@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       if (this._searchReload) {
          //Нужно поменять фильтр и загрузить нужный корень.
          //TODO менять фильтр в контексте, когда появятся data-binding'и
-         filter[view.getHierField()] = this._lastRoot || null;
+         filter[view.getHierField()] = this._lastRoot;
          //DataGridView._filter = filter;
          //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
          //Релоад сделает то же самое, так как он стреляет onSetRoot даже если корень на самом деле не понменялся
