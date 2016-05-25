@@ -741,7 +741,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       add: function (item, at) {
-         this._checkItem(item, this.getCount() > 0);
+         this._checkItem(item, !!this._options.format || this.getCount() > 0);
          this._getRawDataAdapter().add(item.getRawData(), at);
          RecordSet.superclass.add.apply(this, arguments);
          item.setOwner(this);
@@ -817,6 +817,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       _addItemsToRawData: function (items, at, replace) {
          var isRecordSet  = items && $ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet'),
             isEqualFormat = this._isEqualItemsFormat(items, replace),
+            hasFormat = !!this._options.format,
             hasItems = replace ? false : this.getCount() > 0,
             adapter = this._getRawDataAdapter(),
             item;
@@ -827,7 +828,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             if (!isRecordSet && !isEqualFormat) {
                this._checkItem(
                   item,
-                  hasItems || i > 0
+                  hasFormat || hasItems || i > 0
                );
 
             }
