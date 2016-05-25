@@ -204,7 +204,6 @@ define('js!SBIS3.CONTROLS.ListView',
             },
             _loadingIndicator: undefined,
             _editInPlace: null,
-            _hasScrollMore: true,
             _infiniteScrollOffset: null,
             _allowInfiniteScroll: true,
             _scrollIndicatorHeight: 32,
@@ -1082,7 +1081,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _reloadInfiniteScrollParams : function(){
             if (this.isInfiniteScroll() || this._isAllowInfiniteScroll()) {
-               this._hasScrollMore = true;
                this._infiniteScrollOffset = this._offset;
                this._isLoadBeforeScrollAppears = true;
             }
@@ -1612,22 +1610,21 @@ define('js!SBIS3.CONTROLS.ListView',
                loadAllowed  = this._isAllowInfiniteScroll();
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && $ws.helpers.isElementVisible(this.getContainer()) &&
-                  this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && this._hasScrollMore && !this._isLoading()) {
+                  this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && !this._isLoading()) {
                this._showLoadingIndicator();
+               this._toggleEmptyData(false);
                this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), this._infiniteScrollOffset + this._limit, this._limit);
                this._loader = this._callQuery(this.getFilter(), this.getSorting(), this._infiniteScrollOffset + this._limit, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
                   //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                   //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                   self._loader = null;
-
-                  self._hideLoadingIndicator();
-
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
-                  if (self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset)) {
+                  var hasNextPage = self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset);
+                  if (hasNextPage) {
                      self._infiniteScrollOffset += self._limit;
                   } else {
-                     self._hasScrollMore = false;
                      self._hideLoadingIndicator();
+                     this._toggleEmptyData(!self.getItems().getCount());
                   }
                   self._notify('onDataMerge', dataSet);
                   //Если данные пришли, нарисуем
@@ -1670,7 +1667,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                   } else {
                      // Если пришла пустая страница, но есть еще данные - догрузим их
-                     if (self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset)){
+                     if (hasNextPage){
                         self._nextLoad();
                      }
                   }
