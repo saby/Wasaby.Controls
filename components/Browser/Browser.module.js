@@ -32,6 +32,7 @@ define('js!SBIS3.CONTROLS.Browser', [
    var Browser = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Browser.prototype */{
       /**
        * @event onEdit при редактировании/создании записи
+       * @event onEditCurrentFolder при редактировании записи текущей папки (только в случае иерархического представления!)
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} id Ид редактируемой записи. Для добавления будет null
        * @param {SBIS3.CONTROLS.Record} item Редактируемая запись
@@ -90,8 +91,8 @@ define('js!SBIS3.CONTROLS.Browser', [
 
       init: function() {
          var self = this;
+         this._publish('onEdit', 'onEditCurrentFolder', 'onFiltersReady');
          Browser.superclass.init.apply(this, arguments);
-
          this._view = this._getView();
          this._view.subscribe('onItemActivate', function(e, itemMeta) {
             self._notifyOnEditByActivate(itemMeta);
@@ -105,6 +106,7 @@ define('js!SBIS3.CONTROLS.Browser', [
             this._backButton = this._getBackButton();
             this._breadCrumbs = this._getBreadCrumbs();
                if (this._backButton && this._breadCrumbs) {
+                  this._backButton.subscribe('onArrowActivated', this._folderEditHandler);
                   this._componentBinder = new ComponentBinder({
                      backButton : this._backButton,
                      breadCrumbs : this._breadCrumbs,
@@ -153,6 +155,10 @@ define('js!SBIS3.CONTROLS.Browser', [
          } else {
             this._notifyOnFiltersReady();
          }
+      },
+
+      _folderEditHandler: function(){
+         this._notify('onEditCurrentFolder', this._componentBinder.getCurrentRootRecord());
       },
 
       addItem: function(metaData) {
