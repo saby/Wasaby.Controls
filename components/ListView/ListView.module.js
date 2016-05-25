@@ -1058,22 +1058,13 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          reload: function () {
-            var self = this;
             this._updateByReload = true; //todo Убрать в 150 когда будет правильный рендер изменившихся данных
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             this._firstScrollTop = true;
             this._hideItemsToolbar();
             this._destroyEditInPlace();
-            var def = ListView.superclass.reload.apply(this, arguments);
-            if (def) {
-               def.addCallback(function(list){
-                  if (self._hasNextPage(list.getMetaData().more, self._infiniteScrollOffset)){
-                     self._nextLoad();
-                  }
-               });
-            }
-            return def;
+            return ListView.superclass.reload.apply(this, arguments);
          },
 
          setFilter: function(filter, noLoad){
