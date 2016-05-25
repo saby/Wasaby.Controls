@@ -3,11 +3,12 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
    'js!SBIS3.CONTROLS.Data.Source.Rpc',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Query.Query',
+   'js!SBIS3.CONTROLS.Data.Record',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
    'js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic'
-], function (Rpc, DataSet, Query, Di, Utils) {
+], function (Rpc, DataSet, Query, Record, Di, Utils) {
    'use strict';
 
    /**
@@ -422,6 +423,18 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          }
       },
 
+      _isHierarhyField: function(name, original){
+         if(name && original) {
+            if (name.slice(-1) in {'@': false, '$': false}) {
+               name = name.slice(0, -1);
+            }
+            if (original.hasOwnProperty(name) && original.hasOwnProperty(name + '@') && original.hasOwnProperty(name + '$')) {
+               return true;
+            }
+         }
+         return false;
+      },
+
       /**
        * Строит запись из объекта
        * @param {Object.<String, *>|SBIS3.CONTROLS.Data.Record} data Данные полей записи
@@ -436,11 +449,12 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             return data;
          }
 
-         var record = this._getModelInstance(null),
+         var record = new Record({
+               adapter: this._options.adapter
+            }),
             name,
             value,
             field,
-            hierarhyFields = {},
             sortNames = [];
 
          for (name in data) {
@@ -622,19 +636,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          };
 
          return this.getAdapter().serialize(args);
-      },
-
-      _isHierarhyField: function(name, original){
-         if(name && original) {
-            if (name.slice(-1) in {'@': false, '$': false}) {
-               name = name.slice(0, -1);
-            }
-            if (original.hasOwnProperty(name) && original.hasOwnProperty(name + '@') && original.hasOwnProperty(name + '$')) {
-               return true;
-            }
-         }
-         return false;
       }
+
       //endregion Deprecated
    });
 

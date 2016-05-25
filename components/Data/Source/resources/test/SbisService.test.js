@@ -1021,6 +1021,36 @@ define([
                      });
                });
 
+               it('should generate a request with filter contains only given data', function (done) {
+                  var MyModel = Model.extend({
+                        $protected: {
+                           _options: {
+                              rawData: {
+                                 a: 1
+                              }
+                           }
+                        }
+                     }),
+                     query = new Query();
+
+                  service.setModel(MyModel);
+                  query.where({
+                     b: 2
+                  });
+                  service.query(query).addCallbacks(function () {
+                     try {
+                        var args = SbisBusinessLogic.lastRequest.args;
+                        assert.strictEqual(args['Фильтр'].s.length, 1);
+                        assert.strictEqual(args['Фильтр'].s[0].n, 'b');
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
                it('should generate a request with valid meta data from record', function (done) {
                   var query = new Query(),
                      meta = getSampleModel();
