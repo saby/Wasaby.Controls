@@ -230,12 +230,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                this._containerSizes.originWidth = scrollWidth > maxWidth ? maxWidth : scrollWidth + border ;
                this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight + border;
             }
+            if (this._fixed === undefined){
+               this._checkFixed(this._options.target);
+            }
             this._initSizes();
             if (!this._originsInited){
                return;
-            }
-            if (this._fixed === undefined){
-               this._checkFixed(this._options.target);
             }
             if (this._options.target) {
                var offset = {
