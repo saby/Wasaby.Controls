@@ -612,7 +612,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          query.where(filter)
             .offset(hasMore === undefined ? offset : hasMore)
             .limit(limit)
-            .orderBy(sorting);
+            .orderBy(sorting)
+            .meta(hasMore === undefined ? {} : {hasMore: hasMore});
 
          args = {
             'Фильтр': this._buildRecord(query ? query.getWhere() : null),
