@@ -26,7 +26,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          view.setGroupBy(groupBy);
          if (this._firstSearch) {
             this._lastRoot = view.getCurrentRoot();
-            this._lastParentProperty = view._itemsProjection.getParentProperty();
             //Запомнили путь в хлебных крошках перед тем как их сбросить для режима поиска
             if (this._options.breadCrumbs && this._options.breadCrumbs.getItems()){
                this._pathDSRawData = $ws.core.clone(this._options.breadCrumbs.getItems().getRawData());
@@ -108,7 +107,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       if (this._firstSearch) {
          return;
       }
-      view._itemsProjection.setParentProperty(this._lastParentProperty);
       view.setInfiniteScroll(this._isInfiniteScroll, true);
       view.setGroupBy(this._lastGroup);
       view.setHighlightText('', false);
@@ -171,7 +169,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          _searchForm : undefined,
          _lastRoot : undefined,
          _lastGroup: {},
-         _lastParentProperty: null,
          _currentRoot: null,
          _pathDSRawData : [],
          _firstSearch: true,
