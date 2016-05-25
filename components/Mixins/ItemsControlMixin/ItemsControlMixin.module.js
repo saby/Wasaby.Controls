@@ -158,6 +158,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _groupHash: {},
          _itemsProjection: null,
          _items : null,
+         _itemsInitializedBySource: false,
          _itemsInstances: {},
          _offset: 0,
          _limit: undefined,
@@ -165,6 +166,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _dataSet: null,
          _dotItemTpl: null,
          _options: {
+            _serverRender: false,
             _defaultItemTemplate: '',
             _defaultItemContentTemplate: '',
             _createDefaultProjection : createDefaultProjection,
@@ -355,13 +357,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _modifyOptions : function(parentFnc, cfg) {
             var newCfg = parentFnc.call(this, cfg);
             newCfg._itemsTemplate = ItemsTemplate;
-            if (cfg.items) {
-               if (!(cfg.items instanceof Array)) {
-                  newCfg._items = cfg.items;
-                  newCfg._itemsProjection = cfg._createDefaultProjection(cfg.items);
-                  newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection);
-                  newCfg._itemData = cfg._buildTplArgs(cfg);
-               }
+            newCfg._items = cfg.items;
+            newCfg._itemsProjection = cfg._createDefaultProjection(cfg.items);
+            newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection);
+            newCfg._itemData = cfg._buildTplArgs(cfg);
+            if (cfg.items && !(cfg.items instanceof Array) && !cfg.userItemAttributes && !cfg.itemTemplate && Object.isEmpty(cfg.groupBy)) {
+               newCfg._serverRender = true;
             }
             return newCfg;
          }
@@ -374,10 +375,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          this._bindHandlers();
          this._prepareConfig(this._options.dataSource, this._options.items);
+
          if (this._options.itemTemplate || this._options.userItemAttributes) {
             $ws.single.ioc.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Заданы itemTemplate или userItemAttributes');
          }
+
       },
+
+
 
       _prepareConfig : function(sourceOpt, itemsOpt) {
          var keyField = this._options.keyField;
@@ -388,18 +393,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          if (sourceOpt) {
             this._dataSource = this._prepareSource(sourceOpt);
-            this._items = null;
-         } else if (itemsOpt) {
-            if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection.Projection')) {
-               this._itemsProjection = itemsOpt;
-               this._items = this._convertItems(this._itemsProjection.getCollection());
-               this._setItemsEventHandlers();
-               this._notify('onItemsReady');
-               this._itemsReadyCallback();
-            } else if($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
-               this._processingData(itemsOpt);
-            } else if (itemsOpt instanceof Array) {
-               /*TODO уменьшаем количество ошибок с key*/
+         }
+
+         if (itemsOpt) {
+            if (itemsOpt instanceof Array) {
                if (!this._options.keyField) {
                   var itemFirst = itemsOpt[0];
                   if (itemFirst) {
@@ -412,12 +409,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   data: itemsOpt,
                   idProperty: this._options.keyField
                });
-            } else {
-               this._items = itemsOpt;
-               this._dataSource = null;
-               this._itemsProjection = this._createDefaultProjection(this._items);
-               this._itemsReadyCallback();
+            }
+            else {
+               this._items = this._options._items;
+               this._itemsProjection = this._options._itemsProjection;
+               this._setItemsEventHandlers();
                this._notify('onItemsReady');
+               this._itemsReadyCallback();
             }
          }
       },
@@ -427,27 +425,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       _getItemProjectionByItemId: function(id) {
          return this._itemsProjection.getItemBySourceItem(this._items.getRecordById(id));
-      },
-
-      _processingData: function(list) {
-         var hasItems = !!this._items;
-
-         if (hasItems) {
-            this._dataSet.setMetaData(list.getMetaData());
-            this._items.assign(list);
-            if (this._items !== this._dataSet) {
-               this._dataSet.assign(list);
-            }
-         } else {
-            this._items = list;
-            this._dataSet = list;
-            this._itemsProjection = this._createDefaultProjection(this._items);
-            this._setItemsEventHandlers();
-            this._notify('onItemsReady');
-            this._itemsReadyCallback();
-         }
-
-         this._dataLoadedCallback();
       },
 
       /*переписанные методы для однопроходной отрисовки begin*/
@@ -460,20 +437,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return curField != prevField;
       },
 
-      _getRecordsForRedraw : function(projection) {
-         var
-            records = [];
-         if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
-            projection.each(function (item) {
-               records.push(item);
-            });
-         }
-         return records;
-      },
-
       _prepareItemsData : function() {
          return {
-            records : this._getRecordsForRedraw(this._itemsProjection)
+            records : this._options._getRecordsForRedraw(this._itemsProjection)
          }
       },
 
@@ -484,7 +450,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             itemTpl = this._getItemTemplate();
 
          data = {
-            items : this._getRecordsForRedraw(this._itemsProjection)
+            items : this._options._getRecordsForRedraw(this._itemsProjection)
          };
 
          data.itemTemplate = TemplateUtil.prepareTemplate(itemTpl);
@@ -494,45 +460,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _prepareItemData: function() {
          if (!this._itemData) {
-            this._itemData = $ws.core.clone(this._buildTplArgs(this._options));
+            this._itemData = $ws.core.clone(this._options._buildTplArgs.call(this, this._options));
          }
          return this._itemData;
-      },
-
-      _buildTplArgs: function(cfg) {
-         var
-            tplOptions = {}, itemTpl, itemContentTpl;
-
-
-         tplOptions.displayField = cfg.displayField;
-         tplOptions.templateBinding = cfg.templateBinding;
-
-         if (cfg.itemContentTpl) {
-            itemContentTpl = cfg.itemContentTpl;
-         }
-         else {
-            itemContentTpl = cfg._defaultItemContentTemplate;
-         }
-         tplOptions.itemContent = TemplateUtil.prepareTemplate(itemContentTpl);
-         if (cfg.itemTpl) {
-            itemTpl = cfg.itemTpl;
-         }
-         else {
-            itemTpl = cfg._defaultItemTemplate;
-         }
-         tplOptions.itemTpl = TemplateUtil.prepareTemplate(itemTpl);
-         tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(cfg._defaultItemTemplate);
-
-         if (cfg.includedTemplates) {
-            var tpls = cfg.includedTemplates;
-            tplOptions.included = {};
-            for (var j in tpls) {
-               if (tpls.hasOwnProperty(j)) {
-                  tplOptions.included[j] = TemplateUtil.prepareTemplate(tpls[j]);
-               }
-            }
-         }
-         return tplOptions
       },
 
       _redrawItems : function() {
@@ -832,6 +762,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             opts.footerTpl = TemplateUtil.prepareTemplate(opts.footerTpl);
             return opts;
          },
+         init : function(){
+            if (this._items && !this._options._serverRender) {
+               this.redraw()
+            }
+            else if (this._dataSource) {
+               this.reload();
+            }
+         },
          destroy : function() {
             this._unsetItemsEventHandlers();
             this._clearItems();
@@ -1007,7 +945,24 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
                    self._toggleIndicator(false);
                    self._notify('onDataLoad', list);
-                   self._processingData(list);
+
+                   if (this._itemsInitializedBySource) {
+                      this._dataSet.setMetaData(list.getMetaData());
+                      this._items.assign(list);
+                      if (this._items !== this._dataSet) {
+                         this._dataSet.assign(list);
+                      }
+                   } else {
+                      this._items = list;
+                      this._dataSet = list;
+                      this._itemsProjection = this._createDefaultProjection(this._items);
+                      this._setItemsEventHandlers();
+                      this._notify('onItemsReady');
+                      this._itemsReadyCallback();
+                      this._itemsInitializedBySource = true;
+                   }
+
+                   this._dataLoadedCallback();
 
                    if(hasItems) {
                       if(!self._options.autoRedraw) {
@@ -1530,7 +1485,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (this._items) {
             this._clearItems();
             this._needToRedraw = false;
-            records = this._getRecordsForRedraw(this._itemsProjection);
+            records = this._options._getRecordsForRedraw(this._itemsProjection);
             this._toggleEmptyData(!records.length && this._options.emptyHTML);
             this._drawItems(records);
          }

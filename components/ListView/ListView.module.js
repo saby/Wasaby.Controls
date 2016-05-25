@@ -74,7 +74,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             tplOptions.multiselect = cfg.multiselect;
-            /*args.decorators = this._decorators;*/
+            tplOptions.decorators = this._decorators;
             tplOptions.colorField = cfg.colorField;
 
             return tplOptions;
@@ -633,7 +633,6 @@ define('js!SBIS3.CONTROLS.ListView',
             this._drawEmptyData();
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
-            this.reload();
          },
          _modifyOptions : function(opts){
             var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
@@ -649,16 +648,6 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             return lvOpts;
-         },
-
-         _buildTplArgs : function(cfg) {
-            var
-               args = ListView.superclass._buildTplArgs.apply(this, arguments);
-
-            args.multiselect = cfg.multiselect;
-            /*args.decorators = this._decorators;*/
-            args.colorField = cfg.colorField;
-            return args;
          },
 
          _prepareInfiniteScroll: function(){
