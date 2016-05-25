@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       },
 
       $constructor: function () {
-         this._publish('onClose', 'onShow', 'onAlignmentChange');
+         this._publish('onClose', 'onShow', 'onAlignmentChange', 'onChangeFixed');
          var self = this,
             container = this._container;
          container.css({
@@ -193,14 +193,22 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          while (element.parent().length){
             if (element.css('position') == 'fixed'){
                $(this._container).css({position : 'fixed'});
+               if (this._fixed){
+                  this._notify('onChangeFixed', true);
+               }
                this._fixed = true;
                return;
             } else {
                element = element.parent();
             }
          }
+         this._notify('onChangeFixed', false);
          this._fixed = false;
          $(this._container).css({position : 'absolute'});
+      },
+
+      isFixed: function(){
+         return this._fixed;
       },
 
       /**

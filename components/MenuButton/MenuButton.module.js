@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       },
 
       _onMoveHandler: function () {
-         if (this._header) {
+         if (this._header && !this._picker.isFixed()) {
             this._header.css({
                left: (this._headerAlignment.horizontal == 'left') ? this._container.offset().left : this._container.offset().left - 16,
                top: (this._headerAlignment.vertical == 'top') ? this._container.offset().top + 2 : this._container.offset().top - 7
@@ -140,7 +140,8 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          this._header.css({
             left: (this._headerAlignment.horizontal == 'left') ? this._container.offset().left : this._container.offset().left - 12,
             top: (this._headerAlignment.vertical == 'top') ? this._container.offset().top + 2 : this._container.offset().top - 7,
-            'z-index': parseInt(this._picker._container.css('z-index'), 10) + 1
+            'z-index': parseInt(this._picker._container.css('z-index'), 10) + 1,
+            position: this._picker.isFixed() ? 'fixed' : 'absolute'
          });
          this._header.removeClass('ws-hidden');
          this._setWidth();
@@ -181,6 +182,11 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          this._picker._oppositeCorners.tr.horizontal.top = 'tl';
          this._picker.subscribe('onDrawItems', function(){
             self._picker.recalcPosition(true);
+         });
+         this._picker.subscribe('onChangeFixed', function(event, fixed){
+            self._header.css({
+               position: fixed ? 'fixed' : 'absolute'
+            });
          });
       },
 
