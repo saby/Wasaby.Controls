@@ -25,6 +25,53 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this.runInPropertiesUpdate(func, arguments);
       };
    }
+   var createDefaultProjection = function(items) {
+      return Projection.getDefaultProjection(items);
+   },
+   getRecordsForRedraw = function(projection) {
+      var
+         records = [];
+      if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
+         projection.each(function (item) {
+            records.push(item);
+         });
+      }
+      return records;
+   },
+   buildTplArgs = function(cfg) {
+      var tplOptions = {}, itemTpl, itemContentTpl;
+
+
+      tplOptions.displayField = cfg.displayField;
+      tplOptions.templateBinding = cfg.templateBinding;
+
+      if (cfg.itemContentTpl) {
+         itemContentTpl = cfg.itemContentTpl;
+      }
+      else {
+         itemContentTpl = cfg._defaultItemContentTemplate;
+      }
+      tplOptions.itemContent = TemplateUtil.prepareTemplate(itemContentTpl);
+      if (cfg.itemTpl) {
+         itemTpl = cfg.itemTpl;
+      }
+      else {
+         itemTpl = cfg._defaultItemTemplate;
+      }
+      tplOptions.itemTpl = TemplateUtil.prepareTemplate(itemTpl);
+      tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(cfg._defaultItemTemplate);
+
+      if (cfg.includedTemplates) {
+         var tpls = cfg.includedTemplates;
+         tplOptions.included = {};
+         for (var j in tpls) {
+            if (tpls.hasOwnProperty(j)) {
+               tplOptions.included[j] = TemplateUtil.prepareTemplate(tpls[j]);
+            }
+         }
+      }
+      return tplOptions;
+   };
 
    var ItemsControlMixin = /**@lends SBIS3.CONTROLS.ItemsControlMixin.prototype  */{
        /**
@@ -118,6 +165,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _dataSet: null,
          _dotItemTpl: null,
          _options: {
+            _defaultItemTemplate: '',
+            _defaultItemContentTemplate: '',
+            _createDefaultProjection : createDefaultProjection,
+            _buildTplArgs : buildTplArgs,
+            _getRecordsForRedraw: getRecordsForRedraw,
             /**
              * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
              * @remark
@@ -301,15 +353,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       around: {
          _modifyOptions : function(parentFnc, cfg) {
-            cfg._itemsTemplate = ItemsTemplate;
-            var newCfg = parentFnc.call(cfg);
+            var newCfg = parentFnc.call(this, cfg);
+            newCfg._itemsTemplate = ItemsTemplate;
             if (cfg.items) {
                if (!(cfg.items instanceof Array)) {
-                  cfg._items = cfg.items;
-                  cfg._itemsProjection = ItemsControlMixin._createDefaultProjection(cfg.items);
-                  cfg._records = ItemsControlMixin._getRecordsForRedraw(cfg._itemsProjection);
-                  cfg._itemData = ItemsControlMixin._buildTplArgs(cfg);
-
+                  newCfg._items = cfg.items;
+                  newCfg._itemsProjection = cfg._createDefaultProjection(cfg.items);
+                  newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection);
+                  newCfg._itemData = cfg._buildTplArgs(cfg);
                }
             }
             return newCfg;
@@ -450,35 +501,27 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _buildTplArgs: function(cfg) {
          var
-            tplOptions = {},
-            itemContentTpl,
-            itemTpl;
+            tplOptions = {}, itemTpl, itemContentTpl;
+
+
+         tplOptions.displayField = cfg.displayField;
+         tplOptions.templateBinding = cfg.templateBinding;
 
          if (cfg.itemContentTpl) {
             itemContentTpl = cfg.itemContentTpl;
          }
          else {
-            itemContentTpl = this._defaultItemContentTemplate;
+            itemContentTpl = cfg._defaultItemContentTemplate;
          }
-         if (cfg.itemTpl) {
-            tplOptions.itemTpl = TemplateUtil.prepareTemplate(cfg.itemTpl);
-         }
-         if (!Object.isEmpty(cfg.groupBy)) {
-            tplOptions.groupTemplate = TemplateUtil.prepareTemplate(this._defaultGroupTemplate);
-            if (cfg.groupBy.contentTpl) {
-               tplOptions.groupContentTemplate = TemplateUtil.prepareTemplate(cfg.groupBy.contentTpl)
-            }
-            else {
-               tplOptions.groupContentTemplate = TemplateUtil.prepareTemplate('<div>{{=it.item.group}}</div>')
-            }
-         }
-
-         tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(this._defaultItemTemplate);
          tplOptions.itemContent = TemplateUtil.prepareTemplate(itemContentTpl);
-
-         tplOptions.displayField = cfg.displayField;
-         tplOptions.templateBinding = cfg.templateBinding;
-
+         if (cfg.itemTpl) {
+            itemTpl = cfg.itemTpl;
+         }
+         else {
+            itemTpl = cfg._defaultItemTemplate;
+         }
+         tplOptions.itemTpl = TemplateUtil.prepareTemplate(itemTpl);
+         tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(cfg._defaultItemTemplate);
 
          if (cfg.includedTemplates) {
             var tpls = cfg.includedTemplates;

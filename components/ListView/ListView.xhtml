@@ -9,7 +9,9 @@
    {{?it.infiniteScroll === 'up'}}
       <div class="controls-ListView-scrollIndicator ws-hidden"></div>
    {{?}}
-   <div class="controls-ListView__itemsContainer"></div>
+   <div class="controls-ListView__itemsContainer">
+      {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
+   </div>
    {{?it.infiniteScroll === 'down'}}
       <div class="controls-ListView-scrollIndicator ws-hidden"></div>
    {{?}}

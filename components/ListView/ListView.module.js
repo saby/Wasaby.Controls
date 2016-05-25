@@ -40,6 +40,47 @@ define('js!SBIS3.CONTROLS.ListView',
       'use strict';
 
       var
+         buildTplArgs = function(cfg) {
+            var tplOptions = {}, itemTpl, itemContentTpl;
+
+
+            tplOptions.displayField = cfg.displayField;
+            tplOptions.templateBinding = cfg.templateBinding;
+
+            if (cfg.itemContentTpl) {
+               itemContentTpl = cfg.itemContentTpl;
+            }
+            else {
+               itemContentTpl = cfg._defaultItemContentTemplate;
+            }
+            tplOptions.itemContent = TemplateUtil.prepareTemplate(itemContentTpl);
+            if (cfg.itemTpl) {
+               itemTpl = cfg.itemTpl;
+            }
+            else {
+               itemTpl = cfg._defaultItemTemplate;
+            }
+            tplOptions.itemTpl = TemplateUtil.prepareTemplate(itemTpl);
+            tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(cfg._defaultItemTemplate);
+
+            if (cfg.includedTemplates) {
+               var tpls = cfg.includedTemplates;
+               tplOptions.included = {};
+               for (var j in tpls) {
+                  if (tpls.hasOwnProperty(j)) {
+                     tplOptions.included[j] = TemplateUtil.prepareTemplate(tpls[j]);
+                  }
+               }
+            }
+
+            tplOptions.multiselect = cfg.multiselect;
+            /*args.decorators = this._decorators;*/
+            tplOptions.colorField = cfg.colorField;
+
+            return tplOptions;
+         };
+
+      var
          DRAG_AVATAR_OFFSET = 5,
          START_NEXT_LOAD_OFFSET = 180;
 
@@ -190,7 +231,6 @@ define('js!SBIS3.CONTROLS.ListView',
          $protected: {
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
-            _defaultGroupTemplate: GroupTemplate,
             _floatCheckBox: null,
             _dotItemTpl: null,
             _itemsContainer: null,
@@ -235,6 +275,9 @@ define('js!SBIS3.CONTROLS.ListView',
             _firstScrollTop : true,
             _addResultsMethod: undefined,
             _options: {
+               _buildTplArgs: buildTplArgs,
+               _defaultItemTemplate: ItemTemplate,
+               _defaultItemContentTemplate: ItemContentTemplate,
                /**
                 * @faq Почему нет флажков в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
                 * Для отрисовки флажков необходимо в шаблоне отображения элемента коллекции обозначить их место.
@@ -608,11 +651,13 @@ define('js!SBIS3.CONTROLS.ListView',
             return lvOpts;
          },
 
-         _buildTplArgs : function() {
-            var args = ListView.superclass._buildTplArgs.apply(this, arguments);
-            args.multiselect = this._options.multiselect;
-            args.decorators = this._decorators;
-            args.colorField = this._options.colorField;
+         _buildTplArgs : function(cfg) {
+            var
+               args = ListView.superclass._buildTplArgs.apply(this, arguments);
+
+            args.multiselect = cfg.multiselect;
+            /*args.decorators = this._decorators;*/
+            args.colorField = cfg.colorField;
             return args;
          },
 
