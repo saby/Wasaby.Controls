@@ -52,6 +52,52 @@ define([
             record = getRecord(recordData);
          });
 
+         describe('.constructor()', function () {
+            var getFormatDeclaration = function() {
+               return [{
+                  name: 'id',
+                  type: 'integer'
+               }, {
+                  name: 'title',
+                  type: 'string'
+               }, {
+                  name: 'descr',
+                  type: 'string',
+                  defaultValue: '-'
+               }, {
+                  name: 'main',
+                  type: 'boolean',
+                  defaultValue: true
+               }];
+            };
+
+            it('should add the default values from injected format to the raw data', function () {
+               var record = new Record({
+                     format: getFormatDeclaration()
+                  }),
+                  data = record.getRawData();
+               assert.strictEqual(data.id, 0);
+               assert.strictEqual(data.title, null);
+               assert.strictEqual(data.descr, '-');
+               assert.strictEqual(data.main, true);
+            });
+            it('should add the default values from inherited format to the raw data', function () {
+               var SubRecord = Record.extend({
+                     $protected: {
+                        _options: {
+                           format: getFormatDeclaration()
+                        }
+                     }
+                  }),
+                  record = new SubRecord(),
+                  data = record.getRawData();
+               assert.strictEqual(data.id, 0);
+               assert.strictEqual(data.title, null);
+               assert.strictEqual(data.descr, '-');
+               assert.strictEqual(data.main, true);
+            });
+         });
+
          describe('.get()', function () {
             it('should return a data value', function () {
                assert.strictEqual(record.get('max'), recordData.max);

@@ -59,11 +59,9 @@ define([
                   ['Ид', 'Фамилия']
                );
             });
-            it('should throw an Error for empty', function () {
+            it('should return an empty Array if data is not present', function () {
                var adapter = new JsonTable();
-               assert.throw(function () {
-                  adapter.getFields();
-               });
+               assert.strictEqual(adapter.getFields().length, 0);
             });
          });
 

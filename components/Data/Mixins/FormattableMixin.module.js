@@ -185,12 +185,15 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
       //region Public methods
 
       $constructor: function (cfg) {
-         if(cfg && cfg.format) {
+         if(this._options.format) {
             this._directFormat = true;
-
+            var adapter = this._getRawDataAdapter(),
+               fields = adapter.getFields();
             this._getFormat().each(function(fieldFormat) {
                try {
-                  this._getRawDataAdapter().addField(fieldFormat);
+                  if (Array.indexOf(fields, fieldFormat.getName()) === -1) {
+                     adapter.addField(fieldFormat);
+                  }
                } catch (e) {
                   Utils.logger.info(e.message);
                }
