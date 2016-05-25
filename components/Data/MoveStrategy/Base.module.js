@@ -1,8 +1,9 @@
 /* global define, $ws  */
 define('js!SBIS3.CONTROLS.Data.MoveStrategy.Base', [
    'js!SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy',
-   'js!SBIS3.CONTROLS.Data.Utils'
-], function (IMoveStrategy, Utils) {
+   'js!SBIS3.CONTROLS.Data.Utils',
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
+], function (IMoveStrategy, Utils, RecordSet) {
    'use strict';
    /**
     * Базовый класс для стратегий перемещения
@@ -70,19 +71,25 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Base', [
          var def = new $ws.proto.ParallelDeferred(),
             newParent = to ? to.getId() : null,
             self = this,
-            record;
-
-         for (var i = 0, len = from.length; i < len; i++) {
-            record = from[i];
-            record.set(self._options.hierField, newParent);
-            def.push(self._options.dataSource.update(record));
+            updateItems;
+         if (from.length > 1) {
+            updateItems = new RecordSet({
+               adapter:  from[0].getAdapter()
+            });
+            updateItems.append(from);
+         } else {
+            updateItems = from[0];
          }
 
-         if (record.getOwner()) {
-            record.getOwner()._reindexTree(self._options.hierField);
-         }
-
-         return def.done().getResult();
+         return self._options.dataSource.update(updateItems).addCallback(function(){
+            for (var i = 0, len = from.length; i < len; i++) {
+               var record = from[i];
+               record.set(self._options.hierField, newParent);
+               if (record.getOwner()) {
+                  record.getOwner()._reindexTree(self._options.hierField);
+               }
+            }
+         });
 
       }
    });
