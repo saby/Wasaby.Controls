@@ -216,6 +216,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if (!collectionRecord){
             return;
          }
+         //Уберём удаляемый элемент из массива выбранных у контрола, являющегося linkedObject.
+         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.MultiSelectable')) {
+            collection.removeItemsSelection([collectionRecord.getId()]);
+         }
          if ($ws.helpers.instanceOfModule(collection.getDataSet && collection.getDataSet(), 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
             collection = collection.getDataSet();
          }
