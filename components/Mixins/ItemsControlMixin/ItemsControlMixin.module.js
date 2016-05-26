@@ -416,6 +416,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._setItemsEventHandlers();
                this._notify('onItemsReady');
                this._itemsReadyCallback();
+               this._dataLoadedCallback();
+               this._notifyOnDrawItems();
             }
          }
       },
@@ -763,8 +765,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             return opts;
          },
          init : function(){
-            if (this._items && !this._options._serverRender) {
-               this.redraw()
+            if (this._items) {
+               if (!this._options._serverRender) {
+                  this.redraw()
+               }
             }
             else if (this._dataSource) {
                this.reload();
