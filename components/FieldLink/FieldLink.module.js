@@ -760,9 +760,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              switch (e.which) {
                 /* Нажатие на клавишу delete удаляет все выбранные элементы в поле связи */
                 case $ws._const.key.del:
-                   if(!this.getText()) {
-                      this.removeItemsSelectionAll();
-                   }
+                   this.removeItemsSelectionAll();
                    break;
 
                 /* ESC закрывает все пикеры у поля связи(если они открыты) */
