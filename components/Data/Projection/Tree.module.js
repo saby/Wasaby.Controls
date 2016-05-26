@@ -423,8 +423,14 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
                }
                hierIndex[parentId].push(index);
             }
-
-            return buildHierarchy(options.root);
+            //todo костыль для поддержания работы поиска, там могут быть дублирующиеся узлы
+            var sortmap = buildHierarchy(options.root), uniq = [];
+            for (index = 0, count= sortmap.length; index < count; index++) {
+               if (Array.indexOf(uniq, sortmap[index]) === -1) {
+                  uniq.push(sortmap[index]);
+               }
+            }
+            return uniq;
          }
       },
 
