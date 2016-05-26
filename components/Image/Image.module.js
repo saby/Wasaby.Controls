@@ -354,6 +354,7 @@ define('js!SBIS3.CONTROLS.Image',
             },
             _onErrorLoad: function(error, withoutReload) {
                this._notify('onErrorLoad', error);
+               $ws.helpers.alert('При загрузке изображения возникла ошибка : ' + error.message);
                if (!withoutReload && this._imageUrl !== this._options.defaultImage) {
                   this._setImage(this._options.defaultImage);
                }
