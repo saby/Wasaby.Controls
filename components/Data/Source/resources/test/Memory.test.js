@@ -1,4 +1,4 @@
-/* global beforeEach, afterEach, describe, context, assert, it */
+/* global define, beforeEach, afterEach, describe, context, assert, it */
 define([
       'js!SBIS3.CONTROLS.Data.Source.Memory',
       'js!SBIS3.CONTROLS.Data.Source.DataSet',
@@ -984,6 +984,70 @@ define([
                      }, function (err) {
                         done(err);
                      });
+                  });
+
+                  it('should update the recordset', function (done) {
+                     source = new MemorySource({
+                        data: [{
+                           'Ид': 6,
+                           'ПорНом': 3,
+                           'Раздел': [null],
+                           'Фамилия': 'Иванов23',
+                           'Имя': 'Иван',
+                           'Отчество': 'Иванович',
+                           'Должность': 'Инженер'
+                        }, {
+                           'Ид': 4,
+                           'ПорНом': 1,
+                           'Раздел': [null],
+                           'Фамилия': 'Петров23',
+                           'Имя': 'Федор',
+                           'Отчество': 'Иванович',
+                           'Должность': 'Директор'
+                        }
+                        ],
+                        idProperty: 'Ид'
+                     });
+                     var rs = new RecordSet({
+                        rawData: [{
+                           'Ид': 6,
+                           'ПорНом': 3,
+                           'Раздел': [null],
+                           'Фамилия': 'Иванов23',
+                           'Имя': 'Иван',
+                           'Отчество': 'Иванович',
+                           'Должность': 'Инженер'
+                        }, {
+                           'Ид': 4,
+                           'ПорНом': 1,
+                           'Раздел': [null],
+                           'Фамилия': 'Петров23',
+                           'Имя': 'Федор',
+                           'Отчество': 'Иванович',
+                           'Должность': 'Директор'
+                        }
+                        ],
+                     });
+                     source.update(rs).addCallbacks(function (success) {
+                        try {
+                           assert.isTrue(!!success);
+                           source.read(6).addCallbacks(function (model) {
+                              try {
+                                 assert.equal(model.get('Фамилия'), 'Иванов23');
+                                 done();
+                              } catch(err) {
+                                 done(err);
+                              }
+                           }, function (err) {
+                              done(err);
+                           });
+                        } catch (err) {
+                           done(err);
+                        }
+                     }, function (err) {
+                        done(err);
+                     });
+
                   });
                });
 

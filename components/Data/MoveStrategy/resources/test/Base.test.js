@@ -57,12 +57,14 @@ define([
          });
 
          describe('.hierarhyMove()', function() {
-            it('should move record to folder', function () {
-               ds.update = function (record) {
-                  assert.equal(record.get('parent'), rs.at(1).getId());
+            it('should move record to folder', function (done) {
+               ds.update = function () {
                   return new $ws.proto.Deferred().callback(true);
                };
-               moveStrategy.hierarhyMove([rs.at(0)], rs.at(1), false);
+               moveStrategy.hierarhyMove([rs.at(0)], rs.at(1), false).addCallback(function(){
+                  assert.equal(rs.at(0).get('parent'), rs.at(1).getId());
+                  done();
+               });
             });
 
             it('should throw an error hierarhy field is undefined', function () {

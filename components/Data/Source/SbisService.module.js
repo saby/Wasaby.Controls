@@ -317,10 +317,10 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          return args;
       },
 
-      _prepareUpdateArguments: function(model, meta) {
-         var args = {
-            'Запись': model
-         };
+      _prepareUpdateArguments: function(data, meta) {
+         var args = {},
+            argName = $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.RecordSet') ? 'Записи' : 'Запись';
+         args[argName] = data;
          if (meta && !Object.isEmpty(meta)) {
             args['ДопПоля'] = meta;
          }
