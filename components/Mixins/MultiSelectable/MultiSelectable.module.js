@@ -195,23 +195,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
                 added: [],
                 removed: []
              },
-             index, currElem;
-
-         function hasInArray(array, elem) {
-            index = Array.indexOf(array, elem);
-
-            if(index < 0) {
-               elem = (typeof elem === 'string') ? Number(elem) : String(elem);
-
-               index = Array.indexOf(array, elem);
-
-               if(index < 0) {
-                  return false;
-               }
-            }
-
-            return true;
-         }
+             currElem;
 
          /* Найдём удаленные */
          result.removed = $ws.helpers.filter(arrayOne, function(item) {
@@ -589,7 +573,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
 
          /* Сфоримруем массив ключей записей, которые требуется вычитать с бл или взять из dataSet'a*/
          for(var i = 0, keys = selKeys.length; i < keys; i++) {
-            if(Array.indexOf(itemsKeysArr, selKeys[i]) === -1 && Array.indexOf(itemsKeysArr, parseInt(selKeys[i], 10)) === -1) {
+            if(!hasInArray(itemsKeysArr, selKeys[i])) {
                loadKeysArr.push(selKeys[i]);
             }
          }
@@ -809,6 +793,21 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
    };
 
    var EMPTY_SELECTION = [null];
+   var hasInArray = function(array, elem) {
+      var index = Array.indexOf(array, elem);
+
+      if(index < 0) {
+         elem = (typeof elem === 'string') ? Number(elem) : String(elem);
+
+         index = Array.indexOf(array, elem);
+
+         if(index < 0) {
+            return false;
+         }
+      }
+
+      return true;
+   };
 
    return MultiSelectable;
 
