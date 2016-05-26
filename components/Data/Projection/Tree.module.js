@@ -423,7 +423,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
                }
                hierIndex[parentId].push(index);
             }
-            //todo костыль для поддержания работы поиска, там могут быть дублирующиеся узлы
+            //todo с бл могут прийти дублирующие узлы мы их убираем
             var sortmap = buildHierarchy(options.root), uniq = [];
             for (index = 0, count= sortmap.length; index < count; index++) {
                if (Array.indexOf(uniq, sortmap[index]) === -1) {
