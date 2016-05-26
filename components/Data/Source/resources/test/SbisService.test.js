@@ -76,7 +76,7 @@ define([
                            break;
 
                         case 'Записать':
-                           if (args['Запись'].d && args['Запись'].d[idPosition]) {
+                           if (args['Запись'] && args['Запись'].d && args['Запись'].d[idPosition]) {
                               data = args['Запись'].d[idPosition];
                            } else {
                               data = 99;
@@ -651,6 +651,27 @@ define([
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
                         testArgIsModel(args['ДопПоля'], meta);
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should generate a one request when data is recordset', function (done) {
+                  var rs =  new RecordSet({
+                     adapter: 'adapter.sbis',
+                     rawData:  {
+                        d: [[1], [2]],
+                        s: [{n: 'Число целое'}]
+                     }
+                  });
+                  service.update(rs).addCallbacks(function () {
+                     try {
+                        var args = SbisBusinessLogic.lastRequest.args;
+                        assert.deepEqual(args['Записи'], rs.getRawData());
                         done();
                      } catch (err) {
                         done(err);

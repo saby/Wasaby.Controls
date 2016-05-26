@@ -189,10 +189,18 @@ define([
          });
 
          describe('.hierarhyMove()', function() {
-            it('should move record to folder', function () {
-               moveStrategy.hierarhyMove([rs.at(0)], rs.at(1));
-               assert.equal(rs.at(0).get('parent'), rs.at(1).get('id'));
-               assert.equal(rs.at(1).has('parent$'), false);
+            it('should move record to folder', function (done) {
+               moveStrategy.hierarhyMove([rs.at(0)], rs.at(1)).addCallback(function(){
+                  try {
+                     assert.equal(rs.at(0).get('parent'), rs.at(1).get('id'));
+                     assert.equal(rs.at(1).has('parent$'), false);
+                     done();
+                  } catch(e) {
+                     done(e);
+                  }
+
+               });
+
             });
 
             it('should change parent$ after move', function(done){
