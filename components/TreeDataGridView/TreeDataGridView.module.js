@@ -394,11 +394,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
          return res;
       },
-
-      _drawExpandArrow: function(key, flag){
-         var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-         $('.js-controls-TreeView__expand', itemCont).toggleClass('controls-TreeView__expand__open', flag);
-      },
       _addItemAttributes : function(container, itemProjection) {
          TreeDataGridView.superclass._addItemAttributes.call(this, container, itemProjection);
          var
