@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
          }
          // webkit && ie>9
          if (currentWindow.getSelection) {
-            textData = e.target.innerText;
+            textData = currentWindow.getSelection().toString();
             selectionRange = currentWindow.getSelection().getRangeAt(0);
             selectionContent = canCut ? selectionRange.extractContents() : selectionRange.cloneContents();
          }
