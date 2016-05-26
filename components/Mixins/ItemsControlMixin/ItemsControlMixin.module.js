@@ -388,7 +388,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var keyField = this._options.keyField;
 
          if (!keyField) {
-            $ws.single.ioc.resolve('ILogger').log('Option keyField is required');
+            $ws.single.ioc.resolve('ILogger').log('Option keyField is undefined in control ' + this.getName());
          }
 
          if (sourceOpt) {
