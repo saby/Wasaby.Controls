@@ -248,6 +248,11 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
        * @see placeholder
        */
       setPlaceholder: function(text){
+         this._setPlaceholder(text);
+         this._options.placeholder = text;
+      },
+
+      _setPlaceholder: function(text){
          if (!$ws._const.compatibility.placeholder) {
             if (!this._compatPlaceholder) {
                this._createCompatPlaceholder();
@@ -257,7 +262,6 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          else {
             this._inputField.attr('placeholder', text || '');
          }
-         this._options.placeholder = text;
       },
 
       /**
@@ -317,12 +321,12 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
       _setEnabled : function(enabled) {
          TextBox.superclass._setEnabled.call(this, enabled);
-         if (enabled == false) {
+         if (enabled) {
+            this._inputField.removeAttr('readonly');
+         } else {
             this._inputField.attr('readonly', 'readonly')
          }
-         else {
-            this._inputField.removeAttr('readonly');
-         }
+         this._setPlaceholder(enabled ? this._options.placeholder : '');
       },
 
       _inputRegExp: function (e, regexp) {
