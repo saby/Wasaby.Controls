@@ -260,10 +260,16 @@
    .controls__filterButton .controls__filterButton__filterLine{
       margin: 8px 32px 8px 0;
    }
+   /* Из-за того, что в FF внезапно изменилось позиционирование с помощью float'a, то добавляю хаки для FF
+      чтобы корректно позиционировался крестик очистки и текст */
    .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-table {
       display: inline-block;
       float: none;
    }
+   .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-table-row {
+      height: 24px;
+   }
+
    .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-copyCross {
       top: -25px;
    }
