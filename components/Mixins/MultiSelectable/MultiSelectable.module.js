@@ -165,7 +165,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
 
          if (Array.isArray(idArray)) {
             difference = this._getArrayDifference(this._options.selectedKeys, idArray);
-
+               /* Для правильной работы биндингов св-во должно присваиваться как есть,
+                  чтобы метод get возвращал то, что передали в set +
+                  при любой модификации св-ва, должно создаваться новое значание, чтобы порвалась ссылка на значение в контексте
+                  и не было зацикливания. */
                if (this._options.multiselect || !idArray.length) {
                   this._options.selectedKeys = idArray;
                } else {
