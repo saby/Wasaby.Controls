@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
       _markingRichContent: function(e) {
          var
             event =  e.originalEvent ? e.originalEvent : e,
-            selectionRange, selectionContent, textRange, bodyElement, tempElement,
+            selectionRange, selectionContent, textRange, bodyElement, tempElement, textData,
             selectionNode = document.createElement('div'),
             clipboardData = event.clipboardData ? event.clipboardData : window.clipboardData,
             currentWindow = window,
@@ -82,6 +82,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
          }
          // webkit && ie>9
          if (currentWindow.getSelection) {
+            textData = e.target.innerText;
             selectionRange = currentWindow.getSelection().getRangeAt(0);
             selectionContent = canCut ? selectionRange.extractContents() : selectionRange.cloneContents();
          }
@@ -101,7 +102,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
          if (event.clipboardData) {
             selectionNode.appendChild(selectionContent);
             clipboardData.setData('text/html', '<!--' + label.data + '-->' + selectionNode.innerHTML);
-            clipboardData.setData('text', currentWindow.getSelection().toString());
+            clipboardData.setData('text', textData);
          }
          // для ie
          else {
