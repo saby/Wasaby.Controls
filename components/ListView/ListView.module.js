@@ -1844,8 +1844,10 @@ define('js!SBIS3.CONTROLS.ListView',
                this._updateOffset();
             }
             if (this.isInfiniteScroll()) {
-               if (!this._hasNextPage(this._dataSet.getMetaData().more)) {
+               if (!this._hasNextPage(this.getItems().getMetaData().more, this._infiniteScrollOffset)) {
                   this._hideLoadingIndicator();
+               } else {
+                  this._preScrollLoading();
                }
             }
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
