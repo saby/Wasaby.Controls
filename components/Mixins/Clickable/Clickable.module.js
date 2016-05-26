@@ -29,7 +29,11 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
             /**
              * @cfg {String}  Команда
              */
-            command: ''
+            command: '',
+            /**
+             * @cfg {Array} Аргументы, которые будут переданы при вызове команды
+             */
+            commandArgs: []
          },
          _keysWeHandle: [
             $ws._const.key.enter,
@@ -45,8 +49,21 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
             if (e.which == 1 && self.isEnabled()) {
                self._container.addClass('controls-Click__active');
             }
+            //В IE предотвратим нативное смещение текста в правый нижний угол внутри кнопки
+            if ($ws._const.browser.isIE) {
+               e.preventDefault();
+            }
             //return false;
          });
+      },
+
+      setCommandArgs: function(commandArgs) {
+         this._options.commandArgs = commandArgs;
+         this._notifyOnPropertyChanged('commandArgs');
+      },
+
+      getCommandArgs: function() {
+         return this._options.commandArgs;
       },
 
       _notifyOnActivated : function(originalEvent) {
@@ -71,7 +88,8 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
       before : {
          _clickHandler: function() {
             if (!!this._options.command) {
-               this.sendCommand(this._options.command);
+               var args = [this._options.command].concat(this._options.commandArgs);
+               this.sendCommand.apply(this, args);
             }
          }
       },

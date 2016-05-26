@@ -3,8 +3,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
    'js!SBIS3.CONTROLS.Data.Adapter.ITable',
    'js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin',
    'js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin',
-   'js!SBIS3.CONTROLS.Data.Adapter.JsonRecord'
-], function (ITable, GenericFormatMixin, JsonFormatMixin, JsonRecord) {
+   'js!SBIS3.CONTROLS.Data.Adapter.JsonRecord',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (ITable, GenericFormatMixin, JsonFormatMixin, JsonRecord, Utils) {
    'use strict';
 
    /**
@@ -39,9 +40,13 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
          JsonTable.superclass.addField.call(this, format, at);
 
          var name = format.getName(),
-            value = format.getDefaultValue();
+            value = format.getDefaultValue(),
+            item;
          for (var i = 0; i < this._data.length; i++) {
-            this._data[i][name] = value;
+            item = this._data[i];
+            if (!item.hasOwnProperty(name)) {
+               item[name] = value;
+            }
          }
       },
 
@@ -58,6 +63,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
       //region Public methods
 
       getEmpty: function () {
+         Utils.logger.stack(this._moduleName + '::getEmpty(): method is deprecated and will be removed in 3.7.4. Use clear() instead.');
          return [];
       },
 
@@ -128,6 +134,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
          this.add(clone, index);
       },
 
+      clear: function () {
+         this._data.length = 0;
+      },
+
       //endregion Public methods
 
       //region Protected methods
@@ -139,8 +149,8 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
             item;
          for (i = 0; i < count; i++) {
             item = this.at(i);
-            if (item instanceof Object && item.hasOwnProperty(name)) {
-               has = true;
+            if (item instanceof Object) {
+               has = item.hasOwnProperty(name);
                break;
             }
          }

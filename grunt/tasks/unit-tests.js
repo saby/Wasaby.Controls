@@ -111,7 +111,7 @@ module.exports = function (grunt) {
    grunt.registerTask('tests-isolated[main]', function () {
       grunt.task.requires('js');
       var cfg = config.mocha.slice();
-      cfg.push(config.path + 'coverage.run');
+      cfg.push(config.path + 'via-isolated.run');
       runCommand(
          this.async(),
          'mocha',

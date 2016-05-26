@@ -36,7 +36,7 @@
 
 @link-cursor:                             pointer;
 @link-text-color:                         @primary-color;
-@link-disabled-text-color:                @gray-light-color;
+@link-disabled-text-color:                @gray-ccc-color;
 @link-text-decoration:                    none;
 @link-text-alignment:                     center;
 @link-line-height:                        normal;
@@ -302,10 +302,13 @@
 
 @tab-button-large-inner-font-size:              18px;
 @tab-button-large-inner-font-weight:            bold;
-@tab-button-large-inner-line-height:            29px;
+@tab-button-large-inner-line-height:            28px;
+@tab-button-large-inner-max-width:              614px;
+@tab-button-large-inner-overflow:               hidden;
+@tab-button-large-inner-text-overflow:          ellipsis;
 
 @tab-button-large-firstAddText-color:           #0055BB;
-@tab-button-large-firstAddText-font-size:       15px;
+@tab-button-large-firstAddText-font-size:       14px;
 @tab-button-large-firstAddText-font-weight:     normal;
 @tab-button-large-firstAddText-hover-color:     #FF7030;
 
@@ -338,6 +341,9 @@
 @tab-button-right-separator-left:               -1px;
 @tab-button-left-margin-left:                   -5px;
 @tab-button-left-separator-right:               -1px;
+@tab-button-side-left-margin-left:              -5px;
+@tab-button-side-right-margin-right:            -5px;
+@tab-button-side-left-border:                   none;
 
 @tab-button-overlay-position:                   absolute;
 @tab-button-overlay-left:                       0;
@@ -782,7 +788,8 @@
 @text-box-disabled-border-width:          @text-box-border-width;
 @text-box-disabled-border-style:          @text-box-border-style;
 @text-box-disabled-border-color:          transparent;
-@text-box-disabled-bg:                    @text-box-bg;
+@text-box-disabled-bg:                    transparent;
+@text-box-disabled-border-bottom:         1px solid #ccc;
 
 @text-box-after-width:                    20px;
 @text-box-after-min-height:               @text-box-field-min-height;
@@ -790,7 +797,7 @@
 
 @text-box-placeholder-color:              @gray-ccc-color !important;
 @text-box-compat-placeholder-font:        inherit;
-@text-box-compat-placeholder-padding:     3px 0 0;
+@text-box-compat-placeholder-padding:     1px 0 0;
 @text-box-compat-placeholder-alignment:   inherit;
 
 @text-box-overflow:                       initial;
@@ -1284,6 +1291,8 @@
 @list-view-scroll-height:                       32px;
 @list-view-scroll-width:                        32px;
 
+@list-view-disabled-cursor:                     default;
+
 // --------- //
 // Tree view //
 // --------- //
@@ -1325,8 +1334,10 @@
 @tree-view-expand-open-hover-bg:                @tree-view-expand-open-bg;
 
 @tree-view-ellipsis-wrapper-height:             19px;
+@tree-view-ellipsis-wrapper-padding:            0;
 @tree-view-ellipsis-copyArrow-shadow:           -10px 2px 8px -5px;
 @tree-view-ellipsis-copyArrow-padding:          0 0 0 3px;
+@tree-view-ellipsis-copyArrow-width:            16px;
 
 @tree-view-item-content-margin:                 0 0 0 20px;
 
@@ -1369,7 +1380,6 @@
 @data-grid-header-cell-padding:                 0 10px;
 @data-grid-header-cell-padding-side:            10px;
 @data-grid-header-cell-font-size:               11px;
-@data-grid-header-cell-min-height:              28px;
 
 @data-grid-header-cell-border-width:            1px 1px 0 1px;
 @data-grid-header-cell-border-style:            solid;
@@ -1482,6 +1492,7 @@
 //      EditInPlace        //
 // ----------------------- //
 @controls-editInPlace-editor-margin-top:            3px;
+@controls-editInPlace-editor-margin-bottom:         3px;
 @controls-editInPlace-editor-padding:               0 1px;
 @controls-editInPlace-editor-bg:                    #f3f3f3 !important;
 
@@ -1550,22 +1561,31 @@
 @DropdownList-min-height:                     24px;
 @DropdownList-shadow-hover:                   0 0 0 1px @DropdownList-border-color;
 
-@DropdownList-picker-bg:                      @white-color;
-@DropdownList-picker-border:                  2px solid @DropdownList-border-color;
-@DropdownList-picker-head-border-radius:      5px 5px 0 0;
-@DropdownList-picker-list-border-radius:      0 0 5px 5px;
-@DropdownList-picker-list-right-border-radius:0 0 5px 5px;
-@DropdownList-picker-list-left-border-radius: 0 0 5px 5px;
-@DropdownList-picker-menu-font-size:          15px;
-@DropdownList-picker-menu-white-space:        nowrap;
-@DropdownList-picker-menu-item-padding:       4px 8px;
-@DropdownList-picker-menu-item-margin:        0;
-@DropdownList-picker-menu-item-color:         @white-color;
-@DropdownList-picker-menu-item-hover:         #F0F5FB;
-@DropdownList-picker-list-padding:            8px 0;
-@DropdownList-linkStyleColor:                 #0055bb;
-@DropdownList-linkStyleHoverColor:            #ff7033;
-//ProgressBar
+@DropdownList-picker-bg:                              @white-color;
+@DropdownList-picker-border:                          2px solid @DropdownList-border-color;
+@DropdownList-picker-head-border-radius:              5px 5px 0 0;
+@DropdownList-picker-list-border-radius:              0 0 5px 5px;
+@DropdownList-picker-list-right-border-radius:        0 0 5px 5px;
+@DropdownList-picker-list-left-border-radius:         0 0 5px 5px;
+@DropdownList-picker-menu-font-size:                  15px;
+@DropdownList-picker-menu-white-space:                nowrap;
+@DropdownList-picker-menu-item-padding:               4px 20px;
+@DropdownList-picker-menu-check-box-margin:           0 2px;
+@DropdownList-picker-menu-item-margin:                0;
+@DropdownList-picker-menu-item-multiselect-padding:   0;
+@DropdownList-picker-menu-item-color:                 @white-color;
+@DropdownList-picker-menu-item-hover:                 #F0F5FB;
+@DropdownList-picker-list-padding:                    4px 0;
+@DropdownList-linkStyleColor:                         #0055bb;
+@DropdownList-linkStyleHoverColor:                    #ff7033;
+@DropdownList-footer-buttonsBlock-position:           relative;
+@DropdownList-footer-buttonsBlock-height:             24px;
+@DropdownList-footer-buttonsBlock-padding-top:        4px;
+@DropdownList-footer-buttons-position:                absolute;
+@DropdownList-footer-hasMore-left:                    20px;
+@DropdownList-footer-select-right:                    20px;
+
+   //ProgressBar
 @controls-ProgressBar-height:                     17px;
 @controls-ProgressBar-empty-bg:                   #F3F3F3;
 @controls-ProgressBar-progress-bg:                #A2E68C;
@@ -1604,8 +1624,6 @@
 @controls-filterButton-area-text-margin:          0 12px 0 0;
 
 @controls-filterButton-area-content-padding:      12px;
-
-@controls-filterButton-clearButton-margin:        3px 0 0 0;
 
 //FilterButtonHistory
 @controls-filterButton-history-area-padding:      0 12px 12px 4px;
@@ -1674,7 +1692,7 @@
 
 @controls-filterLine-copyCross-top:               -22px;
 @controls-filterLine-copyCross-margin:            -30px;
-@controls-filterLine-copyCross-shadow:            -6px 2px 8px -2px @white-color;
+@controls-filterLine-copyCross-shadow:            -8px 0px 10px 2px @white-color;
 @controls-filterLine-copyCross-cross-top:         3px;
 
 //DragNDropObject
@@ -1690,13 +1708,15 @@
 @drag-and-drop-border:                             1px solid @drag-and-drop-border-color;
 
 //FieldLink
-@controls-FieldLink-picker-show-border:            1px solid;
-@controls-FieldLink-picker-show-border-color:      #eaeaea #eaeaea #e4e4e4;
+@controls-FieldLink-border-color:                  @text-area-border-color @text-area-border-color @gray-ccc-color @text-area-border-color;
+@controls-FieldLink-border-color-focus-hover:      @gray-ccc-color @gray-ccc-color @gray-ccc-color @gray-ccc-color;
+@controls-FieldLink-border:                        1px solid;
 @controls-FieldLink-picker-show-color:             @white-color;
 
 @controls-FieldLink-fieldWrapper-margin:           0 !important;
 @controls-FieldLink-showAllLinks-top:              2px;
 @controls-FieldLink-showAllLinks-padding:          0 4px;
+@controls-FieldLink-showAllLinks-lineHeight:       22px;
 @controls-FieldLink-linkContainer-padding:         4px 0;
 
 @controls-FieldLink-picker-max-height:             500px;
@@ -1720,3 +1740,10 @@
 @controls-SelectorButton-line-height:              24px;
 @controls-SelectorButton-align:                    middle;
 @controls-SelectorButton-margin:                   4px 0 0 0;
+
+// BackButton
+@back-button-font-size:                            18px;
+@back-button-margin-before:                        0;
+@icon-size:                                        16px;
+@icon-width:                                       16px;
+@icon-height:                                      16px;

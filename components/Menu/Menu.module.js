@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.Menu', [
    'js!SBIS3.CONTROLS.FloatArea',
    'js!SBIS3.CONTROLS.MenuItem'
 
-], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixinDS, FloatArea) {
+], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea) {
 
    'use strict';
 
@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.Menu', [
     * @mixes SBIS3.CONTROLS.TreeMixinDS
     */
 
-   var Menu = ButtonGroupBase.extend([hierarchyMixin, TreeMixinDS], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
+   var Menu = ButtonGroupBase.extend([hierarchyMixin, TreeMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
       /**
        * @event onMenuItemActivate При активации пункта меню
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -262,8 +262,17 @@ define('js!SBIS3.CONTROLS.Menu', [
             horizontalAlign : {
                side : 'left'
             },
+            handlers: {
+               'onShow': function(){
+                  this._notify('onNodeExpand', this._options.item.getId());
+               },
+               'onClose': function(){
+                  this._notify('onNodeCollapse', this._options.item.getId());
+               }
+            },
             closeByExternalOver: true,
-            targetPart : true
+            targetPart : true,
+            item: item
          };
          config = this._onMenuConfig(config, isFirstLevel, item);
          return config;

@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.Browser', [
     *
     * @class SBIS3.CONTROLS.Browser
     * @extends $ws.proto.CompoundControl
+    * @author Крайнов Дмитрий Олегович
     * @control
     * @public
     * @designTime plugin /design/DesignPlugin
@@ -21,7 +22,7 @@ define('js!SBIS3.CONTROLS.Browser', [
    var
       checkViewType = function(view) {
          if (view && $ws.helpers.instanceOfModule(view, 'SBIS3.CONTROLS.ListView')) {
-            return $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixinDS');
+            return $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
          }
          else {
             throw new Error('Browser: Can\'t define linkedView');
@@ -75,6 +76,10 @@ define('js!SBIS3.CONTROLS.Browser', [
              * @cfg {String} Id для работы с историей фильтров
              */
             historyId : '',
+            /**
+             * @cfg {Array} ignoreFiltersList Массив ключей фильтров, которые не надо запоминать в историю.
+             */
+            ignoreFiltersList: [],
             contentTpl : contentTpl
          }
       },
@@ -139,6 +144,7 @@ define('js!SBIS3.CONTROLS.Browser', [
                    this._fastDataFilter,
                    this._options.searchParam,
                    this._options.historyId,
+                   this._options.ignoreFiltersList,
                    HistoryController,
                    this);
             } else {

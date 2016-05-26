@@ -7,11 +7,16 @@ import platform
 def process_file(name):
    css_name = name[:-4] + "css"
    # https://docs.python.org/3/library/subprocess.html#subprocess.call
-   print(name)
+   builderDir = os.path.dirname(__file__)
    util = "lessc"
    if platform.system() == "Windows":
-      util = os.path.join("..", "duncansmart-less","lessc.cmd")
-   subprocess.call([util, name, css_name])
+      util = os.path.join(builderDir, "..", "duncansmart-less", "lessc.cmd")
+
+   includePath = ''
+   if builderDir:
+      # default --include-path=PATHS
+      includePath = '--include-path=' + builderDir
+   subprocess.call([util, name, css_name, includePath])
 
 def main():
    if len(sys.argv) < 2:

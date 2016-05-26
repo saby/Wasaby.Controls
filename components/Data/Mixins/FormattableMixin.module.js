@@ -192,7 +192,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
                try {
                   this._getRawDataAdapter().addField(fieldFormat);
                } catch (e) {
-
+                  Utils.logger.info(e.message);
                }
             }, this);
          }
@@ -244,6 +244,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * Устанавливает адаптер для работы с данными в "сыром" виде
        * @param {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter
        * @see adapter
+       * @see rawData
        * @see getAdapter
        */
       setAdapter: function (adapter) {
@@ -454,6 +455,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
             try {
                fields = this._getRawDataFields();
             } catch (e) {
+               Utils.logger.info(e.message);
             }
             if (fields) {
                var i;

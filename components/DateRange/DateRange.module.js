@@ -4,6 +4,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
    'html!SBIS3.CONTROLS.DateRange',
    'js!SBIS3.CONTROLS.Utils.DateUtil',
    'js!SBIS3.CONTROLS.FormWidgetMixin',
+   'i18n!SBIS3.CONTROLS.DateRange',
    'js!SBIS3.CONTROLS.DatePicker',
    'js!SBIS3.CONTROLS.Button',
    'js!SBIS3.CORE.DateRangeChoose'
@@ -13,6 +14,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
     * SBIS3.CONTROLS.DateRange
     * @class SBIS3.CONTROLS.DateRange
     * @extends $ws.proto.CompoundControl
+    * @author Крайнов Дмитрий Олегович
     * @control
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyDateRange
@@ -84,6 +86,18 @@ define('js!SBIS3.CONTROLS.DateRange', [
          this._options.endDate   = DateUtil.valueToDate(this._options.endDate);
          this._setStartDate(this._options.startDate);
          this._setEndDate(this._options.endDate);
+
+         this._addDefaultValidator();
+      },
+
+      _addDefaultValidator: function() {
+         //Добавляем к прикладным валидаторам стандартный, который проверяет что дата начала периода меньше даты конца.
+         this._options.validators.push({
+            validator: function() {
+               return !(this._options.startDate && this._options.endDate && this._options.endDate < this._options.startDate);
+            }.bind(this),
+            errorMessage: rk('Дата начала периода не может быть больше даты окончания')
+         });
       },
 
       _setDate: function(newDate, datePicker, currentDate, type, useSetDate) {

@@ -3,7 +3,8 @@ define('js!SBIS3.CONTROLS.Data.Types.IEnum', [], function () {
    'use strict';
 
    /**
-    * Интерфейс перечисляемого
+    * Интерфейс перечисляемого типа.
+    * Работает на основе словаря, хранящего соотвествие индексов и их значений.
     * @mixin SBIS3.CONTROLS.Data.Types.IEnum
     * @public
     * @author Ганшин Ярослав
@@ -11,35 +12,44 @@ define('js!SBIS3.CONTROLS.Data.Types.IEnum', [], function () {
 
    return /** @lends SBIS3.CONTROLS.Data.Types.IEnum.prototype */{
       /**
-       * Возвращает текущее значение
-       * @returns {Number}
+       * Возвращает выбранный индекс.
+       * @returns {Number|Null}
        */
       get: function() {
          throw new Error('Method must be implemented');
       },
 
       /**
-       * Устанаваливает текущее значение
-       * @param index {index} Идентификатор записи
+       * Устанавливает выбранный индекс. Если индекс недопустим, кидает исключение.
+       * @param {Number|Null} index Выбранный индекс
        */
       set: function(index) {
          throw new Error('Method must be implemented');
       },
+
       /**
-       * Устанаваливает элемент текущим по значению
-       * @param Value {String}
+       * Возвращает значение, соответствующее выбранному индексу.
+       * @returns {String}
        */
-      setByValue: function(Value) {
+      getAsValue: function() {
          throw new Error('Method must be implemented');
       },
+
       /**
-       * Сравнивает с перечисляемым
-       * @param obj {IEnum} объект реализующий интерфейс IEnum
+       * Устанавливает выбранный индекс по соответствующему ему значению. Если значение недопустимо, кидает исключение.
+       * @param {String} value Выбранное значение
+       */
+      setByValue: function(value) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Сопоставляет два Enum по совпадению выбранного индекса. Также проверяется совпадение словарей.
+       * @param {IEnum} to Объект, реализующий интерфейс IEnum
        * @returns {Boolean}
        */
-      equals: function(obj){
+      isEqual: function(to) {
          throw new Error('Method must be implemented');
       }
-
    };
 });

@@ -282,7 +282,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       //region SBIS3.CONTROLS.Data.Source.Base
 
       _prepareCallResult: function(data) {
-         return SbisService.superclass._prepareCallResult.call(this, data, 'n');
+         return SbisService.superclass._prepareCallResult.call(this, data, undefined, 'n');
       },
 
       //endregion SBIS3.CONTROLS.Data.Source.Base
@@ -371,10 +371,26 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Возвращает тип значения
        * @param {*} val Значение
+       * @param {String} name Название
+       * @param {Object} original Оригинальный объект
        * @returns {String|Object}
        * @protected
        */
-      _getValueType: function (val) {
+      _getValueType: function (val, name, original) {
+         if (this._isHierarhyField(name, original)) {
+            if (name.slice(-1) in {'@': false, '$': false}) {
+               return {
+                  type: 'hierarchy',
+                  kind: 'boolean'
+               };
+            } else {
+               return {
+                  type: 'hierarchy',
+                  kind: 'identity'
+               };
+            }
+         }
+
          switch (typeof val) {
             case 'boolean':
                return 'boolean';
@@ -399,10 +415,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                      type: 'array',
                      kind: this._getValueType(val[0])
                   };
-               } else {
-                  return 'string';
                }
-               break;
+               return 'object';
             default:
                return 'string';
          }
@@ -425,18 +439,26 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          var record = this._getModelInstance(null),
             name,
             value,
-            field;
+            field,
+            hierarhyFields = {},
+            sortNames = [];
 
          for (name in data) {
             if (data.hasOwnProperty(name)) {
-               value = data[name];
-               field = this._getValueType(value);
-               if (!(field instanceof Object)) {
-                  field = {type: field};
-               }
-               field.name = name;
-               record.addField(field, undefined, value);
+               sortNames.push(name);
             }
+         }
+         sortNames = sortNames.sort();
+
+         for (var i = 0, len = sortNames.length; i < len; i++) {
+            name = sortNames[i];
+            value = data[name];
+            field = this._getValueType(value, name, data);
+            if (!(field instanceof Object)) {
+               field = {type: field};
+            }
+            field.name = name;
+            record.addField(field, undefined, value);
          }
 
          return record;
@@ -517,7 +539,11 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             delete meta[moreProp];
             query.meta(meta);
          }
-         if (offset === 0 && limit === undefined) {
+
+         if (
+            offset === 0 &&
+            (limit === undefined || limit === null)
+         ) {
             return null;
          }
          return {
@@ -586,7 +612,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          query.where(filter)
             .offset(hasMore === undefined ? offset : hasMore)
             .limit(limit)
-            .orderBy(sorting);
+            .orderBy(sorting)
+            .meta(hasMore === undefined ? {} : {hasMore: hasMore});
 
          args = {
             'Фильтр': this._buildRecord(query ? query.getWhere() : null),
@@ -596,8 +623,19 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          };
 
          return this.getAdapter().serialize(args);
-      }
+      },
 
+      _isHierarhyField: function(name, original){
+         if(name && original) {
+            if (name.slice(-1) in {'@': false, '$': false}) {
+               name = name.slice(0, -1);
+            }
+            if (original.hasOwnProperty(name) && original.hasOwnProperty(name + '@') && original.hasOwnProperty(name + '$')) {
+               return true;
+            }
+         }
+         return false;
+      }
       //endregion Deprecated
    });
 

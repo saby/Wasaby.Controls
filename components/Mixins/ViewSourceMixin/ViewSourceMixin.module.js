@@ -46,11 +46,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
          }
 
          /* Подготавливаем фильтр */
-         queryFilter = $ws.core.merge(
-            filter || {},
-            historyFilter,
-            {preferSource: true}  /* Так как в метод отдают фильтр, который является основным, нельзя в нём перетирать значения фильтром из истории */
-         );
+         queryFilter = $ws.core.merge(filter || {}, historyFilter);
 
          /* Подготавливаем query */
          query.where(queryFilter)
@@ -65,9 +61,15 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
             var browser = browserName ? this.getChildControlByName(browserName) : this,
                 view = browser.getView();
 
+            /* Т.к. запрос вызывается отдельно, то и индикатор надо показать самим,
+               иногда БЛ может подтупливать и в этом случае может долго висеть пустой реестр, который вводит пользователя в заблуждение  */
+            view._toggleIndicator(true);
+
             queryDef.addCallback(function(dataSet) {
                var keyField = view.getProperty('keyField'),
                    recordSet;
+
+               view._toggleIndicator(false);
 
                if (keyField && keyField !== dataSet.getIdProperty()) {
                   dataSet.setIdProperty(keyField);

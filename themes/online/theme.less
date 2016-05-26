@@ -2,6 +2,29 @@
   font-family: @font-basic-name;
   font-size: @font-basic-size;
 }
+.controls-Button.controls-Button__withoutCaption {
+   width: 50px;
+   .controls-Button__icon{
+      left: 16px;
+   }
+   .controls-Button__icon{
+      &.icon-24 {
+         left: 11px;
+      }
+
+   }
+}
+.controls-Button.controls-Checked__checked.controls-Button__withoutCaption {
+   .controls-Button__icon{
+      left: 15px;
+   }
+   .controls-Button__icon{
+      &.icon-24 {
+         left: 10px;
+      }
+
+   }
+}
 
 .controls-PopupMixin__closeButton {
    position: absolute;
@@ -72,12 +95,6 @@
 .controls-TreePager:hover {
    text-decoration: underline;
    color: @link-hover-text-color;
-}
-
-.controls-ListView__multiselect:not(.controls-ListView__hideCheckBoxes) {
-   .controls-TreeDataGridView__folderFooterContainer {
-      padding-left: @data-grid-td-checkbox-width-without-marker;
-   }
 }
 
 .controls-Popup-border{

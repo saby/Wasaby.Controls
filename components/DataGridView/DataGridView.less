@@ -167,7 +167,6 @@
             }
          }
          .controls-DataGridView__th-content{
-            max-height: @data-grid-header-cell-min-height;
             overflow: hidden;
             text-overflow: ellipsis;
          }
@@ -212,6 +211,13 @@
          margin: @data-grid-checkbox-margin;
         //В FireFox все чекбоксы улетают в верхний левый угол из за position: absolute
          position: static;
+      }
+   }
+
+   &.ws-disabled {
+      .controls-DataGridView__td,
+      .controls-DataGridView__td__checkBox {
+         cursor: @list-view-disabled-cursor;
       }
    }
 }

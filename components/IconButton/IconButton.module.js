@@ -43,7 +43,9 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     *
-    * @cssModifier controls-IconButton__round-border круглый бордер вокруг иконки
+    * @cssModifier controls-IconButton__round-border Устанавливает круглую границу вокруг иконки. Цвет границы соответствует цвету иконки, установленной в опции {@link icon}.
+    * @cssModifier controls-IconButton__round-border-24 Устанавливает круглую границу (диаметр в 24 px) вокруг иконки быстрой операции, доступной по наведению курсора. Подробнее о таких типах операций вы можете прочитать <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">здесь</a>.
+    * Модификатор применяется совместно с иконками размерами 16 px. Цвет границы соответствует цвету иконки, установленной в опции {@link icon}.
     */
 
    var IconButton = ButtonBase.extend([IconMixin], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
@@ -53,11 +55,12 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
          }
       },
 
-      $constructor: function() {
+      $constructor: function () {
          /*TODO оставляем добавку класса через jquery
-         * чтобы избавиться - надо убрать зависимость от icons.css
-         * в котором прописаны поведение и цвета для иконок по ховеру*/
-         if (this._container.hasClass('controls-IconButton__round-border')) {
+          * чтобы избавиться - надо убрать зависимость от icons.css
+          * в котором прописаны поведение и цвета для иконок по ховеру*/
+         var className = this._container.get(0).className;
+         if (className && className.indexOf('controls-IconButton__round-border') >= 0) {
             this._container.removeClass('action-hover');
          }
       },

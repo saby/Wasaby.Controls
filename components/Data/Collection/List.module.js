@@ -1,30 +1,46 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.List', [
-   'js!SBIS3.CONTROLS.Data.SerializableMixin',
+   'js!SBIS3.CONTROLS.Data.ICloneable',
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
    'js!SBIS3.CONTROLS.Data.Collection.IList',
    'js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection',
+   'js!SBIS3.CONTROLS.Data.Bind.ICollection',
+   'js!SBIS3.CONTROLS.Data.CloneableMixin',
+   'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
-   'js!SBIS3.CONTROLS.Data.Serializer',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.ContextField.List'
-], function (SerializableMixin, IEnumerable, IList, IIndexedCollection, ArrayEnumerator, Serializer, Di, Utils, ContextFieldList) {
+], function (
+   ICloneable,
+   IEnumerable,
+   IList,
+   IIndexedCollection,
+   IBindCollection,
+   CloneableMixin,
+   SerializableMixin,
+   ArrayEnumerator,
+   Di,
+   Utils,
+   ContextFieldList
+) {
    'use strict';
 
    /**
     * Список - коллекция c доступом по порядковому индексу
     * @class SBIS3.CONTROLS.Data.Collection.List
     * @extends $ws.proto.Abstract
-    * @mixes SBIS3.CONTROLS.Data.SerializableMixin
+    * @mixes SBIS3.CONTROLS.Data.ICloneable
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @mixes SBIS3.CONTROLS.Data.Collection.IList
     * @mixes SBIS3.CONTROLS.Data.Collection.IIndexedCollection
+    * @mixes SBIS3.CONTROLS.Data.CloneableMixin
+    * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var List = $ws.proto.Abstract.extend([SerializableMixin, IEnumerable, IList, IIndexedCollection], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
+   var List = $ws.proto.Abstract.extend([ICloneable, IEnumerable, IList, IIndexedCollection, CloneableMixin, SerializableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.List',
       $protected: {
          _options: {
@@ -115,18 +131,15 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       assign: function (items) {
          this._items.length = 0;
-         this._splice(items || [], 0, 0);
-         this._reindex();
+         this._splice(items || [], 0, 0, IBindCollection.ACTION_REPLACE);
       },
 
       append: function (items) {
-         this._splice(items, this.getCount(), 0);
-         this._reindex();
+         this._splice(items, this.getCount(), 0, IBindCollection.ACTION_ADD);
       },
 
       prepend: function (items) {
-         this._splice(items, 0, 0);
-         this._reindex();
+         this._splice(items, 0, 0, IBindCollection.ACTION_ADD);
       },
 
       clear: function () {
@@ -136,6 +149,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       add: function (item, at) {
          if (at === undefined) {
+            at = this._items.length;
             this._items.push(item);
          } else {
             at = at || 0;
@@ -145,7 +159,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             this._items.splice(at, 0, item);
          }
 
-         this._reindex();
+         this._reindex(IBindCollection.ACTION_ADD, at, 1);
       },
 
       at: function (index) {
@@ -167,7 +181,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          }
          this._items.splice(index, 1);
 
-         this._reindex();
+         this._reindex(IBindCollection.ACTION_REMOVE, index, 1);
       },
 
       replace: function (item, at) {
@@ -176,7 +190,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          }
          this._items[at] = item;
 
-         this._reindex();
+         this._reindex(IBindCollection.ACTION_REPLACE, at, 1);
       },
 
       getIndex: function (item) {
@@ -246,18 +260,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       //endregion deprecated
 
       //region Public methods
-
-      /**
-       * Клонирует список
-       * @returns {SBIS3.CONTROLS.Data.Collection.List}
-       */
-      clone: function () {
-         var serializer = new Serializer();
-         return JSON.parse(
-            JSON.stringify(this, serializer.serialize),
-            serializer.deserialize
-         );
-      },
 
       equals: function (another) {
          Utils.logger.stack(this._moduleName + '::equals(): method is deprecated and will be removed in 3.7.4. Use isEqual() instead.');
@@ -340,23 +342,34 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       },
 
-      _reindex: function () {
+      /**
+       * Переиндексирует список
+       * @param {SBIS3.CONTROLS.Data.Bind.ICollection/ChangeAction.typedef[]} action Действие, приведшее к изменению.
+       * @param {Number} [start=0] С какой позиции переиндексировать
+       * @param {Number} [count=0] Число переиндексируемых элементов
+       * @protected
+       */
+      _reindex: function (action, start, count) {
          this._hashIndex = undefined;
-         this._getServiceEnumerator().reIndex();
+         this._getServiceEnumerator().reIndex(action, start, count);
       },
 
       /**
        * Вызывает метод splice
        * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable|Array} items Коллекция с элементами для замены
        * @param {Number} start Индекс в массиве, с которого начинать добавление.
+       * @param {SBIS3.CONTROLS.Data.Bind.ICollection/ChangeAction.typedef[]} action Действие, приведшее к изменению.
        * @private
        */
-      _splice: function (items, start){
-         Array.prototype.splice.apply(this._items,([start, 0].concat(
-            this._itemsToArray(items)
-         )));
-         this._getServiceEnumerator().reIndex();
+      _splice: function (items, start, action) {
+         items = this._itemsToArray(items);
+         Array.prototype.splice.apply(
+            this._items,
+            [start, 0].concat(items)
+         );
+         this._reindex(action, start, items.length);
       },
+
       /**
        * Приводит переденные элементы к массиву
        * @param items
@@ -379,6 +392,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       //endregion Protected methods
 
    });
+
+   SerializableMixin._checkExtender(List);
 
    Di.register('collection.list', List);
 

@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
     *
     * </component>
     */
-   var OperationsPanelButton = Control.Control.extend([Clickable, Checkable], {
+   var OperationsPanelButton = Control.Control.extend([Clickable, Checkable], /** @lends SBIS3.CONTROLS.OperationsPanelButton.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
@@ -45,8 +45,7 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
       },
       _initHandlers: function() {
          this._internalHandlers = {
-            onTogglePanel: this._onTogglePanel.bind(this),
-            onChangeEnabled: this._onChangeEnabled.bind(this)
+            onTogglePanel: this._onTogglePanel.bind(this)
          }
       },
       _clickHandler: function() {
@@ -65,24 +64,18 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
       setLinkedPanel: function(linkedPanel) {
          if (linkedPanel && ($ws.helpers.instanceOfModule(linkedPanel, 'SBIS3.CORE.OperationsPanel') || $ws.helpers.instanceOfModule(linkedPanel, 'SBIS3.CONTROLS.OperationsPanel'))) {
             this._reassignPanel(linkedPanel);
-            this._onChangeEnabled();
             this.setChecked(linkedPanel.isVisible());
          }
       },
       _reassignPanel: function(linkedPanel) {
          if (this._options.linkedPanel) {
             this._options.linkedPanel.unsubscribe('onToggle', this._internalHandlers.onTogglePanel);
-            this._options.linkedPanel.unsubscribe('onChangeEnabled', this._internalHandlers.onChangeEnabled);
          }
          this._options.linkedPanel = linkedPanel;
          this._options.linkedPanel.subscribe('onToggle', this._internalHandlers.onTogglePanel);
-         this._options.linkedPanel.subscribe('onChangeEnabled', this._internalHandlers.onChangeEnabled);
       },
       _onTogglePanel: function() {
          this.setChecked(this._options.linkedPanel.isVisible());
-      },
-      _onChangeEnabled: function() {
-         this.setEnabled(this._options.linkedPanel.isEnabled());
       }
    });
 

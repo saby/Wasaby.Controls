@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
     'js!SBIS3.CONTROLS.TreeDataGridView',
     'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellRadioButtonTpl',
     'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl',
+    'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellTitleTpl',
     'i18n!!SBIS3.CONTROLS.MergeDialogTemplate'
 ], function(Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter, RecordSet) {
 
@@ -79,6 +80,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             dataSource = new SbisServiceSource(this._options.dataSource._options);
             dataSource.getBinding().query = this._options.queryMethodName ? this._options.queryMethodName : this._options.dataSource.getBinding().query;
             this._treeView.setDataSource(dataSource, true);
+            this._treeView._projectionFilter = retTrue; //todo ИСПРАВИТЬ. Возможно, нужно поправить тест и передавать поле, которое будет использоваться в поиске при группировке
             this._treeView.reload({
                 'Разворот': 'С разворотом',
                 'usePages': 'full',
@@ -113,13 +115,13 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 self._hideIndicator();
             });
         },
-        _showErrorDialog: function(mergeKeys, errors) {
+        _showErrorDialog: function(mergeKeys, error) {
             var
                 errorsTexts = [],
                 count = mergeKeys.length;
-            if (errors.addinfo) {
+            if (error.addinfo) {
                 new RecordSet({
-                    rawData: errors.addinfo,
+                    rawData: error.addinfo,
                     adapter: 'adapter.sbis'
                 }).each(function(item) {
                     errorsTexts.push(item.get('error'));

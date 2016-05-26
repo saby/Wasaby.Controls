@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
     * Пример использования - иерархические реестры
     * @class SBIS3.CONTROLS.BreadCrumbs
     * @extends $ws.proto.CompoundControl
+    * @author Крайнов Дмитрий Олегович
     * @control
     * @public
     * @initial
@@ -35,6 +36,45 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          _options: {
             keyField: 'id',
             displayField: 'title',
+            /**
+             * @cfg {String} Устанавливает шаблон отображения каждого элемента коллекции.
+             * @remark
+             * Шаблон - это пользовательская вёрстка элемента коллекции.
+             * Для доступа к полям элемента коллекции в шаблоне подразумевается использование конструкций шаблонизатора.
+             * Подробнее о шаблонизаторе вы можете прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/ Шаблонизация вёрстки компонента}.
+             *
+             * Шаблон может быть создан в отдельном XHTML-файле, когда вёрстка большая или требуется использовать его в разных компонентах.
+             * Шаблон создают в директории компонента в подпапке resources согласно правилам, описанным в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/file-structure/ Файловая структура компонента}.
+             * Чтобы такой шаблон можно было использовать, нужно:
+             * 1. Подключить шаблон в массив зависимостей компонента и импортировать его в переменную:
+             *       <pre>
+             *          define('js!SBIS3.MyArea.MyComponent',
+             *             [
+             *                ...
+             *                'html!SBIS3.MyArea.MyComponent/resources/item_template'
+             *             ],
+             *             function(..., myItemTpl) {
+                *             ...
+                *          });
+             *       </pre>
+             * 2. Установить шаблон:
+             *       <pre>
+             *          <option name="itemTemplate">html!SBIS3.MyArea.MyComponent/resources/item_template</option>
+             *       </pre>
+             * Пример содержимого шаблона элемента коллекции вы можете найти в разделе "Примеры".
+             *
+             * @example
+             * Далее приведён шаблон, который отображает значение поля title:
+             * <pre>
+             *     <div class="listViewItem" style="height: 30px;">
+             *        {{=it.item.get("title")}}
+             *     </div>
+             * </pre>
+             * @editor CloudFileChooser
+             * @editorConfig extFilter xhtml
+             *
+             *
+             */
             itemTemplate: pointTpl,
             pickerClassName: 'controls-Menu__Popup controls-BreadCrumbs'
          }
@@ -57,17 +97,24 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       _onClickHandler: function(e) {
          BreadCrumbs.superclass._onClickHandler.apply(this, arguments);
          var target = $(e.target),
-            point = target.closest('.js-controls-BreadCrumbs__crumb');
-         if (point.hasClass('controls-BreadCrumbs__dots')) {
-            if (this._picker) {
-               this._picker.setTarget(point);
-            }
-            this.togglePicker();
-            if (this._picker.isVisible()) {
-               this._redrawDropdown();
-            }
-         } else if (point.length) {
-            this._notify('onItemClick', point.data(this._options.keyField));
+            crumb = target.closest('.js-controls-BreadCrumbs__crumb');
+         if (crumb.hasClass('controls-BreadCrumbs__dots')) {
+            this._dotsClickHandler(crumb)
+         } else if (crumb.length) {
+            this._notify('onItemClick', crumb.data(this._options.keyField));
+         }
+      },
+      /**
+       * Обработчик клика на многоточие
+       * вынесен отдельно для того, что бы можно было переопределить
+       */
+      _dotsClickHandler: function(crumb){
+         if (this._picker) {
+            this._picker.setTarget(crumb);
+         }
+         this.togglePicker();
+         if (this._picker.isVisible()) {
+            this._redrawDropdown();
          }
       },
 

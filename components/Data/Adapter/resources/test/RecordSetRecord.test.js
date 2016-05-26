@@ -83,6 +83,21 @@ define([
          });
       });
 
+      describe('.clear()', function () {
+         it('should return an empty record', function () {
+            adapter.clear();
+            var hasFields = false;
+            adapter.getData().each(function() {
+               hasFields = true;
+            });
+            assert.isFalse(hasFields);
+         });
+         it('should return a same instance', function () {
+            adapter.clear();
+            assert.strictEqual(data, adapter.getData());
+         });
+      });
+
       describe('.getEmpty()', function () {
          it('should return an empty Record', function () {
             assert.instanceOf(adapter.getEmpty(), Record);

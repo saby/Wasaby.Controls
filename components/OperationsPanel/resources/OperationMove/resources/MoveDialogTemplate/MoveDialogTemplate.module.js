@@ -59,22 +59,25 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
       _createRoot: function() {
          var
              self = this,
-             rootBlock = $('<tr class="controls-DataGridView__tr controls-ListView__item controls-ListView__folder" style="" data-id="null"><td class="controls-DataGridView__td controls-MoveDialog__root"><div class="controls-TreeView__expand js-controls-TreeView__expand has-child controls-TreeView__expand__open"></div>Корень</td></tr>');
-         rootBlock.bind('click', function(event) {
-            self._container.find('.controls-ListView__item').toggleClass('ws-hidden');
-            rootBlock.toggleClass('ws-hidden').find('.controls-TreeView__expand').toggleClass('controls-TreeView__expand__open');
+             rootBlock = this._container.find('tbody .controls-MoveDialog__root');
+         if (!rootBlock.length) {
+            rootBlock = $('<tr class="controls-DataGridView__tr controls-ListView__item controls-ListView__folder" style="" data-id="null"><td class="controls-DataGridView__td controls-MoveDialog__root"><div class="controls-TreeView__expand js-controls-TreeView__expand has-child controls-TreeView__expand__open"></div>' + rk("Корень") + '</td></tr>');
+            rootBlock.bind('click', function(event) {
+               self._container.find('.controls-ListView__item').toggleClass('ws-hidden');
+               rootBlock.toggleClass('ws-hidden').find('.controls-TreeView__expand').toggleClass('controls-TreeView__expand__open');
+               self.setSelectedKey('null');
+               rootBlock.addClass('controls-ListView__item__selected');
+               event.stopPropagation();
+            });
+            rootBlock.prependTo(self._container.find('tbody'));
             self.setSelectedKey('null');
-            rootBlock.addClass('controls-ListView__item__selected');
-            event.stopPropagation();
-         });
-         rootBlock.prependTo(self._container.find('tbody'));
-         self.setSelectedKey('null');
-         //TODO: Установим марке отметки на фейковый корень по таймауту т.к. сначала стреляет событие onDrawItems по которому
-         //вызывается данный метод, а потом отрабатывает метод _drawItemsCallback который в Selectable.module.js
-         //убирает маркер т.к. не находит запись с id='null' в наборе данных.
-         setTimeout(function() {
-            rootBlock.addClass('controls-ListView__item__selected');
-         }, 0);
+            //TODO: Установим марке отметки на фейковый корень по таймауту т.к. сначала стреляет событие onDrawItems по которому
+            //вызывается данный метод, а потом отрабатывает метод _drawItemsCallback который в Selectable.module.js
+            //убирает маркер т.к. не находит запись с id='null' в наборе данных.
+            setTimeout(function() {
+               rootBlock.addClass('controls-ListView__item__selected');
+            }, 0);
+         }
       }
    });
 

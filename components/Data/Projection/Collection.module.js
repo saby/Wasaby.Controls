@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          /**
           * @member {Boolean} Генерация событий включена
           */
-         _eventsEnabled: true,
+         _eventRaising: true,
 
          /**
           * @member {Function} Обработчик события об изменении исходной коллекции
@@ -236,9 +236,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       },
 
       getCount: function () {
-         return $ws.helpers.reduce(this._filterMap, function(prev, current) {
-            return prev + (current ? 1 : 0);
-         }, 0);
+         return $ws.helpers.reduce(this._sortMap, function(prev, current) {
+            return prev + (this._filterMap[current] ? 1 : 0);
+         }, 0, this);
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IList
@@ -251,6 +251,14 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        */
       getCollection: function () {
          return this._options.collection;
+      },
+
+      /**
+       * Возвращает элементы проекции
+       * @returns {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>}
+       */
+      getItems: function () {
+         return this._items.slice();
       },
 
       /**
@@ -567,6 +575,22 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          return index == -1 ? undefined : this.at(index);
       },
 
+      /**
+       * Включает/выключает генерацию событий об изменении проекции
+       * @param {Boolean} enabled Генерация событий влючена/выключена
+       */
+      setEventRaising: function(enabled) {
+         this._eventRaising = !!enabled;
+      },
+
+      /**
+       * Возвращает признак, включена ли генерация событий об изменении проекции
+       * @returns {Boolean}
+       */
+      isEventRaising: function() {
+         return this._eventRaising;
+      },
+
       //endregion SBIS3.CONTROLS.Data.Projection.ICollection
 
       //region Public methods
@@ -577,7 +601,13 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @param {String} property Изменившееся свойство
        */
       notifyItemChange: function (item, property) {
-         if (!this._eventsEnabled) {
+         var session;
+         if (this._filter) {
+            session = this._startUpdateSession();
+            this._reFilter();
+            this._finishUpdateSession(session);
+         }
+         if (!this._eventRaising) {
             return;
          }
          this._notify(
@@ -660,7 +690,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       _reBuild: function () {
          this._items.length = 0;
          this._filterMap.length = 0;
-         this._isSortedCache = undefined;
+         this._reIndex();
 
          var enumerator = this._options.collection.getEnumerator(),
             index = 0,
@@ -690,7 +720,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
              oldMatch;
          for (var index = start; index < finish; index++) {
             item = this._items[index];
-            match = !this._filter || this._filter(item.getContents(), index);
+            match = !this._filter || this._filter(item.getContents(), index, item);
             oldMatch = this._filterMap[index];
 
             if (match !== oldMatch) {
@@ -716,10 +746,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          count = count || this._items.length - start;
 
          var session = this._startUpdateSession();
+         this._reSort();
          this._reFilter(start, count);
-         if (this._isSorted()) {
-            this._reSort();
-         }
          this._finishUpdateSession(session);
       },
 
@@ -731,7 +759,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          this._sortMap.length = 0;
          Array.prototype.push.apply(this._sortMap, this._buildSortMap());
 
-         this._isSortedCache = undefined;
          this._reIndex();
       },
 
@@ -794,19 +821,23 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
 
          var groups = ['added', 'removed', 'replaced', 'moved'],
             changes,
-            startFrom;
+            maxRepeats = 65535,
+            startFrom,
+            offset;
 
          //Информируем об изменениях по группам
          for (var groupIndex = 0; groupIndex < groups.length; groupIndex++) {
             //Собираем изменения в пачки (следующие подряд наборы)
             startFrom = 0;
+            offset = 0;
             while(startFrom !== -1) {
                changes = this._getGroupChanges(
                   groups[groupIndex],
                   session.before,
                   session.after,
                   session.beforeContents,
-                  startFrom
+                  startFrom,
+                  offset
                );
                this._applyGroupChanges(
                   groups[groupIndex],
@@ -815,7 +846,14 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   session.after,
                   session.beforeContents
                );
+               if (changes.endAt !== -1 && changes.endAt <= startFrom) {
+                  maxRepeats--;
+                  if (maxRepeats === 0) {
+                     throw new Error('Endless cycle detected.');
+                  }
+               }
                startFrom = changes.endAt;
+               offset = changes.offset;
             }
          }
       },
@@ -826,11 +864,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} before Элементы до изменений
        * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} after Элементы после изменений
        * @param {Array.<*>} beforeContents Содержимое элементов до изменений
-       * @param {Naumber} [startFrom=0] Начать с элемента номер
+       * @param {Number} [startFrom=0] Начать с элемента номер
+       * @param {Number} [offset=0] Смещение элеметов в after относительно before
        * @return {Object}
        * @protected
        */
-      _getGroupChanges: function (groupName, before, after, beforeContents, startFrom) {
+      _getGroupChanges: function (groupName, before, after, beforeContents, startFrom, offset) {
          var newItems = [],
             newItemsIndex = 0,
             oldItems = [],
@@ -844,6 +883,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             count = Math.max(before.length, after.length);
          
          startFrom = startFrom || 0;
+         offset = offset || 0;
          for (index = startFrom; index < count; index++) {
             beforeItem = before[index];
             afterItem = after[index];
@@ -855,15 +895,17 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   }
                   afterIndex = index;
                   beforeIndex = Array.indexOf(before, afterItem);
+                  //если элемента не было - добавим его в список новых,
+                  //если был - отдаем накопленный список новых, если там что-то есть
                   if (beforeIndex === -1) {
-                     if (newItems.length && afterIndex > newItemsIndex + newItems.length) {
-                        exit = true;
-                     } else {
-                        newItems.push(afterItem);
-                        newItemsIndex = newItems.length === 1 ? afterIndex : newItemsIndex;
-                     }
+                     //элемент добавлен
+                     newItems.push(afterItem);
+                     newItemsIndex = newItems.length === 1 ? afterIndex : newItemsIndex;
+                  } else if (newItems.length) {
+                     exit = true;
                   }
                   break;
+               
                case 'removed':
                   //собираем удаленные элементы
                   if (!beforeItem) {
@@ -871,15 +913,16 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   }
                   beforeIndex = index;
                   afterIndex = Array.indexOf(after, beforeItem);
+                  //если элемента не стало - добавим его в список старых,
+                  //если остался - отдаем накопленный список старых, если там что-то есть
                   if (afterIndex === -1) {
-                     if (oldItems.length && beforeIndex > oldItemsIndex + oldItems.length) {
-                        exit = true;
-                     } else {
-                        oldItems.push(beforeItem);
-                        oldItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
-                     }
+                     oldItems.push(beforeItem);
+                     oldItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
+                  } else if (oldItems.length) {
+                     exit = true;
                   }
                   break;
+               
                case 'replaced':
                   //собираем замененные элементы
                   if (!afterItem) {
@@ -887,24 +930,46 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   }
                   afterIndex = index;
                   beforeIndex = Array.indexOf(before, afterItem);
-                  if (beforeIndex === afterIndex && beforeContents[index] !== afterItem.getContents()) {
-                     if (newItems.length && afterIndex > newItemsIndex + newItems.length) {
-                        exit = true;
-                     } else {
-                        oldItems.push(this._convertToItem(beforeContents[index], index));
-                        newItems.push(afterItem);
-                        oldItemsIndex = newItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
-                     }
+                  //если элемент на месте, но изменилось его содержимое - добавим новый в список новых, а для старого генерим новую обертку, которую добавим в список старых
+                  //если остался - отдаем накопленные списки старых и новых, если в них что-то есть
+                  if (
+                     beforeIndex === afterIndex &&
+                     beforeContents[index] !== afterItem.getContents()
+                  ) {
+                     oldItems.push(this._convertToItem(beforeContents[index], index));
+                     newItems.push(afterItem);
+                     oldItemsIndex = newItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
+                  } else if (oldItems.length) {
+                     exit = true;
                   }
                   break;
+               
                case 'moved':
                   //собираем перемещенные элементы
                   if (!beforeItem) {
                      continue;
                   }
+                  //поверяем, что afterItem есть в before
+                  do {
+                     afterItem = after[index + offset];
+                     beforeIndex = Array.indexOf(before, afterItem);
+                     if (beforeIndex === -1) {
+                        //afterItem нет в before - пропускаем его
+                        offset++;
+                     } else {
+                        break;
+                     }
+                  } while(afterItem);
+                  
                   beforeIndex = index;
                   afterIndex = Array.indexOf(after, beforeItem);
-                  if (afterIndex !== -1 && beforeIndex !== afterIndex) {
+                  //если элемент присутствует, но изменилась его позиция - добавляем его в список старых и новых
+                  //в противом случае - отдаем накопленные списки старых и новых, если в них что-то есть
+                  if (
+                     beforeIndex !== -1 &&
+                     afterIndex !== -1 &&
+                     beforeIndex !== afterIndex - offset
+                  ) {
                      if (
                         oldItems.length && beforeIndex !== oldItemsIndex + oldItems.length ||
                         newItems.length && afterIndex !== newItemsIndex + newItems.length
@@ -929,7 +994,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             newItemsIndex: newItemsIndex,
             oldItems: oldItems,
             oldItemsIndex: oldItemsIndex,
-            endAt: exit ? index : -1
+            endAt: exit ? index : -1,
+            offset: offset
          };
       },
 
@@ -976,9 +1042,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   Array.prototype.splice.apply(beforeContents, [changes.newItemsIndex, 0].concat($ws.helpers.map(changes.newItems, function(item) {
                      return item.getContents();
                   })));
-                  if (changes.endAt !== -1) {
-                     changes.endAt += changes.newItems.length;
-                  }
                   break;
                case 'removed':
                   before.splice(changes.oldItemsIndex, changes.oldItems.length);
@@ -1036,12 +1099,16 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        */
       _isSorted: function () {
          if (this._isSortedCache === undefined) {
-            this._isSortedCache = false;
-            for (var i = 0; i < this._sortMap.length; i++) {
-               if (i !== this._sortMap[i]) {
-                  this._isSortedCache = true;
-                  break;
+            if (this._sortMap.length === this._items.length) {
+               this._isSortedCache = false;
+               for (var i = 0; i < this._sortMap.length; i++) {
+                  if (i !== this._sortMap[i]) {
+                     this._isSortedCache = true;
+                     break;
+                  }
                }
+            } else {
+               this._isSortedCache = true;
             }
          }
          return this._isSortedCache;
@@ -1118,7 +1185,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             }
          }
 
-         this._isSortedCache = undefined;
+         this._reIndex();
       },
 
       /**
@@ -1188,7 +1255,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @protected
        */
       _notifyCollectionChange: function (action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-         if (!this._eventsEnabled) {
+         if (!this._eventRaising) {
             return;
          }
          if (newItems.length || oldItems.length) {
@@ -1212,7 +1279,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @protected
        */
       _notifyCurrentChange: function (newCurrent, oldCurrent, newPosition, oldPosition) {
-         if (!this._eventsEnabled) {
+         if (!this._eventRaising) {
             return;
          }
          this._notify(
@@ -1231,6 +1298,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       _reIndex: function () {
          this._getServiceEnumerator().reIndex();
          this._getNavigationEnumerator().reIndex();
+         this._isSortedCache = undefined;
       },
 
       /**
@@ -1405,7 +1473,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @private
        */
       onSourceCollectionItemChange: function (event, item, index, property) {
-         if (!this._eventsEnabled) {
+         if (!this._eventRaising) {
             return;
          }
          this._notify(

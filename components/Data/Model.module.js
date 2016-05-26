@@ -1,16 +1,43 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Model', [
    'js!SBIS3.CONTROLS.Data.Record',
+   'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.IHashable',
    'js!SBIS3.CONTROLS.Data.HashableMixin',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator'
-], function (Record, IHashable, HashableMixin, Di, Utils, ArrayEnumerator) {
+], function (Record, SerializableMixin, IHashable, HashableMixin, Di, Utils, ArrayEnumerator) {
    'use strict';
 
    /**
-    * Модель - обеспечивает доступ к данным объекта предметной области
+    * Абстрактная модель - обеспечивает доступ к данным объекта предметной области.
+    * @remark
+    * Для реализации конкретных объектов предметной области используется наследование от абстрактной модели:
+    * <pre>
+    *    var User = Model.extend({
+    *       _moduleName: 'My.Module.User',
+    *       authenticate: function(login, password) {
+    *          //some logic here
+    *       }
+    *    });
+    *    //...
+    *    var user = new User();
+    *    user.authenticate('i.c.wiener', 'its pizza time!');
+    * </pre>
+    * Для корректной сериализации и клонирования моделей необходимо указывать имя модуля в свойстве _moduleName каждого наследника:
+    * <pre>
+    * define('js!My.Awesome.Model', ['js!SBIS3.CONTROLS.Data.Model'], function (Model) {
+    *    'use strict';
+    *
+    *    var AwesomeModel = Model.extend({
+    *      _moduleName: 'My.Awesome.Model'
+    *      //...
+    *    });
+    *
+    *    return AwesomeModel;
+    * });
+    * </pre>
     * @class SBIS3.CONTROLS.Data.Model
     * @extends SBIS3.CONTROLS.Data.Record
     * @mixes SBIS3.CONTROLS.Data.IHashable
@@ -36,6 +63,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
              * @example
              * <pre>
              *    var User = Model.extend({
+             *       _moduleName: 'My.Module.User',
              *       $protected: {
              *          _options: {
              *             properties: {
@@ -99,12 +127,22 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          _isDeleted: false,
 
          /**
-          * @var {Object.<String, *>} Объект содержащий вычисленные значения свойств по умолчанию
+          * @var {Object.<String, *>} Объект, содержащий вычисленные значения свойств по умолчанию
           */
          _defaultPropertiesValues: {},
 
          /**
-          * @var {Object.<String, Boolean>} Объект содержащий названия свойств, для которых сейчас выполняется вычисление значения
+          * @member {Object.<String, Array.<Sting>>} Зависимости свойств: название свойства -> массив названий свойств, которые от него зависят
+          */
+         _propertiesDependency: {},
+
+         /**
+          * @member {String} Имя свойства, для которого сейчас осуществляется сбор зависимостей
+          */
+         _propertiesDependencyGathering: '',
+
+         /**
+          * @var {Object.<String, Boolean>} Объект, содержащий названия свойств, для которых сейчас выполняется вычисление значения
           */
          _nowCalculatingProperties: {},
 
@@ -134,6 +172,13 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             return this._propertiesCache[name];
          }
 
+         if (this._propertiesDependencyGathering) {
+            if (!this._propertiesDependency.hasOwnProperty(name)) {
+               this._propertiesDependency[name] = [];
+            }
+            this._propertiesDependency[name].push(this._propertiesDependencyGathering);
+         }
+
          var value = Model.superclass.get.call(this, name),
             property = this.getProperties()[name];
          if (property) {
@@ -154,6 +199,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       set: function (name, value) {
+         this._deleteDependencyCache(name);
+
          var property = this.getProperties()[name];
          if (property && property.set) {
             value = this._processCalculatedValue(name, value, property, false);
@@ -163,6 +210,16 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          }
 
          Model.superclass.set.call(this, name, value);
+      },
+
+      _deleteDependencyCache: function (name) {
+         if (this._propertiesDependency.hasOwnProperty(name)) {
+            var dependency = this._propertiesDependency[name];
+            for (var i = 0; i < dependency.length; i++) {
+               delete this._propertiesCache[dependency[i]];
+               this._deleteDependencyCache(dependency[i]);
+            }
+         }
       },
 
       has: function (name) {
@@ -424,16 +481,24 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       _processCalculatedValue: function (name, value, property, isReading) {
          //TODO: отследить зависимости от других свойств (например, отлеживая вызов get() внутри _processCalculatedValue), и сбрасывать кэш для зависимых полей при set()
-         var checkKey = name + '|' + isReading;
+         var checkKey = name + '|' + isReading,
+            prevGathering;
          if (this._nowCalculatingProperties.hasOwnProperty(checkKey)) {
             throw new Error('Recursive value ' +  (isReading ? 'reading' : 'writing') + ' detected for property ' + name);
          }
 
+         if (isReading) {
+            prevGathering = this._propertiesDependencyGathering;
+            this._propertiesDependencyGathering = name;
+         }
          this._nowCalculatingProperties[checkKey] = true;
          value = isReading ?
             property.get.call(this, value) :
             property.set.call(this, value);
          delete this._nowCalculatingProperties[checkKey];
+         if (isReading) {
+            this._propertiesDependencyGathering = prevGathering;
+         }
 
          return value;
       },
@@ -493,6 +558,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
       //endregion SBIS3.CONTROLS.Record
    });
+
+   SerializableMixin._checkExtender(Model);
 
    Di.register('model', Model);
 

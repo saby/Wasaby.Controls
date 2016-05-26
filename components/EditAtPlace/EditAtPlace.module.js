@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CORE.Dialog',
       'js!SBIS3.CONTROLS.EditAtPlaceMixin',
-      'js!SBIS3.CONTROLS.Utils.HtmlDecorators/DateFormatDecorator',
+      'js!SBIS3.CONTROLS.Utils.HtmlDecorators.DateFormatDecorator',
       'html!SBIS3.CONTROLS.EditAtPlace'],
    function (CompoundControl, TextBox, PickerMixin, Dialog, EditAtPlaceMixin, DateFormatDecorator, dotTplFn) {
       'use strict';
@@ -32,6 +32,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                decorator: null,
                mask: 'DD.MM.YY'
             },
+            _isEditInGroup: false, //Находится ли редактирование в группе
             _options: {
                /**
                 * @cfg {String} Текст в поле ввода
@@ -43,7 +44,8 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                 * @see getText
                 */
                text: '',
-               /* @cfg {String} Текст подсказки внутри редактирования
+               /**
+                * @cfg {String} Текст подсказки внутри редактирования
                 * @remark
                 * Данный текст отображается внутри поля до момента получения фокуса 
                 * и как текст по нажатию на который начнется редактирование
@@ -51,18 +53,17 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                 * <pre>
                 *     <option name="placeholder">Фамилия</option>
                 * </pre>
+                * @translatable
                 * @see setPlaceholder
                 */
                placeholder: '',
                /**
-                * Компонент которым будет редактируется текст
-                * @type {String}
+                * @cfg {Content} Устанавливает компонент, который будет использован для редактирования текста.т
                 */
                editorTpl: '<component data-component="SBIS3.CONTROLS.TextBox"></component>',
                /**
-                * Будет ли многострочным редактируемый текст
-                * Если указано, текст будет переноситься, убираясь в ширину контейнера
-                * @type {Boolean}
+                * @cfg {Boolean} Определяет, будет ли многострочным редактируемый текст.
+                * Если указано, текст будет переноситься, убираясь в ширину контейнера.
                 */
                multiline: false
             }
@@ -95,9 +96,33 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                $(this._container.children()[0]).addClass('controls-EditAtPlace__textAreaWrapper');
             }
 
-            $('.js-controls-EditAtPlace__editor', this._container.get(0)).bind('keydown', function (e) {
+            var editor = $('.js-controls-EditAtPlace__editor', this._container.get(0));
+
+            editor.bind('keydown', function (e) {
                self._keyPressHandler(e);
             });
+            editor.bind('focusout', function(){
+               self._editorFocusOutHandler();
+            });
+         },
+
+         /**
+          * При потере полем редактирования фокуса вызываем завершение редактирования
+          * @private
+          */
+         _editorFocusOutHandler: function(){
+            if (!this._isEditInGroup){
+               this._applyEdit();
+            }
+         },
+
+         /**
+          * Устанавливаем флаг, указывающий на то, что редактирование находится в группе
+          * Используется EditAtPlaceGroup
+          * @private
+          */
+         _setEditInGroup: function(){
+            this._isEditInGroup = true;
          },
 
          _saveOldText: function () {

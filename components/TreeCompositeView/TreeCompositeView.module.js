@@ -1,31 +1,36 @@
-define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridView', 'js!SBIS3.CONTROLS.CompositeViewMixin', 'html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl'], function(TreeDataGridView, CompositeViewMixin, folderTpl) {
+define('js!SBIS3.CONTROLS.TreeCompositeView', [
+   'js!SBIS3.CONTROLS.TreeDataGridView',
+   'js!SBIS3.CONTROLS.CompositeViewMixin',
+   'html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl'
+], function(TreeDataGridView, CompositeViewMixin, folderTpl) {
+
    'use strict';
 
+   /**
+    * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде таблицы, плитки или списка
+    * @class SBIS3.CONTROLS.TreeCompositeView
+    * @extends SBIS3.CONTROLS.TreeDataGridView
+    * @mixes SBIS3.CONTROLS.CompositeViewMixin
+    * @public
+    * @author Крайнов Дмитрий Олегович
+    * @control
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.TreeCompositeView'>
+    *    <options name="columns" type="array">
+    *       <options>
+    *          <option name="title">Поле 1</option>
+    *          <option name="width">100</option>
+    *       </options>
+    *       <options>
+    *          <option name="title">Поле 2</option>
+    *       </options>
+    *    </options>
+    * </component>
+    *
+    * @demo SBIS3.CONTROLS.Demo.MyTreeCompositeView
+    */
+
    var TreeCompositeView = TreeDataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.TreeCompositeView.prototype*/ {
-      /**
-       * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде таблицы, плитки или списка
-       * @class SBIS3.CONTROLS.TreeCompositeView
-       * @extends SBIS3.CONTROLS.TreeDataGridView
-       * @mixes SBIS3.CONTROLS.CompositeViewMixin
-       * @public
-       * @author Крайнов Дмитрий Олегович
-       * @control
-       * @initial
-       * <component data-component='SBIS3.CONTROLS.TreeCompositeView'>
-       *    <options name="columns" type="array">
-       *       <options>
-       *          <option name="title">Поле 1</option>
-       *          <option name="width">100</option>
-       *       </options>
-       *       <options>
-       *          <option name="title">Поле 2</option>
-       *       </options>
-       *    </options>
-       * </component>
-       *
-       * @demo SBIS3.CONTROLS.Demo.MyTreeCompositeView
-       *
-       */
 
       $protected: {
          _options: {
@@ -108,10 +113,10 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
          }
          return res;
       },
-      _getItemTemplate: function(item) {
-         var resultTpl, dotTpl;
+      _getItemTemplate: function(itemProj) {
+         var resultTpl, dotTpl, item = itemProj.getContents();
             switch (this._options.viewMode) {
-               case 'table': resultTpl = TreeCompositeView.superclass._getItemTemplate.call(this, item); break;
+               case 'table': resultTpl = TreeCompositeView.superclass._getItemTemplate.call(this, itemProj); break;
                case 'list': {
                   if (item.get(this._options.hierField + '@')) {
                      dotTpl = this._options.listFolderTemplate || this._options.folderTemplate || folderTpl;
@@ -194,7 +199,8 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             currentDataSet,
             currentRecord,
             needRedraw,
-            parentBranch,
+            item,
+            parentBranchId,
             dependentRecords,
             recordsGroup = {},
             branchesData = {},
@@ -233,7 +239,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                   self.redrawItem(record);
                } else { //Иначе - удаляем запись
                   currentDataSet.removeAt(currentDataSet.getIndexById(row.key));
-                  self._destroyFolderFooter([row.key]);
+                  self._destroyItemsFolderFooter([row.key]);
                   self._ladderCompare(environment);
                   row.$row.remove();
                   //Если количество записей в текущем DataSet меньше, чем в обновленном, то добавляем в него недостающую запись
@@ -274,7 +280,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                      })
                      .callback();
                } else {
-                  filter['Раздел'] = branchId === 'null' ? null : branchId;
+                  filter[self._options.hierField] = branchId === 'null' ? null : branchId;
                   var limit;
                   //проверяем, является ли обновляемый узел корневым, если да, обновляем записи до подгруженной записи (_infiniteScrollOffset)
                   if ( String(self._curRoot) == branchId  &&  self._infiniteScrollOffset) { // т.к. null != "null", _infiniteScrollOffset проверяем на случай, если нет подгрузки по скроллу
@@ -292,33 +298,39 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             };
          $ws.helpers.toggleIndicator(true);
          if (items) {
-            currentDataSet = this.getDataSet();
+            currentDataSet = this.getItems();
             filter = $ws.core.clone(this.getFilter());
             //Группируем записи по веткам (чтобы как можно меньше запросов делать)
-            $ws.helpers.forEach(items, function(item) {
-               //todo Сделать опредение родительского ключа через DataSet
-               parentBranch = container.find('[data-id="' + item + '"]').attr('data-parent') || 'null';
-               if (!recordsGroup[parentBranch]) {
-                  recordsGroup[parentBranch] = [];
+            $ws.helpers.forEach(items, function(id) {
+               item = this._items.getRecordById(id);
+               if (item) {
+                  parentBranchId = this.getParentKey(undefined, this._items.getRecordById(id));
+                  if (!recordsGroup[parentBranchId]) {
+                     recordsGroup[parentBranchId] = [];
+                  }
+                  recordsGroup[parentBranchId].push(id);
                }
-               recordsGroup[parentBranch].push(item);
-            });
-            $ws.helpers.forEach(recordsGroup, function(branch, branchId) {
-               //Загружаем содержимое веток
-               getBranch(branchId)
-                  .addCallback(function(branchDataSet) {
-                     $ws.helpers.forEach(branch, function(record, idx) {
-                        currentRecord = currentDataSet.getRecordByKey(record);
-                        dependentRecords = findDependentRecords(record, branchId);
-                        needRedraw = !!branchDataSet.getRecordByKey(record);
-                        //Удаляем то, что надо удалить и перерисовываем то, что надо перерисовать
-                        removeAndRedraw(dependentRecords, branch.length - idx);
+            }, this);
+            if (Object.isEmpty(recordsGroup)) {
+               $ws.helpers.toggleIndicator(false);
+            } else {
+               $ws.helpers.forEach(recordsGroup, function(branch, branchId) {
+                  //Загружаем содержимое веток
+                  getBranch(branchId)
+                     .addCallback(function(branchDataSet) {
+                        $ws.helpers.forEach(branch, function(record, idx) {
+                           currentRecord = currentDataSet.getRecordByKey(record);
+                           dependentRecords = findDependentRecords(record, branchId);
+                           needRedraw = !!branchDataSet.getRecordByKey(record);
+                           //Удаляем то, что надо удалить и перерисовываем то, что надо перерисовать
+                           removeAndRedraw(dependentRecords, branch.length - idx);
+                        })
                      })
-                  })
-                  .addBoth(function() {
-                     $ws.helpers.toggleIndicator(false);
-                  });
-            });
+                     .addBoth(function() {
+                        $ws.helpers.toggleIndicator(false);
+                     });
+               });
+            }
          }
       },
       //Переопределим метод определения направления изменения порядкового номера, так как если элементы отображаются в плиточном режиме,

@@ -198,12 +198,16 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
                }
                else {
                   removedKeys = $ws.core.clone(this._options.selectedKeys);
-                  this._options.selectedKeys = idArray.slice(0, 1);
+                  if(idArray.length === 1) {
+                     this._options.selectedKeys = idArray;
+                  } else {
+                     this._options.selectedKeys = idArray.slice(0, 1);
+                  }
                }
             }
             else {
                removedKeys = $ws.core.clone(this._options.selectedKeys);
-               this._options.selectedKeys = [];
+               this._options.selectedKeys = idArray;
             }
 	         this._afterSelectionHandler(addedKeys, removedKeys);
          }
@@ -488,6 +492,40 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
             this.toggleItemsSelection(items);
          }
       },
+
+      /**
+       * @param {Boolean} multiselect Устанавливает режим множественного выбора элементов коллекции.
+       * true Режим множественного выбора элементов коллекции установлен.
+       * false Режим множественного выбора элементов коллекции отменен.
+       * @see selectedKeys
+       * @see multiselect
+       */
+      setMultiselect: function(multiselect) {
+         /* Из контекста может прийти null или undefined */
+         var newMultiselect = Boolean(multiselect),
+             selectedKeys;
+
+         if(this._options.multiselect !== newMultiselect) {
+            this._options.multiselect = newMultiselect;
+
+            selectedKeys = this.getSelectedKeys();
+
+            /* Если multiselect выключили, а ключей у нас больше чем > 1, надо их отфильтровать */
+            if(newMultiselect === false && selectedKeys.length > 1) {
+               this.setSelectedKeys(selectedKeys);
+            }
+         }
+      },
+
+      /**
+       * @returns {Boolean} multiselect Возвращает режим множественного выбора элементов коллекции.
+       * @see selectedKeys
+       * @see multiselect
+       */
+      getMultiselect: function() {
+         return this._options.multiselect;
+      },
+
       /**
        * Возвращает набор выбранных элементов коллекции контрола в режиме множественного выбора.
        * @param {Boolean} loadItems Необходимость загрузки элементов коллекции, если их нет в текущем наборе выбранных элементов
@@ -513,13 +551,14 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * @see toggleItemsSelectionAll
        */
       getSelectedItems: function(loadItems, count) {
+         /* Сначала запускаем синхронизацию, чтобы работать уже с поправленными переменными */
+         this._syncSelectedItems();
+
          var self = this,
              selKeys = this._options.selectedKeys,
              selItems = this._options.selectedItems,
              loadKeysArr = [],
              dMultiResult, item, loadKeysAmount, itemsKeysArr;
-
-         this._syncSelectedItems();
 
          if(!loadItems) {
             return selItems;
@@ -590,7 +629,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          /* Выбранных ключей нет - очистим IList */
          if(this._isEmptySelection()) {
             if(selItems.getCount()) {
-               selItems.clear();
+               /* Чтобы порвать ссылку на контекст делаем клон,
+                  т.к. при любом изменении св-ва надо порвать ссылку на контекст */
+               this._options.selectedItems = selItems.clone();
+               this._options.selectedItems.clear();
                this._notifyOnPropertyChanged('selectedItems');
             }
             return;
@@ -604,8 +646,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          });
 
          if(delItems.length) {
+            this._options.selectedItems = selItems.clone();
             for(var i = 0, len = delItems.length; i < len; i++) {
-               selItems.remove(delItems[i]);
+               this._options.selectedItems.remove(delItems[i]);
             }
             this._notifyOnPropertyChanged('selectedItems');
          }
@@ -675,11 +718,13 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          if (this._checkEmptySelection()) {
             this._setFirstItemAsSelected();
          }
+         this._setSelectedItems();
       },
 
       _setFirstItemAsSelected : function() {
-         if (this._dataSet) {
-            this._options.selectedKeys = [this._dataSet.at(0).getId()];
+         var item = this._dataSet && this._dataSet.at(0);
+         if (item) {
+            this._options.selectedKeys = [item.getId()];
          }
       },
 
@@ -695,17 +740,28 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       _setSelectedItems: function() {
          var dataSet = this.getItems(),
              self = this,
-             record;
+             record, index;
 
          if (dataSet) {
             this._syncSelectedItems();
             $ws.helpers.forEach(this.getSelectedKeys(), function (key) {
                record = dataSet.getRecordById(key);
-               if (record && !self._isItemSelected(record)) {
+               if (record) {
                   if(!self._options.selectedItems) {
                      self.initializeSelectedItems();
                   }
-                  self._options.selectedItems.add(record);
+
+                  index = self._options.selectedItems.getIndexByValue(self._options.keyField, record.getId());
+
+                  /**
+                   * Запись в датасете есть - заменим в наборе выбранных записей, т.к. она могла измениться.
+                   * Если нету, то просто добавим.
+                   */
+                  if(index !== -1) {
+                     self._options.selectedItems.replace(record, index);
+                  } else {
+                     self._options.selectedItems.add(record);
+                  }
                }
             });
          }

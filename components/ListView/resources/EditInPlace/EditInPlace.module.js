@@ -10,10 +10,6 @@ define('js!SBIS3.CONTROLS.EditInPlace',
       'js!SBIS3.CONTROLS.CompoundFocusMixin'
    ],
    function(Control, dotTplFn, CompoundActiveFixMixin, CompoundFocusMixin) {
-
-      //Высота отступа у редакторов от верхнего края редактируемого элемента
-      var EDITOR_MARGINS = 3;
-
       'use strict';
 
       /**
@@ -49,7 +45,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                _editingDeferred: undefined
             },
             init: function() {
-               this._publish('onItemValueChanged', 'onChangeHeight');
+               this._publish('onItemValueChanged', 'onChangeHeight', 'onBeginEdit', 'onEndEdit');
                EditInPlace.superclass.init.apply(this, arguments);
                this._container.bind('keypress keydown', this._onKeyDown);
                this.subscribe('onChildControlFocusOut', this._onChildControlFocusOut);
@@ -62,11 +58,11 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   result,
                   difference,
                   loadingIndicator;
-               // Будем стрелять событие только в том случае, если редактирование по месту видимо. Это обусловлено тем, что при
+               // Будем стрелять событие только если запущено редактирование по месту. Это обусловлено тем, что при
                // клике вне области редактирования стрельнет событие onChildFocusOut в контроллере и редактирование начнет
                // завершаться. Завершение редактирования приведет к вызову метода EditInPlace.hide, в котором происходит
                // расфокусировка поля ввода и нельзя допустить изменения рекорда и стрельбы событием onItemValueChanged.
-               if (this.isVisible()) {
+               if (this.isEdit()) {
                   difference = this._getRecordsDifference(); // Получаем разницу
                   if (difference.length) { //Если есть разница, то нотифицируем об этом в событии
                      result = this._notify('onItemValueChanged', difference, this._editingRecord);
@@ -166,7 +162,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                    newHeight = 0,
                    editorHeight;
                $.each(this._editors, function(id, editor) {
-                  editorHeight = $(editor).height();
+                  editorHeight = $(editor).outerHeight(true);
                   if (editorHeight > newHeight) {
                      newHeight = editorHeight;
                   }
@@ -174,7 +170,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                if (this._lastHeight !== newHeight) {
                   this._lastHeight = newHeight;
                   this._notify('onChangeHeight');
-                  this.getEditingItem().target.height(newHeight + EDITOR_MARGINS);
+                  this.getEditingItem().target.height(newHeight);
                }
             },
             _endTrackHeight: function() {
@@ -199,6 +195,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                if (!this.hasActiveChildControl()) {
                   this.activateFirstControl();
                }
+               this._notify('onBeginEdit');
             },
             isEdit: function() {
                return this._editing;
@@ -209,6 +206,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this.getEditingItem().target.removeClass('controls-editInPlace__editing');
                this._editing = false;
                this.hide();
+               this._notify('onEndEdit');
             },
             setOffset: function(model) {
                var container = this.getContainer();

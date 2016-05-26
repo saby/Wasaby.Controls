@@ -90,6 +90,20 @@ define([
             });
          });
 
+         describe('.clear()', function () {
+            it('should return an empty record', function () {
+               assert.isTrue(data.d.length > 0);
+               assert.isTrue(data.s.length > 0);
+               adapter.clear();
+               assert.strictEqual(adapter.getData().d.length, 0);
+               assert.strictEqual(adapter.getData().s.length, 0);
+            });
+            it('should return a same instance', function () {
+               adapter.clear();
+               assert.strictEqual(data, adapter.getData());
+            });
+         });
+
          describe('.getEmpty()', function () {
             it('should return empty raw data', function () {
                assert.deepEqual(
@@ -515,7 +529,7 @@ define([
                      name: fieldName
                   });
                adapter.addField(field, fieldIndex);
-               assert.strictEqual(adapter.get(fieldName), 0);
+               assert.deepEqual(adapter.get(fieldName), [null]);
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Идентификатор');
             });
             it('should add an Enum field', function () {
@@ -606,11 +620,13 @@ define([
                   fieldIndex = 0,
                   field = FieldsFactory.create({
                      type: 'hierarchy',
-                     name: fieldName
+                     name: fieldName,
+                     kind: 'identity'
                   });
                adapter.addField(field, fieldIndex);
-               assert.strictEqual(adapter.get(fieldName), null);
-               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Иерархия');
+               assert.deepEqual(adapter.get(fieldName), [null]);
+               assert.strictEqual(adapter.getData().s[fieldIndex].s, 'Иерархия');
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Идентификатор');
             });
             it('should add an Array field', function () {
                var fieldName = 'New',

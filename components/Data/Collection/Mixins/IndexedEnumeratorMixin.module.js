@@ -1,7 +1,8 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
+   'js!SBIS3.CONTROLS.Data.Bind.ICollection',
    'js!SBIS3.CONTROLS.Data.Utils'
-], function (Utils) {
+], function (IBindCollection, Utils) {
    'use strict';
 
    /**
@@ -14,7 +15,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
    var IndexedEnumeratorMixin = /**@lends SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin.prototype  */{
       $protected: {
          /**
-          * @var {Object} Индексы, распределенные по полям
+          * @member {Object} Индексы, распределенные по полям
           */
          _enumeratorIndexes: {}
       },
@@ -27,9 +28,26 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
 
       /**
        * Переиндексирует энумератор
+       * @param {SBIS3.CONTROLS.Data.Bind.ICollection/ChangeAction.typedef[]} [action] Действие, приведшее к изменению.
+       * @param {Number} [start=0] С какой позиции переиндексировать
+       * @param {Number} [count=0] Число переиндексируемых элементов
        */
-      reIndex: function () {
-         this._enumeratorIndexes = {};
+      reIndex: function (action, start, count) {
+         switch (action){
+            case IBindCollection.ACTION_ADD:
+               this._shiftIndex(start, count);
+               this._addToIndex(start, count);
+               break;
+            case IBindCollection.ACTION_REMOVE:
+               this._removeFromIndex(start, count);
+               this._shiftIndex(start + count, -count);
+               break;
+            case IBindCollection.ACTION_REPLACE:
+               this._replaceInIndex(start, count);
+               break;
+            default:
+               this._resetIndex();
+         }
       },
 
       /**
@@ -40,26 +58,24 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
        */
       getIndexByValue: function (property, value) {
          var index = this._getIndexForPropertyValue(property, value);
-         return index.length ? index[0][0] : -1;
+         return index.length ? index[0] : -1;
       },
 
       /**
        * Возвращает индексы всех элементов с указанным значением свойства.
        * @param {String} property Название свойства элемента.
        * @param {*} value Значение свойства элемента.
-       * @returns {Array}
+       * @returns {Array.<Number>}
        */
       getIndicesByValue: function (property, value) {
-         return $ws.helpers.map(this._getIndexForPropertyValue(property, value), function(item) {
-            return item[0];
-         });
+         return this._getIndexForPropertyValue(property, value);
       },
 
       /**
        * Возвращает индексы всех элементов с указанным значением свойства.
        * @param {String} property Название свойства элемента.
        * @param {*} value Значение свойства элемента.
-       * @returns {Array}
+       * @returns {Array.<Number>}
        * @deprecated метод будет удален в 3.7.4 используйте getIndicesByValue()
        */
       getIndiciesByValue: function (property, value) {
@@ -91,64 +107,194 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
        * Возвращает индекс для указанного значения свойства.
        * @param {String} property Название свойства элемента.
        * @param {*} value Значение свойства элемента.
-       * @returns {Array}
-       * @private
+       * @returns {Array.<Number>}
+       * @protected
        */
       _getIndexForPropertyValue: function (property, value) {
-         var index;
-         if (Object.prototype.hasOwnProperty.call(this._enumeratorIndexes, property)) {
-            index = this._enumeratorIndexes[property];
-         } else {
-            index = this._createIndex(property);
-         }
-         return index[value] || [];
+         var index = this._getIndex(property);
+         return (index && index[value]) || [];
       },
 
       /**
-       * Создает индекс для указанного свойства.
+       * Проверяет наличие индекса для указанного свойства.
+       * @param {String} [property] Название свойства.
+       * @protected
+       */
+      _hasIndex: function (property) {
+         if (property) {
+            return Object.prototype.hasOwnProperty.call(this._enumeratorIndexes, property);
+         } else {
+            return Object.isEmpty(this._enumeratorIndexes);
+         }
+      },
+
+      /**
+       * Возвращает индекс для указанного свойства.
        * @param {String} property Название свойства.
        * @returns {Object}
-       * @private
+       * @protected
        */
-      _createIndex: function (property) {
-         var index = this._enumeratorIndexes[property] = {},
-            position = 0,
-            item,
-            value;
-         this.reset();
-         while ((item = this.getNext())) {
-            value = Utils.getItemPropertyValue(item, property);
-
-            //FIXME: для проекций решить проблему, кода поиск осущетвляется как по CollectionItem, так и по его contents
-            if (value === undefined &&
-               item instanceof Object &&
-               $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Projection.CollectionItem')
-            ) {
-               value = Utils.getItemPropertyValue(item.getContents(), property);
-            }
-
-            if (!Object.prototype.hasOwnProperty.call(index, value)) {
-               index[value] = [];
-            }
-            index[value].push([position, item]);
-            position++;
+      _getIndex: function (property) {
+         if (property && !this._hasIndex(property)) {
+            this._createIndex(property);
          }
+         return this._enumeratorIndexes[property];
+      },
 
-         return index;
+      /**
+       * Сбрасывает индекс
+       */
+      _resetIndex: function () {
+         this._enumeratorIndexes = {};
       },
 
       /**
        * Удаляет индекс для указанного свойства.
        * @param {String} property Название свойства.
-       * @private
+       * @protected
        */
       _deleteIndex: function (property) {
          delete this._enumeratorIndexes[property];
       },
 
       /**
+       * Создает индекс для указанного свойства.
+       * @param {String} property Название свойства.
+       * @protected
+       */
+      _createIndex: function (property) {
+         var index = this._enumeratorIndexes[property] = {},
+            position = 0,
+            item;
+         this.reset();
+         while ((item = this.getNext())) {
+            this._setToIndex(index, property, item, position);
+            position++;
+         }
+      },
+
+      /**
+       * Добавляет элементы в индекс
+       * @param {Number} start С какой позиции переиндексировать
+       * @param {Number} count Число переиндексируемых элементов
+       * @protected
+       */
+      _addToIndex: function (start, count) {
+         var index,
+            finish = start + count,
+            position,
+            item;
+
+         for (var property in this._enumeratorIndexes) {
+            if (this._enumeratorIndexes.hasOwnProperty(property)) {
+               index = this._enumeratorIndexes[property];
+               position = 0;
+               this.reset();
+               while ((item = this.getNext())) {
+                  if (position >= start) {
+                     this._setToIndex(index, property, item, position);
+                  }
+                  position++;
+                  if (position >= finish) {
+                     break;
+                  }
+               }
+            }
+         }
+      },
+
+      /**
+       * Удаляет элементы из индекса
+       * @param {Number} start С какой позиции переиндексировать
+       * @param {Number} count Число переиндексируемых элементов
+       * @protected
+       */
+      _removeFromIndex: function (start, count) {
+         var index,
+            value,
+            elem,
+            i,
+            at;
+         for (var property in this._enumeratorIndexes) {
+            if (this._enumeratorIndexes.hasOwnProperty(property)) {
+               index = this._enumeratorIndexes[property];
+               for (value in index) {
+                  if (index.hasOwnProperty(value)) {
+                     elem = index[value];
+                     for (i = 0; i < count; i++) {
+                        at = Array.indexOf(elem, start + i);
+                        if (at > -1) {
+                           elem.splice(at, 1);
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      },
+
+      /**
+       * Заменяет элементы в индексе
+       * @param {Number} start С какой позиции заменять
+       * @param {Number} count Число замененных элементов
+       * @protected
+       */
+      _replaceInIndex: function (start, count) {
+         this._removeFromIndex(start, count);
+         this._addToIndex(start, count);
+      },
+
+      /**
+       * Сдвигает позицию элементов индекса
+       * @param {Number} start С какой позиции
+       * @param {Number} offset Сдвиг
+       * @protected
+       */
+      _shiftIndex: function (start, offset) {
+         var index,
+            item,
+            i;
+         for (var property in this._enumeratorIndexes) {
+            if (this._enumeratorIndexes.hasOwnProperty(property)) {
+               index = this._enumeratorIndexes[property];
+               for (var value in index) {
+                  if (index.hasOwnProperty(value)) {
+                     item = index[value];
+                     for (i = 0; i < item.length; i++) {
+                        if (item[i] >= start) {
+                           item[i]+= offset;
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      },
+
+      /**
+       * Устанавливает элемент в индекс
+       * @protected
+       */
+      _setToIndex: function (index, property, item, position) {
+         var value = Utils.getItemPropertyValue(item, property);
+
+         //FIXME: для проекций решить проблему, кода поиск осуществляется как по CollectionItem, так и по его contents
+         if (value === undefined &&
+            item instanceof Object &&
+            $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Projection.CollectionItem')
+         ) {
+            value = Utils.getItemPropertyValue(item.getContents(), property);
+         }
+
+         if (!Object.prototype.hasOwnProperty.call(index, value)) {
+            index[value] = [];
+         }
+         index[value].push(position);
+      },
+
+      /**
        * Удаляет индексы при изменении исходной коллекции
-       * @private
+       * @protected
        */
       _onCollectionChange: function () {
          this.reIndex();

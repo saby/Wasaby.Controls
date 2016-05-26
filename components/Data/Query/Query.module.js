@@ -1,18 +1,20 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Query.Query', [
+   'js!SBIS3.CONTROLS.Data.ICloneable',
    'js!SBIS3.CONTROLS.Data.Query.Join',
    'js!SBIS3.CONTROLS.Data.Query.Order'
-], function (Join, Order) {
+], function (ICloneable, Join, Order) {
    'use strict';
 
    /**
     * Запрос на выборку
     * @class SBIS3.CONTROLS.Data.Query.Query
+    * @mixes SBIS3.CONTROLS.Data.ICloneable
     * @public
     * @author Мальцев Алексей
     */
 
-   var Query = $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Data.Query.Query.prototype */{
+   var Query = $ws.core.extend({}, [ICloneable], /** @lends SBIS3.CONTROLS.Data.Query.Query.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Query.Query',
       $protected: {
          /**
@@ -66,6 +68,27 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
          _meta: {}
       },
 
+      //region SBIS3.CONTROLS.Data.ICloneable
+
+      clone: function () {
+         //TODO: deeper clone?
+         var clone = new Query();
+         clone._select = $ws.core.clone(this._select);
+         clone._from = this._from;
+         clone._as = this._as;
+         clone._join = this._join.slice();
+         clone._where = $ws.core.clone(this._where);
+         clone._groupBy = $ws.core.clone(this._groupBy);
+         clone._orderBy = this._orderBy.slice();
+         clone._offset = this._offset;
+         clone._limit = this._limit;
+         clone._meta = $ws.core.clone(this._meta);
+
+         return clone;
+      },
+
+      //endregion SBIS3.CONTROLS.Data.ICloneable
+
       //region Public methods
 
       /**
@@ -85,28 +108,6 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
          this._meta = {};
 
          return this;
-      },
-      
-      /**
-       * Возвращет клон запроса
-
-       * @returns {SBIS3.CONTROLS.Data.Query.Query}
-       */
-      clone: function () {
-         //TODO: deeper clone?
-         var clone = new Query();
-         clone._select = $ws.core.clone(this._select);
-         clone._from = this._from;
-         clone._as = this._as;
-         clone._join = this._join.slice();
-         clone._where = $ws.core.clone(this._where);
-         clone._groupBy = $ws.core.clone(this._groupBy);
-         clone._orderBy = this._orderBy.slice();
-         clone._offset = this._offset;
-         clone._limit = this._limit;
-         clone._meta = $ws.core.clone(this._meta);
-         
-         return clone;
       },
 
       /**
@@ -293,7 +294,7 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
 
       /**
        * Возвращает способы сортировки
-       * @returns {SBIS3.CONTROLS.Data.Query.Order[]}
+       * @returns {Array.<SBIS3.CONTROLS.Data.Query.Order>}
        */
       getOrderBy: function () {
          return this._orderBy;
@@ -301,23 +302,33 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
 
       /**
        * Устанавливает порядок сортировки выборки
-       * @param {String|Object[]|Object} selector Поле сортировки или набор полей
-       * @param {Boolean} [order=true] Порядок сортировки
+       * @param {String|Array.<Object.<String, Boolean>>} selector Название поле сортировки или набор полей и направление сортировки в каждом
+       * @param {Boolean} [order=true] Порядок сортировки (true - по возрастанию, false - по убыванию)
        * @returns {SBIS3.CONTROLS.Data.Query.Query}
        * @example
+       * Отсортируем заказы по полю id по возрастанию:
        * <pre>
        *    var query = new Query()
        *       .select('*')
        *       .from('Orders')
        *       .orderBy('id');
-       *
+       * </pre>
+       * Отсортируем заказы по полю id по убыванию:
+       * <pre>
        *    var query = new Query()
        *       .select('*')
        *       .from('Orders')
-       *       .orderBy({
-       *          customerId: true,
-       *          date: false
-       *       });
+       *       .orderBy('id', false);
+       * </pre>
+       * Отсортируем заказы сначала по полю customerId по возрастанию, затем по полю date по убыванию:
+       * <pre>
+       *    var query = new Query()
+       *       .select('*')
+       *       .from('Orders')
+       *       .orderBy([
+       *          {customerId: true},
+       *          {date: false}
+       *       ]);
        * </pre>
        */
       orderBy: function (selector, order) {

@@ -1,10 +1,25 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
-], function () {
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (Utils) {
    'use strict';
 
    /**
-    * Миксин, позволяющий сериализовать объекты
+    * Миксин, позволяющий сериализовать и десериализовать инастансы различных модулей.
+    * Для корректной работы необходимо определить в прототипе каждого модуля свойство _moduleName, в котором прописать
+    * имя модуля для requirejs (без плагина js!).
+    * @example
+    * <pre>
+    * define('js!My.SubModule', ['js!My.SuperModule'], function (SuperModule) {
+    *    'use strict';
+    *
+    *    var SubModule = SuperModule.extend({
+    *      _moduleName: 'My.SubModule'
+    *    });
+    *
+    *    return SubModule;
+    * });
+    * </pre>
     * @mixin SBIS3.CONTROLS.Data.SerializableMixin
     * @public
     * @author Мальцев Алексей
@@ -25,16 +40,14 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
        * @returns {Object}
        */
       toJSON: function() {
-         if (!this._moduleName) {
-            throw new Error('Module name is undefined');
-         }
-         var result = {
+         this._checkModuleName(true, true);
+
+         return {
             $serialized$: 'inst',
             module: this._moduleName,
             id: this._getInstanceId(),
             state: this._getSerializableState()
          };
-         return result;
       },
 
       /**
@@ -58,9 +71,63 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
       //region Protected methods
 
       /**
+       * Добавляет в метод extend() модуля проверку на установку значения свойства _moduleName
+       * @param {Function} module Модуль
+       * @protected
+       * @static
+       */
+      _checkExtender: function(module) {
+         module.extend = module.extend.callBefore(function() {
+            var extender = arguments[0];
+            if (extender instanceof Array) {
+               extender = arguments[1];
+            }
+            SerializableMixin._checkModuleName.call(extender || {});
+         });
+      },
+
+      /**
+       * Проверяет, что в прототипе указано имя модуля для requirejs, иначе не будет работать десериализация
+       * @param {Boolean} critical Отсутствие имени модуля критично
+       * @param {Boolean} isInstance Проверка вызвана на экземпляре класса (в противном случае - на прототипе)
+       * @protected
+       */
+      _checkModuleName: function(critical, isInstance) {
+         var proto = this;
+         if (!proto._moduleName) {
+            SerializableMixin._createModuleNameError('Property "_moduleName" with module name for requirejs is not defined in a prototype', critical);
+         }
+         //TODO: переделать на Object.getPrototypeOf(this), после перевода на SBIS3.CONTROLS.Data.Core::extend()
+         if (isInstance) {
+            if (!_protoSupported) {
+               return;
+            }
+            proto = this.__proto__;
+         }
+         if (!proto.hasOwnProperty('_moduleName')) {
+            SerializableMixin._createModuleNameError('Property "_moduleName" with module name for requirejs should be defined in a prototype of each sub module of SerializableMixin', critical);
+         }
+      },
+
+      /**
+       * Создает ошибку
+       * @param {String} str Сообщение об ошибке
+       * @param {Boolean} critical Выбросить исключение либо предупредить
+       * @protected
+       * @static
+       */
+      _createModuleNameError: function(str, critical) {
+         if (critical) {
+            throw new ReferenceError(str);
+         } else {
+            Utils.logger.stack(str, 3);
+         }
+      },
+
+      /**
        * Возвращает всё, что нужно сложить в состояние объекта при сериализации, чтобы при десериализации вернуть его в это же состояние
        * @returns {Object}
-       * @private
+       * @protected
        */
       _getSerializableState: function() {
          return {
@@ -71,7 +138,7 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
       /**
        * Проверяет сериализованное состояние перед созданием инстанса. Возвращает метод, востанавливающий состояние объекта после создания инстанса.
        * @returns {Function|undefined}
-       * @private
+       * @protected
        */
       _setSerializableState: function(state) {
          state._options = state._options || {};
@@ -81,7 +148,7 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
       /**
        * Возвращает уникальный номер инстанса
        * @returns {Number}
-       * @private
+       * @protected
        */
       _getInstanceId: function() {
          return this._instanceId || (this._instanceId = ++_instanceCounter);
@@ -90,7 +157,8 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
       //endregion Protected methods
    };
 
-   var _instanceCounter = 0;
+   var _instanceCounter = 0,
+      _protoSupported = typeof ({}).__proto__ === 'object';
 
    return SerializableMixin;
 });

@@ -1,21 +1,23 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Types.Flags', [
+   'js!SBIS3.CONTROLS.Data.Types.IFlags',
    'js!SBIS3.CONTROLS.Data.Types.Dictionary',
    'js!SBIS3.CONTROLS.Data.ContextField.Flags',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils'
-], function (Dictionary, ContextFieldFlags, Di, Utils) {
+], function (IFlags, Dictionary, ContextFieldFlags, Di, Utils) {
    'use strict';
 
    /**
     * Тип данных набор флагов
     * @class SBIS3.CONTROLS.Data.Types.Flags
+    * @mixes SBIS3.CONTROLS.Data.Types.IFlags
     * @extends SBIS3.CONTROLS.Data.Types.Dictionary
     * @public
     * @author Ганшин Ярослав
     */
 
-   var Flags = Dictionary.extend(/** @lends SBIS3.CONTROLS.Data.Types.Flags.prototype */ {
+   var Flags = Dictionary.extend([IFlags],/** @lends SBIS3.CONTROLS.Data.Types.Flags.prototype */ {
       _moduleName: 'SBIS3.CONTROLS.Data.Types.Flags',
       $protected: {
          _options: {
@@ -42,13 +44,8 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
          }
       },
 
-      //region Public methods
+      //region SBIS3.CONTROLS.Data.Types.IFlags
 
-      /**
-       * Возвращает значение флага по названию
-       * @param name {String} Название флага
-       * @returns {Boolean|Null}
-       */
       get: function (name) {
          var index = this._getIndex(name);
          if (index > -1) {
@@ -57,11 +54,6 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
          return undefined;
       },
 
-      /**
-       * Устанавливает значение флага по названию
-       * @param name {String} Название флага
-       * @param value {Boolean|Null} Значение
-       */
       set: function (name, value) {
          var index = this._getIndex(name);
          if (index === -1) {
@@ -70,20 +62,10 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
          this._options.values[index] = this._prepareValue(value);
       },
 
-      /**
-       * Возвращает значение флага по индексу
-       * @param index {Number} Индекс флага
-       * returns {Boolean|Null}
-       */
       getByIndex: function (index) {
          return this._options.values[index];
       },
 
-      /**
-       * Устанавливает значение флага по индексу
-       * @param index {Number} - индекс флага
-       * @param value {Boolean|Null} - значение флага
-       */
       setByIndex: function (index, value) {
          var key = this._getKeByIndex(index);
          if(typeof key === 'undefined'){
@@ -92,23 +74,14 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
          this._options.values[index] = this._prepareValue(value);
       },
 
-      /**
-       * Установить всем флагам false
-       */
       setFalseAll: function () {
          this._setAll(false);
       },
 
-      /**
-       * Установить всем флагам true
-       */
       setTrueAll: function () {
          this._setAll(true);
       },
 
-      /**
-       * Установить всем флагам null
-       */
       setNullAll: function () {
          this._setAll(null);
       },
@@ -116,26 +89,42 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
       /**
        * Сравнивает с дргуим экземпляром флагов - должен полностью совпадать словарь и набор значений
        * @param {SBIS3.CONTROLS.Data.Types.Flags} value Объект Flags
-       * returns {Boolean}
+       * @returns {Boolean}
+       * @deprecated Будет удалено с 3.7.4 Используйте {@link isEqual}
        */
       equals: function (value) {
-         if (!(value instanceof Flags)) {
+         Utils.logger.stack(this._moduleName + '::equals(): method is deprecated and will be removed in 3.7.4. Use isEqual() instead.');
+         return this.isEqual(value);
+      },
+
+      isEqual: function(to) {
+         if (!(to instanceof Flags)) {
             return false;
          }
 
-         if (!Flags.superclass.equals.call(this, value)) {
+         if (!Dictionary.prototype.isEqual.call(this, to)) {
             return false;
          }
 
          var enumerator = this.getEnumerator(),
             key;
          while ((key = enumerator.getNext())) {
-            if (this.get(key) !== value.get(key)) {
+            if (this.get(key) !== to.get(key)) {
                return false;
             }
          }
 
          return true;
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Types.IFlags
+
+      //region Public methods
+
+      toString: function() {
+         return '[' + $ws.helpers.map(this._options.values, function(value) {
+            return value === null ? 'null': value;
+         }).join(',') + ']';
       },
 
       //endregion Public methods

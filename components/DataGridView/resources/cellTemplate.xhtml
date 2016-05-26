@@ -1,0 +1,4 @@
+{{var val = it.getColumnVal(it.item, it.field);}}{{?((val !== null) && (val !== undefined))}}{{=it.decorators.applyOnly($ws.helpers.escapeHtml(val),
+        {highlight: it.column.highlight,
+         ladder: {column: it.column.field, parentId: it.item.get(it.hierField)}
+        })}}{{?}}

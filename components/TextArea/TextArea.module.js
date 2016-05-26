@@ -102,12 +102,22 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
       $constructor: function() {
          var self = this;
          this._inputField = $('.controls-TextArea__inputField', this._container);
+         this._disabledWrapper = $('.controls-TextArea__disabled-wrapper', this._container);
+         this._inputField.bind('focus', function() {
+            $ws.single.EventBus.globalChannel().notify('MobileInputFocus');
+         });
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
          this._inputField.bind('focusout', function () {
+            var text = self._inputField.val();
             if (self._options.trim) {
-               self.setText(String.trim(self.getText()));
+               text = String.trim(text);
             }
+            //Установим текст только если значения различны и оба не пустые
+            if (text !== self._options.text && !(self._isEmptyValue(self._options.text) && !text.length)){
+               self.setText(text);
+            }
+            $ws.single.EventBus.globalChannel().notify('MobileInputFocusOut');
          });
 
          this._container.bind('keyup',function(e){
@@ -127,7 +137,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  TextArea.superclass.setText.call(self, self._formatText(self._inputField.val()));
+                  self.setText.call(self, self._formatText(self._inputField.val()));
                   self._inputField.val(self._options.text);
                }
             }, 100)
@@ -183,11 +193,19 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
 
       _setEnabled: function(state){
          TextArea.superclass._setEnabled.call(this, state);
+         this._inputField.toggleClass('ws-invisible', !state)
+         this._disabledWrapper.toggleClass('ws-hidden', state);
          if (!state){
             this._inputField.attr('readonly', 'readonly')
          } else {
             this._inputField.removeAttr('readonly');
          }
+      },
+
+      setText: function(text){
+         TextArea.superclass.setText.call(this, text);
+         var newText = $ws.helpers.escapeHtml(text);
+         this._disabledWrapper.html($ws.helpers.wrapURLs(newText));
       },
 
       _processNewLine: function(event) {
@@ -206,7 +224,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
             newText = this._inputField.val(),
             key = event.which || event.keyCode;
          if (newText != this._options.text) {
-            TextArea.superclass.setText.call(this, newText);
+            this.setText.call(this, newText);
          }
          if (!this._processNewLine(event) && ((key === $ws._const.key.enter && !event.ctrlKey) ||
              Array.indexOf([$ws._const.key.up, $ws._const.key.down], key) >= 0)) {
@@ -226,7 +244,6 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
         * @see placeholder
         */
       setPlaceholder: function(text){
-         TextArea.superclass.setPlaceholder.call(this, text);
          this._inputField.attr('placeholder', text);
       },
        /**
@@ -255,6 +272,11 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          if (this._options.autoResize.state) {
             this._inputField.trigger('autosize.resize');
          }
+      },
+
+      setMaxLength: function(num) {
+         TextArea.superclass.setMaxLength.call(this, num);
+         this._inputField.attr('maxlength',num);
       },
 
       _textAreaResize : function() {

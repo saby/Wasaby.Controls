@@ -382,9 +382,50 @@ define([
                      done(err);
                   });
                });
+
+               it('should build hierarhy', function (done) {
+                  var filter = {'Раздел':1,'Раздел@':true,'Раздел$':true};
+                  service.create(filter).addBoth(function (err) {
+                     var s = SbisBusinessLogic.lastRequest.args.Фильтр.s;
+                     assert.strictEqual(s.length, 3);
+                     for(var i = 0; i < s.length; i++) {
+                        if (s[i].n in filter) {
+                           assert.strictEqual(s[i].s, 'Иерархия');
+                        }
+                     }
+                     done();
+                  });
+               });
+
+               it('should not build hierarrhy', function (done) {
+                  var filter = {'Раздел':1,'Раздел@':true};
+                  service.create(filter).addBoth(function (err) {
+                     var s = SbisBusinessLogic.lastRequest.args.Фильтр.s;
+                     assert.strictEqual(s.length, 2);
+                     for(var i = 0; i < s.length; i++) {
+                        if (s[i].n in filter) {
+                           assert.notEqual(s[i].s, 'Иерархия');
+                        }
+                     }
+                     done();
+                  });
+               });
+
+               it('should sort fields in filter', function (done) {
+                  var filter = {'Раздел':1,'Тип':3,'Раздел@':true,'Демо':true,'Раздел$':true};
+                  service.create(filter).addBoth(function () {
+                     var s = SbisBusinessLogic.lastRequest.args.Фильтр.s,
+                        sortNames = ['Демо','Раздел','Раздел$','Раздел@','Тип'];
+                     for(var i = 0; i < sortNames.length; i++) {
+                        assert.strictEqual(s[i].n, sortNames[i]);
+                     }
+                     done();
+                  });
+               });
+
             });
 
-            context('when the service isn\'t exists', function () {
+             context('when the service isn\'t exists', function () {
                it('should return an error', function (done) {
                   var service = new SbisService({
                      endpoint: 'Купец'
@@ -821,7 +862,7 @@ define([
                   });
                });
 
-               it('should take idProperty for dataset  from raw data', function (done) {
+               it('should take idProperty for dataset from raw data', function (done) {
                   service.query(new Query()).addCallbacks(function (ds) {
                      try {
                         assert.strictEqual(ds.getIdProperty(), '@Ид');
@@ -896,6 +937,7 @@ define([
                         enabled: true,
                         title: 'abc*',
                         path: [1, 2, 3],
+                        obj: {a: 1, b: 2},
                         rec: new Model({
                            adapter: 'adapter.sbis',
                            rawData: recData
@@ -916,22 +958,26 @@ define([
                         try {
                            var args = SbisBusinessLogic.lastRequest.args;
 
-                           assert.strictEqual(args['Фильтр'].d[0], 5);
-                           assert.strictEqual(args['Фильтр'].s[0].n, 'id');
-                           assert.strictEqual(args['Фильтр'].s[0].t, 'Число целое');
+                           assert.strictEqual(args['Фильтр'].d[1], 5);
+                           assert.strictEqual(args['Фильтр'].s[1].n, 'id');
+                           assert.strictEqual(args['Фильтр'].s[1].t, 'Число целое');
 
-                           assert.isTrue(args['Фильтр'].d[1]);
-                           assert.strictEqual(args['Фильтр'].s[1].n, 'enabled');
-                           assert.strictEqual(args['Фильтр'].s[1].t, 'Логическое');
+                           assert.isTrue(args['Фильтр'].d[0]);
+                           assert.strictEqual(args['Фильтр'].s[0].n, 'enabled');
+                           assert.strictEqual(args['Фильтр'].s[0].t, 'Логическое');
 
-                           assert.strictEqual(args['Фильтр'].d[2], 'abc*');
-                           assert.strictEqual(args['Фильтр'].s[2].n, 'title');
-                           assert.strictEqual(args['Фильтр'].s[2].t, 'Строка');
+                           assert.strictEqual(args['Фильтр'].d[6], 'abc*');
+                           assert.strictEqual(args['Фильтр'].s[6].n, 'title');
+                           assert.strictEqual(args['Фильтр'].s[6].t, 'Строка');
 
                            assert.deepEqual(args['Фильтр'].d[3], [1, 2, 3]);
                            assert.strictEqual(args['Фильтр'].s[3].n, 'path');
                            assert.strictEqual(args['Фильтр'].s[3].t.n, 'Массив');
                            assert.strictEqual(args['Фильтр'].s[3].t.t, 'Число целое');
+
+                           assert.deepEqual(args['Фильтр'].d[2], {a: 1, b: 2});
+                           assert.strictEqual(args['Фильтр'].s[2].n, 'obj');
+                           assert.strictEqual(args['Фильтр'].s[2].t, 'JSON-объект');
 
                            assert.deepEqual(args['Фильтр'].d[4].d, recData.d);
                            assert.deepEqual(args['Фильтр'].d[4].s, recData.s);
@@ -943,26 +989,26 @@ define([
                            assert.strictEqual(args['Фильтр'].s[5].n, 'rs');
                            assert.strictEqual(args['Фильтр'].s[5].t, 'Выборка');
 
-                           assert.strictEqual(args['Сортировка'].d[0][0], 'id');
-                           assert.isTrue(args['Сортировка'].d[0][1]);
-                           assert.isFalse(args['Сортировка'].d[0][2]);
+                           assert.strictEqual(args['Сортировка'].d[0][1], 'id');
+                           assert.isTrue(args['Сортировка'].d[0][2]);
+                           assert.isFalse(args['Сортировка'].d[0][0]);
 
-                           assert.strictEqual(args['Сортировка'].d[1][0], 'enabled');
-                           assert.isFalse(args['Сортировка'].d[1][1]);
-                           assert.isTrue(args['Сортировка'].d[1][2]);
+                           assert.strictEqual(args['Сортировка'].d[1][1], 'enabled');
+                           assert.isFalse(args['Сортировка'].d[1][2]);
+                           assert.isTrue(args['Сортировка'].d[1][0]);
 
-                           assert.strictEqual(args['Сортировка'].s[0].n, 'n');
-                           assert.strictEqual(args['Сортировка'].s[1].n, 'o');
-                           assert.strictEqual(args['Сортировка'].s[2].n, 'l');
+                           assert.strictEqual(args['Сортировка'].s[0].n, 'l');
+                           assert.strictEqual(args['Сортировка'].s[1].n, 'n');
+                           assert.strictEqual(args['Сортировка'].s[2].n, 'o');
 
-                           assert.strictEqual(args['Навигация'].d[0], 3);
-                           assert.strictEqual(args['Навигация'].s[0].n, 'Страница');
+                           assert.strictEqual(args['Навигация'].d[2], 3);
+                           assert.strictEqual(args['Навигация'].s[2].n, 'Страница');
 
                            assert.strictEqual(args['Навигация'].d[1], 33);
                            assert.strictEqual(args['Навигация'].s[1].n, 'РазмерСтраницы');
 
-                           assert.isTrue(args['Навигация'].d[2]);
-                           assert.strictEqual(args['Навигация'].s[2].n, 'ЕстьЕще');
+                           assert.isTrue(args['Навигация'].d[0]);
+                           assert.strictEqual(args['Навигация'].s[0].n, 'ЕстьЕще');
 
                            assert.strictEqual(args['ДопПоля'].length, 0);
 
@@ -998,6 +1044,38 @@ define([
                   });
                });
 
+               it('should generate a request with null navigation with undefined limit', function (done) {
+                  var query = new Query();
+                  query.limit(undefined);
+                  service.query(query).addCallbacks(function () {
+                     try {
+                        var args = SbisBusinessLogic.lastRequest.args;
+                        assert.isNull(args['Навигация']);
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should generate a request with null navigation with null limit', function (done) {
+                  var query = new Query();
+                  query.limit(null);
+                  service.query(query).addCallbacks(function () {
+                     try {
+                        var args = SbisBusinessLogic.lastRequest.args;
+                        assert.isNull(args['Навигация']);
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
                it('should generate a request with "hasMore" from given meta property', function (done) {
                   var hasMore = 'test',
                      query = new Query();
@@ -1011,8 +1089,8 @@ define([
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
 
-                        assert.strictEqual(args['Навигация'].d[2], hasMore);
-                        assert.strictEqual(args['Навигация'].s[2].n, 'ЕстьЕще');
+                        assert.strictEqual(args['Навигация'].d[0], hasMore);
+                        assert.strictEqual(args['Навигация'].s[0].n, 'ЕстьЕще');
 
                         done();
                      } catch (err) {
@@ -1160,45 +1238,64 @@ define([
                   33
                );
 
-               assert.strictEqual(args['Фильтр'].d[0], 5);
-               assert.strictEqual(args['Фильтр'].s[0].n, 'id');
-               assert.strictEqual(args['Фильтр'].s[0].t, 'Число целое');
+               assert.strictEqual(args['Фильтр'].d[1], 5);
+               assert.strictEqual(args['Фильтр'].s[1].n, 'id');
+               assert.strictEqual(args['Фильтр'].s[1].t, 'Число целое');
 
-               assert.isTrue(args['Фильтр'].d[1]);
-               assert.strictEqual(args['Фильтр'].s[1].n, 'enabled');
-               assert.strictEqual(args['Фильтр'].s[1].t, 'Логическое');
+               assert.isTrue(args['Фильтр'].d[0]);
+               assert.strictEqual(args['Фильтр'].s[0].n, 'enabled');
+               assert.strictEqual(args['Фильтр'].s[0].t, 'Логическое');
 
-               assert.strictEqual(args['Фильтр'].d[2], 'abc*');
-               assert.strictEqual(args['Фильтр'].s[2].n, 'title');
-               assert.strictEqual(args['Фильтр'].s[2].t, 'Строка');
+               assert.strictEqual(args['Фильтр'].d[3], 'abc*');
+               assert.strictEqual(args['Фильтр'].s[3].n, 'title');
+               assert.strictEqual(args['Фильтр'].s[3].t, 'Строка');
 
-               assert.deepEqual(args['Фильтр'].d[3], [1, 2, 3]);
-               assert.strictEqual(args['Фильтр'].s[3].n, 'path');
-               assert.strictEqual(args['Фильтр'].s[3].t.n, 'Массив');
-               assert.strictEqual(args['Фильтр'].s[3].t.t, 'Число целое');
+               assert.deepEqual(args['Фильтр'].d[2], [1, 2, 3]);
+               assert.strictEqual(args['Фильтр'].s[2].n, 'path');
+               assert.strictEqual(args['Фильтр'].s[2].t.n, 'Массив');
+               assert.strictEqual(args['Фильтр'].s[2].t.t, 'Число целое');
 
-               assert.strictEqual(args['Сортировка'].d[0][0], 'id');
-               assert.isTrue(args['Сортировка'].d[0][1]);
-               assert.isFalse(args['Сортировка'].d[0][2]);
+               assert.strictEqual(args['Сортировка'].d[0][1], 'id');
+               assert.isTrue(args['Сортировка'].d[0][2]);
+               assert.isFalse(args['Сортировка'].d[0][0]);
 
-               assert.strictEqual(args['Сортировка'].d[1][0], 'enabled');
-               assert.isFalse(args['Сортировка'].d[1][1]);
-               assert.isTrue(args['Сортировка'].d[1][2]);
+               assert.strictEqual(args['Сортировка'].d[1][1], 'enabled');
+               assert.isFalse(args['Сортировка'].d[1][2]);
+               assert.isTrue(args['Сортировка'].d[1][0]);
 
-               assert.strictEqual(args['Сортировка'].s[0].n, 'n');
-               assert.strictEqual(args['Сортировка'].s[1].n, 'o');
-               assert.strictEqual(args['Сортировка'].s[2].n, 'l');
+               assert.strictEqual(args['Сортировка'].s[0].n, 'l');
+               assert.strictEqual(args['Сортировка'].s[1].n, 'n');
+               assert.strictEqual(args['Сортировка'].s[2].n, 'o');
 
-               assert.strictEqual(args['Навигация'].d[0], 3);
-               assert.strictEqual(args['Навигация'].s[0].n, 'Страница');
+               assert.strictEqual(args['Навигация'].d[2], 3);
+               assert.strictEqual(args['Навигация'].s[2].n, 'Страница');
 
                assert.strictEqual(args['Навигация'].d[1], 33);
                assert.strictEqual(args['Навигация'].s[1].n, 'РазмерСтраницы');
 
-               assert.isTrue(args['Навигация'].d[2]);
-               assert.strictEqual(args['Навигация'].s[2].n, 'ЕстьЕще');
+               assert.isTrue(args['Навигация'].d[0]);
+               assert.strictEqual(args['Навигация'].s[0].n, 'ЕстьЕще');
 
                assert.strictEqual(args['ДопПоля'].length, 0);
+            });
+
+            it('should return valid arguments when has more is false', function () {
+               var args = service.prepareQueryParams({
+                     id: 5,
+                     enabled: true,
+                     title: 'abc*',
+                     path: [1, 2, 3]
+                  },
+                  {
+                     id: true,
+                     enabled: false
+                  },
+                  100,
+                  33,
+                  false
+               );
+               assert.strictEqual(args['Навигация'].s[0].n, 'ЕстьЕще');
+               assert.isFalse(args['Навигация'].d[0]);
             });
          });
       });

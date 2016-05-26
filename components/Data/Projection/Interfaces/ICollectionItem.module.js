@@ -14,5 +14,5 @@ define('js!SBIS3.CONTROLS.Data.Projection.ICollectionItem', [
 
    $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Projection.ICollectionItem', 'Interface has been removed in 3.7.3.150. Use SBIS3.CONTROLS.Data.Projection.CollectionItem instead.');
 
-   return /** @lends SBIS3.CONTROLS.Data.Projection.ICollectionItem.prototype */{};
+   return;
 });

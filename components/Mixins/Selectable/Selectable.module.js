@@ -103,17 +103,17 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
             this._selectMode = 'index';
             if (this._itemsProjection.getCount()) {
                this._options.selectedIndex = index;
+               this._setKeyByIndex();
             }
             else {
                this._options.selectedIndex = undefined;
             }
          }
-         if (!this._options.allowEmptySelection && (this._options.selectedIndex === null || typeof this._options.selectedIndex == 'undefined' || this._options.selectedIndex == -1)) {
+         if (!this._options.allowEmptySelection && this._isEmptyIndex()) {
             if (this._itemsProjection.getCount()) {
                this._selectMode = 'index';
                this._options.selectedIndex = 0;
-               var item = this._itemsProjection.at(this._options.selectedIndex);
-               this._options.selectedKey = item.getContents().getKey();
+               this._setKeyByIndex();
             }
          }
       },
@@ -162,6 +162,18 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          _itemsReadyCallback: function() {
             this._prepareSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
             this._selectInProjection();
+         },
+         /**
+          * todo Удалить, когда будет выполнена указанная ниже задача
+          * Задача в разработку от 28.04.2016 №1172779597
+          * В деревянной проекции необходима возможность определять, какие элементы создаются развернутыми. Т...
+          * https://inside.tensor.ru/opendoc.html?guid=6f1758f0-f45d-496b-a8fe-fde7390c92c7
+          * @private
+          */
+         redraw: function() {
+            if (this._utilityEnumerator) {
+               this._utilityEnumerator.reIndex();
+            }
          }
       },
 
@@ -299,18 +311,31 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          this._notify('onSelectedItemChange', id, index);
       },
 
-      _selectInProjection: function (){
-         if ((typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null)
-            && (typeof this._itemsProjection.at(this._options.selectedIndex) != 'undefined')) {
-            this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
+      _setKeyByIndex: function() {
+         if(this._hasItemByIndex()) {
+            var item = this._itemsProjection.at(this._options.selectedIndex);
+            this._options.selectedKey = item.getContents().getId();
          }
-         else {
+      },
+
+      _hasItemByIndex: function() {
+         return (typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null) && (typeof this._itemsProjection.at(this._options.selectedIndex) != 'undefined');
+      },
+
+      _isEmptyIndex: function() {
+         return this._options.selectedIndex === null || typeof this._options.selectedIndex == 'undefined' || this._options.selectedIndex == -1;
+      },
+
+      _selectInProjection: function (){
+         if (this._hasItemByIndex()) {
+            this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
+         } else {
             this._itemsProjection.setCurrentPosition(-1);
          }
       }
    };
 
-   var onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems) {
+   var onCollectionChange = function (event, action) {
       switch (action) {
          case IBindCollection.ACTION_ADD:
          case IBindCollection.ACTION_REMOVE:
@@ -319,25 +344,39 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          case IBindCollection.ACTION_RESET:
             this._resetUtilityEnumerator();
 
-            var indexByKey = this._getItemIndexByKey(this._options.selectedKey);
+            var indexByKey = this._getItemIndexByKey(this._options.selectedKey),
+                itemsProjection = this._itemsProjection,
+                oldIndex = this._options.selectedIndex,
+                oldKey = this._options.selectedKey,
+                count;
+
             if (indexByKey >= 0) {
                this._options.selectedIndex = indexByKey;
-            }
-            else {
-               var count = this._itemsProjection.getCount();
+            } else {
+               count = itemsProjection.getCount();
                if (count > 0) {
-                  if (this._options.selectedIndex > this._itemsProjection.getCount() - 1) {
-                     this._options.selectedIndex = (count > 0) ? 0 : -1;
-                     var item = this._itemsProjection.at(this._options.selectedIndex);
-                     this._options.selectedKey = item.getContents().getId();
+                  if (!this._isEmptyIndex()) {
+                     if (this._options.selectedIndex > count - 1) {
+                        this._options.selectedIndex = 0;
+                     }
+                     this._setKeyByIndex();
+                  } else if (!this._options.allowEmptySelection) {
+                     this._options.selectedIndex = 0;
+                     this._setKeyByIndex();
                   }
-               }
-               else {
+               } else {
                   this._options.selectedIndex = -1;
                   this._options.selectedKey = null;
                }
             }
-            if (action !== IBindCollection.ACTION_REPLACE){
+            //TODO защита от логики деревянной проекции: добавил проверку на изменение selectedIndex и selectedKey, т.к. при вызове toggleNode
+            //в узле стреляет либо action_remove, либо action_add листьев и мы всегда попадали сюда. и всегда делали _setSelectedIndex,
+            //что приводило к лишнему событию onSelectedItemChanged, чего быть не должно.
+            //Ошибка остается актуальной для rightNavigationPanel, где мы сначала делаем toggleNode, у нас меняется индекс и нижеописанная проверка проходит(хотя
+            //по факту активный элемент не изменился) => стреляет onSelectedItemChanged, после из listView стреляет setSelectedKey из которого так же стреляет onSelectedItemChanged
+            //выписал на это ошибку в 373.200
+
+            if (action !== IBindCollection.ACTION_REPLACE && (this._options.selectedIndex !== oldIndex || this._options.selectedKey !== oldKey)) {
                this._setSelectedIndex(this._options.selectedIndex, this._options.selectedKey);
             }
       }

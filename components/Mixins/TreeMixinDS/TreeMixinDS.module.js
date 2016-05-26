@@ -114,11 +114,11 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
 
       $constructor : function() {
          var filter = this.getFilter() || {};
-         this._publish('onSearchPathClick', 'onNodeExpand');
+         this._publish('onSearchPathClick', 'onNodeExpand', 'onNodeCollapse');
 
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
-            filter['ВидДерева'] = 'Узлы и листья';
+            filter['ВидДерева'] = 'С узлами и листьями';
          }
          this.setFilter(filter, true);
       },
@@ -189,7 +189,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          this._collapseChilds(key);
          delete(this._options.openedPath[key]);
          this._nodeClosed(key);
-         this._updateItemsToolbar()
+         this._updateItemsToolbar();
          this._notify('onNodeCollapse', key);
       },
 
@@ -346,31 +346,31 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
       },
 
       /* здесь добавляется запись "Еще 50" в корень таблицы, но сейчас мы включаем подгрузку по скроллу в папках, значит этот код не нужен
-      _processPaging: function() {
-         var more, nextPage;
-         if (!this._treePager) {
-            more = this._dataSet.getMetaData().more;
-            //Убираем текст "Еще n", если включена бесконечная подгрузка
-            nextPage = this.isInfiniteScroll() ? false : this._hasNextPage(more);
-            var
-               container = this.getContainer().find('.controls-TreePager-container'),
-               self = this;
-            this._treePager = new TreePagingLoader({
-               pageSize: this._options.pageSize,
-               opener: this,
-               hasMore: nextPage,
-               element: container,
-               handlers : {
-                  'onClick' : function(){
-                     self._folderLoad();
-                  }
-               }
-            });
-         }
-         more = this._dataSet.getMetaData().more;
-         nextPage = this._hasNextPage(more);
-         this._treePager.setHasMore(nextPage);
-      },
+       _processPaging: function() {
+       var more, nextPage;
+       if (!this._treePager) {
+       more = this._dataSet.getMetaData().more;
+       //Убираем текст "Еще n", если включена бесконечная подгрузка
+       nextPage = this.isInfiniteScroll() ? false : this._hasNextPage(more);
+       var
+       container = this.getContainer().find('.controls-TreePager-container'),
+       self = this;
+       this._treePager = new TreePagingLoader({
+       pageSize: this._options.pageSize,
+       opener: this,
+       hasMore: nextPage,
+       element: container,
+       handlers : {
+       'onClick' : function(){
+       self._folderLoad();
+       }
+       }
+       });
+       }
+       more = this._dataSet.getMetaData().more;
+       nextPage = this._hasNextPage(more);
+       this._treePager.setHasMore(nextPage);
+       },
        */
       _folderLoad: function(id) {
          var
@@ -449,9 +449,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
       },
       _createFolderFooter: function(key) {
          var
-             footerTpl = this._options.folderFooterTpl,
-             options = this._getFolderFooterOptions(key),
-             container = $('<div class="controls-TreeView__folderFooterContainer">' + (footerTpl ? footerTpl(options) : '') + '</div>');
+            footerTpl = this._options.folderFooterTpl,
+            options = this._getFolderFooterOptions(key),
+            container = $('<div class="controls-TreeView__folderFooterContainer">' + (footerTpl ? footerTpl(options) : '') + '</div>');
          this._destroyFolderFooter([key]);
          this._createFolderPager(key, $('<div class="controls-TreePager-container">').appendTo(container), options.more);
          this._foldersFooters[key] = container;
@@ -464,8 +464,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
       },
       _destroyFolderFooter: function(items) {
          var
-             controls,
-             self = this;
+            controls,
+            self = this;
          $ws.helpers.forEach(items, function(item) {
             if (self._foldersFooters[item]) {
                controls = self._foldersFooters[item].find('.ws-component');
@@ -570,9 +570,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
       _searchMethod: function(record, at, last){
          //TODO lastParent - curRoot - правильно?. 2. Данные всегда приходят в правильном порядке?
          var key,
-               curRecRoot,
-               drawItem = false,
-               kInd = -1;
+            curRecRoot,
+            drawItem = false,
+            kInd = -1;
          if (this._lastParent === undefined) {
             this._lastParent = this._curRoot;
          }
@@ -647,10 +647,10 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
       _drawBreadCrumbs:function(path, record, container){
          if (path.length) {
             var self = this,
-                  elem,
-                  groupBy = this._options.groupBy,
-                  cfg,
-                  td = container.find('td');
+               elem,
+               groupBy = this._options.groupBy,
+               cfg,
+               td = container.find('td');
             td.append(elem = $('<div style="width:'+ td.width() +'px"></div>'));
             cfg = {
                element : elem,
@@ -698,7 +698,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
       },
       _createPathItemsDS: function(pathRecords){
          var dsItems = [],
-               parentID;
+            parentID;
          for (var i = 0; i < pathRecords.length; i++){
             //TODO для SBISServiceSource в ключе находится массив
             parentID = pathRecords[i].get(this._options.hierField);
@@ -745,4 +745,3 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
    return TreeMixinDS;
 
 });
-

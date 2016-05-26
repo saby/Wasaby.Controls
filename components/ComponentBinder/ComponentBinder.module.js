@@ -4,8 +4,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
     *
     * @class SBIS3.CONTROLS.ComponentBinder
     * @extends $ws.proto.Abstract
+    * @author Крайнов Дмитрий Олегович
     * @public
-    * @param backButton объект кнопки назад
     */
    /*методы для поиска*/
    function startHierSearch(text, searchParamName, searchCrumbsTpl, searchMode) {
@@ -26,13 +26,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          view.setGroupBy(groupBy);
          if (this._firstSearch) {
             this._lastRoot = view.getCurrentRoot();
-            this._lastParentProperty = view._itemsProjection.getParentProperty();
             //Запомнили путь в хлебных крошках перед тем как их сбросить для режима поиска
             if (this._options.breadCrumbs && this._options.breadCrumbs.getItems()){
                this._pathDSRawData = $ws.core.clone(this._options.breadCrumbs.getItems().getRawData());
             }
          }
-         view._itemsProjection.setParentProperty(null);
          this._firstSearch = false;
          //Флаг обозначает, что ввод был произведен пользователем
          this._searchReload = true;
@@ -49,6 +47,14 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          if (searchMode == 'root'){
             filter[view.getHierField()] = undefined;
          }
+
+         view.once('onDataLoad', function(){
+            //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
+            this._itemsProjection.setEventRaising(false);
+            //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
+            view._itemsProjection.setRoot(null);
+            this._itemsProjection.setEventRaising(true);
+         });
 
          view.reload(filter, view.getSorting(), 0).addCallback(function(){
             view._container.addClass('controls-GridView__searchMode');
@@ -82,22 +88,24 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
    }
 
    function resetGroup(searchParamName) {
-      var view = this._options.view,
-            filter = $ws.core.merge(view.getFilter(), {
-               'Разворот' : 'Без разворота'
-            });
+      var
+         view = this._options.view,
+         filter = $ws.core.merge(view.getFilter(), {
+            'Разворот' : 'Без разворота'
+         }),
+         self = this;
       delete (filter[searchParamName]);
       //При сбрасывании группировки в иерархии нужно снять класс-можификатор, но сделать это можно
       //только после релоада, иначе визуально будут прыжки и дерганья (класс меняет паддинги)
       view.once('onDataLoad', function(){
          view._container.removeClass('controls-GridView__searchMode');
+         view._itemsProjection.setRoot(self._lastRoot || null);
       });
       this._searchMode = false;
       //Если мы ничего не искали, то и сбрасывать нечего
       if (this._firstSearch) {
          return;
       }
-      view._itemsProjection.setParentProperty(this._lastParentProperty);
       view.setInfiniteScroll(this._isInfiniteScroll, true);
       view.setGroupBy(this._lastGroup);
       view.setHighlightText('', false);
@@ -133,7 +141,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       this._firstSearch = !!withReload;
       //Если в строке поиска что-то есть, очистим и сбросим Фильтр
       if (searchForm.getText()) {
-         searchForm.setText('');
+         searchForm.resetSearch();
       }
    }
 
@@ -141,7 +149,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       if (gridView._options.multiselect && hideCheckBoxes) {
          gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible())
             .toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isVisible());
-         if (gridView.hasPartScroll()) {
+         if (gridView._options.startScrollColumn !== undefined) {
             gridView.updateScrollAndColumns();
          }
       }
@@ -160,7 +168,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          _searchForm : undefined,
          _lastRoot : undefined,
          _lastGroup: {},
-         _lastParentProperty: null,
          _currentRoot: null,
          _pathDSRawData : [],
          _firstSearch: true,
@@ -228,7 +235,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, searchMode) {
          var self = this,
             view = this._options.view,
-            isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixinDS');
+            isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
          searchForm = searchForm || this._options.searchForm;
          //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
          view._searchParamName = searchParamName;
@@ -267,13 +274,18 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          this._lastGroup = view._options.groupBy;
          this._isInfiniteScroll = view.isInfiniteScroll();
 
-         searchForm.subscribe('onTextChange', function(event, text){
-            if (text.length < searchForm.getProperty('startCharacter')) {
-               if (isTree) {
-                  resetGroup.call(self, searchParamName);
-               } else {
-                  resetSearch.call(self, searchParamName);
-               }
+         searchForm.subscribe('onReset', function(event, text){
+            if (isTree) {
+               resetGroup.call(self, searchParamName);
+            } else {
+               resetSearch.call(self, searchParamName);
+            }
+         });
+         searchForm.subscribe('onKeyPressed', function(eventObject, event){
+            // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
+            if (event.which == $ws._const.key.down && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)){
+               view.setSelectedIndex(0);
+               view.setActive(true);
             }
          });
 
@@ -445,7 +457,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       /**
        * Метод для связывания истории фильтров с представлением данных
        */
-      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, controller, browser) {
+      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, controller, browser) {
          var view = browser.getView(),
              noSaveFilters = ['Разворот', 'ВидДерева'],
              historyController, filter;
@@ -454,8 +466,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             noSaveFilters.push(searchParam);
          }
 
-         if($ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.hierarchyMixin')) {
+         if($ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin')) {
             noSaveFilters.push(view.getHierField());
+         }
+
+         if(ignoreFiltersList && ignoreFiltersList.length) {
+            noSaveFilters = noSaveFilters.concat(ignoreFiltersList);
          }
 
          historyController = new controller({

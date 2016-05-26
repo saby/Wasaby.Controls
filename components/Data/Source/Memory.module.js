@@ -183,22 +183,23 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       },
 
       query: function (query) {
-         var items = this._applyFrom(query ? query.getFrom() : undefined);
+         var items = this._applyFrom(query ? query.getFrom() : undefined),
+            total;
          if (query) {
             items = this._applyJoin(items, query.getJoin());
             items = this._applyWhere(items, query.getWhere());
             items = this._applyOrderBy(items, query.getOrderBy());
-            var total = this.getAdapter().forTable(items).getCount();
+            total = this.getAdapter().forTable(items).getCount();
             items = this._applyPaging(items, query.getOffset(), query.getLimit());
-            try {
-               this.getAdapter().setProperty(items, 'total', total);
-            } catch (error) {
-               Utils.logger.log(this._moduleName + '::query(): ' + error);
-            }
+         } else {
+            total = this.getAdapter().forTable(items).getCount();
          }
 
          return $ws.proto.Deferred.success(
-            this._prepareQueryResult(items, 'total')
+            this._prepareQueryResult({
+               items: items,
+               total: total
+            }, 'items', 'total')
          );
       },
 
@@ -271,9 +272,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        */
       _applyFrom: function (from) {
          from = from || '';
-         var adapter = this.getAdapter().forTable(
-            this._getTableAdapter().getEmpty()
-         );
+         var adapter = this.getAdapter().forTable();
          this._each(
             from ? _static.contracts[from] : this._options.data,
             function(item) {
@@ -311,9 +310,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          }
 
          var adapter = this.getAdapter(),
-            tableAdapter = adapter.forTable(
-               adapter.forTable(data).getEmpty()
-            ),
+            tableAdapter = adapter.forTable(),
             skipFields = {
                'Разворот': true,
                'ВидДерева': true,
@@ -369,7 +366,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       /**
        * Применяет сортировку
        * @param {*} data Данные
-       * @param {SBIS3.CONTROLS.Data.Query.Order[]} order Параметры сортировки
+       * @param {Array.<SBIS3.CONTROLS.Data.Query.Order>} order Параметры сортировки
        * @returns {*}
        * @protected
        */
@@ -430,7 +427,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
 
          //Создаем новую таблицу по служебному массиву
          var sourceAdapter = adapter.forTable(data),
-            resultAdapter = adapter.forTable(sourceAdapter.getEmpty()),
+            resultAdapter = adapter.forTable(),
             count;
          for (i = 0, count = dataMap.length; i < count; i++) {
             resultAdapter.add(
@@ -462,9 +459,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             limit = limit || 0;
          }
 
-         var newDataAdapter = this.getAdapter().forTable(
-               dataAdapter.getEmpty()
-            ),
+         var newDataAdapter = this.getAdapter().forTable(),
             newIndex = 0,
             beginIndex = offset,
             endIndex = Math.min(

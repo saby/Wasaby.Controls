@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
        * Контрол, позволяющий обрезать произвольное изображение.
        * @class SBIS3.CONTROLS.Image.CropPlugin
        * @extends $ws.proto.Abstract
+       * @author Крайнов Дмитрий Олегович
        * @control
        * @public
        */

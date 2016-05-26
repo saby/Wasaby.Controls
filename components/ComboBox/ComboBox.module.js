@@ -156,13 +156,16 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this.subscribe('onReset', this._onResetSearch);
          }
 
-         /*обрабочики кликов TODO mouseup!!*/
          this._container.click(function (e) {
-            if ($(e.target).hasClass('js-controls-ComboBox__arrowDown') ||
-               $(e.target).hasClass('controls-TextBox__afterFieldWrapper') ||
-               self.isEditable() === false) {
+            var target = $(e.target),
+               isArrow = target.hasClass('js-controls-ComboBox__arrowDown');
+            if (isArrow || target.hasClass('controls-TextBox__afterFieldWrapper') || self.isEditable() === false) {
                if (self.isEnabled()) {
                   self.togglePicker();
+                  // Что бы не открывалась клавиатура на айпаде при клике на стрелку 
+                  if (isArrow) {
+                     e.preventDefault();
+                  }
                }
             }
          });
@@ -480,7 +483,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _redraw: function () {
          if (this._picker) {
             ComboBox.superclass._redraw.call(this);
-            this._picker.recalcPosition();
+            // Сделано для того, что бы в при уменьшении колчества пунктов при поиске нормально усеньшались размеры пикера
+            // В 3.7.3.200 сделано нормально на уровне попапа
+            this._picker.getContainer().css('height', '');
+            this._picker.recalcPosition(true);
          }
          else {
             this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);

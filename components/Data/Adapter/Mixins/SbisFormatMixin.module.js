@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
    'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
    'js!SBIS3.CONTROLS.Data.Format.UniversalField',
+   'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Adapter.FieldType'
-], function (FieldsFactory, UniversalField, FIELD_TYPE) {
+], function (FieldsFactory, UniversalField, Utils, FIELD_TYPE) {
    'use strict';
 
    /**
@@ -68,7 +69,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          return fields;
       },
 
+      clear: function () {
+         this._data.d.length = 0;
+      },
+
       getEmpty: function () {
+         Utils.logger.stack(this._moduleName + '::getEmpty(): method is deprecated and will be removed in 3.7.4. Use clear() instead.');
          return {
             d: [],
             s: $ws.core.clone(this._data.s || [])
@@ -201,24 +207,21 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          var info = this._data.s[index],
             meta = singleton ? this._sharedFieldMeta : {};
 
-         try {
-            switch (type) {
-               case 'Real':
-               case 'Money':
-                  meta.precision = info.t.p;
-                  break;
-               case 'Enum':
-               case 'Flags':
-                  meta.dictionary = info.t.s;
-                  break;
-               case 'Identity':
-                  meta.separator = ',';
-                  break;
-               case 'Array':
-                  meta.kind = this._getFieldTypeNameByInner(info.t.t);
-                  break;
-            }
-         } catch (e) {
+         switch (type) {
+            case 'Real':
+            case 'Money':
+              meta.precision = info.t.p;
+               break;
+            case 'Enum':
+            case 'Flags':
+               meta.dictionary = info.t.s;
+               break;
+            case 'Identity':
+               meta.separator = ',';
+               break;
+            case 'Array':
+               meta.kind = this._getFieldTypeNameByInner(info.t.t);
+               break;
          }
 
          return meta;
@@ -240,6 +243,13 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
       },
 
       _buildS: function(format) {
+         if(format.getType() === 'Hierarchy') {
+            return {
+               n: format.getName(),
+               t: this._getFieldInnerTypeNameByOuter(format.getKind()),
+               s: FIELD_TYPE[format.getType()]
+            };
+         }
          return {
             n: format.getName(),
             t: this._buildSType(format, format.getType())
@@ -264,6 +274,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
                return {
                   n: FIELD_TYPE[type],
                   t: this._getFieldInnerTypeNameByOuter(format.getKind())
+               };
+            case 'Hierarchy':
+               return {
+
                };
             default:
                return FIELD_TYPE[type];

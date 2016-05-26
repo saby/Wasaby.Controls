@@ -29,9 +29,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
     * Для показа автодополнения при получения контролом фокуса, используется {@link autoShow}.
     *
     * В контроле, к которому подмешивается, обязательно требует миксины:
-    * @link SBIS3.CONTROLS.PickerMixin
-    * @link SBIS3.CONTROLS.DataBindMixin
-    * @link SBIS3.CONTROLS.ChooserMixin
+    * {@link SBIS3.CONTROLS.PickerMixin}
+    * {@link SBIS3.CONTROLS.DataBindMixin}
+    * {@link SBIS3.CONTROLS.ChooserMixin}
     *
     * @mixin SBIS3.CONTROLS.SuggestMixin
     * @public
@@ -379,7 +379,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /* Если фокус уходит на список - вернём его обратно в контрол, с которого фокус ушёл */
             this.subscribeTo(control, 'onFocusOut', function(e, destroyed, focusedControl) {
-               if(self.getList() === focusedControl) {
+               if(self._list && self._list === focusedControl) {
                   focusedControl.setActive(false, false, false, this);
                   this.setActive(true);
                }
@@ -495,16 +495,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             this.subscribeTo(this._showAllButton, 'onActivated', function() {
                var showAllConfig;
 
-               /* Если передали конфигурацию диалога, то используем его, иначе используем дефолтный */
-               if(Object.keys(self._options.showAllConfig).length) {
-                  showAllConfig = self._options.showAllConfig;
-               } else {
-                  showAllConfig = $ws.core.merge({
-                     componentOptions: {
-                        chooserMode: self._options.chooserMode
-                     }
-                  }, DEFAULT_SHOW_ALL_CONFIG);
-               }
+               showAllConfig = self._getShowAllConfig();
+
 
                //FIXME и ещё один костыль до перевода пикера на фокусную систему
                self.hidePicker();
@@ -514,6 +506,21 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          }
 
          this._notify('onListReady', this._list);
+      },
+
+
+      _getShowAllConfig: function(){
+         /* Если передали конфигурацию диалога, то используем его, иначе используем дефолтный */
+         /* Если передали конфигурацию диалога, то используем его, иначе используем дефолтный */
+         if(!Object.isEmpty(this._options.showAllConfig)) {
+            return this._options.showAllConfig;
+         } else {
+            return $ws.core.merge({
+               componentOptions: {
+                  chooserMode: this._options.chooserMode
+               }
+            }, DEFAULT_SHOW_ALL_CONFIG);
+         }
       },
 
       /**

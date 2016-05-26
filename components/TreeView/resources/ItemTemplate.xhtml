@@ -1,0 +1,11 @@
+{{var
+      hierType = it.item.get(it.hierField + '@'),
+      addClasses = 'controls-ListView__item-type-' + (hierType == null ? 'leaf' : hierType == true ? 'node' : 'hidden'),
+      padding = it.paddingSize * (it.projItem.getLevel() - 1) + it.originallPadding;
+}}
+<div{{?padding > it.originallPadding}} style="padding-left: {{=padding}}px;"{{?}} class="js-controls-ListView__item controls-ListView__item js-controls-TreeView__item controls-TreeView__item{{?addClasses}} {{=addClasses}}{{?}}" data-parent-hash="{{=it.projItem.getParent().getHash()}}" data-hash="{{=it.projItem.getHash()}}" data-id="{{=it.item.getId()}}">
+   {{?it.item.get("par@")}}
+      <div class="controls-TreeView__expand js-controls-TreeView__expand {{?it.projItem.isExpanded()}} controls-TreeView__expand__open{{?}}"></div>
+   {{?}}
+   {{=it.itemContent(it)}}
+</div>

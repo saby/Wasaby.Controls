@@ -1,8 +1,8 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Format.Format', [
    'js!SBIS3.CONTROLS.Data.Collection.List',
-   'js!SBIS3.CONTROLS.Data.Serializer'
-], function (List, Serializer) {
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (List, Utils) {
    'use strict';
 
    /**
@@ -110,8 +110,20 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
        * Если поля с таким именем нет, возвращает -1.
        * @param {String} name Имя поля
        * @returns {Number}
+       * @deprecated метод будет удален в 3.7.4 используйте getFieldIndex()
        */
       getFieldndex: function (name) {
+         Utils.logger.stack(this._moduleName + '::getFieldndex(): method is deprecated and will be removed in 3.7.4. Use "getFieldIndex()" instead.');
+         return this.getFieldIndex(name);
+      },
+
+      /**
+       * Возвращает индекс поля по его имени.
+       * Если поля с таким именем нет, возвращает -1.
+       * @param {String} name Имя поля
+       * @returns {Number}
+       */
+      getFieldIndex: function (name) {
          return this.getIndexByValue('name', name);
       },
 
@@ -123,18 +135,6 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
        */
       getFieldName: function (at) {
          return this.at(at).getName();
-      },
-
-      /**
-       * Клонирует формат
-       * @returns {SBIS3.CONTROLS.Data.Format.Format}
-       */
-      clone: function() {
-         var serializer = new Serializer();
-         return JSON.parse(
-            JSON.stringify(this, serializer.serialize),
-            serializer.deserialize
-         );
       },
 
       /**
@@ -182,7 +182,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
        * @protected
        */
       _checkName: function (item, at) {
-         var exists = this.getFieldndex(item.getName());
+         var exists = this.getFieldIndex(item.getName());
          if(exists > -1 && exists !== at) {
             throw new ReferenceError(this._moduleName + ': field with name "' + item.getName() + '" already exists');
          }

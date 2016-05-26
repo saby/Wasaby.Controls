@@ -38,24 +38,23 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          }
       },
 
-      //TODO: Можно будет выпилить когда меню будет сделано через таблицу
-      //3.7.3.10: придрот для отсупа в пунктах меню, если ни в одном пункте нет иконки а у кнопки есть
+      //TODO: Постараться придумать что то получше
+      // Вешаем на пункты меню отступы слева в соответствии с иконкой у самой кнопки
       _checkItemsIcons: function(items){
-         var icon = 'sprite:';
+         var padding = 'controls-MenuItem__';
          if (this._options.icon && items && !this._container.hasClass('controls-Menu__hide-menu-header')){
             if (this._options.icon.indexOf('icon-16') !== -1){
-               icon += 'icon-16';
+               padding += 'padding-16';
             } else if (this._options.icon.indexOf('icon-24') !== -1){
-               icon += 'icon-24';
-            }
-            for (var i = 0; i < items.length; i++){
-               //отступы нужны только в основном меню, но не в сабменю
-               if (!items[i].has('icon')){
-                  items[i].addField({name: 'icon', type: 'string'});
-               }
-               if (!items[i].get('icon') && !items[i].get(this._options.hierField)) { items[i].set('icon', icon);}
+               padding += 'padding-24';
             }
          }
+         $('> .controls-MenuItem', this._picker.getContainer()).each(function(){
+            var $this = $(this);
+            if (!$this.find('.controls-MenuItem__icon').length) {
+               $this.addClass(padding);
+            }
+         });
       },
 
       _createPicker: function(targetElement){
@@ -102,6 +101,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          header.bind('click', function(){
             self._onHeaderClick();
          });
+         this._picker.getItems() && this._checkItemsIcons(this._picker.getItems().toArray());
          this._picker.getContainer().prepend(header);
       },
 
@@ -147,10 +147,6 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          //Установить ширину меню
       },
       after : {
-         redraw: function(){
-            this.getItems() && this._checkItemsIcons(this.getItems().toArray());
-         },
-
          _initializePicker : function() {
             var self = this;
             this._picker.subscribe('onMenuItemActivate', function(e, id, mEvent) {
@@ -168,7 +164,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          _drawIcon: function(icon){
             if (this._picker){
                var $icon = $('.controls-Menu__header-icon', this._picker.getContainer()),
-                  newclass = 'controls-Menu__header-icon ' + this._iconClass;
+                  newclass = 'controls-Menu__header-icon ' + this._options._iconClass;
                if (icon) {
                   if ($icon.length){
                      $icon.get(0).className = newclass;

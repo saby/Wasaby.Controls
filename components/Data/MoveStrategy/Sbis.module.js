@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
     * @example
     */
 
-   return BaseMoveStrategy.extend([],/** @lends SBIS3.CONTROLS.Data.MoveStrategy.Sbis.prototype */{
+   var SbisMoveStrategy = BaseMoveStrategy.extend([],/** @lends SBIS3.CONTROLS.Data.MoveStrategy.Sbis.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.MoveStrategy.Sbis',
       $protected: {
          _options:{
@@ -40,7 +40,12 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
              * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
              * @see move
              */
-            moveDefaultColumn: 'ПорНомер'
+            moveDefaultColumn: 'ПорНомер',
+
+            /**
+             * @cfg {List} .
+             */
+            listView: undefined
 
          },
 
@@ -55,9 +60,6 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
             this._options.moveContract = cfg.moveResource;
          }
 
-         if(!this._options.contract && !this._options.dataSource){
-            throw new Error('The Contract and the Data Source are not defined.');
-         }
          if (!this._options.contract) {
             this._options.contract = this._options.dataSource.getEndpoint().contract;
          }
@@ -68,7 +70,8 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
             suffix = after ? 'После':'До',
             def = new $ws.proto.ParallelDeferred(),
             method = this._options.moveMethodPrefix + suffix,
-            params = this._getMoveParams(to, after);
+            params = this._getMoveParams(to, after),
+            parent = to.get(self._options.hierField);
          if (!this._orderProvider) {
             this._orderProvider = DI.resolve(
                'source.provider.sbis-business-logic', {
@@ -80,6 +83,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
          }
          $ws.helpers.forEach(from, function(record) {
             params['ИдО'] = self._prepareComplexId(record.getId());
+            record.set(self._options.hierField, parent);
             def.push(self._orderProvider.call(method, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addErrback(function (error) {
                $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.MoveStrategy.Sbis::move()', error);
                return error;
@@ -88,6 +92,33 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
          return def.done().getResult();
       },
 
+      hierarhyMove: function(from, to) {
+         var self = this,
+            oldParents = [];
+         $ws.helpers.forEach(from, function (record) {
+            oldParents.push(record.get(self._options.hierField));
+         });
+         return SbisMoveStrategy.superclass.hierarhyMove.call(this, from, to).addCallback(function(){
+            if(self._options.listView) {
+               var items = self._options.listView.getItems();
+               if(items.getFormat().getIndexByValue('name', self._options.hierField + '$') !== -1) {
+                  if (to !== null) {
+                     to = (items.getIndex(to) !== -1) ? to : items.getRecordById(to.getId());
+
+                     if (to && to.has(self._options.hierField + '$')) {
+                        to.set(self._options.hierField + '$', true);
+                     }
+                  }
+
+                  $ws.helpers.forEach(oldParents, function (parentId) {
+                     if (items.getChildItems(parentId).length === 0) {
+                        items.getRecordById(parentId).set(self._options.hierField + '$', false);
+                     }
+                  });
+               }
+            }
+         });
+      },
       /**
        * Возвращает параметры перемещения записей
        * @param {String} to Значение поля, в позицию которого перемещаем (по умолчанию - значение первичного ключа)
@@ -98,7 +129,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
       _getMoveParams: function(to, after) {
          var params = {
                'ПорядковыйНомер': this._options.moveDefaultColumn,
-               'Иерархия': null,
+               'Иерархия': this._options.hierField || null,
                'Объект': this._options.contract
             },
             id = this._prepareComplexId(to.getId());
@@ -124,4 +155,6 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
          return preparedId;
       }
    });
+
+   return SbisMoveStrategy;
 });

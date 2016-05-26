@@ -3,12 +3,11 @@
    <div class="controls-DropdownList__list"></div>
    {{?it.multiselect}}
       <div class="controls-DropdownList__buttonsBlock {{?it.className}} {{=it.className}}{{?}}">
-         <component data-component="SBIS3.CONTROLS.Button" class="ws-invisible">
+         <component data-component="SBIS3.CONTROLS.IconButton" class="controls-DropdownListFooter_select controls-IconButton__round-border-24 ws-invisible">
             <opt name="name">DropdownList_buttonChoose</opt>
-            <opt name="caption">Отобрать</opt>
+            <opt name="icon">sprite:icon-16 icon-Yes icon-done</opt>
             <opt name="primary">true</opt>
-         </component>
-         <component class="controls-DropdownListFooter_hasMore" data-component="SBIS3.CONTROLS.Link">
+         </component><component class="controls-DropdownListFooter_hasMore" data-component="SBIS3.CONTROLS.Link">
             <opt name="caption">Еще...</opt>
             <opt name="name">DropdownList_buttonHasMore</opt>
          </component>

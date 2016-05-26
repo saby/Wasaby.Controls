@@ -2,8 +2,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
    'js!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.SuggestMixin',
-   'js!SBIS3.CONTROLS.ChooserMixin'
-], function (TextBox, PickerMixin, SuggestMixin, ChooserMixin) {
+   'js!SBIS3.CONTROLS.ChooserMixin',
+   'js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil'
+], function (TextBox, PickerMixin, SuggestMixin, ChooserMixin, KbLayoutRevertUtil) {
    'use strict';
 
    function stopEvent(e) {
@@ -29,8 +30,20 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          _changedByKeyboard: false  /* {Boolean} Флаг, обозначающий, что изменения были вызваны действиями с клавиатуры */
       },
       $constructor: function () {
+         var self = this;
+
          this._options.observableControls.unshift(this);
          this.getContainer().addClass('controls-SuggestTextBox');
+
+         /* Проверяем на изменение раскладки */
+         this.once('onListReady', function(e, list) {
+            self.subscribeTo(list, 'onDataLoad', function(event, data) {
+               if(data.getMetaData()['Switched']) {
+                  self.setText(KbLayoutRevertUtil.process(self.getText()));
+               }
+            });
+         });
+
       },
 
       _getLoadingContainer : function() {
@@ -73,6 +86,12 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          }
       },
 
+      _setPickerConfig: function(){
+         var parentConfig = SuggestTextBox.superclass._setPickerConfig.call(this);
+         parentConfig.tabindex = 0;
+         return parentConfig;
+      },
+
       setListFilter: function(filter) {
          SuggestTextBox.superclass.setListFilter.call(this, filter, !this._changedByKeyboard);
       },
@@ -81,6 +100,29 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
       _inputFocusInHandler: function() {
          SuggestTextBox.superclass._inputFocusInHandler.apply(this, arguments);
          this._observableControlFocusHandler();
+      },
+
+      /* Метод для проверки, куда ушёл фокус, т.к. попап до сих пор
+         отслеживает клики, и, если фокус ушёл например по tab, то саггест не закроется +
+         надо, чтобы правильно запускалась валидация */
+      // FIXME костыль до перехода на пикера по фокусную систему
+      _focusOutHandler: function(event, isDestroyed, focusedControl) {
+         var isChildControl = false;
+
+         if(this._list) {
+            isChildControl = (this._list === focusedControl) || (focusedControl.getOpener && this._list === focusedControl.getOpener());
+
+            if(!isChildControl) {
+               isChildControl = this._list.getChildControls(false, true, function(ctrl) {
+                  return focusedControl === ctrl;
+               }).length;
+            }
+         }
+
+         if(!isChildControl) {
+            this.hidePicker();
+            SuggestTextBox.superclass._focusOutHandler.apply(this, arguments);
+         }
       },
 
       _keyDownBind: function(e) {

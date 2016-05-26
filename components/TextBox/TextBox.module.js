@@ -112,8 +112,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              */
             placeholder: '',
             /**
-             * @cfg {String} Устанавливает регулярное выражение, в соответствии с которым будет осуществляться валидация
-             * вводимых символов.
+             * @cfg {String} Устанавливает регулярное выражение, в соответствии с которым будет осуществляться валидация вводимых символов.
              * @remark
              * Служит для фильтрации вводимых символов в поле ввода по условию, установленному регулярным выражением.
              * Каждый вводимый символ будет проверяться на соответствие указанному в этой опции регулярному выражению;
@@ -139,12 +138,24 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
                         .bind('keydown', this._keyDownBind.bind(this))
                         .bind('keyup', this._keyUpBind.bind(this));
 
-         this._inputField.bind('paste', function(){
+         this._inputField.on('paste', function(){
             self._pasteProcessing++;
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  self.setText(self._formatText(self._inputField.val()));
+                  var text = self._inputField.val(),
+                     newText = '';
+                  if (self._options.inputRegExp){
+                     var regExp = new RegExp(self._options.inputRegExp);
+                     for (var i = 0; i < text.length; i++){
+                        if (regExp.test(text[i])){
+                           newText = newText + text[i];
+                        }
+                     }
+                     text = newText;
+                  }
+                  self._inputField.val(text);
+                  self.setText(self._formatText(text));
                }
             }, 100);
          });
@@ -160,18 +171,8 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             self._fromTab = false;
          });
 
-         this._inputField.bind('focusin', this._inputFocusInHandler.bind(this));
-
-         this._inputField.bind('focusout', function(){
-            var text = self._inputField.val();
-            if (self._options.trim) {
-               text = String.trim(text);
-            }
-            //Установим текст только если значения различны и оба не пустые
-            if (text !== self._options.text && !(self._isEmptyValue(self._options.text) && !text.length)){
-               self.setText(text);
-            }
-         });
+         this._inputField.bind('focusin', this._inputFocusInHandler.bind(this))
+                         .bind('focusout', this._inputFocusOutHandler.bind(this));
 
          if (this._options.placeholder && !$ws._const.compatibility.placeholder) {
             this._createCompatPlaceholder();
@@ -180,6 +181,24 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          this._container.bind("mouseenter", function(e){
             self._applyTooltip();
          });
+      },
+
+      init: function() {
+         TextBox.superclass.init.apply(this, arguments);
+         /* Надо проверить значение input'a, т.к. при дублировании вкладки там уже может быть что-то написано */
+         this._checkInputVal();
+      },
+
+      _checkInputVal: function() {
+         var text = this._inputField.val();
+
+         if (this._options.trim) {
+            text = String.trim(text);
+         }
+         //Установим текст только если значения различны и оба не пустые
+         if (text !== this._options.text && !(this._isEmptyValue(this._options.text) && !text.length)){
+            this.setText(text);
+         }
       },
 
       /**
@@ -295,7 +314,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       _keyPressBind: function(event) {
-         if (this._options.inputRegExp){
+         if (this._options.inputRegExp && !event.ctrlKey){
             return this._inputRegExp(event, new RegExp(this._options.inputRegExp));
          }
       },
@@ -329,7 +348,15 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          return true;
       },
 
+      _inputFocusOutHandler: function(e) {
+         this._checkInputVal();
+      },
+
       _inputFocusInHandler: function(e) {
+         // Хак для фф и ие, которые ставят курсор в readonly поле
+         if (!this._options.enabled){
+            this._inputField.blur()
+         }
          if (this._options.selectOnClick || this._fromTab){
             this._inputField.select();
          }

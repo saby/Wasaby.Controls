@@ -1,7 +1,7 @@
 .controls-BackButton {
    cursor: pointer;
    display: inline-block;
-   font-size: 18px;
+   font-size: @back-button-font-size;
    line-height: 24px;
    font-weight: 700;
    position: relative;
@@ -15,6 +15,7 @@
       white-space: nowrap;
       text-align: left;
       max-width: calc(~"100% - 8px");
+      line-height: normal;
    }
    &:before {
       width: 8px;
@@ -22,6 +23,7 @@
       font-weight: normal;
       content: '\e003';
       float: left;
+      margin: @back-button-margin-before;
    }
 
 
@@ -64,8 +66,7 @@
    }
 }
 
-//Баг в мозилле плохо работает с before и float:left
-@-moz-document url-prefix() {
+.back-button-before-fix(){
    .controls-BackButton {
       .controls-BackButton__caption {
          margin-left: -4px;
@@ -76,4 +77,13 @@
          float: none;
       }
    }
+}
+
+//Баг в мозилле плохо работает с before и float:left
+@-moz-document url-prefix(){
+   .back-button-before-fix();
+}
+
+.ws-is-ie{
+   .back-button-before-fix();
 }

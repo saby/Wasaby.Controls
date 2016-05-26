@@ -633,6 +633,117 @@ define([
             });
          });
 
+         describe('.setEventRaising()', function() {
+            it('should enable and disable onCurrentChange', function() {
+               var handler = function () {
+                     fired = true;
+                  },
+                  fired;
+
+               projection.subscribe('onCurrentChange', handler);
+
+               fired = false;
+               projection.setEventRaising(true);
+               projection.moveToNext();
+               assert.isTrue(fired);
+
+               fired = false;
+               projection.setEventRaising(false);
+               projection.moveToNext();
+               assert.isFalse(fired);
+
+               projection.unsubscribe('onCurrentChange', handler);
+            });
+
+            it('should enable and disable onCollectionItemChange', function() {
+               var handler = function() {
+                     fired = true;
+                  },
+                  fired;
+
+               projection.subscribe('onCollectionItemChange', handler);
+
+               fired = false;
+               projection.setEventRaising(true);
+               projection.at(0).setSelected(true);
+               assert.isTrue(fired);
+
+               fired = false;
+               projection.setEventRaising(false);
+               projection.at(1).setSelected(true);
+               assert.isFalse(fired);
+
+               projection.unsubscribe('onCollectionItemChange', handler);
+            });
+
+            it('should enable and disable onCollectionChange', function() {
+               var handler = function() {
+                     fired = true;
+                  },
+                  fired;
+
+               projection.subscribe('onCollectionChange', handler);
+
+               fired = false;
+               projection.setEventRaising(true);
+               projection.getCollection().add({id: 'testA'});
+               assert.isTrue(fired);
+
+               fired = false;
+               projection.setEventRaising(false);
+               projection.getCollection().add({id: 'testB'});
+               assert.isFalse(fired);
+
+               projection.unsubscribe('onCollectionItemChange', handler);
+            });
+
+            it("should trigger event onCollectionItemChange after onCollectionChange", function(done){
+               var
+                  list = new ObservableList({
+                     items: [
+                        new Model({
+                           rawData: {max: 1}
+                        }),
+                        new Model({
+                           rawData: {max: 3}
+                        }),
+                        new Model({
+                           rawData: {max: 4}
+                        })
+                     ]
+                  });
+               list.subscribe('onCollectionChange', function(e, act, newItems, index, oldItems, oldIndex ){
+                  var item = list.at(oldIndex+1);
+                  item.set('max', 502);
+               });
+
+               var  projection = new CollectionProjection({
+                     collection: list
+                  });
+
+               projection.subscribe('onCollectionItemChange', function(e, item) {
+                  if(item.getContents().get('max') === 502){
+                     done();
+                  }
+               });
+               list.removeAt(0);
+            });
+         });
+
+         describe('.isEventRaising()', function() {
+            it('should return true by default', function() {
+               assert.isTrue(projection.isEventRaising());
+            });
+            it('should return true if enabled', function() {
+               projection.setEventRaising(true);
+               assert.isTrue(projection.isEventRaising());
+            });
+            it('should return false if disabled', function() {
+               projection.setEventRaising(false);
+               assert.isFalse(projection.isEventRaising());
+            });
+         });
+
          describe('.concat()', function() {
             it('should throw an error anyway', function() {
                assert.throw(function() {
@@ -650,6 +761,19 @@ define([
                   list,
                   projection.getCollection()
                );
+            });
+         });
+
+         describe('.getItems()', function() {
+            it('should return array of items', function() {
+               var items = projection.getItems();
+               assert.isTrue(items.length > 0);
+               for (var i = 0; i < items.length; i++) {
+                  assert.strictEqual(
+                     items[i],
+                     projection.at(i)
+                  );
+               }
             });
          });
 

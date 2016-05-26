@@ -1,0 +1,13 @@
+<!--WS-EXPERT
+<tr class="controls-DataGridView__tr controls-ListView__item js-controls-ListView__item {{=it.className}}" style="{{=it.decorators.apply((it.colorField ? it.item.get(it.colorField) : ''), 'color')}}" data-hash="{{=it.projItem.getHash()}}" data-id="{{=it.item.getId()}}"
+   {{for(var j in it.attributes){}}
+      {{=j}}="{{=it.attributes[j]}}"
+   {{}}}>
+   {{?it.multiselect}}
+   <td class="controls-DataGridView__td controls-DataGridView__td__checkBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
+      <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"/>
+   </td>
+   {{?}}
+   {{=it.itemContent(it)}}
+</tr>
+WS-EXPERT-->

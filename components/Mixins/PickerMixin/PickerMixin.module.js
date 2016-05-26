@@ -196,6 +196,15 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
                this._picker.destroy();
             }
          }
+      },
+
+      around : {
+         _getScrollContainer: function(parentFunc) {
+            if(!this._picker) {
+               return parentFunc.call(this);
+            }
+            return this._picker.getContainer();
+         }
       }
 
    };
