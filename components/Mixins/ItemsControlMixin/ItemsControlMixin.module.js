@@ -178,6 +178,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _dataSet: null,
          _dotItemTpl: null,
          _options: {
+            _canServerRender: false,
             _serverRender: false,
             _defaultItemTemplate: '',
             _defaultItemContentTemplate: '',
@@ -369,7 +370,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _modifyOptions : function(parentFnc, cfg) {
             var newCfg = parentFnc.call(this, cfg);
             newCfg._itemsTemplate = ItemsTemplate;
-            newCfg._itemData = cfg._buildTplArgs(cfg);
             if (cfg.items) {
                if (cfg.items instanceof Array) {
                   newCfg.keyField = findKeyField(cfg.items);
@@ -379,8 +379,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   newCfg._items = cfg.items;
                }
                newCfg._itemsProjection = cfg._createDefaultProjection(cfg._items);
-               if (!cfg.userItemAttributes && !cfg.itemTemplate && Object.isEmpty(cfg.groupBy)) {
+               if (cfg._canServerRender && !cfg.userItemAttributes && !cfg.itemTemplate && Object.isEmpty(cfg.groupBy)) {
                   newCfg._serverRender = true;
+                  newCfg._itemData = cfg._buildTplArgs(cfg);
                   newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection);
                }
             }
@@ -484,9 +485,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return data;
       },
 
+      _buildTplArgs : function() {
+         return this._options._buildTplArgs.apply(this, arguments);
+      },
+
       _prepareItemData: function() {
+         var buildArgsMethod;
+         if (this._canServerRender) {
+            buildArgsMethod = this._options._buildTplArgs;
+         }
+         else {
+            buildArgsMethod = this._buildTplArgs;
+         }
          if (!this._itemData) {
-            this._itemData = $ws.core.clone(this._options._buildTplArgs.call(this, this._options));
+            this._itemData = $ws.core.clone(buildArgsMethod.call(this, this._options));
          }
          return this._itemData;
       },

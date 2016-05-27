@@ -275,6 +275,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _firstScrollTop : true,
             _addResultsMethod: undefined,
             _options: {
+               _canServerRender: true,
                _buildTplArgs: buildTplArgs,
                _defaultItemTemplate: ItemTemplate,
                _defaultItemContentTemplate: ItemContentTemplate,
@@ -633,6 +634,14 @@ define('js!SBIS3.CONTROLS.ListView',
             this._drawEmptyData();
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
+            if (!this._options._serverRender) {
+               if (this._items) {
+                  this.redraw()
+               }
+               else if (this._dataSource){
+                  this.reload();
+               }
+            }
          },
          _modifyOptions : function(opts){
             var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
