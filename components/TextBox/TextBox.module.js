@@ -375,7 +375,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          this._compatPlaceholder = $('<div class="controls-TextBox__placeholder">' + this._options.placeholder + '</div>');
          this._updateCompatPlaceholderVisibility();
          this._inputField.after(this._compatPlaceholder);
-         this._compatPlaceholder.css('left', this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10));
+         this._compatPlaceholder.css({
+            'left': this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10),
+            'right': this._inputField.position().right || parseInt(this._inputField.parent().css('padding-right'), 10)
+         });
          this._compatPlaceholder.click(function(){
             if (self.isEnabled()) {
                self._inputField.get(0).focus();
