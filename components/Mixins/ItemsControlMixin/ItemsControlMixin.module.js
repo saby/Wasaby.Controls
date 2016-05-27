@@ -379,7 +379,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                if (cfg._canServerRender && !cfg.userItemAttributes && !cfg.itemTemplate && Object.isEmpty(cfg.groupBy)) {
                   newCfg._serverRender = true;
                   newCfg._itemData = cfg._buildTplArgs(cfg);
-                  newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection);
+                  newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection, cfg);
                }
             }
 
@@ -461,7 +461,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _prepareItemsData : function() {
          return {
-            records : this._options._getRecordsForRedraw(this._options._itemsProjection)
+            records : this._options._getRecordsForRedraw.call(this, this._options._itemsProjection, this._options)
          }
       },
 
@@ -472,7 +472,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             itemTpl = this._getItemTemplate();
 
          data = {
-            items : this._options._getRecordsForRedraw(this._options._itemsProjection)
+            items : this._options._getRecordsForRedraw(this._options._itemsProjection, this._options)
          };
 
          data.itemTemplate = TemplateUtil.prepareTemplate(itemTpl);
@@ -1518,7 +1518,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (this._options._items) {
             this._clearItems();
             this._needToRedraw = false;
-            records = this._options._getRecordsForRedraw(this._options._itemsProjection);
+            records = this._options._getRecordsForRedraw(this._options._itemsProjection, this._options);
             this._toggleEmptyData(!records.length && this._options.emptyHTML);
             this._drawItems(records);
          }

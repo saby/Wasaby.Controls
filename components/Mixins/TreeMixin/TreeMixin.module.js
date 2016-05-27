@@ -22,9 +22,45 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          nodeProperty: cfg.hierField + '@',
          root: root
       });
-      var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders : projectionFilter;
-      projection.setFilter(projectionFilter);
+      var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
+      projection.setFilter(filterCallBack);
       return projection;
+   },
+   getRecordsForRedraw = function(projection, cfg) {
+      var
+         records = [];
+      if (cfg.expand) {
+         projection.setEventRaising(false);
+         expandAllItems(projection);
+         projection.setEventRaising(true);
+         projection.each(function(item) {
+            records.push(item);
+         });
+      }
+      else {
+         /**
+          * todo Переписать, когда будет выполнена указанная ниже задача
+          * Задача в разработку от 28.04.2016 №1172779597
+          * В деревянной проекции необходима возможность определять, какие элементы создаются развернутыми. Т...
+          * https://inside.tensor.ru/opendoc.html?guid=6f1758f0-f45d-496b-a8fe-fde7390c92c7
+          * @private
+          */
+         var
+            items = [];
+         //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
+         if (this._isSearchMode && this._isSearchMode()) {
+            /*TODO нехорошее место, для поиска возвращаем приватное свойство, потому что надо в независимости от текущего корня
+             * показать все записи, а по другому их не вытащить*/
+            return projection._items;
+         } else {
+            applyExpandToItemsProjection(projection, cfg);
+            projection.each(function(item) {
+               items.push(item);
+            });
+         }
+         return items;
+      }
+      return records;
    },
    isVisibleItem =  function(item, onlyFolders) {
       if (onlyFolders && item.isNode() !== true) {
@@ -34,10 +70,43 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       return itemParent ? itemParent.isExpanded() ? isVisibleItem(itemParent) : false : true;
    },
    projectionFilter = function(item, index, itemProj) {
-      return /*this._isSearchMode() || */isVisibleItem(itemProj);
-   };
+      return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
+   },
    projectionFilterOnlyFolders = function(item, index, itemProj) {
-      return /*this._isSearchMode() || */isVisibleItem(itemProj, true);
+      return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj, true);
+   },
+   applyExpandToItemsProjection = function(projection, cfg) {
+      var idx, item;
+      projection.setEventRaising(false);
+      projection.setFilter(retTrue);
+      for (idx in cfg.openedPath) {
+         if (cfg.hasOwnProperty(idx)) {
+            item = projection.getItemBySourceItem(cfg._items.getRecordById(idx));
+            if (item && !item.isExpanded()) {
+               if (projection.getChildren(item).getCount()) {
+                  item.setExpanded(true);
+               } else {
+                  delete cfg.openedPath[idx];
+               }
+            }
+         }
+      }
+      var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders : projectionFilter;
+      projection.setFilter(filterCallBack);
+      projection.setEventRaising(true);
+   },
+   expandAllItems = function(projection) {
+      var
+         enumerator = projection.getEnumerator(),
+         doNext = true,
+         item;
+      while (doNext && (item = enumerator.getNext())) {
+         if (item.isNode() && !item.isExpanded()) {
+            item.setExpanded(true);
+            doNext = false;
+            expandAllItems(projection);
+         }
+      }
    };
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
@@ -100,6 +169,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          _treePagers : {},
          _treePager: null,
          _options: {
+            _getRecordsForRedraw: getRecordsForRedraw,
             _curRoot: null,
             _createDefaultProjection : createDefaultProjection,
             /**
@@ -185,9 +255,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          this._previousRoot = this._options._curRoot;
          this.setFilter(filter, true);
       },
-      _projectionFilter: function(item, index, itemProj) {
-         return this._isSearchMode() || isVisibleItem(itemProj, this._options.displayType == 'folders');
-      },
       /**
        * Задать поле иерархии
        * @param hierField Название поля иерархии
@@ -200,32 +267,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        */
       getHierField : function(){
          return this._options.hierField;
-      },
-      /**
-       * Создает проекцию итемов
-       */
-      _createDefaultProjection : function(items) {
-         var root;
-         if (typeof this._options._curRoot != 'undefined') {
-            root = this._options._curRoot;
-         }
-         else {
-            if (typeof this._options.root != 'undefined') {
-               root = this._options.root;
-            }
-            else {
-               root = null;
-            }
-         }
-         this._options._itemsProjection = new TreeProjection({
-            collection: items,
-            idProperty: this._options.keyField || (this._dataSource ? this._dataSource.getIdProperty() : ''),
-            parentProperty: this._options.hierField,
-            nodeProperty: this._options.hierField + '@',
-            root: root
-         });
-         this._options._itemsProjection.setFilter(this._projectionFilter.bind(this));
-         return this._options._itemsProjection;
       },
       /**
        * Закрывает узел (папку) по переданному идентификатору
@@ -261,40 +302,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       expandNode: function(key) {
          this._getItemProjectionByItemId(key).setExpanded(true);
       },
-      _expandAllItems: function() {
-         var
-            enumerator = this._options._itemsProjection.getEnumerator(),
-            doNext = true,
-            item;
-         while (doNext && (item = enumerator.getNext())) {
-            if (item.isNode() && !item.isExpanded()) {
-               item.setExpanded(true);
-               doNext = false;
-               this._expandAllItems();
-            }
-         }
-      },
       /**
        * Получить список записей для отрисовки
        * @private
        */
-      _getRecordsForRedraw: function() {
-         //*Получаем только рекорды с parent = curRoot*//
-         var
-            records = [];
-         if (this._options.expand) {
-            this._options._itemsProjection.setEventRaising(false);
-            this._expandAllItems();
-            this._options._itemsProjection.setEventRaising(true);
-            this._options._itemsProjection.each(function(item) {
-               records.push(item);
-            });
-         }
-         else {
-            return this._getRecordsForRedrawCurFolder();
-         }
-         return records;
-      },
       _isVisibleItem: function(item, onlyFolders) {
          if (onlyFolders && (item.isNode() !== true)) {
             return false;
@@ -310,50 +321,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             }
          }
          return result;
-      },
-      /**
-       * todo Переписать, когда будет выполнена указанная ниже задача
-       * Задача в разработку от 28.04.2016 №1172779597
-       * В деревянной проекции необходима возможность определять, какие элементы создаются развернутыми. Т...
-       * https://inside.tensor.ru/opendoc.html?guid=6f1758f0-f45d-496b-a8fe-fde7390c92c7
-       * @private
-       */
-      _applyExpandToItemsProjection: function() {
-         var idx, item;
-         this._options._itemsProjection.setEventRaising(false);
-         this._options._itemsProjection.setFilter(retTrue);
-         for (idx in this._options.openedPath) {
-            if (this._options.openedPath.hasOwnProperty(idx)) {
-               item = this._getItemProjectionByItemId(idx);
-               if (item && !item.isExpanded()) {
-                  if (this._options._itemsProjection.getChildren(item).getCount()) {
-                     item.setExpanded(true);
-                  } else {
-                     delete this._options.openedPath[idx];
-                  }
-               }
-            }
-         }
-         this._options._itemsProjection.setFilter(this._projectionFilter.bind(this));
-         this._options._itemsProjection.setEventRaising(true);
-      },
-      _getRecordsForRedrawCurFolder: function() {
-         /*Получаем только рекорды с parent = curRoot*/
-         var
-            items = [],
-            itemParent;
-         //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
-         if (this._isSearchMode()) {
-            /*TODO нехорошее место, для поиска возвращаем приватное свойство, потому что надо в независимости от текущего корня
-            * показать все записи, а по другому их не вытащить*/
-            return this._options._itemsProjection._items;
-         } else {
-            this._applyExpandToItemsProjection();
-            this._options._itemsProjection.each(function(item) {
-               items.push(item);
-            }.bind(this));
-         }
-         return items;
       },
       /**
        * Создаёт фильтр для дерева (берет текущий фильтр и дополняет его)

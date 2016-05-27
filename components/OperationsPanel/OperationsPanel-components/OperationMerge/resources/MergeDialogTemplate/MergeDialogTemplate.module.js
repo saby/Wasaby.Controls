@@ -80,7 +80,9 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             dataSource = new SbisServiceSource(this._options.dataSource._options);
             dataSource.getBinding().query = this._options.queryMethodName ? this._options.queryMethodName : this._options.dataSource.getBinding().query;
             this._treeView.setDataSource(dataSource, true);
-            this._treeView._projectionFilter = retTrue; //todo ИСПРАВИТЬ. Возможно, нужно поправить тест и передавать поле, которое будет использоваться в поиске при группировке
+            this._treeView._getItemsProjection.setEventRaising(false);
+            this._treeView._getItemsProjection.setFilter(retTrue);//todo ИСПРАВИТЬ. Возможно, нужно поправить тест и передавать поле, которое будет использоваться в поиске при группировке
+            this._treeView._getItemsProjection.setEventRaising(true);
             this._treeView.reload({
                 'Разворот': 'С разворотом',
                 'usePages': 'full',
