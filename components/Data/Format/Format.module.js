@@ -15,24 +15,17 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
 
    var Format = List.extend(/** @lends SBIS3.CONTROLS.Data.Format.Format.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Format.Format',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {Array.<SBIS3.CONTROLS.Data.Format.Field>} Элементы списка
-             * @name SBIS3.CONTROLS.Data.Format.Format#items
-             */
-         },
 
-         /**
-          * @member {Array.<SBIS3.CONTROLS.Data.Format.Field>} Элементы списка
-          */
-         _items: []
-      },
+      /**
+       * @cfg {Array.<SBIS3.CONTROLS.Data.Format.Field>} Элементы списка
+       * @name SBIS3.CONTROLS.Data.Format.Format#items
+       */
 
-      $constructor: function () {
-         for (var i = 0, len = this._items.length; i < len; i++) {
-            this._checkItem(this._items[i]);
-            this._checkName(this._items[i], i);
+      constructor: function $Format(options) {
+         Format.superclass.constructor.call(this, options);
+         for (var i = 0, len = this._$items.length; i < len; i++) {
+            this._checkItem(this._$items[i]);
+            this._checkName(this._$items[i], i);
          }
       },
 
@@ -41,18 +34,18 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
       add: function (item, at) {
          this._checkItem(item);
          this._checkName(item);
-         Format.superclass.add.apply(this, arguments);
+         Format.superclass.add.call(this, item, at);
       },
 
       remove: function (item) {
          this._checkItem(item);
-         return Format.superclass.remove.apply(this, arguments);
+         return Format.superclass.remove.call(this, item);
       },
 
       replace: function (item, at) {
          this._checkItem(item);
          this._checkName(item, at);
-         Format.superclass.replace.apply(this, arguments);
+         Format.superclass.replace.call(this, item, at);
       },
 
       assign: function (items) {
@@ -62,8 +55,8 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
             this._checkItem(items[i]);
          }
          Format.superclass.assign.call(this, items);
-         for (i = 0, len = this._items.length; i < len; i++) {
-            this._checkName(this._items[i], i);
+         for (i = 0, len = this._$items.length; i < len; i++) {
+            this._checkName(this._$items[i], i);
          }
       },
 

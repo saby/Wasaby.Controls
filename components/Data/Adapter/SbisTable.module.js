@@ -1,8 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
+   'js!SBIS3.CONTROLS.Data.Entity.Abstract',
    'js!SBIS3.CONTROLS.Data.Adapter.ITable',
    'js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin'
-], function (ITable, SbisFormatMixin) {
+], function (Abstract, ITable, SbisFormatMixin) {
    'use strict';
 
    /**
@@ -13,10 +14,16 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
     * @public
     * @author Мальцев Алексей
     */
-   var SbisTable = $ws.core.extend({}, [ITable, SbisFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisTable.prototype */{
+   var SbisTable = Abstract.extend([ITable, SbisFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisTable.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.SbisTable',
 
-      $constructor: function () {
+      /**
+       * Конструктор
+       * @param {*} data Сырые данные
+       */
+      constructor: function (data) {
+         SbisTable.superclass.constructor.call(this, data);
+         SbisFormatMixin.constructor.call(this, data);
          this._data._type = 'recordset';
       },
 
