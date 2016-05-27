@@ -65,6 +65,11 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
             this._changeSelectionHandler = function (event, result) {
                var linkedView = self.getLinkedView();
 
+               /* По стандадту:
+                  5. Если в панели множественного выбора кликнуть на записи, она должна добавиться в значение поля связи (поддержка единичного выбора).
+                  Единичный выбор срабатывает только если не отмечено ни одного чекбокса.
+                  Поэтому добавляю проверку на выделенные записи.
+                */
                if(linkedView.getSelectedKeys().length) {
                   return;
                }
