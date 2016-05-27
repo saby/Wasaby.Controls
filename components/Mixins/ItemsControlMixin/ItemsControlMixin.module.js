@@ -71,6 +71,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       }
       return tplOptions;
+   },
+   findKeyField  = function(json){
+      var itemFirst = json[0];
+      if (itemFirst) {
+         return Object.keys(json[0])[0];
+      }
+   },
+   JSONToRecordset  = function(json) {
+      return new RecordSet({
+         rawData : json,
+         idProperty : findKeyField(json)
+      })
    };
 
    var ItemsControlMixin = /**@lends SBIS3.CONTROLS.ItemsControlMixin.prototype  */{
@@ -357,13 +369,22 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _modifyOptions : function(parentFnc, cfg) {
             var newCfg = parentFnc.call(this, cfg);
             newCfg._itemsTemplate = ItemsTemplate;
-            newCfg._items = cfg.items;
-            newCfg._itemsProjection = cfg._createDefaultProjection(cfg.items);
-            newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection);
             newCfg._itemData = cfg._buildTplArgs(cfg);
-            if (cfg.items && !(cfg.items instanceof Array) && !cfg.userItemAttributes && !cfg.itemTemplate && Object.isEmpty(cfg.groupBy)) {
-               newCfg._serverRender = true;
+            if (cfg.items) {
+               if (cfg.items instanceof Array) {
+                  newCfg.keyField = findKeyField(cfg.items);
+                  newCfg._items = JSONToRecordset(cfg.items);
+               }
+               else {
+                  newCfg._items = cfg.items;
+               }
+               newCfg._itemsProjection = cfg._createDefaultProjection(cfg._items);
+               if (!cfg.userItemAttributes && !cfg.itemTemplate && Object.isEmpty(cfg.groupBy)) {
+                  newCfg._serverRender = true;
+                  newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection);
+               }
             }
+
             return newCfg;
          }
       },
@@ -373,8 +394,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (typeof this._options.pageSize === 'string') {
             this._options.pageSize = this._options.pageSize * 1;
          }
+         if (!this._options.keyField) {
+            $ws.single.ioc.resolve('ILogger').log('Option keyField is undefined in control ' + this.getName());
+         }
          this._bindHandlers();
-         this._prepareConfig(this._options.dataSource, this._options.items);
+         this._prepareItemsConfig();
 
          if (this._options.itemTemplate || this._options.userItemAttributes) {
             $ws.single.ioc.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Заданы itemTemplate или userItemAttributes');
@@ -382,6 +406,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       },
 
+      _prepareItemsConfig: function() {
+         if (this._options._dataSource) {
+            this._dataSource = this._prepareSource(this._options._dataSource);
+         }
+         this._items = this._options._items;
+         this._itemsProjection = this._options._itemsProjection;
+         this._setItemsEventHandlers();
+         this._notify('onItemsReady');
+         this._itemsReadyCallback();
+         this._dataLoadedCallback();
+         this._notifyOnDrawItems();
+      },
 
 
       _prepareConfig : function(sourceOpt, itemsOpt) {
@@ -397,28 +433,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          if (itemsOpt) {
             if (itemsOpt instanceof Array) {
-               if (!this._options.keyField) {
-                  var itemFirst = itemsOpt[0];
-                  if (itemFirst) {
-                     this._options.keyField = Object.keys(itemFirst)[0];
-                  }
-               }
-
-               /*TODO для совеместимости пока создадим сорс*/
-               this._dataSource = new MemorySource({
-                  data: itemsOpt,
-                  idProperty: this._options.keyField
-               });
+               this._options.keyField = findKeyField(itemsOpt);
+               this._items = this._options._items = JSONToRecordset(itemsOpt);
             }
             else {
-               this._items = this._options._items;
-               this._itemsProjection = this._options._itemsProjection;
-               this._setItemsEventHandlers();
-               this._notify('onItemsReady');
-               this._itemsReadyCallback();
-               this._dataLoadedCallback();
-               this._notifyOnDrawItems();
+               this._items = this._options._items = itemsOpt;
             }
+            this._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items);
+            this._setItemsEventHandlers();
+            this._notify('onItemsReady');
+            this._itemsReadyCallback();
          }
       },
 
@@ -1181,14 +1205,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see onDataLoad
         */
        setItems: function (items) {
+          this._options.items = items;
           this._unsetItemsEventHandlers();
-          this._items = null;
+          this._options._items = this._items = null;
           this._prepareConfig(undefined, items);
-          if(items instanceof Array) {
-             this.reload();
-          } else {
-             this.redraw();
-          }
+          this.redraw();
       },
 
       _drawItemsCallback: function () {
