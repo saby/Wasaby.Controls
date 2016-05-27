@@ -1565,6 +1565,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if (this._options.infiniteScroll == 'up' && this._scrollOnBottom){
                   self._scrollWatcher.scrollTo('bottom');
                }
+               //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
                if (this._scrollWatcher && !this._scrollWatcher.hasScroll(this.getContainer())){
                   this._nextLoad();
                }
