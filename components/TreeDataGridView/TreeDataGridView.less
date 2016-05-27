@@ -34,6 +34,20 @@
       height: 14px;
     }
   }
+
+   &.controls-DataGridView-cell-overflow-ellipsis {
+      .controls-TreeView__folderTitle {
+         overflow: hidden;
+         text-overflow: ellipsis;
+         white-space: nowrap;
+
+         > * {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+         }
+      }
+   }
 }
 .controls-CompositeView-table.controls-TreeView-big {
    .controls-ListView__item-type-node{
