@@ -60,16 +60,20 @@
    }
    .controls-ListView-scrollIndicator{
       display: block;
-      background: @list-view-scroll-bg;
       margin: 0 auto;
-      right: 50%;
       height: @list-view-scroll-height;
       width: @list-view-scroll-width;
       bottom: 0;
       position: absolute;
-      z-index: 1;
+      z-index: 1;         
+      right: 0;
+      width: 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-image: url('img/ajax-loader-indicator.gif'), linear-gradient(to top, rgba(255,255,255,1) 0%,rgba(255,255,255,0.7) 50%,rgba(255,255,255,0.69) 51%,rgba(125,185,232,0) 100%);
       &.controls-ListView-scrollIndicator__up{
          top: 0;
+         background-image: url('img/ajax-loader-indicator.gif'), linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0.7) 50%,rgba(255,255,255,0.69) 51%,rgba(125,185,232,0) 100%);
       }
    }
    &.controls-ListView__showCheckBoxes {
