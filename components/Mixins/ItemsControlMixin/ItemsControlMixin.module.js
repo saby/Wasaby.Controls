@@ -378,7 +378,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                else {
                   newCfg._items = cfg.items;
                }
-               newCfg._itemsProjection = cfg._createDefaultProjection(cfg._items);
+               newCfg._itemsProjection = cfg._createDefaultProjection(cfg._items, cfg);
                if (cfg._canServerRender && !cfg.userItemAttributes && !cfg.itemTemplate && Object.isEmpty(cfg.groupBy)) {
                   newCfg._serverRender = true;
                   newCfg._itemData = cfg._buildTplArgs(cfg);
@@ -440,7 +440,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else {
                this._items = this._options._items = itemsOpt;
             }
-            this._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items);
+            this._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
             this._setItemsEventHandlers();
             this._notify('onItemsReady');
             this._itemsReadyCallback();

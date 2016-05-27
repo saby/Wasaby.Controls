@@ -25,6 +25,9 @@ define('js!SBIS3.CONTROLS.TreeView', [
          _defaultItemTemplate: ItemTemplate,
          _defaultItemContentTemplate: ItemContentTemplate,
          _options: {
+            _canServerRender: true,
+            _defaultItemTemplate: ItemTemplate,
+            _defaultItemContentTemplate: ItemContentTemplate,
             //FixME: так как приходит набор от листвью. пока он не нужен
             itemsActions: [],
             //TODO: Копипаст из TreeDataGridView, временное решение т.к. в TreeMixin пока разместить нельзя по причине

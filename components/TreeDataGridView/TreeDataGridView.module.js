@@ -72,6 +72,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          _defaultItemContentTemplate: ItemContentTemplate,
          _footerWrapperTemplate: FooterWrapperTemplate,
          _options: {
+            _canServerRender: false,
+            _defaultItemTemplate: ItemTemplate,
+            _defaultItemContentTemplate: ItemContentTemplate,
             /**
              * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике по кнопке справа от названия узла (папки) или скрытого узла.
              * @remark

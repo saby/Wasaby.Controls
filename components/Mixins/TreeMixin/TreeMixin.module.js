@@ -6,7 +6,29 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-
+   var createDefaultProjection = function(items, cfg) {
+      var root;
+      if (typeof cfg._curRoot != 'undefined') {
+         root = cfg._curRoot;
+      }
+      else {
+         if (typeof cfg.root != 'undefined') {
+            root = cfg.root;
+         }
+         else {
+            root = null;
+         }
+      }
+      this._itemsProjection = new TreeProjection({
+         collection: items,
+         idProperty: cfg.keyField || (this._dataSource ? this._dataSource.getIdProperty() : ''),
+         parentProperty: cfg.hierField,
+         nodeProperty: cfg.hierField + '@',
+         root: root
+      });
+      this._itemsProjection.setFilter(this._projectionFilter.bind(this));
+      return this._itemsProjection;
+   };
    var TreeMixin = /** @lends SBIS3.CONTROLS.TreeMixin.prototype */{
       /**
        * @event onSearchPathClick При клике по хлебным крошкам в режиме поиска.
@@ -62,6 +84,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          _treePagers : {},
          _treePager: null,
          _options: {
+            _createDefaultProjection : createDefaultProjection,
             /**
              * @cfg {String} Идентификатор узла, относительно которого надо отображать данные
              * @noShow
