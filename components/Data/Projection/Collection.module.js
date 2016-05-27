@@ -590,9 +590,21 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       /**
        * Включает/выключает генерацию событий об изменении проекции
        * @param {Boolean} enabled Генерация событий влючена/выключена
+       * @param {Boolean} [analyze=false] Анализировать изменения (если включить, то при включении будет произведен анализ всех изменений с момента выключения - сгенерируются события об изменениях)
        */
-      setEventRaising: function(enabled) {
+      setEventRaising: function(enabled, analyze) {
          this._eventRaising = !!enabled;
+
+         if (analyze) {
+            if (this._eventRaising) {
+               if (this._beforeRaiseOff) {
+                  this._finishUpdateSession(this._beforeRaiseOff);
+                  delete this._beforeRaiseOff;
+               }
+            } else {
+               this._beforeRaiseOff = this._startUpdateSession();
+            }
+         }
       },
 
       /**
