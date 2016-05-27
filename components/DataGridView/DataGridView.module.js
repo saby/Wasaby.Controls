@@ -49,8 +49,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
       _dotTplFn : dotTplFn,
       $protected: {
-         _defaultItemTemplate: ItemTemplate,
-         _defaultItemContentTemplate: ItemContentTemplate,
          _defaultGroupTemplate: GroupTemplate,
          _defaultCellTemplate: cellTemplate,
          _rowTpl : rowTpl,

@@ -164,8 +164,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       $protected: {
          _itemData : null,
-         _defaultItemTemplate: '',
-         _defaultItemContentTemplate: '',
          _defaultGroupTemplate: '',
          _groupHash: {},
          _itemsProjection: null,
@@ -1555,7 +1553,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             return this._options.itemTemplate;
          }
          else {
-            return this._defaultItemTemplate;
+            return this._options._defaultItemTemplate;
          }
       },
 

@@ -22,8 +22,6 @@ define('js!SBIS3.CONTROLS.TreeView', [
 
    var TreeView = ListView.extend([TreeMixin, TreeViewMixin], /** @lends SBIS3.CONTROLS.TreeView.prototype*/ {
       $protected: {
-         _defaultItemTemplate: ItemTemplate,
-         _defaultItemContentTemplate: ItemContentTemplate,
          _options: {
             _canServerRender: true,
             _defaultItemTemplate: ItemTemplate,

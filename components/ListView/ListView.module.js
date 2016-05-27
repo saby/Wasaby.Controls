@@ -229,8 +229,6 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {Object} filter Фильтр который будет помещёт в диалог перемещения.
           */
          $protected: {
-            _defaultItemTemplate: ItemTemplate,
-            _defaultItemContentTemplate: ItemContentTemplate,
             _floatCheckBox: null,
             _dotItemTpl: null,
             _itemsContainer: null,
