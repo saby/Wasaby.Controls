@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
 
       _notifyOnFiltersReady: function() {
-         var fastFilter =this._fastDataFilter;
+         var fastFilter = this._fastDataFilter;
 
          /* Если фильтр скрыт, то не будем его отображать */
          if(fastFilter && fastFilter.isVisible()) {
