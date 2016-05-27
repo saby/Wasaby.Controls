@@ -2,7 +2,7 @@
    border: 1px solid @border-color;
    border-radius: 14px;
    text-align: center;
-   &:hover{
+   &:hover, &.ws-has-focus {
       border-color: @default-color;
       &.controls-IconButton__errorBorder {
          border-color: #ef463a;
@@ -61,44 +61,60 @@
    .icon-primary{
       &.controls-IconButton {
          color: #587ab0 !important;
-         &.ws-disabled, &.ws-disabled.action-hover:hover{
-            color: #ccc!important;
+         &.ws-disabled, &.ws-disabled.action-hover {
+            &:hover, &.ws-has-focus{
+               color: #ccc !important;
+            }
          }
-         &.action-hover:hover{
-            color: #ff7033 !important;
+         &.action-hover {
+            &:hover, &.ws-has-focus {
+               color: #ff7033 !important;
+            }
          }
       }
    }
    .icon-error{
       &.controls-IconButton {
          color: #ef463a !important;
-         &.ws-disabled, &.ws-disabled.action-hover:hover{
-            color: #ccc!important;
+         &.ws-disabled, &.ws-disabled.action-hover {
+            &:hover, &.ws-has-focus{
+               color: #ccc !important;
+            }
          }
-         &.action-hover:hover {
-            color: #ff7033 !important;
+         &.action-hover {
+            &:hover, &.ws-has-focus {
+               color: #ff7033 !important;
+            }
          }
       }
    }
    .icon-done{
       &.controls-IconButton {
          color: #72be44 !important;
-         &.ws-disabled, &.ws-disabled.action-hover:hover{
-            color: #ccc!important;
+         &.ws-disabled, &.ws-disabled.action-hover {
+            &:hover, &.ws-has-focus{
+               color: #ccc !important;
+            }
          }
-         &.action-hover:hover {
-            color: #ff7033 !important;
+         &.action-hover {
+            &:hover, &.ws-has-focus {
+               color: #ff7033 !important;
+            }
          }
       }
    }
    .icon-attention{
       &.controls-IconButton {
          color: #FEC63F !important;
-         &.ws-disabled, &.ws-disabled.action-hover:hover{
-            color: #ccc!important;
+         &.ws-disabled, &.ws-disabled.action-hover {
+            &:hover, &.ws-has-focus{
+               color: #ccc !important;
+            }
          }
-         &.action-hover:hover {
-            color: #ff7033 !important;
+         &.action-hover {
+            &:hover, &.ws-has-focus {
+               color: #ff7033 !important;
+            }
          }
       }
    }

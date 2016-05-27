@@ -33,7 +33,7 @@
   .box-shadow(@button-shadow);
   background: @button-bg;
 
-  &:hover {
+  &:hover, &.ws-has-focus {
     color: @button-hover-text-color;
     border: @button-hover-border;
     .box-shadow(@button-hover-shadow);
@@ -69,7 +69,7 @@
     border: @button-primary-border;
     .box-shadow(@button-primary-shadow);
     background: @button-primary-bg;
-    &:hover {
+    &:hover, &.ws-has-focus {
       color: @button-primary-hover-text-color;
       border: @button-primary-hover-border;
       .box-shadow(@button-primary-hover-shadow);
@@ -106,7 +106,7 @@
     .box-shadow(@button-big-shadow);
     background: @button-big-bg;
 
-    &:hover {
+    &:hover, &.ws-has-focus {
       color: @button-big-hover-text-color;
       border: @button-big-hover-border;
       .box-shadow(@button-big-hover-shadow);
@@ -144,7 +144,7 @@
       .box-shadow(@button-big-primary-shadow);
       background: @button-big-primary-bg;
 
-      &:hover {
+      &:hover, &.ws-has-focus {
         color: @button-big-primary-hover-text-color;
         border: @button-big-primary-hover-border;
         .box-shadow(@button-big-primary-hover-shadow);
