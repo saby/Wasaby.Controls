@@ -253,7 +253,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
          _clearItems: function(container) {
             if (this._getItemsContainer().get(0) == $(container).get(0) || !container) {
                var self = this;
-               this._lastParent = this._curRoot;
+               this._lastParent = this._options._curRoot;
                this._lastDrawn = undefined;
                this._lastPath = [];
                this._destroySearchBreadCrumbs();

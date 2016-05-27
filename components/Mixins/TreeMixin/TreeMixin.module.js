@@ -84,6 +84,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          _treePagers : {},
          _treePager: null,
          _options: {
+            _curRoot: null,
             _createDefaultProjection : createDefaultProjection,
             /**
              * @cfg {String} Идентификатор узла, относительно которого надо отображать данные
@@ -148,7 +149,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          _lastPath : [],
          _loadedNodes: {},
          _previousRoot: null,
-         _curRoot: null,
          _hier: [],
          _paddingSize: 16,
          _originallPadding: 6
@@ -159,14 +159,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             filter = this.getFilter() || {};
          this._publish('onSearchPathClick', 'onNodeExpand', 'onNodeCollapse', 'onSetRoot', 'onBeforeSetRoot');
          if (typeof this._options.root != 'undefined') {
-            this._curRoot = this._options.root;
+            this._options._curRoot = this._options.root;
             filter[this._options.hierField] = this._options.root;
          }
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'С узлами и листьями';
          }
-         this._previousRoot = this._curRoot;
+         this._previousRoot = this._options._curRoot;
          this.setFilter(filter, true);
       },
       _projectionFilter: function(item, index, itemProj) {
@@ -190,8 +190,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        */
       _createDefaultProjection : function(items) {
          var root;
-         if (typeof this._curRoot != 'undefined') {
-            root = this._curRoot;
+         if (typeof this._options._curRoot != 'undefined') {
+            root = this._options._curRoot;
          }
          else {
             if (typeof this._options.root != 'undefined') {
@@ -451,7 +451,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             if (this._options.expand) {
                var tree = this._dataSet.getTreeIndex(this._options.hierField);
                for (var i in tree) {
-                  if (tree.hasOwnProperty(i) && i != 'null' && i != this._curRoot) {
+                  if (tree.hasOwnProperty(i) && i != 'null' && i != this._options._curRoot) {
                      this._options.openedPath[i] = true;
                   }
                }
@@ -460,15 +460,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                hierarchy = $ws.core.clone(this._hier),
                item;
             if (path) {
-               hierarchy = this._getHierarchy(path, this._curRoot);
+               hierarchy = this._getHierarchy(path, this._options._curRoot);
             }
             // При каждой загрузке данных стреляем onSetRoot, не совсем правильно
             // но есть случаи когда при reload присылают новый path,
             // а хлебные крошки не перерисовываются так как корень не поменялся
-            this._notify('onSetRoot', this._curRoot, hierarchy);
+            this._notify('onSetRoot', this._options._curRoot, hierarchy);
             //TODO Совсем быстрое и временное решение. Нужно скроллиться к первому элементу при проваливании в папку.
             // Выпилить, когда это будет делать установка выделенного элемента
-            if (this._previousRoot !== this._curRoot) {
+            if (this._previousRoot !== this._options._curRoot) {
 
                //TODO курсор
                /*Если в текущем списке есть предыдущий путь, значит это выход из папки*/
@@ -485,7 +485,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                   }
                }
 
-               this._previousRoot = this._curRoot;
+               this._previousRoot = this._options._curRoot;
 
             }
          },
@@ -550,7 +550,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             drawItem = false,
             kInd = -1;
          if (this._lastParent === undefined) {
-            this._lastParent = this._curRoot;
+            this._lastParent = this._options._curRoot;
          }
          key = record.getKey();
          curRecRoot = record.get(this._options.hierField);
@@ -573,7 +573,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                if (last) {
                   this._drawGroup(projItem.getContents(), at, undefined, projItem);
                   this._lastPath = [];
-                  this._lastParent = this._curRoot;
+                  this._lastParent = this._options._curRoot;
                }
             }
          } else {//другой кусок иерархии
@@ -607,7 +607,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                if (last) {
                   this._drawGroup(projItem.getContents(), at, undefined, projItem);
                   this._lastPath = [];
-                  this._lastParent = this._curRoot;
+                  this._lastParent = this._options._curRoot;
                }
             }
          }
@@ -705,7 +705,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        * @returns {*}
        */
       getCurrentRoot : function(){
-         return this._curRoot;
+         return this._options._curRoot;
       },
       /**
        * Раскрыть определенный узел
@@ -731,10 +731,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          this._offset = 0;
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
          this._notify('onBeforeSetRoot', key);
-         this._curRoot = key || this._options.root;
+         this._options._curRoot = key || this._options.root;
          if (this._options._itemsProjection) {
             this._options._itemsProjection.setEventRaising(false);
-            this._options._itemsProjection.setRoot(this._curRoot || null);
+            this._options._itemsProjection.setRoot(this._options._curRoot || null);
             this._options._itemsProjection.setEventRaising(true);
          }
       },
