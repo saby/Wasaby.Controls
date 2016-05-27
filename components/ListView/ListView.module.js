@@ -945,6 +945,13 @@ define('js!SBIS3.CONTROLS.ListView',
                this._drawEmptyData();
             }
          },
+
+         setMultiselect: function(flag) {
+            ListView.superclass.setMultiselect.apply(this, arguments);
+            this.getContainer().toggleClass('controls-ListView__multiselect', flag)
+                               .toggleClass('controls-ListView__multiselect__off', !flag);
+         },
+
          _drawEmptyData: function() {
             var html = this._options.emptyHTML;
             this._emptyData = html && $(emptyDataTpl({emptyHTML: html})).appendTo(this._container);
