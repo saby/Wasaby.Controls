@@ -282,9 +282,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             filter = $ws.core.clone(this.getFilter());
             //Группируем записи по веткам (чтобы как можно меньше запросов делать)
             $ws.helpers.forEach(items, function(id) {
-               item = this._items.getRecordById(id);
+               item = this._options._items.getRecordById(id);
                if (item) {
-                  parentBranchId = this.getParentKey(undefined, this._items.getRecordById(id));
+                  parentBranchId = this.getParentKey(undefined, this._options._items.getRecordById(id));
                   if (!recordsGroup[parentBranchId]) {
                      recordsGroup[parentBranchId] = [];
                   }

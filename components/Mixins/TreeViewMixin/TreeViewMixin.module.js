@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                this._folderHasMore[key] = list.getMetaData().more;
                this._loadedNodes[key] = true;
                ladderDecorator && ladderDecorator.setIgnoreEnabled(true);
-               this._items.merge(list, {remove: false});
+               this._options._items.merge(list, {remove: false});
                ladderDecorator && ladderDecorator.setIgnoreEnabled(false);
                if (this._isSlowDrawing()) {
                   this._dataSet.getTreeIndex(this._options.hierField, true);

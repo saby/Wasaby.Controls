@@ -633,7 +633,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
             if (!this._options._serverRender) {
-               if (this._items) {
+               if (this._options._items) {
                   this.redraw()
                }
                else if (this._dataSource){
@@ -1318,7 +1318,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //options.editFieldFocusHandler = this._editFieldFocusHandler.bind(this) - подумать, как это сделать
             var
                config = {
-                  dataSet: this._items,
+                  dataSet: this._options._items,
                   editingItem: this._editingItem,
                   ignoreFirstColumn: this._options.multiselect,
                   dataSource: this._dataSource,
@@ -1683,7 +1683,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         self._containerScrollHeight = self._scrollWatcher.getScrollHeight();
                         self._needSrollTopCompensation = true;
                         //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
-                        self._items.prepend(dataSet.toArray().reverse());
+                        self._options._items.prepend(dataSet.toArray().reverse());
                         at = {at: 0};
                      } else {
                         //TODO новый миксин не задействует декоратор лесенки в принципе при любых действиях, кроме первичной отрисовки
@@ -1694,7 +1694,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            ladder.setIgnoreEnabled(true);
                         }
                         //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
-                        self._items.append(dataSet);
+                        self._options._items.append(dataSet);
                         ladder && ladder.setIgnoreEnabled(false);
                      }
 

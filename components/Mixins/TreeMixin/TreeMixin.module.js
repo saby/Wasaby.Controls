@@ -428,8 +428,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             }
             //Если данные пришли, нарисуем
             if (dataSet.getCount()) {
-               self._items.merge(dataSet, {remove: false});
-               self._items.getTreeIndex(self._options.hierField, true);
+               self._options._items.merge(dataSet, {remove: false});
+               self._options._items.getTreeIndex(self._options.hierField, true);
                self._updateItemsToolbar();
                self._dataLoadedCallback();
             }
@@ -457,7 +457,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                   }
                }
             }
-            var path = this._items.getMetaData().path,
+            var path = this._options._items.getMetaData().path,
                hierarchy = $ws.core.clone(this._hier),
                item;
             if (path) {

@@ -408,7 +408,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (this._options._dataSource) {
             this._dataSource = this._prepareSource(this._options._dataSource);
          }
-         this._items = this._options._items;
          this._setItemsEventHandlers();
          this._notify('onItemsReady');
          this._itemsReadyCallback();
@@ -431,10 +430,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (itemsOpt) {
             if (itemsOpt instanceof Array) {
                this._options.keyField = findKeyField(itemsOpt);
-               this._items = this._options._items = JSONToRecordset(itemsOpt);
+               this._options._items = JSONToRecordset(itemsOpt);
             }
             else {
-               this._items = this._options._items = itemsOpt;
+               this._options._items = itemsOpt;
             }
             this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
             this._setItemsEventHandlers();
@@ -447,7 +446,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * Метод получения проекции по ID итема
        */
       _getItemProjectionByItemId: function(id) {
-         return this._options._itemsProjection.getItemBySourceItem(this._items.getRecordById(id));
+         return this._options._itemsProjection.getItemBySourceItem(this._options._items.getRecordById(id));
       },
 
       /*переписанные методы для однопроходной отрисовки begin*/
@@ -650,7 +649,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
                      // TODO. Костыль для редактирования по месту. Написан тут, т.к. необходимо его убрать (решение не универсальное).
                      // https://inside.tensor.ru/opendoc.html?guid=8fe37872-c08b-4a7b-9c9f-d04f531cc45b
-                     this._optimizedInsertMarkup(itemsContainer, markup, this._items.getCount() > 1);
+                     this._optimizedInsertMarkup(itemsContainer, markup, this._options._items.getCount() > 1);
                   }
                   else {
                      if ((newItemsIndex) == (this._options._itemsProjection.getCount() - newItems.length)) {
@@ -797,7 +796,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             return opts;
          },
          init : function(){
-            if (this._items) {
+            if (this._options._items) {
                if (!this._options._serverRender) {
                   this.redraw()
                }
@@ -977,21 +976,21 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              this._notify('onBeforeDataLoad');
              def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit)
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
-                   var hasItems = !!this._items;
+                   var hasItems = !!this._options._items;
 
                    self._toggleIndicator(false);
                    self._notify('onDataLoad', list);
 
                    if (this._itemsInitializedBySource) {
                       this._dataSet.setMetaData(list.getMetaData());
-                      this._items.assign(list);
-                      if (this._items !== this._dataSet) {
+                      this._options._items.assign(list);
+                      if (this._options._items !== this._dataSet) {
                          this._dataSet.assign(list);
                       }
                    } else {
-                      this._items = list;
+                      this._options._items = list;
                       this._dataSet = list;
-                      this._options._itemsProjection = this._createDefaultProjection(this._items);
+                      this._options._itemsProjection = this._createDefaultProjection(this._options._items);
                       this._setItemsEventHandlers();
                       this._notify('onItemsReady');
                       this._itemsReadyCallback();
@@ -1186,7 +1185,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
       //TODO поддержка старого - обратная совместимость
       getItems : function() {
-         return this._items;
+         return this._options._items;
       },
        /**
         * Метод установки либо замены коллекции элементов, заданных опцией {@link items}.
@@ -1517,7 +1516,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _oldRedraw: function () {
          var records;
 
-         if (this._items) {
+         if (this._options._items) {
             this._clearItems();
             this._needToRedraw = false;
             records = this._options._getRecordsForRedraw(this._options._itemsProjection);
