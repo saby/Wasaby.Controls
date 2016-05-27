@@ -1561,8 +1561,13 @@ define('js!SBIS3.CONTROLS.ListView',
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
             var self = this;
-            if (this._options.infiniteScroll == 'up' && this._scrollOnBottom){
-               self._scrollWatcher.scrollTo('bottom');
+            if (this.getItems()){
+               if (this._options.infiniteScroll == 'up' && this._scrollOnBottom){
+                  self._scrollWatcher.scrollTo('bottom');
+               }
+               if (this._scrollWatcher && !this._scrollWatcher.hasScroll(this.getContainer())){
+                  this._nextLoad();
+               }
             }
          },
          _removeItem: function(item){
