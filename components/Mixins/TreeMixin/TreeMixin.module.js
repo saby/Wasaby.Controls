@@ -7,7 +7,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
     * @author Крайнов Дмитрий Олегович
     */
    var createDefaultProjection = function(items, cfg) {
-      var root;
+      var
+         root, projection;
       if (typeof cfg._curRoot != 'undefined') {
          root = cfg._curRoot;
       }
@@ -19,15 +20,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             root = null;
          }
       }
-      this._options._itemsProjection = new TreeProjection({
+      projection = new TreeProjection({
          collection: items,
-         idProperty: cfg.keyField || (this._dataSource ? this._dataSource.getIdProperty() : ''),
+         idProperty: cfg.keyField || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
          parentProperty: cfg.hierField,
          nodeProperty: cfg.hierField + '@',
          root: root
       });
-      this._options._itemsProjection.setFilter(this._projectionFilter.bind(this));
-      return this._options._itemsProjection;
+      projection.setFilter(this._projectionFilter.bind(this));
+      return projection;
    };
    var TreeMixin = /** @lends SBIS3.CONTROLS.TreeMixin.prototype */{
       /**
