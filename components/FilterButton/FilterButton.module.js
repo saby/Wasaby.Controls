@@ -254,6 +254,12 @@ define('js!SBIS3.CONTROLS.FilterButton',
                       }
                       firstTime = false;
                    },
+                   //FIXME временное решение, пока пикер не научится работать с фокусом и обрабатывать клавиши
+                   onKeyPressed: function(event, e) {
+                      if(e.which === $ws._const.key.esc) {
+                         this.hide();
+                      }
+                   },
 
                    onInit: function() {
                       if(self._filterComponent) {
