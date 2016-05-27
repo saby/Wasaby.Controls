@@ -19,15 +19,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             root = null;
          }
       }
-      this._itemsProjection = new TreeProjection({
+      this._options._itemsProjection = new TreeProjection({
          collection: items,
          idProperty: cfg.keyField || (this._dataSource ? this._dataSource.getIdProperty() : ''),
          parentProperty: cfg.hierField,
          nodeProperty: cfg.hierField + '@',
          root: root
       });
-      this._itemsProjection.setFilter(this._projectionFilter.bind(this));
-      return this._itemsProjection;
+      this._options._itemsProjection.setFilter(this._projectionFilter.bind(this));
+      return this._options._itemsProjection;
    };
    var TreeMixin = /** @lends SBIS3.CONTROLS.TreeMixin.prototype */{
       /**
@@ -201,15 +201,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                root = null;
             }
          }
-         this._itemsProjection = new TreeProjection({
+         this._options._itemsProjection = new TreeProjection({
             collection: items,
             idProperty: this._options.keyField || (this._dataSource ? this._dataSource.getIdProperty() : ''),
             parentProperty: this._options.hierField,
             nodeProperty: this._options.hierField + '@',
             root: root
          });
-         this._itemsProjection.setFilter(this._projectionFilter.bind(this));
-         return this._itemsProjection;
+         this._options._itemsProjection.setFilter(this._projectionFilter.bind(this));
+         return this._options._itemsProjection;
       },
       /**
        * Закрывает узел (папку) по переданному идентификатору
@@ -247,7 +247,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       },
       _expandAllItems: function() {
          var
-            enumerator = this._itemsProjection.getEnumerator(),
+            enumerator = this._options._itemsProjection.getEnumerator(),
             doNext = true,
             item;
          while (doNext && (item = enumerator.getNext())) {
@@ -267,10 +267,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          var
             records = [];
          if (this._options.expand) {
-            this._itemsProjection.setEventRaising(false);
+            this._options._itemsProjection.setEventRaising(false);
             this._expandAllItems();
-            this._itemsProjection.setEventRaising(true);
-            this._itemsProjection.each(function(item) {
+            this._options._itemsProjection.setEventRaising(true);
+            this._options._itemsProjection.each(function(item) {
                records.push(item);
             });
          }
@@ -304,13 +304,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        */
       _applyExpandToItemsProjection: function() {
          var idx, item;
-         this._itemsProjection.setEventRaising(false);
-         this._itemsProjection.setFilter(retTrue);
+         this._options._itemsProjection.setEventRaising(false);
+         this._options._itemsProjection.setFilter(retTrue);
          for (idx in this._options.openedPath) {
             if (this._options.openedPath.hasOwnProperty(idx)) {
                item = this._getItemProjectionByItemId(idx);
                if (item && !item.isExpanded()) {
-                  if (this._itemsProjection.getChildren(item).getCount()) {
+                  if (this._options._itemsProjection.getChildren(item).getCount()) {
                      item.setExpanded(true);
                   } else {
                      delete this._options.openedPath[idx];
@@ -318,8 +318,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                }
             }
          }
-         this._itemsProjection.setFilter(this._projectionFilter.bind(this));
-         this._itemsProjection.setEventRaising(true);
+         this._options._itemsProjection.setFilter(this._projectionFilter.bind(this));
+         this._options._itemsProjection.setEventRaising(true);
       },
       _getRecordsForRedrawCurFolder: function() {
          /*Получаем только рекорды с parent = curRoot*/
@@ -330,10 +330,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          if (this._isSearchMode()) {
             /*TODO нехорошее место, для поиска возвращаем приватное свойство, потому что надо в независимости от текущего корня
             * показать все записи, а по другому их не вытащить*/
-            return this._itemsProjection._items;
+            return this._options._itemsProjection._items;
          } else {
             this._applyExpandToItemsProjection();
-            this._itemsProjection.each(function(item) {
+            this._options._itemsProjection.each(function(item) {
                items.push(item);
             }.bind(this));
          }
@@ -511,7 +511,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        */
       expandToItem: function(key){
          var items = this.getItems(),
-            projection = this._itemsProjection,
+            projection = this._options._itemsProjection,
             recordKey = key,
             nodes = [],
             hasItemInProjection,
@@ -732,10 +732,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
          this._notify('onBeforeSetRoot', key);
          this._curRoot = key || this._options.root;
-         if (this._itemsProjection) {
-            this._itemsProjection.setEventRaising(false);
-            this._itemsProjection.setRoot(this._curRoot || null);
-            this._itemsProjection.setEventRaising(true);
+         if (this._options._itemsProjection) {
+            this._options._itemsProjection.setEventRaising(false);
+            this._options._itemsProjection.setRoot(this._curRoot || null);
+            this._options._itemsProjection.setEventRaising(true);
          }
       },
       _getHierarchy: function(dataSet, key){
@@ -762,7 +762,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
 
       getParentKey: function (DataSet, item) {
          var
-            itemParent = this._itemsProjection.getItemBySourceItem(item).getParent().getContents();
+            itemParent = this._options._itemsProjection.getItemBySourceItem(item).getParent().getContents();
          return $ws.helpers.instanceOfModule(itemParent, 'SBIS3.CONTROLS.Data.Record') ? itemParent.getId() : itemParent;
       },
 

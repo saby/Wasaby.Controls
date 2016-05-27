@@ -757,8 +757,8 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          getNextItemById: function (id) {
             return this._getHtmlItemByProjectionItem(
-               this._itemsProjection.getNext(
-                  this._itemsProjection.getItemBySourceItem(
+               this._options._itemsProjection.getNext(
+                  this._options._itemsProjection.getItemBySourceItem(
                      this.getItems().getRecordById(id)
                   )
                )
@@ -771,8 +771,8 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          getPrevItemById: function (id) {
             return this._getHtmlItemByProjectionItem(
-               this._itemsProjection.getPrevious(
-                  this._itemsProjection.getItemBySourceItem(
+               this._options._itemsProjection.getPrevious(
+                  this._options._itemsProjection.getItemBySourceItem(
                      this.getItems().getRecordById(id)
                   )
                )
@@ -1324,7 +1324,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   editingItem: this._editingItem,
                   ignoreFirstColumn: this._options.multiselect,
                   dataSource: this._dataSource,
-                  itemsProjection: this._itemsProjection,
+                  itemsProjection: this._options._itemsProjection,
                   notEndEditClassName: this._notEndEditClassName,
                   editingTemplate: this._options.editingTemplate,
                   itemsContainer: this._getItemsContainer(),

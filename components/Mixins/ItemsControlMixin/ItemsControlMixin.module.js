@@ -412,7 +412,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._dataSource = this._prepareSource(this._options._dataSource);
          }
          this._items = this._options._items;
-         this._itemsProjection = this._options._itemsProjection;
          this._setItemsEventHandlers();
          this._notify('onItemsReady');
          this._itemsReadyCallback();
@@ -440,7 +439,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else {
                this._items = this._options._items = itemsOpt;
             }
-            this._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
+            this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
             this._setItemsEventHandlers();
             this._notify('onItemsReady');
             this._itemsReadyCallback();
@@ -451,7 +450,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * Метод получения проекции по ID итема
        */
       _getItemProjectionByItemId: function(id) {
-         return this._itemsProjection.getItemBySourceItem(this._items.getRecordById(id));
+         return this._options._itemsProjection.getItemBySourceItem(this._items.getRecordById(id));
       },
 
       /*переписанные методы для однопроходной отрисовки begin*/
@@ -466,7 +465,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _prepareItemsData : function() {
          return {
-            records : this._options._getRecordsForRedraw(this._itemsProjection)
+            records : this._options._getRecordsForRedraw(this._options._itemsProjection)
          }
       },
 
@@ -477,7 +476,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             itemTpl = this._getItemTemplate();
 
          data = {
-            items : this._options._getRecordsForRedraw(this._itemsProjection)
+            items : this._options._getRecordsForRedraw(this._options._itemsProjection)
          };
 
          data.itemTemplate = TemplateUtil.prepareTemplate(itemTpl);
@@ -657,11 +656,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      this._optimizedInsertMarkup(itemsContainer, markup, this._items.getCount() > 1);
                   }
                   else {
-                     if ((newItemsIndex) == (this._itemsProjection.getCount() - newItems.length)) {
+                     if ((newItemsIndex) == (this._options._itemsProjection.getCount() - newItems.length)) {
                         this._optimizedInsertMarkup(itemsContainer, markup, false);
                      }
                      else {
-                        item = this._itemsProjection.at(newItemsIndex - 1);
+                        item = this._options._itemsProjection.at(newItemsIndex - 1);
                         container = this._getDomElementByItem(item);
                         container.after(markup);
                      }
@@ -877,13 +876,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _setItemsEventHandlers: function() {
-         this.subscribeTo(this._itemsProjection, 'onCollectionChange', this._onCollectionChange);
-         this.subscribeTo(this._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
+         this.subscribeTo(this._options._itemsProjection, 'onCollectionChange', this._onCollectionChange);
+         this.subscribeTo(this._options._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
       },
 
       _unsetItemsEventHandlers: function () {
-         this.unsubscribeFrom(this._itemsProjection, 'onCollectionChange', this._onCollectionChange);
-         this.unsubscribeFrom(this._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
+         this.unsubscribeFrom(this._options._itemsProjection, 'onCollectionChange', this._onCollectionChange);
+         this.unsubscribeFrom(this._options._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
       },
        /**
         * Метод установки источника данных.
@@ -995,7 +994,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    } else {
                       this._items = list;
                       this._dataSet = list;
-                      this._itemsProjection = this._createDefaultProjection(this._items);
+                      this._options._itemsProjection = this._createDefaultProjection(this._items);
                       this._setItemsEventHandlers();
                       this._notify('onItemsReady');
                       this._itemsReadyCallback();
@@ -1014,7 +1013,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       self.redraw();
                    }
                    if (self._options.infiniteScroll === 'up'){
-                      var firstItem = self._itemsProjection.at(0);
+                      var firstItem = self._options._itemsProjection.at(0);
                       if (firstItem) {
                          self._scrollToItem(firstItem.getContents().getId());
                       }
@@ -1034,7 +1033,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                 }, self));
              this._loader = def;
           } else {
-             if (this._itemsProjection) {
+             if (this._options._itemsProjection) {
                 this._redraw();
              }
              def = new $ws.proto.Deferred();
@@ -1524,7 +1523,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (this._items) {
             this._clearItems();
             this._needToRedraw = false;
-            records = this._options._getRecordsForRedraw(this._itemsProjection);
+            records = this._options._getRecordsForRedraw(this._options._itemsProjection);
             this._toggleEmptyData(!records.length && this._options.emptyHTML);
             this._drawItems(records);
          }
@@ -1570,7 +1569,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   projItem = items[i]
                }
                else {
-                  projItem = this._itemsProjection.getItemBySourceItem(items[i]);
+                  projItem = this._options._itemsProjection.getItemBySourceItem(items[i]);
                }
 
                this._drawAndAppendItem(projItem, curAt, i === items.length - 1);
@@ -1623,8 +1622,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (canApplyGrouping) {
             var
                meth = this._options.groupBy.method,
-               prev = this._itemsProjection.getPrevious(projItem),
-               next = this._itemsProjection.getNext(projItem);
+               prev = this._options._itemsProjection.getPrevious(projItem),
+               next = this._options._itemsProjection.getNext(projItem);
             if(prev)
                meth.call(this, prev.getContents(), undefined, undefined, prev);
             meth.call(this, item, undefined, undefined, projItem);
@@ -1754,7 +1753,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
                      ladderDecorator.setIgnoreEnabled(false);
                   }
-                  this._toggleEmptyData(!this._itemsProjection.getCount());
+                  this._toggleEmptyData(!this._options._itemsProjection.getCount());
 	               //this._view.checkEmpty(); toggleEmtyData
 	               this.reviveComponents(); //надо?
                    this._drawItemsCallback();
