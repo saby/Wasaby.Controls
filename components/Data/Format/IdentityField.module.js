@@ -14,16 +14,14 @@ define('js!SBIS3.CONTROLS.Data.Format.IdentityField', [
 
    var IdentityField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.IdentityField.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Format.IdentityField',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {Number} Значение поля по умолчанию
-             * @see getDefaultValue
-             * @see setDefaultValue
-             */
-            defaultValue: [null]
-         }
-      },
+
+      /**
+       * @cfg {Number} Значение поля по умолчанию
+       * @name SBIS3.CONTROLS.Data.Format.IdentityField#defaultValue
+       * @see getDefaultValue
+       * @see setDefaultValue
+       */
+      _$defaultValue: [null],
 
       //region Public methods
 

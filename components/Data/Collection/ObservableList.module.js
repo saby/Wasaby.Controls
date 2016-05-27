@@ -19,7 +19,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableList', [
     */
 
    var ObservableList = List.extend([IBindCollection, ObservableListMixin], /** @lends SBIS3.CONTROLS.Data.Collection.ObservableList.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Collection.ObservableList'
+      _moduleName: 'SBIS3.CONTROLS.Data.Collection.ObservableList',
+
+      constructor: function $ObservableList(options) {
+         ObservableList.superclass.constructor.call(this, options);
+         ObservableListMixin.constructor.call(this, options);
+      }
    });
 
    SerializableMixin._checkExtender(ObservableList);

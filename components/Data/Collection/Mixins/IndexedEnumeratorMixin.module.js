@@ -13,14 +13,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
     */
 
    var IndexedEnumeratorMixin = /**@lends SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin.prototype  */{
-      $protected: {
-         /**
-          * @member {Object} Индексы, распределенные по полям
-          */
-         _enumeratorIndexes: {}
-      },
+      /**
+       * @member {Object} Индексы, распределенные по полям
+       */
+      _enumeratorIndexes: null,
 
-      $constructor: function () {
+      constructor: function () {
+         this._enumeratorIndexes = {};
          this._onCollectionChange = this._onCollectionChange.bind(this);
       },
 

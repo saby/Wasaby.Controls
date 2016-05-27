@@ -15,34 +15,32 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableListMixin', [
     */
 
    var LoadableListMixin = /** @lends SBIS3.CONTROLS.Data.Collection.LoadableListMixin.prototype */{
-      $protected: {
-         /**
-          * @var {$ws.proto.Deferred} Текущий загрузчик
-          */
-         _loader: undefined,
+      /**
+       * @member {$ws.proto.Deferred} Текущий загрузчик
+       */
+      _loader: undefined,
 
-         /**
-          * @var {Boolean} Загрузка была произведена
-          */
-         _loaded: false,
+      /**
+       * @member {Boolean} Загрузка была произведена
+       */
+      _loaded: false,
 
-         /**
-          * @var {SBIS3.CONTROLS.Data.Query.Query} Сформированный запрос
-          */
-         _query: undefined,
+      /**
+       * @member {SBIS3.CONTROLS.Data.Query.Query} Сформированный запрос
+       */
+      _query: undefined,
 
-         /**
-          * @var {Boolean} С момента последнего вызова load() были внесены изменения в query
-          */
-         _queryChanged: false,
+      /**
+       * @member {Boolean} С момента последнего вызова load() были внесены изменения в query
+       */
+      _queryChanged: false,
 
-         /**
-          * @var {Number|Boolean} Общее кол-во записей выборки
-          */
-         _queryTotal: true
-      },
+      /**
+       * @member {Number|Boolean} Общее кол-во записей выборки
+       */
+      _queryTotal: true,
 
-      $constructor: function () {
+      constructor: function () {
          this._publish('onBeforeCollectionLoad', 'onAfterCollectionLoad', 'onBeforeLoadedApply', 'onAfterLoadedApply');
          this._query = new Query();
       },
@@ -50,11 +48,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableListMixin', [
       //region SBIS3.CONTROLS.Data.Collection.ISourceLoadable
 
       getSource: function () {
-         return this._options.source;
+         return this._$source;
       },
 
       setSource: function (source) {
-         this._options.source = source;
+         this._$source = source;
       },
 
       isLoaded: function () {

@@ -1,15 +1,17 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
+   'js!SBIS3.CONTROLS.Data.Entity.Abstract',
    'js!SBIS3.CONTROLS.Data.Adapter.IRecord',
    'js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin',
    'js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin',
    'js!SBIS3.CONTROLS.Data.Utils'
-], function (IRecord, GenericFormatMixin, JsonFormatMixin, Utils) {
+], function (Abstract, IRecord, GenericFormatMixin, JsonFormatMixin, Utils) {
    'use strict';
 
    /**
     * Адаптер для записи таблицы данных в формате JSON
     * @class SBIS3.CONTROLS.Data.Adapter.JsonRecord
+    * @extends SBIS3.CONTROLS.Data.Entity.Abstract
     * @mixes SBIS3.CONTROLS.Data.Adapter.IRecord
     * @mixes SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin
     * @mixes SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
@@ -17,19 +19,23 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
     * @author Мальцев Алексей
     */
 
-   var JsonRecord = $ws.core.extend({}, [IRecord, GenericFormatMixin, JsonFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.JsonRecord.prototype */{
+   var JsonRecord = Abstract.extend([IRecord, GenericFormatMixin, JsonFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.JsonRecord.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.JsonRecord',
-      $protected: {
-         /**
-          * @member {Object.<String, *>} Сырые данные
-          */
-         _data: null
-      },
+      /**
+       * @member {Object.<String, *>} Сырые данные
+       */
+      _data: null,
 
-      $constructor: function (data) {
+      /**
+       * Конструктор
+       * @param {*} data Сырые данные
+       */
+      constructor: function (data) {
          if (!(data instanceof Object)) {
             data = {};
          }
+         JsonRecord.superclass.constructor.call(this, data);
+         JsonFormatMixin.constructor.call(this, data);
          this._data = data;
       },
 
@@ -44,12 +50,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
             throw new Error(this._moduleName + '::addField(): field "' + name + '" already exists');
          }
 
-         JsonRecord.superclass.addField.call(this, format, at);
+         JsonFormatMixin.addField.call(this, format, at);
          this.set(name, format.getDefaultValue());
       },
 
       removeField: function(name) {
-         JsonRecord.superclass.removeField.call(this, name);
+         JsonFormatMixin.removeField.call(this, name);
          delete this._data[name];
       },
 

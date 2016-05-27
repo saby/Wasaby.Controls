@@ -15,23 +15,21 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeChildren', [
 
    var TreeChildren = List.extend(/** @lends SBIS3.CONTROLS.Data.Projection.TreeChildren.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.TreeChildren',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {SBIS3.CONTROLS.Data.Projection.TreeItem} Узел-владелец
-             */
-            owner: false
-         }
-      },
 
-      $constructor: function (cfg) {
-         cfg = cfg || {};
+      /**
+       * @cfg {SBIS3.CONTROLS.Data.Projection.TreeItem} Узел-владелец
+       * @name SBIS3.CONTROLS.Data.Projection.TreeChildren#owner
+       */
+      _$owner: null,
 
-         if (typeof cfg.owner !== 'object') {
-            throw new Error('Tree children owner should be an object');
+      constructor: function $TreeChildren(options) {
+         TreeChildren.superclass.constructor.call(this, options);
+
+         if (!(this._$owner instanceof Object)) {
+            throw new TypeError('Tree children owner should be an object');
          }
-         if (!$ws.helpers.instanceOfModule(cfg.owner, 'SBIS3.CONTROLS.Data.Projection.TreeItem')) {
-            throw new Error('Tree children owner should be an instance of SBIS3.CONTROLS.Data.Projection.TreeItem');
+         if (!$ws.helpers.instanceOfModule(this._$owner, 'SBIS3.CONTROLS.Data.Projection.TreeItem')) {
+            throw new TypeError('Tree children owner should be an instance of SBIS3.CONTROLS.Data.Projection.TreeItem');
          }
       },
 
@@ -50,7 +48,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeChildren', [
        * @returns {SBIS3.CONTROLS.Data.Projection.TreeItem}
        */
       getOwner: function () {
-         return this._options.owner;
+         return this._$owner;
       }
 
       //endregion Public methods

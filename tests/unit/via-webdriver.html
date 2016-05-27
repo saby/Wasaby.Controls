@@ -46,14 +46,11 @@
 <!-- WS setup -->
 <script>
     window.wsConfig = {
-        WSRootPath: '../../sbis3-ws/ws/',
         wsRoot: '../../sbis3-ws/ws/',
-        WSTheme: 'wi_scheme',
         resourceRoot: '../../components',
         nostyle: true,
         globalConfigSupport: false
     };
-    window.WSTheme = 'wi_scheme';
 </script>
 <script src="../../components/contents.js" data-pack-name="contents"></script>
 <script src="../../sbis3-ws/ws/ext/requirejs/require.js"></script>
@@ -75,13 +72,6 @@
     $ws.core.withComponents('Source').addCallback(function () {
         requirejs(['../../tests/unit/list'], function () {
             mocha.run(function () {
-                //Save jscoverage report if was run in his iframe
-                if (window.jscoverage_report) {
-                    jscoverage_report();
-                }
-                //jscoverage_storeButton_click();
-                //jscoverage_stopButton_click();
-
                 $('body').addClass('tests-finished');
             });
         });
