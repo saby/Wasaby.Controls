@@ -107,11 +107,11 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       },
 
       _toggleTrackHeader: function(state){
-      	var track = $ws.helpers.trackElement(this._container);
       	if (state){
+            var track = $ws.helpers.trackElement(this._container);
       		track.subscribe('onMove', this._onMoveHandler, this);
       	} else {
-      		track.unsubscribe('onMove', this._onMoveHandler);
+            $ws.helpers.trackElement(this._container, false);
       	}
       },
 
