@@ -82,6 +82,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
          }
          // webkit && ie>9
          if (currentWindow.getSelection) {
+            //В хроме getSelection().toString() отдаёт переносы в виде \n блокнот их не воспринимает, необходимо переделывать их в \r\n
             textData = currentWindow.getSelection().toString().replace(/\r\n|\n/gi,'\r\n');;
             selectionRange = currentWindow.getSelection().getRangeAt(0);
             selectionContent = canCut ? selectionRange.extractContents() : selectionRange.cloneContents();
