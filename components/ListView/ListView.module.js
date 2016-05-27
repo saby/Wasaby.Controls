@@ -681,7 +681,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   topParent.once('onAfterShow', function(){
                      self._isLoadBeforeScrollAppears = true;
                      self._firstScrollTop = true;
-                     if (self._dataSet) {
+                     if (self._options._items) {
                         self._preScrollLoading();
                      }
                   });
@@ -715,7 +715,7 @@ define('js!SBIS3.CONTROLS.ListView',
                case $ws._const.key.enter:
                   if(selectedKey) {
                      var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
-                     this._elemClickHandler(selectedKey, this._dataSet.getRecordByKey(selectedKey), selectedItem);
+                     this._elemClickHandler(selectedKey, this._options._items.getRecordById(selectedKey), selectedItem);
                   }
                   break;
                case $ws._const.key.space:
@@ -1248,7 +1248,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _onChangeHoveredItemHandler: function(event, hoveredItem) {
             var target = hoveredItem.container;
             if (target && !(target.hasClass('controls-editInPlace') || target.hasClass('controls-editInPlace__editing'))) {
-               this.showEip(target, this._dataSet.getRecordByKey(hoveredItem.key), { isEdit: false });
+               this.showEip(target, this._options._items.getRecordById(hoveredItem.key), { isEdit: false });
             } else {
                this._getEditInPlace().hide();
             }
@@ -1638,7 +1638,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _loadChecked: function (result) {
             //Важно, чтобы датасет уже был готов к моменту, когда мы попытаемся грузить данные
-            if (this._dataSet && result) {
+            if (this._options._items && result) {
                this._nextLoad();
             }
          },
@@ -1653,7 +1653,7 @@ define('js!SBIS3.CONTROLS.ListView',
                loadAllowed  = this._isAllowInfiniteScroll();
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && $ws.helpers.isElementVisible(this.getContainer()) &&
-                  this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && this._hasScrollMore && !this._isLoading()) {
+                  this._hasNextPage(this._options._items.getMetaData().more, this._infiniteScrollOffset) && this._hasScrollMore && !this._isLoading()) {
                this._showLoadingIndicator();
                this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), this._infiniteScrollOffset + this._limit, this._limit);
                this._loader = this._callQuery(this.getFilter(), this.getSorting(), this._infiniteScrollOffset + this._limit, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
@@ -1917,7 +1917,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _processPagingStandart: function () {
             if (!this._pager) {
-               var more = this._dataSet.getMetaData().more,
+               var more = this._options._items.getMetaData().more,
                   hasNextPage = this._hasNextPage(more),
                   pagingOptions = {
                      recordsPerPage: this._options.pageSize || more,
@@ -1951,7 +1951,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * Метод обработки интеграции с пейджингом
           */
          _updatePaging: function () {
-            var more = this._dataSet.getMetaData().more,
+            var more = this._options._items.getMetaData().more,
                nextPage = this._hasNextPage(more, this._infiniteScrollOffset),
                numSelected = 0;
             if (this._pager) {
@@ -1963,16 +1963,16 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._pageChangeDeferred = undefined;
                }
                //Если на странице больше нет записей - то устанавливаем предыдущую (если это возможно)
-               if (this._dataSet.getCount() === 0 && pageNum > 1) {
+               if (this._options._items.getCount() === 0 && pageNum > 1) {
                   this._pager.getPaging().setPage(1); //чтобы не перезагружать поставим 1ую. было : pageNum - 1
                }
                //TODO Постараться избавиться от _infiniteScrollOffset, т.к. _offset уже выполняет необходимые функции
                this._pager.getPaging().update(this.getPage(this.isInfiniteScroll() ? this._infiniteScrollOffset : this._offset) + 1, more, nextPage);
-               this._pager.getContainer().toggleClass('ws-hidden', !this._dataSet.getCount());
+               this._pager.getContainer().toggleClass('ws-hidden', !this._options._items.getCount());
                if (this._options.multiselect) {
                   numSelected = this.getSelectedKeys().length;
                }
-               this._pager.updateAmount(this._dataSet.getCount(), nextPage, numSelected);
+               this._pager.updateAmount(this._options._items.getCount(), nextPage, numSelected);
             }
          },
          /**
@@ -2014,12 +2014,12 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          getPage: function (offset) {
             var offset = offset || this._offset,
-                more = this._dataSet.getMetaData().more;
+                more = this._options._items.getMetaData().more;
             //Если offset отрицательный, значит запросили последнюю страницу.
             return Math.ceil((offset < 0 ? more + offset : offset) / this._options.pageSize);
          },
          _updateOffset: function () {
-            var more = this._dataSet.getMetaData().more,
+            var more = this._options._items.getMetaData().more,
                nextPage = this._hasNextPage(more);
             if (this.getPage() === -1) {
                this._offset = more - this._options.pageSize;

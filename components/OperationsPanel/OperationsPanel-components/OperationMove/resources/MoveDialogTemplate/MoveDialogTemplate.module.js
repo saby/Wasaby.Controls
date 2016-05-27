@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
          var
              self = this.getParent(),
              moveTo = self._treeView.getSelectedKey();
-         moveTo = moveTo !== 'null' ? self._treeView._dataSet.getRecordByKey(moveTo) : null;
+         moveTo = moveTo !== 'null' ? self._treeView._options._items.getRecordByKey(moveTo) : null;
          if (self._treeView._checkRecordsForMove(self._options.records, moveTo)) {
             self._options.linkedView._move(self._options.records, moveTo);
          }

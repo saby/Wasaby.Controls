@@ -165,7 +165,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       _getPDFPageOrient: function(){
          var pageOrient;
          if (this._currentItem === 'PDF'){
-            pageOrient = this._dataSet.getRecordById(this._currentItem).getRaw().pageOrientation;
+            pageOrient = this.getItems().getRecordById(this._currentItem).getRaw().pageOrientation;
          }
          return pageOrient
       },

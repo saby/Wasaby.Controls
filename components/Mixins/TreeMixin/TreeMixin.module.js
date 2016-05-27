@@ -450,7 +450,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          _dataLoadedCallback: function () {
             //this._options.openedPath = {};
             if (this._options.expand) {
-               var tree = this._dataSet.getTreeIndex(this._options.hierField);
+               var tree = this._options._items.getTreeIndex(this._options.hierField);
                for (var i in tree) {
                   if (tree.hasOwnProperty(i) && i != 'null' && i != this._options._curRoot) {
                      this._options.openedPath[i] = true;
@@ -727,7 +727,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          }
          this.setFilter(filter, true);
          this._notify('onBeforeSetRoot');
-         this._hier = this._getHierarchy(this._dataSet, key);
+         this._hier = this._getHierarchy(this._options._items, key);
          //узел грузим с 0-ой страницы
          this._offset = 0;
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет

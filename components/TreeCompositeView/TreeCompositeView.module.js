@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             if (res !== false) {
                this._options.elemClickHandler && this._options.elemClickHandler.call(this, id, data, target);
                nodeID = $(target).closest('.controls-ListView__item').data('id');
-               if (this._dataSet.getRecordByKey(nodeID).get(this._options.hierField + '@')) {
+               if (this.getItems().getRecordByKey(nodeID).get(this._options.hierField + '@')) {
                   this.setCurrentRoot(nodeID);
                   this.reload();
                }

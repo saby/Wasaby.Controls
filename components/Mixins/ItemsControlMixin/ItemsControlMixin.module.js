@@ -938,7 +938,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if(!compatibilityMode) {
             Utils.logger.stack('SBIS3.CONTROLS.ItemsControlMixin Получение DataSet явялется устаревшим функционалом используйте getItems()', 1);
          }
-         return this._dataSet;
+         return this._options._items;
       },
        /**
         * Метод перезагрузки данных.
@@ -982,14 +982,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    self._notify('onDataLoad', list);
 
                    if (this._itemsInitializedBySource) {
-                      this._dataSet.setMetaData(list.getMetaData());
+                      this._options._items.setMetaData(list.getMetaData());
                       this._options._items.assign(list);
-                      if (this._options._items !== this._dataSet) {
-                         this._dataSet.assign(list);
-                      }
                    } else {
                       this._options._items = list;
-                      this._dataSet = list;
                       this._options._itemsProjection = this._createDefaultProjection(this._options._items);
                       this._setItemsEventHandlers();
                       this._notify('onItemsReady');
