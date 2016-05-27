@@ -1,6 +1,5 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.HashableMixin', [
-], function () {
+define('js!SBIS3.CONTROLS.Data.HashableMixin', function () {
    'use strict';
 
    /**
@@ -12,17 +11,15 @@ define('js!SBIS3.CONTROLS.Data.HashableMixin', [
     */
 
    var HashableMixin = /**@lends SBIS3.CONTROLS.Data.HashableMixin.prototype  */{
-      $protected: {
-         /**
-          * @var {String} Префикс значений хеша
-          */
-         _hashPrefix: 'id-',
+      /**
+       * @member {String} Префикс значений хеша
+       */
+      _hashPrefix: 'id-',
 
-         /**
-          * @var {String} Уникальный хеш
-          */
-         _hash: ''
-       },
+      /**
+       * @member {String} Уникальный хеш
+       */
+      _hash: '',
 
       //region SBIS3.CONTROLS.Data.IHashable
 
