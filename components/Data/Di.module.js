@@ -48,6 +48,15 @@ define('js!SBIS3.CONTROLS.Data.Di', [], function () {
        *    });
        *    Di.register('app.logger', Logger, {single: true});
        * </pre>
+       * Регистрируем зависимость с переопределенными параметарми конструктора:
+       * <pre>
+       *    Di.register('model.crm-user', function(options) {
+       *       return new User($ws.core.merge(options, {
+       *          context: 'crm',
+       *          dateFormat: 'Y/m/d'
+       *       }));
+       *    });
+       * </pre>
        */
       register: function (alias, factory, options) {
          Di._checkAlias(alias);

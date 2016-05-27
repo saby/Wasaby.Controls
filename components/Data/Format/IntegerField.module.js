@@ -14,16 +14,14 @@ define('js!SBIS3.CONTROLS.Data.Format.IntegerField', [
 
    var IntegerField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.IntegerField.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Format.IntegerField',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {Number} Значение поля по умолчанию
-             * @see getDefaultValue
-             * @see setDefaultValue
-             */
-            defaultValue: 0
-         }
-      }
+
+      /**
+       * @cfg {Number} Значение поля по умолчанию
+       * @name SBIS3.CONTROLS.Data.Format.IntegerField#defaultValue
+       * @see getDefaultValue
+       * @see setDefaultValue
+       */
+      _$defaultValue: 0
 
       //region Public methods
 

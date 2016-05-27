@@ -59,11 +59,11 @@ define([
                   ['Ид', 'Фамилия']
                );
             });
-            it('should throw an Error for empty', function () {
-               var adapter = new JsonTable();
-               assert.throw(function () {
-                  adapter.getFields();
-               });
+            it('should return an empty array for empty', function () {
+               var adapter = new JsonTable(),
+                  fields = adapter.getFields();
+               assert.instanceOf(fields, Array);
+               assert.strictEqual(fields.length, 0);
             });
          });
 
