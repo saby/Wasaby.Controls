@@ -164,7 +164,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       $protected: {
          _itemData : null,
-         _defaultGroupTemplate: '',
          _groupHash: {},
          _itemsProjection: null,
          _items : null,
