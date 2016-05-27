@@ -995,6 +995,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    if(hasItems) {
                       if(!self._options.autoRedraw) {
                          self.redraw();
+                      } else {
+                        self._drawItemsCallback();
                       }
                    } else {
                       self.redraw();

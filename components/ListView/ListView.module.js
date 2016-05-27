@@ -1878,7 +1878,8 @@ define('js!SBIS3.CONTROLS.ListView',
                this._updateOffset();
             }
             if (this.isInfiniteScroll()) {
-               if (!this._hasNextPage(this._dataSet.getMetaData().more)) {
+               //Если нет следующей страницы - скроем индикатор загрузки
+               if (!this._hasNextPage(this.getItems().getMetaData().more, this._infiniteScrollOffset)) {
                   this._hideLoadingIndicator();
                }
             }
