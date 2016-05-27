@@ -321,8 +321,7 @@ define(
       setText: function (text) {
          DatePicker.superclass.setText.call(this, text);
          this._options.date = text == '' ? null : this._getDateByText(text);
-         this._notifyOnPropertyChanged('date', this._options.date);
-         this._notify('onDateChange', this._options.date);
+        this._notifyOnDateChanged();
       },
 
       /**
@@ -341,8 +340,7 @@ define(
        */
       setDate: function (date) {
          this._setDate(date);
-         this._notifyOnPropertyChanged('date', this._options.date);
-         this._notify('onDateChange', this._options.date);
+         this._notifyOnDateChanged();
       },
 
       /**
@@ -450,9 +448,14 @@ define(
             } else {
                this._options.date = null;
             }
-            this._notifyOnPropertyChanged('date', this._options.date);
-            this._notify('onDateChange', this._options.date);
+            this._notifyOnDateChanged();
          }
+      },
+
+      _notifyOnDateChanged: function() {
+         this._notifyOnPropertyChanged('date', this._options.date);
+         this._notify('onDateChange', this._options.date);
+         this.validate();
       },
 
       /**
@@ -464,7 +467,7 @@ define(
        */
       _getDateByText: function(text, oldDate) {
          //не разбираем дату, если вся не заполнена
-         if (!this.formatModel.isFilled() || !this.validate()) {
+         if (!this.formatModel.isFilled() || !this._dateIsValid()) {
             return null;
          }
          var
