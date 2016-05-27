@@ -207,7 +207,6 @@ define('js!SBIS3.CONTROLS.ListView',
             _hasScrollMore: true,
             _infiniteScrollOffset: null,
             _allowInfiniteScroll: true,
-            _scrollIndicatorHeight: 32,
             _isLoadBeforeScrollAppears : true, //Переменная хранит состояние, что загрузка произошла ПЕРЕД отображением скролла
             _pageChangeDeferred : undefined,
             _pager : undefined,
@@ -1761,7 +1760,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _createLoadingIndicator : function () {
             this._loadingIndicator = this._container.find('.controls-ListView-scrollIndicator');
-            this._scrollIndicatorHeight = this._loadingIndicator.height();
          },
          /**
           * Метод изменения возможности подгрузки по скроллу.
