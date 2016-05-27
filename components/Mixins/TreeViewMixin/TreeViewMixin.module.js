@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             ladderDecorator = this._decorators.getByName('ladder');
          this._closeAllExpandedNode(key);
          this._options.openedPath[expandedItem.getContents().getId()] = true;
-         if (!this._loadedNodes[key] && this._options.partialyReload) {
+         if (this._dataSource && !this._loadedNodes[key] && this._options.partialyReload) {
             this._toggleIndicator(true);
             this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), 0, this._limit);
             return this._callQuery(this._createTreeFilter(key), this.getSorting(), 0, this._limit).addCallback(function (list) {

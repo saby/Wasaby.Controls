@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          }
          else {
             this._selectMode = 'index';
-            if (this._options._itemsProjection.getCount()) {
+            if (this._getItemsProjection().getCount()) {
                this._options.selectedIndex = index;
                this._setKeyByIndex();
             }
@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
             }
          }
          if (!this._options.allowEmptySelection && this._isEmptyIndex()) {
-            if (this._options._itemsProjection.getCount()) {
+            if (this._getItemsProjection().getCount()) {
                this._selectMode = 'index';
                this._options.selectedIndex = 0;
                this._setKeyByIndex();
@@ -135,12 +135,12 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
             if (!this._onProjectionCurrentChange) {
                this._onProjectionCurrentChange = onProjectionCurrentChange.bind(this);
             }
-            this.subscribeTo(this._options._itemsProjection, 'onCurrentChange', this._onProjectionCurrentChange);
+            this.subscribeTo(this._getItemsProjection(), 'onCurrentChange', this._onProjectionCurrentChange);
 
             if (!this._onProjectionChange) {
                this._onProjectionChange = onCollectionChange.bind(this);
             }
-            this.subscribeTo(this._options._itemsProjection, 'onCollectionChange', this._onProjectionChange);
+            this.subscribeTo(this._getItemsProjection(), 'onCollectionChange', this._onProjectionChange);
          },
          _drawItemsCallback: function() {
             this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);
@@ -148,15 +148,15 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          _unsetItemsEventHandlers : function() {
             if (this._utilityEnumerator) {
                this._utilityEnumerator.unsetObservableCollection(
-                  this._options._itemsProjection
+                  this._getItemsProjection()
                );
             }
             this._utilityEnumerator = undefined;
-            if (this._options._itemsProjection && this._onProjectionCurrentChange) {
-               this.unsubscribeFrom(this._options._itemsProjection, 'onCurrentChange', this._onProjectionCurrentChange);
+            if (this._getItemsProjection() && this._onProjectionCurrentChange) {
+               this.unsubscribeFrom(this._getItemsProjection(), 'onCurrentChange', this._onProjectionCurrentChange);
             }
-            if (this._options._itemsProjection && this._onProjectionChange) {
-               this.unsubscribeFrom(this._options._itemsProjection, 'onCollectionChange', this._onProjectionChange);
+            if (this._getItemsProjection() && this._onProjectionChange) {
+               this.unsubscribeFrom(this._getItemsProjection(), 'onCollectionChange', this._onProjectionChange);
             }
          },
          _itemsReadyCallback: function() {
@@ -179,8 +179,8 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
 
       _getUtilityEnumerator: function() {
          if (!this._utilityEnumerator) {
-            this._utilityEnumerator = this._options._itemsProjection.getEnumerator();
-            this._utilityEnumerator.setObservableCollection(this._options._itemsProjection);
+            this._utilityEnumerator = this._getItemsProjection().getEnumerator();
+            this._utilityEnumerator.setObservableCollection(this._getItemsProjection());
          }
          return this._utilityEnumerator;
       },
@@ -188,7 +188,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
       _resetUtilityEnumerator: function(){
          if (this._utilityEnumerator) {
             this._utilityEnumerator.unsetObservableCollection(
-               this._options._itemsProjection
+               this._getItemsProjection()
             );
          }
          this._utilityEnumerator = undefined;
@@ -217,7 +217,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
        */
       setSelectedKey : function(id) {
          this._options.selectedKey = id;
-         if (this._options._itemsProjection) {
+         if (this._getItemsProjection()) {
             this._prepareSelectedConfig(undefined, id);
             this._selectInProjection();
          } else {
@@ -236,9 +236,9 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
        * @see getSelectedIndex
        */
       setSelectedIndex: function(index) {
-         if (this._options._itemsProjection) {
+         if (this._getItemsProjection()) {
             this._prepareSelectedConfig(index);
-            this._options._itemsProjection.setCurrentPosition(index);
+            this._getItemsProjection().setCurrentPosition(index);
          }
       },
       /**
@@ -296,7 +296,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
             );
          } else {
             var index;
-            this._options._itemsProjection.each(function(value, i){
+            this._getItemsProjection().each(function(value, i){
                if(value.getContents() === id){
                   index = i;
                }
@@ -313,13 +313,13 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
 
       _setKeyByIndex: function() {
          if(this._hasItemByIndex()) {
-            var item = this._options._itemsProjection.at(this._options.selectedIndex);
+            var item = this._getItemsProjection().at(this._options.selectedIndex);
             this._options.selectedKey = item.getContents().getId();
          }
       },
 
       _hasItemByIndex: function() {
-         return (typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null) && (typeof this._options._itemsProjection.at(this._options.selectedIndex) != 'undefined');
+         return (typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null) && (typeof this._getItemsProjection().at(this._options.selectedIndex) != 'undefined');
       },
 
       _isEmptyIndex: function() {
@@ -328,9 +328,9 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
 
       _selectInProjection: function (){
          if (this._hasItemByIndex()) {
-            this._options._itemsProjection.setCurrentPosition(this._options.selectedIndex);
+            this._getItemsProjection().setCurrentPosition(this._options.selectedIndex);
          } else {
-            this._options._itemsProjection.setCurrentPosition(-1);
+            this._getItemsProjection().setCurrentPosition(-1);
          }
       }
    };
@@ -345,7 +345,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
             this._resetUtilityEnumerator();
 
             var indexByKey = this._getItemIndexByKey(this._options.selectedKey),
-                itemsProjection = this._options._itemsProjection,
+                itemsProjection = this._getItemsProjection(),
                 oldIndex = this._options.selectedIndex,
                 oldKey = this._options.selectedKey,
                 count;

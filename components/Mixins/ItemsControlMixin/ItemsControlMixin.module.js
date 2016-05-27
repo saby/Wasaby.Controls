@@ -626,7 +626,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                itemsToDraw = this._getItemsForRedrawOnAdd(newItems);
                if (itemsToDraw.length) {
                   data = {
-                     items: itemsToDraw,
+                     records: itemsToDraw,
                      tplData: this._prepareItemData()
                   };
                   markup = MarkupTransformer(this._options._itemsTemplate(data));
@@ -1182,6 +1182,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       //TODO поддержка старого - обратная совместимость
       getItems : function() {
          return this._options._items;
+      },
+      _getItemsProjection: function() {
+         return this._options._itemsProjection;
       },
        /**
         * Метод установки либо замены коллекции элементов, заданных опцией {@link items}.

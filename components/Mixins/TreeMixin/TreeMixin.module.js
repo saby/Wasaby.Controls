@@ -1,11 +1,6 @@
 define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
    'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!SBIS3.CONTROLS.Data.Projection.Tree'], function (BreadCrumbs, groupByTpl, TreeProjection) {
-   /**
-    * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
-    * @mixin SBIS3.CONTROLS.TreeMixin
-    * @public
-    * @author Крайнов Дмитрий Олегович
-    */
+
    var createDefaultProjection = function(items, cfg) {
       var
          root, projection;
@@ -27,9 +22,29 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          nodeProperty: cfg.hierField + '@',
          root: root
       });
-      projection.setFilter(this._projectionFilter.bind(this));
+      var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders : projectionFilter;
+      projection.setFilter(projectionFilter);
       return projection;
+   },
+   isVisibleItem =  function(item, onlyFolders) {
+      if (onlyFolders && item.isNode() !== true) {
+         return false;
+      }
+      var itemParent = item.getParent();
+      return itemParent ? itemParent.isExpanded() ? isVisibleItem(itemParent) : false : true;
+   },
+   projectionFilter = function(item, index, itemProj) {
+      return /*this._isSearchMode() || */isVisibleItem(itemProj);
    };
+   projectionFilterOnlyFolders = function(item, index, itemProj) {
+      return /*this._isSearchMode() || */isVisibleItem(itemProj, true);
+   };
+   /**
+    * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
+    * @mixin SBIS3.CONTROLS.TreeMixin
+    * @public
+    * @author Крайнов Дмитрий Олегович
+    */
    var TreeMixin = /** @lends SBIS3.CONTROLS.TreeMixin.prototype */{
       /**
        * @event onSearchPathClick При клике по хлебным крошкам в режиме поиска.
@@ -171,7 +186,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          this.setFilter(filter, true);
       },
       _projectionFilter: function(item, index, itemProj) {
-         return this._isSearchMode() || this._isVisibleItem(itemProj, this._options.displayType == 'folders');
+         return this._isSearchMode() || isVisibleItem(itemProj, this._options.displayType == 'folders');
       },
       /**
        * Задать поле иерархии

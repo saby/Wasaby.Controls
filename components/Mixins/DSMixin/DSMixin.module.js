@@ -875,6 +875,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       getItems : function() {
          return this._items;
       },
+      _getItemsProjection: function() {
+         return this._itemsProjection;
+      },
        /**
         * Метод установки либо замены коллекции элементов, заданных опцией {@link items}.
         * @param {Object} items Набор новых данных, по которому строится отображение.
