@@ -1563,7 +1563,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /*TODO второй параметр нужен для поддержи старой группировки*/
       _buildTplItem: function(item, altTpl){
          var itemTpl, dotTemplate;
-         if (altTpl) {
+         if (altTpl !== undefined) {
             itemTpl = altTpl;
          }
          else {
