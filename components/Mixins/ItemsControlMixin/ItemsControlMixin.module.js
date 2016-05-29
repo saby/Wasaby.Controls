@@ -432,9 +432,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             });
          }
          else {
-            this._itemsProjection.each(function (item) {
-               records.push(item);
-            });
+            if (this._itemsProjection) {
+               this._itemsProjection.each(function (item) {
+                  records.push(item);
+               });
+            }
          }
          return records;
       },
