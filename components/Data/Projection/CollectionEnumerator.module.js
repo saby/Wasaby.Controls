@@ -67,6 +67,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
 
          CollectionEnumerator.superclass.constructor.call(this, options);
          OptionsMixin.constructor.call(this, options);
+         IndexedEnumeratorMixin.constructor.call(this);
 
          if (!(this._$items instanceof Array)) {
             throw new TypeError(this._moduleName + '::constructor(): items should be instance of an Array');
