@@ -8,17 +8,12 @@
          </div>
       </div>
    </div>
-   {{?it.infiniteScroll === 'up'}}
-      <div class="controls-ListView-scrollIndicator ws-hidden"></div>
-   {{?}}
+   <div class="controls-ListView-scrollIndicator ws-hidden{{?it.infiniteScroll === 'up'}} controls-ListView-scrollIndicator__up {{?}}"></div>
    <table class="controls-DataGridView__table">
       <tbody class="controls-DataGridView__tbody"></tbody>
       <tfoot class="controls-DataGridView__tfoot">
       </tfoot>
    </table>
-   {{?it.infiniteScroll === 'down'}}
-      <div class="controls-ListView-scrollIndicator ws-hidden"></div>
-   {{?}}
    {{?it.footerTpl}}
       <div class="controls-ListView__footer">{{=it.footerTpl(it)}}</div>
    {{?}}
