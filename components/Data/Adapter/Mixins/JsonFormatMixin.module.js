@@ -14,14 +14,16 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
     */
 
    var JsonFormatMixin = /** @lends SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin.prototype */{
-      $protected: {
-         /**
-          * @member {Object.<String, SBIS3.CONTROLS.Data.Format.Field>} Форматы полей
-          */
-         _format: {}
-      },
+      /**
+       * @member {Object.<String, SBIS3.CONTROLS.Data.Format.Field>} Форматы полей
+       */
+      _format: null,
 
       //region Public methods
+
+      constructor: function () {
+         this._format = {};
+      },
 
       getFormat: function (name) {
          if (!this._has(name)) {

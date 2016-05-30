@@ -55,15 +55,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.ISourceLoadable', [
        * </pre>
        */
 
-      $protected: {
-         _options: {
 
-            /**
-             * @cfg {SBIS3.CONTROLS.Data.Source.ISource} Источник данных
-             */
-            source: undefined
-         }
-      },
+      /**
+       * @cfg {SBIS3.CONTROLS.Data.Source.ISource} Источник данных
+       * @name SBIS3.CONTROLS.Data.Collection.ISourceLoadable#source
+       */
+      _$source: undefined,
 
       /**
        * Возвращает источник данных

@@ -1,19 +1,29 @@
 /* global define, require, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.Projection', [
+   'js!SBIS3.CONTROLS.Data.Entity.Abstract',
+   'js!SBIS3.CONTROLS.Data.Entity.OptionsMixin',
+   'js!SBIS3.CONTROLS.Data.Entity.ObservableMixin',
    'js!SBIS3.CONTROLS.Data.Di'
-], function (Di) {
+], function (Abstract, OptionsMixin, ObservableMixin, Di) {
    'use strict';
 
    /**
     * Абстрактная проекция данных
     * @class SBIS3.CONTROLS.Data.Projection.Projection
-    * @extends $ws.proto.Abstract
+    * @extends SBIS3.CONTROLS.Data.Entity.Abstract
+    * @mixes SBIS3.CONTROLS.Data.Entity.OptionsMixin
+    * @mixes SBIS3.CONTROLS.Data.Entity.ObservableMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var Projection = $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.Data.Projection.Projection.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Projection.Projection'
+   var Projection = Abstract.extend([OptionsMixin, ObservableMixin], /** @lends SBIS3.CONTROLS.Data.Projection.Projection.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.Data.Projection.Projection',
+
+      constructor: function $Projection(options) {
+         Projection.superclass.constructor.call(this, options);
+         OptionsMixin.constructor.call(this, options);
+      }
    });
 
    /**

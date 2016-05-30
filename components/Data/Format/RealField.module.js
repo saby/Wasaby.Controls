@@ -14,23 +14,22 @@ define('js!SBIS3.CONTROLS.Data.Format.RealField', [
 
    var RealField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.RealField.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Format.RealField',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {Number} Значение поля по умолчанию
-             * @see getDefaultValue
-             * @see setDefaultValue
-             */
-            defaultValue: 0,
 
-            /**
-             * @cfg {Number} Максимальное количество знаков в дробной части
-             * @see getPrecision
-             * @see setPrecision
-             */
-            precision: 16
-         }
-      },
+      /**
+       * @cfg {Number} Значение поля по умолчанию
+       * @name SBIS3.CONTROLS.Data.Format.RealField#defaultValue
+       * @see getDefaultValue
+       * @see setDefaultValue
+       */
+      _$defaultValue: 0,
+
+      /**
+       * @cfg {Number} Максимальное количество знаков в дробной части
+       * @name SBIS3.CONTROLS.Data.Format.RealField#precision
+       * @see getPrecision
+       * @see setPrecision
+       */
+      _$precision: 16,
 
       //region Public methods
 
@@ -41,7 +40,7 @@ define('js!SBIS3.CONTROLS.Data.Format.RealField', [
        * @see setPrecision
        */
       getPrecision: function () {
-         return this._options.precision;
+         return this._$precision;
       },
 
       /**
@@ -51,7 +50,7 @@ define('js!SBIS3.CONTROLS.Data.Format.RealField', [
        * @see getPrecision
        */
       setPrecision: function (value) {
-         this._options.precision = value;
+         this._$precision = value;
       }
 
       //endregion Public methods

@@ -14,15 +14,13 @@ define('js!SBIS3.CONTROLS.Data.Format.ArrayField', [
 
    var ArrayField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.ArrayField.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Format.ArrayField',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {String} Тип элементов
-             * @see getKind
-             */
-            kind: ''
-         }
-      },
+
+      /**
+       * @cfg {String} Тип элементов
+       * @name SBIS3.CONTROLS.Data.Format.ArrayField#kind
+       * @see getKind
+       */
+      _$kind: '',
 
       /**
        * Возвращает тип элементов
@@ -30,7 +28,7 @@ define('js!SBIS3.CONTROLS.Data.Format.ArrayField', [
        * @see dictionary
        */
       getKind: function () {
-         return this._options.kind;
+         return this._$kind;
       }
 
       //region Public methods
