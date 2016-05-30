@@ -46,8 +46,14 @@ function(RadioGroupBase, dotTpl) {
 
    var RadioGroup = RadioGroupBase.extend( /** @lends SBIS3.CONTROLS.RadioGroup.prototype */ {
       _dotTplFn : dotTpl,
-       /**
-        * @cfg {SBIS3.CONTROLS.CheckBoxGroup/GroupItems.typedef[]} Набор исходных данных, по которому строится отображение
+      /**
+       * @typedef {Object} GroupItems
+       * @property {String} id Идентификатор элемента группы.
+       * @property {String} title Заголовок элемента группы.
+       * @translatable title
+       */
+      /**
+        * @cfg {GroupItems} Набор исходных данных, по которому строится отображение
         * @name SBIS3.CONTROLS.RadioGroup#items
         * @example
         * <pre class="brush:xml">
