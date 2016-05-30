@@ -427,8 +427,7 @@ define([
                   });
                adapter.addField(field, fieldIndex);
                assert.strictEqual(adapter.get(fieldName), 0);
-               assert.strictEqual(adapter.getData().s[fieldIndex].t.n, 'Число вещественное');
-               assert.strictEqual(adapter.getData().s[fieldIndex].t.p, precision);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Число вещественное');
             });
             it('should add a Money field', function () {
                var fieldName = 'New',
@@ -441,8 +440,7 @@ define([
                   });
                adapter.addField(field, fieldIndex);
                assert.strictEqual(adapter.get(fieldName), 0);
-               assert.strictEqual(adapter.getData().s[fieldIndex].t.n, 'Деньги');
-               assert.strictEqual(adapter.getData().s[fieldIndex].t.p, precision);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Деньги');
             });
             it('should add a String field', function () {
                var fieldName = 'New',

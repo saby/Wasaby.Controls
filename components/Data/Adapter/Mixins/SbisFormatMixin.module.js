@@ -258,12 +258,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
 
       _buildSType: function(format, type) {
          switch (type) {
-            case 'Real':
-            case 'Money':
-               return {
-                  n: FIELD_TYPE[type],
-                  p: format.getPrecision()
-               };
             case 'Enum':
             case 'Flags':
                return {
