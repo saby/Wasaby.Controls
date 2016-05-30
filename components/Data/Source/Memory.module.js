@@ -196,7 +196,10 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          }
 
          return $ws.proto.Deferred.success(
-            this._prepareQueryResult( {items: items,'total': total}, 'items', 'total')
+            this._prepareQueryResult({
+               items: items,
+               total: total
+            }, 'items', 'total')
          );
       },
 
@@ -363,7 +366,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       /**
        * Применяет сортировку
        * @param {*} data Данные
-       * @param {SBIS3.CONTROLS.Data.Query.Order[]} order Параметры сортировки
+       * @param {Array.<SBIS3.CONTROLS.Data.Query.Order>} order Параметры сортировки
        * @returns {*}
        * @protected
        */

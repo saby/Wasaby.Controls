@@ -48,6 +48,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
     */
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
       _dotTplFn : dotTplFn,
+      /**
+       * @event onDrawHead Возникает после отрисовки шапки
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       */
       $protected: {
          _defaultItemTemplate: ItemTemplate,
          _defaultItemContentTemplate: ItemContentTemplate,
@@ -83,6 +87,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {Boolean} [highlight=true] Подсвечивать фразу при поиске
              * @property {String} resultTemplate Шаблон отображения колонки в строке результатов
              * @property {String} className Имя класса, который будет применён к каждой ячейке столбца
+             * Стилевые классы: controls-DataGridView-cell-overflow-ellipsis - текст внутри ячейки будет обрезаться троеточием (актуально для однострочных ячеек)
              * @property {String} headTemplate Шаблон отображения шапки колонки
              * @property {String} headTooltip Всплывающая подсказка шапки колонки
              * @property {String} editor Устанавливает редактор колонки для режима редактирования по месту.

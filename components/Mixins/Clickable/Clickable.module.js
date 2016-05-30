@@ -49,6 +49,10 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
             if (e.which == 1 && self.isEnabled()) {
                self._container.addClass('controls-Click__active');
             }
+            //В IE предотвратим нативное смещение текста в правый нижний угол внутри кнопки
+            if ($ws._const.browser.isIE) {
+               e.preventDefault();
+            }
             //return false;
          });
       },

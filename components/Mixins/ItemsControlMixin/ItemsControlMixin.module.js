@@ -323,13 +323,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._dataSource = this._prepareSource(sourceOpt);
             this._items = null;
          } else if (itemsOpt) {
-            if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection.Projection')) {
-               this._itemsProjection = itemsOpt;
-               this._items = this._convertItems(this._itemsProjection.getCollection());
-               this._setItemsEventHandlers();
-               this._notify('onItemsReady');
-               this._itemsReadyCallback();
-            } else if($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            if($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
                this._processingData(itemsOpt);
             } else if (itemsOpt instanceof Array) {
                /*TODO уменьшаем количество ошибок с key*/
@@ -432,9 +426,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             });
          }
          else {
-            this._itemsProjection.each(function (item) {
-               records.push(item);
-            });
+            if (this._itemsProjection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
+               this._itemsProjection.each(function (item) {
+                  records.push(item);
+               });
+            }
          }
          return records;
       },
@@ -578,6 +574,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             /*TODO С этим отдельно разобраться*/
 
             this._ladderCompare([targetElement.prev(), targetElement.next()]);
+
+            /*TODO Особое поведение при группировке*/
+            if (!Object.isEmpty(this._options.groupBy)) {
+               var prev = targetElement.prev();
+               if (prev.length && prev.hasClass('controls-GroupBy')) {
+                  var next = targetElement.next();
+                  if (!next.length || next.hasClass('controls-GroupBy')) {
+                     prev.remove();
+                  }
+               }
+            }
+
             targetElement.remove();
          }
       },
@@ -798,27 +806,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          },
          destroy : function() {
             this._unsetItemsEventHandlers();
+            if (this._itemsProjection) {
+               this._itemsProjection.destroy();
+               this._itemsProjection = null;
+            }
             this._clearItems();
          }
       },
 
       _createDefaultProjection: function(items) {
          this._itemsProjection = Projection.getDefaultProjection(items);
-      },
-
-      _convertItems: function (items) {
-         items = items || [];
-         if (items instanceof Array) {
-            items = new ObservableList({
-               items: items
-            });
-         }
-
-         if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            throw new Error('Items should implement SBIS3.CONTROLS.Data.Collection.IEnumerable');
-         }
-
-         return items;
       },
 
       _prepareSource: function(sourceOpt) {
@@ -1561,7 +1558,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /*TODO второй параметр нужен для поддержи старой группировки*/
       _buildTplItem: function(item, altTpl){
          var itemTpl, dotTemplate;
-         if (altTpl) {
+         if (altTpl !== undefined) {
             itemTpl = altTpl;
          }
          else {

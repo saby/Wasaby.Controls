@@ -6,9 +6,11 @@ define('js!SBIS3.CONTROLS.Data.Types.Dictionary', [
    'use strict';
 
    /**
-    * Тип данных словарь. Это абстрактный класс, не предусмотрено создание самостоятельных экземпляров.
+    * Тип данных словарь.
+    * Это абстрактный класс, не предусмотрено создание самостоятельных экземпляров.
     * @class SBIS3.CONTROLS.Data.Types.Dictionary
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
+    * @public
     * @author Мальцев Алексей
     */
 
@@ -49,9 +51,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Dictionary', [
       },
 
       getEnumerator: function () {
-         return new ArrayEnumerator({
-            items: this._options.dictionary
-         });
+         return new ArrayEnumerator(this._options.dictionary);
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
@@ -60,16 +60,16 @@ define('js!SBIS3.CONTROLS.Data.Types.Dictionary', [
 
       /**
        * Сравнивает с другим словарем
-       * @param obj {Dictionary} - Объект Dictionary
+       * @param {Dictionary} to Словарь, с которым сравнить
        * returns {Boolean}
        */
-      equals: function (value) {
-         if (!(value instanceof Dictionary)) {
+      isEqual: function(to) {
+         if (!(to instanceof Dictionary)) {
             return false;
          }
 
          var selfDict = this._options.dictionary,
-            extDict = value._options.dictionary,
+            extDict = to._options.dictionary,
             selfDictLen = selfDict.length,
             extDictLen = extDict.length,
             index;

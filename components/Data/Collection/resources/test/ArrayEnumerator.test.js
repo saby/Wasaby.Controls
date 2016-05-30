@@ -31,27 +31,19 @@ define([
             items = undefined;
          });
 
-         describe('$constructor()', function() {
+         describe('constructor()', function() {
             it('should throw an error on invalid argument', function() {
                assert.throw(function() {
-                  var enumerator = new ArrayEnumerator({
-                     items: {}
-                  });
+                  var enumerator = new ArrayEnumerator({});
                });
                assert.throw(function() {
-                  var enumerator = new ArrayEnumerator({
-                     items: ''
-                  });
+                  var enumerator = new ArrayEnumerator('');
                });
                assert.throw(function() {
-                  var enumerator = new ArrayEnumerator({
-                     items: 0
-                  });
+                  var enumerator = new ArrayEnumerator(0);
                });
                assert.throw(function() {
-                  var enumerator = new ArrayEnumerator({
-                     items: undefined
-                  });
+                  var enumerator = new ArrayEnumerator(null);
                });
             });
          });
@@ -62,9 +54,7 @@ define([
                assert.isUndefined(enumerator.getCurrent());
             });
             it('should return item by item', function() {
-               var enumerator = new ArrayEnumerator({
-                     items: items
-                  }),
+               var enumerator = new ArrayEnumerator(items),
                   index = -1;
                while (enumerator.getNext()) {
                   index++;
@@ -80,9 +70,7 @@ define([
                assert.isUndefined(enumerator.getNext());
             });
             it('should return item by item', function() {
-               var enumerator = new ArrayEnumerator({
-                     items: items
-                  }),
+               var enumerator = new ArrayEnumerator(items),
                   index = -1,
                   item = enumerator.getNext();
                while (item) {
@@ -96,9 +84,7 @@ define([
 
          describe('.reset()', function() {
             it('should set current to undefined', function() {
-               var enumerator = new ArrayEnumerator({
-                  items: items
-               });
+               var enumerator = new ArrayEnumerator(items);
                enumerator.getNext();
                assert.isDefined(enumerator.getCurrent());
                enumerator.reset();
@@ -106,9 +92,7 @@ define([
             });
 
             it('should start enumeration from beginning', function() {
-               var enumerator = new ArrayEnumerator({
-                     items: items
-                  }),
+               var enumerator = new ArrayEnumerator(items),
                   item,
                   index;
 
@@ -137,9 +121,7 @@ define([
 
          describe('.getIndexByValue()', function() {
             it('should return item index with given property', function() {
-               var enumerator = new ArrayEnumerator({
-                  items: items
-               });
+               var enumerator = new ArrayEnumerator(items);
                for (var i = 0; i < items.length; i++) {
                   assert.strictEqual(
                      i,
@@ -152,18 +134,14 @@ define([
                }
             });
             it('should return -1 with not exists property', function() {
-               var enumerator = new ArrayEnumerator({
-                  items: items
-               });
+               var enumerator = new ArrayEnumerator(items);
                assert.strictEqual(
                   -1,
                   enumerator.getIndexByValue('Ид', 0)
                );
             });
             it('should return -1 for not a property name', function() {
-               var enumerator = new ArrayEnumerator({
-                  items: items
-               });
+               var enumerator = new ArrayEnumerator(items);
                assert.strictEqual(-1, enumerator.getIndexByValue());
                assert.strictEqual(-1, enumerator.getIndexByValue(null));
                assert.strictEqual(-1, enumerator.getIndexByValue(false));
@@ -180,9 +158,7 @@ define([
                   }, {
                      'isPrototypeOf': null
                   }],
-                  enumerator = new ArrayEnumerator({
-                     items: items
-                  });
+                  enumerator = new ArrayEnumerator(items);
                for (var i = 0; i < items.length; i++) {
                   for (var k in items[i]) {
                      if (Object.prototype.hasOwnProperty.call(items[i], k)) {
@@ -204,9 +180,7 @@ define([
                   }, {
                      id: 'isPrototypeOf'
                   }],
-                  enumerator = new ArrayEnumerator({
-                     items: items
-                  });
+                  enumerator = new ArrayEnumerator(items);
                for (var i = 0; i < items.length; i++) {
                   assert.strictEqual(
                      i,
@@ -218,9 +192,7 @@ define([
 
          describe('.getIndicesByValue()', function() {
             it('should return items indexes with given property', function() {
-               var enumerator = new ArrayEnumerator({
-                  items: items
-               });
+               var enumerator = new ArrayEnumerator(items);
                assert.deepEqual(
                   [0],
                   enumerator.getIndicesByValue('Ид', 1)
@@ -235,9 +207,7 @@ define([
                );
             });
             it('should return no indexes with not exists property', function() {
-               var enumerator = new ArrayEnumerator({
-                  items: items
-               });
+               var enumerator = new ArrayEnumerator(items);
                assert.strictEqual(
                   0,
                   enumerator.getIndicesByValue('Ид', 0).length

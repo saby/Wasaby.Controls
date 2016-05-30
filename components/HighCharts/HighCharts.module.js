@@ -106,7 +106,6 @@ function(BaseControl, dotTpl){
              * @cfg {wsSerie[]} Набор графиков
              */
             wsSeries : [],
-
             /**
              * @typedef {Object} typeAxis
              * @variant xAxis Горизонтальная
@@ -255,7 +254,11 @@ function(BaseControl, dotTpl){
                   /**
                    * @cfg {Number} Левый внешний отступ
                    */
-                  spacingLeft : null
+                  spacingLeft : null,
+                  /**
+                   * @cfg {String} Цвет фона диаграммы
+                   */
+                  backgroundColor: "#FFFFFF"
                },
                /**
                 * @cfg {string[]} Набор цветов
@@ -484,6 +487,10 @@ function(BaseControl, dotTpl){
                    * @group plotOptions.pie
                    */
                   pie : {
+                     /**
+                      * @cfg {String} Цвет границ сектора
+                      */
+                     borderColor: "#FFFFFF",
                      /**
                       * @cfg {Boolean} Выделение сектора по клику
                       */
@@ -1111,6 +1118,7 @@ function(BaseControl, dotTpl){
             this.getLinkedContext().unsubscribe('onFieldChange', this._ctxFieldChangeHandler);
             this.getLinkedContext().unsubscribe('onDataBind', this._ctxDataBindHandler);
          }
+         $ws.helpers.trackElement(this._container, false);
          HighCharts.superclass.destroy.call(this);
       }
 

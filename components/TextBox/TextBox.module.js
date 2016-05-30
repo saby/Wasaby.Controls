@@ -155,7 +155,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
                      text = newText;
                   }
                   self._inputField.val(text);
-                  self.setText(self._formatText(text));   
+                  self.setText(self._formatText(text));
                }
             }, 100);
          });
@@ -171,18 +171,8 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             self._fromTab = false;
          });
 
-         this._inputField.bind('focusin', this._inputFocusInHandler.bind(this));
-
-         this._inputField.bind('focusout', function(){
-            var text = self._inputField.val();
-            if (self._options.trim) {
-               text = String.trim(text);
-            }
-            //Установим текст только если значения различны и оба не пустые
-            if (text !== self._options.text && !(self._isEmptyValue(self._options.text) && !text.length)){
-               self.setText(text);
-            }
-         });
+         this._inputField.bind('focusin', this._inputFocusInHandler.bind(this))
+                         .bind('focusout', this._inputFocusOutHandler.bind(this));
 
          if (this._options.placeholder && !$ws._const.compatibility.placeholder) {
             this._createCompatPlaceholder();
@@ -191,6 +181,24 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          this._container.bind("mouseenter", function(e){
             self._applyTooltip();
          });
+      },
+
+      init: function() {
+         TextBox.superclass.init.apply(this, arguments);
+         /* Надо проверить значение input'a, т.к. при дублировании вкладки там уже может быть что-то написано */
+         this._checkInputVal();
+      },
+
+      _checkInputVal: function() {
+         var text = this._inputField.val();
+
+         if (this._options.trim) {
+            text = String.trim(text);
+         }
+         //Установим текст только если значения различны и оба не пустые
+         if (text !== this._options.text && !(this._isEmptyValue(this._options.text) && !text.length)){
+            this.setText(text);
+         }
       },
 
       /**
@@ -248,6 +256,11 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
        * @see placeholder
        */
       setPlaceholder: function(text){
+         this._setPlaceholder(text);
+         this._options.placeholder = text;
+      },
+
+      _setPlaceholder: function(text){
          if (!$ws._const.compatibility.placeholder) {
             if (!this._compatPlaceholder) {
                this._createCompatPlaceholder();
@@ -257,7 +270,6 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          else {
             this._inputField.attr('placeholder', text || '');
          }
-         this._options.placeholder = text;
       },
 
       /**
@@ -294,7 +306,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
       _keyUpBind: function(event) {
          var newText = this._inputField.val();
-         this._setTextByKeyboard(newText);
+         if (this._options.text !== newText){
+            this._setTextByKeyboard(newText);
+         }
          var key = event.which || event.keyCode;
          if (Array.indexOf([$ws._const.key.up, $ws._const.key.down], key) >= 0) {
             event.stopPropagation();
@@ -317,12 +331,12 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
       _setEnabled : function(enabled) {
          TextBox.superclass._setEnabled.call(this, enabled);
-         if (enabled == false) {
+         if (enabled) {
+            this._inputField.removeAttr('readonly');
+         } else {
             this._inputField.attr('readonly', 'readonly')
          }
-         else {
-            this._inputField.removeAttr('readonly');
-         }
+         this._setPlaceholder(enabled ? this._options.placeholder : '');
       },
 
       _inputRegExp: function (e, regexp) {
@@ -338,6 +352,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             return false;
          }
          return true;
+      },
+
+      _inputFocusOutHandler: function(e) {
+         this._checkInputVal();
       },
 
       _inputFocusInHandler: function(e) {
@@ -363,7 +381,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          this._compatPlaceholder = $('<div class="controls-TextBox__placeholder">' + this._options.placeholder + '</div>');
          this._updateCompatPlaceholderVisibility();
          this._inputField.after(this._compatPlaceholder);
-         this._compatPlaceholder.css('left', this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10));
+         this._compatPlaceholder.css({
+            'left': this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10),
+            'right': this._inputField.position().right || parseInt(this._inputField.parent().css('padding-right'), 10)
+         });
          this._compatPlaceholder.click(function(){
             if (self.isEnabled()) {
                self._inputField.get(0).focus();

@@ -48,41 +48,41 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             visible: false,
             /**
              * @typedef {Object} CornerEnum
-             * @variant tl верхний левый
-             * @variant tr верхний правый
-             * @variant br нижний правый
-             * @variant bl нижний левый
+             * @variant tl Верхний левый угол.
+             * @variant tr Верхний правый угол.
+             * @variant br Нижний правый угол.
+             * @variant bl Нижний левый угол.
              */
             /**
-             * @cfg {Object} От какого угла идет отсчет координат
+             * @cfg {CornerEnum} Устанавливает точку построения всплывающего окна (угол контрола, относительно которого происходит построение окна).
              */
             corner: null,
             /**
              * @typedef {Object} VerticalAlignEnum
-             * @variant top
-             * @variant bottom
+             * @variant top Всплывающее окно отображается сверху относительно точки построения.
+             * @variant bottom Всплывающее окно отображается снизу относительно точки построения.
              */
             /**
-             * @typedef {Object} verticalAlign
-             * @property {VerticalAlignEnum} side Вертикальное выравнивание контрола
-             * @property {Number} offset отступ в пикселях
+             * @typedef {Object} VerticalAlign
+             * @property {VerticalAlignEnum} side Тип вертикального выравнивания всплывающего окна.
+             * @property {Number} offset Устанавливает отступ по вертикали в пикселях относительно точки построения всплывающего окна.
              */
             /**
-             * @cfg {verticalAlign} авторесайз по высоте, если текст не помещается
+             * @cfg {VerticalAlign} Устанавливает вертикальное выравнивание всплывающего окна относительно точки его построения.
              */
             verticalAlign: {},
             /**
              * @typedef {Object} HorizontalAlignEnum
-             * @variant right
-             * @variant left
+             * @variant right Всплывающее окно отображается справа относительно точки построения.
+             * @variant left Всплывающее окно отображается слева относительно точки построения.
              */
             /**
              * @typedef {Object} HorizontalAlign
-             * @property {HorizontalAlignEnum} side Вертикальное выравнивание контрола
-             * @property {Number} offset отступ в пикселях
+             * @property {HorizontalAlignEnum} side Тип горизонтального выравнивания всплывающего окна.
+             * @property {Number} offset Устанавливает отступ по горизонтали в пикселях относительно точки построения всплывающего окна.
              */
             /**
-             * @cfg {HorizontalAlign} авторесайз по высоте, если текст не помещается
+             * @cfg {HorizontalAlign} Устанавливает горизонтальное выравнивание всплывающего окна относительно точки его построения.
              */
             horizontalAlign: {},
             /**
@@ -225,6 +225,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             // Пересчитать оригинальные размеры, флаг true если размеры контейнера поменялись
             if (recalcFlag) {
                this._originsInited = true;
+               this._container.css('height', '');
+               this._container.css('width', '');
                var scrollWidth = this._container.get(0).scrollWidth,
                   scrollHeight = this._container.get(0).scrollHeight,
                   maxWidth = parseFloat(this._container.css('max-width'), 10) || scrollWidth,
@@ -846,6 +848,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             else if (this._options.closeByExternalClick) {
                $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentClick', this._clickHandler, this);
             }
+         },
+         hide: function() {
+            $ws.helpers.trackElement(this._options.target, false);
          }
       },
 
