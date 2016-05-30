@@ -408,11 +408,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (this._options._dataSource) {
             this._dataSource = this._prepareSource(this._options._dataSource);
          }
-         this._setItemsEventHandlers();
-         this._notify('onItemsReady');
-         this._itemsReadyCallback();
-         this._dataLoadedCallback();
-         this._notifyOnDrawItems();
+         /*Если уже вычислили все в modifyoptions а иначе все это стрельнет после reload*/
+         if (this._options.itemsProjection) {
+            this._setItemsEventHandlers();
+            this._notify('onItemsReady');
+            this._itemsReadyCallback();
+            this._dataLoadedCallback();
+            this._notifyOnDrawItems();
+         }
       },
 
 
@@ -1205,8 +1208,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
           this._options.items = items;
           this._unsetItemsEventHandlers();
           this._options._items = this._items = null;
+          this._itemsInitializedBySource = false;
           this._prepareConfig(undefined, items);
           this.redraw();
+
       },
 
       _drawItemsCallback: function () {
