@@ -102,7 +102,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
       $constructor: function() {
          this._initBlocks();
-         this._publish('onToggle', 'onChangeEnabled');
+         this._publish('onToggle');
          this._container.removeClass('ws-area');
       },
       init: function() {
@@ -165,17 +165,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
       _getItemType: function (type) {
          return type.mark ? 'mark' : type.mass && type.selection ? 'all' : type.mass ? 'mass' : 'selection';
-      },
-       /**
-        * Установить возможность взаимодействия с панелью массовых операций.
-        * @param enabled
-        */
-      setEnabled: function(enabled) {
-         if (!enabled) {
-            this.hide();
-         }
-         OperationsPanel.superclass.setEnabled.apply(this, arguments);
-         this._notify('onChangeEnabled');
       },
       onSelectedItemsChange: function(idArray) {
          this._blocks.wrapper.toggleClass('controls-operationsPanel__massMode', !idArray.length)

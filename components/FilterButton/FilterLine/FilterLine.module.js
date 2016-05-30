@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
        * Умеет отображать строку по определенному шаблону. Работает исключительно через контекст.
        * @class SBIS3.CONTROLS.FilterButton.FilterLine
        * @extends $ws.proto.CompoundControl
+       * @author Крайнов Дмитрий Олегович
        * @control
        * @public
        */
@@ -42,10 +43,6 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
 
             updateContext();
             context.subscribe('onFieldsChanged', updateContext);
-
-            this._container.on('click', '.controls__filterButton__filterLine-cross', function() {
-               this.sendCommand('reset-filter');
-            }.bind(this));
          }
       });
 

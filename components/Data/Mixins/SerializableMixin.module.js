@@ -26,12 +26,10 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
     */
 
    var SerializableMixin = /**@lends SBIS3.CONTROLS.Data.SerializableMixin.prototype */{
-      $protected: {
-         /**
-          * @var {Number} Уникальный номер инстанса
-          */
-         _instanceId: 0
-      },
+      /**
+       * @member {Number} Уникальный номер инстанса
+       */
+      _instanceId: 0,
 
       //region Public methods
 
@@ -59,7 +57,7 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
       fromJSON: function(data) {
          var instance,
             initializer = this.prototype._setSerializableState(data.state);
-         instance = new this(data.state._options);
+         instance = new this(data.state.$options);
          if (initializer) {
             initializer.call(instance);
          }
@@ -94,15 +92,18 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
        */
       _checkModuleName: function(critical, isInstance) {
          var proto = this;
-         //TODO: переделать на Object.getPrototypeOf(this), после перевода на SBIS3.CONTROLS.Data.Core::extend()
-         if (isInstance && _protoSupported) {
+         if (!proto._moduleName) {
+            SerializableMixin._createModuleNameError('Property "_moduleName" with module name for requirejs is not defined in a prototype', critical);
+         }
+         //TODO: переделать на Object.getPrototypeOf(this), после перевода на $ws.single.simpleExtender::extend()
+         if (isInstance) {
+            if (!_protoSupported) {
+               return;
+            }
             proto = this.__proto__;
          }
          if (!proto.hasOwnProperty('_moduleName')) {
             SerializableMixin._createModuleNameError('Property "_moduleName" with module name for requirejs should be defined in a prototype of each sub module of SerializableMixin', critical);
-         }
-         if (!proto._moduleName) {
-            SerializableMixin._createModuleNameError('Property "_moduleName" with module name for requirejs is not defined in a prototype', critical);
          }
       },
 
@@ -123,22 +124,24 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
 
       /**
        * Возвращает всё, что нужно сложить в состояние объекта при сериализации, чтобы при десериализации вернуть его в это же состояние
+       * @param {Object} state Cостояние
        * @returns {Object}
        * @protected
        */
-      _getSerializableState: function() {
-         return {
-            _options: this._options
-         };
+      _getSerializableState: function(state) {
+         state = state || {};
+         state.$options = this._getOptions ? this._getOptions() : this._options;//FIXME: отказаться от устаревших _options
+         return state;
       },
 
       /**
        * Проверяет сериализованное состояние перед созданием инстанса. Возвращает метод, востанавливающий состояние объекта после создания инстанса.
+       * @param {Object} state Cостояние
        * @returns {Function|undefined}
        * @protected
        */
       _setSerializableState: function(state) {
-         state._options = state._options || {};
+         state.$options = state.$options || {};
          return function() {};
       },
 

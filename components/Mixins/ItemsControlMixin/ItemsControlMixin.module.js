@@ -9,8 +9,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate) {
+   'html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -250,6 +251,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * </pre>
              * @remark
              * Опция задаёт текст, отображаемый как при абсолютном отсутствии данных, так и в результате {@link groupBy фильтрации}.
+             * @translatable
              * @see items
              * @see setDataSource
              * @see groupBy
@@ -321,13 +323,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._dataSource = this._prepareSource(sourceOpt);
             this._items = null;
          } else if (itemsOpt) {
-            if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection.Projection')) {
-               this._itemsProjection = itemsOpt;
-               this._items = this._convertItems(this._itemsProjection.getCollection());
-               this._setItemsEventHandlers();
-               this._notify('onItemsReady');
-               this._itemsReadyCallback();
-            } else if($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            if($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
                this._processingData(itemsOpt);
             } else if (itemsOpt instanceof Array) {
                /*TODO уменьшаем количество ошибок с key*/
@@ -430,9 +426,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             });
          }
          else {
-            this._itemsProjection.each(function (item) {
-               records.push(item);
-            });
+            if (this._itemsProjection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
+               this._itemsProjection.each(function (item) {
+                  records.push(item);
+               });
+            }
          }
          return records;
       },
@@ -512,18 +510,27 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _redrawItems : function() {
          this._groupHash = {};
          var
-            itemsContainer,
+            $itemsContainer = this._getItemsContainer(),
+            itemsContainer = $itemsContainer.get(0),
             data = this._prepareItemsData(),
             markup;
 
          data.tplData = this._prepareItemData();
-
+         //TODO опять же, перед полной перерисовкой данные лесенки достаточно сбросить, чтобы она правильно отработала
+         //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
+         var ladder = this._decorators.getByName('ladder');
+         ladder && ladder.setIgnoreEnabled(true);
+         ladder && ladder.reset();
          markup = MarkupTransformer(this._itemsTemplate(data));
-         itemsContainer = this._getItemsContainer().get(0);
+         ladder && ladder.setIgnoreEnabled(false);
          //TODO это может вызвать тормоза
-         this._destroyInnerComponents(itemsContainer);
+         this._destroyInnerComponents($itemsContainer);
          if (markup.length) {
-            itemsContainer.innerHTML = markup;
+            if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
+               $itemsContainer.append(markup);
+            } else {
+               itemsContainer.innerHTML = markup;
+            }
          }
          this._toggleEmptyData(!(data.items && data.items.length) && this._options.emptyHTML);
          this._reviveItems();
@@ -534,6 +541,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var
             markup,
             targetElement = this._getDomElementByItem(item),
+            itemContainer,
             data;
          if (targetElement.length) {
             data = this._prepareItemData();
@@ -550,10 +558,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             /*TODO посмотреть не вызывает ли это тормоза*/
             this._clearItems(targetElement);
             /*TODO С этим отдельно разобраться*/
-            this._ladderCompare([targetElement.prev(), targetElement, targetElement.next()]);
 
             targetElement.after(markup).remove();
+            itemContainer = this._getDomElementByItem(item);
+            this._ladderCompare([itemContainer.prev(), itemContainer, itemContainer.next()]);
             this._reviveItems();
+            this._notifyOnDrawItems();
          }
       },
 
@@ -564,12 +574,32 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             /*TODO С этим отдельно разобраться*/
 
             this._ladderCompare([targetElement.prev(), targetElement.next()]);
+
+            /*TODO Особое поведение при группировке*/
+            if (!Object.isEmpty(this._options.groupBy)) {
+               var prev = targetElement.prev();
+               if (prev.length && prev.hasClass('controls-GroupBy')) {
+                  var next = targetElement.next();
+                  if (!next.length || next.hasClass('controls-GroupBy')) {
+                     prev.remove();
+                  }
+               }
+            }
+
             targetElement.remove();
          }
       },
 
       _getItemsForRedrawOnAdd: function(items) {
          return items;
+      },
+
+      _optimizedInsertMarkup: function(container, markup, prepend) {
+         if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // В IE8-9 insertAdjacentHTML ломает верстку при вставке
+            container[prepend ? 'prepend' : 'append'](markup);
+         } else {
+            container.get(0).insertAdjacentHTML(prepend ? 'afterBegin' : 'beforeEnd', markup);
+         }
       },
 
       _addItems: function(newItems, newItemsIndex) {
@@ -580,8 +610,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                for (i = 0; i < newItems.length; i++) {
                   this._addItem(
                      newItems[i],
-                     newItemsIndex + i
+                     newItemsIndex + i,
+                     true
                   );
+                  this._notifyOnDrawItems();
                }
             }
             else {
@@ -593,14 +625,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   item,
                   container, firstHash, lastHash, itemsContainer;
 
-
                /*TODO Лесенка*/
                if (this._options.ladder) {
                   ladderDecorator = this._decorators.getByName('ladder');
                   ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
                }
                /*TODO Лесенка*/
-
 
                itemsToDraw = this._getItemsForRedrawOnAdd(newItems);
                if (itemsToDraw.length) {
@@ -610,15 +640,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   };
                   markup = MarkupTransformer(this._itemsTemplate(data));
 
-
-                  itemsContainer = this._getItemsContainer().get(0);
+                  itemsContainer = this._getItemsContainer();
                   if (newItemsIndex == 0) {
-
 
                      /*TODO Лесенка*/
                      if (this._options.ladder) {
                         firstHash = itemsToDraw[0].getHash();
-                        var lastElem = $('.js-controls-ListView__item', this._getItemsContainer()).first();
+                        var lastElem = $('.js-controls-ListView__item', itemsContainer).first();
                         if (lastElem.length) {
                            lastHash = lastElem.attr('data-hash');
                         }
@@ -628,13 +656,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      }
                      /*TODO Лесенка*/
 
-
-                     itemsContainer.insertAdjacentHTML('afterBegin', markup);
-
+                     // TODO. Костыль для редактирования по месту. Написан тут, т.к. необходимо его убрать (решение не универсальное).
+                     // https://inside.tensor.ru/opendoc.html?guid=8fe37872-c08b-4a7b-9c9f-d04f531cc45b
+                     this._optimizedInsertMarkup(itemsContainer, markup, this._items.getCount() > 1);
                   }
                   else {
                      if ((newItemsIndex) == (this._itemsProjection.getCount() - newItems.length)) {
-                        itemsContainer.insertAdjacentHTML('beforeEnd', markup);
+                        this._optimizedInsertMarkup(itemsContainer, markup, false);
                      }
                      else {
                         item = this._itemsProjection.at(newItemsIndex - 1);
@@ -644,10 +672,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
                      /*TODO Лесенка*/
                      if (this._options.ladder) {
-                        firstHash = container.attr('data-hash');
-                        var nextCont = container.next('.js-controls-ListView__item');
+                        firstHash = $(container).attr('data-hash');
+                        var nextCont = $(container).next('.js-controls-ListView__item');
                         if (nextCont.length) {
-                           lastHash = nextCont.attr('data-hash');
+                           lastHash = $(nextCont).attr('data-hash');
                         }
                         else {
                            lastHash = itemsToDraw[itemsToDraw.length - 1].getHash();
@@ -660,7 +688,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   /*TODO Лесенка суть - надо пробежать по только что добавленным контейнерам и вызвать для них ladderCompare*/
                   if (this._options.ladder) {
                      var
-                        rows = $('.js-controls-ListView__item', this._getItemsContainer()),
+                        rows = $('.js-controls-ListView__item', itemsContainer),
                         ladderRows = [], start = false;
 
                      for (i = 0; i < rows.length; i++) {
@@ -672,6 +700,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                         }
                         if ($(rows[i]).attr('data-hash') == lastHash) {
                            start = false;
+                           //Над i + 1 элементом изменилась запись, для него тоже нужна лесенка
+                           if ($(rows[i + 1]).length){
+                              ladderRows.push($(rows[i + 1]));
+                           }
                            break;
                         }
                      }
@@ -687,6 +719,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   }
                   /*TODO Лесенка*/
                }
+               this._notifyOnDrawItems();
             }
          }
       },
@@ -744,7 +777,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _destroyInnerComponents: function(container) {
          this._destroyControls(container);
-         container.innerHTML = '';
+         if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
+            container.empty();
+         } else {
+            container.get(0).innerHTML = '';
+         }
       },
 
       _destroyControls: function(container){
@@ -769,27 +806,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          },
          destroy : function() {
             this._unsetItemsEventHandlers();
+            if (this._itemsProjection) {
+               this._itemsProjection.destroy();
+               this._itemsProjection = null;
+            }
             this._clearItems();
          }
       },
 
       _createDefaultProjection: function(items) {
          this._itemsProjection = Projection.getDefaultProjection(items);
-      },
-
-      _convertItems: function (items) {
-         items = items || [];
-         if (items instanceof Array) {
-            items = new ObservableList({
-               items: items
-            });
-         }
-
-         if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            throw new Error('Items should implement SBIS3.CONTROLS.Data.Collection.IEnumerable');
-         }
-
-         return items;
       },
 
       _prepareSource: function(sourceOpt) {
@@ -898,7 +924,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /*TODO поддержка старого API*/
       getDataSet: function(compatibilityMode) {
          if(!compatibilityMode) {
-            $ws.single.ioc.resolve('ILogger').log('Получение DataSet явялется устаревшим функционалом используйте getItems()');
+            Utils.logger.stack('SBIS3.CONTROLS.ItemsControlMixin Получение DataSet явялется устаревшим функционалом используйте getItems()', 1);
          }
          return this._dataSet;
       },
@@ -947,6 +973,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    if(hasItems) {
                       if(!self._options.autoRedraw) {
                          self.redraw();
+                      } else {
+                        self._drawItemsCallback();
                       }
                    } else {
                       self.redraw();
@@ -965,6 +993,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       self._toggleIndicator(false);
                       if (self._notify('onDataLoadError', error) !== true) {
                          $ws.helpers.message(error.message.toString().replace('Error: ', ''));
+                         error.processed = true;
                       }
                    }
                    return error;
@@ -1001,13 +1030,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                dataSet.setIdProperty(this._options.keyField);
             }
             var recordSet = dataSet.getAll();
-            recordSet.setMetaData({
-               results: dataSet.getProperty('r'),
-               more: dataSet.getTotal(),
-               path: dataSet.getProperty('p')
-            });
+            recordSet.setMetaData(this._prepareMetaData(dataSet));
             return recordSet;
          }).bind(this));
+      },
+
+      _prepareMetaData: function(dataSet) {
+         //todo ножно придумать как изменить конструктор модели для метаданных
+         var meta = dataSet.hasProperty('m') ?  dataSet.getRow('m').toObject() : {};
+
+         meta.results = dataSet.getProperty('r');
+         meta.more = dataSet.getTotal();
+         meta.path = dataSet.getProperty('p');
+
+         return meta;
       },
 
       _toggleIndicator:function(){
@@ -1149,10 +1185,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see onDataLoad
         */
        setItems: function (items) {
-         this._unsetItemsEventHandlers();
-         this._items = null;
-         this._prepareConfig(undefined, items);
-         this.reload();
+          this._unsetItemsEventHandlers();
+          this._items = null;
+          this._prepareConfig(undefined, items);
+          if(items instanceof Array) {
+             this.reload();
+          } else {
+             this.redraw();
+          }
       },
 
       _drawItemsCallback: function () {
@@ -1197,9 +1237,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          projItem = projItem || this._getItemProjectionByItemId(item.getId());
          var
             targetElement = this._getElementByModel(item),
-            newElement = this._drawItem(projItem);
+            newElement = this._createItemInstance(projItem);/*раньше здесь звался _drawItem, но он звал лишнюю группировку, а при перерисовке одного итема она не нужна*/
+         this._addItemAttributes(newElement, projItem);
+         this._clearItems(targetElement);
          targetElement.after(newElement).remove();
          this.reviveComponents();
+         this._notifyOnDrawItems();
       },
 
       _getElementByModel: function(item) {
@@ -1347,12 +1390,27 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          //Если offset отрицательный, значит запрашивали последнюю страницу
          return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
       },
+      _scrollTo: function scrollTo(target, container) {
+         var scrollContainer = container || this._getScrollContainer(),
+             scrollContainerOffset = scrollContainer.offset(),
+             targetOffset;
+
+         if (typeof target === 'string') {
+            target = $(target);
+         }
+
+         targetOffset = target.offset();
+
+         if( (targetOffset.top - scrollContainerOffset.top - scrollContainer.scrollTop()) < 0) {
+            target[0].scrollIntoView(true);
+         } else if ( (targetOffset.top + target.height() - scrollContainerOffset.top - scrollContainer.scrollTop()) > scrollContainer[0].clientHeight) {
+            target[0].scrollIntoView(false);
+         }
+      },
       _scrollToItem: function(itemId) {
          var itemContainer  = $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer());
          if (itemContainer.length) {
-            itemContainer
-               .attr('tabindex', -1)
-               .focus();
+            this._scrollTo(itemContainer);
          }
       },
       /**
@@ -1376,6 +1434,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._dataSource;
       },
 
+      _getScrollContainer: function() {
+
+      },
       _dataLoadedCallback: function () {
 
       },
@@ -1384,10 +1445,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _ladderCompare: function(rows){
+         var ladderDecorator = this._decorators.getByName('ladder');
+         if (ladderDecorator && ladderDecorator.isIgnoreEnabled()){
+            return;
+         }
          //TODO придрот - метод нужен только для адекватной работы лесенки при перемещении элементов местами
          for (var i = 1; i < rows.length; i++){
-            var upperRow = rows[i - 1].length ? $('.controls-ladder', rows[i - 1]) : undefined,
-                lowerRow = rows[i].length ? $('.controls-ladder', rows[i]) : undefined,
+            var upperRow = $(rows[i - 1]).length ? $('.controls-ladder', rows[i - 1]) : undefined,
+                lowerRow = $(rows[i]).length ? $('.controls-ladder', rows[i]) : undefined,
                needHide;
             if (lowerRow) {
                for (var j = 0; j < lowerRow.length; j++) {
@@ -1398,7 +1463,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
       _isNeedToRedraw: function(){
-      	return !!this._getItemsContainer();
+         //Проверяем _needToRedraw для поддержки старой медленной отрисовки
+      	return !!this._getItemsContainer() && this._needToRedraw;
       },
 
       _changeItemProperties: function(item, property) {
@@ -1492,7 +1558,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /*TODO второй параметр нужен для поддержи старой группировки*/
       _buildTplItem: function(item, altTpl){
          var itemTpl, dotTemplate;
-         if (altTpl) {
+         if (altTpl !== undefined) {
             itemTpl = altTpl;
          }
          else {
@@ -1510,23 +1576,28 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
-      _addItem: function (projItem, at) {
+      _canApplyGrouping: function(projItem) {
+         return !Object.isEmpty(this._options.groupBy);
+      },
+
+      _addItem: function (projItem, at, withoutNotify) {
          var
             item = projItem.getContents(),
             ladderDecorator = this._decorators.getByName('ladder'),
+            canApplyGrouping = this._canApplyGrouping(projItem),
             previousGroupBy = this._previousGroupBy;//После добавления записи восстанавливаем это значение, чтобы не сломалась группировка
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
          /*TODO отдельно обрабатываем случай с группировкой*/
          var flagAfter = false;
-         if (!Object.isEmpty(this._options.groupBy)) {
+         if (canApplyGrouping) {
             var
                meth = this._options.groupBy.method,
                prev = this._itemsProjection.getPrevious(projItem),
                next = this._itemsProjection.getNext(projItem);
             if(prev)
-               meth.call(this, prev.getContents());
-            meth.call(this, item);
-            if (next && !meth.call(this, next.getContents())) {
+               meth.call(this, prev.getContents(), undefined, undefined, prev);
+            meth.call(this, item, undefined, undefined, projItem);
+            if (next && !meth.call(this, next.getContents(), undefined, undefined, next)) {
                flagAfter = true;
             }
          }
@@ -1541,7 +1612,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             newItemContainer.insertBefore(this._getItemContainerByIndex(target, at));
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else if (currentItemAt && currentItemAt.length) {
-            meth && meth.call(this, prev.getContents());
+            meth && meth.call(this, prev.getContents(), undefined, undefined, prev);
             newItemContainer.insertAfter(currentItemAt);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else if(at === 0) {
@@ -1552,10 +1623,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             newItemContainer.appendTo(target);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next()];
          }
-         this._group(projItem, {at: at});
-         this._previousGroupBy = previousGroupBy;
+         if (canApplyGrouping) {
+            this._group(projItem, {at: at});
+            this._previousGroupBy = previousGroupBy;
+         }
          ladderDecorator && ladderDecorator.setMarkLadderColumn(false);
          this._ladderCompare(rows);
+         if (!withoutNotify) {
+            this._notifyOnDrawItems();
+         }
       },
 
       _addItemAttributes: function (container, item) {
@@ -1636,8 +1712,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 	            case IBindCollection.ACTION_REMOVE:
                case IBindCollection.ACTION_MOVE:
 	               this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);
+                  var ladderDecorator = this._decorators.getByName('ladder');
+                  //todo опять неверно вызывается ladderCompare, используем костыль, чтобы этого не было
+                  if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
+                     ladderDecorator.setIgnoreEnabled(true);
+                  }
                   if (newItems.length) {
                      this._addItems(newItems, newItemsIndex)
+                  }
+                  if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
+                     ladderDecorator.setIgnoreEnabled(false);
                   }
                   this._toggleEmptyData(!this._itemsProjection.getCount());
 	               //this._view.checkEmpty(); toggleEmtyData

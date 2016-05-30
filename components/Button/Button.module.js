@@ -191,15 +191,20 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
         * @noShow
         * @param isDefault
         */
-      setDefaultButton: function(isDefault){
-         if(isDefault === undefined)
-            isDefault = true;
-         this.setPrimary(isDefault);
+       setDefaultButton: function(isDefault){
+          if (isDefault === undefined)
+             isDefault = true;
 
 
-         if(isDefault) this._registerDefaultButton();
-         else this._unregisterDefaultButton();
-      }
+          if (isDefault) {
+             this._registerDefaultButton();
+          }
+          else {
+             this._unregisterDefaultButton();
+          }
+
+          this.setPrimary(isDefault);
+       }
       /*TODO конец*/
    });
 

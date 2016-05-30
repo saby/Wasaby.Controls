@@ -32,12 +32,14 @@ define('js!SBIS3.CONTROLS.TabControl', [
              * @typedef {object} Item
              * @property {AlignType} [align=''] Выравнивание вкладки
              * @property {Content} content Xhtml-вёрстка заголовка закладки при редактировании по месту
+             * @property {String} title Текст вкладки
+             * @translatable title
              */
             /**
              * @cfg {Item[]} Массив с элементами, отображающими закладки и области, связанные с ним
              * Для настройки содержимого вкладок и областей нужно учитывать что задано в опциях tabsDisplayField и selectedKey.
-             * Например, если задали <opt name="tabsDisplayField">title</opt>, то и для текста вкладки задаем опцию <opt name="title">Текст вкладки</opt>
-             * Если задали <opt name="keyField">id</opt>, то и для вкладки задаем ключ опцией <opt name="id">id1</opt>
+             * Например, если задали &lt;opt name=&quot;tabsDisplayField&quot;&gt;title&lt;/opt&gt;, то и для текста вкладки задаем опцию &lt;opt name=&quot;title&quot;&gt;Текст вкладки&lt;/opt&gt;
+             * Если задали &lt;opt name=&quot;keyField&quot;&gt;id&lt;/opt&gt;, то и для вкладки задаем ключ опцией &lt;opt name=&quot;id&quot;&gt;id1&lt;/opt&gt;
              */
             items: null,
             /**

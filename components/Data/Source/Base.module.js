@@ -134,13 +134,14 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
          return key;
       },
 
-      _prepareQueryResult: function(data, totalProperty) {
-         return this._prepareCallResult(data, totalProperty);
+      _prepareQueryResult: function(data, itemsProperty, totalProperty) {
+         return this._prepareCallResult(data, itemsProperty, totalProperty);
       },
 
-      _prepareCallResult: function(data, totalProperty) {
+      _prepareCallResult: function(data, itemsProperty, totalProperty) {
          return this._getDataSetInstance({
             rawData: data,
+            itemsProperty: itemsProperty,
             totalProperty: totalProperty
          });
       },

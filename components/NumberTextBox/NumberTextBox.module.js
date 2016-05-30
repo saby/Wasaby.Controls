@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
              * </ul>
              * @example
              * <pre>
-             *     <option name="onlyIntegers">true</option>
+             *     <option name="onlyInteger">true</option>
              * </pre>
              * @see decimals
              * @see hideEmptyDecimals
@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
              * Опция позволяет скрыть нулевую дробную часть.
              * @example
              * <pre>
-             *     <option name="hideEmtyDecimals">true</option>
+             *     <option name="hideEmptyDecimals">true</option>
              * <pre>
              * @see decimals
              */
@@ -285,12 +285,12 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _arrowUpClick: function(){
-         this._setText(this._getSibling(1).toString());
+         this.setNumericValue(this._getSibling(1));
       },
 
       _arrowDownClick: function(){
          if (!(this._options.onlyPositive && this.getNumericValue() < 1)) {
-            this._setText(this._getSibling(-1).toString());
+            this.setNumericValue(this._getSibling(-1));
          }
       },
 

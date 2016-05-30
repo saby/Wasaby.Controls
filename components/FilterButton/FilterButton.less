@@ -163,12 +163,48 @@
    height: @controls-filterButton-height;
    display: inline-block;
 
+   .controls__filterButton-button {
+      width: @controls-filterButton-button-width;
+      height: @controls-filterButton-button-height;
+      margin: @controls-filterButton-button-margin;
+      background: @controls-filterButton-button-image;
+      display: inline-block;
+      cursor: pointer;
+      float: right;
+
+      &:hover {
+         background-position: @controls-filterButton-button-image-hover;
+      }
+      &:active {
+         background-position: @controls-filterButton-button-image-hover;
+      }
+   }
+
+   &.ws-disabled {
+      .controls__filterButton-button {
+         cursor: default;
+         background-position: @controls-filterButton-button-image-disabled;
+      }
+   }
+
    .controls__filterButton__filterLine {
       height: @controls-filterButton-button-height;
       overflow: hidden;
       margin: 8px 0 8px 0;
       vertical-align: @controls-filterLine-align;
       text-align: @controls-filterLine-text-align;
+
+      &.ws-disabled {
+         .controls__filterButton__filterLine-items {
+            color: @link-disabled-text-color;
+            cursor: default;
+
+            &:hover {
+               color: @link-disabled-text-color;
+               text-decoration: none;
+            }
+         }
+      }
 
       .controls__filterButton__filterLine-table {
          display: @controls-filterLine-wrapper-display;
@@ -191,11 +227,6 @@
          span {
             color: @controls-filterLine-link-color
          }
-
-         .controls__filterButton__filterLine-cross {
-            display: inline-block;
-            top: @controls-filterLine-copyCross-cross-top;
-         }
       }
    }
 
@@ -213,51 +244,38 @@
       box-sizing: border-box;
    }
 
+   .controls__filterButton__filterLine-arrow {
+      height: @controls-filterLine-arrow-height;
+      vertical-align: middle;
+   }
+
    .controls__filterButton__filterLine-items:hover {
       color: @primary-color;
       text-decoration: underline;
-
-      .controls__filterButton__filterLine-arrow {
-         color: @primary-color !important;
-      }
    }
 
    .controls__filterButton__filterLine-cross {
-      width: @controls-filterLine-cross-width;
-      height: @controls-filterLine-cross-height;
       display: @controls-filterLine-items-display;
       position: relative;
-      top: @controls-filterLine-cross-top;
-      cursor: pointer;
-   }
-
-   .controls__filterButton__filterLine-arrow:before {
-      line-height: normal;
-      position: relative;
-      top: @controls-filterLine-arrow-top;
-   }
-
-   .controls__filterButton-button {
-      width: @controls-filterButton-button-width;
-      height: @controls-filterButton-button-height;
-      margin: @controls-filterButton-button-margin;
-      background: @controls-filterButton-button-image;
-      display: inline-block;
-      cursor: pointer;
-      float: right;
-
-      &:hover {
-         background-position: @controls-filterButton-button-image-hover
-      }
-      &:active {
-         background-position: @controls-filterButton-button-image-hover
-      }
    }
 }
 
 // ФИКС ДЛЯ ФФ
 @-moz-document url-prefix() {
-   .controls__filterButton .controls__filterButton__filterLine {
+   .controls__filterButton .controls__filterButton__filterLine{
       margin: 8px 32px 8px 0;
+   }
+   /* Из-за того, что в FF внезапно изменилось позиционирование с помощью float'a, то добавляю хаки для FF
+      чтобы корректно позиционировался крестик очистки и текст */
+   .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-table {
+      display: inline-block;
+      float: none;
+   }
+   .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-table-row {
+      height: 24px;
+   }
+
+   .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-copyCross {
+      top: -25px;
    }
 }

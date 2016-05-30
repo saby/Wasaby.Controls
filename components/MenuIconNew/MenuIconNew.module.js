@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.MenuIconNew', [
    /**
     * Кнопка с выпадающим меню
     * @class SBIS3.CONTROLS.MenuIcon
-	 * @demo SBIS3.CONTROLS.Demo.MyMenuIconNew
+	* @demo SBIS3.CONTROLS.Demo.MyMenuIconNew
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuIcon'>
     *    <option name="icon">sprite:icon-24 icon-AddButton icon-primary</option>

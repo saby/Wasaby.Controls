@@ -1,7 +1,8 @@
 .controls-FieldLink__picker {
    max-height: @controls-FieldLink-picker-max-height;
    min-height: @controls-FieldLink-picker-min-height;
-   border: @controls-FieldLink-picker-border;
+   border: @controls-FieldLink-border;
+   border-color: @controls-FieldLink-border-color-focus-hover;
    border-top: none;
    background: @controls-FieldLink-picker-background;
    overflow: auto;
@@ -82,16 +83,22 @@
 
 .controls-FieldLink {
    display: inline-block;
+   border-color: @controls-FieldLink-border-color;
+
+   &.controls-Picker__show,
+   &.ws-has-focus,
+   &:hover {
+      border: @controls-FieldLink-border;
+      border-color: @controls-FieldLink-border-color-focus-hover;
+   }
 
    &.controls-Picker__show {
-      border: @controls-FieldLink-picker-show-border;
-      border-color: @controls-FieldLink-picker-show-border-color;
       background: @controls-FieldLink-picker-show-color;
    }
 
    .controls-TextBox__fieldWrapper {
-      float: left;
       margin: @controls-FieldLink-fieldWrapper-margin;
+      display: inline-block;
    }
 
    .controls-TextBox__beforeFieldWrapper {
@@ -100,7 +107,7 @@
       .controls-FieldLink__dropAllLinks {
          position: relative;
          float: left;
-         top: @controls-FieldLink-showAllLinks-top;
+         line-height: @controls-FieldLink-showAllLinks-lineHeight;
          padding: @controls-FieldLink-showAllLinks-padding;
       }
 

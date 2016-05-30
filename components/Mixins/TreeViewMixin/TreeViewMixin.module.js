@@ -36,7 +36,8 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
        */
       _onExpandItem: function(expandedItem) {
          var
-            key = expandedItem.getContents().getId();
+            key = expandedItem.getContents().getId(),
+            ladderDecorator = this._decorators.getByName('ladder');
          this._closeAllExpandedNode(key);
          this._options.openedPath[expandedItem.getContents().getId()] = true;
          if (!this._loadedNodes[key] && this._options.partialyReload) {
@@ -47,12 +48,10 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                // так как на него много всего завязано. (пользуется Янис)
                this._folderHasMore[key] = list.getMetaData().more;
                this._loadedNodes[key] = true;
-               if (this._isSlowDrawing()) {
-                  this._needToRedraw = false;
-               }
+               ladderDecorator && ladderDecorator.setIgnoreEnabled(true);
                this._items.merge(list, {remove: false});
+               ladderDecorator && ladderDecorator.setIgnoreEnabled(false);
                if (this._isSlowDrawing()) {
-                  this._needToRedraw = true;
                   this._dataSet.getTreeIndex(this._options.hierField, true);
                }
                this._notify('onDataMerge', list);
@@ -67,7 +66,8 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
          //todo При переходе на Virtual DOM удалить работу с expandedItemContainer
          var
             expandedItemContainer = this._getItemsContainer().find('[data-hash="'+ expandedItem.getHash() + '"]');
-         expandedItemContainer.find('.controls-TreeView__expand').addClass('controls-TreeView__expand__open');
+         this._folderOffsets[expandedItem.getContents().getKey()] = 0;
+         expandedItemContainer.find('.js-controls-TreeView__expand').addClass('controls-TreeView__expand__open');
          this._notify('onNodeExpand', expandedItem.getContents().getId(), expandedItemContainer);
       },
       /**
@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
          var
             itemId = collapsedItem.getContents().getId(),
             collapsedItemContainer = this._getItemsContainer().find('[data-hash="'+ collapsedItem.getHash() + '"]');
-         collapsedItemContainer.find('.controls-TreeView__expand').removeClass('controls-TreeView__expand__open');
+         collapsedItemContainer.find('.js-controls-TreeView__expand').removeClass('controls-TreeView__expand__open');
          delete this._options.openedPath[itemId];
          //Уничтожим все дочерние footer'ы и footer узла
          this._destroyItemsFolderFooter([itemId]);
@@ -108,72 +108,6 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             closest = elem.closest('.js-controls-TreeView__expand');
             return closest.length ? closest : elem;
          }
-      },
-      _drawItemsFolder: function(records) {
-         var self = this;
-         for (var j = 0; j < records.length; j++) {
-            var record = records[j];
-            var projItem = this._getItemProjectionByItemId(records[j].getId());
-            var
-               recKey = record.getId(),
-               parKey = self._dataSet.getParentKey(record, self._options.hierField),
-               childKeys = this._dataSet.getChildItems(parKey, true),
-               targetContainer = self._getTargetContainer(record);
-
-            if (!$('.controls-ListView__item[data-id="'+recKey+'"]', self._getItemsContainer().get(0)).length) {
-
-               if (targetContainer) {
-                  /*TODO пока придрот для определения позиции вставки*/
-                  var
-                     parentContainer = $('.controls-ListView__item[data-id="' + parKey + '"]', self._getItemsContainer().get(0)),
-                     allContainers = $('.controls-ListView__item', self._getItemsContainer().get(0)),
-                     startRow = 0;
-
-                  for (var i = 0; i < allContainers.length; i++) {
-                     if (allContainers[i] == parentContainer.get(0)) {
-                        startRow = i + 1;
-                     } else {
-                        //TODO сейчас ключи могут оказаться строками, а могут целыми числами, в 20 все должно быть строками и это можно выпилить
-                        if ((Array.indexOf(childKeys,$(allContainers[i]).attr('data-id')) >= 0) || (Array.indexOf(childKeys, $(allContainers[i]).data('id')) >= 0)) {
-                           startRow++;
-                        }
-                     }
-                     /*else {
-                      if ()
-                      }*/
-                  }
-                  /**/
-                  if (self._options.displayType == 'folders') {
-                     if (record.get(self._options.hierField + '@')) {
-                        self._drawAndAppendItem(projItem, {at : startRow});
-                     }
-
-                  }
-                  else {
-                     self._drawAndAppendItem(projItem, {at : startRow});
-                  }
-               }
-            }
-         }
-         self._drawItemsCallback();
-      },
-      /**
-       * Отрисовывает загруженную ветку
-       * @param key
-       * @param records
-       * @private
-       */
-      _drawLoadedNode: function(key, records){
-         this._drawItemsFolder(records);
-         this._updateItemsToolbar();
-      },
-      /**
-       * Отрисовка элементов после загрузки ветки
-       * @param records
-       * @private
-       */
-      _drawItemsFolderLoad: function(records) {
-         this._drawItems(records);
       },
       /**
        * Создает постраничную навигацию в ветках

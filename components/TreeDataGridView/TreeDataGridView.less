@@ -34,6 +34,20 @@
       height: 14px;
     }
   }
+
+   &.controls-DataGridView-cell-overflow-ellipsis {
+      .controls-TreeView__folderTitle {
+         overflow: hidden;
+         text-overflow: ellipsis;
+         white-space: nowrap;
+
+         > * {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+         }
+      }
+   }
 }
 .controls-CompositeView-table.controls-TreeView-big {
    .controls-ListView__item-type-node{
@@ -77,6 +91,7 @@
    .controls-TreeView__ellipsis-wrapper {
       overflow: hidden;
       height: @tree-view-ellipsis-wrapper-height;
+      padding: @tree-view-ellipsis-wrapper-padding;
 
       .controls-TreeView__ellipsis-container {
          float: left;
@@ -92,6 +107,7 @@
          .box-shadow(@tree-view-ellipsis-copyArrow-shadow @white-color);
 
          .controls-TreeView__editArrow {
+            width: @tree-view-ellipsis-copyArrow-width;
             display: inline-block;
          }
       }
@@ -122,8 +138,13 @@
       }
       &.controls-ListView__item-type-node{
          .controls-TreeView__expand{
-            margin: 0 12px 0 12px; 
+            margin: 0 12px 0 12px;
          }
       }
    }
+}
+
+.controls-TreeView__editArrow-container {
+   position: absolute;
+   z-index: 1;
 }

@@ -1,44 +1,58 @@
 .controls-MenuItem {
-   position: relative;
-   overflow: hidden;
-   .box-sizing(border-box);
-   cursor: @menu-item-cursor;
-   width: @menu-item-width;
-   height: @menu-item-height;
-   line-height: @menu-item-line-height;
-   padding: @menu-item-default-padding;
-   color: @menu-item-text-color;
-   background: @menu-item-bg;
-   display: table-row;
+  position: relative;
+  display: block;
+  overflow: hidden;
+  .box-sizing(border-box);
+  cursor: @menu-item-cursor;
+  width: @menu-item-width;
+  height: @menu-item-height;
+  line-height: @menu-item-line-height;
+  padding: @menu-item-default-padding;
+  color: @menu-item-text-color;
+  background: @menu-item-bg;
 
-   .controls-MenuItem__cell {
-      display: table-cell;
-   }
-   .controls-MenuItem__text{
-      display: block;
-   }
-   .control-MenuItem__child-expand {
-      padding-right: 16px;
-   }
-   .controls-MenuItem__icon {
-      padding-right: 6px;
-      vertical-align: middle;
-      position: relative;
-      top: -1px;
-   }
+  &:hover {
+    color: @menu-item-hover-text-color;
+    background: @menu-item-hover-bg;
+    .controls-MenuItem__icon{
+      color: @menu-item-hover-icon-color;
+    }
+  }
 
-   &:hover {
-      color: @menu-item-hover-text-color;
-      background: @menu-item-hover-bg;
-      .controls-MenuItem__icon {
-         color: @menu-item-hover-icon-color;
+   &.controls-MenuItem__padding-16{
+      padding-left: 30px;
+   }
+  
+   &.controls-MenuItem__padding-24{
+      padding-left: 38px;
+   }
+  
+  .controls-MenuItem__content {
+    position: relative;
+
+    .icon-24 ~ .controls-MenuItem__text{
+    	margin: 0 0 0 29px;
+    }
+
+    .controls-MenuItem__icon {
+      position: absolute;
+      top: @menu-item-icon-top-offset;
+      left: @menu-item-icon-left-offset;
+      &.icon-24 {
+         top: @menu-item-icon24-top-offset;
+         left: @menu-item-icon24-left-offset;
       }
-   }
+    }
 
-   .controls-MenuItem__icon-wrapper {
-      width: 1px;
-      padding-left: 8px;
-   }
+    .controls-MenuItem__text {
+       margin: @menu-item-text-margin;
+       display: block;
+    }
+  }
+}
+
+.icon-offset24 .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__text {
+   margin-left: 40px;
 }
 
 .ws-disabled {

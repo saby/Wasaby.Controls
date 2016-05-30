@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     *
     */
-   var BackButton = CompoundControl.extend({
+   var BackButton = CompoundControl.extend( /** @lends SBIS3.CONTROLS.BackButton.prototype */ {
       _dotTplFn: dotTpl,
       /**
        * @event onActivated При активации кнопки (клик мышкой, кнопки клавиатуры)
@@ -53,12 +53,22 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
          _link: null,
          _options:{
             /**
-             * @cfg {String} Надпись
+             * @cfg {String} Устанавливает надпись на кнопке.
+             * Надпись должна отображать смысл действия клика по кнопке или побуждать к действию.
+             * @example
+             * <pre class="brush: xml">
+             *    <option name="caption">Вернуться</option>
+             * </pre>
              * @translatable
              */ 
             caption: '',
             /**
-             * @cfg {String} спрайт иконки
+             * @cfg {String} Устанавливает изображение иконки на кнопке.
+             * @example
+             * <pre class="brush: xml">
+             *    <option name="icon">sprite:icon-16 icon-Arrow1730 icon-primary</option>
+             * </pre>
+             * @see setIcon
              */
             icon: ''
          }
@@ -96,8 +106,8 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
          this._container.toggleClass('controls-BackButton__empty', !caption);
       },
       /**
-       * Устанавливает исконку кнопки
-       * @param icon Текси
+       * Устанавливает изображение иконки кнопки.
+       * @param icon Изображение иконки.
        */
       setIcon: function(icon){
          this._link.setIcon(icon);

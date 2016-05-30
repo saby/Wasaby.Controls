@@ -13,66 +13,46 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
     */
 
    var ObservableListMixin = /** @lends SBIS3.CONTROLS.Data.Collection.ObservableListMixin.prototype */{
-      $protected: {
-         /**
-          * @member {Boolean} Генерация событий включена
-          */
-         _eventsEnabled: true,
+      /**
+       * @member {Boolean} Генерация событий включена
+       */
+      _eventsEnabled: true,
 
-         /**
-          * @member {Object.<String, Boolean>} Есть подписчики на событие
-          */
-         _hasSubscription: {},
+      /**
+       * @member {Function} Обработчик изменения свойств элемента
+       */
+      _onItemPropertyChangeHandler: null,
 
-         /**
-          * @member {Function} Обработчик изменения свойств элемента
-          */
-         _onItemPropertyChangeHandler: null,
-         /**
-          * @member {boolean} флаг показывает выполняется ли в данный момент событие изменения коллекции
-          */
-         _isChangingYet: false
-      },
+      /**
+       * @member {boolean} флаг показывает выполняется ли в данный момент событие изменения коллекции
+       */
+      _isChangingYet: false,
 
-      $constructor: function () {
+      constructor: function $ObservableListMixin() {
          this._publish('onCollectionChange', 'onCollectionItemChange');
-         this._hasSubscription.onCollectionChange = this._handlers.hasOwnProperty('onCollectionChange');
-         this._hasSubscription.onCollectionItemChange = this._handlers.hasOwnProperty('onCollectionItemChange');
          this._onItemPropertyChangeHandler = onItemPropertyChangeHandler.bind(this);
 
-         this._setObservableItems(this._items);
+         this._setObservableItems(this._$items);
       },
 
-      before: {
-         destroy: function() {
-            this._unsetObservableItems(this._items);
-         }
-      },
-
-      after: {
+      $after: {
          subscribe: function(event) {
-            var hasSubscription = this._hasSubscription[event];
-            this._hasSubscription[event] = true;
-            if (!hasSubscription) {
-               this._setObservableItems(this._items);
+            if (this._eventBusChannel.getEventHandlers(event).length == 1) {
+               this._setObservableItems(this._$items);
             }
          },
 
-         unsubscribe: function(event) {
-            this._hasSubscription[event] = this._getChannel().hasEventHandlers(event);
-         },
-
-         unbind: function(event) {
-            this._hasSubscription[event] = false;
+         destroy: function() {
+            this._unsetObservableItems(this._$items);
          }
       },
 
-      around: {
+      $around: {
 
          //region SBIS3.CONTROLS.Data.Collection.List
 
          assign: function (parentFnc, items) {
-            var oldItems = this._items.slice(),
+            var oldItems = this._$items.slice(),
                eventsWasEnabled = this._eventsEnabled;
 
             this._eventsEnabled = false;
@@ -82,7 +62,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
             this._notifier(
                this.notifyCollectionChange,
                IBindCollection.ACTION_RESET,
-               this._items.slice(),
+               this._$items.slice(),
                0,
                oldItems,
                0
@@ -100,7 +80,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
             this._notifier(
                this.notifyCollectionChange,
                IBindCollection.ACTION_ADD,
-               this._items.slice(count, this._lenght),
+               this._$items.slice(count),
                count,
                [],
                0
@@ -118,7 +98,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
             this._notifier(
                this.notifyCollectionChange,
                IBindCollection.ACTION_ADD,
-               this._items.slice(0, this.getCount() - length),
+               this._$items.slice(0, this.getCount() - length),
                0,
                [],
                0
@@ -126,7 +106,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          },
 
          clear: function (parentFnc) {
-            var oldItems = this._items.slice(),
+            var oldItems = this._$items.slice(),
                eventsWasEnabled = this._eventsEnabled;
 
             this._eventsEnabled = false;
@@ -136,7 +116,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
             this._notifier(
                this.notifyCollectionChange,
                IBindCollection.ACTION_RESET,
-               this._items.slice(),
+               this._$items.slice(),
                0,
                oldItems,
                0
@@ -149,7 +129,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
             this._notifier(
                this.notifyCollectionChange,
                IBindCollection.ACTION_ADD,
-               [this._items[at]],
+               [this._$items[at]],
                at,
                [],
                0
@@ -157,7 +137,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          },
 
          removeAt: function (parentFnc, index) {
-            var item = this._items[index];
+            var item = this._$items[index];
             parentFnc.call(this, index);
             this._notifier(
                this.notifyCollectionChange,
@@ -171,12 +151,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          },
 
          replace: function (parentFnc, item, at) {
-            var oldItem = this._items[at];
+            var oldItem = this._$items[at];
             parentFnc.call(this, item, at);
             this._notifier(
                this.notifyCollectionChange,
                IBindCollection.ACTION_REPLACE,
-               [this._items[at]],
+               [this._$items[at]],
                at,
                [oldItem],
                at
@@ -200,7 +180,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          if (!this._eventsEnabled) {
             return;
          }
-         if (this._hasSubscription.onCollectionChange) {
+         if (this.hasEventHandlers('onCollectionChange')) {
             this._notify(
                'onCollectionChange',
                action,
@@ -210,7 +190,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
                oldItemsIndex
             );
          }
-         if (this._hasSubscription.onCollectionItemChange) {
+         if (this.hasEventHandlers('onCollectionItemChange')) {
             this._checkWatchableOnCollectionChange(
                action,
                newItems,
@@ -229,7 +209,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
       notifyItemChange: function (item, properties) {
          if (
             !this._eventsEnabled ||
-            !this._hasSubscription.onCollectionItemChange
+            !this.hasEventHandlers('onCollectionItemChange')
          ) {
             return;
          }
@@ -237,7 +217,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          var index = this.getIndex(item);
          this._notify(
             'onCollectionItemChange',
-            this._items[index],
+            this._$items[index],
             index,
             properties
          );
@@ -276,7 +256,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
        * @protected
        */
       _setObservableItems: function(items) {
-         if (this._hasSubscription.onCollectionItemChange) {
+         if (this.hasEventHandlers('onCollectionItemChange')) {
             $ws.helpers.forEach(items, this._watchForChanges, this);
          }
       },

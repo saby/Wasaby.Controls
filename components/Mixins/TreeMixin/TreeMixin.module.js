@@ -31,7 +31,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        *       $ws.helpers.question('Продолжить?');
        *    }
        * </pre>
-       *
+       */
+      /**
        * @event onNodeCollapse После сворачивания ветки
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} key ключ разворачиваемой ветки
@@ -71,6 +72,23 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              * @cfg {String} Поле иерархии
              */
             hierField: null,
+            /**
+             * @cfg {String} Устанавливает режим отображения данных, имеющих иерархическую структуру.
+             * @remark
+             * Для набора данных, имеющих иерархическую структуру, опция определяет режим их отображения. Она позволяет пользователю отображать данные в виде развернутого или свернутого списка.
+             * В режиме развернутого списка будут отображены узлы группировки данных (папки) и данные, сгруппированные по этим узлам.
+             * В режиме свернутого списка будет отображен только список узлов (папок).
+             * Возможные значения опции:
+             * * folders - будут отображаться только узлы (папки),
+             * * all - будут отображаться узлы (папки) и их содержимое - элементы коллекции, сгруппированные по этим узлам.
+             *
+             * Подробное описание иерархической структуры приведено в документе {@link https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy "Типы отношений в таблицах БД"}
+             * @example
+             * Устанавливаем режим полного отображения данных: будут отображены элементы коллекции и папки, по которым сгруппированы эти элементы.
+             * <pre class="brush:xml">
+             *     <option name="displayType">all</option>
+             * </pre>
+             */
             displayType : 'all',
             /**
              * @cfg {Boolean} При открытия узла закрывать другие
@@ -88,6 +106,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              * @noShow
              */
             partialyReload: true,
+            /**
+             * @cfg {Object}  Устанавливает набор открытых элементов иерархии.
+             * @see getOpenedPath
+             */
             openedPath : {},
             /**
              * @cfg {Boolean}
@@ -112,14 +134,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       $constructor : function() {
          var
             filter = this.getFilter() || {};
-         this._publish('onSearchPathClick', 'onNodeExpand', 'onSetRoot', 'onBeforeSetRoot');
+         this._publish('onSearchPathClick', 'onNodeExpand', 'onNodeCollapse', 'onSetRoot', 'onBeforeSetRoot');
          if (typeof this._options.root != 'undefined') {
             this._curRoot = this._options.root;
             filter[this._options.hierField] = this._options.root;
          }
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
-            filter['ВидДерева'] = 'Узлы и листья';
+            filter['ВидДерева'] = 'С узлами и листьями';
          }
          this._previousRoot = this._curRoot;
          this.setFilter(filter, true);
@@ -183,7 +205,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        * @param {String} key Идентификатор раскрываемого узла
        */
       toggleNode: function(key) {
+         var ladderDecorator = this._decorators.getByName('ladder');
+         if (ladderDecorator){
+            ladderDecorator.removeNodeData(key);
+            ladderDecorator.setIgnoreEnabled(true);
+         }
          this._getItemProjectionByItemId(key).toggleExpanded();
+         ladderDecorator && ladderDecorator.setIgnoreEnabled(false);
       },
       /**
        * Развернуть ветку
@@ -324,7 +352,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       getOpenedPath: function(){
          return this._options.openedPath;
       },
-      around : {
+      around: {
          _buildTplArgs: function(parentFnc, item) {
             var
                args = parentFnc.call(this, item);
@@ -334,6 +362,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             args.originallPadding = this._originallPadding;
             args.isSearch = (!Object.isEmpty(this._options.groupBy) && this._options.groupBy.field === this._searchParamName)
             return args;
+         },
+         _canApplyGrouping: function(parentFn, projItem) {
+            var
+               itemParent = projItem.getParent();
+            return parentFn.call(this, projItem) && itemParent && itemParent.isRoot();
          }
       },
       /**
@@ -370,10 +403,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             }
             //Если данные пришли, нарисуем
             if (dataSet.getCount()) {
-               var records = dataSet._getRecords();
-               self._dataSet.merge(dataSet, {remove: false});
-               self._dataSet.getTreeIndex(self._options.hierField, true);
-               self._drawItemsFolderLoad(records, id);
+               self._items.merge(dataSet, {remove: false});
+               self._items.getTreeIndex(self._options.hierField, true);
+               self._updateItemsToolbar();
                self._dataLoadedCallback();
             }
 
@@ -446,6 +478,38 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             template : groupByTpl,
             method : this._searchMethod.bind(this),
             render : this._searchRender.bind(this)
+         }
+      },
+
+      /**
+       * Метод разврачивает узлы дерева до нужной записи
+       * @param {String} key ключ записи
+       */
+      expandToItem: function(key){
+         var items = this.getItems(),
+            projection = this._itemsProjection,
+            recordKey = key,
+            nodes = [],
+            hasItemInProjection,
+            record;
+
+         while(!hasItemInProjection && recordKey){
+            record = items.getRecordByKey(recordKey);
+            hasItemInProjection = projection.getItemBySourceItem(record);
+            //если hasItemInProjection = true - это значит что мы нашли запись, которая находится в раскрытом узле
+            if (!hasItemInProjection){
+               if (record){
+                  recordKey = record.get(this._options.hierField);
+                  nodes.push(recordKey);
+               }
+               else{
+                  recordKey = undefined;
+               }
+            }
+         }
+
+         for (var i = nodes.length - 1, l = 0; i >= l; i--){
+            this.expandNode(nodes[i]);
          }
       },
       //----------------- defaultSearch group

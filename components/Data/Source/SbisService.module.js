@@ -282,7 +282,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       //region SBIS3.CONTROLS.Data.Source.Base
 
       _prepareCallResult: function(data) {
-         return SbisService.superclass._prepareCallResult.call(this, data, 'n');
+         return SbisService.superclass._prepareCallResult.call(this, data, undefined, 'n');
       },
 
       //endregion SBIS3.CONTROLS.Data.Source.Base
@@ -415,10 +415,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                      type: 'array',
                      kind: this._getValueType(val[0])
                   };
-               } else {
-                  return 'object';
                }
-               break;
+               return 'object';
             default:
                return 'string';
          }
@@ -442,18 +440,25 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             name,
             value,
             field,
-            hierarhyFields = {};
+            hierarhyFields = {},
+            sortNames = [];
 
          for (name in data) {
             if (data.hasOwnProperty(name)) {
-               value = data[name];
-               field = this._getValueType(value, name, data);
-               if (!(field instanceof Object)) {
-                  field = {type: field};
-               }
-               field.name = name;
-               record.addField(field, undefined, value);
+               sortNames.push(name);
             }
+         }
+         sortNames = sortNames.sort();
+
+         for (var i = 0, len = sortNames.length; i < len; i++) {
+            name = sortNames[i];
+            value = data[name];
+            field = this._getValueType(value, name, data);
+            if (!(field instanceof Object)) {
+               field = {type: field};
+            }
+            field.name = name;
+            record.addField(field, undefined, value);
          }
 
          return record;
@@ -607,7 +612,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          query.where(filter)
             .offset(hasMore === undefined ? offset : hasMore)
             .limit(limit)
-            .orderBy(sorting);
+            .orderBy(sorting)
+            .meta(hasMore === undefined ? {} : {hasMore: hasMore});
 
          args = {
             'Фильтр': this._buildRecord(query ? query.getWhere() : null),

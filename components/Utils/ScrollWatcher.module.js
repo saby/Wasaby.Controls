@@ -162,6 +162,11 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
       _isOnTop : function(){
          return this._isScrollUp && (this._lastScrollTop <= this._options.checkOffset);
       },
+
+      getScrollContainer: function() {
+         return this._getContainer();
+      },
+
       /**
        * Проскроллить в контейнере
        * @param {String|Number} offset куда или насколько скроллить.
@@ -188,6 +193,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
                if (scrollable.length) {
                   return scrollable[0].scrollHeight;
                }
+               return element[0].scrollHeight;
             }
             return document.body.scrollHeight;
          }

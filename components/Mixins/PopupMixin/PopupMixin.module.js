@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
    if (typeof window !== 'undefined') {
       var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
 
-      $(document).bind('mousedown', function (e) {
+      $(document).bind('mousedown touchstart', function (e) {
          eventsChannel.notify('onDocumentClick', e.target);
       });
 
@@ -40,6 +40,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          _defaultVerticalAlignSide: '',
          _margins: null,
          _marginsInited: false,
+         _originsInited: false, // Обозначает, что были инициализированы размеры. _onResizeHandler срабатывает до show, и при этом еще нельзя получить правильные размеры -
+                                // и соответсвенно провести правильные рассчеты, поэтому пропустим первое его срабатывание.
          _zIndex: null,
          _currentAlignment: {},
          _options: {
@@ -111,7 +113,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       },
 
       $constructor: function () {
-         this._publish('onClose', 'onShow', 'onAlignmentChange');
+         this._publish('onClose', 'onShow', 'onAlignmentChange', 'onChangeFixed');
          var self = this,
             container = this._container;
          container.css({
@@ -139,6 +141,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          if (this._options.closeButton) {
             container.append('<div class="controls-PopupMixin__closeButton" ></div>');
             $('.controls-PopupMixin__closeButton', this.getContainer().get(0)).click(function() {
+               //Нужно вызвать активироваться перед hide, чтобы закрылись плав. панели, у которых опенером был этот контрол
+               //TODO: унифицировать код закрытия с SBIS3.CORE.FloatArea: хранить коллекцию дочерних панелей, и закрывать их тут
+               //(не делая активацию)
+               self.setActive(true);
                self.hide();
             });
          }
@@ -187,14 +193,22 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          while (element.parent().length){
             if (element.css('position') == 'fixed'){
                $(this._container).css({position : 'fixed'});
+               if (this._fixed){
+                  this._notify('onChangeFixed', true);
+               }
                this._fixed = true;
                return;
             } else {
                element = element.parent();
             }
          }
+         this._notify('onChangeFixed', false);
          this._fixed = false;
          $(this._container).css({position : 'absolute'});
+      },
+
+      isFixed: function(){
+         return this._fixed;
       },
 
       /**
@@ -210,6 +224,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             };
             // Пересчитать оригинальные размеры, флаг true если размеры контейнера поменялись
             if (recalcFlag) {
+               this._originsInited = true;
+               this._container.css('height', '');
+               this._container.css('width', '');
                var scrollWidth = this._container.get(0).scrollWidth,
                   scrollHeight = this._container.get(0).scrollHeight,
                   maxWidth = parseFloat(this._container.css('max-width'), 10) || scrollWidth,
@@ -221,9 +238,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                this._containerSizes.originWidth = scrollWidth > maxWidth ? maxWidth : scrollWidth + border ;
                this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight + border;
             }
-            this._initSizes();
             if (this._fixed === undefined){
                this._checkFixed(this._options.target);
+            }
+            this._initSizes();
+            if (!this._originsInited){
+               return;
             }
             if (this._options.target) {
                var offset = {
@@ -430,6 +450,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                border: (target.outerWidth() - target.innerWidth()) / 2,
                boundingClientRect: target.get(0).getBoundingClientRect()
             };
+            if (this._fixed) this._targetSizes.offset = this._targetSizes.boundingClientRect;
          }
          this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;
          var buff = this._getGeneralOffset(this._defaultVerticalAlignSide, this._defaultHorizontalAlignSide, this._defaultCorner, true);
@@ -596,8 +617,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
       _getOffsetByWindowSize: function (offset) {
          var buf = this._targetSizes.offset,
-            scrollY = $(window).scrollTop(),
-            scrollX = $(window).scrollLeft();
+            scrollY = this._fixed ? 0 : $(window).scrollTop(),
+            scrollX = this._fixed ? 0 : $(window).scrollLeft();
          //Проверяем убираемся ли в экран снизу. Если позиционируем нижней стороной, не нужно менять положение если не влезаем снизу
          if (this._containerSizes.requiredOffset.top > this._windowSizes.height + scrollY && !this._isMovedV && this._options.verticalAlign.side !== 'bottom') {
             this._isMovedV = true;

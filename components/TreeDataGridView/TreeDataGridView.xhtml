@@ -25,5 +25,11 @@
    {{?it.footerTpl}}
       <div class="controls-ListView__footer">{{=it.footerTpl(it)}}</div>
    {{?}}
+   {{? it.showPaging}}
+      <div class="controls-Pager-container"></div>
+   {{?}}
    <div class="controls-ListView__ItemsToolbar-container ws-hidden"></div>
+   {{? it.editArrow}}
+      <div class="controls-TreeView__editArrow-container ws-hidden"></div>
+   {{?}}
 </div>

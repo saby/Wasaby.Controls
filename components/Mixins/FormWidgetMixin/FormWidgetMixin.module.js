@@ -1,20 +1,18 @@
 define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function (Infobox) {
    /**
-    * Добавляет к любому контролу методы для получения и установки “значения”.
-    * Необходим для однообразной работы с набором контролов на диалоге, когда речь идет о сохранении набора данных в БЛ,
-    * или заполнении контролов значениями из БЛ. В каждом контроле методы должны быть определены.
+    * Миксин, который добавляет функционал валидаторов.
+    * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/">Валидация вводимых данных</a>.
     * @mixin SBIS3.CONTROLS.FormWidgetMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
    var FormWidgetMixin = /** @lends SBIS3.CONTROLS.FormWidgetMixin.prototype */{
        /**
-        * @event onValidate Поисходит при прохождении валидации.
-        * Событие происходит как при удачном прохождении валидации, так и при возвращении ошибки валидатором.
+        * @event onValidate Происходит при прохождении валидации.
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-        * @param {Boolean} vResult.result Результат.
-        * @param {Array} vResult.errors Ошибки.
-        * @param {String} previousStatus Предыдущее состоянии валидации.
+        * @param {Boolean} result Результат прохождения валидации.
+        * @param {Array} errors Массив ошибок валидации.
+        * @param {Boolean} previousStatus Предыдущий результат валидации.
         * @example
         * Если поле ввода (TextBox) успешно прошло валидацию, то сделать кнопку (btn) доступной для взаимодействия.
         * <pre>
@@ -39,47 +37,24 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
             /**
              * @typedef {Object} Validator
              * @property {Function} validator Функция валидации.
-             * @property {String} option Валидируемая опция. Передаётся в функцию валидации в качестве её аргумента.
-             * @property {String} errorMessage Текст сообщения об ошибке валидации.
-             * Если свойство не определено, то в качестве текста будет использовано значение, возвращаемое функцией валидации.
+             * @property {String} option Название валидируемой опции. Передаётся в функцию валидации в качестве её аргумента.
+             * @property {String} errorMessage Текст сообщения об ошибке валидации. Если свойство не определено, то в качестве текста будет использовано значение, возвращаемое функцией валидации.
+             * @property {Boolean} noFailOnError Нежёсткая валидация. Если значение опции true, то при не прохождении валидации контрол только маркируется, а валидация всё равно считается пройденной.
              * @translatable errorMessage
-             * @property {Boolean} noFailOnError Нежёсткая валидация.
-             * Если значение опции true, то при непрохождении валидации контрол маркируется и возвращается true.
              */
             /**
-             * @cfg {Validator[]} Валидаторы контрола
-             * Массив объектов, описывающих валидаторы контрола.
-             * Подробнее о валидации можно прочесть в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/validator/ руководстве разработчика},
-             * там же приведен список платформенных валидаторов.
+             * @cfg {Validator[]} Устанавливает валидаторы контрола.
+             * Подробнее о валидации можно прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/validation/ руководстве разработчика}.
              * @example
              * Пример массива, описывающего валидаторы:
              * <pre class="brush: xml">
              *     <options name="validators" type="array">
              *        <options>
-             *           <option name="validator" type="function" value="js!SBIS3.CORE.CoreValidators:required"></option>
-             *           <option name='errorMessage'>Пожалуйста, введите в данное поле ваше имя!</option>
-             *        </options>
-             *        <options>
-             *           <option name="validator" type="function" value="js!SBIS3.CORE.CoreValidators:length"></option>
+             *           <option name="validator" type="function" value="js!SBIS3.CONTROLS.ControlsValidators:required"></option>
+             *           <option name="option">text</option>
+             *           <option name="errorMessage">Пожалуйста, введите в данное поле ваше имя!</option>
              *        </options>
              *     </options>
-             * </pre>
-             * Пример пользовательского валидатора:
-             * <pre>
-             *     define('js!SBIS3.MySite.MyComponent.Validators', [], function() {
-             *        'use strict';
-             *        return {
-             *           myValidator: function() {
-             *              var value = this.getValue();
-             *              if (value.length < 3) {
-             *                 // если число введённых символов меньше 4-х, то возвращается сообщение об ошибке - валидация не пройдена
-             *                 return 'Название товара должно состоять из 4-х или более символов';
-             *              }
-             *              // если количество введённых символов соответствует требованиям, возвращаем true - валидация пройдена
-             *              return true;
-             *           }
-             *        }
-             *     });
              * </pre>
              * @group Validation
              * @see validators
@@ -173,21 +148,14 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
          return retval;
       },
       /**
-       * Запускает механизм валидации контрола.
+       * Запускает валидаторы контрола.
        * @remark
-       * Проверит контрол всеми валидаторами, как встроенными, так и пользовательскими.
-       * В случае неудачи отметит контрол сообщением об ошибке валидации.
-       * В случае успеха снимет отметку ошибки, если такая была.
-       * Подробнее о валидации можно прочесть в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/validator/ руководстве разработчика},
-       * там же приведен список платформенных валидаторов.
+       * Проверит контрол всеми валидаторами: как встроенными, так и пользовательскими. В случае неудачи отметит контрол сообщением об ошибке валидации. В случае успеха снимет отметку ошибки, если такая была установлена.
+       * <br/>
+       * При работе с диалогами редактирования, валидации по умолчанию производится при попытке сохранения редактируемой записи.
+       * <br/>
+       * Подробнее о валидации вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/ руководстве разработчика}.
        * @returns {Boolean} Признак: валидация пройдена успешно (true) или с ошибками (false).
-       * @example
-       * Проверить все валидаторы диалога редактирования записи (dialogRecord). В случае успеха обновить запись.
-       * <pre>
-       *    if (dialogRecord.validate()) {
-       *       dialogRecord.updateRecord();
-       *    }
-       * </pre>
        * @see validators
        * @see getValidators
        * @see setValidators
@@ -211,7 +179,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
             if (vResult.result && this._childControls) {
                for (var i = 0, l = this._childControls.length; i < l; i++) {
                   var childControl = this._childControls[i];
-                  if (childControl && !childControl.validate()) {
+                  if (childControl && childControl.validate && !childControl.validate()) {
                      vResult.result = false;
                      break;
                   }
@@ -315,10 +283,9 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
          this._prevValidationResult = !this.isMarked();
       },
       /**
-       * Метод маркирует контрол как непрошедший валидацию.
-       * Не проводит валидацию, просто отмечает контрол, валидация которого завершилась с ошибкой.
-       * @param {Array|String} s Сообщение об ошибке.
-       * @param {Boolean} showInfoBox Показывать инфобокс сразу(true) или по ховеру(false)
+       * Отмечает контрол как непрошедший валидацию. Не проводит валидацию, а только отмечает контрол, валидация которого завершилась с ошибкой.
+       * @param {Array|String} s Сообщение об ошибке. Отображается в инфобоксе.
+       * @param {Boolean} [showInfoBox=false] Показывать инфобокс сразу(true) или по ховеру(false)
        * @example
        * Уведомить регистрирующегося пользователя, если введённый логин уже используется.
        * <pre>
@@ -352,7 +319,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
          this._container.addClass('ws-validation-error');
       },
       /**
-       * Снимает маркировку об ошибке валидации.
+       * Снимает с контрола маркировку об ошибке валидации.
        * @example
        * Для поля ввода (TextBox) определено необязательное условие: первый символ должен быть заглавной буквой.
        * Когда поле не соответствует этому условию, оно маркируется как непрошедшее валидацию.
@@ -398,8 +365,8 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
          }
       },
       /**
-       * Определяет, отмечен ли контрол ошибкой валидации.
-       * @return {Boolean} Признак: отмечен (true) или нет (false).
+       * Возвращает признак, по которому можно определить: отмечен ли контрол ошибкой валидации.
+       * @return {Boolean} true - контрол отмечен ошибкой валидации.
        * @example
        * Если поле ввода (fieldString) отмечено ошибкой валидации, то кнопка (btn) не доступна для клика.
        * <pre>
@@ -418,16 +385,13 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
       },
 
       /**
-       * Устанавливает валидаторы контрола, определяемые свойством {@link validators}.
+       * Устанавливает валидаторы контрола.
        * @param {Array} validators Массив объектов, описывающих функции валидации.
        * @param {Object} [validators.object] Объект с конфигурацией валидатора.
        * @param {Function} [validators.object.validator] Функция валидации.
-       * @param {Array} [validators.object.params] Параметры валидатора. Каждый параметр передаётся в функцию валидации в качестве её аргумента.
-       * Первый элемент массива параметров является первым аргументов функции валидации, второй элемент - вторым аргументом, и т.д.
-       * @param {String} [validators.object.errorMessage] Текст сообщения об ошибке валидации.
-       * Если свойство не определено, то в качестве текста будет использовано значение, возвращаемое функцией валидации.
-       * @param {Boolean} [validators.object.noFailOnError] Нежесткая валидация.
-       * Если noFailOnError установлено в true, то при непрохождении валидации контрол маркируется и возвращается true.
+       * @param {String} [validators.object.option] Название опции контрола, значение которой требуется проверить валидатором.
+       * @param {String} [validators.object.errorMessage] Текст сообщения об ошибке валидации. Если свойство не определено, то в качестве текста будет использовано значение, возвращаемое функцией валидации.
+       * @param {Boolean} [validators.object.noFailOnError] Нежесткая валидация. В случае не прохождения валидации контрол будет только отмечен как непрошедший проверку, но валидация будет считаться пройденной.
        * @example
        * При готовности поля ввода (fieldString) установить валидаторы, если их не существует.
        * <pre>

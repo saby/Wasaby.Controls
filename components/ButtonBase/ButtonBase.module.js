@@ -57,7 +57,8 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
              * @see setCaption
              * @see getCaption
              */
-            caption: undefined
+            caption: undefined,
+            escapeCaptionHtml: true
          }
       },
 
@@ -85,10 +86,23 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
        * @see caption
        * @see getCaption
        */
-      setCaption: function(captionTxt) {
-         this._options.caption = captionTxt || '';
+      setCaption: function(caption) {
+         if (this._options.escapeCaptionHtml){
+            caption = $ws.helpers.escapeHtml(caption);
+         }
+         this._options.caption = caption || '';
       },
-
+      _setEnabled: function() {
+         ButtonBase.superclass._setEnabled.apply(this, arguments);
+         // В IE8 при цвета смене иконки не происходит автоматическая её перерисовка, а вызывается она лишь при смене контента в before
+         // http://stackoverflow.com/questions/14227751/ie8-update-inherited-color-of-before-content-based-on-parent-elements-class
+         if ($ws._const.browser.isIE8) {
+            this._container.addClass('controls-Button__IE8Hack');
+            setTimeout(function() {
+               this._container.removeClass('controls-Button__IE8Hack')
+            }.bind(this), 1);
+         }
+      },
       /**
        * Получить текст на кнопке.
        * Метод получения текста, заданного либо опцией {@link caption}, либо методом {@link setCaption}.

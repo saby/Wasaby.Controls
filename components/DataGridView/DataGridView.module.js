@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * Контрол, отображающий набор данных в виде таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.DataGridView
     * @extends SBIS3.CONTROLS.ListView
+    * @author Крайнов Дмитрий Олегович
     * @control
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyDataGridView
@@ -82,19 +83,22 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {Boolean} [highlight=true] Подсвечивать фразу при поиске
              * @property {String} resultTemplate Шаблон отображения колонки в строке результатов
              * @property {String} className Имя класса, который будет применён к каждой ячейке столбца
+             * Стилевые классы: controls-DataGridView-cell-overflow-ellipsis - текст внутри ячейки будет обрезаться троеточием (актуально для однострочных ячеек)
              * @property {String} headTemplate Шаблон отображения шапки колонки
              * @property {String} headTooltip Всплывающая подсказка шапки колонки
-             * @property {String} editor Редактор колонки для режима редактирования по месту
+             * @property {String} editor Устанавливает редактор колонки для режима редактирования по месту.
+             * Редактор отрисовывается поверх редактируемой строки с прозрачным фоном. Это поведение считается нормальным в целях решения прикладных задач.
+             * Чтобы отображать только редактор строки без прозрачного фона, нужно установить для него свойство background-color.
+             * Пример использования опции вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/simple-edit-in-place/">Редактирование записи по клику</a>.
              * @property {Boolean} allowChangeEnable Доступность установки сотояния активности редактирования колонки в зависимости от состояния табличного представления
              * @property {String} cellTemplate Шаблон отображения ячейки
              * Данные, которые передаются в cellTemplate:
              * <ol>
-             *    <li>item</li>
+             *    <li>item - отрисовываемая запись {@link SBIS3.CONTROLS.Data.Record}</li>
              *    <li>hierField - поле иерархии</li>
              *    <li>isNode - является ли узлом</li>
              *    <li>decorators - объект декораторов</li>
              *    <li>field - имя поля</li>
-             *    <li>value - значение</li>
              *    <li>highlight - есть ли подсветка</li>
              * </ol>
              * Необходимо указать настройки декораторов разметки, если требуется
@@ -149,6 +153,35 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * Массив имен столбцов, по которым строится лесенка
              */
             ladder: undefined,
+            /**
+             * @cfg {String} Устанавливает шаблон отображения строки итогов.
+             * @remark
+             * Отображение строки итогов конфигурируется тремя опциями: resultsTpl, {@link resultsPosition} и {@link resultsText}.
+             * В данную опцию передается имя шаблона, в котором описана конфигурация строки итогов.
+             * Чтобы шаблон можно было передать в опцию компонента, его нужно предварительно подключить в массив зависимостей.
+             * Опция позволяет пользователю выводить в строку требуемые данные и задать для нее определенное стилевое оформление.
+             * Подсчет каких-либо итоговых сумм в строке не предусмотрен. Все итоги рассчитываются на стороне источника данных.
+             * С подробным описанием можно ознакомиться в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ Строка итогов}.
+             * @example
+             * 1. Подключаем шаблон в массив зависимостей:
+             * <pre>
+             *     define('js!SBIS3.Demo.nDataGridView',
+             *        [
+             *           ...,
+             *           'html!SBIS3.Demo.nDataGridView/resources/resultTemplate'
+             *        ],
+             *        ...
+             *     );
+             * </pre>
+             * 2. Передаем шаблон в опцию:
+             * <pre class="brush: xml">
+             *     <option name="resultsTpl" value="html!SBIS3.Demo.nDataGridView/resources/resultTemplate"></option>
+             * </pre>
+             * @editor CloudFileChooser
+             * @editorConfig extFilter xhtml
+             * @see resultsPosition
+             * @see resultsText
+             */
             resultsTpl: resultsTpl,
             /**
              * @cfg {Boolean} Производить ли преобразование колонок в шапке
@@ -476,18 +509,53 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this.updateScrollAndColumns();
          }
       },
-      _canShowEip: function() {
-         // Отображаем редактирование по месту и для задизабленного DataGrid, но только если хоть у одиной колонки
-         // доступен редактор при текущем состоянии задизабленности DataGrid.
+
+      _redrawItems: function() {
+         if(this._options.showHead) {
+            this._redrawHead();
+         }
+         DataGridView.superclass._redrawItems.apply(this, arguments);
+      },
+      _onItemClickHandler: function(event, id, record, target) {
          var
-            col = 0,
-            canShow = DataGridView.superclass._canShowEip.apply(this, arguments);
-         while (!canShow && col < this._options.columns.length) {
-            if (this._options.columns[col].allowChangeEnable === false) {
-               canShow = true;
-            } else {
-               col++;
+            targetColumn,
+            targetColumnIndex;
+         if (!this._options.editingTemplate) {
+            targetColumn = $(target).closest('.controls-DataGridView__td');
+            if (targetColumn.length) {
+               targetColumnIndex = targetColumn.index();
             }
+         }
+         event.setResult(this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true }, targetColumnIndex)
+            .addCallback(function(result) {
+               return !result;
+            })
+            .addErrback(function() {
+               return true;
+            }));
+      },
+      showEip: function(target, model, options, targetColumnIndex) {
+         return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().showEip(target, model, options) : $ws.proto.Deferred.fail();
+      },
+      _canShowEip: function(targetColumnIndex) {
+         var
+            column = 0,
+            canShow = this.isEnabled();
+         if (this._options.editingTemplate || targetColumnIndex === undefined) {
+            // Отображаем редактирование по месту и для задизабленного DataGrid, но только если хоть у одиной колонки
+            // доступен редактор при текущем состоянии задизабленности DataGrid.
+            while (!canShow && column < this._options.columns.length) {
+               if (this._options.columns[column].allowChangeEnable === false) {
+                  canShow = true;
+               } else {
+                  column++;
+               }
+            }
+         } else {
+            if (this._options.multiselect) {
+               targetColumnIndex -= 1;
+            }
+            canShow = !!this._options.columns[targetColumnIndex].editor && (canShow || this._options.columns[targetColumnIndex].allowChangeEnable === false);
          }
          return canShow;
       },
@@ -619,7 +687,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _arrowClickHandler: function(isRightArrow) {
-         var shift = (this._getScrollContainer()[0].offsetWidth/100)*5;
+         var shift = (this._getPartScrollContainer()[0].offsetWidth/100)*5;
          this._moveThumbAndColumns({left: (parseInt(this._thumb[0].style.left) || 0) + (isRightArrow ?  -shift : shift)});
       },
 
@@ -675,7 +743,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return this._thead.find('.controls-DataGridView__PartScroll__thumb, .controls-DataGridView__scrolledCell');
       },
 
-      _getScrollContainer: function() {
+      _getPartScrollContainer: function() {
          return this._thead.find('.controls-DataGridView__PartScroll__container');
       },
 
@@ -714,7 +782,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _updatePartScrollWidth: function() {
          var containerWidth = this._container[0].offsetWidth,
-             scrollContainer = this._getScrollContainer(),
+             scrollContainer = this._getPartScrollContainer(),
              thumbWidth = this._thumb[0].offsetWidth,
              correctMargin = 0,
              notScrolledCells;
@@ -838,6 +906,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
            чтобы таблица не прыгала, из-за того что изменилось количество и ширина колонок */
           this.once('onDataLoad', this._redrawHead.bind(this));
        },
+
+      setMultiselect: function() {
+         DataGridView.superclass.setMultiselect.apply(this, arguments);
+
+         if(this.getItems()) {
+            this.redraw();
+         } else if(this._options.showHead) {
+            this._redrawHead();
+         }
+      },
       /**
        * Проверяет настройки колонок, заданных опцией {@link columns}.
        */

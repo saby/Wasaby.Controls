@@ -34,7 +34,14 @@ define([
 '../../components/Data/Projection/resources/test/Projection.test',
 '../../components/Data/Projection/resources/test/Tree.test',
 '../../components/Data/Query/resources/test/Join.test',
+'../../components/Data/Query/resources/test/Order.test',
 '../../components/Data/Query/resources/test/Query.test',
+'../../components/Data/resources/test/Di.test',
+'../../components/Data/resources/test/Factory.test',
+'../../components/Data/resources/test/helpers.test',
+'../../components/Data/resources/test/Model.test',
+'../../components/Data/resources/test/Record.test',
+'../../components/Data/resources/test/Serializer.test',
 '../../components/Data/Source/Provider/resources/test/SbisBusinessLogic.test',
 '../../components/Data/Source/resources/test/DataSet.test',
 '../../components/Data/Source/resources/test/Memory.test',
@@ -43,10 +50,5 @@ define([
 '../../components/Data/Source/resources/test/SbisService.test',
 '../../components/Data/Types/resources/test/Enum.test',
 '../../components/Data/Types/resources/test/Flags.test',
-'../../components/Data/resources/test/Di.test',
-'../../components/Data/resources/test/Factory.test',
-'../../components/Data/resources/test/Model.test',
-'../../components/Data/resources/test/Record.test',
-'../../components/Data/resources/test/Serializer.test',
-'../../components/Data/resources/test/helpers.test'
+'../../components/Utils/Sanitizer/resources/tests/sanitizer.test'
 ]);

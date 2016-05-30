@@ -29,9 +29,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
     * Для показа автодополнения при получения контролом фокуса, используется {@link autoShow}.
     *
     * В контроле, к которому подмешивается, обязательно требует миксины:
-    * @link SBIS3.CONTROLS.PickerMixin
-    * @link SBIS3.CONTROLS.DataBindMixin
-    * @link SBIS3.CONTROLS.ChooserMixin
+    * {@link SBIS3.CONTROLS.PickerMixin}
+    * {@link SBIS3.CONTROLS.DataBindMixin}
+    * {@link SBIS3.CONTROLS.ChooserMixin}
     *
     * @mixin SBIS3.CONTROLS.SuggestMixin
     * @public
@@ -379,7 +379,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /* Если фокус уходит на список - вернём его обратно в контрол, с которого фокус ушёл */
             this.subscribeTo(control, 'onFocusOut', function(e, destroyed, focusedControl) {
-               if(self.getList() === focusedControl) {
+               if(self._list && self._list === focusedControl) {
                   focusedControl.setActive(false, false, false, this);
                   this.setActive(true);
                }

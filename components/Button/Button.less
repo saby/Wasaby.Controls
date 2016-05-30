@@ -63,11 +63,12 @@
     }
   }
 
+  &.controls-Button__IE8Hack .controls-Button__icon:before {
+    content: '\00ad';
+  }
+
   // Normal primary button
   &.controls-Button__primary {
-    .controls-Button__icon{
-       color: #393939!important;
-    }
     color: @button-primary-text-color;
     border: @button-primary-border;
     .box-shadow(@button-primary-shadow);
@@ -186,12 +187,6 @@
   }
    &.controls-Button__filled, &.controls-Button__big.controls-Button__filled {
       background-color: #ffffff;
-   }
-   &.controls-Button__withoutCaption {
-      width: 50px;
-      .controls-Button__icon{
-         left: 16px;
-      }
    }
 }
 

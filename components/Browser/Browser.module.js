@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.Browser', [
     *
     * @class SBIS3.CONTROLS.Browser
     * @extends $ws.proto.CompoundControl
+    * @author Крайнов Дмитрий Олегович
     * @control
     * @public
     * @designTime plugin /design/DesignPlugin
@@ -172,7 +173,12 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
 
       _notifyOnFiltersReady: function() {
-         this._fastDataFilter && this._fastDataFilter.getContainer().removeClass('ws-hidden');
+         var fastFilter = this._fastDataFilter;
+
+         /* Если фильтр скрыт, то не будем его отображать */
+         if(fastFilter && fastFilter.isVisible()) {
+            fastFilter.getContainer().removeClass('ws-hidden');
+         }
          this._notify('onFiltersReady');
       },
 

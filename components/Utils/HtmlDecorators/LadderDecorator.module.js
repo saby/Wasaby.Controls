@@ -19,7 +19,8 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
          _columnName: undefined,
          _parentId: undefined,
          _isCheckCondition: false,
-         _markLadderColumn: false
+         _markLadderColumn: false,
+         _ignoreEnabled: false
       },
 
       $constructor: function () {
@@ -78,12 +79,23 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
          this._ladderLastWords = {};
       },
 
+      reset: function(){
+         this._ladderLastWords = {}
+      },
+
       removeNodeData: function(key){
          this._ladderLastWords[key] = {};
       },
 
       _isLadderColumn: function(){
          return this._options.ladder && Array.indexOf(this._options.ladder, this._columnName) > -1;
+      },
+
+      isIgnoreEnabled: function(){
+         return this._ignoreEnabled;
+      },
+      setIgnoreEnabled: function(ignore){
+        this._ignoreEnabled = !!ignore;
       },
 
       /**
@@ -95,7 +107,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
          if (!this._isLadderColumn()){
             return text;
          }
-         if (!this.isMarkLadderColumn()){
+         if (!this.isMarkLadderColumn() || this.isIgnoreEnabled()){
             if (!this._ladderLastWords[this._parentId]) {
                this._ladderLastWords[this._parentId] = {};
             }

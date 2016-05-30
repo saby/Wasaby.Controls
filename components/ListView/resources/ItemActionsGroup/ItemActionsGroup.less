@@ -17,60 +17,63 @@
 }
 
 .ws-is-mobile-platform{
-   .controls-DataGridView{
-      .controls-ItemActions{
-         box-shadow: none;
-      }
-   }
-   .controls-ItemActions{
-      padding-left: 6px;
-      overflow: hidden;
-      .controls-ItemActions__itemsContainer{
-         > * {
-            &:not(.controls-IconButton__round-border-24) {
-               line-height: @list-view-actions-menu-touch-height !important;
-            }
-            &:not(.controls-ItemActions__menu-button) {
-               top: 1px;
-               height: 24px;
-            }
-         }
-         background: @list-view-actions-bg;
-         position: relative;
-         .controls-Link{
-            font-size: 16px;
-         }
-         .controls-ItemActions__menu-button, .controls-ItemActions__menu-button:hover{
-            background: @list-view-actions-menu-touch-icon;
-            height: @list-view-actions-menu-touch-height;
-            width: @list-view-actions-menu-touch-width;
-            background-size: @list-view-actions-menu-touch-size;
-            background-position: center;
-         }
-      }
-   }
-   .controls-ItemActions__menu-container{
-      background: #F3F8FC;
-      border-radius: 0;
-      border-width: 1px;
-      padding: 0;
-      border-top: none;
-      .controls-MenuItem {
-         line-height: 44px;
-         border-top: 1px solid #e4e4e4;
-         height: 44px;
-         background: #F3F8FC;
-         padding-right: 37px;
-         .controls-MenuItem__content{
-            padding-right: 19px;
-         }
-      }
-   }
+   .controls-ListView {
+      .controls-ItemActions {
+         overflow: hidden;
+         margin: 0;
 
+         .controls-ItemActions__itemsContainer {
+            .controls-ItemActions__item {
+               padding: 0 12px;
+               margin: 0;
+               height: 100%;
+
+               outline: 4px solid #E7EFF8;
+               outline-offset: -4px;
+               border-right: 5px solid #D0D8E0;
+               border-top: none;
+
+
+               &.controls-Link  {
+                  display: table;
+
+                  .controls-Link-link {
+                     display: table-cell;
+                     vertical-align: middle;
+                  }
+               }
+
+               &.controls-IconButton:before{
+                  top: 50%;
+                  margin-top: -@list-view-actions-item-height / 2;
+                  position: absolute;
+               }
+            }
+
+            .controls-ItemActions__menu-button,
+            .controls-ItemActions__menu-button:hover {
+               padding: 0;
+               border: none;
+               top: 50%;
+               position: relative;
+               margin-top: -@list-view-actions-menu-touch-height / 2;
+               margin-left: 0;
+               background: @list-view-actions-menu-touch-icon;
+               height: @list-view-actions-menu-touch-height;
+               width: @list-view-actions-menu-touch-width;
+               background-size: @list-view-actions-menu-touch-size;
+               background-position: center;
+            }
+         }
+      }
+   }
    .controls-ItemActions__menu-container {
-      .controls-PopupMixin__closeButton{
+      .controls-MenuItem {
+         padding-right: 42px;
+      }
+      .controls-PopupMixin__closeButton {
          position: absolute;
-         top: @controls-Popup-closeButton-top;
+         top: @list-view-actions-menu-touch-close-top;
          right: @controls-Popup-closeButton-right;
          width: @closeButtonWidth;
          height: @closeButtonHeight;
@@ -113,10 +116,7 @@
 .controls-ItemActions__menu-container {
    .controls-MenuItem {
       white-space: nowrap;
-
-      .control-MenuItem__child-expand {
-         padding-right: @list-view-actions-menu-item-padding-right;
-      }
+      padding-right: @list-view-actions-menu-item-padding-right;
    }
    .controls-PopupMixin__closeButton {
       height: @list-view-actions-menu-close-height;
