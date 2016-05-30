@@ -14,16 +14,14 @@ define('js!SBIS3.CONTROLS.Data.Format.XmlField', [
 
    var XmlField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.XmlField.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Format.XmlField',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {String} Значение поля по умолчанию
-             * @see getDefaultValue
-             * @see setDefaultValue
-             */
-            defaultValue: ''
-         }
-      }
+
+      /**
+       * @cfg {String} Значение поля по умолчанию
+       * @name SBIS3.CONTROLS.Data.Format.XmlField#defaultValue
+       * @see getDefaultValue
+       * @see setDefaultValue
+       */
+      _$defaultValue: ''
 
       //region Public methods
 

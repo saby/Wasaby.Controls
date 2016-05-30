@@ -1,12 +1,39 @@
 define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
    /**
-    * только работа с иерархией + методы для отображения
+    * Миксин, добавляющий только работу с иерархией и методы для отображения.
     * @mixin SBIS3.CONTROLS.hierarchyMixin
     * @author Крайнов Дмитрий Олегович
     * @public
     */
    var hierarchyMixin = /** @lends SBIS3.CONTROLS.hierarchyMixin.prototype */{
+      /**
+       * @event onSetRoot Происходит при загрузке данных и перед установкой корня иерархии.
+       * @remark
+       * При каждой загрузке данных, например вызванной методом {@link SBIS3.CONTROLS.ListView#reload}, происходит событие onSetRoot.
+       * В этом есть необходимость, потому что в переданных данных может быть установлен новый path - путь для хлебных крошек (см. {@link SBIS3.CONTROLS.Data.Collection.RecordSet#meta}).
+       * Хлебные крошки не перерисовываются, так как корень не поменялся.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String|Number|Null} curRoot Идентификатор узла, который установлен в качестве текущего корня иерархии.
+       * @param {Array.<object>} hierarchy Массив объектов, каждый из которых описывает узлы иерархии установленного пути.
+       * Каждый объект содержит следующие свойства:
+       * <ul>
+       *    <li>id - идентификатор текущего узла иерархии;</li>
+       *    <li>parent - идентификатор предыдущего узла иерархии;</li>
+       *    <li>title - значение поля отображения (см. {@link SBIS3.CONTROLS.DSMixin#displayField});</li>
+       *    <li>color - значение поля записи, хранящее данные об отметке цветом (см. {@link SBIS3.CONTROLS.DecorableMixin#colorField});</li>
+       *    <li>data - запись узла иерархии, экземпляр класса {@link SBIS3.CONTROLS.Data.Record}.</li>
+       * </ul>
+       * @see onBeforeSetRoot
+       */
+      /**
+       * @event onBeforeSetRoot Происходит при установке текущего корня иерархии.
+       * @remark
+       * Событие может быть инициировано при использовании метода {@link setCurrentRoot}.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String|Number|Null} key Идентификатор узла иерархии, который нужно установить. Null - это вершина иерархии, в наборе данных отображены только те записи, которые являются родительскими для других.
+       * @see onSetRoot
+       */
       $protected: {
          _previousRoot: null,
          _curRoot: null,
@@ -17,9 +44,13 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
              * @noShow
              */
             root: undefined,
-
             /**
-             * @cfg {String} Поле иерархии
+             * @cfg {String} Устанавливает поле иерархии.
+             * @remark
+             * Полем иерархии называют поле записи, по значениям которой устанавливаются иерархические отношения между записями набора данных.
+             * Для таблиц БД, для которых установлен <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">тип отношений Иерархия</a>, по умолчанию поле иерархии называется "Раздел".
+             * @see setHierField
+             * @see getHierField
              */
             hierField: null,
             /**
@@ -28,11 +59,14 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
              * Для набора данных, имеющих иерархическую структуру, опция определяет режим их отображения. Она позволяет пользователю отображать данные в виде развернутого или свернутого списка.
              * В режиме развернутого списка будут отображены узлы группировки данных (папки) и данные, сгруппированные по этим узлам.
              * В режиме свернутого списка будет отображен только список узлов (папок).
+             * <br/>
              * Возможные значения опции:
-             * * folders - будут отображаться только узлы (папки),
-             * * all - будут отображаться узлы (папки) и их содержимое - элементы коллекции, сгруппированные по этим узлам.
+             * <ul>
+             *    <li>folders - будут отображаться только узлы (папки);</li>
+             *    <li>all - будут отображаться узлы (папки) и их содержимое - элементы коллекции, сгруппированные по этим узлам.</li>
+             * </ul>
              *
-             * Подробное описание иерархической структуры приведено в документе {@link https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy "Типы отношений в таблицах БД"}
+             * Подробное описание иерархической структуры приведено в документе {@link https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy Типы отношений в таблицах БД}.
              * @example
              * Устанавливаем режим полного отображения данных: будут отображены элементы коллекции и папки, по которым сгруппированы эти элементы.
              * <pre class="brush:xml">
@@ -55,18 +89,23 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          this._previousRoot = this._curRoot;
          this.setFilter(filter, true);
       },
-
+      /**
+       * Устанавливает поле иерархии для набора данных.
+       * @param {String} hierField Имя поля иерархии.
+       * @see hierField
+       * @see getHierField
+       */
       setHierField: function (hierField) {
          this._options.hierField = hierField;
       },
       /**
-       * Получить название поля иерархии
+       * Возвращает поле иерархии набора данных.
+       * @see hierField
+       * @see setHierField
        */
       getHierField : function(){
          return this._options.hierField;
       },
-
-      // обход происходит в том порядке что и пришли
       hierIterate: function (DataSet, iterateCallback, status) {
          var
             indexTree = DataSet.getTreeIndex(this._options.hierField, true),
@@ -121,31 +160,39 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
          return records;
       },
-
+      /**
+       * Возвращает идентификатор родительской записи.
+       * @param {SBIS3.CONTROLS.Data.Collection.RecordSet} DataSet Набор данных.
+       * @param {SBIS3.CONTROLS.Data.Record} record Запись, для которой нужно определить идентификатор родителя.
+       * @returns {*|{d: Array, s: Array}|String|Number}
+       */
       getParentKey: function (DataSet, record) {
          return this._items.getParentKey(record, this._options.hierField);
       },
-
-      /* отображение */
-
       /**
-       * Установить корень выборки
-       * @param {String} root Идентификатор корня
+       * Установить корень выборки.
+       * @param {String|Number} root Идентификатор корня
        */
       setRoot: function(root){
          this._options.root = root;
       },
       /**
-       * Получить текущий корень иерархии
-       * @returns {*}
+       * Возвращает идентификатор корня иерархии.
+       * @returns {String|Number|Null} Идентификатор текущего узла иерархии. Null - это вершина иерархии, в наборе данных отображены только те записи, которые являются родительскими для других.
+       * @see setCurrentRoot
        */
       getCurrentRoot : function(){
          return this._curRoot;
       },
-
       /**
-       * Раскрыть определенный узел
-       * @param {String} key Идентификатор раскрываемого узла
+       * Устанавливает текущий корень иерархии.
+       * @remark
+       * Метод производит изменение набора данных: он будет соответствовать содержимому узла, идентификатор которого был установлен в качестве корня иерархии.
+       * В иерархических списках существует три типа записей: лист, узел и скрытый узел. Подробнее о различиях между ними читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Типы отношений в БД</a>.
+       * При выполнении метода происходит событие {@link onBeforeSetRoot}.
+       * @param {String|Number|Null} key Идентификатор узла иерархии, который нужно установить. Null - это вершина иерархии, в наборе данных отображены только те записи, которые являются родительскими для других.
+       * @see getCurrentRoot
+       * @see onBeforeSetRoot
        */
       setCurrentRoot: function(key) {
          var

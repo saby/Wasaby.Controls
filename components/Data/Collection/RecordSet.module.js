@@ -6,11 +6,17 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Model'
-], function (ObservableList, SerializableMixin, FormattableMixin, Di, Utils) {
+], function (
+   ObservableList,
+   SerializableMixin,
+   FormattableMixin,
+   Di,
+   Utils
+) {
    'use strict';
 
    /**
-    * Список записей
+    * Список записей, имеющих общий формат полей.
     * @class SBIS3.CONTROLS.Data.Collection.RecordSet
     * @extends SBIS3.CONTROLS.Data.Collection.ObservableList
     * @mixes SBIS3.CONTROLS.Data.FormattableMixin
@@ -20,123 +26,138 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
     */
 
    var RecordSet = ObservableList.extend([FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
+     /**
+      * @typedef {Object} OperationOptions
+      * @property {Boolean} [add=true] Добавлять новые записи.
+      * @property {Boolean} [remove=false] Удалять отсутствующие записи.
+      * @property {Boolean} [merge=true] Объединять одинаковые записи.
+      */
+
+     /**
+      * @typedef {String} RecordStatus
+      * @variant actual В переборе функции {@link each} будут использованы только актуальные записи RecordSet'а.
+      * @variant all В переборе функции {@link each} будут использованы все записи RecordSet'а.
+      * @variant created В переборе функции {@link each} будут использованы только новые записи RecordSet'а.
+      * @variant deleted В переборе функции {@link each} будут использованы только удалённые записи RecordSet'а. Статус удалённых записей устанавливают с помощью метода {@link removeRecords}.
+      * @variant changed В переборе функции {@link each} будут использованы только изменённые записи RecordSet'а.
+      */
+
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.RecordSet',
-      $protected: {
-         _options: {
-            /**
-             * @typedef {Object} OperationOptions
-             * @property {Boolean} [add=true] Добавлять новые записи.
-             * @property {Boolean} [remove=false] Удалять отсутствующие записи.
-             * @property {Boolean} [merge=true] Объединять одинаковые записи.
-             */
 
-            /**
-             * @typedef {String} RecordStatus
-             * @variant actual В переборе функции {@link each} будут использованы только актуальные записи RecordSet'а.
-             * @variant all В переборе функции {@link each} будут использованы все записи RecordSet'а.
-             * @variant created В переборе функции {@link each} будут использованы только новые записи RecordSet'а.
-             * @variant deleted В переборе функции {@link each} будут использованы только удалённые записи RecordSet'а. Статус удалённых записей устанавливают с помощью метода {@link removeRecords}.
-             * @variant changed В переборе функции {@link each} будут использованы только изменённые записи RecordSet'а.
-             */
+      /**
+       * @cfg {String|Function} Конструктор модели
+       * @name SBIS3.CONTROLS.Data.Collection.RecordSet#model
+       * @see getModel
+       * @see SBIS3.CONTROLS.Data.Record
+       * @see SBIS3.CONTROLS.Data.Model
+       * @see SBIS3.CONTROLS.Data.Di
+       * @example
+       * <pre>
+       *    var User = Model.extend({
+       *       identify: function(login, password) {
+       *       }
+       *    });
+       *    Di.register('model.user', User);
+       *    //...
+       *    var user = new RecordSet({
+       *       model: 'model.user'
+       *    });
+       * </pre>
+       * @example
+       * <pre>
+       *    var User = Model.extend({
+       *       identify: function(login, password) {
+       *       }
+       *    });
+       *    //...
+       *    var user = new RecordSet({
+       *       model: User
+       *    });
+       * </pre>
+       */
+      _$model: 'model',
 
-            /**
-             * @cfg {String|Function} Конструктор модели
-             * @see getModel
-             * @see SBIS3.CONTROLS.Data.Model
-             * @see SBIS3.CONTROLS.Data.Di
-             * @example
-             * <pre>
-             *    var User = Model.extend({
-             *       identify: function(login, password) {
-             *       }
-             *    });
-             *    Di.register('model.user', User);
-             *    //...
-             *    var user = new RecordSet({
-             *       model: 'model.user'
-             *    });
-             * </pre>
-             * @example
-             * <pre>
-             *    var User = Model.extend({
-             *       identify: function(login, password) {
-             *       }
-             *    });
-             *    //...
-             *    var user = new RecordSet({
-             *       model: User
-             *    });
-             * </pre>
-             */
-            model: 'model',
+      /**
+       * @cfg {String} Поле модели, содержащее первичный ключ
+       * @name SBIS3.CONTROLS.Data.Collection.RecordSet#idProperty
+       * @see getIdProperty
+       * @example
+       * <pre>
+       *    var dataSource = new RecordSet({
+       *       idProperty: 'primaryId'
+       *    });
+       * </pre>
+       */
+      _$idProperty: '',
 
-            /**
-             * @cfg {String} Поле модели, содержащее первичный ключ
-             * @see getIdProperty
-             * @see SBIS3.CONTROLS.Data.Model#idProperty
-             * @example
-             * <pre>
-             *    var dataSource = new RecordSet({
-             *       idProperty: 'primaryId'
-             *    });
-             * </pre>
-             */
-            idProperty: '',
+      /**
+       * @cfg {Object} Метаданные
+       * @name SBIS3.CONTROLS.Data.Collection.RecordSet#meta
+       * @see getMetaData
+       * @see setMetaData
+       */
+      _$meta: null,
 
-            /**
-             * @cfg {Object} Метаданные
-             * @see getMetaData
-             * @see setMetaData
-             */
-            meta: {}
-         },
+      /**
+       * @member {Object} индексы
+       */
+      _indexTree: null,
 
-         /**
-          * @var {Object} индексы
-          */
-         _indexTree: {},
-         /**
-          * //TODO надо убрать в 3.7.4
-          * @var флаг  показывает проверять ли формат при изменении рекордсета
-          */
-         _doNotFormatCheck: false
-      },
+     /**
+      * //TODO надо убрать в 3.7.4
+      * @member флаг  показывает проверять ли формат при изменении рекордсета
+      */
+     _doNotFormatCheck: false,
 
-      $constructor: function (cfg) {
-         cfg = cfg || {};
-
-         if ('data' in cfg && !('rawData' in cfg)) {
-            this._options.rawData = cfg.data;
-            Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.', 1);
+      constructor: function $RecordSet(options) {
+         if (options) {
+            if ('data' in options && !('rawData' in options)) {
+               this._$rawData = options.data;
+               Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.', 1);
+            }
+            if ('strategy' in options && !('adapter' in options)) {
+               this._$adapter = options.strategy;
+               Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.', 1);
+            }
+            if ('keyField' in options && !('idProperty' in options)) {
+               this._$idProperty = options.keyField;
+               Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.', 1);
+            }
+            if (!this._$idProperty) {
+               this._$idProperty = this.getAdapter().getKeyField(this._$rawData);
+            }
+            if ('items' in options) {
+               Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "items" is not acceptable. Use "rawData" instead.', 1);
+            }
          }
-         if ('strategy' in cfg && !('adapter' in cfg)) {
-            this._options.adapter = cfg.strategy;
-            Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.', 1);
-         }
-         if ('keyField' in cfg && !('idProperty' in cfg)) {
-            this._options.idProperty = cfg.keyField;
-            Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.', 1);
-         }
-         if (!this._options.idProperty) {
-            this._options.idProperty = this.getAdapter().getKeyField(this._options.rawData);
-         }
-         if ('items' in cfg) {
-            Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "items" is not acceptable. Use "rawData" instead.', 1);
-         }
-         if (this._options.rawData) {
-            this._assignRawData(this._options.rawData, true);
+
+         this._indexTree = {};
+         RecordSet.superclass.constructor.call(this, options);
+         FormattableMixin.constructor.call(this, options);
+         this._$meta = this._$meta || {};
+         if (this._$rawData) {
+            this._assignRawData(this._$rawData, true);
             this._createFromRawData();
          }
       },
 
-      //region SBIS3.CONTROLS.Data.SerializableMixin
+      // region SBIS3.CONTROLS.Data.SerializableMixin
+
+      _getSerializableState: function(state) {
+         state = RecordSet.superclass._getSerializableState.call(this, state);
+         state = FormattableMixin._getSerializableState.call(this, state);
+         delete state.$options.items;
+         return state;
+      },
 
       _setSerializableState: function(state) {
-         return RecordSet.superclass._setSerializableState(state).callNext(function() {
-            this.each(function(record) {
-               record.setOwner(this);
-            }, this);
-         });
+         return RecordSet.superclass._setSerializableState(state)
+            .callNext(
+               FormattableMixin._setSerializableState(state)
+            )
+            .callNext(function() {
+               this._clearServiceEnumerator();
+            });
       },
 
       //endregion SBIS3.CONTROLS.Data.SerializableMixin
@@ -150,7 +171,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       addField: function(format, at, value) {
          format = this._buildField(format);
-         RecordSet.superclass.addField.call(this, format, at);
+         FormattableMixin.addField.call(this, format, at);
 
          var name = format.getName(),
             methodName = 'addField';
@@ -163,7 +184,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       removeField: function(name) {
-         RecordSet.superclass.removeField.call(this, name);
+         FormattableMixin.removeField.call(this, name);
 
          var methodName = 'removeField';
          this.each(function(record) {
@@ -172,7 +193,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       removeFieldAt: function(at) {
-         RecordSet.superclass.removeFieldAt.call(this, at);
+         FormattableMixin.removeFieldAt.call(this, at);
 
          var methodName = 'removeFieldAt';
          this.each(function(record) {
@@ -186,7 +207,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @protected
        */
       _createRawDataAdapter: function () {
-         return this.getAdapter().forTable(this._options.rawData);
+         return this.getAdapter().forTable(this._$rawData);
       },
 
       /**
@@ -196,7 +217,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @protected
        */
       _assignRawData: function(data, keepFormat) {
-         RecordSet.superclass.setRawData.call(this, data);
+         FormattableMixin.setRawData.call(this, data);
          if (!keepFormat) {
             this._clearFormat();
          }
@@ -265,18 +286,18 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             self = this,
             position = 0,
             willRemove = [];
-         this.each(function(model) {
-            if (model.isDeleted() && !model.isSynced()) {
-               model.setSynced(true);
-               syncCompleteDef.push(dataSource.destroy(model.getId()).addCallback(function() {
-                  willRemove.push(model);
-                  return model;
+         this.each(function(record) {
+            if (record.isDeleted() && !record.isSynced()) {
+               record.setSynced(true);
+               syncCompleteDef.push(dataSource.destroy(record.get(self._$idProperty)).addCallback(function() {
+                  willRemove.push(record);
+                  return record;
                }));
-            } else if (model.isChanged() || (!model.isStored() && !model.isSynced())) {
-               syncCompleteDef.push(dataSource.update(model).addCallback(function() {
-                  model.applyChanges();
-                  model.setStored(true);
-                  return model;
+            } else if (record.isChanged() || (!record.isStored() && !record.isSynced())) {
+               syncCompleteDef.push(dataSource.update(record).addCallback(function() {
+                  record.applyChanges();
+                  record.setStored(true);
+                  return record;
                }));
             }
             position++;
@@ -294,10 +315,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @returns {String}
        * @see setIdProperty
        * @see idProperty
-       * @see SBIS3.CONTROLS.Data.Model#idProperty
        */
       getIdProperty: function () {
-         return this._options.idProperty;
+         return this._$idProperty;
       },
 
       /**
@@ -305,13 +325,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @param {String} name
        * @see getIdProperty
        * @see idProperty
-       * @see SBIS3.CONTROLS.Data.Model#idProperty
        */
       setIdProperty: function (name) {
-         this._options.idProperty = name;
-         this.each((function(item) {
-            item.setIdProperty(this._options.idProperty);
-         }).bind(this));
+         this._$idProperty = name;
       },
 
       /**
@@ -321,7 +337,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       getRecordById: function (id) {
          return this.at(
-            this.getIndexByValue(this._options.idProperty, id)
+            this.getIndexByValue(this._$idProperty, id)
          );
       },
 
@@ -374,29 +390,29 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @see setMetaData
        */
       getMetaData: function () {
-         if (this._options.meta &&
-            this._options.meta.path &&
-            !$ws.helpers.instanceOfModule(this._options.meta.path, 'SBIS3.CONTROLS.Data.Collection.RecordSet')
+         if (this._$meta &&
+            this._$meta.path &&
+            !$ws.helpers.instanceOfModule(this._$meta.path, 'SBIS3.CONTROLS.Data.Collection.RecordSet')
          ) {
-            this._options.meta.path = new RecordSet({
+            this._$meta.path = new RecordSet({
                adapter: this.getAdapter(),
-               rawData: this._options.meta.path,
-               idProperty: this._options.idProperty
+               rawData: this._$meta.path,
+               idProperty: this._$idProperty
             });
          }
 
-         if (this._options.meta &&
-            this._options.meta.results &&
-            !$ws.helpers.instanceOfModule(this._options.meta.results, 'SBIS3.CONTROLS.Data.Model')
+         if (this._$meta &&
+            this._$meta.results &&
+            !$ws.helpers.instanceOfModule(this._$meta.results, 'SBIS3.CONTROLS.Data.Model')
          ) {
-            this._options.meta.results = Di.resolve('model', {
+            this._$meta.results = Di.resolve('model', {
                adapter: this.getAdapter(),
-               rawData: this._options.meta.results,
-               idProperty: this._options.idProperty
+               rawData: this._$meta.results,
+               idProperty: this._$idProperty
             });
          }
 
-         return this._options.meta;
+         return this._$meta;
       },
 
       /**
@@ -415,7 +431,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @see getMetaData
        */
       setMetaData: function (meta) {
-         this._options.meta = meta;
+         this._$meta = meta;
       },
 
       //endregion Public methods
@@ -453,7 +469,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @deprecated метод будет удален в 3.7.4 используйте getIndex(getRecordById())
        */
       getIndexById: function (id) {
-         return this.getIndexByValue(this._options.idProperty, id);
+         return this.getIndexByValue(this._$idProperty, id);
       },
 
       /**
@@ -466,7 +482,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       getRecordKeyByIndex: function (index) {
          var item = this.at(index);
-         return item && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model') ? item.getId() : undefined;
+         return item && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Record') ? item.get(this._$idProperty) : undefined;
       },
 
       /**
@@ -500,7 +516,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @deprecated метод будет удален в 3.7.4, используйте add()
        */
       push: function (record) {
-         if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Model')) {
+         if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Record')) {
             record = this._getModelInstance(record);
          }
          this.add(record);
@@ -552,7 +568,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          if(Object.isEmpty(this._indexTree)) {
             this._reindexTree(field);
          }
-         parentId = (typeof parentId != 'undefined') ? parentId : null;
+         parentId = parentId === undefined ? null : parentId;
          if (this._indexTree.hasOwnProperty(parentId)) {
             if (getFullBranch) {
                var fillChildren = function (newParent) {
@@ -614,8 +630,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       filter: function (filterCallback) {
          var filterDataSet = new RecordSet({
-            adapter: this._options.adapter,
-            idProperty: this._idProperty
+            adapter: this._$adapter,
+            idProperty: this._$idProperty
          });
 
          this.each(function (record) {
@@ -658,9 +674,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
                this._checkItem(records[i]);
                this._doNotFormatCheck = true;
             }
-            id = records[i].getId();
+            id = records[i].get(this._$idProperty);
             recordsMap[id] = true;
-            var index = this.getIndexByValue(this._options.idProperty, id);
+            var index = this.getIndexByValue(this._$idProperty, id);
             if (index > -1) {
                toReplace[index] = records[i];
                l++;
@@ -680,9 +696,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             this.append(toAdd);
          }
          if (options.remove) {
-            var newItems = [];
+            var self = this,
+               newItems = [];
             this.each(function (record) {
-               var key = record.getId();
+               var key = record.get(self._$idProperty);
                if (recordsMap[key]) {
                   newItems.push(record);
                }
@@ -719,7 +736,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             if (!this._indexTree.hasOwnProperty(parentKey)) {
                this._indexTree[parentKey] = [];
             }
-            childKey = record.getId();
+            childKey = record.get(self._$idProperty);
             if (parentKey === childKey) {
                throw new Error('Record with hierarchy field "' + field + '" = ' + parentKey + ' is related to itself.');
             }
@@ -732,8 +749,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //region SBIS3.CONTROLS.Data.Collection.List
 
       clear: function () {
-         for (var i = 0, count = this._items.length; i < count; i++) {
-            this._items[i].setOwner(null);
+         for (var i = 0, count = this._$items.length; i < count; i++) {
+            this._$items[i].setOwner(null);
          }
          this._getRawDataAdapter().clear();
          RecordSet.superclass.clear.call(this);
@@ -743,7 +760,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       add: function (item, at) {
          this._checkItem(item, !!this._options.format || this.getCount() > 0);
          this._getRawDataAdapter().add(item.getRawData(), at);
-         RecordSet.superclass.add.apply(this, arguments);
+         RecordSet.superclass.add.call(this, item, at);
          item.setOwner(this);
          this._indexTree = {};
       },
@@ -752,16 +769,16 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._checkItem(item, false);
          item.setOwner(null);
          this._indexTree = {};
-         return RecordSet.superclass.remove.apply(this, arguments);
+         return RecordSet.superclass.remove.call(this, item);
       },
 
       removeAt: function (index) {
          this._getRawDataAdapter().remove(index);
-         var item = this._items[index];
+         var item = this._$items[index];
          if (item) {
             item.setOwner(null);
          }
-         RecordSet.superclass.removeAt.apply(this, arguments);
+         RecordSet.superclass.removeAt.call(this, index);
          this._indexTree = {};
       },
 
@@ -769,13 +786,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._checkItem(item, checkFormat);
          item.setOwner(this);
          this._getRawDataAdapter().replace(item.getRawData(), at);
-         RecordSet.superclass.replace.apply(this, arguments);
+         RecordSet.superclass.replace.call(this, item, at);
          this._indexTree = {};
       },
 
       assign: function (items) {
          this._resetRawDataAdapter();
-         this._options.rawData = null;
+         this._$rawData = null;
          items = this._addItemsToRawData(items, undefined, true);
          RecordSet.superclass.assign.call(this, items);
          for (var i = 0, count = items.length; i < count; i++) {
@@ -881,16 +898,16 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * Создает новый экземпляр модели
-       * @param {*} model Данные модели
-       * @returns {SBIS3.CONTROLS.Data.Model}
+       * @param {*} data Данные модели
+       * @returns {SBIS3.CONTROLS.Data.Record}
        * @protected
        */
       _getModelInstance: function (data) {
-         var model = Di.resolve(this._options.model, {
+         var model = Di.resolve(this._$model, {
             owner: this,
             adapter: this.getAdapter(),
             rawData: data,
-            idProperty: this._options.idProperty
+            idProperty: this._$idProperty
          });
          model.setStored(true);
          return model;

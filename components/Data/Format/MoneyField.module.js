@@ -14,11 +14,8 @@ define('js!SBIS3.CONTROLS.Data.Format.MoneyField', [
 
    var MoneyField = RealField.extend(/** @lends SBIS3.CONTROLS.Data.Format.MoneyField.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Format.MoneyField',
-      $protected: {
-         _options: {
-            precision: 2
-         }
-      }
+
+      _$precision: 2
 
       //region Public methods
 

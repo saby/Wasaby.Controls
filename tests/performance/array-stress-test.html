@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ws="ws-component">
+   <head>
+      <title>Array stress test</title>
+      <script type="text/javascript" src="/tests/performance/test.js"></script>
+      <link rel="stylesheet" type="text/css" href="/tests/performance/test.css"/>
+   </head>
+   <body>
+      <script type="text/javascript">
+         test.log('Array stress test');
+         test.startCounter('total');
+
+         test.startCounter('createData');
+         var data = test.createData();
+         test.finishCounter('createData');
+
+         test.startCounter('traverseData');
+         var recordset = [].concat(data),
+            count = recordset.length,
+            i,
+            record,
+            name,
+            value;
+         for (i = 0; i < count; i++) {
+            record = recordset[i];
+            for (name in record) {
+               if (record.hasOwnProperty(name)) {
+                  value = record[name];
+                  //console.log([name, value]);
+               }
+            }
+         }
+         test.finishCounter('traverseData');
+
+         test.finishCounter('total');
+      </script>
+   </body>
+</html>

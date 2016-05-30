@@ -5,7 +5,7 @@
 `http://localhost:666/tests/unit/via-webdriver.html`
 
 ## Команды Grunt
-- `grunt --force tests` - прогнать unit тесты и тест покрытия;
+- `grunt --force tests` - прогнать unit тесты через webdriver и тест покрытия;
 - `grunt tests-webdriver` - прогнать unit тесты через webdriver;
 - `grunt tests-isolated` - прогнать unit тесты изолированно;
 - `grunt --force tests-coverage` - прогнать тест покрытия;
@@ -104,10 +104,6 @@
 `WEBDRIVER_remote_desiredCapabilities_browserName` - браузер, в котором будут проводится тесты
 
 `WEBDRIVER_remote_desiredCapabilities_version` - версия бразузера, в которой будут проводится тесты
-
-`JSCOVERAGE_params_port` - порт, на котором будет запущен jscoverage server
-
-`JSCOVERAGE_webdriver_host` - хост, на который будет обращаться webdriver за отчетом jscoverage
 
 
 ✓ Abort the build if it's stuck

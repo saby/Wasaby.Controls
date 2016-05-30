@@ -1,24 +1,32 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
+   'js!SBIS3.CONTROLS.Data.Entity.Abstract',
    'js!SBIS3.CONTROLS.Data.Adapter.IRecord',
    'js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin',
    'js!SBIS3.CONTROLS.Data.Adapter.FieldType',
    'js!SBIS3.CONTROLS.Data.Utils'
-], function (IRecord, SbisFormatMixin, FIELD_TYPE, Utils) {
+], function (Abstract, IRecord, SbisFormatMixin, FIELD_TYPE, Utils) {
    'use strict';
 
    /**
     * Адаптер для записи таблицы данных в формате СБиС
     * @class SBIS3.CONTROLS.Data.Adapter.SbisRecord
+    * @extends SBIS3.CONTROLS.Data.Entity.Abstract
     * @mixes SBIS3.CONTROLS.Data.Adapter.IRecord
     * @mixes SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin
     * @public
     * @author Мальцев Алексей
     */
-   var SbisRecord = $ws.core.extend({}, [IRecord, SbisFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisRecord.prototype */{
+   var SbisRecord = Abstract.extend([IRecord, SbisFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisRecord.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.SbisRecord',
 
-      $constructor: function () {
+      /**
+       * Конструктор
+       * @param {*} data Сырые данные
+       */
+      constructor: function (data) {
+         SbisRecord.superclass.constructor.call(this, data);
+         SbisFormatMixin.constructor.call(this, data);
          this._data._type = 'record';
       },
 
@@ -72,6 +80,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
       },
 
       getKeyField: function () {
+         //TODO: имя поля с ПК может лежать в this._data.k (при этом может принимать значение -1)
          var s = this._data.s,
             index;
          for (var i = 0, l = s.length; i < l; i++) {
@@ -95,7 +104,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
          key = key || 't';
          var typeSbis = meta[key],
             type;
-         if (typeof typeSbis === 'object') {
+         if (typeSbis instanceof Object) {
             return this._getType(typeSbis, value, 'n');
          }
          for (var fieldType in FIELD_TYPE) {

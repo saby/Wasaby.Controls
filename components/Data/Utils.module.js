@@ -1,7 +1,5 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
-   'use strict';
-
    /**
     * Утилиты для коллекций
     * @class SBIS3.CONTROLS.Data.Utils
@@ -9,7 +7,7 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
     * @author Мальцев Алексей
     */
 
-   return /** @lends SBIS3.CONTROLS.Data.Utils.prototype */{
+   var Utils = /** @lends SBIS3.CONTROLS.Data.Utils.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Utils',
 
       /**
@@ -21,7 +19,7 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
       getItemPropertyValue: function (item, property) {
          property = property || '';
 
-         if (item === null || typeof item !== 'object') {
+         if (!(item instanceof Object)) {
             return undefined;
          }
 
@@ -51,7 +49,7 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
       setItemPropertyValue: function (item, property, value) {
          property = property || '';
 
-         if (item === null || typeof item !== 'object') {
+         if (!(item instanceof Object)) {
             throw new TypeError('Argument item should be an instance of Object');
          }
 
@@ -143,4 +141,6 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
          return prefix + property.substr(0, 1).toUpperCase() + property.substr(1);
       }
    };
+
+   return Utils;
 });

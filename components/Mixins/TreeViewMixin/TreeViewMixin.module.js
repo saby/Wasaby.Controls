@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
          var
             expandedItemContainer = this._getItemsContainer().find('[data-hash="'+ expandedItem.getHash() + '"]');
          this._folderOffsets[expandedItem.getContents().getKey()] = 0;
-         expandedItemContainer.find('.controls-TreeView__expand').addClass('controls-TreeView__expand__open');
+         expandedItemContainer.find('.js-controls-TreeView__expand').addClass('controls-TreeView__expand__open');
          this._notify('onNodeExpand', expandedItem.getContents().getId(), expandedItemContainer);
       },
       /**
@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
          var
             itemId = collapsedItem.getContents().getId(),
             collapsedItemContainer = this._getItemsContainer().find('[data-hash="'+ collapsedItem.getHash() + '"]');
-         collapsedItemContainer.find('.controls-TreeView__expand').removeClass('controls-TreeView__expand__open');
+         collapsedItemContainer.find('.js-controls-TreeView__expand').removeClass('controls-TreeView__expand__open');
          delete this._options.openedPath[itemId];
          //Уничтожим все дочерние footer'ы и footer узла
          this._destroyItemsFolderFooter([itemId]);
