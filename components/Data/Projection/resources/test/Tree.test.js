@@ -121,7 +121,7 @@ define([
          describe('.getEnumerator()', function() {
             it('should traverse items in hierarchical order', function() {
                var enumerator = tree.getEnumerator(),
-                  expect = ['A', 'AA','AC', 'ACA', 'ACC', 'ACB', 'AB', 'B', 'BA', 'BAA', 'BAAA',  'C', 'D'],
+                  expect = ['A', 'AA', 'AB', 'AC', 'ACA', 'ACB', 'ACC', 'B', 'BA', 'BAA', 'BAAA', 'C', 'D'],
                   index = 0,
                   item;
                while ((item = enumerator.getNext())) {
@@ -164,7 +164,9 @@ define([
                tree.setParentProperty('');
                var count = 0;
                tree.each(function(item) {
+                  assert.equal(item.getContents(), tree.getCollection().at(count));
                   count++;
+
                });
                assert.strictEqual(count, tree.getCollection().getCount());
                assert.strictEqual(tree.getCount(), tree.getCollection().getCount());
@@ -278,7 +280,7 @@ define([
 
             it('should return children of the first node', function() {
                var children = tree.getChildren(tree.at(0)),
-                  expect = ['AA', 'AC', 'AB'];
+                  expect = ['AA', 'AB', 'AC'];
                children.each(function(child, index) {
                   assert.strictEqual(child.getContents().title, expect[index]);
                });
@@ -303,7 +305,7 @@ define([
 
          describe('.$constructor()', function(){
             it('should sort projection so first folder then next leaf', function(){
-               var item = new Tree({
+               var items = new Tree({
                      collection:  new List({
                         items:[{
                            id: 1,
@@ -330,13 +332,22 @@ define([
                      root: 0,
                      idProperty: 'id',
                      parentProperty: 'pid',
-                     nodeProperty: 'node',
-                     isNodeOnTop: true
+                     nodeProperty: 'node'
                   });
-               assert.isTrue(item.at(0).isNode());
-               assert.isTrue(item.at(1).isNode());
-               assert.isFalse(item.at(2).isNode());
-               assert.isFalse(item.at(3).isNode());
+               items.setSort(function(itemA, itemB) {
+                  var
+                     isNodeA = itemA.item.isNode(),
+                     isNodeB = itemB.item.isNode();
+                  if (isNodeA === isNodeB) {
+                     return 0;
+                  } else {
+                     return isNodeA ? -1 : 1;
+                  }
+               });
+               assert.isTrue(items.at(0).isNode());
+               assert.isTrue(items.at(1).isNode());
+               assert.isFalse(items.at(2).isNode());
+               assert.isFalse(items.at(3).isNode());
             });
 
          });
@@ -372,13 +383,13 @@ define([
                assert.strictEqual(tree.getCurrent().getContents().title, 'AA');
 
                assert.isTrue(tree.moveToNext());
-               assert.strictEqual(tree.getCurrent().getContents().title, 'AC');
+               assert.strictEqual(tree.getCurrent().getContents().title, 'AB');
 
                assert.isTrue(tree.moveToNext());
-               assert.strictEqual(tree.getCurrent().getContents().title, 'AB');
+               assert.strictEqual(tree.getCurrent().getContents().title, 'AC');
 
                assert.isFalse(tree.moveToNext());
-               assert.strictEqual(tree.getCurrent().getContents().title, 'AB');
+               assert.strictEqual(tree.getCurrent().getContents().title, 'AC');
             });
 
             it('should notify onCurrentChange', function(done) {
@@ -408,9 +419,12 @@ define([
             });
 
             it('should move current through direct children of the given node', function() {
-               tree.setCurrentPosition(2);
+               tree.setCurrentPosition(3);
 
                assert.strictEqual(tree.getCurrent().getContents().title, 'AC');
+
+               assert.isTrue(tree.moveToPrevious());
+               assert.strictEqual(tree.getCurrent().getContents().title, 'AB');
 
                assert.isTrue(tree.moveToPrevious());
                assert.strictEqual(tree.getCurrent().getContents().title, 'AA');
@@ -420,7 +434,7 @@ define([
             });
 
             it('should notify onCurrentChange', function(done) {
-               tree.setCurrentPosition(2);
+               tree.setCurrentPosition(3);
                tree.subscribe('onCurrentChange', function(){
                   done();
                });
@@ -552,8 +566,7 @@ define([
 
                it('should fire with all of children after remove a node', function(done) {
                   var tree = getObservableTree(),
-                     //['A', 'AA','AC',  'AB', 'B', 'BA', 'BAA', 'BAAA',  'C', 'D'];
-                     expectOldItems = ['A', 'AA', 'AC', 'ACA', 'ACC', 'ACB',  'AB'],
+                     expectOldItems = ['A', 'AA', 'AB', 'AC', 'ACA', 'ACB', 'ACC'],
                      expectOldItemsIndex = 0,
                      firesCount = 0,
                      handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
