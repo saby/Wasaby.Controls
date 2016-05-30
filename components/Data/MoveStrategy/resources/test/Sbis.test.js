@@ -4,9 +4,10 @@ define([
       'js!SBIS3.CONTROLS.Data.Di',
       'js!SBIS3.CONTROLS.Data.Source.Provider.IRpc',
       'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
-      'js!SBIS3.CONTROLS.Data.Source.SbisService'
+      'js!SBIS3.CONTROLS.Data.Source.SbisService',
+      'js!SBIS3.CONTROLS.Data.Model'
    ],
-   function (SbisMoveStrategy, Di, IRpc, RecordSet, SbisService) {
+   function (SbisMoveStrategy, Di, IRpc, RecordSet, SbisService, Model) {
       'use strict';
 
       var SbisBusinessLogic = (function() {
@@ -100,6 +101,11 @@ define([
                   id: 121,
                   name: 'Козлов',
                   parent: 12,
+                  parent$: false
+               },{
+                  id: 255,
+                  name: 'Козлов',
+                  parent: 254,
                   parent$: false
                }
                ],
@@ -212,6 +218,32 @@ define([
                   assert.equal(rs$.getRecordById('11').get('parent$'), true);
                   assert.equal(rs$.getRecordById('12').get('parent$'), false);
                   done();
+               });
+            });
+
+            it('should not throw an error when from records parent miss in resordset', function(){
+               var moveStrategy = new SbisMoveStrategy({
+                     dataSource: new SbisService({
+                        endpoint: 'test'
+                     }),
+                     hierField: 'parent',
+                     listView: {
+                        getItems: function () {
+                           return rs$;
+                        }
+                     },
+                  }),
+                  to = new Model({
+                     rawData:{
+                        id: 569,
+                        name: 'Иванов',
+                        parent: null,
+                        parent$: true
+                     },
+                     idProperty: 'id'
+                  });
+               moveStrategy.hierarhyMove([rs$.getRecordById('255')], to).addCallback(function(){
+                  assert.equal(rs$.getRecordById('255').get('parent'), to.getId());
                });
             });
          });
