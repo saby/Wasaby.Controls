@@ -111,8 +111,9 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
                   }
 
                   $ws.helpers.forEach(oldParents, function (parentId) {
-                     if (items.getChildItems(parentId).length === 0) {
-                        items.getRecordById(parentId).set(self._options.hierField + '$', false);
+                     var record = items.getRecordById(parentId);
+                     if (record && items.getChildItems(parentId).length === 0) {
+                        record.set(self._options.hierField + '$', false);
                      }
                   });
                }
