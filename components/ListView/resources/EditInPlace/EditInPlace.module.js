@@ -152,7 +152,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
 
                this.setTarget(target);
                //Строка с редакторами всегда должна быть первой в таблице, иначе если перед ней вставятся другие строки,
-               //редакторы будут неверно позиционироваться, т.к. редакторам мы проставляем top, такой же как у target.
+               //редакторы будут неверно позиционироваться, т.к. у строки с редакторами position absolute и top у неё
+               //всегда равен 0, даже если она не первая. Просто перед показом, пододвинем строчку с редакторами на первое место.
                this._container.prependTo(this._options.itemsContainer);
                EditInPlace.superclass.show.apply(this, arguments);
             },
