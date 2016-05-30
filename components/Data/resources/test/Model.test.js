@@ -264,6 +264,12 @@ define([
                var v3new = model.get('p3');
                assert.strictEqual(v3old, v3new);
             });
+            it('should stay inner index length stable on several calls', function () {
+               var model = getMyModel();
+               model.get('p3');
+               model.get('p3');
+               assert.equal(model._propertiesDependency.p3.length, 1);
+            });
          });
 
          context('if adapter doesn\'t support dynamic properties define', function () {
