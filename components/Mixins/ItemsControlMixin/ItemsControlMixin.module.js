@@ -409,7 +409,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._dataSource = this._prepareSource(this._options._dataSource);
          }
          /*Если уже вычислили все в modifyoptions а иначе все это стрельнет после reload*/
-         if (this._options.itemsProjection) {
+         if (this._options._itemsProjection) {
             this._setItemsEventHandlers();
             this._notify('onItemsReady');
             this._itemsReadyCallback();
