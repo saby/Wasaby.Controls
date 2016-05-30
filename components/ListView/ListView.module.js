@@ -1317,6 +1317,9 @@ define('js!SBIS3.CONTROLS.ListView',
                         this.setSelectedKey(model.getId());
                         event.setResult(this._notify('onAfterBeginEdit', model));
                      }.bind(this),
+                     onChangeHeight: function() {
+                        this._showItemsToolbar(this._getElementData(this._editingItem.target));
+                     }.bind(this),
                      onBeginAdd: function(event, options) {
                         event.setResult(this._notify('onBeginAdd', options));
                      }.bind(this),

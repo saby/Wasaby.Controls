@@ -41,14 +41,15 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                return $ws.core.merge(EditInPlaceHoverController.superclass._getEditInPlaceConfig.apply(this), {
                   handlers: {
                      onChildControlFocusIn: this._onChildControlFocusIn.bind(this),
-                     onChildFocusIn: this._onChildFocusIn.bind(this),
-                     onChangeHeight: function() {
-                        if (this._hoveredEip) {
-                           this._hoveredEip.hide();
-                        }
-                     }.bind(this)
+                     onChildFocusIn: this._onChildFocusIn.bind(this)
                   }
                })
+            },
+            _onChangeHeight: function() {
+               if (this._hoveredEip) {
+                  this._hoveredEip.hide();
+               }
+               EditInPlaceHoverController.superclass._onChangeHeight.apply(this, arguments)
             },
             _getCurrentTarget: function() {
                return this._getEditingEip().getTarget();
