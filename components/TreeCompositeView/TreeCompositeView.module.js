@@ -53,7 +53,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
              *    </div>
              * </pre>
              */
-             */
             folderTemplate: undefined,
             /**
              * @cfg {String} Устанавливает шаблон, который используется для отрисовки папки в режимах "Список"
@@ -72,7 +71,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
              *       {{=it.item.get("title")}}\
              *    </div>
              * </pre>
-             */
              */
             listFolderTemplate: undefined
          }
