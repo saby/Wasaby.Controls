@@ -64,12 +64,19 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          _options: {
             /**
              * @cfg {String} Идентификатор узла, относительно которого надо отображать данные
-             * @noShow
+             * @example
+             * <pre>
+             *    <option name="root">12688410,ПапкаДокументов</option>
+             * </pre>
              */
             root: undefined,
 
             /**
              * @cfg {String} Поле иерархии
+             * @example
+             * <pre>
+             *    <option name="hierField">Раздел</option>
+             * </pre>
              */
             hierField: null,
             /**
@@ -92,6 +99,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             displayType : 'all',
             /**
              * @cfg {Boolean} При открытия узла закрывать другие
+             * @example
+             * <pre>
+             *    <option name="singleExpand">true</option>
+             * </pre>
              */
             singleExpand: false,
 
@@ -99,22 +110,39 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              * @cfg {Boolean} Устанавливает режим отображения содержимого узлов (папок) в иерархии при построении контрола
              * @variant true Содержимое узлов раскрыто.
              * @variant false Содержимое узлов скрыто.
+             * @example
+             * <pre>
+             *    <option name="expand">true</option>
+             * </pre>
              */
             expand: false,
             /**
              * @cfg {Boolean} Запрашивать записи для папки если в текущем наборе данных их нет
-             * @noShow
+             * @example
+             * <pre>
+             *    <option name="partialyReload">false</option>
+             * </pre>
              */
             partialyReload: true,
             /**
              * @cfg {Object}  Устанавливает набор открытых элементов иерархии.
              * @see getOpenedPath
+             * @example
+             * <pre>
+             *    <options name="openedPath">
+             *       <option name="12688410">true</option>
+             *    </options>
+             * </pre>
              */
             openedPath : {},
             /**
              * @cfg {Boolean}
              * Разрешить проваливаться в папки
              * Если выключено, то папки можно открывать только в виде дерева, проваливаться в них нельзя
+             * @example
+             * <pre>
+             *    <option name="allowEnterToFolder">false</option>
+             * </pre>
              */
             allowEnterToFolder: true
          },

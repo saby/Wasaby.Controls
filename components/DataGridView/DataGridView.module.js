@@ -151,6 +151,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
             /**
              * @cfg {Array} Лесенка
              * Массив имен столбцов, по которым строится лесенка
+             * @example
+             * <pre>
+             *    <option name="ladder" type="array">
+             *       <option>Документ.Дата</option>
+             *    </option>
+             * </pre>
              */
             ladder: undefined,
             /**
