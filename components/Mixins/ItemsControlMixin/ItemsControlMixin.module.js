@@ -295,9 +295,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             footerTpl: undefined,
             itemContentTpl : null,
-            itemTpl : null
+            itemTpl : null,
+            /**
+             * @cfg {Function} Метод сортировки элементов
+             * @see setItemsSortMethod
+             * @see SBIS3.CONTROLS.Data.Projection.Collection:setSort
+             */
+            itemsSortMethod: undefined
          },
          _loader: null
+
       },
 
       $constructor: function () {
@@ -310,6 +317,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (this._options.itemTemplate || this._options.userItemAttributes) {
             $ws.single.ioc.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Заданы itemTemplate или userItemAttributes');
          }
+
       },
 
       _prepareConfig : function(sourceOpt, itemsOpt) {
@@ -816,6 +824,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _createDefaultProjection: function(items) {
          this._itemsProjection = Projection.getDefaultProjection(items);
+         if (this._options.itemsSortMethod) {
+            this._itemsProjection.setSort(this._options.itemsSortMethod);
+         }
       },
 
       _prepareSource: function(sourceOpt) {
@@ -979,6 +990,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    } else {
                       self.redraw();
                    }
+
                    if (self._options.infiniteScroll === 'up'){
                       var firstItem = self._itemsProjection.at(0);
                       if (firstItem) {
@@ -1684,6 +1696,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                items[i]
             );
          }
+      },
+      /**
+       * Устанавливает метод сортировки элементов на клиенте.
+       * @param {Function} sort функция сортировка элементов, если передать undefined сортировка сбросится
+       * @see SBIS3.CONTROLS.Data.Projection.Collection:setSort
+       */
+      setItemsSortMethod: function(sort){
+         this._options.itemsSortMethod = sort;
+         if(this._itemsProjection)
+            this._itemsProjection.setSort(sort);
       }
    };
 
