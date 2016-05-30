@@ -317,8 +317,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             $ws.single.ioc.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Заданы itemTemplate или userItemAttributes');
          }
 
-         this._options.itemsSortMethod = this._options.itemsSortMethod||this._defaultItemsSortMethod;
-
       },
 
       _prepareConfig : function(sourceOpt, itemsOpt) {
@@ -384,7 +382,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._items = list;
             this._dataSet = list;
             this._createDefaultProjection(this._items);
-            this._itemsProjection.setSort(this._options.itemsSortMethod);
             this._setItemsEventHandlers();
             this._notify('onItemsReady');
             this._itemsReadyCallback();
@@ -830,6 +827,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _createDefaultProjection: function(items) {
          this._itemsProjection = Projection.getDefaultProjection(items);
+         if (this._options.itemsSortMethod) {
+            this._itemsProjection.setSort(this._options.itemsSortMethod);
+         }
       },
 
       _convertItems: function (items) {
@@ -1710,16 +1710,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._removeItem(
                items[i]
             );
-         }
-      },
-      _defaultItemsSortMethod: function(itemA, itemB) {
-         var
-            isNodeA = itemA.item.isNode(),
-            isNodeB = itemB.item.isNode();
-         if (isNodeA === isNodeB) {
-            return 0;
-         } else {
-            return isNodeA ? -1 : 1;
          }
       },
       /**
