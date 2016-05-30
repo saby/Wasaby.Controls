@@ -700,7 +700,9 @@ define(
          this._inputField.bind('paste', function(e) {
             var
                 prevText,
-                pasteValue = $ws.helpers.escapeUnicode(e.originalEvent.clipboardData ? e.originalEvent.clipboardData.getData('text') : window.clipboardData.getData('text'));
+                //Единственный способ понять, что мы пытаемся вставить это посмотреть в буфере.
+                //Берём из буфера только текст, так-как возможно там присутствует и разметка, которая нас не интересует.
+                pasteValue = e.originalEvent.clipboardData ? e.originalEvent.clipboardData.getData('text') : window.clipboardData.getData('text');
             //TODO возможно стоит сделать проверку до вставки, чтобы не портить данные и вставлять уже по факту после проверки
             self._pasteProcessing++;
             //TODO перенести в TextBoxBase и вместо этого вызвать метод для вставки
