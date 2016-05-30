@@ -1485,10 +1485,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {*} item Измененный элемент коллеции.
        * @param {Integer} index Индекс измененного элемента.
-       * @param {String} [property] Измененное свойство элемента
+       * @param {Object.<String, *>} [properties] Изменившиеся свойства
        * @private
        */
-      onSourceCollectionItemChange: function (event, item, index, property) {
+      onSourceCollectionItemChange: function (event, item, index, properties) {
          if (!this._eventRaising) {
             return;
          }
@@ -1500,8 +1500,13 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          );
 
          //Only changes of important properties can launch analysis
-         if (Array.indexOf(this._$importantItemProperties, property) > -1) {
-            this._reAnalize(index, 1);
+         for (var key in properties) {
+            if (properties.hasOwnProperty(key)) {
+               if (Array.indexOf(this._$importantItemProperties, key) > -1) {
+                  this._reAnalize(index, 1);
+                  break;
+               }
+            }
          }
       }
    };
