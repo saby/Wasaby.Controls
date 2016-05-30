@@ -269,6 +269,9 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 }
              });
 
+             /* Т.к. в реестре задач (возможно где-то ещё)
+                в поле фильтра с типом "Дата" ожидают строку даты со сдвигом(чтобы её обработать),
+                а не стандартный ISO формат, то использую наш специальный метод для приведения даты в строку */
              $ws.helpers.forEach(viewFilter, function(val, key, obj) {
                 if(val instanceof Date) {
                    obj[key] = val.toSQL(true);
