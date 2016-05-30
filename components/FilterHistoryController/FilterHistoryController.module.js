@@ -5,11 +5,10 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
     [
        'js!SBIS3.CONTROLS.HistoryController',
        'js!SBIS3.CONTROLS.Data.Collection.List',
-       'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
-       'js!SBIS3.CONTROLS.Utils.DateUtil'
+       'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil'
     ],
 
-    function(HistoryController, List, FilterToStringUtil, DateUtil) {
+    function(HistoryController, List, FilterToStringUtil) {
 
        'use strict';
 
@@ -116,8 +115,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
           _prepareStructureElemToSave: function(structure) {
              /* Все правки надо делать с копией, чтобы не портить оригинальную структуру */
-             var structureCopy = $ws.core.clone(structure),
-                 dateFix;
+             var structureCopy = $ws.core.clone(structure);
 
              $ws.helpers.forEach(structureCopy, function(elem) {
                 /* Хак для испрвления даты, при записи на бл история приводится к строке через метод JSON.stringify,
@@ -125,9 +123,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                   и в итоге мы можем получить не ту дату */
                 if(elem.value) {
                    if(elem.value instanceof Date) {
-                      dateFix = new Date(elem.value);
-                      dateFix.setHours(dateFix.getHours() - dateFix.getTimezoneOffset() / 60);
-                      elem.value = DateUtil.dateToIsoString(dateFix);
+                      elem.value = elem.value.toSQL();
                    }
                 }
                 /* Надо удалить из истории шаблоны, т.к. история сохраняется строкой */
@@ -265,11 +261,20 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
           prepareViewFilter: function(filter) {
              var view = this._options.view,
-                 viewFilter = filter || $ws.core.clone(view.getFilter());
+                 viewFilter = $ws.core.clone(filter || view.getFilter());
 
              $ws.helpers.forEach(this._options.noSaveFilters, function(filter) {
                 if(viewFilter[filter]) {
                    delete viewFilter[filter];
+                }
+             });
+
+             /* Т.к. в реестре задач (возможно где-то ещё)
+                в поле фильтра с типом "Дата" ожидают строку даты со сдвигом(чтобы её обработать),
+                а не стандартный ISO формат, то использую наш специальный метод для приведения даты в строку */
+             $ws.helpers.forEach(viewFilter, function(val, key, obj) {
+                if(val instanceof Date) {
+                   obj[key] = val.toSQL(true);
                 }
              });
 
