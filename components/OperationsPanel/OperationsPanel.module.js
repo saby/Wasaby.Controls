@@ -115,10 +115,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
       _drawItemsCallback: function() {
          this._itemsDrawn = true;
-         //TODO: После перехода на новую идеалогию, кнопки ни чего знать о view не будут, и этот костыль уйдёт.
-         $ws.helpers.forEach(this.getItemsInstances(), function(item) {
-            this.addItemOptions(item);
-         }, this)
       },
       _setVisibility: function(show) {
          var self = this;
