@@ -294,9 +294,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             footerTpl: undefined,
             itemContentTpl : null,
-            itemTpl : null
+            itemTpl : null,
+            /**
+             * @cfg {Function} Метод сортировки элментов
+             * @see setItemsSortMethod
+             * @see SBIS3.CONTROLS.Data.Projection.Collection:setSort
+             */
+            itemsSortMethod: undefined
          },
          _loader: null
+
       },
 
       $constructor: function () {
@@ -309,6 +316,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (this._options.itemTemplate || this._options.userItemAttributes) {
             $ws.single.ioc.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Заданы itemTemplate или userItemAttributes');
          }
+
+         this._options.itemsSortMethod = this._options.itemsSortMethod||this._defaultItemsSortMethod;
+
       },
 
       _prepareConfig : function(sourceOpt, itemsOpt) {
@@ -374,6 +384,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._items = list;
             this._dataSet = list;
             this._createDefaultProjection(this._items);
+            this._itemsProjection.setSort(this._options.itemsSortMethod);
             this._setItemsEventHandlers();
             this._notify('onItemsReady');
             this._itemsReadyCallback();
@@ -995,6 +1006,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    } else {
                       self.redraw();
                    }
+
                    if (self._options.infiniteScroll === 'up'){
                       var firstItem = self._itemsProjection.at(0);
                       if (firstItem) {
@@ -1699,6 +1711,26 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                items[i]
             );
          }
+      },
+      _defaultItemsSortMethod: function(itemA, itemB) {
+         var
+            isNodeA = itemA.item.isNode(),
+            isNodeB = itemB.item.isNode();
+         if (isNodeA === isNodeB) {
+            return 0;
+         } else {
+            return isNodeA ? -1 : 1;
+         }
+      },
+      /**
+       * Устанавливает метод сортировки элементов на клиенте.
+       * @param {Function} sort функция сортировка элементов, если передать undefined сортировка сбросится
+       * @see SBIS3.CONTROLS.Data.Projection.Collection:setSort
+       */
+      setItemsSortMethod: function(sort){
+         this._options.itemsSortMethod = sort;
+         if(this._itemsProjection)
+            this._itemsProjection.setSort(sort);
       }
    };
 

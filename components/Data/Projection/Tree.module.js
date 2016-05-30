@@ -50,11 +50,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
             /**
              * @cfg {SBIS3.CONTROLS.Data.Projection.TreeItem|*} Корневой узел или его содержимое
              */
-            root: undefined,
-            /**
-             * @cfg {Boolean} если true то элементы отсортируются в таком порядке сначала узлы потом листья
-             */
-            nodesBeforeLeaves: true
+            root: undefined
          },
 
          _itemModule: 'projection.tree-item',
@@ -262,18 +258,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
       _buildSortMap: function () {
          var sortMap = TreeProjection.superclass._buildSortMap.call(this);
-         if (this._options.nodesBeforeLeaves) {
-            sortMap = sortMap.sort((function(a, b){
-               var
-                  isNodeA = this._items[a].isNode(),
-                  isNodeB = this._items[b].isNode();
-               if (isNodeA === isNodeB) {
-                  return 0;
-               } else {
-                  return isNodeA ? -1 : 1;
-               }
-            }).bind(this));
-         }
          return _private.sorters.tree(
             this._items,
             sortMap,
