@@ -208,7 +208,10 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
       _mapFilterStructureByProp: function(prop) {
          return $ws.helpers.reduce(this._filterStructure, function(result, element) {
             if (prop in element) {
-               result[element.internalValueField] = element[prop];
+               /* Отдаём клон значения, чтобы его не испортили извне,
+                  т.к. структуру можно менять только через setFilterStructure +
+                  контролы будут правильно приниматься значения при открытии панели фильтрации*/
+               result[element.internalValueField] = $ws.core.clone(element[prop]);
             }
             return result;
          }, {});
