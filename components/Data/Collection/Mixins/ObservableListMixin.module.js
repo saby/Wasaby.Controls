@@ -175,7 +175,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
        * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
        * @param {*[]} oldItems Удаленные элементы коллекции.
        * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
-       * @public
        */
       notifyCollectionChange: function (action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
          if (!this._eventsEnabled) {
@@ -205,10 +204,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
       /**
        * Генерирует событие об изменении элемента
        * @param {*} item Элемент
-       * @param {String} property Измененное свойство
-       * @public
+       * @param {Object.<String, *>} properties Изменившиеся свойства
        */
-      notifyItemChange: function (item, property) {
+      notifyItemChange: function (item, properties) {
          if (
             !this._eventsEnabled ||
             !this.hasEventHandlers('onCollectionItemChange')
@@ -221,7 +219,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
             'onCollectionItemChange',
             this._$items[index],
             index,
-            property
+            properties
          );
       },
 
@@ -332,14 +330,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
    /**
     * Обработчк события изменения модели
     * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {String} property Измененное свойство
-    * @param {*} value Значение свойства
+    * @param {Object.<String, *>} properties Названия и новые значения изменившихся свойств
     */
-   var onItemPropertyChangeHandler = function (event, property) {
+   var onItemPropertyChangeHandler = function (event, properties) {
       this._notifier(
          this.notifyItemChange,
          event.getTarget(),
-         property
+         properties
       );
    };
 
