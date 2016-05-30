@@ -325,6 +325,7 @@ define('js!SBIS3.CONTROLS.Image',
                if (response.hasOwnProperty('error')) {
                   $ws.helpers.toggleLocalIndicator(imageInstance._container, false);
                   imageInstance._boundEvents.onErrorLoad(response.error, true);
+                  $ws.helpers.alert('При загрузке изображения возникла ошибка: ' + response.error.message);
                } else {
                   imageInstance._notify('onEndLoad', response);
                   if (imageInstance._options.edit) {
@@ -354,7 +355,6 @@ define('js!SBIS3.CONTROLS.Image',
             },
             _onErrorLoad: function(error, withoutReload) {
                this._notify('onErrorLoad', error);
-               $ws.helpers.alert('При загрузке изображения возникла ошибка: ' + error.message);
                if (!withoutReload && this._imageUrl !== this._options.defaultImage) {
                   this._setImage(this._options.defaultImage);
                }
