@@ -261,9 +261,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       },
 
       _buildSortMap: function () {
+         var sortMap = TreeProjection.superclass._buildSortMap.call(this);
          return _private.sorters.tree(
             this._items,
-            TreeProjection.superclass._buildSortMap.call(this),
+            sortMap,
             {
                idProperty: this._$idProperty,
                parentProperty: this._$parentProperty,
@@ -370,7 +371,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
           * @private
           */
          tree: function (items, currentMap, options) {
-            //TODO: enumeration with currentMap order
             var push = Array.prototype.push,
                logStamp = 'SBIS3.CONTROLS.Data.Projection.Tree::sorters.tree',
                idProperty = options.idProperty,
@@ -417,15 +417,15 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
                };
 
             var index, count, parentId;
-            for (index = 0, count = items.length; index < count; index++) {
+            for (index = 0, count = currentMap.length; index < count; index++) {
                parentId = Utils.getItemPropertyValue(
-                  items[index].getContents(),
+                  items[currentMap[index]].getContents(),
                   parentProperty
                );
                if (!hierIndex.hasOwnProperty(parentId)) {
                   hierIndex[parentId] = [];
                }
-               hierIndex[parentId].push(index);
+               hierIndex[parentId].push(currentMap[index]);
             }
             //todo с бл могут прийти дублирующиеся узлы мы их убираем
             var sortmap = buildHierarchy(options.root), uniq = [];

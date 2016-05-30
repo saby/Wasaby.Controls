@@ -42,11 +42,12 @@ define('js!SBIS3.CONTROLS.Data.Bind.ICollection', [], function () {
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {*} item Измененный элемент коллекции.
        * @param {Number} index Индекс измененного элемента.
-       * @param {String} [property] Измененное свойство элемента
+       * @param {Object.<String, *>} [properties] Изменившиеся свойства
        * @example
+       * Отследим изменение свойства title:
        * <pre>
-       *    list.subscribe('onCollectionItemChange', function(eventObject, item, index, property){
-       *       if (property === 'title'){
+       *    list.subscribe('onCollectionItemChange', function(eventObject, item, index, properties){
+       *       if ('title' in properties) {
        *          //Do something
        *       }
        *    });

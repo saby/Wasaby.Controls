@@ -314,6 +314,56 @@ define([
                var item = tree.getNext(tree.at(0));
                assert.equal(item.getContents().id, 2);
             });
+
+         });
+
+         describe('.$constructor()', function(){
+            it('should sort projection so first folder then next leaf', function(){
+               var items = new Tree({
+                     collection:  new List({
+                        items:[{
+                           id: 1,
+                           pid: 0,
+                           node: false,
+                           title: 'leaf'
+                        }, {
+                           id: 2,
+                           pid: 0,
+                           node: false,
+                           title: 'leaf'
+                        }, {
+                           id: 3,
+                           pid: 0,
+                           node: true,
+                           title: 'node'
+                        }, {
+                           id: 4,
+                           pid: 0,
+                           node: true,
+                           title: 'node'
+                        }]
+                     }),
+                     root: 0,
+                     idProperty: 'id',
+                     parentProperty: 'pid',
+                     nodeProperty: 'node'
+                  });
+               items.setSort(function(itemA, itemB) {
+                  var
+                     isNodeA = itemA.item.isNode(),
+                     isNodeB = itemB.item.isNode();
+                  if (isNodeA === isNodeB) {
+                     return 0;
+                  } else {
+                     return isNodeA ? -1 : 1;
+                  }
+               });
+               assert.isTrue(items.at(0).isNode());
+               assert.isTrue(items.at(1).isNode());
+               assert.isFalse(items.at(2).isNode());
+               assert.isFalse(items.at(3).isNode());
+            });
+
          });
 
          describe('.getPrevious()', function(){

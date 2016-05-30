@@ -55,6 +55,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    var Record = Abstract.extend([IObject, ICloneable, IEnumerable, OptionsMixin, ObservableMixin, SerializableMixin, CloneableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Record',
 
+      _compatibleConstructor: true,//Чтобы в наследниках с "old style extend" звался нативный constructor()
+
       /**
        * @cfg {SBIS3.CONTROLS.Data.Collection.RecordSet} Рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
        * @name SBIS3.CONTROLS.Data.Record#owner
@@ -110,19 +112,41 @@ define('js!SBIS3.CONTROLS.Data.Record', [
             Utils.logger.stack('SBIS3.CONTROLS.Data.Record::set(): property name is empty, value can\'t be setted.');
          }
 
-         var oldValue = this._getRawDataValue(name);
-         if (!this._isEqualValues(oldValue, value)) {
-            this._setRawDataValue(name, value);
-            if (!this.has(name)) {
-               this._addRawDataField(name);
+         var map = name,
+            equals = [],
+            oldValue;
+         if (!(map instanceof Object)) {
+            map = {};
+            map[name] = value;
+         }
+
+         for (name in map) {
+            if (!map.hasOwnProperty(name)) {
+               continue;
             }
-            this._setChanged(name, oldValue);
-            if (this._hasInPropertiesCache(name) &&
-               value !== this._getFromPropertiesCache(name)
-            ) {
-               this._unsetFromPropertiesCache(name);
+            value = map[name];
+            oldValue = this._getRawDataValue(name);
+            if (this._isEqualValues(oldValue, value)) {
+               equals.push(name);
+            } else {
+               this._setRawDataValue(name, value);
+               if (!this.has(name)) {
+                  this._addRawDataField(name);
+               }
+               this._setChanged(name, oldValue);
+               if (this._hasInPropertiesCache(name) &&
+                  value !== this._getFromPropertiesCache(name)
+               ) {
+                  this._unsetFromPropertiesCache(name);
+               }
             }
-            this._notify('onPropertyChange', name, value);
+         }
+
+         for (var i = 0; i < equals.length; i++) {
+            delete map[equals[i]];
+         }
+         if (!Object.isEmpty(map)) {
+            this._notify('onPropertyChange', map);
          }
       },
 

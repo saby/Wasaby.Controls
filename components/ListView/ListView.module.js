@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.DecorableMixin',
       'js!SBIS3.CONTROLS.DragNDropMixin',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
+      'js!SBIS3.CONTROLS.BreakClickBySelectMixin',
       'js!SBIS3.CONTROLS.ItemsToolbar',
       'js!SBIS3.CORE.MarkupTransformer',
       'html!SBIS3.CONTROLS.ListView',
@@ -33,7 +34,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable,
-             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
+             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelect, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
              Link, ScrollWatcher, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate) {
 
@@ -204,10 +205,8 @@ define('js!SBIS3.CONTROLS.ListView',
             },
             _loadingIndicator: undefined,
             _editInPlace: null,
-            _hasScrollMore: true,
             _infiniteScrollOffset: null,
             _allowInfiniteScroll: true,
-            _scrollIndicatorHeight: 32,
             _isLoadBeforeScrollAppears : true, //Переменная хранит состояние, что загрузка произошла ПЕРЕД отображением скролла
             _pageChangeDeferred : undefined,
             _pager : undefined,
@@ -561,8 +560,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          $constructor: function () {
             this._touchSupport = $ws._const.browser.isMobilePlatform;
-            //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
-            var topParent = this.getTopParent();
+
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
 
             if(this._touchSupport) {
@@ -1092,7 +1090,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _reloadInfiniteScrollParams : function(){
             if (this.isInfiniteScroll() || this._isAllowInfiniteScroll()) {
-               this._hasScrollMore = true;
                this._infiniteScrollOffset = this._offset;
                this._isLoadBeforeScrollAppears = true;
             }
@@ -1297,6 +1294,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   itemsContainer: this._getItemsContainer(),
                   element: $('<div>'),
                   opener: this,
+                  endEditByFocusOut: this._options.editMode.indexOf('toolbar') === -1,
                   modeAutoAdd: this._options.editMode.indexOf('autoadd') !== -1,
                   handlers: {
                      onItemValueChanged: function(event, difference, model) {
@@ -1316,6 +1314,9 @@ define('js!SBIS3.CONTROLS.ListView',
                         }
                         this.setSelectedKey(model.getId());
                         event.setResult(this._notify('onAfterBeginEdit', model));
+                     }.bind(this),
+                     onChangeHeight: function() {
+                        this._showItemsToolbar(this._getElementData(this._editingItem.target));
                      }.bind(this),
                      onBeginAdd: function(event, options) {
                         event.setResult(this._notify('onBeginAdd', options));
@@ -1628,22 +1629,21 @@ define('js!SBIS3.CONTROLS.ListView',
                loadAllowed  = this._isAllowInfiniteScroll();
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && $ws.helpers.isElementVisible(this.getContainer()) &&
-                  this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && this._hasScrollMore && !this._isLoading()) {
+                  this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && !this._isLoading()) {
                this._showLoadingIndicator();
+               this._toggleEmptyData(false);
                this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), this._infiniteScrollOffset + this._limit, this._limit);
                this._loader = this._callQuery(this.getFilter(), this.getSorting(), this._infiniteScrollOffset + this._limit, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
                   //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                   //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                   self._loader = null;
-
-                  self._hideLoadingIndicator();
-
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
-                  if (self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset)) {
+                  var hasNextPage = self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset);
+                  if (hasNextPage) {
                      self._infiniteScrollOffset += self._limit;
                   } else {
-                     self._hasScrollMore = false;
                      self._hideLoadingIndicator();
+                     this._toggleEmptyData(!self.getItems().getCount());
                   }
                   self._notify('onDataMerge', dataSet);
                   //Если данные пришли, нарисуем
@@ -1686,7 +1686,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                   } else {
                      // Если пришла пустая страница, но есть еще данные - догрузим их
-                     if (self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset)){
+                     if (hasNextPage){
                         self._nextLoad();
                      }
                   }
@@ -1777,7 +1777,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _createLoadingIndicator : function () {
             this._loadingIndicator = this._container.find('.controls-ListView-scrollIndicator');
-            this._scrollIndicatorHeight = this._loadingIndicator.height();
          },
          /**
           * Метод изменения возможности подгрузки по скроллу.
@@ -2394,6 +2393,5 @@ define('js!SBIS3.CONTROLS.ListView',
          }
       });
 
-      return ListView;
-
+      return ListView.mixin([BreakClickBySelect]);
    });

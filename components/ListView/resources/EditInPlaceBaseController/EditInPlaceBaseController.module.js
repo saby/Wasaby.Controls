@@ -29,6 +29,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   itemsProjection: undefined,
                   columns: undefined,
                   /**
+                   * @cfg {Boolean} Завершение редактирования при потере фокуса
+                   */
+                  endEditByFocusOut: false,
+                  /**
                    * @cfg {Boolean} Режим автоматического добавления элементов
                    * @remark
                    * Используется при включенном редактировании по месту. Позволяет при завершении редактирования последнего элемента автоматически создавать новый.
@@ -59,7 +63,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _lastTargetAdding: undefined
             },
             $constructor: function () {
-               this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace');
+               this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace', 'onChangeHeight');
                this._eipHandlers = {
                   onKeyDown: this._onKeyDown.bind(this)
                };
@@ -89,8 +93,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
 
             _getEditInPlaceConfig: function() {
                var
-                   self = this;
-               return {
+                  self = this,
+                  config;
+               config = {
                   editingTemplate: this._options.editingTemplate,
                   columns: this._options.columns,
                   element: $('<div>').prependTo(this._options.itemsContainer),
@@ -106,10 +111,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      onItemValueChanged: function(event, difference, model) {
                         event.setResult(self._notify('onItemValueChanged', difference, model));
                      },
-                     onChildFocusOut: this._onChildFocusOut.bind(this),
                      onInit: function() {
                         self._notify('onInitEditInPlace', this);
                      },
+                     onChangeHeight: this._onChangeHeight.bind(this),
                      //TODO: EIP Авраменко, Сухоручкин: сейчас сделано через pendingOperation, в будущем переделать на команды блокировки родительких компонентов
                      onBeginEdit: function() {
                         self._editingDeferred = new $ws.proto.Deferred();
@@ -120,6 +125,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      }
                   }
                };
+               if (this._options.endEditByFocusOut) {
+                  config.handlers.onChildFocusOut = this._onChildFocusOut.bind(this);
+               }
+               return config;
+            },
+            _onChangeHeight: function() {
+               this._notify('onChangeHeight');
             },
             _getContextForEip: function () {
                var
