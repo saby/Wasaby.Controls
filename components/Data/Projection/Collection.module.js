@@ -1397,7 +1397,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             //Создаем служебный массив
             for (var index = 0, count = items.length; index < count; index++) {
                sorted.push({
-                  item: items[index].getContents(),
+                  item: items[index],
+                  collectionItem: items[index].getContents(),
                   index: index,
                   collectionIndex: index
                });

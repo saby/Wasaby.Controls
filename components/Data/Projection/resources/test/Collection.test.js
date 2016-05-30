@@ -334,7 +334,7 @@ define([
                   return [4, 3, 2, 1];
                },
                sort = function(a, b){
-                  return a.item <= b.item ? 1 : -1;
+                  return a.collectionItem <= b.collectionItem ? 1 : -1;
                };
 
             it('should sort projection', function() {
@@ -431,7 +431,7 @@ define([
                   collection: list
                });
                projection.setSort(function(a, b){
-                  return a.item.get('max') <= b.item.get('max') ? 1 : -1;
+                  return a.collectionItem.get('max') <= b.collectionItem.get('max') ? 1 : -1;
                });
                changeModel.set('max', 10);
                projection.each(function(item, i) {
@@ -464,7 +464,7 @@ define([
                   importantItemProperties: ['max']
                });
                projection.setSort(function(a ,b){
-                  return a.item.get('max') <= b.item.get('max') ? 1 : -1;
+                  return a.collectionItem.get('max') <= b.collectionItem.get('max') ? 1 : -1;
                });
                changeModel.set('max', 10);
                projection.each(function(item, i) {
@@ -963,7 +963,7 @@ define([
                   return [4, 3, 2, 1];
                },
                sort = function(a, b) {
-                  return a.item <= b.item ? 1 : -1;
+                  return a.collectionItem <= b.collectionItem ? 1 : -1;
                },
                filter = function(item) {
                   return outsideItems.indexOf(item) === -1;
@@ -1164,7 +1164,7 @@ define([
                   fireId = 0;
                projection.subscribe('onCollectionChange', handler);
                projection.setSort(function(a, b) {
-                     return a.item >= b.item ? 1 : -1;
+                     return a.collectionItem >= b.collectionItem ? 1 : -1;
                   }
                );
                projection.unsubscribe('onCollectionChange', handler);
