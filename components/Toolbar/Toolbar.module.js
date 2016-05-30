@@ -60,6 +60,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          //отправляем в меню обработанные элементы, в которых убраны с showType.TOOLBAR
          var menuItems = this._getMenuItems(items);
          this._menuIcon.setItems(menuItems);
+         this._menuIcon.toggle(!!menuItems.length);
       },
 
       //обработчик для меню
