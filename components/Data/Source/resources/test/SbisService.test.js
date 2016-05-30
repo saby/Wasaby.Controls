@@ -1278,6 +1278,25 @@ define([
 
                assert.strictEqual(args['ДопПоля'].length, 0);
             });
+
+            it('should return valid arguments when has more is false', function () {
+               var args = service.prepareQueryParams({
+                     id: 5,
+                     enabled: true,
+                     title: 'abc*',
+                     path: [1, 2, 3]
+                  },
+                  {
+                     id: true,
+                     enabled: false
+                  },
+                  100,
+                  33,
+                  false
+               );
+               assert.strictEqual(args['Навигация'].s[0].n, 'ЕстьЕще');
+               assert.isFalse(args['Навигация'].d[0]);
+            });
          });
       });
    }

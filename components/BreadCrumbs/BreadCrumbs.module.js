@@ -102,6 +102,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             this._dotsClickHandler(crumb)
          } else if (crumb.length) {
             this._notify('onItemClick', crumb.data(this._options.keyField));
+            if (this._picker.isVisible()){
+               this._picker.hide();
+            }
          }
       },
       /**
@@ -237,7 +240,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             //Минимум остается первая и последняя хлебная крошка
             if (targetContainer.width() + this._homeIconWidth >= containerWidth) {
                //ширина декоротивных элементов -  блок с домиком, троеточие, стрелки 
-               var width = this._homeIconWidth + this._dotsWidth + this._arrowWidth * 2;
+               var dotsWidth = $('.controls-BreadCrumbs__dots', this._container).outerWidth(true) || 0;
+               var width = this._homeIconWidth + dotsWidth + this._arrowWidth * 2;
                var halfWidth = Math.floor((containerWidth - width) / 2);
                if (points.length >= 2){
                   $('.controls-BreadCrumbs__title', points).css('max-width', halfWidth);
@@ -261,9 +265,6 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          if (!this._homeIconWidth || !this._arrowWidth){
             this._homeIconWidth = $('.controls-BreadCrumbs__crumb-home', this._container).outerWidth(true);
             this._arrowWidth = $('.controls-BreadCrumbs__arrow', this._container).outerWidth(true);
-         } 
-         if (!this._dotsWidth){
-            this._dotsWidth = $('.controls-BreadCrumbs__dots', this._container).outerWidth(true);
          }
       },
 

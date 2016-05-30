@@ -1,13 +1,21 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Model', [
    'js!SBIS3.CONTROLS.Data.Record',
-   'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.IHashable',
    'js!SBIS3.CONTROLS.Data.HashableMixin',
+   'js!SBIS3.CONTROLS.Data.SerializableMixin',
+   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.Di',
-   'js!SBIS3.CONTROLS.Data.Utils',
-   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator'
-], function (Record, SerializableMixin, IHashable, HashableMixin, Di, Utils, ArrayEnumerator) {
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (
+   Record,
+   IHashable,
+   HashableMixin,
+   SerializableMixin,
+   ArrayEnumerator,
+   Di,
+   Utils
+) {
    'use strict';
 
    /**
@@ -48,128 +56,134 @@ define('js!SBIS3.CONTROLS.Data.Model', [
     */
 
    var Model = Record.extend([IHashable, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Model.prototype */{
+      /**
+       * @typedef {Object} Property
+       * @property {*|Function} [def] Значение по умолчанию (используется, если свойства нет в сырых данных)
+       * @property {Function} [get] Метод, возвращающий значение свойства. Первым аргументом придет значение свойства в сырых данных.
+       * @property {Function} [set] Метод, устанавливающий значение свойства.
+       */
+
       _moduleName: 'SBIS3.CONTROLS.Data.Model',
-      $protected: {
-         _options: {
-            /**
-             * @typedef {Object} Property
-             * @property {*|Function} [def] Значение по умолчанию (используется, если свойства нет в сырых данных)
-             * @property {Function} [get] Метод, возвращающий значение свойства. Первым аргументом придет значение свойства в сырых данных.
-             * @property {Function} [set] Метод, устанавливающий значение свойства.
-             */
 
-            /**
-             * @cfg {Object.<String, Property>} Описание свойств модели. Дополняет/уточняет свойства, уже существующие в сырых данных.
-             * @example
-             * <pre>
-             *    var User = Model.extend({
-             *       _moduleName: 'My.Module.User',
-             *       $protected: {
-             *          _options: {
-             *             properties: {
-             *                id: {
-             *                   get: function(value) {
-             *                      return '№' + value;
-             *                   }
-             *                },
-             *                guid: {
-             *                   def: function() {
-             *                      return $ws.helpers.createGUID();
-             *                   }
-             *                },
-             *                displayName: {
-             *                   get: function() {
-             *                      return this.get('firstName') + ' a.k.a "' + this.get('login') + '" ' + this.get('lastName');
-             *                   }
-             *                }
-             *             }
-             *          }
-             *       }
-             *    });
-             *    var user = new User({
-             *       rawData: {
-             *          id: 5,
-             *          login: 'Keanu',
-             *          firstName: 'Johnny',
-             *          lastName: 'Mnemonic',
-             *          job: 'Memory stick'
-             *       }
-             *    });
-             *    user.get('id');//№5
-             *    user.get('guid');//010a151c-1160-d31d-11b3-18189155cc13
-             *    user.get('displayName');//Johnny a.k.a "Keanu" Mnemonic
-             *    user.get('job');//Memory stick
-             *    user.get('uptime');//undefined
-             * </pre>
-             * @see getProperties
-             * @see Property
-             */
-            properties: {},
+      _compatibleConstructor: true,//Чтобы в наследниках с "old style extend" звался нативный constructor()
 
-            /**
-             * @cfg {String} Поле, содержащее первичный ключ
-             * @see getIdProperty
-             * @see setIdProperty
-             */
-            idProperty: undefined
-         },
+      _hashPrefix: 'model-',
 
-         _hashPrefix: 'model-',
+      /**
+       * @cfg {Object.<String, Property>} Описание свойств модели. Дополняет/уточняет свойства, уже существующие в сырых данных.
+       * @name SBIS3.CONTROLS.Data.Model#properties
+       * @example
+       * <pre>
+       *    var User = Model.extend({
+       *       _$properties: {
+       *          id: {
+       *             get: function(value) {
+       *                return '№' + value;
+       *             }
+       *          },
+       *          guid: {
+       *             def: function() {
+       *                return $ws.helpers.createGUID();
+       *             }
+       *          },
+       *          displayName: {
+       *             get: function() {
+       *                return this.get('firstName') + ' a.k.a "' + this.get('login') + '" ' + this.get('lastName');
+       *             }
+       *          }
+       *       }
+       *    });
+       *    var user = new User({
+       *       rawData: {
+       *          id: 5,
+       *          login: 'Keanu',
+       *          firstName: 'Johnny',
+       *          lastName: 'Mnemonic',
+       *          job: 'Memory stick'
+       *       }
+       *    });
+       *    user.get('id');//№5
+       *    user.get('guid');//010a151c-1160-d31d-11b3-18189155cc13
+       *    user.get('displayName');//Johnny a.k.a "Keanu" Mnemonic
+       *    user.get('job');//Memory stick
+       *    user.get('uptime');//undefined
+       * </pre>
+       * @see getProperties
+       * @see Property
+       */
+      _$properties: null,
 
-         /**
-          * @var {Boolean} Признак, что модель существует в источнике данных
-          */
-         _isStored: false,
+      /**
+       * @cfg {String} Поле, содержащее первичный ключ
+       * @name SBIS3.CONTROLS.Data.Model#idProperty
+       * @see getIdProperty
+       * @see setIdProperty
+       */
+      _$idProperty: '',
 
-         /**
-          * @var {Boolean} Признак, что модель удалена из источника данных
-          */
-         _isDeleted: false,
+      /**
+       * @member {Boolean} Признак, что модель существует в источнике данных
+       */
+      _isStored: false,
 
-         /**
-          * @var {Object.<String, *>} Объект, содержащий вычисленные значения свойств по умолчанию
-          */
-         _defaultPropertiesValues: {},
+      /**
+       * @member {Boolean} Признак, что модель удалена из источника данных
+       */
+      _isDeleted: false,
 
-         /**
-          * @member {Object.<String, Array.<Sting>>} Зависимости свойств: название свойства -> массив названий свойств, которые от него зависят
-          */
-         _propertiesDependency: {},
+      /**
+       * @member {Object.<String, *>} Объект, содержащий вычисленные значения свойств по умолчанию
+       */
+      _defaultPropertiesValues: {},
 
-         /**
-          * @member {String} Имя свойства, для которого сейчас осуществляется сбор зависимостей
-          */
-         _propertiesDependencyGathering: '',
+      /**
+       * @member {Object.<String, Array.<Sting>>} Зависимости свойств: название свойства -> массив названий свойств, которые от него зависят
+       */
+      _propertiesDependency: {},
 
-         /**
-          * @var {Object.<String, Boolean>} Объект, содержащий названия свойств, для которых сейчас выполняется вычисление значения
-          */
-         _nowCalculatingProperties: {},
+      /**
+       * @member {String} Имя свойства, для которого сейчас осуществляется сбор зависимостей
+       */
+      _propertiesDependencyGathering: '',
 
-         /**
-          * @var {Object} Флаг показывающий была ли модель синхронизирована
-          */
-         _synced: false
-      },
+      /**
+       * @member {Object.<String, Boolean>} Объект, содержащий названия свойств, для которых сейчас выполняется вычисление значения
+       */
+      _nowCalculatingProperties: {},
 
-      $constructor: function (cfg) {
-         cfg = cfg || {};
+      /**
+       * @member {Object} Флаг показывающий была ли модель синхронизирована
+       */
+      _synced: false,
 
-         if ('usingDataSetAsList' in cfg) {
-            Utils.logger.stack(this._moduleName + '::$constructor(): option "usingDataSetAsList" is deprecated and will be removed in 3.7.4', 1);
+      constructor: function $Model(options) {
+         if (options) {
+            if ('usingDataSetAsList' in options) {
+               Utils.logger.stack(this._moduleName + '::constructor(): option "usingDataSetAsList" is deprecated and will be removed in 3.7.4', 1);
+            }
          }
 
-         this._options.idProperty = this._options.idProperty || '';
-         if (!this._options.idProperty) {
-            this._options.idProperty = this.getAdapter().getKeyField(this._options.rawData);
+         this._defaultPropertiesValues = {};
+         this._nowCalculatingProperties = {};
+         Model.superclass.constructor.call(this, options);
+
+         this._$properties = this._$properties || {};
+         //Old style extend compatibility for _$properties
+         if (this._options && this._options.properties) {
+            //Utils.logger.stack(this._moduleName + '::constructor(): usage of "$protected._options.properties" is deprecated and will be removed in 3.7.4. Use extend() syntax like "_$properties: $ws.core.merge(ParentModel.prototype._$properties, {...})" instead.');
+            this._$properties = $ws.core.merge(this._$properties, this._options.properties);
+         }
+
+         if (!this._$idProperty) {
+            this._$idProperty = this.getAdapter().getKeyField(this._$rawData);
          }
       },
 
       // region SBIS3.CONTROLS.Data.IObject
 
       get: function (name) {
-         if (this._propertiesCache.hasOwnProperty(name)) {
-            return this._propertiesCache[name];
+         if (this._hasInPropertiesCache(name)) {
+            return this._getFromPropertiesCache(name);
          }
 
          if (this._propertiesDependencyGathering) {
@@ -180,7 +194,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          }
 
          var value = Model.superclass.get.call(this, name),
-            property = this.getProperties()[name];
+            property = this._$properties[name];
          if (property) {
             if ('def' in property && !this._getRawDataAdapter().has(name)) {
                value = this.getDefault(name);
@@ -188,9 +202,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             if (property.get) {
                value = this._processCalculatedValue(name, value, property, true);
                if (this._isFieldValueCacheable(value)) {
-                  this._propertiesCache[name] = value;
-               } else if (this._propertiesCache.hasOwnProperty(name)) {
-                  delete this._propertiesCache[name];
+                  this._setToPropertiesCache(name, value);
+               } else if (this._hasInPropertiesCache(name)) {
+                  this._unsetFromPropertiesCache(name);
                }
             }
          }
@@ -201,7 +215,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       set: function (name, value) {
          this._deleteDependencyCache(name);
 
-         var property = this.getProperties()[name];
+         var property = this._$properties[name];
          if (property && property.set) {
             value = this._processCalculatedValue(name, value, property, false);
             if (value === undefined) {
@@ -216,14 +230,14 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          if (this._propertiesDependency.hasOwnProperty(name)) {
             var dependency = this._propertiesDependency[name];
             for (var i = 0; i < dependency.length; i++) {
-               delete this._propertiesCache[dependency[i]];
+               this._unsetFromPropertiesCache(dependency[i]);
                this._deleteDependencyCache(dependency[i]);
             }
          }
       },
 
       has: function (name) {
-         return this.getProperties().hasOwnProperty(name) || Model.superclass.has.call(this, name);
+         return this._$properties.hasOwnProperty(name) || Model.superclass.has.call(this, name);
       },
 
       // endregion SBIS3.CONTROLS.Data.IObject
@@ -235,9 +249,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @returns {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator}
        */
       getEnumerator: function () {
-         return new ArrayEnumerator({
-            items: this._getAllProperties()
-         });
+         return new ArrayEnumerator(this._getAllProperties());
       },
 
       /**
@@ -284,7 +296,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @see Property
        */
       getProperties: function () {
-         return this._options.properties;
+         return this._$properties;
       },
 
       /**
@@ -294,7 +306,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       isUsingDataSetAsList: function () {
          Utils.logger.stack(this._moduleName + '::isUsingDataSetAsList(): method is deprecated and will be removed in 3.7.4');
-         return true;
+         return false;
       },
 
       /**
@@ -313,9 +325,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       getDefault: function (name) {
          if (!this._defaultPropertiesValues.hasOwnProperty(name)) {
-            var property = this._options.properties[name];
+            var property = this._$properties[name];
             if (property && 'def' in property) {
-               this._defaultPropertiesValues[name] = [typeof property.def === 'function' ? property.def.call(this) : property.def];
+               this._defaultPropertiesValues[name] = [property.def instanceof Function ? property.def.call(this) : property.def];
             } else {
                this._defaultPropertiesValues[name] = [];
             }
@@ -395,7 +407,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             Utils.logger.info('SBIS3.CONTROLS.Data.Model::setIdProperty(): property "' + idProperty + '" is not defined');
             return;
          }
-         this._options.idProperty = idProperty;
+         this._$idProperty = idProperty;
       },
 
       /**
@@ -431,6 +443,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       setSynced: function (synced) {
          this._synced = synced;
       },
+
       // endregion Public methods
 
       //region Protected methods
@@ -441,10 +454,10 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @protected
        */
       _getIdProperty: function () {
-         if (this._options.idProperty === undefined) {
-            this._options.idProperty = this._getRawDataAdapter().getKeyField() || '';
+         if (this._$idProperty === undefined) {
+            this._$idProperty = this._getRawDataAdapter().getKeyField() || '';
          }
-         return this._options.idProperty;
+         return this._$idProperty;
       },
 
       /**
@@ -454,7 +467,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       _getAllProperties: function() {
          var fields = this._getRawDataFields(),
-            objProps = this.getProperties(),
+            objProps = this._$properties,
             props = Object.keys(objProps);
          return props.concat($ws.helpers.filter(fields, function(field) {
             return !objProps.hasOwnProperty(field);
@@ -492,10 +505,13 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             this._propertiesDependencyGathering = name;
          }
          this._nowCalculatingProperties[checkKey] = true;
-         value = isReading ?
-            property.get.call(this, value) :
-            property.set.call(this, value);
-         delete this._nowCalculatingProperties[checkKey];
+         try {
+            value = isReading ?
+               property.get.call(this, value) :
+               property.set.call(this, value);
+         } finally {
+            delete this._nowCalculatingProperties[checkKey];
+         }
          if (isReading) {
             this._propertiesDependencyGathering = prevGathering;
          }
@@ -513,7 +529,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          var adapter = this._getRawDataAdapter(),
             info = adapter.getInfo(field);
          return info && info.meta && info.meta.t ?
-            (typeof info.meta.t === 'object' ? info.meta.t.n : info.meta.t) :
+            (info.meta.t instanceof Object ? info.meta.t.n : info.meta.t) :
             (field ? 'Текст' : undefined);
       },
 

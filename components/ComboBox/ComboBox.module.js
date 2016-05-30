@@ -84,6 +84,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          //если поменяли текст до того, как были установлены items. То мы не сможем проставить соответсвующий ключ из набора
          //это надо будет сделать после уставноки items, а этот флаг используем для понимания
          _delayedSettingTextByKey: false,
+         //В зависимости от этого флага по разному будет работать отрисовка выделенного
+         //если он true, то при условии ключа null текст будет оцищаться
+         //нельзя всегда очищать текст, потому что при ручном вводе текста, даже при пустом ключе текст стирать не надо
+         _isClearing: false,
          _keysWeHandle: [$ws._const.key.up, $ws._const.key.down, $ws._const.key.enter],
          _options: {
             searchDelay: 0,
@@ -275,6 +279,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       setText: function (text) {
          ComboBox.superclass.setText.call(this, text);
+         this._setKeyByText();
+      },
+
+      _drawText: function(text) {
+         ComboBox.superclass._drawText.apply(this, arguments);
          this._drawNotEditablePlaceholder(text);
          $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder);
          this._setKeyByText();
@@ -285,7 +294,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _drawSelectedItem: function (key, index) {
-
+         function clearSelection() {
+            ComboBox.superclass.setText.call(self, '');
+            self._drawNotEditablePlaceholder('');
+            $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text('');
+            if (this._picker) {
+               $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
+            }
+         }
          var item, def;
          def = new $ws.proto.Deferred();
          if (this._dataSet) {
@@ -313,9 +329,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   }
                }
                else {
-                  ComboBox.superclass.setText.call(self, '');
-                  self._drawNotEditablePlaceholder('');
-                  $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text('');
+                  clearSelection.call(self);
                }
                if (self._picker) {
                   $('.controls-ComboBox__itemRow__selected', self._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
@@ -323,10 +337,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                }
             });
          }
-
-         if (this._picker) {
-            $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
+         if (this._isClearing) {
+            clearSelection.call(self);
+            this._isClearing = false;
          }
+
 
       },
 
@@ -574,6 +589,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var def = new $ws.proto.Deferred();
          def.callback();
          return def;
+      },
+      setSelectedKey : function(key) {
+         if (key == null) {
+            this._isClearing = true;
+         }
+         ComboBox.superclass.setSelectedKey.apply(this, arguments);
       }
    });
 

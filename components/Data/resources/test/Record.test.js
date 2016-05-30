@@ -83,6 +83,17 @@ define([
             });
             it('should add the default values from inherited format to the raw data', function () {
                var SubRecord = Record.extend({
+                     _$format: getFormatDeclaration()
+                  }),
+                  record = new SubRecord(),
+                  data = record.getRawData();
+               assert.strictEqual(data.id, 0);
+               assert.strictEqual(data.title, null);
+               assert.strictEqual(data.descr, '-');
+               assert.strictEqual(data.main, true);
+            });
+            it('should add the default values from inherited format to the raw data by old extend', function () {
+               var SubRecord = Record.extend({
                      $protected: {
                         _options: {
                            format: getFormatDeclaration()
@@ -757,11 +768,14 @@ define([
 
          describe('.toJSON()', function () {
             it('should serialize a Record', function () {
-               var json = record.toJSON();
+               var json = record.toJSON(),
+                  options = record._getOptions();
+               delete options.owner;
+
                assert.strictEqual(json.module, 'SBIS3.CONTROLS.Data.Record');
                assert.isNumber(json.id);
                assert.isTrue(json.id > 0);
-               assert.deepEqual(json.state._options, record._options);
+               assert.deepEqual(json.state.$options, options);
                assert.deepEqual(json.state._changedFields, record._changedFields);
             });
             it('should set subclass\'s module name', function () {
@@ -788,10 +802,10 @@ define([
                      }
                   }),
                   json = record.toJSON();
-               assert.isUndefined(json.state._options.rawData._type);
-               assert.strictEqual(json.state._options.rawData.$type, 'record');
-               assert.deepEqual(json.state._options.rawData.s, [1]);
-               assert.deepEqual(json.state._options.rawData.d, [2]);
+               assert.isUndefined(json.state.$options.rawData._type);
+               assert.strictEqual(json.state.$options.rawData.$type, 'record');
+               assert.deepEqual(json.state.$options.rawData.s, [1]);
+               assert.deepEqual(json.state.$options.rawData.d, [2]);
             });
          });
 

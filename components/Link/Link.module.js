@@ -89,11 +89,19 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
       },
 
       _setEnabled: function(enabled){
-          Link.superclass._setEnabled.apply(this, arguments);
-          this._container.toggleClass('ws-hover-target', enabled);
+         Link.superclass._setEnabled.apply(this, arguments);
+         this._container.toggleClass('ws-hover-target', enabled);
+         if (enabled) {
+            if (this._options.href) {
+               $('.controls-Link-link', this._container).attr('href', this._options.href);
+            }
+         }
+         else {
+            $('.controls-Link-link', this._container).removeAttr('href', this._options.href);
+         }
       },
 
-      _drawIcon: function(icon) {
+      _drawIcon: function (icon) {
          var content;
          if (icon) {
             content = $('<i class="controls-Link__icon ' + this._options._iconClass + '" ></i><span class="controls-Link__field">' + (this._options.caption || '') + '</span>');
@@ -102,14 +110,14 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
          }
          this._container.html(content);
       },
-       /**
-        * Установить ссылку.
-        * Метод установки либо замены адреса, заданного опцией {@link href}.
-        * @param href Сыылка.
-        * @see href
-        * @see inNewTab
-        */
-      setHref: function(href){
+      /**
+       * Установить ссылку.
+       * Метод установки либо замены адреса, заданного опцией {@link href}.
+       * @param href Сыылка.
+       * @see href
+       * @see inNewTab
+       */
+      setHref: function (href) {
          this._options.href = href;
          this._container.html(this._options.hrefTemplate(this._options));
       }

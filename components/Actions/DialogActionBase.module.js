@@ -148,6 +148,14 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       },
 
       /**
+       * Устанавливает связанный список, для которого будет открываться диалог редактирования записей.
+       * @param linkedObject связанный список
+       */
+      setLinkedObject: function(linkedObject){
+        this._options.linkedObject = linkedObject;
+      },
+
+      /**
        * Должен вернуть ключ записи, которую редактируем в диалоге
        */
       _getEditKey: function(item){
@@ -216,6 +224,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if (!collectionRecord){
             return;
          }
+         //Уберём удаляемый элемент из массива выбранных у контрола, являющегося linkedObject.
+         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.MultiSelectable')) {
+            collection.removeItemsSelection([collectionRecord.getId()]);
+         }
          if ($ws.helpers.instanceOfModule(collection.getDataSet && collection.getDataSet(), 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
             collection = collection.getDataSet();
          }
@@ -237,19 +249,24 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        */
       _actionHandler: function(event, model) {
          var eventName = event.name,
-            eventResult = this._notify(eventName, model),
             genericMethods = {
                onDestroyModel: '_destroyModel',
                onUpdateModel : '_updateModel',
                onReadModel: '_readModel'
             },
+            args = Array.prototype.slice.call(arguments, 0),
             self = this,
-            actionResult = eventResult,
-            genericMethod,
-            methodResult;
+            eventResult,
+            actionResult,
+            methodResult,
+            genericMethod;
+
+         args.splice(0, 1); //Обрежем первый аргумент типа EventObject, его не нужно прокидывать в события и переопределяемый метод
+         eventResult = actionResult = this._notify.apply(this, [eventName].concat(args));
+
          genericMethod = genericMethods[eventName];
          if (eventResult !== OpenDialogAction.ACTION_CUSTOM) {
-            methodResult  = this['_' + eventName](model);
+            methodResult  = this['_' + eventName].apply(this, args);
             actionResult = methodResult || eventResult;
          }
          if (actionResult === OpenDialogAction.ACTION_CUSTOM || !this._options.linkedObject) {
@@ -258,16 +275,15 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if (actionResult !== undefined){
             genericMethod = actionResult;
          }
-         Array.prototype.splice.call(arguments, 0, 1);
          if (actionResult instanceof $ws.proto.Deferred){
             actionResult.addCallback(function(result){
                if (self[genericMethod]){
-                  self[genericMethod].apply(this, arguments);
+                  self[genericMethod].apply(this, args);
                }
             })
          } else {
             if (this[genericMethod]){
-               this[genericMethod].apply(this, arguments);
+               this[genericMethod].apply(this, args);
             }
          }
       },

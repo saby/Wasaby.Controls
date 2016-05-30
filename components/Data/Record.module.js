@@ -3,27 +3,48 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    'js!SBIS3.CONTROLS.Data.IObject',
    'js!SBIS3.CONTROLS.Data.ICloneable',
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
-   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
-   'js!SBIS3.CONTROLS.Data.CloneableMixin',
+   'js!SBIS3.CONTROLS.Data.Entity.Abstract',
+   'js!SBIS3.CONTROLS.Data.Entity.OptionsMixin',
+   'js!SBIS3.CONTROLS.Data.Entity.ObservableMixin',
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
+   'js!SBIS3.CONTROLS.Data.CloneableMixin',
    'js!SBIS3.CONTROLS.Data.FormattableMixin',
+   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Factory',
    'js!SBIS3.CONTROLS.Data.Format.StringField',
    'js!SBIS3.CONTROLS.Data.ContextField.Record'
-], function (IObject, ICloneable, IEnumerable, ArrayEnumerator, CloneableMixin, SerializableMixin, FormattableMixin, Di, Utils, Factory, StringField, ContextFieldRecord) {
+], function (
+   IObject,
+   ICloneable,
+   IEnumerable,
+   Abstract,
+   OptionsMixin,
+   ObservableMixin,
+   SerializableMixin,
+   CloneableMixin,
+   FormattableMixin,
+   ArrayEnumerator,
+   Di,
+   Utils,
+   Factory,
+   StringField,
+   ContextFieldRecord
+) {
    'use strict';
 
    /**
     * Запись - обертка над данными.
     * @class SBIS3.CONTROLS.Data.Record
-    * @extends $ws.proto.Abstract
+    * @extends SBIS3.CONTROLS.Data.Entity.Abstract
     * @mixes SBIS3.CONTROLS.Data.IObject
     * @mixes SBIS3.CONTROLS.Data.ICloneable
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
-    * @mixes SBIS3.CONTROLS.Data.CloneableMixin
+    * @mixes SBIS3.CONTROLS.Data.Entity.OptionsMixin
+    * @mixes SBIS3.CONTROLS.Data.Entity.ObservableMixin
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
+    * @mixes SBIS3.CONTROLS.Data.CloneableMixin
     * @mixes SBIS3.CONTROLS.Data.FormattableMixin
     * @public
     * @ignoreOptions owner
@@ -31,51 +52,56 @@ define('js!SBIS3.CONTROLS.Data.Record', [
     * @author Мальцев Алексей
     */
 
-   var Record = $ws.proto.Abstract.extend([IObject, ICloneable, IEnumerable, CloneableMixin, SerializableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
+   var Record = Abstract.extend([IObject, ICloneable, IEnumerable, OptionsMixin, ObservableMixin, SerializableMixin, CloneableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Record',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.RecordSet} Рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
-             * @see getOwner
-             */
-            owner: null
-         },
 
-         /**
-          * @member {Object.<String, *>} Измененные поля и оригинальные значения
-          */
-         _changedFields: {},
+      _compatibleConstructor: true,//Чтобы в наследниках с "old style extend" звался нативный constructor()
 
-         /**
-          * @member {Object} Объект содержащий закэшированные инстансы значений-объектов
-          */
-         _propertiesCache: {}
-      },
+      /**
+       * @cfg {SBIS3.CONTROLS.Data.Collection.RecordSet} Рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
+       * @name SBIS3.CONTROLS.Data.Record#owner
+       * @see getOwner
+       */
+      _$owner: null,
 
-      $constructor: function (cfg) {
-         cfg = cfg || {};
-         this._publish('onPropertyChange');
+      /**
+       * @member {Object.<String, *>} Измененные поля и оригинальные значения
+       */
+      _changedFields: null,
 
-         if ('data' in cfg && !('rawData' in cfg)) {
-            this._options.rawData = cfg.data;
-            Utils.logger.stack('SBIS3.CONTROLS.Data.Record: option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.', 1);
+      /**
+       * @member {Object} Объект содержащий закэшированные инстансы значений-объектов
+       */
+      _propertiesCache: null,
+
+      constructor: function $Record(options) {
+         if (options) {
+            if ('data' in options && !('rawData' in options)) {
+               options.rawData = options.data;
+               Utils.logger.stack(this._moduleName + '::constructor(): option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.', 1);
+            }
          }
-         this.setRawData(this._options.rawData);
+
+         this._changedFields = {};
+         Record.superclass.constructor.call(this, options);
+         OptionsMixin.constructor.call(this, options);
+         FormattableMixin.constructor.call(this, options);
+         this._publish('onPropertyChange');
+         this.setRawData(this._$rawData);
       },
 
       //region SBIS3.CONTROLS.Data.IObject
 
       get: function (name) {
-         if (this._propertiesCache.hasOwnProperty(name)) {
-            return this._propertiesCache[name];
+         if (this._hasInPropertiesCache(name)) {
+            return this._getFromPropertiesCache(name);
          }
 
          var hasValue = this._getRawDataAdapter().has(name),
             value = hasValue ? this._getRawDataValue(name) : undefined;
 
          if (this._isFieldValueCacheable(value)) {
-            this._propertiesCache[name] = value;
+            this._setToPropertiesCache(name, value);
          }
 
          return value;
@@ -93,10 +119,10 @@ define('js!SBIS3.CONTROLS.Data.Record', [
                this._addRawDataField(name);
             }
             this._setChanged(name, oldValue);
-            if (name in this._propertiesCache &&
-               value !== this._propertiesCache[name]
+            if (this._hasInPropertiesCache(name) &&
+               value !== this._getFromPropertiesCache(name)
             ) {
-               delete this._propertiesCache[name];
+               this._unsetFromPropertiesCache(name);
             }
             this._notify('onPropertyChange', name, value);
          }
@@ -115,9 +141,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @returns {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator}
        */
       getEnumerator: function () {
-         return new ArrayEnumerator({
-            items: this._getRawDataFields()
-         });
+         return new ArrayEnumerator(this._getRawDataFields());
       },
 
       /**
@@ -141,21 +165,22 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       //region SBIS3.CONTROLS.Data.SerializableMixin
 
-      _getSerializableState: function() {
-         var state = $ws.core.merge(
-            Record.superclass._getSerializableState.call(this), {
-               _changedFields: this._changedFields
-            }
-         );
-         delete state._options.owner;
-
+      _getSerializableState: function(state) {
+         state = SerializableMixin._getSerializableState.call(this, state);
+         state = FormattableMixin._getSerializableState.call(this, state);
+         state._changedFields = this._changedFields;
+         delete state.$options.owner;
          return state;
       },
 
       _setSerializableState: function(state) {
-         return Record.superclass._setSerializableState(state).callNext(function() {
-            this._changedFields = state._changedFields;
-         });
+         return SerializableMixin._setSerializableState(state)
+            .callNext(
+               FormattableMixin._setSerializableState(state)
+            )
+            .callNext(function() {
+               this._changedFields = state._changedFields;
+            });
       },
 
       //endregion SBIS3.CONTROLS.Data.SerializableMixin
@@ -163,20 +188,20 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       //region SBIS3.CONTROLS.Data.FormattableMixin
 
       setRawData: function(rawData) {
-         Record.superclass.setRawData.call(this, rawData);
-         this._propertiesCache = {};
+         FormattableMixin.setRawData.call(this, rawData);
+         this._clearPropertiesCache();
          this._notify('onPropertyChange');
       },
 
       setAdapter: function (adapter) {
-         Record.superclass.setAdapter.call(this, adapter);
-         this._propertiesCache = {};
+         FormattableMixin.setAdapter.call(this, adapter);
+         this._clearPropertiesCache();
       },
 
       addField: function(format, at, value) {
          this._checkFormatIsWritable();
          format = this._buildField(format);
-         Record.superclass.addField.call(this, format, at);
+         FormattableMixin.addField.call(this, format, at);
 
          if (value !== undefined) {
             this.set(format.getName(), value);
@@ -185,12 +210,12 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       removeField: function(name) {
          this._checkFormatIsWritable();
-         Record.superclass.removeField.call(this, name);
+         FormattableMixin.removeField.call(this, name);
       },
 
       removeFieldAt: function(at) {
          this._checkFormatIsWritable();
-         Record.superclass.removeFieldAt.call(this, at);
+         FormattableMixin.removeFieldAt.call(this, at);
       },
 
       /**
@@ -199,7 +224,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @protected
        */
       _createRawDataAdapter: function () {
-         return this.getAdapter().forRecord(this._options.rawData);
+         return this.getAdapter().forRecord(this._$rawData);
       },
 
       /**
@@ -207,7 +232,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @protected
        */
       _checkFormatIsWritable: function() {
-         if (this._options.owner) {
+         if (this._$owner) {
             throw new Error('Record format has read only access. You should change recordset format instead. See option "owner" for details.');
          }
       },
@@ -255,7 +280,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
        */
       getOwner: function() {
-         return this._options.owner;
+         return this._$owner;
       },
 
       /**
@@ -264,7 +289,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @see getOwner
        */
       setOwner: function(owner) {
-         this._options.owner = owner;
+         this._$owner = owner;
       },
 
       /**
@@ -287,6 +312,67 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       //region Protected methods
 
       /**
+       * Проверяет наличие закэшированного значения поля
+       * @param {String} name Название поля
+       * @return {Boolean}
+       * @protected
+       */
+      _hasInPropertiesCache: function (name) {
+         return this._propertiesCache && this._propertiesCache.hasOwnProperty(name);
+      },
+
+      /**
+       * Возвращает закэшированноое значение поля
+       * @param {String} name Название поля
+       * @return {Object}
+       * @protected
+       */
+      _getFromPropertiesCache: function (name) {
+         return this._propertiesCache ? this._propertiesCache[name] : undefined;
+      },
+
+      /**
+       * Кэширует значение поля
+       * @param {String} name Название поля
+       * @param {Object} value Значение поля
+       * @protected
+       */
+      _setToPropertiesCache: function (name, value) {
+         if (this._propertiesCache === null) {
+            this._propertiesCache = {};
+         }
+         this._propertiesCache[name] = value;
+      },
+
+      /**
+       * Удаляет закэшированноое значение поля
+       * @param {String} name Название поля
+       * @protected
+       */
+      _unsetFromPropertiesCache: function (name) {
+         if (this._propertiesCache) {
+            delete this._propertiesCache[name];
+         }
+      },
+
+      /**
+       * Обнуляет кэш значений полей
+       * @protected
+       */
+      _clearPropertiesCache: function () {
+         this._propertiesCache = null;
+      },
+
+      /**
+       * Возвращает признак, что значение поля кэшируемое
+       * @returns {Boolean}
+       * @protected
+       */
+      _isFieldValueCacheable: function(value) {
+         return value && value instanceof Object;
+      },
+
+      /**
        * Добавляет поле в список полей
        * @param {String} name Название поля
        * @protected
@@ -302,21 +388,17 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @protected
        */
       _getRawDataValue: function(name) {
-         var adapter = this._getRawDataAdapter(),
-            rawValue = adapter.get(name),
-            format;
+         var adapter = this._getRawDataAdapter();
 
          try {
-            format = adapter.getSharedFormat(name);
+            return Factory.cast(
+               adapter.get(name),
+               adapter.getSharedFormat(name),
+               this.getAdapter()
+            );
          } catch (e) {
-            format = 'String';
+            return undefined;
          }
-
-         return Factory.cast(
-            rawValue,
-            format,
-            this.getAdapter()
-         );
       },
 
       /**
@@ -331,6 +413,9 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          try {
             format = adapter.getSharedFormat(name);
          } catch (e) {
+            if (!(e instanceof ReferenceError)) {
+               throw e;
+            }
             format = 'String';
          }
 
@@ -343,18 +428,9 @@ define('js!SBIS3.CONTROLS.Data.Record', [
             )
          );
 
-         if (!(this._options.rawData instanceof Object)) {
-            this._options.rawData = adapter.getData();
+         if (!(this._$rawData instanceof Object)) {
+            this._$rawData = adapter.getData();
          }
-      },
-
-      /**
-       * Возвращает признак, что значение поля кэшируемое
-       * @returns {Boolean}
-       * @protected
-       */
-      _isFieldValueCacheable: function(value) {
-         return value && typeof value === 'object';
       },
 
       /**

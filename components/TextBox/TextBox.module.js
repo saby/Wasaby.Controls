@@ -248,6 +248,11 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
        * @see placeholder
        */
       setPlaceholder: function(text){
+         this._setPlaceholder(text);
+         this._options.placeholder = text;
+      },
+
+      _setPlaceholder: function(text){
          if (!$ws._const.compatibility.placeholder) {
             if (!this._compatPlaceholder) {
                this._createCompatPlaceholder();
@@ -257,7 +262,6 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          else {
             this._inputField.attr('placeholder', text || '');
          }
-         this._options.placeholder = text;
       },
 
       /**
@@ -294,7 +298,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
       _keyUpBind: function(event) {
          var newText = this._inputField.val();
-         this._setTextByKeyboard(newText);
+         if (this._options.text !== newText){
+            this._setTextByKeyboard(newText);
+         }
          var key = event.which || event.keyCode;
          if (Array.indexOf([$ws._const.key.up, $ws._const.key.down], key) >= 0) {
             event.stopPropagation();
@@ -317,12 +323,12 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
       _setEnabled : function(enabled) {
          TextBox.superclass._setEnabled.call(this, enabled);
-         if (enabled == false) {
+         if (enabled) {
+            this._inputField.removeAttr('readonly');
+         } else {
             this._inputField.attr('readonly', 'readonly')
          }
-         else {
-            this._inputField.removeAttr('readonly');
-         }
+         this._setPlaceholder(enabled ? this._options.placeholder : '');
       },
 
       _inputRegExp: function (e, regexp) {
@@ -363,7 +369,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          this._compatPlaceholder = $('<div class="controls-TextBox__placeholder">' + this._options.placeholder + '</div>');
          this._updateCompatPlaceholderVisibility();
          this._inputField.after(this._compatPlaceholder);
-         this._compatPlaceholder.css('left', this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10));
+         this._compatPlaceholder.css({
+            'left': this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10),
+            'right': this._inputField.position().right || parseInt(this._inputField.parent().css('padding-right'), 10)
+         });
          this._compatPlaceholder.click(function(){
             if (self.isEnabled()) {
                self._inputField.get(0).focus();
