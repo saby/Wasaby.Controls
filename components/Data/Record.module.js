@@ -55,6 +55,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    var Record = Abstract.extend([IObject, ICloneable, IEnumerable, OptionsMixin, ObservableMixin, SerializableMixin, CloneableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Record',
 
+      _compatibleConstructor: true,//Чтобы в наследниках с "old style extend" звался нативный constructor()
+
       /**
        * @cfg {SBIS3.CONTROLS.Data.Collection.RecordSet} Рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
        * @name SBIS3.CONTROLS.Data.Record#owner

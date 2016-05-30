@@ -59,7 +59,7 @@ define([
                   ['Ид', 'Фамилия']
                );
             });
-            it('should return an empty array for empty', function () {
+            it('should return an empty array for no data', function () {
                var adapter = new JsonTable(),
                   fields = adapter.getFields();
                assert.instanceOf(fields, Array);

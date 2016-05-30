@@ -63,9 +63,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @property {Function} [set] Метод, устанавливающий значение свойства.
        */
 
-      _compatibleConstructor: true,//Чтобы в наследниках с "old style extend" звался нативный constructor()
-
       _moduleName: 'SBIS3.CONTROLS.Data.Model',
+
+      _compatibleConstructor: true,//Чтобы в наследниках с "old style extend" звался нативный constructor()
 
       _hashPrefix: 'model-',
 
