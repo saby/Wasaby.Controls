@@ -29,6 +29,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   itemsProjection: undefined,
                   columns: undefined,
                   /**
+                   * @cfg {Boolean} Завершение редактирования при потере фокуса
+                   */
+                  endEditByFocusOut: false,
+                  /**
                    * @cfg {Boolean} Режим автоматического добавления элементов
                    * @remark
                    * Используется при включенном редактировании по месту. Позволяет при завершении редактирования последнего элемента автоматически создавать новый.
@@ -89,8 +93,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
 
             _getEditInPlaceConfig: function() {
                var
-                   self = this;
-               return {
+                  self = this,
+                  config;
+               config = {
                   editingTemplate: this._options.editingTemplate,
                   columns: this._options.columns,
                   element: $('<div>').prependTo(this._options.itemsContainer),
@@ -106,7 +111,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      onItemValueChanged: function(event, difference, model) {
                         event.setResult(self._notify('onItemValueChanged', difference, model));
                      },
-                     onChildFocusOut: this._onChildFocusOut.bind(this),
                      onInit: function() {
                         self._notify('onInitEditInPlace', this);
                      },
@@ -120,6 +124,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      }
                   }
                };
+               if (this._options.endEditByFocusOut) {
+                  config.handlers.onChildFocusOut = this._onChildFocusOut.bind(this);
+               }
+               return config;
             },
             _getContextForEip: function () {
                var
