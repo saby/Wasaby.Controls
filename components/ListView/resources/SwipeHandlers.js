@@ -91,11 +91,12 @@
             context.stop = function() {
                emitted = true;
                $.event.special.swipe.eventInProgress = false;
+               document.removeEventListener('touchend', context.stop);
                document.removeEventListener('touchmove', context.move);
             };
 
             document.addEventListener('touchmove', context.move, true);
-            $(document).one('touchend', context.stop);
+            document.addEventListener('touchend', context.stop, true);
          };
 
          $(this).bind('touchstart', context.start);
@@ -144,13 +145,13 @@
             isTaphold = false;
             var timer,
                target = event.target,
-               startTime = new Date().getTime(), 
+               startTime = new Date().getTime(),
                start = $.event.special.swipe.getLocation(event.originalEvent.touches[0]),
                stop = start;
             function clearTapTimer() {
                clearTimeout(timer);
             }
-            
+
             context.move = function(e){
                stop = $.event.special.swipe.getLocation(e.originalEvent.touches[0]);
             };
