@@ -48,6 +48,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
              */
             /**
              * @typedef {Object} Items
+             * @property {String} Путь к файлу, отвечающий за xslt-преобразование.
              * @property {Binding} binding Имена методов БЛ, которые будут использованы при сохранении.
              * @property {Boolean} serverSideExport Использовать серверную выгрузку.
              */
@@ -59,6 +60,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                   id : 'PDF',
                   title : rk('Список в PDF'),
                   pageOrientation: 1,
+                  xsl: undefined,
                   serverSideExport : true,
                   binding: {
                      saveList: undefined,
@@ -69,6 +71,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                {
                   id : 'Excel',
                   title : rk('Список в Excel'),
+                  xsl: undefined,
                   serverSideExport : true,
                   binding: {
                      saveList: undefined,
@@ -195,16 +198,25 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       },
       applyOperation: function(cfg){
          var
+             xsl,
              filter,
+             exporter,
              fullFilter,
-             pageOrient = this._getPDFPageOrient(),
-             methodName = this._getCurrentItem().get('binding').saveDataSet,
-             exporter = new Exporter(methodName ? this._prepareExporterConfig() : cfg);
+             methodName,
+             pageOrient = this._getPDFPageOrient();
 
          if (this._isClientUnload()) {
+            xsl = this._getCurrentItem().get('xsl');
+            if (xsl) {
+               cfg.xsl = xsl;
+               cfg.report = true;
+            }
+            exporter = new Exporter(cfg);
             //TODO что делать, если метод шибко прикладной?
             exporter.exportHTML(this._getUnloadFileName(), this._currentItem, undefined, undefined, pageOrient);
          } else {
+            exporter = new Exporter(this._prepareExporterConfig());
+            methodName = this._getCurrentItem().get('binding').saveDataSet;
             if (methodName) {
                filter = new Record({
                   adapter: new SbisAdapter(),

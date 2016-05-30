@@ -278,13 +278,16 @@ define('js!SBIS3.CONTROLS.ListView',
                _defaultItemTemplate: ItemTemplate,
                _defaultItemContentTemplate: ItemContentTemplate,
                /**
-                * @faq Почему нет флажков в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
-                * Для отрисовки флажков необходимо в шаблоне отображения элемента коллекции обозначить их место.
-                * Это делают с помощью CSS-класса "js-controls-ListView__itemCheckBox".
-                * В следующем примере место отображения флажков обозначено тегом span:
+                * @faq Почему нет чекбоксов в режиме множественного выбора значений (активация режима
+                производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
+                * Для отрисовки чекбоксов необходимо в шаблоне отображения элемента коллекции обозначить их
+                место.
+                * Это делают с помощью CSS-классов "controls-ListView__itemCheckBox js-controls-
+                ListView__itemCheckBox".
+                * В следующем примере место отображения чекбоксом обозначено тегом span:
                 * <pre>
                 *     <div class="listViewItem" style="height: 30px;">
-                *        <span class="js-controls-ListView__itemCheckBox"></span>
+                *        <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></span>
                 *        {{=it.item.get("title")}}
                 *     </div>
                 * </pre>
@@ -986,6 +989,13 @@ define('js!SBIS3.CONTROLS.ListView',
                this._drawEmptyData();
             }
          },
+
+         setMultiselect: function(flag) {
+            ListView.superclass.setMultiselect.apply(this, arguments);
+            this.getContainer().toggleClass('controls-ListView__multiselect', flag)
+                               .toggleClass('controls-ListView__multiselect__off', !flag);
+         },
+
          _drawEmptyData: function() {
             var html = this._options.emptyHTML;
             this._emptyData = html && $(emptyDataTpl({emptyHTML: html})).appendTo(this._container);
@@ -1602,8 +1612,14 @@ define('js!SBIS3.CONTROLS.ListView',
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
             var self = this;
-            if (this._options.infiniteScroll == 'up' && this._scrollOnBottom){
-               self._scrollWatcher.scrollTo('bottom');
+            if (this.getItems()){
+               if (this._options.infiniteScroll == 'up' && this._scrollOnBottom){
+                  self._scrollWatcher.scrollTo('bottom');
+               }
+               //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
+               if (this._scrollWatcher && !this._scrollWatcher.hasScroll(this.getContainer())){
+                  this._nextLoad();
+               }
             }
          },
          _removeItem: function(item){

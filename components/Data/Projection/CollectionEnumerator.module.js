@@ -1,69 +1,82 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
+   'js!SBIS3.CONTROLS.Data.Entity.Abstract',
+   'js!SBIS3.CONTROLS.Data.Entity.OptionsMixin',
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerator',
    'js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin'
-], function (IEnumerator, IndexedEnumeratorMixin) {
+], function (Abstract, OptionsMixin, IEnumerator, IndexedEnumeratorMixin) {
    'use strict';
 
    /**
     * Энумератор для проекции коллекции
     * @class SBIS3.CONTROLS.Data.Projection.CollectionEnumerator
+    * @extends SBIS3.CONTROLS.Data.Entity.Abstract
+    * @mixes SBIS3.CONTROLS.Data.Entity.OptionsMixin
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerator
     * @mixes SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var CollectionEnumerator = $ws.core.extend({}, [IEnumerator, IndexedEnumeratorMixin], /** @lends SBIS3.CONTROLS.Data.Projection.CollectionEnumerator.prototype */{
+   var CollectionEnumerator = Abstract.extend([OptionsMixin, IEnumerator, IndexedEnumeratorMixin], /** @lends SBIS3.CONTROLS.Data.Projection.CollectionEnumerator.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.CollectionEnumerator',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} Индекс проекции коллекции
-             */
-            items: [],
 
-            /**
-             * @cfg {Array.<Boolean>} Результат применения фильтра
-             */
-            filterMap: [],
+      /**
+       * @cfg {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} Индекс проекции коллекции
+       * @name SBIS3.CONTROLS.Data.Projection.CollectionEnumerator#items
+       */
+      _$items: null,
 
-            /**
-             * @cfg {Array.<Number>} Результат применения сортировки
-             */
-            sortMap: []
-         },
+      /**
+       * @cfg {Array.<Boolean>} Результат применения фильтра
+       * @name SBIS3.CONTROLS.Data.Projection.CollectionEnumerator#filterMap
+       */
+      _$filterMap: null,
 
-         /**
-          * @member {SBIS3.CONTROLS.Data.Projection.CollectionItem} Текущий элемент
-          */
-         _сurrent: undefined,
+      /**
+       * @cfg {Array.<Number>} Результат применения сортировки
+       * @name SBIS3.CONTROLS.Data.Projection.CollectionEnumerator#sortMap
+       */
+      _$sortMap: null,
 
-         /**
-          * @member {Number} Текущая позиция (в исходной коллекции)
-          */
-         _currentPosition: -1,
+      /**
+       * @member {SBIS3.CONTROLS.Data.Projection.CollectionItem} Текущий элемент
+       */
+      _сurrent: undefined,
 
-         /**
-          * @member {Array.<Number>} Соответствие позиций проекции и исходной коллекции
-          */
-         _internalMap: null,
+      /**
+       * @member {Number} Текущая позиция (в исходной коллекции)
+       */
+      _currentPosition: -1,
 
-         /**
-          * @member {Array.<Number>} Кэш соответствия позиций исходной коллекции и проекции
-          */
-         _sourceToInternal: []
-      },
+      /**
+       * @member {Array.<Number>} Соответствие позиций проекции и исходной коллекции
+       */
+      _internalMap: null,
 
-      $constructor: function () {
-         if (!(this._options.items instanceof Array)) {
-            throw new Error(this._moduleName + ': items should be instance of an Array');
+      /**
+       * @member {Array.<Number>} Кэш соответствия позиций исходной коллекции и проекции
+       */
+      _sourceToInternal: null,
+
+      constructor: function $CollectionEnumerator(options) {
+         this._$items = [];
+         this._$filterMap = [];
+         this._$sortMap = [];
+         this._sourceToInternal = [];
+
+         CollectionEnumerator.superclass.constructor.call(this, options);
+         OptionsMixin.constructor.call(this, options);
+         IndexedEnumeratorMixin.constructor.call(this);
+
+         if (!(this._$items instanceof Array)) {
+            throw new TypeError(this._moduleName + '::constructor(): items should be instance of an Array');
          }
-         if (!(this._options.filterMap instanceof Array)) {
-            throw new Error(this._moduleName + ': filter map should be instance of an Array');
+         if (!(this._$filterMap instanceof Array)) {
+            throw new TypeError(this._moduleName + '::constructor(): filter map should be instance of an Array');
          }
-         if (!(this._options.sortMap instanceof Array)) {
-            throw new Error(this._moduleName + ': sort map should be instance of an Array');
+         if (!(this._$sortMap instanceof Array)) {
+            throw new TypeError(this._moduleName + '::constructor(): sort map should be instance of an Array');
          }
       },
 
@@ -92,7 +105,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
 
       _createIndex: function (property) {
          var savedPosition = this._currentPosition,
-            result = CollectionEnumerator.superclass._createIndex.call(this, property);
+            result = IndexedEnumeratorMixin._createIndex.call(this, property);
 
          this._currentPosition = savedPosition;
          return result;
@@ -111,7 +124,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       at: function (index) {
          return index === undefined ?
             undefined :
-            this._options.items[this.getSourceByInternal(index)];
+            this._$items[this.getSourceByInternal(index)];
       },
 
       /**
@@ -119,7 +132,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Текущий элемент
        */
       setCurrent: function(item) {
-         this._currentPosition = Array.indexOf(this._options.items, item);
+         this._currentPosition = Array.indexOf(this._$items, item);
          this._setCurrentByPosition();
       },
 
@@ -175,7 +188,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          internalPosition++;
          var newPosition = this.getSourceByInternal(internalPosition);
 
-         if (newPosition === undefined || newPosition > this._options.items.length - 1) {
+         if (newPosition === undefined || newPosition > this._$items.length - 1) {
             return;
          }
 
@@ -238,7 +251,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        */
       _buildInternalMap: function () {
          var result = [],
-            sortMap = this._options.sortMap,
+            sortMap = this._$sortMap,
             i;
 
          for (i = 0; i < sortMap.length; i++) {
@@ -253,9 +266,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        * @protected
        */
       _addToInternalMap: function (map, sourceIndex) {
-         if (this._options.filterMap[sourceIndex]) {
+         if (this._$filterMap[sourceIndex]) {
             map.push(sourceIndex);
-            if (this._сurrent && this._сurrent === this._options.items[sourceIndex]) {
+            if (this._сurrent && this._сurrent === this._$items[sourceIndex]) {
                this._currentPosition = sourceIndex;
             }
          }
@@ -279,7 +292,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        * @protected
        */
       _setCurrentByPosition: function () {
-         this._сurrent = this._options.items[this._currentPosition];
+         this._сurrent = this._$items[this._currentPosition];
       },
 
       /**
@@ -300,7 +313,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        * @protected
        */
       _isValidPosition: function (position) {
-         return position >= -1 && position < this._options.items.length;
+         return position >= -1 && position < this._$items.length;
       }
 
       //endregion Protected methods

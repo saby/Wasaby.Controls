@@ -130,6 +130,9 @@ define('js!SBIS3.CONTROLS.FilterButton',
                  showPicker = FilterButton.superclass.showPicker.bind(this),
                  template = this._options.template;
 
+             /* Не показываем кнопку фильтров, если она выключена */
+             if(!this.isEnabled()) return;
+
              /* Если шаблон указали как имя компонента (строки которые начинаются с SBIS3 или js!SBIS3),
                 то перед отображением панели фильтров сначала загрузим компонент. */
              if(!this._picker && /^(js!)?SBIS3.*/.test(template)) {
@@ -250,6 +253,12 @@ define('js!SBIS3.CONTROLS.FilterButton',
                          updatePickerContext();
                       }
                       firstTime = false;
+                   },
+                   //FIXME временное решение, пока пикер не научится работать с фокусом и обрабатывать клавиши
+                   onKeyPressed: function(event, e) {
+                      if(e.which === $ws._const.key.esc) {
+                         this.hide();
+                      }
                    },
 
                    onInit: function() {

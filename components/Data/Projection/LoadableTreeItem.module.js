@@ -18,23 +18,20 @@ define('js!SBIS3.CONTROLS.Data.Projection.LoadableTreeItem', [
     */
    var LoadableTreeItem = TreeItem.extend([IQueryable, ISourceLoadable], /** @lends SBIS3.CONTROLS.Data.Projection.LoadableTreeItem.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.LoadableTreeItem',
-      $protected: {
+      /**
+       * @member {Boolean} Содержимое узла было загружено через load()
+       */
+      _loaded: false,
 
-         /**
-          * @member {Boolean} Содержимое узла было загружено через load()
-          */
-         _loaded: false,
+      /**
+       * @member {SBIS3.CONTROLS.Data.Query.Query} Сформированный запрос
+       */
+      _query: undefined,
 
-         /**
-          * @member {SBIS3.CONTROLS.Data.Query.Query} Сформированный запрос
-          */
-         _query: undefined,
-
-         /**
-          * @member {Boolean} Запрос был изменен с момента последнего load
-          */
-         _queryChanged: false
-      },
+      /**
+       * @member {Boolean} Запрос был изменен с момента последнего load
+       */
+      _queryChanged: false,
 
       //region SBIS3.CONTROLS.Data.Query.IQueryable
 

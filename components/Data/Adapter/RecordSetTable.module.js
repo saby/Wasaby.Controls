@@ -1,37 +1,43 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetTable', [
+   'js!SBIS3.CONTROLS.Data.Entity.Abstract',
    'js!SBIS3.CONTROLS.Data.Adapter.ITable',
    'js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Utils'
-], function (ITable, GenericFormatMixin, RecordSet, Utils) {
+], function (Abstract, ITable, GenericFormatMixin, RecordSet, Utils) {
    'use strict';
 
    /**
     * Адаптер для таблицы данных в формате списка
     * @class SBIS3.CONTROLS.Data.Adapter.RecordSetTable
+    * @extends SBIS3.CONTROLS.Data.Entity.Abstract
     * @mixes SBIS3.CONTROLS.Data.Adapter.ITable
     * @mixes SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var RecordSetTable = $ws.core.extend({}, [ITable, GenericFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.RecordSetTable.prototype */{
+   var RecordSetTable = Abstract.extend([ITable, GenericFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.RecordSetTable.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.RecordSetTable',
-      $protected: {
-         /**
-          * @member {SBIS3.CONTROLS.Data.Collection.RecordSet} Список
-          */
-         _data: null
-      },
 
-      $constructor: function (data) {
+      /**
+       * @member {SBIS3.CONTROLS.Data.Collection.RecordSet} Список
+       */
+      _data: null,
+
+      /**
+       * Конструктор
+       * @param {*} data Сырые данные
+       */
+      constructor: function (data) {
          if (!data) {
             data = new RecordSet();
          }
          if (!$ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
             throw new TypeError('Argument data should be an instance of SBIS3.CONTROLS.Data.Collection.RecordSet');
          }
+         RecordSetTable.superclass.constructor.call(this, data);
          this._data = data;
          this._format = data.getFormat();
       },

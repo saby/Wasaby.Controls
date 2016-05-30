@@ -807,27 +807,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          },
          destroy : function() {
             this._unsetItemsEventHandlers();
+            if (this._itemsProjection) {
+               this._itemsProjection.destroy();
+               this._itemsProjection = null;
+            }
             this._clearItems();
          }
       },
 
       _createDefaultProjection: function(items) {
          return Projection.getDefaultProjection(items);
-      },
-
-      _convertItems: function (items) {
-         items = items || [];
-         if (items instanceof Array) {
-            items = new ObservableList({
-               items: items
-            });
-         }
-
-         if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            throw new Error('Items should implement SBIS3.CONTROLS.Data.Collection.IEnumerable');
-         }
-
-         return items;
       },
 
       _prepareSource: function(sourceOpt) {
@@ -1583,7 +1572,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /*TODO второй параметр нужен для поддержи старой группировки*/
       _buildTplItem: function(item, altTpl){
          var itemTpl, dotTemplate;
-         if (altTpl) {
+         if (altTpl !== undefined) {
             itemTpl = altTpl;
          }
          else {

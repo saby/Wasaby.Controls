@@ -124,9 +124,6 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
             dataSet : dataSet || this._getView().getItems(),
             columns: columns
          };
-         if ( this._options.xsl ){
-            cfg.xsl = this._options.xsl;
-         }
          this.applyOperation(cfg);
          //Снимем выделение
          this._getView().removeItemsSelectionAll();

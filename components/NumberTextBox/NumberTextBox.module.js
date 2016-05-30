@@ -285,12 +285,12 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _arrowUpClick: function(){
-         this._setText(this._getSibling(1).toString());
+         this.setNumericValue(this._getSibling(1));
       },
 
       _arrowDownClick: function(){
          if (!(this._options.onlyPositive && this.getNumericValue() < 1)) {
-            this._setText(this._getSibling(-1).toString());
+            this.setNumericValue(this._getSibling(-1));
          }
       },
 

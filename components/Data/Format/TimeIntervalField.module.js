@@ -14,16 +14,14 @@ define('js!SBIS3.CONTROLS.Data.Format.TimeIntervalField', [
 
    var TimeIntervalField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.TimeIntervalField.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Format.TimeIntervalField',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {Number} Значение поля по умолчанию
-             * @see getDefaultValue
-             * @see setDefaultValue
-             */
-            defaultValue: 0
-         }
-      }
+
+      /**
+       * @cfg {Number} Значение поля по умолчанию
+       * @name SBIS3.CONTROLS.Data.Format.TimeIntervalField#defaultValue
+       * @see getDefaultValue
+       * @see setDefaultValue
+       */
+      _$defaultValue: 0
 
       //region Public methods
 
