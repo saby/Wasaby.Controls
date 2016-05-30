@@ -191,12 +191,20 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
       //region Public methods
 
       constructor: function $FormattableMixin(options) {
-         if(options && options.format) {
-            this._directFormat = true;
+         //FIXME: поддержка старого extend
+         if (!this._$format && this._options && this._options.format) {
+            this._$format = this._options.format;
+         }
 
+         if(this._$format) {
+            this._directFormat = true;
+            var adapter = this._getRawDataAdapter(),
+               fields = adapter.getFields();
             this._getFormat().each(function(fieldFormat) {
                try {
-                  this._getRawDataAdapter().addField(fieldFormat);
+                  if (Array.indexOf(fields, fieldFormat.getName()) === -1) {
+                     adapter.addField(fieldFormat);
+                  }
                } catch (e) {
                   Utils.logger.info(this._moduleName + '::constructor(): can\'t add raw data field (' + e.message + ')');
                }
