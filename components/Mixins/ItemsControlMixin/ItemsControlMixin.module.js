@@ -296,7 +296,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             itemContentTpl : null,
             itemTpl : null,
             /**
-             * @cfg {Function} Метод сортировки элментов
+             * @cfg {Function} Метод сортировки элементов
              * @see setItemsSortMethod
              * @see SBIS3.CONTROLS.Data.Projection.Collection:setSort
              */
