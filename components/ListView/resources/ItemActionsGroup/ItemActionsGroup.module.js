@@ -76,6 +76,13 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
             this._itemActionsMenuButton[onlyMain ? 'addClass' : 'removeClass']('ws-hidden');
          },
+
+
+         setEnabled: function () {
+            /* Чтобы после изменения состояния, применилась видимость к операциям */
+            ItemActionsGroup.superclass.setEnabled.apply(this, arguments);
+            this.applyItemActions();
+         },
          /**
           * Создаёт меню для операций над записью
           * @private
