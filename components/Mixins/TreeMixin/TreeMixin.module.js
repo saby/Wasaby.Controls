@@ -426,7 +426,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             isNodeA = itemA.item.isNode(),
             isNodeB = itemB.item.isNode();
          if (isNodeA === isNodeB) {
-            return 0;
+            //сохраняем порядок сортировки, если вернуть 0 chrome сломает переданный порядок
+            return itemA.index > itemB.index ? 1 : -1;
          } else {
             return isNodeA ? -1 : 1;
          }
