@@ -25,6 +25,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       });
       var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
       projection.setFilter(filterCallBack);
+      projection.setSort(cfg.itemsSortMethod);
       return projection;
    },
    _defaultItemsSortMethod = function(itemA, itemB) {
