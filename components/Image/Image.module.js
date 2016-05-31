@@ -78,6 +78,19 @@ define('js!SBIS3.CONTROLS.Image',
              * </pre>
              */
              /**
+             * @event onImageReady Возникает при загрузке изображения в компонент
+             * <wiTag group="Загрузка изображения">
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
+             * @param {String} imageUrl адрес изображения
+             * @param {bool} firstload первый ли раз прошла загрузка (false- первый, true- не первый)
+             * @example
+             * <pre>
+             *    Image.subscribe('onImageReady', function(event, image) {
+             *       $ws.helpers.alert('Изображение обновлено на ' + image);
+             *    });
+             * </pre>
+             */
+             /**
              * @event onResetImage Возникает при сбросе изображения
              * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
              * @example
@@ -229,7 +242,7 @@ define('js!SBIS3.CONTROLS.Image',
                _firstLoaded: false
             },
             $constructor: function() {
-               this._publish('onBeginLoad', 'onEndLoad', 'onErrorLoad', 'onChangeImage', 'onResetImage', 'onShowEdit', 'onBeginSave', 'onEndSave');
+               this._publish('onBeginLoad', 'onEndLoad', 'onErrorLoad', 'onChangeImage', 'onResetImage', 'onShowEdit', 'onBeginSave', 'onEndSave', 'onImageReady');
                $ws.single.CommandDispatcher.declareCommand(this, 'uploadImage', this._uploadImage);
                $ws.single.CommandDispatcher.declareCommand(this, 'editImage', this._editImage);
                $ws.single.CommandDispatcher.declareCommand(this, 'resetImage', this._resetImage);
@@ -345,6 +358,7 @@ define('js!SBIS3.CONTROLS.Image',
                   this._buttonReset.toggle(showButtons);
                   this._buttonEdit.toggle(this._options.edit && showButtons);
                }
+               this._notify('onImageReady', this._imageUrl, this._firstLoaded);
                if (!this._firstLoaded) {
                   this._firstLoaded = true;
                } else {
