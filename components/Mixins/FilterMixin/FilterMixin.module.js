@@ -46,12 +46,29 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
             /**
              * @cfg {filterStructure[]} Структура элемента фильтра
              * @remark Важно! все, что задано в filterStructure влияет на объекты в контексе - filter и filterDescr(строится по полям value у структуры)
+             * @example
+             * <pre class="brush:xml">
+             *     <options name="filterStructure" type="array">
+             *        <options>
+             *            <option name="internalValueField">Поле1</option>
+             *            <option name="internalCaptionField">Поле2</option>
+             *            <option name="caption">Текущее текстовое отображение значения</option>
+             *            <option name="value">100</option>
+             *            <option name="resetValue">10</option>
+             *            <option name="resetCaption">Текст по умолчанию</option>
+             *         </options>
+             *      </options>
+             * </pre>
              */
             filterStructure: [ /*filterStructureElementDef*/ ],
             /**
              * @cfg {String} Поле в контексте, где будет храниться внутренний фильтр компонента
              * @remark
              * !Важно: Если на одной форме, в одном контексте лежит несколько хлебных фильтров, то только в этом случае стоит менять стандартное имя
+             * @example
+             * <pre class="brush:xml">
+             *     <option name="internalContextFilterName">sbis3-controls-fast-filter</option>
+             * </pre>
              */
             internalContextFilterName : 'sbis3-controls-filter-button'
          }
