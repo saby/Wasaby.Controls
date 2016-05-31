@@ -135,6 +135,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @see SBIS3.CONTROLS.Selectable#getSelectedKey
              */
             keyField : null,
+            /**
+             * @noShow
+             * @deprecated На текущий момент отрисовка изменившихся данных осуществляется автматически. Опция будет удалена в 3.7.4.100.
+             */
             autoRedraw: true,
             /**
              * @cfg {String} Поле элемента коллекции, из которого отображать данные
@@ -241,6 +245,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             groupBy : {},
             /**
              * @cfg {Function} Пользовательский метод добавления атрибутов на элементы коллекции
+             * @noShow
+             * @deprecated На текущий момент для быстрой отрисовки атрибуты задаются непосредственно в шаблоне. Опция будет удалена в 3.7.4.100.
              */
             userItemAttributes : null,
             /**
@@ -281,20 +287,54 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             sorting: [],
             /**
              * @cfg {Object.<String,String>} соответствие опций шаблона полям в рекорде
+             * @example
+             * <pre>
+             *    {{?it.item.get(it.templateBinding.photoFldName)}}
+             *       <img src="{{=it.item.get(it.templateBinding.photoFldName).url}}" />
+             *    {{?}}
+             * </pre>
              */
             templateBinding: {},
             /**
              * @cfg {Object.<String,String>} подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне
+             * @example
+             * <pre>
+             *    {{=it.includedTemplates.userTemplate(it)}}
+             * </pre>
              */
             includedTemplates: {},
             /**
              * @cfg {String|function} Шаблон элементов, которые будт рисоваться под даннными.
              * @remark
-             * Например для отрисовки кнопко +Документ, +Папка.
+             * Например, для отрисовки кнопки " + Документ ".
              * Если задан, то под всеми(!) элементами появится контейнер с содержимым этого шаблона
+             * @example
+             * <pre>
+             *    <div>\
+             *       <component data-component="SBIS3.CONTROLS.Link">\
+             *          <option name="caption">+ Документ</option>\
+             *       </component>\
+             *    </div>
+             * </pre>
              */
             footerTpl: undefined,
+            /**
+             * @cfg {String} Шаблон отображения содержимого каждого элемента коллекции
+             * @example
+             * <pre>
+             *    {{=it.item.get("title")}}
+             * </pre>
+             */
             itemContentTpl : null,
+            /**
+             * @cfg {String} Шаблон отображения каждого элемента коллекции
+             * @example
+             * <pre>
+             *    <div class="listViewItem" style="height: 30px;">\
+             *       {{=it.item.get("title")}}\
+             *    </div>
+             * </pre>
+             */
             itemTpl : null,
             /**
              * @cfg {Function} Метод сортировки элементов
