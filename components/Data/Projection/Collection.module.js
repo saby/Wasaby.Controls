@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
    IEnumerable,
    IList,
    IBindCollectionProjection,
-   CollectionProjectionEnumerator,
+   CollectionEnumerator,
    Projection,
    Di,
    Utils
@@ -664,7 +664,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @protected
        */
       _getEnumerator: function (clone) {
-         return new CollectionProjectionEnumerator({
+         return new CollectionEnumerator({
             items: clone ? this._items.slice() : this._items,
             filterMap: clone ? this._filterMap.slice() : this._filterMap,
             sortMap: clone ? this._sortMap.slice() : this._sortMap

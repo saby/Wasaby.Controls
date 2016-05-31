@@ -416,25 +416,20 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
                   return result;
                };
 
-            var index, count, parentId;
+            var index, count, itemIndex, parentId;
             for (index = 0, count = currentMap.length; index < count; index++) {
+               itemIndex = currentMap[index];
                parentId = Utils.getItemPropertyValue(
-                  items[currentMap[index]].getContents(),
+                  items[itemIndex].getContents(),
                   parentProperty
                );
                if (!hierIndex.hasOwnProperty(parentId)) {
                   hierIndex[parentId] = [];
                }
-               hierIndex[parentId].push(currentMap[index]);
+               hierIndex[parentId].push(itemIndex);
             }
-            //todo с бл могут прийти дублирующиеся узлы мы их убираем
-            var sortmap = buildHierarchy(options.root), uniq = [];
-            for (index = 0, count= sortmap.length; index < count; index++) {
-               if (Array.indexOf(uniq, sortmap[index]) === -1) {
-                  uniq.push(sortmap[index]);
-               }
-            }
-            return uniq;
+
+            return buildHierarchy(options.root);
          }
       },
 
