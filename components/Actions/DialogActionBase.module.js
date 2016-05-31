@@ -310,7 +310,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
                collection.getItems().add(rec, at);
             }
             else{
-               if (collection._isLoading()){
+               if (collection.isLoading()){
                   collection.once('onItemsReady', function(){
                      this.getItems().add(rec, at);
                   });

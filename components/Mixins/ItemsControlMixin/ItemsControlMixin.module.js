@@ -1190,8 +1190,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       //переопределяется в HierarchyMixin
       _dropPageSave: function () {
       },
-      //TODO Сделать публичным? вроде так всем захочется делать
+      /**
+       * @deprecated метод будет удален в 3.7.4 используйте isLoading()
+       * @private
+       */
       _isLoading: function () {
+         $ws.single.ioc.resolve('ILogger').log('ListView', 'Метод _isLoading() будет удален в 3.7.4 используйте isLoading()');
+         return this.isLoading();
+      },
+      isLoading: function(){
          return this._loader && !this._loader.isReady();
       },
       //TODO Сделать публичным? вроде так всем захочется делать
@@ -1201,7 +1208,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @private
        */
       _cancelLoading: function () {
-         if (this._isLoading()) {
+         if (this.isLoading()) {
             this._loader.cancel();
          }
          this._loader = null;
