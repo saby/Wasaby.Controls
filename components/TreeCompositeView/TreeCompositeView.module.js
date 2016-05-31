@@ -46,6 +46,12 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
              * @see SBIS3.CONTROLS.ListView#itemTemplate
              * @see SBIS3.CONTROLS.CompositeViewMixin#listTemplate
              * @see SBIS3.CONTROLS.CompositeViewMixin#tileTemplate
+             * @example
+             * <pre>
+             *    <div class="controls-ListView__demo-folder">\
+             *       {{=it.item.get("title")}}\
+             *    </div>
+             * </pre>
              */
             folderTemplate: undefined,
             /**
@@ -60,6 +66,11 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
              * @see SBIS3.CONTROLS.ListView#itemTemplate
              * @see SBIS3.CONTROLS.CompositeViewMixin#listTemplate
              * @see SBIS3.CONTROLS.CompositeViewMixin#tileTemplate
+             * <pre>
+             *    <div class="controls-ListView__demo-folder">\
+             *       {{=it.item.get("title")}}\
+             *    </div>
+             * </pre>
              */
             listFolderTemplate: undefined
          }
