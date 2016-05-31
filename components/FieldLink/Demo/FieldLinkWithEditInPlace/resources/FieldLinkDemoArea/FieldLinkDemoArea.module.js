@@ -119,6 +119,13 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoArea', [
          this.rebuildMarkup();
       },
 
+      _onSelectedItemsChange: function() {
+         /* Чтобы пометить запись, как изменённую, т.к. Model пока не умеет понимать изменение вложенных записей,
+            которые были изменены механизмом биндингов
+            !Требуется для тестов */
+         this.getLinkedContext().getPrevious().getPrevious().getValue('sbis3-controls-edit-in-place').setChanged(true);
+      },
+
       sendAddCompany: function() {
          this.sendCommand('addWorkPlaceField', 'company');
       },
