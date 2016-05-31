@@ -44,6 +44,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.RecordSet',
 
+      _compatibleConstructor: true,//Чтобы в наследниках с "old style extend" звался нативный constructor()
+
       /**
        * @cfg {String|Function} Конструктор модели
        * @name SBIS3.CONTROLS.Data.Collection.RecordSet#model
