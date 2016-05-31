@@ -109,8 +109,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
       _focusOutHandler: function(event, isDestroyed, focusedControl) {
          var isChildControl = false;
 
-         if(this._list) {
-            isChildControl = (this._list === focusedControl) || (focusedControl.getOpener && this._list === focusedControl.getOpener());
+         /* focusedControl может не приходить при разрушении контрола */
+         if(this._list && focusedControl) {
+            isChildControl = (this._list === focusedControl) || (!isDestroyed && focusedControl.getOpener && this._list === focusedControl.getOpener());
 
             if(!isChildControl) {
                isChildControl = this._list.getChildControls(false, true, function(ctrl) {
