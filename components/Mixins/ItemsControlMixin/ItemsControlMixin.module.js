@@ -985,7 +985,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       this._options._items.assign(list);
                    } else {
                       this._options._items = list;
-                      this._options._itemsProjection = this._createDefaultProjection(this._options._items);
+                      this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
                       this._setItemsEventHandlers();
                       this._notify('onItemsReady');
                       this._itemsReadyCallback();
