@@ -151,6 +151,10 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this.setOffset(record);
 
                this.setTarget(target);
+               //Строка с редакторами всегда должна быть первой в таблице, иначе если перед ней вставятся другие строки,
+               //редакторы будут неверно позиционироваться, т.к. у строки с редакторами position absolute и top у неё
+               //всегда равен 0, даже если она не первая. Просто перед показом, пододвинем строчку с редакторами на первое место.
+               this._container.prependTo(this._options.itemsContainer);
                EditInPlace.superclass.show.apply(this, arguments);
             },
             _beginTrackHeight: function() {
@@ -169,8 +173,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }.bind(this));
                if (this._lastHeight !== newHeight) {
                   this._lastHeight = newHeight;
-                  this._notify('onChangeHeight');
                   this.getEditingItem().target.height(newHeight);
+                  this._notify('onChangeHeight');
                }
             },
             _endTrackHeight: function() {
@@ -206,6 +210,11 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this.getEditingItem().target.removeClass('controls-editInPlace__editing');
                this._editing = false;
                this.hide();
+               //Возможен такой сценарий: начали добавление по месту, не заполнив данные, подтверждают добавление
+               //и срабатывает валидация. Валидация помечает невалидные поля. После этого происходит отмена добавления,
+               //и редакторы скрываются. При следующем начале добавления по месту редакторы будут показаны, как невалидные.
+               //Так что сами принудительно очистим отметку валидации, при завершении редактирования/добавления.
+               this.resetValidation();
                this._notify('onEndEdit');
             },
             setOffset: function(model) {

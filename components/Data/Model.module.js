@@ -63,9 +63,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @property {Function} [set] Метод, устанавливающий значение свойства.
        */
 
-      _compatibleConstructor: true,//Чтобы в наследниках с "old style extend" звался нативный constructor()
-
       _moduleName: 'SBIS3.CONTROLS.Data.Model',
+
+      _compatibleConstructor: true,//Чтобы в наследниках с "old style extend" звался нативный constructor()
 
       _hashPrefix: 'model-',
 
@@ -190,7 +190,10 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             if (!this._propertiesDependency.hasOwnProperty(name)) {
                this._propertiesDependency[name] = [];
             }
-            this._propertiesDependency[name].push(this._propertiesDependencyGathering);
+            var dep = this._propertiesDependency[name];
+            if (Array.indexOf(dep, this._propertiesDependencyGathering) === -1) {
+               dep.push(this._propertiesDependencyGathering);
+            }
          }
 
          var value = Model.superclass.get.call(this, name),

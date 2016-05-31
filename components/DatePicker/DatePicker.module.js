@@ -320,8 +320,7 @@ define(
       */
       setText: function (text) {
          DatePicker.superclass.setText.call(this, text);
-         this._options.date = text == '' ? null : this._getDateByText(text);
-        this._notifyOnDateChanged();
+         this._options.date = text == '' ? null : this._getDateByText(text, this._options.date);
       },
 
       /**
@@ -471,18 +470,18 @@ define(
             return null;
          }
          var
-            //используем старую дату как основу, чтобы сохранять год, при его отсутствии в маске
+            //используем старую дату как основу, чтобы сохранять части даты, отсутствующие в маске
             //new Date от старой даты делаем, чтобы контекст увидел новый объект
             date = (DateUtil.isValidDate(oldDate)) ? new Date(oldDate.getTime())  : new Date(),
             item,
             value,
-            yyyy = 0,
-            mm   = 0,
-            dd   = 1,
-            hh   = 0,
-            ii   = 0,
-            ss   = 0,
-            uuu  = 0;
+            yyyy = date.getFullYear(),
+            mm   = date.getMonth(),
+            dd   = date.getDate(),
+            hh   = date.getHours(),
+            ii   = date.getMinutes(),
+            ss   = date.getSeconds(),
+            uuu  = date.getMilliseconds();
          for (var i = 0; i < this.formatModel.model.length; i++) {
             item = this.formatModel.model[i];
             if ( !item.isGroup) {
@@ -494,10 +493,6 @@ define(
             }
             switch (item.mask) {
                case 'YY' :
-                  //сохраняем век для года, чтобы дата 1986 не превращалась в 2086, после правки дня или месяца
-                  var baseYear = date.getFullYear() - date.getFullYear() % 100;
-                  yyyy = baseYear + parseInt(value);
-                  break;
                case 'YYYY' :
                   yyyy = value;
                   break;

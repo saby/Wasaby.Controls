@@ -6,17 +6,12 @@
          </div>
       </div>
    </div>
-   {{?it.infiniteScroll === 'up'}}
-      <div class="controls-ListView-scrollIndicator ws-hidden"></div>
-   {{?}}
+   <div class="controls-ListView-scrollIndicator ws-hidden{{?it.infiniteScroll === 'up'}} controls-ListView-scrollIndicator__up{{?}}"></div>
    <div class="controls-ListView__itemsContainer">
       {{?it._serverRender}}
          {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
       {{?}}
    </div>
-   {{?it.infiniteScroll === 'down'}}
-      <div class="controls-ListView-scrollIndicator ws-hidden"></div>
-   {{?}}
    {{?it.footerTpl}}
       <div class="controls-ListView__footer">{{=it.footerTpl(it)}}</div>
    {{?}}

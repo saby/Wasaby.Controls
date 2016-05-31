@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.Image.EditDialog', [
       $constructor: function() {
          var
             self = this;
-         this._publish('onBeginSave', 'onEndSave');
+         this._publish('onBeginSave', 'onEndSave', 'onOpenError');
          this._image = this._container.find('.controls-EditDialog__image');
          this._image.load(function() {
             this.getTopParent().show();
@@ -91,6 +91,10 @@ define('js!SBIS3.CONTROLS.Image.EditDialog', [
                   this._cropPlugin.startCrop();
                }.bind(this),0);
          }.bind(this));
+         this._image.error(function(event){
+            self._notify('onOpenError', event);
+            self.sendCommand('close');
+         });
          this._imageUrl = $ws.helpers.prepareGetRPCInvocationURL(this._options.dataSource.getEndpoint().contract,
             this._options.dataSource.getBinding().read, this._options.filter, $ws.proto.BLObject.RETURN_TYPE_ASIS);
          $ws.helpers.reloadImage(this._image, this._imageUrl);

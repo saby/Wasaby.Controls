@@ -44,6 +44,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.RecordSet',
 
+      _compatibleConstructor: true,//Чтобы в наследниках с "old style extend" звался нативный constructor()
+
       /**
        * @cfg {String|Function} Конструктор модели
        * @name SBIS3.CONTROLS.Data.Collection.RecordSet#model
@@ -758,7 +760,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       add: function (item, at) {
-         this._checkItem(item, this.getCount() > 0);
+         this._checkItem(item, !!this._$format || this.getCount() > 0);
          this._getRawDataAdapter().add(item.getRawData(), at);
          RecordSet.superclass.add.call(this, item, at);
          item.setOwner(this);
@@ -834,6 +836,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       _addItemsToRawData: function (items, at, replace) {
          var isRecordSet  = items && $ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet'),
             isEqualFormat = this._isEqualItemsFormat(items, replace),
+            hasFormat = !!this._$format,
             hasItems = replace ? false : this.getCount() > 0,
             adapter = this._getRawDataAdapter(),
             item;
@@ -844,7 +847,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             if (!isRecordSet && !isEqualFormat) {
                this._checkItem(
                   item,
-                  hasItems || i > 0
+                  hasFormat || hasItems || i > 0
                );
 
             }

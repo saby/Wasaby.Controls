@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             root = null;
          }
       }
+      cfg.itemsSortMethod = 'itemsSortMethod' in cfg ? cfg.itemsSortMethod : _defaultItemsSortMethod;
       projection = new TreeProjection({
          collection: items,
          idProperty: cfg.keyField || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
@@ -25,6 +26,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
       projection.setFilter(filterCallBack);
       return projection;
+   },
+   _defaultItemsSortMethod = function(itemA, itemB) {
+      var
+         isNodeA = itemA.item.isNode(),
+         isNodeB = itemB.item.isNode();
+      if (isNodeA === isNodeB) {
+         return 0;
+      } else {
+         return isNodeA ? -1 : 1;
+      }
    },
    getRecordsForRedraw = function(projection, cfg) {
       var
@@ -240,9 +251,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          _originallPadding: 6
       },
 
-      $constructor : function() {
+      $constructor : function(cfg) {
          var
             filter = this.getFilter() || {};
+         cfg = cfg || {};
          this._publish('onSearchPathClick', 'onNodeExpand', 'onNodeCollapse', 'onSetRoot', 'onBeforeSetRoot');
          if (typeof this._options.root != 'undefined') {
             this._options._curRoot = this._options.root;
@@ -421,6 +433,18 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             return error;
          });
       },
+
+      _defaultItemsSortMethod: function(itemA, itemB) {
+         var
+            isNodeA = itemA.item.isNode(),
+            isNodeB = itemB.item.isNode();
+         if (isNodeA === isNodeB) {
+            return 0;
+         } else {
+            return isNodeA ? -1 : 1;
+         }
+      },
+
       before: {
          reload : function() {
             this._folderOffsets['null'] = 0;
@@ -691,16 +715,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          return this._options._curRoot;
       },
       /**
-       * Раскрыть определенный узел
+       * Зайти в определенный узел
        * @param {String} key Идентификатор раскрываемого узла
        */
       setCurrentRoot: function(key) {
          var
             filter = this.getFilter() || {};
-         if (key) {
+         if (key !== undefined) {
             filter[this._options.hierField] = key;
-         }
-         else {
+         } else {
             if (this._options.root){
                filter[this._options.hierField] = this._options.root;
             } else {

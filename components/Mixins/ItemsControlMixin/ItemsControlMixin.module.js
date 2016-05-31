@@ -25,8 +25,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this.runInPropertiesUpdate(func, arguments);
       };
    }
-   var createDefaultProjection = function(items) {
-      return Projection.getDefaultProjection(items);
+   var createDefaultProjection = function(items, cfg) {
+      var proj = Projection.getDefaultProjection(items);
+      if (cfg.itemsSortMethod) {
+         proj.setSort(cfg.itemsSortMethod);
+      }
+      return proj;
    },
    getRecordsForRedraw = function(projection) {
       var
@@ -358,9 +362,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             footerTpl: undefined,
             itemContentTpl : null,
-            itemTpl : null
+            itemTpl : null,
+            /**
+             * @cfg {Function} Метод сортировки элементов
+             * @see setItemsSortMethod
+             * @see SBIS3.CONTROLS.Data.Projection.Collection:setSort
+             */
+            itemsSortMethod: undefined
          },
          _loader: null
+
       },
 
       around: {
@@ -818,10 +829,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
-      _createDefaultProjection: function(items) {
-         return Projection.getDefaultProjection(items);
-      },
-
       _prepareSource: function(sourceOpt) {
          var result;
          switch (typeof sourceOpt) {
@@ -996,6 +1003,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    } else {
                       self.redraw();
                    }
+
                    if (self._options.infiniteScroll === 'up'){
                       var firstItem = self._options._itemsProjection.at(0);
                       if (firstItem) {
@@ -1702,6 +1710,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._removeItem(
                items[i]
             );
+         }
+      },
+      /**
+       * Устанавливает метод сортировки элементов на клиенте.
+       * @param {Function} sort функция сортировка элементов, если передать undefined сортировка сбросится
+       * @see SBIS3.CONTROLS.Data.Projection.Collection:setSort
+       */
+      setItemsSortMethod: function(sort){
+         this._options.itemsSortMethod = sort;
+         if(this._options._itemsProjection) {
+            this._options._itemsProjection.setSort(sort);
          }
       }
    };

@@ -305,10 +305,8 @@ define('js!SBIS3.CONTROLS.Image',
             _bindToolbarEvents: function(){
                this._boundEvents.onImageMouseEnter = this._onImageMouseEnter.bind(this);
                this._boundEvents.onImageMouseLeave = this._onImageMouseLeave.bind(this);
-               this._boundEvents.onImageBarMouseLeave = this._onImageBarMouseLeave.bind(this);
-               this._image.mouseenter(this._boundEvents.onImageMouseEnter);
-               this._image.mouseleave(this._boundEvents.onImageMouseLeave);
-               this._imageBar.mouseleave(this._boundEvents.onImageBarMouseLeave);
+               this._container.mouseenter(this._boundEvents.onImageMouseEnter);
+               this._container.mouseleave(this._boundEvents.onImageMouseLeave);
             },
             _onBeginLoad: function(event) {
                var
@@ -325,6 +323,7 @@ define('js!SBIS3.CONTROLS.Image',
                if (response.hasOwnProperty('error')) {
                   $ws.helpers.toggleLocalIndicator(imageInstance._container, false);
                   imageInstance._boundEvents.onErrorLoad(response.error, true);
+                  $ws.helpers.alert('При загрузке изображения возникла ошибка: ' + response.error.message);
                } else {
                   imageInstance._notify('onEndLoad', response);
                   if (imageInstance._options.edit) {
@@ -354,7 +353,6 @@ define('js!SBIS3.CONTROLS.Image',
             },
             _onErrorLoad: function(error, withoutReload) {
                this._notify('onErrorLoad', error);
-               $ws.helpers.alert('При загрузке изображения возникла ошибка: ' + error.message);
                if (!withoutReload && this._imageUrl !== this._options.defaultImage) {
                   this._setImage(this._options.defaultImage);
                }
@@ -364,13 +362,8 @@ define('js!SBIS3.CONTROLS.Image',
                   this._imageBar.fadeIn(ANIMATION_DURATION);
                }
             },
-            _onImageMouseLeave: function(event) {
-               if (this._canDisplayImageBar() && event.relatedTarget !== this._imageBar[0] && !$.contains(this._imageBar[0], event.relatedTarget)) {
-                  this._imageBar.hide();
-               }
-            },
-            _onImageBarMouseLeave: function(event) {
-               if (this._canDisplayImageBar() && event.relatedTarget !== this._image[0]) {
+            _onImageMouseLeave: function() {
+               if (this._canDisplayImageBar()) {
                   this._imageBar.hide();
                }
             },
@@ -423,6 +416,10 @@ define('js!SBIS3.CONTROLS.Image',
                            event.setResult(self._notify('onEndSave', result));
                            self._toggleSaveIndicator(false);
                            self.reload();
+                        },
+                        onOpenError: function(event){
+                           $ws.helpers.toggleLocalIndicator(self._container, false);
+                           self._boundEvents.onErrorLoad(event, true);
                         }
                      }
                   }, this._options.editConfig),
