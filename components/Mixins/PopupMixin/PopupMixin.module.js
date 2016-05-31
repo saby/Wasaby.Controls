@@ -257,15 +257,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
                offset.top = this._calculateOverflow(offset, 'vertical');
                offset.left = this._calculateOverflow(offset, 'horizontal');
-
-               //Если никаких перемещений не было то прибавим оффсеты, если были то вычтем их
-               //Если было уменьшение размеров контейнера (появились скроллы) то оффсеты уже учтены и ничего прибавлять не нужно
-               var sign;
-               sign = (!this._isMovedV) ? 1 : (!this._overflowedV) ? -1 : 0;
-               offset.top += sign * (this._margins.top - this._margins.bottom + (this._options.verticalAlign.offset || 0));
-               sign = (!this._isMovedH) ? 1 : (!this._overflowedH) ? -1 : 0;
-               offset.left += sign * (this._margins.left - this._margins.right + (this._options.horizontalAlign.offset || 0));
-
                this._notifyOnAlignmentChange();
 
                this._container.css({
@@ -545,6 +536,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          var offset = this._getOffsetByCorner(corner, notSave),
             buff = this._getOffsetBySide(vert, horiz, notSave);
          offset = this._addOffset(offset, buff);
+         offset.top += (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom,
+         offset.left += (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right
          return offset;
       },
 
