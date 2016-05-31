@@ -296,7 +296,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             //Создаем новую модель, т.к. Record не знает, что такое первичный ключ - это добавляется на модели.
             rec = new Model({
                format: collection.getDataSet().getFormat(),
-               idProperty: model.getIdProperty()
+               idProperty: collection.getItems().getIdProperty(),
+               adapter: collection.getItems().getAdapter()
             });
             this._mergeRecords(model, rec, true);
          } else  {
@@ -310,7 +311,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
                collection.getItems().add(rec, at);
             }
             else{
-               if (collection._isLoading()){
+               if (collection.isLoading()){
                   collection.once('onItemsReady', function(){
                      this.getItems().add(rec, at);
                   });

@@ -25,48 +25,54 @@ define(
          this._updateText();
       },
       /**
-       * Вычисляет котейнет и позицир для установки курсора в начало
-       * @param {Object} positionObject
+       * Вычисляет котейнет и позицир и устанавливает курсора в начало
        * @private
        */
-      _setHomePosition = function (positionObject) {
+      _setHomePosition = function () {
          var group = this.formatModel.model[0];
-         positionObject.container = _getContainerByIndex.call(this, (group  &&  group.isGroup) ? 0 : 1);
-         positionObject.position = 0;
+         _moveCursor(_getContainerByIndex.call(this, (group  &&  group.isGroup) ? 0 : 1), 0);
       },
 
       /**
-       * Вычисляет котейнер и позицию для установки курсора в конец
-       * @param {Object} positionObject
+       * Вычисляет котейнер и позицию и устанавливает курсора в конец
        * @private
        */
-      _setEndPosition = function (positionObject) {
+      _setEndPosition = function () {
          var groupInd = this.formatModel.model.length - 1;
          var group = this.formatModel.model[groupInd];
-         positionObject.container = _getContainerByIndex.call(this, (group  &&  group.isGroup) ? groupInd : --groupInd);
-         positionObject.position = this.formatModel.model[groupInd].mask.length;
+         _moveCursor(_getContainerByIndex.call(this, (group  &&  group.isGroup) ? groupInd : --groupInd), this.formatModel.model[groupInd].mask.length);
       },
-      _getPreviousPosition = function (positionObject) {
-         var prevSibling = positionObject.container.parentNode.previousSibling;
-         if (positionObject.position === 0) {
+      _setPreviousPosition = function () {
+         var cursor = _getCursor.call(this, true),
+             container = _getContainerByIndex.call(this, cursor[0]),
+             prevSibling = container.parentNode.previousSibling,
+             position = cursor[1];
+
+         if (position === 0) {
             if (prevSibling && prevSibling.previousSibling) {
-               positionObject.container = prevSibling.previousSibling.childNodes[0];
-               positionObject.position = positionObject.container.nodeValue.length - 1;
+               container = prevSibling.previousSibling.childNodes[0];
+               position = container.nodeValue.length - 1;
             }
          } else {
-            positionObject.position--;
+            position--;
          }
+         _moveCursor(container, position);
       },
-      _getNextPosition = function (positionObject) {
-         var nextSibling = positionObject.container.parentNode.nextSibling;
-         if (positionObject.position == positionObject.container.nodeValue.length) {
+      _setNextPosition = function () {
+         var cursor = _getCursor.call(this, true),
+             container = _getContainerByIndex.call(this, cursor[0]),
+             nextSibling = container.parentNode.nextSibling,
+             position = cursor[1];
+
+         if (position == container.nodeValue.length) {
             if (nextSibling && nextSibling.nextSibling) {
-               positionObject.container = nextSibling.nextSibling.childNodes[0];
-               positionObject.position = 0;
+               container = nextSibling.nextSibling.childNodes[0];
+               position = 0;
             }
          } else {
-            positionObject.position++;
+            position++;
          }
+         _moveCursor(container, position);
       },
       /**
        * Передвинуть курсор к заданной позиции
@@ -650,9 +656,7 @@ define(
       },
 
       $constructor: function () {
-         var
-            self = this,
-            key;
+         var self = this;
          this._publish('onInputFinished','onTextChange');
          // Проверяем, является ли маска, с которой создается контролл, допустимой
          this._checkPossibleMask();
@@ -660,44 +664,17 @@ define(
          this._container.bind('focusin', function () {
             self._focusHandler();
          });
-         this._inputField.keypress(function (event) {
-            //keypress учитывает расскладку, keydown - нет
-            key = event.which || event.keyCode;
-            event.preventDefault();
-            self._keyPressHandler(key, 'character', event.shift);
-         });
          this._inputField.keyup(function (event) {
             event.preventDefault();
          });
          this._inputField.bind('dragstart', function(e) {
             e.preventDefault();
          });
-         this._inputField.keydown(function (event) {
-            //keydown ловит управляющие символы, keypress - нет
-            key = event.which || event.keyCode;
-            if (key == $ws._const.key.home && !event.shiftKey) {
-               event.preventDefault();
-               self._keyPressHandler(key, 'home');
-            } else if (key == $ws._const.key.end && !event.shiftKey) {
-               event.preventDefault();
-               self._keyPressHandler(key, 'end');
-            } else if (key == $ws._const.key.del) {
-               event.preventDefault();
-               self._keyPressHandler(key, 'delete');
-            } else if (key == $ws._const.key.backspace) {
-               event.preventDefault();
-               self._keyPressHandler(key, 'backspace');
-            } else if (key == $ws._const.key.left && !event.shiftKey) {
-               event.preventDefault();
-               self._keyPressHandler(key, 'arrow_left');
-            } else if (key == $ws._const.key.right && !event.shiftKey) {
-               event.preventDefault();
-               self._keyPressHandler(key, 'arrow_right');
-            } else if (event.ctrlKey && key == 88) {
-               event.preventDefault();//предотвращаем вырезание Ctrl+X
-            }
-         });
-         this._inputField.bind('paste', function(e) {
+         //keypress учитывает расскладку, keydown - нет
+         this._inputField.keypress(this._keyPressBind.bind(this));
+         //keydown ловит управляющие символы, keypress - нет
+         this._inputField.keydown(this._keyDownBind.bind(this));
+         this._inputField.bind('paste', function() {
             var
                 prevText,
                 //Единственный способ понять, что мы пытаемся вставить это посмотреть в буфере.
@@ -725,6 +702,126 @@ define(
       init: function(){
          FormattedTextBoxBase.superclass.init.apply(this, arguments);
          this._updateText();
+      },
+
+      //Тут обрабатываются управляющие команды
+      _keyDownBind: function(event) {
+         var
+             isCtrl = event.ctrlKey,
+             isShift = event.shiftKey,
+             key = event.which || event.keyCode;
+
+         if (key == $ws._const.key.home && !isShift) {
+            _setHomePosition.call(this);
+         } else if (key == $ws._const.key.end && !isShift) {
+            _setEndPosition.call(this);
+         } else if (key == $ws._const.key.left && !isShift) {
+            _setPreviousPosition.call(this);
+         } else if (key == $ws._const.key.right && !isShift) {
+            _setNextPosition.call(this);
+         } else if (key == $ws._const.key.del) {
+            this._clearCommandHandler('delete');
+         } else if (key == $ws._const.key.backspace) {
+            this._clearCommandHandler('backspace');
+         } else if (key == 88 && isCtrl) {
+            //предотвращаем вырезание Ctrl+X
+         } else {
+            return;
+         }
+         event.preventDefault();
+      },
+       //Тут обрабатываются текстовые символы
+      _keyPressBind: function(event) {
+         var
+             keyInsertInfo,
+             key = event.which || event.keyCode,
+             character = String.fromCharCode(key),
+             positionIndexes = _getCursor.call(this, true),
+             position = positionIndexes[1],
+             groupNum = positionIndexes[0];
+
+         //TODO сбрасываем, чтобы после setText(null) _updateText после ввода символов обновлял опцию text
+         this.formatModel._settedText = '';
+
+         character = event.shiftKey ? character.toUpperCase() : character.toLowerCase();
+         keyInsertInfo = this.formatModel.insertCharacter(groupNum, position, character);
+         this._afterCharacterInsertHandler(keyInsertInfo);
+
+         event.preventDefault();
+      },
+
+      _clearCommandHandler: function(type) {
+         var
+             positionIndexesBegin = _getCursor.call(this, true),
+             positionIndexesEnd = _getCursor.call(this, false),
+             position = positionIndexesBegin[1],
+             groupNum = positionIndexesBegin[0],
+             group = null,
+             startGroupNum = null,
+             endGroupNum = null,
+             positionOffset = (type == 'backspace') ? -1 : 0,
+             keyInsertInfo;
+
+         //TODO сбрасываем, чтобы после setText(null) _updateText после ввода символов обновлял опцию text
+         this.formatModel._settedText = '';
+
+         //Если в поле ввода выделен текст
+         if (positionIndexesBegin[0] != positionIndexesEnd[0] || positionIndexesBegin[1] != positionIndexesEnd[1]) {
+            //проходим группы с конца, чтобы закончить самым левым символом выделенного текста и использовать его данные в keyInsertInfo о позиции курсора
+            startGroupNum = positionIndexesBegin[0];
+            endGroupNum   = positionIndexesEnd[0];
+            for (var i = endGroupNum; i >= startGroupNum; i--) {
+               group = this.formatModel.model[i];
+               //проходим только группы, т.к. разделители не интересуют
+               if ( ! group.isGroup) {
+                  continue;
+               }
+               /* средняя группа - значение по умолчанию.
+                Средняя для выбора например мы выделили такой текст: 11)222-34 из текста 8 (111)222-34-56.
+                Средняя здесь это не начальная и не конечная группа выделения, т.е. 222, 111 - начальная, а 34 - конечная
+                */
+               var startCharNum = 0,
+                   endCharNum = group.mask.length - 1;
+               //последняя группа выделенного текста
+               if (i == endGroupNum) {
+                  endCharNum = positionIndexesEnd[1] - 1;
+               }
+               //первая группа выделенного текста
+               if (i == startGroupNum) {
+                  startCharNum = positionIndexesBegin[1];
+               }
+               for (var j = endCharNum; j >= startCharNum; j--) {
+                  keyInsertInfo = this.formatModel.insertCharacter(i, j, this._maskReplacer, true);
+               }
+            }
+            //модель обновили - обновляем опцию text и html-отображение
+            this._updateText();
+            this._inputField.html(this._getHtmlMask());
+         } else {
+            keyInsertInfo = this.formatModel.insertCharacter(groupNum, position + positionOffset, this._maskReplacer, true);
+         }
+         this._afterCharacterInsertHandler(keyInsertInfo, positionOffset);
+      },
+
+      _afterCharacterInsertHandler: function(keyInsertInfo, positionOffset) {
+         var
+             position,
+             container,
+             lastGroupNum;
+         if (keyInsertInfo) {
+            container = _getContainerByIndex.call(this, keyInsertInfo.groupNum);
+            //записываем символ в html
+            _replaceCharacter.call(this, container, keyInsertInfo.position, keyInsertInfo.character);
+            position = this.formatModel._options.cursorPosition.position + (positionOffset || 0);
+            //проверяем был ли введен последний символ в последней группе
+            lastGroupNum = this.formatModel.model.length - 1;
+            lastGroupNum = this.formatModel.model[lastGroupNum].isGroup ? lastGroupNum : lastGroupNum - 1;
+            this._notify('onTextChange', this._options.text);
+            if (keyInsertInfo.groupNum == lastGroupNum  &&  keyInsertInfo.position == this.formatModel.model[lastGroupNum].mask.length - 1) {
+               this._notify('onInputFinished');
+            }
+            _moveCursor(container, position);
+         }
       },
 
       /* Переопределяем метод SBIS3.CORE.CompoundActiveFixMixin чтобы при клике нормально фокус ставился
@@ -816,103 +913,6 @@ define(
             startContainer = this._inputField.get(0).childNodes[child].childNodes[0],
             startPosition = 0;
          _moveCursor(startContainer, startPosition);
-      },
-
-      /**
-       * Обработка события нажатия клавиши
-       * @param key
-       * @param type
-       * @param isShiftPressed
-       * @private
-       */
-      _keyPressHandler: function(key, type, isShiftPressed) {
-         var
-            positionIndexesBegin = _getCursor.call(this, true),
-            positionIndexesEnd = _getCursor.call(this, false),
-            //TODO заменить на 2 переменные, без объекта (учесть в _getPreviousPosition, _getNextPosition, _setHomePosition, _setEndPosition)
-            positionObject = {
-               container: _getContainerByIndex.call(this, positionIndexesBegin[0]),
-               position: positionIndexesBegin[1]
-            },
-            positionObjEnd = {
-               container: _getContainerByIndex.call(this, positionIndexesEnd[0]),
-               position: positionIndexesEnd[1]
-            },
-            character = String.fromCharCode(key),
-            groupNum = positionIndexesBegin[0],
-            group = null,
-            startGroupNum = null,
-            endGroupNum = null,
-            isClear = (type == 'delete' || type == 'backspace'),
-            positionOffset = (type == 'backspace') ? -1 : 0,
-            keyInsertInfo;
-
-         // Обработка зажатой кнопки shift (-> в букву верхнего регистра)
-         character = isShiftPressed ? character.toUpperCase() : character.toLowerCase();
-         character = isClear ? this._maskReplacer : character;
-         if (type == 'character'  ||  isClear) {
-            //TODO сбрасываем, чтобы после setText(null) _updateText после ввода символов обновлял опцию text
-            this.formatModel._settedText = '';
-            if (isClear && (positionIndexesBegin[0] != positionIndexesEnd[0] || positionIndexesBegin[1] != positionIndexesEnd[1])) {
-               //проходим группы с конца, чтобы закончить самым левым символом выделенного текста и использовать его данные в keyInsertInfo о позиции курсора
-               startGroupNum = positionIndexesBegin[0];
-               endGroupNum   = positionIndexesEnd[0];
-               for (var i = endGroupNum; i >= startGroupNum; i--) {
-                  group = this.formatModel.model[i];
-                  //проходим только группы, т.к. разделители не интересуют
-                  if ( ! group.isGroup) {
-                     continue;
-                  }
-                  /* средняя группа - значение по умолчанию.
-                     Средняя для выбора например мы выделили такой текст: 11)222-34 из текста 8 (111)222-34-56.
-                     Средняя здесь это не начальная и не конечная группа выделения, т.е. 222, 111 - начальная, а 34 - конечная
-                   */
-                  var startCharNum = 0,
-                      endCharNum = group.mask.length - 1;
-                  //последняя группа выделенного текста
-                  if (i == endGroupNum) {
-                     endCharNum = positionIndexesEnd[1] - 1;
-                  }
-                  //первая группа выделенного текста
-                  if (i == startGroupNum) {
-                     startCharNum = positionIndexesBegin[1];
-                  }
-                  for (var j = endCharNum; j >= startCharNum; j--) {
-                     keyInsertInfo = this.formatModel.insertCharacter(i, j, character, isClear) || keyInsertInfo;
-                  }
-               }
-               //модель обновили - обновляем опцию text и html-отображение
-               this._updateText();
-               this._inputField.html(this._getHtmlMask());
-            } else {
-               keyInsertInfo = this.formatModel.insertCharacter(groupNum, positionObject.position + positionOffset, character, isClear);
-            }
-            if (keyInsertInfo) {
-               //записываем символ в html
-               positionObject.container = _getContainerByIndex.call(this, keyInsertInfo.groupNum);
-               _replaceCharacter.call(this, positionObject.container, keyInsertInfo.position, keyInsertInfo.character);
-               positionObject.position = this.formatModel._options.cursorPosition.position + positionOffset;
-               //проверяем был ли введен последний символ в последней группе
-               var lastGroupNum = this.formatModel.model.length - 1;
-               lastGroupNum = this.formatModel.model[lastGroupNum].isGroup ? lastGroupNum : lastGroupNum - 1;
-               this._notify('onTextChange', this._options.text);
-               if (keyInsertInfo.groupNum == lastGroupNum  &&  keyInsertInfo.position == this.formatModel.model[lastGroupNum].mask.length - 1) {
-                  this._notify('onInputFinished');
-               }
-            }
-            if (type == 'delete') {
-               positionObject = positionObjEnd;
-            }
-         } else if (type == 'arrow_left')   {
-            _getPreviousPosition(positionObject);
-         } else if (type == 'arrow_right') {
-            _getNextPosition(positionObject);
-         } else if (type == 'home') {
-            _setHomePosition.call(this, positionObject);
-         } else if (type == 'end') {
-            _setEndPosition.call(this, positionObject);
-         }
-         _moveCursor(positionObject.container, positionObject.position);
       },
 
       _setEnabled: function(enabled) {

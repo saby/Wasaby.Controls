@@ -775,10 +775,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
              FieldLink.superclass._keyDownBind.apply(this, arguments);
              switch (e.which) {
                 case $ws._const.key.del:
-                   if(this.getText() && $ws.helpers.getTextSelection()) {
-                      break;
+                   if(!this.getText()) {
+                      this.removeItemsSelectionAll();
                    }
-                   this.removeItemsSelectionAll();
                    break;
                 /* Нажатие на backspace должно удалять последние значение, если нет набранного текста */
                 case $ws._const.key.backspace:

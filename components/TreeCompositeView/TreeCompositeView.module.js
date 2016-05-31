@@ -36,10 +36,21 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          _options: {
             /**
              * Шаблон, используемый при отрисовке папки
+             * @example
+             * <pre>
+             *    <div class="controls-ListView__demo-folder">\
+             *       {{=it.item.get("title")}}\
+             *    </div>
+             * </pre>
              */
             folderTemplate: undefined,
             /**
              * Шаблон, используемый при отрисовке папки в режиме списка
+             * <pre>
+             *    <div class="controls-ListView__demo-folder">\
+             *       {{=it.item.get("title")}}\
+             *    </div>
+             * </pre>
              */
             listFolderTemplate: undefined
          }

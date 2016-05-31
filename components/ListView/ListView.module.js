@@ -13,7 +13,6 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.DecorableMixin',
       'js!SBIS3.CONTROLS.DragNDropMixin',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
-      'js!SBIS3.CONTROLS.BreakClickBySelectMixin',
       'js!SBIS3.CONTROLS.ItemsToolbar',
       'js!SBIS3.CORE.MarkupTransformer',
       'html!SBIS3.CONTROLS.ListView',
@@ -34,7 +33,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable,
-             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelect, ItemsToolbar, MarkupTransformer, dotTplFn,
+             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
              Link, ScrollWatcher, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate) {
 
@@ -1629,7 +1628,7 @@ define('js!SBIS3.CONTROLS.ListView',
                loadAllowed  = this._isAllowInfiniteScroll();
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && $ws.helpers.isElementVisible(this.getContainer()) &&
-                  this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && !this._isLoading()) {
+                  this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && !this.isLoading()) {
                this._showLoadingIndicator();
                this._toggleEmptyData(false);
                this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), this._infiniteScrollOffset + this._limit, this._limit);
@@ -2393,5 +2392,5 @@ define('js!SBIS3.CONTROLS.ListView',
          }
       });
 
-      return ListView.mixin([BreakClickBySelect]);
+      return ListView;
    });
