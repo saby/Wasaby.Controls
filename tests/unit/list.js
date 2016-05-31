@@ -50,5 +50,5 @@ define([
 '../../components/Data/Source/resources/test/SbisService.test',
 '../../components/Data/Types/resources/test/Enum.test',
 '../../components/Data/Types/resources/test/Flags.test',
-'../../components/Utils/Sanitizer/resources/tests/sanitizer.test'
+'../../components/Utils/resources/tests/Sanitize.test'
 ]);
