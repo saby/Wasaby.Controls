@@ -697,7 +697,36 @@ define([
                projection.unsubscribe('onCollectionItemChange', handler);
             });
 
-            it("should trigger event onCollectionItemChange after onCollectionChange", function(done){
+            it('should notify onCollectionChange after restore if "analize" is true', function() {
+               var args = {},
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     fired = true;
+                     args.action = action;
+                     args.newItems = newItems;
+                     args.newItemsIndex = newItemsIndex;
+                     args.oldItems = oldItems;
+                     args.oldItemsIndex = oldItemsIndex;
+                  },
+                  fired = false;
+
+               projection.subscribe('onCollectionChange', handler);
+               projection.setEventRaising(false, true);
+               projection.getCollection().add({id: 'testA'});
+
+               assert.isFalse(fired);
+
+               projection.setEventRaising(true, true);
+               projection.unsubscribe('onCollectionItemChange', handler);
+
+               assert.isTrue(fired);
+               assert.strictEqual(args.action, IBindCollectionProjection.ACTION_ADD);
+               assert.strictEqual(args.newItems[0].getContents().id, 'testA');
+               assert.strictEqual(args.newItemsIndex, projection.getCollection().getCount() - 1);
+               assert.strictEqual(args.oldItems.length, 0);
+               assert.strictEqual(args.oldItemsIndex, 0);
+            });
+
+            it('should trigger event onCollectionItemChange after onCollectionChange', function(done){
                var
                   list = new ObservableList({
                      items: [
