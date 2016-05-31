@@ -654,6 +654,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          //TODO Избавиться от дублирования
          var vOffset = this._options.verticalAlign.offset || 0,
             hOffset = this._options.verticalAlign.offset || 0,
+            scrollHeight = this._container.get(0).scrollHeight,
             spaces, oppositeOffset;
          spaces = this._getSpaces(this._options.corner);
          if (orientation == 'vertical') {
@@ -668,7 +669,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                   this._isMovedV = !this._isMovedV;
                } else {
                   offset.top = 0;
-                  this._container.css('height', spaces.top - vOffset - this._margins.top + this._margins.bottom);
+                  //Если места снизу меньше чем сверху покажемся во весь размер (возможно поверх таргета), или в высоту окна если в него не влезаем
+                  var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
+                  this._container.css('height', height);
                }
             }
             if (this._containerSizes.originHeight + vOffset + this._margins.top - this._margins.bottom < spaces.bottom && this._overflowedV) {
