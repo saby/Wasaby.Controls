@@ -71,7 +71,6 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
          /* Если поиск запущен, то надо отменить поиск с задержкой */
          this._clearSearchDelay();
          if (text) {
-            text = text.replace(/[<>]/g, '');
             if ( (hasStartCharacter && String.trim(text).length >= this._options.startCharacter) || force ) {
                this._notify('onSearch', text);
                this._onResetIsFired = false;
