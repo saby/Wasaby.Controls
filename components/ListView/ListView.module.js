@@ -1273,6 +1273,15 @@ define('js!SBIS3.CONTROLS.ListView',
             this._editInPlace = new controller(this._getEditInPlaceConfig());
          },
 
+         //TODO: Сейчас ListView не является родителем редактирования по месту, и при попытке отвалидировать
+         //ListView, валидация редактирования не вызывается. Сейчас есть сценарий, когда редактирование
+         //располагается на карточке, и при попытке провалидировать карточку перед сохранением, результат
+         //будет true, но редактирование может быть невалидно.
+         validate: function() {
+            var editingIsValid = !(this.isEdit() && !this._getEditInPlace().validate());
+            return ListView.superclass.validate.apply(this, arguments) && editingIsValid;
+         },
+
          _destroyEditInPlace: function() {
             if (this._hasEditInPlace()) {
                this._editInPlace.destroy();
