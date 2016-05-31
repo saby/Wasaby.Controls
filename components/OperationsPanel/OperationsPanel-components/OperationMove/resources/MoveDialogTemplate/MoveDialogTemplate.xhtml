@@ -20,11 +20,13 @@
       <option name="itemsDragNDrop" type="boolean">false</option>
       <option name="allowEmptySelection" type="boolean">true</option>
       <option name="partialyReload" type="boolean">{{=it.linkedView._options.partialyReload}}</option>
+      <option name="displayField" type="boolean">{{=it.linkedView._options.displayField}}</option>
       <options name="columns" type="array">
          <options>
             <option name="title"></option>
             <option name="field">{{=it.linkedView._options.displayField}}</option>
             <option name="className">controls-DataGridView-cell-overflow-ellipsis</option>
+            <option name="cellTemplate">html!SBIS3.CONTROLS.MoveDialogTemplate/resources/FolderTitleTpl</option>
          </options>
       </options>
       <option name="keyField" type="boolean">{{=it.linkedView._options.keyField}}</option>
