@@ -650,8 +650,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          var prototypeProtectedData = {};
          var options = {};
          this._initializer.call(prototypeProtectedData); //На прототипе опции не доступны, получаем их через initializer
-         $ws.core.merge(opt, options); //Чтобы не портить объект
-         $ws.core.merge(opt, prototypeProtectedData._options); //Мержим опции с прототипа, на опции, которые прилетели из dialogActionBase
+         $ws.core.merge(options, opt); //Чтобы не портить объект
+         $ws.core.merge(options, prototypeProtectedData._options); //Мержим опции с прототипа, на опции, которые прилетели из dialogActionBase
          if (!$ws.helpers.instanceOfModule(options.dataSource, 'SBIS3.CONTROLS.Data.Source.Base')) {
             options.dataSource = this.createDataSource(options);
          }
