@@ -95,13 +95,15 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       _onClickHandler: function(e) {
-         BreadCrumbs.superclass._onClickHandler.apply(this, arguments);
-         var target = $(e.target),
-            crumb = target.closest('.js-controls-BreadCrumbs__crumb');
-         if (crumb.hasClass('controls-BreadCrumbs__dots')) {
-            this._dotsClickHandler(crumb)
-         } else if (crumb.length) {
-            this._notify('onItemClick', crumb.data(this._options.keyField));
+         if (this.isEnabled()){
+            BreadCrumbs.superclass._onClickHandler.apply(this, arguments);
+            var target = $(e.target),
+               crumb = target.closest('.js-controls-BreadCrumbs__crumb');
+            if (crumb.hasClass('controls-BreadCrumbs__dots')) {
+               this._dotsClickHandler(crumb)
+            } else if (crumb.length) {
+               this._notify('onItemClick', crumb.data(this._options.keyField));
+            }
             if (this._picker.isVisible()){
                this._picker.hide();
             }
