@@ -203,7 +203,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * @returns {*}
        */
       getScrollHeight: function(element){
-         return this.getScrollContainer().scrollHeight;
+         return this.getScrollContainer(element).scrollHeight;
       },
       /**
        * Получить текущую высоту скроллируемого контейнера
