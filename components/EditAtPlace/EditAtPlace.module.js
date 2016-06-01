@@ -8,6 +8,32 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'html!SBIS3.CONTROLS.EditAtPlace'],
    function (CompoundControl, TextBox, PickerMixin, Dialog, EditAtPlaceMixin, DateFormatDecorator, dotTplFn) {
       'use strict';
+
+      var dateDecorator = null;
+
+      function formatText(text) {
+         var getTextFromDate = function(date){
+            if (!dateDecorator) {
+               dateDecorator = new DateFormatDecorator();
+            }
+            return dateDecorator.apply(date, this.dateDecoratorMask);
+         }.bind(this);
+
+         var getTextByDateRange = function(range){
+            return 'c ' + getTextFromDate(range.startDate) + ' по ' + getTextFromDate(range.endDate);
+         }.bind(this);
+
+         //TODO: Декоратор даты, временно применяется здесь до лучших времен (ждем virtualDOM'a)
+         if (text instanceof(Date)){
+            text = getTextFromDate(text);
+         }
+         //Если пришел период - склеиваем из дат строку
+         else if (text instanceof Object && text.startDate && text.endDate){
+            text = getTextByDateRange(text);
+         }
+         return $ws.helpers.escapeHtml(text);
+      }
+
       /**
        * @class SBIS3.CONTROLS.EditAtPlace
        * @extends $ws.proto.CompoundControl
@@ -19,7 +45,6 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
        * @author Крайнов Дмитрий Олегович
        * @cssModifier controls-EditAtPlace__ellipsis Текстовое поле обрезается троеточием, если не умещается в контейнере
        */
-
       var EditAtPlace = CompoundControl.extend([PickerMixin, EditAtPlaceMixin], /** @lends SBIS3.CONTROLS.EditAtPlace.prototype */{
          _dotTplFn: dotTplFn,
          _aliasForContent: 'editorTpl',
@@ -28,10 +53,6 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             _okButton: null,
             _oldText: '',
             _requireDialog: false,
-            _dateDecorator: {
-               decorator: null,
-               mask: 'DD.MM.YY'
-            },
             _isEditInGroup: false, //Находится ли редактирование в группе
             _options: {
                /**
@@ -65,7 +86,13 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                 * @cfg {Boolean} Определяет, будет ли многострочным редактируемый текст.
                 * Если указано, текст будет переноситься, убираясь в ширину контейнера.
                 */
-               multiline: false
+               multiline: false,
+
+               dateDecoratorMask: 'DD.MM.YY',
+
+               formattedText: function() {
+                  return formatText.call(this, this.text);
+            }
             }
          },
 
@@ -84,7 +111,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             if (decorators && decorators.indexOf('format:') !== -1) {
                decorators = decorators.split('format:');
                if (decorators.length > 1){
-                  this._dateDecorator.mask = decorators[1];
+                  this._options.dateDecoratorMask = decorators[1];
                }
             }
 
@@ -229,30 +256,9 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             if (oldText !== this._options.text) {
                this._notify('onTextChange', this._options.text);
             }
+            this._drawText(this._options.formattedText());
+         },
             
-            //TODO: Декоратор даты, временно применяется здесь до лучших времен (ждем virtualDOM'a)
-            if (text instanceof(Date)){
-               text = this._getTextFromDate(text);
-            }
-            //Если пришел период - склеиваем из дат строку
-            else if (text instanceof Object && text.startDate && text.endDate){
-               text = this._getTextByDateRange(text);
-            }
-            text = $ws.helpers.escapeHtml(text);
-            this._drawText(text);
-         },
-         _getTextFromDate: function(date){
-            if (date instanceof(Date)) {
-               if (!this._dateDecorator.decorator) {
-                  this._dateDecorator.decorator = new DateFormatDecorator();
-               }
-               return this._dateDecorator.decorator.apply(date, this._dateDecorator.mask);
-            }
-            return date;
-         },
-         _getTextByDateRange: function(range){
-            return 'c ' + this._getTextFromDate(range.startDate) + ' по ' + this._getTextFromDate(range.endDate);
-         },
          /**
           * Получить текстовое значение контрола
           * @returns {String} Текст - значение поля
