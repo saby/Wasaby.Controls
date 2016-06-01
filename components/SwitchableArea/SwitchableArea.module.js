@@ -103,6 +103,7 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
             $ws.core.merge(
                {
                   autoHeight: this._options.autoHeight,
+                  buildMarkupWithContext: !!this._options.buildMarkupWithContext,
                   parent: this,
                   element: $('<div class="ws-SwitchableArea__item" data-for="' + itemObj.id + '">').appendTo(this.getContainer())
                },
