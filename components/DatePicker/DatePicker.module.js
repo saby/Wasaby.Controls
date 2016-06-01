@@ -220,6 +220,17 @@ define(
          this._addDefaultValidator();
       },
 
+      _keyDownBind: function(event) {
+         var key = event.which || event.keyCode;
+
+         if (key == $ws._const.key.insert) {
+            this.setDate(new Date());
+         } else {
+            return DatePicker.superclass._keyDownBind.apply(this, arguments);
+         }
+         event.preventDefault();
+      },
+
       _modifyOptions : function(options) {
          this._checkTypeOfMask(options);
          return DatePicker.superclass._modifyOptions.apply(this, arguments);

@@ -51,12 +51,12 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             },
             _treeView: undefined,
             _treeViewKeys: [],
-            _applyContainer: undefined,
-            _loadingIndicator: undefined
+            _applyContainer: undefined
         },
         $constructor: function() {
             this._container.removeClass('ws-area');
             this.subscribe('onReady', this._onReady);
+            $ws.single.CommandDispatcher.declareCommand(this, 'beginMerge', this.onMergeButtonActivated);
         },
         addUserItemAttributes: function(row, record) {
             if (record.get(AVAILABLE_FIELD_NAME) === false) {
@@ -72,8 +72,6 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 dataSource,
                 self = this;
             this._applyContainer = this.getContainer().find('.controls-MergeDialogTemplate__applyBlock');
-            this.getChildControlByName('MergeDialogTemplate-mergeButton')
-                .subscribe('onActivated', this.onMergeButtonActivated.bind(this));
             this._treeView = this.getChildControlByName('MergeDialogTemplate__treeDataGridView');
             this._treeView.subscribe('onSelectedItemChange', this.onSelectedItemChange.bind(this));
             this._treeView.setGroupBy(this._treeView.getSearchGroupBy(), false);
@@ -109,12 +107,11 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             var self = this,
                 mergeTo = this._treeView.getSelectedKey(),
                 mergeKeys = this._getMergedKeys(mergeTo, true);
-            this._showIndicator();
+            this._treeView._toggleIndicator(true);
             this._options.dataSource.merge(mergeTo, mergeKeys).addErrback(function(errors) {
                 self._showErrorDialog(mergeKeys, errors);
             }).addBoth(function(result) {
                 self.sendCommand('close', { mergeTo: mergeTo, mergeKeys: mergeKeys, mergeResult: result });
-                self._hideIndicator();
             });
         },
         _showErrorDialog: function(mergeKeys, error) {
@@ -156,14 +153,12 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 self = this,
                 isAvailable,
                 showMergeButton,
-                treeView = this._treeView,
-                dataSet = treeView.getDataSet();
-            this._showIndicator();
+                dataSet = this._treeView.getDataSet();
+            this._treeView._toggleIndicator(true);
             this._options.dataSource.call(this._options.testMergeMethodName, {
                 'target': key,
                 'merged': this._getMergedKeys(key)
             }).addCallback(function (data) {
-                //TODO: Данный костыль нужен для того, чтобы добавить в dataSet колонки, выпилить когда необходимое api появится у dataSet'а
                 data.getAll().each(function(rec) {
                     record = dataSet.getRecordByKey(rec.getId());
                     isAvailable = rec.get(AVAILABLE_FIELD_NAME);
@@ -171,20 +166,10 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                     record.set(AVAILABLE_FIELD_NAME, isAvailable);
                     record.set(COMMENT_FIELD_NAME, rec.get(COMMENT_FIELD_NAME));
                 }, self);
-                treeView.redraw();
                 self._applyContainer.toggleClass('ws-hidden', !showMergeButton);
             }).addBoth(function() {
-                self._hideIndicator();
+                self._treeView._toggleIndicator(false);
             });
-        },
-        _showIndicator: function() {
-            this._loadingIndicator = setTimeout(function () {
-                $ws.helpers.toggleIndicator(true);
-            }, 100);
-        },
-        _hideIndicator: function() {
-            clearTimeout(this._loadingIndicator);
-            $ws.helpers.toggleIndicator(false);
         }
     });
 
