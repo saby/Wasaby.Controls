@@ -1744,6 +1744,24 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             );
          }
       },
+      _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems) {
+         this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);
+         var ladderDecorator = this._decorators.getByName('ladder');
+         //todo опять неверно вызывается ladderCompare, используем костыль, чтобы этого не было
+         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
+            ladderDecorator.setIgnoreEnabled(true);
+         }
+         if (newItems.length) {
+            this._addItems(newItems, newItemsIndex)
+         }
+         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
+            ladderDecorator.setIgnoreEnabled(false);
+         }
+         this._toggleEmptyData(!this._itemsProjection.getCount());
+         //this._view.checkEmpty(); toggleEmtyData
+         this.reviveComponents(); //надо?
+         this._drawItemsCallback();
+      },
       /**
        * Устанавливает метод сортировки элементов на клиенте.
        * @param {Function} sort функция сортировка элементов, если передать undefined сортировка сбросится
@@ -1774,28 +1792,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @private
        */
       onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems) {
-         var i;
          if (this._isNeedToRedraw()) {
 	         switch (action) {
 	            case IBindCollection.ACTION_ADD:
-	            case IBindCollection.ACTION_REMOVE:
                case IBindCollection.ACTION_MOVE:
-	               this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);
-                  var ladderDecorator = this._decorators.getByName('ladder');
-                  //todo опять неверно вызывается ladderCompare, используем костыль, чтобы этого не было
-                  if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
-                     ladderDecorator.setIgnoreEnabled(true);
-                  }
-                  if (newItems.length) {
-                     this._addItems(newItems, newItemsIndex)
-                  }
-                  if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
-                     ladderDecorator.setIgnoreEnabled(false);
-                  }
-                  this._toggleEmptyData(!this._itemsProjection.getCount());
-	               //this._view.checkEmpty(); toggleEmtyData
-	               this.reviveComponents(); //надо?
-                   this._drawItemsCallback();
+               case IBindCollection.ACTION_REMOVE:
+	               this._onCollectionAddMoveRemove.apply(this, arguments);
 	               break;
 
 	            case IBindCollection.ACTION_REPLACE:
