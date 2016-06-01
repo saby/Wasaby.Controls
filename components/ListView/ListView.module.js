@@ -1905,7 +1905,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      recordsPerPage: this._options.pageSize || more,
                      currentPage: 1,
                      recordsCount: more,
-                     pagesLeftRight: 3,
+                     pagesLeftRight: 1,
                      onlyLeftSide: typeof more === 'boolean', // (this._options.display.usePaging === 'parts')
                      rightArrow: hasNextPage
                   },
@@ -1920,6 +1920,17 @@ define('js!SBIS3.CONTROLS.ListView',
                   pagingOptions: pagingOptions,
                   handlers: {
                      'onPageChange': function (event, pageNum, deferred) {
+                        var more = self._dataSet.getMetaData().more,
+                            hasNextPage = self._hasNextPage(more, self._infiniteScrollOffset),
+                            maxPage = self._pager.getPaging()._maxPage;
+                        //Старый Paging при включенной частичной навигации по нажатию кнопки "Перейти к последней странице" возвращает pageNum = 0 (у него индексы страниц начинаются с 1)
+                        //В новом Pager'e индексация страниц начинается с 0 и такое поведение здесь не подходит
+                        //Так же в режиме частичной навигации нет возможности высчитать номер последней страницы, поэтому
+                        //при переходе к последней странице делаем так, чтобы мы переключились на последнюю доступную страницу.
+                        if (pageNum == 0 && self._pager._options.pagingOptions.onlyLeftSide){
+                           pageNum = hasNextPage ? (maxPage + 1) : maxPage;
+                        }
+
                         self._setPageSave(pageNum);
                         self.setPage(pageNum - 1);
                         self._pageChangeDeferred = deferred;
