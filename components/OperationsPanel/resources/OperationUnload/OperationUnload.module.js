@@ -206,16 +206,13 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             exporter.exportHTML(this._getUnloadFileName(), this._currentItem, undefined, undefined, pageOrient);
          } else {
             if (methodName) {
+               fullFilter = exporter.getFullFilter(cfg.dataSet.getCount(), true);
                filter = new Record({
                   adapter: new SbisAdapter(),
-                  format: [{
-                     name: 'selectedIds',
-                     type: 'array',
-                     kind: 'string'
-                   }]
+                  rawData: fullFilter['Filter']
                });
+               filter.addField({name: 'selectedIds', type: 'array', kind: 'string'});
                filter.set('selectedIds', this._getView().getSelectedKeys());
-               fullFilter = exporter.getFullFilter(cfg.dataSet.getCount(), true);
                fullFilter['MethodName'] = methodName;
                fullFilter['FileName'] = this._getUnloadFileName();
                fullFilter['Filter'] = filter;
