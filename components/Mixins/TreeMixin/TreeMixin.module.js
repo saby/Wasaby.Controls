@@ -332,21 +332,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          this._itemsProjection.setEventRaising(true);
       },
       _getRecordsForRedrawCurFolder: function() {
-         /*Получаем только рекорды с parent = curRoot*/
-         var
-            items = [],
-            itemParent;
-         //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
-         if (this._isSearchMode()) {
-            /*TODO нехорошее место, для поиска возвращаем приватное свойство, потому что надо в независимости от текущего корня
-            * показать все записи, а по другому их не вытащить*/
-            return this._itemsProjection._items;
-         } else {
+         var items = [];
+         if (!this._isSearchMode()) {
             this._applyExpandToItemsProjection();
-            this._itemsProjection.each(function(item) {
-               items.push(item);
-            }.bind(this));
          }
+         this._itemsProjection.each(function(item) {
+            items.push(item);
+         }.bind(this));
          return items;
       },
       /**
