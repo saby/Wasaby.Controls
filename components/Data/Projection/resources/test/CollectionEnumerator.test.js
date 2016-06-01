@@ -6,7 +6,6 @@ define([
 
       describe('SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', function() {
          var items,
-            sourceMap,
             filterMap,
             sortMap,
             enumerator,
@@ -29,22 +28,6 @@ define([
             }, {
                index: 4
             }];
-            sourceMap = [{
-               'Ид': 1,
-               'Фамилия': 'Иванов'
-            }, {
-               'Ид': 2,
-               'Фамилия': 'Петров'
-            }, {
-               'Ид': 3,
-               'Фамилия': 'Сидоров'
-            }, {
-               'Ид': 4,
-               'Фамилия': 'Пухов'
-            }, {
-               'Ид': 5,
-               'Фамилия': 'Молодцов'
-            }];
 
             filterMap = [true, true, true, true, true];
 
@@ -52,7 +35,6 @@ define([
 
             enumerator = new ProjectionEnumerator({
                items: items,
-               sourceMap: sourceMap,
                filterMap: filterMap,
                sortMap: sortMap
             });
@@ -61,17 +43,15 @@ define([
          afterEach(function() {
             enumerator = undefined;
             items = undefined;
-            sourceMap = undefined;
             filterMap = undefined;
             sortMap = undefined;
          });
 
-         describe('$constructor()', function() {
+         describe('constructor()', function() {
             it('should throw an error on invalid argument', function() {
                assert.throw(function() {
                   var enumerator = new ProjectionEnumerator({
                      items: {},
-                     sourceMap: {},
                      filterMap: {},
                      sortMap: {}
                   });
@@ -79,7 +59,6 @@ define([
                assert.throw(function() {
                   var enumerator = new ProjectionEnumerator({
                      items: '',
-                     sourceMap: '',
                      filterMap: '',
                      sortMap: ''
                   });
@@ -87,7 +66,6 @@ define([
                assert.throw(function() {
                   var enumerator = new ProjectionEnumerator({
                      items: 0,
-                     sourceMap: 0,
                      filterMap: 1,
                      sortMap: 2
                   });
@@ -95,7 +73,6 @@ define([
                assert.throw(function() {
                   var enumerator = new ProjectionEnumerator({
                      items: undefined,
-                     sourceMap: undefined,
                      filterMap: undefined,
                      sortMap: undefined
                   });
@@ -103,7 +80,6 @@ define([
                assert.throw(function() {
                   var enumerator = new ProjectionEnumerator({
                      items: [],
-                     sourceMap: [],
                      filterMap: undefined,
                      sortMap: undefined
                   });
@@ -111,7 +87,6 @@ define([
                assert.throw(function() {
                   var enumerator = new ProjectionEnumerator({
                      items: [],
-                     sourceMap: [],
                      filterMap: [],
                      sortMap: undefined
                   });
@@ -149,6 +124,24 @@ define([
                }
                assert.isUndefined(enumerator.getNext());
             });
+
+            it('should work fine with repeated elements', function() {
+               var items = ['a', 'b', 'c', 'd', 'e'],
+                  sortMap = [0, 1, 2, 1, 3, 4, 2, 5, 0, 0, 4, 5],
+                  enumerator = new ProjectionEnumerator({
+                     items: items,
+                     filterMap: [true, true, true, true, true],
+                     sortMap: sortMap
+                  }),
+                  index = -1,
+                  item,
+                  itemIndex;
+               while ((item = enumerator.getNext())) {
+                  index++;
+                  itemIndex = sortMap[index];
+                  assert.strictEqual(items[itemIndex], item);
+               }
+            });
          });
 
          describe('.getPrevious()', function() {
@@ -158,7 +151,7 @@ define([
             });
 
             it('should return item by item', function() {
-               var index = sourceMap.length - 1,
+               var index = items.length - 1,
                   item;
                enumerator.setPosition(index);
                while ((item = enumerator.getPrevious())) {
@@ -236,7 +229,7 @@ define([
             });
 
             it('should change the current item', function() {
-               for (var i = 0; i < sourceMap.length; i++) {
+               for (var i = 0; i < items.length; i++) {
                   enumerator.setPosition(i);
                   assert.strictEqual(items[i], enumerator.getCurrent());
                }
@@ -247,7 +240,7 @@ define([
                   enumerator.setPosition(-2);
                });
                assert.throw(function() {
-                  enumerator.setPosition(sourceMap.length);
+                  enumerator.setPosition(items.length);
                });
             });
          });
@@ -647,7 +640,6 @@ define([
                            for (var removeNum = 0; removeNum < test.remove.length; removeNum++) {
                               var index = test.remove[removeNum];
                               items.splice(index, 1);
-                              sourceMap.splice(index, 1);
                               filterMap.splice(index, 1);
                               var sortIndex = Array.indexOf(sortMap, index);
                               if (sortIndex > -1) {
