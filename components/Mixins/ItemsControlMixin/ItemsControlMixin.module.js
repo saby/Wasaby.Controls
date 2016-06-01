@@ -467,6 +467,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._dataLoadedCallback();
             this._notifyOnDrawItems();
          }
+         /*TODO Поддержка совместимости. Раньше если были заданы items массивом создавался сорс, осталась куча завязок на это*/
+         if (this._options.items instanceof Array) {
+            if (!this._options.keyField) {
+               this._options.keyField = findKeyField(this._options.items)
+            }
+            this._dataSource = new MemorySource({
+               data: this._options.items,
+               idProperty: this._options.keyField
+            });
+         }
       },
 
 
