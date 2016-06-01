@@ -154,7 +154,14 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 }, false);
 
                 if(elemFromHistory) {
-                   $ws.core.merge(elem, elemFromHistory);
+                   /* Меняем только value и caption, т.к. нам нужны только значения для фильтрации из историии,
+                      остальные значения структуры нам не интересны + их могут менять, и портить их неправильно тем, что пришло из истории неправильно */
+                   if(elemFromHistory.value !== undefined) {
+                      elem.value = elemFromHistory.value;
+                   }
+                   if(elemFromHistory.caption !== undefined) {
+                      elem.caption = elemFromHistory.caption;
+                   }
                 } else if(elem.value && elem.resetValue && !$ws.helpers.isEqualObject(elem.value, elem.resetValue)) {
                    elem.value = elem.resetValue;
                 }
