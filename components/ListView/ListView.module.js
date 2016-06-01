@@ -661,6 +661,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _keyboardHover: function (e) {
             var
+               selectedKeys,
                selectedKey = this.getSelectedKey(),
                newSelectedKey,
                newSelectedItem;
@@ -689,9 +690,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                   break;
                case $ws._const.key.del:
-                  var key = this.getSelectedKey();
-                   if (key && this._allowDelete()) {
-                      this.deleteRecords(key);
+                   selectedKeys = this._options.multiselect ? this.getSelectedKeys() : selectedKey ? [selectedKey] : [];
+                   if (selectedKeys.length && this._allowDelete()) {
+                      this.deleteRecords(selectedKeys);
                    }
                   break;
             }
