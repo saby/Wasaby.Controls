@@ -2346,6 +2346,24 @@ define('js!SBIS3.CONTROLS.ListView',
             this._updateItemsToolbar();
          },
          /*DRAG_AND_DROP END*/
+         /**
+          * Устанавливает позицию строки итогов
+          * @param {String} position Позиция
+          * <ul>
+          *    <li>none - Строка итогов не будет отображаться</li>
+          *    <li>top - Строка итогов будет расположена вверху</li>
+          *    <li>bottom - Строка итогов будет расположена внизу</li>
+          * </ul>
+          * @example
+          * <pre>
+          *     DataGridView.setResultsPosition('none');
+          *     DataGridView.reload();
+          * </pre>
+          * @see resultsPosition
+          */
+         setResultsPosition: function(position){
+           this._options.resultsPosition = position;
+         },
          _drawResults: function(){
             if (!this._checkResults()){
                return;
