@@ -226,7 +226,7 @@ define(
          if (key == $ws._const.key.insert) {
             this.setDate(new Date());
          } else {
-            return DatePicker.superclass._commandKeyHandler.apply(this, arguments);
+            return DatePicker.superclass._keyDownBind.apply(this, arguments);
          }
          event.preventDefault();
       },
