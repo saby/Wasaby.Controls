@@ -163,8 +163,28 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          return this._isScrollUp && (this._lastScrollTop <= this._options.checkOffset);
       },
 
-      getScrollContainer: function() {
+      getScrollableContainer: function() {
          return this._getContainer();
+      },
+
+      getScrollContainer: function(element){
+         var scrollable;
+         if (this._inContainer() && this._options.element.length){
+            return this._options.element[0];
+         }
+         if (this._inWindow()){
+            if (element) {
+               scrollable = element.closest('.ws-scrolling-content');
+               if (scrollable.length) {
+                  return scrollable[0];
+               }
+               return element[0];
+            }
+            return document.body;
+         }
+         if (this._inFloatArea()) {
+            return this.getOpener().getTopParent().getContainer().closest('.ws-scrolling-content')[0];
+         }
       },
 
       /**
@@ -183,24 +203,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * @returns {*}
        */
       getScrollHeight: function(element){
-         var scrollable;
-         if (this._inContainer() && this._options.element.length){
-            return this._options.element[0].scrollHeight;
-         }
-         if (this._inWindow()){
-            if (element) {
-               scrollable = element.closest('.ws-scrolling-content');
-               if (scrollable.length) {
-                  return scrollable[0].scrollHeight;
-               }
-               return element[0].scrollHeight;
-            }
-            return document.body.scrollHeight;
-         }
-         if (this._inFloatArea()) {
-            return this.getOpener().getTopParent().getContainer().closest('.ws-scrolling-content')[0].scrollHeight;
-         }
-
+         return this.getScrollContainer().scrollHeight;
       },
       /**
        * Получить текущую высоту скроллируемого контейнера
