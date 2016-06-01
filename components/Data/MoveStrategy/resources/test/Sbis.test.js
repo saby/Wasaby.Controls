@@ -231,7 +231,7 @@ define([
                         getItems: function () {
                            return rs$;
                         }
-                     },
+                     }
                   }),
                   to = new Model({
                      rawData:{
