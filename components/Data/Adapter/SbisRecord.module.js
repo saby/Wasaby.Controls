@@ -25,6 +25,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
        * @param {*} data Сырые данные
        */
       constructor: function (data) {
+         if (data && data._type && data._type !== 'record') {
+            throw new Error('Wrong data type. Record cant be built for this data.');
+         }
          SbisRecord.superclass.constructor.call(this, data);
          SbisFormatMixin.constructor.call(this, data);
          this._data._type = 'record';
@@ -79,22 +82,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
          return fieldData;
       },
 
-      getKeyField: function () {
-         //TODO: имя поля с ПК может лежать в this._data.k (при этом может принимать значение -1)
-         var s = this._data.s,
-            index;
-         for (var i = 0, l = s.length; i < l; i++) {
-            if (s[i].n && s[i].n[0] === '@') {
-               index = i;
-               break;
-            }
-         }
-         if (index === undefined && s.length) {
-            index = 0;
-         }
 
-         return index === undefined ? undefined : s[index].n;
-      },
 
       //endregion Public methods
 

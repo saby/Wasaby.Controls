@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
        * @param {*} data Сырые данные
        */
       constructor: function (data) {
-         if(this._data._type && this._data._type !== 'recordset'){
+         if (data && data._type && data._type !== 'recordset') {
             throw new Error('Wrong data type. Recordset cant be built for this data.');
          }
          SbisTable.superclass.constructor.call(this, data);
