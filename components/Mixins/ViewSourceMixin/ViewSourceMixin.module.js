@@ -96,6 +96,8 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
                view.setDataSource(source, true);
                view.setFilter(queryFilter, true);
                resultDef.callback(recordSet);
+               //FIXME это временный придрод, уйдёт, как будет сделана отрисовка на сервере (3.7.3.200 - 3.7.4)
+               view._notify('onDataLoad', recordSet);
                view.setItems(recordSet);
 
                return recordSet;
