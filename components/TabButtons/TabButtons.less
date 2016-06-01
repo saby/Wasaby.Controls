@@ -5,15 +5,6 @@
    height: @tab-buttons-height;
    border-collapse: @tab-buttons-border-collapse;
 
-  //только в 200 версию, в 374 и выше это убрал на уровне buttons.less
-  //Непонятный хак от Ильи Протасова, в коммите нет комментариев и ссылки на задачу, не понятно для чего это нужно.
-  //Во вкладках в ff поехало отображение валидации у dateRange
-  @-moz-document url-prefix() {
-    .controls-Button {
-      padding-bottom: 0px;
-    }
-  }
-
    > div {
       display: @tab-buttons-div-display;
       white-space: @tab-buttons-div-space;
