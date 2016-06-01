@@ -23,8 +23,8 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
        */
 
       var EditAtPlaceGroup = CompoundControl.extend([PickerMixin, EditAtPlaceMixin, CompoundActiveFixMixin], /** @lends SBIS3.CONTROLS.EditAtPlaceGroup.prototype */{
+         _dotTplFn: dotTplFn,
          $protected: {
-            _dotTplFn: dotTplFn,
             _textField: null,
             _cancelButton: null,
             _okButton: null,
