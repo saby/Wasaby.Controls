@@ -71,7 +71,9 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
          /* Если поиск запущен, то надо отменить поиск с задержкой */
          this._clearSearchDelay();
          if (text) {
-            text = text.replace(/[<>]/g, '');
+            /* Вырезаем символы < > только если они одиночные, т.е. не в составе какого-то слова,
+               т.к. декоратор в гриде при выделении цветом одиночных < > может поломать вёрстку */
+            text = text.replace(/^([<|>][\s])|([\s][<|>][\s])|([\s][<|>])$/g, '');
             if ( (hasStartCharacter && String.trim(text).length >= this._options.startCharacter) || force ) {
                this._notify('onSearch', text);
                this._onResetIsFired = false;
