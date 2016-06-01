@@ -737,7 +737,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       setCurrentRoot: function(key) {
          var
             filter = this.getFilter() || {};
-         if (key !== undefined) {
+         if (key !== undefined && key !== null) {
             filter[this._options.hierField] = key;
          } else {
             if (this._options.root){
