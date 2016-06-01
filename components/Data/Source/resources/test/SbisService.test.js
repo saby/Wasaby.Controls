@@ -990,12 +990,12 @@ define([
                            assert.strictEqual(args['Фильтр'].s[5].t, 'Выборка');
 
                            assert.strictEqual(args['Сортировка'].d[0][1], 'id');
-                           assert.isTrue(args['Сортировка'].d[0][2]);
-                           assert.isFalse(args['Сортировка'].d[0][0]);
+                           assert.isFalse(args['Сортировка'].d[0][2]);
+                           assert.isTrue(args['Сортировка'].d[0][0]);
 
                            assert.strictEqual(args['Сортировка'].d[1][1], 'enabled');
-                           assert.isFalse(args['Сортировка'].d[1][2]);
-                           assert.isTrue(args['Сортировка'].d[1][0]);
+                           assert.isTrue(args['Сортировка'].d[1][2]);
+                           assert.isFalse(args['Сортировка'].d[1][0]);
 
                            assert.strictEqual(args['Сортировка'].s[0].n, 'l');
                            assert.strictEqual(args['Сортировка'].s[1].n, 'n');
@@ -1286,12 +1286,12 @@ define([
                assert.strictEqual(args['Фильтр'].s[2].t.t, 'Число целое');
 
                assert.strictEqual(args['Сортировка'].d[0][1], 'id');
-               assert.isTrue(args['Сортировка'].d[0][2]);
-               assert.isFalse(args['Сортировка'].d[0][0]);
+               assert.isFalse(args['Сортировка'].d[0][2]);
+               assert.isTrue(args['Сортировка'].d[0][0]);
 
                assert.strictEqual(args['Сортировка'].d[1][1], 'enabled');
-               assert.isFalse(args['Сортировка'].d[1][2]);
-               assert.isTrue(args['Сортировка'].d[1][0]);
+               assert.isTrue(args['Сортировка'].d[1][2]);
+               assert.isFalse(args['Сортировка'].d[1][0]);
 
                assert.strictEqual(args['Сортировка'].s[0].n, 'l');
                assert.strictEqual(args['Сортировка'].s[1].n, 'n');
