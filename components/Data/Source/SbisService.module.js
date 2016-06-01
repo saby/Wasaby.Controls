@@ -525,8 +525,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             order = orders[i];
             sort.push({
                n: order.getSelector(),
-               o: order.getOrder(),
-               l: !order.getOrder()
+               o: !order.getOrder(),
+               l: order.getOrder()
             });
          }
          return sort;
