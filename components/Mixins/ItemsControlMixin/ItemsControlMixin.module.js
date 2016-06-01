@@ -951,6 +951,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         */
       setDataSource: function (source, noLoad) {
           this._unsetItemsEventHandlers();
+          this._itemsInitializedBySource = false;
           this._prepareConfig(source);
           if (!noLoad) {
              return this.reload();
@@ -1015,14 +1016,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              this._notify('onBeforeDataLoad');
              def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit)
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
-                   var hasItems = !!this._options._items;
-
                    self._toggleIndicator(false);
                    self._notify('onDataLoad', list);
 
                    if (this._itemsInitializedBySource) {
                       this._options._items.setMetaData(list.getMetaData());
                       this._options._items.assign(list);
+                      if(!self._options.autoRedraw) {
+                         self.redraw();
+                      } else {
+                         self._drawItemsCallback();
+                      }
                    } else {
                       this._options._items = list;
                       this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
@@ -1030,19 +1034,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       this._notify('onItemsReady');
                       this._itemsReadyCallback();
                       this._itemsInitializedBySource = true;
+                      self.redraw();
                    }
 
                    this._dataLoadedCallback();
-
-                   if(hasItems) {
-                      if(!self._options.autoRedraw) {
-                         self.redraw();
-                      } else {
-                        self._drawItemsCallback();
-                      }
-                   } else {
-                      self.redraw();
-                   }
 
                    if (self._options.infiniteScroll === 'up'){
                       var firstItem = self._options._itemsProjection.at(0);
