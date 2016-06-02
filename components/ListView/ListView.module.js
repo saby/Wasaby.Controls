@@ -1934,7 +1934,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   pagingOptions: pagingOptions,
                   handlers: {
                      'onPageChange': function (event, pageNum, deferred) {
-                        var more = self._dataSet.getMetaData().more,
+                        var more = self.getItems().getMetaData().more,
                             hasNextPage = self._hasNextPage(more, self._infiniteScrollOffset),
                             maxPage = self._pager.getPaging()._maxPage;
                         //Старый Paging при включенной частичной навигации по нажатию кнопки "Перейти к последней странице" возвращает pageNum = 0 (у него индексы страниц начинаются с 1)

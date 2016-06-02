@@ -588,7 +588,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                itemsContainer.innerHTML = markup;
             }
          }
-         this._toggleEmptyData(!(data.items && data.items.length) && this._options.emptyHTML);
+         this._toggleEmptyData(!(data.records && data.records.length) && this._options.emptyHTML);
          this._reviveItems();
          this._container.addClass('controls-ListView__dataLoaded');
       },
