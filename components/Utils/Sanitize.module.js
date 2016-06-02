@@ -27,7 +27,9 @@ define('js!SBIS3.CONTROLS.Utils.Sanitize', ['Core/markup/ParserUtilitiesNew'], f
          class: true,
          id: true,
          tabindex: true,
-         title: true
+         title: true,
+         href: true,
+         target: true
       };
 
    function validateAttributes(content) {
