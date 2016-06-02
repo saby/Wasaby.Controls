@@ -35,9 +35,9 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBas
          var record = ($ws.helpers.instanceOfModule(meta.item, 'SBIS3.CONTROLS.Data.Record') ? meta.item.clone() : meta.item) || null;
 
          return {
-            dataSource: meta.dataSource,
+            source: meta.dataSource,
             key : meta.id,
-            sourceOptions: meta.sourceOptions,
+            dataSource: meta.dataSource,
             initValues : meta.filter,
             record: record
          }

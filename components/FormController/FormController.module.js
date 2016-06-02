@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
 
    var FormController = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.FormController.prototype */ {
       /**
-       * @typedef {Object} SourceOptions
+       * @typedef {Object} dataSource
        * @property {SBIS3.CONTROLS.Data.Source.ISource/Binding.typedef[]} [Binding] Соответствие методов CRUD+ контракту
        * @property {SBIS3.CONTROLS.Data.Source.ISource/Endpoint.typedef[]} [endpoint] Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных
        * @property {String} [moduleAlias=source.sbis-service] Название зависимости, или конструктор объекта или инстанс объекта
@@ -141,9 +141,9 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
              */
             indicatorSavingMessage:  rk('Подождите, идёт сохранение'),
             /**
-             * @cfg {SourceOptions} Соответствие методов CRUD+ методам БЛ.
+             * @cfg {dataSource} Соответствие методов CRUD+ методам БЛ.
              */
-            sourceOptions: {
+            dataSource: {
             }
          }
       },
@@ -511,7 +511,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see getDataSource
        */
       setDataSource: function(source, config){
-         $ws.single.ioc.resolve('ILogger').error('FormController', 'Метод setDataSource в скором времени будет удален, задать источник данных необходимо через конфигурацию sourceOptions');
+         $ws.single.ioc.resolve('ILogger').error('FormController', 'Метод setDataSource в скором времени будет удален, задать источник данных необходимо через конфигурацию dataSource');
          this._dataSource = source;
          return this._getRecordFromSource(config)
       },
@@ -652,20 +652,20 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._initializer.call(prototypeProtectedData); //На прототипе опции не доступны, получаем их через initializer
          $ws.core.merge(options, opt); //Чтобы не портить объект
          $ws.core.merge(options, prototypeProtectedData._options); //Мержим опции с прототипа, на опции, которые прилетели из dialogActionBase
-         if (!$ws.helpers.instanceOfModule(options.dataSource, 'SBIS3.CONTROLS.Data.Source.Base')) {
-            options.dataSource = this.createDataSource(options);
+         if (!$ws.helpers.instanceOfModule(options.source, 'SBIS3.CONTROLS.Data.Source.Base')) {
+            options.source = this.createDataSource(options);
          }
          if (options.key){
-            return options.dataSource.read(options.key);
+            return options.source.read(options.key);
          }
          else{
-            return options.dataSource.create(options.initValues);
+            return options.source.create(options.initValues);
          }
       };
 
       FormController.prototype.createDataSource = function(options){
-         if (!$ws.helpers.instanceOfModule(options.dataSource, 'SBIS3.CONTROLS.Data.Source.Base')) {
-            return Di.resolve(options.sourceOptions.moduleAlias || 'source.sbis-service', options.sourceOptions);
+         if (!$ws.helpers.instanceOfModule(options.source, 'SBIS3.CONTROLS.Data.Source.Base')) {
+            return Di.resolve(options.dataSource.moduleAlias || 'source.sbis-service', options.dataSource);
          }
       };
    return FormController;
