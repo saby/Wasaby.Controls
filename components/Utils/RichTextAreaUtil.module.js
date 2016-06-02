@@ -78,15 +78,16 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
          }
          //рассчет родительского window элемента
          //если на странице есть youtube елемент то window.frames[0].document стреляет ошибкой доступа
-         try {
-            while (window.frames[i]) {
-               if (_isDescendant(window.frames[i].document.body, event.target)) {
-                  currentWindow = window.frames[i];
+         if (!_isDescendant(window.document.body, event.target)) {
+            try {
+               while (window.frames[i]) {
+                  if (_isDescendant(window.frames[i].document.body, event.target)) {
+                     currentWindow = window.frames[i];
+                  }
+                  i++;
                }
-               i++;
+            } catch (exception) {
             }
-         } catch(exception) {
-            currentWindow = window
          }
          // webkit && ie>9
          if (currentWindow.getSelection) {
