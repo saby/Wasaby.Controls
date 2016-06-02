@@ -66,7 +66,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              * показать все записи, а по другому их не вытащить*/
             return projection._items;
          } else {
-            applyExpandToItemsProjection(projection, cfg);
+            applyExpandToItemsProjection.call(this, projection, cfg);
             projection.each(function(item) {
                items.push(item);
             });
@@ -89,8 +89,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj, true);
    },
    applyExpandToItemsProjection = function(projection, cfg) {
-      var idx, item;
+      var idx, item, projFilter;
       projection.setEventRaising(false);
+      projFilter = projection.getFilter();
       projection.setFilter(retTrue);
       for (idx in cfg.openedPath) {
          if (cfg.openedPath.hasOwnProperty(idx)) {
@@ -104,7 +105,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             }
          }
       }
-      var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders : projectionFilter;
+      var filterCallBack = projFilter;
       projection.setFilter(filterCallBack);
       projection.setEventRaising(true);
    },

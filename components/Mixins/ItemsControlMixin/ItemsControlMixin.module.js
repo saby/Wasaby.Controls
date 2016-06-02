@@ -1573,7 +1573,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (this._options._items) {
             this._clearItems();
             this._needToRedraw = false;
-            records = this._options._getRecordsForRedraw(this._options._itemsProjection, this._options);
+            records = this._options._getRecordsForRedraw.call(this, this._options._itemsProjection, this._options);
             this._toggleEmptyData(!records.length && this._options.emptyHTML);
             this._drawItems(records);
          }
