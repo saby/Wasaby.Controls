@@ -36,7 +36,6 @@ define(
     */
 
    var DatePicker = FormattedTextBoxBase.extend([PickerMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
-       _dotTplFn: dotTplFn,
        /**
         * @event onDateChange Происходит при изменении даты.
         * @remark
@@ -58,6 +57,7 @@ define(
         * </pre>
         */
       $protected: {
+         _dotTplFn: dotTplFn,
          /**
           * Допустимые управляющие символы в маске.
           * Условные обозначения:
