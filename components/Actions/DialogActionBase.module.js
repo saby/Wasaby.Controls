@@ -128,6 +128,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          };
 
          if (!config.componentOptions.record) {
+            //Загружаем компонент, отнаследованный от formController'a, чтобы с его прототипа вычитать запись, которую мы прокинем при инициализации компонента
+            //Сделано в рамках ускорения
             require([dialogComponent], this._initTemplateComponentCallback.bind(this, config, meta, mode));
          }
          else {
