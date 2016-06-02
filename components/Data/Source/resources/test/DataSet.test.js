@@ -233,16 +233,6 @@ define([
                data._type = 'recordset';
                assert.isUndefined(ds.getRow());
             });
-
-            it('should return record after get all', function () {
-               var ds = new DataSet({
-                  rawData: {d:[[1]], s:[{n:'Id',t:'Число целое'}], _type:'recordset'},
-                  adapter:'adapter.sbis'
-               });
-               assert.Throw(function(){
-                  ds.getRow();
-               });
-            });
          });
 
          describe('.getScalar()', function () {
