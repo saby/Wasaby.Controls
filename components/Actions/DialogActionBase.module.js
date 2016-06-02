@@ -172,8 +172,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          var defaultConfig = {
                isStack: true,
                autoHide: true,
-               //buildMarkupWithContext: true,
-               //showOnControlsReady: false,
+               buildMarkupWithContext: true,
+               showOnControlsReady: false,
                autoCloseOnHide: true
             },
             floatAreaCfg = {};
