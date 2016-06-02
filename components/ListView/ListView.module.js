@@ -690,7 +690,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                   break;
                case $ws._const.key.del:
-                   selectedKeys = this._options.multiselect ? this.getSelectedKeys() : selectedKey ? [selectedKey] : [];
+                   selectedKeys = this._options.multiselect ? this.getSelectedKeys() : [];
+                   if (selectedKeys.length === 0 && selectedKey) {
+                      selectedKeys = [selectedKey];
+                   }
                    if (selectedKeys.length && this._allowDelete()) {
                       this.deleteRecords(selectedKeys);
                    }
