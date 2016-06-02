@@ -280,11 +280,7 @@ define(
           * @see onChangeInterval
           */
          setInterval: function ( interval ) {
-            if (interval == undefined){
-               this.setText(this._getEmptyText());
-               return;
-            }
-            if (interval.toString() == this.getInterval()){
+            if (interval == undefined || interval.toString() == this.getInterval()){
                return;
             }
             this.timeInterval.set(interval);
