@@ -333,9 +333,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       },
       _getRecordsForRedrawCurFolder: function() {
          var items = [];
-         if (!this._isSearchMode()) {
-            this._applyExpandToItemsProjection();
-         }
+         this._applyExpandToItemsProjection();
          this._itemsProjection.each(function(item) {
             items.push(item);
          }.bind(this));
