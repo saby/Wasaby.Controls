@@ -40,46 +40,14 @@ define('js!SBIS3.CONTROLS.ListView',
       'use strict';
 
       var
-         buildTplArgs = function(cfg) {
-            var tplOptions = {}, itemTpl, itemContentTpl;
-
-
-            tplOptions.displayField = cfg.displayField;
-            tplOptions.templateBinding = cfg.templateBinding;
-
-            if (cfg.itemContentTpl) {
-               itemContentTpl = cfg.itemContentTpl;
-            }
-            else {
-               itemContentTpl = cfg._defaultItemContentTemplate;
-            }
-            tplOptions.itemContent = TemplateUtil.prepareTemplate(itemContentTpl);
-            if (cfg.itemTpl) {
-               itemTpl = cfg.itemTpl;
-            }
-            else {
-               itemTpl = cfg._defaultItemTemplate;
-            }
-            tplOptions.itemTpl = TemplateUtil.prepareTemplate(itemTpl);
-            tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(cfg._defaultItemTemplate);
-
-            if (cfg.includedTemplates) {
-               var tpls = cfg.includedTemplates;
-               tplOptions.included = {};
-               for (var j in tpls) {
-                  if (tpls.hasOwnProperty(j)) {
-                     tplOptions.included[j] = TemplateUtil.prepareTemplate(tpls[j]);
-                  }
-               }
-            }
-
+         buildTplArgsLV = function(cfg) {
+            var tplOptions = cfg._buildTplArgsSt(cfg);
             tplOptions.multiselect = cfg.multiselect;
             tplOptions.decorators = this._decorators;
             tplOptions.colorField = cfg.colorField;
 
             return tplOptions;
          };
-
       var
          DRAG_AVATAR_OFFSET = 5,
          START_NEXT_LOAD_OFFSET = 180;
@@ -272,7 +240,8 @@ define('js!SBIS3.CONTROLS.ListView',
             _addResultsMethod: undefined,
             _options: {
                _canServerRender: true,
-               _buildTplArgs: buildTplArgs,
+               _buildTplArgs: buildTplArgsLV,
+               _buildTplArgsLV: buildTplArgsLV,
                _defaultItemTemplate: ItemTemplate,
                _defaultItemContentTemplate: ItemContentTemplate,
                /**

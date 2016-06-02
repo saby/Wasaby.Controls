@@ -119,6 +119,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             expandAllItems(projection);
          }
       }
+   },
+   buildTplArgsTV = function(cfg) {
+      var tplOptions = cfg._buildTplArgsSt(cfg);
+      tplOptions.displayType = cfg.displayType;
+      tplOptions.hierField = cfg.hierField;
+      tplOptions.paddingSize = cfg._paddingSize;
+      tplOptions.originallPadding = cfg._originallPadding;
+      tplOptions.isSearch = (!Object.isEmpty(cfg.groupBy) && cfg.groupBy.field === this._searchParamName);
+      return tplOptions;
    };
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
@@ -181,6 +190,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          _treePagers : {},
          _treePager: null,
          _options: {
+            _buildTplArgs: buildTplArgsTV,
+            _buildTplArgsLV: buildTplArgsTV,
+            _paddingSize: 16,
+            _originallPadding: 6,
             _getRecordsForRedraw: getRecordsForRedraw,
             _curRoot: null,
             _createDefaultProjection : createDefaultProjection,
@@ -275,9 +288,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          _lastPath : [],
          _loadedNodes: {},
          _previousRoot: null,
-         _hier: [],
-         _paddingSize: 16,
-         _originallPadding: 6
+         _hier: []
       },
 
       $constructor : function(cfg) {
@@ -401,16 +412,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          return this._options.openedPath;
       },
       around: {
-         _buildTplArgs: function(parentFnc, item) {
-            var
-               args = parentFnc.call(this, item);
-            args.displayType = this._options.displayType;
-            args.hierField = this._options.hierField;
-            args.paddingSize = this._paddingSize;
-            args.originallPadding = this._originallPadding;
-            args.isSearch = (!Object.isEmpty(this._options.groupBy) && this._options.groupBy.field === this._searchParamName)
-            return args;
-         },
          _canApplyGrouping: function(parentFn, projItem) {
             var
                itemParent = projItem.getParent();

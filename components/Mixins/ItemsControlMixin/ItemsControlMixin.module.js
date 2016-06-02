@@ -184,6 +184,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _defaultItemTemplate: '',
             _defaultItemContentTemplate: '',
             _createDefaultProjection : createDefaultProjection,
+            _buildTplArgsSt: buildTplArgs,
             _buildTplArgs : buildTplArgs,
             _getRecordsForRedraw: getRecordsForRedraw,
             /**
