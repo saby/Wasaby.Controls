@@ -551,7 +551,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _prepareItemData: function() {
          var buildArgsMethod;
-         if (this._canServerRender) {
+         if (this._options._canServerRender) {
             buildArgsMethod = this._options._buildTplArgs;
          }
          else {

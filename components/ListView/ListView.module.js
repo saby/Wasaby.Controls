@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
       var
          buildTplArgsLV = function(cfg) {
-            var tplOptions = cfg._buildTplArgsSt(cfg);
+            var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
             tplOptions.multiselect = cfg.multiselect;
             tplOptions.decorators = this._decorators;
             tplOptions.colorField = cfg.colorField;

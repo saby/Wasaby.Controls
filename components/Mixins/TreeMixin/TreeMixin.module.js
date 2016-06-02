@@ -121,7 +121,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       }
    },
    buildTplArgsTV = function(cfg) {
-      var tplOptions = cfg._buildTplArgsSt(cfg);
+      var tplOptions = cfg._buildTplArgsLV.call(this, cfg);
       tplOptions.displayType = cfg.displayType;
       tplOptions.hierField = cfg.hierField;
       tplOptions.paddingSize = cfg._paddingSize;
@@ -191,7 +191,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          _treePager: null,
          _options: {
             _buildTplArgs: buildTplArgsTV,
-            _buildTplArgsLV: buildTplArgsTV,
+            _buildTplArgsTV: buildTplArgsTV,
             _paddingSize: 16,
             _originallPadding: 6,
             _getRecordsForRedraw: getRecordsForRedraw,
