@@ -164,8 +164,10 @@ define([
                   newV;
                record.subscribe('onPropertyChange', function(e, properties) {
                   for (var key in properties) {
-                     name = key;
-                     newV = properties[key];
+                     if (properties.hasOwnProperty(key)) {
+                        name = key;
+                        newV = properties[key];
+                     }
                   }
                });
                record.set('max', 13);
@@ -177,8 +179,10 @@ define([
                   newV;
                record.subscribe('onPropertyChange', function(e, properties) {
                   for (var key in properties) {
-                     name = key;
-                     newV = properties[key];
+                     if (properties.hasOwnProperty(key)) {
+                        name = key;
+                        newV = properties[key];
+                     }
                   }
                });
                record.set({
@@ -193,8 +197,10 @@ define([
                   newV;
                record.subscribe('onPropertyChange', function(e, properties) {
                   for (var key in properties) {
-                     name = key;
-                     newV = properties[key];
+                     if (properties.hasOwnProperty(key)) {
+                        name = key;
+                        newV = properties[key];
+                     }
                   }
                });
                record.set('max', record.get('max'));
@@ -209,8 +215,10 @@ define([
                record.set('rec', val);
                record.subscribe('onPropertyChange', function(e, properties) {
                   for (var key in properties) {
-                     name = key;
-                     newV = properties[key];
+                     if (properties.hasOwnProperty(key)) {
+                        name = key;
+                        newV = properties[key];
+                     }
                   }
                });
                val = val.clone();
@@ -226,8 +234,10 @@ define([
                record.set('rec', val);
                record.subscribe('onPropertyChange', function(e, properties) {
                   for (var key in properties) {
-                     name = key;
-                     newV = properties[key];
+                     if (properties.hasOwnProperty(key)) {
+                        name = key;
+                        newV = properties[key];
+                     }
                   }
                });
                val = val.clone();
@@ -244,8 +254,10 @@ define([
                record.set('enum', val1);
                record.subscribe('onPropertyChange', function(e, properties) {
                   for (var key in properties) {
-                     name = key;
-                     newV = properties[key];
+                     if (properties.hasOwnProperty(key)) {
+                        name = key;
+                        newV = properties[key];
+                     }
                   }
                });
                record.set('enum', val2);
@@ -260,8 +272,10 @@ define([
                record.set('enum', val1);
                record.subscribe('onPropertyChange', function(e, properties) {
                   for (var key in properties) {
-                     name = key;
-                     newV = properties[key];
+                     if (properties.hasOwnProperty(key)) {
+                        name = key;
+                        newV = properties[key];
+                     }
                   }
                });
                record.set('enum', val2);
@@ -282,8 +296,10 @@ define([
                record.set('flags', val1);
                record.subscribe('onPropertyChange', function(e, properties) {
                   for (var key in properties) {
-                     name = key;
-                     newV = properties[key];
+                     if (properties.hasOwnProperty(key)) {
+                        name = key;
+                        newV = properties[key];
+                     }
                   }
                });
                record.set('flags', val2);
@@ -304,8 +320,10 @@ define([
                record.set('flags', val1);
                record.subscribe('onPropertyChange', function(e, properties) {
                   for (var key in properties) {
-                     name = key;
-                     newV = properties[key];
+                     if (properties.hasOwnProperty(key)) {
+                        name = key;
+                        newV = properties[key];
+                     }
                   }
                });
                record.set('flags', val2);
@@ -318,7 +336,7 @@ define([
                assert.property(record._propertiesCache, 'obj');
                record.set('obj', {val: 14});
                record.get('obj');
-               assert.deepEqual(record._propertiesCache['obj'], {val: 14});
+               assert.deepEqual(record._propertiesCache.obj, {val: 14});
             });
          });
 
@@ -367,7 +385,7 @@ define([
             it('should traverse all of fields', function () {
                var count = Object.keys(recordData).length;
                assert.isTrue(count > 0);
-               record.each(function(name) {
+               record.each(function() {
                   count--;
                });
                assert.strictEqual(count, 0);
@@ -586,7 +604,7 @@ define([
                      adapter: 'adapter.sbis',
                      rawData: getRecordSbisData()
                   });
-               var cl = record.clone();
+               record.clone();
                record.removeFieldAt(fieldIndex);
 
                assert.notEqual(record.getFormat().at(fieldIndex).getName(), fieldName);

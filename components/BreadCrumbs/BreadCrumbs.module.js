@@ -94,15 +94,17 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          event.stopPropagation();
       },
 
-      _onClickHandler: function(e) {
-         BreadCrumbs.superclass._onClickHandler.apply(this, arguments);
-         var target = $(e.target),
-            crumb = target.closest('.js-controls-BreadCrumbs__crumb');
-         if (crumb.hasClass('controls-BreadCrumbs__dots')) {
-            this._dotsClickHandler(crumb)
-         } else if (crumb.length) {
-            this._notify('onItemClick', crumb.data(this._options.keyField));
-            if (this._picker.isVisible()){
+      _onClickHandler: function(e, fromDropdown) {
+         if (this.isEnabled()){
+            BreadCrumbs.superclass._onClickHandler.apply(this, arguments);
+            var target = $(e.target),
+               crumb = target.closest('.js-controls-BreadCrumbs__crumb');
+            if (crumb.hasClass('controls-BreadCrumbs__dots')) {
+               this._dotsClickHandler(crumb)
+            } else if (crumb.length) {
+               this._notify('onItemClick', crumb.data(this._options.keyField));
+            }
+            if (this._picker.isVisible() && fromDropdown){
                this._picker.hide();
             }
          }
@@ -156,7 +158,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          var self = this;
          this._redrawDropdown();
          this._picker._container.bind('mouseup', function(e) {
-            self._onClickHandler(e);
+            self._onClickHandler(e, true);
          });
       },
 

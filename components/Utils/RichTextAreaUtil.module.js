@@ -73,6 +73,9 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
                return false;
             };
          e.preventDefault();
+         if (canCut) {
+            e.stopImmediatePropagation();
+         }
          //рассчет родительского window элемента
          while (window.frames[i]){
             if (_isDescendant(window.frames[i].document.body, event.target)) {

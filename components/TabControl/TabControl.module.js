@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.TabControl', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.TabControl',
-   'js!SBIS3.CONTROLS.SwitchableArea',
+   'js!SBIS3.CORE.SwitchableArea',
    'js!SBIS3.CONTROLS.TabButtons'
 ], function(CompoundControl, dotTplFn) {
 
@@ -106,9 +106,6 @@ define('js!SBIS3.CONTROLS.TabControl', [
          this._switchableArea.setActiveArea(this._options.selectedKey);
          this._tabButtons = this.getChildControlByName('TabButtons');
          this._tabButtons.subscribe('onSelectedItemChange', this._onSelectedItemChange.bind(this));
-
-         //передаем элементы заданные TabControl-у
-         this.setItems(this._options.items);
       },
 
       setItems: function(items) {

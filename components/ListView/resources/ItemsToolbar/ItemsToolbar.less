@@ -7,10 +7,9 @@
       position: absolute;
       display: block;
       z-index: @list-view-items-toolbar-zindex;
-      margin: 0 1px 1px 0;
+      margin: @list-view-items-toolbar-margin;
       background-color: @list-view-items-toolbar-bg;
       box-shadow: @list-view-items-toolbar-box-shadow;
-      margin-right: @list-view-items-toolbar-margin-right;
 
       &.controls-ItemsToolbar__vertical {
          margin: 1px 1px 0 0;
@@ -42,7 +41,7 @@
       .controls-ItemsToolbar {
          background-color: @list-view-items-toolbar-bg;
          box-shadow: @list-view-items-toolbar-box-shadow;
-         &.controls-ItemsToolbar__locked {
+         &.controls-ItemsToolbar__edit {
             background-color: @list-view-items-toolbar-locked-bg;
             box-shadow: @list-view-items-toolbar-locked-box-shadow;
             &.controls-ItemsToolbar__vertical {
@@ -73,7 +72,7 @@
       .controls-ItemsToolbar {
          background-color: @list-view-items-toolbar-bg;
          box-shadow: none;
-         &.controls-ItemsToolbar__locked {
+         &.controls-ItemsToolbar__edit {
             background-color: @list-view-items-toolbar-locked-bg;
             &:before {
                background: url('img/items-toolbar-bottom-style-background.png') no-repeat 0 -30px;

@@ -4,6 +4,7 @@
 define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.MoveDialogTemplate',
+   'html!SBIS3.CONTROLS.MoveDialogTemplate/resources/FolderTitleTpl',
    'js!SBIS3.CONTROLS.Button',
    'js!SBIS3.CONTROLS.TreeDataGridView',
    'i18n!SBIS3.CONTROLS.MoveDialogTemplate'
@@ -68,7 +69,10 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
                self.setSelectedKey('null');
                rootBlock.addClass('controls-ListView__item__selected');
                event.stopPropagation();
-            });
+               //Добавляем debounce, т.к. на iPad клик отрабатывает 2 раза, первый нативный, а второй генерируем мы сами в Control.module.js
+               //т.к. на iPad не всегда отрабатывает нативный клик. В 3.7.4 этот костль уйдёт вместе с этим методом, когда Мальцев сделает
+               //создание фейкового корня.
+            }.debounce(100));
             rootBlock.prependTo(self._container.find('tbody'));
             self.setSelectedKey('null');
             //TODO: Установим марке отметки на фейковый корень по таймауту т.к. сначала стреляет событие onDrawItems по которому

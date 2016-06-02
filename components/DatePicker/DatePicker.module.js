@@ -220,6 +220,17 @@ define(
          this._addDefaultValidator();
       },
 
+      _keyDownBind: function(event) {
+         var key = event.which || event.keyCode;
+
+         if (key == $ws._const.key.insert) {
+            this.setDate(new Date());
+         } else {
+            return DatePicker.superclass._keyDownBind.apply(this, arguments);
+         }
+         event.preventDefault();
+      },
+
       _modifyOptions : function(options) {
          this._checkTypeOfMask(options);
          return DatePicker.superclass._modifyOptions.apply(this, arguments);
@@ -475,6 +486,7 @@ define(
             date = (DateUtil.isValidDate(oldDate)) ? new Date(oldDate.getTime())  : new Date(),
             item,
             value,
+            curYear = new Date().getFullYear(),
             yyyy = date.getFullYear(),
             mm   = date.getMonth(),
             dd   = date.getDate(),
@@ -493,6 +505,9 @@ define(
             }
             switch (item.mask) {
                case 'YY' :
+                  //Если год задаётся двумя числами, то считаем что это текущий век.
+                  yyyy = (curYear - curYear % 100) + Number(value);
+                  break;
                case 'YYYY' :
                   yyyy = value;
                   break;

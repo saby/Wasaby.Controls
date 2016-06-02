@@ -40,6 +40,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this.once('onInit', function() {
                this._itemActionsMenuButton = this._container.find('.controls-ItemActions__menu-button');
             }.bind(this));
+
+            if(this._options.items.length && this._options.items[0].title) {
+               $ws.single.ioc.resolve('ILogger').log('title', 'C 3.7.3.140 свойство операции над записью title перестанет работать. Используйте свойство caption');
+            }
          },
          /**
           * Изменяет операции над строкой до нужного состояния - скрывает / показывает кнопки
@@ -75,6 +79,13 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             if(this.isItemActionsMenuVisible()) return;
 
             this._itemActionsMenuButton[onlyMain ? 'addClass' : 'removeClass']('ws-hidden');
+         },
+
+
+         setEnabled: function () {
+            /* Чтобы после изменения состояния, применилась видимость к операциям */
+            ItemActionsGroup.superclass.setEnabled.apply(this, arguments);
+            this.applyItemActions();
          },
          /**
           * Создаёт меню для операций над записью
@@ -234,21 +245,17 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             var action = {
                isMainAction : item.get('isMainAction'),
                isVisible: true
-            };
+                },
+                onActivated = item.get('onActivated');
 
-
-            /*TODO придрот, Леха сделал клонирование записей и теперь функции теряются*/
-            var
-               data = this._dataSource._options.data,
-               key = item.getId(),
-               prop = item.getIdProperty();
-
-            if (data instanceof Array) {
-               for (var i = 0; i < data.length; i++) {
-                  if (data[i] instanceof Object && data[i][prop] == key) {
-                     action.handler = data[i]['onActivated'];
-                  }
+            // При сериализации элементов ItemActions в проекции функции клонируется в строку,
+            // поэтому требуется вернуть её в исходное состояние
+            if(typeof onActivated === "string") {
+               if( onActivated.beginsWith('wsFuncDecl::')) {
+                  action.handler = $ws.helpers.getFuncFromDeclaration(onActivated.replace('wsFuncDecl::', ''));
                }
+            }else{
+               action.handler = onActivated;
             }
 
             this._itemActionsButtons[item.get('name')] = action;
