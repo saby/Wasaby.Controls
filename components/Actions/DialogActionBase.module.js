@@ -130,10 +130,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
 
          if (meta.preloadRecord !== false){
             if (!this._templateComponent){
-               require([dialogComponent], this._initTemplateComponentCallback.bind(this, undefined, config, meta, mode));
+               require([dialogComponent], this._initTemplateComponentCallback.bind(this, config, meta, mode));
             }
             else{
-               this._initTemplateComponentCallback(this._templateComponent, config, meta, mode);
+               this._initTemplateComponentCallback(config, meta, mode, this._templateComponent);
             }
          }
          else{
@@ -141,20 +141,17 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          }
       },
 
-      _initTemplateComponentCallback: function (templateComponent, config, meta, mode) {
+      _initTemplateComponentCallback: function (config, meta, mode, templateComponent) {
          var self = this;
          this._templateComponent = templateComponent;
          templateComponent.prototype.getRecordFromSource(config.componentOptions).addCallback(function (record) {
-            var dialog = self._dialog;
+            if (record){
+               var ctx = new $ws.proto.Context({restriction: 'set'}).setPrevious(self.getLinkedContext());
+               ctx.setValue('record', record);
+               config.componentOptions.context = ctx;
+            }
             config.componentOptions.record = record;
-            if (dialog.isInitialized()) {
-               self._showDialog(config, meta, mode);
-            }
-            else {
-               dialog.once('onAfterLoad', function () {
-                  self._showDialog(config, meta, mode);
-               });
-            }
+            self._showDialog(config, meta, mode);
          });
       },
 

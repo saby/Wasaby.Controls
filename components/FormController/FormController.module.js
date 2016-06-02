@@ -510,8 +510,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see dataSource
        * @see getDataSource
        */
-      setDataSource: function(){
-         $ws.single.ioc.resolve('ILogger').error('FormController', 'Метод setDataSource отсутствует, задать источник данных необходимо через конфигурацию sourceOptions');
+      setDataSource: function(source, config){
+         $ws.single.ioc.resolve('ILogger').error('FormController', 'Метод setDataSource в скором времени будет удален, задать источник данных необходимо через конфигурацию sourceOptions');
          this._dataSource = source;
          return this._getRecordFromSource(config)
       },
