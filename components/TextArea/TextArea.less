@@ -87,4 +87,13 @@
       white-space: pre-line;
       text-overflow: ellipsis;
    }
+  .controls-TextArea__placeholder {
+    position: absolute;
+    top: 0;
+    .text-overflow();
+    color: @text-area-placeholder-color;
+    font: @text-area-compat-placeholder-font;
+    padding: @text-area-compat-placeholder-padding;
+    text-align: @text-area-compat-placeholder-alignment;
+  }
 }
