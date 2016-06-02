@@ -1,0 +1,17 @@
+rootUrl: http://test-autotest53:32200
+gridUrl: http://10.76.159.209:4444/wd/hub
+screenshotsDir: './screenshots'
+windowSize: 1280x1024
+sessionsPerBrowser: 8
+
+browsers:
+  chrome:
+    desiredCapabilities:
+      browserName: chrome
+
+  firefox:
+    desiredCapabilities:
+      browserName: firefox
+	
+system:
+  diffColor: '#018def'
