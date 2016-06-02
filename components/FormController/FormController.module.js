@@ -615,7 +615,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          });
          def.addBoth(function(r){
             if (!config.hideErrorDialog && (r instanceof Error)){
-               self._processError()
+               self._processError(r);
             }
             self._hideLoadingIndicator();
             self._activateChildControlAfterLoad();
