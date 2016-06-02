@@ -62,6 +62,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           showEditActions: function() {
              this._getEditActions().removeClass('ws-hidden');
+             this.getContainer().addClass('controls-ItemsToolbar__edit');
           },
           /**
            * Скрывает кнопки редактирования
@@ -69,6 +70,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           hideEditActions: function() {
              if (this._editActions) {
                 this._editActions.addClass('ws-hidden');
+                this.getContainer().removeClass('controls-ItemsToolbar__edit');
              }
           },
           /**
@@ -170,7 +172,6 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           lockToolbar: function() {
              this._lockingToolbar = true;
-             this.getContainer().addClass('controls-ItemsToolbar__locked');
              this._trackingTarget();
           },
           /**
@@ -178,7 +179,6 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           unlockToolbar: function() {
              this._lockingToolbar = false;
-             this.getContainer().removeClass('controls-ItemsToolbar__locked');
              this._untrackingTarget();
           },
           /**

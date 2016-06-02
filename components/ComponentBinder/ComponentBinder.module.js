@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       if (this._searchReload) {
          //Нужно поменять фильтр и загрузить нужный корень.
          //TODO менять фильтр в контексте, когда появятся data-binding'и
-         filter[view.getHierField()] = this._lastRoot || null;
+         filter[view.getHierField()] = this._lastRoot;
          //DataGridView._filter = filter;
          //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
          //Релоад сделает то же самое, так как он стреляет onSetRoot даже если корень на самом деле не понменялся
@@ -293,9 +293,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          });
          searchForm.subscribe('onKeyPressed', function(eventObject, event){
             // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
-            if (event.which == $ws._const.key.down && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)){
+            if ((event.which == $ws._const.key.tab || event.which == $ws._const.key.down) && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)){
                view.setSelectedIndex(0);
                view.setActive(true);
+               event.stopPropagation();
             }
          });
 

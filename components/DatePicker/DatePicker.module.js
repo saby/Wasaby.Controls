@@ -36,6 +36,7 @@ define(
     */
 
    var DatePicker = FormattedTextBoxBase.extend([PickerMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
+       _dotTplFn: dotTplFn,
        /**
         * @event onDateChange Происходит при изменении даты.
         * @remark
@@ -57,7 +58,6 @@ define(
         * </pre>
         */
       $protected: {
-         _dotTplFn: dotTplFn,
          /**
           * Допустимые управляющие символы в маске.
           * Условные обозначения:
@@ -486,6 +486,7 @@ define(
             date = (DateUtil.isValidDate(oldDate)) ? new Date(oldDate.getTime())  : new Date(),
             item,
             value,
+            curYear = new Date().getFullYear(),
             yyyy = date.getFullYear(),
             mm   = date.getMonth(),
             dd   = date.getDate(),
@@ -504,6 +505,9 @@ define(
             }
             switch (item.mask) {
                case 'YY' :
+                  //Если год задаётся двумя числами, то считаем что это текущий век.
+                  yyyy = (curYear - curYear % 100) + Number(value);
+                  break;
                case 'YYYY' :
                   yyyy = value;
                   break;

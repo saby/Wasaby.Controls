@@ -702,6 +702,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _keyboardHover: function (e) {
             var
+               selectedKeys,
                selectedKey = this.getSelectedKey(),
                newSelectedKey,
                newSelectedItem;
@@ -730,9 +731,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                   break;
                case $ws._const.key.del:
-                  var key = this.getSelectedKey();
-                   if (key && this._allowDelete()) {
-                      this.deleteRecords(key);
+                   selectedKeys = this._options.multiselect ? this.getSelectedKeys() : selectedKey ? [selectedKey] : [];
+                   if (selectedKeys.length && this._allowDelete()) {
+                      this.deleteRecords(selectedKeys);
                    }
                   break;
             }
@@ -1311,6 +1312,15 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                controller = this._isHoverEditMode() ? EditInPlaceHoverController : EditInPlaceClickController;
             this._editInPlace = new controller(this._getEditInPlaceConfig());
+         },
+
+         //TODO: Сейчас ListView не является родителем редактирования по месту, и при попытке отвалидировать
+         //ListView, валидация редактирования не вызывается. Сейчас есть сценарий, когда редактирование
+         //располагается на карточке, и при попытке провалидировать карточку перед сохранением, результат
+         //будет true, но редактирование может быть невалидно.
+         validate: function() {
+            var editingIsValid = !(this.isEdit() && !this._getEditInPlace().validate());
+            return ListView.superclass.validate.apply(this, arguments) && editingIsValid;
          },
 
          _destroyEditInPlace: function() {
@@ -1937,7 +1947,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      recordsPerPage: this._options.pageSize || more,
                      currentPage: 1,
                      recordsCount: more,
-                     pagesLeftRight: 3,
+                     pagesLeftRight: 1,
                      onlyLeftSide: typeof more === 'boolean', // (this._options.display.usePaging === 'parts')
                      rightArrow: hasNextPage
                   },
@@ -1952,6 +1962,17 @@ define('js!SBIS3.CONTROLS.ListView',
                   pagingOptions: pagingOptions,
                   handlers: {
                      'onPageChange': function (event, pageNum, deferred) {
+                        var more = self._dataSet.getMetaData().more,
+                            hasNextPage = self._hasNextPage(more, self._infiniteScrollOffset),
+                            maxPage = self._pager.getPaging()._maxPage;
+                        //Старый Paging при включенной частичной навигации по нажатию кнопки "Перейти к последней странице" возвращает pageNum = 0 (у него индексы страниц начинаются с 1)
+                        //В новом Pager'e индексация страниц начинается с 0 и такое поведение здесь не подходит
+                        //Так же в режиме частичной навигации нет возможности высчитать номер последней страницы, поэтому
+                        //при переходе к последней странице делаем так, чтобы мы переключились на последнюю доступную страницу.
+                        if (pageNum == 0 && self._pager._options.pagingOptions.onlyLeftSide){
+                           pageNum = hasNextPage ? (maxPage + 1) : maxPage;
+                        }
+
                         self._setPageSave(pageNum);
                         self.setPage(pageNum - 1);
                         self._pageChangeDeferred = deferred;
@@ -2387,6 +2408,24 @@ define('js!SBIS3.CONTROLS.ListView',
             this._updateItemsToolbar();
          },
          /*DRAG_AND_DROP END*/
+         /**
+          * Устанавливает позицию строки итогов
+          * @param {String} position Позиция
+          * <ul>
+          *    <li>none - Строка итогов не будет отображаться</li>
+          *    <li>top - Строка итогов будет расположена вверху</li>
+          *    <li>bottom - Строка итогов будет расположена внизу</li>
+          * </ul>
+          * @example
+          * <pre>
+          *     DataGridView.setResultsPosition('none');
+          *     DataGridView.reload();
+          * </pre>
+          * @see resultsPosition
+          */
+         setResultsPosition: function(position){
+           this._options.resultsPosition = position;
+         },
          _drawResults: function(){
             if (!this._checkResults()){
                return;
