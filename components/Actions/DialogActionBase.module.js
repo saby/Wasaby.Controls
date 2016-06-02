@@ -63,8 +63,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
           * Отдельно храним ключ для модели из связного списка, т.к. он может не совпадать с ключом редактируемой модели
           * К примеру в реестре задач ключ записи в реестре и ключ редактируемой записи различается, т.к. одна и та же задача может находиться в нескольких различных фазах
           */
-         _linkedModelKey: undefined,
-         _templateComponent: undefined
+         _linkedModelKey: undefined
       },
       /**
        * @typedef {Object} ExecuteMetaConfig
@@ -128,43 +127,38 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             }
          };
 
-         if (meta.preloadRecord !== false){
-            if (!this._templateComponent){
-               require([dialogComponent], this._initTemplateComponentCallback.bind(this, config, meta, mode));
-            }
-            else{
-               this._initTemplateComponentCallback(config, meta, mode, this._templateComponent);
-            }
+         if (!config.componentOptions.record) {
+            require([dialogComponent], this._initTemplateComponentCallback.bind(this, config, meta, mode));
          }
-         else{
+         else {
             this._showDialog(config, meta, mode);
          }
       },
 
       _initTemplateComponentCallback: function (config, meta, mode, templateComponent) {
          var self = this;
-         this._templateComponent = templateComponent;
          templateComponent.prototype.getRecordFromSource(config.componentOptions).addCallback(function (record) {
-            if (record){
-               var ctx = new $ws.proto.Context({restriction: 'set'}).setPrevious(self.getLinkedContext());
-               ctx.setValue('record', record);
-               config.componentOptions.context = ctx;
-            }
             config.componentOptions.record = record;
             self._showDialog(config, meta, mode);
          });
       },
 
       _showDialog: function(config, meta, mode){
-         var Component;
+         var floatAreaCfg,
+             Component;
          mode = mode || this._options.mode;
          if (mode == 'floatArea'){
             Component = FloatArea;
-            config.isStack = meta.isStack !== undefined ? meta.isStack : true;
-            config.autoHide = meta.autoHide !== undefined ? meta.autoHide : true;
-            config.autoCloseOnHide = meta.autoCloseOnHide !== undefined ? meta.autoCloseOnHide : true;
+            floatAreaCfg = this._getFloatAreaConfig(meta);
+            $ws.core.merge(config, floatAreaCfg);
          } else if (mode == 'dialog') {
             Component = Dialog;
+         }
+
+         if (config.componentOptions.record){
+            var ctx = new $ws.proto.Context({restriction: 'set'}).setPrevious(this.getLinkedContext());
+            ctx.setValue('record', config.componentOptions.record);
+            config.componentOptions.context = ctx;
          }
          if (this._dialog && !this._dialog.isAutoHide()){
             $ws.core.merge(this._dialog._options, config);
@@ -173,6 +167,22 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          else{
             this._dialog = new Component(config);
          }
+      },
+      _getFloatAreaConfig: function(meta){
+         var defaultConfig = {
+               isStack: true,
+               autoHide: true,
+               //buildMarkupWithContext: true,
+               //showOnControlsReady: false,
+               autoCloseOnHide: true
+            },
+            floatAreaCfg = {};
+
+         $ws.helpers.forEach(defaultConfig, function(value, prop){
+            floatAreaCfg[prop] = meta[prop] !== undefined ? meta[prop] : defaultConfig[prop];
+         });
+
+         return floatAreaCfg;
       },
 
       /**
