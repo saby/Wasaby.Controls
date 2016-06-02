@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       projection.setEventRaising(false);
       projection.setFilter(retTrue);
       for (idx in cfg.openedPath) {
-         if (cfg.hasOwnProperty(idx)) {
+         if (cfg.openedPath.hasOwnProperty(idx)) {
             item = projection.getItemBySourceItem(cfg._items.getRecordById(idx));
             if (item && !item.isExpanded()) {
                if (projection.getChildren(item).getCount()) {
