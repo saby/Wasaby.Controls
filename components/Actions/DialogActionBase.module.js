@@ -176,7 +176,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
                autoHide: true,
                buildMarkupWithContext: true,
                showOnControlsReady: false,
-               autoCloseOnHide: true
+               autoCloseOnHide: true,
+               target: '',
+               side: 'left',
+               animation: 'slide'
             },
             floatAreaCfg = {};
 
