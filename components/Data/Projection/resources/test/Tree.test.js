@@ -608,6 +608,25 @@ define([
                   }
                });
             });
+
+            context('onCollectionItemChange', function() {
+               it('should update hierarchy level', function() {
+                  var tree = getObservableTree(),
+                     collection = tree.getCollection(),
+                     index = collection.getIndexByValue('id', 4),
+                     item = collection.at(index),
+                     treeItem = tree.getItemBySourceItem(item),
+                     oldLevel = treeItem.getLevel(),
+                     level;
+
+                  tree.subscribe('onCollectionItemChange', function(e, item) {
+                     level = item.getLevel();
+                  });
+                  item.pid = 1;
+                  collection.notifyItemChange(item, {pid: 1});
+                  assert.strictEqual(oldLevel + 1, level);
+               });
+            });
          });
       });
    }
