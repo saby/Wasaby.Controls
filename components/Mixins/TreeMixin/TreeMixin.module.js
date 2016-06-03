@@ -144,7 +144,33 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              *    <option name="allowEnterToFolder">false</option>
              * </pre>
              */
-            allowEnterToFolder: true
+            allowEnterToFolder: true,
+            /**
+             * @cfg {Function}
+             * Метод используется для сортировки элементов, если передать null то данные сортироваться не будут
+             * По умолчанию данные сортируются так: с начала папки потом листья
+             * @example
+             * <pre>
+             *    <option name="itemsSortMethod">null</option>
+             * </pre>
+             * <pre>
+             *    var tree = new Tree({
+             *       elem: 'demoTree',
+             *       itemsSortMethod: function (objA, objB) {
+             *          var
+             *             isNodeA = objA.item.isNode(),
+             *             isNodeB = objB.item.isNode();
+             *          if (isNodeA === isNodeB) {
+             *             return objA.index > objB.index ? 1 : -1;
+             *          } else {
+             *              return isNodeA ? -1 : 1;
+             *          }
+             *       });
+             * </pre>
+             * @see SBIS3.CONTROLS.ItemsControlMixin#itemsSortMethod
+             * @see SBIS3.CONTROLS.ItemsControlMixin#setItemsSortMethod
+             */
+            itemsSortMethod: defaultItemsSortMethod
          },
          _foldersFooters: {},
          _breadCrumbs : [],
@@ -174,8 +200,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          }
          this._previousRoot = this._curRoot;
          this.setFilter(filter, true);
-
-         this._options.itemsSortMethod = 'itemsSortMethod' in cfg ? cfg.itemsSortMethod : this._defaultItemsSortMethod;
 
       },
       _projectionFilter: function(item, index, itemProj) {
@@ -447,18 +471,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             //Здесь при .cancel приходит ошибка вида DeferredCanceledError
             return error;
          });
-      },
-
-      _defaultItemsSortMethod: function(itemA, itemB) {
-         var
-            isNodeA = itemA.item.isNode(),
-            isNodeB = itemB.item.isNode();
-         if (isNodeA === isNodeB) {
-            //сохраняем порядок сортировки, если вернуть 0 chrome сломает переданный порядок
-            return itemA.index > itemB.index ? 1 : -1;
-         } else {
-            return isNodeA ? -1 : 1;
-         }
       },
 
       before: {
@@ -794,6 +806,18 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          this._pageSaver[root] = 0;
       }
    };
+
+   function defaultItemsSortMethod (objA, objB) {
+      var
+         isNodeA = objA.item.isNode(),
+         isNodeB = objB.item.isNode();
+      if (isNodeA === isNodeB) {
+         //сохраняем порядок сортировки, если вернуть 0 chrome сломает переданный порядок
+         return objA.index > objB.index ? 1 : -1;
+      } else {
+         return isNodeA ? -1 : 1;
+      }
+   }
 
    return TreeMixin;
 });
