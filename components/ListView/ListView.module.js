@@ -826,11 +826,29 @@ define('js!SBIS3.CONTROLS.ListView',
          _getScrollContainer: function() {
             var scrollWatcher = this._scrollWatcher,
                 scrollContainer;
+            
+            function findScrollContainer(node) {
+               if (node === null) {
+                  return null;
+               }
+
+               if (node.scrollHeight > node.clientHeight) {
+                  return node;
+               } else {
+                  findScrollContainer(node.parentNode);
+               }
+            }
 
             if(scrollWatcher) {
                scrollContainer = scrollWatcher.getScrollContainer();
             } else {
-               scrollContainer = $ws._const.$body;
+               /* т.к. скролл может находиться у произвольного контейнера, то попытаемся его найти */
+               scrollContainer = $(findScrollContainer(this._container[0]));
+
+               /* если всё же не удалось найти, то просто будем считать body */
+               if(!scrollContainer.length) {
+                  scrollContainer = $ws._const.$body;
+               }
             }
 
             return scrollContainer;
