@@ -1686,7 +1686,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                      
                      //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
-                     self.getItems().getMetaData().setMetaData(dataSet.getMetaData());
+                     self.getItems().setMetaData(dataSet.getMetaData());
 
                      if (this._isSlowDrawing()) {
                         self._drawItems(dataSet.toArray(), at);
