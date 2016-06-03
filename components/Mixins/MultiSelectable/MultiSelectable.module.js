@@ -604,8 +604,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
             }
 
             dMultiResult.done().getResult().addCallback(function() {
+               self._onSelectedItemsChangeHandler();
                self._loadItemsDeferred.callback(selItems);
-               self._notifyOnPropertyChanged('selectedItems');
             });
 
          } else {
@@ -631,9 +631,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
             if(selItems.getCount()) {
                /* Чтобы порвать ссылку на контекст делаем клон,
                   т.к. при любом изменении св-ва надо порвать ссылку на контекст */
-               this._options.selectedItems = selItems.clone();
-               this._options.selectedItems.clear();
-               this._notifyOnPropertyChanged('selectedItems');
+               selItems.clear();
+               this._onSelectedItemsChangeHandler();
             }
             return;
          }
@@ -646,12 +645,18 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          });
 
          if(delItems.length) {
-            this._options.selectedItems = selItems.clone();
             for(var i = 0, len = delItems.length; i < len; i++) {
-               this._options.selectedItems.remove(delItems[i]);
+               selItems.remove(delItems[i]);
             }
-            this._notifyOnPropertyChanged('selectedItems');
+            this._onSelectedItemsChangeHandler();
          }
+      },
+
+      /* Для правильной работы контекста надо рвать ссылку, на текущее св-во,
+         чтобы не было равенства при сравнении и в контекст записалось новое значение */
+      _onSelectedItemsChangeHandler: function() {
+         this._options.selectedItems = this._options.selectedItems.clone();
+         this._notifyOnPropertyChanged('selectedItems');
       },
 
       _isItemSelected : function(item) {
@@ -730,11 +735,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
 
       _checkEmptySelection: function() {
          return !this._options.selectedKeys.length && this._options.allowEmptyMultiSelection == false;
-      },
-
-      _getSelItemsClone: function() {
-         /* надо обязательно делать клон массива, чтобы порвать ссылку и не портить при изменении значения в контексте */
-         return this._makeList(this._options.selectedItems.toArray().slice());
       },
 
       _setSelectedItems: function() {

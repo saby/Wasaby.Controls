@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.Utils.Sanitize', ['Core/markup/ParserUtilitiesNew'], f
          width: true,
          colspan: true,
          rowspan: true,
-         class: true,
+         'class': true,
          id: true,
          tabindex: true,
          title: true,
@@ -38,6 +38,7 @@ define('js!SBIS3.CONTROLS.Utils.Sanitize', ['Core/markup/ParserUtilitiesNew'], f
       if (content.attributes.length) {
          while (content.attributes.length && idx < content.attributes.length) {
             if (validAttributes[content.attributes[idx].name]) {
+               content.attributes[idx].value.replace( /javascript:/gim, '');
                idx++;
             } else {
                content.attributes.splice(idx, 1);
