@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                });
             });
          } else {
-            $ws.helpers.saveToFile(fileType, methodName, cfg, undefined, true);
+            $ws.helpers.saveToFile(fileType, methodName, cfg, undefined, useGET);
          }
       },
       /**
