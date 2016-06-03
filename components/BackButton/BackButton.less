@@ -1,4 +1,4 @@
-   .controls-BackButton {
+.controls-BackButton {
    cursor: pointer;
    display: inline-block;
    font-size: @back-button-font-size;
@@ -26,6 +26,21 @@
       margin: @back-button-margin-before;
    }
 
+   &:hover {
+      .controls-BackButton__arrow{
+         display: inline-block;
+      }
+   }
+
+   &.controls-BackButton__hover-arrow{
+      .controls-BackButton__arrow{
+         position: absolute;
+         top: 4px;
+         right: 0;
+         background-color: rgba(255, 255, 255, 0.9);
+      }
+   }
+
    .controls-BackButton__arrow {
       position: relative;
       top: 5px;
@@ -33,6 +48,7 @@
       &:before{
          float: right;
       }
+      display: none;
    }
    
    .controls-BackButton__caption {
