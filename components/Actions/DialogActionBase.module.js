@@ -108,15 +108,32 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          meta.id = this._getEditKey(meta.item) || meta.id;
 
          var self = this,
-            config,
-            compOptions = this._buildComponentConfig(meta);
-            config = {
+            config, Component,
+
+         compOptions = this._buildComponentConfig(meta);
+         config = {
             opener: this,
             template: dialogComponent,
             componentOptions: compOptions
          };
          if (meta.title) {
             config.title = meta.title;
+         }
+
+         mode = mode || this._options.mode;
+         if (mode == 'floatArea'){
+            Component = FloatArea;
+            config.isStack = meta.isStack !== undefined ? meta.isStack : true;
+            config.autoHide = meta.autoHide !== undefined ? meta.autoHide : true;
+            config.autoCloseOnHide = meta.autoCloseOnHide !== undefined ? meta.autoCloseOnHide : true;
+         } else if (mode == 'dialog') {
+            Component = Dialog;
+         }
+
+         if (this._dialog && !this._dialog.isAutoHide()){
+            $ws.core.merge(this._dialog._options, config);
+            this._dialog.reload();
+            return;
          }
 
          config.componentOptions.handlers = this._getFormControllerHandlers();
@@ -127,67 +144,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             }
          };
 
-         if (!config.componentOptions.record) {
-            //Загружаем компонент, отнаследованный от formController'a, чтобы с его прототипа вычитать запись, которую мы прокинем при инициализации компонента
-            //Сделано в рамках ускорения
-            require([dialogComponent], this._initTemplateComponentCallback.bind(this, config, meta, mode));
-         }
-         else {
-            this._showDialog(config, meta, mode);
-         }
-      },
-
-      _initTemplateComponentCallback: function (config, meta, mode, templateComponent) {
-         var self = this;
-         templateComponent.prototype.getRecordFromSource(config.componentOptions).addCallback(function (record) {
-            config.componentOptions.record = record;
-            self._showDialog(config, meta, mode);
-         });
-      },
-
-      _showDialog: function(config, meta, mode){
-         var floatAreaCfg,
-             Component;
-         mode = mode || this._options.mode;
-         if (mode == 'floatArea'){
-            Component = FloatArea;
-            floatAreaCfg = this._getFloatAreaConfig(meta);
-            $ws.core.merge(config, floatAreaCfg);
-         } else if (mode == 'dialog') {
-            Component = Dialog;
-         }
-
-         if (config.componentOptions.record){
-            var ctx = new $ws.proto.Context({restriction: 'set'}).setPrevious(this.getLinkedContext());
-            ctx.setValue('record', config.componentOptions.record);
-            config.componentOptions.context = ctx;
-         }
-         if (this._dialog && !this._dialog.isAutoHide()){
-            $ws.core.merge(this._dialog._options, config);
-            this._dialog.reload();
-         }
-         else{
-            this._dialog = new Component(config);
-         }
-      },
-      _getFloatAreaConfig: function(meta){
-         var defaultConfig = {
-               isStack: true,
-               autoHide: true,
-               buildMarkupWithContext: true,
-               showOnControlsReady: false,
-               autoCloseOnHide: true,
-               target: '',
-               side: 'left',
-               animation: 'slide'
-            },
-            floatAreaCfg = {};
-
-         $ws.helpers.forEach(defaultConfig, function(value, prop){
-            floatAreaCfg[prop] = meta[prop] !== undefined ? meta[prop] : defaultConfig[prop];
-         });
-
-         return floatAreaCfg;
+         this._dialog = new Component(config);
       },
 
       /**
