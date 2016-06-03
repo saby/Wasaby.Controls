@@ -1,5 +1,5 @@
-<div class="controls-TabControl">
-    <component data-component="SBIS3.CONTROLS.TabButtons" name="TabButtons">
+<div class="controls-TabControl {{?it.fixedHeader === 'sticky'}}ws-sticky-header__parent{{?}}">
+    <component data-component="SBIS3.CONTROLS.TabButtons" name="TabButtons" class="{{=it.tabButtonsExtraClass || ''}} {{?it.fixedHeader === 'fixed'}}ws-fixed-header__block{{??it.fixedHeader === 'sticky'}}ws-sticky-header__block{{?}}">
         <option name="selectedKey">{{=it.selectedKey}}</option>
         <option name="displayField">{{=it.tabsDisplayField}}</option>
         <option name="keyField">{{=it.keyField}}</option>

@@ -14,9 +14,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'browser!html!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate',
       'browser!html!SBIS3.CONTROLS.DataGridView/resources/ItemContentTemplate',
       'browser!html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate',
-      'browser!html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate'
+      'browser!html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate',
+      'js!SBIS3.FixedHeaderManager'
    ],
-   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate) {
+   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate, FixedHeaderManager) {
    'use strict';
 
       var ANIMATION_DURATION = 500; //Продолжительность анимации скролла заголовков
@@ -215,7 +216,20 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *     <option name="allowToggleHead">false</option>
              * </pre>
              */
-            allowToggleHead: true
+            allowToggleHead: true,
+            /**
+             * @cfg {String} Режим фиксации шапки таблицы.
+             * В зависимости от режима позволяет либо навсегда зафискировать заголовок таблицы наверху страницы,
+             * либо прижимать заголовок к верху страницы, когда при скроллинге таблица уходит за пределы экрана, но ещё видна какая-то часть таблицы.
+             * @example
+             * <pre>
+             *     <option name="fixedHeader">sticky</option>
+             * </pre>
+             * @variant no не фиксировать заголовок таблицы;
+             * @variant fixed зафиксировать заголовок наверху страницы навсегда;
+             * @variant sticky прижимать заголовок к верху страницы, когда при скроллинге таблица уходит за пределы экрана, но ещё видна какая-то часть таблицы;
+             */
+            fixedHeader: 'no'
          }
       },
 
@@ -459,6 +473,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
              В этом случае плавающая ширина скукоживаться не будет.
              Пример можно посмотреть в реестре номенклатур. */
             this._setColumnWidthForPartScroll();
+         }
+         if (this._options.fixedHeader === 'fixed' || this._options.fixedHeader === 'sticky'){
+            FixedHeaderManager.tableHeadRedrawn(this.getContainer().find('table:first'));
          }
          this._notify('onDrawHead');
       },
