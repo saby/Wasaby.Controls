@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
        */
       _$childrenProperty: '',
 
-      _hashPrefix: 'tree-item-',
+       _hashPrefix: 'tree-item-',
 
       constructor: function $TreeItem(options) {
          TreeItem.superclass.constructor.call(this, options);
