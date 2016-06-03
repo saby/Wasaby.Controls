@@ -337,9 +337,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             itemTpl : null,
             /**
-             * @cfg {Function} Метод сортировки элементов
+             * @cfg {Function} Метод используется для сортировки элементов, принимает два
+             * объекта вида {item:ProjectionItem, collectionItem: Model, index: Number, collectionIndex: Number} и
+             * должен вернуть -1|0|1
+             * @example
+             * <pre>
+             *      <option name="itemsSortMethod" type"function">SBIS3.Demo.Handlers.sort</option>
+             * </pre>
+             * <pre>
+             *    sort: function(obj1, obj2) {
+             *       return obj1.index - obj2.index
+             *    }
+             * </pre>
              * @see setItemsSortMethod
-             * @see SBIS3.CONTROLS.Data.Projection.Collection:setSort
+             * @see SBIS3.CONTROLS.Data.Projection.Collection#setSort
              */
             itemsSortMethod: undefined
          },
