@@ -263,6 +263,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                element: this._container.find('> .controls-TreeView__editArrow-container'),
                icon: 'icon-16 icon-View icon-primary action-hover',
                parent: this,
+               allowChangeEnable: false,
                handlers: {
                   onActivated: function () {
                      var hoveredItem = self.getHoveredItem();
