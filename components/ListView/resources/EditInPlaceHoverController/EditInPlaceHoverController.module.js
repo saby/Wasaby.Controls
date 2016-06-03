@@ -28,7 +28,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             },
 
             isEdit: function() {
-               return this._eip.isEdit() || this._secondEip.isEdit();
+               var firstEipIsEdit = EditInPlaceHoverController.superclass.isEdit.apply(this);
+               return firstEipIsEdit || (this._secondEip && this._secondEip.isEdit());
             },
 
             _createEip: function() {
@@ -125,10 +126,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             },
             _destroyEip: function() {
                EditInPlaceHoverController.superclass._destroyEip.apply(this);
-               if (this._hoveredEip) {
-                  this._hoveredEip.getContainer().unbind('keyup', this._eipHandlers.onKeyDown);
-                  this._hoveredEip.destroy();
-                  this._hoveredEip = null;
+               if (this._secondEip) {
+                  this._secondEip.getContainer().unbind('keyup', this._eipHandlers.onKeyDown);
+                  this._secondEip.destroy();
+                  this._secondEip = null;
                }
             },
             destroy: function() {
