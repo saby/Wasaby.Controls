@@ -7,3 +7,15 @@
 /SBIS3.CONTROLS/*
 /themes/**/*.css
 /tests/unit/artifacts/*
+/tests/int/.idea
+/tests/int/config.ini
+/tests/int/result.db
+/tests/int/js_errors
+/tests/int/preprocessor_logs
+/tests/int/screenshots
+/tests/css/online/node_modules
+/tests/css/online/gemini-report
+/tests/css/online/gemini-coverage
+/tests/css/presto/node_modules
+/tests/css/presto/gemini-report
+/tests/css/presto/gemini-coverage
