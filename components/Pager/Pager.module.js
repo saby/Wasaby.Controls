@@ -115,7 +115,7 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
                ' ' + selectedCount + $ws.helpers.wordCaseByNumber(selectedCount, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + '. ' + pagerStr;
             }
          }
-         this.getContainer().find('.controls-Amount-text_js').text(pagerStr);
+         this.getContainer().find('.controls-Amount-text_js').text(pagerStr + ',');
       },
       /**
        * Получить SBIS3.CORE.Paging
