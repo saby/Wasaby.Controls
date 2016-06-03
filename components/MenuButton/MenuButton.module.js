@@ -69,9 +69,13 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          this.reload();
          MenuButton.superclass.init.call(this);
       },
+
+      _moveHandler: function(){
+         this._moveHeaderToButton();
+      },
       
-      _moveHeaderToButton: function(){
-         if (this._header && !this._picker.isFixed()) {
+      _moveHeaderToButton: function(force){
+         if (this._header && (!this._picker.isFixed() || force)) {
             this._header.css({
                left: (this._headerAlignment.horizontal == 'left') ? this._container.offset().left : this._container.offset().left - 16,
                top: (this._headerAlignment.vertical == 'top') ? this._container.offset().top + 2 : this._container.offset().top - 7
@@ -109,9 +113,9 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       _toggleTrackHeader: function(state){
       	var track = $ws.helpers.trackElement(this._container);
       	if (state){
-      		track.subscribe('onMove', this._moveHeaderToButton, this);
+      		track.subscribe('onMove', this._moveHandler, this);
       	} else {
-      		track.unsubscribe('onMove', this._moveHeaderToButton);
+      		track.unsubscribe('onMove', this._moveHandler);
       	}
       },
 
@@ -137,7 +141,9 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             this._createHeader();
          }
          MenuButton.superclass.showPicker.call(this);
-         this._moveHeaderToButton();
+         //Если не задавали координаты, то их нужно задать в любом случае
+         var isInit = !parseInt(this._header.css('top'));
+         this._moveHeaderToButton(isInit);
          this._header.css({
             'z-index': parseInt(this._picker._container.css('z-index'), 10) + 1,
             position: this._picker.isFixed() ? 'fixed' : 'absolute'
