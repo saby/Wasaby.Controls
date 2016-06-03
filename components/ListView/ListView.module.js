@@ -1257,6 +1257,15 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          /**
+          * Проверить наличие скрола, и догрузить еще данные если его нет
+          * @return {[type]} [description]
+          */
+         scrollLoadMore: function(){
+            if (this._options.infiniteScroll && this._scrollWatcher && !this._scrollWatcher.hasScroll(this.getContainer())) {
+               this._nextLoad();
+            }
+         },
+         /**
           * @private
           */
          _getEditInPlace: function() {
