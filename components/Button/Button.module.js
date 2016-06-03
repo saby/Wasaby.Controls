@@ -191,7 +191,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
         * @noShow
         * @param isDefault
         */
-       setDefaultButton: function(isDefault){
+      setDefaultButton: function(isDefault){
           if (isDefault === undefined)
              isDefault = true;
 
@@ -204,7 +204,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
           }
 
           this.setPrimary(isDefault);
-       }
+      }
       /*TODO конец*/
    });
 
