@@ -348,7 +348,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       $constructor: function () {
-         this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady');
+         this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady', 'onPageSizeChange');
          if (typeof this._options.pageSize === 'string') {
             this._options.pageSize = this._options.pageSize * 1;
          }
@@ -1107,6 +1107,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        /**
         * Метод установки количества элементов на одной странице.
         * @param {Number} pageSize Количество записей.
+        * @param {Boolean} noLoad установить кол-во записей без запроса на БЛ.
         * @example
         * <pre>
         *     myListView.setPageSize(20);
@@ -1121,10 +1122,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * </ul>
         * @see pageSize
         */
-      setPageSize: function(pageSize){
+      setPageSize: function(pageSize, noLoad){
          this._options.pageSize = pageSize;
          this._dropPageSave();
-         this.reload(this._options.filter, this.getSorting(), 0, pageSize);
+         this._notify('onPageSizeChange', this._options.pageSize);
+         if(!noLoad) {
+            this.reload(this._options.filter, this.getSorting(), 0, pageSize);
+         }
       },
       /**
        * Метод получения количества элементов на одной странице.
