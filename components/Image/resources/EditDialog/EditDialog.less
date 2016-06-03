@@ -1,16 +1,22 @@
+.ws-window-titlebar-custom {
+   .controls-EditDialog {
+      &__applyButton {
+         width: 90px;
+         position: absolute;
+         right: 38px; /*ширина кнопки закрытия окна 36px + 2px на набольшой отступ между ними (в ie8 нет скруглений и кнопки склеиваются)*/
+         top: 8px;
+      }
+      &__title.ws-window-title {
+         margin-right: 128px;
+         float: none;
+         display: block;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         position: absolute;
+      }
+   }
+}
 .controls-EditDialog {
-   &__applyButton {
-      width: 90px;
-      position: absolute;
-      right: 38px; /*ширина кнопки закрытия окна 36px + 2px на набольшой отступ между ними (в ie8 нет скруглений и кнопки склеиваются)*/
-      top: 8px;
-   }
-   &__title.ws-window-title {
-      margin-right: 122px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      position: absolute;
-   }
    &__image {
       &-wrapper {
          left: 8px;
