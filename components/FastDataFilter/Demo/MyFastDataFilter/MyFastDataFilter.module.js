@@ -86,7 +86,8 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilter',
                   values:[
                      {
                         key : 0,
-                        title : rk('Не выбрано')
+                        title : rk('Не выбрано'),
+                        filterField: 'filter'
                      },
                      {
                         key : 1,
@@ -94,13 +95,16 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilter',
                      },
                      {
                         key : 2,
-                        title : rk('Не для продажи')
+                        title : rk('Не для продажи'),
+                        filterField: 'filter'
                      },
                      {
                         key : 3,
-                        title : rk('Для продажи')
+                        title : rk('Для продажи'),
+                        filterField: 'filter'
                      }
-                  ]
+                  ],
+                  filter: { filterField: 'filter' }
                }]
             }
          },
