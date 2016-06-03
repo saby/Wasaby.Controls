@@ -458,6 +458,7 @@ define(
             } else {
                this._options.date = null;
             }
+            this._textChanged = true;
             this._notifyOnDateChanged();
          }
       },
@@ -465,7 +466,6 @@ define(
       _notifyOnDateChanged: function() {
          this._notifyOnPropertyChanged('date', this._options.date);
          this._notify('onDateChange', this._options.date);
-         this.validate();
       },
 
       /**
