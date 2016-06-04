@@ -80,6 +80,10 @@ define('js!SBIS3.CONTROLS.Browser', [
              * @cfg {Array} ignoreFiltersList Массив ключей фильтров, которые не надо запоминать в историю.
              */
             ignoreFiltersList: [],
+            /**
+             * @cfg {Boolean} hideCheckBoxes необходимо ли скрывать чекбоксы, когда панель массовых операций закрыта.
+             */
+            hideCheckBoxes: false,
             contentTpl : contentTpl
          }
       },
@@ -132,7 +136,7 @@ define('js!SBIS3.CONTROLS.Browser', [
 
          this._operationsPanel = this._getOperationsPanel();
          if (this._operationsPanel) {
-            this._componentBinder.bindOperationPanel(true, this._operationsPanel);
+            this._componentBinder.bindOperationPanel(this._options.hideCheckBoxes, this._operationsPanel);
          }
 
          this._filterButton = this._getFilterButton();

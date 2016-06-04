@@ -146,9 +146,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
    }
 
    function toggleCheckBoxes(operationPanel, gridView, hideCheckBoxes) {
-      if (gridView._options.multiselect && hideCheckBoxes) {
-         gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible())
-            .toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isVisible());
+      if (gridView._options.multiselect) {
+         gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
+         if (hideCheckBoxes) {
+            gridView._container.toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isVisible());
+         }
          if (gridView._options.startScrollColumn !== undefined) {
             gridView.updateScrollAndColumns();
          }
@@ -455,6 +457,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          drawItemsCallback(operationPanel, view);
          toggleCheckBoxes(operationPanel, view, hideCheckBoxes);
          view.subscribe('onSelectedItemsChange', function(event, idArray) {
+            if (idArray.length && !operationPanel.isVisible()) {
+               operationPanel.show();
+            }
             operationPanel.onSelectedItemsChange(idArray);
          });
          operationPanel.subscribe('onToggle', function() {
