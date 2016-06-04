@@ -15,7 +15,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             root = null;
          }
       }
-      cfg.itemsSortMethod = 'itemsSortMethod' in cfg ? cfg.itemsSortMethod : _defaultItemsSortMethod;
       projection = new TreeProjection({
          collection: items,
          idProperty: cfg.keyField || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
@@ -58,20 +57,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
           * https://inside.tensor.ru/opendoc.html?guid=6f1758f0-f45d-496b-a8fe-fde7390c92c7
           * @private
           */
-         var
-            items = [];
-         //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
-         if (this._isSearchMode && this._isSearchMode()) {
-            /*TODO нехорошее место, для поиска возвращаем приватное свойство, потому что надо в независимости от текущего корня
-             * показать все записи, а по другому их не вытащить*/
-            return projection._items;
-         } else {
-            applyExpandToItemsProjection.call(this, projection, cfg);
-            projection.each(function(item) {
-               items.push(item);
-            });
-         }
+         var items = [];
+         applyExpandToItemsProjection.call(this, projection, cfg);
+         projection.each(function(item) {
+            items.push(item);
+         });
          return items;
+
       }
       return records;
    },
@@ -281,7 +273,33 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              *    <option name="allowEnterToFolder">false</option>
              * </pre>
              */
-            allowEnterToFolder: true
+            allowEnterToFolder: true,
+            /**
+             * @cfg {Function}
+             * Метод используется для сортировки элементов, если передать null то данные сортироваться не будут
+             * По умолчанию данные сортируются так: с начала папки потом листья
+             * @example
+             * <pre>
+             *    <option name="itemsSortMethod">null</option>
+             * </pre>
+             * <pre>
+             *    var tree = new Tree({
+             *       elem: 'demoTree',
+             *       itemsSortMethod: function (objA, objB) {
+             *          var
+             *             isNodeA = objA.item.isNode(),
+             *             isNodeB = objB.item.isNode();
+             *          if (isNodeA === isNodeB) {
+             *             return objA.index > objB.index ? 1 : -1;
+             *          } else {
+             *              return isNodeA ? -1 : 1;
+             *          }
+             *       });
+             * </pre>
+             * @see SBIS3.CONTROLS.ItemsControlMixin#itemsSortMethod
+             * @see SBIS3.CONTROLS.ItemsControlMixin#setItemsSortMethod
+             */
+            itemsSortMethod: _defaultItemsSortMethod
          },
          _foldersFooters: {},
          _breadCrumbs : [],
@@ -375,6 +393,50 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             }
          }
          return result;
+      },
+      /**
+       * todo Переписать, когда будет выполнена указанная ниже задача
+       * Задача в разработку от 28.04.2016 №1172779597
+       * В деревянной проекции необходима возможность определять, какие элементы создаются развернутыми. Т...
+       * https://inside.tensor.ru/opendoc.html?guid=6f1758f0-f45d-496b-a8fe-fde7390c92c7
+       * @private
+       */
+      _applyExpandToItemsProjection: function() {
+         var idx, item;
+         this._itemsProjection.setEventRaising(false);
+         this._itemsProjection.setFilter(retTrue);
+         for (idx in this._options.openedPath) {
+            if (this._options.openedPath.hasOwnProperty(idx)) {
+               item = this._getItemProjectionByItemId(idx);
+               if (item && !item.isExpanded()) {
+                  if (this._itemsProjection.getChildren(item).getCount()) {
+                     item.setExpanded(true);
+                  } else {
+                     delete this._options.openedPath[idx];
+                  }
+               }
+            }
+         }
+         this._itemsProjection.setFilter(this._projectionFilter.bind(this));
+         this._itemsProjection.setEventRaising(true);
+      },
+      _getRecordsForRedrawCurFolder: function() {
+         /*Получаем только рекорды с parent = curRoot*/
+         var
+            items = [],
+            itemParent;
+         //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
+         if (this._isSearchMode()) {
+            /*TODO нехорошее место, для поиска возвращаем приватное свойство, потому что надо в независимости от текущего корня
+            * показать все записи, а по другому их не вытащить*/
+            return this._itemsProjection._items;
+         } else {
+            this._applyExpandToItemsProjection();
+            this._itemsProjection.each(function(item) {
+               items.push(item);
+            }.bind(this));
+         }
+         return items;
       },
       /**
        * Создаёт фильтр для дерева (берет текущий фильтр и дополняет его)
@@ -799,6 +861,5 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          this._pageSaver[root] = 0;
       }
    };
-
    return TreeMixin;
 });

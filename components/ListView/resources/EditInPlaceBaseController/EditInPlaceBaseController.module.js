@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
 
             isEdit: function() {
-               return this._eip.isEdit();
+               return this._eip && this._eip.isEdit();
             },
 
             _createEip: function() {

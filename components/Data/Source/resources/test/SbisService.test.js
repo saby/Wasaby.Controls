@@ -45,6 +45,7 @@ define([
                      switch (method) {
                         case 'Создать':
                            data = {
+                              _type: 'record',
                               d: [
                                  '',
                                  '',
@@ -60,6 +61,7 @@ define([
                         case 'Прочитать':
                            if (args['ИдО'] === existsId) {
                               data = {
+                                 _type: 'record',
                                  d: [
                                     'Иванов',
                                     'Иван',
@@ -103,6 +105,7 @@ define([
 
                         case 'Список':
                            data = {
+                              _type: 'recordset',
                               d: [
                                  [
                                     'Иванов',
