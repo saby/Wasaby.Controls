@@ -314,7 +314,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (withSaving) {
                   this._options.dataSource.update(eipRecord).addCallback(function() {
                      if (isAdd) {
-                        this._options.dataSet.push(eipRecord);
+                        this._options.dataSet.push(this._cloneWithFormat(eipRecord, this._options.dataSet));
                      }
                   }.bind(this)).addBoth(function() {
                      this._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
@@ -322,6 +322,19 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                } else {
                   this._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
                }
+            },
+            //TODO: метод нужен для того, чтобы подогнать формат рекорда под формат рекордсета.
+            //Выписана задача Мальцеву, который должен убрать этот метод отсюда, и предаставить механизм выполняющий необходимую задачу.
+            _cloneWithFormat: function(record, recordSet) {
+               var
+                   fieldName,
+                   clone = record.clone();
+               clone.setRawData(null);
+               recordSet.getFormat().each(function(field) {
+                  fieldName = field.getName();
+                  clone.addField(field, undefined, record.get(fieldName));
+               });
+               return clone;
             },
             //TODO: Нужно переименовать метод
             _notifyOnAfterEndEdit: function(eip, eipRecord, withSaving, isAdd) {
