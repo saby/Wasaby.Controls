@@ -10,8 +10,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
-   'js!SBIS3.CONTROLS.Data.Utils'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils) {
+   'js!SBIS3.CONTROLS.Data.Utils',
+   'Core/ParserUtilities'
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, ParserUtilities) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -588,7 +589,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var ladder = this._decorators.getByName('ladder');
          ladder && ladder.setIgnoreEnabled(true);
          ladder && ladder.reset();
-         markup = MarkupTransformer(this._options._itemsTemplate(data));
+         markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this.getId());
          ladder && ladder.setIgnoreEnabled(false);
          //TODO это может вызвать тормоза
          this._destroyInnerComponents($itemsContainer);
@@ -621,7 +622,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else {
                dot = data.defaultItemTpl;
             }
-            markup = dot(data);
+            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this.getId());
             /*TODO посмотреть не вызывает ли это тормоза*/
             this._clearItems(targetElement);
             /*TODO С этим отдельно разобраться*/
@@ -705,7 +706,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      records: itemsToDraw,
                      tplData: this._prepareItemData()
                   };
-                  markup = MarkupTransformer(this._options._itemsTemplate(data));
+                  markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this.getId());
 
                   itemsContainer = this._getItemsContainer();
                   if (newItemsIndex == 0) {
@@ -793,12 +794,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _getDomElementByItem : function(item) {
          return this._getItemsContainer().find('.js-controls-ListView__item[data-hash="' + item.getHash() + '"]')
-      },
-
-      _buildInnerMarkup: function(rawMarkup) {
-         return rawMarkup;
-         // todo Витя обещал _buildMarkup разбирать на 2 метода.
-         // return this._buildMarkup($ws.helpers.constant(rawMarkup), {})
       },
 
       _reviveItems : function() {
