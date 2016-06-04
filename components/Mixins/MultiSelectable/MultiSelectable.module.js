@@ -346,18 +346,17 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       _removeItemsSelection : function(idArray) {
-         var resultArray = [],
-             removedKeys = [];
+         var removedKeys = [];
 
          if (Array.isArray(idArray)) {
-            resultArray = Array.clone(this._options.selectedKeys);
             for (var i = idArray.length - 1; i >= 0; i--) {
                if (this._isItemSelected(idArray[i])) {
-                  Array.remove(resultArray, this._getSelectedIndex(idArray[i]));
+                  Array.remove(this._options.selectedKeys, this._getSelectedIndex(idArray[i]));
+                  removedKeys.push(idArray[i]);
                }
             }
-            removedKeys = this._getArrayDifference(this._options.selectedKeys, resultArray).removed;
-            this._options.selectedKeys = resultArray;
+            /* Копируем, чтобы порвать ссылку на значение в контексте */
+            this._options.selectedKeys = Array.clone(this._options.selectedKeys);
             return removedKeys;
          }
          else {
