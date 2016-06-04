@@ -1529,12 +1529,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          if (!this._eventRaising) {
             return;
          }
-         this._notify(
-            'onCollectionItemChange',
-            this._items[index],
-            this._getServiceEnumerator().getInternalBySource(index),
-            'contents'
-         );
 
          //Only changes of important properties can launch analysis
          for (var key in properties) {
@@ -1544,6 +1538,16 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   break;
                }
             }
+         }
+
+         var internalIndex = this._getServiceEnumerator().getInternalBySource(index);
+         if (internalIndex > -1) {
+            this._notify(
+               'onCollectionItemChange',
+               this._items[index],
+               internalIndex,
+               'contents'
+            );
          }
       }
    };
