@@ -103,9 +103,6 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
       $constructor: function() {
          var self = this;
          this._inputField = $('.controls-TextArea__inputField', this._container);
-         if (this._options.placeholder && !$ws._const.compatibility.placeholder) {
-            this._createCompatPlaceholder();
-         }
          this._disabledWrapper = $('.controls-TextArea__disabled-wrapper', this._container);
          this._inputField.bind('focus', function() {
             $ws.single.EventBus.globalChannel().notify('MobileInputFocus');
@@ -151,6 +148,9 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
       init :function(){
          TextArea.superclass.init.call(this);
          var self = this;
+         if (this._options.placeholder && !$ws._const.compatibility.placeholder) {
+            this._createCompatPlaceholder();
+         }
          if (this._options.autoResize.state) {
             this._options.minLinesCount = parseInt(this._options.minLinesCount, 10);
             if (!this._options.autoResize.maxLinesCount) {
