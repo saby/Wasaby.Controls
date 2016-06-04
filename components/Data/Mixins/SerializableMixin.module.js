@@ -130,7 +130,11 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
        */
       _getSerializableState: function(state) {
          state = state || {};
-         state.$options = this._getOptions ? this._getOptions() : this._options;//FIXME: отказаться от устаревших _options
+         state.$options = this._getOptions ? this._getOptions() : {};
+         //FIXME: отказаться от устаревших _options
+         if (this._options) {
+            $ws.core.merge(state.$options, this._options, {preferSource: true});
+         }
          return state;
       },
 
