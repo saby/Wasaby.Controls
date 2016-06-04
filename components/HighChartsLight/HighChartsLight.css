@@ -1,3 +1,7 @@
 .ws-HighChartsLight *{
    -webkit-transform: none !important;
 }
+
+.ws-HighChartsLight {
+   height: 400px;
+}
