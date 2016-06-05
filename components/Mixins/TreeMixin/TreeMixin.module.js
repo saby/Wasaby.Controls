@@ -477,6 +477,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       },
       around: {
          _canApplyGrouping: function(parentFn, projItem) {
+            if (this._isSearchMode()) {
+               return true;
+            }
             var
                itemParent = projItem.getParent();
             return parentFn.call(this, projItem) && itemParent && itemParent.isRoot();

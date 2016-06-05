@@ -954,7 +954,16 @@
 @text-area-disabled-border-color:               transparent;
 @text-area-disabled-bg:                         @text-area-bg;
 
-@text-area-field-padding:                       2px 4px 2px 4px;
+@text-area-left-padding:                        4px;
+@text-area-top-padding:                         2px;
+@text-area-right-padding:                       4px;
+@text-area-bottom-padding:                      2px;
+@text-area-field-padding:                       @text-area-top-padding @text-area-right-padding @text-area-bottom-padding @text-area-left-padding;
+
+@text-area-placeholder-color:              @text-box-placeholder-color;
+@text-area-compat-placeholder-font:        @text-box-compat-placeholder-font;
+@text-area-compat-placeholder-padding:     @text-box-compat-placeholder-padding;
+@text-area-compat-placeholder-alignment:   @text-box-compat-placeholder-alignment;
 
 
 

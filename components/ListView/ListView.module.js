@@ -841,11 +841,29 @@ define('js!SBIS3.CONTROLS.ListView',
          _getScrollContainer: function() {
             var scrollWatcher = this._scrollWatcher,
                 scrollContainer;
+            
+            function findScrollContainer(node) {
+               if (node === null) {
+                  return null;
+               }
+
+               if (node.scrollHeight > node.clientHeight) {
+                  return node;
+               } else {
+                  findScrollContainer(node.parentNode);
+               }
+            }
 
             if(scrollWatcher) {
                scrollContainer = scrollWatcher.getScrollContainer();
             } else {
-               scrollContainer = $ws._const.$body;
+               /* т.к. скролл может находиться у произвольного контейнера, то попытаемся его найти */
+               scrollContainer = $(findScrollContainer(this._container[0]));
+
+               /* если всё же не удалось найти, то просто будем считать body */
+               if(!scrollContainer.length) {
+                  scrollContainer = $ws._const.$body;
+               }
             }
 
             return scrollContainer;
@@ -1711,6 +1729,9 @@ define('js!SBIS3.CONTROLS.ListView',
                         self._options._items.append(dataSet);
                         ladder && ladder.setIgnoreEnabled(false);
                      }
+                     
+                     //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
+                     self.getItems().setMetaData(dataSet.getMetaData());
 
                      if (this._isSlowDrawing()) {
                         self._drawItems(dataSet.toArray(), at);
@@ -2417,6 +2438,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _drawResults: function(){
             if (!this._checkResults()){
+               this._removeDrawnResults();
                return;
             }
             var resultRow = this._makeResultsTemplate(this._getResultsData());
@@ -2450,14 +2472,17 @@ define('js!SBIS3.CONTROLS.ListView',
             return this.getItems().getMetaData().results;
          },
          _appendResultsContainer: function(container, resultRow){
-            var position = this._addResultsMethod || (this._options.resultsPosition == 'top' ? 'prepend' : 'append'),
-               drawnResults = $('.controls-DataGridView__results', container);
-            if (drawnResults.length){
-               this._destroyControls(drawnResults);
-               drawnResults.remove();
-            }
+            var position = this._addResultsMethod || (this._options.resultsPosition == 'top' ? 'prepend' : 'append');
+            this._removeDrawnResults();
             $(container)[position](resultRow);
             this.reviveComponents();
+         },
+         _removeDrawnResults: function(){
+            var resultRow = $('.controls-DataGridView__results', this.getContainer());
+            if (resultRow.length){
+               this._destroyControls(resultRow);
+               resultRow.remove();
+            }
          }
       });
 
