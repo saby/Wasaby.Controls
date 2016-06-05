@@ -10,14 +10,6 @@
   &.ws-area{
    height: auto;
   }
-  &:hover {
-    cursor: @link-cursor;
-    color: @link-hover-text-color;
-    text-decoration: @link-hover-text-decoration;
-    .controls-Link__icon{
-      color: @primary-color!important;
-    }
-  }
 
   &.controls-Click__active {
     cursor: @link-cursor;
@@ -65,5 +57,17 @@
 .staff-CardButtons__right{
    .controls-Link{
       line-height: 24px;
+   }
+}
+.ws-is-desktop-platform {
+   .controls-Link {
+      &:hover {
+         color: @link-hover-text-color;
+         cursor: @link-cursor;
+         text-decoration: @link-hover-text-decoration;
+         .controls-Link__icon{
+            color: @primary-color!important;
+         }
+      }
    }
 }
