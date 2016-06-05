@@ -221,7 +221,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             doc = document.implementation.createDocument("", "", null);
          // IE
          if($ws.helpers.axo) {
-            doc = $ws.helpers.axo('Microsoft.XmlDom');
+            doc = $ws.helpers.axo($ws._const.IE_ACTIVEOBJECT_XML_PRINT_TYPE);
          }
          return doc;
       }
