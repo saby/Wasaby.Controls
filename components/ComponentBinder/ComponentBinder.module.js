@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
+define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryController'], function (HistoryController) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
@@ -500,6 +500,19 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             }
             browser._notifyOnFiltersReady();
          }, view), 0);
+      },
+
+      bindPagingHistory: function(view, id) {
+         var pagingHistoryController = new HistoryController({historyId: id}),
+             historyLimit = pagingHistoryController.getHistory();
+
+         if(historyLimit) {
+            view.setPageSize(historyLimit, true);
+         }
+
+         view.subscribe('onPageSizeChange', function(event, pageSize) {
+            pagingHistoryController.setHistory(pageSize, true);
+         });
       }
    });
 
