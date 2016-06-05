@@ -465,7 +465,7 @@ define(
       _notifyOnDateChanged: function() {
          this._notifyOnPropertyChanged('date', this._options.date);
          this._notify('onDateChange', this._options.date);
-         this.validate();
+         this._textChanged = true;
       },
 
       /**
