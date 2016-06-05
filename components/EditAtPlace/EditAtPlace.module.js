@@ -255,6 +255,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             this._options.text = text || '';
             if (oldText !== this._options.text) {
                this._notify('onTextChange', this._options.text);
+               this._notifyOnPropertyChanged('text');
             }
             this._drawText(this._options.formattedText());
          },
