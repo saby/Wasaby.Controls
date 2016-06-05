@@ -80,6 +80,12 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             this._treeView.setDataSource(dataSource, true);
             this._treeView._projectionFilter = retTrue; //todo ИСПРАВИТЬ. Возможно, нужно поправить тест и передавать поле, которое будет использоваться в поиске при группировке
             this._treeView._isSearchMode = retTrue; //todo говорим списку, что он отображается в режиме поиска (с хлебными крошками) надо исправить
+            this._treeView.once('onItemsReady', function(){
+               this._getItemsProjection().setEventRaising(false);
+               this._getItemsProjection().setFilter(retTrue);//todo ИСПРАВИТЬ. Возможно, нужно поправить тест и передавать поле, которое будет использоваться в поиске при группировке
+               this._getItemsProjection().setEventRaising(true);
+            });
+
             this._treeView.reload({
                 'Разворот': 'С разворотом',
                 'usePages': 'full',

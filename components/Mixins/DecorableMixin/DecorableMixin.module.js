@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.DecorableMixin', [
          /**
           * @var {SBIS3.CONTROLS.Utils.HtmlDecorators} Набор декораторов
           */
-         _decorators: undefined
+         _decorators: null
       },
 
       $constructor: function () {
