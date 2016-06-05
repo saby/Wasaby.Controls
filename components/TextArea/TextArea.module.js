@@ -38,6 +38,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          _inputField: null,
          _cachedW: null,
          _cachedH: null,
+         _compatPlaceholder: null,
          _options: {
              /**
               * @cfg {String} Текст подсказки внутри поля ввода
@@ -147,6 +148,9 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
       init :function(){
          TextArea.superclass.init.call(this);
          var self = this;
+         if (this._options.placeholder && !$ws._const.compatibility.placeholder) {
+            this._createCompatPlaceholder();
+         }
          if (this._options.autoResize.state) {
             this._options.minLinesCount = parseInt(this._options.minLinesCount, 10);
             if (!this._options.autoResize.maxLinesCount) {
@@ -244,7 +248,35 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
         * @see placeholder
         */
       setPlaceholder: function(text){
-         this._inputField.attr('placeholder', text);
+          if (!$ws._const.compatibility.placeholder) {
+             if (!this._compatPlaceholder) {
+                this._createCompatPlaceholder();
+             }
+             this._compatPlaceholder.text(text || '');
+          }
+          else {
+             this._inputField.attr('placeholder', text);
+          }
+      },
+      _createCompatPlaceholder : function() {
+         var self = this;
+         this._compatPlaceholder = $('<div class="controls-TextArea__placeholder">' + this._options.placeholder + '</div>');
+         this._updateCompatPlaceholderVisibility();
+         this._inputField.after(this._compatPlaceholder);
+         this._compatPlaceholder.css({
+            'left': this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10),
+            'right': this._inputField.position().right || parseInt(this._inputField.parent().css('padding-right'), 10)
+         });
+         this._compatPlaceholder.click(function(){
+            if (self.isEnabled()) {
+               self._inputField.get(0).focus();
+            }
+         });
+      },
+      _updateCompatPlaceholderVisibility: function() {
+         if (this._compatPlaceholder) {
+            this._compatPlaceholder.toggle(!this._options.text);
+         }
       },
        /**
         * Метод установки минимального количества строк.
@@ -266,6 +298,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
       },
 
       _drawText: function(text) {
+         this._updateCompatPlaceholderVisibility();
          if (this._inputField.val() != text) {
             this._inputField.val(text || '');
          }
