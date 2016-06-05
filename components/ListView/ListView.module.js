@@ -2407,6 +2407,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _drawResults: function(){
             if (!this._checkResults()){
+               this._removeDrawnResults();
                return;
             }
             var resultRow = this._makeResultsTemplate(this._getResultsData());
@@ -2440,14 +2441,17 @@ define('js!SBIS3.CONTROLS.ListView',
             return this.getItems().getMetaData().results;
          },
          _appendResultsContainer: function(container, resultRow){
-            var position = this._addResultsMethod || (this._options.resultsPosition == 'top' ? 'prepend' : 'append'),
-               drawnResults = $('.controls-DataGridView__results', container);
-            if (drawnResults.length){
-               this._destroyControls(drawnResults);
-               drawnResults.remove();
-            }
+            var position = this._addResultsMethod || (this._options.resultsPosition == 'top' ? 'prepend' : 'append');
+            this._removeDrawnResults();
             $(container)[position](resultRow);
             this.reviveComponents();
+         },
+         _removeDrawnResults: function(){
+            var resultRow = $('.controls-DataGridView__results', this.getContainer());
+            if (resultRow.length){
+               this._destroyControls(resultRow);
+               resultRow.remove();
+            }
          }
       });
 
