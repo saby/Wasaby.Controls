@@ -1026,7 +1026,11 @@
 @text-area-disabled-border-color:               transparent;
 @text-area-disabled-bg:                         @text-area-bg;
 
-@text-area-field-padding:                       6px 7px;
+@text-area-left-padding:                        7px;
+@text-area-top-padding:                         6px;
+@text-area-right-padding:                       7px;
+@text-area-bottom-padding:                      6px;
+@text-area-field-padding:                       @text-area-top-padding @text-area-right-padding @text-area-bottom-padding @text-area-left-padding;
 
 @text-area-placeholder-color:              @text-box-placeholder-color;
 @text-area-compat-placeholder-font:        @text-box-compat-placeholder-font;
