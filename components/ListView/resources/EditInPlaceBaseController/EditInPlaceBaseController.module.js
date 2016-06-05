@@ -60,7 +60,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _eipHandlers: null,
                //TODO: Данная переменная нужна для автодобавления по enter(mode autoadd), чтобы определить в какой папке происходит добавление элемента
                //Вариант решения проблемы не самый лучший, и добавлен как временное решение для выпуска 3.7.3.150. В версию .200 придумать нормальное решение.
-               _lastTargetAdding: undefined
+               _lastTargetAdding: undefined,
+               //Флаг отвечает за блокировку при добавлении записей. Если несколько раз подряд будет отправлена команда добавления, то уйдёт несколько запросов на бл
+               _addLock: false
             },
             $constructor: function () {
                this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace', 'onChangeHeight');
@@ -353,7 +355,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                    modelOptions = options.model || this._notify('onBeginAdd');
                this._lastTargetAdding = options.target;
                return this.endEdit(true).addCallback(function() {
-                  return self._options.dataSource.create(modelOptions).addCallback(function (createdModel) {
+                  return self._createModel(modelOptions).addCallback(function (createdModel) {
                      return self._prepareEdit(createdModel).addCallback(function(model) {
                         if (self._options.hierField) {
                            model.set(self._options.hierField, options.target ? options.target.getContents().getId() : options.target);
@@ -369,6 +371,18 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      });
                   });
                });
+            },
+            _createModel: function(modelOptions) {
+               var self = this;
+               if (this._addLock) {
+                  return $ws.proto.Deferred.fail();
+               } else {
+                  this._addLock = true;
+                  return this._options.dataSource.create(modelOptions).addBoth(function(model) {
+                     self._addLock = false;
+                     return model;
+                  });
+               }
             },
             _createAddTarget: function(options) {
                var
