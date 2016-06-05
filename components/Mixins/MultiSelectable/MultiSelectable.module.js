@@ -234,9 +234,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * @see toggleItemsSelectionAll
        */
       setSelectedItemsAll : function() {
-         if (this._dataSet) {
+         if (this._options._items) {
             var items = [];
-            this._dataSet.each(function(rec){
+            this._options._items.each(function(rec){
                items.push(rec.getId())
             });
             this.setSelectedKeys(items);
@@ -483,9 +483,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * @see allowEmptyMultiSelection
        */
       toggleItemsSelectionAll : function() {
-         if (this._dataSet) {
+         if (this._options._items) {
             var items = [];
-            this._dataSet.each(function(rec){
+            this._options._items.each(function(rec){
                items.push(rec.getId())
             });
             this.toggleItemsSelection(items);
@@ -726,7 +726,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       _setFirstItemAsSelected : function() {
-         var item = this._dataSet && this._dataSet.at(0);
+         var item = this._options._items && this._options._items.at(0);
          if (item) {
             this._options.selectedKeys = [item.getId()];
          }

@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
                recordTo = moveTo;
                moveTo = recordTo.getId();
             } else {
-               recordTo = this._items.getRecordById(moveTo);
+               recordTo = this._options._items.getRecordById(moveTo);
             }
             if (recordTo) {
                isNodeTo = recordTo.get(this._options.hierField + '@');
@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
             for (var i = 0; i < records.length; i++) {
                records[i] = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model') ?
                   this.getItems().getRecordById(records[i].getId()) : //todo может прийти рекорд инстанса которого нет в рекордсете замеять все рекорды для этого плохо.
-                  this._items.getRecordById(records[i]);
+                  this._options._items.getRecordById(records[i]);
             }
             this._toggleIndicator(true);
 
@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
                   } else {
                      //TODO: пока дерево не перевели на проекции, нужно пересчитывать дерево индексов, т.к. после set
                      //в поле иерархии он сам этого не сделает
-                     self._items._reindexTree(self._options.hierField);
+                     self._options._items._reindexTree(self._options.hierField);
                      self.removeItemsSelectionAll();
                   }
                }).addBoth(function() {
@@ -204,7 +204,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
       },
       _moveRecord: function(item, moveToId, current, up) {
          var self = this,
-             moveToItem = this._items.getRecordById(moveToId);
+             moveToItem = this._options._items.getRecordById(moveToId);
          this.getMoveStrategy().move([item], moveToItem, !up).addCallback(function() {
             self._afterOrderChange([item], moveToItem, up);
          }).addErrback(function(e) {
@@ -214,26 +214,26 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
       _afterOrderChange: function(items, moveToItem, up) {
          var moveToIndex;
          $ws.helpers.forEach(items, function(item) {
-            this._items.remove(item);
+            this._options._items.remove(item);
 
-            moveToIndex = this._items.getIndex(moveToItem);
+            moveToIndex = this._options._items.getIndex(moveToItem);
             if(!up) {
-               moveToIndex = this._itemsProjection.getIndexBySourceIndex(moveToIndex);
-               var projectionItem = this._itemsProjection.getNext(
-                   this._itemsProjection.at(moveToIndex)
+               moveToIndex = this._options._itemsProjection.getIndexBySourceIndex(moveToIndex);
+               var projectionItem = this._options._itemsProjection.getNext(
+                   this._options._itemsProjection.at(moveToIndex)
                );
                if(projectionItem) {
-                  moveToIndex = this._itemsProjection.getSourceIndexByIndex(
-                      this._itemsProjection.getIndex(projectionItem)
+                  moveToIndex = this._options._itemsProjection.getSourceIndexByIndex(
+                      this._options._itemsProjection.getIndex(projectionItem)
                   );
                } else {
-                  moveToIndex = this._items.getCount();
+                  moveToIndex = this._options._items.getCount();
                }
             }
 
-            this._items.add(
+            this._options._items.add(
                 item,
-                moveToIndex < this._items.getCount() ? moveToIndex : undefined
+                moveToIndex < this._options._items.getCount() ? moveToIndex : undefined
             );
          }.bind(this));
       }

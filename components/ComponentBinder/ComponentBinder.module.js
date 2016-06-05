@@ -50,10 +50,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryControlle
 
          view.once('onDataLoad', function(){
             //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
-            this._itemsProjection.setEventRaising(false);
+            this._options._itemsProjection.setEventRaising(false);
             //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
-            view._itemsProjection.setRoot(null);
-            this._itemsProjection.setEventRaising(true);
+            view._options._itemsProjection.setRoot(null);
+            this._options._itemsProjection.setEventRaising(true);
          });
 
          view.reload(filter, view.getSorting(), 0).addCallback(function(){
@@ -99,7 +99,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryControlle
       //только после релоада, иначе визуально будут прыжки и дерганья (класс меняет паддинги)
       view.once('onDataLoad', function(){
          view._container.removeClass('controls-GridView__searchMode');
-         view._itemsProjection.setRoot(self._lastRoot || null);
+         view._getItemsProjection().setRoot(self._lastRoot || null);
       });
       this._searchMode = false;
       //Если мы ничего не искали, то и сбрасывать нечего
