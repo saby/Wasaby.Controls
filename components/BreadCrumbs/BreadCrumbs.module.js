@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
     */
    'use strict';
    //TODO: Переписать все к чертям 
-   var BreadCrumbs = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], {
+   var BreadCrumbs = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], /** @lends SBIS3.CONTROLS.BreadCrumbs.prototype */{
       $protected: {
          _dotTplFn: dotTpl,
          _resizeTimeout: null,
