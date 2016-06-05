@@ -66,6 +66,9 @@ define('js!SBIS3.CONTROLS.Utils.Sanitize', ['Core/markup/ParserUtilitiesNew'], f
    return function(content, settings) {
       var
          parsed = Parser.parse(content);
+      if (typeof(content) !== 'string') {
+         return content;
+      }
       validateContent(parsed);
       return parsed.innerHTML();
    };
