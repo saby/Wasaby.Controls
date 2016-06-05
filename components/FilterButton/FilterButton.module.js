@@ -48,9 +48,9 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
    function isFieldResetValue(element, fieldName, filter) {
       var hasResetValue = 'resetValue' in element,
-	       hasValue = fieldName in filter;
+	      hasValue = fieldName in filter;
 
-      return hasResetValue && hasValue ? $ws.helpers.isEqualObject(filter[fieldName], element.resetValue) : !hasValue;
+      return hasResetValue && hasValue ? this._isEqualValues(filter[fieldName], element.resetValue) : !hasValue;
    }
 
        var FilterButton = CompoundControl.extend([FilterMixin, PickerMixin],/** @lends SBIS3.CONTROLS.FilterButton.prototype */{
@@ -219,7 +219,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
              ctx.subscribe('onFieldsChanged', function() {
                 var filter = ctx.getValue(rootName + '/filter'),
                     changed = $ws.helpers.reduce(self._filterStructure, function(result, element) {
-                       return result || !isFieldResetValue(element, element.internalValueField, filter);
+                       return result || !isFieldResetValue.call(self, element, element.internalValueField, filter);
                     }, false, self);
                 ctx.setValueSelf(rootName + '/filterChanged', changed);
              });
