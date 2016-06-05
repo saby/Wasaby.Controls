@@ -1,14 +1,5 @@
-{{~it.items :item:index}}
-   {{?!item.getContents}}
-      {{it.tplData['item'] = item;}}
-      {{=it.tplData.groupTemplate(it.tplData)}}
-   {{??}}
-      {{it.tplData['item'] = item.getContents();
-      it.tplData['projItem'] = item;}}
-      {{?it.tplData.itemTpl}}
-         {{=it.tplData.itemTpl(it.tplData)}}
-      {{??}}
-         {{=it.tplData.defaultItemTpl(it.tplData)}}
-      {{?}}
-   {{?}}
+{{~it.records :item:index}}
+   {{it.tplData['item'] = item.getContents();
+   it.tplData['projItem'] = item;}}
+   {{=it.tplData.itemTpl(it.tplData)}}
 {{~}}
