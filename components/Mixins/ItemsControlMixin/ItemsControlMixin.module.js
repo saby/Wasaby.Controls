@@ -1340,7 +1340,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                resultGroup,
                drawGroup,
                drawItem = true;
-         if (!Object.isEmpty(groupBy)){
+         if (this._canApplyGrouping(item)) {
             resultGroup = groupBy.method.apply(this, [item.getContents(), at, last, item]);
             drawGroup = typeof resultGroup === 'boolean' ? resultGroup : (resultGroup instanceof Object && resultGroup.hasOwnProperty('drawGroup') ? !!resultGroup.drawGroup : false);
             drawItem = resultGroup instanceof Object && resultGroup.hasOwnProperty('drawItem') ? !!resultGroup.drawItem : true;
@@ -1651,7 +1651,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _canApplyGrouping: function(projItem) {
-         return !Object.isEmpty(this._options.groupBy);
+         var
+             itemParent = projItem.getParent && projItem.getParent();
+         return !Object.isEmpty(this._options.groupBy) && (!itemParent || itemParent.isRoot());
       },
 
       _addItem: function (projItem, at, withoutNotify) {
@@ -1812,7 +1814,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 	            case IBindCollection.ACTION_ADD:
                case IBindCollection.ACTION_MOVE:
                case IBindCollection.ACTION_REMOVE:
-	               this._onCollectionAddMoveRemove.apply(this, arguments);
+                  if (action === IBindCollection.ACTION_MOVE && !Object.isEmpty(this._options.groupBy)) {
+                     this.redraw(); //TODO костыль, пока не будет группировки на стороне проекции.
+                  } else {
+                     this._onCollectionAddMoveRemove.apply(this, arguments);
+                  }
 	               break;
 
 	            case IBindCollection.ACTION_REPLACE:
