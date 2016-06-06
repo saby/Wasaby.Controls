@@ -98,18 +98,16 @@ define('js!SBIS3.CONTROLS.RichEditor',
                strikethrough:  false
             },
             _fileLoader: undefined,
-            _tinyIsInit: false,
-            _lastSelection: undefined,
-            _enabled: undefined,
+            _tinyIsInit: false,//TODO: избьавиться от этого флага через  _tinyReady
+            _enabled: undefined, //TODO: подумать как избавиться от этого
             _typeInProcess: false,
             _instances: {},
-            _itemsContext: undefined,
             _toolbarContainer: undefined,
             _toggleToolbarButton: undefined,
             _needPasteImage: false,
             _buttonsState: undefined,
             _clipboardText: undefined,
-            _lastRng: undefined,
+            _lastRng: undefined
          },
 
          _modifyOptions: function(options) {
@@ -1538,8 +1536,8 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
          _drawItems: function() {
             var itemsArray = this._prepareItems(),
-               result = this._instances;
-            this._itemsContext = new $ws.proto.Context({ isGlobal: true });
+               result = this._instances,
+               itemsContext = new $ws.proto.Context({ isGlobal: true });
             for (var i in itemsArray) {
                if (itemsArray.hasOwnProperty(i)) {
                   var div = $('<div class="controls-RichEditor__ToolbarItem"></div>').appendTo(this._toolbarContainer),
@@ -1551,7 +1549,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                         element: div,
                         richEditor: this,
                         cssClassName: 'controls-RichEditor__ToolbarItem mce-',
-                        linkedContext: this._itemsContext,
+                        linkedContext: itemsContext,
                         renderStyle: isButton ? 'asLink' : 'hover'
                      }, itemsArray[i].config);
                   if (isButton) {
