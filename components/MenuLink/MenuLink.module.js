@@ -62,6 +62,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTRO
 
       init : function(){
          this.reload();
+         this._options.pickerClassName += ' controls-MenuLink__Menu';
          MenuLink.superclass.init.call(this);
       },
 
