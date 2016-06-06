@@ -1,8 +1,9 @@
 /* global define, require, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
    'js!SBIS3.CONTROLS.Data.Projection.CollectionItem',
-   'js!SBIS3.CONTROLS.Data.Di'
-], function (CollectionItem, Di) {
+   'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (CollectionItem, Di, Utils) {
    'use strict';
 
    /**
@@ -39,7 +40,18 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
        */
       _$childrenProperty: '',
 
-       _hashPrefix: 'tree-item-',
+      /**
+       * @cfg {String} Название свойства, содержащего признак загруженности узла
+       * <pre>
+       *    new TreeItem({
+       *       loadedProperty: 'Раздел$'
+       *    })
+       * </pre>
+       *
+       */
+      _$loadedProperty: '',
+
+      _hashPrefix: 'tree-item-',
 
       constructor: function $TreeItem(options) {
          TreeItem.superclass.constructor.call(this, options);
@@ -115,6 +127,24 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
       },
 
       /**
+       * Устанавливает свойство наличия дочерних элементов
+       * @param {String} name
+       * @see loadedProperty
+       */
+      setLoadedProperty: function (name) {
+         this._$loadedProperty = name;
+      },
+
+      /**
+       * Возвращает название свойства наличия дочерних элементов
+       * @returns {String}
+       * @see loadedProperty
+       */
+      getLoadedProperty: function () {
+         return this._$loadedProperty;
+      },
+
+      /**
        * Устанавливает признак, что узел развернут или свернут
        * @param {Boolean} expanded Развернут или свернут узел
        */
@@ -132,6 +162,25 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
       toggleExpanded: function () {
          this.setExpanded(!this.isExpanded());
       },
+
+      /**
+       * Возвращает значение свойства загруженности узла
+       * @returns {Boolean}
+       */
+      isLoaded: function () {
+         this._checkLoadedProperty();
+         return Utils.getItemPropertyValue(this.getContents(), this.getLoadedProperty());
+      },
+
+      /**
+       * Устанавливает свойство загруженности узла
+       * @param {Boolean} value
+       */
+      setLoaded: function (value) {
+         this._checkLoadedProperty();
+         Utils.getItemPropertyValue(this.getContents(), this.getLoadedProperty(), !!value);
+      },
+
 
       /**
        * Возвращает название свойства, содержащего дочерние элементы узла
@@ -157,6 +206,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
          var rootOwner = this.getRoot().getOwner();
          if (rootOwner && rootOwner !== this._$owner) {
             rootOwner.notifyItemChange(this, property);
+         }
+      },
+
+      _checkLoadedProperty: function() {
+         if(!this.getLoadedProperty()) {
+            throw new Error('Loaded property is not defined, please set it and try again.');
          }
       }
 
