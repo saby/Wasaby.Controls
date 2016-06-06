@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             } else if (crumb.length) {
                this._notify('onItemClick', crumb.data(this._options.keyField));
             }
-            if (this._picker.isVisible() && fromDropdown){
+            if (this._picker && this._picker.isVisible() && fromDropdown){
                this._picker.hide();
             }
          }
@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             this._picker.setTarget(crumb);
          }
          this.togglePicker();
-         if (this._picker.isVisible()) {
+         if (this._picker && this._picker.isVisible()) {
             this._redrawDropdown();
          }
       },
