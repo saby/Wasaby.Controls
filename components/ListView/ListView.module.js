@@ -838,7 +838,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _getScrollContainer: function() {
             var scrollWatcher = this._scrollWatcher,
                 scrollContainer;
-            
+
             function findScrollContainer(node) {
                if (node === null) {
                   return null;
@@ -1467,7 +1467,7 @@ define('js!SBIS3.CONTROLS.ListView',
                return elem;
             }
 
-            if(this._itemsProjection && this._getItemProjectionByItemId(dataId) && this._getItemProjectionByHash(dataHash)) {
+            if(this._getItemsProjection() && this._getItemProjectionByItemId(dataId) && this._getItemProjectionByHash(dataHash)) {
                return elem;
             } else {
                return this._findItemByElement(elem.parent());
@@ -1732,7 +1732,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         self._options._items.append(dataSet);
                         ladder && ladder.setIgnoreEnabled(false);
                      }
-                     
+
                      //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                      self.getItems().setMetaData(dataSet.getMetaData());
 
