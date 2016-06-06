@@ -876,20 +876,23 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         _getDomElementByItem : function(item) {
+            //FIXME т.к. строка редактирования по местру спозиционирована абсолютно, то надо искать оригинальную строку
+            return this._getItemsContainer().find('.js-controls-ListView__item[data-hash="' + item.getHash() + '"]:not(.controls-editInPlace)')
+         },
+
          _getElementData: function(target) {
             if (target.length){
                var cont = this._container[0],
                    containerCords = cont.getBoundingClientRect(),
                    targetKey = target[0].getAttribute('data-id'),
-               //FIXME т.к. строка редактирования по местру спозиционирована абсолютно, то надо искать оригинальную строку
-                   correctTarget = target.hasClass('controls-editInPlace') ?
-                       this._getItemsContainer().find('[data-id="' + targetKey + '"]:not(.controls-editInPlace)') :
-                       target,
+                   item = this.getItems().getRecordById(targetKey),
+                   correctTarget = target.hasClass('controls-editInPlace') ? this._getDomElementByItem(item) : target,
                    targetCords = correctTarget[0].getBoundingClientRect();
 
                return {
                   key: targetKey,
-                  record: this.getItems().getRecordById(targetKey),
+                  record: item,
                   container: correctTarget,
                   position: {
                      /* При расчётах координат по вертикали учитываем прокрутку */
