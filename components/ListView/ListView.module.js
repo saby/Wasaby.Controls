@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CORE.CompoundActiveFixMixin',
       'js!SBIS3.CONTROLS.ItemsControlMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
+      'js!SBIS3.CONTROLS.Data.Query.Query',
       'js!SBIS3.CONTROLS.Selectable',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.DecorableMixin',
@@ -33,7 +34,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
-   function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable,
+   function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
              Link, ScrollWatcher, IBindCollection, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate) {
@@ -557,7 +558,12 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see resultsPosition
                 * @see resultsText
                 */
-               resultsTpl: undefined
+               resultsTpl: undefined,
+               /**
+                * @cfg {Boolean} Использовать режим частичной навигации
+                * Задаёт какой режим навигации использовать: полный или частичный.
+                */
+               partialPaging: false
             },
             //Флаг обозначает необходимость компенсировать подгрузку по скроллу вверх, ее нельзя делать безусловно, так как при подгрузке вверх могут добавлятся элементы и вниз тоже
             _needSrollTopCompensation: false,
@@ -1997,6 +2003,15 @@ define('js!SBIS3.CONTROLS.ListView',
                });
             }
             this._updatePaging();
+         },
+         _getQueryForCall: function(filter, sorting, offset, limit){
+            var query = new Query();
+            query.where(filter)
+               .offset(offset)
+               .limit(limit)
+               .orderBy(sorting)
+               .meta({ hasMore: this._options.partialPaging});
+            return query;
          },
          /**
           * Метод обработки интеграции с пейджингом
