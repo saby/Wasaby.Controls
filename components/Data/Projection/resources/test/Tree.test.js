@@ -317,6 +317,32 @@ define([
 
          });
 
+         describe('.getLoadedProperty()', function(){
+            it('should return loaded property', function(){
+               var item = new TreeItem({
+                  contents: {
+                     id: null,
+                     title: 'Root'
+                  },
+                  loadedProperty: 'isLoaded'
+               });
+
+               assert.equal(item.getLoadedProperty(), 'isLoaded');
+            });
+
+            it('should return loaded property', function(){
+               var items = new Tree({
+                  collection: items,
+                  root: {id: 1, title: 'Root'},
+                  idProperty: 'id',
+                  loadedProperty: 'isLoaded'
+               });
+
+               assert.equal(items.at(0).getLoadedProperty(), 'isLoaded');
+            });
+         });
+
+
          describe('.$constructor()', function(){
             it('should sort projection so first folder then next leaf', function(){
                var items = new Tree({

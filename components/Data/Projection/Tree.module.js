@@ -59,6 +59,18 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       _$root: undefined,
 
       /**
+       * @cfg {String} Название свойства, содержащего признак загруженности узла
+       * <pre>
+       *    new Tree({
+       *       parentProperty: 'Раздел'
+       *       loadedProperty: 'Раздел$'
+       *    })
+       * </pre>
+       *
+       */
+      _$loadedProperty: '',
+
+      /**
        * @member {SBIS3.CONTROLS.Data.Projection.TreeItem} Корневой элемент дерева
        */
       _root: null,
@@ -176,7 +188,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
                   owner: this,
                   node: true,
                   expanded: true,
-                  contents: this._$root
+                  contents: this._$root,
+                  loadedProperty: this._$loadedProperty
                });
             }
          }
@@ -277,7 +290,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          return Di.resolve(this._itemModule, {
             contents: item,
             owner: this,
-            node: !!Utils.getItemPropertyValue(item, this._$nodeProperty)
+            node: !!Utils.getItemPropertyValue(item, this._$nodeProperty),
+            loadedProperty: this._$loadedProperty
          });
       },
 
