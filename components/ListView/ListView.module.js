@@ -1798,11 +1798,14 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          isScrollOnBottom: function(){
-            var scrollContainer = this._scrollWatcher.getScrollContainer();
+            var scrollableContainer = this._scrollWatcher.getScrollContainer(),
+            isBody = scrollableContainer == document.body,
+            scrollContainer = isBody ? $(window) : this._options.infiniteScrollContainer;
             // Если scrollContainer это body и есть floatArea со скроллом, то у body скролла нет, а значит он не может быть снизу (его же нет!)
             // Todo: когда будут классные скроллы (3.7.4.100?) - можно будет выпилить
-            if (scrollContainer && scrollContainer == document.body && !$('.ws-scrolling-content').length){
-               return (scrollContainer.scrollHeight - (scrollContainer.scrollTop + scrollContainer.offsetHeight)) == 0;
+            if (scrollableContainer && isBody && !$('.ws-scrolling-content').length){
+               scrollContainer = $(scrollContainer);
+               return (scrollableContainer.scrollHeight - (scrollableContainer.scrollTop + scrollContainer.height())) == 0;
             }
          },
          isScrollOnTop: function(){
