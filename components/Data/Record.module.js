@@ -52,7 +52,24 @@ define('js!SBIS3.CONTROLS.Data.Record', [
     * @author Мальцев Алексей
     */
 
+   var RecordState = {
+      ADDED: 'Added',
+      DELETED: 'Deleted',
+      CHANGED: 'Changed',
+      UNCHANGED: 'Unchanged',
+      DETACHED: 'Detached'
+   };
+
    var Record = Abstract.extend([IObject, ICloneable, IEnumerable, OptionsMixin, ObservableMixin, SerializableMixin, CloneableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
+      /**
+       * @typedef {String} RecordState
+       * @variant Added Запись была добавлена в рекордсет, но метод Record::acceptChanges() не был вызыван.
+       * @variant Deleted Запись была удалена из рекордсета с использованием метода Record::delete().
+       * @variant Changed Запись была изменена, но метод Record::acceptChanges() не был вызван. Автоматически переходит в это состояние при изменении любого поля, если до этого оно (состояние) было Unchanged или Detached.
+       * @variant Unchanged С момента последнего вызова Record::acceptChanges() запись не была изменена.
+       * @variant Detached Запись не была вставлена ни в один рекордсет, либо запись была удалена из рекордсета.
+       */
+
       _moduleName: 'SBIS3.CONTROLS.Data.Record',
 
       _compatibleConstructor: true,//Чтобы в наследниках с "old style extend" звался нативный constructor()
@@ -63,6 +80,15 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @see getOwner
        */
       _$owner: null,
+
+      /**
+       * @cfg {RecordState} Текущее состояние записи.
+       * @name SBIS3.CONTROLS.Data.Record#state
+       * @see getState
+       * @see setState
+       * @see getOwner
+       */
+      _$state: RecordState.DETACHED,
 
       /**
        * @member {Object.<String, *>} Измененные поля и оригинальные значения
@@ -315,6 +341,26 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       },
 
       /**
+       * Возвращает текущее состояние записи.
+       * @returns {RecordState}
+       * @see state
+       * @see setState
+       */
+      getState: function() {
+         return this._$state;
+      },
+
+      /**
+       * Устанавливает текущее состояние записи.
+       * @param {RecordState} state Новое состояние записи.
+       * @see state
+       * @see getState
+       */
+      setState: function(state) {
+         this._$state = state;
+      },
+
+      /**
        *  Возвращает массив названий измененных полей.
        *  @returns {Array}
        */
@@ -324,9 +370,39 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       /**
        * Забывает измененные поля.
+       * @see acceptChanges
+       * @deprecated Метод будет удалён в версии платформы СБИС 3.7.4. Используйте acceptChanges()
        */
       applyChanges: function() {
+         Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet::applyChanges() - method is deprecated and will be removed in 3.7.4. Use acceptChanges() instead.', 1);
+         this.acceptChanges();
+      },
+
+      /**
+       * Подтверждает изменения состояния записи в с момента предыдущего вызова acceptChanges()
+       * <ul>
+       *    <li>Сбрасывает признак изменения для всех измененных полей;
+       *    <li>Меняет {@link state} следующим образом:
+       *       <ul>
+       *          <li>Added или Changed становится Unchanged;</li>
+       *          <li>Deleted становится Detached;</li>
+       *          <li>остальные не меняются.</li>
+       *       </ul>
+       *    </li>
+       * </ul>
+       */
+      acceptChanges: function() {
          this._changedFields = {};
+
+         switch (this._$state) {
+            case RecordState.ADDED:
+            case RecordState.CHANGED:
+               this._$state = RecordState.UNCHANGED;
+               break;
+            case RecordState.DELETED:
+               this._$state = RecordState.DETACHED;
+               break;
+         }
       },
 
       //endregion Public methods
@@ -474,13 +550,13 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          if (a && $ws.helpers.instanceOfModule(a, 'SBIS3.CONTROLS.Data.Types.Enum') &&
             b && $ws.helpers.instanceOfModule(b, 'SBIS3.CONTROLS.Data.Types.Enum')
          ) {
-            return a.equals(b);
+            return a.isEqual(b);
          }
 
          if (a && $ws.helpers.instanceOfModule(a, 'SBIS3.CONTROLS.Data.Types.Flags') &&
             b && $ws.helpers.instanceOfModule(b, 'SBIS3.CONTROLS.Data.Types.Flags')
          ) {
-            return a.equals(b);
+            return a.isEqual(b);
          }
 
          return false;
@@ -509,6 +585,12 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          if (!this._changedFields.hasOwnProperty(name)) {
             this._changedFields[name] = [value];
          }
+         switch (this._$state) {
+            case RecordState.DETACHED:
+            case RecordState.UNCHANGED:
+               this._$state = RecordState.CHANGED;
+               break;
+         }
       },
 
       /**
@@ -522,6 +604,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       //endregion Protected methods
    });
+
+   Record.RecordState = RecordState;
 
    SerializableMixin._checkExtender(Record);
 

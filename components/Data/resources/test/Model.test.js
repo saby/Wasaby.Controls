@@ -456,7 +456,7 @@ define([
             assert.strictEqual(model.isDeleted(), cloneA.isDeleted());
             assert.strictEqual(model.isStored(), cloneA.isStored());
 
-            model._setDeleted(true);
+            model.setDeleted(true);
             model.setStored(true);
             var cloneB = model.clone();
             assert.strictEqual(model.isDeleted(), cloneB.isDeleted());
@@ -593,32 +593,6 @@ define([
             model.merge(anotherModel);
             assert.isTrue(model.isChanged());
          });
-         it('should stay unstored', function () {
-            assert.isFalse(model.isStored());
-            var anotherModel = new Model();
-            model.merge(anotherModel);
-            assert.isFalse(model.isStored());
-         });
-         it('should become stored', function () {
-            assert.isFalse(model.isStored());
-            var anotherModel = new Model();
-            anotherModel._isStored = true;
-            model.merge(anotherModel);
-            assert.isTrue(model.isStored());
-         });
-         it('should stay undeleted', function () {
-            assert.isFalse(model.isDeleted());
-            var anotherModel = new Model();
-            model.merge(anotherModel);
-            assert.isFalse(model.isDeleted());
-         });
-         it('should become deleted', function () {
-            assert.isFalse(model.isDeleted());
-            var anotherModel = new Model();
-            anotherModel._isDeleted = true;
-            model.merge(anotherModel);
-            assert.isTrue(model.isDeleted());
-         });
       });
 
       describe('.toJSON()', function () {
@@ -675,7 +649,7 @@ define([
       });
 
       describe('.isCreated()', function (){
-         it('sould return flag usingDataSetAsList', function (){
+         it('sould return given value', function (){
             model.setCreated(true);
             assert.isTrue(model.isCreated());
             model.setCreated(false);
@@ -684,7 +658,7 @@ define([
       });
 
       describe('.isDeleted()', function (){
-         it('sould return flag usingDataSetAsList', function (){
+         it('sould return given value', function (){
             model.setDeleted(true);
             assert.isTrue(model.isDeleted());
             model.setDeleted(false);
@@ -693,7 +667,7 @@ define([
       });
 
       describe('.isChanged()', function (){
-         it('sould return flag usingDataSetAsList', function (){
+         it('sould return given value', function (){
             model.setChanged(true);
             assert.isTrue(model.isChanged());
             model.setChanged(false);

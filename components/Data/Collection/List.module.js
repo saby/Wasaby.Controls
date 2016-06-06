@@ -100,19 +100,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       //region SBIS3.CONTROLS.Data.Collection.IEnumerable
 
       /**
-       * Возвращает энумератор для перебора элементов коллеции
+       * Возвращает энумератор для перебора элементов списка.
        * @returns {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator}
        */
       getEnumerator: function () {
          return new ArrayEnumerator(this._$items);
       },
 
-      /**
-       * Итератор для обхода всех элементов коллекции
-       * Цикл проходит полное количество итераций, его невозможно прервать досрочно
-       * @param callback
-       * @param context
-       */
       each: function (callback, context) {
          //так быстрее, чем по правильному - через enumerator
          for (var i = 0, count = this._$items.length; i < count; i++) {

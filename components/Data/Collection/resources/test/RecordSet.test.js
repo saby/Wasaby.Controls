@@ -3,11 +3,12 @@ define([
       'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
       'js!SBIS3.CONTROLS.Data.Collection.List',
       'js!SBIS3.CONTROLS.Data.Bind.ICollection',
+      'js!SBIS3.CONTROLS.Data.Record',
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Source.Memory',
       'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis'
-   ], function (RecordSet, List, IBindCollection, Model, MemorySource, FieldsFactory, SbisAdapter) {
+   ], function (RecordSet, List, IBindCollection, Record, Model, MemorySource, FieldsFactory, SbisAdapter) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Collection.RecordSet', function() {
@@ -17,7 +18,7 @@ define([
             getSbisItems;
 
          beforeEach(function() {
-            getItems = function (){
+            getItems = function () {
                return [{
                   'Ид': 1,
                   'Фамилия': 'Иванов'
@@ -43,7 +44,8 @@ define([
                   'Ид': 8,
                   'Фамилия': 'Арбузнов'
                }];
-            },
+            };
+
             getSbisItems = function() {
                return {
                   d: [
@@ -65,6 +67,7 @@ define([
                   }]
                };
             };
+
             items = getItems();
             rs = new RecordSet({
                rawData: getItems(),
@@ -181,12 +184,214 @@ define([
                   assert.isTrue($ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Record'));
                }
             });
+            it('should return all records', function() {
+               var enumerator = rs.getEnumerator(),
+                  foundCount = 0;
+               while(enumerator.getNext()) {
+                  foundCount++;
+               }
+               assert.equal(rs.getCount(), foundCount);
+            });
             it('should return records owned by itself', function() {
                var enumerator = rs.getEnumerator(),
                   record;
                while((record = enumerator.getNext())) {
                   assert.strictEqual(record.getOwner(), rs);
                }
+            });
+            it('should return records with state "Unchanged"', function() {
+               var enumerator = rs.getEnumerator(),
+                  record;
+               while((record = enumerator.getNext())) {
+                  assert.strictEqual(record.getState(), Record.RecordState.UNCHANGED);
+               }
+            });
+            it('should return only records with state "Unchanged"', function() {
+               var enumerator = rs.getEnumerator(Record.RecordState.UNCHANGED),
+                  foundCount = 0,
+                  record;
+               while((record = enumerator.getNext())) {
+                  assert.strictEqual(record.getState(), Record.RecordState.UNCHANGED);
+                  foundCount++;
+               }
+               assert.equal(rs.getCount(), foundCount);
+            });
+            it('should return no records with state "Changed"', function() {
+               var enumerator = rs.getEnumerator(Record.RecordState.CHANGED),
+                  found = false;
+               while(enumerator.getNext()) {
+                  found = true;
+               }
+               assert.isFalse(found);
+            });
+            it('should return only records with state "Changed"', function() {
+               rs.at(1).set('Ид', 'test');
+               var enumerator = rs.getEnumerator(Record.RecordState.CHANGED),
+                  foundCount = 0,
+                  record;
+               while((record = enumerator.getNext())) {
+                  assert.strictEqual(record.getState(), Record.RecordState.CHANGED);
+                  foundCount++;
+               }
+               assert.equal(foundCount, 1);
+            });
+            it('should return no records with state "Added"', function() {
+               var enumerator = rs.getEnumerator(Record.RecordState.ADDED),
+                  found = false;
+               while(enumerator.getNext()) {
+                  found = true;
+               }
+               assert.isFalse(found);
+            });
+            it('should return only records with state "Added"', function() {
+               rs.add(new Model());
+               var enumerator = rs.getEnumerator(Record.RecordState.ADDED),
+                  foundCount = 0,
+                  record;
+               while((record = enumerator.getNext())) {
+                  assert.strictEqual(record.getState(), Record.RecordState.ADDED);
+                  foundCount++;
+               }
+               assert.equal(foundCount, 1);
+            });
+            it('should return no records with state "Deleted"', function() {
+               var enumerator = rs.getEnumerator(Record.RecordState.DELETED),
+                  found = false;
+               while(enumerator.getNext()) {
+                  found = true;
+               }
+               assert.isFalse(found);
+            });
+            it('should return only records with state "Deleted"', function() {
+               rs.at(2).setState(Record.RecordState.DELETED);
+               var enumerator = rs.getEnumerator(Record.RecordState.DELETED),
+                  foundCount = 0,
+                  record;
+               while((record = enumerator.getNext())) {
+                  assert.strictEqual(record.getState(), Record.RecordState.DELETED);
+                  foundCount++;
+               }
+               assert.equal(foundCount, 1);
+            });
+            it('should return no records with state "Detached"', function() {
+               var enumerator = rs.getEnumerator(Record.RecordState.DETACHED),
+                  found = false;
+               while(enumerator.getNext()) {
+                  found = true;
+               }
+               assert.isFalse(found);
+            });
+         });
+
+         describe('.each()', function() {
+            it('should return records', function() {
+               rs.each(function(record) {
+                  assert.isTrue($ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Record'));
+               });
+            });
+            it('should return all records', function() {
+               var foundCount = 0;
+               rs.each(function() {
+                  foundCount++;
+               });
+               assert.equal(rs.getCount(), foundCount);
+            });
+            it('should return record indexes', function() {
+               var expect = 0;
+               rs.each(function(record, index) {
+                  assert.equal(index, expect);
+                  expect++;
+               });
+            });
+            it('should make call in self context', function() {
+               rs.each(function() {
+                  assert.strictEqual(this, rs);
+               });
+            });
+            it('should make call in given context if state is skipped', function() {
+               var context = {};
+               rs.each(function() {
+                  assert.strictEqual(this, context);
+               }, context);
+            });
+            it('should make call in given context if state is used', function() {
+               var context = {};
+               rs.each(function() {
+                  assert.strictEqual(this, context);
+               }, Record.RecordState.UNCHANGED, context);
+            });
+            it('should return records owned by itself', function() {
+               rs.each(function(record) {
+                  assert.strictEqual(record.getOwner(), rs);
+               });
+            });
+            it('should return records with state "Unchanged"', function() {
+               rs.each(function(record) {
+                  assert.strictEqual(record.getState(), Record.RecordState.UNCHANGED);
+               });
+            });
+            it('should return only records with state "Unchanged"', function() {
+               var foundCount = 0;
+               rs.each(function(record) {
+                  assert.strictEqual(record.getState(), Record.RecordState.UNCHANGED);
+                  foundCount++;
+               }, Record.RecordState.UNCHANGED);
+               assert.equal(rs.getCount(), foundCount);
+            });
+            it('should return no records with state "Changed"', function() {
+               var found = false;
+               rs.each(function() {
+                  found = true;
+               }, Record.RecordState.CHANGED);
+               assert.isFalse(found);
+            });
+            it('should return only records with state "Changed"', function() {
+               rs.at(1).set('Ид', 'test');
+               var foundCount = 0;
+               rs.each(function(record) {
+                  assert.strictEqual(record.getState(), Record.RecordState.CHANGED);
+                  foundCount++;
+               }, Record.RecordState.CHANGED);
+               assert.equal(foundCount, 1);
+            });
+            it('should return no records with state "Added"', function() {
+               var found = false;
+               rs.each(function() {
+                  found = true;
+               }, Record.RecordState.ADDED);
+               assert.isFalse(found);
+            });
+            it('should return only records with state "Added"', function() {
+               rs.add(new Model());
+               var foundCount = 0;
+               rs.each(function(record) {
+                  assert.strictEqual(record.getState(), Record.RecordState.ADDED);
+                  foundCount++;
+               }, Record.RecordState.ADDED);
+               assert.equal(foundCount, 1);
+            });
+            it('should return no records with state "Deleted"', function() {
+               var found = false;
+               rs.each(function() {
+                  found = true;
+               }, Record.RecordState.DELETED);
+               assert.isFalse(found);
+            });
+            it('should return only records with state "Deleted"', function() {
+               rs.at(2).setState(Record.RecordState.DELETED);
+               var foundCount = 0;
+               rs.each(function(record) {
+                  assert.strictEqual(record.getState(), Record.RecordState.DELETED);
+                  foundCount++;
+               }, Record.RecordState.DELETED);
+               assert.equal(foundCount, 1);
+            });
+            it('should return no records with state "Detached"', function() {
+               var found = false;
+               rs.each(function() {
+                  found = true;
+               }, Record.RecordState.DETACHED);
+               assert.isFalse(found);
             });
          });
 
@@ -360,19 +565,6 @@ define([
                   assert.strictEqual(item.getName(), declaration[index].name);
                   assert.strictEqual(item.getType().toLowerCase(), declaration[index].type);
                });
-            });
-         });
-
-         describe('.getIndexByValue()', function(){
-            it('should return records index from recordset by value', function(){
-               var data = getSbisItems(),
-                  rs = new RecordSet({
-                     rawData: data,
-                     adapter: 'adapter.sbis'
-                  });
-               for(var i= data.d.length; i<=0;i-- ) {
-                  assert.equal(rs.getIndexByValue('Фамилия', data.d[i][1]), i);
-               }
             });
          });
 
@@ -560,7 +752,7 @@ define([
                });
             });
 
-            it('should set the records owner to itself', function() {
+            it('should set the new records owner to itself', function() {
                var records = [new Model(), new Model(), new Model()];
                rs.append(records);
                for (var i = 0; i < records.length; i++) {
@@ -568,7 +760,15 @@ define([
                }
             });
 
-            it('should throw an error', function() {
+            it('should set the new records state to "Added"', function() {
+               var records = [new Model(), new Model(), new Model()];
+               rs.append(records);
+               for (var i = 0; i < records.length; i++) {
+                  assert.strictEqual(records[i].getState(), Record.RecordState.ADDED);
+               }
+            });
+
+            it('should throw an error for not a Record', function() {
                var data4 = {id: 4},
                   data5 = {id: 5};
                assert.throw(function (){
@@ -630,11 +830,19 @@ define([
                });
             });
 
-            it('should set the records owner to itself', function() {
+            it('should set the new records owner to itself', function() {
                var records = [new Model(), new Model(), new Model()];
                rs.prepend(records);
                for (var i = 0; i < records.length; i++) {
                   assert.strictEqual(records[i].getOwner(), rs);
+               }
+            });
+
+            it('should set the new records state to "Added"', function() {
+               var records = [new Model(), new Model(), new Model()];
+               rs.prepend(records);
+               for (var i = 0; i < records.length; i++) {
+                  assert.strictEqual(records[i].getState(), Record.RecordState.ADDED);
                }
             });
 
@@ -704,6 +912,30 @@ define([
                rs.assign(records);
                for (var i = 0; i < records.length; i++) {
                   assert.strictEqual(records[i].getOwner(), rs);
+               }
+            });
+
+            it('should set the new records state to "Changed"', function() {
+               var records = [new Model(), new Model(), new Model()];
+               rs.assign(records);
+               for (var i = 0; i < records.length; i++) {
+                  assert.strictEqual(records[i].getState(), Record.RecordState.CHANGED);
+               }
+            });
+
+            it('should reset the old records owner', function() {
+               var records = rs.toArray();
+               rs.assign([]);
+               for (var i = 0; i < records.length; i++) {
+                  assert.isNull(records[i].getOwner());
+               }
+            });
+
+            it('should set the old records state to "Detached"', function() {
+               var records = rs.toArray();
+               rs.assign([]);
+               for (var i = 0; i < records.length; i++) {
+                  assert.strictEqual(records[i].getState(), Record.RecordState.DETACHED);
                }
             });
 
@@ -832,14 +1064,21 @@ define([
          });
 
          describe('.clear()', function() {
-            it('should reset records owner', function() {
+            it('should reset the records owner', function() {
                var records = rs.toArray();
                rs.clear();
                for (var i = 0; i < records.length; i++) {
                   assert.isNull(records[i].getOwner());
                }
             });
-            it('should change raw data', function() {
+            it('should set the records state to "Detached"', function() {
+               var records = rs.toArray();
+               rs.clear();
+               for (var i = 0; i < records.length; i++) {
+                  assert.equal(records[i].getState(), Record.RecordState.DETACHED);
+               }
+            });
+            it('should clear the raw data', function() {
                rs.clear();
                assert.deepEqual(rs.getRawData(), []);
             });
@@ -888,24 +1127,28 @@ define([
 
          describe('.add()', function() {
             it('should set the record owner to itself', function() {
-               var addItem = new Model();
-               rs.add(addItem);
-               assert.strictEqual(addItem.getOwner(), rs);
+               var record = new Model();
+               rs.add(record);
+               assert.strictEqual(record.getOwner(), rs);
+            });
+            it('should set the record state to "Added"', function() {
+               var record = new Model();
+               rs.add(record);
+               assert.strictEqual(record.getState(), Record.RecordState.ADDED);
             });
             it('should change raw data', function() {
                var rd = {
                      'Ид': 502,
                      'Фамилия': '502'
                   },
-                  addItem = new Model({
+                  record = new Model({
                      rawData: rd
                   });
-               rs.add(addItem);
+               rs.add(record);
                items.push(rd);
                assert.deepEqual(rs.getRawData(), items);
             });
-
-            it('should throw an error if pass not a record ', function() {
+            it('should throw an error for not a record ', function() {
                var rd = {
                      'Ид': 502,
                      'Фамилия': '502'
@@ -932,6 +1175,11 @@ define([
                assert.strictEqual(record.getOwner(), rs);
                rs.remove(record);
                assert.isNull(record.getOwner());
+            });
+            it('should set the record state to "Detached"', function() {
+               var record = rs.at(0);
+               rs.remove(record);
+               assert.strictEqual(record.getState(), Record.RecordState.DETACHED);
             });
             it('should remove record from hierarchy index', function() {
                var rs = new RecordSet({
@@ -974,6 +1222,11 @@ define([
                rs.removeAt(0);
                assert.isNull(record.getOwner());
             });
+            it('should set the record state to "Detached"', function() {
+               var record = rs.at(0);
+               rs.removeAt(0);
+               assert.strictEqual(record.getState(), Record.RecordState.DETACHED);
+            });
          });
 
          describe('.replace()', function() {
@@ -992,16 +1245,24 @@ define([
                rs.replace(record, 0);
                assert.strictEqual(record.getOwner(), rs);
             });
-            it('should throw an error', function() {
-               var rd = {
-                     'Ид': 50,
-                     'Фамилия': '50'
-                  },
-                  newItem = new Model({rawData: rd});
-               assert.throw(function (){
-                  rs.append([new Model({
-                     rawData: data4
-                  }), data5]);
+            it('should set the record state to "Changed"', function() {
+               var record = new Model();
+               rs.replace(record, 0);
+               assert.strictEqual(record.getState(), Record.RecordState.CHANGED);
+            });
+            it('should reset the old record owner', function() {
+               var record = rs.at(0);
+               rs.replace(new Model(), 0);
+               assert.isNull(record.getOwner());
+            });
+            it('should set the old record state to "Detached"', function() {
+               var record = rs.at(0);
+               rs.replace(new Model(), 0);
+               assert.strictEqual(record.getState(), Record.RecordState.DETACHED);
+            });
+            it('should throw an error for not a record', function() {
+               assert.throw(function () {
+                  rs.replace({}, 0);
                });
             });
          });
@@ -1066,6 +1327,38 @@ define([
                rs.saveChanges(source);
                assert.strictEqual(rec, byKeyRec);
                assert.strictEqual(rec, rs.getRecordById(rec.get(idProperty)));
+            });
+         });
+
+         describe('.acceptChanges()', function (){
+            it('should make the records unchanged', function() {
+               rs.each(function(record, index) {
+                  record.set('Ид', 'new-' + index);
+               });
+               rs.acceptChanges();
+               rs.each(function(record) {
+                  assert.strictEqual(record.getChanged().length, 0);
+               });
+            });
+            it('should set the records state to "Unchanged"', function() {
+               rs.each(function(record, index) {
+                  record.set('Ид', 'new-' + index);
+               });
+               rs.acceptChanges();
+               rs.each(function(record) {
+                  assert.strictEqual(record.getState(), Record.RecordState.UNCHANGED);
+               });
+            });
+            it('should set the added record state to "Unchanged"', function() {
+               var record = new Model({
+                  rawData: {
+                     'Ид': 100,
+                     'Фамилия': 'Test'
+                  }
+               });
+               rs.add(record);
+               rs.acceptChanges();
+               assert.strictEqual(record.getState(), Record.RecordState.UNCHANGED);
             });
          });
 
@@ -1246,6 +1539,19 @@ define([
             });
          });
 
+         describe('.getIndexByValue()', function(){
+            it('should return records index from recordset by value', function(){
+               var data = getSbisItems(),
+                  rs = new RecordSet({
+                     rawData: data,
+                     adapter: 'adapter.sbis'
+                  });
+               for(var i= data.d.length; i<=0;i-- ) {
+                  assert.equal(rs.getIndexByValue('Фамилия', data.d[i][1]), i);
+               }
+            });
+         });
+
          describe('.getRecordKeyByIndex()', function (){
             it('should return record by id', function() {
                assert.equal(rs.getRecordKeyByIndex(1), 2);
@@ -1301,8 +1607,6 @@ define([
                rs.insert(m, 5);
                assert.equal(rs.getCount(), length);
             });
-
-
          });
 
          describe('.setMetaData()', function (){

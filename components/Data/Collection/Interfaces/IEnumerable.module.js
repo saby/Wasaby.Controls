@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IEnumerable', [], function () {
 
    return /** @lends SBIS3.CONTROLS.Data.Collection.IEnumerable.prototype */{
       /**
-       * Возвращает энумератор для перебора элементов коллеции
+       * Возвращает энумератор для перебора элементов коллекции
        * @returns {SBIS3.CONTROLS.Data.Collection.IEnumerator}
        */
       getEnumerator: function () {
@@ -19,9 +19,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.IEnumerable', [], function () {
       },
 
       /**
-       * Перебирает все элементы коллекции, начиная с первого
+       * Перебирает все элементы коллекции, начиная с первого.
+       * Цикл проходит полное количество итераций, его невозможно прервать досрочно.
        * @param {Function(*, Number)} callback Ф-я обратного вызова для каждого элемента коллекции
-       * @param {Object} [context] Конекст
+       * @param {Object} [context] Контекст вызова callback
        */
       each: function (callback, context) {
          throw new Error('Method must be implemented');

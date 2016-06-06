@@ -229,16 +229,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          Model.superclass.set.call(this, name, value);
       },
 
-      _deleteDependencyCache: function (name) {
-         if (this._propertiesDependency.hasOwnProperty(name)) {
-            var dependency = this._propertiesDependency[name];
-            for (var i = 0; i < dependency.length; i++) {
-               this._unsetFromPropertiesCache(dependency[i]);
-               this._deleteDependencyCache(dependency[i]);
-            }
-         }
-      },
-
       has: function (name) {
          return this._$properties.hasOwnProperty(name) || Model.superclass.has.call(this, name);
       },
@@ -339,7 +329,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       /**
-       * Объединяет модель с данными и состоянием другой модели
+       * Объединяет модель с данными другой модели
        * @param {SBIS3.CONTROLS.Data.Model} model Модель, с которой будет произведено объединение
        */
       merge: function (model) {
@@ -352,21 +342,12 @@ define('js!SBIS3.CONTROLS.Data.Model', [
                }
             }
          }, this);
-         this._isStored = this._isStored || model._isStored;
-         this._isDeleted = this._isDeleted || model._isDeleted;
-      },
-
-      /**
-       * Возвращает признак, что модель удалена
-       * @returns {Boolean}
-       */
-      isDeleted: function () {
-         return this._isDeleted;
       },
 
       /**
        * Возвращает признак, что модель существует в источнике данных
        * @returns {Boolean}
+       * @deprecated метод будет удален в 3.7.4 - используйте SBIS3.CONTROLS.Data.Sync::record()
        */
       isStored: function () {
          return this._isStored;
@@ -375,9 +356,28 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * Устанавливает, существует ли модель в источнике данных
        * @param {Boolean} stored Модель существует в источнике данных
+       * @deprecated метод будет удален в 3.7.4 - используйте SBIS3.CONTROLS.Data.Sync::record()
        */
       setStored: function (stored) {
          this._isStored = stored;
+      },
+
+      /**
+       * Возвращает признак, что модель была синхронизирована с источником данных
+       * @returns {Boolean}
+       * @deprecated метод будет удален в 3.7.4 - используйте SBIS3.CONTROLS.Data.Sync::record()
+       */
+      isSynced: function () {
+         return this._synced;
+      },
+
+      /**
+       * Устанавливает признак, что модель была синхронизирована с источником данных
+       * @param {Boolean} synced
+       * @deprecated метод будет удален в 3.7.4 - используйте SBIS3.CONTROLS.Data.Sync::record()
+       */
+      setSynced: function (synced) {
+         this._synced = synced;
       },
 
       /**
@@ -387,7 +387,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       getId: function () {
          var idProperty = this.getIdProperty();
          if (!idProperty) {
-            Utils.logger.info('SBIS3.CONTROLS.Data.Model::getId(): option idProperty is empty');
+            Utils.logger.info(this._moduleName + '::getId(): option idProperty is empty');
             return undefined;
          }
          return this.get(idProperty);
@@ -403,11 +403,11 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
       /**
        * Устанавливает свойство, в котором хранится первичный ключ модели
-       * @param {String} idProperty Первичный ключ модели.
+       * @param {String} idProperty Название свойства для первичного ключа модели.
        */
       setIdProperty: function (idProperty) {
          if (!this.has(idProperty)) {
-            Utils.logger.info('SBIS3.CONTROLS.Data.Model::setIdProperty(): property "' + idProperty + '" is not defined');
+            Utils.logger.info(this._moduleName + '::setIdProperty(): property "' + idProperty + '" is not defined');
             return;
          }
          this._$idProperty = idProperty;
@@ -432,20 +432,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       toString: function() {
          return JSON.stringify(this.toObject());
       },
-      /**
-       * Возвращает признак синхронизации модели
-       * @returns {Boolean}
-       */
-      isSynced: function () {
-         return this._synced;
-      },
-      /**
-       * Устанавливает признак синхронизации модели
-       * @param synced {Boolean}
-       */
-      setSynced: function (synced) {
-         this._synced = synced;
-      },
+
 
       // endregion Public methods
 
@@ -463,15 +450,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          return props.concat($ws.helpers.filter(fields, function(field) {
             return !objProps.hasOwnProperty(field);
          }));
-      },
-
-      /**
-       * Устанавливает, удалена ли модель
-       * @param {Boolean} deleted Модель удалена
-       * @protected
-       */
-      _setDeleted: function (deleted) {
-         this._isDeleted = deleted;
       },
 
       /**
@@ -510,6 +488,21 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          return value;
       },
 
+      /**
+      * Удаляет закешированное значение для свойства и всех от него зависимых свойств
+      * @param {String} idProperty Название свойства.
+      * @protected
+      */
+      _deleteDependencyCache: function (name) {
+         if (this._propertiesDependency.hasOwnProperty(name)) {
+            var dependency = this._propertiesDependency[name];
+            for (var i = 0; i < dependency.length; i++) {
+               this._unsetFromPropertiesCache(dependency[i]);
+               this._deleteDependencyCache(dependency[i]);
+            }
+         }
+      },
+
       //endregion Protected methods
 
       //TODO: совместимость с SBIS3.CONTROLS.Record - выплить после перехода на ISource
@@ -536,7 +529,17 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
       setDeleted: function (deleted) {
          Utils.logger.stack('SBIS3.CONTROLS.Data.Model: method setDeleted() is deprecated and will be removed in 3.7.4.');
-         this._setDeleted(deleted);
+         this._isDeleted = deleted;
+      },
+
+      /**
+       * Возвращает признак, что модель удалена
+       * @returns {Boolean}
+       * @deprecated метод будет удален в 3.7.4 - используйте getState() === Record.RecordState.DELETED
+       */
+      isDeleted: function () {
+         Utils.logger.stack(this._moduleName + '::isDeleted(): method is deprecated and will be removed in 3.7.4. Use getState() === Record.RecordState.DELETED instead.');
+         return this._isDeleted;
       },
 
       setChanged: function (changed) {

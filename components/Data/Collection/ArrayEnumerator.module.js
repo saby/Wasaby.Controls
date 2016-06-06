@@ -27,6 +27,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator', [
       _index: -1,
 
       /**
+       * @member {Function(*): Boolean} Фильтр элементов
+       */
+      _filter: null,
+
+      /**
        * Конструктор
        * @param {Array} items Массив
        */
@@ -55,14 +60,31 @@ define('js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator', [
             return undefined;
          }
          this._index++;
-         return this.getCurrent();
+
+         var current = this.getCurrent();
+         if (this._filter && !this._filter(current)) {
+            return this.getNext();
+         }
+         return current;
       },
 
       reset: function () {
          this._index = -1;
-      }
+      },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerator
 
+      //region Public methods
+
+      /**
+       * Возвращает текущий элемент
+       * @param {Function(*): Boolean} callback Функция обратного вызова, которая должна для каждого элемента вернуть признак, проходит ли он фильтр
+       * @returns {*}
+       */
+      setFilter: function (filter) {
+         this._filter = filter;
+      }
+
+      //endregion Public methods
    });
 });
