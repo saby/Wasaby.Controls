@@ -77,7 +77,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             _tinyEditor: undefined,
             _lastHeight: undefined,
             _tinyReady: null,
-            _ReadyContolDeffered: null,
+            _readyContolDeffered: null,
             _saveBeforeWindowClose: null,
             _changeValueFromSetText: false,
             _textAlignState: {
@@ -130,8 +130,8 @@ define('js!SBIS3.CONTROLS.RichEditor',
             this._publish('onInitEditor');
             this._sourceContainer = this._container.find('.controls-RichEditor__SourceContainer');
             this._areaEditor = this._sourceContainer.find('.controls-RichEditor__SourceArea').bind('input', this._onChangeAreaValue.bind(this));
-            this._ReadyContolDeffered = new $ws.proto.Deferred();
-            this._dChildReady.push(this._ReadyContolDeffered);// не уверен что это вообще надо делать
+            this._readyContolDeffered = new $ws.proto.Deferred();
+            this._dChildReady.push(this._readyContolDeffered);// не уверен что это вообще надо делать
             this._dataReview = this._container.find('.controls-RichEditor__DataReview');
             this._tinyReady = new $ws.proto.Deferred();
             this._inputControl = this._container.find('.controls-RichEditor__EditorFrame');
@@ -189,7 +189,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                //вешать обработчик copy/paste надо в любом случае, тк редактор может менять состояние Enabled
                RichUtil.markRichContentOnCopy(this._dataReview);
                if (!this.isEnabled()) {
-                  this._ReadyContolDeffered.callback();
+                  this._readyContolDeffered.callback();
                   this._notify('onReady');
                }
                this._updateDataReview(this.getText());
@@ -404,8 +404,8 @@ define('js!SBIS3.CONTROLS.RichEditor',
             this._areaEditor = null;
             this._dataReview = null;
             this._options.editorConfig.setup = null;
-            if (!this._ReadyContolDeffered.isReady()) {
-               this._ReadyContolDeffered.errback();
+            if (!this._readyContolDeffered.isReady()) {
+               this._readyContolDeffered.errback();
             }
             for (var i in this._instances) {
                this._instances[i].destroy instanceof Function && this._instances[i].destroy();
@@ -980,14 +980,14 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
                this._notifyOnSizeChanged();
 
-               if (!self._ReadyContolDeffered.isReady()) {
+               if (!self._readyContolDeffered.isReady()) {
                   self._tinyReady.addCallback(function() {
                      //Стреляем готовность ws-контрола только в том случае, если раньше не стреляли
-                     self._ReadyContolDeffered.addCallback(function () {
+                     self._readyContolDeffered.addCallback(function () {
                         self._notify('onReady');
                         self._notify('onInitEditor');
                      });
-                     self._ReadyContolDeffered.callback();
+                     self._readyContolDeffered.callback();
                   });
                }
                //уменьшаем высоту на разность в outerHeight editor`а и height контейнера
