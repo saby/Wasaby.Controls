@@ -131,6 +131,17 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
     */
    var TreeMixin = /** @lends SBIS3.CONTROLS.TreeMixin.prototype */{
       /**
+       * @name reload
+       * @function
+       * Метод перезагрузки данных.
+       * Можно задать фильтрацию, сортировку.
+       * @param {String} filter Параметры фильтрации.
+       * @param {String} sorting Параметры сортировки.
+       * @param offset Элемент, с которого перезагружать данные.
+       * @param {Number} limit Ограничение количества перезагружаемых элементов.
+       * @param {Boolean} deepReload Глубокая перезагрузка. Позволяет запрашивать текущие открытые папки при перезагрузке
+       */
+      /**
        * @event onSearchPathClick При клике по хлебным крошкам в режиме поиска.
        * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
