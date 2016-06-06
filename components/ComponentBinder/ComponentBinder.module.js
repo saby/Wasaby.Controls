@@ -492,12 +492,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryControlle
          filter = historyController.getActiveFilter();
 
          filterButton.setHistoryController(historyController);
+         /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
+         filterButton.setFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
          setTimeout($ws.helpers.forAliveOnly(function() {
-            if(filter) {
-               /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
-               filterButton._updateFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
-               view.setFilter($ws.core.merge(view.getFilter(), historyController.prepareViewFilter(filter.viewFilter)), true);
-            }
+            // Через timeout, чтобы можно было подписаться на соыбтие, уйдёт с серверным рендерингом
             browser._notifyOnFiltersReady();
          }, view), 0);
       },
