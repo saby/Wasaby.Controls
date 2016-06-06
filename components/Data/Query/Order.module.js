@@ -27,7 +27,11 @@ define('js!SBIS3.CONTROLS.Data.Query.Order', [
       },
 
       $constructor: function () {
-         switch (this._options.order) {
+         var order = this._options.order;
+         if (typeof order === 'string') {
+            order = order.toUpperCase();
+         }
+         switch (order) {
             case Order.SORT_DESC:
             case Order.SORT_DESC_STR:
                this._options.order = Order.SORT_DESC;
