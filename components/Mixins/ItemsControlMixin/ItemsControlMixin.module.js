@@ -878,9 +878,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          },
          destroy : function() {
             this._unsetItemsEventHandlers();
-            if (this._itemsProjection) {
-               this._itemsProjection.destroy();
-               this._itemsProjection = null;
+            if (this._options._itemsProjection) {
+               this._options._itemsProjection.destroy();
+               this._options._itemsProjection = null;
             }
             this._clearItems();
          }
@@ -1790,7 +1790,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
             ladderDecorator.setIgnoreEnabled(false);
          }
-         this._toggleEmptyData(!this._itemsProjection.getCount());
+         this._toggleEmptyData(!this._options._itemsProjection.getCount());
          //this._view.checkEmpty(); toggleEmtyData
          this.reviveComponents(); //надо?
          this._drawItemsCallback();
