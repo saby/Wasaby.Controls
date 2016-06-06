@@ -2,30 +2,33 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.CollectionMixin',   'js!SBIS3.CONTROLS.DataBindMixin'], function(CompoundControl, CollectionMixin, DataBindMixin) {
+define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.ItemsControlMixin'], function(CompoundControl, ItemsControlMixin) {
 
    'use strict';
 
    /**
-    * Контрол, реализующий поведение выбора одного из нескольких значений при помощи набора радиокнопок.
-    * Отображения не имеет.
-    * @class SBIS3.CONTROLS.ButtonGroupBase
+    * Контрол, реализующий поведение выбора одного из нескольких значений при помощи набора радиокнопок. Отображения не имеет.
+    * @class SBIS3.CONTROLS.ButtonGroupBaseDS
     * @public
-    * @mixes SBIS3.CONTROLS.CollectionMixin
-    * @mixes SBIS3.CONTROLS.Selectable
+    * @mixes SBIS3.CONTROLS.DSMixin
+    * @mixes SBIS3.CONTROLS.DataBindMixin
     * @extends $ws.proto.CompoundControl
     * @author Крайнов Дмитрий Олегович
     */
 
-   var ButtonGroupBase = CompoundControl.extend([CollectionMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBase.prototype */ {
+   var ButtonGroupBase = CompoundControl.extend([ItemsControlMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBaseDS.prototype */ {
       $protected: {
          _options: {
-
-         }
+         },
+         /**
+          * Элементы были заданы в верстке
+          */
+         _hasItems: null
       },
 
       $constructor: function() {
          this._container.removeClass('ws-area');
+         this._hasItems = this._container.hasClass('hasItems');
       },
 
       setEnabled: function (enabled) {
@@ -36,46 +39,34 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'j
                itemsInstances[i].setEnabled(enabled);
             }
          }
-      },      
-
-      _getItemClass : function(config) {
-         /*метод должен быть перегружен*/
-         return false;
       },
 
-      _itemActivatedHandler : function() {
-         /*метод должен быть перегружен*/
-      },
-
-      _getAddOptions : function() {
-         return {};
-      },
-
-      _getItemTemplate : function(item) {
+      _drawItemsCallback : function(){
          var
-            self = this,
-            config = this._getAddOptions(item);
-
-         config.handlers = config.handlers || {};
-
-         if (config.handlers.onActivated) {
-            config.handlers.onActivated = [config.handlers.onActivated];
-            Array.insert(config.handlers.onActivated, 0, function() {
-               self._itemActivatedHandler(this);
-            })
+             controls = this.getItemsInstances(),
+             self = this;
+         for (var i in controls) {
+            if (controls.hasOwnProperty(i)) {
+               controls[i].subscribe('onActivated', function (busEvent, event) {
+                  var id = this.getContainer().data('id');
+                  self._itemActivatedHandler(id, event);
+               });
+            }
          }
-         else {
-            config.handlers.onActivated = function () {
-               self._itemActivatedHandler(this);
-            };
-         }
+      },
 
-         return function() {
-            return {
-               componentType : self._getItemClass(config),
-               config : config
-            };
-         }
+      _itemActivatedHandler : function(id, event) {
+         /*метод должен быть перегружен*/
+      },
+
+      /**
+       * Переопределённый метод из базового Control
+       * Нужен, чтобы быстро работало скртие контрола,
+       * Не запускались расчёты авторазмеров
+       */
+      _setVisibility: function(show) {
+         this._container.toggleClass('ws-hidden', !show);
+         this._isVisible = show;
       }
    });
 
