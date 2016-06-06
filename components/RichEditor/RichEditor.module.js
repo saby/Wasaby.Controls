@@ -19,9 +19,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
       'i18n!js!SBIS3.CONTROLS.RichEditor'
    ], function(TextBoxBase, dotTplFn, Button, RichUtil, FileLoader, defaultConfig, ToggleButton, MenuButton, Dropdown,  PluginManager, ImageUtil, Sanitize) {
       'use strict';
-      /**
-      * @controls-RichEditor__overflowVisible  делает OverFlow: visible
-      */
 
       var
          constants = {
@@ -73,21 +70,21 @@ define('js!SBIS3.CONTROLS.RichEditor',
                toolbarVisible: true,
                userItems: {}
             },
-            _fakeArea: undefined,
-            _tinyEditor: undefined,
-            _lastHeight: undefined,
-            _tinyReady: null,
-            _readyContolDeffered: null,
+            _fakeArea: undefined, //textarea для перехода фкуса по табу
+            _tinyEditor: undefined, //экземпляр tinyMCE
+            _lastHeight: undefined, //последняявысота для UpdateHeight
+            _tinyReady: null, //deferred готовности tinyMCE
+            _readyContolDeffered: null, //deferred Готовности контрола
             _saveBeforeWindowClose: null,
-            _changeValueFromSetText: false,
+            _changeValueFromSetText: false, //флаг показывающий откуда изменилось значение
             _textAlignState: {
                left: false,
                center: false,
                right: false,
                justify: false
             },
-            _areaEditor: undefined,
-            _sourceContainer: undefined,
+            _sourceArea: undefined,
+            _sourceContainer: undefined, //TODO: избавиться от _sourceContainer
             _textFormats: {
                title: false,
                subTitle: false,
@@ -129,9 +126,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
                editorHeight;
             this._publish('onInitEditor');
             this._sourceContainer = this._container.find('.controls-RichEditor__SourceContainer');
-            this._areaEditor = this._sourceContainer.find('.controls-RichEditor__SourceArea').bind('input', this._onChangeAreaValue.bind(this));
+            this._sourceArea = this._sourceContainer.find('.controls-RichEditor__SourceArea').bind('input', this._onChangeAreaValue.bind(this));
             this._readyContolDeffered = new $ws.proto.Deferred();
-            this._dChildReady.push(this._readyContolDeffered);// не уверен что это вообще надо делать
+            this._dChildReady.push(this._readyContolDeffered);
             this._dataReview = this._container.find('.controls-RichEditor__DataReview');
             this._tinyReady = new $ws.proto.Deferred();
             this._inputControl = this._container.find('.controls-RichEditor__EditorFrame');
@@ -397,11 +394,11 @@ define('js!SBIS3.CONTROLS.RichEditor',
             }
             $ws.helpers.trackElement(this._container, false);
             this._container.unbind('keydown keyup');
-            this._areaEditor.unbind('input');
+            this._sourceArea.unbind('input');
             this._tinyEditor = null;
             this._sourceContainer  = null;
             this._fakeArea = null;
-            this._areaEditor = null;
+            this._sourceArea = null;
             this._dataReview = null;
             this._options.editorConfig.setup = null;
             if (!this._readyContolDeffered.isReady()) {
@@ -461,7 +458,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                         left: target && target.offset().left - (348 - target.width()),
                         autoHeight: true,
                         keepSize: false,
-                        opener: self._options.fieldRichEditor,
+                        opener: self._options.richEditor,
                         handlers: {
                            onReady: function () {
                               var
@@ -1086,7 +1083,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   if (/data:image/gi.test(content.innerHTML)) {
                      return false;
                   }
-                  maximalWidth = this._inputControl.width() - $ws._const.FieldRichEditor.imageOffset;
+                  maximalWidth = this._inputControl.width() - constants.imageOffset;
                   for (var i = 0; i < $images.length; i++) {
                      naturalSizes = ImageUtil.getNaturalSizes($images[i]);
                      currentWidth = $($images[i]).width();
@@ -1532,7 +1529,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   'height' : container.outerHeight(),
                   'width' : container.outerWidth()
                });
-               this._areaEditor.val(this.getText());
+               this._sourceArea.val(this.getText());
             }
             this._sourceContainer.toggleClass('ws-hidden', !sourceVisible);
             container.toggleClass('ws-hidden', sourceVisible);
@@ -1552,7 +1549,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                      itemCfg = $ws.core.merge({
                         name: i,
                         element: div,
-                        fieldRichEditor: this,
+                        richEditor: this,
                         cssClassName: 'controls-RichEditor__ToolbarItem mce-',
                         linkedContext: this._itemsContext,
                         renderStyle: isButton ? 'asLink' : 'hover'
@@ -1579,7 +1576,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   }
                   result[i].getContainer().attr('tabindex', '-1');
                   result[i].getOwner = function() {
-                     return this._options.fieldRichEditor;
+                     return this._options.richEditor;
                   };
                   result[i].setActive = this._setActiveControlsButton;
                }
@@ -1593,7 +1590,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
          _onChangeAreaValue: function() {
             if (this._sourceContainerIsActive()) {
-               this.setText(this._areaEditor.val());
+               this.setText(this._sourceArea.val());
             }
          },
 

@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.RichEditor/resources/config', ['i18n!js!SBIS3.CONTROLS
       blankImgPath = 'https://cdn.sbis.ru/richeditor/26-01-2015/blank.png',
       widthDropdownIcon = 18,
       onButtonClick = function() {
-         this._options.fieldRichEditor.execCommand(this._options.name);
+         this._options.richEditor.execCommand(this._options.name);
       },
       renderDropdownTitle = function(onlyIcon) {
          return onlyIcon ?
@@ -41,9 +41,9 @@ define('js!SBIS3.CONTROLS.RichEditor/resources/config', ['i18n!js!SBIS3.CONTROLS
       },
       onChangeValue = function(event, value) {
          //при вставке таблиц в будующем тоже не забываем менять источник смены значения
-         this._options.fieldRichEditor._changeValueFromSetText = false;
-         this._options.fieldRichEditor._checkFocus();
-         this._options.fieldRichEditor._tinyEditor.execCommand(value);
+         this._options.richEditor._changeValueFromSetText = false;
+         this._options.richEditor._checkFocus();
+         this._options.richEditor._tinyEditor.execCommand(value);
       };
 
    return {
@@ -91,7 +91,7 @@ define('js!SBIS3.CONTROLS.RichEditor/resources/config', ['i18n!js!SBIS3.CONTROLS
             visible: true,
             handlers: {
                onChange: function(e, key) {
-                  this._options.fieldRichEditor.setFontStyle(key);
+                  this._options.richEditor.setFontStyle(key);
                }
             },
             enabled: true
@@ -163,8 +163,8 @@ define('js!SBIS3.CONTROLS.RichEditor/resources/config', ['i18n!js!SBIS3.CONTROLS
             valueRender: renderDropdownValue(true),
             handlers: {
                onChange: function(event, value) {
-                  this._options.fieldRichEditor._checkFocus();
-                  this._options.fieldRichEditor._setTextAlign(value);
+                  this._options.richEditor._checkFocus();
+                  this._options.richEditor._setTextAlign(value);
                }
             },
             value: 'alignleft',
@@ -193,7 +193,7 @@ define('js!SBIS3.CONTROLS.RichEditor/resources/config', ['i18n!js!SBIS3.CONTROLS
             ],
             handlers: {
                onMenuItemActivate: function(event, key) {
-                  this._options.fieldRichEditor.setFontColor(key);
+                  this._options.richEditor.setFontColor(key);
                }
             },
             value: 'textColor',
@@ -217,8 +217,8 @@ define('js!SBIS3.CONTROLS.RichEditor/resources/config', ['i18n!js!SBIS3.CONTROLS
             ],
             handlers: {
                onMenuItemActivate: function(event, key) {
-                     this._options.fieldRichEditor._changeValueFromSetText = false;
-                     this._options.fieldRichEditor._tinyEditor.execCommand(key);
+                     this._options.richEditor._changeValueFromSetText = false;
+                     this._options.richEditor._tinyEditor.execCommand(key);
                }
             },
             value: 'InsertUnorderedList',
@@ -236,7 +236,7 @@ define('js!SBIS3.CONTROLS.RichEditor/resources/config', ['i18n!js!SBIS3.CONTROLS
             handlers:{
                onActivated: function(){
                   this.setChecked(true);
-                  this._options.fieldRichEditor.insertLink(function(){
+                  this._options.richEditor.insertLink(function(){
                      this.setChecked(false);
                   }.bind(this), this._container);
                }
@@ -284,8 +284,8 @@ define('js!SBIS3.CONTROLS.RichEditor/resources/config', ['i18n!js!SBIS3.CONTROLS
             icon: 'sprite:icon-16 icon-Picture icon-primary',
             handlers: {
                onActivated: function(event, originalEvent) {
-                  this._options.fieldRichEditor._changeValueFromSetText = false;
-                  this._options.fieldRichEditor._getFileLoader().selectFile(originalEvent);
+                  this._options.richEditor._changeValueFromSetText = false;
+                  this._options.richEditor._getFileLoader().selectFile(originalEvent);
                }
             },
             visible: true,
@@ -327,7 +327,7 @@ define('js!SBIS3.CONTROLS.RichEditor/resources/config', ['i18n!js!SBIS3.CONTROLS
             ],
             handlers: {
                onMenuItemActivate: function(event, key) {
-                  this._options.fieldRichEditor.insertSmile(key);
+                  this._options.richEditor.insertSmile(key);
                }
             },
             value: 'Smile',
@@ -346,8 +346,8 @@ define('js!SBIS3.CONTROLS.RichEditor/resources/config', ['i18n!js!SBIS3.CONTROLS
                onActivated: function() {
                   var self = this;
                   this.setChecked(true);
-                  this._options.fieldRichEditor._changeValueFromSetText = false;
-                  this._options.fieldRichEditor.pasteFromBufferWithStyles(function() {
+                  this._options.richEditor._changeValueFromSetText = false;
+                  this._options.richEditor.pasteFromBufferWithStyles(function() {
                      self.setChecked(false);
                   }, this._container);
                }
@@ -369,10 +369,10 @@ define('js!SBIS3.CONTROLS.RichEditor/resources/config', ['i18n!js!SBIS3.CONTROLS
                onMenuItemActivate: function(event, key) {
                   var
                      value = this.getItems().getRawData()[key].value;
-                  this._options.fieldRichEditor.setValue(value);
+                  this._options.richEditor.setValue(value);
                },
                onInit: function() {
-                  var fre = this._options.fieldRichEditor;
+                  var fre = this._options.richEditor;
                   fre._tinyReady.addCallback(function () {
                      fre._fillHistory();
                   });
@@ -393,7 +393,7 @@ define('js!SBIS3.CONTROLS.RichEditor/resources/config', ['i18n!js!SBIS3.CONTROLS
             icon: 'sprite:icon-16 icon-Html icon-primary',
             handlers: {
                onActivated: function() {
-                  this._options.fieldRichEditor._toggleContentSource();
+                  this._options.richEditor._toggleContentSource();
                }
             },
             visible: true,
