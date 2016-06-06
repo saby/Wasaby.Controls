@@ -203,9 +203,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this.endEdit(true).addCallback(function() {
                   return self._prepareEdit(record).addCallback(function(preparedRecord) {
                      if (preparedRecord) {
-                        self._lastTargetAdding = self._options.itemsProjection.getItemBySourceItem(preparedRecord);
-                        self._eip.edit(target, preparedRecord, self._lastTargetAdding);
+                        var itemProjItem = self._options.itemsProjection.getItemBySourceItem(preparedRecord);
+                        self._eip.edit(target, preparedRecord, itemProjItem);
                         self._notify('onAfterBeginEdit', preparedRecord);
+                        self._lastTargetAdding = itemProjItem;
                         return preparedRecord;
                      }
                      return preparedRecord;
