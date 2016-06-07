@@ -1031,7 +1031,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
           if (this._dataSource) {
              this._toggleIndicator(true);
              this._notify('onBeforeDataLoad');
-             def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit)
+             def = this._callQuery(this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit)
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
                    self._notify('onDataLoad', list);
@@ -1091,6 +1091,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          return this._loader;
       }),
+
+      _getFilterForReload: function() {
+         return this._options.filter;
+      },
 
       _callQuery: function (filter, sorting, offset, limit) {
          if (!this._dataSource) {
