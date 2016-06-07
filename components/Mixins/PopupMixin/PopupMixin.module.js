@@ -108,7 +108,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             /**
              * @cfg {Boolean} модальный или нет
              */
-            isModal: false
+            isModal: false,
+            fullHeight: true
          }
       },
 
@@ -662,11 +663,17 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                this._overflowedV = true;
                this._container.css('overflow-y', 'auto');
                if (spaces.top < spaces.bottom) {
-                  oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
-                  spaces = this._getSpaces(this._options.corner);
-                  this._container.css('height', spaces.bottom - vOffset - this._margins.top + this._margins.bottom);
-                  offset.top = this._targetSizes.offset.top + oppositeOffset.top;
-                  this._isMovedV = !this._isMovedV;
+                  if (this._options.fullHeight){
+                     var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
+                     this._container.css('height', height);
+                     offset.top = this._windowSizes.height - this._container.get(0).scrollHeight - this._containerSizes.border * 2;
+                  } else {
+                     oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
+                     spaces = this._getSpaces(this._options.corner);
+                     this._container.css('height', spaces.bottom - vOffset - this._margins.top + this._margins.bottom);
+                     offset.top = this._targetSizes.offset.top + oppositeOffset.top;
+                     this._isMovedV = !this._isMovedV;
+                  }
                } else {
                   offset.top = 0;
                   //Если места снизу меньше чем сверху покажемся во весь размер (возможно поверх таргета), или в высоту окна если в него не влезаем
