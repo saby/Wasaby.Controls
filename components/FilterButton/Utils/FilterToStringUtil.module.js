@@ -6,6 +6,14 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
        'js!SBIS3.CONTROLS.Utils.TemplateUtil'
     ], function (TemplateUtil) {
 
+       function isEqualValues(val1, val2) {
+          /* Даты нельзя сравнивать по обычному равенству (===) */
+          if((val1 && val2) && (val1 instanceof Date || val2 instanceof Date)) {
+             return $ws.helpers.compareDates(new Date(val1), '=', new Date(val2));
+          }
+          return $ws.helpers.isEqualObject(val1, val2);
+       }
+
        return {
           /**
            * Метод, который составляет строку из струкруты фильтров
@@ -29,13 +37,15 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
                    return res;
                 }
 
-                if (elem.caption && !$ws.helpers.isEqualObject(elem.value, elem.resetValue)) {
+                if (elem.caption && !isEqualValues(elem.value, elem.resetValue)) {
                    res.push(elem.caption);
                 }
                 return res;
              }, []);
 
              return result.join(', ');
-          }
+          },
+
+          isEqualValues: isEqualValues
        }
     });

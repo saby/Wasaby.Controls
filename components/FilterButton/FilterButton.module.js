@@ -6,13 +6,14 @@ define('js!SBIS3.CONTROLS.FilterButton',
        'js!SBIS3.CONTROLS.FilterMixin',
        'js!SBIS3.CONTROLS.PickerMixin',
        'js!SBIS3.CONTROLS.ControlHierarchyManager',
+       'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
        'js!SBIS3.CONTROLS.Link',
        'js!SBIS3.CONTROLS.Button',
        'js!SBIS3.CONTROLS.FilterButton.FilterLine',
        'js!SBIS3.CONTROLS.FilterHistory',
        'i18n!SBIS3.CONTROLS.FilterButton'
     ],
-    function(CompoundControl, dotTplFn, dotTplForPicker, FilterMixin, PickerMixin, ControlHierarchyManager) {
+    function(CompoundControl, dotTplFn, dotTplForPicker, FilterMixin, PickerMixin, ControlHierarchyManager, FilterToStringUtil) {
 
        'use strict';
        /**
@@ -50,7 +51,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
       var hasResetValue = 'resetValue' in element,
 	      hasValue = fieldName in filter;
 
-      return hasResetValue && hasValue ? this._isEqualValues(filter[fieldName], element.resetValue) : !hasValue;
+      return hasResetValue && hasValue ? FilterToStringUtil.isEqualValues(filter[fieldName], element.resetValue) : !hasValue;
    }
 
        var FilterButton = CompoundControl.extend([FilterMixin, PickerMixin],/** @lends SBIS3.CONTROLS.FilterButton.prototype */{

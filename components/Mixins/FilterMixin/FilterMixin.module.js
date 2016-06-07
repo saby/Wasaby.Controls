@@ -1,8 +1,7 @@
 /**
  * Created by ad.chistyakova on 05.10.2015.
  */
-define('js!SBIS3.CONTROLS.FilterMixin', [
-], function () {
+define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil'], function (FilterToStringUtil) {
 
 
    /**
@@ -110,7 +109,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
                   var hasResetValue = element.hasOwnProperty('resetValue'),
                       hasInternalValue = filter.hasOwnProperty(field);
 
-                  if((hasResetValue && hasInternalValue && this._isEqualValues(element.resetValue, filter[field])) || (!hasResetValue && !hasInternalValue)) {
+                  if((hasResetValue && hasInternalValue && FilterToStringUtil.isEqualValues(element.resetValue, filter[field])) || (!hasResetValue && !hasInternalValue)) {
 
                      if (element.hasOwnProperty('resetCaption')) {
                         newElement.caption = element.resetCaption;
@@ -158,7 +157,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
       },
       _recalcInternalContext: function() {
          var changed = $ws.helpers.reduce(this._filterStructure, function(result, element) {
-            return result || (element.hasOwnProperty('value') ? !this._isEqualValues(element.resetValue, element.value) : false);
+            return result || (element.hasOwnProperty('value') ? !FilterToStringUtil.isEqualValues(element.resetValue, element.value) : false);
          }, false, this);
 
          this.getLinkedContext().setValueSelf({
@@ -166,14 +165,6 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
             filterStructure: this._filterStructure,
             filterResetLinkText: this.getProperty('resetLinkText')
          });
-      },
-
-      _isEqualValues: function(val1, val2) {
-         /* Даты нельзя сравнивать по обычному равенству (===) */
-         if((val1 && val2) && (val1 instanceof Date || val2 instanceof Date)) {
-            return $ws.helpers.compareDates(new Date(val1), '=', new Date(val2));
-         }
-         return $ws.helpers.isEqualObject(val1, val2);
       },
 
       _resetFilter: function(internalOnly) {
