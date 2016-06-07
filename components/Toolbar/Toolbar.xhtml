@@ -1,6 +1,9 @@
-<div class="controls-ToolBar">
-   <div class="controls-ToolBar__itemsContainer">
-   </div><component data-component="SBIS3.CONTROLS.CommandsButton" name="controls-ToolBar__menuIcon" class="controls-ToolBar__menuIcon">
+<div class="controls-ToolBar"><div class="controls-ToolBar__itemsContainer">
+      {{?it._serverRender}}
+         {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
+      {{?}}
+   </div>
+   <component data-component="SBIS3.CONTROLS.CommandsButton" name="controls-ToolBar__menuIcon" class="controls-ToolBar__menuIcon">
       <option name="keyField">{{=it.keyField}}</option>
       <option name="hierField">{{=it.hierField}}</option>
       <option name="displayField">{{=it.displayField}}</option>
