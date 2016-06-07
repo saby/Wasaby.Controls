@@ -3,6 +3,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    'js!SBIS3.CONTROLS.Data.IObject',
    'js!SBIS3.CONTROLS.Data.ICloneable',
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
+   'js!SBIS3.CONTROLS.Data.Mediator.IReceiver',
    'js!SBIS3.CONTROLS.Data.Entity.Abstract',
    'js!SBIS3.CONTROLS.Data.Entity.OptionsMixin',
    'js!SBIS3.CONTROLS.Data.Entity.ObservableMixin',
@@ -12,6 +13,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
+   'js!SBIS3.CONTROLS.Data.Mediator.OneToMany',
    'js!SBIS3.CONTROLS.Data.Factory',
    'js!SBIS3.CONTROLS.Data.Format.StringField',
    'js!SBIS3.CONTROLS.Data.ContextField.Record'
@@ -19,6 +21,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    IObject,
    ICloneable,
    IEnumerable,
+   IMediatorReceiver,
    Abstract,
    OptionsMixin,
    ObservableMixin,
@@ -28,6 +31,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    ArrayEnumerator,
    Di,
    Utils,
+   OneToManyMediator,
    Factory,
    StringField,
    ContextFieldRecord
@@ -41,28 +45,20 @@ define('js!SBIS3.CONTROLS.Data.Record', [
     * @mixes SBIS3.CONTROLS.Data.IObject
     * @mixes SBIS3.CONTROLS.Data.ICloneable
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
+    * @mixes SBIS3.CONTROLS.Data.Mediator.IReceiver
     * @mixes SBIS3.CONTROLS.Data.Entity.OptionsMixin
     * @mixes SBIS3.CONTROLS.Data.Entity.ObservableMixin
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @mixes SBIS3.CONTROLS.Data.CloneableMixin
     * @mixes SBIS3.CONTROLS.Data.FormattableMixin
     * @public
-    * @ignoreOptions owner
-    * @ignoreMethods setOwner
     * @author Мальцев Алексей
     */
 
-   var Record = Abstract.extend([IObject, ICloneable, IEnumerable, OptionsMixin, ObservableMixin, SerializableMixin, CloneableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
+   var Record = Abstract.extend([IObject, ICloneable, IEnumerable, IMediatorReceiver, OptionsMixin, ObservableMixin, SerializableMixin, CloneableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Record',
 
       _compatibleConstructor: true,//Чтобы в наследниках с "old style extend" звался нативный constructor()
-
-      /**
-       * @cfg {SBIS3.CONTROLS.Data.Collection.RecordSet} Рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
-       * @name SBIS3.CONTROLS.Data.Record#owner
-       * @see getOwner
-       */
-      _$owner: null,
 
       /**
        * @member {Object.<String, *>} Измененные поля и оригинальные значения
@@ -185,13 +181,29 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
+      //region SBIS3.CONTROLS.Data.Mediator.IReceiver
+
+      relationChanged: function (which, name, data) {
+         if (name == 'owner') {
+            switch (data) {
+               case 'addField':
+               case 'removeField':
+               case 'removeFieldAt':
+                  this._resetRawDataAdapter();
+                  this._resetRawDataFields();
+                  break;
+            }
+         }
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Mediator.IReceiver
+
       //region SBIS3.CONTROLS.Data.SerializableMixin
 
       _getSerializableState: function(state) {
          state = SerializableMixin._getSerializableState.call(this, state);
          state = FormattableMixin._getSerializableState.call(this, state);
          state._changedFields = this._changedFields;
-         delete state.$options.owner;
          return state;
       },
 
@@ -254,8 +266,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @protected
        */
       _checkFormatIsWritable: function() {
-         if (this._$owner) {
-            throw new Error('Record format has read only access. You should change recordset format instead. See option "owner" for details.');
+         if (this.getOwner()) {
+            throw new Error('Record format has read only access if record belongs to recordset. You should change recordset format instead.');
          }
       },
 
@@ -302,16 +314,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
        */
       getOwner: function() {
-         return this._$owner;
-      },
-
-      /**
-       * Устанавливает рекордсет, которому принадлежит запись. Данный метод может вызывать только сам рекордсет!
-       * @param {SBIS3.CONTROLS.Data.Collection.RecordSet} owner Новый владелец
-       * @see getOwner
-       */
-      setOwner: function(owner) {
-         this._$owner = owner;
+         return this._getMediator().getParent(this) || null;
       },
 
       /**
@@ -332,6 +335,15 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       //endregion Public methods
 
       //region Protected methods
+
+       /**
+        * Возвращает посредника для установления отношений с записями
+        * @returns {SBIS3.CONTROLS.Mediator.OneToMany}
+        * @protected
+        */
+       _getMediator: function() {
+           return OneToManyMediator.getInstance();
+       },
 
       /**
        * Проверяет наличие закэшированного значения поля
@@ -413,11 +425,15 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          var adapter = this._getRawDataAdapter();
 
          try {
-            return Factory.cast(
+            var result = Factory.cast(
                adapter.get(name),
                adapter.getSharedFormat(name),
                this.getAdapter()
             );
+            if (result && $ws.helpers.instanceOfMixin(result, 'SBIS3.CONTROLS.Data.Mediator.IReceiver')) {
+               this._getMediator().addTo(this, result, name);
+            }
+            return result;
          } catch (e) {
             return undefined;
          }

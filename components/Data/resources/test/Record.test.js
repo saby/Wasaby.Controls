@@ -513,10 +513,9 @@ define([
                });
             });
             it('should throw an error if the record has an owner', function () {
-               record = new Record({
-                  rawData: recordData,
-                  owner: {}
-               });
+               var record = new Record(),
+                   rs = new RecordSet();
+               rs.add(record);
                assert.throw(function() {
                   record.addField({name: 'new', type: 'string'});
                });
@@ -581,10 +580,9 @@ define([
                });
             });
             it('should throw an error if the record has an owner', function () {
-               record = new Record({
-                  rawData: recordData,
-                  owner: {}
-               });
+               var record = new Record(),
+                  rs = new RecordSet();
+               rs.add(record);
                assert.throw(function() {
                   record.removeField('title');
                });
@@ -621,11 +619,11 @@ define([
                });
             });
             it('should throw an error if the record has an owner', function () {
-               record = new Record({
-                  adapter: 'adapter.sbis',
-                  rawData: getRecordSbisData(),
-                  owner: {}
-               });
+               var record = new Record({
+                     adapter: 'adapter.sbis'
+                  }),
+                  rs = new RecordSet();
+               rs.add(record);
                assert.throw(function() {
                   record.removeFieldAt(1);
                });
@@ -806,21 +804,6 @@ define([
          describe('.getOwner()', function () {
             it('should return null by default', function () {
                assert.isNull(record.getOwner());
-            });
-            it('should owner passed to the constructor', function () {
-               var owner = {},
-                  record = new Record({
-                  owner: owner
-               });
-               assert.strictEqual(record.getOwner(), owner);
-            });
-         });
-
-         describe('.setOwner()', function () {
-            it('should set the new owner', function () {
-               var owner = {};
-               record.setOwner(owner);
-               assert.strictEqual(record.getOwner(), owner);
             });
          });
 

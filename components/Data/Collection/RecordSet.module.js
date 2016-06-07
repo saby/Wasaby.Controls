@@ -1,17 +1,21 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
+   'js!SBIS3.CONTROLS.Data.Mediator.IReceiver',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.FormattableMixin',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
+   'js!SBIS3.CONTROLS.Data.Mediator.OneToMany',
    'js!SBIS3.CONTROLS.Data.Model'
 ], function (
+   IMediatorReceiver,
    ObservableList,
    SerializableMixin,
    FormattableMixin,
    Di,
-   Utils
+   Utils,
+   OneToManyMediator
 ) {
    'use strict';
 
@@ -20,12 +24,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
     * @class SBIS3.CONTROLS.Data.Collection.RecordSet
     * @extends SBIS3.CONTROLS.Data.Collection.ObservableList
     * @mixes SBIS3.CONTROLS.Data.FormattableMixin
+    * @mixes SBIS3.CONTROLS.Data.Mediator.IReceiver
     * @ignoreOptions items
     * @author Мальцев Алексей
     * @public
     */
 
-   var RecordSet = ObservableList.extend([FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
+   var RecordSet = ObservableList.extend([IMediatorReceiver, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
      /**
       * @typedef {Object} OperationOptions
       * @property {Boolean} [add=true] Добавлять новые записи.
@@ -143,7 +148,20 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          }
       },
 
-      // region SBIS3.CONTROLS.Data.SerializableMixin
+      //region SBIS3.CONTROLS.Data.Mediator.IReceiver
+
+      relationChanged: function (which, name, data) {
+         switch (name) {
+            case 'owner':
+               this._resetRawDataAdapter();
+               this._resetRawDataFields();
+               break;
+         }
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Mediator.IReceiver
+
+      //region SBIS3.CONTROLS.Data.SerializableMixin
 
       _getSerializableState: function(state) {
          state = RecordSet.superclass._getSerializableState.call(this, state);
@@ -175,32 +193,25 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          format = this._buildField(format);
          FormattableMixin.addField.call(this, format, at);
 
-         var name = format.getName(),
-            methodName = 'addField';
-         this.each(function(record) {
-            record.notifyFormatChanged(methodName, arguments);
-            if (value !== undefined) {
+         this._getMediator().parentChanged(this, 'addField');
+         if (value !== undefined) {
+            var name = format.getName();
+            this.each(function(record) {
                record.set(name, value);
-            }
-         });
+            });
+         }
       },
 
       removeField: function(name) {
          FormattableMixin.removeField.call(this, name);
 
-         var methodName = 'removeField';
-         this.each(function(record) {
-            record.notifyFormatChanged(methodName, arguments);
-         });
+         this._getMediator().parentChanged(this, 'removeField');
       },
 
       removeFieldAt: function(at) {
          FormattableMixin.removeFieldAt.call(this, at);
 
-         var methodName = 'removeFieldAt';
-         this.each(function(record) {
-            record.notifyFormatChanged(methodName, arguments);
-         });
+         this._getMediator().parentChanged(this, 'removeFieldAt');
       },
 
       /**
@@ -751,9 +762,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //region SBIS3.CONTROLS.Data.Collection.List
 
       clear: function () {
-         for (var i = 0, count = this._$items.length; i < count; i++) {
-            this._$items[i].setOwner(null);
-         }
+         this._getMediator().clear(this);
          this._getRawDataAdapter().clear();
          RecordSet.superclass.clear.call(this);
          this._indexTree = {};
@@ -763,13 +772,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._checkItem(item, !!this._$format || this.getCount() > 0);
          this._getRawDataAdapter().add(item.getRawData(), at);
          RecordSet.superclass.add.call(this, item, at);
-         item.setOwner(this);
+         this._getMediator().addTo(this, item, 'owner');
          this._indexTree = {};
       },
 
       remove: function (item) {
          this._checkItem(item, false);
-         item.setOwner(null);
+         this._getMediator().removeFrom(this, item);
          this._indexTree = {};
          return RecordSet.superclass.remove.call(this, item);
       },
@@ -778,7 +787,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._getRawDataAdapter().remove(index);
          var item = this._$items[index];
          if (item) {
-            item.setOwner(null);
+            this._getMediator().removeFrom(this, item);
          }
          RecordSet.superclass.removeAt.call(this, index);
          this._indexTree = {};
@@ -786,7 +795,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       replace: function (item, at, checkFormat) {
          this._checkItem(item, checkFormat);
-         item.setOwner(this);
+         this._getMediator().addTo(this, item, 'owner');
          this._getRawDataAdapter().replace(item.getRawData(), at);
          RecordSet.superclass.replace.call(this, item, at);
          this._indexTree = {};
@@ -797,8 +806,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._$rawData = null;
          items = this._addItemsToRawData(items, undefined, true);
          RecordSet.superclass.assign.call(this, items);
+         var mediator = this._getMediator();
          for (var i = 0, count = items.length; i < count; i++) {
-            items[i].setOwner(this);
+            mediator.addTo(this, items[i], 'owner');
          }
          this._indexTree = {};
       },
@@ -806,8 +816,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       append: function (items) {
          items = this._addItemsToRawData(items);
          RecordSet.superclass.append.call(this, items);
+         var mediator = this._getMediator();
          for (var i = 0, count = items.length; i < count; i++) {
-            items[i].setOwner(this);
+            mediator.addTo(this, items[i], 'owner');
          }
          this._indexTree = {};
       },
@@ -815,8 +826,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       prepend: function (items) {
          items = this._addItemsToRawData(items, 0);
          RecordSet.superclass.prepend.call(this, items);
+         var mediator = this._getMediator();
          for (var i = 0, count = items.length; i < count; i++) {
-            items[i].setOwner(this);
+            mediator.addTo(this, items[i], 'owner');
          }
          this._indexTree = {};
       },
@@ -824,6 +836,15 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //endregion SBIS3.CONTROLS.Data.Collection.List
 
       //region Protected methods
+
+      /**
+       * Возвращает посредника для установления отношений с записями
+       * @returns {SBIS3.CONTROLS.Mediator.OneToMany}
+       * @protected
+       */
+      _getMediator: function() {
+         return OneToManyMediator.getInstance();
+      },
 
       /**
        * Вставляет сырые данные записей в сырые данные рекордсета
@@ -924,10 +945,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          RecordSet.superclass.clear.call(this);
          var adapter = this._getRawDataAdapter(),
             count = adapter.getCount(),
+            mediator = this._getMediator(),
             record;
          for (var i = 0; i < count; i++) {
             record = this._getModelInstance(adapter.at(i));
             RecordSet.superclass.add.call(this, record);
+            mediator.addTo(this, record, 'owner');
          }
          this._resetIndexTree();
       },
