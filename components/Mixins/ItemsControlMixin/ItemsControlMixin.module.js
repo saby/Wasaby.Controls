@@ -83,10 +83,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return Object.keys(json[0])[0];
       }
    },
-   JSONToRecordset  = function(json) {
+   JSONToRecordset  = function(json, keyField) {
       return new RecordSet({
          rawData : json,
-         idProperty : findKeyField(json)
+         idProperty : keyField
       })
    };
 
@@ -431,12 +431,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _modifyOptions : function(parentFnc, cfg) {
             var newCfg = parentFnc.call(this, cfg);
             newCfg._itemsTemplate = ItemsTemplate;
-            if (cfg.items) {
-               if (cfg.items instanceof Array) {
-                  if (!cfg.keyField) {
-                     newCfg.keyField = findKeyField(cfg.items);
+            if (newCfg.items) {
+               if (newCfg.items instanceof Array) {
+                  if (!newCfg.keyField) {
+                     newCfg.keyField = findKeyField(newCfg.items);
                   }
-                  newCfg._items = JSONToRecordset(cfg.items);
+                  newCfg._items = JSONToRecordset(cfg.items, newCfg.keyField);
                }
                else {
                   newCfg._items = cfg.items;
@@ -510,7 +510,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                if (!this._options.keyField) {
                   this._options.keyField = findKeyField(itemsOpt);
                }
-               this._options._items = JSONToRecordset(itemsOpt);
+               this._options._items = JSONToRecordset(itemsOpt, this._options.keyField);
             }
             else {
                this._options._items = itemsOpt;
