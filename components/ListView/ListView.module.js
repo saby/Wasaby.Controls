@@ -461,6 +461,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @variant "" Редактирование по месту отключено.
                 * @variant click Режим редактирования по клику.
                 * @variant hover Режим редактирования по наведению курсора.
+                * @variant single Режим редактирования единичной записи. После завершения редактирования текущей записи не происходит автоматического перехода к редактированию следующей записи.
                 * @variant autoadd Режим автоматического добавления новых элементов коллекции; этот режим позволяет при завершении редактирования последнего элемента автоматически создавать новый.
                 * @variant toolbar Отображение панели инструментов при входе в режим редактирования записи.</li>
                 * @remark
@@ -1345,6 +1346,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   opener: this,
                   endEditByFocusOut: this._options.editMode.indexOf('toolbar') === -1,
                   modeAutoAdd: this._options.editMode.indexOf('autoadd') !== -1,
+                  modeSingleEdit: this._options.editMode.indexOf('single') !== -1,
                   handlers: {
                      onItemValueChanged: function(event, difference, model) {
                         event.setResult(this._notify('onItemValueChanged', difference, model));
