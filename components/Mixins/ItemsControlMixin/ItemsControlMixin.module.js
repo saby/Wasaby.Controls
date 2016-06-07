@@ -875,6 +875,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else if (this._dataSource) {
                this.reload();
             }
+            if (this._options.pageSize) {
+               this._limit = this._options.pageSize;
+            }
          },
          destroy : function() {
             this._unsetItemsEventHandlers();
@@ -1006,10 +1009,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @param {Number} limit Ограничение количества перезагружаемых элементов.
         */
       reload: propertyUpdateWrapper(function (filter, sorting, offset, limit) {
-         if (this._options.pageSize) {
-            this._limit = this._options.pageSize;
-         }
-
          var
             def,
             self = this,
