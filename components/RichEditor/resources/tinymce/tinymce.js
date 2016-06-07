@@ -47642,7 +47642,10 @@ tinymce.PluginManager.add('media', function(editor, url) {
                   });
 
                   editor.getDoc().execCommand('Paste', false, null);
-                  clipboardContent["text/html"] = getPasteBinHtml();
+                  //TODO:https://github.com/tinymce/tinymce/issues/2976
+                  if ( Env.ie != 12) {
+                     clipboardContent["text/html"] = getPasteBinHtml();
+                  }
                }
 
                // If clipboard API has HTML then use that directly

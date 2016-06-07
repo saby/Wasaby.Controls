@@ -111,9 +111,11 @@ define('js!SBIS3.CONTROLS.RichEditor',
          },
 
          _modifyOptions: function(options) {
+            options = RichEditor.superclass._modifyOptions.apply(this, arguments);
             if (options.editorConfig === undefined || Object.prototype.toString.call(options.editorConfig) !== '[object Object]') {
                options.editorConfig = {};
             }
+            options._prepareReviewContent = this._prepareReviewContent.bind(this);
             options.editorConfig.browser_spellcheck = options.spellcheck;
             return options;
          },
@@ -1399,7 +1401,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
           */
 
          _curValue: function() {
-            return this._tinyEditor && this._tinyEditor.initialized ? this._getTinyEditorValue() : this._curval;
+            return this._tinyEditor && this._tinyEditor.initialized && this.isEnabled() ? this._getTinyEditorValue() : this._curval;
          },
 
          _prepareContent: function(value) {
@@ -1675,12 +1677,15 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
          _updateDataReview: function(value) {
             if (this._dataReview) {
-               if (value && value[0] !== '<') {
-                  value = '<p>' + value.replace(/\n/gi, '<br/>') + '</p>';
-               }
-               value = Sanitize(value);
-               this._dataReview.html(this._options.highlightLinks ? $ws.helpers.wrapURLs($ws.helpers.wrapFiles(value), true) : value);
+               this._dataReview.html(this._prepareReviewContent(value));
             }
+         },
+         _prepareReviewContent: function(value) {
+            if (value && value[0] !== '<') {
+               value = '<p>' + value.replace(/\n/gi, '<br/>') + '</p>';
+            }
+            value = Sanitize(value);
+            return this._options.highlightLinks ? $ws.helpers.wrapURLs($ws.helpers.wrapFiles(value), true) : value;
          },
 
          _onValueChangeHandler: function(noAutoComplete, onKeyUp) {
