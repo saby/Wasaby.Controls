@@ -56,6 +56,10 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
       applyOperation: function(cfg){
          var p;
          cfg.minWidth = this._options.minPrintWindowWidth;
+         if (this._options.xsl) {
+            cfg.xsl = this._options.xsl;
+            cfg.report = true;
+         }
          p = new Printer(cfg);
          p.print();
       }
