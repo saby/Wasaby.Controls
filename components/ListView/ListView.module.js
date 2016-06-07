@@ -213,7 +213,6 @@ define('js!SBIS3.CONTROLS.ListView',
             _editInPlace: null,
             _infiniteScrollOffset: null,
             _allowInfiniteScroll: true,
-            _isLoadBeforeScrollAppears : true, //Переменная хранит состояние, что загрузка произошла ПЕРЕД отображением скролла
             _pageChangeDeferred : undefined,
             _pager : undefined,
             _previousGroupBy : undefined,
@@ -647,9 +646,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Если мы находися на панельке, то пока она скрыта все данные уже могут загрузиться, но новая пачка не загрузится
                 * потому что контейнер невидимый*/
                if ($ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
-                  this._isLoadBeforeScrollAppears = false;
                   topParent.once('onAfterShow', function(){
-                     self._isLoadBeforeScrollAppears = true;
                      self._firstScrollTop = true;
                      if (self._options._items) {
                         self._preScrollLoading();
@@ -855,7 +852,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             if(scrollWatcher) {
-               scrollContainer = scrollWatcher.getScrollContainer();
+               scrollContainer = scrollWatcher.getScrollableContainer();
             } else {
                /* т.к. скролл может находиться у произвольного контейнера, то попытаемся его найти */
                scrollContainer = $(findScrollContainer(this._container[0]));
@@ -1123,7 +1120,6 @@ define('js!SBIS3.CONTROLS.ListView',
          _reloadInfiniteScrollParams : function(){
             if (this.isInfiniteScroll() || this._isAllowInfiniteScroll()) {
                this._infiniteScrollOffset = this._offset;
-               this._isLoadBeforeScrollAppears = true;
             }
          },
          /**
@@ -1642,7 +1638,6 @@ define('js!SBIS3.CONTROLS.ListView',
          _removeItem: function(item){
             ListView.superclass._removeItem.call(this, item);
             if (this.isInfiniteScroll()) {
-               this._isLoadBeforeScrollAppears = true;
                this._preScrollLoading();
             }
          },
@@ -1765,15 +1760,9 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _preScrollLoading: function(){
-            /**
-             * Если у нас автовысота, то подгружать данные надо пока размер контейнера не привысит размеры экрана (контейнера window)
-             * Если же высота фиксированная, то подгружать данные в этой функции будем пока высота контейнера(ту, что фиксированно задали) не станет меньше высоты таблицы(table),
-             * т.е. пока не появится скролл внутри контейнера
-             */
-            if (this._scrollWatcher && this._isLoadBeforeScrollAppears && !this._scrollWatcher.hasScroll(this.getContainer())){
+            if (this._scrollWatcher && (!this._scrollWatcher.hasScroll(this.getContainer()) || this.isScrollOnBottom())) {
                this._nextLoad();
             } else {
-               this._isLoadBeforeScrollAppears = false;
                this._moveTopScroll();
                this._firstScrollTop = false;
             }
@@ -1809,10 +1798,14 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          isScrollOnBottom: function(){
-            var scrollContainer = this._options.infiniteScrollContainer;
-            if (scrollContainer && scrollContainer.length){
-               scrollContainer = scrollContainer[0];
-               return (scrollContainer.scrollHeight - (scrollContainer.scrollTop + scrollContainer.offsetHeight)) == 0;
+            var scrollableContainer = this._scrollWatcher.getScrollContainer(),
+            isBody = scrollableContainer == document.body,
+            scrollContainer = isBody ? $(window) : this._options.infiniteScrollContainer;
+            // Если scrollContainer это body и есть floatArea со скроллом, то у body скролла нет, а значит он не может быть снизу (его же нет!)
+            // Todo: когда будут классные скроллы (3.7.4.100?) - можно будет выпилить
+            if (scrollableContainer && isBody && !$('.ws-scrolling-content').length){
+               scrollContainer = $(scrollContainer);
+               return (scrollableContainer.scrollHeight - (scrollableContainer.scrollTop + scrollContainer.height())) == 0;
             }
          },
          isScrollOnTop: function(){

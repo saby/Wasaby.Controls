@@ -732,6 +732,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
 
+          setEnabled: function() {
+             FieldLink.superclass.setEnabled.apply(this, arguments);
+             /* При изменении состояния поля связи, надо скинуть старую запомненую ширину,
+                если это произошло в скрытом состоянии, иначе поле показа не запустится перерисовка */
+             if(!this.isVisibleWithParents()) {
+                this._lastFieldLinkWidth = null;
+             }
+          },
+
           /**
            * Конфигурация пикера
            */
