@@ -68,6 +68,8 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
 
       _notifyOnActivated : function(originalEvent) {
          this._notify('onActivated', originalEvent);
+         //Блокируем всплытие event'a, т.к. нажатие Enter на КНОПКЕ не должно приводить к срабатыванию дефолтной кнопки
+         originalEvent.stopImmediatePropagation();
       },
 
       _keyboardHover: function(event){
