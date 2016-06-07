@@ -57,8 +57,13 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
        * Can be implemented
        */
       _clickHandler: function() {
+         this._onOperationActivated();
          PrintUnloadBase.superclass._clickHandler.apply(this, arguments);
       },
+
+      _onOperationActivated: function() {
+      },
+
       _prepareOperation: function(title){
          var selectedItems = this._getView().getSelectedKeys(),
                selectedItemsObj = {},
