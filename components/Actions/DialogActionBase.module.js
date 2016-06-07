@@ -140,10 +140,16 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
 
       _initTemplateComponentCallback: function (config, meta, mode, templateComponent) {
          var self = this;
-         templateComponent.prototype.getRecordFromSource(config.componentOptions).addCallback(function (record) {
-            config.componentOptions.record = record;
+         var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource;
+         if (getRecordProtoMethod){
+            getRecordProtoMethod(config.componentOptions).addCallback(function (record) {
+               config.componentOptions.record = record;
+               self._showDialog(config, meta, mode);
+            });
+         }
+         else{
             self._showDialog(config, meta, mode);
-         });
+         }
       },
 
       _showDialog: function(config, meta, mode){
