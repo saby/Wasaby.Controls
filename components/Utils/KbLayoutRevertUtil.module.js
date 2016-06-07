@@ -9,6 +9,13 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil',
     function () {
        'use strict';
 
+       var SEARCH_SOURCE_CONFIG = {
+          endpoint: 'CoreUtils',
+          binding: {
+             query: 'TranslitSearchProxyCall'
+          }
+       };
+
        return {
           _layouts :
           {
@@ -176,6 +183,62 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil',
              });
 
              return result;
+          },
+
+          /**
+           * Подготавливает сорс для запроса со сменой раскладки
+           * @param source
+           * @returns {sourceClass}
+           */
+          prepareSearchSource: function(source) {
+             /* Пока сделано через _moduleName, Леха обещает сделать clone для сорса */
+             var sourceClass = require('js!' + source._moduleName),
+             /* Из источника возмём конфиг, необходимый для обработки полученных данных */
+                 sourceConfig = {
+                    listModule: source.getListModule(),
+                    model: source.getModel(),
+                    adapter: source.getAdapter()
+                 };
+             return new sourceClass($ws.core.merge(sourceConfig, SEARCH_SOURCE_CONFIG));
+          },
+
+          /**
+           * Возвращает, нужно ли менять раскладку по переданному рекордсету
+           * @param data
+           * @returns {*}
+           */
+          needRevert: function(data) {
+             return data.getMetaData()['Switched'];
+          },
+
+          /**
+           * Подготавливает фильтр для запроса со сменой раскладки
+           * @param source
+           * @param filter
+           * @param param
+           * @returns {*}
+           */
+          prepareSearchFilter: function(source, filter, param) {
+             var additionalFilter = {
+                    __Method__: source.getEndpoint().contract + '.' + source.getBinding().query,
+                    __Field__: param
+                 };
+
+             /* Подмержим в фильтр необходимые поля */
+             return $ws.core.merge(filter, additionalFilter);
+          },
+
+          /**
+           * Возвращает фильтр к нормальному состоянию, удаляет поля,
+           * которые требуются для запроса со сменой раскладки
+           * @param filter
+           * @returns {*}
+           */
+          revertSearchFilter: function(filter) {
+             delete filter['__Method__'];
+             delete filter['__Field__'];
+
+             return filter;
           }
        };
     }
