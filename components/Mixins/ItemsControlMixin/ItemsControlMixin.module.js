@@ -433,7 +433,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             newCfg._itemsTemplate = ItemsTemplate;
             if (cfg.items) {
                if (cfg.items instanceof Array) {
-                  newCfg.keyField = findKeyField(cfg.items);
+                  if (!cfg.keyField) {
+                     newCfg.keyField = findKeyField(cfg.items);
+                  }
                   newCfg._items = JSONToRecordset(cfg.items);
                }
                else {
@@ -506,7 +508,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          if (itemsOpt) {
             if (itemsOpt instanceof Array) {
-               this._options.keyField = findKeyField(itemsOpt);
+               if (!this._options.keyField) {
+                  this._options.keyField = findKeyField(itemsOpt);
+               }
                this._options._items = JSONToRecordset(itemsOpt);
             }
             else {
@@ -1278,9 +1282,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        setItems: function (items) {
           this._options.items = items;
           this._unsetItemsEventHandlers();
-          this._options._items = this._items = null;
+          this._options._items = null;
           this._itemsInitializedBySource = false;
           this._prepareConfig(undefined, items);
+          this._notify('onDataLoad', this.getItems()); //TODO на это событие завязались. аккуратно спилить
           this.redraw();
 
       },
