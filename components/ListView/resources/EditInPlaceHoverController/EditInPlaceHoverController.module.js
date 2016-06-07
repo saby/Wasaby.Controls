@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             },
             showEip: function(target, record, options) {
                if (options && options.isEdit === false) {
-                  this.show(target, record)
+                  this.show(target, record, this._options.itemsProjection.getItemBySourceItem(record))
                } else {
                   EditInPlaceHoverController.superclass.showEip.apply(this, arguments)
                }
@@ -67,12 +67,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
              * @param {Object} target Элемент, для которого отобразить область по ховеру
              * @private
              */
-            show: function(target, record) {
+            show: function(target, record, itemProj) {
                if (this._notify('onBeginEdit', record) !== false) {
                   if (!this._hoveredEip) {
                      this._hoveredEip = this._eip.isEdit() ? this._secondEip : this._eip;
                   }
-                  this._hoveredEip.show(target, record);
+                  this._hoveredEip.show(target, record, itemProj);
                } else {
                   if (this._hoveredEip) {
                      this._hoveredEip.hide();

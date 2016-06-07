@@ -526,6 +526,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._options._itemsProjection.getItemBySourceItem(this._options._items.getRecordById(id));
       },
 
+      /**
+       * Метод получения проекции по hash итема
+       */
+      _getItemProjectionByHash: function(hash) {
+         return this._getItemsProjection().getByHash(hash);
+      },
+
       /*переписанные методы для однопроходной отрисовки begin*/
       /*данные для отрисовки итемов через шаблон*/
 

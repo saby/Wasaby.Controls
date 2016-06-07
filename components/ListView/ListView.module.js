@@ -838,7 +838,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _getScrollContainer: function() {
             var scrollWatcher = this._scrollWatcher,
                 scrollContainer;
-            
+
             function findScrollContainer(node) {
                if (node === null) {
                   return null;
@@ -876,20 +876,23 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         _getDomElementByItem : function(item) {
+            //FIXME т.к. строка редактирования по местру спозиционирована абсолютно, то надо искать оригинальную строку
+            return this._getItemsContainer().find('.js-controls-ListView__item[data-hash="' + item.getHash() + '"]:not(.controls-editInPlace)')
+         },
+
          _getElementData: function(target) {
             if (target.length){
                var cont = this._container[0],
                    containerCords = cont.getBoundingClientRect(),
                    targetKey = target[0].getAttribute('data-id'),
-               //FIXME т.к. строка редактирования по местру спозиционирована абсолютно, то надо искать оригинальную строку
-                   correctTarget = target.hasClass('controls-editInPlace') ?
-                       this._getItemsContainer().find('[data-id="' + targetKey + '"]:not(.controls-editInPlace)') :
-                       target,
+                   item = this.getItems().getRecordById(targetKey),
+                   correctTarget = target.hasClass('controls-editInPlace') ? this._getDomElementByItem(item) : target,
                    targetCords = correctTarget[0].getBoundingClientRect();
 
                return {
                   key: targetKey,
-                  record: this.getItems().getRecordById(targetKey),
+                  record: item,
                   container: correctTarget,
                   position: {
                      /* При расчётах координат по вертикали учитываем прокрутку */
@@ -1456,14 +1459,22 @@ define('js!SBIS3.CONTROLS.ListView',
                return [];
             }
 
-            var elem = target.closest('.js-controls-ListView__item', this._getItemsContainer());
+            var elem = target.closest('.js-controls-ListView__item', this._getItemsContainer()),
+                domElem = elem[0],
+                dataId, dataHash;
 
-            // TODO Подумать, как решить данную проблему. Не надёжно хранить информацию в доме
-            // TODO  В качестве возможного решения: сохранять ссылку на дом элемент
-            /* Поиск элемента коллекции с учётом вложенных контролов,
-               обязательно проверяем, что мы нашли, возможно это элемент вложенного контрола,
-               тогда поднимемся на уровень выше и опять поищем */
-            return elem[0] && this.getItems() && this.getItems().getRecordById(elem[0].getAttribute('data-id')) ? elem : this._findItemByElement(elem.parent());
+            if(domElem) {
+               dataId = domElem.getAttribute('data-id');
+               dataHash = domElem.getAttribute('data-hash');
+            } else {
+               return elem;
+            }
+
+            if(this._getItemsProjection() && this._getItemProjectionByItemId(dataId) && this._getItemProjectionByHash(dataHash)) {
+               return elem;
+            } else {
+               return this._findItemByElement(elem.parent());
+            }
          },
          /**
           * Показывает оперцаии над записью для элемента
@@ -1724,7 +1735,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         self._options._items.append(dataSet);
                         ladder && ladder.setIgnoreEnabled(false);
                      }
-                     
+
                      //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                      self.getItems().setMetaData(dataSet.getMetaData());
 
