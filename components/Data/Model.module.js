@@ -175,7 +175,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          }
 
          if (!this._$idProperty) {
-            this._$idProperty = this.getAdapter().getKeyField(this._$rawData);
+            this._$idProperty = this.getAdapter().getKeyField(this._$rawData) || '';
          }
       },
 
@@ -385,7 +385,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @returns {*}
        */
       getId: function () {
-         var idProperty = this._getIdProperty();
+         var idProperty = this.getIdProperty();
          if (!idProperty) {
             Utils.logger.info('SBIS3.CONTROLS.Data.Model::getId(): option idProperty is empty');
             return undefined;
@@ -398,7 +398,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @returns {String}
        */
       getIdProperty: function () {
-         return this._getIdProperty();
+         return this._$idProperty;
       },
 
       /**
@@ -450,18 +450,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       // endregion Public methods
 
       //region Protected methods
-
-      /**
-       * Возвращает значение idProperty, при этом, если оно не задано явно, пытается втащить его через адаптер
-       * @returns {String}
-       * @protected
-       */
-      _getIdProperty: function () {
-         if (this._$idProperty === undefined) {
-            this._$idProperty = this._getRawDataAdapter().getKeyField() || '';
-         }
-         return this._$idProperty;
-      },
 
       /**
        * Возвращает массив названий всех свойств (включая поля в "сырых" данных)

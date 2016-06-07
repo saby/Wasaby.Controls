@@ -1026,9 +1026,16 @@
 @text-area-disabled-border-color:               transparent;
 @text-area-disabled-bg:                         @text-area-bg;
 
-@text-area-field-padding:                       6px 7px;
+@text-area-left-padding:                        7px;
+@text-area-top-padding:                         6px;
+@text-area-right-padding:                       7px;
+@text-area-bottom-padding:                      6px;
+@text-area-field-padding:                       @text-area-top-padding @text-area-right-padding @text-area-bottom-padding @text-area-left-padding;
 
-
+@text-area-placeholder-color:              @text-box-placeholder-color;
+@text-area-compat-placeholder-font:        @text-box-compat-placeholder-font;
+@text-area-compat-placeholder-padding:     @text-box-compat-placeholder-padding;
+@text-area-compat-placeholder-alignment:   @text-box-compat-placeholder-alignment;
 
 // ----------- //
 // Suggest //
@@ -1540,7 +1547,7 @@
 // ----------------------- //
 //      EditInPlace        //
 // ----------------------- //
-@controls-editInPlace-editor-margin-top:            2px;
+@controls-editInPlace-editor-margin-top:            3px;
 @controls-editInPlace-editor-margin-bottom:         3px;
 @controls-editInPlace-editor-padding:               0 1px;
 @controls-editInPlace-editor-bg:                    #f3f3f3 !important;

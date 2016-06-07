@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             if (res !== false) {
                this._options.elemClickHandler && this._options.elemClickHandler.call(this, id, data, target);
                nodeID = $(target).closest('.controls-ListView__item').data('id');
-               if (this._dataSet.getRecordByKey(nodeID).get(this._options.hierField + '@')) {
+               if (this.getItems().getRecordByKey(nodeID).get(this._options.hierField + '@')) {
                   this.setCurrentRoot(nodeID);
                   this.reload();
                }
@@ -274,7 +274,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                   filter[self._options.hierField] = branchId === 'null' ? null : branchId;
                   var limit;
                   //проверяем, является ли обновляемый узел корневым, если да, обновляем записи до подгруженной записи (_infiniteScrollOffset)
-                  if ( String(self._curRoot) == branchId  &&  self._infiniteScrollOffset) { // т.к. null != "null", _infiniteScrollOffset проверяем на случай, если нет подгрузки по скроллу
+                  if ( String(self._options._curRoot) == branchId  &&  self._infiniteScrollOffset) { // т.к. null != "null", _infiniteScrollOffset проверяем на случай, если нет подгрузки по скроллу
                      limit = self._infiniteScrollOffset + self._options.pageSize;
                   } else if (self._limit !== undefined) {
                      limit = (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit;
@@ -293,9 +293,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             filter = $ws.core.clone(this.getFilter());
             //Группируем записи по веткам (чтобы как можно меньше запросов делать)
             $ws.helpers.forEach(items, function(id) {
-               item = this._items.getRecordById(id);
+               item = this._options._items.getRecordById(id);
                if (item) {
-                  parentBranchId = this.getParentKey(undefined, this._items.getRecordById(id));
+                  parentBranchId = this.getParentKey(undefined, this._options._items.getRecordById(id));
                   if (!recordsGroup[parentBranchId]) {
                      recordsGroup[parentBranchId] = [];
                   }

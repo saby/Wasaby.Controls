@@ -77,6 +77,10 @@ define('js!SBIS3.CONTROLS.Browser', [
              */
             historyId : '',
             /**
+             * @cfg {String} Id для запоминания пэйджинга
+             */
+            pagingId: '',
+            /**
              * @cfg {Array} ignoreFiltersList Массив ключей фильтров, которые не надо запоминать в историю.
              */
             ignoreFiltersList: [],
@@ -152,6 +156,10 @@ define('js!SBIS3.CONTROLS.Browser', [
             }
          } else {
             this._notifyOnFiltersReady();
+         }
+
+         if(this._options.pagingId && this._view.getProperty('showPaging')) {
+            this._componentBinder.bindPagingHistory(this._view, this._options.pagingId);
          }
       },
 

@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
+define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryController'], function (HistoryController) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
@@ -50,10 +50,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
          view.once('onDataLoad', function(){
             //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
-            this._itemsProjection.setEventRaising(false);
+            this._options._itemsProjection.setEventRaising(false);
             //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
-            view._itemsProjection.setRoot(null);
-            this._itemsProjection.setEventRaising(true);
+            view._options._itemsProjection.setRoot(null);
+            this._options._itemsProjection.setEventRaising(true);
          });
 
          view.reload(filter, view.getSorting(), 0).addCallback(function(){
@@ -99,7 +99,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       //только после релоада, иначе визуально будут прыжки и дерганья (класс меняет паддинги)
       view.once('onDataLoad', function(){
          view._container.removeClass('controls-GridView__searchMode');
-         view._itemsProjection.setRoot(self._lastRoot || null);
+         view._getItemsProjection().setRoot(self._lastRoot || null);
       });
       this._searchMode = false;
       //Если мы ничего не искали, то и сбрасывать нечего
@@ -492,14 +492,25 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          filter = historyController.getActiveFilter();
 
          filterButton.setHistoryController(historyController);
+         /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
+         filterButton.setFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
          setTimeout($ws.helpers.forAliveOnly(function() {
-            if(filter) {
-               /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
-               filterButton._updateFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
-               view.setFilter($ws.core.merge(view.getFilter(), historyController.prepareViewFilter(filter.viewFilter)), true);
-            }
+            // Через timeout, чтобы можно было подписаться на соыбтие, уйдёт с серверным рендерингом
             browser._notifyOnFiltersReady();
          }, view), 0);
+      },
+
+      bindPagingHistory: function(view, id) {
+         var pagingHistoryController = new HistoryController({historyId: id}),
+             historyLimit = pagingHistoryController.getHistory();
+
+         if(historyLimit) {
+            view.setPageSize(historyLimit, true);
+         }
+
+         view.subscribe('onPageSizeChange', function(event, pageSize) {
+            pagingHistoryController.setHistory(pageSize, true);
+         });
       }
    });
 

@@ -49,10 +49,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
       _dotTplFn : dotTplFn,
       $protected: {
-         _defaultItemTemplate: ItemTemplate,
-         _defaultItemContentTemplate: ItemContentTemplate,
-         _defaultGroupTemplate: GroupTemplate,
-         _defaultCellTemplate: cellTemplate,
          _rowTpl : rowTpl,
          _rowData : [],
          _isPartScrollVisible: false,                 //Видимость скроллбара
@@ -74,6 +70,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
          _isHeaderScrolling: false,                   //Флаг обозначающий, происходит ли скролл за заголовок
          _lastLeftPos: null,                          //Положение по горизонтали, нужно когда происходит скролл за заголовок
          _options: {
+            _defaultCellTemplate: cellTemplate,
+            _defaultItemTemplate: ItemTemplate,
+            _defaultItemContentTemplate: ItemContentTemplate,
+            _canServerRender: false,
             /**
              * @typedef {Object} Columns
              * @property {String} title Заголовок колонки
@@ -284,7 +284,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return $('.controls-DataGridView__tbody', this._container);
       },
 
-      _buildTplArgs : function() {
+      _buildTplArgs : function(cfg) {
          function getColumnVal(item, colName) {
             if (!colName || !(colName.indexOf("['") == 0 && colName.indexOf("']") == (colName.length - 2))){
                return item.get(colName);
@@ -303,15 +303,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
             return value;
          }
          var args = DataGridView.superclass._buildTplArgs.apply(this, arguments);
-         args.columns = this._prepareColumns(this._options.columns);
+         args.columns = this._prepareColumns(cfg.columns);
          args.cellData = {
             /*TODO hierField вроде тут не должно быть*/
-            hierField: this._options.hierField,
+            hierField: cfg.hierField,
             getColumnVal: getColumnVal,
             decorators : args.decorators,
             displayField : args.displayField
          };
-         args.startScrollColumn = this._options.startScrollColumn;
+         args.startScrollColumn = cfg.startScrollColumn;
 
          return args;
       },
@@ -323,7 +323,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                columnsNew[i].contentTpl = TemplateUtil.prepareTemplate(columnsNew[i].cellTemplate);
             }
             else {
-               columnsNew[i].contentTpl = TemplateUtil.prepareTemplate(this._defaultCellTemplate);
+               columnsNew[i].contentTpl = TemplateUtil.prepareTemplate(this._options._defaultCellTemplate);
             }
 
             if (columnsNew[i].includedTemplates) {

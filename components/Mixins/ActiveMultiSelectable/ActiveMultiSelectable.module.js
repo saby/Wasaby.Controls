@@ -177,7 +177,6 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Model
        */
       addSelectedItems: function(items) {
          var self = this,
-             selItems = this._options.selectedItems,
              newItems = [];
 
          items = this._prepareItems(items);
@@ -194,12 +193,12 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Model
             });
          } else if(!self._isItemSelected(items.at(0))) {
             newItems.push(items.at(0));
-            selItems && selItems.clear();
+            this._options.selectedItems && this._options.selectedItems.clear();
          }
 
          if(newItems.length) {
-            if(selItems) {
-               selItems.append(newItems);
+            if(this._options.selectedItems) {
+               this._options.selectedItems.append(newItems);
             } else {
                this._options.selectedItems = this._makeList(newItems);
             }
