@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          /* Проверяем на изменение раскладки */
          this.once('onListReady', function(e, list) {
             self.subscribeTo(list, 'onDataLoad', function(event, data) {
-               if(data.getMetaData()['Switched']) {
+               if(KbLayoutRevertUtil.needRevert(data)) {
                   self.setText(KbLayoutRevertUtil.process(self.getText()));
                }
             });
