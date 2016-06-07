@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
              */
             isModal: false,
             //Ограничить размеры только высотой экрана, в противном случае они ограничены границами экрана и расположением тагрета
-            fullHeight: true
+            fullHeight: false
          }
       },
 
