@@ -480,7 +480,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._notify('onItemsReady');
             this._itemsReadyCallback();
             this._dataLoadedCallback();
-            this._notifyOnDrawItems();
          }
          /*TODO Поддержка совместимости. Раньше если были заданы items массивом создавался сорс, осталась куча завязок на это*/
          if (this._options.items instanceof Array) {
@@ -597,7 +596,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          data.tplData = this._prepareItemData();
          //TODO опять же, перед полной перерисовкой данные лесенки достаточно сбросить, чтобы она правильно отработала
          //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
-         var ladder = this._decorators.getByName('ladder');
+         var ladder = this._decorators && this._decorators.getByName('ladder');
          ladder && ladder.setIgnoreEnabled(true);
          ladder && ladder.reset();
          markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this.getId());
@@ -855,6 +854,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          } else {
             container.get(0).innerHTML = '';
          }
+         if (container.get(0) === this._getItemsContainer().get(0)) {
+            this._itemsInstances = {};
+         }
       },
 
       _destroyControls: function(container){
@@ -885,6 +887,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             else if (this._dataSource) {
                this.reload();
+            }
+            if (this._options._serverRender) {
+               this._notifyOnDrawItems();
             }
          },
          destroy : function() {
