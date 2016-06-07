@@ -330,8 +330,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _cloneWithFormat: function(record, recordSet) {
                var
                    fieldName,
-                   clone = record.clone();
-               clone.setRawData(null);
+                   clone = new Model({
+                      'adapter': record.getAdapter()
+                   });
+
                recordSet.getFormat().each(function(field) {
                   fieldName = field.getName();
                   clone.addField(field, undefined, record.get(fieldName));
