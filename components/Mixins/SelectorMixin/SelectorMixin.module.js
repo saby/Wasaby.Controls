@@ -63,7 +63,8 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
             }
 
             this._changeSelectionHandler = function (event, result) {
-               var linkedView = self.getLinkedView();
+               var linkedView = self.getLinkedView(),
+                   item = result.item;
 
                /* По стандадту:
                   5. Если в панели множественного выбора кликнуть на записи, она должна добавиться в значение поля связи (поддержка единичного выбора).
@@ -73,6 +74,13 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
                if(linkedView.getSelectedKeys().length) {
                   return;
                }
+
+               /* При выборе в иерархических представлених, нельзя реагировать на событие onItemActivate вызваное
+                  кликом по узлу / нажатии на >> . Выбор узлов в иерархических представлениях обрабатывается прикладной логикой */
+               if($ws.helpers.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.TreeMixin') && item.get(linkedView.getHierField() + '@')) {
+                  return;
+               }
+
                self.close([result.item]);
             };
 
