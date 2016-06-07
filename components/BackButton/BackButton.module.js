@@ -75,15 +75,20 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
       },
 
       init: function(){
-         this._publish('onActivated');
+         this._publish('onActivated', 'onArrowActivated');
          BackButton.superclass.init.call(this);
          this._container.removeClass('ws-area');
          var self = this;
          this._link = this.getChildControlByName('BackButton-caption');
          // Две подписки сделаны для того что бы в тестах можно было стриггерить событие нажатия
          // Клик по Link не проходит и сделан для того что бы можно было кликнуть по стрелке
-         this._container.bind('click', function(){
-            self._notify('onActivated');
+         this._container.on('click', function(e){
+            if ($(e.target).hasClass('controls-BackButton__arrow')){
+               self._notify('onArrowActivated');
+               e.stopPropagation();
+            } else {
+               self._notify('onActivated');
+            }
          });
          this._link.subscribe('onActivated', function(){
             self._notify('onActivated');
