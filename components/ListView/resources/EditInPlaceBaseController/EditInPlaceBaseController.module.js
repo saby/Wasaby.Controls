@@ -42,6 +42,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                    * </pre>
                    */
                   modeAutoAdd: false,
+                  modeSingleEdit: false,
                   ignoreFirstColumn: false,
                   notEndEditClassName: undefined,
                   editFieldFocusHandler: undefined,
@@ -164,7 +165,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                } else if (key === $ws._const.key.enter || key === $ws._const.key.down || key === $ws._const.key.up) {
                   e.stopImmediatePropagation();
                   e.preventDefault();
-                  this._editNextTarget(this._getCurrentTarget(), key === $ws._const.key.down || key === $ws._const.key.enter);
+                  if (this._options.modeSingleEdit) {
+                     this.endEdit(true);
+                  } else {
+                     this._editNextTarget(this._getCurrentTarget(), key === $ws._const.key.down || key === $ws._const.key.enter);
+                  }
                }
             },
             _editNextTarget: function (currentTarget, editNextRow) {
