@@ -150,7 +150,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _drawItemsCallback: function() {
-         $ws.helpers.forEach(this._options.openedPath, function(key) {
+         $ws.helpers.forEach(this._options.openedPath, function(val, key) {
             //Рисуем футер, только если узел есть в проекции, иначе он скрыт и футер рисовать не нужно
             if (this._getItemProjectionByItemId(key)) {
                this._createFolderFooter(key);
