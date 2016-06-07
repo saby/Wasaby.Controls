@@ -129,7 +129,9 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
             relation;
          if (parent) {
             relation = this._childToParent[this._getChildIndex(child)];
-            parent.relationChanged(child, relation ? relation[1] : '', data);
+            if ($ws.helpers.instanceOfMixin(parent, 'SBIS3.CONTROLS.Data.Mediator.IReceiver')) {
+               parent.relationChanged(child, relation ? relation[1] : '', data);
+            }
          }
       },
 
@@ -140,7 +142,9 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
        */
       parentChanged: function (parent, data) {
          this.each(parent, function(child, name) {
-            child.relationChanged(parent, name, data);
+            if ($ws.helpers.instanceOfMixin(child, 'SBIS3.CONTROLS.Data.Mediator.IReceiver')) {
+               child.relationChanged(parent, name, data);
+            }
          });
       },
 

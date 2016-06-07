@@ -1,21 +1,17 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
-   'js!SBIS3.CONTROLS.Data.Mediator.IReceiver',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.FormattableMixin',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
-   'js!SBIS3.CONTROLS.Data.Mediator.OneToMany',
    'js!SBIS3.CONTROLS.Data.Model'
 ], function (
-   IMediatorReceiver,
    ObservableList,
    SerializableMixin,
    FormattableMixin,
    Di,
-   Utils,
-   OneToManyMediator
+   Utils
 ) {
    'use strict';
 
@@ -24,13 +20,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
     * @class SBIS3.CONTROLS.Data.Collection.RecordSet
     * @extends SBIS3.CONTROLS.Data.Collection.ObservableList
     * @mixes SBIS3.CONTROLS.Data.FormattableMixin
-    * @mixes SBIS3.CONTROLS.Data.Mediator.IReceiver
     * @ignoreOptions items
     * @author Мальцев Алексей
     * @public
     */
 
-   var RecordSet = ObservableList.extend([IMediatorReceiver, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
+   var RecordSet = ObservableList.extend([FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
      /**
       * @typedef {Object} OperationOptions
       * @property {Boolean} [add=true] Добавлять новые записи.
@@ -150,7 +145,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       //region SBIS3.CONTROLS.Data.Mediator.IReceiver
 
-      relationChanged: function (which, name, data) {
+      relationChanged: function (which, name) {
+         RecordSet.superclass.relationChanged.call(this, which, name);
          switch (name) {
             case 'owner':
                this._resetRawDataAdapter();
@@ -193,7 +189,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          format = this._buildField(format);
          FormattableMixin.addField.call(this, format, at);
 
-         this._getMediator().parentChanged(this, 'addField');
+         this._parentChanged('addField');
          if (value !== undefined) {
             var name = format.getName();
             this.each(function(record) {
@@ -205,13 +201,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       removeField: function(name) {
          FormattableMixin.removeField.call(this, name);
 
-         this._getMediator().parentChanged(this, 'removeField');
+         this._parentChanged('removeField');
       },
 
       removeFieldAt: function(at) {
          FormattableMixin.removeFieldAt.call(this, at);
 
-         this._getMediator().parentChanged(this, 'removeFieldAt');
+         this._parentChanged('removeFieldAt');
       },
 
       /**
@@ -762,7 +758,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //region SBIS3.CONTROLS.Data.Collection.List
 
       clear: function () {
-         this._getMediator().clear(this);
          this._getRawDataAdapter().clear();
          RecordSet.superclass.clear.call(this);
          this._indexTree = {};
@@ -772,30 +767,23 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._checkItem(item, !!this._$format || this.getCount() > 0);
          this._getRawDataAdapter().add(item.getRawData(), at);
          RecordSet.superclass.add.call(this, item, at);
-         this._getMediator().addTo(this, item, 'owner');
          this._indexTree = {};
       },
 
       remove: function (item) {
          this._checkItem(item, false);
-         this._getMediator().removeFrom(this, item);
          this._indexTree = {};
          return RecordSet.superclass.remove.call(this, item);
       },
 
       removeAt: function (index) {
          this._getRawDataAdapter().remove(index);
-         var item = this._$items[index];
-         if (item) {
-            this._getMediator().removeFrom(this, item);
-         }
          RecordSet.superclass.removeAt.call(this, index);
          this._indexTree = {};
       },
 
       replace: function (item, at, checkFormat) {
          this._checkItem(item, checkFormat);
-         this._getMediator().addTo(this, item, 'owner');
          this._getRawDataAdapter().replace(item.getRawData(), at);
          RecordSet.superclass.replace.call(this, item, at);
          this._indexTree = {};
@@ -806,45 +794,24 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._$rawData = null;
          items = this._addItemsToRawData(items, undefined, true);
          RecordSet.superclass.assign.call(this, items);
-         var mediator = this._getMediator();
-         for (var i = 0, count = items.length; i < count; i++) {
-            mediator.addTo(this, items[i], 'owner');
-         }
          this._indexTree = {};
       },
 
       append: function (items) {
          items = this._addItemsToRawData(items);
          RecordSet.superclass.append.call(this, items);
-         var mediator = this._getMediator();
-         for (var i = 0, count = items.length; i < count; i++) {
-            mediator.addTo(this, items[i], 'owner');
-         }
          this._indexTree = {};
       },
 
       prepend: function (items) {
          items = this._addItemsToRawData(items, 0);
          RecordSet.superclass.prepend.call(this, items);
-         var mediator = this._getMediator();
-         for (var i = 0, count = items.length; i < count; i++) {
-            mediator.addTo(this, items[i], 'owner');
-         }
          this._indexTree = {};
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.List
 
       //region Protected methods
-
-      /**
-       * Возвращает посредника для установления отношений с записями
-       * @returns {SBIS3.CONTROLS.Mediator.OneToMany}
-       * @protected
-       */
-      _getMediator: function() {
-         return OneToManyMediator.getInstance();
-      },
 
       /**
        * Вставляет сырые данные записей в сырые данные рекордсета
@@ -945,12 +912,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          RecordSet.superclass.clear.call(this);
          var adapter = this._getRawDataAdapter(),
             count = adapter.getCount(),
-            mediator = this._getMediator(),
             record;
          for (var i = 0; i < count; i++) {
             record = this._getModelInstance(adapter.at(i));
             RecordSet.superclass.add.call(this, record);
-            mediator.addTo(this, record, 'owner');
          }
          this._resetIndexTree();
       },

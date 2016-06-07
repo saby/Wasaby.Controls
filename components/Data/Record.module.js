@@ -9,11 +9,11 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    'js!SBIS3.CONTROLS.Data.Entity.ObservableMixin',
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.CloneableMixin',
+   'js!SBIS3.CONTROLS.Data.OneToManyMixin',
    'js!SBIS3.CONTROLS.Data.FormattableMixin',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
-   'js!SBIS3.CONTROLS.Data.Mediator.OneToMany',
    'js!SBIS3.CONTROLS.Data.Factory',
    'js!SBIS3.CONTROLS.Data.Format.StringField',
    'js!SBIS3.CONTROLS.Data.ContextField.Record'
@@ -27,11 +27,11 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    ObservableMixin,
    SerializableMixin,
    CloneableMixin,
+   OneToManyMixin,
    FormattableMixin,
    ArrayEnumerator,
    Di,
    Utils,
-   OneToManyMediator,
    Factory,
    StringField,
    ContextFieldRecord
@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
     * @author Мальцев Алексей
     */
 
-   var Record = Abstract.extend([IObject, ICloneable, IEnumerable, IMediatorReceiver, OptionsMixin, ObservableMixin, SerializableMixin, CloneableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
+   var Record = Abstract.extend([IObject, ICloneable, IEnumerable, IMediatorReceiver, OptionsMixin, ObservableMixin, SerializableMixin, CloneableMixin, OneToManyMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Record',
 
       _compatibleConstructor: true,//Чтобы в наследниках с "old style extend" звался нативный constructor()
@@ -142,7 +142,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
             delete map[equals[i]];
          }
          if (!Object.isEmpty(map)) {
-            this._notify('onPropertyChange', map);
+            this._notifyChange(map);
          }
       },
 
@@ -224,7 +224,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       setRawData: function(rawData) {
          FormattableMixin.setRawData.call(this, rawData);
          this._clearPropertiesCache();
-         this._notify('onPropertyChange');
+         this._notifyChange();
       },
 
       setAdapter: function (adapter) {
@@ -336,15 +336,6 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       //region Protected methods
 
-       /**
-        * Возвращает посредника для установления отношений с записями
-        * @returns {SBIS3.CONTROLS.Mediator.OneToMany}
-        * @protected
-        */
-       _getMediator: function() {
-           return OneToManyMediator.getInstance();
-       },
-
       /**
        * Проверяет наличие закэшированного значения поля
        * @param {String} name Название поля
@@ -430,9 +421,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
                adapter.getSharedFormat(name),
                this.getAdapter()
             );
-            if (result && $ws.helpers.instanceOfMixin(result, 'SBIS3.CONTROLS.Data.Mediator.IReceiver')) {
-               this._getMediator().addTo(this, result, name);
-            }
+            this._addChild(result, name);
             return result;
          } catch (e) {
             return undefined;
@@ -513,6 +502,16 @@ define('js!SBIS3.CONTROLS.Data.Record', [
             return false;
          }
          return $ws.helpers.instanceOfModule(value, 'SBIS3.CONTROLS.Data.Record');
+      },
+
+      /**
+       * Уведомляет об изменении полей записи
+       * @param {Object.<String, *)} [map] Измененные поля
+       * @protected
+       */
+      _notifyChange: function(map) {
+         this._childChanged(map);
+         this._notify('onPropertyChange', map);
       },
 
       /**

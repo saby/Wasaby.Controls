@@ -163,7 +163,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
             );
          }
 
-
          //endregion SBIS3.CONTROLS.Data.Collection.List
 
       },
