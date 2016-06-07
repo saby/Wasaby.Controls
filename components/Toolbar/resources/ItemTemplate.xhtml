@@ -26,7 +26,7 @@
 }}
 <component data-component="{{=item.get('componentType').substr(3)}}" config="{{=$ws.helpers.encodeCfgAttr(options)}}"
            data-hash="{{=it.projItem.getHash()}}"
-           data-id="{{=it.item.getId()}}"
+           data-id="{{=itemKey}}"
            class="controls-ListView__item js-controls-ListView__item controls-ToolBar__item {{=className}}">
     <opt name="visible" type="boolean">{{=visible}}</opt>
     {{=icon}}{{=caption}}{{=command}}

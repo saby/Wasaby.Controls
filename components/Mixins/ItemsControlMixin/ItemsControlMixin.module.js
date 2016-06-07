@@ -877,7 +877,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else if (this._dataSource) {
                this.reload();
             }
-            if (this._options._itemsProjection) {
+            if (this._options._serverRender) {
                this._notifyOnDrawItems();
             }
          },
