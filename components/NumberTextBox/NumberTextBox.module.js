@@ -279,8 +279,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             this._options.delimiters,
             decimals,
             this._options.onlyPositive,
-            this._options.maxLength,
-            true
+            this._options.maxLength
          );
          return value || '';
       },
