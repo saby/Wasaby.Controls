@@ -131,6 +131,17 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
     */
    var TreeMixin = /** @lends SBIS3.CONTROLS.TreeMixin.prototype */{
       /**
+       * @name reload
+       * @function
+       * Метод перезагрузки данных.
+       * Можно задать фильтрацию, сортировку.
+       * @param {String} filter Параметры фильтрации.
+       * @param {String} sorting Параметры сортировки.
+       * @param offset Элемент, с которого перезагружать данные.
+       * @param {Number} limit Ограничение количества перезагружаемых элементов.
+       * @param {Boolean} deepReload Глубокая перезагрузка. Позволяет запрашивать текущие открытые папки при перезагрузке
+       */
+      /**
        * @event onSearchPathClick При клике по хлебным крошкам в режиме поиска.
        * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -253,6 +264,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              * </pre>
              */
             partialyReload: true,
+            /**
+             * @cfg {Boolean} Глубокая перезагрузка. Позволяет запрашивать текущие открытые папки при перезагрузке
+             * @deprecated Опция будет удалена в 3.7.4.100. Используйте передачу параметра deepReload в непосредственно в метод reload.
+             */
+            deepReload: false,
             /**
              * @cfg {Object}  Устанавливает набор открытых элементов иерархии.
              * @see getOpenedPath
@@ -484,6 +500,23 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                itemParent = projItem.getParent();
             return parentFn.call(this, projItem) && itemParent && itemParent.isRoot();
          }
+      },
+      _getFilterForReload: function(filter, sorting, offset, limit, deepReload) {
+         var
+            filter = $ws.core.clone(this._options.filter),
+            hierField;
+         if ((this._options.deepReload || deepReload) && !Object.isEmpty(this._options.openedPath)) {
+            hierField = this._options.hierField;
+            if (!(filter[hierField] instanceof Array)) {
+               filter[hierField] = [];
+               if (this._options.filter[hierField]) {
+                  filter[hierField].push(this._options.filter[hierField]);
+               }
+            }
+            filter[hierField].push(this.getCurrentRoot());
+            filter[hierField] = filter[hierField].concat(Object.keys(this._options.openedPath));
+         }
+         return filter;
       },
       /**
        * Обработка загрузки ветки
