@@ -41,9 +41,11 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
 
       $constructor: function() {
       },
-      _clickHandler: function() {
+
+      _onOperationActivated: function() {
          this._prepareOperation('Что напечатать');
       },
+
       /**
        * @param columns
        * @private
