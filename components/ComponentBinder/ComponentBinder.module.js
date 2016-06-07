@@ -226,6 +226,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryControlle
          this._options.backButton.setCaption(this._currentRoot.title || '');
       },
 
+      getCurrentRootRecord: function(){
+         return this._currentRoot ? this._currentRoot.data : null;
+      },
+
       /**
        * Метод для связывания формы строки поиска с представлением данных.
        * для работы необходимо задать опциию view

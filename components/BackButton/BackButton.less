@@ -26,9 +26,33 @@
       margin: @back-button-margin-before;
    }
 
-
    &:hover {
-      .controls-BackButton__caption {
+      .controls-BackButton__arrow{
+         display: inline-block;
+      }
+   }
+
+   &.controls-BackButton__hover-arrow{
+      .controls-BackButton__arrow{
+         position: absolute;
+         top: 4px;
+         right: 0;
+         background-color: rgba(255, 255, 255, 0.9);
+      }
+   }
+
+   .controls-BackButton__arrow {
+      position: relative;
+      top: 5px;
+      float: right;
+      &:before{
+         float: right;
+      }
+      display: none;
+   }
+   
+   .controls-BackButton__caption {
+      &:hover {
          text-decoration: none;
          color: @primary-color;
       }
@@ -86,4 +110,12 @@
 
 .ws-is-ie{
    .back-button-before-fix();
+}
+
+.has_path{
+   .controls-BackButton__arrow {
+      width: 20px;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);
+      right: 16px;
+   }
 }
