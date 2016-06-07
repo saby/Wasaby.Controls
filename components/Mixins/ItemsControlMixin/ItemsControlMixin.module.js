@@ -433,7 +433,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             newCfg._itemsTemplate = ItemsTemplate;
             if (cfg.items) {
                if (cfg.items instanceof Array) {
-                  newCfg.keyField = findKeyField(cfg.items);
+                  if (!cfg.keyField) {
+                     newCfg.keyField = findKeyField(cfg.items);
+                  }
                   newCfg._items = JSONToRecordset(cfg.items);
                }
                else {
@@ -478,7 +480,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._notify('onItemsReady');
             this._itemsReadyCallback();
             this._dataLoadedCallback();
-            this._notifyOnDrawItems();
          }
          /*TODO Поддержка совместимости. Раньше если были заданы items массивом создавался сорс, осталась куча завязок на это*/
          if (this._options.items instanceof Array) {
@@ -506,7 +507,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          if (itemsOpt) {
             if (itemsOpt instanceof Array) {
-               this._options.keyField = findKeyField(itemsOpt);
+               if (!this._options.keyField) {
+                  this._options.keyField = findKeyField(itemsOpt);
+               }
                this._options._items = JSONToRecordset(itemsOpt);
             }
             else {
@@ -524,6 +527,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       _getItemProjectionByItemId: function(id) {
          return this._options._itemsProjection.getItemBySourceItem(this._options._items.getRecordById(id));
+      },
+
+      /**
+       * Метод получения проекции по hash итема
+       */
+      _getItemProjectionByHash: function(hash) {
+         return this._getItemsProjection().getByHash(hash);
       },
 
       /*переписанные методы для однопроходной отрисовки begin*/
@@ -586,7 +596,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          data.tplData = this._prepareItemData();
          //TODO опять же, перед полной перерисовкой данные лесенки достаточно сбросить, чтобы она правильно отработала
          //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
-         var ladder = this._decorators.getByName('ladder');
+         var ladder = this._decorators && this._decorators.getByName('ladder');
          ladder && ladder.setIgnoreEnabled(true);
          ladder && ladder.reset();
          markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this.getId());
@@ -844,6 +854,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          } else {
             container.get(0).innerHTML = '';
          }
+         if (container.get(0) === this._getItemsContainer().get(0)) {
+            this._itemsInstances = {};
+         }
       },
 
       _destroyControls: function(container){
@@ -877,6 +890,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             if (this._options.pageSize) {
                this._limit = this._options.pageSize;
+            }
+            if (this._options._serverRender) {
+               this._notifyOnDrawItems();
             }
          },
          destroy : function() {
@@ -1030,7 +1046,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
           if (this._dataSource) {
              this._toggleIndicator(true);
              this._notify('onBeforeDataLoad');
-             def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit)
+             def = this._callQuery(this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit)
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
                    self._notify('onDataLoad', list);
@@ -1090,6 +1106,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          return this._loader;
       }),
+
+      _getFilterForReload: function() {
+         return this._options.filter;
+      },
 
       _callQuery: function (filter, sorting, offset, limit) {
          if (!this._dataSource) {
@@ -1277,9 +1297,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        setItems: function (items) {
           this._options.items = items;
           this._unsetItemsEventHandlers();
-          this._options._items = this._items = null;
+          this._options._items = null;
           this._itemsInitializedBySource = false;
           this._prepareConfig(undefined, items);
+          this._notify('onDataLoad', this.getItems()); //TODO на это событие завязались. аккуратно спилить
           this.redraw();
 
       },

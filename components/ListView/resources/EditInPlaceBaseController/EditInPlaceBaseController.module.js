@@ -42,6 +42,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                    * </pre>
                    */
                   modeAutoAdd: false,
+                  modeSingleEdit: false,
                   ignoreFirstColumn: false,
                   notEndEditClassName: undefined,
                   editFieldFocusHandler: undefined,
@@ -164,7 +165,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                } else if (key === $ws._const.key.enter || key === $ws._const.key.down || key === $ws._const.key.up) {
                   e.stopImmediatePropagation();
                   e.preventDefault();
-                  this._editNextTarget(this._getCurrentTarget(), key === $ws._const.key.down || key === $ws._const.key.enter);
+                  if (this._options.modeSingleEdit) {
+                     this.endEdit(true);
+                  } else {
+                     this._editNextTarget(this._getCurrentTarget(), key === $ws._const.key.down || key === $ws._const.key.enter);
+                  }
                }
             },
             _editNextTarget: function (currentTarget, editNextRow) {
@@ -203,9 +208,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this.endEdit(true).addCallback(function() {
                   return self._prepareEdit(record).addCallback(function(preparedRecord) {
                      if (preparedRecord) {
-                        self._eip.edit(target, preparedRecord);
+                        var itemProjItem = self._options.itemsProjection.getItemBySourceItem(preparedRecord);
+                        self._eip.edit(target, preparedRecord, itemProjItem);
                         self._notify('onAfterBeginEdit', preparedRecord);
-                        self._lastTargetAdding = self._options.itemsProjection.getItemBySourceItem(preparedRecord);
+                        self._lastTargetAdding = itemProjItem;
                         return preparedRecord;
                      }
                      return preparedRecord;
@@ -330,8 +336,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _cloneWithFormat: function(record, recordSet) {
                var
                    fieldName,
-                   clone = record.clone();
-               clone.setRawData(null);
+                   clone = new Model({
+                      'adapter': record.getAdapter()
+                   });
+
                recordSet.getFormat().each(function(field) {
                   fieldName = field.getName();
                   clone.addField(field, undefined, record.get(fieldName));

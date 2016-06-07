@@ -5,11 +5,10 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
    ['js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.EditAtPlace',
-      'js!SBIS3.CORE.Dialog',
       'js!SBIS3.CONTROLS.EditAtPlaceMixin',
       'js!SBIS3.CORE.CompoundActiveFixMixin',
       'html!SBIS3.CONTROLS.EditAtPlaceGroup'],
-   function (CompoundControl, PickerMixin, EditAtPlace, Dialog, EditAtPlaceMixin, CompoundActiveFixMixin, dotTplFn) {
+   function (CompoundControl, PickerMixin, EditAtPlace, EditAtPlaceMixin, CompoundActiveFixMixin, dotTplFn) {
       'use strict';
       /**
        * @class SBIS3.CONTROLS.EditAtPlaceGroup

@@ -547,6 +547,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          return this._options.editable;
       },
 
+      _getElementToFocus: function() {
+         return this.isEditable() ? ComboBox.superclass._getElementToFocus.apply(this, arguments) : this.getContainer();
+      },
+
       _setEnabled: function (enabled) {
          TextBox.superclass._setEnabled.call(this, enabled);
          if (enabled === false) {
