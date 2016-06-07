@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.EditAtPlaceMixin', ['js!SBIS3.CONTROLS.IconButton'], function(IconButton) {
+define('js!SBIS3.CONTROLS.EditAtPlaceMixin', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.CORE.Dialog'], function(IconButton, Dialog) {
       /**
        * @mixin SBIS3.CONTROLS.EditAtPlaceMixin
        * @public
