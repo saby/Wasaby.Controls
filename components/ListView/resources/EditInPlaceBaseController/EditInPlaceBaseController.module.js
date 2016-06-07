@@ -320,8 +320,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._editingRecord = undefined;
                }
                if (withSaving) {
-                  this._options.dataSource.update(eipRecord).addCallback(function() {
+                  this._options.dataSource.update(eipRecord).addCallback(function(recordId) {
                      if (isAdd) {
+                        eipRecord.set(eipRecord.getKeyField(), recordId)
                         this._options.dataSet.push(this._cloneWithFormat(eipRecord, this._options.dataSet));
                      }
                   }.bind(this)).addBoth(function() {
@@ -337,7 +338,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                var
                    fieldName,
                    clone = new Model({
-                      'adapter': record.getAdapter()
+                      'adapter': record.getAdapter(),
+                      'idProperty': record.getIdProperty()
                    });
 
                recordSet.getFormat().each(function(field) {
