@@ -83,10 +83,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return Object.keys(json[0])[0];
       }
    },
-   JSONToRecordset  = function(json) {
+   JSONToRecordset  = function(json, keyField) {
       return new RecordSet({
          rawData : json,
-         idProperty : findKeyField(json)
+         idProperty : keyField
       })
    };
 
@@ -431,12 +431,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _modifyOptions : function(parentFnc, cfg) {
             var newCfg = parentFnc.call(this, cfg);
             newCfg._itemsTemplate = ItemsTemplate;
-            if (cfg.items) {
-               if (cfg.items instanceof Array) {
-                  if (!cfg.keyField) {
-                     newCfg.keyField = findKeyField(cfg.items);
+            if (newCfg.items) {
+               if (newCfg.items instanceof Array) {
+                  if (!newCfg.keyField) {
+                     newCfg.keyField = findKeyField(newCfg.items);
                   }
-                  newCfg._items = JSONToRecordset(cfg.items);
+                  newCfg._items = JSONToRecordset(cfg.items, newCfg.keyField);
                }
                else {
                   newCfg._items = cfg.items;
@@ -510,7 +510,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                if (!this._options.keyField) {
                   this._options.keyField = findKeyField(itemsOpt);
                }
-               this._options._items = JSONToRecordset(itemsOpt);
+               this._options._items = JSONToRecordset(itemsOpt, this._options.keyField);
             }
             else {
                this._options._items = itemsOpt;
@@ -1401,14 +1401,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          tplOptions.item = item;
          tplOptions.colspan = tplOptions.columns.length + this._options.multiselect;
          itemInstance = this._buildTplItem(projItem, groupBy.template(tplOptions));
+         //Навесим класс группировки и удалим лишний класс на item, если он вдруг добавился
+         itemInstance.addClass('controls-GroupBy')
+            .removeClass('controls-ListView__item');
          this._appendItemTemplate(item, targetContainer, itemInstance, at);
          //Сначала положим в дом, потом будем звать рендеры, иначе контролы, которые могут создать в рендере неправмльно поймут свою ширину
          if (groupBy.render && typeof groupBy.render === 'function') {
             groupBy.render.apply(this, [item, itemInstance, last]);
          }
-         //Навесим класс группировки и удалим лишний класс на item, если он вдруг добавился
-         itemInstance.addClass('controls-GroupBy')
-               .removeClass('controls-ListView__item');
 
       },
       /**
@@ -1721,6 +1721,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             newItemContainer = this._buildTplItem(projItem, template),
             rows;
          this._addItemAttributes(newItemContainer, projItem);
+         newItemContainer = $(ParserUtilities.buildInnerComponents(MarkupTransformer(newItemContainer.get(0).outerHTML), this.getId()));
          if (flagAfter) {
             newItemContainer.insertBefore(this._getItemContainerByIndex(target, at));
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
@@ -1763,22 +1764,23 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._buildTplItem(item, this._getItemTemplate(item));
       },
       _appendItemTemplate: function (item, targetContainer, itemBuildedTpl, at) {
+         var itemBuildedMarkup = ParserUtilities.buildInnerComponents(MarkupTransformer(itemBuildedTpl.get(0).outerHTML), this.getId());
          if (at && (typeof at.at !== 'undefined')) {
             var atContainer = at.at !== 0 && $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at-1);
             if (atContainer.length) {
-               atContainer.after(itemBuildedTpl);
+               atContainer.after(itemBuildedMarkup);
             }
             else {
                atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at);
                if (atContainer.length) {
-                  atContainer.before(itemBuildedTpl);
+                  atContainer.before(itemBuildedMarkup);
                } else {
-                  targetContainer.append(itemBuildedTpl);
+                  targetContainer.append(itemBuildedMarkup);
                }
             }
          }
          else {
-            targetContainer.append(itemBuildedTpl);
+            targetContainer.append(itemBuildedMarkup);
          }
       },
       _onCollectionReplace: function(items) {
