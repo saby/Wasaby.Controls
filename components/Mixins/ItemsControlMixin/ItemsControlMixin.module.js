@@ -10,8 +10,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
-   'js!SBIS3.CONTROLS.Data.Utils'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils) {
+   'js!SBIS3.CONTROLS.Data.Utils',
+   'Core/ParserUtilities'
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, ParserUtilities) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -25,6 +26,69 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this.runInPropertiesUpdate(func, arguments);
       };
    }
+   var createDefaultProjection = function(items, cfg) {
+      var proj = Projection.getDefaultProjection(items);
+      if (cfg.itemsSortMethod) {
+         proj.setSort(cfg.itemsSortMethod);
+      }
+      return proj;
+   },
+   getRecordsForRedraw = function(projection) {
+      var
+         records = [];
+      if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
+         projection.each(function (item) {
+            records.push(item);
+         });
+      }
+      return records;
+   },
+   buildTplArgs = function(cfg) {
+      var tplOptions = {}, itemTpl, itemContentTpl;
+
+
+      tplOptions.displayField = cfg.displayField;
+      tplOptions.templateBinding = cfg.templateBinding;
+
+      if (cfg.itemContentTpl) {
+         itemContentTpl = cfg.itemContentTpl;
+      }
+      else {
+         itemContentTpl = cfg._defaultItemContentTemplate;
+      }
+      tplOptions.itemContent = TemplateUtil.prepareTemplate(itemContentTpl);
+      if (cfg.itemTpl) {
+         itemTpl = cfg.itemTpl;
+      }
+      else {
+         itemTpl = cfg._defaultItemTemplate;
+      }
+      tplOptions.itemTpl = TemplateUtil.prepareTemplate(itemTpl);
+      tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(cfg._defaultItemTemplate);
+
+      if (cfg.includedTemplates) {
+         var tpls = cfg.includedTemplates;
+         tplOptions.included = {};
+         for (var j in tpls) {
+            if (tpls.hasOwnProperty(j)) {
+               tplOptions.included[j] = TemplateUtil.prepareTemplate(tpls[j]);
+            }
+         }
+      }
+      return tplOptions;
+   },
+   findKeyField  = function(json){
+      var itemFirst = json[0];
+      if (itemFirst) {
+         return Object.keys(json[0])[0];
+      }
+   },
+   JSONToRecordset  = function(json, keyField) {
+      return new RecordSet({
+         rawData : json,
+         idProperty : keyField
+      })
+   };
 
    var ItemsControlMixin = /**@lends SBIS3.CONTROLS.ItemsControlMixin.prototype  */{
        /**
@@ -105,13 +169,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       $protected: {
          _itemData : null,
-         _defaultItemTemplate: '',
-         _defaultItemContentTemplate: '',
-         _defaultGroupTemplate: '',
          _groupHash: {},
-         _itemsTemplate: ItemsTemplate,
          _itemsProjection: null,
          _items : null,
+         _itemsInitializedBySource: false,
          _itemsInstances: {},
          _offset: 0,
          _limit: undefined,
@@ -119,6 +180,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _dataSet: null,
          _dotItemTpl: null,
          _options: {
+            _canServerRender: false,
+            _serverRender: false,
+            _defaultItemTemplate: '',
+            _defaultItemContentTemplate: '',
+            _createDefaultProjection : createDefaultProjection,
+            _buildTplArgsSt: buildTplArgs,
+            _buildTplArgs : buildTplArgs,
+            _getRecordsForRedraw: getRecordsForRedraw,
             /**
              * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
              * @remark
@@ -337,9 +406,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             itemTpl : null,
             /**
-             * @cfg {Function} Метод сортировки элементов
+             * @cfg {Function} Метод используется для сортировки элементов, принимает два
+             * объекта вида {item:ProjectionItem, collectionItem: Model, index: Number, collectionIndex: Number} и
+             * должен вернуть -1|0|1
+             * @example
+             * <pre>
+             *      <option name="itemsSortMethod" type"function">SBIS3.Demo.Handlers.sort</option>
+             * </pre>
+             * <pre>
+             *    sort: function(obj1, obj2) {
+             *       return obj1.index - obj2.index
+             *    }
+             * </pre>
              * @see setItemsSortMethod
-             * @see SBIS3.CONTROLS.Data.Projection.Collection:setSort
+             * @see SBIS3.CONTROLS.Data.Projection.Collection#setSort
              */
             itemsSortMethod: undefined
          },
@@ -347,53 +427,98 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       },
 
+      around: {
+         _modifyOptions : function(parentFnc, cfg) {
+            var newCfg = parentFnc.call(this, cfg);
+            newCfg._itemsTemplate = ItemsTemplate;
+            if (newCfg.items) {
+               if (newCfg.items instanceof Array) {
+                  if (!newCfg.keyField) {
+                     newCfg.keyField = findKeyField(newCfg.items);
+                  }
+                  newCfg._items = JSONToRecordset(cfg.items, newCfg.keyField);
+               }
+               else {
+                  newCfg._items = cfg.items;
+               }
+               newCfg._itemsProjection = cfg._createDefaultProjection(cfg._items, cfg);
+               if (cfg._canServerRender && !cfg.userItemAttributes && !cfg.itemTemplate && Object.isEmpty(cfg.groupBy)) {
+                  newCfg._serverRender = true;
+                  newCfg._itemData = cfg._buildTplArgs(cfg);
+                  newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection, cfg);
+               }
+            }
+
+            return newCfg;
+         }
+      },
+
       $constructor: function () {
-         this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady');
+         this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady', 'onPageSizeChange');
          if (typeof this._options.pageSize === 'string') {
             this._options.pageSize = this._options.pageSize * 1;
          }
+         if (!this._options.keyField) {
+            $ws.single.ioc.resolve('ILogger').log('Option keyField is undefined in control ' + this.getName());
+         }
          this._bindHandlers();
-         this._prepareConfig(this._options.dataSource, this._options.items);
+         this._prepareItemsConfig();
+
          if (this._options.itemTemplate || this._options.userItemAttributes) {
             $ws.single.ioc.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Заданы itemTemplate или userItemAttributes');
          }
 
       },
 
+      _prepareItemsConfig: function() {
+         if (this._options._dataSource) {
+            this._dataSource = this._prepareSource(this._options._dataSource);
+         }
+         /*Если уже вычислили все в modifyoptions а иначе все это стрельнет после reload*/
+         if (this._options._itemsProjection) {
+            this._setItemsEventHandlers();
+            this._notify('onItemsReady');
+            this._itemsReadyCallback();
+            this._dataLoadedCallback();
+         }
+         /*TODO Поддержка совместимости. Раньше если были заданы items массивом создавался сорс, осталась куча завязок на это*/
+         if (this._options.items instanceof Array) {
+            if (!this._options.keyField) {
+               this._options.keyField = findKeyField(this._options.items)
+            }
+            this._dataSource = new MemorySource({
+               data: this._options.items,
+               idProperty: this._options.keyField
+            });
+         }
+      },
+
+
       _prepareConfig : function(sourceOpt, itemsOpt) {
          var keyField = this._options.keyField;
 
          if (!keyField) {
-            $ws.single.ioc.resolve('ILogger').log('Option keyField is required');
+            $ws.single.ioc.resolve('ILogger').log('Option keyField is undefined in control ' + this.getName());
          }
 
          if (sourceOpt) {
             this._dataSource = this._prepareSource(sourceOpt);
-            this._items = null;
-         } else if (itemsOpt) {
-            if($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
-               this._processingData(itemsOpt);
-            } else if (itemsOpt instanceof Array) {
-               /*TODO уменьшаем количество ошибок с key*/
-               if (!this._options.keyField) {
-                  var itemFirst = itemsOpt[0];
-                  if (itemFirst) {
-                     this._options.keyField = Object.keys(itemFirst)[0];
-                  }
-               }
+         }
 
-               /*TODO для совеместимости пока создадим сорс*/
-               this._dataSource = new MemorySource({
-                  data: itemsOpt,
-                  idProperty: this._options.keyField
-               });
-            } else {
-               this._items = itemsOpt;
-               this._dataSource = null;
-               this._createDefaultProjection(this._items);
-               this._itemsReadyCallback();
-               this._notify('onItemsReady');
+         if (itemsOpt) {
+            if (itemsOpt instanceof Array) {
+               if (!this._options.keyField) {
+                  this._options.keyField = findKeyField(itemsOpt);
+               }
+               this._options._items = JSONToRecordset(itemsOpt, this._options.keyField);
             }
+            else {
+               this._options._items = itemsOpt;
+            }
+            this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
+            this._setItemsEventHandlers();
+            this._notify('onItemsReady');
+            this._itemsReadyCallback();
          }
       },
 
@@ -401,28 +526,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * Метод получения проекции по ID итема
        */
       _getItemProjectionByItemId: function(id) {
-         return this._itemsProjection.getItemBySourceItem(this._items.getRecordById(id));
+         return this._options._itemsProjection.getItemBySourceItem(this._options._items.getRecordById(id));
       },
 
-      _processingData: function(list) {
-         var hasItems = !!this._items;
-
-         if (hasItems) {
-            this._dataSet.setMetaData(list.getMetaData());
-            this._items.assign(list);
-            if (this._items !== this._dataSet) {
-               this._dataSet.assign(list);
-            }
-         } else {
-            this._items = list;
-            this._dataSet = list;
-            this._createDefaultProjection(this._items);
-            this._setItemsEventHandlers();
-            this._notify('onItemsReady');
-            this._itemsReadyCallback();
-         }
-
-         this._dataLoadedCallback();
+      /**
+       * Метод получения проекции по hash итема
+       */
+      _getItemProjectionByHash: function(hash) {
+         return this._getItemsProjection().getByHash(hash);
       },
 
       /*переписанные методы для однопроходной отрисовки begin*/
@@ -435,57 +546,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return curField != prevField;
       },
 
-      _getRecordsForRedraw : function() {
-         var
-            records = [];
-         if (!Object.isEmpty(this._options.groupBy) && !this._isSlowDrawing()) {
-            var
-               fieldValue,
-               self = this,
-               prevGroupItem;
-            this._itemsProjection.each(function (item, index) {
-               if (index == 0) {
-                  fieldValue = item.getContents().get(self._options.groupBy.field);
-                  records.push({
-                     group: fieldValue
-                  });
-                  self._groupHash[item.getHash()] = fieldValue;
-                  prevGroupItem = item;
-               }
-               else {
-                  var groupByMethod;
-                  if (self._options.groupBy.method && (self._options.groupBy.method instanceof Function)) {
-                     groupByMethod = self._options.groupBy.method;
-                  }
-                  else {
-                     groupByMethod = self._groupByDefaultMethod;
-                  }
-                  var res = groupByMethod.call(self, prevGroupItem.getContents(), item.getContents(), self._options.groupBy.field);
-                  if (res) {
-                     fieldValue = item.getContents().get(self._options.groupBy.field);
-                     records.push({
-                        group: fieldValue
-                     });
-                     self._groupHash[item.getHash()] = fieldValue;
-                     prevGroupItem = item;
-                  }
-               }
-               records.push(item);
-            });
-         }
-         else {
-            if (this._itemsProjection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
-               this._itemsProjection.each(function (item) {
-                  records.push(item);
-               });
-            }
-         }
-         return records;
-      },
-
       _prepareItemsData : function() {
          return {
-            items : this._getRecordsForRedraw()
+            records : this._options._getRecordsForRedraw.call(this, this._options._itemsProjection, this._options)
          }
       },
 
@@ -496,63 +559,30 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             itemTpl = this._getItemTemplate();
 
          data = {
-            items : this._getRecordsForRedraw()
+            items : this._options._getRecordsForRedraw(this._options._itemsProjection, this._options)
          };
 
          data.itemTemplate = TemplateUtil.prepareTemplate(itemTpl);
-         data.itemsTemplate = this._itemsTemplate;
+         data.itemsTemplate = this._options._itemsTemplate;
          return data;
       },
 
-      _prepareItemData: function() {
-         if (!this._itemData) {
-            this._itemData = $ws.core.clone(this._buildTplArgs());
-         }
-         return this._itemData;
+      _buildTplArgs : function() {
+         return this._options._buildTplArgs.apply(this, arguments);
       },
 
-      _buildTplArgs: function() {
-         var
-            tplOptions = {},
-            itemContentTpl,
-            itemTpl;
-
-         if (this._options.itemContentTpl) {
-            itemContentTpl = this._options.itemContentTpl;
+      _prepareItemData: function() {
+         var buildArgsMethod;
+         if (this._options._canServerRender) {
+            buildArgsMethod = this._options._buildTplArgs;
          }
          else {
-            itemContentTpl = this._defaultItemContentTemplate;
+            buildArgsMethod = this._buildTplArgs;
          }
-         if (this._options.itemTpl) {
-            tplOptions.itemTpl = TemplateUtil.prepareTemplate(this._options.itemTpl);
+         if (!this._itemData) {
+            this._itemData = $ws.core.clone(buildArgsMethod.call(this, this._options));
          }
-         if (!Object.isEmpty(this._options.groupBy)) {
-            tplOptions.groupTemplate = TemplateUtil.prepareTemplate(this._defaultGroupTemplate);
-            if (this._options.groupBy.contentTpl) {
-               tplOptions.groupContentTemplate = TemplateUtil.prepareTemplate(this._options.groupBy.contentTpl)
-            }
-            else {
-               tplOptions.groupContentTemplate = TemplateUtil.prepareTemplate('<div>{{=it.item.group}}</div>')
-            }
-         }
-
-         tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(this._defaultItemTemplate);
-         tplOptions.itemContent = TemplateUtil.prepareTemplate(itemContentTpl);
-
-         tplOptions.displayField = this._options.displayField;
-         tplOptions.templateBinding = this._options.templateBinding;
-
-
-         if (this._options.includedTemplates) {
-            var tpls = this._options.includedTemplates;
-            tplOptions.included = {};
-            for (var j in tpls) {
-               if (tpls.hasOwnProperty(j)) {
-                  tplOptions.included[j] = TemplateUtil.prepareTemplate(tpls[j]);
-               }
-            }
-         }
-         return tplOptions
+         return this._itemData;
       },
 
       _redrawItems : function() {
@@ -566,10 +596,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          data.tplData = this._prepareItemData();
          //TODO опять же, перед полной перерисовкой данные лесенки достаточно сбросить, чтобы она правильно отработала
          //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
-         var ladder = this._decorators.getByName('ladder');
+         var ladder = this._decorators && this._decorators.getByName('ladder');
          ladder && ladder.setIgnoreEnabled(true);
          ladder && ladder.reset();
-         markup = MarkupTransformer(this._itemsTemplate(data));
+         markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this.getId());
          ladder && ladder.setIgnoreEnabled(false);
          //TODO это может вызвать тормоза
          this._destroyInnerComponents($itemsContainer);
@@ -580,7 +610,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                itemsContainer.innerHTML = markup;
             }
          }
-         this._toggleEmptyData(!(data.items && data.items.length) && this._options.emptyHTML);
+         this._toggleEmptyData(!(data.records && data.records.length) && this._options.emptyHTML);
          this._reviveItems();
          this._container.addClass('controls-ListView__dataLoaded');
       },
@@ -602,7 +632,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else {
                dot = data.defaultItemTpl;
             }
-            markup = dot(data);
+            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this.getId());
             /*TODO посмотреть не вызывает ли это тормоза*/
             this._clearItems(targetElement);
             /*TODO С этим отдельно разобраться*/
@@ -683,10 +713,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                itemsToDraw = this._getItemsForRedrawOnAdd(newItems);
                if (itemsToDraw.length) {
                   data = {
-                     items: itemsToDraw,
+                     records: itemsToDraw,
                      tplData: this._prepareItemData()
                   };
-                  markup = MarkupTransformer(this._itemsTemplate(data));
+                  markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this.getId());
 
                   itemsContainer = this._getItemsContainer();
                   if (newItemsIndex == 0) {
@@ -706,14 +736,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
                      // TODO. Костыль для редактирования по месту. Написан тут, т.к. необходимо его убрать (решение не универсальное).
                      // https://inside.tensor.ru/opendoc.html?guid=8fe37872-c08b-4a7b-9c9f-d04f531cc45b
-                     this._optimizedInsertMarkup(itemsContainer, markup, this._items.getCount() > 1);
+                     this._optimizedInsertMarkup(itemsContainer, markup, this._options._items.getCount() > 1);
                   }
                   else {
-                     if ((newItemsIndex) == (this._itemsProjection.getCount() - newItems.length)) {
+                     if ((newItemsIndex) == (this._options._itemsProjection.getCount() - newItems.length)) {
                         this._optimizedInsertMarkup(itemsContainer, markup, false);
                      }
                      else {
-                        item = this._itemsProjection.at(newItemsIndex - 1);
+                        item = this._options._itemsProjection.at(newItemsIndex - 1);
                         container = this._getDomElementByItem(item);
                         container.after(markup);
                      }
@@ -776,12 +806,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._getItemsContainer().find('.js-controls-ListView__item[data-hash="' + item.getHash() + '"]')
       },
 
-      _buildInnerMarkup: function(rawMarkup) {
-         return rawMarkup;
-         // todo Витя обещал _buildMarkup разбирать на 2 метода.
-         // return this._buildMarkup($ws.helpers.constant(rawMarkup), {})
-      },
-
       _reviveItems : function() {
          this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
             throw e;
@@ -830,6 +854,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          } else {
             container.get(0).innerHTML = '';
          }
+         if (container.get(0) === this._getItemsContainer().get(0)) {
+            this._itemsInstances = {};
+         }
       },
 
       _destroyControls: function(container){
@@ -852,20 +879,26 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             opts.footerTpl = TemplateUtil.prepareTemplate(opts.footerTpl);
             return opts;
          },
+         init : function(){
+            if (this._options._items) {
+               if (!this._options._serverRender) {
+                  this.redraw()
+               }
+            }
+            else if (this._dataSource) {
+               this.reload();
+            }
+            if (this._options._serverRender) {
+               this._notifyOnDrawItems();
+            }
+         },
          destroy : function() {
             this._unsetItemsEventHandlers();
-            if (this._itemsProjection) {
-               this._itemsProjection.destroy();
-               this._itemsProjection = null;
+            if (this._options._itemsProjection) {
+               this._options._itemsProjection.destroy();
+               this._options._itemsProjection = null;
             }
             this._clearItems();
-         }
-      },
-
-      _createDefaultProjection: function(items) {
-         this._itemsProjection = Projection.getDefaultProjection(items);
-         if (this._options.itemsSortMethod) {
-            this._itemsProjection.setSort(this._options.itemsSortMethod);
          }
       },
 
@@ -911,13 +944,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _setItemsEventHandlers: function() {
-         this.subscribeTo(this._itemsProjection, 'onCollectionChange', this._onCollectionChange);
-         this.subscribeTo(this._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
+         this.subscribeTo(this._options._itemsProjection, 'onCollectionChange', this._onCollectionChange);
+         this.subscribeTo(this._options._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
       },
 
       _unsetItemsEventHandlers: function () {
-         this.unsubscribeFrom(this._itemsProjection, 'onCollectionChange', this._onCollectionChange);
-         this.unsubscribeFrom(this._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
+         this.unsubscribeFrom(this._options._itemsProjection, 'onCollectionChange', this._onCollectionChange);
+         this.unsubscribeFrom(this._options._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
       },
        /**
         * Метод установки источника данных.
@@ -951,6 +984,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         */
       setDataSource: function (source, noLoad) {
           this._unsetItemsEventHandlers();
+          this._itemsInitializedBySource = false;
           this._prepareConfig(source);
           if (!noLoad) {
              return this.reload();
@@ -977,7 +1011,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if(!compatibilityMode) {
             Utils.logger.stack('SBIS3.CONTROLS.ItemsControlMixin Получение DataSet явялется устаревшим функционалом используйте getItems()', 1);
          }
-         return this._dataSet;
+         return this._options._items;
       },
        /**
         * Метод перезагрузки данных.
@@ -1013,26 +1047,33 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
           if (this._dataSource) {
              this._toggleIndicator(true);
              this._notify('onBeforeDataLoad');
-             def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit)
+             def = this._callQuery(this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit)
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
-                   var hasItems = !!this._items;
-
                    self._toggleIndicator(false);
                    self._notify('onDataLoad', list);
-                   self._processingData(list);
 
-                   if(hasItems) {
+                   if (this._itemsInitializedBySource) {
+                      this._options._items.setMetaData(list.getMetaData());
+                      this._options._items.assign(list);
                       if(!self._options.autoRedraw) {
                          self.redraw();
                       } else {
-                        self._drawItemsCallback();
+                         self._drawItemsCallback();
                       }
                    } else {
+                      this._options._items = list;
+                      this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
+                      this._setItemsEventHandlers();
+                      this._notify('onItemsReady');
+                      this._itemsReadyCallback();
+                      this._itemsInitializedBySource = true;
                       self.redraw();
                    }
 
+                   this._dataLoadedCallback();
+
                    if (self._options.infiniteScroll === 'up'){
-                      var firstItem = self._itemsProjection.at(0);
+                      var firstItem = self._options._itemsProjection.at(0);
                       if (firstItem) {
                          self._scrollToItem(firstItem.getContents().getId());
                       }
@@ -1052,7 +1093,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                 }, self));
              this._loader = def;
           } else {
-             if (this._itemsProjection) {
+             if (this._options._itemsProjection) {
                 this._redraw();
              }
              def = new $ws.proto.Deferred();
@@ -1066,6 +1107,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          return this._loader;
       }),
+
+      _getFilterForReload: function() {
+         return this._options.filter;
+      },
 
       _callQuery: function (filter, sorting, offset, limit) {
          if (!this._dataSource) {
@@ -1107,6 +1152,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        /**
         * Метод установки количества элементов на одной странице.
         * @param {Number} pageSize Количество записей.
+        * @param {Boolean} noLoad установить кол-во записей без запроса на БЛ.
         * @example
         * <pre>
         *     myListView.setPageSize(20);
@@ -1121,10 +1167,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * </ul>
         * @see pageSize
         */
-      setPageSize: function(pageSize){
+      setPageSize: function(pageSize, noLoad){
          this._options.pageSize = pageSize;
          this._dropPageSave();
-         this.reload(this._options.filter, this.getSorting(), 0, pageSize);
+         this._notify('onPageSizeChange', this._options.pageSize);
+         if(!noLoad) {
+            this.reload(this._options.filter, this.getSorting(), 0, pageSize);
+         }
       },
       /**
        * Метод получения количества элементов на одной странице.
@@ -1215,7 +1264,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
       //TODO поддержка старого - обратная совместимость
       getItems : function() {
-         return this._items;
+         return this._options._items;
+      },
+      _getItemsProjection: function() {
+         return this._options._itemsProjection;
       },
        /**
         * Метод установки либо замены коллекции элементов, заданных опцией {@link items}.
@@ -1244,14 +1296,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see onDataLoad
         */
        setItems: function (items) {
+          this._options.items = items;
           this._unsetItemsEventHandlers();
-          this._items = null;
+          this._options._items = null;
+          this._itemsInitializedBySource = false;
           this._prepareConfig(undefined, items);
-          if(items instanceof Array) {
-             this.reload();
-          } else {
-             this.redraw();
-          }
+          this._notify('onDataLoad', this.getItems()); //TODO на это событие завязались. аккуратно спилить
+          this.redraw();
+
       },
 
       _drawItemsCallback: function () {
@@ -1325,7 +1377,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                resultGroup,
                drawGroup,
                drawItem = true;
-         if (!Object.isEmpty(groupBy)){
+         if (this._canApplyGrouping(item)) {
             resultGroup = groupBy.method.apply(this, [item.getContents(), at, last, item]);
             drawGroup = typeof resultGroup === 'boolean' ? resultGroup : (resultGroup instanceof Object && resultGroup.hasOwnProperty('drawGroup') ? !!resultGroup.drawGroup : false);
             drawItem = resultGroup instanceof Object && resultGroup.hasOwnProperty('drawItem') ? !!resultGroup.drawItem : true;
@@ -1349,14 +1401,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          tplOptions.item = item;
          tplOptions.colspan = tplOptions.columns.length + this._options.multiselect;
          itemInstance = this._buildTplItem(projItem, groupBy.template(tplOptions));
+         //Навесим класс группировки и удалим лишний класс на item, если он вдруг добавился
+         itemInstance.addClass('controls-GroupBy')
+            .removeClass('controls-ListView__item');
          this._appendItemTemplate(item, targetContainer, itemInstance, at);
          //Сначала положим в дом, потом будем звать рендеры, иначе контролы, которые могут создать в рендере неправмльно поймут свою ширину
          if (groupBy.render && typeof groupBy.render === 'function') {
             groupBy.render.apply(this, [item, itemInstance, last]);
          }
-         //Навесим класс группировки и удалим лишний класс на item, если он вдруг добавился
-         itemInstance.addClass('controls-GroupBy')
-               .removeClass('controls-ListView__item');
 
       },
       /**
@@ -1549,10 +1601,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _oldRedraw: function () {
          var records;
 
-         if (this._items) {
+         if (this._options._items) {
             this._clearItems();
             this._needToRedraw = false;
-            records = this._getRecordsForRedraw();
+            records = this._options._getRecordsForRedraw.call(this, this._options._itemsProjection, this._options);
             this._toggleEmptyData(!records.length && this._options.emptyHTML);
             this._drawItems(records);
          }
@@ -1584,7 +1636,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             return this._options.itemTemplate;
          }
          else {
-            return this._defaultItemTemplate;
+            return this._options._defaultItemTemplate;
          }
       },
 
@@ -1598,7 +1650,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   projItem = items[i]
                }
                else {
-                  projItem = this._itemsProjection.getItemBySourceItem(items[i]);
+                  projItem = this._options._itemsProjection.getItemBySourceItem(items[i]);
                }
 
                this._drawAndAppendItem(projItem, curAt, i === items.length - 1);
@@ -1636,7 +1688,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _canApplyGrouping: function(projItem) {
-         return !Object.isEmpty(this._options.groupBy);
+         var
+             itemParent = projItem.getParent && projItem.getParent();
+         return !Object.isEmpty(this._options.groupBy) && (!itemParent || itemParent.isRoot());
       },
 
       _addItem: function (projItem, at, withoutNotify) {
@@ -1651,8 +1705,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (canApplyGrouping) {
             var
                meth = this._options.groupBy.method,
-               prev = this._itemsProjection.getPrevious(projItem),
-               next = this._itemsProjection.getNext(projItem);
+               prev = this._options._itemsProjection.getPrevious(projItem),
+               next = this._options._itemsProjection.getNext(projItem);
             if(prev)
                meth.call(this, prev.getContents(), undefined, undefined, prev);
             meth.call(this, item, undefined, undefined, projItem);
@@ -1667,6 +1721,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             newItemContainer = this._buildTplItem(projItem, template),
             rows;
          this._addItemAttributes(newItemContainer, projItem);
+         newItemContainer = $(ParserUtilities.buildInnerComponents(MarkupTransformer(newItemContainer.get(0).outerHTML), this.getId()));
          if (flagAfter) {
             newItemContainer.insertBefore(this._getItemContainerByIndex(target, at));
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
@@ -1709,22 +1764,23 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._buildTplItem(item, this._getItemTemplate(item));
       },
       _appendItemTemplate: function (item, targetContainer, itemBuildedTpl, at) {
+         var itemBuildedMarkup = ParserUtilities.buildInnerComponents(MarkupTransformer(itemBuildedTpl.get(0).outerHTML), this.getId());
          if (at && (typeof at.at !== 'undefined')) {
             var atContainer = at.at !== 0 && $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at-1);
             if (atContainer.length) {
-               atContainer.after(itemBuildedTpl);
+               atContainer.after(itemBuildedMarkup);
             }
             else {
                atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at);
                if (atContainer.length) {
-                  atContainer.before(itemBuildedTpl);
+                  atContainer.before(itemBuildedMarkup);
                } else {
-                  targetContainer.append(itemBuildedTpl);
+                  targetContainer.append(itemBuildedMarkup);
                }
             }
          }
          else {
-            targetContainer.append(itemBuildedTpl);
+            targetContainer.append(itemBuildedMarkup);
          }
       },
       _onCollectionReplace: function(items) {
@@ -1744,6 +1800,24 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             );
          }
       },
+      _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems) {
+         this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);
+         var ladderDecorator = this._decorators.getByName('ladder');
+         //todo опять неверно вызывается ladderCompare, используем костыль, чтобы этого не было
+         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
+            ladderDecorator.setIgnoreEnabled(true);
+         }
+         if (newItems.length) {
+            this._addItems(newItems, newItemsIndex)
+         }
+         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
+            ladderDecorator.setIgnoreEnabled(false);
+         }
+         this._toggleEmptyData(!this._options._itemsProjection.getCount());
+         //this._view.checkEmpty(); toggleEmtyData
+         this.reviveComponents(); //надо?
+         this._drawItemsCallback();
+      },
       /**
        * Устанавливает метод сортировки элементов на клиенте.
        * @param {Function} sort функция сортировка элементов, если передать undefined сортировка сбросится
@@ -1751,8 +1825,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       setItemsSortMethod: function(sort){
          this._options.itemsSortMethod = sort;
-         if(this._itemsProjection)
-            this._itemsProjection.setSort(sort);
+         if(this._options._itemsProjection) {
+            this._options._itemsProjection.setSort(sort);
+         }
       }
    };
 
@@ -1774,28 +1849,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @private
        */
       onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems) {
-         var i;
          if (this._isNeedToRedraw()) {
 	         switch (action) {
 	            case IBindCollection.ACTION_ADD:
-	            case IBindCollection.ACTION_REMOVE:
                case IBindCollection.ACTION_MOVE:
-	               this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);
-                  var ladderDecorator = this._decorators.getByName('ladder');
-                  //todo опять неверно вызывается ladderCompare, используем костыль, чтобы этого не было
-                  if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
-                     ladderDecorator.setIgnoreEnabled(true);
+               case IBindCollection.ACTION_REMOVE:
+                  if (action === IBindCollection.ACTION_MOVE && !Object.isEmpty(this._options.groupBy)) {
+                     this.redraw(); //TODO костыль, пока не будет группировки на стороне проекции.
+                  } else {
+                     this._onCollectionAddMoveRemove.apply(this, arguments);
                   }
-                  if (newItems.length) {
-                     this._addItems(newItems, newItemsIndex)
-                  }
-                  if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
-                     ladderDecorator.setIgnoreEnabled(false);
-                  }
-                  this._toggleEmptyData(!this._itemsProjection.getCount());
-	               //this._view.checkEmpty(); toggleEmtyData
-	               this.reviveComponents(); //надо?
-                   this._drawItemsCallback();
 	               break;
 
 	            case IBindCollection.ACTION_REPLACE:

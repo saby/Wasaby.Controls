@@ -42,6 +42,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                    * </pre>
                    */
                   modeAutoAdd: false,
+                  modeSingleEdit: false,
                   ignoreFirstColumn: false,
                   notEndEditClassName: undefined,
                   editFieldFocusHandler: undefined,
@@ -60,7 +61,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _eipHandlers: null,
                //TODO: Данная переменная нужна для автодобавления по enter(mode autoadd), чтобы определить в какой папке происходит добавление элемента
                //Вариант решения проблемы не самый лучший, и добавлен как временное решение для выпуска 3.7.3.150. В версию .200 придумать нормальное решение.
-               _lastTargetAdding: undefined
+               _lastTargetAdding: undefined,
+               //Флаг отвечает за блокировку при добавлении записей. Если несколько раз подряд будет отправлена команда добавления, то уйдёт несколько запросов на бл
+               _addLock: false
             },
             $constructor: function () {
                this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace', 'onChangeHeight');
@@ -72,7 +75,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
 
             isEdit: function() {
-               return this._eip.isEdit();
+               return this._eip && this._eip.isEdit();
             },
 
             _createEip: function() {
@@ -162,7 +165,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                } else if (key === $ws._const.key.enter || key === $ws._const.key.down || key === $ws._const.key.up) {
                   e.stopImmediatePropagation();
                   e.preventDefault();
-                  this._editNextTarget(this._getCurrentTarget(), key === $ws._const.key.down || key === $ws._const.key.enter);
+                  if (this._options.modeSingleEdit) {
+                     this.endEdit(true);
+                  } else {
+                     this._editNextTarget(this._getCurrentTarget(), key === $ws._const.key.down || key === $ws._const.key.enter);
+                  }
                }
             },
             _editNextTarget: function (currentTarget, editNextRow) {
@@ -201,9 +208,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this.endEdit(true).addCallback(function() {
                   return self._prepareEdit(record).addCallback(function(preparedRecord) {
                      if (preparedRecord) {
-                        self._eip.edit(target, preparedRecord);
+                        var itemProjItem = self._options.itemsProjection.getItemBySourceItem(preparedRecord);
+                        self._eip.edit(target, preparedRecord, itemProjItem);
                         self._notify('onAfterBeginEdit', preparedRecord);
-                        self._lastTargetAdding = self._options.itemsProjection.getItemBySourceItem(preparedRecord);
+                        self._lastTargetAdding = itemProjItem;
                         return preparedRecord;
                      }
                      return preparedRecord;
@@ -312,9 +320,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._editingRecord = undefined;
                }
                if (withSaving) {
-                  this._options.dataSource.update(eipRecord).addCallback(function() {
+                  this._options.dataSource.update(eipRecord).addCallback(function(recordId) {
                      if (isAdd) {
-                        this._options.dataSet.push(eipRecord);
+                        eipRecord.set(eipRecord.getKeyField(), recordId)
+                        this._options.dataSet.push(this._cloneWithFormat(eipRecord, this._options.dataSet));
                      }
                   }.bind(this)).addBoth(function() {
                      this._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
@@ -322,6 +331,22 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                } else {
                   this._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
                }
+            },
+            //TODO: метод нужен для того, чтобы подогнать формат рекорда под формат рекордсета.
+            //Выписана задача Мальцеву, который должен убрать этот метод отсюда, и предаставить механизм выполняющий необходимую задачу.
+            _cloneWithFormat: function(record, recordSet) {
+               var
+                   fieldName,
+                   clone = new Model({
+                      'adapter': record.getAdapter(),
+                      'idProperty': record.getIdProperty()
+                   });
+
+               recordSet.getFormat().each(function(field) {
+                  fieldName = field.getName();
+                  clone.addField(field, undefined, record.get(fieldName));
+               });
+               return clone;
             },
             //TODO: Нужно переименовать метод
             _notifyOnAfterEndEdit: function(eip, eipRecord, withSaving, isAdd) {
@@ -340,7 +365,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                    modelOptions = options.model || this._notify('onBeginAdd');
                this._lastTargetAdding = options.target;
                return this.endEdit(true).addCallback(function() {
-                  return self._options.dataSource.create(modelOptions).addCallback(function (createdModel) {
+                  return self._createModel(modelOptions).addCallback(function (createdModel) {
                      return self._prepareEdit(createdModel).addCallback(function(model) {
                         if (self._options.hierField) {
                            model.set(self._options.hierField, options.target ? options.target.getContents().getId() : options.target);
@@ -356,6 +381,18 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      });
                   });
                });
+            },
+            _createModel: function(modelOptions) {
+               var self = this;
+               if (this._addLock) {
+                  return $ws.proto.Deferred.fail();
+               } else {
+                  this._addLock = true;
+                  return this._options.dataSource.create(modelOptions).addBoth(function(model) {
+                     self._addLock = false;
+                     return model;
+                  });
+               }
             },
             _createAddTarget: function(options) {
                var

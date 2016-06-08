@@ -720,7 +720,7 @@ define([
       });
 
       context('when old style extend used', function () {
-         describe('$constructor', function (){
+         describe('$constructor()', function (){
             it('should be called', function() {
                var Sub = Model.extend({
                      $constructor: function() {
@@ -748,7 +748,7 @@ define([
             });
          });
 
-         describe('extend', function (){
+         describe('.extend()', function (){
             it('should merge properties', function() {
                var Sub = Model.extend({
                      $protected: {
@@ -784,6 +784,42 @@ define([
                var instance = new MoreSub();
                assert.equal(instance.get('p1'), 'p1B');
                assert.equal(instance.get('p2'), 'p2A');
+            });
+
+            it('should inherit idProperty', function() {
+               var Sub = Model.extend({
+                  $protected: {
+                     _options: {
+                        idProperty: 'a'
+                     }
+                  }
+               });
+               var instance = new Sub({
+                  rawData: {a: 'test'}
+               });
+               assert.equal(instance.getIdProperty(), 'a');
+               assert.equal(instance.getId(), 'test');
+            });
+         });
+
+         describe('.toJSON()', function (){
+            it('should save old _options object values', function() {
+               var Sub = Model.extend({
+                     _moduleName: 'Sub',
+                     $protected: {
+                        _options: {
+                           opt1: 1,
+                           opt2: 'a'
+                        }
+                     }
+                  }),
+                  instance = new Sub({
+                     opt2: 'b'
+                  }),
+                  serialized = instance.toJSON();
+               assert.equal(serialized.state.$options.opt1, 1);
+               assert.equal(serialized.state.$options.opt2, 'b');
+               assert.instanceOf(serialized.state.$options.properties, Object);
             });
          });
       });

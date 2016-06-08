@@ -120,6 +120,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          }
 
          config.componentOptions.handlers = this._getFormControllerHandlers();
+
          config.handlers = {
             onAfterClose: function (e, meta) {
                self._dialog = undefined;
@@ -127,7 +128,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             }
          };
 
-         if (!config.componentOptions.record) {
+         if (!config.componentOptions.record && config.componentOptions.dataSource) {
             //Загружаем компонент, отнаследованный от formController'a, чтобы с его прототипа вычитать запись, которую мы прокинем при инициализации компонента
             //Сделано в рамках ускорения
             require([dialogComponent], this._initTemplateComponentCallback.bind(this, config, meta, mode));
@@ -139,10 +140,16 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
 
       _initTemplateComponentCallback: function (config, meta, mode, templateComponent) {
          var self = this;
-         templateComponent.prototype.getRecordFromSource(config.componentOptions).addCallback(function (record) {
-            config.componentOptions.record = record;
+         var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource;
+         if (getRecordProtoMethod){
+            getRecordProtoMethod(config.componentOptions).addCallback(function (record) {
+               config.componentOptions.record = record;
+               self._showDialog(config, meta, mode);
+            });
+         }
+         else{
             self._showDialog(config, meta, mode);
-         });
+         }
       },
 
       _showDialog: function(config, meta, mode){
@@ -157,11 +164,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             Component = Dialog;
          }
 
-         if (config.componentOptions.record){
-            var ctx = new $ws.proto.Context({restriction: 'set'}).setPrevious(this.getLinkedContext());
-            ctx.setValue('record', config.componentOptions.record);
-            config.componentOptions.context = ctx;
-         }
          if (this._dialog && !this._dialog.isAutoHide()){
             $ws.core.merge(this._dialog._options, config);
             this._dialog.reload();

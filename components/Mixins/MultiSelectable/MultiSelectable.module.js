@@ -234,12 +234,14 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * @see toggleItemsSelectionAll
        */
       setSelectedItemsAll : function() {
-         if (this._dataSet) {
-            var items = [];
-            this._dataSet.each(function(rec){
-               items.push(rec.getId())
+         var items = this.getItems(),
+             keys = [];
+
+         if (items) {
+            items.each(function(rec){
+               keys.push(rec.getId())
             });
-            this.setSelectedKeys(items);
+            this.setSelectedKeys(keys);
          }
 
       },
@@ -346,18 +348,17 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       _removeItemsSelection : function(idArray) {
-         var resultArray = [],
-             removedKeys = [];
+         var removedKeys = [];
 
          if (Array.isArray(idArray)) {
-            resultArray = Array.clone(this._options.selectedKeys);
             for (var i = idArray.length - 1; i >= 0; i--) {
                if (this._isItemSelected(idArray[i])) {
-                  Array.remove(resultArray, this._getSelectedIndex(idArray[i]));
+                  Array.remove(this._options.selectedKeys, this._getSelectedIndex(idArray[i]));
+                  removedKeys.push(idArray[i]);
                }
             }
-            removedKeys = this._getArrayDifference(this._options.selectedKeys, resultArray).removed;
-            this._options.selectedKeys = resultArray;
+            /* Копируем, чтобы порвать ссылку на значение в контексте */
+            this._options.selectedKeys = Array.clone(this._options.selectedKeys);
             return removedKeys;
          }
          else {
@@ -484,12 +485,14 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * @see allowEmptyMultiSelection
        */
       toggleItemsSelectionAll : function() {
-         if (this._dataSet) {
-            var items = [];
-            this._dataSet.each(function(rec){
-               items.push(rec.getId())
+         var items = this.getItems(),
+             keys = [];
+
+         if (items) {
+            items.each(function(rec){
+               keys.push(rec.getId())
             });
-            this.toggleItemsSelection(items);
+            this.toggleItemsSelection(keys);
          }
       },
 
@@ -727,7 +730,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       _setFirstItemAsSelected : function() {
-         var item = this._dataSet && this._dataSet.at(0);
+         var items = this.getItems(),
+             item = items && items.at(0);
+
          if (item) {
             this._options.selectedKeys = [item.getId()];
          }

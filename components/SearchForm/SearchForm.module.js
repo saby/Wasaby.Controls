@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
          }
       },
 
-      $constructor: function () {
+      $constructor:function () {
          var self = this;
 
          this.subscribe('onTextChange', function(e, text) {

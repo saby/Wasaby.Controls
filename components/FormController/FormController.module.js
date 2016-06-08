@@ -1,5 +1,5 @@
-define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CORE.LoadingIndicator', 'js!SBIS3.CONTROLS.Data.Record', 'js!SBIS3.CONTROLS.Data.Source.SbisService', 'js!SBIS3.CONTROLS.Data.Di', 'i18n!SBIS3.CONTROLS.FormController'],
-   function(CompoundControl, LoadingIndicator, Record, SbisService, Di) {
+define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CORE.LoadingIndicator', 'js!SBIS3.CONTROLS.Data.Record', 'js!SBIS3.CONTROLS.Data.Source.SbisService', 'i18n!SBIS3.CONTROLS.FormController'],
+   function(CompoundControl, LoadingIndicator, Record, SbisService) {
    /**
     * Компонент, на основе которого создают диалоги редактирования записей.
     * Подробнее о создании диалогов вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/">Диалоги редактирования</a>.
@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @typedef {Object} dataSource
        * @property {SBIS3.CONTROLS.Data.Source.ISource/Binding.typedef[]} [Binding] Соответствие методов CRUD+ контракту
        * @property {SBIS3.CONTROLS.Data.Source.ISource/Endpoint.typedef[]} [endpoint] Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных
-       * @property {String} [moduleAlias=source.sbis-service] Название зависимости, или конструктор объекта или инстанс объекта
+       * @property {String} [model=source.sbis-service] Название зависимости, или конструктор объекта или инстанс объекта
        */
       /**
        * @event onFail Происходит в случае ошибки при сохранении или чтении записи из источника данных.
@@ -160,7 +160,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._updateDocumentTitle();
          this._setDefaultContextRecord();
          this._panel = this.getTopParent();
-         this._dataSource = FormController.prototype.createDataSource(this._options);
+         this._dataSource = this._options.source;
          var loadingTime = new Date();
          this.subscribe('onAfterShow', function(){
             $ws.single.ioc.resolve('ILogger').log('FormController', 'Время загрузки ' + (new Date() - loadingTime) + 'мс');
@@ -648,12 +648,11 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       //todo Костыль, позволяющий с прототипа компонента вычитать запись до инициализации компонента и прокинуть ее в опции. Сделано в рамках ускорения
       FormController.prototype.getRecordFromSource = function (opt) {
          var prototypeProtectedData = {};
-         var options = {};
          this._initializer.call(prototypeProtectedData); //На прототипе опции не доступны, получаем их через initializer
-         $ws.core.merge(options, opt); //Чтобы не портить объект
-         $ws.core.merge(options, prototypeProtectedData._options); //Мержим опции с прототипа, на опции, которые прилетели из dialogActionBase
+         var options = prototypeProtectedData._options;
+         $ws.core.merge(options, opt);
          if (!$ws.helpers.instanceOfModule(options.source, 'SBIS3.CONTROLS.Data.Source.Base')) {
-            options.source = this.createDataSource(options);
+            options.source = opt.source = this.createDataSource(options);
          }
          if (options.key){
             return options.source.read(options.key);
@@ -665,7 +664,11 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
 
       FormController.prototype.createDataSource = function(options){
          if (!$ws.helpers.instanceOfModule(options.source, 'SBIS3.CONTROLS.Data.Source.Base')) {
-            return Di.resolve(options.dataSource.moduleAlias || 'source.sbis-service', options.dataSource);
+            return new SbisService({
+               endpoint: options.dataSource.endpoint,
+               binding: options.dataSource.bindings,
+               model: options.dataSource.model
+            });
          }
       };
    return FormController;

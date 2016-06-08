@@ -1,8 +1,7 @@
 /**
  * Created by ad.chistyakova on 05.10.2015.
  */
-define('js!SBIS3.CONTROLS.FilterMixin', [
-], function () {
+define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil'], function (FilterToStringUtil) {
 
 
    /**
@@ -127,7 +126,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
                   var hasResetValue = element.hasOwnProperty('resetValue'),
                       hasInternalValue = filter.hasOwnProperty(field);
 
-                  if((hasResetValue && hasInternalValue && $ws.helpers.isEqualObject(element.resetValue, filter[field])) || (!hasResetValue && !hasInternalValue)) {
+                  if((hasResetValue && hasInternalValue && FilterToStringUtil.isEqualValues(element.resetValue, filter[field])) || (!hasResetValue && !hasInternalValue)) {
 
                      if (element.hasOwnProperty('resetCaption')) {
                         newElement.caption = element.resetCaption;
@@ -148,15 +147,15 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
                }
 
                if (captions && (field in captions)) {
-                  setDescrWithReset(captions[field]);
+                  setDescrWithReset.call(this, captions[field]);
                } else if (field in filter) {
-                  setDescrWithReset(filter[field]);
+                  setDescrWithReset.call(this, filter[field]);
                } else {
-                  setDescrWithReset(undefined, true);
+                  setDescrWithReset.call(this, undefined, true);
                }
 
                return newElement;
-            });
+            }, this);
          }
          this._recalcInternalContext();
       },
@@ -174,10 +173,9 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          });
       },
       _recalcInternalContext: function() {
-         var
-               changed = $ws.helpers.reduce(this._filterStructure, function(result, element) {
-                  return result || (element.hasOwnProperty('value') ? !$ws.helpers.isEqualObject(element.resetValue, element.value) : false);
-               }, false);
+         var changed = $ws.helpers.reduce(this._filterStructure, function(result, element) {
+            return result || (element.hasOwnProperty('value') ? !FilterToStringUtil.isEqualValues(element.resetValue, element.value) : false);
+         }, false, this);
 
          this.getLinkedContext().setValueSelf({
             filterChanged: changed,
@@ -185,6 +183,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
             filterResetLinkText: this.getProperty('resetLinkText')
          });
       },
+
       _resetFilter: function(internalOnly) {
          var resetFilter = this.getResetFilter(),
              context = this._getCurrentContext(),

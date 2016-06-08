@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             ladderDecorator = this._decorators.getByName('ladder');
          this._closeAllExpandedNode(key);
          this._options.openedPath[expandedItem.getContents().getId()] = true;
-         if (!this._loadedNodes[key] && this._options.partialyReload) {
+         if (this._dataSource && !this._loadedNodes[key] && this._options.partialyReload) {
             this._toggleIndicator(true);
             this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), 0, this._limit);
             return this._callQuery(this._createTreeFilter(key), this.getSorting(), 0, this._limit).addCallback(function (list) {
@@ -49,10 +49,10 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                this._folderHasMore[key] = list.getMetaData().more;
                this._loadedNodes[key] = true;
                ladderDecorator && ladderDecorator.setIgnoreEnabled(true);
-               this._items.merge(list, {remove: false});
+               this._options._items.merge(list, {remove: false});
                ladderDecorator && ladderDecorator.setIgnoreEnabled(false);
                if (this._isSlowDrawing()) {
-                  this._dataSet.getTreeIndex(this._options.hierField, true);
+                  this._options._items.getTreeIndex(this._options.hierField, true);
                }
                this._notify('onDataMerge', list);
                this._toggleIndicator(false);
@@ -253,7 +253,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
          _clearItems: function(container) {
             if (this._getItemsContainer().get(0) == $(container).get(0) || !container) {
                var self = this;
-               this._lastParent = this._curRoot;
+               this._lastParent = this._options._curRoot;
                this._lastDrawn = undefined;
                this._lastPath = [];
                this._destroySearchBreadCrumbs();
@@ -291,7 +291,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
       //Переопределяем метод, чтоб передать тип записи
       _activateItem : function(id) {
          var
-            item = this._dataSet.getRecordByKey(id),
+            item = this._options._items.getRecordByKey(id),
             meta = {
                id: id,
                item: item,

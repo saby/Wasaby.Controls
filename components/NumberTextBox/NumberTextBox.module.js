@@ -179,6 +179,12 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          this._hideEmptyDecimals();
       },
 
+      _checkMaxLength: function(value){
+         var
+             length = value ? value.replace(/\s/g,'').length : 0;
+         return !(this._options.maxLength && length > this._options.maxLength);
+      },
+
       _setText: function(text){
          this._setNumericValue(text);
          if (text !== '-' && text !== '.' && text !== ''){
@@ -284,9 +290,12 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             this._options.delimiters,
             decimals,
             this._options.onlyPositive,
-            this._options.maxLength,
-            true
+            this._options.maxLength
          );
+
+         if(!this._checkMaxLength(value)){
+            return this._options.text;
+         }
          return value || '';
       },
 
@@ -331,6 +340,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             this._toggleMinus();
             event.preventDefault();
          }
+
          if (keyCode == 46){ /*Delete*/
             this._deleteHandler();
          } else if (keyCode == 8){ /*Backspace*/
@@ -357,29 +367,34 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             dotPosition = currentVal.indexOf('.'),
             symbol = String.fromCharCode(keyCode),
             spaceCount = currentVal.split(' ').length - 1,
+            checkMaxLength = this._checkMaxLength(currentVal),
             newCaretPosition = b;
          if (currentVal[0] == 0 && b == e && b == 1){ // заменяем первый ноль если курсор после него
             newCaretPosition--;
          }
          if ((b <= dotPosition && e <= dotPosition) || dotPosition == -1) { //до точки
-            if (b == e) {
-               if (dotPosition == this._options.integers + spaceCount || (dotPosition == -1 && currentVal.length - spaceCount == this._options.integers)){
-                  return;
+               if (b == e) {
+                  if (checkMaxLength) {
+                     if (dotPosition == this._options.integers + spaceCount || (dotPosition == -1 && currentVal.length - spaceCount == this._options.integers)) {
+                        return;
+                     }
+                     (this._options.delimiters && this._getIntegersCount(currentVal) % 3 == 0 && currentVal.length) ? newCaretPosition += 2 : newCaretPosition++;
+                     currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e);
+                  }
+               } else {
+                  currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e);
+                  newCaretPosition++;
                }
-               (this._options.delimiters && this._getIntegersCount(currentVal) % 3 == 0 && currentVal.length) ? newCaretPosition+=2 : newCaretPosition++;
-               currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e);
-            } else {
-               currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e);
-               newCaretPosition++;
-            }
          } else
          if (b > dotPosition && e > dotPosition){ // после точки
-            if (b == e){
-               currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e + ((this._options.decimals > 0) ? 1 : 0));
-            } else {
-               currentVal = currentVal.substr(0, b) + symbol + ((this._options.decimals > 0) ? this._getZeroString(e - b - 1) : '') + currentVal.substr(e);
-            }
-            newCaretPosition++;
+               if (b == e) {
+                  if(checkMaxLength || (e <= dotPosition + this._options.decimals)) {
+                     currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e + ((this._options.decimals > 0) ? 1 : 0));
+                  }
+               } else {
+                  currentVal = currentVal.substr(0, b) + symbol + ((this._options.decimals > 0) ? this._getZeroString(e - b - 1) : '') + currentVal.substr(e);
+               }
+               newCaretPosition++;
          } else { // точка в выделении
             currentVal = currentVal.substr(0, b) + symbol + '.' + ((this._options.decimals > 0) ? this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
             newCaretPosition = currentVal.indexOf('.');

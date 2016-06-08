@@ -68,10 +68,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
         * </ul>
         */
       $protected: {
-         _defaultItemTemplate: ItemTemplate,
-         _defaultItemContentTemplate: ItemContentTemplate,
          _footerWrapperTemplate: FooterWrapperTemplate,
          _options: {
+            _canServerRender: false,
+            _defaultItemTemplate: ItemTemplate,
+            _defaultItemContentTemplate: ItemContentTemplate,
             /**
              * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике по кнопке справа от названия узла (папки) или скрытого узла.
              * @remark
@@ -144,29 +145,17 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       init: function(){
          TreeDataGridView.superclass.init.call(this);
          if (this._container.hasClass('controls-TreeDataGridView__withPhoto')){
-            this._paddingSize = 42;
+            this._options.paddingSize = 42;
          }
       },
 
       _drawItemsCallback: function() {
-         var
-            model,
-            dataSet = this._dataSet;
-         for (var key in this._options.openedPath) {
-            if (this._options.openedPath.hasOwnProperty(key)) {
-               /*TODO:
-                Не нужно создавать футер у узла, если данный узел не отображается.
-                Прежде чем создавать футер у развёрнутого узла проверим что данный узел присутствует в наборе элементов.
-                Возможна такая ситуация что списочный метод вернул сразу все данные и узел может являться развёрнутым,
-                но не отображаться, тогда для такого случая проверим необходимость создания футера путём поиска узла
-                среди текущего набора элементов в DOM.
-                */
-               model = dataSet.getRecordByKey(key);
-               if (model && this._getElementByModel(model).length) {
-                  this._createFolderFooter(key);
-               }
+         $ws.helpers.forEach(this._options.openedPath, function(val, key) {
+            //Рисуем футер, только если узел есть в проекции, иначе он скрыт и футер рисовать не нужно
+            if (this._getItemProjectionByItemId(key)) {
+               this._createFolderFooter(key);
             }
-         }
+         },this);
          this._updateEditArrow();
          TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
@@ -404,12 +393,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          container.addClass('controls-ListView__item-type-' + itemType);
          var
             key = item.getId(),
-            parentKey = this._items.getParentKey(item, this._options.hierField),
+            parentKey = this._options._items.getParentKey(item, this._options.hierField),
          	parentContainer = $('.controls-ListView__item[data-id="' + parentKey + '"]', this._getItemsContainer().get(0)).get(0);
          container.attr('data-parent', parentKey);
 
          if (this._options.openedPath[key]) {
-            var tree = this._items.getTreeIndex(this._options.hierField);
+            var tree = this._options._items.getTreeIndex(this._options.hierField);
             if (tree[key]) {
                $('.js-controls-TreeView__expand', container).addClass('controls-TreeView__expand__open');
             } else {
@@ -427,7 +416,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          /*TODO пока придрот*/
          if (typeof parentKey != 'undefined' && parentKey !== null && parentContainer) {
             var parentMargin = parseInt($('.controls-TreeView__expand', parentContainer).parent().css('padding-left'));
-            $('.controls-TreeView__expand', container).parent().css('padding-left', parentMargin + this._paddingSize);
+            $('.controls-TreeView__expand', container).parent().css('padding-left', parentMargin + this._options.paddingSize);
          }
       },
 

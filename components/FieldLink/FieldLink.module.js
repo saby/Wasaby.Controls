@@ -706,11 +706,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           setSelectedItem: function(item) {
-             var hasRequiredFields, needSet;
+             var hasRequiredFields,
+                 key, displayValue;
+
+             /* Т.к. ключ может быть как 0, а ключевое поле как '', то надо проверять на null/undefined */
+             function isEmpty(val) {
+                return val === null || val === undefined;
+             }
 
              if(item  && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')) {
                 /* Проверяем запись на наличие ключевых полей */
-                hasRequiredFields = item.get(this._options.displayField) && item.get(this._options.keyField);
+                hasRequiredFields = !isEmpty(item.get(this._options.displayField)) && !isEmpty(item.get(this._options.keyField));
 
                 if(hasRequiredFields) {
                    /* Если запись собралась из контекста, в ней может не быть поля с первичным ключем */
@@ -723,6 +729,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
              /* Вызываем родительский метод, если передали запись с обязательными полями или null */
              if(hasRequiredFields || item === null) {
                 FieldLink.superclass.setSelectedItem.apply(this, arguments);
+             }
+          },
+
+          setEnabled: function() {
+             FieldLink.superclass.setEnabled.apply(this, arguments);
+             /* При изменении состояния поля связи, надо скинуть старую запомненую ширину,
+                если это произошло в скрытом состоянии, иначе поле показа не запустится перерисовка */
+             if(!this.isVisibleWithParents()) {
+                this._lastFieldLinkWidth = null;
              }
           },
 

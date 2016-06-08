@@ -28,7 +28,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             },
 
             isEdit: function() {
-               return this._eip.isEdit() || this._secondEip.isEdit();
+               var firstEipIsEdit = EditInPlaceHoverController.superclass.isEdit.apply(this);
+               return firstEipIsEdit || (this._secondEip && this._secondEip.isEdit());
             },
 
             _createEip: function() {
@@ -56,7 +57,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             },
             showEip: function(target, record, options) {
                if (options && options.isEdit === false) {
-                  this.show(target, record)
+                  this.show(target, record, this._options.itemsProjection.getItemBySourceItem(record))
                } else {
                   EditInPlaceHoverController.superclass.showEip.apply(this, arguments)
                }
@@ -66,12 +67,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
              * @param {Object} target Элемент, для которого отобразить область по ховеру
              * @private
              */
-            show: function(target, record) {
+            show: function(target, record, itemProj) {
                if (this._notify('onBeginEdit', record) !== false) {
                   if (!this._hoveredEip) {
                      this._hoveredEip = this._eip.isEdit() ? this._secondEip : this._eip;
                   }
-                  this._hoveredEip.show(target, record);
+                  this._hoveredEip.show(target, record, itemProj);
                } else {
                   if (this._hoveredEip) {
                      this._hoveredEip.hide();
@@ -125,10 +126,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             },
             _destroyEip: function() {
                EditInPlaceHoverController.superclass._destroyEip.apply(this);
-               if (this._hoveredEip) {
-                  this._hoveredEip.getContainer().unbind('keyup', this._eipHandlers.onKeyDown);
-                  this._hoveredEip.destroy();
-                  this._hoveredEip = null;
+               if (this._secondEip) {
+                  this._secondEip.getContainer().unbind('keyup', this._eipHandlers.onKeyDown);
+                  this._secondEip.destroy();
+                  this._secondEip = null;
                }
             },
             destroy: function() {

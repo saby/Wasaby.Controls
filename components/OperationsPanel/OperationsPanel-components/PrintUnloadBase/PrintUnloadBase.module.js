@@ -57,8 +57,13 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
        * Can be implemented
        */
       _clickHandler: function() {
+         this._onOperationActivated();
          PrintUnloadBase.superclass._clickHandler.apply(this, arguments);
       },
+
+      _onOperationActivated: function() {
+      },
+
       _prepareOperation: function(title){
          var selectedItems = this._getView().getSelectedKeys(),
                selectedItemsObj = {},
@@ -69,7 +74,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
             for (var i = 0, len = selectedItems.length; i < len; i++){
                selectedItemsObj[selectedItems[i]] = true;
             }
-            ds = this._getView()._dataSet.filter(function(item){
+            ds = this._getView().getItems().filter(function(item){
                return selectedItemsObj[item.getId()];
             });
             this._applyOperation(ds);
@@ -79,10 +84,10 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          return this._options.linkedView;
       },
       _processMassOperations:function(title){
-         var numOfRecords = this._getView()._dataSet.getCount(),
+         var numOfRecords = this._getView().getItems().getCount(),
             self = this,
-            ds = this._getView()._dataSet;
-         if (this._getView()._hasNextPage(this._getView()._dataSet.getMetaData().more)) {
+            ds = this._getView().getItems();
+         if (this._getView()._hasNextPage(this._getView().getItems().getMetaData().more)) {
             //Показать диалог выбора записей
             new Dialog ({
                opener : this,
@@ -121,7 +126,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          var columns = this._prepareOperationColumns(),
              cfg;
          cfg = {
-            dataSet : dataSet || this._getView()._dataSet,
+            dataSet : dataSet || this._getView().getItems(),
             columns: columns
          };
          this.applyOperation(cfg);
@@ -143,7 +148,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
        * @param pageSize - количество записей, есди передать undefined, то значит, что нужны вообще все записи
        */
       processSelectedPageSize: function(pageSize){
-         var ds = this._getView()._dataSet,
+         var ds = this._getView().getItems(),
             numOfRecords = ds.getCount(),
             num = 0,
             self = this;
@@ -158,7 +163,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
                num = 0;
                //TODO здесь должен быть не filter, а что-то типа .range - получение первых N записей
                //Выберем pageSize записей из dataSet
-               ds = self._getView()._dataSet.filter(function(){
+               ds = self._getView().getItems().filter(function(){
                   return num++ < pageSize;
                });
             }

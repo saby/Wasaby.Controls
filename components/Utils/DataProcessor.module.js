@@ -146,9 +146,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                'FileName': fileName,
                'html': reportText
             };
-            if (pageOrientation) {
-               newCfg.PageOrientation = pageOrientation;
-            }
+            newCfg.PageOrientation = typeof pageOrientation === 'number' ? pageOrientation : 1;
             self.exportFileTransfer(fileType, methodName || 'SaveHTML', cfg || newCfg).addErrback(function(error){
                return error;
             }).addBoth(function(){

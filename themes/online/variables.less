@@ -52,7 +52,7 @@
 @link-icon-margin:                        -3px 0 0;
 
 @link-field-margin:                       0;
-@link-icon-field-margin:                  0 0 0 6px;
+@link-icon-field-margin:                  0 0 0 4px;
 
 
 
@@ -954,7 +954,16 @@
 @text-area-disabled-border-color:               transparent;
 @text-area-disabled-bg:                         @text-area-bg;
 
-@text-area-field-padding:                       2px 4px 2px 4px;
+@text-area-left-padding:                        4px;
+@text-area-top-padding:                         2px;
+@text-area-right-padding:                       4px;
+@text-area-bottom-padding:                      2px;
+@text-area-field-padding:                       @text-area-top-padding @text-area-right-padding @text-area-bottom-padding @text-area-left-padding;
+
+@text-area-placeholder-color:              @text-box-placeholder-color;
+@text-area-compat-placeholder-font:        @text-box-compat-placeholder-font;
+@text-area-compat-placeholder-padding:     @text-box-compat-placeholder-padding;
+@text-area-compat-placeholder-alignment:   @text-box-compat-placeholder-alignment;
 
 
 
@@ -1372,7 +1381,7 @@
 @data-grid-cell-cursor:                         pointer;
 @data-grid-cell-text-alignment:                 @data-grid-header-cell-text-alignment;
 @data-grid-cell-height:                         30px;
-@data-grid-cell-line-height:                    19px;
+@data-grid-cell-line-height:                    20px;
 @data-grid-cell-padding:                        3px 8px;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
@@ -1494,7 +1503,7 @@
 // ----------------------- //
 //      EditInPlace        //
 // ----------------------- //
-@controls-editInPlace-editor-margin-top:            2px;
+@controls-editInPlace-editor-margin-top:            3px;
 @controls-editInPlace-editor-margin-bottom:         3px;
 @controls-editInPlace-editor-padding:               0 3px;
 @controls-editInPlace-editor-bg:                    #f3f3f3 !important;
@@ -1665,7 +1674,7 @@
 @controls-filterLine-arrow-height:                19px;
 @controls-filterLine-link-color:                  #0055bb;
 
-@controls-filterLine-copyCross-top:               -21px;
+@controls-filterLine-copyCross-top:               -20px;
 @controls-filterLine-copyCross-margin:            -30px;
 @controls-filterLine-copyCross-shadow:            -8px 0px 10px 2px @white-color;
 @controls-filterLine-copyCross-cross-top:         3px;
@@ -1702,9 +1711,9 @@
 @controls-FieldLink-linkItem-cursor:               default;
 @controls-FieldLink-linkItem-margin:               2px 0;
 @controls-FieldLink-linkItem-position:             relative;
-@controls-FieldLink-linkItem-padding:              0 16px 0 4px;
+@controls-FieldLink-linkItem-padding:              0 17px 0 4px;
 @controls-FieldLink-linkItem-caption-height:       16px;
-@controls-FieldLink-linkItem-cross-right:          0;
+@controls-FieldLink-linkItem-cross-right:          1px;
 @controls-FieldLink-linkItem-cross-top:            1px;
 
 @controls-FieldLink-disabled-item-padding:         0 4px;
@@ -1714,6 +1723,10 @@
 @controls-SelectorButton-line-height:              24px;
 @controls-SelectorButton-align:                    top;
 @controls-SelectorButton-margin:                   4px 0 0 0;
+
+// Search button
+@search-loop-size:                                 22px;
+@search-loop-padding:                              3px;
 
 // BackButton
 @back-button-font-size:                            18px;

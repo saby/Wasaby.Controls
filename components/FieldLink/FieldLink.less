@@ -31,6 +31,14 @@
       top: @controls-FieldLink-linkItem-cross-top;
       cursor: @link-cursor;
    }
+   &:after {
+      position: absolute;
+      right: 0;
+      content: ',';
+   }
+   &:last-child:after {
+      content: '';
+   }
 }
 
 .controls-FieldLink__picker,
@@ -76,7 +84,6 @@
 
 .controls-FieldLink {
    display: inline-block;
-   vertical-align: bottom;
    border-color: @controls-FieldLink-border-color;
 
    &.controls-Picker__show,

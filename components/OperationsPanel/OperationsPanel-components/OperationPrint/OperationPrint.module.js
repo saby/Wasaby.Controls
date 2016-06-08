@@ -41,9 +41,11 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
 
       $constructor: function() {
       },
-      _clickHandler: function() {
+
+      _onOperationActivated: function() {
          this._prepareOperation('Что напечатать');
       },
+
       /**
        * @param columns
        * @private
@@ -54,6 +56,10 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
       applyOperation: function(cfg){
          var p;
          cfg.minWidth = this._options.minPrintWindowWidth;
+         if (this._options.xsl) {
+            cfg.xsl = this._options.xsl;
+            cfg.report = true;
+         }
          p = new Printer(cfg);
          p.print();
       }
