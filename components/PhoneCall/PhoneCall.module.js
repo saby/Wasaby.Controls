@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.PhoneCall', ['js!SBIS3.CONTROLS.Link'], function(Link)
       return digits;
    };
 
-   var PhoneCall = Link.extend( /** @lends SBIS3.CONTROLS.Link.prototype */ {
+   var PhoneCall = Link.extend( /** @lends SBIS3.CONTROLS.PhoneCall.prototype */ {
       $protected: {
          _options: {
             /**
