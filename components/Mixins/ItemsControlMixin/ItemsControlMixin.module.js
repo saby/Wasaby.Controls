@@ -1106,7 +1106,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._notifyOnPropertyChanged('offset');
          this._notifyOnPropertyChanged('limit');
 
-         return this._loader;
+         return def;
       }),
 
       _getFilterForReload: function() {
