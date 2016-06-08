@@ -664,11 +664,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
 
       FormController.prototype.createDataSource = function(options){
          if (!$ws.helpers.instanceOfModule(options.source, 'SBIS3.CONTROLS.Data.Source.Base')) {
-            return new SbisService({
-               endpoint: options.dataSource.endpoint,
-               binding: options.dataSource.bindings,
-               model: options.dataSource.model
-            });
+            return new SbisService(options.dataSource);
          }
       };
    return FormController;
