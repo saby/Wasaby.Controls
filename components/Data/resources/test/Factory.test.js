@@ -155,6 +155,14 @@ define([
       });
    });
 
+   afterEach(function () {
+      dataScheme = undefined;
+      dataValues = undefined;
+      dataEmpty = undefined;
+      sbisModel = undefined;
+      sbisModelEmpty = undefined;
+   });
+
    describe('SBIS3.CONTROLS.Data.Factory', function () {
       describe('.cast()', function () {
          it('should cast value to integer', function () {

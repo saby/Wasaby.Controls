@@ -37,7 +37,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableList', [
 
       //region SBIS3.CONTROLS.Data.Mediator.IReceiver
 
-      relationChanged: function (which, name) {
+      relationChanged: function (which, name, data) {
+         /*var index = this.getIndex(which);
+         if (index > -1) {
+            this.notifyItemChange(which, data);
+         }*/
       }
 
       //endregion SBIS3.CONTROLS.Data.Mediator.IReceiver

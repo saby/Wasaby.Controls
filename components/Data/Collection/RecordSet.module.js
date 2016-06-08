@@ -145,14 +145,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       //region SBIS3.CONTROLS.Data.Mediator.IReceiver
 
-      relationChanged: function (which, name) {
-         RecordSet.superclass.relationChanged.call(this, which, name);
-         switch (name) {
-            case 'owner':
-               this._resetRawDataAdapter();
-               this._resetRawDataFields();
-               break;
+      relationChanged: function (which, name, data) {
+         if (name === 'owner') {
+            this._resetRawDataAdapter();
+            this._resetRawDataFields();
          }
+         RecordSet.superclass.relationChanged.call(this, which, name, data);
       },
 
       //endregion SBIS3.CONTROLS.Data.Mediator.IReceiver

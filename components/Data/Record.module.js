@@ -184,7 +184,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       //region SBIS3.CONTROLS.Data.Mediator.IReceiver
 
       relationChanged: function (which, name, data) {
-         if (name == 'owner') {
+         var fieldName;
+         if (name === 'owner') {
             switch (data) {
                case 'addField':
                case 'removeField':
@@ -193,6 +194,12 @@ define('js!SBIS3.CONTROLS.Data.Record', [
                   this._resetRawDataFields();
                   break;
             }
+         } else if ((fieldName = this._getFieldFromRelationName(name))) {
+            var fieldValue = this.get(fieldName),
+               map = {};
+            this._setChanged(fieldName, fieldValue);
+            map[fieldName] = fieldValue;
+            this._notify('onPropertyChange', map);
          }
       },
 
@@ -336,6 +343,17 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       //region Protected methods
 
+      _getRelationNameForField: function(name) {
+         return _fieldRelationPrefix + name;
+      },
+
+      _getFieldFromRelationName: function(name) {
+         name += '';
+         if (name.substr(0, _fieldRelationPrefix.length) === _fieldRelationPrefix) {
+            return name.substr(_fieldRelationPrefix.length - 1);
+         }
+      },
+
       /**
        * Проверяет наличие закэшированного значения поля
        * @param {String} name Название поля
@@ -421,7 +439,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
                adapter.getSharedFormat(name),
                this.getAdapter()
             );
-            this._addChild(result, name);
+            this._addChild(result, this._getRelationNameForField(name));
             return result;
          } catch (e) {
             return undefined;
@@ -537,6 +555,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       //endregion Protected methods
    });
+
+   var _fieldRelationPrefix = 'field.';
 
    SerializableMixin._checkExtender(Record);
 
