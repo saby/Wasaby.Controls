@@ -749,6 +749,7 @@
 @text-box-border-radius:                  0;
 
 @text-box-field-font:                     inherit;
+@text-box-field-font-size:                inherit;
 @text-box-field-text-alignment:           left;
 @text-box-field-min-height:               38px;
 @text-box-field-line-height:              @text-box-height !important;
@@ -768,6 +769,7 @@
 @text-box-border-width:                   1px;
 @text-box-border-style:                   solid;
 @text-box-border-color:                   transparent transparent @gray-dark-color transparent;
+@text-box-bottom-border-color:            @gray-dark-color;
 @text-box-bg:                             transparent;
 @text-box-editor-bg:                      #f3f3f3;
 @text-box-editor-text-color:              #999999;
@@ -876,6 +878,26 @@
 @number-text-box-arrow-down-disabled-border-style:    @number-text-box-arrow-down-border-style;
 @number-text-box-arrow-down-disabled-border-color:    transparent;
 
+// ----------- //
+// Search form //
+// ----------- //
+
+@search-background:                                   #F2F2F2;
+@search-disabled-background:                          @text-box-disabled-bg;
+@search-focus-background:                             @search-background;
+@search-height:                                       @text-box-height;
+@search-padding:                                      0 24px 0 16px;
+@search-left-margin:                                  16px;
+@search-border-radius:                                10px;
+@search-border-color:                                 @search-background;
+@search-hover-border-color:                           @search-background;
+@search-bottom-border-color:                          @search-background;
+@search-form-border-width:                            @text-box-border-width;
+@search-form-border-disabled-width:                   @text-box-disabled-border-width;
+@search-form-disabled-border-bottom:                  @text-box-disabled-border-bottom;
+@search-buttons-wrapper-width:                        22px + 22px;
+@search-form-icon-padding:                            3px;
+@search-form-icon-disabled-display:                   block;
 
 
 // --------- //
@@ -1344,7 +1366,7 @@
 @tree-view-expand-open-hover-bg:                @tree-view-expand-open-bg;
 
 @tree-view-ellipsis-wrapper-height:             19px;
-@tree-view-ellipsis-wrapper-padding:            0;
+@tree-view-ellipsis-wrapper-margin:             0;
 @tree-view-ellipsis-copyArrow-shadow:           -10px 2px 8px -5px;
 @tree-view-ellipsis-copyArrow-padding:          0 0 0 3px;
 @tree-view-ellipsis-copyArrow-width:            16px;
@@ -1741,6 +1763,7 @@
 @controls-FieldLink-linkItem-cross-top:            1px;
 
 @controls-FieldLink-disabled-item-padding:         0 4px;
+@controls-FieldLink-afterField-padding:            6px 16px 6px 0;
 
 //SelectorButton
 @controls-SelectorButton-height:                   24px;
