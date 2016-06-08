@@ -372,12 +372,25 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                }],
                /**
-                * @cfg {String} Разрешено или нет перемещение элементов "Drag-and-Drop"
-                * @variant "" Запрещено
-                * @variant allow Разрешено
+                * @cfg {String|Boolean} Устанавливает возможность перемещения элементов с помощью курсора мыши.
+                * @variant "" Запрещено перемещение.
+                * @variant allow Разрешено перемещение.
+                * @variant false Запрещено перемещение.
+                * @variant true Разрешено перемещение.
                 * @example
+                * Подробнее о способах передачи значения в опцию вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/">Вёрстка компонента</a>.
+                * <b>Пример 1.</b> Ограничим возможность перемещения записей с помощью курсора мыши.
                 * <pre>
-                *     <option name="itemsDragNDrop">allow</option>
+                *     <option name="itemsDragNDrop" value=""></option>      <!-- Передаём пустую строку в атрибуте value. Иным способом пустая строка не распознаётся -->
+                *     <option name="itemsDragNDrop" value="false"></option> <!-- Первый способ передачи false -->
+                *     <option name="itemsDragNDrop">false</option>          <!-- Второй способ передачи false -->
+                * </pre>
+                * <b>Пример 2.</b> Разрешим перемещение записей с помощью курсора мыши.
+                * <pre>
+                *     <option name="itemsDragNDrop" type="string" value="allow"></option> <!-- Первый способ передачи allow -->
+                *     <option name="itemsDragNDrop" type="string">allow</option>          <!-- Второй способ передачи allow -->
+                *     <option name="itemsDragNDrop" value="false"></option> <!-- Первый способ передачи true -->
+                *     <option name="itemsDragNDrop">false</option>          <!-- Второй способ передачи true -->
                 * </pre>
                 */
                itemsDragNDrop: 'allow',
