@@ -1934,17 +1934,34 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
          },
          _toggleIndicator: function(show){
+            var self = this,
+                container = this.getContainer(),
+                ajaxLoader = container.find('.controls-AjaxLoader').eq(0),
+                indicator, centerCord, scrollContainer;
+
+
             this._showedLoading = show;
-            var self = this;
             if (show) {
                setTimeout(function(){
                   if (self._showedLoading) {
-                     self._container.find('.controls-AjaxLoader').toggleClass('ws-hidden', false);
+                     scrollContainer = self._getScrollContainer();
+                     indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
+                     if(scrollContainer && container[0].scrollHeight > scrollContainer[0].offsetHeight) {
+                        /* Ищем кординату, которая находится по середине отображаемой области грида */
+                        centerCord =
+                           (Math.max(scrollContainer[0].getBoundingClientRect().bottom, 0) - Math.max(container[0].getBoundingClientRect().top, 0))/2;
+                        /* Располагаем индикатор, учитывая прокрутку */
+                        indicator[0].style.top = centerCord + scrollContainer[0].scrollTop + 'px';
+                     } else {
+                        /* Если скрола нет, то сбросим кординату, чтобы индикатор сам расположился по середине */
+                        indicator[0].style.top = '';
+                     }
+                     ajaxLoader.removeClass('ws-hidden');
                   }
                }, 750);
             }
             else {
-               self._container.find('.controls-AjaxLoader').toggleClass('ws-hidden', true);
+               ajaxLoader.addClass('ws-hidden');
             }
          },
          _toggleEmptyData: function(show) {
