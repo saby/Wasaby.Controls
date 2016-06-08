@@ -49,6 +49,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * </component>
     */
    var OperationsPanel = Control.extend([DSMixin],/** @lends SBIS3.CONTROLS.OperationsPanel.prototype */{
+      /**
+       * @event onToggle Происходит при изменении видимости панели действий: появление или скрытие.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       */
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
