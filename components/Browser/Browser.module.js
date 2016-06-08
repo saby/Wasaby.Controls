@@ -78,6 +78,10 @@ define('js!SBIS3.CONTROLS.Browser', [
              */
             historyId : '',
             /**
+             * @cfg {Boolean} Применять последний активный фильтр при загрузке реестра.
+             */
+            applyHistoryFilterOnLoad: true,
+            /**
              * @cfg {String} Id для запоминания пэйджинга
              */
             pagingId: '',
@@ -155,6 +159,7 @@ define('js!SBIS3.CONTROLS.Browser', [
                    this._options.searchParam,
                    this._options.historyId,
                    this._options.ignoreFiltersList,
+                   this._options.applyHistoryFilterOnLoad,
                    HistoryController,
                    this);
             } else {
