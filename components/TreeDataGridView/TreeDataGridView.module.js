@@ -434,9 +434,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _elemClickHandlerInternal: function(data, id, target) {
-         var nodeID = $(target).closest('.controls-ListView__item').data('id');
+         var $target =  $(target),
+             nodeID = $target.closest('.controls-ListView__item').data('id');
          if (this._options.allowEnterToFolder){
-            if ($(target).hasClass('js-controls-TreeView__editArrow')) {
+            if ($target.hasClass('js-controls-TreeView__editArrow') || $target.hasClass('js-controls-ListView__itemCheckBox')) {
 
             } else if (data.get(this._options.hierField + '@')) {
                this.setCurrentRoot(nodeID);
