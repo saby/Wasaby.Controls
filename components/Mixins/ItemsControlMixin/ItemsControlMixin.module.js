@@ -1835,6 +1835,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if(this._options._itemsProjection) {
             this._options._itemsProjection.setSort(sort);
          }
+      },
+      /**
+       * Возвращает последний элемент по проекции
+       * @return {SBIS3.CONTROLS.Data.Model}
+       */
+      getLastItemByProjection: function(){
+         if(this._options._itemsProjection && this._options._itemsProjection.getCount()) {
+            return this._options._itemsProjection.at(this._options._itemsProjection.getCount()-1).getContents();
+         }
       }
    };
 
