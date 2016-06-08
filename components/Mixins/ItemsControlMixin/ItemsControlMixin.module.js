@@ -1099,7 +1099,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              }
              def = new $ws.proto.Deferred();
              def.callback();
-             this._loader = def;
           }
 
          this._notifyOnPropertyChanged('filter');
@@ -1107,7 +1106,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._notifyOnPropertyChanged('offset');
          this._notifyOnPropertyChanged('limit');
 
-         return this._loader;
+         return def;
       }),
 
       _getFilterForReload: function() {
