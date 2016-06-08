@@ -1628,6 +1628,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._mouseLeaveHandler();
                }else {
                   this._updateItemsToolbar();
+                  hoveredItem.addClass('controls-ListView__hoveredItem');
                }
             }
 
