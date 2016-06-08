@@ -1117,11 +1117,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (!this._dataSource) {
             return;
          }
-         var query = new Query();
-         query.where(filter)
-            .offset(offset)
-            .limit(limit)
-            .orderBy(sorting);
+         var query = this._getQueryForCall(filter, sorting, offset, limit);
 
          return this._dataSource.query(query).addCallback((function(dataSet) {
             if (this._options.keyField && this._options.keyField !== dataSet.getIdProperty()) {
@@ -1131,6 +1127,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             recordSet.setMetaData(this._prepareMetaData(dataSet));
             return recordSet;
          }).bind(this));
+      },
+
+      _getQueryForCall: function(filter, sorting, offset, limit){
+         var query = new Query();
+         query.where(filter)
+            .offset(offset)
+            .limit(limit)
+            .orderBy(sorting);
+         return query;
       },
 
       _prepareMetaData: function(dataSet) {
