@@ -48,6 +48,13 @@ define('js!SBIS3.CONTROLS.ListView',
             tplOptions.colorField = cfg.colorField;
 
             return tplOptions;
+         },
+         getRecordsForRedrawLV = function (projection){
+            var records = this._options._getRecordsForRedrawSt.call(this, projection);
+            if (this._options.infiniteScroll === 'up' && !this._isSearchMode()) {
+               return records.reverse();
+            }
+            return records;
          };
       var
          DRAG_AVATAR_OFFSET = 5,
@@ -241,6 +248,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _options: {
                _canServerRender: true,
                _buildTplArgs: buildTplArgsLV,
+               _getRecordsForRedraw: getRecordsForRedrawLV,
                _buildTplArgsLV: buildTplArgsLV,
                _defaultItemTemplate: ItemTemplate,
                _defaultItemContentTemplate: ItemContentTemplate,
@@ -1266,13 +1274,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._checkScroll(); //todo Убрать в 150, когда будет правильный рендер изменившихся данных
          },
 
-         _getRecordsForRedraw: function(){
-            var records = ListView.superclass._getRecordsForRedraw.apply(this, arguments);
-            if (this._options.infiniteScroll === 'up' && !this._isSearchMode()) {
-               return records.reverse();
-            }
-            return records;
-         },
+
          /**
           * todo Убрать в 150, когда будет правильный рендер изменившихся данных
           */
