@@ -254,8 +254,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                   },
                   buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner);
                
-               offset.top += this._getUserOffset('vertical');
-               offset.left += this._getUserOffset('horizontal');
+               offset.top += (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom;
+               offset.left += (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right;
 
                offset = this._addOffset(offset, buff);
                offset = this._getOffsetByWindowSize(offset);
@@ -454,8 +454,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          //Запоминаем координаты правого нижнего угла контейнера необходимые для отображения контейнера целиком и там где нужно.
          if (target) {
             this._containerSizes.requiredOffset = {
-               top: buff.top + this._targetSizes.offset.top + this._containerSizes.originHeight + this._getUserOffset('vertical'),
-               left: buff.left + this._targetSizes.offset.left + this._containerSizes.originWidth + this._getUserOffset('horizontal')
+               top: buff.top + this._targetSizes.offset.top + this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom,
+               left: buff.left + this._targetSizes.offset.left + this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right
             };
          } else {
             this._containerSizes.requiredOffset = {
@@ -560,18 +560,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             offset = this._getGeneralOffset(this._options.verticalAlign.side, oppositeSide, oppositeCorner);
          }
 
-         offset.top -= this._getUserOffset('vertical'); 
-         offset.left -= this._getUserOffset('horizontal');
+         offset.top -= (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom;
+         offset.left -= (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right;
 
          return offset;
-      },
-
-      _getUserOffset: function(align){
-         if (align == 'vertical'){
-            return (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom;
-         } else {
-            return (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right;
-         }
       },
 
       _initOppositeCorners: function () {
