@@ -148,7 +148,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
          var fullFilter,
              exporter,
              pageOrient = this._getPDFPageOrient(),
-             methodName = this._getCurrentItem().get('binding').saveList;
+             methodName = this._getSaveMethodName(true);
          if (this._isClientUnload()) {
             OperationUnload.superclass.processSelectedPageSize.apply(this, arguments);
             return;
@@ -216,7 +216,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             exporter.exportHTML(this._getUnloadFileName(), this._currentItem, undefined, undefined, pageOrient);
          } else {
             exporter = new Exporter(this._prepareExporterConfig());
-            methodName = this._getCurrentItem().get('binding').saveDataSet;
+            methodName = this._getSaveMethodName(false);
             if (methodName) {
                fullFilter = exporter.getFullFilter(cfg.dataSet.getCount(), true);
                filter = new Record({
@@ -237,6 +237,12 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             }
          }
          //p.exportData(this._controlsId[this._currentItem].objectName, this._controlsId[this._currentItem].method, this._getUnloadFileName() );
+      },
+      _getSaveMethodName: function(isList) {
+         var binding = this._getCurrentItem().get('binding');
+         if (binding) {
+            return isList ? binding.saveList : binding.saveDataSet
+         }
       },
       _getUnloadFileName: function(){
          return  this._options.fileName || this._getView().getColumns()[0].title || 'Как на экране';
