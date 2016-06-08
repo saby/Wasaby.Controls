@@ -1691,10 +1691,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          dotTemplate = TemplateUtil.prepareTemplate(itemTpl);
 
          if (typeof dotTemplate == 'function') {
-            var args = this._prepareItemData();
+            var args = this._prepareItemData(), buildedTpl;
             args['projItem'] = item;
             args['item'] = item.getContents();
-            return $(ParserUtilities.buildInnerComponents(MarkupTransformer(dotTemplate(args)), this.getId()));
+            buildedTpl = dotTemplate(args);
+            //TODO нашлись умники, которые в качестве шаблона передают функцию, возвращающую jquery
+            //в 200 пусть поживут, а в новой отрисовке, отпилим у них
+            if (buildedTpl instanceof $) {
+               buildedTpl = buildedTpl.get(0).outerHTML;
+            }
+            return $(ParserUtilities.buildInnerComponents(MarkupTransformer(buildedTpl), this.getId()));
          } else {
             throw new Error('Ошибка в itemTemplate');
          }
@@ -1734,7 +1740,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             newItemContainer = this._buildTplItem(projItem, template),
             rows;
          this._addItemAttributes(newItemContainer, projItem);
-         newItemContainer = $(ParserUtilities.buildInnerComponents(MarkupTransformer(newItemContainer.get(0).outerHTML), this.getId()));
          if (flagAfter) {
             newItemContainer.insertBefore(this._getItemContainerByIndex(target, at));
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
