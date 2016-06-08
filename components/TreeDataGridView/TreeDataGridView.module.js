@@ -420,34 +420,19 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
       },
 
-      _notifyOnItemClick: function(id, data, target) {
-         var
-             res,
-             self = this,
-             elClickHandler = this._options.elemClickHandler,
-             nodeID = $(target).closest('.controls-ListView__item').data('id'),
-             closestExpand = this._findExpandByElement($(target));
 
-         if ($(closestExpand).hasClass('js-controls-TreeView__expand') && $(closestExpand).hasClass('has-child')) {
+      _elemClickHandler: function(id, data, target) {
+         var $target = $(target),
+             closestExpand = this._findExpandByElement($target),
+             nodeID = $target.closest('.controls-ListView__item').data('id');
+
+         if (closestExpand.hasClass('js-controls-TreeView__expand') && closestExpand.hasClass('has-child')) {
             this.toggleNode(nodeID);
+         } else {
+            TreeDataGridView.superclass._elemClickHandler.apply(this, arguments);
          }
-         else {
-            res = this._notify('onItemClick', id, data, target);
-            if (res instanceof $ws.proto.Deferred) {
-               res.addCallback(function(result) {
-                  if (result !== false) {
-                     self._elemClickHandlerInternal(data, id, target);
-                     elClickHandler && elClickHandler.call(self, id, data, target);
-                  }
-                  return result;
-               });
-            } else if (res !== false) {
-               this._elemClickHandlerInternal(data, id, target);
-               elClickHandler && elClickHandler.call(this, id, data, target);
-            }
-         }
-         return res;
       },
+
       _elemClickHandlerInternal: function(data, id, target) {
          var nodeID = $(target).closest('.controls-ListView__item').data('id');
          if (this._options.allowEnterToFolder){
