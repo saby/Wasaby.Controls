@@ -420,24 +420,21 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
       },
 
-
-      _elemClickHandler: function(id, data, target) {
-         var $target = $(target),
+      _elemClickHandlerInternal: function(data, id, target) {
+         var $target =  $(target),
              closestExpand = this._findExpandByElement($target),
              nodeID = $target.closest('.controls-ListView__item').data('id');
 
+         /* При клике по треугольнику надо просто раскрыть ветку */
          if (closestExpand.hasClass('js-controls-TreeView__expand') && closestExpand.hasClass('has-child')) {
             this.toggleNode(nodeID);
-         } else {
-            TreeDataGridView.superclass._elemClickHandler.apply(this, arguments);
+            return;
          }
-      },
 
-      _elemClickHandlerInternal: function(data, id, target) {
-         var nodeID = $(target).closest('.controls-ListView__item').data('id');
          if (this._options.allowEnterToFolder){
-            if ($(target).hasClass('js-controls-TreeView__editArrow')) {
-
+            /* Не обрабатываем клики по чекбоку и по стрелке редактирования, они обрабатываются в elemClickHandler'e */
+            if ($target.hasClass('js-controls-TreeView__editArrow') || $target.hasClass('js-controls-ListView__itemCheckBox')) {
+               return;
             } else if (data.get(this._options.hierField + '@')) {
                this.setCurrentRoot(nodeID);
                this.reload();
