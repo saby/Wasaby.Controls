@@ -281,6 +281,11 @@ function(BaseControl, dotTpl){
                    */
                   enabled: true,
                   /**
+                   * Стиль элемента легенды по hover
+                   * @cfg {Object.<string, number|string>} CSS стили
+                   */
+                  itemHoverStyle: {"color": "#000"},
+                  /**
                    * @typedef {Object} align
                    * @variant center По центру
                    * @variant left Слева
