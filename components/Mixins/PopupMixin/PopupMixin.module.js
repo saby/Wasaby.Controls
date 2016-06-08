@@ -255,7 +255,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                   buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner);
                
                offset.top += this._getUserOffset('vertical');
-               offset.left += this._getUserOffset('horizontal')
+               offset.left += this._getUserOffset('horizontal');
 
                offset = this._addOffset(offset, buff);
                offset = this._getOffsetByWindowSize(offset);
@@ -568,9 +568,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
       _getUserOffset: function(align){
          if (align == 'vertical'){
-            return this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom;
+            return (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom;
          } else {
-            return this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right;
+            return (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right;
          }
       },
 
