@@ -1099,6 +1099,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              }
              def = new $ws.proto.Deferred();
              def.callback();
+             this._loader = def;
           }
 
          this._notifyOnPropertyChanged('filter');
