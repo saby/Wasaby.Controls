@@ -5,3 +5,16 @@
    width: @icon-width;
    height: @icon-height;
 }
+
+@text-box-height-carryBig:   60px;
+@text-box-height-carryFont:  30px;
+.controls-TextBox {
+   &.controls-TextBox__big {
+      height: @text-box-height-carryBig;
+      .controls-TextBox__fieldWrapper {
+         .controls-TextBox__field {
+            font-size: @text-box-height-carryFont;
+         }
+      }
+   }
+}
