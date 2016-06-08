@@ -11,8 +11,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
    'js!SBIS3.CONTROLS.Data.Utils',
+   'js!SBIS3.CONTROLS.Data.Model',
    'Core/ParserUtilities'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, ParserUtilities) {
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -1133,8 +1134,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _prepareMetaData: function(dataSet) {
-         //todo ножно придумать как изменить конструктор модели для метаданных
-         var meta = dataSet.hasProperty('m') ?  dataSet.getRow('m').toObject() : {};
+         /*  надо создавать дефолтную модель, а не внедренную, т.к. в модели recordSet'a
+             могут быть расчитываемые поля, которые ожидают что в модели будут гарантированно какие-то данные */
+         var meta = dataSet.hasProperty('m') ?
+             (new Model({
+                rawData: dataSet.getProperty('m'),
+                adapter: dataSet.getAdapter()
+             })).toObject() :
+             {};
 
          meta.results = dataSet.getProperty('r');
          meta.more = dataSet.getTotal();
@@ -1681,7 +1688,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var args = this._prepareItemData();
             args['projItem'] = item;
             args['item'] = item.getContents();
-            return $(MarkupTransformer(dotTemplate(args)));
+            return $(ParserUtilities.buildInnerComponents(MarkupTransformer(dotTemplate(args)), this.getId()));
          } else {
             throw new Error('Ошибка в itemTemplate');
          }
@@ -1764,23 +1771,22 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._buildTplItem(item, this._getItemTemplate(item));
       },
       _appendItemTemplate: function (item, targetContainer, itemBuildedTpl, at) {
-         var itemBuildedMarkup = ParserUtilities.buildInnerComponents(MarkupTransformer(itemBuildedTpl.get(0).outerHTML), this.getId());
          if (at && (typeof at.at !== 'undefined')) {
             var atContainer = at.at !== 0 && $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at-1);
             if (atContainer.length) {
-               atContainer.after(itemBuildedMarkup);
+               atContainer.after(itemBuildedTpl);
             }
             else {
                atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at);
                if (atContainer.length) {
-                  atContainer.before(itemBuildedMarkup);
+                  atContainer.before(itemBuildedTpl);
                } else {
-                  targetContainer.append(itemBuildedMarkup);
+                  targetContainer.append(itemBuildedTpl);
                }
             }
          }
          else {
-            targetContainer.append(itemBuildedMarkup);
+            targetContainer.append(itemBuildedTpl);
          }
       },
       _onCollectionReplace: function(items) {
