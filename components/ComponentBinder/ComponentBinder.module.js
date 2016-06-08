@@ -505,7 +505,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
       /**
        * Метод для связывания истории фильтров с представлением данных
        */
-      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, controller, browser) {
+      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, applyOnLoad, controller, browser) {
          var view = browser.getView(),
              noSaveFilters = ['Разворот', 'ВидДерева'],
              historyController, filter;
@@ -530,11 +530,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             noSaveFilters: noSaveFilters
          });
 
-         filter = historyController.getActiveFilter();
+         if(applyOnLoad) {
+            filter = historyController.getActiveFilter();
 
-         filterButton.setHistoryController(historyController);
-         /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
-         filterButton.setFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
+            filterButton.setHistoryController(historyController);
+            /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
+            filterButton.setFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
+         }
          setTimeout($ws.helpers.forAliveOnly(function() {
             // Через timeout, чтобы можно было подписаться на соыбтие, уйдёт с серверным рендерингом
             browser._notifyOnFiltersReady();
