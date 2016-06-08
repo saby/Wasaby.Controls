@@ -142,7 +142,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          var self = this;
          var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource;
          if (getRecordProtoMethod){
-            getRecordProtoMethod(config.componentOptions).addCallback(function (record) {
+            getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions).addCallback(function (record) {
                config.componentOptions.record = record;
                self._showDialog(config, meta, mode);
             });
