@@ -1095,15 +1095,22 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          /**
           * Перезагружает набор записей представления данных с последующим обновлением отображения.
+          * @remark
+          * Производится запрос на выборку записей из источника данных по установленным параметрам:
+          * <ol>
+          *    <li>Параметры фильтрации, которые устанавливают с помощью опции {@link SBIS3.CONTROLS.ItemsControlMixin#filter}.</li>
+          *    <li>Параметры сортировки, которые устанавливают с помощью опции {@link SBIS3.CONTROLS.ItemsControlMixin#sorting}.</li>
+          *    <li>Порядковый номер записи в источнике, с которого будет производиться отбор записей для выборки. Устанавливают с помощью метода {@link SBIS3.CONTROLS.ItemsControlMixin#setOffset}.</li>
+          *    <li>Масимальное число записей, которые будут присутствовать в выборке. Устанавливают с помощью метода {@link SBIS3.CONTROLS.ItemsControlMixin#pageSize}.</li>
+          * </ol>
+          * Вызов метода инициирует событие {@link SBIS3.CONTROLS.ItemsControlMixin#onBeforeDataLoad}. В случае успешной перезагрузки набора записей происходит событие {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoad}, а в случае ошибки - {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoadError}.
+          * Если источник данных не установлен, производит перерисовку установленного набора данных.
+          * @return {$ws.proto.Deferred}
           * @example
           * <pre>
-          *    var btn = new Button({
-           *         element: "buttonReload",
-           *         caption: 'reload offset: 450'
-           *    }).subscribe('onActivated', function(event, id){
-           *           //При нажатии на кнопку перезагрузим DataGridView  с 450ой записи
-           *           DataGridViewBL.reload(DataGridViewBL._filter, DataGridViewBL.getSorting(), 450, DataGridViewBL._limit);
-           *    });
+          *    btn.subscribe('onActivated', function() {
+          *       DataGridViewBL.reload();
+          *    });
           * </pre>
           */
          reload: function () {
