@@ -24,12 +24,20 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
          var query = new Query(),
              historyFilter = {},
              resultDef = new $ws.proto.Deferred(),
+             applyFilterOnLoad = true,
              queryDef, history, serializedHistory, queryFilter;
 
          historyId = historyId || this._options.historyId;
 
-         /* Если есть historyId, то попытаемся достать фильтр из истории */
-         if(historyId) {
+         /* Если миксин подмешивается в браузер, то опция applyHistoryFilterOnLoad должна быть, проверим по ней, нужно ли применять историю,
+            если флага нет, значит миксин подмешан не в браузер,
+            и если применять историю не надо, то можно просто не передавать historyId */
+         if( !historyId || this._options.applyHistoryFilterOnLoad === false ) {
+            applyFilterOnLoad = false;
+         }
+
+         /* Если есть historyId и разрешёно применение из истории, то попытаемся достать фильтр из истории */
+         if(applyFilterOnLoad) {
             history = $ws.single.SessionStorage.get(historyId);
 
             if (history) {
