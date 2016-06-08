@@ -11,8 +11,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
    'js!SBIS3.CONTROLS.Data.Utils',
+   'js!SBIS3.CONTROLS.Data.Model',
    'Core/ParserUtilities'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, ParserUtilities) {
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -1133,8 +1134,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _prepareMetaData: function(dataSet) {
-         //todo ножно придумать как изменить конструктор модели для метаданных
-         var meta = dataSet.hasProperty('m') ?  dataSet.getRow('m').toObject() : {};
+         /*  надо создавать дефолтную модель, а не внедренную, т.к. в модели recordSet'a
+             могут быть расчитываемые поля, которые ожидают что в модели будут гарантированно какие-то данные */
+         var meta = dataSet.hasProperty('m') ?
+             (new Model({
+                rawData: dataSet.getProperty('m'),
+                adapter: dataSet.getAdapter()
+             })).toObject() :
+             {};
 
          meta.results = dataSet.getProperty('r');
          meta.more = dataSet.getTotal();
