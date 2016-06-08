@@ -330,18 +330,120 @@ define([
                assert.equal(item.getLoadedProperty(), 'isLoaded');
             });
 
-            it('should return loaded property', function(){
-               var items = new Tree({
-                  collection: items,
-                  root: {id: 1, title: 'Root'},
-                  idProperty: 'id',
+            it('should return loaded property when item gets into projections', function(){
+               var  root = new TreeItem({contents: {
+                     id: null,
+                     title: 'Root'
+                  }}),
+                  tree = new Tree({
+                     collection: items,
+                     root: root,
+                     idProperty: 'id',
+                     loadedProperty: 'isLoaded'
+                  });
+
+               assert.equal(tree.at(0).getLoadedProperty(), 'isLoaded');
+            });
+         });
+         describe('.setLoadedProperty()', function() {
+            it('should set loaded property', function () {
+               var item = new TreeItem({
+                  contents: {
+                     id: null,
+                     title: 'Root'
+                  }
+               });
+               item.setLoadedProperty('isLoaded');
+               assert.equal(item.getLoadedProperty(), 'isLoaded');
+            });
+         });
+         describe('.isLoaded', function() {
+            it('should set loaded property', function () {
+               var item = new TreeItem({
+                  contents: {
+                     id: null,
+                     title: 'Root',
+                     isLoaded: true
+                  },
                   loadedProperty: 'isLoaded'
                });
 
-               assert.equal(items.at(0).getLoadedProperty(), 'isLoaded');
+               assert.isTrue(item.isLoaded());
+            });
+
+            it('should set loaded property', function () {
+               var item = new TreeItem({
+                  contents: {
+                     id: null,
+                     title: 'Root',
+                     isLoaded: false
+                  },
+                  loadedProperty: 'isLoaded'
+               });
+
+               assert.isFalse(item.isLoaded());
+            });
+
+            it('should throw an error becouse loaded property is undefined', function () {
+               var item = new TreeItem({
+                  contents: {
+                     id: null,
+                     title: 'Root',
+                     isLoaded: false
+                  }
+               });
+               assert.Throw(function(){
+                  item.isLoaded();
+               });
             });
          });
 
+         describe('.setLoaded', function() {
+            it('should set loaded false when its true', function () {
+               var item = new TreeItem({
+                  contents: {
+                     id: null,
+                     title: 'Root',
+                     isLoaded: true,
+                     setIsLoaded: function(val){
+                        this['isLoaded'] = val;
+                     }
+                  },
+                  loadedProperty: 'isLoaded'
+               });
+               item.setLoaded(false);
+               assert.isFalse(item.isLoaded());
+            });
+
+            it('should set loaded true when its false', function () {
+               var item = new TreeItem({
+                  contents: {
+                     id: null,
+                     title: 'Root',
+                     isLoaded: false,
+                     setIsLoaded: function(val){
+                        this['isLoaded'] = val;
+                     }
+                  },
+                  loadedProperty: 'isLoaded'
+               });
+               item.setLoaded(true);
+               assert.isTrue(item.isLoaded());
+            });
+
+            it('should throw an error becouse loaded property is undefined', function () {
+               var item = new TreeItem({
+                  contents: {
+                     id: null,
+                     title: 'Root',
+                     isLoaded: false
+                  }
+               });
+               assert.Throw(function(){
+                  item.setLoaded(true);
+               });
+            });
+         });
 
          describe('.$constructor()', function(){
             it('should sort projection so first folder then next leaf', function(){

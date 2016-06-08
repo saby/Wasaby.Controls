@@ -178,7 +178,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
        */
       setLoaded: function (value) {
          this._checkLoadedProperty();
-         Utils.getItemPropertyValue(this.getContents(), this.getLoadedProperty(), !!value);
+         Utils.setItemPropertyValue(this.getContents(), this.getLoadedProperty(), !!value);
       },
 
 
