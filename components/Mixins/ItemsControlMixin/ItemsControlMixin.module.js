@@ -188,6 +188,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _createDefaultProjection : createDefaultProjection,
             _buildTplArgsSt: buildTplArgs,
             _buildTplArgs : buildTplArgs,
+            _getRecordsForRedrawSt: getRecordsForRedraw,
             _getRecordsForRedraw: getRecordsForRedraw,
             /**
              * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
