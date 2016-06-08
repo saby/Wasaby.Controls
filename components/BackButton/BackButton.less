@@ -26,28 +26,31 @@
       margin: @back-button-margin-before;
    }
 
-   &:hover {
-      .controls-BackButton__arrow{
-         display: inline-block;
+   &.controls-BackButton__show-arrow{
+      &:hover {
+         .controls-BackButton__arrow{
+            display: inline-block;
+         }
       }
-   }
-
-   &.controls-BackButton__hover-arrow{
-      .controls-BackButton__arrow{
-         position: absolute;
-         top: 4px;
-         right: 0;
-         background-color: rgba(255, 255, 255, 0.9);
+      &.controls-BackButton__hover-arrow{
+         .controls-BackButton__arrow{
+            position: absolute;
+            top: 4px;
+            right: 0;
+            background-color: rgba(255, 255, 255, 0.9);
+         }
       }
-   }
-
-   .controls-BackButton__arrow {
-      position: relative;
-      top: 5px;
-      float: right;
-      &:before{
+      .controls-BackButton__arrow {
+         position: relative;
+         top: 5px;
          float: right;
+         &:before{
+            float: right;
+         }
       }
+   }
+
+   .controls-BackButton__arrow{
       display: none;
    }
    
