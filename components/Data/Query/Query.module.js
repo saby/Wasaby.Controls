@@ -302,8 +302,8 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
 
       /**
        * Устанавливает порядок сортировки выборки
-       * @param {String|Array.<Object.<String, Boolean>>} selector Название поле сортировки или набор полей и направление сортировки в каждом
-       * @param {Boolean} [order=true] Порядок сортировки (true - по возрастанию, false - по убыванию)
+       * @param {String|Array.<Object.<String, SBIS3.CONTROLS.Data.Query.Order/Order.typedef>>} selector Название поле сортировки или набор полей и направление сортировки в каждом (false - по возрастанию, true - по убыванию)
+       * @param {SBIS3.CONTROLS.Data.Query.Order/Order.typedef} [desc=false] По убыванию
        * @returns {SBIS3.CONTROLS.Data.Query.Query}
        * @example
        * Отсортируем заказы по полю id по возрастанию:
@@ -318,7 +318,7 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
        *    var query = new Query()
        *       .select('*')
        *       .from('Orders')
-       *       .orderBy('id', false);
+       *       .orderBy('id', true);
        * </pre>
        * Отсортируем заказы сначала по полю customerId по возрастанию, затем по полю date по убыванию:
        * <pre>
@@ -326,14 +326,14 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
        *       .select('*')
        *       .from('Orders')
        *       .orderBy([
-       *          {customerId: true},
-       *          {date: false}
+       *          {customerId: false},
+       *          {date: true}
        *       ]);
        * </pre>
        */
-      orderBy: function (selector, order) {
-         if (order === undefined) {
-            order = true;
+      orderBy: function (selector, desc) {
+         if (desc === undefined) {
+            desc = true;
          }
 
          this._orderBy = [];
@@ -363,7 +363,7 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
          } else if (selector) {
             this._orderBy.push(new Order({
                selector: selector,
-               order: order
+               order: desc
             }));
          }
 
