@@ -81,9 +81,9 @@ define('js!SBIS3.CONTROLS.Browser', [
              */
             ignoreFiltersList: [],
             /**
-             * @cfg {Boolean} hideCheckBoxes необходимо ли скрывать чекбоксы, когда панель массовых операций закрыта.
+             * @cfg {Boolean} showCheckBoxes необходимо ли показывать чекбоксы, когда панель массовых операций закрыта.
              */
-            hideCheckBoxes: false,
+            showCheckBoxes: false,
             contentTpl : contentTpl
          }
       },
@@ -136,7 +136,7 @@ define('js!SBIS3.CONTROLS.Browser', [
 
          this._operationsPanel = this._getOperationsPanel();
          if (this._operationsPanel) {
-            this._componentBinder.bindOperationPanel(this._options.hideCheckBoxes, this._operationsPanel);
+            this._componentBinder.bindOperationPanel(!this._options.showCheckBoxes, this._operationsPanel);
          }
 
          this._filterButton = this._getFilterButton();
