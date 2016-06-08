@@ -617,7 +617,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
             if (!this._options._serverRender) {
-               if (this._options._items) {
+               if (this.getItems()) {
                   this.redraw()
                }
                else if (this._dataSource){
@@ -663,7 +663,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if ($ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
                   topParent.once('onAfterShow', function(){
                      self._firstScrollTop = true;
-                     if (self._options._items) {
+                     if (self.getItems()) {
                         self._preScrollLoading();
                      }
                   });
@@ -698,7 +698,7 @@ define('js!SBIS3.CONTROLS.ListView',
                case $ws._const.key.enter:
                   if(selectedKey) {
                      var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
-                     this._elemClickHandler(selectedKey, this._options._items.getRecordById(selectedKey), selectedItem);
+                     this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem);
                   }
                   break;
                case $ws._const.key.space:
@@ -740,9 +740,10 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {jQuery}
           */
          getNextItemById: function (id) {
+            var projection = this._getItemsProjection();
             return this._getHtmlItemByProjectionItem(
-               this._options._itemsProjection.getNext(
-                  this._options._itemsProjection.getItemBySourceItem(
+                projection.getNext(
+                    projection.getItemBySourceItem(
                      this.getItems().getRecordById(id)
                   )
                )
@@ -754,9 +755,10 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {jQuery}
           */
          getPrevItemById: function (id) {
+            var projection = this._getItemsProjection();
             return this._getHtmlItemByProjectionItem(
-               this._options._itemsProjection.getPrevious(
-                  this._options._itemsProjection.getItemBySourceItem(
+                projection.getPrevious(
+                    projection.getItemBySourceItem(
                      this.getItems().getRecordById(id)
                   )
                )
@@ -804,7 +806,7 @@ define('js!SBIS3.CONTROLS.ListView',
                siblingItem = items.eq(index);
             }
             if (siblingItem)
-               return this._options._items.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItemByDOM(siblingItem.data('id'), isNext);
+               return this.getItems().getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItemByDOM(siblingItem.data('id'), isNext);
             else
                return undefined;
          },
@@ -819,7 +821,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             if (target.length && this._isViewElement(target)) {
                id = target.data('id');
-               this._elemClickHandler(id, this._options._items.getRecordByKey(id), e.target);
+               this._elemClickHandler(id, this.getItems().getRecordByKey(id), e.target);
             }
             if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox') && this.isEnabled()){
                $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
@@ -1034,6 +1036,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _elemClickHandler: function (id, data, target) {
             var $target = $(target),
                 self = this,
+                elClickHandler = this._options.elemClickHandler,
                 onItemClickResult;
 
             if (this._options.multiselect) {
@@ -1051,38 +1054,27 @@ define('js!SBIS3.CONTROLS.ListView',
                onItemClickResult.addCallback(function (result) {
                   if (result !== false) {
                      self.setSelectedKey(id);
+                     self._elemClickHandlerInternal(data, id, target);
+                     elClickHandler && elClickHandler.call(self, id, data, target);
                   }
                   return result;
                });
             }
             else if (onItemClickResult !== false) {
                this.setSelectedKey(id);
+               self._elemClickHandlerInternal(data, id, target);
+               elClickHandler && elClickHandler.call(self, id, data, target);
             }
+         },
+         _notifyOnItemClick: function(id, data, target) {
+            return this._notify('onItemClick', id, data, target);
          },
          _onCheckBoxClick: function(target) {
             if (this.isEnabled()) {
                this.toggleItemsSelection([target.closest('.controls-ListView__item').attr('data-id')]);
             }
          },
-         _notifyOnItemClick: function(id, data, target) {
-            var
-                self = this,
-                elClickHandler = this._options.elemClickHandler,
-                res = this._notify('onItemClick', id, data, target);
-            if (res instanceof $ws.proto.Deferred) {
-               res.addCallback(function(result) {
-                  if (result !== false) {
-                     self._elemClickHandlerInternal(data, id, target);
-                     elClickHandler && elClickHandler.call(self, id, data, target);
-                  }
-                  return result;
-               });
-            } else if (res !== false) {
-               this._elemClickHandlerInternal(data, id, target);
-               elClickHandler && elClickHandler.call(this, id, data, target);
-            }
-            return res;
-         },
+
          _elemClickHandlerInternal: function (data, id, target) {
             this._activateItem(id);
          },
@@ -1260,7 +1252,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _onChangeHoveredItemHandler: function(event, hoveredItem) {
             var target = hoveredItem.container;
             if (target && !(target.hasClass('controls-editInPlace') || target.hasClass('controls-editInPlace__editing'))) {
-               this.showEip(target, this._options._items.getRecordById(hoveredItem.key), { isEdit: false });
+               this.showEip(target, this.getItems().getRecordById(hoveredItem.key), { isEdit: false });
             } else {
                this._getEditInPlace().hide();
             }
@@ -1342,11 +1334,11 @@ define('js!SBIS3.CONTROLS.ListView',
             //options.editFieldFocusHandler = this._editFieldFocusHandler.bind(this) - подумать, как это сделать
             var
                config = {
-                  dataSet: this._options._items,
+                  dataSet: this.getItems(),
                   editingItem: this._editingItem,
                   ignoreFirstColumn: this._options.multiselect,
                   dataSource: this._dataSource,
-                  itemsProjection: this._options._itemsProjection,
+                  itemsProjection: this._getItemsProjection(),
                   notEndEditClassName: this._notEndEditClassName,
                   editingTemplate: this._options.editingTemplate,
                   itemsContainer: this._getItemsContainer(),
@@ -1687,7 +1679,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _loadChecked: function (result) {
             //Важно, чтобы датасет уже был готов к моменту, когда мы попытаемся грузить данные
-            if (this._options._items && result) {
+            if (this.getItems() && result) {
                this._nextLoad();
             }
          },
@@ -1702,7 +1694,7 @@ define('js!SBIS3.CONTROLS.ListView',
                loadAllowed  = this._isAllowInfiniteScroll();
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && $ws.helpers.isElementVisible(this.getContainer()) &&
-                  this._hasNextPage(this._options._items.getMetaData().more, this._infiniteScrollOffset) && !this.isLoading()) {
+                  this._hasNextPage(this.getItems().getMetaData().more, this._infiniteScrollOffset) && !this.isLoading()) {
                this._showLoadingIndicator();
                this._toggleEmptyData(false);
                this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), this._infiniteScrollOffset + this._limit, this._limit);
@@ -1731,7 +1723,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         self._containerScrollHeight = self._scrollWatcher.getScrollHeight();
                         self._needSrollTopCompensation = true;
                         //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
-                        self._options._items.prepend(dataSet.toArray().reverse());
+                        self.getItems().prepend(dataSet.toArray().reverse());
                         at = {at: 0};
                      } else {
                         //TODO новый миксин не задействует декоратор лесенки в принципе при любых действиях, кроме первичной отрисовки
@@ -1742,7 +1734,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            ladder.setIgnoreEnabled(true);
                         }
                         //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
-                        self._options._items.append(dataSet);
+                        self.getItems().append(dataSet);
                         ladder && ladder.setIgnoreEnabled(false);
                      }
 
@@ -1965,7 +1957,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _processPagingStandart: function () {
             if (!this._pager) {
-               var more = this._options._items.getMetaData().more,
+               var more = this.getItems().getMetaData().more,
                   hasNextPage = this._hasNextPage(more),
                   pagingOptions = {
                      recordsPerPage: this._options.pageSize || more,
@@ -2019,7 +2011,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * Метод обработки интеграции с пейджингом
           */
          _updatePaging: function () {
-            var more = this._options._items.getMetaData().more,
+            var more = this.getItems().getMetaData().more,
                nextPage = this._hasNextPage(more, this._infiniteScrollOffset),
                numSelected = 0;
             if (this._pager) {
@@ -2031,16 +2023,16 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._pageChangeDeferred = undefined;
                }
                //Если на странице больше нет записей - то устанавливаем предыдущую (если это возможно)
-               if (this._options._items.getCount() === 0 && pageNum > 1) {
+               if (this.getItems().getCount() === 0 && pageNum > 1) {
                   this._pager.getPaging().setPage(1); //чтобы не перезагружать поставим 1ую. было : pageNum - 1
                }
                //TODO Постараться избавиться от _infiniteScrollOffset, т.к. _offset уже выполняет необходимые функции
                this._pager.getPaging().update(this.getPage(this.isInfiniteScroll() ? this._infiniteScrollOffset : this._offset) + 1, more, nextPage);
-               this._pager.getContainer().toggleClass('ws-hidden', !this._options._items.getCount());
+               this._pager.getContainer().toggleClass('ws-hidden', !this.getItems().getCount());
                if (this._options.multiselect) {
                   numSelected = this.getSelectedKeys().length;
                }
-               this._pager.updateAmount(this._options._items.getCount(), nextPage, numSelected);
+               this._pager.updateAmount(this.getItems().getCount(), nextPage, numSelected);
             }
          },
          /**
@@ -2082,12 +2074,12 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          getPage: function (offset) {
             var offset = offset || this._offset,
-                more = this._options._items.getMetaData().more;
+                more = this.getItems().getMetaData().more;
             //Если offset отрицательный, значит запросили последнюю страницу.
             return Math.ceil((offset < 0 ? more + offset : offset) / this._options.pageSize);
          },
          _updateOffset: function () {
-            var more = this._options._items.getMetaData().more,
+            var more = this.getItems().getMetaData().more,
                nextPage = this._hasNextPage(more);
             if (this.getPage() === -1) {
                this._offset = more - this._options.pageSize;
@@ -2132,8 +2124,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see commitEdit
           */
          _activateItem : function(id) {
-            var
-               item = this._options._items.getRecordByKey(id);
+            var item = this.getItems().getRecordByKey(id);
             this._notify('onItemActivate', {id: id, item: item});
          },
          /**

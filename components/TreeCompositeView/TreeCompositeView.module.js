@@ -76,54 +76,23 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          }
       },
 
-      _elemClickHandler: function (id, data, target) {
-         var $target = $(target),
-             onItemClickResult;
-
+      _elemClickHandlerInternal: function(data, id, target) {
          if (this._options.viewMode == 'table') {
-            TreeCompositeView.superclass._elemClickHandler.call(this, id, data, target);
-         }
-         else {
-            if (this._options.multiselect) {
-               if ($target.hasClass('js-controls-ListView__itemCheckBox')) {
-                  this._onCheckBoxClick($target);
-               }
-               else {
-                  onItemClickResult = this._notifyOnItemClick(id, data, target);
-               }
-            } else {
-               onItemClickResult = this._notifyOnItemClick(id, data, target);
-               if (onItemClickResult !== false){
-                  this.setSelectedKeys([id]);
-               }
-            }
-            if (onItemClickResult !== false){
-               this.setSelectedKey(id);
-            }
-         }
-      },
-      _notifyOnItemClick: function(id, data, target) {
-         var res;
-         if (this._options.viewMode == 'table') {
-            res = TreeCompositeView.superclass._notifyOnItemClick.apply(this, arguments);
+            TreeCompositeView.superclass._elemClickHandlerInternal.apply(this, arguments);
          }
          else {
             var nodeID;
-               res = this._notify('onItemClick', id, data, target);
-            if (res !== false) {
-               this._options.elemClickHandler && this._options.elemClickHandler.call(this, id, data, target);
-               nodeID = $(target).closest('.controls-ListView__item').data('id');
-               if (this.getItems().getRecordByKey(nodeID).get(this._options.hierField + '@')) {
-                  this.setCurrentRoot(nodeID);
-                  this.reload();
-               }
-               else {
-                  this._activateItem(id);
-               }
+            nodeID = $(target).closest('.controls-ListView__item').data('id');
+            if (this.getItems().getRecordByKey(nodeID).get(this._options.hierField + '@')) {
+               this.setCurrentRoot(nodeID);
+               this.reload();
+            }
+            else {
+               this._activateItem(id);
             }
          }
-         return res;
       },
+      
       _getItemTemplate: function(itemProj) {
          var resultTpl, dotTpl, item = itemProj.getContents();
             switch (this._options.viewMode) {
