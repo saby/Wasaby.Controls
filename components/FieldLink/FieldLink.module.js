@@ -402,6 +402,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
              })
           },
 
+          _observableControlFocusHandler: function() {
+             /* Не надо обрабатывать приход фокуса, если у нас есть выбрынные
+              элементы при единичном выборе, в противном случае, автодополнение будет посылать лишний запрос,
+              хотя ему отображаться не надо. */
+             if(!this._options.multiselect && !this._isEmptySelection()) {
+                return false;
+             }
+             FieldLink.superclass._observableControlFocusHandler.apply(this, arguments);
+          },
+
           /**
            * Обрабатывает результат выбора из справочника
            * @param {Array} result
