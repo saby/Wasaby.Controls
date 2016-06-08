@@ -1302,6 +1302,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
           this._itemsInitializedBySource = false;
           this._prepareConfig(undefined, items);
           this._notify('onDataLoad', this.getItems()); //TODO на это событие завязались. аккуратно спилить
+          this._dataLoadedCallback(); //TODO на это завязаны хлебные крошки, нужно будет спилить
           this.redraw();
 
       },
