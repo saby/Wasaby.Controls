@@ -63,6 +63,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             this._options._itemsProjection.setEventRaising(false);
             //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
             view._options._itemsProjection.setRoot(null);
+            view._options._curRoot = null;
             this._options._itemsProjection.setEventRaising(true);
          });
 
@@ -109,6 +110,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
       //только после релоада, иначе визуально будут прыжки и дерганья (класс меняет паддинги)
       view.once('onDataLoad', function(){
          view._container.removeClass('controls-GridView__searchMode');
+         view._options._curRoot = self._lastRoot || null;
          view._getItemsProjection().setRoot(self._lastRoot || null);
       });
       this._searchMode = false;
