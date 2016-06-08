@@ -1681,7 +1681,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var args = this._prepareItemData();
             args['projItem'] = item;
             args['item'] = item.getContents();
-            return $(MarkupTransformer(dotTemplate(args)));
+            return $(ParserUtilities.buildInnerComponents(MarkupTransformer(dotTemplate(args)), this.getId()));
          } else {
             throw new Error('Ошибка в itemTemplate');
          }
@@ -1764,23 +1764,22 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._buildTplItem(item, this._getItemTemplate(item));
       },
       _appendItemTemplate: function (item, targetContainer, itemBuildedTpl, at) {
-         var itemBuildedMarkup = ParserUtilities.buildInnerComponents(MarkupTransformer(itemBuildedTpl.get(0).outerHTML), this.getId());
          if (at && (typeof at.at !== 'undefined')) {
             var atContainer = at.at !== 0 && $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at-1);
             if (atContainer.length) {
-               atContainer.after(itemBuildedMarkup);
+               atContainer.after(itemBuildedTpl);
             }
             else {
                atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at);
                if (atContainer.length) {
-                  atContainer.before(itemBuildedMarkup);
+                  atContainer.before(itemBuildedTpl);
                } else {
-                  targetContainer.append(itemBuildedMarkup);
+                  targetContainer.append(itemBuildedTpl);
                }
             }
          }
          else {
-            targetContainer.append(itemBuildedMarkup);
+            targetContainer.append(itemBuildedTpl);
          }
       },
       _onCollectionReplace: function(items) {
