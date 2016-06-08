@@ -18,9 +18,9 @@ define([
       });
 
       describe('.getOrder', function () {
-         it('should return true by default', function () {
+         it('should return false by default', function () {
             var order = new Order();
-            assert.isTrue(order.getOrder());
+            assert.isFalse(order.getOrder());
          });
          it('should return boolean value passed to the constructor', function () {
             var order = new Order({
@@ -28,11 +28,11 @@ define([
             });
             assert.isFalse(order.getOrder());
          });
-         it('should return true from string "ASC" passed to the constructor', function () {
+         it('should return false from string "ASC" passed to the constructor', function () {
             var order = new Order({
                order: 'ASC'
             });
-            assert.isTrue(order.getOrder());
+            assert.isFalse(order.getOrder());
 
             order = new Order({
                order: 'asc'
@@ -44,11 +44,11 @@ define([
             });
             assert.isTrue(order.getOrder());
          });
-         it('should return false from string "DESC" passed to the constructor', function () {
+         it('should return true from string "DESC" passed to the constructor', function () {
             var order = new Order({
                order: 'DESC'
             });
-            assert.isFalse(order.getOrder());
+            assert.isTrue(order.getOrder());
 
             order = new Order({
                order: 'desc'
