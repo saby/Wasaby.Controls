@@ -139,7 +139,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          }
 
          if (this._options.closeButton) {
-            container.append('<div class="controls-PopupMixin__closeButton" ></div>');
+            container.append('<div class="controls-PopupMixin__closeButton icon-16 icon-size icon-ExpandUp icon-primary action-hover"></div>');
             $('.controls-PopupMixin__closeButton', this.getContainer().get(0)).click(function() {
                //Нужно вызвать активироваться перед hide, чтобы закрылись плав. панели, у которых опенером был этот контрол
                //TODO: унифицировать код закрытия с SBIS3.CORE.FloatArea: хранить коллекцию дочерних панелей, и закрывать их тут
