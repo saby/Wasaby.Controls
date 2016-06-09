@@ -27,6 +27,11 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
       _registry: null,
 
       /**
+       * @member {Object.<String, Number>} Реестр хешей объектов
+       */
+      _hash: null,
+
+      /**
        * @member {Array.<Array.<Number>>} Индекс родителя -> [индексы детей]
        */
       _parentToChild: null,
@@ -39,6 +44,7 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
       constructor: function $OneToMany() {
          OneToMany.superclass.constructor.call(this);
          this._registry = [];
+         this._hash = {};
          this._parentToChild = [];
          this._childToParent = {};
       },
@@ -171,13 +177,30 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
       //region Protected methods
 
       /**
+       * Возвращает хеш объекта
+       * @param {Object} item Объект
+       * @return {String}
+       * @protected
+       */
+      _getHash: function(item) {
+         //Вместо $ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IHashable') т.к. важна скорость
+         return item.getHash ? item.getHash() : undefined;
+      },
+
+      /**
        * Возвращает индекс объекта в реестре
        * @param {Object} item Объект
        * @return {Number}
        * @protected
        */
       _getIndex: function(item) {
-         return Array.indexOf(this._registry, item);
+         var hash = this._getHash(item);
+         if (hash) {
+            var index = this._hash[hash];
+            return index === undefined ? -1 : index;
+         } else {
+            return Array.indexOf(this._registry, item);
+         }
       },
 
       /**
@@ -191,6 +214,10 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
          if (index === -1) {
             index = this._registry.length;
             this._registry.push(item);
+            var hash = this._getHash(item);
+            if (hash) {
+               this._hash[hash] = index;
+            }
          }
          return index;
       },
@@ -201,10 +228,14 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
        * @return {Number} Индекс удаленного объекта в реестре
        * @protected
        */
-      _remove: function(child) {
-         var index = this._getIndex(child);
+      _remove: function(item) {
+         var index = this._getIndex(item);
          if (index > -1) {
             this._registry[index] = null;
+            var hash = this._getHash(item);
+            if (hash) {
+               delete this._hash[hash];
+            }
          }
          return index;
       },
