@@ -50,9 +50,9 @@ define('js!SBIS3.CONTROLS.ListView',
 
             return tplOptions;
          },
-         getRecordsForRedrawLV = function (projection){
+         getRecordsForRedrawLV = function (projection, cfg){
             var records = this._options._getRecordsForRedrawSt.call(this, projection);
-            if (this._options.infiniteScroll === 'up' && !this._isSearchMode()) {
+            if (cfg.infiniteScroll === 'up' && this._isSearchMode && !this._isSearchMode()) {
                return records.reverse();
             }
             return records;
