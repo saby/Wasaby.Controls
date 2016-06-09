@@ -160,7 +160,10 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._updateDocumentTitle();
          this._setDefaultContextRecord();
          this._panel = this.getTopParent();
-         this._dataSource = this._options.source;
+         this._dataSource = this._options.source || FormController.prototype.createDataSource(this._options);
+         if (!this._options.record){
+            this._getRecordFromSource({});
+         }
          var loadingTime = new Date();
          this.subscribe('onAfterShow', function(){
             $ws.single.ioc.resolve('ILogger').log('FormController', 'Время загрузки ' + (new Date() - loadingTime) + 'мс');
