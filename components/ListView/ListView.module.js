@@ -588,6 +588,9 @@ define('js!SBIS3.CONTROLS.ListView',
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
 
+            /* За счёт того, что разделено поведения отображения операций и ховера,
+               в зависимости от события, которое произошло, то можно смело подписаться на все событие,
+               если его нет, то подписки не произодйдёт */
             this._container.on('swipe', this._swipeHandler.bind(this))
                            .on('tap', this._tapHandler.bind(this))
                            .on('touchmove mousemove',this._mouseMoveHandler.bind(this))
@@ -840,6 +843,8 @@ define('js!SBIS3.CONTROLS.ListView',
             target = this._findItemByElement($target);
 
             if (target.length) {
+               /* Проверяем, чем был вызвано событие, мышью или движением пальца,
+                  чтобы в зависимости от этого понимать, надо ли показывать операции */
                if(!e.originalEvent.touches) {
                   this._changeHoveredItem(target);
                }
