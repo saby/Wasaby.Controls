@@ -37,12 +37,12 @@ define([
             order = new Order({
                order: 'asc'
             });
-            assert.isTrue(order.getOrder());
+            assert.isFalse(order.getOrder());
 
             order = new Order({
                order: 'Asc'
             });
-            assert.isTrue(order.getOrder());
+            assert.isFalse(order.getOrder());
          });
          it('should return true from string "DESC" passed to the constructor', function () {
             var order = new Order({
@@ -53,12 +53,12 @@ define([
             order = new Order({
                order: 'desc'
             });
-            assert.isFalse(order.getOrder());
+            assert.isTrue(order.getOrder());
 
             order = new Order({
                order: 'Desc'
             });
-            assert.isFalse(order.getOrder());
+            assert.isTrue(order.getOrder());
          });
       });
    });
