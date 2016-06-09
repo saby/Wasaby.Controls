@@ -33,7 +33,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
                 actions.mouseMove(this.item_1);
             })
     });
-	/*
+
 	gemini.suite('right_side', function (test) {
 
         test.setUrl('/regression_menu_button_online.html').setCaptureElements('html')
@@ -68,7 +68,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
 			.capture('hovered_item', function (actions) {
                 actions.mouseMove(this.item_1);
             })
-    });*/
+    });
 	
 	gemini.suite('bottom_side', function (test) {
 
@@ -894,7 +894,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
                 actions.mouseMove(this.item_3);
             })
     });
-	/*
+    /*
 	gemini.suite('right_side_with_submenu', function (test) {
 
         test.setUrl('/regression_menu_button_online_15.html').setCaptureElements('html')
