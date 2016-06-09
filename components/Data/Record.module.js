@@ -439,9 +439,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
                adapter.getSharedFormat(name),
                this.getAdapter()
             );
-            if (result instanceof Object) {
-               this._addChild(result, this._getRelationNameForField(name));
-            }
+            this._addChild(result, this._getRelationNameForField(name));
             return result;
          } catch (e) {
             return undefined;

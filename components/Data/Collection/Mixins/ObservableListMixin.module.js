@@ -156,7 +156,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
                which,
                data
             );
-            //this.notifyItemChange(which, data);
          }
       },
 

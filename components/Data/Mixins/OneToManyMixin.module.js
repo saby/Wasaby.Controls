@@ -1,11 +1,11 @@
-/* global define, $ws */
+/* global define */
 define('js!SBIS3.CONTROLS.Data.OneToManyMixin', [
    'js!SBIS3.CONTROLS.Data.Mediator.OneToMany'
 ], function (OneToManyMediator) {
    'use strict';
 
    /**
-    * Миксин, позволяющий строить отношения "один ко многим"
+    * Миксин, позволяющий строить отношения "один ко многим" для родителя
     * @mixin SBIS3.CONTROLS.Data.OneToManyMixin
     * @public
     * @author Мальцев Алексей
@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.Data.OneToManyMixin', [
        * @protected
        */
       _addChild: function(child, name) {
-         if (child) {
+         if (child instanceof Object) {
             this._getMediator().addTo(this, child, name);
          }
       },
@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.Data.OneToManyMixin', [
        * @protected
        */
       _removeChild: function(child) {
-         if (child) {
+         if (child instanceof Object) {
             this._getMediator().removeFrom(this, child);
          }
       },

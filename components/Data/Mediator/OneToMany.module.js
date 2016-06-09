@@ -20,15 +20,25 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
 
    var OneToMany = Abstract.extend([IMediator], /** @lends SBIS3.CONTROLS.Data.Mediator.OneToMany.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Mediator.OneToMany',
-      _parents: null,
-      _children: null,
+
+      /**
+       * @member {Array.<Object>} Реестр объектов
+       */
+      _registry: null,
+
+      /**
+       * @member {Array.<Array.<Number>>} Индекс родителя -> [индексы детей]
+       */
       _parentToChild: null,
+
+      /**
+       * @member {Object.<Number, Array.<Number, String>>} Индекс ребенка -> [индекс родителя, название отношения]
+       */
       _childToParent: null,
 
       constructor: function $OneToMany() {
          OneToMany.superclass.constructor.call(this);
-         this._parents = [];
-         this._children = [];
+         this._registry = [];
          this._parentToChild = [];
          this._childToParent = {};
       },
@@ -36,7 +46,7 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
       //region SBIS3.CONTROLS.Data.Mediator.IMediator
 
       getInstance: function () {
-         return Di.resolve('mediator.one-to-many');
+         return _instance || (_instance = new OneToMany());
       },
 
       //endregion SBIS3.CONTROLS.Data.Mediator.IMediator
@@ -50,8 +60,8 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
        * @param {String} [name] Название отношений
        */
       addTo: function (parent, child, name) {
-         var parentIndex = this._insertParent(parent),
-            childIndex = this._insertChild(child);
+         var parentIndex = this._insert(parent),
+            childIndex = this._insert(child);
          this._insertRelation(parentIndex, childIndex, name);
       },
 
@@ -61,26 +71,22 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
        * @param {SBIS3.CONTROLS.Data.Mediator.IReceiver} child Ребенок
        */
       removeFrom: function (parent, child) {
-         var parentIndex = this._getParentIndex(parent),
+         var parentIndex = this._getIndex(parent),
             childIndex;
          if (parentIndex > -1) {
-            childIndex = this._removeChild(child);
+            childIndex = this._getIndex(child);
             if (childIndex > -1) {
                this._removeRelation(parentIndex, childIndex);
             }
          }
-         var children = this._getChildren(parentIndex);
-         if (children.length === 0) {
-            this._parents[parentIndex] = null;
-         }
       },
 
       /**
-       * Очищает все отношения у указанного родителя
+       * Очищает все отношения c детьми у указанного родителя
        * @param {SBIS3.CONTROLS.Data.Mediator.IReceiver} parent Родитель
        */
       clear: function (parent) {
-         var parentIndex = this._getParentIndex(parent),
+         var parentIndex = this._getIndex(parent),
             children;
          if (parentIndex === -1) {
             return;
@@ -88,9 +94,8 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
          children = this._getChildren(parentIndex);
          for (var i = 0; i < children.length; i++) {
             delete this._childToParent[children[i]];
-            children[i] = null;
          }
-         this._parents[parentIndex] = null;
+         children.length = 0;
       },
 
       /**
@@ -99,7 +104,7 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
        * @param {Function(SBIS3.CONTROLS.Data.Mediator.IReceiver)} callback Функция обратного вызова для каждого ребенка
        */
       each: function (parent, callback) {
-         var parentIndex = this._getParentIndex(parent),
+         var parentIndex = this._getIndex(parent),
             childIndex,
             children,
             relation;
@@ -109,11 +114,8 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
          children = this._getChildren(parentIndex);
          for (var i = 0; i < children.length; i++) {
             childIndex = children[i];
-            if (childIndex === null) {
-               continue;
-            }
             relation = this._childToParent[childIndex];
-            callback.call(this, this._children[childIndex], relation ? relation[1]: undefined);
+            callback.call(this, this._registry[childIndex], relation ? relation[1]: undefined);
          }
       },
 
@@ -123,8 +125,8 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
        * @return {SBIS3.CONTROLS.Data.Mediator.IReceiver}
        */
       getParent: function (child) {
-         var relation = this._childToParent[this._getChildIndex(child)];
-         return relation ? this._parents[relation[0]] : undefined;
+         var relation = this._childToParent[this._getIndex(child)];
+         return relation ? this._registry[relation[0]] : undefined;
       },
 
       /**
@@ -137,7 +139,7 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
          var parent = this.getParent(child),
             relation;
          if (parent) {
-            relation = this._childToParent[this._getChildIndex(child)];
+            relation = this._childToParent[this._getIndex(child)];
             if ($ws.helpers.instanceOfMixin(parent, 'SBIS3.CONTROLS.Data.Mediator.IReceiver')) {
                parent.relationChanged(child, relation ? relation[1] : '', data);
                if (recursive) {
@@ -169,46 +171,52 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
       //region Protected methods
 
       /**
-       * Проверяет наличие закэшированного значения поля
-       * @param {String} name Название поля
-       * @return {Boolean}
+       * Возвращает индекс объекта в реестре
+       * @param {Object} item Объект
+       * @return {Number}
        * @protected
        */
-
-      _getParentIndex: function(parent) {
-         return Array.indexOf(this._parents, parent);
+      _getIndex: function(item) {
+         return Array.indexOf(this._registry, item);
       },
 
-      _getChildIndex: function(child) {
-         return Array.indexOf(this._children, child);
-      },
-
-      _insertParent: function(parent) {
-         var index = this._getParentIndex(parent);
+      /**
+       * Добавляет объект в реестр, если его еще там нет
+       * @param {Object} item Объект
+       * @return {Number} Индекс объекта в реестре
+       * @protected
+       */
+      _insert: function(item) {
+         var index = this._getIndex(item);
          if (index === -1) {
-            index = this._parents.length;
-            this._parents.push(parent);
+            index = this._registry.length;
+            this._registry.push(item);
          }
          return index;
       },
 
-      _insertChild: function(child) {
-         var index = this._getChildIndex(child);
-         if (index === -1) {
-            index = this._children.length;
-            this._children.push(child);
-         }
-         return index;
-      },
-
-      _removeChild: function(child) {
-         var index = this._getChildIndex(child);
+      /**
+       * Удаляет объект из реестра, если он там есть
+       * @param {Object} item Объект
+       * @return {Number} Индекс удаленного объекта в реестре
+       * @protected
+       */
+      _remove: function(child) {
+         var index = this._getIndex(child);
          if (index > -1) {
-            this._children[index] = null;
+            this._registry[index] = null;
          }
          return index;
       },
 
+      /**
+       * Добавляет отношение
+       * @param {Number} parentIndex Индекс родителя
+       * @param {Number} childIndex Индекс ребенка
+       * @param {String} name Название отношения
+       * @return {Number}
+       * @protected
+       */
       _insertRelation: function(parentIndex, childIndex, name) {
          var children = this._getChildren(parentIndex),
             index = Array.indexOf(children, childIndex);
@@ -220,16 +228,29 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
          return index;
       },
 
+      /**
+       * Удаляет отношение
+       * @param {Number} parentIndex Индекс родителя
+       * @param {Number} childIndex Индекс ребенка
+       * @return {Number}
+       * @protected
+       */
       _removeRelation: function(parentIndex, childIndex) {
          var children = this._getChildren(parentIndex),
             index = Array.indexOf(children, childIndex);
          if (index > -1) {
-            children[index] = null;
+            children.splice(index, 1);
          }
          delete this._childToParent[childIndex];
          return index;
       },
 
+      /**
+       * Возвращает индексы детей
+       * @param {Number} parentIndex Индекс родителя
+       * @return {Array.<Number>}
+       * @protected
+       */
       _getChildren: function(parentIndex) {
          var children = this._parentToChild[parentIndex];
          if (!children) {
@@ -241,9 +262,11 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
       //endregion Protected methods
    });
 
-    OneToMany.getInstance = OneToMany.prototype.getInstance;
+   var _instance = null;
 
-   Di.register('mediator.one-to-many', OneToMany, {single: true});
+   OneToMany.getInstance = OneToMany.prototype.getInstance;
+
+   Di.register('mediator.one-to-many', OneToMany);
 
    return OneToMany;
 });
