@@ -19,32 +19,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
       _eventsEnabled: true,
 
       /**
-       * @member {Function} Обработчик изменения свойств элемента
-       */
-      _onItemPropertyChangeHandler: null,
-
-      /**
        * @member {boolean} флаг показывает выполняется ли в данный момент событие изменения коллекции
        */
       _isChangingYet: false,
 
       constructor: function $ObservableListMixin() {
          this._publish('onCollectionChange', 'onCollectionItemChange');
-         this._onItemPropertyChangeHandler = onItemPropertyChangeHandler.bind(this);
-
-         this._setObservableItems(this._$items);
-      },
-
-      $after: {
-         subscribe: function(event) {
-            if (this._eventBusChannel.getEventHandlers(event).length == 1) {
-               this._setObservableItems(this._$items);
-            }
-         },
-
-         destroy: function() {
-            this._unsetObservableItems(this._$items);
-         }
       },
 
       $around: {
@@ -170,10 +150,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
       //region SBIS3.CONTROLS.Data.Mediator.IReceiver
 
       relationChanged: function (which, name, data) {
-         // TODO: больше не использовать подписку на onPropertyChange
-         /*if (name === 'owner') {
-          this.notifyItemChange(which, data);
-          }*/
+         if (name === 'owner') {
+            this.notifyItemChange(which, data);
+         }
       },
 
       //endregion SBIS3.CONTROLS.Data.Mediator.IReceiver
@@ -195,15 +174,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          if (this.hasEventHandlers('onCollectionChange')) {
             this._notify(
                'onCollectionChange',
-               action,
-               newItems,
-               newItemsIndex,
-               oldItems,
-               oldItemsIndex
-            );
-         }
-         if (this.hasEventHandlers('onCollectionItemChange')) {
-            this._checkWatchableOnCollectionChange(
                action,
                newItems,
                newItemsIndex,
@@ -239,92 +209,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
 
       //region Protected methods
 
-      /**
-       * При изменениях коллекции синхронизирует подписки на элементы
-       * @param {String} action Действие, приведшее к изменению.
-       * @param {*[]} newItems Новые элементы коллеции.
-       * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
-       * @param {*[]} oldItems Удаленные элементы коллекции.
-       * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
-       * @protected
-       */
-      _checkWatchableOnCollectionChange: function(action, newItems, newItemsIndex, oldItems) {
-         switch (action){
-            case IBindCollection.ACTION_ADD:
-               this._setObservableItems(newItems);
-               break;
-            case IBindCollection.ACTION_REMOVE:
-               this._unsetObservableItems(oldItems);
-               break;
-            case IBindCollection.ACTION_RESET:
-            case IBindCollection.ACTION_REPLACE:
-               this._unsetObservableItems(oldItems);
-               this._setObservableItems(newItems);
-               break;
-         }
-      },
-
-      /**
-       * Оформляет подписку на событие onPropertyChange для каждого из элементов массива, если на событие есть подписчики
-       * @param items {Array} Элементы
-       * @protected
-       */
-      _setObservableItems: function(items) {
-         if (this.hasEventHandlers('onCollectionItemChange')) {
-            $ws.helpers.forEach(items, this._watchForChanges, this);
-         }
-      },
-
-      /**
-       * Отменяет подписку на событие onPropertyChange для каждого из элементов массива
-       * @param items {Array} Элементы
-       * @protected
-       */
-      _unsetObservableItems: function(items) {
-         $ws.helpers.forEach(items, this._cancelWatchForChanges, this);
-      },
-
-      /**
-       * Подписывается на событие onPropertyChange на содержимом элемента коллекции
-       * @param item {*} Элемент коллекции
-       * @protected
-       */
-      _watchForChanges: function(item) {
-         if (this._needWatchForChanges(item)) {
-            var handlers = item.getEventHandlers('onPropertyChange');
-            if (Array.indexOf(handlers, this._onItemPropertyChangeHandler) === -1) {
-               item.subscribe('onPropertyChange', this._onItemPropertyChangeHandler);
-            }
-         }
-      },
-
-      /**
-       * Отписываетсят события onPropertyChange
-       * @param item {*} Элемент коллекции
-       * @protected
-       */
-      _cancelWatchForChanges: function(item) {
-         if (this._needWatchForChanges(item)) {
-            item.unsubscribe('onPropertyChange', this._onItemPropertyChangeHandler);
-         }
-      },
-
-      /**
-       * Проверяет нужно ли следить за изменением содержимого элемента коллекции
-       * @param item {*} Содержимое элемента коллекции
-       * @returns {Boolean}
-       * @protected
-       */
-      _needWatchForChanges: function(item) {
-         if (
-            item &&
-            $ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IObject')
-         ) {
-            return true;
-         }
-         return false;
-      },
-
       _notifier: function (func /*, arguments*/) {
          var args = Array.prototype.slice.call(arguments, 1);
          if (this._isChangingYet) {
@@ -337,20 +221,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          func.apply(this, args);
          this._isChangingYet = false;
       }
-      //endregion Protected methods
-   };
 
-   /**
-    * Обработчк события изменения модели
-    * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {Object.<String, *>} properties Названия и новые значения изменившихся свойств
-    */
-   var onItemPropertyChangeHandler = function (event, properties) {
-      this._notifier(
-         this.notifyItemChange,
-         event.getTarget(),
-         properties
-      );
+      //endregion Protected methods
    };
 
    return ObservableListMixin;
