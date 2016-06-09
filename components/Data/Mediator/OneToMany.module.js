@@ -250,12 +250,13 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
       },
 
       /**
-       * Проверяет, что объект на был уничтожен
+       * Проверяет, что объект "живой" (не был уничтожен)
        * @param {Object} item Объект
        * @return {Boolean}
        * @protected
        */
       _isAlive: function(item) {
+         //Вместо $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Entity.Abstract') т.к. важна скорость
          return item instanceof Object && item.isDestroyed ? !item.isDestroyed() : true;
       },
 
