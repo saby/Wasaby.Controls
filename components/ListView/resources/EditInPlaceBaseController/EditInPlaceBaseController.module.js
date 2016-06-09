@@ -6,9 +6,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    [
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.EditInPlace',
-      'js!SBIS3.CONTROLS.Data.Model'
+      'js!SBIS3.CONTROLS.Data.Model',
+      'js!SBIS3.CONTROLS.Data.Di'
    ],
-   function (CompoundControl, EditInPlace, Model) {
+   function (CompoundControl, EditInPlace, Model, Di) {
 
       'use strict';
 
@@ -341,7 +342,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _cloneWithFormat: function(record, recordSet) {
                var
                    fieldName,
-                   clone = new Model({
+                   clone = Di.resolve(recordSet.getModel(), {
                       'adapter': record.getAdapter(),
                       'idProperty': record.getIdProperty()
                    });
