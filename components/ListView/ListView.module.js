@@ -1089,7 +1089,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _elemClickHandlerInternal: function (data, id, target) {
-            this._activateItem(id);
+            /* Клик по чекбоксу не должен вызывать активацию элемента */
+            if(!$(target).hasClass('js-controls-ListView__itemCheckBox')) {
+               this._activateItem(id);
+            }
          },
          _drawSelectedItems: function (idArray) {
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__multiSelected');
