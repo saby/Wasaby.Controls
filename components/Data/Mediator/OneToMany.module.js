@@ -113,6 +113,7 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
          var parentIndex = this._getIndex(parent),
             childIndex,
             children,
+            child,
             relation;
          if (parentIndex === -1) {
             return;
@@ -121,7 +122,10 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
          for (var i = 0; i < children.length; i++) {
             childIndex = children[i];
             relation = this._childToParent[childIndex];
-            callback.call(this, this._registry[childIndex], relation ? relation[1]: undefined);
+            child = this._registry[childIndex];
+            if (this._isAlive(child)) {
+               callback.call(this, child, relation ? relation[1]: undefined);
+            }
          }
       },
 
@@ -131,8 +135,9 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
        * @return {SBIS3.CONTROLS.Data.Mediator.IReceiver}
        */
       getParent: function (child) {
-         var relation = this._childToParent[this._getIndex(child)];
-         return relation ? this._registry[relation[0]] : undefined;
+         var relation = this._childToParent[this._getIndex(child)],
+            parent = relation ? this._registry[relation[0]] : undefined;
+         return this._isAlive(parent) ? parent : undefined;
       },
 
       /**
@@ -147,7 +152,9 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
          if (parent) {
             relation = this._childToParent[this._getIndex(child)];
             if ($ws.helpers.instanceOfMixin(parent, 'SBIS3.CONTROLS.Data.Mediator.IReceiver')) {
-               parent.relationChanged(child, relation ? relation[1] : '', data);
+               if (this._isAlive(parent)) {
+                  parent.relationChanged(child, relation ? relation[1] : '', data);
+               }
                if (recursive) {
                   this.childChanged(parent, data, recursive);
                }
@@ -164,7 +171,9 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
       parentChanged: function (parent, data, recursive) {
          this.each(parent, (function(child, name) {
             if ($ws.helpers.instanceOfMixin(child, 'SBIS3.CONTROLS.Data.Mediator.IReceiver')) {
-               child.relationChanged(parent, name, data);
+               if (this._isAlive(child)) {
+                  child.relationChanged(parent, name, data);
+               }
                if (recursive) {
                   this.parentChanged(child, data, recursive);
                }
@@ -238,6 +247,16 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
             }
          }
          return index;
+      },
+
+      /**
+       * Проверяет, что объект на был уничтожен
+       * @param {Object} item Объект
+       * @return {Boolean}
+       * @protected
+       */
+      _isAlive: function(item) {
+         return item instanceof Object && item.isDestroyed ? !item.isDestroyed() : true;
       },
 
       /**
