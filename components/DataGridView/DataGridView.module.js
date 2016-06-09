@@ -19,7 +19,63 @@ define('js!SBIS3.CONTROLS.DataGridView',
    function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate) {
    'use strict';
 
-      var ANIMATION_DURATION = 500; //Продолжительность анимации скролла заголовков
+      var ANIMATION_DURATION = 500, //Продолжительность анимации скролла заголовков
+         _prepareColumns = function(columns, cfg) {
+            var columnsNew = $ws.core.clone(columns);
+            for (var i = 0; i < columnsNew.length; i++) {
+               if (columnsNew[i].cellTemplate) {
+                  columnsNew[i].contentTpl = TemplateUtil.prepareTemplate(columnsNew[i].cellTemplate);
+               }
+               else {
+                  columnsNew[i].contentTpl = TemplateUtil.prepareTemplate(cfg._defaultCellTemplate);
+               }
+
+               if (columnsNew[i].includedTemplates) {
+                  var tpls = columnsNew[i].includedTemplates;
+                  columnsNew[i].included = {};
+                  for (var j in tpls) {
+                     if (tpls.hasOwnProperty(j)) {
+                        columnsNew[i].included[j] = TemplateUtil.prepareTemplate(tpls[j]);
+                     }
+                  }
+               }
+
+
+            }
+            return columnsNew;
+         },
+         getColumnVal = function (item, colName) {
+            if (!colName || !(colName.indexOf("['") == 0 && colName.indexOf("']") == (colName.length - 2))){
+               return item.get(colName);
+            }
+            var colNameParts = colName.slice(2, -2).split('.'),
+               curItem = item,
+               value;
+            for (var i = 0; i < colNameParts.length; i++){
+               if (i !== colNameParts.length - 1){
+                  curItem = curItem.get(colNameParts[i]);
+               }
+               else{
+                  value = curItem.get(colNameParts[i]);
+               }
+            }
+            return value;
+         },
+
+         buildTplArgsDG = function(cfg) {
+            var tplOptions = cfg._buildTplArgsLV.call(this, cfg);
+            tplOptions.columns = _prepareColumns.call(this, cfg.columns, cfg);
+            tplOptions.cellData = {
+               /*TODO hierField вроде тут не должно быть*/
+               hierField: cfg.hierField,
+               getColumnVal: getColumnVal,
+               decorators : tplOptions.decorators,
+               displayField : tplOptions.displayField
+            };
+            tplOptions.startScrollColumn = cfg.startScrollColumn;
+
+            return tplOptions;
+         };
    /**
     * Контрол, отображающий набор данных в виде таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.DataGridView
@@ -74,6 +130,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
             _canServerRender: true,
+            _buildTplArgs: buildTplArgsDG,
+            _buildTplArgsDG: buildTplArgsDG,
             /**
              * @typedef {Object} Columns
              * @property {String} title Заголовок колонки
@@ -303,7 +361,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             return value;
          }
          var args = DataGridView.superclass._buildTplArgs.apply(this, arguments);
-         args.columns = this._prepareColumns(cfg.columns);
+         args.columns = _prepareColumns.call(this, cfg.columns, this._options);
          args.cellData = {
             /*TODO hierField вроде тут не должно быть*/
             hierField: cfg.hierField,
@@ -314,31 +372,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          args.startScrollColumn = cfg.startScrollColumn;
 
          return args;
-      },
-
-      _prepareColumns : function(columns) {
-         var columnsNew = $ws.core.clone(columns);
-         for (var i = 0; i < columnsNew.length; i++) {
-            if (columnsNew[i].cellTemplate) {
-               columnsNew[i].contentTpl = TemplateUtil.prepareTemplate(columnsNew[i].cellTemplate);
-            }
-            else {
-               columnsNew[i].contentTpl = TemplateUtil.prepareTemplate(this._options._defaultCellTemplate);
-            }
-
-            if (columnsNew[i].includedTemplates) {
-               var tpls = columnsNew[i].includedTemplates;
-               columnsNew[i].included = {};
-               for (var j in tpls) {
-                  if (tpls.hasOwnProperty(j)) {
-                     columnsNew[i].included[j] = TemplateUtil.prepareTemplate(tpls[j]);
-                  }
-               }
-            }
-
-
-         }
-         return columnsNew;
       },
 
       _prepareHeadData: function() {
