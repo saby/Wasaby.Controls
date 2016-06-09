@@ -101,13 +101,8 @@
 
          &.controls-ItemActions__menu-button {
             z-index: 11;
-            background: @list-view-actions-menu-icon;
             width: @list-view-actions-menu-icon-width;
             float: right;
-
-            &:hover {
-               background: @list-view-actions-menu-icon-hover;
-            }
          }
       }
    }
@@ -126,9 +121,9 @@
       top: @list-view-actions-menu-close-top;
       position: absolute;
       cursor: @list-view-actions-cursor;
-      background: @list-view-actions-menu-icon-close;
+      background: none;
       &:hover {
-         background: @list-view-actions-menu-icon 0 -60px;
+         background: none;
       }
    }
    &.controls-popup-revert-vertical {

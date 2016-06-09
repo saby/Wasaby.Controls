@@ -337,6 +337,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             //TODO: метод нужен для того, чтобы подогнать формат рекорда под формат рекордсета.
             //Выписана задача Мальцеву, который должен убрать этот метод отсюда, и предаставить механизм выполняющий необходимую задачу.
+            //https://inside.tensor.ru/opendoc.html?guid=85d18197-2094-4797-b823-5406424881e5&description=
             _cloneWithFormat: function(record, recordSet) {
                var
                    fieldName,
@@ -349,6 +350,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   fieldName = field.getName();
                   clone.addField(field, undefined, record.get(fieldName));
                });
+               clone.setStored(record.isStored());
                return clone;
             },
             //TODO: Нужно переименовать метод

@@ -674,7 +674,7 @@ define(
          this._inputField.keypress(this._keyPressBind.bind(this));
          //keydown ловит управляющие символы, keypress - нет
          this._inputField.keydown(this._keyDownBind.bind(this));
-         this._inputField.bind('paste', function() {
+         this._inputField.bind('paste', function(e) {
             var
                 prevText,
                 //Единственный способ понять, что мы пытаемся вставить это посмотреть в буфере.

@@ -160,9 +160,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
    }
 
    function toggleCheckBoxes(operationPanel, gridView, hideCheckBoxes) {
-      if (gridView._options.multiselect && hideCheckBoxes) {
-         gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible())
-            .toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isVisible());
+      if (gridView._options.multiselect) {
+         gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
+         if (hideCheckBoxes) {
+            gridView._container.toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isVisible());
+         }
          if (gridView._options.startScrollColumn !== undefined) {
             gridView.updateScrollAndColumns();
          }
@@ -511,6 +513,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          drawItemsCallback(operationPanel, view);
          toggleCheckBoxes(operationPanel, view, hideCheckBoxes);
          view.subscribe('onSelectedItemsChange', function(event, idArray) {
+            if (idArray.length && !operationPanel.isVisible()) {
+               operationPanel.show();
+            }
             operationPanel.onSelectedItemsChange(idArray);
          });
          operationPanel.subscribe('onToggle', function() {
@@ -520,7 +525,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
       /**
        * Метод для связывания истории фильтров с представлением данных
        */
-      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, controller, browser) {
+      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, applyOnLoad, controller, browser) {
          var view = browser.getView(),
              noSaveFilters = ['Разворот', 'ВидДерева'],
              historyController, filter;
@@ -545,11 +550,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             noSaveFilters: noSaveFilters
          });
 
-         filter = historyController.getActiveFilter();
+         if(applyOnLoad) {
+            filter = historyController.getActiveFilter();
 
-         filterButton.setHistoryController(historyController);
-         /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
-         filterButton.setFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
+            filterButton.setHistoryController(historyController);
+            /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
+            filterButton.setFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
+         }
          setTimeout($ws.helpers.forAliveOnly(function() {
             // Через timeout, чтобы можно было подписаться на соыбтие, уйдёт с серверным рендерингом
             browser._notifyOnFiltersReady();

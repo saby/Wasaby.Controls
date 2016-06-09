@@ -27,31 +27,45 @@
    border-width: @tree-view-expand-border-width;
    border-style: @tree-view-expand-border-style;
    border-color: @tree-view-expand-border-color;
-   background: @tree-view-expand-bg;
+
+   font-family: 'cbuc-icons' !important;
+   font-size: 29px;
+   color: @blue-dark-color;
 
    &:hover {
       border-width: @tree-view-expand-hover-border-width;
       border-style: @tree-view-expand-hover-border-style;
       border-color: @tree-view-expand-hover-border-color;
-      background: @tree-view-expand-hover-bg;
+      color: @primary-color;
    }
 
    &.controls-TreeView__expand__open {
       border-width: @tree-view-expand-open-border-width;
       border-style: @tree-view-expand-open-border-style;
       border-color: @tree-view-expand-open-border-color;
-      background: @tree-view-expand-open-bg;
+
+      &:before {
+         content: '\e692';
+         left: -6px;
+         top: 1px;
+      }
 
       &:hover {
          border-width: @tree-view-expand-open-hover-border-width;
          border-style: @tree-view-expand-open-hover-border-style;
          border-color: @tree-view-expand-open-hover-border-color;
-         background: @tree-view-expand-open-hover-bg;
+         color: @primary-color;
       }
    }
 
    & + .controls-TreeView__itemContent {
       margin: @tree-view-item-content-margin;
+   }
+
+   &:before {
+      content: '\e666';
+      position: relative;
+      left: -7px;
    }
 
    &:after {
@@ -60,6 +74,9 @@
 }
 .controls-TreeView__expand__leaf, .controls-TreeView__expand__leaf:hover {
    background: none !important;
+   &:before {
+      content: '';
+   }
 }
 
 .controls-TreeView {

@@ -5,6 +5,7 @@
   border-width: @text-box-border-width;
   border-style: @text-box-border-style;
   border-color: @text-box-border-color;
+  border-bottom-color: @text-box-bottom-border-color;
   background: @text-box-bg;
 
   .box-sizing(border-box);
@@ -20,17 +21,6 @@
       }
     }
   }
-  &.ws-has-focus {
-    border-width: @text-box-focus-border-width;
-    border-style: @text-box-focus-border-style;
-    border-color: @text-box-focus-border-color;
-    background: @text-box-focus-bg;
-    .controls-TextBox__fieldWrapper {
-      .controls-TextBox__field {
-        color: @text-box-field-focus-text-color;
-      }
-    }
-  }
   &:hover {
     border-width: @text-box-hover-border-width;
     border-style: @text-box-hover-border-style;
@@ -39,6 +29,17 @@
     .controls-TextBox__fieldWrapper {
       .controls-TextBox__field {
         color: @text-box-field-hover-text-color;
+      }
+    }
+  }
+  &.ws-has-focus {
+    border-width: @text-box-focus-border-width;
+    border-style: @text-box-focus-border-style;
+    border-color: @text-box-focus-border-color;
+    background: @text-box-focus-bg;
+    .controls-TextBox__fieldWrapper {
+      .controls-TextBox__field {
+        color: @text-box-field-focus-text-color;
       }
     }
   }
@@ -81,6 +82,7 @@
       line-height: @text-box-field-line-height;
       .controls-TextBox__field {
          font: @text-box-field-font;
+         font-size: @text-box-field-font-size;
          line-height: @text-box-field-line-height;
          width: 100%;
          height: 100%;

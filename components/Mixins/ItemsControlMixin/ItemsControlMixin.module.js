@@ -188,6 +188,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _createDefaultProjection : createDefaultProjection,
             _buildTplArgsSt: buildTplArgs,
             _buildTplArgs : buildTplArgs,
+            _getRecordsForRedrawSt: getRecordsForRedraw,
             _getRecordsForRedraw: getRecordsForRedraw,
             /**
              * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
@@ -889,6 +890,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else if (this._dataSource) {
                this.reload();
             }
+            if (this._options.pageSize) {
+               this._limit = this._options.pageSize;
+            }
             if (this._options._serverRender) {
                this._notifyOnDrawItems();
             }
@@ -1023,10 +1027,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @param {Number} limit Ограничение количества перезагружаемых элементов.
         */
       reload: propertyUpdateWrapper(function (filter, sorting, offset, limit) {
-         if (this._options.pageSize) {
-            this._limit = this._options.pageSize;
-         }
-
          var
             def,
             self = this,
@@ -1106,7 +1106,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._notifyOnPropertyChanged('offset');
          this._notifyOnPropertyChanged('limit');
 
-         return this._loader;
+         return def;
       }),
 
       _getFilterForReload: function() {
@@ -1117,11 +1117,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (!this._dataSource) {
             return;
          }
-         var query = new Query();
-         query.where(filter)
-            .offset(offset)
-            .limit(limit)
-            .orderBy(sorting);
+         var query = this._getQueryForCall(filter, sorting, offset, limit);
 
          return this._dataSource.query(query).addCallback((function(dataSet) {
             if (this._options.keyField && this._options.keyField !== dataSet.getIdProperty()) {
@@ -1131,6 +1127,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             recordSet.setMetaData(this._prepareMetaData(dataSet));
             return recordSet;
          }).bind(this));
+      },
+
+      _getQueryForCall: function(filter, sorting, offset, limit){
+         var query = new Query();
+         query.where(filter)
+            .offset(offset)
+            .limit(limit)
+            .orderBy(sorting);
+         return query;
       },
 
       _prepareMetaData: function(dataSet) {
@@ -1309,6 +1314,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
           this._itemsInitializedBySource = false;
           this._prepareConfig(undefined, items);
           this._notify('onDataLoad', this.getItems()); //TODO на это событие завязались. аккуратно спилить
+          this._dataLoadedCallback(); //TODO на это завязаны хлебные крошки, нужно будет спилить
           this.redraw();
 
       },
@@ -1685,10 +1691,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          dotTemplate = TemplateUtil.prepareTemplate(itemTpl);
 
          if (typeof dotTemplate == 'function') {
-            var args = this._prepareItemData();
+            var args = this._prepareItemData(), buildedTpl;
             args['projItem'] = item;
             args['item'] = item.getContents();
-            return $(ParserUtilities.buildInnerComponents(MarkupTransformer(dotTemplate(args)), this.getId()));
+            buildedTpl = dotTemplate(args);
+            //TODO нашлись умники, которые в качестве шаблона передают функцию, возвращающую jquery
+            //в 200 пусть поживут, а в новой отрисовке, отпилим у них
+            if (buildedTpl instanceof $) {
+               buildedTpl = buildedTpl.get(0).outerHTML;
+            }
+            return $(ParserUtilities.buildInnerComponents(MarkupTransformer(buildedTpl), this.getId()));
          } else {
             throw new Error('Ошибка в itemTemplate');
          }
@@ -1728,7 +1740,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             newItemContainer = this._buildTplItem(projItem, template),
             rows;
          this._addItemAttributes(newItemContainer, projItem);
-         newItemContainer = $(ParserUtilities.buildInnerComponents(MarkupTransformer(newItemContainer.get(0).outerHTML), this.getId()));
          if (flagAfter) {
             newItemContainer.insertBefore(this._getItemContainerByIndex(target, at));
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
@@ -1833,6 +1844,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._options.itemsSortMethod = sort;
          if(this._options._itemsProjection) {
             this._options._itemsProjection.setSort(sort);
+         }
+      },
+      /**
+       * Возвращает последний элемент по проекции
+       * @return {SBIS3.CONTROLS.Data.Model}
+       */
+      getLastItemByProjection: function(){
+         if(this._options._itemsProjection && this._options._itemsProjection.getCount()) {
+            return this._options._itemsProjection.at(this._options._itemsProjection.getCount()-1).getContents();
          }
       }
    };
