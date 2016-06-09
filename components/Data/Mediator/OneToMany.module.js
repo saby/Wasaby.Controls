@@ -69,6 +69,10 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
                this._removeRelation(parentIndex, childIndex);
             }
          }
+         var children = this._getChildren(parentIndex);
+         if (children.length === 0) {
+            this._parents[parentIndex] = null;
+         }
       },
 
       /**
@@ -84,8 +88,9 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
          children = this._getChildren(parentIndex);
          for (var i = 0; i < children.length; i++) {
             delete this._childToParent[children[i]];
+            children[i] = null;
          }
-         children.length = 0;
+         this._parents[parentIndex] = null;
       },
 
       /**
@@ -104,6 +109,9 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
          children = this._getChildren(parentIndex);
          for (var i = 0; i < children.length; i++) {
             childIndex = children[i];
+            if (childIndex === null) {
+               continue;
+            }
             relation = this._childToParent[childIndex];
             callback.call(this, this._children[childIndex], relation ? relation[1]: undefined);
          }
@@ -123,14 +131,18 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
        * Уведомляет родителя об изменении ребенка
        * @param {SBIS3.CONTROLS.Data.Mediator.IReceiver} child Ребенок
        * @param {*} [data] Данные об изменениях
+       * @param {Boolean} [recursive=false] Рекурсивно обойти всю иерархию родителей
        */
-      childChanged: function (child, data) {
+      childChanged: function (child, data, recursive) {
          var parent = this.getParent(child),
             relation;
          if (parent) {
             relation = this._childToParent[this._getChildIndex(child)];
             if ($ws.helpers.instanceOfMixin(parent, 'SBIS3.CONTROLS.Data.Mediator.IReceiver')) {
                parent.relationChanged(child, relation ? relation[1] : '', data);
+               if (recursive) {
+                  this.childChanged(parent, data, recursive);
+               }
             }
          }
       },
@@ -139,13 +151,17 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
        * Уведомляет детей об изменении родителя
        * @param {SBIS3.CONTROLS.Data.Mediator.IReceiver} parent Родитель
        * @param {*} [data] Данные об изменениях
+       * @param {Boolean} [recursive=false] Рекурсивно обойти всю иерархию детей
        */
-      parentChanged: function (parent, data) {
-         this.each(parent, function(child, name) {
+      parentChanged: function (parent, data, recursive) {
+         this.each(parent, (function(child, name) {
             if ($ws.helpers.instanceOfMixin(child, 'SBIS3.CONTROLS.Data.Mediator.IReceiver')) {
                child.relationChanged(parent, name, data);
+               if (recursive) {
+                  this.parentChanged(child, data, recursive);
+               }
             }
-         });
+         }).bind(this));
       },
 
       //endregion Public methods
@@ -188,7 +204,7 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
       _removeChild: function(child) {
          var index = this._getChildIndex(child);
          if (index > -1) {
-            this._children.splice(index, 1);
+            this._children[index] = null;
          }
          return index;
       },
@@ -208,7 +224,7 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
          var children = this._getChildren(parentIndex),
             index = Array.indexOf(children, childIndex);
          if (index > -1) {
-            children.splice(index, 1);
+            children[index] = null;
          }
          delete this._childToParent[childIndex];
          return index;

@@ -197,11 +197,7 @@ define([
          });
          it('should cast value to RecordSet', function () {
             assert.instanceOf(sbisModel.get('recordSet'), RecordSet);
-            debugger;
-            sbisModel.get('recordSet').removeAt(0);
          });
-
-
          it('should cast link to integer', function () {
             var val = sbisModel.get('link');
             assert.strictEqual(val, 6);

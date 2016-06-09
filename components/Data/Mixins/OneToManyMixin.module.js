@@ -48,12 +48,12 @@ define('js!SBIS3.CONTROLS.Data.OneToManyMixin', [
       },
 
       /**
-       * Уведомляет родителя об изменении экземпляра
+       * Уведомляет всех родителей об изменении экземпляра
        * @param {*} [data] Данные об изменениях
        * @protected
        */
       _childChanged: function (data) {
-         this._getMediator().childChanged(this, data);
+         this._getMediator().childChanged(this, data, true);
       },
 
       /**

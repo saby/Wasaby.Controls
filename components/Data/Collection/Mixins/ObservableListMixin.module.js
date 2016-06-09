@@ -167,6 +167,19 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
 
       },
 
+      //region SBIS3.CONTROLS.Data.Mediator.IReceiver
+
+      relationChanged: function (which, name, data) {
+         // TODO: больше не использовать подписку на onPropertyChange
+         /*if (name === 'owner') {
+          this.notifyItemChange(which, data);
+          }*/
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Mediator.IReceiver
+
+      //region Public methods
+
       /**
        * Генерирует событие об изменении коллеции
        * @param {String} action Действие, приведшее к изменению.
@@ -221,6 +234,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
             properties
          );
       },
+
+      //endregion Public methods
 
       //region Protected methods
 
@@ -313,10 +328,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
       _notifier: function (func /*, arguments*/) {
          var args = Array.prototype.slice.call(arguments, 1);
          if (this._isChangingYet) {
-            var self = this;
-            setTimeout(function (){
-               func.apply(self, args);
-            }, 0);
+            setTimeout((function () {
+               func.apply(this, args);
+            }).bind(this), 0);
             return;
          }
          this._isChangingYet = true;
