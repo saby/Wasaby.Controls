@@ -87,33 +87,35 @@ define('js!SBIS3.CONTROLS.ListView',
       var ListView = CompoundControl.extend([CompoundActiveFixMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
-          * @event onChangeHoveredItem При переводе курсора мыши на другую запись
-          * @remark
-          * Событие срабатывает при смене записи под курсором мыши.
+          * @event onChangeHoveredItem Происходит при переводе курсора мыши на другой элемент коллекции списка.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} hoveredItem Объект
-          * @param {Number|String} hoveredItem.key ключ элемента представления данных
-          * @param {jQuery|false} hoveredItem.container элемент представления данных
-          * @param {Object} hoveredItem.position координаты контейнера элемента
-          * @param {Number} hoveredItem.top отступ сверху
-          * @param {Number} hoveredItem.left отступ слева
-          * @param {Object} hoveredItem.size размеры контейнера элемента
-          * @param {Number} hoveredItem.height высота
-          * @param {Number} hoveredItem.width ширина
+          * @param {Object} hoveredItem Объект, свойства которого описывают данные элемента коллекции списка, на который навели курсор мыши.
+          * @param {SBIS3.CONTROLS.Data.Model} record Элемент коллекции, на который перевели курсор.
+          * @param {Number|String} hoveredItem.key Первичный ключ элемента.
+          * @param {jQuery|false} hoveredItem.container Контейнер визуального отображения элемента (DOM-элемент).
+          * @param {Object} hoveredItem.position Объект, свойства которого описывают координаты контейнера визуального отображения элемента.
+          * @param {Number} hoveredItem.position.top Отступ от верхней границы контейнера визуального отображения элемента до верхней границы контейнера визуального отображения списка. Значение в px.
+          * @param {Number} hoveredItem.position.left Отступ от левой границы контейнера визуального отображения элемента до левой границы контейнера визуального отображения списка. Значение в px.
+          * @param {Object} hoveredItem.size Объект, свойства которого описывают высоту и ширину контейнера визуального отображения элемента.
+          * @param {Number} hoveredItem.size.height Высота контейнера визуального отображения элемента. Значение в px.
+          * @param {Number} hoveredItem.size.width Ширина контейнера визуального отображения элемента. Значение в px.
           * @example
+          * При наведении курсора мыши на запись справа от неё отображаются операции (см. <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">Быстрый доступ к операциям по наведению курсора</a>).
+          * Ниже приведён код, с помощью которого можно изменять отображение набора операций для записей списка.
           * <pre>
-          *     DataGridView.subscribe('onChangeHoveredItem', function(hoveredItem) {
-           *        var actions = DataGridView.getItemsActions(),
-           *        instances = actions.getItemsInstances();
-           *
-           *        for (var i in instances) {
-           *           if (instances.hasOwnProperty(i)) {
-           *              //Будем скрывать кнопку удаления для всех строк
-           *              instances[i][i === 'delete' ? 'show' : 'hide']();
-           *           }
-           *        }
-           *     });
+          *    dataGrid.subscribe('onChangeHoveredItem', function(eventObject, hoveredItem) {
+          *       var actions = DataGridView.getItemsActions(),
+          *           instances = actions.getItemsInstances();
+          *       for (var i in instances) {
+          *          if (instances.hasOwnProperty(i)) {
+          *             //Будем скрывать кнопку удаления для всех строк
+          *             instances[i][i === 'delete' ? 'show' : 'hide']();
+          *          }
+          *       }
+          *    });
           * </pre>
+          * Подобная задача часто сводится к отображению различных операций для узлов, скрытых узлов и листьев для иерархических списков.
+          * Пример конфигурации списка для решения подобной задачи вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/mode/">здесь</a>.
           * @see itemsActions
           * @see setItemsActions
           * @see getItemsActions
