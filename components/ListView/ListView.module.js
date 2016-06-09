@@ -1410,7 +1410,10 @@ define('js!SBIS3.CONTROLS.ListView',
             // DataGridView. В виду одинакового атрибута "data-id", это единственный способ отличить строку DataGridView от строки EditInPlace.
             return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getId() + '"]:not(".controls-editInPlace")');
          },
-
+         /**
+          * Возвращает признак, по которому можно установить: активно или нет редактирование по месту в данный момент.
+          * @returns {Boolean} Значение true нужно интерпретировать как "Редактирование по месту активно".
+          */
          isEdit: function() {
             return this._hasEditInPlace() && this._getEditInPlace().isEdit();
          },
