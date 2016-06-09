@@ -11,8 +11,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
    'js!SBIS3.CONTROLS.Data.Utils',
+   'js!SBIS3.CONTROLS.Data.Model',
    'Core/ParserUtilities'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, ParserUtilities) {
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -187,6 +188,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _createDefaultProjection : createDefaultProjection,
             _buildTplArgsSt: buildTplArgs,
             _buildTplArgs : buildTplArgs,
+            _getRecordsForRedrawSt: getRecordsForRedraw,
             _getRecordsForRedraw: getRecordsForRedraw,
             /**
              * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
@@ -888,6 +890,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else if (this._dataSource) {
                this.reload();
             }
+            if (this._options.pageSize) {
+               this._limit = this._options.pageSize;
+            }
             if (this._options._serverRender) {
                this._notifyOnDrawItems();
             }
@@ -1022,10 +1027,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @param {Number} limit Ограничение количества перезагружаемых элементов.
         */
       reload: propertyUpdateWrapper(function (filter, sorting, offset, limit) {
-         if (this._options.pageSize) {
-            this._limit = this._options.pageSize;
-         }
-
          var
             def,
             self = this,
@@ -1105,7 +1106,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._notifyOnPropertyChanged('offset');
          this._notifyOnPropertyChanged('limit');
 
-         return this._loader;
+         return def;
       }),
 
       _getFilterForReload: function() {
@@ -1116,11 +1117,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (!this._dataSource) {
             return;
          }
-         var query = new Query();
-         query.where(filter)
-            .offset(offset)
-            .limit(limit)
-            .orderBy(sorting);
+         var query = this._getQueryForCall(filter, sorting, offset, limit);
 
          return this._dataSource.query(query).addCallback((function(dataSet) {
             if (this._options.keyField && this._options.keyField !== dataSet.getIdProperty()) {
@@ -1132,9 +1129,24 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }).bind(this));
       },
 
+      _getQueryForCall: function(filter, sorting, offset, limit){
+         var query = new Query();
+         query.where(filter)
+            .offset(offset)
+            .limit(limit)
+            .orderBy(sorting);
+         return query;
+      },
+
       _prepareMetaData: function(dataSet) {
-         //todo ножно придумать как изменить конструктор модели для метаданных
-         var meta = dataSet.hasProperty('m') ?  dataSet.getRow('m').toObject() : {};
+         /*  надо создавать дефолтную модель, а не внедренную, т.к. в модели recordSet'a
+             могут быть расчитываемые поля, которые ожидают что в модели будут гарантированно какие-то данные */
+         var meta = dataSet.hasProperty('m') ?
+             (new Model({
+                rawData: dataSet.getProperty('m'),
+                adapter: dataSet.getAdapter()
+             })).toObject() :
+             {};
 
          meta.results = dataSet.getProperty('r');
          meta.more = dataSet.getTotal();
@@ -1302,6 +1314,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
           this._itemsInitializedBySource = false;
           this._prepareConfig(undefined, items);
           this._notify('onDataLoad', this.getItems()); //TODO на это событие завязались. аккуратно спилить
+          this._dataLoadedCallback(); //TODO на это завязаны хлебные крошки, нужно будет спилить
           this.redraw();
 
       },
@@ -1678,10 +1691,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          dotTemplate = TemplateUtil.prepareTemplate(itemTpl);
 
          if (typeof dotTemplate == 'function') {
-            var args = this._prepareItemData();
+            var args = this._prepareItemData(), buildedTpl;
             args['projItem'] = item;
             args['item'] = item.getContents();
-            return $(MarkupTransformer(dotTemplate(args)));
+            buildedTpl = dotTemplate(args);
+            //TODO нашлись умники, которые в качестве шаблона передают функцию, возвращающую jquery
+            //в 200 пусть поживут, а в новой отрисовке, отпилим у них
+            if (buildedTpl instanceof $) {
+               buildedTpl = buildedTpl.get(0).outerHTML;
+            }
+            return $(ParserUtilities.buildInnerComponents(MarkupTransformer(buildedTpl), this.getId()));
          } else {
             throw new Error('Ошибка в itemTemplate');
          }
@@ -1721,7 +1740,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             newItemContainer = this._buildTplItem(projItem, template),
             rows;
          this._addItemAttributes(newItemContainer, projItem);
-         newItemContainer = $(ParserUtilities.buildInnerComponents(MarkupTransformer(newItemContainer.get(0).outerHTML), this.getId()));
          if (flagAfter) {
             newItemContainer.insertBefore(this._getItemContainerByIndex(target, at));
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
@@ -1764,23 +1782,22 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._buildTplItem(item, this._getItemTemplate(item));
       },
       _appendItemTemplate: function (item, targetContainer, itemBuildedTpl, at) {
-         var itemBuildedMarkup = ParserUtilities.buildInnerComponents(MarkupTransformer(itemBuildedTpl.get(0).outerHTML), this.getId());
          if (at && (typeof at.at !== 'undefined')) {
             var atContainer = at.at !== 0 && $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at-1);
             if (atContainer.length) {
-               atContainer.after(itemBuildedMarkup);
+               atContainer.after(itemBuildedTpl);
             }
             else {
                atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at);
                if (atContainer.length) {
-                  atContainer.before(itemBuildedMarkup);
+                  atContainer.before(itemBuildedTpl);
                } else {
-                  targetContainer.append(itemBuildedMarkup);
+                  targetContainer.append(itemBuildedTpl);
                }
             }
          }
          else {
-            targetContainer.append(itemBuildedMarkup);
+            targetContainer.append(itemBuildedTpl);
          }
       },
       _onCollectionReplace: function(items) {
@@ -1827,6 +1844,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._options.itemsSortMethod = sort;
          if(this._options._itemsProjection) {
             this._options._itemsProjection.setSort(sort);
+         }
+      },
+      /**
+       * Возвращает последний элемент по проекции
+       * @return {SBIS3.CONTROLS.Data.Model}
+       */
+      getLastItemByProjection: function(){
+         if(this._options._itemsProjection && this._options._itemsProjection.getCount()) {
+            return this._options._itemsProjection.at(this._options._itemsProjection.getCount()-1).getContents();
          }
       }
    };

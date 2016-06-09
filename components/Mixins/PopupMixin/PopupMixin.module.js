@@ -108,7 +108,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             /**
              * @cfg {Boolean} модальный или нет
              */
-            isModal: false
+            isModal: false,
+            //Ограничить размеры только высотой экрана, в противном случае они ограничены границами экрана и расположением тагрета
+            fullHeight: false
          }
       },
 
@@ -139,7 +141,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          }
 
          if (this._options.closeButton) {
-            container.append('<div class="controls-PopupMixin__closeButton" ></div>');
+            container.append('<div class="controls-PopupMixin__closeButton"></div>');
             $('.controls-PopupMixin__closeButton', this.getContainer().get(0)).click(function() {
                //Нужно вызвать активироваться перед hide, чтобы закрылись плав. панели, у которых опенером был этот контрол
                //TODO: унифицировать код закрытия с SBIS3.CORE.FloatArea: хранить коллекцию дочерних панелей, и закрывать их тут
@@ -253,10 +255,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                   buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner);
                
                // Добавим пользовательский сдвиг с учетом того, разворачивались уже или нет
-               var sign = !!this._isMovedV ? -1 : 1;
-               offset.top = offset.top + this._getUserOffset('vertical') * sign ;
-               sign = !!this._isMovedH ? -1 : 1;
-               offset.left = offset.left + this._getUserOffset('horizontal') * sign ;
+               offset.top = offset.top + this._getUserOffset('vertical');
+               offset.left = offset.left + this._getUserOffset('horizontal');
 
                offset = this._addOffset(offset, buff);
                offset = this._getOffsetByWindowSize(offset);
@@ -455,8 +455,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          //Запоминаем координаты правого нижнего угла контейнера необходимые для отображения контейнера целиком и там где нужно.
          if (target) {
             this._containerSizes.requiredOffset = {
-               top: buff.top + this._targetSizes.offset.top + this._containerSizes.originHeight + this._getUserOffset('vertical'),
-               left: buff.left + this._targetSizes.offset.left + this._containerSizes.originWidth + this._getUserOffset('horizontal')
+               top: buff.top + this._targetSizes.offset.top + this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom,
+               left: buff.left + this._targetSizes.offset.left + this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right
             };
          } else {
             this._containerSizes.requiredOffset = {
@@ -550,10 +550,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
        * Получить offset при сдвиге в противоположный угол относительно corner по горизонтали или верткали 'horizontal'/'vertical'
        * @param  {[type]} corner      Угол относительно которого расчитывать
        * @param  {[type]} orientation Противоположный по вертекали или горизонтали
-       * @param  {[type]} flag        Учитывать пользовательские отступы 
        * @return {[type]}             offset противоположного угла
        */
-      _getOppositeOffset: function (corner, orientation, flag) {
+      _getOppositeOffset: function (corner, orientation) {
          var side = (orientation == 'vertical') ? this._options.horizontalAlign.side : this._options.verticalAlign.side,
             offset,
             oppositeSide, oppositeCorner;
@@ -566,18 +565,20 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             oppositeSide = (this._options.horizontalAlign.side == 'left') ? 'right' : 'left';
             offset = this._getGeneralOffset(this._options.verticalAlign.side, oppositeSide, oppositeCorner);
          }
-         if (!flag){
-            offset.top -= this._getUserOffset('vertical'); 
-            offset.left -= this._getUserOffset('horizontal');
-         }
+         offset.top += this._getUserOffset('vertical'); 
+         offset.left += this._getUserOffset('horizontal');
+
          return offset;
       },
 
       _getUserOffset: function(align){
+         var sign;
          if (align == 'vertical'){
-            return (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom;
+            sign = !!this._isMovedV ? -1 : 1;
+            return sign * ((this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom);
          } else {
-            return (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right;
+            sign = !!this._isMovedH ? -1 : 1;
+            return sign * ((this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right);
          }
       },
 
@@ -638,14 +639,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          //Проверяем убираемся ли в экран снизу. Если позиционируем нижней стороной, не нужно менять положение если не влезаем снизу
          if (this._containerSizes.requiredOffset.top > this._windowSizes.height + scrollY && !this._isMovedV && this._options.verticalAlign.side !== 'bottom') {
             this._isMovedV = true;
-            offset.top = this._getOppositeOffset(this._options.corner, 'vertical', true).top;
+            offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
             offset.top = this._addOffset(offset, buf).top;
          }
 
          //Возможно уже меняли положение и теперь хватает места что бы вернуться на нужную позицию по вертикали
          if (this._containerSizes.requiredOffset.top < this._windowSizes.height + scrollY && this._isMovedV) {
             this._isMovedV = false;
-            offset.top = this._getOppositeOffset(this._options.corner, 'vertical', true).top;
+            offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
             offset.top = this._addOffset(offset, buf).top;
          }
 
@@ -653,14 +654,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          //Проверяем убираемся ли в экран справа. Если позиционируем правой стороной, не нужно менять положение если не влезаем справа
          if (this._containerSizes.requiredOffset.left > this._windowSizes.width + scrollX && !this._isMovedH && this._options.horizontalAlign.side !== 'right') {
             this._isMovedH = true;
-            offset.left = this._getOppositeOffset(this._options.corner, 'horizontal', true).left;
+            offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
             offset.left = this._addOffset(offset, buf).left;
          }
 
          //Возможно уже меняли положение и теперь хватает места что бы вернуться на нужную позицию по горизонтали
          if (this._containerSizes.requiredOffset.left < this._windowSizes.width + scrollX && this._isMovedH) {
             this._isMovedH = false;
-            offset.left = this._getOppositeOffset(this._options.corner, 'horizontal', true).left;
+            offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
             offset.left = this._addOffset(offset, buf).left;
          }
          return offset;
@@ -678,13 +679,17 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                this._overflowedV = true;
                this._container.css('overflow-y', 'auto');
                if (spaces.top < spaces.bottom) {
-                  //Если добавляем скролл, то не учитываем пользовательские отступы
-                  oppositeOffset = this._getOppositeOffset(this._options.corner, orientation, false);
-                  spaces = this._getSpaces(this._options.corner);
-                  this._container.css('height', spaces.bottom - vOffset - this._margins.top + this._margins.bottom);
-                  offset.top = this._targetSizes.offset.top + oppositeOffset.top;
-                  offset.top += this._getUserOffset('vertical');
-                  this._isMovedV = !this._isMovedV;
+                  if (this._options.fullHeight){
+                     var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
+                     this._container.css('height', height);
+                     offset.top = this._windowSizes.height - this._container.get(0).scrollHeight - this._containerSizes.border * 2;
+                  } else {
+                     this._isMovedV = !this._isMovedV;
+                     oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
+                     spaces = this._getSpaces(this._options.corner);
+                     this._container.css('height', spaces.bottom - vOffset - this._margins.top + this._margins.bottom);
+                     offset.top = this._targetSizes.offset.top + oppositeOffset.top;
+                  }
                } else {
                   offset.top = 0;
                   //Если места снизу меньше чем сверху покажемся во весь размер (возможно поверх таргета), или в высоту окна если в него не влезаем
@@ -705,11 +710,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                this._container.css('overflow-x', 'auto');
                spaces = this._getSpaces(this._options.corner);
                if (spaces.left < spaces.right) {
-                  oppositeOffset = this._getOppositeOffset(this._options.corner, orientation, false);
+                  this._isMovedH = !this._isMovedH;
+                  oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
                   spaces = this._getSpaces(this._options.corner);
                   this._container.css('width', spaces.right - hOffset - this._margins.left + this._margins.right);
                   offset.left = this._targetSizes.offset.left + oppositeOffset.left;
-                  this._isMovedH = !this._isMovedH;
                } else {
                   offset.left = 0;
                   this._container.css('width', spaces.left - hOffset - this._margins.left + this._margins.right);
