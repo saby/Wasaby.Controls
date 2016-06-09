@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             }
          };
 
-         if (!config.componentOptions.record && config.componentOptions.dataSource) {
+         if (!config.componentOptions.record || meta.preloadRecord !== false) {
             //Загружаем компонент, отнаследованный от formController'a, чтобы с его прототипа вычитать запись, которую мы прокинем при инициализации компонента
             //Сделано в рамках ускорения
             require([dialogComponent], this._initTemplateComponentCallback.bind(this, config, meta, mode));
@@ -144,6 +144,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if (getRecordProtoMethod){
             getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions).addCallback(function (record) {
                config.componentOptions.record = record;
+               if (!config.componentOptions.key){
+                  //Если не было ключа, то отработал метод "создать". Запоминаем ключ созданной записи
+                  config.componentOptions.key = record.getKey();
+               }
                self._showDialog(config, meta, mode);
             });
          }
@@ -176,8 +180,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          var defaultConfig = {
                isStack: true,
                autoHide: true,
-               buildMarkupWithContext: true,
-               showOnControlsReady: false,
+               buildMarkupWithContext: false,
+               showOnControlsReady: true,
                autoCloseOnHide: true,
                target: '',
                side: 'left',
