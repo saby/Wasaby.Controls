@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             }
          };
 
-         if (!config.componentOptions.record && config.componentOptions.dataSource) {
+         if (!config.componentOptions.record) {
             //Загружаем компонент, отнаследованный от formController'a, чтобы с его прототипа вычитать запись, которую мы прокинем при инициализации компонента
             //Сделано в рамках ускорения
             require([dialogComponent], this._initTemplateComponentCallback.bind(this, config, meta, mode));
@@ -176,8 +176,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          var defaultConfig = {
                isStack: true,
                autoHide: true,
-               buildMarkupWithContext: true,
-               showOnControlsReady: false,
                autoCloseOnHide: true,
                target: '',
                side: 'left',
