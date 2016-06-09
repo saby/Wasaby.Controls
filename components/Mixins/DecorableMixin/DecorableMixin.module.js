@@ -47,18 +47,23 @@ define('js!SBIS3.CONTROLS.DecorableMixin', [
          }
       },
 
-      $constructor: function () {
-         this._options._decorators = new HtmlDecorators();
+      around : {
+         _modifyOptions : function(parentFnc, cfg) {
+            var newCfg = parentFnc.call(this, cfg);
+            newCfg._decorators = new HtmlDecorators();
 
-         this._options._decorators.add(new HighlightDecorator({
-            enabledGetter: 'isHighlightEnabled',
-            textGetter: 'getHighlightText'
-         }));
+            newCfg._decorators.add(new HighlightDecorator({
+               enabledGetter: 'isHighlightEnabled',
+               textGetter: 'getHighlightText'
+            }));
 
-         this._options._decorators.add(new ColorMarkDecorator({
-            enabledGetter: 'isColorMarkEnabled'
-         }), 'color');
+            newCfg._decorators.add(new ColorMarkDecorator({
+               enabledGetter: 'isColorMarkEnabled'
+            }), 'color');
+            return newCfg;
+         }
       },
+
 
       before: {
          destroy: function () {
