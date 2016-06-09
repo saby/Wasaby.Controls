@@ -38,8 +38,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableList', [
       //region SBIS3.CONTROLS.Data.Mediator.IReceiver
 
       relationChanged: function (which, name, data) {
-         /*var index = this.getIndex(which);
-         if (index > -1) {
+         // TODO: больше не использовать подписку на onPropertyChange в ObservableListMixin
+         /*if (name === 'owner') {
             this.notifyItemChange(which, data);
          }*/
       }

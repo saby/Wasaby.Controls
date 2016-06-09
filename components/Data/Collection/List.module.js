@@ -84,6 +84,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          List.superclass.constructor.call(this, options);
          OptionsMixin.constructor.call(this, options);
          this._$items = this._$items || [];
+         for (var i = 0, count = this._$items.length; i < count; i++) {
+            this._addChild(this._$items[i], 'owner');
+         }
       },
 
       // region SBIS3.CONTROLS.Data.SerializableMixin
@@ -138,6 +141,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          for (var i = 0, count = items.length; i < count; i++) {
             this._addChild(items[i], 'owner');
          }
+         this._childChanged(items);
       },
 
       append: function (items) {
@@ -146,6 +150,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          for (var i = 0, count = items.length; i < count; i++) {
             this._addChild(items[i], 'owner');
          }
+         this._childChanged(items);
       },
 
       prepend: function (items) {
@@ -154,12 +159,14 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          for (var i = 0, count = items.length; i < count; i++) {
             this._addChild(items[i], 'owner');
          }
+         this._childChanged(items);
       },
 
       clear: function () {
          this._$items.length = 0;
-         this._getMediator().clear(this);
          this._reindex();
+         this._getMediator().clear(this);
+         this._childChanged();
       },
 
       add: function (item, at) {
@@ -175,6 +182,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          }
 
          this._addChild(item, 'owner');
+         this._childChanged(item);
          this._reindex(IBindCollection.ACTION_ADD, at, 1);
       },
 
@@ -186,6 +194,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          var index = this.getIndex(item);
          if(index !== -1) {
             this.removeAt(index);
+            this._childChanged(item);
             return true;
          }
          return false;
@@ -198,6 +207,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          this._removeChild(this._$items[index]);
          this._$items.splice(index, 1);
          this._reindex(IBindCollection.ACTION_REMOVE, index, 1);
+         this._childChanged(index);
       },
 
       replace: function (item, at) {
@@ -207,8 +217,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          this._removeChild(this._$items[at], 'owner');
          this._$items[at] = item;
          this._addChild(item, 'owner');
-
          this._reindex(IBindCollection.ACTION_REPLACE, at, 1);
+         this._childChanged(item);
       },
 
       getIndex: function (item) {

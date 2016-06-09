@@ -350,7 +350,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       _getFieldFromRelationName: function(name) {
          name += '';
          if (name.substr(0, _fieldRelationPrefix.length) === _fieldRelationPrefix) {
-            return name.substr(_fieldRelationPrefix.length - 1);
+            return name.substr(_fieldRelationPrefix.length);
          }
       },
 
@@ -439,7 +439,9 @@ define('js!SBIS3.CONTROLS.Data.Record', [
                adapter.getSharedFormat(name),
                this.getAdapter()
             );
-            this._addChild(result, this._getRelationNameForField(name));
+            if (result instanceof Object) {
+               this._addChild(result, this._getRelationNameForField(name));
+            }
             return result;
          } catch (e) {
             return undefined;
