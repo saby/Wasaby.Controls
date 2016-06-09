@@ -128,7 +128,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             }
          };
 
-         if (!config.componentOptions.record || meta.preloadRecord !== false) {
+         //делам загрузку компонента, только если в мете явно указали, что на прототипе в опциях есть данные об источнике данных
+         if (meta.controllerSource && ( !config.componentOptions.record || meta.preloadRecord !== false )) {
             //Загружаем компонент, отнаследованный от formController'a, чтобы с его прототипа вычитать запись, которую мы прокинем при инициализации компонента
             //Сделано в рамках ускорения
             require([dialogComponent], this._initTemplateComponentCallback.bind(this, config, meta, mode));
