@@ -726,7 +726,7 @@ define([
                assert.strictEqual(args.oldItemsIndex, 0);
             });
 
-            it('should trigger event onCollectionItemChange after onCollectionChange', function(done){
+            it('should trigger event onCollectionItemChange after onCollectionChange', function(done) {
                var
                   list = new ObservableList({
                      items: [
@@ -740,22 +740,42 @@ define([
                            rawData: {max: 4}
                         })
                      ]
-                  });
-               list.subscribe('onCollectionChange', function(e, act, newItems, index, oldItems, oldIndex ){
-                  var item = list.at(oldIndex+1);
+                  }),
+                  projection,
+                  fireNum = 0,
+                  collectionChanged = 0,
+                  projectionChanged = 0,
+                  itemChanged = 0,
+                  itemValue;
+
+               list.subscribe('onCollectionChange', function(e, act, newItems, index, oldItems, oldIndex ) {
+                  collectionChanged = ++fireNum;
+                  var item = list.at(oldIndex + 1);
                   item.set('max', 502);
                });
 
-               var  projection = new CollectionProjection({
-                     collection: list
-                  });
+               projection = new CollectionProjection({
+                  collection: list
+               });
+
+               projection.subscribe('onCollectionChange', function() {
+                  projectionChanged = ++fireNum;
+               });
 
                projection.subscribe('onCollectionItemChange', function(e, item) {
-                  if(item.getContents().get('max') === 502){
-                     done();
-                  }
+                  itemChanged = ++fireNum;
+                  itemValue = item.getContents().get('max');
                });
+
                list.removeAt(0);
+
+               setTimeout(function() {
+                  assert.equal(collectionChanged, 1);
+                  assert.equal(projectionChanged, 2);
+                  assert.equal(itemChanged, 3);
+                  assert.equal(itemValue, 502);
+                  done();
+               }, 0);
             });
          });
 

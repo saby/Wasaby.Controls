@@ -151,7 +151,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
 
       relationChanged: function (which, name, data) {
          if (name === 'owner') {
-            this.notifyItemChange(which, data);
+            this._notifier(
+               this.notifyItemChange,
+               which,
+               data
+            );
+            //this.notifyItemChange(which, data);
          }
       },
 
