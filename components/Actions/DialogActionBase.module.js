@@ -180,6 +180,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          var defaultConfig = {
                isStack: true,
                autoHide: true,
+               buildMarkupWithContext: false,
+               showOnControlsReady: true,
                autoCloseOnHide: true,
                target: '',
                side: 'left',
