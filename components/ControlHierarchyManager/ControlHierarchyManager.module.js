@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
             childs = component.getChildControls();
             for (var i = 0; i < childs.length; i++){
                if (this._index[childs[i].getId()]){
-                  delete this._index[childs[i.getId()]];
+                  delete this._index[childs[i].getId()];
                }
             }
          }
