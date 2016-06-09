@@ -70,7 +70,8 @@ define([
                                     'Инженер',
                                     true
                                  ],
-                                 s: meta
+                                 s: meta,
+                                 _type: 'record'
                               };
                            } else {
                               error = 'Model is not found';
