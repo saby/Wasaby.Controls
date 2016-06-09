@@ -61,8 +61,8 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
 
       /**
        * Добавляет отношение "родитель - ребенок"
-       * @param {SBIS3.CONTROLS.Data.Mediator.IReceiver} parent Родитель
-       * @param {SBIS3.CONTROLS.Data.Mediator.IReceiver} child Ребенок
+       * @param {*} parent Родитель
+       * @param {*} child Ребенок
        * @param {String} [name] Название отношений
        */
       addTo: function (parent, child, name) {
@@ -73,8 +73,8 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
 
       /**
        * Удаляет отношение "родитель - ребенок"
-       * @param {SBIS3.CONTROLS.Data.Mediator.IReceiver} parent Родитель
-       * @param {SBIS3.CONTROLS.Data.Mediator.IReceiver} child Ребенок
+       * @param {*} parent Родитель
+       * @param {*} child Ребенок
        */
       removeFrom: function (parent, child) {
          var parentIndex = this._getIndex(parent),
@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
 
       /**
        * Очищает все отношения c детьми у указанного родителя
-       * @param {SBIS3.CONTROLS.Data.Mediator.IReceiver} parent Родитель
+       * @param {*} parent Родитель
        */
       clear: function (parent) {
          var parentIndex = this._getIndex(parent),
@@ -106,8 +106,8 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
 
       /**
        * Возвращает всех детей для указанного родителя
-       * @param {SBIS3.CONTROLS.Data.Mediator.IReceiver} parent Родитель
-       * @param {Function(SBIS3.CONTROLS.Data.Mediator.IReceiver)} callback Функция обратного вызова для каждого ребенка
+       * @param {*} parent Родитель
+       * @param {Function(*)} callback Функция обратного вызова для каждого ребенка
        */
       each: function (parent, callback) {
          var parentIndex = this._getIndex(parent),
@@ -131,8 +131,8 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
 
       /**
        * Возвращает родителя для указанного ребенка
-       * @param {SBIS3.CONTROLS.Data.Mediator.IReceiver} child Ребенок
-       * @return {SBIS3.CONTROLS.Data.Mediator.IReceiver}
+       * @param {*} child Ребенок
+       * @return {*}
        */
       getParent: function (child) {
          var relation = this._childToParent[this._getIndex(child)],
@@ -142,7 +142,7 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
 
       /**
        * Уведомляет родителя об изменении ребенка
-       * @param {SBIS3.CONTROLS.Data.Mediator.IReceiver} child Ребенок
+       * @param {*} child Ребенок
        * @param {*} [data] Данные об изменениях
        * @param {Boolean} [recursive=false] Рекурсивно обойти всю иерархию родителей
        */
@@ -164,7 +164,7 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
 
       /**
        * Уведомляет детей об изменении родителя
-       * @param {SBIS3.CONTROLS.Data.Mediator.IReceiver} parent Родитель
+       * @param {*} parent Родитель
        * @param {*} [data] Данные об изменениях
        * @param {Boolean} [recursive=false] Рекурсивно обойти всю иерархию детей
        */
@@ -187,7 +187,7 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
 
       /**
        * Возвращает хеш объекта
-       * @param {Object} item Объект
+       * @param {*} item Объект
        * @return {String}
        * @protected
        */
@@ -198,7 +198,7 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
 
       /**
        * Возвращает индекс объекта в реестре
-       * @param {Object} item Объект
+       * @param {*} item Объект
        * @return {Number}
        * @protected
        */
@@ -214,7 +214,7 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
 
       /**
        * Добавляет объект в реестр, если его еще там нет
-       * @param {Object} item Объект
+       * @param {*} item Объект
        * @return {Number} Индекс объекта в реестре
        * @protected
        */
@@ -233,7 +233,7 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
 
       /**
        * Удаляет объект из реестра, если он там есть
-       * @param {Object} item Объект
+       * @param {*} item Объект
        * @return {Number} Индекс удаленного объекта в реестре
        * @protected
        */
@@ -251,7 +251,7 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
 
       /**
        * Проверяет, что объект "живой" (не был уничтожен)
-       * @param {Object} item Объект
+       * @param {*} item Объект
        * @return {Boolean}
        * @protected
        */
