@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             _defaultCellTemplate: cellTemplate,
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
-            _canServerRender: false,
+            _canServerRender: true,
             /**
              * @typedef {Object} Columns
              * @property {String} title Заголовок колонки
@@ -1009,35 +1009,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             headData: this._prepareHeadData()
          }
       },
-
-      /*TODO старая отрисовка*/
-      /*_getItemTemplate: function(item){
-       if (!this._options.itemTemplate) {
-
-       var rowData = {
-       columns: $ws.core.clone(this._options.columns),
-       decorators: this._decorators,
-       color: this._options.colorField ? item.get(this._options.colorField) : '',
-       multiselect : this._options.multiselect,
-       isNode: item.get(this._options.hierField + '@'),
-       hasChilds: item.get(this._options.hierField + '$'),
-       arrowActivatedHandler: this._options.arrowActivatedHandler,
-       hierField: this._options.hierField,
-       displayType: this._options.displayType,
-       startScrollColumn: this._options.startScrollColumn
-       };
-
-       for (var i = 0; i < rowData.columns.length; i++) {
-       var column = rowData.columns[i];
-       column.value = this._getCellTemplate(item, column);
-       column.item = item;
-       }
-       return this._rowTpl(rowData);
-       }
-       else {
-       return this._options.itemTemplate(item);
-       }
-       },*/
 
       _getCellTemplate: function(item, column) {
          /*TODO не выпиливать. Тут хранится список параметров которые отдаются в шаблон ячейки. Важно не потерять*/
