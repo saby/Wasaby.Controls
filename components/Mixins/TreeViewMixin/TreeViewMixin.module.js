@@ -66,7 +66,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
          //todo При переходе на Virtual DOM удалить работу с expandedItemContainer
          var
             expandedItemContainer = this._getItemsContainer().find('[data-hash="'+ expandedItem.getHash() + '"]');
-         this._folderOffsets[expandedItem.getContents().getKey()] = 0;
+         this._folderOffsets[expandedItem.getContents().getId()] = 0;
          expandedItemContainer.find('.js-controls-TreeView__expand').addClass('controls-TreeView__expand__open');
          this._notify('onNodeExpand', expandedItem.getContents().getId(), expandedItemContainer);
       },
