@@ -1185,6 +1185,19 @@ define([
             });
          });
 
+         describe('.getModel()', function () {
+            it('should return a given model', function () {
+               var rs = new RecordSet({
+                  model: Model
+               });
+               assert.strictEqual(rs.getModel(), Model);
+            });
+
+            it('should return "model"', function () {
+               assert.strictEqual(rs.getModel(), 'model');
+            });
+         });
+
          describe('.getIdProperty()', function (){
             it('should return id property', function() {
                assert.equal("Ид", rs.getIdProperty());
