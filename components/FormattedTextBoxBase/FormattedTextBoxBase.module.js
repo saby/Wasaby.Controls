@@ -820,7 +820,9 @@ define(
             if (keyInsertInfo.groupNum == lastGroupNum  &&  keyInsertInfo.position == this.formatModel.model[lastGroupNum].mask.length - 1) {
                this._notify('onInputFinished');
             }
-            _moveCursor(container, position);
+            //Заново ищем контейнер группы, т.к. после замены символа, снаружи значение текста может быть изменено(например setText)
+            //и html будет полность изменён, а в переменной container лежит элемент, которого в DOM уже нет, и курсор не сможет верно спозиционироваться
+            _moveCursor(_getContainerByIndex.call(this, keyInsertInfo.groupNum), position);
          }
       },
 
