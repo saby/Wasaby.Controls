@@ -145,7 +145,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       init: function(){
          TreeDataGridView.superclass.init.call(this);
          if (this._container.hasClass('controls-TreeDataGridView__withPhoto')){
-            this._options.paddingSize = 42;
+            this._options._paddingSize = 42;
          }
       },
 
