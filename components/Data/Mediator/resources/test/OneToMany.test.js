@@ -221,5 +221,130 @@ define([
             checkParent(mediator, parent, children);
          });
       });
+
+      describe('.childChanged()', function() {
+         it('should notify the parent', function() {
+            var parent = getParentAsHashable(),
+               children = getChildrenAsObjects(),
+               result = {};
+
+            parent.relationChanged = function(which, name, data) {
+               result.which = which;
+               result.name = name;
+               result.data = data;
+            };
+
+            addChildren(mediator, parent, children);
+
+            mediator.childChanged(children[1], 'test');
+            assert.strictEqual(result.which, children[1]);
+            assert.equal(result.name, 'rel1');
+            assert.equal(result.data, 'test');
+         });
+         it('should notify all of the parents if recursive', function() {
+            var parent = getParentAsHashable(),
+               children = getChildrenAsHashable(),
+               handler = function(which, name, data) {
+                  results.push({
+                     which: which,
+                     name: name,
+                     data: data
+                  });
+                  callsCount++;
+               },
+               results = [],
+               stack,
+               callsCount = 0,
+               i;
+
+            parent.relationChanged = handler;
+            var curr = parent;
+            for (i = 0; i < children.length; i++) {
+               mediator.addTo(curr, children[i], 'level' + i);
+               children[i].relationChanged = handler;
+               curr = children[i];
+            }
+
+            mediator.childChanged(children[children.length - 1], 'last', true);
+            stack = children.slice();
+            stack.reverse();
+            var result;
+            for (i = 0; i < stack.length; i++) {
+               result = results[i];
+               assert.strictEqual(result.which, stack[i]);
+               assert.equal(result.name, 'level' + (stack.length - i - 1));
+               assert.equal(result.data, 'last');
+            }
+            assert.equal(callsCount, children.length);
+         });
+      });
+
+      describe('.parentChanged()', function() {
+         it('should notify all of direct children', function() {
+            var parent = getParentAsObject(),
+               children = getChildrenAsHashable(),
+               handler = function(which, name, data) {
+                  results.push({
+                     which: which,
+                     name: name,
+                     data: data
+                  });
+               },
+               results = [],
+               i;
+
+            for (i = 0; i < children.length; i++) {
+               children[i].relationChanged = handler;
+            }
+
+            addChildren(mediator, parent, children);
+
+            mediator.parentChanged(parent, 'test');
+            var result;
+            for (i = 0; i < children.length; i++) {
+               result = results[i];
+               assert.strictEqual(result.which, parent);
+               assert.equal(result.name, 'rel' + i);
+               assert.equal(result.data, 'test');
+            }
+         });
+         it('should notify all of the children if recursive', function() {
+            var parent = getParentAsHashable(),
+               children = getChildrenAsHashable(),
+               handler = function(which, name, data) {
+                  results.push({
+                     which: which,
+                     name: name,
+                     data: data
+                  });
+                  callsCount++;
+               },
+               results = [],
+               stack,
+               callsCount = 0,
+               i;
+
+            parent.relationChanged = handler;
+            var curr = parent;
+            for (i = 0; i < children.length; i++) {
+               mediator.addTo(curr, children[i], 'level' + i);
+               children[i].relationChanged = handler;
+               curr = children[i];
+            }
+
+            mediator.parentChanged(parent, 'first', true);
+            stack = children.slice();
+            stack.pop();
+            stack.unshift(parent);
+            var result;
+            for (i = 0; i < stack.length; i++) {
+               result = results[i];
+               assert.strictEqual(result.which, stack[i]);
+               assert.equal(result.name, 'level' + i);
+               assert.equal(result.data, 'first');
+            }
+            assert.equal(callsCount, children.length);
+         });
+      });
    });
 });
