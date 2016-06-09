@@ -18,23 +18,22 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
    var HtmlDecorators = $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Utils.HtmlDecorators.prototype */{
       $protected: {
          /**
-          * @var {Object} Набор декораторов SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator[]
-          */
-         _decorators: {},
-         /**
           * @var {Object} Типы зон декорирования
           */
-         _kinds: {}
+         _kinds: {},
+         _options: {
+            _decorators: {}
+         }
       },
 
       $constructor: function () {
       },
 
       destroy: function () {
-         for (var area in this._decorators) {
-            if (this._decorators.hasOwnProperty(area)) {
-               for (var i = 0; i < this._decorators[area].length; i++) {
-                  this._decorators[area][i].destroy();
+         for (var area in this._options._decorators) {
+            if (this._options._decorators.hasOwnProperty(area)) {
+               for (var i = 0; i < this._options._decorators[area].length; i++) {
+                  this._options._decorators[area][i].destroy();
                }
             }
          }
@@ -50,22 +49,22 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
          area = this._getDefaultArea(area);
          kind = kind || AREA_KIND_TEXT;
 
-         if (this._decorators[area] === undefined) {
-            this._decorators[area] = [];
+         if (this._options._decorators[area] === undefined) {
+            this._options._decorators[area] = [];
             this._kinds[area] = kind;
          } else if (this._kinds[area] !== kind) {
             throw new Error('Area kind mismatch.');
          }
 
-         this._decorators[area].push(decorator);
+         this._options._decorators[area].push(decorator);
       },
 
       getByName: function (decoratorName) {
-         for (var area in this._decorators) {
-            if (this._decorators.hasOwnProperty(area)) {
-               for (var i = 0; i < this._decorators[area].length; i++) {
-                  if (this._decorators[area][i].getName() == decoratorName){
-                     return this._decorators[area][i];
+         for (var area in this._options._decorators) {
+            if (this._options._decorators.hasOwnProperty(area)) {
+               for (var i = 0; i < this._options._decorators[area].length; i++) {
+                  if (this._options._decorators[area][i].getName() == decoratorName){
+                     return this._options._decorators[area][i];
                   }
                }
             }
@@ -77,10 +76,10 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
        * @param {Object} control Контрол-владелец декораторов
        */
       update: function(control) {
-         for (var area in this._decorators) {
-            if (this._decorators.hasOwnProperty(area)) {
-               for (var i = 0; i < this._decorators[area].length; i++) {
-                  this._decorators[area][i].update(control);
+         for (var area in this._options._decorators) {
+            if (this._options._decorators.hasOwnProperty(area)) {
+               for (var i = 0; i < this._options._decorators[area].length; i++) {
+                  this._options._decorators[area][i].update(control);
                }
             }
          }
@@ -118,11 +117,11 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
        */
       setConditions: function(obj) {
          var enabledDecorators = [];
-         for (var area in this._decorators) {
-            if (this._decorators.hasOwnProperty(area)) {
-               for (var i = 0; i < this._decorators[area].length; i++) {
-                  if (this._decorators[area][i].checkCondition(obj)){
-                     enabledDecorators.push(this._decorators[area][i]);
+         for (var area in this._options._decorators) {
+            if (this._options._decorators.hasOwnProperty(area)) {
+               for (var i = 0; i < this._options._decorators[area].length; i++) {
+                  if (this._options._decorators[area][i].checkCondition(obj)){
+                     enabledDecorators.push(this._options._decorators[area][i]);
                   }
                }
             }
@@ -184,8 +183,8 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
        */
       _getByArea: function (area) {
          area = this._getDefaultArea(area);
-         if (this._decorators[area]) {
-            return this._decorators[area];
+         if (this._options._decorators[area]) {
+            return this._options._decorators[area];
          }
          return [];
       },

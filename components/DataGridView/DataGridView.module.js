@@ -276,7 +276,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       $constructor: function() {
          this._publish('onDrawHead');
          this._checkColumns();
-         this._decorators.add(new LadderDecorator());
+         this._options._decorators.add(new LadderDecorator());
          this._tfoot = $('.controls-DataGridView__tfoot', this._container[0]);
          this._tbody = $('.controls-DataGridView__tbody', this._container[0]);
       },
@@ -1052,7 +1052,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                item: item,
                hierField: this._options.hierField,
                isNode: item.get(this._options.hierField + '@'),
-               decorators: this._decorators,
+               decorators: this._options._decorators,
                field: column.field,
                value: value,
                highlight: column.highlight
@@ -1071,7 +1071,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
             value = MarkupTransformer((cellTpl)(tplOptions));
          } else {
-            value = this._decorators.applyOnly(
+            value = this._options._decorators.applyOnly(
                   value === undefined || value === null ? '' : $ws.helpers.escapeHtml(value), {
                   highlight: column.highlight,
                   ladder: {

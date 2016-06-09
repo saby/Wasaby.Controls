@@ -235,7 +235,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
 
       _clearLadderData: function(key){
-         var ladderDecorator = this._decorators.getByName('ladder');
+         var ladderDecorator = this._options._decorators.getByName('ladder');
          if (ladderDecorator){
             ladderDecorator.removeNodeData(key);
          }

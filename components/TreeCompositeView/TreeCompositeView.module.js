@@ -94,7 +94,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                   }
                   resultTpl = dotTpl({
                      item: item,
-                     decorators: this._decorators,
+                     decorators: this._options._decorators,
                      color: this._options.colorField ? item.get(this._options.colorField) : '',
                      description: this._options.displayField,
                      image: this._options.imageField
@@ -124,7 +124,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                   }
                   resultTpl = dotTpl({
                      item: item,
-                     decorators: this._decorators,
+                     decorators: this._options._decorators,
                      color: this._options.colorField ? item.get(this._options.colorField) : '',
                      description: this._options.displayField,
                      image: this._options.imageField

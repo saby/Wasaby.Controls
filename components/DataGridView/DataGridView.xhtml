@@ -10,7 +10,11 @@
    </div>
    <div class="controls-ListView-scrollIndicator ws-hidden{{?it.infiniteScroll === 'up'}} controls-ListView-scrollIndicator__up {{?}}"></div>
    <table class="controls-DataGridView__table">
-      <tbody class="controls-DataGridView__tbody"></tbody>
+      <tbody class="controls-DataGridView__tbody">
+      {{?it._serverRender}}
+         {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
+      {{?}}
+      </tbody>
       <tfoot class="controls-DataGridView__tfoot">
       </tfoot>
    </table>

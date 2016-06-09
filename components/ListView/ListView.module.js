@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.ListView',
          buildTplArgsLV = function(cfg) {
             var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
             tplOptions.multiselect = cfg.multiselect;
-            tplOptions.decorators = this._decorators;
+            tplOptions.decorators = cfg._decorators;
             tplOptions.colorField = cfg.colorField;
 
             return tplOptions;
@@ -1733,7 +1733,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         //TODO новый миксин не задействует декоратор лесенки в принципе при любых действиях, кроме первичной отрисовки
                         //это неправильно, т.к. лесенка умеет рисовать и дорисовывать данные, если они добавляются последовательно
                         //здесь мы говорим, чтобы лесенка отработала при отрисовке данных
-                        var ladder = this._decorators.getByName('ladder');
+                        var ladder = this._options._decorators.getByName('ladder');
                         if (ladder){
                            ladder.setIgnoreEnabled(true);
                         }
