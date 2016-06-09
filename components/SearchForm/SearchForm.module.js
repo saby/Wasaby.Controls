@@ -1,9 +1,12 @@
 define('js!SBIS3.CONTROLS.SearchForm', [
    'js!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.SearchMixin',
+   'js!SBIS3.CONTROLS.SuggestMixin',
+   'js!SBIS3.CONTROLS.SuggestTextBoxMixin',
+   'js!SBIS3.CONTROLS.PickerMixin',
    'html!SBIS3.CONTROLS.SearchForm',
    'html!SBIS3.CONTROLS.SearchForm/resources/SearchFormButtons'
-], function (TextBox, SearchMixin, dotTplFn, buttonsTpl) {
+], function (TextBox, SearchMixin, SuggestMixin, SuggestTextBoxMixin, PickerMixin, dotTplFn, buttonsTpl) {
 
    'use strict';
 
@@ -18,7 +21,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
     * @author Крайнов Дмитрий Олегович
     */
 
-   var SearchForm = TextBox.extend([SearchMixin],/** @lends SBIS3.CONTROLS.SearchForm.prototype */ {
+   var SearchForm = TextBox.extend([SearchMixin, PickerMixin, SuggestMixin, SuggestTextBoxMixin],/** @lends SBIS3.CONTROLS.SearchForm.prototype */ {
       /**
        * @event onSearch При нажатии кнопки поиска
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -40,7 +43,8 @@ define('js!SBIS3.CONTROLS.SearchForm', [
              * </pre>
              * @translatable
              */
-            btnCaption: ''
+            btnCaption: '',
+            usePicker: false
          }
       },
 
@@ -66,10 +70,19 @@ define('js!SBIS3.CONTROLS.SearchForm', [
        */
       _keyUpBind:function(event) {
          if (event.which === $ws._const.key.enter) {
+            if (this._options.usePicker && this.isPickerVisible()) {
+               SearchForm.superclass._keyUpBind.apply(this, arguments);
+            }
             this.applySearch(true);
             event.stopPropagation();
          } else {
             SearchForm.superclass._keyUpBind.apply(this, arguments);
+         }
+      },
+
+      _startSearch: function() {
+         if (!this._options.usePicker) {
+            SearchForm.superclass._startSearch.apply(this, arguments);
          }
       },
 

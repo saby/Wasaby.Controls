@@ -1,9 +1,11 @@
 define('js!SBIS3.CONTROLS.Demo.MySearchForm', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Demo.MySearchForm',
+   'js!SBIS3.CONTROLS.DEMO.DemoSuggestMemory',
    'css!SBIS3.CONTROLS.Demo.MySearchForm',
-   'js!SBIS3.CONTROLS.SearchForm'
-], function (CompoundControl, dotTplFn) {
+   'js!SBIS3.CONTROLS.SearchForm',
+   'js!SBIS3.CONTROLS.DataGridView'
+], function (CompoundControl, dotTplFn, DemoSuggestMemory) {
    'use strict';
    /**
     * SBIS3.CONTROLS.Demo.MySearchForm
@@ -21,6 +23,12 @@ define('js!SBIS3.CONTROLS.Demo.MySearchForm', [
 
       init: function () {
          MySearchForm.superclass.init.call(this);
+
+         var searchTwo = this.getChildControlByName('SearchTwo');
+
+         searchTwo.subscribe('onListReady', function(event, list) {
+            list.setDataSource(new DemoSuggestMemory(), true);
+         });
       }
    });
    return MySearchForm;
