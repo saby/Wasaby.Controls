@@ -1,5 +1,5 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Sync', [
+define('js!SBIS3.CONTROLS.Data.Source.Synchronizer', [
    'js!SBIS3.CONTROLS.Data.Record',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator'
 ], function (Record, ArrayEnumerator) {
@@ -23,12 +23,12 @@ define('js!SBIS3.CONTROLS.Data.Sync', [
 
    /**
     * Синхронизатор данных и источника.
-    * @class SBIS3.CONTROLS.Data.Sync
+    * @class SBIS3.CONTROLS.Data.Source.Synchronizer
     * @public
     * @author Мальцев Алексей
     */
 
-   var Sync = /** @lends SBIS3.CONTROLS.Data.Sync.prototype */{
+   var Synchronizer = /** @lends SBIS3.CONTROLS.Data.Source.Synchronizer.prototype */{
       /**
        * @typedef {Number} RecordStateSerialized
        * @variant 0 Запись не была изменена.
@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.Data.Sync', [
        * @variant 4 Запись не была вставлена
        */
 
-      _moduleName: 'SBIS3.CONTROLS.Data.Sync',
+      _moduleName: 'SBIS3.CONTROLS.Data.Source.Synchronizer',
 
       //region Public methods
 
@@ -202,7 +202,7 @@ define('js!SBIS3.CONTROLS.Data.Sync', [
       //endregion Protected methods
    };
 
-   Sync.RecordStateSerialized = RecordStateSerialized
+   Synchronizer.RecordStateSerialized = RecordStateSerialized;
 
-   return Sync;
+   return Synchronizer;
 });
