@@ -213,7 +213,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
       },
 
       /**
-       * Возвращает данные в "сыром" виде
+       * Возвращает данные в "сыром" виде. Если данные являются объектом, то возвращается его дубликат.
        * @returns {Object}
        * @see setRawData
        * @see rawData
