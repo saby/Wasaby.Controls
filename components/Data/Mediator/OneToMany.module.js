@@ -97,7 +97,7 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
          if (parentIndex === -1) {
             return;
          }
-         children = this._getChildren(parentIndex);
+         children = this._getChildrenIndexes(parentIndex);
          for (var i = 0; i < children.length; i++) {
             delete this._childToParent[children[i]];
          }
@@ -118,10 +118,10 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
          if (parentIndex === -1) {
             return;
          }
-         children = this._getChildren(parentIndex);
+         children = this._getChildrenIndexes(parentIndex);
          for (var i = 0; i < children.length; i++) {
             childIndex = children[i];
-            relation = this._childToParent[childIndex];
+            relation = this._getRelation(childIndex);
             child = this._registry[childIndex];
             if (this._isAlive(child)) {
                callback.call(this, child, relation ? relation[1]: undefined);
@@ -135,7 +135,7 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
        * @return {*}
        */
       getParent: function (child) {
-         var relation = this._childToParent[this._getIndex(child)],
+         var relation = this._getRelation(this._getIndex(child)),
             parent = relation ? this._registry[relation[0]] : undefined;
          return this._isAlive(parent) ? parent : undefined;
       },
@@ -150,7 +150,7 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
          var parent = this.getParent(child),
             relation;
          if (parent) {
-            relation = this._childToParent[this._getIndex(child)];
+            relation = this._getRelation(this._getIndex(child));
             if ($ws.helpers.instanceOfMixin(parent, 'SBIS3.CONTROLS.Data.Mediator.IReceiver')) {
                if (this._isAlive(parent)) {
                   parent.relationChanged(child, relation ? relation[1] : '', data);
@@ -261,39 +261,56 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
       },
 
       /**
+       * Возвращет отношение
+       * @param {Number} childIndex Индекс ребенка
+       * @return {Array.<Number, String>}
+       * @protected
+       */
+      _getRelation: function(childIndex) {
+         return this._childToParent[childIndex];
+      },
+
+      /**
        * Добавляет отношение
        * @param {Number} parentIndex Индекс родителя
        * @param {Number} childIndex Индекс ребенка
        * @param {String} name Название отношения
-       * @return {Number}
        * @protected
        */
       _insertRelation: function(parentIndex, childIndex, name) {
-         var children = this._getChildren(parentIndex),
-            index = Array.indexOf(children, childIndex);
-         if (index === -1) {
-            index = children.length;
+         if (this._getParentIndex(childIndex) === -1) {
+            var children = this._getChildrenIndexes(parentIndex);
             children.push(childIndex);
          }
          this._childToParent[childIndex] = [parentIndex, name];
-         return index;
       },
 
       /**
        * Удаляет отношение
        * @param {Number} parentIndex Индекс родителя
        * @param {Number} childIndex Индекс ребенка
-       * @return {Number}
        * @protected
        */
       _removeRelation: function(parentIndex, childIndex) {
-         var children = this._getChildren(parentIndex),
-            index = Array.indexOf(children, childIndex);
-         if (index > -1) {
-            children.splice(index, 1);
+         if (this._getParentIndex(childIndex) > -1) {
+            var children = this._getChildrenIndexes(parentIndex),
+               index = Array.indexOf(children, childIndex);
+            if (index > -1) {
+               children.splice(index, 1);
+            }
          }
          delete this._childToParent[childIndex];
-         return index;
+      },
+
+      /**
+       * Возвращает индекс родителя для указанного ребенка
+       * @param {Number} childIndex Индекс ребенка
+       * @return {Number} Индекс родителя
+       * @protected
+       */
+      _getParentIndex: function(childIndex) {
+         var relation = this._getRelation(childIndex);
+         return relation ? relation[0] : -1;
       },
 
       /**
@@ -302,7 +319,7 @@ define('js!SBIS3.CONTROLS.Data.Mediator.OneToMany', [
        * @return {Array.<Number>}
        * @protected
        */
-      _getChildren: function(parentIndex) {
+      _getChildrenIndexes: function(parentIndex) {
          var children = this._parentToChild[parentIndex];
          if (!children) {
             children = this._parentToChild[parentIndex] = [];
