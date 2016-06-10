@@ -576,6 +576,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //Флаг обозначает необходимость компенсировать подгрузку по скроллу вверх, ее нельзя делать безусловно, так как при подгрузке вверх могут добавлятся элементы и вниз тоже
             _needSrollTopCompensation: false,
             _scrollWatcher : undefined,
+            _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
             _searchParamName: undefined, //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
             _updateByReload: false, //todo: Убрать в 150, когда будет правильный рендер изменившихся данных. Флаг, означающий то, что обновление происходит из-за перезагрузки данных.
             _scrollOnBottom: true, // TODO: Придрот для скролла вниз при первой подгрузке. Если включена подгрузка вверх то изначально нужно проскроллить контейнер вниз,
@@ -1358,10 +1359,18 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onBeginEdit', model));
                      }.bind(this),
                      onAfterBeginEdit: function(event, model) {
+                        var itemsActions;
                         if (this._options.editMode.indexOf('toolbar') !== -1) {
                            this._getItemsToolbar().unlockToolbar();
                            //Отображаем кнопки редактирования
                            this._getItemsToolbar().showEditActions();
+                           if (!model.isStored()) {
+                              itemsActions = this._getItemsToolbar().getItemsActions().getItemsInstances();
+                              if (itemsActions.delete) {
+                                 this._lastDeleteActionState = itemsActions.delete.isVisible();
+                                 itemsActions.delete.hide();
+                              }
+                           }
                            //Отображаем itemsToolbar для редактируемого элемента и фиксируем его
                            this._showItemsToolbar(this._getElementData(this._editingItem.target));
                            this._getItemsToolbar().lockToolbar();
@@ -1383,6 +1392,10 @@ define('js!SBIS3.CONTROLS.ListView',
                            //Скрываем кнопки редактирования
                            this._getItemsToolbar().unlockToolbar();
                            this._getItemsToolbar().hideEditActions();
+                           if (this._lastDeleteActionState !== undefined) {
+                              this._getItemsToolbar().getItemsActions().getItemsInstances().delete.toggle(this._lastDeleteActionState);
+                              this._lastDeleteActionState = undefined;
+                           }
                            this._hideItemsToolbar();
                         }
                         event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
