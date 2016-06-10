@@ -1,12 +1,13 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
       'js!SBIS3.CONTROLS.Data.Record',
+      'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
       'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
       'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
       'js!SBIS3.CONTROLS.Data.Types.Enum',
       'js!SBIS3.CONTROLS.Data.Types.Flags'
-   ], function (Record, RecordSet, SbisAdapter, FieldsFactory, Enum, Flags) {
+   ], function (Record, ObservableList, RecordSet, SbisAdapter, FieldsFactory, Enum, Flags) {
       'use strict';
       describe('SBIS3.CONTROLS.Data.Record', function () {
          var getRecordData = function() {
@@ -329,6 +330,28 @@ define([
                record.set('flags', val2);
                assert.strictEqual(name, 'flags');
                assert.strictEqual(newV, val2);
+            });
+            it('should trigger onPropertyChange with deep changed item', function(done) {
+               var sub = new Record(),
+                  list = new ObservableList({
+                     items: [sub]
+                  }),
+                  top = new Record({
+                     rawData: {list: list}
+                  }),
+                  handler = function(event, map) {
+                     try {
+                        assert.strictEqual(map.list, list);
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+
+               top.get('list');
+               top.subscribe('onPropertyChange', handler);
+               sub.set('test', 'ok');
+               top.unsubscribe('onPropertyChange', handler);
             });
             it('should change properties cache', function () {
                record.set('obj', {val: 13});
