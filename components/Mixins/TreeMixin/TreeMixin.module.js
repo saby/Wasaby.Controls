@@ -600,14 +600,20 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                /*Если в текущем списке есть предыдущий путь, значит это выход из папки*/
                if (this.getItems().getRecordById(this._previousRoot)) {
                   this.setSelectedKey(this._previousRoot);
-                  this._scrollToItem(this._previousRoot);
+                  //todo Это единственный на текущий момент способ проверить, что наш контейнер уже в контейнере ListView и тогда осуществлять scrollTo не нужно!
+                  if (!this._container.parents('.controls-ListView').length) {
+                     this._scrollToItem(this._previousRoot);
+                  }
                }
                else {
                   /*иначе вход в папку*/
                   item = this.getItems() && this.getItems().at(0);
                   if (item){
                      this.setSelectedKey(item.getId());
-                     this._scrollToItem(item.getId());
+                     if (!this._container.parents('.controls-ListView').length) {
+                        //todo Это единственный на текущий момент способ проверить, что наш контейнер уже в контейнере ListView и тогда осуществлять scrollTo не нужно!
+                        this._scrollToItem(item.getId());
+                     }
                   }
                }
 
