@@ -1,5 +1,9 @@
 {{~it.records :item:index}}
-   {{it.tplData['item'] = item.getContents();
-   it.tplData['projItem'] = item;}}
-   {{=it.tplData.itemTpl(it.tplData)}}
+   {{?item.getContents}}
+      {{it.tplData['item'] = item.getContents();
+      it.tplData['projItem'] = item;}}
+      {{=it.tplData.itemTpl(it.tplData)}}
+   {{??}}
+      {{=item.tpl(item.data)}}
+   {{?}}
 {{~}}
