@@ -75,6 +75,102 @@ define('js!SBIS3.CONTROLS.DataGridView',
             tplOptions.startScrollColumn = cfg.startScrollColumn;
 
             return tplOptions;
+         },
+         checkColumns = function(cfg) {
+            for (var i = 0; i < cfg.columns.length; i++) {
+               var column = cfg.columns[i];
+               if (column.highlight === undefined) {
+                  column.highlight =  true;
+               }
+            }
+         },
+         prepareHeadColumns = function(cfg){
+            var
+               rowData = {},
+               columns = $ws.core.clone(cfg.columns),
+               supportUnion = $ws.core.clone(columns[0]),
+               supportDouble,
+               curCol,
+               nextCol,
+               curColSplitTitle,
+               nextColSplitTitle;
+
+            rowData.countRows = 1;
+            rowData.content = [[], []];
+
+            if (!cfg.transformHead){
+               rowData.content[0] = columns;
+               return rowData;
+            }
+
+            for (var i = 0, l = columns.length; i < l; i++){
+               curCol = columns[i];
+               nextCol = columns[i + 1];
+               curColSplitTitle = curCol.title.split('.');
+               nextColSplitTitle = nextCol && nextCol.title.split('.');
+
+               if (!supportDouble){
+                  supportDouble = $ws.core.clone(curCol);
+               }
+               else {
+                  curColSplitTitle = [supportDouble.value, curColSplitTitle];
+               }
+               if (nextCol && (curColSplitTitle.length == nextColSplitTitle.length) && (curColSplitTitle.length == 2) && (curColSplitTitle[0] == nextColSplitTitle[0])){
+                  supportDouble.value = curColSplitTitle[0];
+                  supportDouble.colspan = ++supportDouble.colspan || 2;
+                  curCol.title = curColSplitTitle[1];
+                  nextCol.title = nextColSplitTitle[1];
+                  rowData.countRows = 2;
+               }
+               else{
+                  rowData.content[1].push(supportDouble);
+                  supportDouble = null;
+               }
+
+               if (!supportUnion){
+                  supportUnion = $ws.core.clone(curCol);
+               }
+               if (nextCol && (supportUnion.title == nextCol.title)){
+                  supportUnion.colspan = ++supportUnion.colspan || 2;
+               }
+               else{
+                  rowData.content[0].push(supportUnion);
+                  supportUnion = null;
+               }
+            }
+            return rowData;
+         },
+         prepareHeadData = function(cfg) {
+            var
+               headData = {
+                  columns: $ws.core.clone(cfg.columns),
+                  multiselect : cfg.multiselect,
+                  startScrollColumn: cfg.startScrollColumn,
+                  showHead: cfg.showHead
+               },
+               value,
+               column,
+               headColumns = prepareHeadColumns(cfg);
+            $ws.core.merge(headData, headColumns);
+            for (var i = 0; i < headData.content[0].length; i++) {
+               column = headData.content[0][i];
+
+               if (column.headTemplate) {
+                  value = MarkupTransformer(TemplateUtil.prepareTemplate(column.headTemplate)({
+                     column: column
+                  }));
+               } else {
+                  value = '<div class="controls-DataGridView__th-content">' + ($ws.helpers.escapeHtml(column.title) || '') + '</div>';
+               }
+               column.value = value;
+            }
+            return headData;
+         },
+         prepareColGroupData = function(cfg) {
+            return {
+               columns: cfg.columns,
+               multiselect: cfg.multiselect
+            }
          };
    /**
     * Контрол, отображающий набор данных в виде таблицы с несколькими колонками.
@@ -126,6 +222,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          _isHeaderScrolling: false,                   //Флаг обозначающий, происходит ли скролл за заголовок
          _lastLeftPos: null,                          //Положение по горизонтали, нужно когда происходит скролл за заголовок
          _options: {
+            _headTpl: headTpl,
+            _colGroupTpl: colgroupTpl,
             _defaultCellTemplate: cellTemplate,
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
@@ -273,20 +371,27 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
 
+      _modifyOptions: function() {
+         var newCfg = DataGridView.superclass._modifyOptions.apply(this, arguments);
+         newCfg._decorators.add(new LadderDecorator());
+         checkColumns(newCfg);
+         newCfg._colgroupData = prepareColGroupData(newCfg);
+         newCfg._headData = prepareHeadData(newCfg);
+         return newCfg;
+      },
+
       $constructor: function() {
          this._publish('onDrawHead');
-         this._checkColumns();
-         this._options._decorators.add(new LadderDecorator());
          this._tfoot = $('.controls-DataGridView__tfoot', this._container[0]);
          this._tbody = $('.controls-DataGridView__tbody', this._container[0]);
       },
 
       init: function() {
-         this._redrawHead();
-         DataGridView.superclass.init.call(this);
-         if(this.hasPartScroll()) {
-            this._initPartScroll();
+         if (!this._options._serverRender && this._options.showHead) {
+            this._redrawHead();
          }
+         DataGridView.superclass.init.call(this);
+         this._bindHead();
       },
 
       _mouseMoveHandler: function(e) {
@@ -374,96 +479,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return args;
       },
 
-      _prepareHeadData: function() {
-         var
-            headData = {
-               columns: $ws.core.clone(this._options.columns),
-               multiselect : this._options.multiselect,
-               startScrollColumn: this._options.startScrollColumn,
-               showHead: this._options.showHead
-            },
-            value,
-            column,
-            headColumns = this._prepareHeadColumns2();
-         $ws.core.merge(headData, headColumns);
-         for (var i = 0; i < headData.content[0].length; i++) {
-            column = headData.content[0][i];
-
-            if (column.headTemplate) {
-               value = MarkupTransformer(TemplateUtil.prepareTemplate(column.headTemplate)({
-                  column: column
-               }));
-            } else {
-               value = '<div class="controls-DataGridView__th-content">' + ($ws.helpers.escapeHtml(column.title) || '') + '</div>';
-            }
-            column.value = value;
-         }
-         return headData;
-      },
-
-      _prepareHeadColumns2: function(){
-         var
-            rowData = {},
-            columns = $ws.core.clone(this._options.columns),
-            supportUnion = $ws.core.clone(columns[0]),
-            supportDouble,
-            curCol,
-            nextCol,
-            curColSplitTitle,
-            nextColSplitTitle;
-
-         rowData.countRows = 1;
-         rowData.content = [[], []];
-
-         if (!this._options.transformHead){
-            rowData.content[0] = columns;
-            return rowData;
-         }
-
-         for (var i = 0, l = columns.length; i < l; i++){
-            curCol = columns[i];
-            nextCol = columns[i + 1];
-            curColSplitTitle = curCol.title.split('.');
-            nextColSplitTitle = nextCol && nextCol.title.split('.');
-
-            if (!supportDouble){
-               supportDouble = $ws.core.clone(curCol);
-            }
-            else {
-               curColSplitTitle = [supportDouble.value, curColSplitTitle];
-            }
-            if (nextCol && (curColSplitTitle.length == nextColSplitTitle.length) && (curColSplitTitle.length == 2) && (curColSplitTitle[0] == nextColSplitTitle[0])){
-               supportDouble.value = curColSplitTitle[0];
-               supportDouble.colspan = ++supportDouble.colspan || 2;
-               curCol.title = curColSplitTitle[1];
-               nextCol.title = nextColSplitTitle[1];
-               rowData.countRows = 2;
-            }
-            else{
-               rowData.content[1].push(supportDouble);
-               supportDouble = null;
-            }
-
-            if (!supportUnion){
-               supportUnion = $ws.core.clone(curCol);
-            }
-            if (nextCol && (supportUnion.title == nextCol.title)){
-               supportUnion.colspan = ++supportUnion.colspan || 2;
-            }
-            else{
-               rowData.content[0].push(supportUnion);
-               supportUnion = null;
-            }
-         }
-         return rowData;
-      },
-
       _redrawHead : function() {
          var
-            headData = this._prepareHeadData(),
+            headData,
             headMarkup;
 
-         headData = this._prepareHeadData();
+         headData = prepareHeadData(this._options);
          headMarkup = MarkupTransformer(headTpl(headData));
          var body = $('.controls-DataGridView__tbody', this._container);
 
@@ -472,10 +493,18 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._thead.remove()
          }
          this._thead = $(headMarkup).insertBefore(body);
+
+         this._redrawColgroup();
+
+      },
+
+      _bindHead: function() {
+         this._thead = $('.controls-DataGridView__thead', this._container.get(0));
+         this._colgroup = $('.controls-DataGridView__colgroup', this._container.get(0));
          if(this._options.showHead) {
             this._isPartScrollVisible = false;
          }
-         this._redrawColgroup();
+
          if(this.hasPartScroll()) {
             this._initPartScroll();
             this.updateDragAndDrop();
@@ -494,10 +523,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _redrawColgroup : function() {
          var markup, data, body;
-         data = {
-            columns: this._options.columns,
-            multiselect: this._options.multiselect
-         };
+         data = prepareColGroupData(this._options);
          markup = colgroupTpl(data);
          body = $('.controls-DataGridView__tbody', this._container);
          if(this._colgroup) {
@@ -940,7 +966,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
         */
        setColumns : function(columns) {
           this._options.columns = columns;
-          this._checkColumns();
+          checkColumns(this._options);
           /* Перестроим шапку только после загрузки данных,
            чтобы таблица не прыгала, из-за того что изменилось количество и ширина колонок */
           this.once('onDataLoad', this._redrawHead.bind(this));
@@ -953,17 +979,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this.redraw();
          } else if(this._options.showHead) {
             this._redrawHead();
-         }
-      },
-      /**
-       * Проверяет настройки колонок, заданных опцией {@link columns}.
-       */
-      _checkColumns : function() {
-         for (var i = 0; i < this._options.columns.length; i++) {
-            var column = this._options.columns[i];
-            if (column.highlight === undefined) {
-               column.highlight =  true;
-            }
          }
       },
 
@@ -1036,12 +1051,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
       /* ----------------------------------------------------------------------------
        ------------------- НИЖЕ ПЕРЕХОД НА ItemsControlMixin ----------------------
        ---------------------------------------------------------------------------- */
-      _prepareFullData: function() {
-         return {
-            items: this._getRecordsForRedraw(),
-            headData: this._prepareHeadData()
-         }
-      },
 
       _getCellTemplate: function(item, column) {
          /*TODO не выпиливать. Тут хранится список параметров которые отдаются в шаблон ячейки. Важно не потерять*/
