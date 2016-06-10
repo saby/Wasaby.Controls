@@ -270,14 +270,14 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
          }
       },
       _elemClickHandlerInternal: function (data, id, target) {
-         var
-            nodeID = $(target).closest('.js-controls-ListView__item').data('id'),
-            closestExpand = this._findExpandByElement($(target));
+         var $target = $(target),
+             nodeID = $target.closest('.js-controls-ListView__item').data('id'),
+             closestExpand = this._findExpandByElement($(target));
 
          if (closestExpand.hasClass('js-controls-TreeView__expand')) {
             this.toggleNode(nodeID);
-         }
-         else {
+            /* Не вызываем активацию item'a при клике на чекбокс */
+         } else if(!$target.hasClass('js-controls-ListView__itemCheckBox')) {
             if ((this._options.allowEnterToFolder) && ((data.get(this._options.hierField + '@')))){
                this.setCurrentRoot(nodeID);
                this.reload();
