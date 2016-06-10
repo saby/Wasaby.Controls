@@ -402,6 +402,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
              })
           },
 
+          _observableControlFocusHandler: function() {
+             /* Не надо обрабатывать приход фокуса, если у нас есть выбрынные
+              элементы при единичном выборе, в противном случае, автодополнение будет посылать лишний запрос,
+              хотя ему отображаться не надо. */
+             if(!this._options.multiselect && !this._isEmptySelection()) {
+                return false;
+             }
+             FieldLink.superclass._observableControlFocusHandler.apply(this, arguments);
+          },
+
           /**
            * Обрабатывает результат выбора из справочника
            * @param {Array} result
@@ -729,6 +739,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
              /* Вызываем родительский метод, если передали запись с обязательными полями или null */
              if(hasRequiredFields || item === null) {
                 FieldLink.superclass.setSelectedItem.apply(this, arguments);
+             }
+          },
+
+          setEnabled: function() {
+             FieldLink.superclass.setEnabled.apply(this, arguments);
+             /* При изменении состояния поля связи, надо скинуть старую запомненую ширину,
+                если это произошло в скрытом состоянии, иначе поле показа не запустится перерисовка */
+             if(!this.isVisibleWithParents()) {
+                this._lastFieldLinkWidth = null;
              }
           },
 

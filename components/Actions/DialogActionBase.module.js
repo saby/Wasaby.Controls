@@ -108,10 +108,9 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          meta.id = this._getEditKey(meta.item) || meta.id;
 
          var self = this,
-            config, Component,
-
-         compOptions = this._buildComponentConfig(meta);
-         config = {
+            config,
+            compOptions = this._buildComponentConfig(meta);
+            config = {
             opener: this,
             template: dialogComponent,
             componentOptions: compOptions
@@ -120,23 +119,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             config.title = meta.title;
          }
 
-         mode = mode || this._options.mode;
-         if (mode == 'floatArea'){
-            Component = FloatArea;
-            config.isStack = meta.isStack !== undefined ? meta.isStack : true;
-            config.autoHide = meta.autoHide !== undefined ? meta.autoHide : true;
-            config.autoCloseOnHide = meta.autoCloseOnHide !== undefined ? meta.autoCloseOnHide : true;
-         } else if (mode == 'dialog') {
-            Component = Dialog;
-         }
-
-         if (this._dialog && !this._dialog.isAutoHide()){
-            $ws.core.merge(this._dialog._options, config);
-            this._dialog.reload();
-            return;
-         }
-
          config.componentOptions.handlers = this._getFormControllerHandlers();
+
          config.handlers = {
             onAfterClose: function (e, meta) {
                self._dialog = undefined;
@@ -144,7 +128,73 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             }
          };
 
-         this._dialog = new Component(config);
+         //делам загрузку компонента, только если в мете явно указали, что на прототипе в опциях есть данные об источнике данных
+         if (meta.controllerSource && ( !config.componentOptions.record || meta.preloadRecord !== false )) {
+            //Загружаем компонент, отнаследованный от formController'a, чтобы с его прототипа вычитать запись, которую мы прокинем при инициализации компонента
+            //Сделано в рамках ускорения
+            require([dialogComponent], this._initTemplateComponentCallback.bind(this, config, meta, mode));
+         }
+         else {
+            this._showDialog(config, meta, mode);
+         }
+      },
+
+      _initTemplateComponentCallback: function (config, meta, mode, templateComponent) {
+         var self = this;
+         var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource;
+         if (getRecordProtoMethod){
+            getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions).addCallback(function (record) {
+               config.componentOptions.record = record;
+               if (!config.componentOptions.key){
+                  //Если не было ключа, то отработал метод "создать". Запоминаем ключ созданной записи
+                  config.componentOptions.key = record.getKey();
+               }
+               self._showDialog(config, meta, mode);
+            });
+         }
+         else{
+            self._showDialog(config, meta, mode);
+         }
+      },
+
+      _showDialog: function(config, meta, mode){
+         var floatAreaCfg,
+             Component;
+         mode = mode || this._options.mode;
+         if (mode == 'floatArea'){
+            Component = FloatArea;
+            floatAreaCfg = this._getFloatAreaConfig(meta);
+            $ws.core.merge(config, floatAreaCfg);
+         } else if (mode == 'dialog') {
+            Component = Dialog;
+         }
+
+         if (this._dialog && !this._dialog.isAutoHide()){
+            $ws.core.merge(this._dialog._options, config);
+            this._dialog.reload();
+         }
+         else{
+            this._dialog = new Component(config);
+         }
+      },
+      _getFloatAreaConfig: function(meta){
+         var defaultConfig = {
+               isStack: true,
+               autoHide: true,
+               buildMarkupWithContext: false,
+               showOnControlsReady: true,
+               autoCloseOnHide: true,
+               target: '',
+               side: 'left',
+               animation: 'slide'
+            },
+            floatAreaCfg = {};
+
+         $ws.helpers.forEach(defaultConfig, function(value, prop){
+            floatAreaCfg[prop] = meta[prop] !== undefined ? meta[prop] : defaultConfig[prop];
+         });
+
+         return floatAreaCfg;
       },
 
       /**

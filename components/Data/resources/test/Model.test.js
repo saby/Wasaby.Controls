@@ -759,6 +759,21 @@ define([
                assert.equal(instance.get('p1'), 'p1B');
                assert.equal(instance.get('p2'), 'p2A');
             });
+
+            it('should inherit idProperty', function() {
+               var Sub = Model.extend({
+                  $protected: {
+                     _options: {
+                        idProperty: 'a'
+                     }
+                  }
+               });
+               var instance = new Sub({
+                  rawData: {a: 'test'}
+               });
+               assert.equal(instance.getIdProperty(), 'a');
+               assert.equal(instance.getId(), 'test');
+            });
          });
 
          describe('.toJSON()', function (){

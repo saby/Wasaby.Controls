@@ -1,52 +1,49 @@
-@search-background:             #F2F2F2;
-@search-padding:                0 24px 0 16px;
-@search-border-radius:          10px;
-@search-border-color:           @search-background;
-@search-buttons-wrapper-width:  22px + 22px;
-
 .controls-SearchForm {
   .border-radius(@search-border-radius);
   border-color: @search-border-color;
+  border-bottom-color: @search-bottom-border-color;
+  border-width: @search-form-border-width;
   background: @search-background;
+  height: @search-height;
 
   &.controls-TextBox {
-    &:hover, &.ws-has-focus {
-      border-color: @search-border-color;
+    &:hover {
+      border-color: @search-hover-border-color;
       background: @search-background;
+    }
+
+    &.ws-has-focus {
+      border-color: @search-hover-border-color;
+      background: @search-focus-background;
+    }
+    &.ws-disabled {
+      background: @search-disabled-background;
+      border-width: @search-form-border-disabled-width;
+      border-bottom: @search-form-disabled-border-bottom;
+
+      .controls-SearchForm__search, .controls-SearchForm__reset {
+        display: @search-form-icon-disabled-display;
+      }
     }
   }
 
   &.controls-TextBox .controls-TextBox__fieldWrapper {
-    margin: 0 @search-buttons-wrapper-width 0 16px;
+    margin: 0 @search-buttons-wrapper-width 0 @search-left-margin;
     padding: 0;
   }
 
   .controls-TextBox__afterFieldWrapper {
     width: @search-buttons-wrapper-width;
   }
+  .controls-SearchForm__search {
+    padding-top: @search-loop-padding;
+    width: @search-loop-size;
+    height: @search-loop-size;
+  }
 }
-
 .controls-SearchForm__search, .controls-SearchForm__reset {
   display: block;
   float: right;
   cursor: pointer;
+  padding:  @search-form-icon-padding;
 }
-
-.controls-SearchForm__search {
-  padding-top: 3px;
-  width: 22px;
-  height: 22px;
-}
-
-.controls-SearchForm__reset {
-  padding: 3px;
-  .controls-SearchForm__resetIcon {
-    width: 16px;
-    height: 16px;
-    background: @edit-at-place-cancel-button-bg;
-  }
-  &:hover .controls-SearchForm__resetIcon {
-    background: @edit-at-place-cancel-button-hover-bg;
-  }
-}
-

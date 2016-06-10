@@ -23,9 +23,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
     */
    'use strict';
    //TODO: Переписать все к чертям 
-   var BreadCrumbs = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], {
+   var BreadCrumbs = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], /** @lends SBIS3.CONTROLS.BreadCrumbs.prototype */{
+      _dotTplFn: dotTpl,
       $protected: {
-         _dotTplFn: dotTpl,
          _resizeTimeout: null,
          _dropdownWidth: null,
          _homeIcon: undefined,
@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             } else if (crumb.length) {
                this._notify('onItemClick', crumb.data(this._options.keyField));
             }
-            if (this._picker.isVisible() && fromDropdown){
+            if (this._picker && this._picker.isVisible() && fromDropdown){
                this._picker.hide();
             }
          }
@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             this._picker.setTarget(crumb);
          }
          this.togglePicker();
-         if (this._picker.isVisible()) {
+         if (this._picker && this._picker.isVisible()) {
             this._redrawDropdown();
          }
       },

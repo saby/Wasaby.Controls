@@ -6,9 +6,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    [
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.EditInPlace',
-      'js!SBIS3.CONTROLS.Data.Model'
+      'js!SBIS3.CONTROLS.Data.Model',
+      'js!SBIS3.CONTROLS.Data.Di'
    ],
-   function (CompoundControl, EditInPlace, Model) {
+   function (CompoundControl, EditInPlace, Model, Di) {
 
       'use strict';
 
@@ -42,6 +43,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                    * </pre>
                    */
                   modeAutoAdd: false,
+                  modeSingleEdit: false,
                   ignoreFirstColumn: false,
                   notEndEditClassName: undefined,
                   editFieldFocusHandler: undefined,
@@ -164,7 +166,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                } else if (key === $ws._const.key.enter || key === $ws._const.key.down || key === $ws._const.key.up) {
                   e.stopImmediatePropagation();
                   e.preventDefault();
-                  this._editNextTarget(this._getCurrentTarget(), key === $ws._const.key.down || key === $ws._const.key.enter);
+                  if (this._options.modeSingleEdit) {
+                     this.endEdit(true);
+                  } else {
+                     this._editNextTarget(this._getCurrentTarget(), key === $ws._const.key.down || key === $ws._const.key.enter);
+                  }
                }
             },
             _editNextTarget: function (currentTarget, editNextRow) {
@@ -203,9 +209,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this.endEdit(true).addCallback(function() {
                   return self._prepareEdit(record).addCallback(function(preparedRecord) {
                      if (preparedRecord) {
-                        self._eip.edit(target, preparedRecord);
+                        var itemProjItem = self._options.itemsProjection.getItemBySourceItem(preparedRecord);
+                        self._eip.edit(target, preparedRecord, itemProjItem);
                         self._notify('onAfterBeginEdit', preparedRecord);
-                        self._lastTargetAdding = self._options.itemsProjection.getItemBySourceItem(preparedRecord);
+                        //TODO: необходимо разбивать контроллер редактирования по месту, для плоских и иерархических представлений
+                        if (self._options.hierField) {
+                           self._lastTargetAdding = itemProjItem.getParent();
+                        }
                         return preparedRecord;
                      }
                      return preparedRecord;
@@ -314,8 +324,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._editingRecord = undefined;
                }
                if (withSaving) {
-                  this._options.dataSource.update(eipRecord).addCallback(function() {
+                  this._options.dataSource.update(eipRecord).addCallback(function(recordId) {
                      if (isAdd) {
+                        eipRecord.set(eipRecord.getKeyField(), recordId)
                         this._options.dataSet.push(this._cloneWithFormat(eipRecord, this._options.dataSet));
                      }
                   }.bind(this)).addBoth(function() {
@@ -327,15 +338,20 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             //TODO: метод нужен для того, чтобы подогнать формат рекорда под формат рекордсета.
             //Выписана задача Мальцеву, который должен убрать этот метод отсюда, и предаставить механизм выполняющий необходимую задачу.
+            //https://inside.tensor.ru/opendoc.html?guid=85d18197-2094-4797-b823-5406424881e5&description=
             _cloneWithFormat: function(record, recordSet) {
                var
                    fieldName,
-                   clone = record.clone();
-               clone.setRawData(null);
+                   clone = Di.resolve(recordSet.getModel(), {
+                      'adapter': record.getAdapter(),
+                      'idProperty': record.getIdProperty()
+                   });
+
                recordSet.getFormat().each(function(field) {
                   fieldName = field.getName();
                   clone.addField(field, undefined, record.get(fieldName));
                });
+               clone.setStored(record.isStored());
                return clone;
             },
             //TODO: Нужно переименовать метод

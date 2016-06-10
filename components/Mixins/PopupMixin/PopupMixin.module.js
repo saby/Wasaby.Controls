@@ -48,41 +48,41 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             visible: false,
             /**
              * @typedef {Object} CornerEnum
-             * @variant tl верхний левый
-             * @variant tr верхний правый
-             * @variant br нижний правый
-             * @variant bl нижний левый
+             * @variant tl Верхний левый угол.
+             * @variant tr Верхний правый угол.
+             * @variant br Нижний правый угол.
+             * @variant bl Нижний левый угол.
              */
             /**
-             * @cfg {Object} От какого угла идет отсчет координат
+             * @cfg {CornerEnum} Устанавливает точку построения всплывающего окна (угол контрола, относительно которого происходит построение окна).
              */
             corner: null,
             /**
              * @typedef {Object} VerticalAlignEnum
-             * @variant top
-             * @variant bottom
+             * @variant top Всплывающее окно отображается сверху относительно точки построения.
+             * @variant bottom Всплывающее окно отображается снизу относительно точки построения.
              */
             /**
-             * @typedef {Object} verticalAlign
-             * @property {VerticalAlignEnum} side Вертикальное выравнивание контрола
-             * @property {Number} offset отступ в пикселях
+             * @typedef {Object} VerticalAlign
+             * @property {VerticalAlignEnum} side Тип вертикального выравнивания всплывающего окна.
+             * @property {Number} offset Устанавливает отступ по вертикали в пикселях относительно точки построения всплывающего окна.
              */
             /**
-             * @cfg {verticalAlign} авторесайз по высоте, если текст не помещается
+             * @cfg {VerticalAlign} Устанавливает вертикальное выравнивание всплывающего окна относительно точки его построения.
              */
             verticalAlign: {},
             /**
              * @typedef {Object} HorizontalAlignEnum
-             * @variant right
-             * @variant left
+             * @variant right Всплывающее окно отображается справа относительно точки построения.
+             * @variant left Всплывающее окно отображается слева относительно точки построения.
              */
             /**
              * @typedef {Object} HorizontalAlign
-             * @property {HorizontalAlignEnum} side Вертикальное выравнивание контрола
-             * @property {Number} offset отступ в пикселях
+             * @property {HorizontalAlignEnum} side Тип горизонтального выравнивания всплывающего окна.
+             * @property {Number} offset Устанавливает отступ по горизонтали в пикселях относительно точки построения всплывающего окна.
              */
             /**
-             * @cfg {HorizontalAlign} авторесайз по высоте, если текст не помещается
+             * @cfg {HorizontalAlign} Устанавливает горизонтальное выравнивание всплывающего окна относительно точки его построения.
              */
             horizontalAlign: {},
             /**
@@ -108,7 +108,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             /**
              * @cfg {Boolean} модальный или нет
              */
-            isModal: false
+            isModal: false,
+            //Ограничить размеры только высотой экрана, в противном случае они ограничены границами экрана и расположением тагрета
+            fullHeight: false
          }
       },
 
@@ -139,7 +141,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          }
 
          if (this._options.closeButton) {
-            container.append('<div class="controls-PopupMixin__closeButton" ></div>');
+            container.append('<div class="controls-PopupMixin__closeButton"></div>');
             $('.controls-PopupMixin__closeButton', this.getContainer().get(0)).click(function() {
                //Нужно вызвать активироваться перед hide, чтобы закрылись плав. панели, у которых опенером был этот контрол
                //TODO: унифицировать код закрытия с SBIS3.CORE.FloatArea: хранить коллекцию дочерних панелей, и закрывать их тут
@@ -662,11 +664,17 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                this._overflowedV = true;
                this._container.css('overflow-y', 'auto');
                if (spaces.top < spaces.bottom) {
-                  oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
-                  spaces = this._getSpaces(this._options.corner);
-                  this._container.css('height', spaces.bottom - vOffset - this._margins.top + this._margins.bottom);
-                  offset.top = this._targetSizes.offset.top + oppositeOffset.top;
-                  this._isMovedV = !this._isMovedV;
+                  if (this._options.fullHeight){
+                     var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
+                     this._container.css('height', height);
+                     offset.top = this._windowSizes.height - this._container.get(0).scrollHeight - this._containerSizes.border * 2;
+                  } else {
+                     oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
+                     spaces = this._getSpaces(this._options.corner);
+                     this._container.css('height', spaces.bottom - vOffset - this._margins.top + this._margins.bottom);
+                     offset.top = this._targetSizes.offset.top + oppositeOffset.top;
+                     this._isMovedV = !this._isMovedV;
+                  }
                } else {
                   offset.top = 0;
                   //Если места снизу меньше чем сверху покажемся во весь размер (возможно поверх таргета), или в высоту окна если в него не влезаем
@@ -851,6 +859,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             else if (this._options.closeByExternalClick) {
                $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentClick', this._clickHandler, this);
             }
+         },
+         hide: function() {
+            $ws.helpers.trackElement(this._options.target, false);
          }
       },
 

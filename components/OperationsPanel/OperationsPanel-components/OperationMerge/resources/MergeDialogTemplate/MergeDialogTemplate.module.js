@@ -166,7 +166,9 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             }).addCallback(function (data) {
                 data.getAll().each(function(rec) {
                     record = dataSet.getRecordByKey(rec.getId());
-                    isAvailable = rec.get(AVAILABLE_FIELD_NAME);
+                    //Для текущей выбранной записи выставим isAvailable = false, потому что с бл может придти true, а для всех остальных
+                    //записей false, тогда мы подумаем что есть записи, которые возможно слить и покажем кнопку подтверждения объединения
+                    isAvailable = rec.getKey() != key ? rec.get(AVAILABLE_FIELD_NAME) : false;
                     showMergeButton = showMergeButton || isAvailable;
                     record.set(AVAILABLE_FIELD_NAME, isAvailable);
                     record.set(COMMENT_FIELD_NAME, rec.get(COMMENT_FIELD_NAME));

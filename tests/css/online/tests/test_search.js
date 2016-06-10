@@ -20,8 +20,8 @@ gemini.suite('SBIS3.CONTROLS.Search Online', function () {
             .capture('with_text', function (actions) {
                 actions.sendKeys(this.search, 'DataGridView');
 				actions.wait(10000);
-				actions.waitForElementToShow('.controls-SearchForm__resetIcon', 1000);
-				actions.waitForElementToShow('.controls-SearchForm__search', 1000);
+				actions.waitForElementToShow('.controls-SearchForm__reset', 2000);
+				actions.waitForElementToShow('.controls-SearchForm__search', 2000);
 				actions.click(this.input);
             })
 

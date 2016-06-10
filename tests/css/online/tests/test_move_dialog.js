@@ -15,13 +15,13 @@ gemini.suite('SBIS3.CONTROLS.MoveDialog Online', function () {
 
             .capture('plain', function (actions) {
                 actions.click(this.item1);
-				actions.click(this.open_button);
+				//actions.click(this.open_button);
 				actions.wait(1000);
                 actions.click(this.move);
                 actions.wait(1000);
             })
     });
-	
+
 	gemini.suite('folder_with_and_without_arrow', function (test) {
 
         test.setUrl('/regression_move_dialog_online_2.html').setCaptureElements('body')
@@ -35,7 +35,7 @@ gemini.suite('SBIS3.CONTROLS.MoveDialog Online', function () {
 
             .capture('plain', function (actions) {
                 actions.click(this.item1);
-				actions.click(this.open_button);
+				//actions.click(this.open_button);
 				actions.wait(1000);
                 actions.click(this.move);
                 actions.wait(1000);

@@ -144,10 +144,13 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   this._record.merge(this._editingRecord);
                }.bind(this))
             },
-            show: function(target, record) {
+            show: function(target, record, itemProj) {
                this.updateFields(record);
                this._toggleOnRecordChangeHandler(true);
                this.getContainer().attr('data-id', record.getId());
+               if (itemProj) {
+                  this.getContainer().attr('data-hash', itemProj.getHash());
+               }
                this.setOffset(record);
 
                this.setTarget(target);
@@ -188,9 +191,9 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._deactivateActiveChildControl();
                this.setActive(false);
             },
-            edit: function(target, record) {
+            edit: function(target, record, itemProj) {
                if (!this.isVisible()) {
-                  this.show(target, record);
+                  this.show(target, record, itemProj);
                }
                this.setEditingItem(target, record);
                this._beginTrackHeight();

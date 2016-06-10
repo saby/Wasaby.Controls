@@ -1,15 +1,85 @@
 @import "../online/variables";
 
-@globalDefaultFontSize:                         16px;
+@globalDefaultFontSize:                         24px;
+@font-basic-size:                               21px;
+
+// data grid
+@default-itemHover-color:                       #E1ECF6;
 @data-grid-cell-height:                         44px;
 @data-grid-cell-padding:                        2px 6px;
-@tree-view-ellipsis-wrapper-padding:            10px 0;
-@back-button-font-size:                         22px;
+@data-grid-columnValue-padding:                 8px 0;
 @data-grid-header-cell-font-size:               16px;
 @data-grid-header-cell-height:                  22px;
-@back-button-font-size:                         24px;
+
+// tree view
+@font-folder-size:                              @globalDefaultFontSize;
+@tree-view-ellipsis-wrapper-margin:            10px 0;
 @tree-view-expand-margin:                       8px 6px 8px 2px;
+
+// back-button
+@menu-item-icon-top-offset:                     14px;
 @back-button-margin-before:                     0 4px 0 0;
+@back-button-padding-before:                    4px 0;
+
+// icon
 @icon-size:                                     24px;
 @icon-width:                                    24px;
 @icon-height:                                   24px;
+
+// BreadCrumbs
+@breadcrumbs-top:                               6px;
+@breadcrumbs-arrow-top:                         2px;
+
+//FieldLink
+@controls-FieldLink-afterField-padding:         10px 16px 0px 0;
+
+// -------- //
+// Text box //
+// -------- //
+@text-box-height:                               40px;
+@text-box-border-color:                         #EAEAEA;
+@text-box-focus-bg:                             #F0F5FB;
+@text-box-bottom-border-color:                  #CCCCCC;
+@text-box-field-focus-text-color:               @black-color;
+@text-box-hover-border-color:                   @text-box-bottom-border-color;
+@text-box-field-hover-text-color:               @text-color;
+@text-box-focus-border-color:                   @text-box-bottom-border-color;
+@text-box-disabled-border-bottom:               #E4E4E4;
+@text-box-field-font-size:                      @font-basic-size;
+
+
+// ----------- //
+// Search form //
+// ----------- //
+
+@search-background:                             #FFFFFF;
+@search-disabled-background:                    none;
+@search-focus-background:                       @text-box-focus-bg;
+@search-height:                                 @text-box-height;
+@search-padding:                                0 24px 0 16px;
+@search-left-margin:                            8px;
+@search-border-radius:                          0;
+@search-border-color:                           @text-box-border-color;
+@search-form-border-width:                      @text-box-border-width;
+@search-form-border-disabled-width:             0;
+@search-buttons-wrapper-width:                  32px + 40px;
+@search-hover-border-color:                     @text-box-bottom-border-color;
+@search-bottom-border-color:                    @text-box-bottom-border-color;
+@search-form-disabled-border-bottom:            1px solid @text-box-disabled-border-bottom;
+@search-form-icon-padding:                      11px 8px 11px 0;
+@search-form-icon-disabled-display:             none;
+@search-loop-size:                              32px;
+@search-loop-padding:                           11px;
+
+// Popup
+@font-popup-size:                               @font-basic-size;
+
+@menu-item-height:                              44px;
+@menu-item-text-margin:                         5px 0 0 34px;
+@menu-item-icon-top-offset:                     14px;
+
+@list-view-actions-menu-icon-width:             24px;
+
+// Big button
+@button-big-font:                               @globalDefaultFontSize;
+@button-big-height:                             60px;@icon-height:                                   24px;

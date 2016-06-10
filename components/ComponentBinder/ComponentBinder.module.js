@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryController'], function (HistoryController) {
+define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil', 'js!SBIS3.CONTROLS.HistoryController'], function (KbLayoutRevertUtil, HistoryController) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
@@ -8,14 +8,15 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryControlle
     * @public
     */
    /*методы для поиска*/
-   function startHierSearch(text, searchParamName, searchCrumbsTpl, searchMode) {
+   function startHierSearch(text, searchParamName, searchCrumbsTpl, searchMode, searchForm) {
       if (text) {
          var filter = $ws.core.merge(this._options.view.getFilter(), {
                'Разворот': 'С разворотом',
                'usePages': 'full'
             }),
             view = this._options.view,
-            groupBy = view.getSearchGroupBy(searchParamName);
+            groupBy = view.getSearchGroupBy(searchParamName),
+            self = this;
          if (searchCrumbsTpl) {
             groupBy.breadCrumbsTpl = searchCrumbsTpl;
          }
@@ -48,12 +49,18 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryControlle
             filter[view.getHierField()] = undefined;
          }
 
-         view.once('onDataLoad', function(){
+         view.once('onDataLoad', function(event, data){
+            var root = view._options.root !== undefined ? view._options.root : null,
+                newText;
+
+            toggleSearchKbLayoutRevert.call(self, view, false);
+            processDataKbLayoutRevert.call(self, data, view, searchForm, searchParamName);
             //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
-            this._options._itemsProjection.setEventRaising(false);
+            view._options._itemsProjection.setEventRaising(false);
             //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
-            view._options._itemsProjection.setRoot(null);
-            this._options._itemsProjection.setEventRaising(true);
+            view._options._itemsProjection.setRoot(root);
+            view._options._curRoot = root;
+            view._options._itemsProjection.setEventRaising(true);
          });
 
          view.reload(filter, view.getSorting(), 0).addCallback(function(){
@@ -63,13 +70,20 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryControlle
       }
    }
 
-   function startSearch(text, searchParamName){
+   function startSearch(text, searchParamName, searchForm){
       if (text){
          var view = this._options.view,
-            filter = $ws.core.merge(view.getFilter(), {
-               'usePages': 'full'
-            });
+             filter = $ws.core.merge(view.getFilter(), {
+                'usePages': 'full'
+             }),
+             self = this,
+             newText;
+
          filter[searchParamName] = text;
+         view.once('onDataLoad', function(event, data) {
+            toggleSearchKbLayoutRevert.call(self, view, false);
+            processDataKbLayoutRevert.call(self, data, view, searchForm, searchParamName);
+         });
          view.setHighlightText(text, false);
          view.setHighlightEnabled(true);
          view.setInfiniteScroll(true, true);
@@ -99,6 +113,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryControlle
       //только после релоада, иначе визуально будут прыжки и дерганья (класс меняет паддинги)
       view.once('onDataLoad', function(){
          view._container.removeClass('controls-GridView__searchMode');
+         view._options._curRoot = self._lastRoot || null;
          view._getItemsProjection().setRoot(self._lastRoot || null);
       });
       this._searchMode = false;
@@ -146,9 +161,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryControlle
    }
 
    function toggleCheckBoxes(operationPanel, gridView, hideCheckBoxes) {
-      if (gridView._options.multiselect && hideCheckBoxes) {
-         gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible())
-            .toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isVisible());
+      if (gridView._options.multiselect) {
+         gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
+         if (hideCheckBoxes) {
+            gridView._container.toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isVisible());
+         }
          if (gridView._options.startScrollColumn !== undefined) {
             gridView.updateScrollAndColumns();
          }
@@ -163,6 +180,48 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryControlle
             instance._options.linkedView = view;
          }
       }, this)
+   }
+
+   function toggleSearchKbLayoutRevert(view, needSet, searchParamName) {
+      var filter = view.getFilter(),
+          source;
+
+      if(needSet) {
+         if(!this._lastViewSource) {
+            this._lastViewSource = view.getDataSource();
+         }
+         /* Подготовим фильтр и сорс для запроса со сменой раскладки */
+         if(!this._searchSource) {
+            this._searchSource = KbLayoutRevertUtil.prepareSearchSource(this._lastViewSource);
+         }
+
+         source = this._searchSource;
+         filter = KbLayoutRevertUtil.prepareSearchFilter(this._lastViewSource, filter, searchParamName);
+
+
+         view.setDataSource(source, true);
+         view.setFilter(filter, true);
+      } else {
+         filter = KbLayoutRevertUtil.revertSearchFilter(filter);
+         source = this._lastViewSource;
+
+         view.setFilter(filter, true);
+         if(source) {
+            view.setDataSource(source, true);
+            this._lastViewSource = null;
+         }
+      }
+   }
+
+   function processDataKbLayoutRevert(data, view, searchForm, searchParamName) {
+      var newText;
+      /* Меняем раскладку, если требуется + меняем фильтр по которому искали */
+      if(KbLayoutRevertUtil.needRevert(data)) {
+         newText = KbLayoutRevertUtil.process(searchForm.getText());
+         searchForm.setText(newText);
+         view.setHighlightText(newText, false);
+         view.getFilter()[searchParamName] = newText;
+      }
    }
    /**
     * Контроллер, позволяющий связывать компоненты осуществляя базовое взаимодейтсие между ними
@@ -182,6 +241,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryControlle
          _pathDSRawData : [],
          _firstSearch: true,
          _lastViewMode: null,
+         _lastViewSource: null,
+         _searchSource: null,
          _path: [],
          _options: {
             /**
@@ -224,6 +285,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryControlle
          }
          this._options.breadCrumbs.setItems(this._path || []);
          this._options.backButton.setCaption(this._currentRoot.title || '');
+      },
+
+      getCurrentRootRecord: function(){
+         return this._currentRoot ? this._currentRoot.data : null;
       },
 
       /**
@@ -285,12 +350,23 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryControlle
          this._isInfiniteScroll = view.isInfiniteScroll();
 
          searchForm.subscribe('onReset', function(event, text){
+            toggleSearchKbLayoutRevert.call(self, view, false, searchParamName);
             if (isTree) {
                resetGroup.call(self, searchParamName);
             } else {
                resetSearch.call(self, searchParamName);
             }
          });
+
+         searchForm.subscribe('onSearch', function(event, text) {
+            toggleSearchKbLayoutRevert.call(self, view, true, searchParamName);
+            if (isTree) {
+               startHierSearch.call(self, text, searchParamName, undefined, searchMode, searchForm);
+            } else {
+               startSearch.call(self, text, searchParamName, searchForm);
+            }
+         });
+
          searchForm.subscribe('onKeyPressed', function(eventObject, event){
             // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
             if ((event.which == $ws._const.key.tab || event.which == $ws._const.key.down) && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)){
@@ -299,26 +375,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryControlle
                event.stopPropagation();
             }
          });
-
-         searchForm.subscribe('onSearch', function(event, text) {
-            if (isTree) {
-               startHierSearch.call(self, text, searchParamName, undefined, searchMode);
-            } else {
-               startSearch.call(self, text, searchParamName);
-            }
-         });
       },
       bindSearchComposite: function(searchParamName, searchCrumbsTpl, searchForm) {
          this.bindSearchGrid.apply(this, arguments);
-         /*var self = this;
-          compositeView.subscribe('onDataLoad', function(){
-          if (searchForm.getText().length > 2) {
-          self._lastViewMode = this.getViewMode();
-          this.setViewMode('table');
-          } else if (self._lastViewMode) {
-          this.setViewMode(self._lastViewMode);
-          }
-          });*/
       },
 
       /**
@@ -455,6 +514,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryControlle
          drawItemsCallback(operationPanel, view);
          toggleCheckBoxes(operationPanel, view, hideCheckBoxes);
          view.subscribe('onSelectedItemsChange', function(event, idArray) {
+            if (idArray.length && !operationPanel.isVisible()) {
+               operationPanel.show();
+            }
             operationPanel.onSelectedItemsChange(idArray);
          });
          operationPanel.subscribe('onToggle', function() {
@@ -464,7 +526,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryControlle
       /**
        * Метод для связывания истории фильтров с представлением данных
        */
-      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, controller, browser) {
+      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, applyOnLoad, controller, browser) {
          var view = browser.getView(),
              noSaveFilters = ['Разворот', 'ВидДерева'],
              historyController, filter;
@@ -489,15 +551,15 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.HistoryControlle
             noSaveFilters: noSaveFilters
          });
 
-         filter = historyController.getActiveFilter();
+         if(applyOnLoad) {
+            filter = historyController.getActiveFilter();
 
-         filterButton.setHistoryController(historyController);
+            filterButton.setHistoryController(historyController);
+            /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
+            filterButton.setFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
+         }
          setTimeout($ws.helpers.forAliveOnly(function() {
-            if(filter) {
-               /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
-               filterButton._updateFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
-               view.setFilter($ws.core.merge(view.getFilter(), historyController.prepareViewFilter(filter.viewFilter)), true);
-            }
+            // Через timeout, чтобы можно было подписаться на соыбтие, уйдёт с серверным рендерингом
             browser._notifyOnFiltersReady();
          }, view), 0);
       },

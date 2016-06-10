@@ -1,5 +1,5 @@
 <div class="controls-SearchForm controls-TextBox">
-    {{? it.afterFieldWrapper}}<div class="controls-TextBox__afterFieldWrapper">{{=it.afterFieldWrapper()}}</div>{{?}}
+    {{? it.afterFieldWrapper}}<div class="controls-TextBox__afterFieldWrapper">{{=it.afterFieldWrapper(it)}}</div>{{?}}
     <div class="controls-TextBox__fieldWrapper">
         <input class="js-controls-TextBox__field controls-TextBox__field"
         {{? it.text }} value="{{=it.text}}"{{?}}

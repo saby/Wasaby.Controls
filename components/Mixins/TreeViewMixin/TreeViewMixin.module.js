@@ -317,7 +317,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
       setHasMore: function(more) {
          this._options.hasMore = more;
          if (this._options.hasMore) {
-            this._container.html('Еще ' + this._options.pageSize);
+            this._container.html('Еще');
          }
          else {
             this._container.empty();

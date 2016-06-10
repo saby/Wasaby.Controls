@@ -951,8 +951,8 @@ define([
                         })
                      })
                      .orderBy({
-                        id: true,
-                        enabled: false
+                        id: false,
+                        enabled: true
                      })
                      .offset(100)
                      .limit(33);
@@ -1264,8 +1264,8 @@ define([
                      path: [1, 2, 3]
                   },
                   {
-                     id: true,
-                     enabled: false
+                     id: false,
+                     enabled: true
                   },
                   100,
                   33

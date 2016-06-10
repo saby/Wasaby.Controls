@@ -168,10 +168,17 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          Model.superclass.constructor.call(this, options);
 
          this._$properties = this._$properties || {};
-         //Old style extend compatibility for _$properties
-         if (this._options && this._options.properties) {
-            //Utils.logger.stack(this._moduleName + '::constructor(): usage of "$protected._options.properties" is deprecated and will be removed in 3.7.4. Use extend() syntax like "_$properties: $ws.core.merge(ParentModel.prototype._$properties, {...})" instead.');
-            this._$properties = $ws.core.merge(this._$properties, this._options.properties);
+
+         //FIXME: backward compatibility for _options
+         if (this._options) {
+            //for _$properties
+            if (this._options.properties) {
+               this._$properties = $ws.core.merge(this._$properties, this._options.properties);
+            }
+            //for _$idProperty
+            if (this._options.idProperty) {
+               this._$idProperty = this._options.idProperty;
+            }
          }
 
          if (!this._$idProperty) {

@@ -130,17 +130,18 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
                this._$idProperty = options.keyField;
                Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.', 1);
             }
-            if (!this._$idProperty) {
-               this._$idProperty = this.getAdapter().getKeyField(this._$rawData);
-            }
             if ('items' in options) {
                Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "items" is not acceptable. Use "rawData" instead.', 1);
             }
          }
 
-         this._indexTree = {};
          RecordSet.superclass.constructor.call(this, options);
          FormattableMixin.constructor.call(this, options);
+
+         if (!this._$idProperty) {
+            this._$idProperty = this.getAdapter().getKeyField(this._$rawData);
+         }
+         this._indexTree = {};
          this._$meta = this._$meta || {};
          if (this._$rawData) {
             this._assignRawData(this._$rawData, true);
@@ -343,6 +344,17 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             $ws.helpers.map(willRemove, self.remove, self);
             self._getServiceEnumerator().reIndex();
          });
+      },
+
+      /**
+       * Возвращает конструктор модели
+       * @returns {String|Function}
+       * @see model
+       * @see SBIS3.CONTROLS.Data.Model
+       * @see SBIS3.CONTROLS.Data.Di
+       */
+      getModel: function () {
+         return this._$model;
       },
 
       /**

@@ -1,0 +1,33 @@
+{{var
+    subItems,
+    item = it.item,
+    options = item.get('options') || {},
+    className = item.get('className') || '',
+    itemKey = item.get(it.keyField),
+    icon = item.get('icon') ? '<opt name="icon">' + item.get('icon') + '</opt>' : '',
+    caption = item.get('caption') ? '<opt name="caption">' + item.get('caption') + '</opt>' : '',
+    command = item.get('command') ? '<opt name="command">' + item.get('command') + '</opt>' : '',
+    visible = !!(item.get('showType') == it.showType.MENU_TOOLBAR || item.get('showType') == it.showType.TOOLBAR );
+    if (visible) {
+        subItems = it.getSubItems(itemKey, null, it.items, it.keyField, it.hierField);
+        subItems = $ws.core.clone(subItems);
+        for (var i = 0; i < subItems.length; i++) {
+            if (subItems[i].parent == itemKey ) {
+                delete subItems[i].parent;
+            }
+        }
+        if (subItems.length) {
+            options.items = subItems;
+            options.keyField = it.keyField;
+            options.hierField = it.hierField;
+            options.displayField = it.displayField;
+        }
+    }
+}}
+<component data-component="{{=item.get('componentType').substr(3)}}" config="{{=$ws.helpers.encodeCfgAttr(options)}}"
+           data-hash="{{=it.projItem.getHash()}}"
+           data-id="{{=itemKey}}"
+           class="controls-ListView__item js-controls-ListView__item controls-ToolBar__item {{=className}}">
+    <opt name="visible" type="boolean">{{=visible}}</opt>
+    {{=icon}}{{=caption}}{{=command}}
+</component>

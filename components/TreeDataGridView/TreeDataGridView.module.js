@@ -145,29 +145,17 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       init: function(){
          TreeDataGridView.superclass.init.call(this);
          if (this._container.hasClass('controls-TreeDataGridView__withPhoto')){
-            this._options.paddingSize = 42;
+            this._options._paddingSize = 42;
          }
       },
 
       _drawItemsCallback: function() {
-         var
-            model,
-            items = this.getItems();
-         for (var key in this._options.openedPath) {
-            if (this._options.openedPath.hasOwnProperty(key)) {
-               /*TODO:
-                Не нужно создавать футер у узла, если данный узел не отображается.
-                Прежде чем создавать футер у развёрнутого узла проверим что данный узел присутствует в наборе элементов.
-                Возможна такая ситуация что списочный метод вернул сразу все данные и узел может являться развёрнутым,
-                но не отображаться, тогда для такого случая проверим необходимость создания футера путём поиска узла
-                среди текущего набора элементов в DOM.
-                */
-               model = items.getRecordByKey(key);
-               if (model && this._getElementByModel(model).length) {
-                  this._createFolderFooter(key);
-               }
+         $ws.helpers.forEach(this._options.openedPath, function(val, key) {
+            //Рисуем футер, только если узел есть в проекции, иначе он скрыт и футер рисовать не нужно
+            if (this._getItemProjectionByItemId(key)) {
+               this._createFolderFooter(key);
             }
-         }
+         },this);
          this._updateEditArrow();
          TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
@@ -432,39 +420,21 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
       },
 
-      _notifyOnItemClick: function(id, data, target) {
-         var
-             res,
-             self = this,
-             elClickHandler = this._options.elemClickHandler,
-             nodeID = $(target).closest('.controls-ListView__item').data('id'),
-             closestExpand = this._findExpandByElement($(target));
-
-         if ($(closestExpand).hasClass('js-controls-TreeView__expand') && $(closestExpand).hasClass('has-child')) {
-            this.toggleNode(nodeID);
-         }
-         else {
-            res = this._notify('onItemClick', id, data, target);
-            if (res instanceof $ws.proto.Deferred) {
-               res.addCallback(function(result) {
-                  if (result !== false) {
-                     self._elemClickHandlerInternal(data, id, target);
-                     elClickHandler && elClickHandler.call(self, id, data, target);
-                  }
-                  return result;
-               });
-            } else if (res !== false) {
-               this._elemClickHandlerInternal(data, id, target);
-               elClickHandler && elClickHandler.call(this, id, data, target);
-            }
-         }
-         return res;
-      },
       _elemClickHandlerInternal: function(data, id, target) {
-         var nodeID = $(target).closest('.controls-ListView__item').data('id');
-         if (this._options.allowEnterToFolder){
-            if ($(target).hasClass('js-controls-TreeView__editArrow')) {
+         var $target =  $(target),
+             closestExpand = this._findExpandByElement($target),
+             nodeID = $target.closest('.controls-ListView__item').data('id');
 
+         /* При клике по треугольнику надо просто раскрыть ветку */
+         if (closestExpand.hasClass('js-controls-TreeView__expand') && closestExpand.hasClass('has-child')) {
+            this.toggleNode(nodeID);
+            return;
+         }
+
+         if (this._options.allowEnterToFolder){
+            /* Не обрабатываем клики по чекбоку и по стрелке редактирования, они обрабатываются в elemClickHandler'e */
+            if ($target.hasClass('js-controls-TreeView__editArrow') || $target.hasClass('js-controls-ListView__itemCheckBox')) {
+               return;
             } else if (data.get(this._options.hierField + '@')) {
                this.setCurrentRoot(nodeID);
                this.reload();

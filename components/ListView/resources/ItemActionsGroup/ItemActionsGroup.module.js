@@ -59,9 +59,18 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   action = itemsInstances[i];
                   isActionVisible = action.isVisible();
 
-                  /* Не отображаем выключенные операции */
-                  if(!action.isEnabled() && isActionVisible) {
+                  /* Выключенные (disabled) операции не должны отображаться,
+                     поэтому скроем их, и выставим флаг, что скрыты они были нами, а не извне,
+                     это надо, так как, после включения (enabled), операции надо показать, но только те,
+                     которые мы же сами и скрывали */
+                  if(action.isEnabled()) {
+                     if(this._itemActionsButtons[i]['disabledHidden'] && !isActionVisible) {
+                        action.show();
+                        isActionVisible = true;
+                     }
+                  } else if(isActionVisible) {
                      action.hide();
+                     this._itemActionsButtons[i]['disabledHidden'] = true;
                      isActionVisible = false;
                   }
 
@@ -147,6 +156,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._itemActionsMenu.show();
             this._activeItem.container.addClass(this._activeCls);
             this._itemActionsMenu.recalcPosition(true);
+            /*TODO фикс теста, для операций над записью должна быть особая иконка*/
+            $('.controls-PopupMixin__closeButton', this._itemActionsMenu.getContainer()).addClass('icon-16 icon-size icon-ExpandUp icon-primary action-hover');
          },
 
          /**

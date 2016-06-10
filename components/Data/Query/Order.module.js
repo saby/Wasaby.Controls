@@ -11,6 +11,12 @@ define('js!SBIS3.CONTROLS.Data.Query.Order', [
     */
 
    var Order = $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Data.Query.Order.prototype */{
+      /**
+       * @typedef {Boolean} Order
+       * @variant false По возрастанию
+       * @variant true По убыванию
+       */
+
       _moduleName: 'SBIS3.CONTROLS.Data.Query.Order',
       $protected: {
          _options: {
@@ -20,14 +26,18 @@ define('js!SBIS3.CONTROLS.Data.Query.Order', [
             selector: '',
 
             /**
-             * @cfg {Boolean} Порядок сортировки (true - по возрастанию)
+             * @cfg {Order} Порядок сортировки
              */
-            order: true
+            order: false
          }
       },
 
       $constructor: function () {
-         switch (this._options.order) {
+         var order = this._options.order;
+         if (typeof order === 'string') {
+            order = order.toUpperCase();
+         }
+         switch (order) {
             case Order.SORT_DESC:
             case Order.SORT_DESC_STR:
                this._options.order = Order.SORT_DESC;
@@ -46,8 +56,8 @@ define('js!SBIS3.CONTROLS.Data.Query.Order', [
       },
 
       /**
-       * Возвращает порядок сортировки (true - по возрастанию, false - по убыванию)
-       * @returns {Boolean}
+       * Возвращает порядок сортировки
+       * @returns {Order}
        */
       getOrder: function () {
          return this._options.order;
@@ -57,12 +67,12 @@ define('js!SBIS3.CONTROLS.Data.Query.Order', [
    /**
     * @const {Boolean} Сортировка по возрастанию
     */
-   Order.SORT_ASC = true;
+   Order.SORT_ASC = false;
 
    /**
     * @const {Boolean} Сортировка по убыванию
     */
-   Order.SORT_DESC = false;
+   Order.SORT_DESC = true;
 
    /**
     * @const {String} Сортировка по возрастанию (для строки)

@@ -32,15 +32,18 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBas
    var OpenDialogAction = DialogActionBase.extend(/** @lends SBIS3.CONTROLS.OpenDialogAction.prototype */{
       _buildComponentConfig: function(meta) {
          //Если запись в meta-информации отсутствует, то передаем null. Это нужно для правильной работы DataBoundMixin с контекстом и привязкой значений по имени компонента
-         var record = ($ws.helpers.instanceOfModule(meta.item, 'SBIS3.CONTROLS.Data.Record') ? meta.item.clone() : meta.item) || null;
-
-         return {
-            dataSource: meta.dataSource,
-            key : meta.id,
-            newModel: meta.newModel,
-            initValues : meta.filter,
-            record: record
-         }
+         var record = ($ws.helpers.instanceOfModule(meta.item, 'SBIS3.CONTROLS.Data.Record') ? meta.item.clone() : meta.item) || null,
+             result = {
+               source: meta.source,
+               key : meta.id,
+               initValues : meta.filter,
+               record: record
+            };
+         //в дальнейшем будем мержить опции на этот конфиг и если в мете явно не передали dataSource
+         //то в объекте не нужно создавать свойство, иначе мы затрем опции на FormController.
+         if(meta.dataSource)
+            result.dataSource = meta.dataSource;
+         return result;
       }
    });
    return OpenDialogAction;

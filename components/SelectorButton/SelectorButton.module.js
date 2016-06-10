@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       },
       _drawSelectedItems: function(keysArr) {
          var self = this,
-             isSelected = Boolean(keysArr.length);
+             isSelected = !this._isEmptySelection();
 
          $('.controls-SelectorButton__cross', this._container[0]).toggleClass('ws-hidden', !isSelected);
          if(isSelected) {

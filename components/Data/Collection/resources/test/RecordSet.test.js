@@ -482,7 +482,7 @@ define([
             it('should return elem by index', function () {
                var rs = new RecordSet({
                   rawData: getItems(),
-                  idProperty: "Ид"
+                  idProperty: 'Ид'
                });
                rs.setRawData([{
                   'Ид': 1000,
@@ -1478,6 +1478,19 @@ define([
             });
          });
 
+         describe('.getModel()', function () {
+            it('should return a given model', function () {
+               var rs = new RecordSet({
+                  model: Model
+               });
+               assert.strictEqual(rs.getModel(), Model);
+            });
+
+            it('should return "model"', function () {
+               assert.strictEqual(rs.getModel(), 'model');
+            });
+         });
+
          describe('.getIdProperty()', function (){
             it('should return id property', function() {
                assert.equal("Ид", rs.getIdProperty());
@@ -1492,6 +1505,24 @@ define([
                });
                assert.isTrue(!rs2.getIdProperty());
             });
+
+            it('should detect idProperty automatically', function () {
+               var rs = new RecordSet({
+                  rawData: {
+                     d: [],
+                     s: [{
+                        n: 'Ид',
+                        t: 'Число целое'
+                     }, {
+                        n: '@Фамилия',
+                        t: 'Идентификатор'
+                     }]
+                  },
+                  adapter: 'adapter.sbis'
+               });
+               assert.strictEqual(rs.getIdProperty(), '@Фамилия');
+            });
+
          });
 
          describe('.setIdProperty()', function (){
