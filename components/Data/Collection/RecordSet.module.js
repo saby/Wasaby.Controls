@@ -314,6 +314,17 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
+       * Возвращает конструктор модели
+       * @returns {String|Function}
+       * @see model
+       * @see SBIS3.CONTROLS.Data.Model
+       * @see SBIS3.CONTROLS.Data.Di
+       */
+      getModel: function () {
+         return this._$model;
+      },
+
+      /**
        * Возвращает свойство модели, содержащее первичный ключ
        * @returns {String}
        * @see setIdProperty

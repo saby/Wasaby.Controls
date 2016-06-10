@@ -50,15 +50,16 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          }
 
          view.once('onDataLoad', function(event, data){
-            var newText;
+            var root = view._options.root !== undefined ? view._options.root : null,
+                newText;
 
             toggleSearchKbLayoutRevert.call(self, view, false);
             processDataKbLayoutRevert.call(self, data, view, searchForm, searchParamName);
             //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
             view._options._itemsProjection.setEventRaising(false);
             //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
-            view._options._itemsProjection.setRoot(null);
-            view._options._curRoot = null;
+            view._options._itemsProjection.setRoot(root);
+            view._options._curRoot = root;
             view._options._itemsProjection.setEventRaising(true);
          });
 
