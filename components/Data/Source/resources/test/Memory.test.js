@@ -98,7 +98,6 @@ define([
                source.create().addCallbacks(function (model) {
                   try {
                      assert.instanceOf(model, Model);
-                     assert.isFalse(model.isStored());
                      assert.isUndefined(model.getId());
                      assert.isUndefined(model.get('Фамилия'));
                      done();
@@ -152,7 +151,6 @@ define([
                   source.read(existsId).addCallbacks(function (model) {
                      try {
                         assert.instanceOf(model, Model);
-                        assert.isTrue(model.isStored());
                         assert.isTrue(model.getId() > 0);
                         assert.strictEqual(model.getId(), existsId);
                         assert.strictEqual(model.get('Фамилия'), 'Баранов');
@@ -225,7 +223,6 @@ define([
                var testModel = function (success, model, length, done) {
                   try {
                      assert.isTrue(!!success);
-                     assert.isTrue(model.isStored());
                      assert.isFalse(model.isChanged());
                      assert.isTrue(!!model.getId());
                      assert.strictEqual(length, data.length);

@@ -300,7 +300,6 @@ define([
                   service.create().addCallbacks(function (model) {
                      try {
                         assert.isTrue(model instanceof Model);
-                        assert.isFalse(model.isStored());
                         assert.isTrue(model.getId() > 0);
                         assert.strictEqual(model.get('Фамилия'), '');
                         done();
@@ -451,7 +450,6 @@ define([
                      service.read(SbisBusinessLogic.existsId).addCallbacks(function (model) {
                         try {
                            assert.isTrue(model instanceof Model);
-                           assert.isTrue(model.isStored());
                            assert.strictEqual(model.getId(), SbisBusinessLogic.existsId);
                            assert.strictEqual(model.get('Фамилия'), 'Иванов');
                            done();
@@ -578,7 +576,6 @@ define([
                   var testModel = function (success, model, done) {
                      try {
                         assert.isTrue(success > 0);
-                        assert.isTrue(model.isStored());
                         assert.isFalse(model.isChanged());
                         assert.isTrue(model.getId() > 0);
                         done();

@@ -454,13 +454,10 @@ define([
          it('should clone state markers', function () {
             var cloneA = model.clone();
             assert.strictEqual(model.isDeleted(), cloneA.isDeleted());
-            assert.strictEqual(model.isStored(), cloneA.isStored());
 
             model.setDeleted(true);
-            model.setStored(true);
             var cloneB = model.clone();
             assert.strictEqual(model.isDeleted(), cloneB.isDeleted());
-            assert.strictEqual(model.isStored(), cloneB.isStored());
          });
          it('should clone id property', function () {
             var clone = model.clone();
@@ -606,7 +603,6 @@ define([
             assert.isTrue(json.id > 0);
             assert.deepEqual(json.state.$options, options);
             assert.strictEqual(json.state._hash, model.getHash());
-            assert.strictEqual(json.state._isStored, model.isStored());
             assert.strictEqual(json.state._isDeleted, model.isDeleted());
             assert.deepEqual(json.state._defaultPropertiesValues, model._defaultPropertiesValues);
             assert.deepEqual(json.state._changedFields, model._changedFields);
@@ -619,15 +615,6 @@ define([
                rawData : {'to': 'String'}
             });
             assert.equal(model.toString(), '{"to":"String"}');
-         });
-      });
-
-      describe('.isSynced()', function (){
-         it('sould return flag usingDataSetAsList', function (){
-            model.setSynced(true);
-            assert.isTrue(model.isSynced());
-            model.setSynced(false);
-            assert.isFalse(model.isSynced());
          });
       });
 
@@ -645,15 +632,6 @@ define([
                }
             });
             assert.equal(model.getType('id'), 'Число целое');
-         });
-      });
-
-      describe('.isCreated()', function (){
-         it('sould return given value', function (){
-            model.setCreated(true);
-            assert.isTrue(model.isCreated());
-            model.setCreated(false);
-            assert.isFalse(model.isCreated());
          });
       });
 

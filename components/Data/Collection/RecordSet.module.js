@@ -272,26 +272,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             record;
          for (var i = 0; i < length; i++) {
             record = this.at(i);
-            //TODO: убрать switch в 3.7.4 - старые варианты оставлены для обратной совместимости
-            switch (state) {
-               case 'all':
-                  isMatching = true;
-                  break;
-               case 'created':
-                  isMatching = record.isCreated();
-                  break;
-               case 'deleted':
-                  isMatching = record.isDeleted();
-                  break;
-               case 'changed':
-                  isMatching = record.isChanged();
-                  break;
-               default:
-                  if (state) {
-                     isMatching = record.getState() === state;
-                  } else {
-                     isMatching = true;
-                  }
+            if (state) {
+               isMatching = record.getState() === state;
+            } else {
+               isMatching = true;
             }
             if (isMatching) {
                callback.call(context, record, index++);
@@ -323,21 +307,19 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             position = 0,
             willRemove = [];
          this.each(function(record) {
-            if (record.isDeleted() && !record.isSynced()) {
-               record.setSynced(true);
+            if (record.isDeleted()) {
                syncCompleteDef.push(dataSource.destroy(record.get(self._$idProperty)).addCallback(function() {
                   willRemove.push(record);
                   return record;
                }));
-            } else if (record.isChanged() || (!record.isStored() && !record.isSynced())) {
+            } else if (record.isChanged()) {
                syncCompleteDef.push(dataSource.update(record).addCallback(function() {
                   record.acceptChanges();
-                  record.setStored(true);
                   return record;
                }));
             }
             position++;
-         }, 'all');
+         });
 
          syncCompleteDef.done(true);
          return syncCompleteDef.getResult(true).addCallback(function(){
@@ -775,7 +757,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
                if (recordsMap[key]) {
                   newItems.push(record);
                }
-            }, 'all');
+            });
             if(newItems.length < this.getCount()) {
                this.assign(newItems);
             }
@@ -813,7 +795,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
                throw new Error('Record with hierarchy field "' + field + '" = ' + parentKey + ' is related to itself.');
             }
             this._indexTree[parentKey].push(childKey);
-         }, 'all');
+         });
       },
 
       //endregion Deprecated methods
@@ -1005,7 +987,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             rawData: data,
             idProperty: this._$idProperty
          });
-         model.setStored(true);
          return model;
       },
 

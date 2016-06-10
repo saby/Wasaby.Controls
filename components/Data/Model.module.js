@@ -122,11 +122,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       _$idProperty: '',
 
       /**
-       * @member {Boolean} Признак, что модель существует в источнике данных
-       */
-      _isStored: false,
-
-      /**
        * @member {Boolean} Признак, что модель удалена из источника данных
        */
       _isDeleted: false,
@@ -269,7 +264,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          return $ws.core.merge(
             Model.superclass._getSerializableState.call(this), {
                _hash: this.getHash(),
-               _isStored: this._isStored,
                _isDeleted: this._isDeleted,
                _defaultPropertiesValues: this._defaultPropertiesValues
             }
@@ -279,7 +273,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       _setSerializableState: function(state) {
          return Model.superclass._setSerializableState(state).callNext(function() {
             this._hash = state._hash;
-            this._isStored = state._isStored;
             this._isDeleted = state._isDeleted;
             this._defaultPropertiesValues = state._defaultPropertiesValues;
          });
@@ -349,42 +342,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
                }
             }
          }, this);
-      },
-
-      /**
-       * Возвращает признак, что модель существует в источнике данных
-       * @returns {Boolean}
-       * @deprecated метод будет удален в 3.7.4 - используйте SBIS3.CONTROLS.Data.Sync::record()
-       */
-      isStored: function () {
-         return this._isStored;
-      },
-
-      /**
-       * Устанавливает, существует ли модель в источнике данных
-       * @param {Boolean} stored Модель существует в источнике данных
-       * @deprecated метод будет удален в 3.7.4 - используйте SBIS3.CONTROLS.Data.Sync::record()
-       */
-      setStored: function (stored) {
-         this._isStored = stored;
-      },
-
-      /**
-       * Возвращает признак, что модель была синхронизирована с источником данных
-       * @returns {Boolean}
-       * @deprecated метод будет удален в 3.7.4 - используйте SBIS3.CONTROLS.Data.Sync::record()
-       */
-      isSynced: function () {
-         return this._synced;
-      },
-
-      /**
-       * Устанавливает признак, что модель была синхронизирована с источником данных
-       * @param {Boolean} synced
-       * @deprecated метод будет удален в 3.7.4 - используйте SBIS3.CONTROLS.Data.Sync::record()
-       */
-      setSynced: function (synced) {
-         this._synced = synced;
       },
 
       /**
@@ -522,16 +479,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          return info && info.meta && info.meta.t ?
             (info.meta.t instanceof Object ? info.meta.t.n : info.meta.t) :
             (field ? 'Текст' : undefined);
-      },
-
-      setCreated: function (created) {
-         Utils.logger.stack('SBIS3.CONTROLS.Data.Model: method setCreated() is deprecated and will be removed in 3.7.4. Use setStored() instead.');
-         this.setStored(created);
-      },
-
-      isCreated: function () {
-         Utils.logger.stack('SBIS3.CONTROLS.Data.Model: method isCreated() is deprecated and will be removed in 3.7.4. Use isStored() instead.');
-         return this.isStored();
       },
 
       setDeleted: function (deleted) {
