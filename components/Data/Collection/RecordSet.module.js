@@ -383,8 +383,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          }
          //TODO: когда появятся форматы, сделать через сравнение форматов и записей
          return $ws.helpers.isEqualObject(
-            this.getRawData(),
-            recordset.getRawData()
+            this._$rawData,
+            recordset._$rawData
          );
       },
 
@@ -773,7 +773,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       add: function (item, at) {
          this._checkItem(item, !!this._$format || this.getCount() > 0);
-         this._getRawDataAdapter().add(item.getRawData(), at);
+         this._getRawDataAdapter().add(item._$rawData, at);
          RecordSet.superclass.add.call(this, item, at);
          item.setOwner(this);
          this._indexTree = {};
@@ -799,7 +799,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       replace: function (item, at, checkFormat) {
          this._checkItem(item, checkFormat);
          item.setOwner(this);
-         this._getRawDataAdapter().replace(item.getRawData(), at);
+         this._getRawDataAdapter().replace(item._$rawData, at);
          RecordSet.superclass.replace.call(this, item, at);
          this._indexTree = {};
       },
@@ -864,7 +864,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
             }
             adapter.add(
-               item.getRawData(),
+               item._$rawData,
                at === undefined ? undefined : at + i
             );
          }

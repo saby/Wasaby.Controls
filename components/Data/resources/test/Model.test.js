@@ -715,7 +715,7 @@ define([
 
       describe('.getRaw()', function (){
          it('should return name id property', function() {
-            assert.equal(model.getRaw(), model.getRawData());
+            assert.deepEqual(model.getRaw(), model.getRawData());
          });
       });
 

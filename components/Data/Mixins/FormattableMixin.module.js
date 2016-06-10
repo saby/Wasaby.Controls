@@ -219,7 +219,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @see rawData
        */
       getRawData: function() {
-         return this._$rawData;
+         return Utils.clone(this._$rawData);
       },
 
       /**

@@ -261,7 +261,7 @@ define([
                   rs = new RecordSet({
                      rawData: data
                   });
-               assert.strictEqual(rs.getRawData(), data);
+               assert.deepEqual(rs.getRawData(), data);
             });
             it('should return the changed value after add a new record', function() {
                var rs = new RecordSet(),
@@ -269,7 +269,7 @@ define([
                rs.add(new Model({
                   rawData: data
                }));
-               assert.strictEqual(rs.getRawData()[0], data);
+               assert.deepEqual(rs.getRawData()[0], data);
             });
          });
 

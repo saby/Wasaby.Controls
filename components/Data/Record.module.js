@@ -292,8 +292,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          }
          //TODO: когда появятся форматы, сделать через сравнение форматов
          return $ws.helpers.isEqualObject(
-            this.getRawData(),
-            record.getRawData()
+            this._$rawData,
+            record._$rawData
          );
       },
 

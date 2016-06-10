@@ -1,5 +1,7 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
+define('js!SBIS3.CONTROLS.Data.Utils', [
+   'js!SBIS3.CONTROLS.Data.Serializer'
+], function (Serializer) {
    /**
     * Утилиты для коллекций
     * @class SBIS3.CONTROLS.Data.Utils
@@ -67,6 +69,28 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
          }
 
          throw new ReferenceError('Object doesn\'t have setter for property "' + property + '".');
+      },
+
+      /**
+       * Клонирует объект
+       * @param {Object} object Объект
+       * @returns {Object} Клон объекта
+       * @static
+       */
+      clone: function (object) {
+         if (object instanceof Object) {
+            if ($ws.helpers.instanceOfMixin(object, 'SBIS3.CONTROLS.Data.ICloneable')) {
+               return object.clone();
+            } else {
+               var serializer = new Serializer();
+               return JSON.parse(
+                  JSON.stringify(object, serializer.serialize),
+                  serializer.deserialize
+               );
+            }
+         } else {
+            return object;
+         }
       },
 
       logger: {
