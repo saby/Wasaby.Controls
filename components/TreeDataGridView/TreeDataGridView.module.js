@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       $protected: {
          _footerWrapperTemplate: FooterWrapperTemplate,
          _options: {
-            _canServerRender: false,
+            _canServerRender: true,
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
             /**

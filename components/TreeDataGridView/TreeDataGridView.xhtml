@@ -10,9 +10,17 @@
    </div>
    <div class="controls-ListView-scrollIndicator ws-hidden{{?it.infiniteScroll === 'up'}} controls-ListView-scrollIndicator__up {{?}}"></div>
    <table class="controls-DataGridView__table">
-      <tbody class="controls-DataGridView__tbody"></tbody>
-       <tfoot class="controls-DataGridView__tfoot">
-       </tfoot>
+      {{=it._colGroupTpl(it._colgroupData)}}
+      {{?it.showHead}}
+      {{=it._headTpl(it._headData)}}
+      {{?}}
+      <tbody class="controls-DataGridView__tbody">
+      {{?it._serverRender}}
+      {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
+      {{?}}
+      </tbody>
+      <tfoot class="controls-DataGridView__tfoot">
+      </tfoot>
    </table>
    {{? it.showPaging}}
       <div class="controls-TreePager-container"></div>

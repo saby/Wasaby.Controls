@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
          _tileWidth: null,
          _folderWidth: null,
          _options: {
+            _canServerRender: false,
             /**
              * @cfg {String} Устанавливает режим отображения элементов коллекции
              * @variant table Режим отображения "Таблица"
