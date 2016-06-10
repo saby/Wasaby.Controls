@@ -333,12 +333,8 @@ define([
             });
             it('should trigger onPropertyChange with deep changed item', function(done) {
                var sub = new Record(),
-                  list = new ObservableList({
-                     items: [sub]
-                  }),
-                  top = new Record({
-                     rawData: {list: list}
-                  }),
+                  list = new ObservableList(),
+                  top = new Record(),
                   handler = function(event, map) {
                      try {
                         assert.strictEqual(map.list, list);
@@ -348,7 +344,9 @@ define([
                      }
                   };
 
-               top.get('list');
+               top.set('list', list);
+               list.add(sub);
+
                top.subscribe('onPropertyChange', handler);
                sub.set('test', 'ok');
                top.unsubscribe('onPropertyChange', handler);

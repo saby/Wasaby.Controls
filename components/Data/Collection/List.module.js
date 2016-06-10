@@ -214,7 +214,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          if (!this._isValidIndex(at)) {
             throw new Error('Index is out of bounds');
          }
-         this._removeChild(this._$items[at], 'owner');
+         this._removeChild(this._$items[at]);
          this._$items[at] = item;
          this._addChild(item, 'owner');
          this._reindex(IBindCollection.ACTION_REPLACE, at, 1);

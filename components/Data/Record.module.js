@@ -394,6 +394,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        */
       _unsetFromPropertiesCache: function (name) {
          if (this._propertiesCache) {
+            this._removeChild(this._propertiesCache[name]);
             delete this._propertiesCache[name];
          }
       },
@@ -403,6 +404,13 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @protected
        */
       _clearPropertiesCache: function () {
+         if (this._propertiesCache) {
+            for (var name in this._propertiesCache) {
+               if (this._propertiesCache.hasOwnProperty(name)) {
+                  this._removeChild(this._propertiesCache[name]);
+               }
+            }
+         }
          this._propertiesCache = null;
       },
 
@@ -472,6 +480,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
                this.getAdapter()
             )
          );
+         this._addChild(value, this._getRelationNameForField(name));
 
          if (!(this._$rawData instanceof Object)) {
             this._$rawData = adapter.getData();

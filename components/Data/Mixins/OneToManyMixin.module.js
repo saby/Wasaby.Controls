@@ -16,6 +16,11 @@ define('js!SBIS3.CONTROLS.Data.OneToManyMixin', [
       //region Protected methods
 
       /**
+       * @member {SBIS3.CONTROLS.Mediator.OneToMany} Медиатор, отвечающий за связь с родителем
+       */
+      _mediator: null,
+
+      /**
        * Добавляет отношение "родитель - ребенок"
        * @param {SBIS3.CONTROLS.Data.Mediator.IReceiver} child Ребенок
        * @param {String} [name] Название отношений
@@ -23,7 +28,12 @@ define('js!SBIS3.CONTROLS.Data.OneToManyMixin', [
        */
       _addChild: function(child, name) {
          if (child instanceof Object) {
-            this._getMediator().addTo(this, child, name);
+            var mediator = this._getMediator();
+            //Вместо $ws.helpers.instanceOfMixin(child, 'SBIS3.CONTROLS.Data.OneToManyMixin') т.к. важна скорость
+            if (child._setMediator) {
+               child._setMediator(mediator);
+            }
+            mediator.addTo(this, child, name);
          }
       },
 
@@ -34,7 +44,12 @@ define('js!SBIS3.CONTROLS.Data.OneToManyMixin', [
        */
       _removeChild: function(child) {
          if (child instanceof Object) {
-            this._getMediator().removeFrom(this, child);
+            var mediator = this._getMediator();
+            mediator.removeFrom(this, child);
+            //Вместо $ws.helpers.instanceOfMixin(child, 'SBIS3.CONTROLS.Data.OneToManyMixin') т.к. важна скорость
+            if (child._setMediator) {
+               child._setMediator(null);
+            }
          }
       },
 
@@ -57,12 +72,21 @@ define('js!SBIS3.CONTROLS.Data.OneToManyMixin', [
       },
 
       /**
-       * Возвращает посредника для установления отношений с записями
+       * Возвращает посредника для установления отношений с детьми
        * @returns {SBIS3.CONTROLS.Mediator.OneToMany}
        * @protected
        */
       _getMediator: function() {
-         return OneToManyMediator.getInstance();
+         return this._mediator || (this._mediator = new OneToManyMediator());
+      },
+
+      /**
+       * Устанавливает посредника для установления отношений с детьми
+       * @param {SBIS3.CONTROLS.Mediator.OneToMany} mediator
+       * @protected
+       */
+      _setMediator: function(mediator) {
+         this._mediator = mediator;
       }
 
       //endregion Protected methods
