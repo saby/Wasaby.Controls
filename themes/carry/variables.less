@@ -38,6 +38,147 @@
 //FieldLink
 @controls-FieldLink-afterField-padding:         10px 16px 0px 0;
 
+// ------ //
+// Button //
+// ------ //
+
+// Normal button
+@button-height:                                 40px;
+@button-min-width:                              40px;
+@button-border-width:                           0;
+@button-icon-top-offset:                        12px;
+@button-icon-left-offset:                       8px;
+
+@button-icon-big-top-offset:                    7px;
+@button-icon-big-left-offset:                   10px;
+
+// Normal default button
+@button-bg:                                     #EAEAEA;
+@button-hover-bg:                               #E1ECF6;
+@button-active-bg:                              #C1D7F0;
+
+@button-border:                                 @button-border-width solid transparent;
+@button-border-radius:                          0;
+
+// Button's icon
+@button-icon-32-top-offset:                     4px;
+@button-icon-32-left-offset:                    2px;
+
+// Normal primary button
+@button-primary-bg:                             #FFB87A;
+@button-primary-hover-bg:                       #FDECD9;
+@button-primary-active-bg:                      #FE9442;
+@button-primary-border:                         @button-border;
+
+// Normal disabled button
+@button-disabled-text-color:                    #CCCCCC;
+@button-disabled-border:                        @button-border-width solid transparent;
+
+// Big button
+
+@button-big-border-radius:                      0;
+@button-big-primary-active-border:              @button-big-primary-border;
+@button-big-font:                               @globalDefaultFontSize @font-basic-name;
+@button-big-min-width:                          60px;
+@button-big-height:                             60px;
+@icon-height:                                   24px;
+
+@button-big-icon-top-offset:                    22px;
+@button-big-icon-left-offset:                   18px;
+
+@button-big-icon-big-top-offset:                16px;
+@button-big-icon-big-left-offset:               20px;
+
+@button-icon-32-top-offset:                     4px;
+@button-icon-32-left-offset:                    2px;
+
+@button-big-icon-32-top-offset:                 14px;
+@button-big-icon-32-left-offset:                14px;
+
+// Big disabled button
+@button-big-disabled-border:                    @button-disabled-border;
+
+// ------------- //
+// Toggle button //
+// ------------- //
+
+// Normal default button
+@button-checked-border-width:                   0;
+@button-checked-border:                         @button-checked-border-width solid transparent;
+@button-checked-text-margin-left:               @button-text-margin-left;
+@button-checked-text-margin-right:              @button-text-margin-right;
+// Normal primary button
+@button-primary-checked-border:                 @button-checked-border;
+// Big default button
+@button-big-checked-border:                     @button-checked-border;
+@button-big-checked-text-margin-left:           @button-big-text-margin-left;
+@button-big-checked-text-margin-right:          @button-big-text-margin-right;
+// Big primary button
+@button-big-primary-checked-border:             @button-primary-checked-border;
+
+// ----------- //
+// Menu button //
+// ----------- //
+
+// Menu
+@menu-button-menu-top-margin:                           40px;
+@menu-button-menu-left-margin:                          0;
+@menu-button-menu-padding:                              4px 0;
+@menu-button-menu-border-width:                         2px;
+@menu-button-menu-border-style:                         @menu-border-style;
+@menu-button-menu-border-color:                         transparent;
+@menu-button-menu-bg:                                   #E1ECF6;
+
+// Menu header
+@menu-button-header-spritesheet:                        '';
+
+@menu-button-header-left-width:                         0;
+@menu-button-header-left-height:                        0;
+@menu-button-header-left-margin:                        0;
+@menu-button-header-left-bg:                            transparent;
+@menu-button-header-left-bg-revert-horizontal:          transparent;
+@menu-button-header-right-bg-revert-vertical:           transparent;
+@menu-button-header-right-bg-revert-vertical-horizontal:transparent;
+
+@menu-button-header-center-width:                       0;
+@menu-button-header-center-height:                      0;
+@menu-button-header-center-margin:                      0;
+@menu-button-header-center-bg:                          transparent;
+
+@menu-button-header-right-width:                        0;
+@menu-button-header-right-height:                       0;
+@menu-button-header-right-margin:                       0;
+@menu-button-header-right-bg:                           transparent;
+@menu-button-header-right-bg-revert-horizontal:         transparent;
+@menu-button-header-left-bg-revert-vertical:            transparent;
+@menu-button-header-left-bg-revert-vertical-horizontal: transparent;
+
+// ---- //
+// Menu //
+// ---- //
+
+@menu-border-width:                             2px;
+@menu-border-style:                             solid;
+@menu-border-color:                             transparent;
+@menu-border-radius:                            0;
+
+
+// --------- //
+// Menu item //
+// --------- //
+
+@menu-item-height:                              40px;
+@menu-item-bg:                                  @menu-button-menu-bg;
+@menu-item-hover-bg:                            #F0F5FB;
+@menu-item-hover-icon-color:                    @blue-dark-color!important;
+
+// ------------- //
+// Toggle button //
+// ------------- //
+
+// Normal default button
+@button-checked-bg:                             #C1D7F0;
+
 //FilterButton
 @controls-filterButton-area-header-padding:     24px 44px 16px 12px;
 @controls-filterButton-area-header-height:      40px;
@@ -89,7 +230,8 @@
 @breadcrumbs-top:                               6px;
 @breadcrumbs-smallItems-font-size:              @globalDefaultFontSize;
 @breadcrumbs-arrow-top:                         2px;
-@breadcrumbs-small-items-top:                   @breadcrumbs-arrow-top;@icon-height:                                   24px;
+@breadcrumbs-small-items-top:                   @breadcrumbs-arrow-top;
+@icon-height:                                   24px;
 
 
 // Popup
@@ -101,6 +243,4 @@
 
 @list-view-actions-menu-icon-width:             24px;
 
-// Big button
-@button-big-font:                               @globalDefaultFontSize;
-@button-big-height:                             60px;@icon-height:                                   24px;
+
