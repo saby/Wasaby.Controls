@@ -140,6 +140,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var
             args = TreeDataGridView.superclass._buildTplArgs.apply(this, arguments);
          args.arrowActivatedHandler = this._options.arrowActivatedHandler;
+         args.editArrow = this._options.editArrow;
          return args;
       },
       init: function(){
