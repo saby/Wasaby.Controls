@@ -599,7 +599,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var ladder = this._decorators && this._decorators.getByName('ladder');
          ladder && ladder.setIgnoreEnabled(true);
          ladder && ladder.reset();
-         markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this.getId());
+         markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
          ladder && ladder.setIgnoreEnabled(false);
          //TODO это может вызвать тормоза
          this._destroyInnerComponents($itemsContainer);
@@ -632,7 +632,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else {
                dot = data.defaultItemTpl;
             }
-            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this.getId());
+            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this._options);
             /*TODO посмотреть не вызывает ли это тормоза*/
             this._clearItems(targetElement);
             /*TODO С этим отдельно разобраться*/
@@ -716,7 +716,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      records: itemsToDraw,
                      tplData: this._prepareItemData()
                   };
-                  markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this.getId());
+                  markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
 
                   itemsContainer = this._getItemsContainer();
                   if (newItemsIndex == 0) {
@@ -1698,7 +1698,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             if (buildedTpl instanceof $) {
                buildedTpl = buildedTpl.get(0).outerHTML;
             }
-            return $(ParserUtilities.buildInnerComponents(MarkupTransformer(buildedTpl), this.getId()));
+            return $(ParserUtilities.buildInnerComponents(MarkupTransformer(buildedTpl), this._options));
          } else {
             throw new Error('Ошибка в itemTemplate');
          }
