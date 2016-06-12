@@ -1180,7 +1180,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return function() {
                var args = arguments;
                if (this._hasEditInPlace()) {
-                  this._getEditInPlace().endEdit(true).addCallback(function() {
+                  return this._getEditInPlace().endEdit(true).addCallback(function() {
                      return handler.apply(this, args)
                   }.bind(this));
                } else {
@@ -1378,7 +1378,9 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onAfterBeginEdit', model));
                      }.bind(this),
                      onChangeHeight: function() {
-                        this._showItemsToolbar(this._getElementData(this._editingItem.target));
+                        if (this._getItemsToolbar().isVisible()) {
+                           this._showItemsToolbar(this._getElementData(this._editingItem.target));
+                        }
                      }.bind(this),
                      onBeginAdd: function(event, options) {
                         event.setResult(this._notify('onBeginAdd', options));
