@@ -578,18 +578,17 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          $constructor: function () {
-            this._touchSupport = $ws._const.browser.isMobilePlatform;
+            this._touchSupport = $ws._const.compatibility.touch;
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
 
-            if(this._touchSupport) {
-               this._container.on('swipe', this._swipeHandler.bind(this))
-                              .on('tap', this._tapHandler.bind(this))
-                              .on('touchmove',this._mouseMoveHandler.bind(this));
-            } else {
-               this._container.on('mousemove', this._mouseMoveHandler.bind(this))
-                              .on('mouseleave', this._mouseLeaveHandler.bind(this));
-            }
+            /* За счёт того, что разделено поведения отображения операций и ховера,
+               в зависимости от события, которое произошло, то можно смело подписаться на все событие,
+               если его нет, то подписки не произодйдёт */
+            this._container.on('swipe', this._swipeHandler.bind(this))
+                           .on('tap', this._tapHandler.bind(this))
+                           .on('touchmove mousemove',this._mouseMoveHandler.bind(this))
+                           .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
             this.initEditInPlace();
             this.setItemsDragNDrop(this._options.itemsDragNDrop);
@@ -833,12 +832,14 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _mouseMoveHandler: function (e) {
             var $target = $(e.target),
-                target, targetKey;
+                target;
 
             target = this._findItemByElement($target);
 
             if (target.length) {
-               if(!this._touchSupport) {
+               /* Проверяем, чем был вызвано событие, мышью или движением пальца,
+                  чтобы в зависимости от этого понимать, надо ли показывать операции */
+               if(!e.originalEvent.touches) {
                   this._changeHoveredItem(target);
                }
             } else if (!this._isHoverControl($target)) {
