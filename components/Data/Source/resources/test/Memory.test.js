@@ -634,74 +634,74 @@ define([
                var tests = [{
                   sorting: 'Ид',
                   check: 'Ид',
-                  expect: [undefined, null, 1, 2, 3, 4, 5, 6, 7]
+                  expect: [7,6,5,4,3,2,1,undefined, null]
                }, {
-                  sorting: [{'Ид': false}],
+                  sorting: [{'Ид': true}],
                   check: 'Ид',
                   expect: [7, 6, 5, 4, 3, 2, 1, undefined, null]
                }, {
-                  sorting: [{'Ид': true}],
+                  sorting: [{'Ид': false}],
                   offset: 2,
                   check: 'Ид',
                   expect: [1, 2, 3, 4, 5, 6, 7]
                }, {
-                  sorting: [{'Ид': false}],
+                  sorting: [{'Ид': true}],
                   offset: 2,
                   check: 'Ид',
                   expect: [5, 4, 3, 2, 1, undefined, null]
                }, {
-                  sorting: [{'Ид': true}],
+                  sorting: [{'Ид': false}],
                   limit: 4,
                   check: 'Ид',
                   expect: [undefined, null, 1, 2, 3, 4]
                }, {
-                  sorting: [{'Ид': false}],
+                  sorting: [{'Ид': true}],
                   limit: 4,
                   check: 'Ид',
                   expect: [7, 6, 5, 4]
                }, {
-                  sorting: [{'Ид': true}],
+                  sorting: [{'Ид': false}],
                   offset: 3,
                   limit: 2,
                   check: 'Ид',
                   expect: [2, 3, 4]
                }, {
-                  sorting: [{'Ид': false}],
+                  sorting: [{'Ид': true}],
                   offset: 3,
                   limit: 2,
                   check: 'Ид',
                   expect: [4, 3]
                }, {
-                  sorting: [{'Фамилия': true}],
+                  sorting: [{'Фамилия': false}],
                   limit: 5,
                   check: 'Фамилия',
                   expect: [undefined, undefined, 'Аксенова', 'Афанасьев', 'Баранов']
                }, {
-                  sorting: [{'Фамилия': false}],
+                  sorting: [{'Фамилия': true}],
                   limit: 3,
                   check: 'Фамилия',
                   expect: ['Петров', 'Иванов', 'Иванов']
                }, {
-                  sorting: [{'Имя': false}],
+                  sorting: [{'Имя': true}],
                   limit: 4,
                   check: 'Имя',
                   expect: ['Ян', 'Федора', 'Федор', 'Иванко']
                }, {
-                  sorting: [{'Фамилия': true}, {'Имя': false}],
+                  sorting: [{'Фамилия': false}, {'Имя': true}],
                   check: ['Фамилия', 'Имя'],
                   expect: ['+', '+', 'Аксенова+Федора', 'Афанасьев+Иван', 'Баранов+Иванко', 'Годолцов+Иван', 'Иванов+Ян', 'Иванов+Иван', 'Петров+Федор']
                }, {
-                  sorting: [{'Имя': true}, {'Отчество': true}],
+                  sorting: [{'Имя': false}, {'Отчество': false}],
                   limit: 7,
                   check: ['Имя', 'Отчество'],
                   expect: ['+', '+', 'Иван+Андреевич', 'Иван+Викторович', 'Иван+Иванович', 'Иванко+Петрович', 'Федор+Иванович']
                }, {
-                  sorting: [{'Имя': true}, {'Отчество': false}],
+                  sorting: [{'Имя': false}, {'Отчество': true}],
                   limit: 7,
                   check: ['Имя', 'Отчество'],
                   expect: ['+', '+', 'Иван+Иванович', 'Иван+Викторович', 'Иван+Андреевич', 'Иванко+Петрович', 'Федор+Иванович']
                }, {
-                  sorting: [{'Должность': true}, {'Фамилия': true}, {'Имя': true}],
+                  sorting: [{'Должность': false}, {'Фамилия': false}, {'Имя': false}],
                   check: ['Должность', 'Фамилия', 'Имя'],
                   expect: ['++', '++', 'Директор+Афанасьев+Иван', 'Директор+Годолцов+Иван', 'Директор+Петров+Федор', 'Инженер+Аксенова+Федора', 'Инженер+Иванов+Иван', 'Карапуз+Баранов+Иванко', 'Маркетолог+Иванов+Ян']
                }];
