@@ -140,9 +140,18 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 require([(template.indexOf('js!') !== 0 ? 'js!' : '') + template], function(ctrl) {
                    self._filterComponent = ctrl;
                    showPicker();
+                   /* Если поле открытия фокус не на пикере, то вернём фокус в него.
+                      т.к. сам пикер при открытии не переводит на себя фокус, однако активация
+                      может вызываться дочериними контролами, то надо проверить на активность */
+                   if(!self._picker.isActive()) {
+                      self._picker.setActive(true);
+                   }
                 });
              } else {
                 showPicker();
+                if(!self._picker.isActive()) {
+                   self._picker.setActive(true);
+                }
              }
           },
 
