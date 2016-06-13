@@ -66,6 +66,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   if(action.isEnabled()) {
                      if(this._itemActionsButtons[i]['disabledHidden'] && !isActionVisible) {
                         action.show();
+                        this._itemActionsButtons[i]['disabledHidden'] = false;
                         isActionVisible = true;
                      }
                   } else if(isActionVisible) {
