@@ -348,33 +348,44 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
          this._lastGroup = view._options.groupBy;
          this._isInfiniteScroll = view.isInfiniteScroll();
+         function subscribeOnSearchFormEvents() {
+            searchForm.subscribe('onReset', function (event, text) {
+               toggleSearchKbLayoutRevert.call(self, view, false, searchParamName);
+               if (isTree) {
+                  resetGroup.call(self, searchParamName);
+               } else {
+                  resetSearch.call(self, searchParamName);
+               }
+            });
 
-         searchForm.subscribe('onReset', function(event, text){
-            toggleSearchKbLayoutRevert.call(self, view, false, searchParamName);
-            if (isTree) {
-               resetGroup.call(self, searchParamName);
-            } else {
-               resetSearch.call(self, searchParamName);
-            }
-         });
+            searchForm.subscribe('onSearch', function (event, text) {
+               toggleSearchKbLayoutRevert.call(self, view, true, searchParamName);
+               if (isTree) {
+                  startHierSearch.call(self, text, searchParamName, undefined, searchMode, searchForm);
+               } else {
+                  startSearch.call(self, text, searchParamName, searchForm);
+               }
+            });
 
-         searchForm.subscribe('onSearch', function(event, text) {
-            toggleSearchKbLayoutRevert.call(self, view, true, searchParamName);
-            if (isTree) {
-               startHierSearch.call(self, text, searchParamName, undefined, searchMode, searchForm);
-            } else {
-               startSearch.call(self, text, searchParamName, searchForm);
-            }
-         });
+            searchForm.subscribe('onKeyPressed', function (eventObject, event) {
+               // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
+               if ((event.which == $ws._const.key.tab || event.which == $ws._const.key.down) && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)) {
+                  view.setSelectedIndex(0);
+                  view.setActive(true);
+                  event.stopPropagation();
+               }
+            });
+         }
 
-         searchForm.subscribe('onKeyPressed', function(eventObject, event){
-            // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
-            if ((event.which == $ws._const.key.tab || event.which == $ws._const.key.down) && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)){
-               view.setSelectedIndex(0);
-               view.setActive(true);
-               event.stopPropagation();
-            }
-         });
+         if(view._getItemsProjection()){
+            subscribeOnSearchFormEvents();
+         }else{
+            view.once('onItemsReady', function(){
+               subscribeOnSearchFormEvents();
+               searchForm.applySearch(false);
+            });
+
+         }
       },
       bindSearchComposite: function(searchParamName, searchCrumbsTpl, searchForm) {
          this.bindSearchGrid.apply(this, arguments);
