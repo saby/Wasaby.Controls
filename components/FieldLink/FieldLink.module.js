@@ -736,8 +736,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 }
              }
 
-             /* Вызываем родительский метод, если передали запись с обязательными полями или null */
-             if(hasRequiredFields || item === null) {
+             /* Вызываем родительский метод, если:
+                1) передали запись с обязательными полями
+                2) передали null
+                3) передали запись без ключевых полей, но у нас есть выделенные ключи,
+                   такое может произойти, когда запись сбрасывается через контекст */
+             if( hasRequiredFields ||
+                 item === null  ||
+                (!hasRequiredFields && !this._isEmptySelection()) ) {
                 FieldLink.superclass.setSelectedItem.apply(this, arguments);
              }
           },
