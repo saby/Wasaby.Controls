@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.TabControl', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.TabControl',
-   'js!SBIS3.CORE.SwitchableArea',
+   'js!SBIS3.CONTROLS.SwitchableArea',
    'js!SBIS3.CONTROLS.TabButtons'
 ], function(CompoundControl, dotTplFn) {
 
