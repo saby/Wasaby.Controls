@@ -52,6 +52,12 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             var onlyMain = true,
                 itemsInstances = this.getItemsInstances(),
                 action, isActionVisible, isMain;
+            
+            function toggleActionByState(enabled, name) {
+               action[enabled ? 'show' : 'hide']();
+               this._itemActionsButtons[name]['disabledHidden'] = !enabled;
+               isActionVisible = enabled;
+            }
 
             for(var i in itemsInstances) {
                if(itemsInstances.hasOwnProperty(i)) {
@@ -65,14 +71,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                      которые мы же сами и скрывали */
                   if(action.isEnabled()) {
                      if(this._itemActionsButtons[i]['disabledHidden'] && !isActionVisible) {
-                        action.show();
-                        this._itemActionsButtons[i]['disabledHidden'] = false;
-                        isActionVisible = true;
+                        toggleActionByState.call(this, true, i);
                      }
                   } else if(isActionVisible) {
-                     action.hide();
-                     this._itemActionsButtons[i]['disabledHidden'] = true;
-                     isActionVisible = false;
+                     toggleActionByState.call(this, false, i);
                   }
 
                   /* Проверка, надо ли показывать иконку меню */
