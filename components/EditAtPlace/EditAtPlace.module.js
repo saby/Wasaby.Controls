@@ -121,14 +121,22 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             if ($(this._options.editorTpl).attr('data-component') == 'SBIS3.CONTROLS.TextArea'){
                $(this._container.children()[0]).addClass('controls-EditAtPlace__textAreaWrapper');
             }
+         },
 
-            var editor = $('.js-controls-EditAtPlace__editor', this._container.get(0));
+         init: function(){
+            EditAtPlace.superclass.init.apply(this, arguments);
+            var editor = $('.js-controls-EditAtPlace__editor', this._container.get(0)),
+               editorComponent = this.getChildControls(undefined, false)[0], //Получим дочерний компонент на первом уровне вложенности
+               self = this;
 
+            editorComponent.subscribe('onFocusOut', function(){
+               self._editorFocusOutHandler();
+            });
+
+            //Подобная подписка на события через jQuery в редактировании по месту используется во многих местах
+            //Имеет смысл в 374 перевести логику работы непосредственно через компонент, который мы получаем чуть выше
             editor.bind('keydown', function (e) {
                self._keyPressHandler(e);
-            });
-            editor.bind('focusout', function(){
-               self._editorFocusOutHandler();
             });
          },
 
