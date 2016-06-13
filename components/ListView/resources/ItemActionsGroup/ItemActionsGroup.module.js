@@ -240,7 +240,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             /* В обработчике могут вызвать destroy */
             if(!this.isDestroyed()) {
                this._notify('onActionActivated', this._activeItem.key);
-               this.hide();
             }
          },
 
