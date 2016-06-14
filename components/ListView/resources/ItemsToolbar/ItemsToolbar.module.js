@@ -97,6 +97,8 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 handlers : {
                    onActionActivated: function(e, key) {
                       self._notify('onItemActionActivated', key);
+                      //Если тулбар не заблокирован, то клик по любой операции над записью приводит к скрытию тулбара
+                      self.hide(false);
                    },
                    onShowMenu: function() {
                       this.getContainer().addClass('ws-invisible');
