@@ -1814,10 +1814,21 @@ define('js!SBIS3.CONTROLS.ListView',
             scrollContainer = isBody ? $(window) : this._options.infiniteScrollContainer;
             // Если scrollContainer это body и есть floatArea со скроллом, то у body скролла нет, а значит он не может быть снизу (его же нет!)
             // Todo: когда будут классные скроллы (3.7.4.100?) - можно будет выпилить
-            if (scrollableContainer && isBody && !$('.ws-scrolling-content').length){
+            if (scrollableContainer && isBody && !this._existFloatArea()){
                scrollContainer = $(scrollContainer);
                return (scrollableContainer.scrollHeight - (scrollableContainer.scrollTop + scrollContainer.height())) == 0;
             }
+         },
+         _existFloatArea: function(){
+            var areas = $ws.single.FloatAreaManager._areas;
+            for (var area in areas){
+               if (areas.hasOwnProperty(area)){
+                  if (areas[area].isVisible()){
+                     return true;
+                  }
+               }
+            }
+            return false;
          },
          isScrollOnTop: function(){
             if (this._options.infiniteScrollContainer && this._options.infiniteScrollContainer.length){
