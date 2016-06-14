@@ -408,7 +408,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             itemTpl : null,
             /**
-             * @cfg {Function} Метод используется для сортировки элементов, принимает два
+             * @cfg {Function|null} Метод используется для сортировки элементов, принимает два
              * объекта вида {item:ProjectionItem, collectionItem: Model, index: Number, collectionIndex: Number} и
              * должен вернуть -1|0|1
              * @example
