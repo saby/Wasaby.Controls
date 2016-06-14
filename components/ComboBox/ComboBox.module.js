@@ -295,7 +295,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _drawSelectedItem: function (key, index) {
          function clearSelection() {
-            ComboBox.superclass.setText.call(self, '');
+            ComboBox.superclass.setText.call(this, '');
             self._drawNotEditablePlaceholder('');
             $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text('');
             if (this._picker) {
