@@ -50,24 +50,22 @@
                }
             }
 
-            .controls-ItemActions__menu-button {
-               &:hover {
-                  padding: 0;
-                  border: none;
-                  top: 50%;
-                  position: relative;
-                  margin-top: -@list-view-actions-menu-touch-height / 2;
-                  margin-left: 0;
-                  background: @list-view-actions-menu-touch-icon;
-                  height: @list-view-actions-menu-touch-height;
-                  width: @list-view-actions-menu-touch-width;
-                  background-size: @list-view-actions-menu-touch-size;
-                  background-position: center;
-               }
-
-               &:before {
-                  content: none;
-               }
+            .controls-ItemActions__menu-button,
+            .controls-ItemActions__menu-button:hover {
+               padding: 0;
+               border: none;
+               top: 50%;
+               position: relative;
+               margin-top: -@list-view-actions-menu-touch-height / 2;
+               margin-left: 0;
+               background: @list-view-actions-menu-touch-icon;
+               height: @list-view-actions-menu-touch-height;
+               width: @list-view-actions-menu-touch-width;
+               background-size: @list-view-actions-menu-touch-size;
+               background-position: center;
+            }
+            .controls-ItemActions__menu-button:before {
+               content: none;
             }
          }
       }
