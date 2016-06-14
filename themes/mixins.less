@@ -178,3 +178,14 @@
    top: 50%;
    margin-top: -(@height / 2 - @padding-top);
 }
+//Решаем проблему лишних отступов между inline-block элементами лежащими друг за другом.
+//ВАЖНО: Если не задано значение @child-font-size то у всех дочерних элементов блока, с данным стилем, должен быть указан собственный font-size.
+.inline-block-bug-fix(@child-font-size: 0) {
+  font-size: 0;
+
+  & when (@child-font-size > 0) {
+    & > * {
+      font-size: @child-font-size;
+    }
+  }
+}

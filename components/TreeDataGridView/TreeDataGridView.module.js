@@ -18,6 +18,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          tvOptions = cfg._buildTplArgsTV.call(this, cfg);
          $ws.core.merge(tplOptions, tvOptions);
          tvOptions.arrowActivatedHandler = cfg.arrowActivatedHandler;
+         tvOptions.editArrow = cfg.editArrow;
          return tplOptions;
       };
 
@@ -148,7 +149,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       init: function(){
          TreeDataGridView.superclass.init.call(this);
          if (this._container.hasClass('controls-TreeDataGridView__withPhoto')){
-            this._options.paddingSize = 42;
+            this._options._paddingSize = 42;
          }
       },
 
@@ -253,7 +254,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if(!this._editArrow && this._options.editArrow) {
             this._editArrow = new IconButton({
                element: this._container.find('> .controls-TreeView__editArrow-container'),
-               icon: 'icon-16 icon-View icon-primary action-hover',
+               icon: 'icon-16 icon-View icon-primary action-hover icon-size',
                parent: this,
                allowChangeEnable: false,
                handlers: {

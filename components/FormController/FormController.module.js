@@ -160,7 +160,15 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._updateDocumentTitle();
          this._setDefaultContextRecord();
          this._panel = this.getTopParent();
+         //для совместимости со старыми формами создает источник данных только если в опциях на прототипе есть данные об источнике данных
+         //в противном случае люди сами устанавливать источник
          this._dataSource = this._options.source;
+         if(this._options.dataSource && this._options.dataSource.endpoint) {
+            this._dataSource = this._dataSource || FormController.prototype.createDataSource(this._options);
+            if (!this._options.record){
+               this._getRecordFromSource({});
+            }
+         }
          var loadingTime = new Date();
          this.subscribe('onAfterShow', function(){
             $ws.single.ioc.resolve('ILogger').log('FormController', 'Время загрузки ' + (new Date() - loadingTime) + 'мс');
@@ -511,7 +519,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see getDataSource
        */
       setDataSource: function(source, config){
-         $ws.single.ioc.resolve('ILogger').error('FormController', 'Метод setDataSource в скором времени будет удален, задать источник данных необходимо через конфигурацию dataSource');
+         $ws.single.ioc.resolve('ILogger').log('FormController', 'Метод setDataSource в скором времени будет удален, задать источник данных необходимо через конфигурацию dataSource');
          this._dataSource = source;
          return this._getRecordFromSource(config)
       },
