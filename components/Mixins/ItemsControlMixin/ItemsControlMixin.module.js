@@ -1284,6 +1284,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        /**
         * Метод установки либо замены коллекции элементов, заданных опцией {@link items}.
         * @param {Object} items Набор новых данных, по которому строится отображение.
+        * @param {Boolean} itemsBySource Флаг, говорящий о том, что items соответствуют сорсу, который в данный момент установлен
         * @example
         * <pre>
         *     setItems: [
@@ -1307,11 +1308,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see onDrawItems
         * @see onDataLoad
         */
-       setItems: function (items) {
+       setItems: function (items, itemsBySource) {
           this._options.items = items;
           this._unsetItemsEventHandlers();
           this._options._items = null;
-          this._itemsInitializedBySource = false;
+          this._itemsInitializedBySource = !!itemsBySource;
           this._prepareConfig(undefined, items);
           this._notify('onDataLoad', this.getItems()); //TODO на это событие завязались. аккуратно спилить
           this._dataLoadedCallback(); //TODO на это завязаны хлебные крошки, нужно будет спилить
