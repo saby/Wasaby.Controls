@@ -562,12 +562,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             noSaveFilters: noSaveFilters
          });
 
+         filterButton.setHistoryController(historyController);
          if(applyOnLoad) {
             filter = historyController.getActiveFilter();
-
-            filterButton.setHistoryController(historyController);
             /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
-            filterButton.setFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
+            if(filter) {
+               filterButton.setFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
+            }
          }
          setTimeout($ws.helpers.forAliveOnly(function() {
             // Через timeout, чтобы можно было подписаться на соыбтие, уйдёт с серверным рендерингом
