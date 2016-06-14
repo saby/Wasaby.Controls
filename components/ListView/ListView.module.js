@@ -823,7 +823,9 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             if (!Object.isEmpty(this._options.groupBy) && this._options.groupBy.clickHandler instanceof Function) {
                var closestGroup = $target.closest('.controls-GroupBy', this._getItemsContainer());
-               this._options.groupBy.clickHandler.call(this, $target);
+               if (closestGroup.length) {
+                  this._options.groupBy.clickHandler.call(this, $target);
+               }
             }
          },
          /**
