@@ -1755,9 +1755,6 @@ define('js!SBIS3.CONTROLS.ListView',
                         ladder && ladder.setIgnoreEnabled(false);
                      }
 
-                     //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
-                     self.getItems().setMetaData(dataSet.getMetaData());
-
                      if (this._isSlowDrawing()) {
                         self._drawItems(dataSet.toArray(), at);
                      }
