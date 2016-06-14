@@ -1720,6 +1720,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   self._loader = null;
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                   var hasNextPage = self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset);
+                  this.getItems().setMetaData(dataSet.getMetaData());//обновим метадату из вновь пришедшего датасета
                   if (hasNextPage) {
                      self._infiniteScrollOffset += self._limit;
                   } else {
