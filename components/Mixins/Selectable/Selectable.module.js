@@ -376,7 +376,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
                         if (this._options.selectedIndex > count - 1) {
                            this._options.selectedIndex = 0;
                         }
-                        if (oldItems.length = 1 && action == IBindCollection.ACTION_REMOVE && oldItems[0].getContents().getId() == this._options.selectedKey) {
+                        if (oldItems.length == 1 && action == IBindCollection.ACTION_REMOVE && oldItems[0].getContents().getId() == this._options.selectedKey) {
                            this._isMove = true;
                            this._isMoveKey = this._options.selectedKey;
                         }
