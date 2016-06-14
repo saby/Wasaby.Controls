@@ -105,7 +105,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
 
       _opendEditComponent: function(meta, dialogComponent, mode){
          this._linkedModelKey = meta.id;
-         //Не задаем в мета данные свойства, если их не было
+         //Производим корректировку идентификатора только в случае, когда идентификатор передан
          if (meta.hasOwnProperty('id')) {
             meta.id = this._getEditKey(meta.item) || meta.id;
          }
