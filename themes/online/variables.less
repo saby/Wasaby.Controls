@@ -1430,7 +1430,8 @@
 @data-grid-td-checkbox-width:                   24px;
 @data-grid-td-hidden-checkbox-width:            4px;
 @data-grid-td-checkbox-width-without-marker:    20px;
-@data-grid-checkbox-margin:                     3px 0 0 3px;
+//Отрицательный margin снизу нужен, чтобы чекбокс не распирал td, а соответственно и tr
+@data-grid-checkbox-margin:                     2px 0 -2px 3px;
 
 @data-grid-columnValue-padding:                 0;
 
