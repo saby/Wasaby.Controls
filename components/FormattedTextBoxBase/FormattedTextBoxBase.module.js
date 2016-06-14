@@ -855,6 +855,7 @@ define(
          //TODO неодинаковое поведение получается для разного text. Но нельзя this._options.text не обновлять, т.к. его getText() использует
          this._options.text = (this.formatModel._settedText !== null && typeof this.formatModel._settedText !== "undefined") ? this.formatModel.getText(this._maskReplacer) : this.formatModel._settedText;
          this._notifyOnPropertyChanged('text');
+         this._textChanged = true;
       },
 
       /**
