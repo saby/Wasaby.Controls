@@ -1,0 +1,29 @@
+<div class="SubmitPopup">
+   <div class="SubmitPopup__body">
+      <div class="SubmitPopup__message">{{=it.message}}</div>
+      <div class="SubmitPopup__details">{{=it.details}}</div>
+   </div>
+   <div class="SubmitPopup__footer">
+      <div class="SubmitPopup__buttonContainer">
+      {{? it.state === 'default'}}
+         <component data-component="SBIS3.CONTROLS.Button" name="positiveButton" class="SubmitPopup__button">
+            <option name="caption">Да</option>
+            <option name="primary">true</option>
+         </component>
+         <component data-component="SBIS3.CONTROLS.Button" name="negativeButton" class="SubmitPopup__button">
+            <option name="caption">Нет</option>
+         </component>
+         {{? it.threeButton}}
+            <component data-component="SBIS3.CONTROLS.Button" name="cancelButton" class="SubmitPopup__button">
+               <option name="caption">Отмена</option>
+            </component>
+         {{?}}
+      {{??}}
+         <component data-component="SBIS3.CONTROLS.Button" name="okButton" class="SubmitPopup__button">
+            <option name="caption">ОК</option>
+            <option name="primary">true</option>
+         </component>
+      {{?}}
+      </div>
+   </div>
+</div>

@@ -1,0 +1,5 @@
+<div>
+   <div class="NotificationPopup__header {{? it.closeButton}}NotificationPopup__header-withCloseButton{{?}}">{{=it.headerTemplate.apply(this, [it])}}</div>
+   {{?it.bodyTemplate}}<div class="NotificationPopup__body">{{=it.bodyTemplate.apply(this, [it])}}</div>{{?}}
+   {{?it.footerTemplate}}<div class="NotificationPopup__footer">{{=it.footerTemplate.apply(this, [it])}}</div>{{?}}
+</div>
