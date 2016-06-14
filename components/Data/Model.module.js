@@ -366,6 +366,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * Возвращает признак, что модель удалена
        * @returns {Boolean}
+       * @deprecated метод будет удален в 3.7.4
        */
       isDeleted: function () {
          return this._isDeleted;
@@ -374,6 +375,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * Возвращает признак, что модель существует в источнике данных
        * @returns {Boolean}
+       * @deprecated метод будет удален в 3.7.4.
        */
       isStored: function () {
          return this._isStored;
@@ -382,6 +384,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * Устанавливает, существует ли модель в источнике данных
        * @param {Boolean} stored Модель существует в источнике данных
+       * @deprecated метод будет удален в 3.7.4
        */
       setStored: function (stored) {
          this._isStored = stored;
@@ -442,6 +445,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * Возвращает признак синхронизации модели
        * @returns {Boolean}
+       * @deprecated метод будет удален в 3.7.4
        */
       isSynced: function () {
          return this._synced;
@@ -449,6 +453,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * Устанавливает признак синхронизации модели
        * @param synced {Boolean}
+       * @deprecated метод будет удален в 3.7.4
        */
       setSynced: function (synced) {
          this._synced = synced;

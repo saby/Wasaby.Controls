@@ -28,7 +28,10 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
         * @see SBIS3.CONTROLS.DSMixin#keyField
         */
       $protected: {
-         _selectMode: 'index',
+          /*не различаются события move и remove/add при смене пор номеров, поэтому используем этот флаг, см ниже*/
+          _isMove: false,
+          _isMoveKey: null,
+          _selectMode: 'index',
           _options: {
              /**
               * @cfg {String} Устанавливает выбранным элемент коллекции по переданному индексу (порядковому номеру).
@@ -335,7 +338,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
       }
    };
 
-   var onCollectionChange = function (event, action) {
+   var onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems) {
       switch (action) {
          case IBindCollection.ACTION_ADD:
          case IBindCollection.ACTION_REMOVE:
@@ -350,23 +353,43 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
                 oldKey = this._options.selectedKey,
                 count;
 
-            if (indexByKey >= 0) {
-               this._options.selectedIndex = indexByKey;
-            } else {
-               count = itemsProjection.getCount();
-               if (count > 0) {
-                  if (!this._isEmptyIndex()) {
-                     if (this._options.selectedIndex > count - 1) {
-                        this._options.selectedIndex = 0;
-                     }
-                     this._setKeyByIndex();
-                  } else if (!this._options.allowEmptySelection) {
-                     this._options.selectedIndex = 0;
-                     this._setKeyByIndex();
-                  }
+            //В начале проверим наш хак на перемещение, а потом все остальное
+            //суть в том что при удалении, мы ставим курсор на следующую запись
+            //но при перемещении тоже происходит удаление - курсор перемещается на следующую, а должен устанавливаться на переносимую запись
+            //в итоге если мы следующим событием после того, где поставили флаг получаем add той же записи, то это было перемещение и ставим курсор
+            if (this._isMove && action == IBindCollection.ACTION_ADD && newItems.length == 1 && this._isMoveKey == newItems[0].getContents().getId()) {
+               this._options.selectedKey = this._isMoveKey;
+               this._options.selectedIndex = itemsProjection.getIndex(newItems[0]);
+               this._isMove = false;
+               this._isMoveKey = null;
+            }
+            else {
+               this._isMove = false;
+               this._isMoveKey = null;
+               if (indexByKey >= 0) {
+                  this._options.selectedIndex = indexByKey;
                } else {
-                  this._options.selectedIndex = -1;
-                  this._options.selectedKey = null;
+
+                  count = itemsProjection.getCount();
+                  if (count > 0) {
+                     if (!this._isEmptyIndex()) {
+                        if (this._options.selectedIndex > count - 1) {
+                           this._options.selectedIndex = 0;
+                        }
+                        if (oldItems.length = 1 && action == IBindCollection.ACTION_REMOVE && oldItems[0].getContents().getId() == this._options.selectedKey) {
+                           this._isMove = true;
+                           this._isMoveKey = this._options.selectedKey;
+                        }
+                        this._setKeyByIndex();
+                     } else if (!this._options.allowEmptySelection) {
+                        this._options.selectedIndex = 0;
+                        this._setKeyByIndex();
+                     }
+                  } else {
+                     this._options.selectedIndex = -1;
+                     this._options.selectedKey = null;
+                  }
+
                }
             }
             //TODO защита от логики деревянной проекции: добавил проверку на изменение selectedIndex и selectedKey, т.к. при вызове toggleNode

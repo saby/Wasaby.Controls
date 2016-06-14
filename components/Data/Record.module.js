@@ -324,8 +324,16 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       /**
        * Забывает измененные поля.
+       * @deprecated Метод будет удалён в версии платформы СБИС 3.7.4. Используйте acceptChanges()
        */
       applyChanges: function() {
+         this._changedFields = {};
+      },
+
+      /**
+       * Забывает измененные поля.
+       */
+      acceptChanges: function() {
          this._changedFields = {};
       },
 

@@ -50,9 +50,9 @@ define('js!SBIS3.CONTROLS.ListView',
 
             return tplOptions;
          },
-         getRecordsForRedrawLV = function (projection){
-            var records = this._options._getRecordsForRedrawSt.call(this, projection);
-            if (this._options.infiniteScroll === 'up' && !this._isSearchMode()) {
+         getRecordsForRedrawLV = function (projection, cfg){
+            var records = cfg._getRecordsForRedrawSt.call(this, projection);
+            if (cfg.infiniteScroll === 'up' && this._isSearchMode && !this._isSearchMode()) {
                return records.reverse();
             }
             return records;
@@ -479,13 +479,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                showPaging: false,
                /**
-                * @cfg {String} Устанавливает режим редактирования по месту.
-                * @variant "" Редактирование по месту отключено.
-                * @variant click Режим редактирования по клику.
-                * @variant hover Режим редактирования по наведению курсора.
-                * @variant single Режим редактирования единичной записи. После завершения редактирования текущей записи не происходит автоматического перехода к редактированию следующей записи.
-                * @variant autoadd Режим автоматического добавления новых элементов коллекции; этот режим позволяет при завершении редактирования последнего элемента автоматически создавать новый.
-                * @variant toolbar Отображение панели инструментов при входе в режим редактирования записи.</li>
+                * @cfg {String} Устанавливает режим редактирования по месту.<br>"" Редактирование по месту отключено.<br>click Режим редактирования по клику.<br>autoadd Режим автоматического добавления новых элементов коллекции; этот режим позволяет при завершении редактирования последнего элемента автоматически создавать новый.<br>toolbar Отображение панели инструментов при входе в режим редактирования записи.<br>single Режим редактирования единичной записи. После завершения редактирования текущей записи не происходит автоматического перехода к редактированию следующей записи.
                 * @remark
                 * Режимы редактирования можно группировать и получать совмещенное поведение.
                 * Например, задать редактирование по клику и отобразить панель инструментов при входе в режим редактирования записи можно такой конфигурацией:
@@ -597,18 +591,17 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          $constructor: function () {
-            this._touchSupport = $ws._const.browser.isMobilePlatform;
+            this._touchSupport = $ws._const.compatibility.touch;
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
 
-            if(this._touchSupport) {
-               this._container.on('swipe', this._swipeHandler.bind(this))
-                              .on('tap', this._tapHandler.bind(this))
-                              .on('touchmove',this._mouseMoveHandler.bind(this));
-            } else {
-               this._container.on('mousemove', this._mouseMoveHandler.bind(this))
-                              .on('mouseleave', this._mouseLeaveHandler.bind(this));
-            }
+            /* За счёт того, что разделено поведения отображения операций и ховера,
+               в зависимости от события, которое произошло, то можно смело подписаться на все событие,
+               если его нет, то подписки не произодйдёт */
+            this._container.on('swipe', this._swipeHandler.bind(this))
+                           .on('tap', this._tapHandler.bind(this))
+                           .on('touchmove mousemove',this._mouseMoveHandler.bind(this))
+                           .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
             this.initEditInPlace();
             this.setItemsDragNDrop(this._options.itemsDragNDrop);
@@ -852,12 +845,14 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _mouseMoveHandler: function (e) {
             var $target = $(e.target),
-                target, targetKey;
+                target;
 
             target = this._findItemByElement($target);
 
             if (target.length) {
-               if(!this._touchSupport) {
+               /* Проверяем, чем был вызвано событие, мышью или движением пальца,
+                  чтобы в зависимости от этого понимать, надо ли показывать операции */
+               if(!e.originalEvent.touches) {
                   this._changeHoveredItem(target);
                }
             } else if (!this._isHoverControl($target)) {
@@ -1185,7 +1180,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return function() {
                var args = arguments;
                if (this._hasEditInPlace()) {
-                  this._getEditInPlace().endEdit(true).addCallback(function() {
+                  return this._getEditInPlace().endEdit(true).addCallback(function() {
                      return handler.apply(this, args)
                   }.bind(this));
                } else {
@@ -1383,7 +1378,9 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onAfterBeginEdit', model));
                      }.bind(this),
                      onChangeHeight: function() {
-                        this._showItemsToolbar(this._getElementData(this._editingItem.target));
+                        if (this._getItemsToolbar().isVisible()) {
+                           this._showItemsToolbar(this._getElementData(this._editingItem.target));
+                        }
                      }.bind(this),
                      onBeginAdd: function(event, options) {
                         event.setResult(this._notify('onBeginAdd', options));

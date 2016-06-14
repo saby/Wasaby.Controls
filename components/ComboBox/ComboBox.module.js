@@ -340,7 +340,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             });
          }
          if (this._isClearing) {
-            clearSelection.call(self);
+            clearSelection.call(this);
             this._isClearing = false;
          }
 
