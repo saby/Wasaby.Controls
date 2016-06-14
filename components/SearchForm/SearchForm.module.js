@@ -72,12 +72,18 @@ define('js!SBIS3.CONTROLS.SearchForm', [
          if (event.which === $ws._const.key.enter) {
             if (this._options.usePicker && this.isPickerVisible()) {
                SearchForm.superclass._keyUpBind.apply(this, arguments);
+            } else {
+               this.applySearch(true);
             }
-            this.applySearch(true);
             event.stopPropagation();
          } else {
             SearchForm.superclass._keyUpBind.apply(this, arguments);
          }
+      },
+
+      _onListItemSelect: function() {
+         SearchForm.superclass._onListItemSelect.apply(this, arguments);
+         this.applySearch(true);
       },
 
       _startSearch: function() {
