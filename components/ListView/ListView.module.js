@@ -959,9 +959,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
-            if (this._isSupportedItemsToolbar() && !this._touchSupport) {
+            if (this._isSupportedItemsToolbar()) {
          		if (target.container){
-                  this._showItemsToolbar(target);
+                  if (!this._touchSupport) {
+                     this._showItemsToolbar(target);
+                  }
                } else {
                   this._hideItemsToolbar();
                }
