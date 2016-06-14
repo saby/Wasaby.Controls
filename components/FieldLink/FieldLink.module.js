@@ -119,6 +119,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
        var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, DSMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
           /**
+           * @name SBIS3.CONTROLS.FieldLink#textValue
+           * @cfg {String} Хранит строку, сформированную из значений поля отображения выбранных элементов коллекции.
+           * @remark
+           * Значения в строке перечислены через запятую. Отображаемые значения в строке определяются с помощью опции {@link displayField} или {@link itemTemplate}.
+           * Опция доступна только на чтение. Запрещена двусторонняя привязка к полю контекста.
+           * @see getTexValue
+           * @see displayField
+           * @see itemTemplate
+           */
+          /**
            * @event onItemActivate Происходит при клике по выбранному элементу коллекции.
            * @param {$ws.proto.EventObject} eventObject Дескриптор события.
            * @param {Object} meta Объект, описывающий метаданные события. В его свойствах передаются идентификатор и экземпляр выбранного значения.
@@ -445,9 +455,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
            /**
             * Возвращает строку, сформированную из текстовых значений полей выбранных элементов коллекции.
             * @remark
-            * Метод формирует строку из значений полей, отображаемых в поле связи, перечисленных через запятую.
+            * Метод формирует строку из значений полей выбранных элементов коллекции. Значения в строке будут перечислены через запятую.
             * Отображаемые значения определяются с помощью опции {@link displayField} или {@link itemTemplate}.
             * @returns {string} Строка, сформированная из отображаемых значений в поле связи.
+            * @see texValue
             * @see displayField
             * @see itemTemplate
             */
