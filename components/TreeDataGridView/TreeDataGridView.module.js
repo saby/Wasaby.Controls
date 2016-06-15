@@ -116,7 +116,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              *     <option name="editArrow" type="boolean">false</option>
              * </pre>
              */
-            editArrow: true,
+            editArrow: false,
             /**
              * @cfg {String} Разрешено или нет перемещение элементов "Drag-and-Drop"
              * @variant "" Запрещено
@@ -444,7 +444,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
 
          if (this._options.allowEnterToFolder){
-            if (data.get(this._options.hierField + '@')) {
+            /* Не обрабатываем клики по чекбоку и по стрелке редактирования, они обрабатываются в elemClickHandler'e */
+            if ($target.hasClass('js-controls-TreeView__editArrow') || $target.hasClass('js-controls-ListView__itemCheckBox')) {
+               return false;
+            } else if (data.get(this._options.hierField + '@')) {
                this.setCurrentRoot(nodeID);
                this.reload();
             }
