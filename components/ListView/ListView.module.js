@@ -2365,7 +2365,11 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _callMoveOutHandler: function() {
          },
-         _callMoveHandler: function(e) {
+         _callMoveHandler: function(e, movable) {
+            var targetControl = $(e.target).wsControl();   
+            if(targetControl && this !== targetControl && $ws.helpers.instanceOfMixin(targetControl, 'SBIS3.CONTROLS.DragNDropMixin')) {
+               targetControl._callMoveHandler(e, movable);      
+            } 
             this._updateDragTarget(e);
             this._setAvatarPosition(e);
          },
