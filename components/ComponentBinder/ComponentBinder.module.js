@@ -16,7 +16,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             }),
             view = this._options.view,
             groupBy = view.getSearchGroupBy(searchParamName),
-            self = this;
+            self = this,
+            mode = searchMode;
          if (searchCrumbsTpl) {
             groupBy.breadCrumbsTpl = searchCrumbsTpl;
          }
@@ -50,17 +51,19 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          }
 
          view.once('onDataLoad', function(event, data){
-            var root = view._options.root !== undefined ? view._options.root : null,
-                newText;
+            var root;
 
             toggleSearchKbLayoutRevert.call(self, view, false);
             processDataKbLayoutRevert.call(self, data, view, searchForm, searchParamName);
-            //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
-            view._options._itemsProjection.setEventRaising(false);
-            //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
-            view._options._itemsProjection.setRoot(root);
-            view._options._curRoot = root;
-            view._options._itemsProjection.setEventRaising(true);
+            if (mode === 'root') {
+               root = view._options.root !== undefined ? view._options.root : null;
+               //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
+               view._options._itemsProjection.setEventRaising(false);
+               //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
+               view._options._itemsProjection.setRoot(root);
+               view._options._curRoot = root;
+               view._options._itemsProjection.setEventRaising(true);
+            }
          });
 
          view.reload(filter, view.getSorting(), 0).addCallback(function(){
