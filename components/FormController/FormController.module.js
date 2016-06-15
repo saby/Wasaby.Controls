@@ -316,13 +316,26 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
              self = this,
              def;
          if (this.validate()) {
-            def = this._dataSource.update(this._options.record);
-            if (!config.hideIndicator){
-               this._showLoadingIndicator();
+            if (this._options.record.isChanged() || self._newRecord) {
+               def = this._dataSource.update(this._options.record);
+               if (!config.hideIndicator) {
+                  this._showLoadingIndicator();
+               }
+               dResult.dependOn(def.addCallbacks(function (result) {
+                  self._notify('onUpdateModel', self._options.record, self._newRecord);
+                  self._newRecord = false;
+                  return result;
+               }, function (error) {
+                  if (!config.hideErrorDialog) {
+                     self._processError(error);
+                  }
+                  self._saving = false;
+                  return error;
+               }));
+            } else {
+               dResult.callback(true);
             }
-            dResult.dependOn(def.addCallbacks(function (result) {
-               self._notify('onUpdateModel', self._options.record, self._newRecord);
-               self._newRecord = false;
+            dResult.addCallback(function(result){
                if (config.closePanelAfterSubmit) {
                   self._closePanel(true);
                }
@@ -330,15 +343,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                   self._saving = false;
                }
                return result;
-            }, function (error) {
-               if (!config.hideErrorDialog){
-                  self._processError(error);
-               }
-               self._saving = false;
-               return error;
-            }));
-            dResult.addBoth(function (r) {
-               self._hideLoadingIndicator();
+            }).addBoth(function (r) {
+                  self._hideLoadingIndicator();
                return r;
             });
          }
