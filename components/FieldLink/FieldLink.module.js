@@ -717,14 +717,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           setSelectedItem: function(item) {
              var hasRequiredFields,
-                 key, displayValue;
+                 isModel = item  && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model');
 
              /* Т.к. ключ может быть как 0, а ключевое поле как '', то надо проверять на null/undefined */
              function isEmpty(val) {
                 return val === null || val === undefined;
              }
 
-             if(item  && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')) {
+             if(isModel) {
                 /* Проверяем запись на наличие ключевых полей */
                 hasRequiredFields = !isEmpty(item.get(this._options.displayField)) && !isEmpty(item.get(this._options.keyField));
 
@@ -743,7 +743,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    такое может произойти, когда запись сбрасывается через контекст */
              if( hasRequiredFields ||
                  item === null  ||
-                (!hasRequiredFields && !this._isEmptySelection()) ) {
+                (!hasRequiredFields && !this._isEmptySelection() && isModel) ) {
                 FieldLink.superclass.setSelectedItem.apply(this, arguments);
              }
           },
