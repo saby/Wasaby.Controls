@@ -14,6 +14,10 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
             $protected: {
                 _options: {
                    /**
+                    * @cfg {Boolean} Обрабатывать двойной клик по элементу коллекции
+                    */
+                   allowDblClick: true,
+                   /**
                     * @cfg {} Шаблон отображения каждого элемента коллекции
                     */
                     itemTemplate: ''
@@ -43,7 +47,7 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
 
             _bindItemSelect: function () {
                 this._picker.getContainer().bind('mouseup', this._clickItemHandler.bind(this));
-                this._picker.getContainer().bind('dblclick', this._dblClickItemHandler.bind(this));
+                this._picker.getContainer().bind('dblclick', this._dblClickItem.bind(this));
             },
            _clickItemHandler : function (e) {
               var row = $(e.target).closest('.' + self._getItemClass());
@@ -52,7 +56,12 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
                  self.hidePicker();
               }
             },
-           _dblClickItemHandler : function(){
+           _dblClickItem : function(e){
+              if (this._options.allowDblClick){
+                 this._dblClickItemHandler(e);
+              }
+           },
+           _dblClickItemHandler : function(e){
               e.stopImmediatePropagation();
               /*Method can be implemented*/
            },
