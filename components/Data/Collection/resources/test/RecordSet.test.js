@@ -43,7 +43,7 @@ define([
                   'Ид': 8,
                   'Фамилия': 'Арбузнов'
                }];
-            },
+            };
             getSbisItems = function() {
                return {
                   d: [
@@ -139,9 +139,21 @@ define([
                      rawData: items
                   });
                rs.each(function(item) {
-                  for (var i = 0; i < declaration.length; i++) {
+                  var given,
+                     expect,
+                     i;
+                  for (i = 0; i < declaration.length; i++) {
                      assert.isTrue(item.has(declaration[i].name));
-                     assert.strictEqual(item.get(declaration[i].name), declaration[i].defaultValue);
+
+                     given = item.get(declaration[i].name);
+                     expect = declaration[i].defaultValue;
+                     if (given instanceof Date) {
+                        given = expect.toString();
+                     }
+                     if (expect instanceof Date) {
+                        expect = expect.toString();
+                     }
+                     assert.strictEqual(given, expect);
                   }
                });
             });
@@ -314,20 +326,24 @@ define([
 
          describe('.getFormat()', function () {
             it('should build the format from json raw data', function () {
+               var rs = new RecordSet({
+                  rawData: items,
+                  initFormatByRawData: true
+               });
                var format = rs.getFormat();
                assert.strictEqual(format.getCount(), 2);
                assert.strictEqual(format.at(0).getName(), 'Ид');
                assert.strictEqual(format.at(1).getName(), 'Фамилия');
             });
-            it('should build the empty format from empty json raw data', function () {
+            it('should return null for empty raw data', function () {
                var rs = new RecordSet();
-               var format = rs.getFormat();
-               assert.strictEqual(format.getCount(), 0);
+               assert.isNull(rs.getFormat());
             });
             it('should build the format from sbis raw data', function () {
                var data = getSbisItems(),
                   rs = new RecordSet({
                      rawData: data,
+                     initFormatByRawData: true,
                      adapter: 'adapter.sbis'
                   }),
                   format = rs.getFormat();
@@ -398,6 +414,7 @@ define([
                var idProperty = 'Ид',
                   rs = new RecordSet({
                      rawData: getSbisItems(),
+                     initFormatByRawData: true,
                      adapter: 'adapter.sbis',
                      idProperty: idProperty
                   }),
@@ -423,7 +440,11 @@ define([
                });
             });
             it('should add the field from the instance', function () {
-               var fieldName = 'login',
+               var rs = new RecordSet({
+                     rawData: items,
+                     initFormatByRawData: true
+                  }),
+                  fieldName = 'login',
                   fieldDefault = 'username';
                rs.addField(FieldsFactory.create({
                   name: fieldName,
@@ -440,7 +461,11 @@ define([
                });
             });
             it('should add the field with the value', function () {
-               var fieldName = 'login',
+               var rs = new RecordSet({
+                     rawData: items,
+                     initFormatByRawData: true
+                  }),
+                  fieldName = 'login',
                   fieldValue = 'root';
                rs.addField({name: fieldName, type: 'string', defaultValue: 'user'}, 0, fieldValue);
 
@@ -450,11 +475,19 @@ define([
                });
             });
             it('should throw an error if the field is already defined', function () {
+               var rs = new RecordSet({
+                  rawData: items,
+                  initFormatByRawData: true
+               });
                assert.throw(function() {
                   rs.addField({name: 'Фамилия', type: 'string'});
                });
             });
             it('should throw an error if add the field twice', function () {
+               var rs = new RecordSet({
+                  rawData: items,
+                  initFormatByRawData: true
+               });
                rs.addField({name: 'new', type: 'string'});
                assert.throw(function() {
                   rs.addField({name: 'new', type: 'string'});
@@ -467,6 +500,7 @@ define([
                var fieldName = 'Фамилия',
                   rs = new RecordSet({
                      adapter: 'adapter.sbis',
+                     initFormatByRawData: true,
                      rawData: getSbisItems()
                   });
                rs.removeField(fieldName);
@@ -480,7 +514,9 @@ define([
                });
             });
             it('should throw an error if adapter doesn\'t support fields detection', function () {
-               var rs = new RecordSet(),
+               var rs = new RecordSet({
+                     initFormatByRawData: true
+                  }),
                   fieldName = 'Фамилия';
                assert.throw(function() {
                   rs.removeField(fieldName);
@@ -489,6 +525,7 @@ define([
             it('should throw an error for not defined field', function () {
                var rs = new RecordSet({
                   adapter: 'adapter.sbis',
+                  initFormatByRawData: true,
                   rawData: getSbisItems()
                });
                assert.throw(function() {
@@ -498,6 +535,7 @@ define([
             it('should throw an error if remove the field twice', function () {
                var rs = new RecordSet({
                   adapter: 'adapter.sbis',
+                  initFormatByRawData: true,
                   rawData: getSbisItems()
                });
                rs.removeField('Фамилия');
@@ -509,6 +547,10 @@ define([
 
          describe('.removeFieldAt()', function () {
             it('should throw an error if adapter doesn\'t support fields indexes', function () {
+               var rs = new RecordSet({
+                  rawData: items,
+                  initFormatByRawData: true
+               });
                assert.throw(function() {
                   rs.removeFieldAt(1);
                });
@@ -518,6 +560,7 @@ define([
                   fieldName = 'title',
                   rs = new RecordSet({
                      adapter: 'adapter.sbis',
+                     initFormatByRawData: true,
                      rawData: getSbisItems()
                   });
                rs.removeFieldAt(fieldIndex);
@@ -533,6 +576,7 @@ define([
             it('should throw an error for not exists index', function () {
                assert.throw(function() {
                   var rs = new Record({
+                     initFormatByRawData: true,
                      adapter: 'adapter.sbis'
                   });
                   rs.removeFieldAt(0);

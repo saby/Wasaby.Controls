@@ -881,10 +881,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       _isEqualItemsFormat: function (items, replace) {
          if (items && $ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
-            if (replace) {
-               return true;
-            }
-            if (this._getFormat().isEqual(items.getFormat())) {
+            if (replace || this._hasEqualFormat(items)) {
                return true;
             }
             Utils.logger.info(this._moduleName +': the outer recordset format is not equal to the recordset format');
@@ -904,7 +901,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          }
          if ((checkFormat === undefined || checkFormat === true) &&
             !this._doNotFormatCheck &&
-            !this._getFormat().isEqual(item.getFormat())
+            !this._hasEqualFormat(item)
          ) {
             Utils.logger.info(this._moduleName + ': the record format is not equal to the recordset format');
          }

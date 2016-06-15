@@ -38,8 +38,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetRecord', [
             throw new TypeError('Argument data should be an instance of SBIS3.CONTROLS.Data.Record');
          }
          RecordSetRecord.superclass.constructor.call(this, data);
-         this._data = data;
-         this._format = data.getFormat();
+         GenericFormatMixin.constructor.call(this, data);
       },
 
       //region SBIS3.CONTROLS.Data.Adapter.IRecord
@@ -76,24 +75,33 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetRecord', [
          return record;
       },
 
+      getFields: function () {
+         var fields = [];
+         this._data.each(function(name) {
+            fields.push(name);
+         });
+         return fields;
+      },
+
       addField: function(format, at) {
          this._data.addField(format, at);
-         this._format.add(format, at);
       },
 
       removeField: function(name) {
          this._data.removeField(name);
-         this._format.removeField(name);
       },
 
       removeFieldAt: function(index) {
          this._data.removeFieldAt(index);
-         this._format.removeAt(index);
-      }
+      },
 
       //endregion SBIS3.CONTROLS.Data.Adapter.IRecord
 
       //region Protected methods
+
+      _getFieldsFormat: function() {
+         return this._data.getFormat();
+      }
 
       //endregion Protected methods
    });

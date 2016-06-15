@@ -59,6 +59,7 @@ define([
                   parent: 1
                }
                ],
+               initFormatByRawData: true,
                idProperty: 'id'
             });
 
@@ -73,6 +74,7 @@ define([
                   'id': '3,A',
                   'name': 'Петров'
                }],
+               initFormatByRawData: true,
                idProperty: 'id'
             });
 
@@ -109,6 +111,7 @@ define([
                   parent$: false
                }
                ],
+               initFormatByRawData: true,
                idProperty: 'id'
             });
 

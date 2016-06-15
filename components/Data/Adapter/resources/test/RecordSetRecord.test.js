@@ -12,6 +12,7 @@ define([
 
       beforeEach(function () {
          data = new Record({
+            initFormatByRawData: true,
             rawData: {
                id: 1,
                name: 'Иванов'
@@ -52,12 +53,22 @@ define([
       });
 
       describe('.set()', function () {
-         it('should set the property value', function () {
+         it('should set the exists property value', function () {
             adapter.set('id', 20);
             assert.strictEqual(
                20,
                data.get('id')
             );
+         });
+
+         it('should set the not exists property value', function () {
+            var data = new Record({
+                  rawData: {
+                     id: 1,
+                     name: 'test'
+                  }
+               }),
+               adapter = new RecordSetRecordAdapter(data);
 
             adapter.set('a', 5);
             assert.strictEqual(
@@ -172,12 +183,6 @@ define([
             assert.throw(function () {
                adapter.addField(null);
             });
-            assert.throw(function () {
-               adapter.addField({
-                  type: 'string',
-                  name: 'new'
-               });
-            });
          });
       });
 
@@ -217,6 +222,7 @@ define([
          it('should remove exists field', function () {
             var data = new Record({
                   rawData: getRawData(),
+                  initFormatByRawData: true,
                   adapter: 'adapter.sbis'
                }),
                adapter = new RecordSetRecordAdapter(data),
@@ -233,6 +239,7 @@ define([
          it('should throw an error', function () {
             var data = new Record({
                   rawData: getRawData(),
+                  initFormatByRawData: true,
                   adapter: 'adapter.sbis'
                }),
                adapter = new RecordSetRecordAdapter(data);

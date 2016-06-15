@@ -152,6 +152,25 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
       _$format: null,
 
       /**
+       * @cfg {Boolean>} Инициализировать формат полей по сырым данным
+       * @name SBIS3.CONTROLS.Data.FormattableMixin#initFormatByRawData
+       * @example
+       * Если опция установлена в true, то формат будет создан по набору полей в сырых данных:
+       * <pre>
+       *    var fruit = new Record({
+       *       initFormatByRawData: true,
+       *       rawData: {
+       *          id: 1,
+       *          title: 'Apple'
+       *       }
+       *    });
+       *    fruit.getFormat().at(1).getName();//Apple
+       *    fruit.getFormat().at(1).getType();//String
+       * </pre>
+       */
+      _$initFormatByRawData: false,
+
+      /**
        * @member {SBIS3.CONTROLS.Data.Adapter.ITable|SBIS3.CONTROLS.Data.Adapter.IRecord} Адаптер для cырых данных
        */
       _rawDataAdapter: null,
@@ -161,10 +180,29 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        */
       _rawDataFields: null,
 
-      /**
-       *@member {Boolean} Формат был задан пользователем явно
-       */
-      _directFormat: false,
+      constructor: function $FormattableMixin(options) {
+         //FIXME: поддержка старого extend
+         if (!this._$format && this._options && this._options.format) {
+            this._$format = this._options.format;
+         }
+
+         if (!this._$format && this._$initFormatByRawData) {
+            this._$format = this._buildFormatByRawData();
+         }
+         if (this._$format) {
+            var adapter = this._getRawDataAdapter(),
+               fields = adapter.getFields();
+               this._getFormat(true).each(function(fieldFormat) {
+                  try {
+                     if (Array.indexOf(fields, fieldFormat.getName()) === -1) {
+                        adapter.addField(fieldFormat);
+                     }
+                  } catch (e) {
+                     Utils.logger.info(this._moduleName + '::constructor(): can\'t add raw data field (' + e.message + ')');
+                  }
+               }, this);
+         }
+      },
 
       //region SBIS3.CONTROLS.Data.SerializableMixin
 
@@ -188,29 +226,9 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
          };
       },
 
+      //endregion SBIS3.CONTROLS.Data.SerializableMixin
+
       //region Public methods
-
-      constructor: function $FormattableMixin(options) {
-         //FIXME: поддержка старого extend
-         if (!this._$format && this._options && this._options.format) {
-            this._$format = this._options.format;
-         }
-
-         if(this._$format) {
-            this._directFormat = true;
-            var adapter = this._getRawDataAdapter(),
-               fields = adapter.getFields();
-            this._getFormat().each(function(fieldFormat) {
-               try {
-                  if (Array.indexOf(fields, fieldFormat.getName()) === -1) {
-                     adapter.addField(fieldFormat);
-                  }
-               } catch (e) {
-                  Utils.logger.info(this._moduleName + '::constructor(): can\'t add raw data field (' + e.message + ')');
-               }
-            }, this);
-         }
-      },
 
       /**
        * Возвращает данные в "сыром" виде
@@ -273,7 +291,8 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @see format
        */
       getFormat: function () {
-         return this._getFormat().clone();
+         var format = this._getFormat();
+         return format ? format.clone() : format;
       },
 
       /**
@@ -299,7 +318,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        */
       addField: function(format, at) {
          format = this._buildField(format);
-         this._getFormat().add(format, at);
+         this._getFormat(true).add(format, at);
          this._getRawDataAdapter().addField(format, at);
          this._resetRawDataFields();
       },
@@ -317,7 +336,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * </pre>
        */
       removeField: function(name) {
-         this._getFormat().removeField(name);
+         this._getFormat(true).removeField(name);
          this._getRawDataAdapter().removeField(name);
          this._resetRawDataFields();
       },
@@ -335,7 +354,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * </pre>
        */
       removeFieldAt: function(at) {
-         this._getFormat().removeAt(at);
+         this._getFormat(true).removeAt(at);
          this._getRawDataAdapter().removeFieldAt(at);
          this._resetRawDataFields();
       },
@@ -425,13 +444,14 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
 
       /**
        * Возвращает формат полей
+       * @param {Boolean} [build=false] Принудительно создать, если не задан
        * @returns {SBIS3.CONTROLS.Data.Format.Format}
        * @protected
        */
-      _getFormat: function () {
+      _getFormat: function (build) {
          if (
-            !this._$format ||
-            !$ws.helpers.instanceOfModule(this._$format, 'SBIS3.CONTROLS.Data.Format.Format')
+            build ||
+            this._$format && !$ws.helpers.instanceOfModule(this._$format, 'SBIS3.CONTROLS.Data.Format.Format')
          ) {
             this._$format = this._buildFormat(this._$format);
          }
@@ -443,7 +463,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @protected
        */
       _clearFormat: function (){
-         if (this._isDirectFormat()) {
+         if (this._hasFormat()) {
             throw new Error(this._moduleName + ': format can\'t be cleared because it\'s defined directly.');
          }
          this._$format = null;
@@ -454,8 +474,8 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @returns {Boolean}
        * @protected
        */
-      _isDirectFormat: function () {
-         return this._directFormat;
+      _hasFormat: function () {
+         return !!this._$format;
       },
 
       /**
@@ -465,17 +485,6 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @protected
        */
       _buildFormat: function(format) {
-         if (!format) {
-            var fields = this._getRawDataFields();
-            if (fields && fields.length) {
-               var i;
-               format = new Format();
-               for (i = 0; i < fields.length; i++) {
-                  format.add(this._getRawDataFormat(fields[i]));
-               }
-            }
-         }
-
          if (format && Object.getPrototypeOf(format) === Array.prototype) {
             format = FormatsFactory.create(format);
          }
@@ -485,6 +494,53 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
          }
 
          return format;
+      },
+
+      /**
+       * Строит формат полей сырым данным
+       * @returns {SBIS3.CONTROLS.Data.Format.Format}
+       * @protected
+       */
+      _buildFormatByRawData: function() {
+         var format = new Format(),
+            fields = this._getRawDataFields();
+         if (fields && fields.length) {
+            var i;
+            for (i = 0; i < fields.length; i++) {
+               format.add(this._getRawDataFormat(fields[i]));
+            }
+         }
+         return format;
+      },
+
+      /**
+       * Возвращает признак, что другой объект имеет такой же формат полей
+       * @param {SBIS3.CONTROLS.Data.FormattableMixin} some
+       * @returns {Boolean}
+       * @protected
+       */
+      _hasEqualFormat: function (some) {
+         var format = this._getFormat(),
+            someFormat = some._getFormat();
+         return format ? format.isEqual(someFormat) : format === someFormat;
+      },
+
+      /**
+       * Возвращает формат поля с указанным названием
+       * @param {String} name Название поля
+       * @return {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.UniversalField}
+       * @protected
+       */
+      _getFieldFormat: function(name) {
+         var fields = this._getFormat();
+         if (fields) {
+            var index = fields.getFieldIndex(name);
+            if (index > -1) {
+               return fields.at(index);
+            }
+            throw new ReferenceError(this._moduleName + ': field "' + name + '" is not defined in the format');
+         }
+         return this._getRawDataAdapter().getSharedFormat(name);
       },
 
       /**

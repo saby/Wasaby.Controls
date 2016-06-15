@@ -240,6 +240,15 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          FormattableMixin.removeFieldAt.call(this, at);
       },
 
+      _getFieldFormat: function(name) {
+         var owner = this.getOwner();
+         if (owner) {
+            return owner._getFieldFormat(name);
+         } else {
+            return FormattableMixin._getFieldFormat.call(this, name);
+         }
+      },
+
       /**
        * Создает адаптер для сырых данных
        * @returns {SBIS3.CONTROLS.Data.Adapter.IRecord}
@@ -423,7 +432,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          try {
             return Factory.cast(
                adapter.get(name),
-               adapter.getSharedFormat(name),
+               this._getFieldFormat(name),
                this.getAdapter()
             );
          } catch (e) {
@@ -439,15 +448,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        */
       _setRawDataValue: function(name, value) {
          var adapter = this._getRawDataAdapter(),
-            format;
-         try {
-            format = adapter.getSharedFormat(name);
-         } catch (e) {
-            if (!(e instanceof ReferenceError)) {
-               throw e;
-            }
-            format = 'String';
-         }
+            format = this._getFieldFormat(name);
 
          adapter.set(
             name,

@@ -429,6 +429,10 @@ define([
 
          describe('.getFormat()', function () {
             it('should build the format from raw data', function () {
+               var record = new Record({
+                  initFormatByRawData: true,
+                  rawData: recordData
+               });
                var format = record.getFormat();
                assert.strictEqual(format.getCount(), Object.keys(recordData).length);
                format.each(function(item) {
@@ -464,7 +468,11 @@ define([
 
          describe('.addField()', function () {
             it('should add the field from the declaration', function () {
-               var index = 1,
+               var record = new Record({
+                     rawData: recordData,
+                     initFormatByRawData: true
+                  }),
+                  index = 1,
                   fieldName = 'login',
                   fieldDefault = 'user';
                record.addField({
@@ -479,7 +487,11 @@ define([
                assert.strictEqual(record.getRawData()[fieldName], fieldDefault);
             });
             it('should add the field from the instance', function () {
-               var fieldName = 'login',
+               var record = new Record({
+                     rawData: recordData,
+                     initFormatByRawData: true
+                  }),
+                  fieldName = 'login',
                   fieldDefault = 'username';
                record.addField(FieldsFactory.create({
                   name: fieldName,
@@ -502,11 +514,19 @@ define([
                assert.strictEqual(record.getRawData()[fieldName], fieldValue);
             });
             it('should throw an error if the field is already defined', function () {
+               var record = new Record({
+                  rawData: recordData,
+                  initFormatByRawData: true
+               });
                assert.throw(function() {
                   record.addField({name: 'title', type: 'string'});
                });
             });
             it('should throw an error if add the field twice', function () {
+               var record = new Record({
+                  rawData: recordData,
+                  initFormatByRawData: true
+               });
                record.addField({name: 'new', type: 'string'});
                assert.throw(function() {
                   record.addField({name: 'new', type: 'string'});
@@ -515,6 +535,7 @@ define([
             it('should throw an error if the record has an owner', function () {
                record = new Record({
                   rawData: recordData,
+                  initFormatByRawData: true,
                   owner: {}
                });
                assert.throw(function() {
@@ -522,14 +543,22 @@ define([
                });
             });
             it('should add the empty record field', function () {
-               var fieldName = 'rec';
+               var record = new Record({
+                     rawData: recordData,
+                     initFormatByRawData: true
+                  }),
+                  fieldName = 'rec';
                record.addField({name: fieldName, type: 'record'});
 
                assert.isNull(record.get(fieldName));
                assert.isNull(record.getRawData()[fieldName]);
             });
             it('should add the filled record field', function () {
-               var fieldName = 'rec';
+               var record = new Record({
+                     rawData: recordData,
+                     initFormatByRawData: true
+                  }),
+                  fieldName = 'rec';
                record.addField(
                   {name: fieldName, type: 'record'},
                   0,
@@ -540,14 +569,22 @@ define([
                assert.strictEqual(record.getRawData()[fieldName].a, 1);
             });
             it('should add the empty recordset field', function () {
-               var fieldName = 'rs';
+               var record = new Record({
+                     rawData: recordData,
+                     initFormatByRawData: true
+                  }),
+                  fieldName = 'rs';
                record.addField({name: fieldName, type: 'recordset'});
 
                assert.isNull(record.get(fieldName));
                assert.isNull(record.getRawData()[fieldName]);
             });
             it('should add the filled recordset field', function () {
-               var fieldName = 'rs';
+               var record = new Record({
+                     rawData: recordData,
+                     initFormatByRawData: true
+                  }),
+                  fieldName = 'rs';
                record.addField(
                   {name: fieldName, type: 'recordset'},
                   0,
@@ -561,6 +598,10 @@ define([
 
          describe('.removeField()', function () {
             it('should remove the exists field', function () {
+               var record = new Record({
+                  rawData: recordData,
+                  initFormatByRawData: true
+               });
                var fieldName = 'title';
                record.removeField(fieldName);
 
@@ -570,11 +611,19 @@ define([
                assert.isUndefined(record.getRawData()[fieldName]);
             });
             it('should throw an error for not defined field', function () {
+               var record = new Record({
+                  rawData: recordData,
+                  initFormatByRawData: true
+               });
                assert.throw(function() {
                   record.removeField('some');
                });
             });
             it('should throw an error if remove the field twice', function () {
+               var record = new Record({
+                  rawData: recordData,
+                  initFormatByRawData: true
+               });
                record.removeField('title');
                assert.throw(function() {
                   record.removeField('title');
@@ -593,6 +642,10 @@ define([
 
          describe('.removeFieldAt()', function () {
             it('should throw an error if adapter doesn\'t support fields indexes', function () {
+               var record = new Record({
+                  rawData: recordData,
+                  initFormatByRawData: true
+               });
                assert.throw(function() {
                   record.removeFieldAt(1);
                });
@@ -602,7 +655,8 @@ define([
                   fieldName = 'title',
                   record = new Record({
                      adapter: 'adapter.sbis',
-                     rawData: getRecordSbisData()
+                     rawData: getRecordSbisData(),
+                     initFormatByRawData: true
                   });
                record.clone();
                record.removeFieldAt(fieldIndex);
@@ -623,6 +677,7 @@ define([
             it('should throw an error if the record has an owner', function () {
                record = new Record({
                   adapter: 'adapter.sbis',
+                  initFormatByRawData: true,
                   rawData: getRecordSbisData(),
                   owner: {}
                });
