@@ -772,7 +772,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       add: function (item, at) {
-         this._checkItem(item, !!this._$format || this.getCount() > 0);
+         this._checkItem(item, this._hasFormat() || this.getCount() > 0);
          this._getRawDataAdapter().add(item.getRawData(), at);
          RecordSet.superclass.add.call(this, item, at);
          item.setOwner(this);
@@ -848,7 +848,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       _addItemsToRawData: function (items, at, replace) {
          var isRecordSet  = items && $ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet'),
             isEqualFormat = this._isEqualItemsFormat(items, replace),
-            hasFormat = !!this._$format,
+            hasFormat = this._hasFormat(),
             hasItems = replace ? false : this.getCount() > 0,
             adapter = this._getRawDataAdapter(),
             item;

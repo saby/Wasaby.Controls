@@ -14,7 +14,6 @@ define([
 
       beforeEach(function () {
          data = new RecordSet({
-            initFormatByRawData: true,
             rawData: [{
                id: 1,
                name: 'Иванов'
@@ -327,7 +326,6 @@ define([
          it('should remove exists field', function () {
             var data = new RecordSet({
                   rawData: getRawData(),
-                  initFormatByRawData: true,
                   adapter: 'adapter.sbis'
                }),
                adapter = new RecordSetTableAdapter(data),
@@ -344,7 +342,6 @@ define([
          it('should throw an error', function () {
             var data = new RecordSet({
                   rawData: getRawData(),
-                  initFormatByRawData: true,
                   adapter: 'adapter.sbis'
                }),
                adapter = new RecordSetTableAdapter(data);

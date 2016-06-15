@@ -152,23 +152,9 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
       _$format: null,
 
       /**
-       * @cfg {Boolean>} Инициализировать формат полей по сырым данным
-       * @name SBIS3.CONTROLS.Data.FormattableMixin#initFormatByRawData
-       * @example
-       * Если опция установлена в true, то формат будет создан по набору полей в сырых данных:
-       * <pre>
-       *    var fruit = new Record({
-       *       initFormatByRawData: true,
-       *       rawData: {
-       *          id: 1,
-       *          title: 'Apple'
-       *       }
-       *    });
-       *    fruit.getFormat().at(1).getName();//title
-       *    fruit.getFormat().at(1).getType();//String
-       * </pre>
+       * @member {SBIS3.CONTROLS.Data.Format.Format} Формат полей (собранный из опции или в результате манипуляций)
        */
-      _$initFormatByRawData: false,
+      _format: null,
 
       /**
        * @member {SBIS3.CONTROLS.Data.Adapter.ITable|SBIS3.CONTROLS.Data.Adapter.IRecord} Адаптер для cырых данных
@@ -186,9 +172,6 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
             this._$format = this._options.format;
          }
 
-         if (!this._$format && this._$initFormatByRawData) {
-            this._$format = this._buildFormatByRawData();
-         }
          if (this._$format) {
             var adapter = this._getRawDataAdapter(),
                fields = adapter.getFields();
@@ -291,8 +274,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @see format
        */
       getFormat: function () {
-         var format = this._getFormat();
-         return format ? format.clone() : format;
+         return this._getFormat(true).clone();
       },
 
       /**
@@ -449,13 +431,14 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @protected
        */
       _getFormat: function (build) {
-         if (
-            build ||
-            this._$format && !$ws.helpers.instanceOfModule(this._$format, 'SBIS3.CONTROLS.Data.Format.Format')
-         ) {
-            this._$format = this._buildFormat(this._$format);
+         if (!this._format && this._$format) {
+            this._format = this._buildFormat(this._$format);
          }
-         return this._$format;
+         if (build && !this._format) {
+            this._format = this._buildFormatByRawData();
+         }
+
+         return this._format;
       },
 
       /**
@@ -466,7 +449,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
          if (this._hasFormat()) {
             throw new Error(this._moduleName + ': format can\'t be cleared because it\'s defined directly.');
          }
-         this._$format = null;
+         this._format = null;
       },
 
       /**
@@ -475,7 +458,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @protected
        */
       _hasFormat: function () {
-         return !!this._$format;
+         return !!this._format;
       },
 
       /**
@@ -532,14 +515,15 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @protected
        */
       _getFieldFormat: function(name) {
-         var fields = this._getFormat();
-         if (fields) {
+         if (this._$format) {
+            var fields = this._getFormat(true);
             var index = fields.getFieldIndex(name);
             if (index > -1) {
                return fields.at(index);
             }
             throw new ReferenceError(this._moduleName + ': field "' + name + '" is not defined in the format');
          }
+
          return this._getRawDataAdapter().getSharedFormat(name);
       },
 
