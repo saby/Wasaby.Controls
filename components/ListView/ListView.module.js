@@ -1356,16 +1356,18 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onBeginEdit', model));
                      }.bind(this),
                      onAfterBeginEdit: function(event, model) {
-                        var itemsActions;
+                        var itemsInstances;
                         if (this._options.editMode.indexOf('toolbar') !== -1) {
                            this._getItemsToolbar().unlockToolbar();
                            //Отображаем кнопки редактирования
                            this._getItemsToolbar().showEditActions();
                            if (!model.isStored()) {
-                              itemsActions = this._getItemsToolbar().getItemsActions().getItemsInstances();
-                              if (itemsActions.delete) {
-                                 this._lastDeleteActionState = itemsActions.delete.isVisible();
-                                 itemsActions.delete.hide();
+                              if (this.getItemsActions()) {
+                                 itemsInstances = this.getItemsActions().getItemsInstances();
+                                 if (itemsInstances.delete) {
+                                    this._lastDeleteActionState = itemsInstances.delete.isVisible();
+                                    itemsInstances.delete.hide();
+                                 }
                               }
                            }
                            //Отображаем itemsToolbar для редактируемого элемента и фиксируем его
@@ -1392,7 +1394,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            this._getItemsToolbar().unlockToolbar();
                            this._getItemsToolbar().hideEditActions();
                            if (this._lastDeleteActionState !== undefined) {
-                              this._getItemsToolbar().getItemsActions().getItemsInstances().delete.toggle(this._lastDeleteActionState);
+                              this.getItemsActions().getItemsInstances().delete.toggle(this._lastDeleteActionState);
                               this._lastDeleteActionState = undefined;
                            }
                            this._hideItemsToolbar();
