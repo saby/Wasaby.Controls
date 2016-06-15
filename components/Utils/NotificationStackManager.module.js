@@ -29,17 +29,28 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
 
             },
             _items: [],
-            _hiddenItems: []
+            _hiddenItems: [],
+
+            //Минимальный z-index сделаем 100
+            _zIndex: 100
          },
          $constructor : function(){
          },
 
          init: function() {
             module.superclass.init.call(this);
+
             var self = this;
+
+            this._zIndex =  Math.max($ws.single.WindowManager.getMaxZIndex() + 1, 100);
 
             $(window).on('resize', function(){
                self._checkCapacity();
+            });
+
+            this.subscribeTo($ws.single.EventBus.globalChannel(), 'FloatAreaZIndexChanged', function(e, zIndex){
+               self._zIndex = Math.max(zIndex + 1, 100);
+               self._updatePositions();
             });
          },
 
@@ -71,8 +82,7 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
                top: '',
                left: '',
                bottom: '-1000px',
-               right: '-1000px',
-               'z-index': '10000'
+               right: '-1000px'
             });
             //TODO Конец костыля
 
@@ -149,7 +159,8 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
 
                controlContainer.css({
                   bottom: bottom,
-                  right: RIGHT
+                  right: RIGHT,
+                  'z-index': this._zIndex
                });
 
                bottom += controlContainer.height() + BLOCK_MARGIN;
