@@ -39,6 +39,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             key = expandedItem.getContents().getId(),
             ladderDecorator = this._decorators.getByName('ladder');
          this._closeAllExpandedNode(key);
+         this._createFolderFooter(key);
          this._options.openedPath[expandedItem.getContents().getId()] = true;
          if (this._dataSource && !this._loadedNodes[key] && this._options.partialyReload) {
             this._toggleIndicator(true);
@@ -151,6 +152,9 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             return typeof (more) !== 'boolean' ? more > (this._folderOffsets[id] + this._options.pageSize) : !!more;
          }
       },
+      //********************************//
+      //       FolderFooter_Start       //
+      //********************************//
       /**
        * Создать футер для веток
        * @param key
@@ -193,6 +197,17 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             }
          }
       },
+      _createAllFolderFooters: function() {
+         $ws.helpers.forEach(this._options.openedPath, function(val, key) {
+            //Рисуем футер, только если узел есть в проекции, иначе он скрыт и футер рисовать не нужно
+            if (this._getItemProjectionByItemId(key)) {
+               this._createFolderFooter(key);
+            }
+         },this);
+      },
+      //********************************//
+      //        FolderFooter_End        //
+      //********************************//
       _getLastChildByParent: function(itemsContainer, parent) {
          var
              lastContainer,
