@@ -1627,23 +1627,38 @@ define('js!SBIS3.CONTROLS.ListView',
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
          //*********************************//
          _drawItemsCallback: function () {
+            var
+               hoveredItem,
+               hoveredItemContainer,
+               hash,
+               projItem;
             ListView.superclass._drawItemsCallback.apply(this, arguments);
-            var hoveredItem = this.getHoveredItem().container;
-
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
             }
             this._drawSelectedItems(this._options.selectedKeys);
 
-            /* Если после перерисовки выделенный элемент удалился из DOM дерава,
+            hoveredItem = this.getHoveredItem();
+            hoveredItemContainer = hoveredItem.container;
+            /*TODO сейчас зачем то в ховеред итем хранится ссылка на DOM элемент
+            * но этот элемент может теряться в ходе перерисовок. Выписана задача по которой мы будем
+            * хранить только идентификатор и данный код станет не нужен*/
+            if (hoveredItemContainer) {
+               hash = hoveredItemContainer.attr('data-hash');
+               projItem = this._getItemsProjection().getByHash(hash);
+               hoveredItemContainer = this._getDomElementByItem(projItem);
+            }
+
+             /* Если после перерисовки выделенный элемент удалился из DOM дерава,
                то событие mouseLeave не сработает, поэтому вызовем руками метод,
                если же он остался, то обновим положение кнопки опций*/
-            if(hoveredItem){
-               if(!$.contains(this._getItemsContainer()[0], hoveredItem[0])) {
+            if(hoveredItemContainer){
+               if(!$.contains(this._getItemsContainer()[0], hoveredItemContainer[0])) {
                   this._mouseLeaveHandler();
                }else {
+                  hoveredItem.container = hoveredItemContainer;
+                  this._setHoveredItem(hoveredItem);
                   this._updateItemsToolbar();
-                  hoveredItem.addClass('controls-ListView__hoveredItem');
                }
             }
 
