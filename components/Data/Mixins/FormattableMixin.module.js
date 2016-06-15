@@ -164,7 +164,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        *          title: 'Apple'
        *       }
        *    });
-       *    fruit.getFormat().at(1).getName();//Apple
+       *    fruit.getFormat().at(1).getName();//title
        *    fruit.getFormat().at(1).getType();//String
        * </pre>
        */
