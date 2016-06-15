@@ -1,11 +1,11 @@
 define('js!SBIS3.CONTROLS.SubmitPopup', [
-      'js!SBIS3.CONTROLS.Popup',
+      'js!SBIS3.CONTROLS.InformationPopup',
       'html!SBIS3.CONTROLS.SubmitPopup/resources/contentTpl',
       'js!SBIS3.CONTROLS.Button'
    ],
-   function(Popup, contentTpl){
+   function(InformationPopup, contentTpl){
       'use strict';
-      var module = Popup.extend({
+      var module = InformationPopup.extend({
          $protected: {
             _options: {
                /**
@@ -32,6 +32,9 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                 */
                threeButton: false,
 
+               /*
+                * @noShow
+                */
                contentTemplate: contentTpl
             }
          },

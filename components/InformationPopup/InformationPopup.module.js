@@ -1,7 +1,7 @@
-define('js!SBIS3.CONTROLS.Popup',
+define('js!SBIS3.CONTROLS.InformationPopup',
    [
       'js!SBIS3.CONTROLS.FloatArea',
-      'html!SBIS3.CONTROLS.Popup'
+      'html!SBIS3.CONTROLS.InformationPopup'
    ],
    function(FloatArea, dotTpl){
       'use strict';
@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.Popup',
           */
          setState: function(state){
             if(state === 'default' || state === 'success' || state === 'error' || state === 'warning'){
-               this.getContainer().removeClass('Popup__state-' + this._options.state).addClass('Popup__state-' + state);
+               this.getContainer().removeClass('controls-InformationPopup__state-' + this._options.state).addClass('controls-InformationPopup__state-' + state);
                this._options.state = state;
             }
          }

@@ -1,11 +1,11 @@
 define('js!SBIS3.CONTROLS.NotificationPopup', [
-      'js!SBIS3.CONTROLS.Popup',
+      'js!SBIS3.CONTROLS.InformationPopup',
       'html!SBIS3.CONTROLS.NotificationPopup/resources/contentTpl',
       'html!SBIS3.CONTROLS.NotificationPopup/resources/headerTpl'
    ],
-   function(Popup, contentTpl, headerTpl){
+   function(InformationPopup, contentTpl, headerTpl){
       'use strict';
-      var module = Popup.extend({
+      var module = InformationPopup.extend({
          $protected: {
             _options: {
 
@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
 
                /**
                 * @cfg {String} Иконка. Отображается в шапке.
-                * По умолчанию иконка завимсит от опции state.
+                * По умолчанию иконка зависит от опции state.
                 */
                icon: null,
 
@@ -44,7 +44,15 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
                 */
                state: 'default',
 
-               contentTemplate: contentTpl
+               /*
+               * @noShow
+               */
+               contentTemplate: contentTpl,
+
+               /*
+                * @noShow
+                */
+               activableByClick: false
             }
          },
          $constructor : function(){
@@ -71,7 +79,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
           */
          setCaption: function(caption){
             if(typeof caption === 'string'){
-               this.getContainer().find('.NotificationPopup__header_caption').text(caption);
+               this.getContainer().find('.controls-NotificationPopup__header_caption').text(caption);
             }
          },
 
@@ -81,7 +89,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
           */
          setIcon: function(icon){
             if(typeof icon === 'string'){
-               this.getContainer().find('.NotificationPopup__header_icon').removeClass(this._options.icon).addClass(icon);
+               this.getContainer().find('.controls-NotificationPopup__header_icon').removeClass(this._options.icon).addClass(icon);
                this._options.icon = icon;
             }
          }

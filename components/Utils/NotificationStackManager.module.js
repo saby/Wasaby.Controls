@@ -1,7 +1,14 @@
-define('js!SBIS3.CONTROLS.Utils.NotificationManager',
+define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
    [
       'js!SBIS3.CORE.Control'
    ],
+
+   /**
+    * Синглтон для работы со стеком нотификационных окон.
+    * @class SBIS3.CONTROLS.Utils.NotificationStackManager
+    * @public
+    * @author Степин П.В.
+    */
    function(Control){
       'use strict';
 
@@ -10,19 +17,19 @@ define('js!SBIS3.CONTROLS.Utils.NotificationManager',
       //Время через которое блоки скрываются
       var LIFE_TIME = 5000;
 
+      //Отступ снизу
+      var BOTTOM = 16;
+
+      //Отступ справа
+      var RIGHT = 16;
+
       var module = Control.Control.extend({
          $protected: {
             _options: {
 
             },
             _items: [],
-            _hiddenItems: [],
-
-            //Отступ снизу
-            _bottom: 16,
-
-            //Отступ справа
-            _right: 16
+            _hiddenItems: []
          },
          $constructor : function(){
          },
@@ -36,24 +43,17 @@ define('js!SBIS3.CONTROLS.Utils.NotificationManager',
             });
          },
 
+         /**
+          * Показать нотификационное окно
+          * @param inst Инстанс нотификационного окна
+          * @param {Boolean} notHide Не прятать окно по истичению времени жизни
+          */
          showNotification: function(inst, notHide){
             notHide = !!notHide;
 
             if(this._getItemIndexById(inst.getId()) === -1){
                this._appendNotification(inst, notHide);
             }
-         },
-
-         setPosition: function(obj){
-            if(obj.hasOwnProperty('right')){
-               this._right = parseInt(obj.right) || this._right;
-            }
-
-            if(obj.hasOwnProperty('bottom')){
-               this._bottom = parseInt(obj.bottom) || this._bottom;
-            }
-
-            this._updatePositions();
          },
 
          _appendNotification: function(inst, notHide){
@@ -75,9 +75,6 @@ define('js!SBIS3.CONTROLS.Utils.NotificationManager',
                'z-index': '10000'
             });
             //TODO Конец костыля
-
-            //Запрешаем активировать по клику, иначе открытые float area будут закрываться
-            inst._options.activableByClick = false;
 
             this._items.unshift(inst);
 
@@ -146,13 +143,13 @@ define('js!SBIS3.CONTROLS.Utils.NotificationManager',
          },
 
          _updatePositions: function(){
-            var bottom = this._bottom;
+            var bottom = BOTTOM;
             for(var i = 0, l = this._items.length; i < l; i++){
                var controlContainer = this._items[i].getContainer();
 
                controlContainer.css({
                   bottom: bottom,
-                  right: this._right
+                  right: RIGHT
                });
 
                bottom += controlContainer.height() + BLOCK_MARGIN;
