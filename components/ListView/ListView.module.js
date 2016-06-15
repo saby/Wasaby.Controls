@@ -1819,11 +1819,12 @@ define('js!SBIS3.CONTROLS.ListView',
                return (scrollableContainer.scrollHeight - (scrollableContainer.scrollTop + scrollContainer.height())) == 0;
             }
          },
+         //Проверка есть ли открытые stack FloatArea, они могут збирать на себя скролл у body
          _existFloatArea: function(){
             var areas = $ws.single.FloatAreaManager._areas;
             for (var area in areas){
                if (areas.hasOwnProperty(area)){
-                  if (areas[area].isVisible()){
+                  if (areas[area].isVisible() && areas[area]._options.isStack()){
                      return true;
                   }
                }
