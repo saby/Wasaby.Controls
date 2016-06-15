@@ -1646,7 +1646,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (hoveredItemContainer) {
                hash = hoveredItemContainer.attr('data-hash');
                projItem = this._getItemsProjection().getByHash(hash);
-               hoveredItemContainer = this._getDomElementByItem(projItem);
+               if (projItem) {
+                  hoveredItemContainer = this._getDomElementByItem(projItem);
+               }
             }
 
              /* Если после перерисовки выделенный элемент удалился из DOM дерава,
