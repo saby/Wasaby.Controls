@@ -306,9 +306,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var item, def;
          def = new $ws.proto.Deferred();
          if (this._dataSet) {
-            if ((index !== null) && (typeof index != 'undefined') && (index != '-1')) {
-               item = this._itemsProjection.at(index).getContents();
-               def.callback(item);
+            if (typeof key !== 'undefined') {
+               item = this.getItems().getRecordById(key);
+               if (item) {
+                  def.callback(item);
+               }
             }
             else {
                if (this._dataSource) {
@@ -597,7 +599,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          return def;
       },
       setSelectedKey : function(key) {
-         if (key == null) {
+         if (key == null && !(this.getItems() && this.getItems().getRecordById(key))) {
             this._isClearing = true;
          }
          ComboBox.superclass.setSelectedKey.apply(this, arguments);
