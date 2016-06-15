@@ -696,6 +696,7 @@ define(
                   }
                }
             }, 100);
+            e.preventDefault();
          });
       },
 
