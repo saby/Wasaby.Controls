@@ -286,12 +286,6 @@ define([
             assert.throw(function () {
                adapter.addField(null);
             });
-            assert.throw(function () {
-               adapter.addField({
-                  type: 'string',
-                  name: 'New'
-               });
-            });
          });
       });
 

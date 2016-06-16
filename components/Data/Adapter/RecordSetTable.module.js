@@ -38,8 +38,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetTable', [
             throw new TypeError('Argument data should be an instance of SBIS3.CONTROLS.Data.Collection.RecordSet');
          }
          RecordSetTable.superclass.constructor.call(this, data);
-         this._data = data;
-         this._format = data.getFormat();
+         GenericFormatMixin.constructor.call(this, data);
       },
 
       //region SBIS3.CONTROLS.Data.Adapter.ITable
@@ -49,6 +48,16 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetTable', [
          var empty = this._data.clone();
          empty.clear();
          return empty;
+      },
+
+      getFields: function () {
+         var fields = [];
+         if (this._data.getCount() > 0) {
+            this._data.at(0).each(function(name) {
+               fields.push(name);
+            });
+         }
+         return fields;
       },
 
       getCount: function () {
@@ -102,18 +111,15 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetTable', [
 
       addField: function(format, at) {
          this._data.addField(format, at);
-         this._format.add(format, at);
       },
 
       removeField: function(name) {
          this._data.removeField(name);
-         this._format.removeField(name);
       },
 
       removeFieldAt: function(index) {
          this._data.removeFieldAt(index);
-         this._format.removeAt(index);
-      }
+      },
 
       //endregion SBIS3.CONTROLS.Data.Adapter.ITable
 
@@ -122,6 +128,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetTable', [
       //endregion Public methods
 
       //region Protected methods
+
+      _getFieldsFormat: function() {
+         return this._data.getFormat();
+      }
 
       //endregion Protected methods
    });

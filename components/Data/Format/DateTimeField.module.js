@@ -13,9 +13,16 @@ define('js!SBIS3.CONTROLS.Data.Format.DateTimeField', [
     */
 
    var DateTimeField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.DateTimeField.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Format.DateTimeField'
+      _moduleName: 'SBIS3.CONTROLS.Data.Format.DateTimeField',
 
       //region Public methods
+
+      getDefaultValue: function () {
+         if (this._$defaultValue instanceof Date) {
+            return this._$defaultValue.toSQL(true);
+         }
+         return this._$defaultValue;
+      }
 
       //endregion Public methods
 

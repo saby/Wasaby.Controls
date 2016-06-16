@@ -19,11 +19,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin', [
       _data: null,
 
       /**
-       * @member {SBIS3.CONTROLS.Data.Format.Format} Формат полей
-       */
-      _format: null,
-
-      /**
        * @member {Object} Формат поля, отдаваемый через getSharedFormat()
        */
       _sharedFieldFormat: null,
@@ -33,6 +28,14 @@ define('js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin', [
        */
       _sharedFieldMeta: null,
 
+      /**
+       * Конструктор
+       * @param {*} data Сырые данные
+       */
+      constructor: function (data) {
+         this._data = data;
+      },
+
       //region Public methods
 
       getData: function () {
@@ -40,19 +43,16 @@ define('js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin', [
       },
 
       getFields: function () {
-         var fields = [];
-         this._format.each(function(item) {
-            fields.push(item.getName());
-         });
-         return fields;
+         throw new Error('Method must be implemented');
       },
 
       getFormat: function (name) {
-         var index = this._format.getFieldIndex(name);
+         var fields = this._getFieldsFormat(),
+            index = fields ? fields.getFieldIndex(name) : -1;
          if (index === -1) {
             throw new ReferenceError(this._moduleName + '::getFormat(): field "' + name + '" is not exists');
          }
-         return this._format.at(index);
+         return fields.at(index);
       },
 
       getSharedFormat: function (name) {
@@ -60,14 +60,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin', [
             this._sharedFieldFormat = new UniversalField();
          }
          var fieldFormat = this._sharedFieldFormat,
-            index = this._format.getFieldIndex(name);
-         if (index === -1) {
-            throw new ReferenceError(this._moduleName + '::getFormat(): field "' + name + '" is not exists');
-         }
+            fields = this._getFieldsFormat(),
+            index = fields ? fields.getFieldIndex(name) : -1;
 
          fieldFormat.name = name;
-         fieldFormat.type = this.getFormat(name).getType();
-         fieldFormat.meta = this._getFieldMeta(name);
+         fieldFormat.type = index === -1 ? 'String' : fields.at(index).getType();
+         fieldFormat.meta = index === -1 ? {} : this._getFieldMeta(name);
 
          return fieldFormat;
       },
@@ -80,28 +78,37 @@ define('js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin', [
          if (!name) {
             throw new Error(this._moduleName + '::addField(): field name is empty');
          }
-         var index = this._format.getFieldIndex(name);
+         var fields = this._getFieldsFormat(),
+            index = fields ? fields.getFieldIndex(name) : -1;
          if (index > -1) {
             throw new Error(this._moduleName + '::addField(): field "' + name + '" already exists');
          }
-         this._format.add(format, at);
+         fields.add(format, at);
       },
 
       removeField: function(name) {
-         var index = this._format.getFieldIndex(name);
+         var fields = this._getFieldsFormat(),
+            index = fields ? fields.getFieldIndex(name) : -1;
          if (index === -1) {
             throw new ReferenceError(this._moduleName + '::removeField(): field "' + name + '" is not exists');
          }
-         this._format.removeAt(index);
+         fields.removeAt(index);
       },
 
       removeFieldAt: function(index) {
-         this._format.removeAt(index);
+         var fields = this._getFieldsFormat();
+         if (fields) {
+            fields.removeAt(index);
+         }
       },
 
       //endregion Public methods
 
       //region Protected methods
+
+      _getFieldsFormat: function() {
+         throw new Error('Method must be implemented');
+      },
 
       _getFieldMeta: function (name) {
          if (this._sharedFieldMeta === null) {

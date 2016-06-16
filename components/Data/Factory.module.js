@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       /**
        * Переводит сырые данные в указанный формат
        * @param {*} value Значение в формате сырых данных
-       * @param {SBIS3.CONTROLS.Data.Format.UniversalField|String} format Формат поля
+       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.UniversalField|String} format Формат поля
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*} Приведенные к нужному формату сырые данные
        */
@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          switch (this._getType(format)) {
             case 'Identity':
                return value instanceof Array ?
-                  value[0] === null ? null : value.join(format.meta && format.meta.separator, value) :
+                  value[0] === null ? null : value.join(this._getSeparator(format), value) :
                   value;
             case 'RecordSet':
                return this._makeRecordSet(value, adapter);
@@ -55,18 +55,19 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Double':
                return (typeof(value) === 'number') ? value : (isNaN(parseFloat(value)) ? null : parseFloat(value));
             case 'Money':
-               if (format.meta && format.meta.precision > 3) {
-                  return $ws.helpers.prepareMoneyByPrecision(value, format.meta.precision);
+               var precision = this._getPrecision(format);
+               if (precision > 3) {
+                  return $ws.helpers.prepareMoneyByPrecision(value, precision);
                }
                return value === undefined ? null : value;
             case 'Enum':
                return new Enum({
-                  dictionary: format.meta && format.meta.dictionary || [],
+                  dictionary:  this._getDictionary(format),
                   currentValue: value
                });
             case 'Flags':
                return new Flags({
-                  dictionary: format.meta && format.meta.dictionary || [],
+                  dictionary: this._getDictionary(format),
                   values: value
                });
             case 'TimeInterval':
@@ -77,11 +78,10 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Boolean':
                return !!value;
             case 'Array':
-               var self = this,
-                  kind = format.meta && format.meta.kind;
+               var kind = this._getKind(format);
                return $ws.helpers.map(value, function (val) {
-                  return self.cast(val, kind, adapter);
-               });
+                  return this.cast(val, kind, adapter);
+               }, this);
             default:
                return value;
          }
@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       /**
        * Переводит обертку над сырыми данными в сырые данные
        * @param {*} value Обертка над сырыми данными
-       * @param {SBIS3.CONTROLS.Data.Format.UniversalField|String} format Формат данных
+       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.UniversalField|String} format Формат данных
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*}
        */
@@ -112,7 +112,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Identity':
                return (
                   typeof value === 'string' ?
-                     value.split(format.meta && format.meta.separator) :
+                     value.split(this._getSeparator(format)) :
                      [value]
                );
             case 'RecordSet':
@@ -139,8 +139,9 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Link':
                return parseInt(value, 10);
             case 'Money':
-               if (format.meta && format.meta.precision > 3) {
-                  return $ws.helpers.prepareMoneyByPrecision(value, format.meta.precision);
+               var precision = this._getPrecision(format);
+               if (precision > 3) {
+                  return $ws.helpers.prepareMoneyByPrecision(value, precision);
                }
                return value;
             case 'TimeInterval':
@@ -156,11 +157,10 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                }
                return value;
             case 'Array':
-               var self = this,
-                  kind = format.meta && format.meta.kind;
-               return $ws.helpers.map(value, function (val){
-                  return self.serialize(val, kind, adapter);
-               });
+               var kind = this._getKind(format);
+               return $ws.helpers.map(value, function (val) {
+                  return this.serialize(val, kind, adapter);
+               }, this);
             default:
                return value;
          }
@@ -168,16 +168,56 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
 
       /**
        * Возвращает тип поля
-       * @param {SBIS3.CONTROLS.Data.Format.UniversalField|String} format Формат поля
+       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.UniversalField|String} format Формат поля
        * @returns {String}
        * @protected
        */
       _getType: function (format) {
          if (typeof format === 'object') {
-            return format.type;
+            return format.getType ? format.getType() : format.type;
          } else {
             return format;
          }
+      },
+
+      /**
+       * Возвращает разделитель для поля типа "Идентификатор"
+       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.UniversalField|String} format Формат поля
+       * @returns {String}
+       * @protected
+       */
+      _getSeparator: function (format) {
+         return (format.getSeparator ? format.getSeparator() : format.meta && format.meta.separator) || '';
+      },
+
+      /**
+       * Возвращает точность для поля типа "Вещественное число"
+       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.UniversalField|String} format Формат поля
+       * @returns {Number}
+       * @protected
+       */
+      _getPrecision: function (format) {
+         return (format.getPrecision ? format.getPrecision() : format.meta && format.meta.precision) || 0;
+      },
+
+      /**
+       * Возвращает словарь для поля типа "Словарь"
+       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.UniversalField|String} format Формат поля
+       * @returns {Array}
+       * @protected
+       */
+      _getDictionary: function (format) {
+         return (format.getDictionary ? format.getDictionary() : format.meta && format.meta.dictionary) || [];
+      },
+
+      /**
+       * Возвращает тип элементов для поля типа "Массив"
+       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.UniversalField|String} format Формат поля
+       * @returns {String}
+       * @protected
+       */
+      _getKind: function (format) {
+         return (format.getKind ? format.getKind() : format.meta && format.meta.kind) || '';
       },
 
       /**

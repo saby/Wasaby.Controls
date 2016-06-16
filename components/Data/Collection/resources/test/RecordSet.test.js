@@ -45,7 +45,6 @@ define([
                   'Фамилия': 'Арбузнов'
                }];
             };
-
             getSbisItems = function() {
                return {
                   d: [
@@ -142,9 +141,21 @@ define([
                      rawData: items
                   });
                rs.each(function(item) {
-                  for (var i = 0; i < declaration.length; i++) {
+                  var given,
+                     expect,
+                     i;
+                  for (i = 0; i < declaration.length; i++) {
                      assert.isTrue(item.has(declaration[i].name));
-                     assert.strictEqual(item.get(declaration[i].name), declaration[i].defaultValue);
+
+                     given = item.get(declaration[i].name);
+                     expect = declaration[i].defaultValue;
+                     if (given instanceof Date) {
+                        given = expect.toString();
+                     }
+                     if (expect instanceof Date) {
+                        expect = expect.toString();
+                     }
+                     assert.strictEqual(given, expect);
                   }
                });
             });
@@ -524,10 +535,9 @@ define([
                assert.strictEqual(format.at(0).getName(), 'Ид');
                assert.strictEqual(format.at(1).getName(), 'Фамилия');
             });
-            it('should build the empty format from empty json raw data', function () {
+            it('should return empty format for empty raw data', function () {
                var rs = new RecordSet();
-               var format = rs.getFormat();
-               assert.strictEqual(format.getCount(), 0);
+               assert.strictEqual(rs.getFormat().getCount(), 0);
             });
             it('should build the format from sbis raw data', function () {
                var data = getSbisItems(),
