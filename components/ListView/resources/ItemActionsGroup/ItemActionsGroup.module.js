@@ -15,8 +15,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
       'use strict';
 
-      var VERTICAL_OFFSET = -5;
-      var HORIZONTAL_OFFSET = 5;
+      var VERTICAL_OFFSET = -13;
+      var HORIZONTAL_OFFSET = 4;
 
       var ItemActionsGroup = ButtonGroupBaseDS.extend( /** @lends SBIS3.CONTROLS.ItemActionsGroup.prototype */ {
          $protected: {

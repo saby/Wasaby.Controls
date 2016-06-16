@@ -1642,23 +1642,40 @@ define('js!SBIS3.CONTROLS.ListView',
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
          //*********************************//
          _drawItemsCallback: function () {
+            var
+               hoveredItem,
+               hoveredItemContainer,
+               hash,
+               projItem;
             ListView.superclass._drawItemsCallback.apply(this, arguments);
-            var hoveredItem = this.getHoveredItem().container;
-
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
             }
             this._drawSelectedItems(this._options.selectedKeys);
 
-            /* Если после перерисовки выделенный элемент удалился из DOM дерава,
+            hoveredItem = this.getHoveredItem();
+            hoveredItemContainer = hoveredItem.container;
+            /*TODO сейчас зачем то в ховеред итем хранится ссылка на DOM элемент
+            * но этот элемент может теряться в ходе перерисовок. Выписана задача по которой мы будем
+            * хранить только идентификатор и данный код станет не нужен*/
+            if (hoveredItemContainer) {
+               hash = hoveredItemContainer.attr('data-hash');
+               projItem = this._getItemsProjection().getByHash(hash);
+               if (projItem) {
+                  hoveredItemContainer = this._getDomElementByItem(projItem);
+               }
+            }
+
+             /* Если после перерисовки выделенный элемент удалился из DOM дерава,
                то событие mouseLeave не сработает, поэтому вызовем руками метод,
                если же он остался, то обновим положение кнопки опций*/
-            if(hoveredItem){
-               if(!$.contains(this._getItemsContainer()[0], hoveredItem[0])) {
+            if(hoveredItemContainer){
+               if(!$.contains(this._getItemsContainer()[0], hoveredItemContainer[0])) {
                   this._mouseLeaveHandler();
                }else {
+                  hoveredItem.container = hoveredItemContainer;
+                  this._setHoveredItem(hoveredItem);
                   this._updateItemsToolbar();
-                  hoveredItem.addClass('controls-ListView__hoveredItem');
                }
             }
 
@@ -1735,6 +1752,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   self._loader = null;
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                   var hasNextPage = self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset);
+                  //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
+                  this.getItems().setMetaData(dataSet.getMetaData());
                   if (hasNextPage) {
                      self._infiniteScrollOffset += self._limit;
                   } else {
@@ -1768,9 +1787,6 @@ define('js!SBIS3.CONTROLS.ListView',
                         self.getItems().append(dataSet);
                         ladder && ladder.setIgnoreEnabled(false);
                      }
-
-                     //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
-                     self.getItems().setMetaData(dataSet.getMetaData());
 
                      if (this._isSlowDrawing()) {
                         self._drawItems(dataSet.toArray(), at);
@@ -1847,10 +1863,22 @@ define('js!SBIS3.CONTROLS.ListView',
             scrollContainer = isBody ? $(window) : this._options.infiniteScrollContainer;
             // Если scrollContainer это body и есть floatArea со скроллом, то у body скролла нет, а значит он не может быть снизу (его же нет!)
             // Todo: когда будут классные скроллы (3.7.4.100?) - можно будет выпилить
-            if (scrollableContainer && isBody && !$('.ws-scrolling-content').length){
+            if (scrollableContainer && isBody && !this._existFloatArea()){
                scrollContainer = $(scrollContainer);
                return (scrollableContainer.scrollHeight - (scrollableContainer.scrollTop + scrollContainer.height())) == 0;
             }
+         },
+         //Проверка есть ли открытые stack FloatArea, они могут збирать на себя скролл у body
+         _existFloatArea: function(){
+            var areas = $ws.single.FloatAreaManager._areas;
+            for (var area in areas){
+               if (areas.hasOwnProperty(area)){
+                  if (areas[area].isVisible() && areas[area]._options.isStack()){
+                     return true;
+                  }
+               }
+            }
+            return false;
          },
          isScrollOnTop: function(){
             if (this._options.infiniteScrollContainer && this._options.infiniteScrollContainer.length){
