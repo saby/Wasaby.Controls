@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Model
        */
       setSelectedItems: function(list) {
          var selItems = this._options.selectedItems,
-             newList, keys;
+             newList;
 
          if(list) {
             list = this._prepareItems(list);
@@ -197,12 +197,17 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Model
          }
 
          if(newItems.length) {
-            if(this._options.selectedItems) {
-               this._options.selectedItems.append(newItems);
-            } else {
-               this._options.selectedItems = this._makeList(newItems);
-            }
-            this._onChangeSelectedItems();
+            /* Т.к. в момент добавления могут загружатся записи, то текущий набор получаем через
+               асинхронный getSelectedItems, который либо сразу вернёт набор, либо когда загрузятся все записи */
+            this.getSelectedItems(true).addCallback(function (selectedItems) {
+               if(selectedItems) {
+                  selectedItems.append(newItems);
+               } else {
+                  self._options.selectedItems = self._makeList(newItems);
+               }
+               self._onChangeSelectedItems();
+               return selectedItems;
+            });
          }
       },
 
