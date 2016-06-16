@@ -540,7 +540,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
       bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, applyOnLoad, controller, browser) {
          var view = browser.getView(),
              noSaveFilters = ['Разворот', 'ВидДерева'],
-             historyController, filter, filterLineContainer;
+             historyController, filter;
 
          if(searchParam) {
             noSaveFilters.push(searchParam);
