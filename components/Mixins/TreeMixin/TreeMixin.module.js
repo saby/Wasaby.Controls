@@ -517,6 +517,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             filter[hierField] = filter[hierField].concat(Object.keys(this._options.openedPath));
          }
          filter['ПутьКУзлу'] = true;
+         filter['ЗаголовокИерархии'] = this._options.displayField;
          return filter;
       },
       /**
