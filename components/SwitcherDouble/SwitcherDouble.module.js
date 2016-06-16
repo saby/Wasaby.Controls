@@ -22,8 +22,6 @@ define('js!SBIS3.CONTROLS.SwitcherDouble', ['js!SBIS3.CORE.Control', 'html!SBIS3
     *
     * @demo SBIS3.CONTROLS.Demo.MySwitcherDoubleOnline
     *
-    * @cssModifier controls-SwitcherDouble__primary
-    *
     * @author Борисов Петр Сергеевич
     *
     * @initial
