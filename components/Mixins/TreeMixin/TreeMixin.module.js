@@ -516,6 +516,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             filter[hierField].push(this.getCurrentRoot());
             filter[hierField] = filter[hierField].concat(Object.keys(this._options.openedPath));
          }
+         filter['ПутьКУзлу'] = true;
          return filter;
       },
       /**
