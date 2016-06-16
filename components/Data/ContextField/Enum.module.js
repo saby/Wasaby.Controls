@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.Data.ContextField.Enum', [
          var result;
 
          if (keyPath.length === 0) {
-            result = oldValue.equals(value);
+            result = oldValue.isEqual(value);
          } else  {
             result = false;
          }

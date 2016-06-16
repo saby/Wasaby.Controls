@@ -98,10 +98,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        */
       _navigationEnumerator: null,
 
-         /**
-          * @member {Boolean} Генерация событий включена
-          */
-         _eventRaising: true,
+      /**
+       * @member {Boolean} Генерация событий включена
+       */
+      _eventRaising: true,
 
       /**
        * @member {Function} Обработчик события об изменении исходной коллекции

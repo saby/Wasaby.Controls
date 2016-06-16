@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @remark
        * Данные должны быть в формате, поддерживаемом адаптером {@link adapter}.
        * @example
-       * Создадим новую запись сотрудника:
+       * Создадим новую запись с данными сотрудника:
        * <pre>
        *    var user = new Record({
        *       rawData: {
@@ -104,26 +104,6 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @name SBIS3.CONTROLS.Data.FormattableMixin#format
        * @see getFormat
        * @example
-       * Создадим запись с форматом полей, внедренным в виде готового экземпляра:
-       * <pre>
-       *    define('js!My.Module', [
-       *       'js!My.Format.User'
-       *    ], function (UserFormat) {
-       *       var user = new Record({
-       *          format: new UserFormat
-       *       });
-       *    });
-       * </pre>
-       * Создадим рекордсет с форматом полей, внедренным в виде готового экземпляра:
-       * <pre>
-       *    define('js!My.Module', [
-       *       'js!My.Format.User'
-       *    ], function (UserFormat) {
-       *       var users = new RecordSet({
-       *          format: new UserFormat
-       *       });
-       *    });
-       * </pre>
        * Создадим запись с форматом полей, внедренным в декларативном виде:
        * <pre>
        *    var user = new Record({
@@ -147,6 +127,58 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        *          type: 'string'
        *       }]
        *    });
+       * </pre>
+       * Создадим запись с форматом полей, внедренным в виде готового экземпляра:
+       * <pre>
+       *    define('js!My.Module', [
+       *       'js!My.Format.User'
+       *    ], function (UserFormat) {
+       *       var user = new Record({
+       *          format: new UserFormat
+       *       });
+       *    });
+       * </pre>
+       * Создадим рекордсет с форматом полей, внедренным в виде готового экземпляра:
+       * <pre>
+       *    define('js!My.Module', [
+       *       'js!My.Format.User'
+       *    ], function (UserFormat) {
+       *       var users = new RecordSet({
+       *          format: new UserFormat
+       *       });
+       *    });
+       * </pre>
+       * Создадим запись заказа в магазине с полем типа "рекордсет", содержащим список позиций. Сырые данные будут в формате БЛ СБИС:
+       * <pre>
+       *    var order = new Record({
+       *          adapter: 'adapter.sbis',
+       *          format:[{
+       *             name: 'id',
+       *             type: 'integer',
+       *             defaultValue: 0
+       *          }, {
+       *             name: 'items',
+       *             type: 'recordset'
+       *          }]
+       *       }),
+       *       orderItems = new RecordSet({
+       *          adapter: 'adapter.sbis',
+       *          format: [{
+       *             name: 'goods_id',
+       *             type: 'integer',
+       *             defaultValue: 0
+       *          }, {
+       *             name: 'price',
+       *             type: 'real',
+       *             defaultValue: 0
+       *          }, {
+       *            name: 'count',
+       *            type: 'integer',
+       *            defaultValue: 0
+       *          }]
+       *       });
+       *
+       *    order.set('items', orderItems);
        * </pre>
        */
       _$format: null,

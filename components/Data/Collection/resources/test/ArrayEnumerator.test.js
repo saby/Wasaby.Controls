@@ -119,6 +119,23 @@ define([
             });
          });
 
+         describe('.setFilter()', function() {
+            it('should cause return only filtered items', function() {
+               var enumerator = new ArrayEnumerator(items),
+                  count = 0,
+                  item;
+               enumerator.setFilter(function(item) {
+                  return item['Ид'] < 3;
+               });
+               while ((item = enumerator.getNext())) {
+                  assert.isBelow(item['Ид'], 3);
+                  count++;
+               }
+               assert.strictEqual(count, 2);
+               assert.isUndefined(enumerator.getNext());
+            });
+         });
+
          describe('.getIndexByValue()', function() {
             it('should return item index with given property', function() {
                var enumerator = new ArrayEnumerator(items);

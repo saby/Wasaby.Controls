@@ -115,7 +115,6 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
 
       _prepareReadResult: function(data) {
          var model = this._getModelInstance(data);
-         model.setStored(true);
          return model;
       },
 
@@ -123,13 +122,11 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
          var idProperty = this.getIdProperty();
          if (key &&
             idProperty &&
-            !model.isStored() &&
             !model.get(idProperty)
          ) {
             model.set(idProperty, key);
          }
-         model.setStored(true);
-         model.applyChanges();
+         model.acceptChanges();
 
          return key;
       },

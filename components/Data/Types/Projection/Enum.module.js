@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Enum', [
       },
 
       _notifyCurrentChange: function(newCurrent, oldCurrent, newPosition, oldPosition) {
-         this._options.collection.set(newPosition);
+         this._$collection.set(newPosition);
          EnumProjection.superclass._notifyCurrentChange.apply(this,arguments);
       }
 

@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
     * Тип данных перечисляемое.
     * @class SBIS3.CONTROLS.Data.Types.Enum
     * @extends SBIS3.CONTROLS.Data.Types.Dictionary
+    * @mixes SBIS3.CONTROLS.Data.Types.IEnum
     * @public
     * @author Ганшнин Ярослав
     */

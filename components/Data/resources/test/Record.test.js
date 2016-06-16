@@ -137,12 +137,34 @@ define([
             });
          });
 
-         describe('.applyChanges()', function () {
-            it('shouldnt return a changed value', function () {
+         describe('.acceptChanges()', function () {
+            it('should reset "Changed" state to "Unchanged"', function () {
+               record.setState(Record.RecordState.CHANGED);
+               record.acceptChanges();
+               assert.strictEqual(record.getState(), Record.RecordState.UNCHANGED);
+            });
+
+            it('should reset "Added" state to "Unchanged"', function () {
+               record.setState(Record.RecordState.ADDED);
+               record.acceptChanges();
+               assert.strictEqual(record.getState(), Record.RecordState.UNCHANGED);
+            });
+            it('should reset "Deleted" state to "Detached"', function () {
+               record.setState(Record.RecordState.DELETED);
+               record.acceptChanges();
+               assert.strictEqual(record.getState(), Record.RecordState.DETACHED);
+            });
+            it('should keep "Detached" state', function () {
+               record.setState(Record.RecordState.DETACHED);
+               record.acceptChanges();
+               assert.strictEqual(record.getState(), Record.RecordState.DETACHED);
+            });
+            it('should cause getChanged() return an empty array', function () {
                record.set('max', 15);
                record.set('title', 'B');
-               record.applyChanges();
-               assert.deepEqual(record.getChanged(), []);
+               assert.isAbove(record.getChanged().length, 0);
+               record.acceptChanges();
+               assert.strictEqual(record.getChanged().length, 0);
             });
          });
 
@@ -807,11 +829,11 @@ define([
             it('should return null by default', function () {
                assert.isNull(record.getOwner());
             });
-            it('should owner passed to the constructor', function () {
+            it('should return owner passed to the constructor', function () {
                var owner = {},
                   record = new Record({
-                  owner: owner
-               });
+                     owner: owner
+                  });
                assert.strictEqual(record.getOwner(), owner);
             });
          });
@@ -821,6 +843,53 @@ define([
                var owner = {};
                record.setOwner(owner);
                assert.strictEqual(record.getOwner(), owner);
+            });
+         });
+
+         describe('.getState()', function () {
+            it('should return Detached by default', function () {
+               assert.strictEqual(record.getState(), Record.RecordState.DETACHED);
+            });
+            it('should return state passed to the constructor', function () {
+               var record = new Record({
+                  state: Record.RecordState.UNCHANGED
+               });
+               assert.strictEqual(record.getState(), Record.RecordState.UNCHANGED);
+            });
+            it('should return "Changed" from previous "Unchanged" after change any field value', function () {
+               var record = new Record({
+                  state: Record.RecordState.UNCHANGED
+               });
+               record.set('id', -1);
+               assert.strictEqual(record.getState(), Record.RecordState.CHANGED);
+            });
+            it('should return "Changed" from previous "Detached" after change any field value', function () {
+               var record = new Record({
+                  state: Record.RecordState.DETACHED
+               });
+               record.set('id', -1);
+               assert.strictEqual(record.getState(), Record.RecordState.CHANGED);
+            });
+            it('should keep "Added" after change any field value', function () {
+               var record = new Record({
+                  state: Record.RecordState.ADDED
+               });
+               record.set('id', -1);
+               assert.strictEqual(record.getState(), Record.RecordState.ADDED);
+            });
+            it('should keep "Deleted" after change any field value', function () {
+               var record = new Record({
+                  state: Record.RecordState.DELETED
+               });
+               record.set('id', -1);
+               assert.strictEqual(record.getState(), Record.RecordState.DELETED);
+            });
+         });
+
+         describe('.setState()', function () {
+            it('should set the new state', function () {
+               record.setState(Record.RecordState.DELETED);
+               assert.strictEqual(record.getState(), Record.RecordState.DELETED);
             });
          });
 

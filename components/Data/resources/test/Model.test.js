@@ -454,13 +454,10 @@ define([
          it('should clone state markers', function () {
             var cloneA = model.clone();
             assert.strictEqual(model.isDeleted(), cloneA.isDeleted());
-            assert.strictEqual(model.isStored(), cloneA.isStored());
 
-            model._setDeleted(true);
-            model.setStored(true);
+            model.setDeleted(true);
             var cloneB = model.clone();
             assert.strictEqual(model.isDeleted(), cloneB.isDeleted());
-            assert.strictEqual(model.isStored(), cloneB.isStored());
          });
          it('should clone id property', function () {
             var clone = model.clone();
@@ -593,32 +590,6 @@ define([
             model.merge(anotherModel);
             assert.isTrue(model.isChanged());
          });
-         it('should stay unstored', function () {
-            assert.isFalse(model.isStored());
-            var anotherModel = new Model();
-            model.merge(anotherModel);
-            assert.isFalse(model.isStored());
-         });
-         it('should become stored', function () {
-            assert.isFalse(model.isStored());
-            var anotherModel = new Model();
-            anotherModel._isStored = true;
-            model.merge(anotherModel);
-            assert.isTrue(model.isStored());
-         });
-         it('should stay undeleted', function () {
-            assert.isFalse(model.isDeleted());
-            var anotherModel = new Model();
-            model.merge(anotherModel);
-            assert.isFalse(model.isDeleted());
-         });
-         it('should become deleted', function () {
-            assert.isFalse(model.isDeleted());
-            var anotherModel = new Model();
-            anotherModel._isDeleted = true;
-            model.merge(anotherModel);
-            assert.isTrue(model.isDeleted());
-         });
       });
 
       describe('.toJSON()', function () {
@@ -632,7 +603,6 @@ define([
             assert.isTrue(json.id > 0);
             assert.deepEqual(json.state.$options, options);
             assert.strictEqual(json.state._hash, model.getHash());
-            assert.strictEqual(json.state._isStored, model.isStored());
             assert.strictEqual(json.state._isDeleted, model.isDeleted());
             assert.deepEqual(json.state._defaultPropertiesValues, model._defaultPropertiesValues);
             assert.deepEqual(json.state._changedFields, model._changedFields);
@@ -645,15 +615,6 @@ define([
                rawData : {'to': 'String'}
             });
             assert.equal(model.toString(), '{"to":"String"}');
-         });
-      });
-
-      describe('.isSynced()', function (){
-         it('sould return flag usingDataSetAsList', function (){
-            model.setSynced(true);
-            assert.isTrue(model.isSynced());
-            model.setSynced(false);
-            assert.isFalse(model.isSynced());
          });
       });
 
@@ -674,17 +635,8 @@ define([
          });
       });
 
-      describe('.isCreated()', function (){
-         it('sould return flag usingDataSetAsList', function (){
-            model.setCreated(true);
-            assert.isTrue(model.isCreated());
-            model.setCreated(false);
-            assert.isFalse(model.isCreated());
-         });
-      });
-
       describe('.isDeleted()', function (){
-         it('sould return flag usingDataSetAsList', function (){
+         it('sould return given value', function (){
             model.setDeleted(true);
             assert.isTrue(model.isDeleted());
             model.setDeleted(false);
@@ -693,7 +645,7 @@ define([
       });
 
       describe('.isChanged()', function (){
-         it('sould return flag usingDataSetAsList', function (){
+         it('sould return given value', function (){
             model.setChanged(true);
             assert.isTrue(model.isChanged());
             model.setChanged(false);

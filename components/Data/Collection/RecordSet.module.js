@@ -3,17 +3,23 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.FormattableMixin',
+   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
+   'js!SBIS3.CONTROLS.Data.Record',
    'js!SBIS3.CONTROLS.Data.Model'
 ], function (
    ObservableList,
    SerializableMixin,
    FormattableMixin,
+   ArrayEnumerator,
    Di,
-   Utils
+   Utils,
+   Record
 ) {
    'use strict';
+
+   var RecordState = Record.RecordState;
 
    /**
     * Список записей, имеющих общий формат полей.
@@ -24,7 +30,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
     * @author Мальцев Алексей
     * @public
     */
-
    var RecordSet = ObservableList.extend([FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
      /**
       * @typedef {Object} OperationOptions
@@ -101,15 +106,15 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       _$meta: null,
 
       /**
-       * @member {Object} индексы
+       * @member {Object} Иерархический индекс
        */
-      _indexTree: null,
+      _indexTree: {},
 
-     /**
-      * //TODO надо убрать в 3.7.4
-      * @member флаг  показывает проверять ли формат при изменении рекордсета
-      */
-     _doNotFormatCheck: false,
+      /**
+       * //TODO надо убрать в 3.7.4
+       * @member флаг  показывает проверять ли формат при изменении рекордсета
+       */
+      _doNotFormatCheck: false,
 
       constructor: function $RecordSet(options) {
          if (options) {
@@ -160,6 +165,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             )
             .callNext(function() {
                this._clearServiceEnumerator();
+               this.each(function(record) {
+                  record.setOwner(this);
+               });
             });
       },
 
@@ -231,37 +239,46 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //region SBIS3.CONTROLS.Data.Collection.IEnumerable
 
       /**
-       * Перебирает все записи рекордсета.
-       * @param {Function} iterateCallback Функция обратного вызова, аргументами будут  переданы запись и ее позиция.
-       * @param {RecordStatus} [status=actual] Селектор состояния выбираемых записей.
+       * Возвращает энумератор для перебора записей рекордсета.
+       * @param {SBIS3.CONTROLS.Data.Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
+       * @returns {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator}
        */
-      each: function (iterateCallback, status) {
-         var length = this.getCount();
+      getEnumerator: function (state) {
+         var enumerator = new ArrayEnumerator(this._$items);
+         if (state) {
+            enumerator.setFilter(function(record) {
+               return record.getState() === state;
+            });
+         }
+         return enumerator;
+      },
+
+      /**
+       * Перебирает записи рекордсета.
+       * @param {Function(SBIS3.CONTROLS.Data.Record, Number)} callback Функция обратного вызова, аргументами будут переданы запись и ее позиция.
+       * @param {SBIS3.CONTROLS.Data.Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
+       * @param {Object} [context] Контекст вызова callback
+       */
+      each: function (callback, state, context) {
+         if (state instanceof Object) {
+            context = state;
+            state = undefined;
+         }
+         context = context || this;
+
+         var length = this.getCount(),
+            index = 0,
+            isMatching,
+            record;
          for (var i = 0; i < length; i++) {
-            var record = this.at(i);
-            switch (status) {
-               case 'all':
-                  iterateCallback.call(this, record, i);
-                  break;
-               case 'created':
-                  if (record.isCreated()) {
-                     iterateCallback.call(this, record, i);
-                  }
-                  break;
-               case 'deleted':
-                  if (record.isDeleted()) {
-                     iterateCallback.call(this, record, i);
-                  }
-                  break;
-               case 'changed':
-                  if (record.isChanged()) {
-                     iterateCallback.call(this, record, i);
-                  }
-                  break;
-               default :
-                  if (!record.isDeleted()) {
-                     iterateCallback.call(this, record, i);
-                  }
+            record = this.at(i);
+            if (state) {
+               isMatching = record.getState() === state;
+            } else {
+               isMatching = true;
+            }
+            if (isMatching) {
+               callback.call(context, record, index++);
             }
          }
       },
@@ -290,21 +307,19 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             position = 0,
             willRemove = [];
          this.each(function(record) {
-            if (record.isDeleted() && !record.isSynced()) {
-               record.setSynced(true);
+            if (record.isDeleted()) {
                syncCompleteDef.push(dataSource.destroy(record.get(self._$idProperty)).addCallback(function() {
                   willRemove.push(record);
                   return record;
                }));
-            } else if (record.isChanged() || (!record.isStored() && !record.isSynced())) {
+            } else if (record.isChanged()) {
                syncCompleteDef.push(dataSource.update(record).addCallback(function() {
-                  record.applyChanges();
-                  record.setStored(true);
+                  record.acceptChanges();
                   return record;
                }));
             }
             position++;
-         }, 'all');
+         });
 
          syncCompleteDef.done(true);
          return syncCompleteDef.getResult(true).addCallback(function(){
@@ -322,6 +337,31 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       getModel: function () {
          return this._$model;
+      },
+
+      /**
+       * Подтверждает изменения всех записей с момента предыдущего вызова acceptChanges().
+       * Обрабатывает {@link state} записей следующим образом:
+       * <ul>
+       *    <li>Changed и Added - меняют state на Unchanged;</li>
+       *    <li>Deleted - удаляются из рекордсета, а их state становится Detached;</li>
+       *    <li>остальные не меняются.</li>
+       * </ul>
+       */
+      acceptChanges: function() {
+         var toRemove = [];
+         this.each(function(record, index) {
+            switch (record.getState()) {
+               case RecordState.DELETED:
+                  toRemove.push(index);
+                  break;
+            }
+            record.acceptChanges();
+         });
+
+         for (var index = toRemove.length - 1; index >= 0; index--) {
+            this.removeAt(toRemove[index]);
+         }
       },
 
       /**
@@ -717,7 +757,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
                if (recordsMap[key]) {
                   newItems.push(record);
                }
-            }, 'all');
+            });
             if(newItems.length < this.getCount()) {
                this.assign(newItems);
             }
@@ -755,7 +795,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
                throw new Error('Record with hierarchy field "' + field + '" = ' + parentKey + ' is related to itself.');
             }
             this._indexTree[parentKey].push(childKey);
-         }, 'all');
+         });
       },
 
       //endregion Deprecated methods
@@ -763,8 +803,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //region SBIS3.CONTROLS.Data.Collection.List
 
       clear: function () {
-         for (var i = 0, count = this._$items.length; i < count; i++) {
-            this._$items[i].setOwner(null);
+         var item, i, count;
+         for (i = 0, count = this._$items.length; i < count; i++) {
+            item = this._$items[i];
+            item.setOwner(null);
+            item.setState(RecordState.DETACHED);
          }
          this._getRawDataAdapter().clear();
          RecordSet.superclass.clear.call(this);
@@ -776,31 +819,35 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._getRawDataAdapter().add(item.getRawData(), at);
          RecordSet.superclass.add.call(this, item, at);
          item.setOwner(this);
+         item.setState(RecordState.ADDED);
          this._indexTree = {};
       },
 
       remove: function (item) {
          this._checkItem(item, false);
-         item.setOwner(null);
-         this._indexTree = {};
          return RecordSet.superclass.remove.call(this, item);
       },
 
       removeAt: function (index) {
          this._getRawDataAdapter().remove(index);
          var item = this._$items[index];
+         RecordSet.superclass.removeAt.call(this, index);
          if (item) {
             item.setOwner(null);
+            item.setState(RecordState.DETACHED);
          }
-         RecordSet.superclass.removeAt.call(this, index);
          this._indexTree = {};
       },
 
       replace: function (item, at, checkFormat) {
          this._checkItem(item, checkFormat);
-         item.setOwner(this);
          this._getRawDataAdapter().replace(item.getRawData(), at);
+         var oldItem = this._$items[at];
          RecordSet.superclass.replace.call(this, item, at);
+         oldItem.setOwner(null);
+         oldItem.setState(RecordState.DETACHED);
+         item.setOwner(this);
+         item.setState(RecordState.CHANGED);
          this._indexTree = {};
       },
 
@@ -808,9 +855,19 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._resetRawDataAdapter();
          this._$rawData = null;
          items = this._addItemsToRawData(items, undefined, true);
+         var oldItems = this._$items.slice();
          RecordSet.superclass.assign.call(this, items);
-         for (var i = 0, count = items.length; i < count; i++) {
-            items[i].setOwner(this);
+
+         var item, i, count;
+         for (i = 0, count = oldItems.length; i < count; i++) {
+            item = oldItems[i];
+            item.setOwner(null);
+            item.setState(RecordState.DETACHED);
+         }
+         for (i = 0, count = items.length; i < count; i++) {
+            item = items[i];
+            item.setOwner(this);
+            item.setState(RecordState.CHANGED);
          }
          this._indexTree = {};
       },
@@ -818,8 +875,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       append: function (items) {
          items = this._addItemsToRawData(items);
          RecordSet.superclass.append.call(this, items);
-         for (var i = 0, count = items.length; i < count; i++) {
-            items[i].setOwner(this);
+         var item, i, count;
+         for (i = 0, count = items.length; i < count; i++) {
+            item = items[i];
+            item.setOwner(this);
+            item.setState(RecordState.ADDED);
          }
          this._indexTree = {};
       },
@@ -827,8 +887,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       prepend: function (items) {
          items = this._addItemsToRawData(items, 0);
          RecordSet.superclass.prepend.call(this, items);
-         for (var i = 0, count = items.length; i < count; i++) {
-            items[i].setOwner(this);
+         var item, i, count;
+         for (i = 0, count = items.length; i < count; i++) {
+            item = items[i];
+            item.setOwner(this);
+            item.setState(RecordState.ADDED);
          }
          this._indexTree = {};
       },
@@ -919,11 +982,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       _getModelInstance: function (data) {
          var model = Di.resolve(this._$model, {
             owner: this,
+            state: RecordState.UNCHANGED,
             adapter: this.getAdapter(),
             rawData: data,
             idProperty: this._$idProperty
          });
-         model.setStored(true);
          return model;
       },
 
@@ -955,6 +1018,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       _resetIndexTree: function(){
          this._indexTree = {};
       }
+
       //endregion Protected methods
    });
 

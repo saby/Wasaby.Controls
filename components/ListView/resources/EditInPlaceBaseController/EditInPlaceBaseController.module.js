@@ -246,7 +246,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   //Запрет на редактирование может быть только у существующих элементов. Если происходит добавление по месту,
                   //то не логично запрещать его. Например почти все кто использует редактирование, запрещают редактирование папок,
                   //но не нужно запрещать редактирование только что добавленных папок.
-                  allowEdit = !record.isStored() || beginEditResult !== false;
+                  allowEdit = record.getState() === 'Added' || beginEditResult !== false;
                   return $ws.proto.Deferred.success(allowEdit ? record : false);
                }
             },
@@ -318,7 +318,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _afterEndEdit: function(eip, withSaving) {
                var
                   eipRecord = eip.getEditingRecord(),
-                  isAdd = !eipRecord.isStored();
+                  isAdd = eipRecord.getState() === 'Added';
                if (this._editingRecord) {
                   this._editingRecord.merge(eipRecord);
                   this._editingRecord = undefined;
@@ -351,7 +351,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   fieldName = field.getName();
                   clone.addField(field, undefined, record.get(fieldName));
                });
-               clone.setStored(record.isStored());
+               clone.setState(record.getState());
                return clone;
             },
             //TODO: Нужно переименовать метод
