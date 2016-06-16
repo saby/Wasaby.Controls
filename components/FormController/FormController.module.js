@@ -624,14 +624,15 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @remark
        * Команда применяется для того, чтобы логика обработки события производилась на стороне {@link SBIS3.CONTROLS.DialogActionBase}.
        * @param {String} eventName Имя события, о котором нужно оповестить {@link SBIS3.CONTROLS.DialogActionBase}.
+       * @param {*} additionalData Данные, которые должны быть проброшены в событие {@link SBIS3.CONTROLS.DialogActionBase}.
        * @command
        * @see read
        * @see create
        * @see update
        * @see destroy
        */
-      _actionNotify: function(eventName){
-         this._notify(eventName, this._options.record);
+      _actionNotify: function(eventName, additionalData){
+         this._notify(eventName, this._options.record, additionalData);
       },
       /**
        * Action, который позволяет выставить активность дочернего контрола после загрузки
