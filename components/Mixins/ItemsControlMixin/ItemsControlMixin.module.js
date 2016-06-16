@@ -1855,6 +1855,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             return this._options._itemsProjection.at(this._options._itemsProjection.getCount()-1).getContents();
          }
       },
+      /**
+       * Обработчик для обновления проперти. В наследниках itemsControlMixin иногда требуется по особому обработать изменение проперти.
+       * @param item
+       * @param property
+       * @private
+       */
       _onUpdateItemProperty: function(item, property) {
          if (this._isNeedToRedraw()) {
             this._changeItemProperties(item, property);
@@ -1863,7 +1869,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    };
 
    var
-      onCollectionItemChange = function(eventObject, item, index, property){
+      onCollectionItemChange = function(eventObject, item, index, property) {
+         //Вызываем обработчик для обновления проперти. В наследниках itemsControlMixin иногда требуется по особому обработать изменение проперти.
          this._onUpdateItemProperty(item, property);
       },
       /**
