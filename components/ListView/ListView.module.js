@@ -1752,6 +1752,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   self._loader = null;
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                   var hasNextPage = self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset);
+                  //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
+                  this.getItems().setMetaData(dataSet.getMetaData());
                   if (hasNextPage) {
                      self._infiniteScrollOffset += self._limit;
                   } else {
@@ -1785,9 +1787,6 @@ define('js!SBIS3.CONTROLS.ListView',
                         self.getItems().append(dataSet);
                         ladder && ladder.setIgnoreEnabled(false);
                      }
-
-                     //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
-                     self.getItems().setMetaData(dataSet.getMetaData());
 
                      if (this._isSlowDrawing()) {
                         self._drawItems(dataSet.toArray(), at);
