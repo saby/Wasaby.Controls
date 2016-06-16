@@ -287,7 +287,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       _getFieldFormat: function(name) {
          var owner = this.getOwner();
-         if (owner) {
+         if (owner && $ws.helpers.instanceOfMixin(owner, 'SBIS3.CONTROLS.Data.FormattableMixin')) {
             return owner._getFieldFormat(name);
          } else {
             return FormattableMixin._getFieldFormat.call(this, name);

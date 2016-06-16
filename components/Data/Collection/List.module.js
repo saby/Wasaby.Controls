@@ -134,7 +134,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             this._removeChild(this._$items[i]);
          }
          this._$items.length = 0;
-         
+
          items = this._splice(items || [], 0, 0, IBindCollection.ACTION_REPLACE);
 
          for (i = 0, count = items.length; i < count; i++) {
