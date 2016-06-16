@@ -42,11 +42,6 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', ['js!SBIS3.CONTROLS.Utils.KbLayo
       },
 
 
-      // FIXME костыль до перехода на пикера по фокусную систему
-      _inputFocusInHandler: function() {
-         this._observableControlFocusHandler();
-      },
-
       after: {
          _keyDownBind: function(e) {
             /* Запрещаем всплытие enter по событию keyDown,
@@ -56,6 +51,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', ['js!SBIS3.CONTROLS.Utils.KbLayo
             } else {
                this._changedByKeyboard = true;
             }
+         },
+
+         // FIXME костыль до перехода на пикера по фокусную систему
+         _inputFocusInHandler: function() {
+            this._observableControlFocusHandler();
          },
          /**
           * Блочим события поднятия служебных клавиш,
