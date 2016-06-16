@@ -226,7 +226,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
             );
             //todo нужно сделать цепочки операций на рекордсете тогда можно будет объединить remove и add
             //todo а пока создается новый элемент проекции и если он был открыт то восттановим ему состояние
-            if ($ws.helpers.indstanceOfMovule(projItem, 'SBIS3.CONTROLS.Data.Projection.TreeItem') && projItem.isExpanded()) {
+            if ($ws.helpers.instanceOfModule(projItem, 'SBIS3.CONTROLS.Data.Projection.TreeItem') && projItem.isExpanded()) {
                this._options._itemsProjection.getItemBySourceItem(item).setExpanded(true);
             }
          }.bind(this));
