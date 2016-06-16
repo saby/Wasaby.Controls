@@ -248,7 +248,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
        */
       getEditArrow: function() {
          var self = this;
-         if(!this._editArrow && this._options.editArrow) {
+         if(!this._editArrow && (this._options.editArrow || this._options.arrowActivatedHandler)) {
             this._editArrow = new IconButton({
                element: this._container.find('> .controls-TreeView__editArrow-container'),
                icon: 'icon-16 icon-View icon-primary action-hover icon-size',
@@ -322,7 +322,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _updateEditArrow: function() {
-         if(this._options.editArrow) {
+         if(this._options.editArrow || this._options.arrowActivatedHandler) {
             if(this.getHoveredItem().container) {
                this._showEditArrow();
             } else {
@@ -364,14 +364,14 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _onLeftSwipeHandler: function() {
-         if(this._options.editArrow) {
+         if(this._options.editArrow || this._options.arrowActivatedHandler) {
             this._showEditArrow();
          }
          TreeDataGridView.superclass._onLeftSwipeHandler.apply(this, arguments);
       },
 
       _onRightSwipeHandler: function() {
-         if(this._options.editArrow) {
+         if(this._options.editArrow || this._options.arrowActivatedHandler) {
             this._hideEditArrow();
          }
          TreeDataGridView.superclass._onRightSwipeHandler.apply(this, arguments);
@@ -380,7 +380,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _isHoverControl: function(target) {
          var res = TreeDataGridView.superclass._isHoverControl.apply(this, arguments);
 
-         if(!res && this._options.editArrow) {
+         if(!res && (this._options.editArrow || this._options.arrowActivatedHandler)) {
             return this.getEditArrow().getContainer()[0] === target[0];
          }
          return res;
