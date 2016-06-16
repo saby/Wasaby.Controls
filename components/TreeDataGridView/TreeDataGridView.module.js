@@ -423,7 +423,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
       _notifyOnItemClick: function(id, data, target) {
          if(!$(target).hasClass('js-controls-TreeView__expand')) {
-            TreeDataGridView.superclass._notifyOnItemClick.apply(this, arguments);
+            return TreeDataGridView.superclass._notifyOnItemClick.apply(this, arguments);
          }
       },
 
