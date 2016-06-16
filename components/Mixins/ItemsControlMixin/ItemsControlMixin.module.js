@@ -485,6 +485,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          /*TODO Поддержка совместимости. Раньше если были заданы items массивом создавался сорс, осталась куча завязок на это*/
          if (this._options.items instanceof Array) {
+            if (this._options.pageSize && (this._options.items.length > this._options.pageSize)) {
+               $ws.single.ioc.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
+            }
             if (!this._options.keyField) {
                this._options.keyField = findKeyField(this._options.items)
             }
@@ -1315,7 +1318,19 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
           this._prepareConfig(undefined, items);
           this._notify('onDataLoad', this.getItems()); //TODO на это событие завязались. аккуратно спилить
           this._dataLoadedCallback(); //TODO на это завязаны хлебные крошки, нужно будет спилить
-          this.redraw();
+          if (items instanceof Array) {
+             if (this._options.pageSize && (items.length > this._options.pageSize)) {
+                $ws.single.ioc.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
+             }
+             if (!this._options.keyField) {
+                this._options.keyField = findKeyField(this._options.items)
+             }
+             this._dataSource = new MemorySource({
+                data: this._options.items,
+                idProperty: this._options.keyField
+             });
+          }
+          this.reload();
 
       },
 
