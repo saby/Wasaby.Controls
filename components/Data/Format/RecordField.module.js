@@ -1,25 +1,6 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Format.RecordField', [
-   'js!SBIS3.CONTROLS.Data.Format.Field'
-], function (Field) {
+define('js!SBIS3.CONTROLS.Data.Format.RecordField', ['js!WS.Data.Format.RecordField'], function (RecordField) {
    'use strict';
-
-   /**
-    * Формат поля для записи
-    * @class SBIS3.CONTROLS.Data.Format.RecordField
-    * @extends SBIS3.CONTROLS.Data.Format.Field
-    * @public
-    * @author Мальцев Алексей
-    */
-
-   var RecordField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.RecordField.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Format.RecordField'
-
-      //region Public methods
-
-      //endregion Public methods
-
-   });
-
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Format.RecordField', 'Module has been renamed in 3.7.4.100. Use WS.Data.Format.RecordField instead');
    return RecordField;
 });

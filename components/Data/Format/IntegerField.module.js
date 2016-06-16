@@ -1,33 +1,6 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Format.IntegerField', [
-   'js!SBIS3.CONTROLS.Data.Format.Field'
-], function (Field) {
+define('js!SBIS3.CONTROLS.Data.Format.IntegerField', ['js!WS.Data.Format.IntegerField'], function (IntegerField) {
    'use strict';
-
-   /**
-    * Формат целочисленного поля
-    * @class SBIS3.CONTROLS.Data.Format.IntegerField
-    * @extends SBIS3.CONTROLS.Data.Format.Field
-    * @public
-    * @author Мальцев Алексей
-    */
-
-   var IntegerField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.IntegerField.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Format.IntegerField',
-
-      /**
-       * @cfg {Number} Значение поля по умолчанию
-       * @name SBIS3.CONTROLS.Data.Format.IntegerField#defaultValue
-       * @see getDefaultValue
-       * @see setDefaultValue
-       */
-      _$defaultValue: 0
-
-      //region Public methods
-
-      //endregion Public methods
-
-   });
-
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Format.IntegerField', 'Module has been renamed in 3.7.4.100. Use WS.Data.Format.IntegerField instead');
    return IntegerField;
 });

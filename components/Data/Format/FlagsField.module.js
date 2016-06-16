@@ -1,25 +1,6 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Format.FlagsField', [
-   'js!SBIS3.CONTROLS.Data.Format.DictionaryField'
-], function (DictionaryField) {
+define('js!SBIS3.CONTROLS.Data.Format.FlagsField', ['js!WS.Data.Format.FlagsField'], function (FlagsField) {
    'use strict';
-
-   /**
-    * Формат поля флагов
-    * @class SBIS3.CONTROLS.Data.Format.FlagsField
-    * @extends SBIS3.CONTROLS.Data.Format.DictionaryField
-    * @public
-    * @author Мальцев Алексей
-    */
-
-   var FlagsField = DictionaryField.extend(/** @lends SBIS3.CONTROLS.Data.Format.FlagsField.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Format.FlagsField'
-
-      //region Public methods
-
-      //endregion Public methods
-
-   });
-
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Format.FlagsField', 'Module has been renamed in 3.7.4.100. Use WS.Data.Format.FlagsField instead');
    return FlagsField;
 });

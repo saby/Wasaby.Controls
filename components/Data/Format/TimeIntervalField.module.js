@@ -1,33 +1,6 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Format.TimeIntervalField', [
-   'js!SBIS3.CONTROLS.Data.Format.Field'
-], function (Field) {
+define('js!SBIS3.CONTROLS.Data.Format.TimeIntervalField', ['js!WS.Data.Format.TimeIntervalField'], function (TimeIntervalField) {
    'use strict';
-
-   /**
-    * Формат поля временной интервал
-    * @class SBIS3.CONTROLS.Data.Format.TimeIntervalField
-    * @extends SBIS3.CONTROLS.Data.Format.Field
-    * @public
-    * @author Мальцев Алексей
-    */
-
-   var TimeIntervalField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.TimeIntervalField.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Format.TimeIntervalField',
-
-      /**
-       * @cfg {Number} Значение поля по умолчанию
-       * @name SBIS3.CONTROLS.Data.Format.TimeIntervalField#defaultValue
-       * @see getDefaultValue
-       * @see setDefaultValue
-       */
-      _$defaultValue: 0
-
-      //region Public methods
-
-      //endregion Public methods
-
-   });
-
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Format.TimeIntervalField', 'Module has been renamed in 3.7.4.100. Use WS.Data.Format.TimeIntervalField instead');
    return TimeIntervalField;
 });

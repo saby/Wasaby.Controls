@@ -1,25 +1,6 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Format.BooleanField', [
-   'js!SBIS3.CONTROLS.Data.Format.Field'
-], function (Field) {
+define('js!SBIS3.CONTROLS.Data.Format.BooleanField', ['js!WS.Data.Format.BooleanField'], function (BooleanField) {
    'use strict';
-
-   /**
-    * Формат логического поля
-    * @class SBIS3.CONTROLS.Data.Format.BooleanField
-    * @extends SBIS3.CONTROLS.Data.Format.Field
-    * @public
-    * @author Мальцев Алексей
-    */
-
-   var BooleanField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.BooleanField.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Format.BooleanField'
-
-      //region Public methods
-
-      //endregion Public methods
-
-   });
-
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Format.BooleanField', 'Module has been renamed in 3.7.4.100. Use WS.Data.Format.BooleanField instead');
    return BooleanField;
 });

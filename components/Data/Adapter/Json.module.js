@@ -1,38 +1,6 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Adapter.Json', [
-   'js!SBIS3.CONTROLS.Data.Adapter.Abstract',
-   'js!SBIS3.CONTROLS.Data.Adapter.JsonTable',
-   'js!SBIS3.CONTROLS.Data.Adapter.JsonRecord',
-   'js!SBIS3.CONTROLS.Data.Di'
-], function (Abstract, JsonTable, JsonRecord, Di) {
+define('js!SBIS3.CONTROLS.Data.Adapter.Json', ['js!WS.Data.Adapter.Json'], function (Json) {
    'use strict';
-
-   /**
-    * Адаптер для данных в формате JSON
-    * @class SBIS3.CONTROLS.Data.Adapter.Json
-    * @extends SBIS3.CONTROLS.Data.Adapter.Abstract
-    * @public
-    * @author Мальцев Алексей
-    */
-
-   var Json = Abstract.extend(/** @lends SBIS3.CONTROLS.Data.Adapter.Json.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Adapter.Json',
-
-      forTable: function (data) {
-         return new JsonTable(data);
-      },
-
-      forRecord: function (data) {
-         return new JsonRecord(data);
-      },
-
-      getKeyField: function () {
-         return undefined;
-      }
-   });
-
-   Di.register('adapter.json', Json);
-
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Adapter.Json', 'Module has been renamed in 3.7.4.100. Use WS.Data.Adapter.Json instead');
    return Json;
 });
-

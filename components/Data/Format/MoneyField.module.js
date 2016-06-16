@@ -1,27 +1,6 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Format.MoneyField', [
-   'js!SBIS3.CONTROLS.Data.Format.RealField'
-], function (RealField) {
+define('js!SBIS3.CONTROLS.Data.Format.MoneyField', ['js!WS.Data.Format.MoneyField'], function (MoneyField) {
    'use strict';
-
-   /**
-    * Формат вещественного поля
-    * @class SBIS3.CONTROLS.Data.Format.MoneyField
-    * @extends SBIS3.CONTROLS.Data.Format.RealField
-    * @public
-    * @author Мальцев Алексей
-    */
-
-   var MoneyField = RealField.extend(/** @lends SBIS3.CONTROLS.Data.Format.MoneyField.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Format.MoneyField',
-
-      _$precision: 2
-
-      //region Public methods
-
-      //endregion Public methods
-
-   });
-
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Format.MoneyField', 'Module has been renamed in 3.7.4.100. Use WS.Data.Format.MoneyField instead');
    return MoneyField;
 });

@@ -1,26 +1,6 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.ContextField.Record', [
-   'js!SBIS3.CONTROLS.Data.ContextField.RecordMixin',
-   'js!SBIS3.CONTROLS.Data.ContextField.Base'
-], function (RecordMixin, ContextFieldBase) {
+define('js!SBIS3.CONTROLS.Data.ContextField.Record', ['js!WS.Data.ContextField.Record'], function (Record) {
    'use strict';
-
-   /**
-    * Поддержка типа запись в контексте
-    * @class SBIS3.CONTROLS.Data.ContextField.Record
-    * @mixes SBIS3.CONTROLS.Data.ContextField.RecordMixin
-    * @extends SBIS3.CONTROLS.Data.ContextField.Base
-    * @author Мальцев Алексей
-    */
-   return $ws.core.extend(ContextFieldBase, [RecordMixin], /** @lends SBIS3.CONTROLS.Data.ContextField.Record.prototype*/{
-      name: 'ControlsFieldTypeRecord',
-
-      subscribe: function (value, fn) {
-         var handler = fn.debounce(1);
-         value.subscribe('onPropertyChange', handler);
-         return function () {
-            value.unsubscribe('onPropertyChange', handler);
-         };
-      }
-   });
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.ContextField.Record', 'Module has been renamed in 3.7.4.100. Use WS.Data.ContextField.Record instead');
+   return Record;
 });
