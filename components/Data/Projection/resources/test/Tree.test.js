@@ -607,6 +607,63 @@ define([
                      done();
                   }
                });
+
+               it('should properly fire with dublicates', function(done) {
+                  var list = new ObservableList({
+                        items: [{
+                           id: 'a',
+                           pid: 0
+                        }, {
+                           id: 'aa',
+                           pid: 'a'
+                        }, {
+                           id: 'aaa',
+                           pid: 'aa'
+                        }, {
+                           id: 'b',
+                           pid: 0
+                        }, {
+                           id: 'ba',
+                           pid: 'b'
+                        }, {
+                           id: 'bb',
+                           pid: 'b'
+                        }]
+                     }),
+                     tree = getObservableTree(list),
+                     expectNewItems = [['aa1'], ['a']],
+                     expectNewItemsIndex = [3, 7],
+                     firesCount = 0,
+                     handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                        try {
+                           assert.strictEqual(action, IBindCollectionProjection.ACTION_ADD);
+
+                           assert.strictEqual(newItems.length, expectNewItems[firesCount].length);
+                           assert.strictEqual(newItemsIndex, expectNewItemsIndex[firesCount]);
+                           for (var i = 0; i < newItems.length; i++) {
+                              assert.strictEqual(newItems[i].getContents().id, expectNewItems[firesCount][i]);
+                           }
+
+                           assert.strictEqual(oldItems.length, 0);
+                           assert.strictEqual(oldItemsIndex, 0);
+                        } catch (err) {
+                           done(err);
+                        }
+                        firesCount++;
+                     };
+                  tree.subscribe('onCollectionChange', handler);
+                  list.append([{
+                     id: 'a',
+                     pid: 0
+                  }, {
+                     id: 'aa1',
+                     pid: 'a'
+                  }]);
+                  tree.unsubscribe('onCollectionChange', handler);
+                  if (firesCount === 2) {
+                     done();
+                  }
+               });
             });
 
             context('onCollectionItemChange', function() {
