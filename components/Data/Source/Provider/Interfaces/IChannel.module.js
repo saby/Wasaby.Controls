@@ -1,20 +1,6 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Source.Provider.IChannel', [
-], function () {
+define('js!SBIS3.CONTROLS.Data.Source.Provider.IChannel', ['js!WS.Data.Source.Provider.IChannel'], function (IChannel) {
    'use strict';
-
-   /**
-    * Интерфейс канала серверных событий
-    * @mixin SBIS3.CONTROLS.Data.Source.Provider.IChannel
-    * @public
-    * @author Мальцев Алексей
-    */
-
-   return /** @lends SBIS3.CONTROLS.Data.Source.Provider.IChannel.prototype */{
-      /**
-       * @event onMessage При получении уведомления о серверном событии
-       * @param {$ws.proto.EventObject} event Дескриптор события.
-       * @param {String|Object} message Сообщение события.
-       */
-   };
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Source.Provider.IChannel', 'Module has been renamed in 3.7.4.100. Use WS.Data.Source.Provider.IChannel instead');
+   return IChannel;
 });

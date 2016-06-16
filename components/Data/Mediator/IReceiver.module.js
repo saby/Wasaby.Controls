@@ -1,22 +1,6 @@
 /* global define */
-define('js!SBIS3.CONTROLS.Data.Mediator.IReceiver', [], function () {
+define('js!SBIS3.CONTROLS.Data.Mediator.IReceiver', ['js!WS.Data.Mediator.IReceiver'], function (IReceiver) {
    'use strict';
-
-   /**
-    * Интерфейс сущности, взаимодействующей с посредником
-    * @mixin SBIS3.CONTROLS.Data.Mediator.IReceiver
-    * @author Мальцев Алексей
-    */
-
-   return /** @lends SBIS3.CONTROLS.Data.Mediator.IReceiver.prototype */{
-      /**
-       * Принимает уведомление от посредника об изменении отношений
-       * @param {Object} which Объект, уведомивший об изменении отношений
-       * @param {String} [name] Название отношений
-       * @param {*} [data] Данные о состоянии отношений
-       */
-      relationChanged: function (which, name, data) {
-         throw new Error('Method must be implemented');
-      }
-   };
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Mediator.IReceiver', 'Module has been renamed in 3.7.4.100. Use WS.Data.Mediator.IReceiver instead');
+   return IReceiver;
 });

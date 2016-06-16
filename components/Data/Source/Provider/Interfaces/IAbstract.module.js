@@ -1,24 +1,6 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Source.Provider.IAbstract', [
-], function () {
+define('js!SBIS3.CONTROLS.Data.Source.Provider.IAbstract', ['js!WS.Data.Source.Provider.IAbstract'], function (IAbstract) {
    'use strict';
-
-   /**
-    * Интерфейс абстрактного провайдера
-    * @mixin SBIS3.CONTROLS.Data.Source.Provider.IAbstract
-    * @public
-    * @author Мальцев Алексей
-    */
-
-   return /** @lends SBIS3.CONTROLS.Data.Source.Provider.IAbstract.prototype */{
-      /**
-       * Вызывает удаленный сервис
-       * @param {String} name Имя сервиса
-       * @param {Object.<String, *>|Array} [args] Аргументы вызова
-       * @returns {$ws.proto.Deferred} Асинхронный результат операции
-       */
-      call: function(name, args) {
-         throw new Error('Method must be implemented');
-      }
-   };
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Source.Provider.IAbstract', 'Module has been renamed in 3.7.4.100. Use WS.Data.Source.Provider.IAbstract instead');
+   return IAbstract;
 });

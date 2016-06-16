@@ -1,24 +1,6 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Source.Provider.IRpc', [
-], function () {
+define('js!SBIS3.CONTROLS.Data.Source.Provider.IRpc', ['js!WS.Data.Source.Provider.IRpc'], function (IRpc) {
    'use strict';
-
-   /**
-    * Интерфейс RPC провайдера
-    * @mixin SBIS3.CONTROLS.Data.Source.Provider.IRpc
-    * @public
-    * @author Мальцев Алексей
-    */
-
-   return /** @lends SBIS3.CONTROLS.Data.Source.Provider.IRpc.prototype */{
-      /**
-       * Вызывает удаленный метод
-       * @param {String} method Имя метода
-       * @param {Object.<String, *>|Array} [args] Аргументы метода
-       * @returns {$ws.proto.Deferred} Асинхронный результат операции
-       */
-      call: function(method, args) {
-         throw new Error('Method must be implemented');
-      }
-   };
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Source.Provider.IRpc', 'Module has been renamed in 3.7.4.100. Use WS.Data.Source.Provider.IRpc instead');
+   return IRpc;
 });

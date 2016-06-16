@@ -1,21 +1,6 @@
 /* global define */
-define('js!SBIS3.CONTROLS.Data.Mediator.IMediator', [], function () {
+define('js!SBIS3.CONTROLS.Data.Mediator.IMediator', ['js!WS.Data.Mediator.IMediator'], function (IMediator) {
    'use strict';
-
-   /**
-    * Интерфейс абстрактного посредника
-    * @mixin SBIS3.CONTROLS.Data.Mediator.IMediator
-    * @author Мальцев Алексей
-    */
-
-   return /** @lends SBIS3.CONTROLS.Data.Mediator.IMediator.prototype */{
-      /**
-       * Возвращает singleton экземпляр посредника
-       * @returns {SBIS3.CONTROLS.Data.Collection.IEnumerator}
-       * @static
-       */
-      getInstance: function () {
-         throw new Error('Method must be implemented');
-      }
-   };
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Mediator.IMediator', 'Module has been renamed in 3.7.4.100. Use WS.Data.Mediator.IMediator instead');
+   return IMediator;
 });
