@@ -333,7 +333,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                   return error;
                }));
             } else {
-               dResult.callback(true);
+               dResult.callback();
             }
             dResult.addCallback(function(result){
                if (config.closePanelAfterSubmit) {
