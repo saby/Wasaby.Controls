@@ -970,7 +970,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          while ((afterItem = enumerator.getNext())) {
             session.after.push(afterItem);
          }
-         enumerator.setPosition(savedPosition);
+         if (enumerator.isValidPosition(savedPosition)) {
+            enumerator.setPosition(savedPosition);
+         }
 
          var groups = ['added', 'removed', 'replaced', 'moved'],
             changes,
@@ -1043,11 +1045,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             switch(groupName) {
                case 'added':
                   //собираем добавленные элементы
-                  if (!afterItem) {
+                  if (!afterItem || beforeItem === afterItem) {
                      continue;
                   }
                   afterIndex = index;
-                  beforeIndex = Array.indexOf(before, afterItem);
+                  beforeIndex = Array.indexOf(before, afterItem, startFrom);
                   //если элемента не было - добавим его в список новых,
                   //если был - отдаем накопленный список новых, если там что-то есть
                   if (beforeIndex === -1) {
@@ -1061,11 +1063,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                
                case 'removed':
                   //собираем удаленные элементы
-                  if (!beforeItem) {
+                  if (!beforeItem || beforeItem === afterItem) {
                      continue;
                   }
                   beforeIndex = index;
-                  afterIndex = Array.indexOf(after, beforeItem);
+                  afterIndex = Array.indexOf(after, beforeItem, startFrom);
                   //если элемента не стало - добавим его в список старых,
                   //если остался - отдаем накопленный список старых, если там что-то есть
                   if (afterIndex === -1) {
@@ -1082,7 +1084,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                      continue;
                   }
                   afterIndex = index;
-                  beforeIndex = Array.indexOf(before, afterItem);
+                  beforeIndex = Array.indexOf(before, afterItem, startFrom);
                   //если элемент на месте, но изменилось его содержимое - добавим новый в список новых, а для старого генерим новую обертку, которую добавим в список старых
                   //если остался - отдаем накопленные списки старых и новых, если в них что-то есть
                   if (
@@ -1099,13 +1101,16 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                
                case 'moved':
                   //собираем перемещенные элементы
-                  if (!beforeItem) {
+                  if (before.length !== after.length) {
+                     throw new Error('The "before" and "after" arrays are not synchronized by the length - "move" can\'t be applied.');
+                  }
+                  if (!beforeItem || beforeItem === afterItem) {
                      continue;
                   }
                   //поверяем, что afterItem есть в before
                   do {
                      afterItem = after[index + offset];
-                     beforeIndex = Array.indexOf(before, afterItem);
+                     beforeIndex = Array.indexOf(before, afterItem, startFrom);
                      if (beforeIndex === -1) {
                         //afterItem нет в before - пропускаем его
                         offset++;
