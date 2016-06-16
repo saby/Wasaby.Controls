@@ -566,18 +566,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          if(applyOnLoad) {
             filter = historyController.getActiveFilter();
 
-            /* Надо скрыть строку фильтров, т.к. фильтр могут поменять при перед установкой сорса,
-               и строка будет не актуальной/будет моргать */
-            if(!view.getItems()) {
-               filterLineContainer = filterButton.getContainer().find('.controls__filterButton__filterLine');
-               filterLineContainer.addClass('ws-invisible');
-               view.once('onItemsReady', function() {
-                  filterLineContainer.removeClass('ws-invisible');
-               })
+            if(filter) {
+               /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
+               filterButton.setFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
+               /* Это синхронизирует фильтр и структуру, т.к. некоторые фильтры возможно мы не сохраняли,
+                  и надо, чтобы это отразилось в структуре */
+               view.setFilter(filter.viewFilter, true);
             }
-
-            /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
-            filterButton.setFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
          }
          setTimeout($ws.helpers.forAliveOnly(function() {
             // Через timeout, чтобы можно было подписаться на соыбтие, уйдёт с серверным рендерингом
