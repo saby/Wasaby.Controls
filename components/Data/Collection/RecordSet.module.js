@@ -177,9 +177,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             )
             .callNext(function() {
                this._clearServiceEnumerator();
-               this.each(function(record) {
-                  record.setOwner(this);
-               });
             });
       },
 
@@ -846,9 +843,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._getRawDataAdapter().replace(item.getRawData(), at);
          var oldItem = this._$items[at];
          RecordSet.superclass.replace.call(this, item, at);
-         oldItem.setOwner(null);
          oldItem.setState(RecordState.DETACHED);
-         item.setOwner(this);
          item.setState(RecordState.CHANGED);
          this._indexTree = {};
       },
@@ -867,7 +862,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          }
          for (i = 0, count = items.length; i < count; i++) {
             item = items[i];
-            item.setOwner(this);
             item.setState(RecordState.CHANGED);
          }
          this._indexTree = {};

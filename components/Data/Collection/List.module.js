@@ -129,10 +129,15 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       //region SBIS3.CONTROLS.Data.Collection.IList
 
       assign: function (items) {
+         var i, count;
+         for (i = 0, count = this._$items.length; i < count; i++) {
+            this._removeChild(this._$items[i]);
+         }
          this._$items.length = 0;
+         
          items = this._splice(items || [], 0, 0, IBindCollection.ACTION_REPLACE);
 
-         for (var i = 0, count = items.length; i < count; i++) {
+         for (i = 0, count = items.length; i < count; i++) {
             this._addChild(items[i], 'owner');
          }
          this._childChanged(items);
