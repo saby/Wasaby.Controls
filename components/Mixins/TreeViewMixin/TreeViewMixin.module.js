@@ -234,12 +234,11 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
           * @param property
           * @private
           */
-         _changeItemProperties: function(parentFunc, item, property) {
+         _onUpdateItemProperty: function(parentFunc, item, property) {
             if (property === 'expanded') {
                this._onChangeItemExpanded(item);
-            } else {
-               parentFunc.call(this, item, property);
             }
+            parentFunc.call(this, item, property);
          }
       },
       before: {

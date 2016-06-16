@@ -1854,15 +1854,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if(this._options._itemsProjection && this._options._itemsProjection.getCount()) {
             return this._options._itemsProjection.at(this._options._itemsProjection.getCount()-1).getContents();
          }
+      },
+      _onUpdateItemProperty: function(item, property) {
+         if (this._isNeedToRedraw()) {
+            this._changeItemProperties(item, property);
+         }
       }
    };
 
    var
       onCollectionItemChange = function(eventObject, item, index, property){
-         if (this._isNeedToRedraw()) {
-            this._changeItemProperties(item, property);
-            this._drawItemsCallback();
-         }
+         this._onUpdateItemProperty(item, property);
       },
       /**
        * Обрабатывает событие об изменении коллекции
