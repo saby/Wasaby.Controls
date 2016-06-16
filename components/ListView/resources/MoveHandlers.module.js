@@ -212,30 +212,19 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
          });
       },
       _afterOrderChange: function(items, moveToItem, up) {
-         var moveToIndex;
+         this._options._itemsProjection.setEventRaising(false, true);
          $ws.helpers.forEach(items, function(item) {
-            this._options._items.remove(item);
-
-            moveToIndex = this._options._items.getIndex(moveToItem);
-            if(!up) {
-               moveToIndex = this._options._itemsProjection.getIndexBySourceIndex(moveToIndex);
-               var projectionItem = this._options._itemsProjection.getNext(
-                   this._options._itemsProjection.at(moveToIndex)
-               );
-               if(projectionItem) {
-                  moveToIndex = this._options._itemsProjection.getSourceIndexByIndex(
-                      this._options._itemsProjection.getIndex(projectionItem)
-                  );
-               } else {
-                  moveToIndex = this._options._items.getCount();
-               }
-            }
-
-            this._options._items.add(
-                item,
-                moveToIndex < this._options._items.getCount() ? moveToIndex : undefined
+            var projItem = this._options._itemsProjection.getItemBySourceItem(item);
+            var moveToIndex = this._options._itemsProjection.getIndex(
+               this._options._itemsProjection[up ? 'getPrev' : 'getNext' ](projItem)
+            );
+            this._options._itemsProjection.remove(projItem);
+            this._options._itemsProjection.add(
+               projItem,
+               moveToIndex < this._options._itemsProjection.getCount() ? moveToIndex : undefined
             );
          }.bind(this));
+         this._options._itemsProjection.setEventRaising(true, true);
       }
    };
 
