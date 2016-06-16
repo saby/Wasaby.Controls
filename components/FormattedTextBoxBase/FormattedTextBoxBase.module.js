@@ -671,7 +671,13 @@ define(
             e.preventDefault();
          });
          //keypress учитывает расскладку, keydown - нет
-         this._inputField.keypress(this._keyPressBind.bind(this));
+         this._inputField.keypress(function(event) {
+            //FF зачем то кидает событие keypress для управляющих символов, в отличии от всех остальных браузеров.
+            //Просто проигнорируем это событие, т.к. управляющая клавиша уже обработана в keydown.
+            if (!($ws._const.browser.firefox && event.charCode === 0)) {
+               self._keyPressBind(event);
+            }
+         });
          //keydown ловит управляющие символы, keypress - нет
          this._inputField.keydown(this._keyDownBind.bind(this));
          this._inputField.bind('paste', function(e) {
