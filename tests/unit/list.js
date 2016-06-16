@@ -27,6 +27,7 @@ define([
 '../../components/Data/Format/resources/test/TextField.test',
 '../../components/Data/Format/resources/test/TimeIntervalField.test',
 '../../components/Data/Format/resources/test/XmlField.test',
+'../../components/Data/Mediator/resources/test/OneToMany.test',
 '../../components/Data/MoveStrategy/resources/test/Base.test',
 '../../components/Data/MoveStrategy/resources/test/Sbis.test',
 '../../components/Data/Projection/resources/test/Collection.test',

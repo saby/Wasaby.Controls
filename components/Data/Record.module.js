@@ -3,11 +3,13 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    'js!SBIS3.CONTROLS.Data.IObject',
    'js!SBIS3.CONTROLS.Data.ICloneable',
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
+   'js!SBIS3.CONTROLS.Data.Mediator.IReceiver',
    'js!SBIS3.CONTROLS.Data.Entity.Abstract',
    'js!SBIS3.CONTROLS.Data.Entity.OptionsMixin',
    'js!SBIS3.CONTROLS.Data.Entity.ObservableMixin',
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.CloneableMixin',
+   'js!SBIS3.CONTROLS.Data.OneToManyMixin',
    'js!SBIS3.CONTROLS.Data.FormattableMixin',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.Di',
@@ -19,11 +21,13 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    IObject,
    ICloneable,
    IEnumerable,
+   IMediatorReceiver,
    Abstract,
    OptionsMixin,
    ObservableMixin,
    SerializableMixin,
    CloneableMixin,
+   OneToManyMixin,
    FormattableMixin,
    ArrayEnumerator,
    Di,
@@ -41,14 +45,13 @@ define('js!SBIS3.CONTROLS.Data.Record', [
     * @mixes SBIS3.CONTROLS.Data.IObject
     * @mixes SBIS3.CONTROLS.Data.ICloneable
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
+    * @mixes SBIS3.CONTROLS.Data.Mediator.IReceiver
     * @mixes SBIS3.CONTROLS.Data.Entity.OptionsMixin
     * @mixes SBIS3.CONTROLS.Data.Entity.ObservableMixin
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @mixes SBIS3.CONTROLS.Data.CloneableMixin
     * @mixes SBIS3.CONTROLS.Data.FormattableMixin
     * @public
-    * @ignoreOptions owner
-    * @ignoreMethods setOwner
     * @author Мальцев Алексей
     */
 
@@ -60,7 +63,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       DETACHED: 'Detached'
    };
 
-   var Record = Abstract.extend([IObject, ICloneable, IEnumerable, OptionsMixin, ObservableMixin, SerializableMixin, CloneableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
+   var Record = Abstract.extend([IObject, ICloneable, IEnumerable, IMediatorReceiver, OptionsMixin, ObservableMixin, SerializableMixin, CloneableMixin, OneToManyMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
       /**
        * @typedef {String} RecordState
        * @variant Added Запись была добавлена в рекордсет, но метод Record::acceptChanges() не был вызыван.
@@ -73,13 +76,6 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       _moduleName: 'SBIS3.CONTROLS.Data.Record',
 
       _compatibleConstructor: true,//Чтобы в наследниках с "old style extend" звался нативный constructor()
-
-      /**
-       * @cfg {SBIS3.CONTROLS.Data.Collection.RecordSet} Рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
-       * @name SBIS3.CONTROLS.Data.Record#owner
-       * @see getOwner
-       */
-      _$owner: null,
 
       /**
        * @cfg {RecordState} Текущее состояние записи.
@@ -172,7 +168,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
             delete map[equals[i]];
          }
          if (!Object.isEmpty(map)) {
-            this._notify('onPropertyChange', map);
+            this._notifyChange(map);
          }
       },
 
@@ -211,13 +207,36 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
+      //region SBIS3.CONTROLS.Data.Mediator.IReceiver
+
+      relationChanged: function (which, name, data) {
+         var fieldName;
+         if (name === 'owner') {
+            switch (data) {
+               case 'addField':
+               case 'removeField':
+               case 'removeFieldAt':
+                  this._resetRawDataAdapter();
+                  this._resetRawDataFields();
+                  break;
+            }
+         } else if ((fieldName = this._getFieldFromRelationName(name))) {
+            var fieldValue = this.get(fieldName),
+               map = {};
+            this._setChanged(fieldName, fieldValue);
+            map[fieldName] = fieldValue;
+            this._notify('onPropertyChange', map);
+         }
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Mediator.IReceiver
+
       //region SBIS3.CONTROLS.Data.SerializableMixin
 
       _getSerializableState: function(state) {
          state = SerializableMixin._getSerializableState.call(this, state);
          state = FormattableMixin._getSerializableState.call(this, state);
          state._changedFields = this._changedFields;
-         delete state.$options.owner;
          return state;
       },
 
@@ -238,7 +257,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       setRawData: function(rawData) {
          FormattableMixin.setRawData.call(this, rawData);
          this._clearPropertiesCache();
-         this._notify('onPropertyChange');
+         this._notifyChange();
       },
 
       setAdapter: function (adapter) {
@@ -280,8 +299,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @protected
        */
       _checkFormatIsWritable: function() {
-         if (this._$owner) {
-            throw new Error('Record format has read only access. You should change recordset format instead. See option "owner" for details.');
+         if (this.getOwner()) {
+            throw new Error('Record format has read only access if record belongs to recordset. You should change recordset format instead.');
          }
       },
 
@@ -328,16 +347,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
        */
       getOwner: function() {
-         return this._$owner;
-      },
-
-      /**
-       * Устанавливает рекордсет, которому принадлежит запись. Данный метод может вызывать только сам рекордсет!
-       * @param {SBIS3.CONTROLS.Data.Collection.RecordSet} owner Новый владелец
-       * @see getOwner
-       */
-      setOwner: function(owner) {
-         this._$owner = owner;
+         return this._getMediator().getParent(this) || null;
       },
 
       /**
@@ -409,6 +419,17 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       //region Protected methods
 
+      _getRelationNameForField: function(name) {
+         return _fieldRelationPrefix + name;
+      },
+
+      _getFieldFromRelationName: function(name) {
+         name += '';
+         if (name.substr(0, _fieldRelationPrefix.length) === _fieldRelationPrefix) {
+            return name.substr(_fieldRelationPrefix.length);
+         }
+      },
+
       /**
        * Проверяет наличие закэшированного значения поля
        * @param {String} name Название поля
@@ -449,6 +470,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        */
       _unsetFromPropertiesCache: function (name) {
          if (this._propertiesCache) {
+            this._removeChild(this._propertiesCache[name]);
             delete this._propertiesCache[name];
          }
       },
@@ -458,6 +480,13 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @protected
        */
       _clearPropertiesCache: function () {
+         if (this._propertiesCache) {
+            for (var name in this._propertiesCache) {
+               if (this._propertiesCache.hasOwnProperty(name)) {
+                  this._removeChild(this._propertiesCache[name]);
+               }
+            }
+         }
          this._propertiesCache = null;
       },
 
@@ -489,11 +518,13 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          var adapter = this._getRawDataAdapter();
 
          try {
-            return Factory.cast(
+            var result = Factory.cast(
                adapter.get(name),
                adapter.getSharedFormat(name),
                this.getAdapter()
             );
+            this._addChild(result, this._getRelationNameForField(name));
+            return result;
          } catch (e) {
             return undefined;
          }
@@ -525,6 +556,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
                this.getAdapter()
             )
          );
+         this._addChild(value, this._getRelationNameForField(name));
 
          if (!(this._$rawData instanceof Object)) {
             this._$rawData = adapter.getData();
@@ -576,6 +608,16 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       },
 
       /**
+       * Уведомляет об изменении полей записи
+       * @param {Object.<String, *)} [map] Измененные поля
+       * @protected
+       */
+      _notifyChange: function(map) {
+         this._childChanged(map);
+         this._notify('onPropertyChange', map);
+      },
+
+      /**
        * Устанавливает признак изменения поля
        * @param {String} name Название поля
        * @param {Boolean} value Старое значение поля
@@ -604,6 +646,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       //endregion Protected methods
    });
+
+   var _fieldRelationPrefix = 'field.';
 
    Record.RecordState = RecordState;
 

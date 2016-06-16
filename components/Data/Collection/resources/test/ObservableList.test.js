@@ -323,32 +323,6 @@ define([
                   list.destroy();
                });
             });
-
-            it('should trigger an event with changed item', function(done) {
-               var list = new ObservableList({
-                     items: []
-                  }),
-                  addItem,
-                  handler = function(event, item, index, property) {
-                     try {
-                        assert.strictEqual(addItem, item);
-                        assert.strictEqual(index, 0);
-                        assert.strictEqual(property.test, 'ok');
-                        done();
-                     } catch (err) {
-                        done(err);
-                     }
-                  };
-               var addItem = new Model({
-                  rawData: {test: 'fail'},
-                  adapter: new JsonAdapter()
-               });
-               list.add(addItem);
-               list.subscribe('onCollectionItemChange', handler);
-               addItem.set('test', 'ok');
-               list.unsubscribe('onCollectionItemChange', handler);
-               list.destroy();
-            });
          });
 
          describe('.removeAt()', function() {
@@ -396,14 +370,13 @@ define([
                var list = new ObservableList({
                      items: []
                   }),
-                  addItem,
+                  addItem = new Model({
+                     rawData: {test: 'fail'}
+                  }),
                   handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
                      done(err);
                   };
-               var addItem = new Model({
-                  rawData: {test: 'fail'},
-                  adapter: new JsonAdapter()
-               });
+
                list.add(addItem);
                list.removeAt(0);
                list.subscribe('onCollectionChange', handler);
@@ -480,6 +453,32 @@ define([
 
                list.unsubscribe('onCollectionChange', handler);
                list.destroy();
+            });
+         });
+
+         describe('.subscribe()', function() {
+            it('should trigger an event with changed item', function(done) {
+               var list = new ObservableList({
+                     items: []
+                  }),
+                  addItem = new Model({
+                     rawData: {test: 'fail'}
+                  }),
+                  handler = function(event, item, index, property) {
+                     try {
+                        assert.strictEqual(addItem, item);
+                        assert.strictEqual(index, 0);
+                        assert.strictEqual(property.test, 'ok');
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+
+               list.add(addItem);
+               list.subscribe('onCollectionItemChange', handler);
+               addItem.set('test', 'ok');
+               list.unsubscribe('onCollectionItemChange', handler);
             });
          });
       });

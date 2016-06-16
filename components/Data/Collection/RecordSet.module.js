@@ -149,7 +149,19 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          }
       },
 
-      // region SBIS3.CONTROLS.Data.SerializableMixin
+      //region SBIS3.CONTROLS.Data.Mediator.IReceiver
+
+      relationChanged: function (which, name, data) {
+         if (name === 'owner') {
+            this._resetRawDataAdapter();
+            this._resetRawDataFields();
+         }
+         RecordSet.superclass.relationChanged.call(this, which, name, data);
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Mediator.IReceiver
+
+      //region SBIS3.CONTROLS.Data.SerializableMixin
 
       _getSerializableState: function(state) {
          state = RecordSet.superclass._getSerializableState.call(this, state);
@@ -184,32 +196,25 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          format = this._buildField(format);
          FormattableMixin.addField.call(this, format, at);
 
-         var name = format.getName(),
-            methodName = 'addField';
-         this.each(function(record) {
-            record.notifyFormatChanged(methodName, arguments);
-            if (value !== undefined) {
+         this._parentChanged('addField');
+         if (value !== undefined) {
+            var name = format.getName();
+            this.each(function(record) {
                record.set(name, value);
-            }
-         });
+            });
+         }
       },
 
       removeField: function(name) {
          FormattableMixin.removeField.call(this, name);
 
-         var methodName = 'removeField';
-         this.each(function(record) {
-            record.notifyFormatChanged(methodName, arguments);
-         });
+         this._parentChanged('removeField');
       },
 
       removeFieldAt: function(at) {
          FormattableMixin.removeFieldAt.call(this, at);
 
-         var methodName = 'removeFieldAt';
-         this.each(function(record) {
-            record.notifyFormatChanged(methodName, arguments);
-         });
+         this._parentChanged('removeFieldAt');
       },
 
       /**
@@ -806,7 +811,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          var item, i, count;
          for (i = 0, count = this._$items.length; i < count; i++) {
             item = this._$items[i];
-            item.setOwner(null);
             item.setState(RecordState.DETACHED);
          }
          this._getRawDataAdapter().clear();
@@ -818,7 +822,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._checkItem(item, !!this._$format || this.getCount() > 0);
          this._getRawDataAdapter().add(item.getRawData(), at);
          RecordSet.superclass.add.call(this, item, at);
-         item.setOwner(this);
          item.setState(RecordState.ADDED);
          this._indexTree = {};
       },
@@ -833,7 +836,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          var item = this._$items[index];
          RecordSet.superclass.removeAt.call(this, index);
          if (item) {
-            item.setOwner(null);
             item.setState(RecordState.DETACHED);
          }
          this._indexTree = {};
@@ -861,7 +863,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          var item, i, count;
          for (i = 0, count = oldItems.length; i < count; i++) {
             item = oldItems[i];
-            item.setOwner(null);
             item.setState(RecordState.DETACHED);
          }
          for (i = 0, count = items.length; i < count; i++) {
@@ -878,7 +879,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          var item, i, count;
          for (i = 0, count = items.length; i < count; i++) {
             item = items[i];
-            item.setOwner(this);
             item.setState(RecordState.ADDED);
          }
          this._indexTree = {};
@@ -890,7 +890,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          var item, i, count;
          for (i = 0, count = items.length; i < count; i++) {
             item = items[i];
-            item.setOwner(this);
             item.setState(RecordState.ADDED);
          }
          this._indexTree = {};

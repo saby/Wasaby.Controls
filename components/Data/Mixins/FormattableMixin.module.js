@@ -19,7 +19,6 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
     * Миксин, предоставляющий поведение владения форматом полей
     * @mixin SBIS3.CONTROLS.Data.FormattableMixin
     * @public
-    * @ignoreMethods notifyFormatChanged
     * @author Мальцев Алексей
     */
 
@@ -369,16 +368,6 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
       removeFieldAt: function(at) {
          this._getFormat().removeAt(at);
          this._getRawDataAdapter().removeFieldAt(at);
-         this._resetRawDataFields();
-      },
-      
-      /**
-       * Уведомляет об изменении формата при композиции/агрегации инстансов общим владельцем
-       * @param {String} methodName Имя метода, модифицировавшего формат
-       * @param {Array} args Аргументы метода, модифицировавшего формат
-       */
-      notifyFormatChanged: function (methodName, args) {
-         this._resetRawDataAdapter();
          this._resetRawDataFields();
       },
 

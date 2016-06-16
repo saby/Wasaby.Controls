@@ -1,12 +1,13 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
       'js!SBIS3.CONTROLS.Data.Record',
+      'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
       'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
       'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
       'js!SBIS3.CONTROLS.Data.Types.Enum',
       'js!SBIS3.CONTROLS.Data.Types.Flags'
-   ], function (Record, RecordSet, SbisAdapter, FieldsFactory, Enum, Flags) {
+   ], function (Record, ObservableList, RecordSet, SbisAdapter, FieldsFactory, Enum, Flags) {
       'use strict';
       describe('SBIS3.CONTROLS.Data.Record', function () {
          var getRecordData = function() {
@@ -352,6 +353,26 @@ define([
                assert.strictEqual(name, 'flags');
                assert.strictEqual(newV, val2);
             });
+            it('should trigger onPropertyChange with deep changed item', function(done) {
+               var sub = new Record(),
+                  list = new ObservableList(),
+                  top = new Record(),
+                  handler = function(event, map) {
+                     try {
+                        assert.strictEqual(map.list, list);
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+
+               top.set('list', list);
+               list.add(sub);
+
+               top.subscribe('onPropertyChange', handler);
+               sub.set('test', 'ok');
+               top.unsubscribe('onPropertyChange', handler);
+            });
             it('should change properties cache', function () {
                record.set('obj', {val: 13});
                record.get('obj');
@@ -535,10 +556,9 @@ define([
                });
             });
             it('should throw an error if the record has an owner', function () {
-               record = new Record({
-                  rawData: recordData,
-                  owner: {}
-               });
+               var record = new Record(),
+                   rs = new RecordSet();
+               rs.add(record);
                assert.throw(function() {
                   record.addField({name: 'new', type: 'string'});
                });
@@ -603,10 +623,9 @@ define([
                });
             });
             it('should throw an error if the record has an owner', function () {
-               record = new Record({
-                  rawData: recordData,
-                  owner: {}
-               });
+               var record = new Record(),
+                  rs = new RecordSet();
+               rs.add(record);
                assert.throw(function() {
                   record.removeField('title');
                });
@@ -643,11 +662,11 @@ define([
                });
             });
             it('should throw an error if the record has an owner', function () {
-               record = new Record({
-                  adapter: 'adapter.sbis',
-                  rawData: getRecordSbisData(),
-                  owner: {}
-               });
+               var record = new Record({
+                     adapter: 'adapter.sbis'
+                  }),
+                  rs = new RecordSet();
+               rs.add(record);
                assert.throw(function() {
                   record.removeFieldAt(1);
                });
@@ -828,21 +847,6 @@ define([
          describe('.getOwner()', function () {
             it('should return null by default', function () {
                assert.isNull(record.getOwner());
-            });
-            it('should return owner passed to the constructor', function () {
-               var owner = {},
-                  record = new Record({
-                     owner: owner
-                  });
-               assert.strictEqual(record.getOwner(), owner);
-            });
-         });
-
-         describe('.setOwner()', function () {
-            it('should set the new owner', function () {
-               var owner = {};
-               record.setOwner(owner);
-               assert.strictEqual(record.getOwner(), owner);
             });
          });
 

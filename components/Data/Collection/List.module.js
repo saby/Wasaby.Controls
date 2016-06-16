@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
    'js!SBIS3.CONTROLS.Data.Entity.ObservableMixin',
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.CloneableMixin',
+   'js!SBIS3.CONTROLS.Data.OneToManyMixin',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
@@ -25,6 +26,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
    ObservableMixin,
    SerializableMixin,
    CloneableMixin,
+   OneToManyMixin,
    ArrayEnumerator,
    Di,
    Utils,
@@ -46,11 +48,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
     * @mixes SBIS3.CONTROLS.Data.Entity.ObservableMixin
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @mixes SBIS3.CONTROLS.Data.CloneableMixin
+    * @mixes SBIS3.CONTROLS.Data.OneToManyMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var List = Abstract.extend([IEnumerable, IList, IIndexedCollection, ICloneable, OptionsMixin, ObservableMixin, SerializableMixin, CloneableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
+   var List = Abstract.extend([IEnumerable, IList, IIndexedCollection, ICloneable, OptionsMixin, ObservableMixin, SerializableMixin, CloneableMixin, OneToManyMixin], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.List',
 
       /**
@@ -81,6 +84,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          List.superclass.constructor.call(this, options);
          OptionsMixin.constructor.call(this, options);
          this._$items = this._$items || [];
+         for (var i = 0, count = this._$items.length; i < count; i++) {
+            this._addChild(this._$items[i], 'owner');
+         }
       },
 
       // region SBIS3.CONTROLS.Data.SerializableMixin
@@ -124,20 +130,37 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       assign: function (items) {
          this._$items.length = 0;
-         this._splice(items || [], 0, 0, IBindCollection.ACTION_REPLACE);
+         items = this._splice(items || [], 0, 0, IBindCollection.ACTION_REPLACE);
+
+         for (var i = 0, count = items.length; i < count; i++) {
+            this._addChild(items[i], 'owner');
+         }
+         this._childChanged(items);
       },
 
       append: function (items) {
-         this._splice(items, this.getCount(), 0, IBindCollection.ACTION_ADD);
+         items = this._splice(items, this.getCount(), 0, IBindCollection.ACTION_ADD);
+
+         for (var i = 0, count = items.length; i < count; i++) {
+            this._addChild(items[i], 'owner');
+         }
+         this._childChanged(items);
       },
 
       prepend: function (items) {
-         this._splice(items, 0, 0, IBindCollection.ACTION_ADD);
+         items = this._splice(items, 0, 0, IBindCollection.ACTION_ADD);
+
+         for (var i = 0, count = items.length; i < count; i++) {
+            this._addChild(items[i], 'owner');
+         }
+         this._childChanged(items);
       },
 
       clear: function () {
          this._$items.length = 0;
          this._reindex();
+         this._getMediator().clear(this);
+         this._childChanged();
       },
 
       add: function (item, at) {
@@ -152,6 +175,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             this._$items.splice(at, 0, item);
          }
 
+         this._addChild(item, 'owner');
+         this._childChanged(item);
          this._reindex(IBindCollection.ACTION_ADD, at, 1);
       },
 
@@ -163,6 +188,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          var index = this.getIndex(item);
          if(index !== -1) {
             this.removeAt(index);
+            this._childChanged(item);
             return true;
          }
          return false;
@@ -172,18 +198,21 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          if (!this._isValidIndex(index)) {
             throw new Error('Index is out of bounds');
          }
+         this._removeChild(this._$items[index]);
          this._$items.splice(index, 1);
-
          this._reindex(IBindCollection.ACTION_REMOVE, index, 1);
+         this._childChanged(index);
       },
 
       replace: function (item, at) {
          if (!this._isValidIndex(at)) {
             throw new Error('Index is out of bounds');
          }
+         this._removeChild(this._$items[at]);
          this._$items[at] = item;
-
+         this._addChild(item, 'owner');
          this._reindex(IBindCollection.ACTION_REPLACE, at, 1);
+         this._childChanged(item);
       },
 
       getIndex: function (item) {
@@ -350,7 +379,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable|Array} items Коллекция с элементами для замены
        * @param {Number} start Индекс в массиве, с которого начинать добавление.
        * @param {SBIS3.CONTROLS.Data.Bind.ICollection/ChangeAction.typedef[]} action Действие, приведшее к изменению.
-       * @private
+       * @return {Array}
+       * @protected
        */
       _splice: function (items, start, action) {
          items = this._itemsToArray(items);
@@ -359,13 +389,15 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             [start, 0].concat(items)
          );
          this._reindex(action, start, items.length);
+
+         return items;
       },
 
       /**
        * Приводит переденные элементы к массиву
        * @param items
        * @returns {Array}
-       * @private
+       * @protected
        */
       _itemsToArray: function (items){
          if(items instanceof Array) {
@@ -380,8 +412,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             throw new TypeError('Argument "items" must be an instance of Array or implement SBIS3.CONTROLS.Data.Collection.IEnumerable.');
          }
       }
-      //endregion Protected methods
 
+      //endregion Protected methods
    });
 
    SerializableMixin._checkExtender(List);

@@ -15,7 +15,9 @@ define([
    var dataScheme,
       dataValues,
       dataEmpty,
+      getSbisModel,
       sbisModel,
+      getSbisModelEmpty,
       sbisModelEmpty,
       identityIndex = 13;
 
@@ -138,21 +140,37 @@ define([
          null
       ];
 
-      sbisModel = new Model({
-         adapter: new AdapterSbis(),
-         rawData: {
-            d: dataValues,
-            s: dataScheme
-         }
-      });
+      getSbisModel = function() {
+         return new Model({
+            adapter: new AdapterSbis(),
+            rawData: {
+               d: dataValues,
+               s: dataScheme
+            }
+         });
+      };
+      sbisModel = getSbisModel();
 
-      sbisModelEmpty = new Model({
-         adapter: (new AdapterSbis()),
-         rawData: {
-            d: dataEmpty,
-            s: dataScheme
-         }
-      });
+      getSbisModelEmpty = function() {
+        return new Model({
+           adapter: (new AdapterSbis()),
+           rawData: {
+              d: dataEmpty,
+              s: dataScheme
+           }
+        });
+      };
+      sbisModelEmpty = getSbisModelEmpty();
+   });
+
+   afterEach(function () {
+      dataScheme = undefined;
+      dataValues = undefined;
+      dataEmpty = undefined;
+      getSbisModel = undefined;
+      sbisModel = undefined;
+      getSbisModelEmpty = undefined;
+      sbisModelEmpty = undefined;
    });
 
    describe('SBIS3.CONTROLS.Data.Factory', function () {
@@ -180,8 +198,6 @@ define([
          it('should cast value to RecordSet', function () {
             assert.instanceOf(sbisModel.get('recordSet'), RecordSet);
          });
-
-
          it('should cast link to integer', function () {
             var val = sbisModel.get('link');
             assert.strictEqual(val, 6);
@@ -333,11 +349,9 @@ define([
                return model.getRawData().d[index];
             },
             getModel = function (type) {
-               return type === 'filled' ? sbisModel : sbisModelEmpty;
+               return type === 'filled' ? getSbisModel() : getSbisModelEmpty();
             },
-            types = ['filled', 'empty'],
-            type,
-            model;
+            types = ['filled', 'empty'];
          while (types.length) {
             (function(type) {
                context('for ' + type + ' model', function () {
