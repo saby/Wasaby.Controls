@@ -214,15 +214,21 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
       _afterOrderChange: function(items, moveToItem, up) {
          this._options._itemsProjection.setEventRaising(false, true);
          $ws.helpers.forEach(items, function(item) {
-            var projItem = this._options._itemsProjection.getItemBySourceItem(item);
-            var moveToIndex = this._options._itemsProjection.getIndex(
-               this._options._itemsProjection[up ? 'getPrev' : 'getNext' ](projItem)
+            var projItem = this._options._itemsProjection.getItemBySourceItem(item),
+                moveToIndex = this._options._itemsProjection.getSourceIndexByItem(
+               this._options._itemsProjection[up ? 'getPrevious' : 'getNext' ](projItem)
             );
-            this._options._itemsProjection.remove(projItem);
-            this._options._itemsProjection.add(
-               projItem,
+
+            this._options._items.remove(item);
+            this._options._items.add(
+               item,
                moveToIndex < this._options._itemsProjection.getCount() ? moveToIndex : undefined
             );
+            //todo нужно сделать цепочки операций на рекордсете тогда можно будет объединить remove и add
+            //todo а пока создается новый элемент проекции и если он был открыт то восттановим ему состояние
+            if ($ws.helpers.indstanceOfMovule(projItem, 'SBIS3.CONTROLS.Data.Projection.TreeItem') && projItem.isExpanded()) {
+               this._options._itemsProjection.getItemBySourceItem(item).setExpanded(true);
+            }
          }.bind(this));
          this._options._itemsProjection.setEventRaising(true, true);
       }
