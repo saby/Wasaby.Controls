@@ -1,13 +1,13 @@
 /**
  * Created by am.gerasimov on 08.02.2016.
  */
-define('js!SBIS3.CONTROLS.DEMO.DemoSuggestMemory', [
+define('js!SBIS3.CONTROLS.DEMO.DemoSearchMemory', [
    'js!SBIS3.CONTROLS.Data.Source.Memory',
    'js!SBIS3.CONTROLS.Data.Adapter.Sbis'],
     function (Memory, Sbis) {
    'use strict';
 
-   var DemoSuggestMemory = Memory.extend({
+   var DemoSearchMemory = Memory.extend({
       $protected: {
          _options: {
             data: {
@@ -77,5 +77,5 @@ define('js!SBIS3.CONTROLS.DEMO.DemoSuggestMemory', [
    });
 
 
-   return DemoSuggestMemory;
+   return DemoSearchMemory;
 });
