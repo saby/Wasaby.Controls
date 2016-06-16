@@ -388,11 +388,13 @@ define([
                   });
                   it('should store record', function () {
                      var model = getModel(type),
-                        record = new $ws.proto.Record();
-                     record.addColumn('id', $ws.proto.Record.FIELD_TYPE_INTEGER);
-                     record.set('id', 1);
-                     model.set('record', record);
-                     assert.deepEqual(getData(model, 3), record.toJSON());
+                        field = new Model({
+                           adapter: 'adapter.sbis'
+                        });
+                     field.addField({name: 'id', type: 'integer'});
+                     field.set('id', 1);
+                     model.set('record', field);
+                     assert.deepEqual(getData(model, 3), field.getRawData());
                   });
                   it('should throw an error if the record adapter is incompatible', function () {
                      var model = getModel(type),
@@ -422,18 +424,35 @@ define([
                      });
                   });
                   it('should store a list of records', function () {
-                     var model = getModel(type),
+                     var getModel = function() {
+                           return new Model({
+                              adapter: new AdapterSbis(),
+                              rawData: {
+                                 d: $ws.core.clone(type === 'filled' ? dataValues : dataEmpty),
+                                 s: $ws.core.clone(dataScheme)
+                              }
+                           });
+                        },
+                        model = getModel(type),
                         items = [
                            getModel(type),
                            getModel(type),
                            getModel(type)
-                        ];
+                        ],
+                        s1,
+                        s2,
+                        i;
                      model.set('recordSet', new List({
                         items: items
                      }));
-                     for (var i = 0; i < items.length; i++) {
-                        assert.deepEqual(getData(model, 4).d[i], items[i].getRawData().d);
-                        assert.deepEqual(getData(model, 4).s, items[i].getRawData().s);
+                     for (i = 0; i < items.length; i++) {
+                        s1 = JSON.stringify(getData(model, 4).s);
+                        s2 = JSON.stringify(items[i].getRawData().s);
+                        assert.equal(s1, s2);
+
+                        s1 = JSON.stringify(getData(model, 4).d[i]);
+                        s2 = JSON.stringify(items[i].getRawData().d);
+                        assert.equal(s1, s2);
                      }
                   });
                   it('should throw an error if set recordset not as a list', function () {

@@ -447,7 +447,7 @@ define([
                   rawData: {}
                });
                newRecord.setRawData(recordData);
-               assert.strictEqual(newRecord.getRawData(), recordData);
+               assert.deepEqual(newRecord.getRawData(), recordData);
             });
          });
 
