@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.Demo.MySearchForm', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Demo.MySearchForm',
-   'js!SBIS3.CONTROLS.DEMO.DemoSuggestMemory',
+   'js!SBIS3.CONTROLS.DEMO.DemoSearchMemory',
    'css!SBIS3.CONTROLS.Demo.MySearchForm',
    'js!SBIS3.CONTROLS.SearchForm',
    'js!SBIS3.CONTROLS.DataGridView'
