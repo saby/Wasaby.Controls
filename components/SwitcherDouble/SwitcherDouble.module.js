@@ -3,16 +3,18 @@ define('js!SBIS3.CONTROLS.SwitcherDouble', ['js!SBIS3.CORE.Control', 'html!SBIS3
    'use strict';
    /**
     * Контрол, отображающий двухпозиционный переключатель для поддержания макетов online.sbis.ru.
-    * Данный переключатель отличается от обычного {@link Switcher} только внешне, функционально они одинаковы.
-    * Можно настроить:
+    * Переключатель отличается от обычного {@link SBIS3.CONTROLS.Switcher} только внешне. Функционально они одинаковые.
+    * В качестве конфигурации можно изменять следующие настройки:
     * <ol>
-    *    <li>{@link state} - начальное состояние;</li>
-    *    <li>{@link stateOn} - текст подписи при включенном состоянии;</li>
-    *    <li>{@link stateOff} - текст подписи при выключенном состоянии.</li>
+    *    <li>{@link state} - устанавливает начальное состояние переключателя;</li>
+    *    <li>{@link stateOn} - устанавливает текст подписи переключателя при включенном состоянии;</li>
+    *    <li>{@link stateOff} - устанавливает текст подписи переключателя при выключенном состоянии.</li>
     * </ol>
     * @class SBIS3.CONTROLS.SwitcherDouble
     * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    * @mixes SBIS3.CONTROLS.Clickable
+    * @mixes SBIS3.CONTROLS.Checkable
     * @initial
     * <component data-component='SBIS3.Engine.SwitcherDouble'>
     *    <option name="stateOff">Выкл</option>
@@ -42,12 +44,24 @@ define('js!SBIS3.CONTROLS.SwitcherDouble', ['js!SBIS3.CORE.Control', 'html!SBIS3
       $protected: {
          _textContainer: {},
          _options: {
+            /**
+             * @cfg {String} Устанавливает начальное положение переключателя.
+             * @see stateOn
+             * @see stateOff
+             */
             state: 'off',
             /**
-             * @cfg {String} Текст при включенном состоянии
+             * @cfg {String} Устанавливает текст подписи переключателя при включенном состоянии.
+             * @remark
+             * В качестве значения можно передавать вёрстку.
              * @example
+             * <b>Пример 1.</b>. Устанавливаем текст подписи переключателя обычной строкой.
              * <pre>
-             *     <option name="stateOn">Скрыть</option>
+             *     <option name="stateOn" value="Скрыть"></option>
+             * </pre>
+             * <b>Пример 2.</b>. Устанавливаем вёрстку в качестве текста подписи переключателя.
+             * <pre>
+             *     <option name="stateOn" value="<span style='color: red'>Скрыть</span>"></option>
              * </pre>
              * @see state
              * @see setState
@@ -57,10 +71,17 @@ define('js!SBIS3.CONTROLS.SwitcherDouble', ['js!SBIS3.CORE.Control', 'html!SBIS3
              */
             stateOn: '',
             /**
-             * @cfg {String} Текст при выключенном состоянии
+             * @cfg {String} Устанавливает текст подписи переключателя при выключенном состоянии.
+             * @remark
+             * В качестве значения можно передавать вёрстку.
              * @example
+             * <b>Пример 1.</b>. Устанавливаем текст подписи переключателя обычной строкой.
              * <pre>
-             *     <option name="stateOff">Показать</option>
+             *     <option name="stateOff" value="Скрыть"></option>
+             * </pre>
+             * <b>Пример 2.</b>. Устанавливаем вёрстку в качестве текста подписи переключателя.
+             * <pre>
+             *     <option name="stateOff" value="<span style='color: red'>Скрыть</span>"></option>
              * </pre>
              * @see state
              * @see setState
@@ -69,6 +90,11 @@ define('js!SBIS3.CONTROLS.SwitcherDouble', ['js!SBIS3.CORE.Control', 'html!SBIS3
              * @translatable
              */
             stateOff: '',
+            /**
+             * @cfg {String} Устанавливает расположение переключателя.
+             * @variant horizontal Горизонтальное расположение.
+             * @variant vertical Вертикальное расположение.
+             */
             disposition: 'horizontal'
          }
       },
