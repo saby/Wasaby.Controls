@@ -10,21 +10,27 @@ define('js!SBIS3.CONTROLS.SwitcherDouble', ['js!SBIS3.CORE.Control', 'html!SBIS3
     *    <li>{@link stateOn} - устанавливает текст подписи переключателя при включенном состоянии;</li>
     *    <li>{@link stateOff} - устанавливает текст подписи переключателя при выключенном состоянии.</li>
     * </ol>
+    *
     * @class SBIS3.CONTROLS.SwitcherDouble
     * @extends $ws.proto.Control
+    * @control
+    * @public
+    *
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.Clickable
     * @mixes SBIS3.CONTROLS.Checkable
-    * @initial
-    * <component data-component='SBIS3.Engine.SwitcherDouble'>
-    *    <option name="stateOff">Выкл</option>
-    *    <option name="stateOn">Вкл</option>
-    * </component>
-    * @control
+    *
     * @demo SBIS3.CONTROLS.Demo.MySwitcherDoubleOnline
-    * @public
+    *
     * @cssModifier controls-SwitcherDouble__primary
-    * @author Крайнов Дмитрий Олегович
+    *
+    * @author Борисов Петр Сергеевич
+    *
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.SwitcherDouble'>
+    *    <option name="stateOff" value="Выкл"></option>
+    *    <option name="stateOn" value="Вкл"></option>
+    * </component>
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner stateKey
