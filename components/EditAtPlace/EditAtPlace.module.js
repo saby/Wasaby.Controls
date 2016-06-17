@@ -130,7 +130,9 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                self = this;
 
             editorComponent.subscribe('onFocusOut', function(){
-               self._editorFocusOutHandler();
+               if (!self._isEditInGroup){
+                  self._editorFocusOutHandler();
+               }
             });
 
             //Подобная подписка на события через jQuery в редактировании по месту используется во многих местах
