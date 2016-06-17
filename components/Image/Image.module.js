@@ -415,6 +415,7 @@ define('js!SBIS3.CONTROLS.Image',
                   opener: this,
                   visible: false,
                   minWidth: 315,
+                  cssClassName: 'controls-EditDialog__template',
                   componentOptions: $ws.core.merge({
                      dataSource: dataSource,
                      filter: filter,
