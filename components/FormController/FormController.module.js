@@ -316,13 +316,26 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
              self = this,
              def;
          if (this.validate()) {
-            def = this._dataSource.update(this._options.record);
-            if (!config.hideIndicator){
-               this._showLoadingIndicator();
+            if (this._options.record.isChanged() || self._newRecord) {
+               def = this._dataSource.update(this._options.record);
+               if (!config.hideIndicator) {
+                  this._showLoadingIndicator();
+               }
+               dResult.dependOn(def.addCallbacks(function (result) {
+                  self._notify('onUpdateModel', self._options.record, self._newRecord);
+                  self._newRecord = false;
+                  return result;
+               }, function (error) {
+                  if (!config.hideErrorDialog) {
+                     self._processError(error);
+                  }
+                  self._saving = false;
+                  return error;
+               }));
+            } else {
+               dResult.callback();
             }
-            dResult.dependOn(def.addCallbacks(function (result) {
-               self._notify('onUpdateModel', self._options.record, self._newRecord);
-               self._newRecord = false;
+            dResult.addCallback(function(result){
                if (config.closePanelAfterSubmit) {
                   self._closePanel(true);
                }
@@ -330,15 +343,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                   self._saving = false;
                }
                return result;
-            }, function (error) {
-               if (!config.hideErrorDialog){
-                  self._processError(error);
-               }
-               self._saving = false;
-               return error;
-            }));
-            dResult.addBoth(function (r) {
-               self._hideLoadingIndicator();
+            }).addBoth(function (r) {
+                  self._hideLoadingIndicator();
                return r;
             });
          }
@@ -624,14 +630,15 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @remark
        * Команда применяется для того, чтобы логика обработки события производилась на стороне {@link SBIS3.CONTROLS.DialogActionBase}.
        * @param {String} eventName Имя события, о котором нужно оповестить {@link SBIS3.CONTROLS.DialogActionBase}.
+       * @param {*} additionalData Данные, которые должны быть проброшены в событие {@link SBIS3.CONTROLS.DialogActionBase}.
        * @command
        * @see read
        * @see create
        * @see update
        * @see destroy
        */
-      _actionNotify: function(eventName){
-         this._notify(eventName, this._options.record);
+      _actionNotify: function(eventName, additionalData){
+         this._notify(eventName, this._options.record, additionalData);
       },
       /**
        * Action, который позволяет выставить активность дочернего контрола после загрузки

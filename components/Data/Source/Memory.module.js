@@ -314,6 +314,8 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             skipFields = {
                'Разворот': true,
                'ВидДерева': true,
+               'ПутьКУзлу': true,
+               'ЗаголовокИерархии': true,
                usePages: true
             },
             compare = function(given, expect) {
