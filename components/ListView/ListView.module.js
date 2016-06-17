@@ -915,7 +915,7 @@ define('js!SBIS3.CONTROLS.ListView',
                    containerCords = cont.getBoundingClientRect(),
                    targetKey = target[0].getAttribute('data-id'),
                    item = this.getItems().getRecordById(targetKey),
-                   correctTarget = target.hasClass('controls-editInPlace') ? this._getDomElementByItem(item) : target,
+                   correctTarget = target.hasClass('controls-editInPlace') ? this._getDomElementByItem(this._options._itemsProjection.getItemBySourceItem(item)) : target,
                    targetCords = correctTarget[0].getBoundingClientRect();
 
                return {
