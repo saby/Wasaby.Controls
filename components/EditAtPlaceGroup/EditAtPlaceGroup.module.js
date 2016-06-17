@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             });
 
             this._iterateChildEditAtPlaces(function(child){
-               child.setInPlaceEditMode(true);
+               child._setEditInGroup();;
                child._setKeyPressHandler(self._keyPressHandler.bind(self));
             }, this._picker);
             this._addControlPanel(this._picker._container);
@@ -125,6 +125,13 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
 
          _getEditTemplate: function(){
             return this._options.template;
+         },
+
+         showPicker: function(){
+            EditAtPlaceGroup.superclass.showPicker.call(this);
+            this._iterateChildEditAtPlaces(function(child){
+               child.setInPlaceEditMode(true);
+            }, this._picker);
          },
 
          _clickHandler: function () {
