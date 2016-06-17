@@ -216,13 +216,15 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
          var moveToIndex;
          $ws.helpers.forEach(items, function(item) {
             var projectionItem =  this._options._itemsProjection.getItemBySourceItem(item);
-            this._options._items.remove(item);
             if(up) { //Если перемещаем вверх то надо вставить запись с индексом к которой перемещаем. Потому элемент выше удален и индексы смещены на 1
                moveToIndex = this._options._items.getIndex(moveToItem);
+               moveToIndex = moveToIndex > -1 ?  moveToIndex : 0;
             } else {
                //Если перемещаем вниз то нужно найти следующий элемент в проекции потом его индекс в рекордсете
                //и вставить запись после него, потомучто может быть перемещение через dragndrop а оно может вставить куда угодно.
-               var nextProjectionItem = this._options._itemsProjection.getNext(projectionItem);
+               var nextProjectionItem = this._options._itemsProjection.getNext(
+                  this._options._itemsProjection.getItemBySourceItem(moveToItem)
+               );
                if(nextProjectionItem) {
                   moveToIndex = this._options._itemsProjection.getSourceIndexByIndex(
                      this._options._itemsProjection.getIndex(nextProjectionItem)
@@ -231,6 +233,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
                   moveToIndex = this._options._items.getCount();
                }
             }
+            this._options._items.remove(item);
 
             this._options._items.add(
                item,
