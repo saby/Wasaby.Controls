@@ -589,10 +589,14 @@ define('js!SBIS3.CONTROLS.ListView',
             /* За счёт того, что разделено поведения отображения операций и ховера,
                в зависимости от события, которое произошло, то можно смело подписаться на все событие,
                если его нет, то подписки не произодйдёт */
-            this._container.on('swipe', this._swipeHandler.bind(this))
-                           .on('tap', this._tapHandler.bind(this))
-                           .on('touchmove mousemove',this._mouseMoveHandler.bind(this))
-                           .on('mouseleave', this._mouseLeaveHandler.bind(this));
+            if(this._touchSupport) {
+               this._container.on('swipe', this._swipeHandler.bind(this))
+                              .on('tap', this._tapHandler.bind(this))
+                              .on('touchmove',this._mouseMoveHandler.bind(this));
+            } else {
+               this._container.on('mousemove', this._mouseMoveHandler.bind(this))
+                              .on('mouseleave', this._mouseLeaveHandler.bind(this));
+            }
 
             this.initEditInPlace();
             this.setItemsDragNDrop(this._options.itemsDragNDrop);
