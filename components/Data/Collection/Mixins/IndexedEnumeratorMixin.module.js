@@ -293,10 +293,26 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
 
       /**
        * Удаляет индексы при изменении исходной коллекции
+       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {String} action Действие, приведшее к изменению.
+       * @param {Array.<*>} newItems Новые элементы коллеции.
+       * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
+       * @param {Array.<*>} oldItems Удаленные элементы коллекции.
+       * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
        * @protected
        */
-      _onCollectionChange: function () {
-         this.reIndex();
+      _onCollectionChange: function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+         switch (action){
+            case IBindCollection.ACTION_ADD:
+            case IBindCollection.ACTION_REPLACE:
+               this.reIndex(action, newItemsIndex, newItems.length);
+               break;
+            case IBindCollection.ACTION_REMOVE:
+               this.reIndex(action, oldItemsIndex, oldItems.length);
+               break;
+            default:
+               this.reIndex(action);
+         }
       }
 
       //endregion Protected methods

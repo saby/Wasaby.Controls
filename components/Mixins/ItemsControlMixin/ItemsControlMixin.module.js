@@ -408,7 +408,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             itemTpl : null,
             /**
-             * @cfg {Function} Метод используется для сортировки элементов, принимает два
+             * @cfg {Function|null} Метод используется для сортировки элементов, принимает два
              * объекта вида {item:ProjectionItem, collectionItem: Model, index: Number, collectionIndex: Number} и
              * должен вернуть -1|0|1
              * @example
@@ -485,6 +485,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          /*TODO Поддержка совместимости. Раньше если были заданы items массивом создавался сорс, осталась куча завязок на это*/
          if (this._options.items instanceof Array) {
+            if (this._options.pageSize && (this._options.items.length > this._options.pageSize)) {
+               $ws.single.ioc.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
+            }
             if (!this._options.keyField) {
                this._options.keyField = findKeyField(this._options.items)
             }
@@ -1284,6 +1287,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        /**
         * Метод установки либо замены коллекции элементов, заданных опцией {@link items}.
         * @param {Object} items Набор новых данных, по которому строится отображение.
+        * @param {Boolean} itemsBySource Флаг, говорящий о том, что items соответствуют сорсу, который в данный момент установлен. При этом после релоада не будет заменяться инстанс items, а произойдет перенос данных пришедших с БЛ в уже существующий инстанс items
         * @example
         * <pre>
         *     setItems: [
@@ -1307,15 +1311,27 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see onDrawItems
         * @see onDataLoad
         */
-       setItems: function (items) {
+       setItems: function (items, itemsBySource) {
           this._options.items = items;
           this._unsetItemsEventHandlers();
           this._options._items = null;
-          this._itemsInitializedBySource = false;
+          this._itemsInitializedBySource = !!itemsBySource;
           this._prepareConfig(undefined, items);
           this._notify('onDataLoad', this.getItems()); //TODO на это событие завязались. аккуратно спилить
           this._dataLoadedCallback(); //TODO на это завязаны хлебные крошки, нужно будет спилить
-          this.redraw();
+          if (items instanceof Array) {
+             if (this._options.pageSize && (items.length > this._options.pageSize)) {
+                $ws.single.ioc.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
+             }
+             if (!this._options.keyField) {
+                this._options.keyField = findKeyField(this._options.items)
+             }
+             this._dataSource = new MemorySource({
+                data: this._options.items,
+                idProperty: this._options.keyField
+             });
+          }
+          this.reload();
 
       },
 
@@ -1517,6 +1533,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _scrollTo: function scrollTo(target, container) {
          var scrollContainer = container || this._getScrollContainer(),
              scrollContainerOffset = scrollContainer.offset(),
+             channel = $ws.single.EventBus.globalChannel(),
+         //FIXME решение для 3.7.3.200, чтобы правильно работал скролл при scrollIntoView
+             /* Оповестим аккордион, о том что контент проскролен, иначе он не заметит и не сместит свой скролл */
+             scrollNotify = channel.notify.bind(channel, 'ContentScrolling', null),
              targetOffset;
 
          if (typeof target === 'string') {
@@ -1527,8 +1547,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          if( (targetOffset.top - scrollContainerOffset.top - scrollContainer.scrollTop()) < 0) {
             target[0].scrollIntoView(true);
+            scrollNotify();
          } else if ( (targetOffset.top + target.height() - scrollContainerOffset.top - scrollContainer.scrollTop()) > scrollContainer[0].clientHeight) {
             target[0].scrollIntoView(false);
+            scrollNotify();
          }
       },
       _scrollToItem: function(itemId) {
@@ -1744,7 +1766,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             newItemContainer.insertBefore(this._getItemContainerByIndex(target, at));
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else if (currentItemAt && currentItemAt.length) {
-            meth && meth.call(this, prev.getContents(), undefined, undefined, prev);
+            if (prev)
+               meth && meth.call(this, prev.getContents(), undefined, undefined, prev);
             newItemContainer.insertAfter(currentItemAt);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else if(at === 0) {
@@ -1854,15 +1877,24 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if(this._options._itemsProjection && this._options._itemsProjection.getCount()) {
             return this._options._itemsProjection.at(this._options._itemsProjection.getCount()-1).getContents();
          }
+      },
+      /**
+       * Обработчик для обновления проперти. В наследниках itemsControlMixin иногда требуется по особому обработать изменение проперти.
+       * @param item
+       * @param property
+       * @private
+       */
+      _onUpdateItemProperty: function(item, property) {
+         if (this._isNeedToRedraw()) {
+            this._changeItemProperties(item, property);
+         }
       }
    };
 
    var
-      onCollectionItemChange = function(eventObject, item, index, property){
-         if (this._isNeedToRedraw()) {
-            this._changeItemProperties(item, property);
-            this._drawItemsCallback();
-         }
+      onCollectionItemChange = function(eventObject, item, index, property) {
+         //Вызываем обработчик для обновления проперти. В наследниках itemsControlMixin иногда требуется по особому обработать изменение проперти.
+         this._onUpdateItemProperty(item, property);
       },
       /**
        * Обрабатывает событие об изменении коллекции
