@@ -16,9 +16,22 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
       });
       
    }
+   var setCurrentElemetHandler = function(wsEvent, jsEvent, element) {
+         this._setCurrentElement(jsEvent, element);
+      },
+      buildTplArgsLV = function(cfg) {
+         var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
+         tplOptions.multiselect = cfg.multiselect;
+         tplOptions.decorators = this._decorators;
+         tplOptions.colorField = cfg.colorField;
 
-   var DragAndDropMixin = {
+         return tplOptions;
+      },
+      DragAndDropMixin = {
       $protected: {
+         _options: {
+            dragNDropGroup: undefined
+         },   
          _moveBeginX: null,
          _moveBeginY: null,
          _shiftX: null,
@@ -30,10 +43,12 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
          _currentComponent: null,
          //константа показывающая на сколько надо сдвинуть мышь, чтобы началось перемещение
          _constShiftLimit: 3,
-
+          
          _avatar: null,
          _position: null,
-         _lines: []
+         _lines: [],
+         _dragNDropGroupEvent: undefined
+
       },
 
       $constructor: function() {
@@ -41,6 +56,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
          self._publish('onDragMove');
          $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMouseup', this.onMouseup, this);
          $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMousemove', this.onMousemove, this);
+         this._setDragNDropGroup(this._options.dragNDropGroup);
       },
 
       preparePageXY: function(e) {
@@ -73,10 +89,12 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
       },
 
       onMousemove: function(buse, e) {
+         
          // Если нет выделенных компонентов, то уходим
          if (!this._currentComponent) {
             return;
          }
+
          var 
             // определяем droppable контейнер
             movable = this._findDragDropContainer(e, e.target);
@@ -109,12 +127,19 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
       //текущий активный компонент, либо по gdi (если переносим)
       //либо отдаем тип, если создаем из палитры
       setCurrentElement: function(e, elementConfig) {
+         if (this._options.dragNDropGroup) {
+            $ws.single.EventBus.channel('DragAndDropChannel').notify(this._dragNDropGroupEvent, e, elementConfig);
+         }
+         this._setCurrentElement.call(this, e, elementConfig);
+      },
+
+      _setCurrentElement: function(e, elementConfig){
          //координаты с которых начато движение
          this.preparePageXY(e);
          this._moveBeginX = e.pageX;
          this._moveBeginY = e.pageY;
+         //elementConfig['component'] = this;
          this._currentComponent = elementConfig;
-
          this._isShifted = false;
          this._dropCache();
       },
@@ -176,7 +201,24 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
       //отвлавливает ли контейнер drag'n'drop внутри себя
       isDragDropContainer: function(element) {
          return $(element).hasClass('genie-dragdrop');
+      },
+
+      _setDragNDropGroup: function(){
+         if(this._options.dragNDropGroup) {
+            this._dragNDropGroupEvent = 'onSetCurrentElement'+ this._options.dragNDropGroup;
+            $ws.single.EventBus.channel('DragAndDropChannel').subscribe(
+               this._dragNDropGroupEvent,
+               setCurrentElemetHandler,
+               this
+            );
+         }
+      },
+
+      getDragNDropGroup: function(){
+         return this._options.dragNDropGroup;
       }
+
+
    };
 
    return DragAndDropMixin;

@@ -2367,10 +2367,9 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _callMoveHandler: function(e, movable) {
             var targetControl = $(e.target).wsControl();   
-            if(targetControl && this !== targetControl && $ws.helpers.instanceOfMixin(targetControl, 'SBIS3.CONTROLS.DragNDropMixin')) {
-               targetControl._callMoveHandler(e, movable);      
-            } 
-            this._updateDragTarget(e);
+            if (targetControl && this === targetControl || !targetControl) {
+               this._updateDragTarget(e);
+            }
             this._setAvatarPosition(e);
          },
          _updateDragTarget: function(e) {
@@ -2381,9 +2380,9 @@ define('js!SBIS3.CONTROLS.ListView',
                 target = this._findItemByElement($(e.target));
 
             this._clearDragHighlight();
-            if (target.length && target.data('id') != currentElement.targetId) {
+            if (currentElement.component !== this || target.length && target.data('id') != currentElement.targetId) {
                insertAfter = this._getDirectionOrderChange(e, target);
-               if (insertAfter !== undefined) {
+               if (insertAfter !== undefined && currentElement.component === this) {
                   neighborItem = this[insertAfter ? 'getNextItemById' : 'getPrevItemById'](target.data('id'));
                   if (neighborItem && neighborItem.data('id') == currentElement.targetId) {
                      insertAfter = undefined;
@@ -2402,7 +2401,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _notifyOnDragMove: function(target, insertAfter) {
             if (typeof insertAfter === 'boolean') {
-               return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter) !== false;
+               return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter, this.getCurrentElement().component) !== false;
             }
          },
          _clearDragHighlight: function() {
@@ -2416,12 +2415,12 @@ define('js!SBIS3.CONTROLS.ListView',
             target.toggleClass('controls-DragNDrop__insertBefore', insertAfter === false);
          },
          _getDirectionOrderChange: function(e, target) {
-            return this._getOrderPosition(e.pageY - target.offset().top, target.height());
+            return this._getOrderPosition(e.pageY - (target.offset() ? target.offset().top : 0), target.height());
          },
          _getOrderPosition: function(offset, metric) {
             return offset < 10 ? false : offset > metric - 10 ? true : undefined;
          },
-         _createAvatar: function(e){
+         _createAvatar: function(e) {
             var count = this.getCurrentElement().keys.length;
             this._avatar = $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>')
                 .css('z-index', $ws.single.WindowManager.acquireZIndex(false)).appendTo($('body'));
@@ -2447,10 +2446,14 @@ define('js!SBIS3.CONTROLS.ListView',
                clickHandler = this._elemClickHandler;
                this._elemClickHandler = function () {
                   this._elemClickHandler = clickHandler;
-               }
+               };
             }
             if (currentElement.target) {
-               this._move(currentElement.keys, currentElement.target.data('id'), currentElement.insertAfter);
+               if(currentElement.component === this) {
+                  this._move(currentElement.keys, currentElement.target.data('id'), currentElement.insertAfter);
+               } else {
+                  this._notify('onDropFromOutside', currentTarget.data('id'), currentElement.keys, currentElement.component);
+               }
             }
          },
          _beginDropDown: function(e) {
@@ -2528,7 +2531,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _removeDrawnResults: function(){
             var resultRow = $('.controls-DataGridView__results', this.getContainer());
-            if (resultRow.length){
+            if (resultRow.length) {
                this._destroyControls(resultRow);
                resultRow.remove();
             }
