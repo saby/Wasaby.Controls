@@ -291,12 +291,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              */
             allowEnterToFolder: true,
             /**
-             * @cfg {Function}
+             * @cfg {Function|null}
              * Метод используется для сортировки элементов, если передать null то данные сортироваться не будут
              * По умолчанию данные сортируются так: с начала папки потом листья
              * @example
              * <pre>
-             *    <option name="itemsSortMethod">null</option>
+             *    <option name="itemsSortMethod" value="null"></option>
              * </pre>
              * <pre>
              *    var tree = new Tree({
@@ -516,6 +516,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             filter[hierField].push(this.getCurrentRoot());
             filter[hierField] = filter[hierField].concat(Object.keys(this._options.openedPath));
          }
+         filter['ПутьКУзлу'] = true;
+         filter['ЗаголовокИерархии'] = this._options.displayField;
          return filter;
       },
       /**
@@ -600,14 +602,20 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                /*Если в текущем списке есть предыдущий путь, значит это выход из папки*/
                if (this.getItems().getRecordById(this._previousRoot)) {
                   this.setSelectedKey(this._previousRoot);
-                  this._scrollToItem(this._previousRoot);
+                  //todo Это единственный на текущий момент способ проверить, что наш контейнер уже в контейнере ListView и тогда осуществлять scrollTo не нужно!
+                  if (!this._container.parents('.controls-ListView').length) {
+                     this._scrollToItem(this._previousRoot);
+                  }
                }
                else {
                   /*иначе вход в папку*/
                   item = this.getItems() && this.getItems().at(0);
                   if (item){
                      this.setSelectedKey(item.getId());
-                     this._scrollToItem(item.getId());
+                     if (!this._container.parents('.controls-ListView').length) {
+                        //todo Это единственный на текущий момент способ проверить, что наш контейнер уже в контейнере ListView и тогда осуществлять scrollTo не нужно!
+                        this._scrollToItem(item.getId());
+                     }
                   }
                }
 
