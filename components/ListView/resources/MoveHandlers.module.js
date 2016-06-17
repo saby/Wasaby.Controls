@@ -217,7 +217,10 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
          $ws.helpers.forEach(items, function(item) {
             var projectionItem =  this._options._itemsProjection.getItemBySourceItem(item);
             this._options._items.remove(item);
-            if(!up) { //Если перемещаем вниз то нужно найти следующий элемент в проекции потом его индекс в рекордсете
+            if(up) { //Если перемещаем вверх то надо вставить запись с индексом к которой перемещаем.
+               moveToIndex = this._options._items.getIndex(moveToItem);
+            } else {
+               //Если перемещаем вниз то нужно найти следующий элемент в проекции потом его индекс в рекордсете
                //и вставить запись после него.
                var nextProjectionItem = this._options._itemsProjection.getNext(projectionItem);
                if(nextProjectionItem) {
@@ -227,8 +230,6 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
                } else { //если не найден то вставляем в конец
                   moveToIndex = this._options._items.getCount();
                }
-            } else {//Если перемещаем вверх то надо вставить запись с индексом к которой перемещаем.
-               moveToIndex = this._options._items.getIndex(moveToItem);
             }
 
             this._options._items.add(
