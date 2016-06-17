@@ -213,20 +213,32 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
       },
       _afterOrderChange: function(items, moveToItem, up) {
          this._options._itemsProjection.setEventRaising(false, true);
+         var moveToIndex;
          $ws.helpers.forEach(items, function(item) {
-            var projItem = this._options._itemsProjection.getItemBySourceItem(item),
-                moveToIndex = this._options._itemsProjection.getSourceIndexByItem(
-               this._options._itemsProjection[up ? 'getPrevious' : 'getNext' ](projItem)
-            );
-
+            var projectionItem =  this._options._itemsProjection.getItemBySourceItem(item);
             this._options._items.remove(item);
+            if(up) { //Если перемещаем вверх то надо вставить запись с индексом к которой перемещаем. Потому элемент выше удален и индексы смещены на 1
+               moveToIndex = this._options._items.getIndex(moveToItem);
+            } else {
+               //Если перемещаем вниз то нужно найти следующий элемент в проекции потом его индекс в рекордсете
+               //и вставить запись после него, потомучто может быть перемещение через dragndrop а оно может вставить куда угодно.
+               var nextProjectionItem = this._options._itemsProjection.getNext(projectionItem);
+               if(nextProjectionItem) {
+                  moveToIndex = this._options._itemsProjection.getSourceIndexByIndex(
+                     this._options._itemsProjection.getIndex(nextProjectionItem)
+                  );
+               } else { //если не найден то вставляем в конец
+                  moveToIndex = this._options._items.getCount();
+               }
+            }
+
             this._options._items.add(
                item,
-               moveToIndex < this._options._itemsProjection.getCount() ? moveToIndex : undefined
+               moveToIndex < this._options._items.getCount() ? moveToIndex : undefined
             );
             //todo нужно сделать цепочки операций на рекордсете тогда можно будет объединить remove и add
             //todo а пока создается новый элемент проекции и если он был открыт то восттановим ему состояние
-            if ($ws.helpers.instanceOfModule(projItem, 'SBIS3.CONTROLS.Data.Projection.TreeItem') && projItem.isExpanded()) {
+            if ($ws.helpers.instanceOfModule(projectionItem, 'SBIS3.CONTROLS.Data.Projection.TreeItem') && projectionItem.isExpanded()) {
                this._options._itemsProjection.getItemBySourceItem(item).setExpanded(true);
             }
          }.bind(this));
