@@ -11,15 +11,6 @@
       margin: @controls-SelectorButton-margin;
    }
 
-   &.ws-disabled {
-      color: @link-disabled-text-color;
-      cursor: default;
-
-      .controls-SelectorButton__cross {
-         display: none;
-      }
-   }
-
    &.controls-SelectorButton__asLink {
       .controls-SelectorButton__text {
          color: @link-text-color;
@@ -31,4 +22,18 @@
          }
       }
    }
+
+   &.ws-disabled {
+      cursor: default;
+      &.controls-SelectorButton__asLink {
+         .controls-SelectorButton__text, &:hover {
+            color: @link-disabled-text-color;
+            text-decoration: @link-text-decoration;
+         }
+      }
+      .controls-SelectorButton__cross {
+         display: none;
+      }
+   }
+
 }
