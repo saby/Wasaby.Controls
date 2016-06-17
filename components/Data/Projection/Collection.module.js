@@ -1045,7 +1045,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             switch(groupName) {
                case 'added':
                   //собираем добавленные элементы
-                  if (!afterItem || beforeItem === afterItem) {
+                  if (!afterItem || beforeItem === afterItem && !newItems.length) {
                      continue;
                   }
                   afterIndex = index;
@@ -1063,7 +1063,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                
                case 'removed':
                   //собираем удаленные элементы
-                  if (!beforeItem || beforeItem === afterItem) {
+                  if (!beforeItem || (beforeItem === afterItem && !oldItems.length)) {
                      continue;
                   }
                   beforeIndex = index;
