@@ -413,6 +413,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             }
             if (!inTarget && !ControlHierarchyManager.checkInclusion(self, target)) {
                if ($(target).hasClass('ws-window-overlay')) {
+                  // Придрот, так как clickHandler на самом деле mousedown
+                  ModalOverlay._notify('onClick');
                   if (parseInt($(target).css('z-index'), 10) < this._zIndex) {
                      self.hide();
                   }
