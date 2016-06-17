@@ -579,7 +579,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          $constructor: function () {
-            this._touchSupport = $ws._const.compatibility.touch;
+            //TODO требуется доработка, для поддержки touch устройств с возможностью управление мышью
+            //    https://inside.tensor.ru/opendoc.html?guid=25dd3a2f-00e5-4765-9b94-a90d6d7a9d4f&description=
+            //    Задача в разработку: доработка listView, для поддержки touch устройств с возможностью управление мышью
+            this._touchSupport = $ws._const.browser.isMobilePlatform;
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
 
