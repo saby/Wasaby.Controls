@@ -3,6 +3,14 @@ define('js!SBIS3.CONTROLS.InformationPopup',
       'js!SBIS3.CONTROLS.FloatArea',
       'html!SBIS3.CONTROLS.InformationPopup'
    ],
+
+   /**
+    * Информационное окно с линией сверху и содержимым.
+    * @class SBIS3.CONTROLS.InformationPopup
+    * @extends SBIS3.CONTROLS.FloatArea
+    * @control
+    * @author Степин П.В.
+    */
    function(FloatArea, dotTpl){
       'use strict';
       var module = FloatArea.extend({

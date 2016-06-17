@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           * @param config Настройки для SBIS3.CONTROLS.SubmitPopup
           * @param handler Обработчик нажатия на кнопку Ок
           */
-         showAlertDialog: function(config, handler){
+         showErrorDialog: function(config, handler){
             showSubmitDialog($ws.core.merge(config, {
                state: 'error'
             }), null, null, handler)

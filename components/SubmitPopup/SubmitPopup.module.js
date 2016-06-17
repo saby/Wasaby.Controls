@@ -3,6 +3,16 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
       'html!SBIS3.CONTROLS.SubmitPopup/resources/contentTpl',
       'js!SBIS3.CONTROLS.Button'
    ],
+
+   /**
+    * Информационный диалог с сообщением.
+    * В зависимости от состояния, может быть диалогом подтверждения ( с кнопками "Да", "Нет", "Отмена" ) и диалогами
+    * успешного выполняения команды, ошибки и предупреждения ( с кнопкой "Ок" ).
+    * @class SBIS3.CONTROLS.InformationPopup
+    * @extends SBIS3.CONTROLS.FloatArea
+    * @control
+    * @author Степин П.В.
+    */
    function(InformationPopup, contentTpl){
       'use strict';
       var module = InformationPopup.extend({
@@ -23,7 +33,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                message: '',
 
                /**
-                * @cfg {String} Отображаемое сообщение, отображается под основным сообщением.
+                * @cfg {String} Дополнительное сообщение, отображается под основным сообщением.
                 */
                details: '',
 

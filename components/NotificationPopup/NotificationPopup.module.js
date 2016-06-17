@@ -3,6 +3,14 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
       'html!SBIS3.CONTROLS.NotificationPopup/resources/contentTpl',
       'html!SBIS3.CONTROLS.NotificationPopup/resources/headerTpl'
    ],
+
+   /**
+    * Нотификационное окно с иконкой, заголовком и двумя областями.
+    * @class SBIS3.CONTROLS.InformationPopup
+    * @extends SBIS3.CONTROLS.FloatArea
+    * @control
+    * @author Степин П.В.
+    */
    function(InformationPopup, contentTpl, headerTpl){
       'use strict';
       var module = InformationPopup.extend({
