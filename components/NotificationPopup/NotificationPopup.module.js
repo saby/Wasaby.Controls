@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
    ],
 
    /**
-    * Нотификационное окно с иконкой, заголовком и двумя областями.
+    * Всплывающее нотификационное уведомление с иконкой, заголовком и дополнительным содержимым.
     * @class SBIS3.CONTROLS.InformationPopup
     * @extends SBIS3.CONTROLS.FloatArea
     * @control

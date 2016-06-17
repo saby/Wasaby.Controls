@@ -1,19 +1,20 @@
 define('js!SBIS3.CONTROLS.InformationPopup',
    [
-      'js!SBIS3.CONTROLS.FloatArea',
+      'js!SBIS3.CORE.CompoundControl',
+      'js!SBIS3.CONTROLS.PopupMixin',
       'html!SBIS3.CONTROLS.InformationPopup'
    ],
 
    /**
-    * Информационное окно с линией сверху и содержимым.
+    * Всплывающий контрол с линией в шапке, зависящей от состояния, и содержимым.
     * @class SBIS3.CONTROLS.InformationPopup
-    * @extends SBIS3.CONTROLS.FloatArea
+    * @extends SBIS3.CORE.CompoundControl
     * @control
     * @author Степин П.В.
     */
-   function(FloatArea, dotTpl){
+   function(CompoundControl, PopupMixin, dotTpl){
       'use strict';
-      var module = FloatArea.extend({
+      var module = CompoundControl.extend([PopupMixin], {
          _dotTplFn : dotTpl,
          $protected: {
             _options: {
