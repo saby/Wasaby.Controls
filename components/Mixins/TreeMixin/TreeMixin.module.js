@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          doNext = true,
          item;
       while (doNext && (item = enumerator.getNext())) {
-         if (item.isNode() && !item.isExpanded()) {
+         if (item.isNode() && !item.isExpanded() && projection.getChildren(item).getCount()) {
             item.setExpanded(true);
             doNext = false;
             expandAllItems(projection);
