@@ -218,7 +218,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
             var projectionItem =  this._options._itemsProjection.getItemBySourceItem(item);
             this._options._items.remove(item);
             moveToIndex = this._options._items.getIndex(moveToItem);
-            if(!up) {
+            if(!up) { //Если перемещаем вниз то нужно найти следующий элемент в проекции потом его индекс в рекордсете
+               //и вставить запись после него. Если перемещаем вверх то надо вставить запись с индексом к которой перемещаем.
                moveToIndex = this._options._itemsProjection.getIndexBySourceIndex(moveToIndex);
                var nextProjectionItem = this._options._itemsProjection.getNext(
                   this._options._itemsProjection.at(moveToIndex)
