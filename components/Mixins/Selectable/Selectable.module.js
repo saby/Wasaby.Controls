@@ -15,7 +15,8 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
        /**
         * @event onSelectedItemChange Происходит при смене выбранного элемента коллекции.
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-        * @param {String} id Идентификатор выбранного элемента коллекции.
+        * @param {String|Number} id Идентификатор (значение поля первичного ключа) выбранного элемента коллекции.
+        * @param {String} index Порядковый номер выбранного элемента коллекции среди других элементов источника данных.
         * @example
         * <pre>
         *     RadioButtonGroup.subscribe('onSelectedItemChange', function(event, id){
@@ -36,30 +37,37 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
              /**
               * @cfg {String} Устанавливает выбранным элемент коллекции по переданному индексу (порядковому номеру).
               * @remark
-              * Любой элемент коллекции можно выбрать либо по его {@link SBIS3.CONTROLS.DSMixin#keyField идентификатору},
-              * либо его по индексу (порядковому номеру) в коллекции.
-              * Для определения выбранного элемента необходимо указать его порядковый номер в коллекции.
+              * <ol>
+              *    <li>Элемент будет выбран по переданному идентификатору только при условии, что для контрола установлен источник данных в опции {@link SBIS3.CONTROLS.DSMixin#dataSource}.</li>
+              *    <li>Установить новый идентификатор элемента коллекции можно с помощью метода {@link setSelectedIndex}, а получить идентификатор - с помощью метода {@link getSelectedIndex}.</li>
+              * </ol>
               * @example
+              * Производим связывание опции с полем контекста через атрибут bind. Подробнее о связывании значения опций контролов с полями контекста вы можете прочитать <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/context/">здесь</a>.
               * <pre>
-              *     <option name="selectedIndex">1</option><!-- Устанавливаем выбранным элемент коллекции, который идет первым в списке -->
+              *     <option name="selectedIndex" bind="record/Индекс"></option>
               * </pre>
               * @see setSelectedIndex
               * @see getSelectedIndex
               * @see onSelectedItemChange
+              * @see selectedKey
               */
              selectedIndex: null,
              /**
-              * @cfg {String} Устанавливает выбранным элемент коллекции по переданному идентификатору - {@link SBIS3.CONTROLS.DSMixin#keyField ключевому полю} элемента коллекции.
+              * @cfg {String|Number} Устанавливает выбранным элемент коллекции по переданному идентификатору - значению {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элемента коллекции.
               * @remark
-              * Установить новый идентификатор элемента коллекции можно с помощью метода {@link setSelectedKey},
-              * получить идентификатор элемента коллекции можно с помощью метода {@link getSelectedKey}.
+              * <ol>
+              *    <li>Элемент будет выбран по переданному идентификатору только при условии, что для контрола установлен источник данных в опции {@link SBIS3.CONTROLS.DSMixin#dataSource}.</li>
+              *    <li>Установить новый идентификатор элемента коллекции можно с помощью метода {@link setSelectedKey}, а получить идентификатор - с помощью метода {@link getSelectedKey}.</li>
+              * </ol>
               * @example
+              * Производим связывание опции с полем контекста через атрибут bind. Подробнее о связывании значения опций контролов с полями контекста вы можете прочитать <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/context/">здесь</a>.
               * <pre>
-              *     <option name="selectedKey">3</option>
+              *     <option name="selectedKey" bind="record/Идентификатор"></option>
               * </pre>
               * @see setSelectedKey
               * @see getSelectedKey
               * @see onSelectedItemChange
+              * @see selectedIndex
               */
              selectedKey: null,
              /**
@@ -205,8 +213,10 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
       /**
        * Устанавливает выбранным элемент коллекции по переданному идентификатору.
        * @remark
+       * Метод актуален для использования при условии, что для контрола установлен источник данных в опции {@link SBIS3.CONTROLS.DSMixin#dataSource} и поле первичного ключа в опции {@link SBIS3.CONTROLS.DSMixin#keyField}.
        * Для возвращения коллекции к состоянию без выбранного элемента нужно передать null.
-       * @param {String} id Идентификатор элемента, который нужно установить в качестве выбранного.
+       * При использовании метода происходит событие {@link onSelectedItemChange}.
+       * @param {String|Number} id Идентификатор элемента, который нужно установить в качестве выбранного.
        * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
        * @example
        * <pre>
@@ -230,7 +240,9 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
 
       /**
        * Устанавливает выбранным элемент коллекции по переданному индексу (порядковому номеру).
-       * @param index Индекс выбранного элемента коллекции.
+       * @remark
+       * Метод актуален для использования при условии, что для контрола установлен источник данных в опции {@link SBIS3.CONTROLS.DSMixin#dataSource} и поле первичного ключа в опции {@link SBIS3.CONTROLS.DSMixin#keyField}.
+       * @param {String|Number} index Индекс выбранного элемента коллекции.
        * @example
        * <pre>
        *    this._getControlOrdersList().setSelectedIndex(0);
@@ -247,6 +259,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
       /**
        * Возвращает идентификатор выбранного элемента коллекции.
        * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
+       * @return {String|Number} Первичный ключ выбранного элемента коллекции.
        * @example
        * <pre>
        *     var key = myComboBox.getSelectedKey();
@@ -265,6 +278,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
 
       /**
        * Возвращает индекс (порядковый номер) выбранного элемента коллекции.
+       * @return {String|Number} Индекс выбранного элемента коллекции.
        * @example
        * <pre>
        *    index = list.getSelectedIndex();
