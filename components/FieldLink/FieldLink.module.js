@@ -717,14 +717,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           setSelectedItem: function(item) {
              var hasRequiredFields,
-                 key, displayValue;
+                 isModel = item  && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model');
 
              /* Т.к. ключ может быть как 0, а ключевое поле как '', то надо проверять на null/undefined */
              function isEmpty(val) {
                 return val === null || val === undefined;
              }
 
-             if(item  && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')) {
+             if(isModel) {
                 /* Проверяем запись на наличие ключевых полей */
                 hasRequiredFields = !isEmpty(item.get(this._options.displayField)) && !isEmpty(item.get(this._options.keyField));
 
@@ -736,8 +736,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 }
              }
 
-             /* Вызываем родительский метод, если передали запись с обязательными полями или null */
-             if(hasRequiredFields || item === null) {
+             /* Вызываем родительский метод, если:
+                1) передали запись с обязательными полями
+                2) передали null
+                3) передали запись без ключевых полей, но у нас есть выделенные ключи,
+                   такое может произойти, когда запись сбрасывается через контекст */
+             if( hasRequiredFields ||
+                 item === null  ||
+                (!hasRequiredFields && !this._isEmptySelection() && isModel) ) {
                 FieldLink.superclass.setSelectedItem.apply(this, arguments);
              }
           },
