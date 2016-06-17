@@ -4,9 +4,9 @@
     options = item.get('options') || {},
     className = item.get('className') || '',
     itemKey = item.get(it.keyField),
-    icon = item.get('icon') ? '<opt name="icon">' + item.get('icon') + '</opt>' : '',
-    caption = item.get('caption') ? '<opt name="caption">' + item.get('caption') + '</opt>' : '',
-    command = item.get('command') ? '<opt name="command">' + item.get('command') + '</opt>' : '',
+    icon = item.get('icon') ? '<option name="icon">' + item.get('icon') + '</option>' : '',
+    caption = item.get('caption') ? '<option name="caption">' + item.get('caption') + '</option>' : '',
+    command = item.get('command') ? '<option name="command">' + item.get('command') + '</option>' : '',
     visible = !!(item.get('showType') == it.showType.MENU_TOOLBAR || item.get('showType') == it.showType.TOOLBAR );
     if (visible) {
         subItems = it.getSubItems(itemKey, null, it.items, it.keyField, it.hierField);
@@ -28,6 +28,6 @@
            data-hash="{{=it.projItem.getHash()}}"
            data-id="{{=itemKey}}"
            class="controls-ListView__item js-controls-ListView__item controls-ToolBar__item {{=className}}">
-    <opt name="visible" type="boolean">{{=visible}}</opt>
+    <option name="visible" type="boolean">{{=visible}}</option>
     {{=icon}}{{=caption}}{{=command}}
 </component>
