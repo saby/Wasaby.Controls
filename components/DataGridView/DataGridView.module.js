@@ -387,9 +387,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       init: function() {
-         if (!this._options._serverRender && this._options.showHead) {
-            this._redrawHead();
-         }
          DataGridView.superclass.init.call(this);
          this._bindHead();
       },
@@ -495,7 +492,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._thead = $(headMarkup).insertBefore(body);
 
          this._redrawColgroup();
-
+         this._bindHead();
       },
 
       _bindHead: function() {
