@@ -413,7 +413,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             }
             if (!inTarget && !ControlHierarchyManager.checkInclusion(self, target)) {
                if ($(target).hasClass('ws-window-overlay')) {
-                  // Придрот, так как clickHandler на самом деле mousedown
+                  // Придрот, так как clickHandler на самом деле mousedown, а ModalOverlay подписан на клик.
+                  // Таким образом при наличии оверлея, мы его сначала скрываем по mousedown, затем он спускается к следующему
+                  // модальному окну и происходит клик по нему - и он снова скрывается, хотя не должен.
                   ModalOverlay._notify('onClick');
                   if (parseInt($(target).css('z-index'), 10) < this._zIndex) {
                      self.hide();
