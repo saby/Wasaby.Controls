@@ -1377,9 +1377,9 @@ define('js!SBIS3.CONTROLS.ListView',
                            if (!model.isStored()) {
                               if (this.getItemsActions()) {
                                  itemsInstances = this.getItemsActions().getItemsInstances();
-                                 if (itemsInstances.delete) {
-                                    this._lastDeleteActionState = itemsInstances.delete.isVisible();
-                                    itemsInstances.delete.hide();
+                                 if (itemsInstances['delete']) {
+                                    this._lastDeleteActionState = itemsInstances['delete'].isVisible();
+                                    itemsInstances['delete'].hide();
                                  }
                               }
                            }
@@ -1407,7 +1407,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            this._getItemsToolbar().unlockToolbar();
                            this._getItemsToolbar().hideEditActions();
                            if (this._lastDeleteActionState !== undefined) {
-                              this.getItemsActions().getItemsInstances().delete.toggle(this._lastDeleteActionState);
+                              this.getItemsActions().getItemsInstances()['delete'].toggle(this._lastDeleteActionState);
                               this._lastDeleteActionState = undefined;
                            }
                            this._hideItemsToolbar();
