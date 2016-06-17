@@ -233,6 +233,9 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
                   moveToIndex = this._options._items.getCount();
                }
             }
+            if (this._options._items.getIndex(item) < moveToIndex ) {
+               moveToIndex--; //если запись по списку сдвигается вниз то после ее удаления индексы сдвинутся
+            }
             this._options._items.remove(item);
             this._options._items.add(
                item,
