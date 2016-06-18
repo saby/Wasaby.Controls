@@ -1067,7 +1067,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                      continue;
                   }
                   beforeIndex = index;
-                  afterIndex = Array.indexOf(after, beforeItem, startFrom);
+                  afterIndex = Array.indexOf(after, beforeItem);
                   //если элемента не стало - добавим его в список старых,
                   //если остался - отдаем накопленный список старых, если там что-то есть
                   if (afterIndex === -1) {
