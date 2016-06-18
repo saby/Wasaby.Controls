@@ -1045,11 +1045,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             switch(groupName) {
                case 'added':
                   //собираем добавленные элементы
-                  if (!afterItem || beforeItem === afterItem && !newItems.length) {
+                  if (!afterItem || (beforeItem === afterItem && !newItems.length)) {
                      continue;
                   }
                   afterIndex = index;
-                  beforeIndex = Array.indexOf(before, afterItem, startFrom);
+                  beforeIndex = Array.indexOf(before, afterItem);
                   //если элемента не было - добавим его в список новых,
                   //если был - отдаем накопленный список новых, если там что-то есть
                   if (beforeIndex === -1) {
@@ -1067,7 +1067,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                      continue;
                   }
                   beforeIndex = index;
-                  afterIndex = Array.indexOf(after, beforeItem, startFrom);
+                  afterIndex = Array.indexOf(after, beforeItem);
                   //если элемента не стало - добавим его в список старых,
                   //если остался - отдаем накопленный список старых, если там что-то есть
                   if (afterIndex === -1) {
