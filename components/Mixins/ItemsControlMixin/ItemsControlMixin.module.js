@@ -1311,7 +1311,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see onDrawItems
         * @see onDataLoad
         */
-       setItems: function (items, itemsBySource) {
+       setItems: function (items, itemsBySource, reload) {
           this._options.items = items;
           this._unsetItemsEventHandlers();
           this._options._items = null;
@@ -1319,20 +1319,28 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
           this._prepareConfig(undefined, items);
           this._notify('onDataLoad', this.getItems()); //TODO на это событие завязались. аккуратно спилить
           this._dataLoadedCallback(); //TODO на это завязаны хлебные крошки, нужно будет спилить
-          if (items instanceof Array) {
-             if (this._options.pageSize && (items.length > this._options.pageSize)) {
-                $ws.single.ioc.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
+          //Из-за костыля для постраничной навигации в отчетности сделали this.reload(), но отвалилось в проектах, которые делают setItems при наличии DataSource.
+          //Поэтому пока по умолчанию вернем как было, а в отчетности специально передадим флаг reload
+          //При этом в отчетности делают неправильно и должны переделать. Если им нужна постраничная навигация, значит они должны задать статический источник данных, вместо Items
+          //После этого параметр reload нужно будет удалить и логику перезагрузки тоже
+          if(!reload) {
+             this.redraw();
+          } else {
+             $ws.single.ioc.resolve('ILogger').log('ListView', 'Параметр reload в методе setItems будет удален в 3.7.4');
+             if (items instanceof Array) {
+                if (this._options.pageSize && (items.length > this._options.pageSize)) {
+                   $ws.single.ioc.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
+                }
+                if (!this._options.keyField) {
+                   this._options.keyField = findKeyField(this._options.items)
+                }
+                this._dataSource = new MemorySource({
+                   data: this._options.items,
+                   idProperty: this._options.keyField
+                });
              }
-             if (!this._options.keyField) {
-                this._options.keyField = findKeyField(this._options.items)
-             }
-             this._dataSource = new MemorySource({
-                data: this._options.items,
-                idProperty: this._options.keyField
-             });
+             this.reload();
           }
-          this.reload();
-
       },
 
       _drawItemsCallback: function () {
