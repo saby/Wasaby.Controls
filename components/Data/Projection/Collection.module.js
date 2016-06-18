@@ -1045,11 +1045,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             switch(groupName) {
                case 'added':
                   //собираем добавленные элементы
-                  if (!afterItem || beforeItem === afterItem && !newItems.length) {
+                  if (!afterItem || (beforeItem === afterItem && !newItems.length)) {
                      continue;
                   }
                   afterIndex = index;
-                  beforeIndex = Array.indexOf(before, afterItem, startFrom);
+                  beforeIndex = Array.indexOf(before, afterItem);
                   //если элемента не было - добавим его в список новых,
                   //если был - отдаем накопленный список новых, если там что-то есть
                   if (beforeIndex === -1) {
@@ -1102,16 +1102,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                case 'moved':
                   //собираем перемещенные элементы
                   if (before.length !== after.length) {
-                     //TODO: вернуть в 3.7.4.
-                     //throw new Error('The "before" and "after" arrays are not synchronized by the length - "move" can\'t be applied.');
-                     return {
-                        newItems: [],
-                        newItemsIndex: 0,
-                        oldItems: [],
-                        oldItemsIndex: 0,
-                        endAt: -1,
-                        offset: 0
-                     };
+                     throw new Error('The "before" and "after" arrays are not synchronized by the length - "move" can\'t be applied.');
                   }
                   if (!beforeItem || beforeItem === afterItem) {
                      continue;
