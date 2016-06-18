@@ -1867,7 +1867,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var areas = $ws.single.FloatAreaManager._areas;
             for (var area in areas){
                if (areas.hasOwnProperty(area)){
-                  if (areas[area].isVisible() && areas[area]._options.isStack()){
+                  if (areas[area].isVisible() && areas[area]._options.isStack){
                      return true;
                   }
                }
