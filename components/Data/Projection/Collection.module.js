@@ -1102,7 +1102,16 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                case 'moved':
                   //собираем перемещенные элементы
                   if (before.length !== after.length) {
-                     throw new Error('The "before" and "after" arrays are not synchronized by the length - "move" can\'t be applied.');
+                     //TODO: вернуть в 3.7.4.
+                     //throw new Error('The "before" and "after" arrays are not synchronized by the length - "move" can\'t be applied.');
+                     return {
+                        newItems: [],
+                        newItemsIndex: 0,
+                        oldItems: [],
+                        oldItemsIndex: 0,
+                        endAt: -1,
+                        offset: 0
+                     };
                   }
                   if (!beforeItem || beforeItem === afterItem) {
                      continue;
