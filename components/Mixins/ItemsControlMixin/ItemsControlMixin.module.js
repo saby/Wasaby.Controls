@@ -756,6 +756,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      /*TODO Лесенка*/
                      if (this._options.ladder) {
                         if (!container){
+                           //Для правильной отрисовки лесенки берем предпоследний итем, т.к. может быть ситуация, что последний итем изменился в результате перемещения
                            var fItem = this._options._itemsProjection.at((newItemsIndex - 2 < 0) ? 0 : newItemsIndex - 2);
                            container = this._getDomElementByItem(fItem);
                         }
