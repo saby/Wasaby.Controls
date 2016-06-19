@@ -753,6 +753,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
                      /*TODO Лесенка*/
                      if (this._options.ladder) {
+                        if (!container){
+                           //Для правильной отрисовки лесенки берем предпоследний итем, т.к. может быть ситуация, что последний итем изменился в результате перемещения
+                           var fItem = this._options._itemsProjection.at((newItemsIndex - 2 < 0) ? 0 : newItemsIndex - 2);
+                           container = this._getDomElementByItem(fItem);
+                        }
                         firstHash = $(container).attr('data-hash');
                         var nextCont = $(container).next('.js-controls-ListView__item');
                         if (nextCont.length) {
@@ -770,13 +775,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   if (this._options.ladder) {
                      var
                         rows = $('.js-controls-ListView__item', itemsContainer),
+                        projection = this._options._itemsProjection,
                         ladderRows = [], start = false;
 
                      for (i = 0; i < rows.length; i++) {
                         if ($(rows[i]).attr('data-hash') == firstHash) {
                            start = true;
                         }
-                        if (start) {
+                        //Если не можем найти item в проекции, значит эта запись будет удалена
+                        if (start && projection.getByHash($(rows[i]).attr('data-hash'))) {
                            ladderRows.push($(rows[i]));
                         }
                         if ($(rows[i]).attr('data-hash') == lastHash) {
@@ -784,6 +791,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                            //Над i + 1 элементом изменилась запись, для него тоже нужна лесенка
                            if ($(rows[i + 1]).length){
                               ladderRows.push($(rows[i + 1]));
+                           }
+                           //На i + 1 позиции, может стоять элемент, который добавили после перемещения. запускаем лесенку для записи, которая находится под ним
+                           if ($(rows[i + 2]).length){
+                              ladderRows.push($(rows[i + 2]));
                            }
                            break;
                         }
@@ -1850,15 +1861,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);
          var ladderDecorator = this._decorators.getByName('ladder');
          //todo опять неверно вызывается ladderCompare, используем костыль, чтобы этого не было
-         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
-            ladderDecorator.setIgnoreEnabled(true);
-         }
+//         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
+//            ladderDecorator.setIgnoreEnabled(true);
+//         }
          if (newItems.length) {
             this._addItems(newItems, newItemsIndex)
          }
-         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
-            ladderDecorator.setIgnoreEnabled(false);
-         }
+//         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
+//            ladderDecorator.setIgnoreEnabled(false);
+//         }
          this._toggleEmptyData(!this._options._itemsProjection.getCount());
          //this._view.checkEmpty(); toggleEmtyData
          this.reviveComponents(); //надо?
