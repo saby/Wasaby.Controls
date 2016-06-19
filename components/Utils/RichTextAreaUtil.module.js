@@ -58,6 +58,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
             selectionNode = document.createElement('div'),
             clipboardData = event.clipboardData ? event.clipboardData : window.clipboardData,
             currentWindow = window,
+            html,
             label = document.createComment('content=SBIS.FRE'), // по этой метке будем определять что контент вставляется из FieldRichEditor
             i = 0,
             target = $(e.currentTarget),
@@ -109,7 +110,15 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
          // webkit позволяет оперировать буфером
          if (event.clipboardData) {
             selectionNode.appendChild(selectionContent);
-            clipboardData.setData('text/html', '<!--' + label.data + '-->' + selectionNode.innerHTML);
+            html = selectionNode.innerHTML;
+            if (html.length - '<p></p>'.length === html.lastIndexOf('<p></p>')) {
+               html = html.substring(0, html.length - '<p></p>'.length)
+            }
+            if (html.indexOf('<p></p>') === 0) {
+               html = html.substring('<p></p>'.length)
+            }
+            html = '<!--' + label.data + '-->' + html;
+            clipboardData.setData('text/html', html);
             clipboardData.setData('text', textData);
          }
          // для ie
