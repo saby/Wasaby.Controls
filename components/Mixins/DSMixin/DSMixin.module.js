@@ -702,14 +702,30 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
          return this._dataSet;
       },
-       /**
-        * Метод перезагрузки данных.
-        * Можно задать фильтрацию, сортировку.
-        * @param {String} filter Параметры фильтрации.
-        * @param {String} sorting Параметры сортировки.
-        * @param offset Элемент, с которого перезагружать данные.
-        * @param {Number} limit Ограничение количества перезагружаемых элементов.
-        */
+      /**
+       * Перезагружает набор записей представления данных с последующим обновлением отображения.
+       * @param {Object} filter Параметры фильтрации.
+       * @param {String|Array.<Object.<String,Boolean>>} sorting Параметры сортировки.
+       * @param {Number} offset Смещение первого элемента выборки.
+       * @param {Number} limit Максимальное количество элементов выборки.
+       * @example
+       * <pre>
+       *    myDataGridView.reload(
+       *       { // Устанавливаем параметры фильтрации: требуется записи, в которых следующие поля принимают следующие значения
+       *          iata: 'SVO',
+       *          direction: 'Arrivals',
+       *          state: 'Landed',
+       *          fromCity: ['New York', 'Los Angeles']
+       *       },
+       *       [ // Устанавливаем параметры сортировки: сначала производится сортировка по полю direction, а потом - по полю state
+       *          {direction: false}, // Поле direction сортируется по возрастанию
+       *          {state: true} // Поле state сортируется по убыванию
+       *       ],
+       *       50, // Устанавливаем смещение: из всех подходящих записей отбор результатов начнём с 50-ой записи
+       *       20 // Требуется вернуть только 20 записей
+       *    );
+       * </pre>
+       */
       reload: propertyUpdateWrapper(function (filter, sorting, offset, limit) {
          if (this._options.pageSize) {
             this._limit = this._options.pageSize;

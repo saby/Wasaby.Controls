@@ -1134,8 +1134,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
       /**
        * Перевычитывает модель из источника данных, мержит изменения к текущим данным и перерисовывает запись
-       * @param id Идентификатор модели
-       * @param id Мета информация
+       * @param {Number} id Идентификатор модели
+       * @param {Object|WS.Data/Entity/Model} meta Мета информация
        * @returns {*}
        */
       reloadItem: function(id, meta) {
@@ -1150,14 +1150,30 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             return $ws.proto.deferred.success();
          }
       },
-       /**
-        * Метод перезагрузки данных.
-        * Можно задать фильтрацию, сортировку.
-        * @param {String} filter Параметры фильтрации.
-        * @param {String} sorting Параметры сортировки.
-        * @param offset Элемент, с которого перезагружать данные.
-        * @param {Number} limit Ограничение количества перезагружаемых элементов.
-        */
+      /**
+       * Перезагружает набор записей представления данных с последующим обновлением отображения.
+       * @param {Object} filter Параметры фильтрации.
+       * @param {String|Array.<Object.<String,Boolean>>} sorting Параметры сортировки.
+       * @param {Number} offset Смещение первого элемента выборки.
+       * @param {Number} limit Максимальное количество элементов выборки.
+       * @example
+       * <pre>
+       *    myDataGridView.reload(
+       *       { // Устанавливаем параметры фильтрации: требуется записи, в которых следующие поля принимают следующие значения
+       *          iata: 'SVO',
+       *          direction: 'Arrivals',
+       *          state: 'Landed',
+       *          fromCity: ['New York', 'Los Angeles']
+       *       },
+       *       [ // Устанавливаем параметры сортировки: сначала производится сортировка по полю direction, а потом - по полю state
+       *          {direction: false}, // Поле direction сортируется по возрастанию
+       *          {state: true} // Поле state сортируется по убыванию
+       *       ],
+       *       50, // Устанавливаем смещение: из всех подходящих записей отбор результатов начнём с 50-ой записи
+       *       20 // Требуется вернуть только 20 записей
+       *    );
+       * </pre>
+       */
       reload: propertyUpdateWrapper(function (filter, sorting, offset, limit) {
          var
             def,
