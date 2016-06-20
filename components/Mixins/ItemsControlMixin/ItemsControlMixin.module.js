@@ -755,6 +755,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
                      /*TODO Лесенка*/
                      if (this._options.ladder) {
+                        if (!container){
+                           //Для правильной отрисовки лесенки берем предпоследний итем, т.к. может быть ситуация, что последний итем изменился в результате перемещения
+                           var fItem = this._options._itemsProjection.at((newItemsIndex - 2 < 0) ? 0 : newItemsIndex - 2);
+                           container = this._getDomElementByItem(fItem);
+                        }
                         firstHash = $(container).attr('data-hash');
                         var nextCont = $(container).next('.js-controls-ListView__item');
                         if (nextCont.length) {
@@ -772,13 +777,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   if (this._options.ladder) {
                      var
                         rows = $('.js-controls-ListView__item', itemsContainer),
+                        projection = this._options._itemsProjection,
                         ladderRows = [], start = false;
 
                      for (i = 0; i < rows.length; i++) {
                         if ($(rows[i]).attr('data-hash') == firstHash) {
                            start = true;
                         }
-                        if (start) {
+                        //Если не можем найти item в проекции, значит эта запись будет удалена
+                        if (start && projection.getByHash($(rows[i]).attr('data-hash'))) {
                            ladderRows.push($(rows[i]));
                         }
                         if ($(rows[i]).attr('data-hash') == lastHash) {
@@ -786,6 +793,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                            //Над i + 1 элементом изменилась запись, для него тоже нужна лесенка
                            if ($(rows[i + 1]).length){
                               ladderRows.push($(rows[i + 1]));
+                           }
+                           //На i + 1 позиции, может стоять элемент, который добавили после перемещения. запускаем лесенку для записи, которая находится под ним
+                           if ($(rows[i + 2]).length){
+                              ladderRows.push($(rows[i + 2]));
                            }
                            break;
                         }
@@ -1311,7 +1322,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see onDrawItems
         * @see onDataLoad
         */
-       setItems: function (items, itemsBySource) {
+       setItems: function (items, itemsBySource, reload) {
           this._options.items = items;
           this._unsetItemsEventHandlers();
           this._options._items = null;
@@ -1319,20 +1330,28 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
           this._prepareConfig(undefined, items);
           this._notify('onDataLoad', this.getItems()); //TODO на это событие завязались. аккуратно спилить
           this._dataLoadedCallback(); //TODO на это завязаны хлебные крошки, нужно будет спилить
-          if (items instanceof Array) {
-             if (this._options.pageSize && (items.length > this._options.pageSize)) {
-                $ws.single.ioc.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
+          //Из-за костыля для постраничной навигации в отчетности сделали this.reload(), но отвалилось в проектах, которые делают setItems при наличии DataSource.
+          //Поэтому пока по умолчанию вернем как было, а в отчетности специально передадим флаг reload
+          //При этом в отчетности делают неправильно и должны переделать. Если им нужна постраничная навигация, значит они должны задать статический источник данных, вместо Items
+          //После этого параметр reload нужно будет удалить и логику перезагрузки тоже
+          if(!reload) {
+             this.redraw();
+          } else {
+             $ws.single.ioc.resolve('ILogger').log('ListView', 'Параметр reload в методе setItems будет удален в 3.7.4');
+             if (items instanceof Array) {
+                if (this._options.pageSize && (items.length > this._options.pageSize)) {
+                   $ws.single.ioc.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
+                }
+                if (!this._options.keyField) {
+                   this._options.keyField = findKeyField(this._options.items)
+                }
+                this._dataSource = new MemorySource({
+                   data: this._options.items,
+                   idProperty: this._options.keyField
+                });
              }
-             if (!this._options.keyField) {
-                this._options.keyField = findKeyField(this._options.items)
-             }
-             this._dataSource = new MemorySource({
-                data: this._options.items,
-                idProperty: this._options.keyField
-             });
+             this.reload();
           }
-          this.reload();
-
       },
 
       _drawItemsCallback: function () {
@@ -1844,15 +1863,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);
          var ladderDecorator = this._decorators.getByName('ladder');
          //todo опять неверно вызывается ladderCompare, используем костыль, чтобы этого не было
-         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
-            ladderDecorator.setIgnoreEnabled(true);
-         }
+//         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
+//            ladderDecorator.setIgnoreEnabled(true);
+//         }
          if (newItems.length) {
             this._addItems(newItems, newItemsIndex)
          }
-         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
-            ladderDecorator.setIgnoreEnabled(false);
-         }
+//         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
+//            ladderDecorator.setIgnoreEnabled(false);
+//         }
          this._toggleEmptyData(!this._options._itemsProjection.getCount());
          //this._view.checkEmpty(); toggleEmtyData
          this.reviveComponents(); //надо?
