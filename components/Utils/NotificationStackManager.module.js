@@ -67,11 +67,16 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
             }
          },
 
+         /**
+          * Добавить нотификационной окно в стек
+          * @param inst Инстанс нотификационного окна
+          * @param {Boolean} notHide Не прятать окно по истичению времени жизни
+          */
          _appendNotification: function(inst, notHide){
             var self = this;
             var instId = inst.getId();
 
-            //TODO Костыль для popupmixin. Испарвить, как только он научиться пзиционироваться фиксированно
+            //TODO Костыль для popupmixin. Исправить, как только он научится позиционироваться фиксированно
             inst.show();
 
             inst._fixed = true;
@@ -106,6 +111,10 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
             this._checkCapacity();
          },
 
+         /**
+          * Удалить нотификационное окно из стека
+          * @param instId Id Инстанса нотификационного окна
+          */
          _deleteNotification: function(instId){
             var index = this._getItemIndexById(instId);
             if(index !== -1){
@@ -118,6 +127,9 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
             }
          },
 
+         /**
+          * Проверирить, вместимость в окно браузера и при необходимости скрыть окна, которые не вмещаются
+          */
          _checkCapacity: function(){
             var itemsLength = this._items.length;
             if(itemsLength){
@@ -152,6 +164,9 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
             }
          },
 
+         /**
+          * Пересчитать позиции нотификационных окон
+          */
          _updatePositions: function(){
             var bottom = BOTTOM;
             for(var i = 0, l = this._items.length; i < l; i++){
@@ -167,6 +182,9 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
             }
          },
 
+         /**
+          * Вернуть индекс нотификационного окно по его id
+          */
          _getItemIndexById: function(id){
             for(var i = 0, l = this._items.length; i < l; i++){
                if(this._items[i].getId() === id){

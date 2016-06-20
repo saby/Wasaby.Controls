@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.InformationPopup',
                /**
                 * @cfg {Function} Шаблон содержимого
                 */
-               contentTemplate: null
+               template: null
             }
          },
          $constructor : function(){

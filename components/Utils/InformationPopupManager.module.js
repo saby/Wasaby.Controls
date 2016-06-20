@@ -4,6 +4,14 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
       'js!SBIS3.CONTROLS.NotificationPopup',
       'js!SBIS3.CONTROLS.Utils.NotificationStackManager'
    ],
+
+   /**
+    * Интерфейс для работы с информационными окнами.
+    * Содержит функции для показа информационных окон и нотификационных уведомелений в области уведомлений.
+    * @class SBIS3.CONTROLS.Utils.InformationPopupManager
+    * @author Степин П.В.
+    * @public
+    */
    function(SubmitPopup, NotificationPopup, NotificationManager){
       'use strict';
 
@@ -29,13 +37,6 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
          popup.show();
       };
 
-      /**
-       * Интерфейс для работы с информационными окнами.
-       * Содержит функции для показа информационных окон и нотификационных уведомелений в области уведомлений.
-       * @class SBIS3.CONTROLS.Utils.InformationPopupManager
-       * @author Степин П.В.
-       * @public
-       */
       return {
          /**
           * Показать диалог с кнопками Да, Нет и Отмена (опционально)

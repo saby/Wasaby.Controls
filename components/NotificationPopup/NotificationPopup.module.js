@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.NotificationPopup', [
       'js!SBIS3.CONTROLS.InformationPopup',
-      'html!SBIS3.CONTROLS.NotificationPopup/resources/contentTpl',
+      'html!SBIS3.CONTROLS.NotificationPopup/resources/template',
       'html!SBIS3.CONTROLS.NotificationPopup/resources/headerTpl'
    ],
 
@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
     * @control
     * @author Степин П.В.
     */
-   function(InformationPopup, contentTpl, headerTpl){
+   function(InformationPopup, template, headerTpl){
       'use strict';
       var module = InformationPopup.extend({
          $protected: {
@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
                /*
                * @noShow
                */
-               contentTemplate: contentTpl,
+               template: template,
 
                /*
                 * @noShow
