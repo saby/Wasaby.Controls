@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilterDataSource',
                   multiselect : false,
                   className: 'controls-DropdownList__withoutCross',
                   dataSource: {
-                     module: 'js!SBIS3.CONTROLS.Data.Source.Memory',
+                     module: 'js!WS.Data.Source.Memory',
                      options: {
                         data: [
                            {
@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilterDataSource',
                   name: 'second',
                   displayField: 'user',
                   dataSource: {
-                     module: 'js!SBIS3.CONTROLS.Data.Source.Memory',
+                     module: 'js!WS.Data.Source.Memory',
                      options: {
                         data: [
                            {
@@ -94,7 +94,7 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilterDataSource',
                   name: 'selling',
                   multiselect: false,
                   dataSource: {
-                     module: 'js!SBIS3.CONTROLS.Data.Source.Memory',
+                     module: 'js!WS.Data.Source.Memory',
                      options: {
                         data: [
 

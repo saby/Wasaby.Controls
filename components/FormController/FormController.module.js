@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CORE.LoadingIndicator', 'js!SBIS3.CONTROLS.Data.Record', 'js!SBIS3.CONTROLS.Data.Source.SbisService', 'i18n!SBIS3.CONTROLS.FormController'],
+define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CORE.LoadingIndicator', 'js!WS.Data.Entity.Record', 'js!WS.Data.Source.SbisService', 'i18n!SBIS3.CONTROLS.FormController'],
    function(CompoundControl, LoadingIndicator, Record, SbisService) {
    /**
     * Компонент, на основе которого создают диалоги редактирования записей.
@@ -15,8 +15,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
    var FormController = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.FormController.prototype */ {
       /**
        * @typedef {Object} dataSource
-       * @property {SBIS3.CONTROLS.Data.Source.ISource/Binding.typedef[]} [Binding] Соответствие методов CRUD+ контракту
-       * @property {SBIS3.CONTROLS.Data.Source.ISource/Endpoint.typedef[]} [endpoint] Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных
+       * @property {WS.Data.Source.ISource/Binding.typedef[]} [Binding] Соответствие методов CRUD+ контракту
+       * @property {WS.Data.Source.ISource/Endpoint.typedef[]} [endpoint] Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных
        * @property {String} [model=source.sbis-service] Название зависимости, или конструктор объекта или инстанс объекта
        */
       /**
@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       /**
        * @event onReadModel Происходит при чтении записи из источника данных диалога редактирования.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {SBIS3.CONTROLS.Data.Record} record Запись, прочитанная из источника данных (см. {@link dataSource}).
+       * @param {WS.Data.Entity.Record} record Запись, прочитанная из источника данных (см. {@link dataSource}).
        * @see read
        * @see dataSource
        * @see onCreateModel
@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       /**
        * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога редактирования.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {SBIS3.CONTROLS.Data.Record} record Сохраняемая запись.
+       * @param {WS.Data.Entity.Record} record Сохраняемая запись.
        * @param {String} key Первичный ключ сохраняемой записи.
        * @see submit
        * @see update
@@ -56,7 +56,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       /**
        * @event onDestroyModel Происходит при удалении записи из источника данных диалога редактирования.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {SBIS3.CONTROLS.Data.Record} record Запись, которая была удалена из источника данных (см. {@link dataSource}).
+       * @param {WS.Data.Entity.Record} record Запись, которая была удалена из источника данных (см. {@link dataSource}).
        * @see destroy
        * @see dataSource
        * @see onCreateModel
@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       /**
        * @event onCreateModel Происходит при создании записи в источнике данных диалога редактирования.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {SBIS3.CONTROLS.Data.Record} record Запись, которая была создана в источнике данных.
+       * @param {WS.Data.Entity.Record} record Запись, которая была создана в источнике данных.
        * При создании часть полей может быть предустановлена с помощью опции {@link initValues}.
        * @see create
        * @see onDestroyModel
@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
              */
             key: null,
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Record} Устанавливает запись, редактируемую на диалоге.
+             * @cfg {WS.Data.Entity.Record} Устанавливает запись, редактируемую на диалоге.
              * @remark
              * Опция используется в том случае, когда не установлен источник данных диалога в опции {@link dataSource}.
              * Чтобы установить запись, используют метод {@link setRecord}.
@@ -537,7 +537,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * Устанавливает запись диалогу редактирования.
        * @remark
        * Новая запись будет добавление в контекст диалога редактирования в свойство "record".
-       * @param {SBIS3.CONTROLS.Data.Model} record Запись источника данных.
+       * @param {WS.Data.Entity.Model} record Запись источника данных.
        * @param {Boolean} [updateKey=false] Признак, по которому устанавливают необходимость обновления значения опции {@link key}.
        * @see record
        * @see key
@@ -593,7 +593,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * После создания новой записи фокус будет установлен на первый дочерний контрол диалога редактирования.
        * <br/>
        * Источник данных для диалога редактирования устанавливают с помощью опции {@link dataSource}.
-       * @returns {SBIS3.CONTROLS.Data.Record|$ws.proto.Deferred} Созданная запись либо результат выполнения команды.
+       * @returns {WS.Data.Entity.Record|$ws.proto.Deferred} Созданная запись либо результат выполнения команды.
        * @command
        * @see read
        * @see update
@@ -668,7 +668,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._initializer.call(prototypeProtectedData); //На прототипе опции не доступны, получаем их через initializer
          var options = prototypeProtectedData._options;
          $ws.core.merge(options, opt);
-         if (!$ws.helpers.instanceOfModule(options.source, 'SBIS3.CONTROLS.Data.Source.Base')) {
+         if (!$ws.helpers.instanceOfModule(options.source, 'WS.Data.Source.Base')) {
             options.source = opt.source = this.createDataSource(options);
          }
          if (options.key){
@@ -682,7 +682,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       };
 
       FormController.prototype.createDataSource = function(options){
-         if (!$ws.helpers.instanceOfModule(options.source, 'SBIS3.CONTROLS.Data.Source.Base')) {
+         if (!$ws.helpers.instanceOfModule(options.source, 'WS.Data.Source.Base')) {
             return new SbisService(options.dataSource);
          }
       };

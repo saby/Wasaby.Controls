@@ -2,8 +2,8 @@
  * Created by am.gerasimov on 08.02.2016.
  */
 define('js!SBIS3.CONTROLS.DEMO.DemoSuggestMemory', [
-   'js!SBIS3.CONTROLS.Data.Source.Memory',
-   'js!SBIS3.CONTROLS.Data.Adapter.Sbis'],
+   'js!WS.Data.Source.Memory',
+   'js!WS.Data.Adapter.Sbis'],
     function (Memory, Sbis) {
    'use strict';
 

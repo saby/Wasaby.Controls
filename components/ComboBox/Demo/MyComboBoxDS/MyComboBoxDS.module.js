@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.Demo.MyComboBoxDS', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Demo.MyComboBoxDS', 'js!SBIS3.CONTROLS.Data.Source.Memory', 'css!SBIS3.CONTROLS.Demo.MyComboBoxDS', 'js!SBIS3.CONTROLS.ComboBox' ], function(CompoundControl, dotTplFn, StaticSource) {
+define('js!SBIS3.CONTROLS.Demo.MyComboBoxDS', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Demo.MyComboBoxDS', 'js!WS.Data.Source.Memory', 'css!SBIS3.CONTROLS.Demo.MyComboBoxDS', 'js!SBIS3.CONTROLS.ComboBox' ], function(CompoundControl, dotTplFn, StaticSource) {
    /**
     * SBIS3.CONTROLS.Demo.MyComboBoxDS
     * @class SBIS3.CONTROLS.Demo.MyComboBoxDS

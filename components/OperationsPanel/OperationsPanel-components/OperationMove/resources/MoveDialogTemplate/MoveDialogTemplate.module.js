@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
          this._treeView = this.getChildControlByName('MoveDialogTemplate-TreeDataGridView');
          //TODO: Избавиться от этого события в .100 версии. Придрот для выпуска .20 чтобы подменить фильтр в диалоге перемещения. Необходимо придумать другой механизм.
          filter = this._notify('onPrepareFilterOnMove', this._options.records) || {};
-         if ($ws.helpers.instanceOfModule(linkedView._dataSource, 'SBIS3.CONTROLS.SbisServiceSource') || $ws.helpers.instanceOfModule(linkedView._dataSource,'SBIS3.CONTROLS.Data.Source.SbisService')) {
+         if ($ws.helpers.instanceOfModule(linkedView._dataSource, 'SBIS3.CONTROLS.SbisServiceSource') || $ws.helpers.instanceOfModule(linkedView._dataSource,'WS.Data.Source.SbisService')) {
             filter['ВидДерева'] = "Только узлы";
             //TODO: костыль написан специально для нуменклатуры, чтобы не возвращалась выборка всех элементов при заходе в пустую папку
             filter['folderChanged'] = true;

@@ -1,13 +1,13 @@
 define('js!SBIS3.CONTROLS.DSMixin', [
-   'js!SBIS3.CONTROLS.Data.Source.Memory',
-   'js!SBIS3.CONTROLS.Data.Source.SbisService',
-   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
-   'js!SBIS3.CONTROLS.Data.Query.Query',
+   'js!WS.Data.Source.Memory',
+   'js!WS.Data.Source.SbisService',
+   'js!WS.Data.Collection.RecordSet',
+   'js!WS.Data.Query.Query',
    'js!SBIS3.CORE.MarkupTransformer',
-   'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
-   'js!SBIS3.CONTROLS.Data.Projection.Projection',
-   'js!SBIS3.CONTROLS.Data.Bind.ICollection',
-   'js!SBIS3.CONTROLS.Data.Projection.Collection',
+   'js!WS.Data.Collection.ObservableList',
+   'js!WS.Data.Display.Display',
+   'js!WS.Data.Collection.IBind',
+   'js!WS.Data.Display.Collection',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil'
 ], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil) {
 
@@ -149,7 +149,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               * @cfg {Array.<Object.<String,String>>} Устанавливает набор исходных данных, по которому строится отображение.
               * @remark
               * Набор исходных данных - это данные определенного формата, которые будут преобразованы
-              * в элементы коллекции (экземпляры класса {@link SBIS3.CONTROLS.Data.Model Model}).
+              * в элементы коллекции (экземпляры класса {@link WS.Data.Entity.Model Model}).
               *
               * Опция items описывает набор данных, который будет преобразован в статический источник данных.
               * Изменять значение опции items можно с помощью метода {@link setItems}.
@@ -195,7 +195,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               */
             items: null,
             /**
-             * @cfg {DataSource|SBIS3.CONTROLS.Data.Source.ISource|Function} Набор исходных данных, по которому строится отображение
+             * @cfg {DataSource|WS.Data.Source.ISource|Function} Набор исходных данных, по которому строится отображение
              * @noShow
              * @see setDataSource
              */
@@ -236,7 +236,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @property {Function} method Функция, которая возвращает признак необходимости отображения как заголовка группы перед обрабатываемым элементом коллекции, так и самого элемента.
              * Аргументы функции:
              * <ol>
-             *    <li>item - обрабатываемый элемент коллекции, экземпляр класса {@link SBIS3.CONTROLS.Data.Model}.</li>
+             *    <li>item - обрабатываемый элемент коллекции, экземпляр класса {@link WS.Data.Entity.Model}.</li>
              *    <li>at.</li>
              *    <li>last - признак, по которому можно установить является ли обрабатываемый элемент последним в группе. В значении true - это последний элемент группы.</li>
              * </ol>
@@ -257,7 +257,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @property {Function} render Функция, дополняющая функционал обработки заголовка группы.
              * Аргументы функции:
              * <ol>
-             *    <li>item - элемент коллекции, который отрисовывается первым в группе. Экземпляр класса {@link SBIS3.CONTROLS.Data.Model}.</li>
+             *    <li>item - элемент коллекции, который отрисовывается первым в группе. Экземпляр класса {@link WS.Data.Entity.Model}.</li>
              *    <li>container - содержимое контейнера визуального отображения (DOM-элемента) заголовка группы.</li>
              *    <li>last - признак, по которому можно установить является ли первый элемент группы одновременно и последним.</li>
              * </ol>
@@ -308,7 +308,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             /**
              * @typedef {Function} UserItem
              * @property {String} container Контейнер визуального отображения (DOM-элемент) текущего элемента коллекции.
-             * @property {SBIS3.CONTROLS.Data.Model} item Текущий элемент коллекции.
+             * @property {WS.Data.Entity.Model} item Текущий элемент коллекции.
              */
             /**
              * @cfg {UserItem} Устанавливает метод, с помощью которого можно производить манипуляции с контейнером визуального отображения элементов коллекции.
@@ -319,7 +319,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              *
              * Аргументы метода:
              * 1. container: Контейнер визуального отображения (DOM-элемент) текущего элемента коллекции.
-             * 2. item: екущий элемент коллекции в виде экземпляра класса {@link SBIS3.CONTROLS.Data.Model Model}.
+             * 2. item: екущий элемент коллекции в виде экземпляра класса {@link WS.Data.Entity.Model Model}.
              * @example
              * Устанавливаем функцию из вёрстки компонента:
              * <pre class="brush:xml">
@@ -460,13 +460,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._dataSource = this._prepareSource(sourceOpt);
             this._items = null;
          } else if (itemsOpt) {
-            if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection.Projection')) {
+            if ($ws.helpers.instanceOfModule(itemsOpt, 'WS.Data.Display.Display')) {
                this._itemsProjection = itemsOpt;
                this._items = this._convertItems(this._itemsProjection.getCollection());
                this._setItemsEventHandlers();
                this._notify('onItemsReady');
                this._itemsReadyCallback();
-            } else if($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            } else if($ws.helpers.instanceOfModule(itemsOpt, 'WS.Data.Collection.RecordSet')) {
                this._processingData(itemsOpt);
             } else if (itemsOpt instanceof Array) {
                /*TODO уменьшаем количество ошибок с key*/
@@ -514,8 +514,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             });
          }
 
-         if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            throw new Error('Items should implement SBIS3.CONTROLS.Data.Collection.IEnumerable');
+         if (!$ws.helpers.instanceOfMixin(items, 'WS.Data.Collection.IEnumerable')) {
+            throw new Error('Items should implement WS.Data.Collection.IEnumerable');
          }
 
          return items;
@@ -528,7 +528,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                result = sourceOpt.call(this);
                break;
             case 'object':
-               if ($ws.helpers.instanceOfMixin(sourceOpt, 'SBIS3.CONTROLS.Data.Source.ISource')) {
+               if ($ws.helpers.instanceOfMixin(sourceOpt, 'WS.Data.Source.ISource')) {
                   result = sourceOpt;
                }
                if ('module' in sourceOpt) {
@@ -542,8 +542,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       /**
        * Возвращает отображаемую контролом коллекцию, сделанную на основе источника данных
-       * @param {SBIS3.CONTROLS.Data.Source.ISource} source
-       * @returns {SBIS3.CONTROLS.Data.Collection.IList}
+       * @param {WS.Data.Source.ISource} source
+       * @returns {WS.Data.Collection.IList}
        * @private
        */
       _convertDataSourceToItems: function (source) {
@@ -581,7 +581,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * <pre>
         *     define(
         *     'SBIS3.MY.Demo',
-        *     'js!SBIS3.CONTROLS.Data.Source.Memory',
+        *     'js!WS.Data.Source.Memory',
         *     function(MemorySource){
         *        //коллекция элементов
         *        var arrayOfObj = [
@@ -1486,9 +1486,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * Обрабатывает событие об изменении коллекции.
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} action Действие, приведшее к изменению.
-       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} newItems Новые элементы коллеции.
+       * @param {WS.Data.Display.CollectionItem[]} newItems Новые элементы коллеции.
        * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
-       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} oldItems Удаленные элементы коллекции.
+       * @param {WS.Data.Display.CollectionItem[]} oldItems Удаленные элементы коллекции.
        * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
        * @private
        */

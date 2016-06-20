@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.DEMO.AddInPlace',
    [
       'js!SBIS3.CORE.CompoundControl', 
       'html!SBIS3.CONTROLS.DEMO.AddInPlace',
-      'js!SBIS3.CONTROLS.Data.Source.SbisService',
+      'js!WS.Data.Source.SbisService',
       'js!SBIS3.CONTROLS.DataGridView', 
       'js!SBIS3.CONTROLS.Button',
       'js!SBIS3.CONTROLS.TextBox',

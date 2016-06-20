@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.Demo.MyCompositeView',
     [
         'js!SBIS3.CORE.CompoundControl',
-        'js!SBIS3.CONTROLS.Data.Source.Memory',
+        'js!WS.Data.Source.Memory',
         'js!SBIS3.CONTROLS.ComponentBinder',
         'html!SBIS3.CONTROLS.Demo.MyCompositeView/resources/tileTpl',
         'html!SBIS3.CONTROLS.Demo.MyCompositeView/resources/listTpl',

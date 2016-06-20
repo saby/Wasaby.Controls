@@ -2,7 +2,7 @@
  * Created by am.gerasimov on 19.11.2015.
  */
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.DemoMemory', ['js!SBIS3.CONTROLS.Data.Source.Memory'], function (Memory) {
+define('js!SBIS3.CONTROLS.DemoMemory', ['js!WS.Data.Source.Memory'], function (Memory) {
    'use strict';
 
    var DemoMemory = Memory.extend({

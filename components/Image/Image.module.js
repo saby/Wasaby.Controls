@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.Image',
    [
       'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.Data.Source.SbisService',
+      'js!WS.Data.Source.SbisService',
       'html!SBIS3.CONTROLS.Image',
       'js!SBIS3.CORE.FileLoader',
       'js!SBIS3.CORE.Dialog',

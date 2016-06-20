@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.HierarchyControl.HierarchyView', [
       },
 
       _getItemRenderData: function(item) {
-         if (!$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Projection.TreeItem')) {
+         if (!$ws.helpers.instanceOfModule(item, 'WS.Data.Display.TreeItem')) {
             return HierarchyView.superclass._getItemRenderData.call(this, item);
          }
 
@@ -119,7 +119,7 @@ define('js!SBIS3.CONTROLS.HierarchyControl.HierarchyView', [
 
       /**
        * Возвращает узел DOM, содержащий детей узла дерева
-       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem} item Элемент дерева
+       * @param {WS.Data.Display.TreeItem} item Элемент дерева
        * @private
        */
       _getTreeChildrenContainer: function(item) {

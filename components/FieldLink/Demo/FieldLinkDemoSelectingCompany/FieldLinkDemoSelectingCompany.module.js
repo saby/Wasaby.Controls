@@ -4,8 +4,8 @@
 define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoSelectingCompany', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Demo.FieldLinkDemoSelectingCompany',
-   'js!SBIS3.CONTROLS.Data.Source.Memory',
-   'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
+   'js!WS.Data.Source.Memory',
+   'js!WS.Data.Adapter.Sbis',
    'js!SBIS3.CONTROLS.DataGridView',
    'js!SBIS3.CONTROLS.Button',
    'css!SBIS3.CONTROLS.Demo.FieldLinkDemoSelectingCompany'

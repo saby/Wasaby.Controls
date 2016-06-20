@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.ListControl.CommonHandlers', [], function() {
                      continue;
                   }
                   try {
-                     if ($ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')) {
+                     if ($ws.helpers.instanceOfModule(item, 'WS.Data.Entity.Model')) {
                         item.remove();
                      }
                      self.getItems().remove(item);

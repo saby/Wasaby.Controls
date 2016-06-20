@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', ['js!SBIS3.CORE.CoreValidators', 
             case 'object' :
                if(option instanceof $ws.proto.Enum) {
                   isEmpty = option.getCurrentValue() === null;
-               } else if($ws.helpers.instanceOfModule(option, 'SBIS3.CONTROLS.Data.Collection.List')) {
+               } else if($ws.helpers.instanceOfModule(option, 'WS.Data.Collection.List')) {
                   isEmpty = !Boolean(option.getCount());
                } else if(option instanceof Array) {
                   isEmpty = !Boolean(option.length);

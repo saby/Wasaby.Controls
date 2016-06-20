@@ -1,7 +1,7 @@
 /*global define, $, $ws*/
 define('js!SBIS3.CONTROLS.MenuButtonNew', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.ContextMenuNew', 'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.ListControlMixin', 'js!SBIS3.CONTROLS.MenuButtonNewMixin',
-      'js!SBIS3.CONTROLS.HierarchyControlMixin','js!SBIS3.CONTROLS.TreeControlMixin', 'js!SBIS3.CONTROLS.Data.Utils','js!SBIS3.CONTROLS.MenuButtonNewView'],
+      'js!SBIS3.CONTROLS.HierarchyControlMixin','js!SBIS3.CONTROLS.TreeControlMixin', 'js!WS.Data.Utils','js!SBIS3.CONTROLS.MenuButtonNewView'],
    function(Button, ContextMenu, PickerMixin,
       ListControlMixin, MenuButtonMixin,
       HierarchyControlMixin, TreeControlMixin, DataUtils, MenuButtonView) {

@@ -4,8 +4,8 @@
 define('js!SBIS3.CONTROLS.OperationUnload', [
    'js!SBIS3.CONTROLS.PrintUnloadBase',
    'js!SBIS3.CONTROLS.Utils.DataProcessor',
-   'js!SBIS3.CONTROLS.Data.Record',
-   'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
+   'js!WS.Data.Entity.Record',
+   'js!WS.Data.Adapter.Sbis',
    'i18n!SBIS3.CONTROLS.OperationUnload'
 ], function(PrintUnloadBase, Exporter, Record, SbisAdapter, rk) {
    //TODO Идея! нужно просто вызвать у view.export, он в свою очередь поднимает событие onUnload, а событие подхыватит выгрузчик. тогда в кнопке вообще только визуализация будет

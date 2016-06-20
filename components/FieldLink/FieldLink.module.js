@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        'js!SBIS3.CONTROLS.ActiveSelectable',
        'js!SBIS3.CONTROLS.SyncSelectionMixin',
        'js!SBIS3.CONTROLS.FieldLinkItemsCollection',
-       'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
+       'js!WS.Data.Collection.RecordSet',
        'html!SBIS3.CONTROLS.FieldLink/afterFieldWrapper',
        'html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper',
        'js!SBIS3.CONTROLS.Utils.DialogOpener',
@@ -421,7 +421,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              var isModel;
 
              if(result && result.length) {
-                isModel = $ws.helpers.instanceOfModule(result[0], 'SBIS3.CONTROLS.Data.Model');
+                isModel = $ws.helpers.instanceOfModule(result[0], 'WS.Data.Entity.Model');
                 this.setText('');
 
                 if(isModel) {
@@ -717,7 +717,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           setSelectedItem: function(item) {
              var hasRequiredFields,
-                 isModel = item  && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model');
+                 isModel = item  && $ws.helpers.instanceOfModule(item, 'WS.Data.Entity.Model');
 
              /* Т.к. ключ может быть как 0, а ключевое поле как '', то надо проверять на null/undefined */
              function isEmpty(val) {

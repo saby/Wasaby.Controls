@@ -6,11 +6,11 @@ define('js!SBIS3.CONTROLS.ListControl.IListItems', [
    /**
     * Интерфейс коллекции, отображаемой списочным контролом
     * @mixin SBIS3.CONTROLS.ListControl.IListItems
-    * @implements SBIS3.CONTROLS.Data.Collection.IEnumerable
-    * @implements [SBIS3.CONTROLS.Data.Collection.IList]
-    * @implements [SBIS3.CONTROLS.Data.Collection.ISourceLoadable]
-    * @implements [SBIS3.CONTROLS.Data.Projection.Collection]
-    * @implements [SBIS3.CONTROLS.Data.Bind.ICollection]
+    * @implements WS.Data.Collection.IEnumerable
+    * @implements [WS.Data.Collection.IList]
+    * @implements [WS.Data.Collection.ISourceLoadable]
+    * @implements [WS.Data.Display.Collection]
+    * @implements [WS.Data.Collection.IBind]
     * @author Крайнов Дмитрий Олегович
     */
    return /** @lends SBIS3.CONTROLS.ListControl.IListItems.prototype */{

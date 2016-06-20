@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.FilterHistoryController',
     [
        'js!SBIS3.CONTROLS.HistoryController',
-       'js!SBIS3.CONTROLS.Data.Collection.List',
+       'js!WS.Data.Collection.List',
        'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil'
     ],
 
