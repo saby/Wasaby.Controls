@@ -889,7 +889,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
        /**
         * Метод установки либо замены колонок, заданных опцией {@link columns}.
-        * @param columns Новый набор колонок.
+        * @param {Array} columns Новый набор колонок.
+        * @param {Boolean} forceRedraw Сразу же перерисовать шапку, или после загрузки данных.
         * @example
         * <pre>
         *    var columns = DataGridView.getColumns(),
@@ -905,12 +906,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
         *    DataGridView.setColumns(newColumns);
         * </pre>
         */
-       setColumns : function(columns) {
+       setColumns : function(columns, forceRedraw) {
           this._options.columns = columns;
           this._checkColumns();
           /* Перестроим шапку только после загрузки данных,
            чтобы таблица не прыгала, из-за того что изменилось количество и ширина колонок */
-          this.once('onDataLoad', this._redrawHead.bind(this));
+          if(forceRedraw) {
+             this._redrawHead();
+          } else {
+             this.once('onDataLoad', this._redrawHead.bind(this));
+          }
        },
 
       setMultiselect: function() {
