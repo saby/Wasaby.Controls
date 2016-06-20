@@ -315,7 +315,17 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              * @see SBIS3.CONTROLS.ItemsControlMixin#itemsSortMethod
              * @see SBIS3.CONTROLS.ItemsControlMixin#setItemsSortMethod
              */
-            itemsSortMethod: _defaultItemsSortMethod
+            itemsSortMethod: _defaultItemsSortMethod,
+            /**
+             * @cfg {Boolean}
+             * Передавать ли в параметрах фильтрации параметр "ПутьКУзлу"
+             */
+            filterNodePath: false,
+            /**
+             * @cfg {Boolean}
+             * Передавать ли в параметрах фильтрации параметр "ЗаголовокИерархии"
+             */
+            filterHierarchyTitle: false
          },
          _foldersFooters: {},
          _breadCrumbs : [],
@@ -516,8 +526,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             filter[hierField].push(this.getCurrentRoot());
             filter[hierField] = filter[hierField].concat(Object.keys(this._options.openedPath));
          }
-         filter['ПутьКУзлу'] = true;
-         filter['ЗаголовокИерархии'] = this._options.displayField;
+         if(this._options.filterNodePath)
+            filter['ПутьКУзлу'] = true;
+         if(this._options.filterHierarchyTitle)
+            filter['ЗаголовокИерархии'] = this._options.displayField;
          return filter;
       },
       /**

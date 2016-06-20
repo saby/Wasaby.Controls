@@ -579,17 +579,24 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          $constructor: function () {
-            this._touchSupport = $ws._const.compatibility.touch;
+            //TODO требуется доработка, для поддержки touch устройств с возможностью управление мышью
+            //    https://inside.tensor.ru/opendoc.html?guid=25dd3a2f-00e5-4765-9b94-a90d6d7a9d4f&description=
+            //    Задача в разработку: доработка listView, для поддержки touch устройств с возможностью управление мышью
+            this._touchSupport = $ws._const.browser.isMobilePlatform;
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
 
             /* За счёт того, что разделено поведения отображения операций и ховера,
                в зависимости от события, которое произошло, то можно смело подписаться на все событие,
                если его нет, то подписки не произодйдёт */
-            this._container.on('swipe', this._swipeHandler.bind(this))
-                           .on('tap', this._tapHandler.bind(this))
-                           .on('touchmove mousemove',this._mouseMoveHandler.bind(this))
-                           .on('mouseleave', this._mouseLeaveHandler.bind(this));
+            if(this._touchSupport) {
+               this._container.on('swipe', this._swipeHandler.bind(this))
+                              .on('tap', this._tapHandler.bind(this))
+                              .on('touchmove',this._mouseMoveHandler.bind(this));
+            } else {
+               this._container.on('mousemove', this._mouseMoveHandler.bind(this))
+                              .on('mouseleave', this._mouseLeaveHandler.bind(this));
+            }
 
             this.initEditInPlace();
             this.setItemsDragNDrop(this._options.itemsDragNDrop);
@@ -1364,9 +1371,9 @@ define('js!SBIS3.CONTROLS.ListView',
                            if (!model.isStored()) {
                               if (this.getItemsActions()) {
                                  itemsInstances = this.getItemsActions().getItemsInstances();
-                                 if (itemsInstances.delete) {
-                                    this._lastDeleteActionState = itemsInstances.delete.isVisible();
-                                    itemsInstances.delete.hide();
+                                 if (itemsInstances['delete']) {
+                                    this._lastDeleteActionState = itemsInstances['delete'].isVisible();
+                                    itemsInstances['delete'].hide();
                                  }
                               }
                            }
@@ -1394,7 +1401,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            this._getItemsToolbar().unlockToolbar();
                            this._getItemsToolbar().hideEditActions();
                            if (this._lastDeleteActionState !== undefined) {
-                              this.getItemsActions().getItemsInstances().delete.toggle(this._lastDeleteActionState);
+                              this.getItemsActions().getItemsInstances()['delete'].toggle(this._lastDeleteActionState);
                               this._lastDeleteActionState = undefined;
                            }
                            this._hideItemsToolbar();
@@ -1860,7 +1867,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var areas = $ws.single.FloatAreaManager._areas;
             for (var area in areas){
                if (areas.hasOwnProperty(area)){
-                  if (areas[area].isVisible() && areas[area]._options.isStack()){
+                  if (areas[area].isVisible() && areas[area]._options.isStack){
                      return true;
                   }
                }
