@@ -148,7 +148,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          }
       },
 
-      $constructor: function() {
+      $constructor: function(cfg) {
+         this._newRecord = cfg.isNewRecord || false;
          this._publish('onFail', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel');
          $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
          $ws.single.CommandDispatcher.declareCommand(this, 'read', this._read);
@@ -662,7 +663,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
    });
       //todo Костыль, позволяющий с прототипа компонента вычитать запись до инициализации компонента и прокинуть ее в опции. Сделано в рамках ускорения
       FormController.prototype.getRecordFromSource = function (opt) {
-         var prototypeProtectedData = {};
+         var prototypeProtectedData = {},
+             result;
          this._initializer.call(prototypeProtectedData); //На прототипе опции не доступны, получаем их через initializer
          var options = prototypeProtectedData._options;
          $ws.core.merge(options, opt);
@@ -670,11 +672,13 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             options.source = opt.source = this.createDataSource(options);
          }
          if (options.key){
-            return options.source.read(options.key);
+            result = options.source.read(options.key);
          }
          else{
-            return options.source.create(options.initValues);
+            result = options.source.create(options.initValues);
+            result.isNewRecord = true;
          }
+         return result;
       };
 
       FormController.prototype.createDataSource = function(options){
