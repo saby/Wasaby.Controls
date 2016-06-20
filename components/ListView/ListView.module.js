@@ -889,20 +889,24 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          /**
-          * Метод, обновляющий текущий выделеный по ховеру элемент
+          * Метод, меняющий текущий выделеный по ховеру элемент
           * @param {jQuery} target Новый выделеный по ховеру элемент
-          * @param {Boolean} forceUpdate Принудительно запустить обновление выделенного элемента, требуется
           * когда ключ элемента не поменялся, но сам он изменился (перерисовался)
           * @private
           */
-         _changeHoveredItem: function(target, forceUpdate) {
+         _changeHoveredItem: function(target) {
             var targetKey = target[0].getAttribute('data-id');
-            if (targetKey !== undefined && (this._hoveredItem.key !== targetKey || forceUpdate)) {
-               this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
-               target.addClass('controls-ListView__hoveredItem');
-               this._hoveredItem = this._getElementData(target);
-               this._notifyOnChangeHoveredItem();
+
+            if (targetKey !== undefined && (this._hoveredItem.key !== targetKey)) {
+               this._updateHoveredItem(target);
             }
+         },
+
+         _updateHoveredItem: function(target) {
+            this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
+            target.addClass('controls-ListView__hoveredItem');
+            this._hoveredItem = this._getElementData(target);
+            this._notifyOnChangeHoveredItem();
          },
 
          _getDomElementByItem : function(item) {
@@ -1679,7 +1683,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   if(!hoveredItemContainer) {
                      this._mouseLeaveHandler();
                   } else {
-                     this._changeHoveredItem(hoveredItemContainer, true);
+                     this._updateHoveredItem(hoveredItemContainer);
                   }
                } else {
                   this._updateItemsToolbar();
