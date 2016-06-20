@@ -464,8 +464,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
                /* По стандарту маркер в списке должен ставиться,
                 но надо оставить возможность это отключить, т.к. не всем это надо */
-               if(options.allowEmptyMultiSelection === undefined) {
-                  options.allowEmptyMultiSelection = false;
+               if(options.allowEmptySelection === undefined) {
+                  options.allowEmptySelection = false;
                }
 
                options.parent = this._picker;
