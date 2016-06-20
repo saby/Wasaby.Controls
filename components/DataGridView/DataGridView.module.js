@@ -517,8 +517,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _redrawItems: function() {
+         //FIXME в 3.7.4 поправить, не всегда надо перерисовывать, а только когда изменились колонки
          if(this._options.showHead) {
             this._redrawHead();
+         } else {
+            /* Надо перерисовывать колгруп, при полной перерисовке item'ов,
+               т.к. могли измениться колонки */
+            this._redrawColgroup();
          }
          DataGridView.superclass._redrawItems.apply(this, arguments);
       },
@@ -889,8 +894,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
        /**
         * Метод установки либо замены колонок, заданных опцией {@link columns}.
-        * @param {Array} columns Новый набор колонок.
-        * @param {Boolean} forceRedraw Сразу же перерисовать шапку, или после загрузки данных.
+        * @param columns Новый набор колонок.
         * @example
         * <pre>
         *    var columns = DataGridView.getColumns(),
@@ -906,16 +910,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
         *    DataGridView.setColumns(newColumns);
         * </pre>
         */
-       setColumns : function(columns, forceRedraw) {
+       setColumns : function(columns) {
           this._options.columns = columns;
           this._checkColumns();
           /* Перестроим шапку только после загрузки данных,
            чтобы таблица не прыгала, из-за того что изменилось количество и ширина колонок */
-          if(forceRedraw) {
-             this._redrawHead();
-          } else {
-             this.once('onDataLoad', this._redrawHead.bind(this));
-          }
+          this.once('onDataLoad', this._redrawHead.bind(this));
        },
 
       setMultiselect: function() {
