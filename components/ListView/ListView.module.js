@@ -888,9 +888,16 @@ define('js!SBIS3.CONTROLS.ListView',
             return scrollContainer;
          },
 
-         _changeHoveredItem: function(target) {
+         /**
+          * Метод, обновляющий текущий выделеный по ховеру элемент
+          * @param {jQuery} target Новый выделеный по ховеру элемент
+          * @param {Boolean} forceUpdate Принудительно запустить обновление выделенного элемента, требуется
+          * когда ключ элемента не поменялся, но сам он изменился (перерисовался)
+          * @private
+          */
+         _changeHoveredItem: function(target, forceUpdate) {
             var targetKey = target[0].getAttribute('data-id');
-            if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
+            if (targetKey !== undefined && (this._hoveredItem.key !== targetKey || forceUpdate)) {
                this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
                target.addClass('controls-ListView__hoveredItem');
                this._hoveredItem = this._getElementData(target);
@@ -1636,11 +1643,12 @@ define('js!SBIS3.CONTROLS.ListView',
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
          //*********************************//
          _drawItemsCallback: function () {
-            var
-               hoveredItem,
-               hoveredItemContainer,
-               hash,
-               projItem;
+            var hoveredItem,
+                hoveredItemContainer,
+                hash,
+                projItem,
+                containsHoveredItem;
+
             ListView.superclass._drawItemsCallback.apply(this, arguments);
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
@@ -1649,26 +1657,31 @@ define('js!SBIS3.CONTROLS.ListView',
 
             hoveredItem = this.getHoveredItem();
             hoveredItemContainer = hoveredItem.container;
-            /*TODO сейчас зачем то в ховеред итем хранится ссылка на DOM элемент
-            * но этот элемент может теряться в ходе перерисовок. Выписана задача по которой мы будем
-            * хранить только идентификатор и данный код станет не нужен*/
-            if (hoveredItemContainer) {
-               hash = hoveredItemContainer.attr('data-hash');
-               projItem = this._getItemsProjection().getByHash(hash);
-               if (projItem) {
-                  hoveredItemContainer = this._getDomElementByItem(projItem);
-               }
-            }
 
              /* Если после перерисовки выделенный элемент удалился из DOM дерава,
                то событие mouseLeave не сработает, поэтому вызовем руками метод,
                если же он остался, то обновим положение кнопки опций*/
             if(hoveredItemContainer){
-               if(!$.contains(this._getItemsContainer()[0], hoveredItemContainer[0])) {
-                  this._mouseLeaveHandler();
-               }else {
-                  hoveredItem.container = hoveredItemContainer;
-                  this._setHoveredItem(hoveredItem);
+               containsHoveredItem = $ws.helpers.contains(this._getItemsContainer()[0], hoveredItemContainer[0]);
+
+               if(!containsHoveredItem && hoveredItemContainer) {
+                  /*TODO сейчас зачем то в ховеред итем хранится ссылка на DOM элемент
+                   * но этот элемент может теряться в ходе перерисовок. Выписана задача по которой мы будем
+                   * хранить только идентификатор и данный код станет не нужен*/
+                  hash = hoveredItemContainer.attr('data-hash');
+                  projItem = this._getItemsProjection().getByHash(hash);
+                  if (projItem) {
+                     hoveredItemContainer = this._getDomElementByItem(projItem);
+                  }
+               }
+
+               if(!containsHoveredItem) {
+                  if(!hoveredItemContainer) {
+                     this._mouseLeaveHandler();
+                  } else {
+                     this._changeHoveredItem(hoveredItemContainer, true);
+                  }
+               } else {
                   this._updateItemsToolbar();
                }
             }
