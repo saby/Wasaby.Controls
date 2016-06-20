@@ -1,7 +1,7 @@
 .ws-window-titlebar-custom {
    .controls-EditDialog {
       &__applyButton {
-         width: 90px;
+         width: @editdialog-applybutton-width;
          position: absolute;
          right: 38px; /*ширина кнопки закрытия окна 36px + 2px на набольшой отступ между ними (в ie8 нет скруглений и кнопки склеиваются)*/
          top: 8px;
@@ -34,5 +34,9 @@
       max-width: 100%;
       display: block;
       margin: 0 auto;
+   }
+
+   &__template {
+      min-width: @editdialog-template-minwidth;
    }
 }
