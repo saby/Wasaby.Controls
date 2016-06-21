@@ -336,6 +336,43 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
             })
     });
 	
+	gemini.suite('DataGridView Hierarchy', function (test) {
+
+        test.setUrl('/regression_items_action_online_24.html').setCaptureElements('html')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="DataGridView 1"]', 40000);
+                actions.waitForElementToShow('[data-id="3"]', 1000);
+				this.item_3 = find('[data-id="3"]')
+				this.item_10 = find('[data-id="10"]')
+				actions.mouseMove(this.item_3);
+				actions.waitForElementToShow('.controls-ItemActions [data-id="delete"]', 1000);
+				this.delete_icon = find('.controls-ItemActions [data-id="delete"]');
+				this.cut_icon = find('.controls-ItemActions__menu-container  [data-id="cut"]')
+				actions.waitForElementToShow('.controls-ItemActions .controls-ItemActions__menu-button', 1000);
+				this.menu_button = find('.controls-ItemActions .controls-ItemActions__menu-button');
+            })
+
+            .capture('plain')
+			
+			.capture('hovered_main_action', function (actions) {
+				actions.mouseMove(this.delete_icon);
+            })
+			
+			.capture('hovered_menu_button', function (actions) {
+				actions.mouseMove(this.menu_button);
+            })
+			
+			.capture('opened_menu', function (actions) {
+				actions.click(this.menu_button);
+				actions.mouseMove(this.item_10);
+            })
+			
+			.capture('hovered_second_action', function (actions) {
+				actions.mouseMove(this.cut_icon);
+            })
+    });
+
 	gemini.suite('DataGridView PartScroll', function (test) {
 
         test.setUrl('/regression_items_action_online_21.html').skip('chrome').setCaptureElements('html')
@@ -428,6 +465,57 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 			
 			.capture('hovered_second_action', function (actions) {
 				actions.mouseMove(this.delete_icon);
+            })
+			
+			.capture('expanded_folder', function (actions) {
+				actions.click(this.expander);
+				actions.waitForElementToShow('[data-id="13"]', 1000);
+				actions.waitForElementToShow('[data-id="15"]', 1000);
+				actions.mouseMove(this.item_4);
+            })
+			
+			.capture('hovered_child', function (actions) {
+				actions.mouseMove(this.item_15);
+            })
+    });
+	
+	gemini.suite('TreeDataGridView Hierarchy', function (test) {
+
+        test.setUrl('/regression_items_action_online_25.html').setCaptureElements('html')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="TreeDataGridView 1"]', 40000);
+                actions.waitForElementToShow('[data-id="3"]', 1000);
+				this.item_3 = find('[data-id="3"]')
+				this.item_4 = find('[data-id="4"]')
+				this.item_12 = find('[data-id="12"]')
+				this.item_15 = find('[data-id="15"]')
+				this.expander = find('[data-id="4"] .controls-TreeView__expand')
+				actions.mouseMove(this.item_3);
+				actions.waitForElementToShow('.controls-ItemActions [data-id="delete"]', 1000);
+				this.delete_icon = find('.controls-ItemActions [data-id="delete"]');
+				this.cut_icon = find('.controls-ItemActions__menu-container  [data-id="cut"]')
+				actions.waitForElementToShow('.controls-ItemActions .controls-ItemActions__menu-button', 1000);
+				this.menu_button = find('.controls-ItemActions .controls-ItemActions__menu-button');
+            })
+
+            .capture('plain')
+			
+			.capture('hovered_main_action', function (actions) {
+				actions.mouseMove(this.delete_icon);
+            })
+			
+			.capture('hovered_menu_button', function (actions) {
+				actions.mouseMove(this.menu_button);
+            })
+			
+			.capture('opened_menu', function (actions) {
+				actions.click(this.menu_button);
+				actions.mouseMove(this.item_12);
+            })
+			
+			.capture('hovered_second_action', function (actions) {
+				actions.mouseMove(this.cut_icon);
             })
 			
 			.capture('expanded_folder', function (actions) {
