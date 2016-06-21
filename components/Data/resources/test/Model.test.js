@@ -203,6 +203,29 @@ define([
             assert.strictEqual(model.get('internal'), 'testInternal');
             assert.isUndefined(model.getRawData().internal);
          });
+         it('should work well in case of getter exception', function () {
+            var model = new Model({
+               properties: {
+                  p1: {
+                     get: function() {
+                        throw new Error('Something went wrong');
+                     },
+                     set: function(value) {
+                        this._p1 = value;
+                     }
+                  }
+               }
+            });
+            //Get twice checks valid state
+            assert.throw(function() {
+               model.get('p1');
+            });
+            assert.throw(function() {
+               model.get('p1');
+            });
+
+            model.set('p1', 'v1');
+         });
 
          context('if has properties dependency', function () {
             var MyModel = Model.extend({
@@ -268,7 +291,8 @@ define([
                var model = getMyModel();
                model.get('p3');
                model.get('p3');
-               assert.equal(model._propertiesDependency.p3.length, 1);
+               assert.equal(model._propertiesDependency.p4.length, 1);
+               assert.equal(model._propertiesDependency.p5.length, 1);
             });
          });
 
