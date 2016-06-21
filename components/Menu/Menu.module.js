@@ -309,6 +309,16 @@ define('js!SBIS3.CONTROLS.Menu', [
          return config;
       },
 
+      /* Само меню не должно вызывать перерасчёта у соседних элементов,
+         т.к. создаётся абсолютом в body, однако, в меню могу лежать контролы,
+         которым требуется расчитывать ширину, поэтому запускаем расчёты только для дочерних */
+      _setVisibility: function(show) {
+         Menu.superclass._setVisibility.apply(this, arguments);
+         if(show) {
+            this._resizeChilds();
+         }
+      },
+
       destroy : function(){
          Menu.superclass.destroy.call(this);
          this.destroySubObjects();
