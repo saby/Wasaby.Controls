@@ -22,7 +22,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				this.addLink = find('[sbisname="FieldRichEditor 1"] [sbisname="link"]')
 				this.linkInput = find('input[name="fre_link_href"]')
 				this.ok = find('.ws-window-titlebar [type="button"] .controls-Button__text')
-				actions.wait(1000);				
+				actions.wait(500);				
             })
 
             .capture('plain', function (actions) {
@@ -79,12 +79,12 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 			.capture('with_link', function (actions) {
 				actions.sendKeys(this.linkInput, 'http://yandex.ru/');
 				actions.click(this.ok);
-				actions.wait(1000);
+				actions.wait(500);
 			})				
 
 			.capture('closed_toolbar', function (actions) {
 				actions.click(this.toolbar);
-				actions.wait(1000);
+				actions.wait(500);
 			})
 			
 			.capture('disabled', function (actions) {
@@ -120,7 +120,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				this.addLink = find('[sbisname="FieldRichEditor 1"] [sbisname="link"]')
 				this.linkInput = find('input[name="fre_link_href"]')
 				this.ok = find('.ws-window-titlebar [type="button"] .controls-Button__text')
-				actions.wait(1000);				
+				actions.wait(500);				
             })
 
             .capture('bold', function (actions) {
@@ -341,7 +341,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				this.addLink = find('[sbisname="FieldRichEditor 1"] [sbisname="link"]')
 				this.linkInput = find('input[name="fre_link_href"]')
 				this.ok = find('.ws-window-titlebar [type="button"] .controls-Button__text')
-				actions.wait(1000);				
+				actions.wait(500);				
             })
 			
 			.capture('with_text', function (actions) {
@@ -369,7 +369,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
 				this.input = find('[sbisname="FieldRichEditor 1"] .ws-editor-frame');
-				actions.wait(1000);				
+				actions.wait(500);				
             })
 			
 			.capture('disabled', function (actions) {
@@ -389,5 +389,34 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
                     window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').setValue('<p>123</p>');
                 });
 			})
+    });
+	
+	gemini.suite('tiny_in_tiny', function (test) {
+
+        test.setUrl('/IntRichFieldEditor8.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
+				this.input = find('[sbisname="FieldRichEditor 1"] .ws-editor-frame');
+				actions.wait(500);				
+            })
+
+            .capture('plain')		
+    });
+	
+	gemini.suite('null_in_context', function (test) {
+
+        test.setUrl('/IntRichFieldEditor9.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
+				this.input = find('[sbisname="FieldRichEditor 1"] .ws-editor-frame');
+				actions.wait(500);
+				actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').setEnabled(false);
+                });				
+            })
+
+            .capture('plain')		
     });
 });
