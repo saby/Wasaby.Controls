@@ -64,6 +64,12 @@ gemini.suite('SBIS3.CONTROLS.Filter Online', function () {
 				actions.wait(500);
 				actions.mouseMove(this.filter_line);
             })
+			
+			.capture('disabled', function (actions, find) {
+				actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('filterButton').setEnabled(false);
+                });
+            })
     });
 
 	gemini.suite('combobox_items_count', function (test) {

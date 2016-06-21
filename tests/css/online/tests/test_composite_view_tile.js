@@ -20,12 +20,12 @@ gemini.suite('SBIS3.CONTROLS.CompositeViewTile Online', function () {
 
             .capture('hovered_item', function (actions) {
                 actions.mouseMove(this.item4);
-				actions.wait(1000);
+				actions.wait(500);
             })
 
             .capture('selected_item', function (actions) {
                 actions.click(this.item6);
-				actions.wait(1000);
+				actions.wait(500);
             })
     });
 	
