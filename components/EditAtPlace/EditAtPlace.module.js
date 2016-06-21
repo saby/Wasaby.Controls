@@ -147,7 +147,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
           * @private
           */
          _editorFocusOutHandler: function(){
-            if (!this._isEditInGroup){
+            if (!this._isEditInGroup && this._options.displayAsEditor){
                this._applyEdit();
             }
          },
