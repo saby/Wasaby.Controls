@@ -1679,6 +1679,8 @@ define('js!SBIS3.CONTROLS.ListView',
                то событие mouseLeave не сработает, поэтому вызовем руками метод,
                если же он остался, то обновим положение кнопки опций*/
             if(hoveredItemContainer){
+               // FIXME УДАЛИТЬ, вызывается, чтобы проходили тесты, просто создаёт индекс по хэшу в енумераторе
+               this._getItemsProjection().getByHash(null);
                containsHoveredItem = $ws.helpers.contains(this._getItemsContainer()[0], hoveredItemContainer[0]);
 
                if(!containsHoveredItem && hoveredItemContainer) {
