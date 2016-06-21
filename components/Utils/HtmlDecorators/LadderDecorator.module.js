@@ -98,6 +98,10 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
         this._ignoreEnabled = !!ignore;
       },
 
+      getIgnoreEnabled: function(){
+         return this._ignoreEnabled;
+      },
+
       /**
        * Вставляет в текст разметку, отображающую фразу подсвеченной
        * @param {*} text Текст
