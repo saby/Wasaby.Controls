@@ -1078,6 +1078,10 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
             //при вырезании текста мышкой тоже должен срабатывать обработчик
             editor.on( 'cut',function(){
+               if (self._options.editorConfig.paste_as_text) { // в костроме отключают нашу утилиту
+                  e.stopImmediatePropagation();
+                  editor.execCommand('forwardDelete');
+               }
                setTimeout(function() {
                   self._onValueChangeHandler();
                }, 1);
