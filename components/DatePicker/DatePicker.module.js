@@ -203,8 +203,7 @@ define(
              * @noShow
              */
             autoComplete: true
-         },
-         _hasIncorrectParts: false
+         }
       },
 
       $constructor: function () {
@@ -254,7 +253,7 @@ define(
          //Добавляем к прикладным валидаторам стандартный, который проверяет что дата заполнена корректно.
          this._options.validators.push({
             validator: function() {
-               return self._dateIsValid();
+               return self.formatModel.isEmpty(this._maskReplacer) ? true : self._options.date instanceof Date;
             },
             errorMessage: rk('Дата заполнена некорректно')
          });
@@ -484,6 +483,16 @@ define(
          this._textChanged = true;
          this.clearMark();
       },
+      setActive: function(active) {
+         var date;
+         if (!active && this._options.autoComplete && !this.formatModel.isFilled()) {
+            date = this._getDateByText(this._options.text, new Date(), true);
+            if (date) {
+               this.setDate(date);
+            }
+         }
+         DatePicker.superclass.setActive.apply(this, arguments);
+      },
 
       /**
        * Получить дату в формате Date по строке
@@ -492,17 +501,15 @@ define(
        * @returns {Date} Дата в формата Date
        * @private
        */
-      _getDateByText: function(text, oldDate) {
-         //не разбираем дату, если вся не заполнена
-         if (!this.formatModel.isFilled() || !this._dateIsValid()) {
-            return null;
-         }
+      _getDateByText: function(text, oldDate, autoComplete) {
          var
             //используем старую дату как основу, чтобы сохранять части даты, отсутствующие в маске
             //new Date от старой даты делаем, чтобы контекст увидел новый объект
             date = (DateUtil.isValidDate(oldDate)) ? new Date(oldDate.getTime())  : new Date(),
             item,
             value,
+            filled = [],
+            notFilled = [],
             curYear = new Date().getFullYear(),
             yyyy = date.getFullYear(),
             mm   = date.getMonth(),
@@ -520,37 +527,59 @@ define(
             for (var j = 0; j < item.mask.length; j++) {
                value += (typeof item.value[j] === "undefined") ? this._maskReplacer : item.value[j];
             }
-            switch (item.mask) {
-               case 'YY' :
-                  //Если год задаётся двумя числами, то считаем что это текущий век.
-                  yyyy = (curYear - curYear % 100) + Number(value);
-                  break;
-               case 'YYYY' :
-                  yyyy = value;
-                  break;
-               case 'MM' :
-                  mm = value - 1;
-                  break;
-               case 'DD' :
-                  dd = value;
-                  break;
-               case 'HH' :
-                  hh = value;
-                  break;
-               case 'II' :
-                  ii = value;
-                  break;
-               case 'SS' :
-                  ss = value;
-                  break;
-               case 'UUU' :
-                  uuu = value;
-                  break;
+            if (value.indexOf(this._maskReplacer) === -1) {
+               switch (item.mask) {
+                  case 'YY' :
+                     //Если год задаётся двумя числами, то считаем что это текущий век.
+                     yyyy = (curYear - curYear % 100) + Number(value);
+                     break;
+                  case 'YYYY' :
+                     yyyy = value;
+                     break;
+                  case 'MM' :
+                     mm = value - 1;
+                     break;
+                  case 'DD' :
+                     dd = value;
+                     break;
+                  case 'HH' :
+                     hh = value;
+                     break;
+                  case 'II' :
+                     ii = value;
+                     break;
+                  case 'SS' :
+                     ss = value;
+                     break;
+                  case 'UUU' :
+                     uuu = value;
+                     break;
+               }
+               filled.push(item.mask);
+            } else {
+               notFilled.push(item.mask);
             }
          }
-         return new Date(yyyy, mm, dd, hh, ii, ss, uuu);
+         if (this._dateIsValid(yyyy, mm, dd, hh, ii, ss)) {
+            if (this.formatModel.isFilled()) {
+               return new Date(yyyy, mm, dd, hh, ii, ss, uuu);
+            } else if (autoComplete) {
+               //TODO: На данный момент по требованиям данной задачи: (https://inside.tensor.ru/opendoc.html?guid=a46626d6-abed-453f-92fe-c66f345863ef&description=)
+               //автодополнение работает только если 1) заполнен день и не заполнены месц и год; 2) заполнены день и месяц и не заполнен год;
+               //Нужно более общий сценарий работы автодополнения! Выписана задача: (https://inside.tensor.ru/opendoc.html?guid=0be02625-2d2f-4f74-940e-4d0e24b369e4&description=)
+               if (Array.indexOf(filled, "DD") !== -1 &&
+                  (Array.indexOf(notFilled, "MM") !== -1 && (Array.indexOf(notFilled, "YY") !== -1 || Array.indexOf(notFilled, "YYYY") !== -1) ||
+                   Array.indexOf(filled, "MM") !== -1 && (Array.indexOf(notFilled, "YY") !== -1 || Array.indexOf(notFilled, "YYYY") !== -1))) {
+                  return new Date(yyyy, mm, dd, hh, ii, ss, uuu);
+               }
+            }
+         }
+         return null;
       },
-
+      _dateIsValid: function(yyyy, mm, dd, hh, ii, ss) {
+         var lastMonthDay = (new Date(yyyy, mm)).setLastMonthDay().getDate();
+         return ss < 60 && ii < 60 && hh < 24 && mm < 12 && dd <= lastMonthDay;
+      },
       /**
        * Получить дату в формате строки по объекту Date. Строка соответсвует изначальной маске.
        * Пример: если дата Wed Oct 25 2102 00:00:00 GMT+0400 и изначальная маска DD.MM.YYYY, то строка будет 25.10.2102
@@ -582,45 +611,6 @@ define(
          }
 
          return text;
-      },
-
-      _dateIsValid: function() {
-         var
-             item,
-             value,
-             isValid = true;
-         //Если дата не заполена то проверять её на валидность не нужно
-         if (this.formatModel.isFilled()) {
-            for (var i = 0; i < this.formatModel.model.length; i++) {
-               item = this.formatModel.model[i];
-               if (!item.isGroup) {
-                  continue;
-               }
-               value = '';
-               for (var j = 0; j < item.mask.length; j++) {
-                  value += item.value[j];
-               }
-
-               value = Number(value);
-
-               switch (item.mask) {
-                  case 'MM' :
-                     isValid &= value <= 12;
-                     break;
-                  case 'DD' :
-                     isValid &= value <= 31;
-                     break;
-                  case 'HH' :
-                     isValid &= value <= 24;
-                     break;
-                  case 'II' :
-                  case 'SS' :
-                     isValid &= value <= 60;
-                     break;
-               }
-            }
-         }
-         return !!isValid;
       }
    });
 
