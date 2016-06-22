@@ -1128,6 +1128,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             this._firstScrollTop = true;
+            this._unlockItemsToolbar();
             this._hideItemsToolbar();
             this._destroyEditInPlace();
             return ListView.superclass.reload.apply(this, arguments);
@@ -1519,6 +1520,11 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _showItemsToolbar: function(target) {
             this._getItemsToolbar().show(target, this._touchSupport);
+         },
+         _unlockItemsToolbar: function() {
+            if (this._itemsToolbar) {
+               this._itemsToolbar.unlockToolbar();
+            }
          },
          _hideItemsToolbar: function (animate) {
             if (this._itemsToolbar) {
