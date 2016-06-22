@@ -115,7 +115,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
        * @protected
        */
       _canValidate: function () {
-         return this._options.validators.length;
+         return this._options.validators.length && this.isEnabled();
       },
 
       _invokeValidation: function () {
@@ -169,7 +169,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
             cont = this.getContainer(),
             previousStatus = this._prevValidationResult;
          this.clearMark();
-         if (this._validating || !cont || cont.hasClass('ws-hidden') === true) {
+         if (this._validating || !this._canValidate() || !cont || cont.hasClass('ws-hidden') === true) {
             return true;
          }
 
