@@ -138,7 +138,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
          this.preparePageXY(e);
          this._moveBeginX = e.pageX;
          this._moveBeginY = e.pageY;
-         //elementConfig['component'] = this;
+         elementConfig['component'] = this;
          this._currentComponent = elementConfig;
          this._isShifted = false;
          this._dropCache();
