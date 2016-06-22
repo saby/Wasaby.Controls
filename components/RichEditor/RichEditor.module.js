@@ -61,6 +61,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   tools: 'inserttable',
                   invalid_elements: 'script',
                   paste_data_images: false,
+                  paste_convert_word_fake_lists: false, //TODO: убрать когда починят https://github.com/tinymce/tinymce/issues/2933
                   statusbar: false,
                   toolbar: false,
                   menubar: false,
@@ -433,6 +434,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   if (!data) {
                      data = event.clipboardData.getData ? event.clipboardData.getData('text/plain') : window.clipboardData.getData('Text');
                   }
+                  //EndFragment и StartFragment превращаются в <p> при вставке в tiny
+                  data = data.replace(/<!--StartFragment-->\r\n|<!--StartFragment-->/,'');
+                  data = data.replace(/\r\n(<!--EndFragment-->)|<!--EndFragment-->/,'');
                   //получение результата из события  BeforePastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
                   //withStyles: true нужно чтобы в нашем обработчике BeforePastePreProcess мы не обрабатывали а прокинули результат в обработчик тини
                   eventResult= self.getTinyEditor().fire('BeforePastePreProcess', {content: data, withStyles: true});
@@ -485,7 +489,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
                      });
                   });
                };
-            this._tinyEditor.selection.lastFocusBookmark = null;
             $ws.single.Indicator.show();
             PluginManager.getPlugin('Clipboard', '1.0.1.0', {silent: true}).addCallback(function(clipboard) {
                if (clipboard.getContentType && clipboard.getHtml) {
@@ -493,6 +496,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
                      clipboard[ContentType === 'Text/Html' || ContentType === 'Text/Rtf' || ContentType === 'Html' || ContentType === 'Rtf' ? 'getHtml' : 'getText']()
                         .addCallback(function(html) {
                            $ws.single.Indicator.hide();
+                           //EndFragment и StartFragment превращаются в <p> при вставке в tiny
+                           html = html.replace(/<!--StartFragment-->\r\n|<!--StartFragment-->/,'');
+                           html = html.replace(/\r\n(<!--EndFragment-->)|<!--EndFragment-->/,'');
                            //получение результата из события  BeforePastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
                            //withStyles: true нужно чтобы в нашем обработчике BeforePastePreProcess мы не обрабатывали а прокинули результат в обработчик тини
                            eventResult = self.getTinyEditor().fire('BeforePastePreProcess', {content: html, withStyles: true});
@@ -679,7 +685,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                });
                if (typeof smile === 'object') {
                   this._checkFocus();
-                  this.insertHtml(this._smileHtml(smile.key, smile.value));
+                  this.insertHtml(this._smileHtml(smile.key, smile.value, smile.alt));
                }
             }
          },
@@ -846,12 +852,14 @@ define('js!SBIS3.CONTROLS.RichEditor',
          _showImagePropertiesDialog: function(target) {
             var
                $image = $(target),
-               editor = this._tinyEditor;
+               editor = this._tinyEditor,
+               self = this;
             require(['js!SBIS3.CORE.Dialog'], function(Dialog) {
                new Dialog({
                   name: 'imagePropertiesDialog',
                   template: 'js!SBIS3.CONTROLS.RichEditor.ImagePropertiesDialog',
                   selectedImage: $image,
+                  editorWidth: self._inputControl.width(),
                   handlers: {
                      onBeforeShow: function () {
                         $ws.single.CommandDispatcher.declareCommand(this, 'saveImage', function () {
@@ -877,8 +885,8 @@ define('js!SBIS3.CONTROLS.RichEditor',
             });
          },
 
-         _smileHtml: function(smile, name) {
-            return '<img class="ws-fre__smile smile'+smile+'" data-mce-resize="false" unselectable ="on" src="'+constants.blankImgPath+'" ' + (name ? ' title="' + name + '"' : '') + ' />';
+         _smileHtml: function(smile, name, alt) {
+            return '<img class="ws-fre__smile smile'+smile+'" data-mce-resize="false" unselectable ="on" src="'+constants.blankImgPath+'" ' + (name ? ' title="' + name + '"' : '') + ' alt=" ' + alt + ' " />';
          },
 
          /**
@@ -901,8 +909,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             if (!this._doAnimate && this.isEnabled()) {
                this._doAnimate = true;
                this.toggleToolbar();
-               this._tinyEditor.selection.lastFocusBookmark = null;
-               this._tinyEditor.focus();
+               this._tinyEditor.execCommand('');
             }
          },
 
@@ -944,6 +951,8 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
                if (this._options.toolbar ) {
                   this._drawAndBindItems();
+                  this._toolbarContainer.on('mousedown focus', this._blockFocusEvents);
+                  this._toggleToolbarButton.on('mousedown focus', this._blockFocusEvents);
                }
 
                if (self._options.uploadImageOnDrop) {
@@ -1008,7 +1017,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                var image;
                if (e.content.indexOf('<img') === 0) {
                   image = $('<div>' + e.content + '</div>').find('img:first');
-                  if (image.length) {
+                  if (image.length && !!image.attr('src').indexOf('data:image') && (!image.attr('class') || !!image.attr('class').indexOf('ws-fre__smile'))) {
                      self._needPasteImage = image.get(0).outerHTML;
                      return false;
                   }
@@ -1235,6 +1244,10 @@ define('js!SBIS3.CONTROLS.RichEditor',
             $ws._const.$win.bind('beforeunload', this._saveBeforeWindowClose);
          },
 
+         _blockFocusEvents: function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+         },
          _bindChangeButtonsState: function() {
             var
                editor = this._tinyEditor,
@@ -1309,6 +1322,10 @@ define('js!SBIS3.CONTROLS.RichEditor',
          },
 
          _setEnabled: function(enabled) {
+            if (enabled && this._options.toolbarVisible) {
+               this._container.removeClass('controls-RichEditor__HideToolbar');
+               this._toolbarContainer.css('height', $ws._const.FieldRichEditor.toolbarHeight + 'px');
+            }
             this._enabled = enabled;
             if (!this._tinyReady.isReady() && enabled) {
                this._tinyReady.addCallback(function() {
@@ -1537,6 +1554,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                         richEditor: this,
                         cssClassName: 'controls-RichEditor__ToolbarItem mce-',
                         linkedContext: itemsContext,
+                        activableByClick: false,
                         renderStyle: isButton ? 'asLink' : 'hover'
                      }, itemsArray[i].config);
                   if (isButton) {
@@ -1554,23 +1572,18 @@ define('js!SBIS3.CONTROLS.RichEditor',
                      itemCfg.opener = this;
                      itemCfg.keyField = 'key';
                      result[i] = new MenuButton(itemCfg);
-                  }
-                  else if (type === 'dropdown') {
+                  } else if (type === 'dropdown') {
                      itemCfg.flipVertical = true;
                      result[i] = new Dropdown(itemCfg);
+                     //TODO: переделать при переходе на dropdownlist
+                     result[i]._optCont.on('mousedown focus', this._blockFocusEvents);
                   }
                   result[i].getContainer().attr('tabindex', '-1');
                   result[i].getOwner = function() {
                      return this._options.richEditor;
                   };
-                  result[i].setActive = this._setActiveControlsButton;
                }
             }
-         },
-
-         _setActiveControlsButton: function() {
-            //Заглушка, чтобы кнопки не забирали на себя фокус, так как у них нет перента, и фокус уйдёт отовсюду.
-            //Например из DialogRecord и тот станет закрываться.
          },
 
          _onChangeAreaValue: function() {
