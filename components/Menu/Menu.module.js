@@ -104,11 +104,12 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
 
       _getItemTemplate: function(item) {
-         var isEnabled = item.get('enabled'),
-             visible = item.get('visible');
-
-         var options = {
+         var
+             isEnabled = item.get('enabled'),
+             visible = item.get('visible'),
+             options = {
                className: item.get('className'),
+               activableByClick: false,
                command: item.get('command'),
                enabled: isEnabled === undefined ? true : isEnabled,
                visible: visible === undefined ? true : visible,

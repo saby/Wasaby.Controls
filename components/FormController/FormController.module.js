@@ -399,7 +399,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          return this._dataSource.read(key).addCallback(function (record) {
             self.setRecord(record);
             self._notify('onReadModel', record);
-            self._newRecord = false;
             return record;
          }).addErrback(function (error) {
                if (!config.hideErrorDialog){

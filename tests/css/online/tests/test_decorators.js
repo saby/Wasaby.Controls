@@ -15,7 +15,7 @@ gemini.suite('SBIS3.CONTROLS.Decorators Online', function () {
             .capture('plain', function (actions) {
                 actions.click(this.input);
 				actions.sendKeys(this.input, 'er');
-				actions.wait(1000);
+				actions.wait(500);
             })
     });
 	
@@ -31,7 +31,7 @@ gemini.suite('SBIS3.CONTROLS.Decorators Online', function () {
 
             .capture('plain', function (actions) {
                 actions.click(this.input);
-				actions.wait(1000);
+				actions.wait(500);
             })
     });
 	
@@ -47,7 +47,7 @@ gemini.suite('SBIS3.CONTROLS.Decorators Online', function () {
 
             .capture('plain', function (actions) {
                 actions.click(this.input);
-				actions.wait(1000);
+				actions.wait(500);
             })
     });
 });

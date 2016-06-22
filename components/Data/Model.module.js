@@ -134,12 +134,12 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * @member {Object.<String, *>} Объект, содержащий вычисленные значения свойств по умолчанию
        */
-      _defaultPropertiesValues: {},
+      _defaultPropertiesValues: null,
 
       /**
        * @member {Object.<String, Array.<Sting>>} Зависимости свойств: название свойства -> массив названий свойств, которые от него зависят
        */
-      _propertiesDependency: {},
+      _propertiesDependency: null,
 
       /**
        * @member {String} Имя свойства, для которого сейчас осуществляется сбор зависимостей
@@ -149,7 +149,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * @member {Object.<String, Boolean>} Объект, содержащий названия свойств, для которых сейчас выполняется вычисление значения
        */
-      _nowCalculatingProperties: {},
+      _nowCalculatingProperties: null,
 
       /**
        * @member {Object} Флаг показывающий была ли модель синхронизирована
@@ -164,6 +164,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          }
 
          this._defaultPropertiesValues = {};
+         this._propertiesDependency = {};
          this._nowCalculatingProperties = {};
          Model.superclass.constructor.call(this, options);
 
@@ -514,9 +515,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
                property.set.call(this, value);
          } finally {
             delete this._nowCalculatingProperties[checkKey];
-         }
-         if (isReading) {
-            this._propertiesDependencyGathering = prevGathering;
+            if (isReading) {
+               this._propertiesDependencyGathering = prevGathering;
+            }
          }
 
          return value;
