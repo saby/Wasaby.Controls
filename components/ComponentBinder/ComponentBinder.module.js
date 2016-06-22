@@ -337,7 +337,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                      self._pathDSRawData = $ws.core.clone(crumbsItems ? crumbsItems.getRawData() : []);
                   }
                   if (self._options.backButton) {
-                     self._options.backButton.getContainer().css({'visibility': 'visible'});
+                     self._options.backButton.getContainer().css({'display': 'inline-block'});
                   }
                }
             });
