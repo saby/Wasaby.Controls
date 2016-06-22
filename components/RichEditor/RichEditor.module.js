@@ -107,8 +107,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             _toggleToolbarButton: undefined,
             _needPasteImage: false,
             _buttonsState: undefined,
-            _clipboardText: undefined,
-            _lastRng: undefined
+            _clipboardText: undefined
          },
 
          _modifyOptions: function(options) {
@@ -167,7 +166,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             } else {
                this._inputControl.css('height',  editorHeight + 'px');
             }
-            this._options.editorConfig.selector = '#' + this.getId() + ' .controls-RichEditor__EditorFrame';
+            this._options.editorConfig.selector = '#' + this.getId() + ' > .controls-RichEditor__EditorFrame';
             if (!this._options.editorConfig.height) {
                this._options.editorConfig.height =  editorHeight;
             }
@@ -566,8 +565,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
           * @private
           */
          setFontStyle: function(style) {
-            this._checkFocus();
-            this.setActive(true);
             if (style !== 'mainText') {
                this._tinyEditor.formatter.apply(style);
                this._textFormats[style] = true;
@@ -589,13 +586,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
           * @private
           */
          setFontColor: function(color) {
-            //setActive в ie перестаёт работать применение цвета к выделенному тексту
-            if (!$ws._const.browser.isIE) {
-               this.setActive(true);
-            }
-            this._checkFocus();
             this._tinyEditor.formatter.apply('forecolor', {value: color});
-            this._tinyEditor.focus();
+            this._tinyEditor.undoManager.add(); //todo Разобраться с undoManager и ВЕЗДЕ убрать undoManager.add
+            this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._onValueChangeHandler();
          },
@@ -703,15 +696,8 @@ define('js!SBIS3.CONTROLS.RichEditor',
           * @public
           */
          execCommand: function(command) {
-            //TODO: избавиться от this._lastRng
-            if (!$ws._const.browser.isMobilePlatform) {
-               this._tinyEditor.selection.lastFocusBookmark = null;
-            } else {
-               this._lastRng && this._tinyEditor.selection.setRng(this._lastRng);
-            }
             this._changeValueFromSetText = false;
             this._tinyEditor.execCommand(command);
-            this._checkFocus();
          },
 
          /**
@@ -972,6 +958,16 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   this._container.bind('touchstart', this._onClickHandler.bind(this));
                }
 
+               if (!$ws._const.browser.firefox) { //в firefox работает нативно
+                  this._inputControl.bind('mouseup', function (e) { //в ie криво отрабатывает клик
+                     if (e.ctrlKey) {
+                        var target = e.target;
+                        if (target.nodeName === 'A' && target.href) {
+                           window.open(target.href, '_blank');
+                        }
+                     }
+                  });
+               }
                this._notifyOnSizeChanged();
 
                if (!self._readyContolDeffered.isReady()) {
@@ -995,6 +991,16 @@ define('js!SBIS3.CONTROLS.RichEditor',
                this._inputControl = $(editor.getBody());
                RichUtil.markRichContentOnCopy(this._inputControl);
                self._tinyReady.callback();
+
+               //Правки Клепикова при необходимости сжечь
+               this._inputControl.bind('focus', function() {
+                  if ($(this).attr('contenteditable') !== 'false') {
+                     $ws.single.EventBus.globalChannel().notify('MobileInputFocus');
+                  }
+               });
+               this._inputControl.bind('blur', function () {
+                  $ws.single.EventBus.globalChannel().notify('MobileInputFocusOut');
+               });
             }.bind(this));
 
             //БИНДЫ НА ВСТАВКУ КОНТЕНТА И ДРОП
@@ -1207,15 +1213,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   self._onValueChangeHandler();
                }
             });
-
-            //НА мобильных устройствах при потере фокуса не запоминается последнее выделение(tinymce tnx)
-            //запоминаем сами выделение
-            //TODO: ИЗбавиться от  _lastRng
-            if ($ws._const.browser.isMobilePlatform) {
-               editor.on('focusout', function () {
-                  self._lastRng = editor.selection.getRng();
-               });
-            }
 
             //Сообщаем компоненту об изменении размеров редактора
             editor.on('resizeEditor', function() {
@@ -1485,15 +1482,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
             //если смена стиля будет сразу после setValue то контент не установится,
             //так как через форматттер не стреляет change
             this._onValueChangeHandler();
-         },
-
-         _checkFocus: function() {
-            var tinyEditor = this._tinyEditor;
-            if (tinyEditor.lastRng) {
-               tinyEditor.selection.setRng(tinyEditor.lastRng);
-            } else {
-               tinyEditor.focus();
-            }
          },
 
          _setButtonsState: function(state, ignoreSourceButton) {
