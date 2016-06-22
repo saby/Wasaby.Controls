@@ -107,7 +107,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          doNext = true,
          item;
       while (doNext && (item = enumerator.getNext())) {
-         if (item.isNode() && !item.isExpanded() && projection.getChildren(item).getCount()) {
+         // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
+         if (item.isNode() && !item.isExpanded() && projection.getCollection().getChildItems(item.getContents().getId(), undefined, projection.getParentProperty()).length) {
             item.setExpanded(true);
             doNext = false;
             expandAllItems(projection);
