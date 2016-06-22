@@ -645,7 +645,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             if (this._options.toolbarVisible !== visible) {
                newHeight = this._inputControl.outerHeight();
                this._options.toolbarVisible = visible === true ? true : visible === false ? false : !this._options.toolbarVisible;
-               newHeight += this._options.toolbarVisible ? -constants.toolbarHeight : constants.toolbarHeight;
+               newHeight += this._options.toolbarVisible ? - constants.toolbarHeight : constants.toolbarHeight;
 
                if (this._options.toolbarVisible) {
                   this._container.removeClass('controls-RichEditor__HideToolbar');
@@ -1325,7 +1325,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
          _setEnabled: function(enabled) {
             if (enabled && this._options.toolbarVisible) {
                this._container.removeClass('controls-RichEditor__HideToolbar');
-               this._toolbarContainer.css('height', $ws._const.FieldRichEditor.toolbarHeight + 'px');
+               this._toolbarContainer.css('height', constants.toolbarHeight + 'px');
             }
             this._enabled = enabled;
             if (!this._tinyReady.isReady() && enabled) {
