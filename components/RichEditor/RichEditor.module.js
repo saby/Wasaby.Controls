@@ -114,6 +114,8 @@ define('js!SBIS3.CONTROLS.RichEditor',
          _modifyOptions: function(options) {
             options = RichEditor.superclass._modifyOptions.apply(this, arguments);
             options._prepareReviewContent = this._prepareReviewContent.bind(this);
+            //todo: с витей обсудить почему у дочерних компонентов buildmarkup зовётся раньше конструктора
+            this._options = options;
             return options;
          },
 
