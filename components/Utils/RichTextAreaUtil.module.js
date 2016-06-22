@@ -58,6 +58,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
             selectionNode = document.createElement('div'),
             clipboardData = event.clipboardData ? event.clipboardData : window.clipboardData,
             currentWindow = window,
+            html,
             label = document.createComment('content=SBIS.FRE'), // по этой метке будем определять что контент вставляется из FieldRichEditor
             i = 0,
             target = $(e.currentTarget),
@@ -73,9 +74,6 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
                return false;
             };
          e.preventDefault();
-         if (canCut) {
-            e.stopImmediatePropagation();
-         }
          //рассчет родительского window элемента
          //если на странице есть youtube елемент то window.frames[0].document стреляет ошибкой доступа
          if (!_isDescendant(window.document.body, event.target)) {
@@ -94,7 +92,8 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
             //В хроме getSelection().toString() отдаёт переносы в виде \n блокнот их не воспринимает, необходимо переделывать их в \r\n
             textData = currentWindow.getSelection().toString().replace(/\r\n|\n/gi,'\r\n');;
             selectionRange = currentWindow.getSelection().getRangeAt(0);
-            selectionContent = canCut ? selectionRange.extractContents() : selectionRange.cloneContents();
+            selectionContent = selectionRange.cloneContents();
+            //TODO: разобраться как правильно вырезать контент на 'cut' (взять за основу deleteRangeBetweenTextBlocks из tinymce
          }
          // ie8
          else {
@@ -111,7 +110,15 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
          // webkit позволяет оперировать буфером
          if (event.clipboardData) {
             selectionNode.appendChild(selectionContent);
-            clipboardData.setData('text/html', '<!--' + label.data + '-->' + selectionNode.innerHTML);
+            html = selectionNode.innerHTML;
+            if (html.length - '<p></p>'.length === html.lastIndexOf('<p></p>')) {
+               html = html.substring(0, html.length - '<p></p>'.length)
+            }
+            if (html.indexOf('<p></p>') === 0) {
+               html = html.substring('<p></p>'.length)
+            }
+            html = '<!--' + label.data + '-->' + html;
+            clipboardData.setData('text/html', html);
             clipboardData.setData('text', textData);
          }
          // для ie
