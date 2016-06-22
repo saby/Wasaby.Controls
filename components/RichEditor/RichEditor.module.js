@@ -63,7 +63,8 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   paste_data_images: false,
                   statusbar: false,
                   toolbar: false,
-                  menubar: false
+                  menubar: false,
+                  browser_spellcheck: true
                },
                placeholder: '',
                toolbar: true,
@@ -112,11 +113,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
          _modifyOptions: function(options) {
             options = RichEditor.superclass._modifyOptions.apply(this, arguments);
-            if (options.editorConfig === undefined || Object.prototype.toString.call(options.editorConfig) !== '[object Object]') {
-               options.editorConfig = {};
-            }
             options._prepareReviewContent = this._prepareReviewContent.bind(this);
-            options.editorConfig.browser_spellcheck = options.spellcheck;
             return options;
          },
 
