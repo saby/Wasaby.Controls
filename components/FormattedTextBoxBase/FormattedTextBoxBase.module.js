@@ -459,6 +459,14 @@ define(
          }
          return isFilled;
       },
+
+      /**
+       * Модель полностью не заполнена
+       * @returns {boolean} true если ни одной позиции не заполнено, false в противном случае
+       */
+      isEmpty: function(maskReplacer) {
+         return this.getStrMask(maskReplacer) === this.getText(maskReplacer);
+      },
       /**
        * Проверяет подходит ли текст маске модели. Например, маске 'HH:MM' подходит текст '12:34'
        * @param text строка, например '23:37'. Можно использовать символ заполнитель, например '_3:37'
@@ -818,7 +826,8 @@ define(
             lastGroupNum = this.formatModel.model.length - 1;
             lastGroupNum = this.formatModel.model[lastGroupNum].isGroup ? lastGroupNum : lastGroupNum - 1;
             this._notify('onTextChange', this._options.text);
-            if (keyInsertInfo.groupNum == lastGroupNum  &&  keyInsertInfo.position == this.formatModel.model[lastGroupNum].mask.length - 1) {
+            //TODO: Событие сейчас стреляет несовсем верно, только тогда, символ заполнивший маску, вставили на последнюю позицую
+            if (this.formatModel.isFilled() && keyInsertInfo.groupNum == lastGroupNum  &&  keyInsertInfo.position == this.formatModel.model[lastGroupNum].mask.length - 1) {
                this._notify('onInputFinished');
             }
             //Заново ищем контейнер группы, т.к. после замены символа, снаружи значение текста может быть изменено(например setText)

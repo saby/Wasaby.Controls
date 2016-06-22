@@ -49,7 +49,9 @@ define('js!SBIS3.CONTROLS.DateRange', [
 
          var self = this;
 
+         this._dateRangeButton = this.getChildControlByName('DateRange__Button');
          this._datePickerStart = this.getChildControlByName('DateRange__DatePickerStart');
+         this._datePickerEnd = this.getChildControlByName('DateRange__DatePickerEnd');
          this._datePickerStart.subscribe('onDateChange', function(e, date) {
             //передаем false, чтобы не зацикливать событие
             self._setStartDate(date, false);
@@ -57,7 +59,12 @@ define('js!SBIS3.CONTROLS.DateRange', [
             self._notify('onStartDateChange', self._options.startDate);
             self._notify('onDateRangeChange', self._options.startDate, self._options.endDate);
          });
-         this._datePickerEnd = this.getChildControlByName('DateRange__DatePickerEnd');
+         this._datePickerStart.subscribe('onInputFinished', function() {
+            //TODO: курсор встаёт в поле только если ставить его асинхронно. Нужно разбираться почему.
+            setTimeout(function() {
+               self._datePickerEnd.setActive(true);
+            }, 0);
+         });
          this._datePickerEnd.subscribe('onDateChange', function(e, date) {
             self._setEndDate(date, false);
             self._notifyOnPropertyChanged('endDate');
@@ -65,7 +72,6 @@ define('js!SBIS3.CONTROLS.DateRange', [
             self._notify('onDateRangeChange', self._options.startDate, self._options.endDate);
          });
 
-         this._dateRangeButton = this.getChildControlByName('DateRange__Button');
          this._dateRangeButton.subscribe('onActivated', this._onDateRangeButtonActivated.bind(this));
 
          this._dateRangeChoose = this.getChildControlByName('DateRange__DateRangeChoose');

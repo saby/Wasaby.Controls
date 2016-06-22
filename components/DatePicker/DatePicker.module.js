@@ -197,8 +197,14 @@ define(
              * @see mask
              * @see setDate
              */
-            isCalendarIconShown: true
-         }
+            isCalendarIconShown: true,
+            /**
+             * @cfg {Boolean} Умное автодополнение
+             * @noShow
+             */
+            autoComplete: true
+         },
+         _hasIncorrectParts: false
       },
 
       $constructor: function () {
@@ -221,10 +227,17 @@ define(
       },
 
       _keyDownBind: function(event) {
-         var key = event.which || event.keyCode;
+         var
+             curDate = this.getDate(),
+             key = event.which || event.keyCode;
 
          if (key == $ws._const.key.insert) {
             this.setDate(new Date());
+         } else if (key == $ws._const.key.plus || key == $ws._const.key.minus) {
+            if (curDate) {
+               curDate.setDate(curDate.getDate() + (key == $ws._const.key.plus ? 1 : -1));
+               this.setDate(curDate);
+            }
          } else {
             return DatePicker.superclass._keyDownBind.apply(this, arguments);
          }
@@ -237,11 +250,12 @@ define(
       },
 
       _addDefaultValidator: function() {
+         var self = this;
          //Добавляем к прикладным валидаторам стандартный, который проверяет что дата заполнена корректно.
          this._options.validators.push({
             validator: function() {
-               return this._dateIsValid();
-            }.bind(this),
+               return self._dateIsValid();
+            },
             errorMessage: rk('Дата заполнена некорректно')
          });
       },
