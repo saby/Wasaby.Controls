@@ -39,7 +39,9 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             key = expandedItem.getContents().getId(),
             ladderDecorator = this._decorators.getByName('ladder');
          this._closeAllExpandedNode(key);
+         this._createFolderFooter(key);
          this._options.openedPath[expandedItem.getContents().getId()] = true;
+         this._folderOffsets[expandedItem.getContents().getKey()] = 0;
          if (this._dataSource && !this._loadedNodes[key] && this._options.partialyReload) {
             this._toggleIndicator(true);
             this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), 0, this._limit);
@@ -64,9 +66,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
       },
       _drawExpandedItem: function(expandedItem) {
          //todo При переходе на Virtual DOM удалить работу с expandedItemContainer
-         var
-            expandedItemContainer = this._getItemsContainer().find('[data-hash="'+ expandedItem.getHash() + '"]');
-         this._folderOffsets[expandedItem.getContents().getKey()] = 0;
+         var expandedItemContainer = this._getItemsContainer().find('[data-hash="'+ expandedItem.getHash() + '"]');
          expandedItemContainer.find('.js-controls-TreeView__expand').addClass('controls-TreeView__expand__open');
          this._notify('onNodeExpand', expandedItem.getContents().getId(), expandedItemContainer);
       },
@@ -151,6 +151,9 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             return typeof (more) !== 'boolean' ? more > (this._folderOffsets[id] + this._options.pageSize) : !!more;
          }
       },
+      //********************************//
+      //       FolderFooter_Start       //
+      //********************************//
       /**
        * Создать футер для веток
        * @param key
@@ -193,6 +196,17 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             }
          }
       },
+      _createAllFolderFooters: function() {
+         $ws.helpers.forEach(this._options.openedPath, function(val, key) {
+            //Рисуем футер, только если узел есть в проекции, иначе он скрыт и футер рисовать не нужно
+            if (this._getItemProjectionByItemId(key)) {
+               this._createFolderFooter(key);
+            }
+         },this);
+      },
+      //********************************//
+      //        FolderFooter_End        //
+      //********************************//
       _getLastChildByParent: function(itemsContainer, parent) {
          var
              lastContainer,
@@ -234,12 +248,11 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
           * @param property
           * @private
           */
-         _changeItemProperties: function(parentFunc, item, property) {
+         _onUpdateItemProperty: function(parentFunc, item, property) {
             if (property === 'expanded') {
                this._onChangeItemExpanded(item);
-            } else {
-               parentFunc.call(this, item, property);
             }
+            parentFunc.call(this, item, property);
          }
       },
       before: {

@@ -123,6 +123,16 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          }
       },
 
+      //Очередной придрот для ховера у disabled иконок, убрать когда избавимся от каскадов в font.css
+      setEnabled: function(enabled){
+         BreadCrumbs.superclass.setEnabled.call(this, enabled);
+         if (enabled) {
+            this._homeIcon.addClass('action-hover');
+         } else {
+            this._homeIcon.removeClass('action-hover');
+         }
+      },
+
       _toggleHomeIcon: function(state){
          if (this._homeIcon){
             this._homeIcon.toggleClass('ws-hidden', state);

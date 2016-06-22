@@ -696,6 +696,7 @@ define(
                   }
                }
             }, 100);
+            e.preventDefault();
          });
       },
 
@@ -820,7 +821,9 @@ define(
             if (keyInsertInfo.groupNum == lastGroupNum  &&  keyInsertInfo.position == this.formatModel.model[lastGroupNum].mask.length - 1) {
                this._notify('onInputFinished');
             }
-            _moveCursor(container, position);
+            //Заново ищем контейнер группы, т.к. после замены символа, снаружи значение текста может быть изменено(например setText)
+            //и html будет полность изменён, а в переменной container лежит элемент, которого в DOM уже нет, и курсор не сможет верно спозиционироваться
+            _moveCursor(_getContainerByIndex.call(this, keyInsertInfo.groupNum), position);
          }
       },
 
@@ -855,6 +858,7 @@ define(
          //TODO неодинаковое поведение получается для разного text. Но нельзя this._options.text не обновлять, т.к. его getText() использует
          this._options.text = (this.formatModel._settedText !== null && typeof this.formatModel._settedText !== "undefined") ? this.formatModel.getText(this._maskReplacer) : this.formatModel._settedText;
          this._notifyOnPropertyChanged('text');
+         this._textChanged = true;
       },
 
       /**

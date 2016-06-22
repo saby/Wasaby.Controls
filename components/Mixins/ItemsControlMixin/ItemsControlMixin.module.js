@@ -408,7 +408,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             itemTpl : null,
             /**
-             * @cfg {Function} Метод используется для сортировки элементов, принимает два
+             * @cfg {Function|null} Метод используется для сортировки элементов, принимает два
              * объекта вида {item:ProjectionItem, collectionItem: Model, index: Number, collectionIndex: Number} и
              * должен вернуть -1|0|1
              * @example
@@ -485,6 +485,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          /*TODO Поддержка совместимости. Раньше если были заданы items массивом создавался сорс, осталась куча завязок на это*/
          if (this._options.items instanceof Array) {
+            if (this._options.pageSize && (this._options.items.length > this._options.pageSize)) {
+               $ws.single.ioc.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
+            }
             if (!this._options.keyField) {
                this._options.keyField = findKeyField(this._options.items)
             }
@@ -752,6 +755,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
                      /*TODO Лесенка*/
                      if (this._options.ladder) {
+                        if (!container){
+                           //Для правильной отрисовки лесенки берем предпоследний итем, т.к. может быть ситуация, что последний итем изменился в результате перемещения
+                           var fItem = this._options._itemsProjection.at((newItemsIndex - 2 < 0) ? 0 : newItemsIndex - 2);
+                           container = this._getDomElementByItem(fItem);
+                        }
                         firstHash = $(container).attr('data-hash');
                         var nextCont = $(container).next('.js-controls-ListView__item');
                         if (nextCont.length) {
@@ -769,13 +777,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   if (this._options.ladder) {
                      var
                         rows = $('.js-controls-ListView__item', itemsContainer),
+                        projection = this._options._itemsProjection,
                         ladderRows = [], start = false;
 
                      for (i = 0; i < rows.length; i++) {
                         if ($(rows[i]).attr('data-hash') == firstHash) {
                            start = true;
                         }
-                        if (start) {
+                        //Если не можем найти item в проекции, значит эта запись будет удалена
+                        if (start && projection.getByHash($(rows[i]).attr('data-hash'))) {
                            ladderRows.push($(rows[i]));
                         }
                         if ($(rows[i]).attr('data-hash') == lastHash) {
@@ -783,6 +793,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                            //Над i + 1 элементом изменилась запись, для него тоже нужна лесенка
                            if ($(rows[i + 1]).length){
                               ladderRows.push($(rows[i + 1]));
+                           }
+                           //На i + 1 позиции, может стоять элемент, который добавили после перемещения. запускаем лесенку для записи, которая находится под ним
+                           if ($(rows[i + 2]).length){
+                              ladderRows.push($(rows[i + 2]));
                            }
                            break;
                         }
@@ -1284,6 +1298,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        /**
         * Метод установки либо замены коллекции элементов, заданных опцией {@link items}.
         * @param {Object} items Набор новых данных, по которому строится отображение.
+        * @param {Boolean} itemsBySource Флаг, говорящий о том, что items соответствуют сорсу, который в данный момент установлен. При этом после релоада не будет заменяться инстанс items, а произойдет перенос данных пришедших с БЛ в уже существующий инстанс items
         * @example
         * <pre>
         *     setItems: [
@@ -1307,16 +1322,36 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see onDrawItems
         * @see onDataLoad
         */
-       setItems: function (items) {
+       setItems: function (items, itemsBySource, reload) {
           this._options.items = items;
           this._unsetItemsEventHandlers();
           this._options._items = null;
-          this._itemsInitializedBySource = false;
+          this._itemsInitializedBySource = !!itemsBySource;
           this._prepareConfig(undefined, items);
           this._notify('onDataLoad', this.getItems()); //TODO на это событие завязались. аккуратно спилить
           this._dataLoadedCallback(); //TODO на это завязаны хлебные крошки, нужно будет спилить
-          this.redraw();
-
+          //Из-за костыля для постраничной навигации в отчетности сделали this.reload(), но отвалилось в проектах, которые делают setItems при наличии DataSource.
+          //Поэтому пока по умолчанию вернем как было, а в отчетности специально передадим флаг reload
+          //При этом в отчетности делают неправильно и должны переделать. Если им нужна постраничная навигация, значит они должны задать статический источник данных, вместо Items
+          //После этого параметр reload нужно будет удалить и логику перезагрузки тоже
+          if(!reload) {
+             this.redraw();
+          } else {
+             $ws.single.ioc.resolve('ILogger').log('ListView', 'Параметр reload в методе setItems будет удален в 3.7.4');
+             if (items instanceof Array) {
+                if (this._options.pageSize && (items.length > this._options.pageSize)) {
+                   $ws.single.ioc.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
+                }
+                if (!this._options.keyField) {
+                   this._options.keyField = findKeyField(this._options.items)
+                }
+                this._dataSource = new MemorySource({
+                   data: this._options.items,
+                   idProperty: this._options.keyField
+                });
+             }
+             this.reload();
+          }
       },
 
       _drawItemsCallback: function () {
@@ -1517,6 +1552,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _scrollTo: function scrollTo(target, container) {
          var scrollContainer = container || this._getScrollContainer(),
              scrollContainerOffset = scrollContainer.offset(),
+             channel = $ws.single.EventBus.globalChannel(),
+         //FIXME решение для 3.7.3.200, чтобы правильно работал скролл при scrollIntoView
+             /* Оповестим аккордион, о том что контент проскролен, иначе он не заметит и не сместит свой скролл */
+             scrollNotify = channel.notify.bind(channel, 'ContentScrolling', null),
              targetOffset;
 
          if (typeof target === 'string') {
@@ -1527,8 +1566,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          if( (targetOffset.top - scrollContainerOffset.top - scrollContainer.scrollTop()) < 0) {
             target[0].scrollIntoView(true);
+            scrollNotify();
          } else if ( (targetOffset.top + target.height() - scrollContainerOffset.top - scrollContainer.scrollTop()) > scrollContainer[0].clientHeight) {
             target[0].scrollIntoView(false);
+            scrollNotify();
          }
       },
       _scrollToItem: function(itemId) {
@@ -1744,7 +1785,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             newItemContainer.insertBefore(this._getItemContainerByIndex(target, at));
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else if (currentItemAt && currentItemAt.length) {
-            meth && meth.call(this, prev.getContents(), undefined, undefined, prev);
+            if (prev)
+               meth && meth.call(this, prev.getContents(), undefined, undefined, prev);
             newItemContainer.insertAfter(currentItemAt);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else if(at === 0) {
@@ -1821,15 +1863,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);
          var ladderDecorator = this._decorators.getByName('ladder');
          //todo опять неверно вызывается ladderCompare, используем костыль, чтобы этого не было
-         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
-            ladderDecorator.setIgnoreEnabled(true);
-         }
+//         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
+//            ladderDecorator.setIgnoreEnabled(true);
+//         }
          if (newItems.length) {
             this._addItems(newItems, newItemsIndex)
          }
-         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
-            ladderDecorator.setIgnoreEnabled(false);
-         }
+//         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
+//            ladderDecorator.setIgnoreEnabled(false);
+//         }
          this._toggleEmptyData(!this._options._itemsProjection.getCount());
          //this._view.checkEmpty(); toggleEmtyData
          this.reviveComponents(); //надо?
@@ -1854,15 +1896,24 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if(this._options._itemsProjection && this._options._itemsProjection.getCount()) {
             return this._options._itemsProjection.at(this._options._itemsProjection.getCount()-1).getContents();
          }
+      },
+      /**
+       * Обработчик для обновления проперти. В наследниках itemsControlMixin иногда требуется по особому обработать изменение проперти.
+       * @param item
+       * @param property
+       * @private
+       */
+      _onUpdateItemProperty: function(item, property) {
+         if (this._isNeedToRedraw()) {
+            this._changeItemProperties(item, property);
+         }
       }
    };
 
    var
-      onCollectionItemChange = function(eventObject, item, index, property){
-         if (this._isNeedToRedraw()) {
-            this._changeItemProperties(item, property);
-            this._drawItemsCallback();
-         }
+      onCollectionItemChange = function(eventObject, item, index, property) {
+         //Вызываем обработчик для обновления проперти. В наследниках itemsControlMixin иногда требуется по особому обработать изменение проперти.
+         this._onUpdateItemProperty(item, property);
       },
       /**
        * Обрабатывает событие об изменении коллекции

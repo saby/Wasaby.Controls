@@ -162,12 +162,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
             /**
              * @cfg {String} Устанавливает шаблон отображения строки итогов.
              * @remark
-             * Отображение строки итогов конфигурируется тремя опциями: resultsTpl, {@link resultsPosition} и {@link resultsText}.
-             * В данную опцию передается имя шаблона, в котором описана конфигурация строки итогов.
+             * Подробнее о правилах построения шаблона вы можете прочитать в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ Строка итогов}.
+             * <br/>
              * Чтобы шаблон можно было передать в опцию компонента, его нужно предварительно подключить в массив зависимостей.
-             * Опция позволяет пользователю выводить в строку требуемые данные и задать для нее определенное стилевое оформление.
-             * Подсчет каких-либо итоговых сумм в строке не предусмотрен. Все итоги рассчитываются на стороне источника данных.
-             * С подробным описанием можно ознакомиться в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ Строка итогов}.
              * @example
              * 1. Подключаем шаблон в массив зависимостей:
              * <pre>
@@ -182,6 +179,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * 2. Передаем шаблон в опцию:
              * <pre class="brush: xml">
              *     <option name="resultsTpl" value="html!SBIS3.Demo.nDataGridView/resources/resultTemplate"></option>
+             * </pre>
+             * 3. Содержимое шаблона должно начинаться с тега tr, для которого установлен атрибут class со значением "controls-DataGridView__results".
+             * <pre>
+             *    <tr class="controls-DataGridView__results">
+             *       ...
+             *    </tr>
              * </pre>
              * @editor CloudFileChooser
              * @editorConfig extFilter xhtml
@@ -517,8 +520,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _redrawItems: function() {
+         //FIXME в 3.7.4 поправить, не всегда надо перерисовывать, а только когда изменились колонки
          if(this._options.showHead) {
             this._redrawHead();
+         } else {
+            /* Надо перерисовывать колгруп, при полной перерисовке item'ов,
+               т.к. могли измениться колонки */
+            this._redrawColgroup();
          }
          DataGridView.superclass._redrawItems.apply(this, arguments);
       },

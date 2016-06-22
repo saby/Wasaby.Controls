@@ -180,11 +180,11 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       _prepareUnloaderConfig:function(){
          return this._prepareExporterConfig();
       },
-      _prepareExporterConfig : function() {
+      _prepareExporterConfig : function(cfg) {
          var  view = this._getView(),
             cfg = {
-               dataSet: view.getDataSet(),
-               columns: this._prepareOperationColumns(),
+               dataSet: cfg ? cfg.dataSet : view.getDataSet(),
+               columns: cfg ? cfg.columns : this._prepareOperationColumns(),
                dataSource : view.getDataSource(),
                filter : view.getFilter(),
                offset: view._offset
@@ -215,7 +215,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             //TODO что делать, если метод шибко прикладной?
             exporter.exportHTML(this._getUnloadFileName(), this._currentItem, undefined, undefined, pageOrient);
          } else {
-            exporter = new Exporter(this._prepareExporterConfig());
+            exporter = new Exporter(this._prepareExporterConfig(cfg));
             methodName = this._getSaveMethodName(false);
             if (methodName) {
                fullFilter = exporter.getFullFilter(cfg.dataSet.getCount(), true);
