@@ -172,8 +172,11 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
        * @private
        */
       _createFolderFooter: function(key) {
+         var template = this._getFolderFooterWrapper();
          this._destroyItemsFolderFooter([key]);
-         this._foldersFooters[key] = $(this._getFolderFooterWrapper()(this._getFolderFooterOptions(key)));
+         if (typeof template === "function") {
+            this._foldersFooters[key] = $(template(this._getFolderFooterOptions(key)));
+         }
       },
       /**
        * Получить опции футера для ветки
