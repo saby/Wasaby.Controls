@@ -462,6 +462,12 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                   options.itemsDragNDrop = false;
                }
 
+               /* По стандарту маркер в списке должен ставиться,
+                но надо оставить возможность это отключить, т.к. не всем это надо */
+               if(options.allowEmptySelection === undefined) {
+                  options.allowEmptySelection = false;
+               }
+
                options.parent = this._picker;
                this._list = new component(options);
                this._initList();
