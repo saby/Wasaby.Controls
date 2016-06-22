@@ -1571,7 +1571,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
       _scrollToItem: function(itemId) {
-         var itemContainer  = $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer());
+         var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
          if (itemContainer.length) {
             this._scrollTo(itemContainer);
          }
