@@ -799,11 +799,11 @@
 @text-box-disabled-border-style:          @text-box-border-style;
 @text-box-disabled-border-color:          transparent;
 @text-box-disabled-bg:                    transparent;
-@text-box-disabled-border-bottom:         1px solid #ccc;
+@text-box-disabled-border-bottom:         1px solid #333333;
 
 @text-box-after-width:                    20px;
 @text-box-after-min-height:               @text-box-field-min-height;
-@text-box-after-margin:                   0 2px 0 0;
+@text-box-after-margin:                   0;
 
 @text-box-placeholder-color:              @gray-ccc-color !important;
 @text-box-compat-placeholder-font:        inherit;
@@ -888,21 +888,21 @@
 // Search form //
 // ----------- //
 
-@search-background:                                   #F2F2F2;
+@search-background:                                   none;
 @search-disabled-background:                          @text-box-disabled-bg;
-@search-focus-background:                             @search-background;
-@search-height:                                       @text-box-height;
+@search-focus-background:                             #444E57;
+@search-height:                                       40px;
 @search-padding:                                      0 24px 0 16px;
-@search-left-margin:                                  16px;
-@search-border-radius:                                10px;
-@search-border-color:                                 @search-background;
-@search-hover-border-color:                           @search-background;
-@search-bottom-border-color:                          @search-background;
+@search-left-margin:                                  8px;
+@search-border-radius:                                0;
+@search-border-color:                                 #666666;
+@search-hover-border-color:                           @search-border-color;
+@search-bottom-border-color:                          @search-border-color;
 @search-form-border-width:                            @text-box-border-width;
 @search-form-border-disabled-width:                   @text-box-disabled-border-width;
 @search-form-disabled-border-bottom:                  @text-box-disabled-border-bottom;
-@search-buttons-wrapper-width:                        22px + 22px;
-@search-form-icon-padding:                            3px;
+@search-buttons-wrapper-width:                        32px + 40px;
+@search-form-icon-padding:                            11px 0 0 0;
 @search-form-icon-disabled-display:                   block;
 
 
@@ -1347,22 +1347,22 @@
 
 @tree-view-expand-cursor:                       pointer;
 
-@tree-view-expand-width:                        auto;
-@tree-view-expand-height:                       auto;
-@tree-view-expand-margin:                       3px 0 0 3px;
+@tree-view-expand-width:                        16px;
+@tree-view-expand-height:                       21px;
+@tree-view-expand-margin:                       0 2px 0 -2px;
 
 @tree-view-editArrow-position:                  relative;
 @tree-view-editArrow-top:                       2px;
 @tree-view-editArrow-align:                     top;
 
-@tree-view-expand-border-width:                 8px 0 8px 8px;
-@tree-view-expand-border-style:                 solid;
-@tree-view-expand-border-color:                 transparent transparent transparent @primary-color;
+@tree-view-expand-border-width:                 0;
+@tree-view-expand-border-style:                 none;
+@tree-view-expand-border-color:                 transparent;
 @tree-view-expand-bg:                           transparent;
 
 @tree-view-expand-hover-border-width:           @tree-view-expand-border-width;
 @tree-view-expand-hover-border-style:           @tree-view-expand-border-style;
-@tree-view-expand-hover-border-color:           transparent transparent transparent darken(@primary-color, 10%);
+@tree-view-expand-hover-border-color:           @tree-view-expand-border-color;
 @tree-view-expand-hover-bg:                     @tree-view-expand-bg;
 
 @tree-view-expand-open-width:                   @tree-view-expand-width;
@@ -1371,12 +1371,12 @@
 
 @tree-view-expand-open-border-width:            8px 8px 0 8px;
 @tree-view-expand-open-border-style:            @tree-view-expand-border-style;
-@tree-view-expand-open-border-color:            @primary-color transparent transparent transparent;
+@tree-view-expand-open-border-color:            @tree-view-expand-border-color;
 @tree-view-expand-open-bg:                      transparent;
 
 @tree-view-expand-open-hover-border-width:      @tree-view-expand-open-border-width;
 @tree-view-expand-open-hover-border-style:      @tree-view-expand-open-border-style;
-@tree-view-expand-open-hover-border-color:      darken(@primary-color, 10%) transparent transparent transparent;
+@tree-view-expand-open-hover-border-color:      @tree-view-expand-open-border-color;
 @tree-view-expand-open-hover-bg:                @tree-view-expand-open-bg;
 
 @tree-view-ellipsis-wrapper-height:             @data-grid-cell-line-height;
@@ -1783,7 +1783,7 @@
 @controls-FieldLink-linkItem-cross-top:            1px;
 
 @controls-FieldLink-disabled-item-padding:         0 4px;
-@controls-FieldLink-afterField-padding:            6px 16px 6px 0;
+@controls-FieldLink-afterField-padding:            0 4px;
 
 //SelectorButton
 @controls-SelectorButton-height:                   24px;
@@ -1799,9 +1799,10 @@
 @back-button-font-size:                            18px;
 @back-button-margin-before:                        0;
 @back-button-padding-before:                       0;
-@icon-size:                                        16px;
-@icon-width:                                       16px;
-@icon-height:                                      16px;
+// icon
+@icon-size:                                        24px;
+@icon-width:                                       24px;
+@icon-height:                                      24px;
 
 // BreadCrumbs
 @breadcrumbs-top:                                  4px;
