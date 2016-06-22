@@ -8,11 +8,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
 
       $(document).bind('mousedown touchstart', function (e) {
-         eventsChannel.notify('onDocumentClick', e.target);
+         eventsChannel.notify('onDocumentClick', e.target, true);
       });
 
       $(document).bind('mouseover', function (e) {
-         eventsChannel.notify('onDocumentMouseOver', e.target);
+         eventsChannel.notify('onDocumentMouseOver', e.target, false);
       });
 
       $(window).bind('scroll', function () {
@@ -404,7 +404,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          }
       },
 
-      _clickHandler: function (eventObject, target) {
+      _clickHandler: function (eventObject, target, isMouseDown) {
          if (this.isVisible()) {
             var self = this,
                inTarget;
@@ -416,7 +416,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                   // Придрот, так как clickHandler на самом деле mousedown, а ModalOverlay подписан на клик.
                   // Таким образом при наличии оверлея, мы его сначала скрываем по mousedown, затем он спускается к следующему
                   // модальному окну и происходит клик по нему - и он снова скрывается, хотя не должен.
-                  ModalOverlay._notify('onClick');
+                  if (isMouseDown) {
+                     ModalOverlay._notify('onClick');
+                  }
                   if (parseInt($(target).css('z-index'), 10) < this._zIndex) {
                      self.hide();
                   }

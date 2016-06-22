@@ -48,7 +48,7 @@ gemini.suite('SBIS3.CONTROLS.Toolbar Online', function () {
 			
 			.capture('hovered_menu_item_2', function (actions) {
                 actions.mouseMove(this.menu_item2);
-				actions.wait(1000);
+				actions.wait(500);
             })
 			
 			.capture('disabled', function (actions) {

@@ -148,15 +148,17 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (this._container.hasClass('controls-TreeDataGridView__withPhoto')){
             this._options._paddingSize = 42;
          }
+         if (this._options._serverRender) {
+            this._createAllFolderFooters();
+         }
+      },
+
+      redraw: function() {
+         TreeDataGridView.superclass.redraw.apply(this, arguments);
+         this._createAllFolderFooters();
       },
 
       _drawItemsCallback: function() {
-         $ws.helpers.forEach(this._options.openedPath, function(val, key) {
-            //Рисуем футер, только если узел есть в проекции, иначе он скрыт и футер рисовать не нужно
-            if (this._getItemProjectionByItemId(key)) {
-               this._createFolderFooter(key);
-            }
-         },this);
          this._updateEditArrow();
          TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
