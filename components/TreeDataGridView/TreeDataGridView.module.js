@@ -116,19 +116,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              *     <option name="editArrow" type="boolean">false</option>
              * </pre>
              */
-            editArrow: false,
-            /**
-             * @cfg {String} Разрешено или нет перемещение элементов "Drag-and-Drop"
-             * @variant "" Запрещено
-             * @variant allow Разрешено
-             * @variant onlyChangeOrder Разрешено только изменение порядка
-             * @variant onlyChangeParent Разрешено только перемещение в папку
-             * @example
-             * <pre>
-             *     <option name="itemsDragNDrop">onlyChangeParent</option>
-             * </pre>
-             */
-            itemsDragNDrop: 'allow'
+            editArrow: false
          },
          _dragStartHandler: undefined,
          _editArrow: undefined
@@ -464,18 +452,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             else {
                this._activateItem(id);
             }
-         }
-      },
-      _notifyOnDragMove: function(target, insertAfter) {
-         //Если происходит изменение порядкового номера и оно разрешено или если происходит смена родителся и она разрешена, стрельнём событием
-         if (typeof insertAfter === 'boolean' && this._options.itemsDragNDrop !== 'onlyChangeParent' || insertAfter === undefined && this._options.itemsDragNDrop !== 'onlyChangeOrder') {
-            return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter) !== false;
-         }
-      },
-
-      _getDirectionOrderChange: function() {
-         if (this._options.itemsDragNDrop !== 'onlyChangeParent') {
-            return TreeDataGridView.superclass._getDirectionOrderChange.apply(this, arguments);
          }
       },
 
