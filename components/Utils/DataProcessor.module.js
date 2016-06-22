@@ -128,7 +128,10 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                });
             });
          } else {
-            $ws.helpers.saveToFile(fileType, methodName, cfg, undefined, useGET);
+            //TODO: В iOS не работает выгрузка с помощью POST запроса.
+            //Возможно у нас что-то неверно сконфигурировано. Выписал задачу чтобы разобраться в этой ситуации:
+            //https://inside.tensor.ru/opendoc.html?guid=03308a7c-ae3b-47c5-9c57-02a79adaf64b&description=
+            $ws.helpers.saveToFile(fileType, methodName, cfg, undefined, useGET || $ws._const.browser.isMobileIOS);
          }
       },
       /**
