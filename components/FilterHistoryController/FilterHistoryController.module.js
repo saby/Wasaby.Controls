@@ -369,6 +369,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 } else if(b.isActiveFilter) {
                    return 1;
                 }
+                return 0;
              })
              )
           },
