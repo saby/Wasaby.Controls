@@ -98,6 +98,9 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                    onActionActivated: function(e, key) {
                       self._notify('onItemActionActivated', key);
                       //Если тулбар не заблокирован, то клик по любой операции над записью приводит к скрытию тулбара
+                      if(!this._lockingToolbar) {
+                         self._itemsActions.hide();
+                      }
                       self.hide(false);
                    },
                    onShowMenu: function() {
@@ -338,7 +341,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              if (!this._lockingToolbar && this._isVisible) {
                 this._isVisible = false;
                 container = this.getContainer();
-                $ws.helpers.trackElement(this._container, false)
+                $ws.helpers.trackElement(this._container, false);
 
                 if (this._options.touchMode || animate) {
                    this._untrackingTarget();
