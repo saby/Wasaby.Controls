@@ -684,7 +684,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   }
                });
                if (typeof smile === 'object') {
-                  this._checkFocus();
                   this.insertHtml(this._smileHtml(smile.key, smile.value, smile.alt));
                }
             }
@@ -1451,8 +1450,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   bottom: 0,
                   left: 0
                });
-            //тоже самое что при execCommand
-            this._tinyEditor.selection.lastFocusBookmark = null;
             img.on('load', function() {
                var
                   isIEMore8 = $ws._const.browser.isIE && !$ws._const.browser.isIE8,
