@@ -146,7 +146,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             this._options.breadCrumbs._redraw();
          }
          if (this._options.backButton) {
-            this._options.backButton.getContainer().css({'display': 'inline-block'});
+            this._options.backButton.getContainer().css({'display': ''});
          }
       } else {
          //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
@@ -337,7 +337,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                      self._pathDSRawData = $ws.core.clone(crumbsItems ? crumbsItems.getRawData() : []);
                   }
                   if (self._options.backButton) {
-                     self._options.backButton.getContainer().css({'display': 'inline-block'});
+                     self._options.backButton.getContainer().css({'display': ''});
                   }
                }
             });
