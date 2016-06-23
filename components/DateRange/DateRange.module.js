@@ -53,6 +53,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
          this._datePickerStart = this.getChildControlByName('DateRange__DatePickerStart');
          this._datePickerEnd = this.getChildControlByName('DateRange__DatePickerEnd');
          this._datePickerStart.subscribe('onDateChange', function(e, date) {
+            self.clearMark();
             //передаем false, чтобы не зацикливать событие
             self._setStartDate(date, false);
             self._notifyOnPropertyChanged('startDate');
@@ -66,6 +67,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
             }, 0);
          });
          this._datePickerEnd.subscribe('onDateChange', function(e, date) {
+            self.clearMark();
             self._setEndDate(date, false);
             self._notifyOnPropertyChanged('endDate');
             self._notify('onEndDateChange',   self._options.endDate);
