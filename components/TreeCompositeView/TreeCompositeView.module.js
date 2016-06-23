@@ -190,7 +190,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             },
             //Метод удаляет или перерисовывает переданную строку
             removeOrRedraw = function(dataSet, row, recordOffset) {
-               var record = needRedraw ? dataSet.getRecordByKey(row.key) : false,
+               var
+                  indexForRemove,
+                  record = needRedraw ? dataSet.getRecordByKey(row.key) : false,
                   environment = [row.$row.prev(), row.$row.next()];
 
                //Если запись найдена в обновленном DataSet, то перерисовываем её
@@ -198,7 +200,10 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                   currentDataSet.getRecordByKey(row.key).merge(record);
                   self.redrawItem(record);
                } else { //Иначе - удаляем запись
-                  currentDataSet.removeAt(currentDataSet.getIndexById(row.key));
+                  indexForRemove = currentDataSet.getIndexById(row.key);
+                  if (indexForRemove) {
+                     currentDataSet.removeAt(indexForRemove);
+                  }
                   self._destroyItemsFolderFooter([row.key]);
                   self._ladderCompare(environment);
                   row.$row.remove();

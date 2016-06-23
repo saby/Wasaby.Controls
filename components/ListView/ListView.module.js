@@ -980,9 +980,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
-            if (this._isSupportedItemsToolbar() && !this._touchSupport) {
+            if (this._isSupportedItemsToolbar()) {
          		if (target.container){
-                  this._showItemsToolbar(target);
+                  if (!this._touchSupport) {
+                     this._showItemsToolbar(target);
+                  }
                } else {
                   this._hideItemsToolbar();
                }
@@ -1128,6 +1130,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             this._firstScrollTop = true;
+            this._unlockItemsToolbar();
             this._hideItemsToolbar();
             this._destroyEditInPlace();
             return ListView.superclass.reload.apply(this, arguments);
@@ -1520,6 +1523,11 @@ define('js!SBIS3.CONTROLS.ListView',
          _showItemsToolbar: function(target) {
             this._getItemsToolbar().show(target, this._touchSupport);
          },
+         _unlockItemsToolbar: function() {
+            if (this._itemsToolbar) {
+               this._itemsToolbar.unlockToolbar();
+            }
+         },
          _hideItemsToolbar: function (animate) {
             if (this._itemsToolbar) {
                this._itemsToolbar.hide(animate);
@@ -1695,6 +1703,9 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notifyOnSizeChanged(true);
             this._drawResults();
             this._needToRedraw = true;
+            //После отрисовки оповещаем аккардеон что поменялись размеры и возможно нужно обновить fixed позиционирование
+            //TODO: выпилить в 3.7.4.100 когда будет независимый скролл аккардеона
+            $ws.single.EventBus.globalChannel().notify('ContentScrolling', null);
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
