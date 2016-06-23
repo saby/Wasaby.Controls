@@ -197,12 +197,7 @@ define(
              * @see mask
              * @see setDate
              */
-            isCalendarIconShown: true,
-            /**
-             * @cfg {Boolean} Умное автодополнение
-             * @noShow
-             */
-            autoComplete: true
+            isCalendarIconShown: true
          }
       },
 
@@ -485,7 +480,7 @@ define(
       },
       setActive: function(active) {
          var date;
-         if (!active && this._options.autoComplete && !this.formatModel.isFilled()) {
+         if (!active && !this.formatModel.isFilled()) {
             date = this._getDateByText(this._options.text, new Date(), true);
             if (date) {
                this.setDate(date);
