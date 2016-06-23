@@ -49,23 +49,31 @@ define('js!SBIS3.CONTROLS.DateRange', [
 
          var self = this;
 
+         this._dateRangeButton = this.getChildControlByName('DateRange__Button');
          this._datePickerStart = this.getChildControlByName('DateRange__DatePickerStart');
+         this._datePickerEnd = this.getChildControlByName('DateRange__DatePickerEnd');
          this._datePickerStart.subscribe('onDateChange', function(e, date) {
+            self.clearMark();
             //передаем false, чтобы не зацикливать событие
             self._setStartDate(date, false);
             self._notifyOnPropertyChanged('startDate');
             self._notify('onStartDateChange', self._options.startDate);
             self._notify('onDateRangeChange', self._options.startDate, self._options.endDate);
          });
-         this._datePickerEnd = this.getChildControlByName('DateRange__DatePickerEnd');
+         this._datePickerStart.subscribe('onInputFinished', function() {
+            //TODO: курсор встаёт в поле только если ставить его асинхронно. Нужно разбираться почему.
+            setTimeout(function() {
+               self._datePickerEnd.setActive(true);
+            }, 0);
+         });
          this._datePickerEnd.subscribe('onDateChange', function(e, date) {
+            self.clearMark();
             self._setEndDate(date, false);
             self._notifyOnPropertyChanged('endDate');
             self._notify('onEndDateChange',   self._options.endDate);
             self._notify('onDateRangeChange', self._options.startDate, self._options.endDate);
          });
 
-         this._dateRangeButton = this.getChildControlByName('DateRange__Button');
          this._dateRangeButton.subscribe('onActivated', this._onDateRangeButtonActivated.bind(this));
 
          this._dateRangeChoose = this.getChildControlByName('DateRange__DateRangeChoose');
@@ -227,6 +235,42 @@ define('js!SBIS3.CONTROLS.DateRange', [
       _onRangeChooseChange: function(event, start, end) {
          this._datePickerStart.setDate(start);
          this._datePickerEnd.setDate(end);
+      },
+
+      //TODO: этот метод нужно перенести в helpers.
+      getFormattedValue: function() {
+         var
+             lastDay,
+             result = "",
+             startDate = this._options.startDate,
+             endDate = this._options.endDate;
+
+         if (startDate && endDate) {
+            lastDay = new Date(endDate.getTime()).setLastMonthDay().getDate();
+            //Если месяц целиком
+            if (startDate.getDate() == 1 && endDate.getDate() == lastDay) {
+               if (startDate.getFullYear() == endDate.getFullYear()) {
+                  if (startDate.getMonth() == endDate.getMonth()) {
+                     result = startDate.strftime("%f %Y");
+                  } else {
+                     result = startDate.strftime("%f") + ' - ' + endDate.strftime("%f %Y");
+                  }
+               } else {
+                  result = startDate.strftime("%f %Y") + ' - ' + endDate.strftime("%f %Y");
+               }
+            //Если даты совпадают
+            } else if (startDate.getDate() == endDate.getDate() && startDate.getMonth() == endDate.getMonth() && startDate.getFullYear() == endDate.getFullYear()) {
+               result = startDate.strftime("%e.%m.%y");
+            //Если даты различные
+            } else {
+               result = startDate.strftime("%e.%m.%y") + ' - ' + endDate.strftime("%e.%m.%y");
+            }
+         } else if (startDate) {
+            result = startDate.strftime("%e.%m.%y") + ' - ...';
+         } else if (endDate) {
+            result = '... - ' + endDate.strftime("%e.%m.%y");
+         }
+         return result;
       }
    });
    return DateRange;
