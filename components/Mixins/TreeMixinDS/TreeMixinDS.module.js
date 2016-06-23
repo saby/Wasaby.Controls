@@ -419,6 +419,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             this._treePagers[key] = new TreePagingLoader({
                pageSize: this._options.pageSize,
                opener: this,
+               parent: this,
                hasMore: nextPage,
                element: container,
                id: key,
