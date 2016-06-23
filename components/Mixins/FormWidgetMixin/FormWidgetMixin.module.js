@@ -154,6 +154,8 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
        * <br/>
        * При работе с диалогами редактирования, валидации по умолчанию производится при попытке сохранения редактируемой записи.
        * <br/>
+       * Если для контрола ограничено взаимодействие через опцию {@link $ws.proto.Control#enabled}, то для него валидация не производится.
+       * <br/>
        * Подробнее о валидации вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/ руководстве разработчика}.
        * @returns {Boolean} Признак: валидация пройдена успешно (true) или с ошибками (false).
        * @see validators
