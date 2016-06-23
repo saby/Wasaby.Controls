@@ -104,6 +104,7 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
       init: function() {
          Menu.superclass.init.apply(this, arguments);
+         // Предотвращаем всплытие focus и mousedown с контейнера меню, т.к. это приводит к потере фокуса
          this._container.on('mousedown focus', this._blockFocusEvents);
       },
       _blockFocusEvents: function(event) {
