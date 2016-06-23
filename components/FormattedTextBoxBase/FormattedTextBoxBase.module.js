@@ -826,8 +826,8 @@ define(
             lastGroupNum = this.formatModel.model.length - 1;
             lastGroupNum = this.formatModel.model[lastGroupNum].isGroup ? lastGroupNum : lastGroupNum - 1;
             this._notify('onTextChange', this._options.text);
-            //TODO: Событие сейчас стреляет несовсем верно, только тогда, когда символ заполнивший маску, вставили на последнюю позицую
-            if (this.formatModel.isFilled() && keyInsertInfo.groupNum == lastGroupNum  &&  keyInsertInfo.position == this.formatModel.model[lastGroupNum].mask.length - 1) {
+            //Если positionOffset = -1, это значит был нажат backspace, и onInputFinished в таком случае стрелять не надо
+            if (positionOffset !== -1 && keyInsertInfo.groupNum == lastGroupNum  &&  keyInsertInfo.position == this.formatModel.model[lastGroupNum].mask.length - 1) {
                this._notify('onInputFinished');
             }
             //Заново ищем контейнер группы, т.к. после замены символа, снаружи значение текста может быть изменено(например setText)
