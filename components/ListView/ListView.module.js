@@ -1764,6 +1764,11 @@ define('js!SBIS3.CONTROLS.ListView',
          _nextLoad: function () {
             var self = this,
                loadAllowed  = this._isAllowInfiniteScroll();
+            if (!this._scrollWatcher.hasScroll(this.getContainer())){
+               this._container.addClass('controls-ListView__outside-scroll-loader');
+            } else {
+               this._container.removeClass('controls-ListView__outside-scroll-loader');
+            }
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && $ws.helpers.isElementVisible(this.getContainer()) &&
                   this._hasNextPage(this.getItems().getMetaData().more, this._infiniteScrollOffset) && !this.isLoading()) {
