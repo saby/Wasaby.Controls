@@ -63,7 +63,9 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
           * Отдельно храним ключ для модели из связного списка, т.к. он может не совпадать с ключом редактируемой модели
           * К примеру в реестре задач ключ записи в реестре и ключ редактируемой записи различается, т.к. одна и та же задача может находиться в нескольких различных фазах
           */
-         _linkedModelKey: undefined
+         _linkedModelKey: undefined,
+
+         _record: undefined
       },
       /**
        * @typedef {Object} ExecuteMetaConfig
@@ -127,7 +129,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          config.handlers = {
             onAfterClose: function (e, meta) {
                self._dialog = undefined;
-               self._notifyOnExecuted(meta, this._record);
+               self._notifyOnExecuted(meta, self._record);
+               self._record = undefined;
             }
          };
 
@@ -149,6 +152,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if (getRecordProtoMethod){
             def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
             def.addCallback(function (record) {
+               self._record = record;
                config.componentOptions.record = record;
                if (def.isNewRecord)
                    config.componentOptions.isNewRecord = true;
