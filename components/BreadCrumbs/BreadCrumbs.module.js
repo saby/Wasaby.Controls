@@ -23,9 +23,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
     */
    'use strict';
    //TODO: Переписать все к чертям 
-   var BreadCrumbs = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], {
+   var BreadCrumbs = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], /** @lends SBIS3.CONTROLS.BreadCrumbs.prototype */{
+      _dotTplFn: dotTpl,
       $protected: {
-         _dotTplFn: dotTpl,
          _resizeTimeout: null,
          _dropdownWidth: null,
          _homeIcon: undefined,
@@ -120,6 +120,16 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          this.togglePicker();
          if (this._picker && this._picker.isVisible()) {
             this._redrawDropdown();
+         }
+      },
+
+      //Очередной придрот для ховера у disabled иконок, убрать когда избавимся от каскадов в font.css
+      setEnabled: function(enabled){
+         BreadCrumbs.superclass.setEnabled.call(this, enabled);
+         if (enabled) {
+            this._homeIcon.addClass('action-hover');
+         } else {
+            this._homeIcon.removeClass('action-hover');
          }
       },
 

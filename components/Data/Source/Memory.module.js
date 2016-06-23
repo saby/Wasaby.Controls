@@ -314,6 +314,8 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             skipFields = {
                'Разворот': true,
                'ВидДерева': true,
+               'ПутьКУзлу': true,
+               'ЗаголовокИерархии': true,
                usePages: true
             },
             compare = function(given, expect) {
@@ -419,7 +421,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
                } else {
                   res = a.values[orderIndex] > b.values[orderIndex] ? 1 : -1;
                }
-               return orderMap[orderIndex].order ? res : -res;
+               return orderMap[orderIndex].order ? -res : res;
             };
          for (orderIndex = 0; orderIndex < orderMap.length; orderIndex++) {
             dataMap.sort(sortHandler);

@@ -38,12 +38,12 @@
       margin-left: -4px;
       display: inline-block;
       position: relative;
-      top: 4px;
+      top: @breadcrumbs-top;
 	}
 
 	.controls-BreadCrumbs__arrow{
        position: relative;
-       top: 2px;
+       top: @breadcrumbs-arrow-top;
 	}
 
 	.controls-BreadCrumbs__itemsContainer{
@@ -70,9 +70,10 @@
          &:hover{
             color: #FF7033;
          }
-         font-size: 13px;
+         font-size: @breadcrumbs-smallItems-font-size;
          color: #0055BB;
          font-weight: normal;
+         top: @breadcrumbs-small-items-top;
       }
    }
 

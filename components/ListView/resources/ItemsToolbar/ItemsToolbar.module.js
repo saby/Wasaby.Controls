@@ -97,6 +97,8 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 handlers : {
                    onActionActivated: function(e, key) {
                       self._notify('onItemActionActivated', key);
+                      //Если тулбар не заблокирован, то клик по любой операции над записью приводит к скрытию тулбара
+                      self.hide(false);
                    },
                    onShowMenu: function() {
                       this.getContainer().addClass('ws-invisible');
@@ -289,6 +291,14 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 return;
              }
              this._currentTarget = target;                  // Запоминаем таргет в качестве текущего
+             /**
+              * нужно следить за положением опций потому что в реестре высота строки может меняться динамически
+              * например в сообщениях картинки прогружаются асинхронно и при подгрузке может измениться высота строки,
+              * а изменение положения опций не произойдет
+              */
+             if(!this._isVisible){
+                $ws.helpers.trackElement(this._container, true).subscribe('onMove', this._recalculatePosition, this);
+             }
              if (hasItemsActions) {       // Если имеются опции записи, то создаем их и отображаем
                 this.showItemsActions(target);
              }
@@ -328,6 +338,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              if (!this._lockingToolbar && this._isVisible) {
                 this._isVisible = false;
                 container = this.getContainer();
+                $ws.helpers.trackElement(this._container, false)
 
                 if (this._options.touchMode || animate) {
                    this._untrackingTarget();

@@ -1,0 +1,11 @@
+<div class="controls-RichEditor">
+   {{? it.toolbar}}
+   <button class="controls-RichEditor__ToolbarToggleButton" tabindex="-1"></button>
+   <div class="controls-RichEditor__Toolbar"></div>
+   {{?}}
+   <div class="controls-RichEditor__DataReview{{? it.enabled}} ws-hidden{{?}} ws-basic-style" tabindex="1">{{? !it.enabled && it.text}}{{=it._prepareReviewContent(it.text)}}{{?}}</div>
+   <div class="controls-RichEditor__Placeholder" >{{=it.placeholder}}</div>
+   <div class="controls-RichEditor__EditorFrame ws-basic-style"></div>
+   <textarea class="controls-RichEditor__FakeArea" tabindex="0"></textarea>
+   <div class="controls-RichEditor__SourceContainer ws-hidden"><textarea class="controls-RichEditor__SourceArea"></textarea></div>
+</div>

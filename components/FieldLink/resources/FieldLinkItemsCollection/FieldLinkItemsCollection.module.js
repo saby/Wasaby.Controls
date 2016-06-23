@@ -42,13 +42,13 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                 itemContainer;
 
             itemContainer = $target.closest('.controls-ListView__item', this._container[0]);
-
-            /* Переводим фокус на поле связи */
-            this.getParent().setActive(true);
-
             if(itemContainer.length) {
                this._notify($target.hasClass('controls-FieldLink__linkItem-cross') ? 'onCrossClick' : 'onItemActivate', itemContainer.data('id'));
             }
+
+            /* Переводим фокус на поле связи, надо делать после оповещения события,
+               иначе, если в поле связи единичный выбор, то при удалении фокус потеряется  */
+            this.getParent().setActive(true);
          },
 
          /**
@@ -80,12 +80,6 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
 
          setItems: function(list) {
             var item, result;
-
-            /* Т.к. в карточке задач не могут установить keyField (там два справочника, с разными keyField'ами),
-               то для внутренней реализации используем наше поле, куда запишем ключ переданных записей */
-            if (!this._options.keyField) {
-               this._options.keyField = '__FieldLinkItemsCollectionKeyField__';
-            }
 
             if(list) {
                result = $ws.helpers.reduce(list.toArray(), function(result, rec) {

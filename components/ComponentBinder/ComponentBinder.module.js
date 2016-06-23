@@ -16,7 +16,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             }),
             view = this._options.view,
             groupBy = view.getSearchGroupBy(searchParamName),
-            self = this;
+            self = this,
+            mode = searchMode;
          if (searchCrumbsTpl) {
             groupBy.breadCrumbsTpl = searchCrumbsTpl;
          }
@@ -50,17 +51,19 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          }
 
          view.once('onDataLoad', function(event, data){
-            var root = view._options.root !== undefined ? view._options.root : null,
-                newText;
+            var root;
 
             toggleSearchKbLayoutRevert.call(self, view, false);
             processDataKbLayoutRevert.call(self, data, view, searchForm, searchParamName);
-            //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
-            view._options._itemsProjection.setEventRaising(false);
-            //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
-            view._options._itemsProjection.setRoot(root);
-            view._options._curRoot = root;
-            view._options._itemsProjection.setEventRaising(true);
+            if (mode === 'root') {
+               root = view._options.root !== undefined ? view._options.root : null;
+               //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
+               view._options._itemsProjection.setEventRaising(false);
+               //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
+               view._options._itemsProjection.setRoot(root);
+               view._options._curRoot = root;
+               view._options._itemsProjection.setEventRaising(true);
+            }
          });
 
          view.reload(filter, view.getSorting(), 0).addCallback(function(){
@@ -348,33 +351,44 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
          this._lastGroup = view._options.groupBy;
          this._isInfiniteScroll = view.isInfiniteScroll();
+         function subscribeOnSearchFormEvents() {
+            searchForm.subscribe('onReset', function (event, text) {
+               toggleSearchKbLayoutRevert.call(self, view, false, searchParamName);
+               if (isTree) {
+                  resetGroup.call(self, searchParamName);
+               } else {
+                  resetSearch.call(self, searchParamName);
+               }
+            });
 
-         searchForm.subscribe('onReset', function(event, text){
-            toggleSearchKbLayoutRevert.call(self, view, false, searchParamName);
-            if (isTree) {
-               resetGroup.call(self, searchParamName);
-            } else {
-               resetSearch.call(self, searchParamName);
-            }
-         });
+            searchForm.subscribe('onSearch', function (event, text) {
+               toggleSearchKbLayoutRevert.call(self, view, true, searchParamName);
+               if (isTree) {
+                  startHierSearch.call(self, text, searchParamName, undefined, searchMode, searchForm);
+               } else {
+                  startSearch.call(self, text, searchParamName, searchForm);
+               }
+            });
 
-         searchForm.subscribe('onSearch', function(event, text) {
-            toggleSearchKbLayoutRevert.call(self, view, true, searchParamName);
-            if (isTree) {
-               startHierSearch.call(self, text, searchParamName, undefined, searchMode, searchForm);
-            } else {
-               startSearch.call(self, text, searchParamName, searchForm);
-            }
-         });
+            searchForm.subscribe('onKeyPressed', function (eventObject, event) {
+               // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
+               if ((event.which == $ws._const.key.tab || event.which == $ws._const.key.down) && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)) {
+                  view.setSelectedIndex(0);
+                  view.setActive(true);
+                  event.stopPropagation();
+               }
+            });
+         }
 
-         searchForm.subscribe('onKeyPressed', function(eventObject, event){
-            // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
-            if ((event.which == $ws._const.key.tab || event.which == $ws._const.key.down) && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)){
-               view.setSelectedIndex(0);
-               view.setActive(true);
-               event.stopPropagation();
-            }
-         });
+         if(view._getItemsProjection()){
+            subscribeOnSearchFormEvents();
+         }else{
+            view.once('onItemsReady', function(){
+               subscribeOnSearchFormEvents();
+               searchForm.applySearch(false);
+            });
+
+         }
       },
       bindSearchComposite: function(searchParamName, searchCrumbsTpl, searchForm) {
          this.bindSearchGrid.apply(this, arguments);
@@ -551,12 +565,17 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             noSaveFilters: noSaveFilters
          });
 
+         filterButton.setHistoryController(historyController);
          if(applyOnLoad) {
             filter = historyController.getActiveFilter();
 
-            filterButton.setHistoryController(historyController);
-            /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
-            filterButton.setFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
+            if(filter) {
+               /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
+               filterButton.setFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
+               /* Это синхронизирует фильтр и структуру, т.к. некоторые фильтры возможно мы не сохраняли,
+                  и надо, чтобы это отразилось в структуре */
+               view.setFilter(filter.viewFilter, true);
+            }
          }
          setTimeout($ws.helpers.forAliveOnly(function() {
             // Через timeout, чтобы можно было подписаться на соыбтие, уйдёт с серверным рендерингом

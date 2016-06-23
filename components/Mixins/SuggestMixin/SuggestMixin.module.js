@@ -328,7 +328,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
          for(var i = 0, len = changedFields.length; i < len; i++) {
             if(String(this._options.listFilter[changedFields[i]]).length >= this._options.startChar) {
-               this._startSearch();
+               this._startListSearch();
                return;
             }
          }
@@ -338,7 +338,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       },
 
       // TODO использовать searchMixin 3.7.3.100
-      _startSearch: function() {
+      _startListSearch: function() {
          var self = this;
 
          this._clearDelayTimer();
@@ -393,7 +393,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _observableControlFocusHandler: function() {
          if(this._options.autoShow) {
-            this._checkPickerState() ? this.showPicker() : this._startSearch();
+            this._checkPickerState() ? this.showPicker() : this._startListSearch();
          }
       },
 

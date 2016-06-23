@@ -465,7 +465,10 @@ define(
       _notifyOnDateChanged: function() {
          this._notifyOnPropertyChanged('date', this._options.date);
          this._notify('onDateChange', this._options.date);
+         //TODO: логика валидации находится на уровне TextBoxBase, но сейчас форматные поля не вызывают функции базового контрола поэтому
+         //приходится дублировать логику, в 3.7.4.100 нужно сделать чтобы форматные поля и поля даты вызывали функции родительского контрола
          this._textChanged = true;
+         this.clearMark();
       },
 
       /**

@@ -1,5 +1,8 @@
 @import "../online/theme";
 
+@closeFilterButtonImage:                        url('img/areaBigCloseButton.png') 0 0;
+@closeFilterButtonImageHover:                  url('img/areaBigCloseButton.png') 0 -40px;
+
 .icon-size {
    font-size: @icon-size !important;
    width: @icon-width;
@@ -7,13 +10,32 @@
 }
 
 @text-box-height-carryBig:   60px;
-@text-box-height-carryFont:  30px;
+@text-box-height-carryFont:  42px;
 .controls-TextBox {
    &.controls-TextBox__big {
       height: @text-box-height-carryBig;
       .controls-TextBox__fieldWrapper {
          .controls-TextBox__field {
             font-size: @text-box-height-carryFont;
+         }
+      }
+   }
+}
+
+.controls-FloatArea {
+   &.controls__filterButton__picker {
+      .controls-PopupMixin__closeButton {
+         top: @controls-filterButton-closeButton-top;
+         height: 40px;
+         width:  60px;
+
+
+         background: @closeFilterButtonImage;
+         &:hover {
+            background: @closeFilterButtonImageHover;
+         }
+         &:active {
+            background: @closeFilterButtonImageHover;
          }
       }
    }

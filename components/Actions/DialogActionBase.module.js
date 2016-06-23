@@ -105,7 +105,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
 
       _opendEditComponent: function(meta, dialogComponent, mode){
          this._linkedModelKey = meta.id;
-         meta.id = this._getEditKey(meta.item) || meta.id;
+         //Производим корректировку идентификатора только в случае, когда идентификатор передан
+         if (meta.hasOwnProperty('id')) {
+            meta.id = this._getEditKey(meta.item) || meta.id;
+         }
 
          var self = this,
             config,
@@ -140,11 +143,15 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       },
 
       _initTemplateComponentCallback: function (config, meta, mode, templateComponent) {
-         var self = this;
+         var self = this,
+             def;
          var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource;
          if (getRecordProtoMethod){
-            getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions).addCallback(function (record) {
+            def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
+            def.addCallback(function (record) {
                config.componentOptions.record = record;
+               if (def.isNewRecord)
+                   config.componentOptions.isNewRecord = true;
                if (!config.componentOptions.key){
                   //Если не было ключа, то отработал метод "создать". Запоминаем ключ созданной записи
                   config.componentOptions.key = record.getKey();

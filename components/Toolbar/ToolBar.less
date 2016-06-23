@@ -1,7 +1,13 @@
-.controls-ToolBar__itemsContainer {
-   display: inline-block;
-}
+.controls-ToolBar {
+   .inline-block-bug-fix();
+   display: @controls-toolbar-display;
 
-.controls-ToolBar__item {
-   margin-right: 4px;
+   .controls-ToolBar__itemsContainer {
+      display: @controls-toolbar-display;
+   }
+
+   .controls-ToolBar__item {
+      margin-right: @controls-toolbar-item-margin-right;
+      vertical-align: @controls-toolbar-item-vertical-align;
+   }
 }

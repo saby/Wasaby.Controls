@@ -20,12 +20,12 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 
             .capture('hovered_row', function (actions) {
                 actions.mouseMove(this.data2);
-				actions.wait(1000);
+				actions.wait(500);
             })
 
             .capture('selected_row', function (actions) {
                 actions.click(this.data6);
-				actions.wait(1000);
+				actions.wait(500);
             })
     });
 	
@@ -47,12 +47,12 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 
             .capture('hovered_row', function (actions) {
                 actions.mouseMove(this.data2);
-				actions.wait(1000);
+				actions.wait(500);
             })
 
             .capture('selected_row', function (actions) {
                 actions.click(this.data6);
-				actions.wait(1000);
+				actions.wait(500);
             })
     });
 	
@@ -77,12 +77,16 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 
             .capture('hovered_row', function (actions) {
                 actions.mouseMove(this.data2);
-				actions.wait(1000);
+				actions.wait(500);
             })
 
             .capture('selected_row', function (actions) {
                 actions.click(this.data6);
-				actions.wait(1000);
+				actions.wait(500);
+            })
+			
+			.capture('clicked_in_box', function (actions) {
+                actions.click('[data-id="1"] .controls-ListView__itemCheckBox');
             })
     });
 

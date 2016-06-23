@@ -148,7 +148,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          }
       },
 
-      $constructor: function() {
+      $constructor: function(cfg) {
+         this._newRecord = cfg.isNewRecord || false;
          this._publish('onFail', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel');
          $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
          $ws.single.CommandDispatcher.declareCommand(this, 'read', this._read);
@@ -316,13 +317,26 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
              self = this,
              def;
          if (this.validate()) {
-            def = this._dataSource.update(this._options.record);
-            if (!config.hideIndicator){
-               this._showLoadingIndicator();
+            if (this._options.record.isChanged() || self._newRecord) {
+               def = this._dataSource.update(this._options.record);
+               if (!config.hideIndicator) {
+                  this._showLoadingIndicator();
+               }
+               dResult.dependOn(def.addCallbacks(function (result) {
+                  self._notify('onUpdateModel', self._options.record, self._newRecord);
+                  self._newRecord = false;
+                  return result;
+               }, function (error) {
+                  if (!config.hideErrorDialog) {
+                     self._processError(error);
+                  }
+                  self._saving = false;
+                  return error;
+               }));
+            } else {
+               dResult.callback();
             }
-            dResult.dependOn(def.addCallbacks(function (result) {
-               self._notify('onUpdateModel', self._options.record, self._newRecord);
-               self._newRecord = false;
+            dResult.addCallback(function(result){
                if (config.closePanelAfterSubmit) {
                   self._closePanel(true);
                }
@@ -330,15 +344,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                   self._saving = false;
                }
                return result;
-            }, function (error) {
-               if (!config.hideErrorDialog){
-                  self._processError(error);
-               }
-               self._saving = false;
-               return error;
-            }));
-            dResult.addBoth(function (r) {
-               self._hideLoadingIndicator();
+            }).addBoth(function (r) {
+                  self._hideLoadingIndicator();
                return r;
             });
          }
@@ -392,7 +399,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          return this._dataSource.read(key).addCallback(function (record) {
             self.setRecord(record);
             self._notify('onReadModel', record);
-            self._newRecord = false;
             return record;
          }).addErrback(function (error) {
                if (!config.hideErrorDialog){
@@ -519,7 +525,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see getDataSource
        */
       setDataSource: function(source, config){
-         $ws.single.ioc.resolve('ILogger').error('FormController', 'Метод setDataSource в скором времени будет удален, задать источник данных необходимо через конфигурацию dataSource');
+         $ws.single.ioc.resolve('ILogger').log('FormController', 'Метод setDataSource в скором времени будет удален, задать источник данных необходимо через конфигурацию dataSource');
          this._dataSource = source;
          return this._getRecordFromSource(config)
       },
@@ -624,14 +630,15 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @remark
        * Команда применяется для того, чтобы логика обработки события производилась на стороне {@link SBIS3.CONTROLS.DialogActionBase}.
        * @param {String} eventName Имя события, о котором нужно оповестить {@link SBIS3.CONTROLS.DialogActionBase}.
+       * @param {*} additionalData Данные, которые должны быть проброшены в событие {@link SBIS3.CONTROLS.DialogActionBase}.
        * @command
        * @see read
        * @see create
        * @see update
        * @see destroy
        */
-      _actionNotify: function(eventName){
-         this._notify(eventName, this._options.record);
+      _actionNotify: function(eventName, additionalData){
+         this._notify(eventName, this._options.record, additionalData);
       },
       /**
        * Action, который позволяет выставить активность дочернего контрола после загрузки
@@ -655,7 +662,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
    });
       //todo Костыль, позволяющий с прототипа компонента вычитать запись до инициализации компонента и прокинуть ее в опции. Сделано в рамках ускорения
       FormController.prototype.getRecordFromSource = function (opt) {
-         var prototypeProtectedData = {};
+         var prototypeProtectedData = {},
+             result;
          this._initializer.call(prototypeProtectedData); //На прототипе опции не доступны, получаем их через initializer
          var options = prototypeProtectedData._options;
          $ws.core.merge(options, opt);
@@ -663,11 +671,13 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             options.source = opt.source = this.createDataSource(options);
          }
          if (options.key){
-            return options.source.read(options.key);
+            result = options.source.read(options.key);
          }
          else{
-            return options.source.create(options.initValues);
+            result = options.source.create(options.initValues);
+            result.isNewRecord = true;
          }
+         return result;
       };
 
       FormController.prototype.createDataSource = function(options){

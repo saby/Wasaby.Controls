@@ -38,9 +38,17 @@ define('js!SBIS3.CONTROLS.OperationDelete', [
       },
       _clickHandler: function() {
          var view = this._options.linkedView,
-            selectedItems = view.getSelectedKeys(),
-            records = selectedItems.length ? selectedItems : view._options._items._indexId;
-         view.deleteRecords(records);
+            selectedKeys = view.getSelectedKeys(),
+            keys = selectedKeys.length ? selectedKeys : this._getAllKeys();
+         view.deleteRecords(keys);
+      },
+      _getAllKeys: function() {
+         var keys = [],
+             view = this._options.linkedView;
+         view.getItems().each(function(item) {
+            keys.push(item.getId());
+         });
+         return keys;
       }
    });
 

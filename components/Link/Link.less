@@ -7,6 +7,8 @@
   line-height: @link-line-height;
   padding: @link-padding;
   box-sizing: border-box;
+  font-family: @font-basic-name;
+  font-size: @font-basic-size;
   &.ws-area{
    height: auto;
   }
@@ -65,5 +67,17 @@
 .staff-CardButtons__right{
    .controls-Link{
       line-height: 24px;
+   }
+}
+.ws-is-desktop-platform {
+   .controls-Link {
+      &:hover {
+         color: @link-hover-text-color;
+         cursor: @link-cursor;
+         text-decoration: @link-hover-text-decoration;
+         .controls-Link__icon{
+            color: @primary-color!important;
+         }
+      }
    }
 }
