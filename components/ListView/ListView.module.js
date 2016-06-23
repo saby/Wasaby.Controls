@@ -593,7 +593,7 @@ define('js!SBIS3.CONTROLS.ListView',
          $constructor: function () {
             this._touchSupport = $ws._const.compatibility.touch;
 
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onDropFromOutside');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onDragEnd');
 
             /* За счёт того, что разделено поведения отображения операций и ховера,
                в зависимости от события, которое произошло, то можно смело подписаться на все событие,
@@ -2449,16 +2449,17 @@ define('js!SBIS3.CONTROLS.ListView',
                };
             }
             if (currentTarget.length) {
-               if(currentElement.component === this) {
-                  this._move(currentElement.keys, currentTarget.data('id'), currentElement.insertAfter);
-               } else {
-                  var remoteItems = currentElement.component.getItems(),
-                     checkedItems = [];
-                  for (var i = currentElement.keys.length - 1; i >= 0; i--) {
-                     checkedItems.push(remoteItems.getRecordById(currentElement.keys[i]));
+               var remoteItems = currentElement.component.getItems(),
+                  checkedItems = [];
+               for (var i = currentElement.keys.length - 1; i >= 0; i--) {
+                  checkedItems.push(remoteItems.getRecordById(currentElement.keys[i]));
+               }
+               var res = this._notify('onDragEnd', this.getItems().getRecordById(currentTarget.data('id')),
+                  checkedItems, currentElement.insertAfter, currentElement.component);
+               if (res !== false) {
+                  if (currentElement.component === this) {
+                     this._move(currentElement.keys, currentTarget.data('id'), currentElement.insertAfter);
                   }
-                  this._notify('onDropFromOutside', this.getItems().getRecordById(currentTarget.data('id')),
-                     checkedItems, currentElement.insertAfter, currentElement.component);
                }
             }
          },
