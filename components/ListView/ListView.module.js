@@ -1767,9 +1767,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   var hasNextPage = self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset);
                   //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                   this.getItems().setMetaData(dataSet.getMetaData());
-                  if (hasNextPage) {
-                     self._infiniteScrollOffset += self._limit;
-                  } else {
+                  self._infiniteScrollOffset += self._limit;
+                  if (!hasNextPage) {
                      self._hideLoadingIndicator();
                      this._toggleEmptyData(!self.getItems().getCount());
                   }
