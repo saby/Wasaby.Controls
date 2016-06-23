@@ -861,6 +861,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       setCurrentRoot: function(key) {
          var
             filter = this.getFilter() || {};
+         // todo Удалить при отказе от режима "hover" у редактирования по месту [Image_2016-06-23_17-54-50_0108] https://inside.tensor.ru/opendoc.html?guid=5bcdb10f-9d69-49a0-9807-75925b726072&description=
+         this._destroyEditInPlace();
          if (key !== undefined && key !== null) {
             filter[this._options.hierField] = key;
          } else {
