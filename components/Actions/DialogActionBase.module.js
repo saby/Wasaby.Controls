@@ -64,7 +64,9 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
           * К примеру в реестре задач ключ записи в реестре и ключ редактируемой записи различается, т.к. одна и та же задача может находиться в нескольких различных фазах
           */
          _linkedModelKey: undefined,
-
+         /**
+          * @var {SBIS3.CONTROLS.Data.Model} Запись которая пришла на редктирование, из метода прочитать или создать
+          */
          _record: undefined
       },
       /**
