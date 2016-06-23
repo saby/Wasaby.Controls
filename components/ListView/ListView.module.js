@@ -1288,7 +1288,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var target = hoveredItem.container;
             if (target && !(target.hasClass('controls-editInPlace') || target.hasClass('controls-editInPlace__editing'))) {
                this.showEip(target, this.getItems().getRecordById(hoveredItem.key), { isEdit: false });
-            } else {
+               // todo Удалить при отказе от режима "hover" у редактирования по месту [Image_2016-06-23_17-54-50_0108] https://inside.tensor.ru/opendoc.html?guid=5bcdb10f-9d69-49a0-9807-75925b726072&description=
+            } else if (this._hasEditInPlace()) {
                this._getEditInPlace().hide();
             }
          },
