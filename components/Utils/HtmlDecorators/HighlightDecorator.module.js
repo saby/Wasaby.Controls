@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.HighlightDecorator', [
-   'js!SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator'
-], function (AbstractDecorator) {
+   'js!SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator',
+   'Core/markup/ParserUtilitiesNew'
+], function (AbstractDecorator, Parser) {
    'use strict';
 
    /**
@@ -76,16 +77,30 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.HighlightDecorator', [
          if (!text || !highlight) {
             return text;
          }
-         text = '' + text;
+         text = Parser.parse(text);
          highlight = $ws.helpers.escapeHtml('' + highlight)
             .replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
 
-         return text.replace(
-            new RegExp(highlight, 'gi'),
+         highlighted(text, new RegExp(highlight, 'gi'), cssClass);
+         return text.innerHTML();
+      }
+   });
+
+   function highlighted(content, highlight, cssClass) {
+      var
+         idx = 0;
+      if (content.childNodes) {
+         for (var i = content.childNodes.length-1; i >= 0; i--) {
+             highlighted(content.childNodes[i], highlight, cssClass );
+         }
+      }
+      if (content.text) {
+         content.text = content.text.replace(
+            highlight,
             '<span class="' + cssClass + '">$&</span>'
          );
       }
-   });
+   }
 
    return HighlightDecorator;
 });

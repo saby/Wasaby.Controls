@@ -901,14 +901,25 @@ define('js!SBIS3.CONTROLS.ListView',
             return scrollContainer;
          },
 
+         /**
+          * Метод, меняющий текущий выделеный по ховеру элемент
+          * @param {jQuery} target Новый выделеный по ховеру элемент
+          * когда ключ элемента не поменялся, но сам он изменился (перерисовался)
+          * @private
+          */
          _changeHoveredItem: function(target) {
             var targetKey = target[0].getAttribute('data-id');
-            if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
-               this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
-               target.addClass('controls-ListView__hoveredItem');
-               this._hoveredItem = this._getElementData(target);
-               this._notifyOnChangeHoveredItem();
+
+            if (targetKey !== undefined && (this._hoveredItem.key !== targetKey)) {
+               this._updateHoveredItem(target);
             }
+         },
+
+         _updateHoveredItem: function(target) {
+            this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
+            target.addClass('controls-ListView__hoveredItem');
+            this._hoveredItem = this._getElementData(target);
+            this._notifyOnChangeHoveredItem();
          },
 
          _getDomElementByItem : function(item) {
@@ -982,9 +993,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
-            if (this._isSupportedItemsToolbar() && !this._touchSupport) {
+            if (this._isSupportedItemsToolbar()) {
          		if (target.container){
-                  this._showItemsToolbar(target);
+                  if (!this._touchSupport) {
+                     this._showItemsToolbar(target);
+                  }
                } else {
                   this._hideItemsToolbar();
                }
@@ -1102,7 +1115,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _drawSelectedItems: function (idArray) {
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__multiSelected');
             for (var i = 0; i < idArray.length; i++) {
-               $(".controls-ListView__item[data-id='" + idArray[i] + "']", this._container).addClass('controls-ListView__item__multiSelected');
+               $('.controls-ListView__item[data-id="' + idArray[i] + '"]', this._container).addClass('controls-ListView__item__multiSelected');
             }
          },
 
@@ -1110,7 +1123,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //рисуем от ключа
             var selId = id;
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
-            $(".controls-ListView__item[data-id='" + selId + "']", this._container).addClass('controls-ListView__item__selected');
+            $('.controls-ListView__item[data-id="' + selId + '"]', this._container).addClass('controls-ListView__item__selected');
          },
          /**
           * Перезагружает набор записей представления данных с последующим обновлением отображения.
@@ -1130,6 +1143,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             this._firstScrollTop = true;
+            this._unlockItemsToolbar();
             this._hideItemsToolbar();
             this._destroyEditInPlace();
             return ListView.superclass.reload.apply(this, arguments);
@@ -1522,6 +1536,11 @@ define('js!SBIS3.CONTROLS.ListView',
          _showItemsToolbar: function(target) {
             this._getItemsToolbar().show(target, this._touchSupport);
          },
+         _unlockItemsToolbar: function() {
+            if (this._itemsToolbar) {
+               this._itemsToolbar.unlockToolbar();
+            }
+         },
          _hideItemsToolbar: function (animate) {
             if (this._itemsToolbar) {
                this._itemsToolbar.hide(animate);
@@ -1649,11 +1668,12 @@ define('js!SBIS3.CONTROLS.ListView',
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
          //*********************************//
          _drawItemsCallback: function () {
-            var
-               hoveredItem,
-               hoveredItemContainer,
-               hash,
-               projItem;
+            var hoveredItem,
+                hoveredItemContainer,
+                hash,
+                projItem,
+                containsHoveredItem;
+
             ListView.superclass._drawItemsCallback.apply(this, arguments);
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
@@ -1662,26 +1682,33 @@ define('js!SBIS3.CONTROLS.ListView',
 
             hoveredItem = this.getHoveredItem();
             hoveredItemContainer = hoveredItem.container;
-            /*TODO сейчас зачем то в ховеред итем хранится ссылка на DOM элемент
-            * но этот элемент может теряться в ходе перерисовок. Выписана задача по которой мы будем
-            * хранить только идентификатор и данный код станет не нужен*/
-            if (hoveredItemContainer) {
-               hash = hoveredItemContainer.attr('data-hash');
-               projItem = this._getItemsProjection().getByHash(hash);
-               if (projItem) {
-                  hoveredItemContainer = this._getDomElementByItem(projItem);
-               }
-            }
 
              /* Если после перерисовки выделенный элемент удалился из DOM дерава,
                то событие mouseLeave не сработает, поэтому вызовем руками метод,
                если же он остался, то обновим положение кнопки опций*/
             if(hoveredItemContainer){
-               if(!$.contains(this._getItemsContainer()[0], hoveredItemContainer[0])) {
-                  this._mouseLeaveHandler();
-               }else {
-                  hoveredItem.container = hoveredItemContainer;
-                  this._setHoveredItem(hoveredItem);
+               // FIXME УДАЛИТЬ, вызывается, чтобы проходили тесты, просто создаёт индекс по хэшу в енумераторе
+               this._getItemsProjection().getByHash(null);
+               containsHoveredItem = $ws.helpers.contains(this._getItemsContainer()[0], hoveredItemContainer[0]);
+
+               if(!containsHoveredItem && hoveredItemContainer) {
+                  /*TODO сейчас зачем то в ховеред итем хранится ссылка на DOM элемент
+                   * но этот элемент может теряться в ходе перерисовок. Выписана задача по которой мы будем
+                   * хранить только идентификатор и данный код станет не нужен*/
+                  hash = hoveredItemContainer.attr('data-hash');
+                  projItem = this._getItemsProjection().getByHash(hash);
+                  if (projItem) {
+                     hoveredItemContainer = this._getDomElementByItem(projItem);
+                  }
+               }
+
+               if(!containsHoveredItem) {
+                  if(!hoveredItemContainer) {
+                     this._mouseLeaveHandler();
+                  } else {
+                     this._updateHoveredItem(hoveredItemContainer);
+                  }
+               } else {
                   this._updateItemsToolbar();
                }
             }
@@ -1689,6 +1716,9 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notifyOnSizeChanged(true);
             this._drawResults();
             this._needToRedraw = true;
+            //После отрисовки оповещаем аккардеон что поменялись размеры и возможно нужно обновить fixed позиционирование
+            //TODO: выпилить в 3.7.4.100 когда будет независимый скролл аккардеона
+            $ws.single.EventBus.globalChannel().notify('ContentScrolling', null);
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
@@ -1858,7 +1888,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _scrollToItem: function(itemId) {
             ListView.superclass._scrollToItem.call(this, itemId);
-            var itemContainer = $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer());
+            var itemContainer = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
             //TODO: будет работать только если есть infiniteScrollContainer, нужно сделать просто scrollContainer так как подгрузки может и не быть
             if (this._options.infiniteScrollContainer && this._options.infiniteScrollContainer.length && itemContainer.length){
                this._options.infiniteScrollContainer[0].scrollTop = itemContainer[0].offsetTop;

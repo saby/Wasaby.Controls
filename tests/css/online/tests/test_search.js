@@ -32,5 +32,19 @@ gemini.suite('SBIS3.CONTROLS.Search Online', function () {
 			.capture('hovered_reset', function (actions) {
                 actions.mouseMove(this.reset);
             })
+			
+			.capture('disabled', function (actions) {
+                actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('SearchForm 1').setEnabled(false);
+                });
+            })
+			
+			.capture('disabled_and_hovered_button', function (actions) {
+                actions.mouseMove(this.send);
+            })
+			
+			.capture('disabled_and_hovered_reset', function (actions) {
+                actions.mouseMove(this.reset);
+            })
     });
 });

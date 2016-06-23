@@ -116,19 +116,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              *     <option name="editArrow" type="boolean">false</option>
              * </pre>
              */
-            editArrow: false,
-            /**
-             * @cfg {String} Разрешено или нет перемещение элементов "Drag-and-Drop"
-             * @variant "" Запрещено
-             * @variant allow Разрешено
-             * @variant onlyChangeOrder Разрешено только изменение порядка
-             * @variant onlyChangeParent Разрешено только перемещение в папку
-             * @example
-             * <pre>
-             *     <option name="itemsDragNDrop">onlyChangeParent</option>
-             * </pre>
-             */
-            itemsDragNDrop: 'allow'
+            editArrow: false
          },
          _dragStartHandler: undefined,
          _editArrow: undefined
@@ -148,15 +136,17 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (this._container.hasClass('controls-TreeDataGridView__withPhoto')){
             this._options._paddingSize = 42;
          }
+         if (this._options._serverRender) {
+            this._createAllFolderFooters();
+         }
+      },
+
+      redraw: function() {
+         TreeDataGridView.superclass.redraw.apply(this, arguments);
+         this._createAllFolderFooters();
       },
 
       _drawItemsCallback: function() {
-         $ws.helpers.forEach(this._options.openedPath, function(val, key) {
-            //Рисуем футер, только если узел есть в проекции, иначе он скрыт и футер рисовать не нужно
-            if (this._getItemProjectionByItemId(key)) {
-               this._createFolderFooter(key);
-            }
-         },this);
          this._updateEditArrow();
          TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
@@ -462,18 +452,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             else {
                this._activateItem(id);
             }
-         }
-      },
-      _notifyOnDragMove: function(target, insertAfter) {
-         //Если происходит изменение порядкового номера и оно разрешено или если происходит смена родителся и она разрешена, стрельнём событием
-         if (typeof insertAfter === 'boolean' && this._options.itemsDragNDrop !== 'onlyChangeParent' || insertAfter === undefined && this._options.itemsDragNDrop !== 'onlyChangeOrder') {
-            return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter) !== false;
-         }
-      },
-
-      _getDirectionOrderChange: function() {
-         if (this._options.itemsDragNDrop !== 'onlyChangeParent') {
-            return TreeDataGridView.superclass._getDirectionOrderChange.apply(this, arguments);
          }
       },
 

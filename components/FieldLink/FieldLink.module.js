@@ -406,10 +406,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
              /* Не надо обрабатывать приход фокуса, если у нас есть выбрынные
               элементы при единичном выборе, в противном случае, автодополнение будет посылать лишний запрос,
               хотя ему отображаться не надо. */
-             if(!this._options.multiselect && !this._isEmptySelection()) {
+             if(!this._needShowSuggest()) {
                 return false;
              }
              FieldLink.superclass._observableControlFocusHandler.apply(this, arguments);
+          },
+
+          _needShowSuggest: function() {
+             return !(!this._isEmptySelection() && !this._options.multiselect);
           },
 
           /**
@@ -542,10 +546,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @private
            */
           _onListItemSelect: function(id, item) {
-             this.hidePicker();
              /* Чтобы не было лишнего запроса на БЛ, добавим рекорд в набор выбранных */
              this.addSelectedItems(item instanceof Array ? item : [item]);
              this.setText('');
+             /* При выборе скрываем саггест, если он попадает под условия,
+                когда его не надо показывать см. _needShowSuggest */
+             if(!this._needShowSuggest()) {
+                this.hidePicker();
+             /* При выборе фокус могу перевести, надо проверить это */
+             } else if(this.isActive()) {
+                this._observableControlFocusHandler();
+             }
           },
 
 
