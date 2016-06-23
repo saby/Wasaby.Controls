@@ -506,6 +506,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                //Если мы не в ховер-моде, нужно отключить эту опцию, чтобы попап после клика сразу не схлапывался
                closeByExternalOver: this._options.mode === 'hover' && !this._options.multiselect,
                closeByExternalClick : true,
+               activableByClick: false,
                targetPart: true,
                template : MarkupTransformer(dotTplFnPicker)({
                   'multiselect' : this._options.multiselect,
