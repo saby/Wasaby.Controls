@@ -107,7 +107,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          doNext = true,
          item;
       while (doNext && (item = enumerator.getNext())) {
-         if (item.isNode() && !item.isExpanded()) {
+         // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
+         if (item.isNode() && !item.isExpanded() && projection.getCollection().getChildItems(item.getContents().getId(), undefined, projection.getParentProperty()).length) {
             item.setExpanded(true);
             doNext = false;
             expandAllItems(projection);
@@ -315,7 +316,17 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              * @see SBIS3.CONTROLS.ItemsControlMixin#itemsSortMethod
              * @see SBIS3.CONTROLS.ItemsControlMixin#setItemsSortMethod
              */
-            itemsSortMethod: _defaultItemsSortMethod
+            itemsSortMethod: _defaultItemsSortMethod,
+            /**
+             * @cfg {Boolean}
+             * Передавать ли в параметрах фильтрации параметр "ПутьКУзлу"
+             */
+            filterNodePath: false,
+            /**
+             * @cfg {Boolean}
+             * Передавать ли в параметрах фильтрации параметр "ЗаголовокИерархии"
+             */
+            filterHierarchyTitle: false
          },
          _foldersFooters: {},
          _breadCrumbs : [],
@@ -516,8 +527,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             filter[hierField].push(this.getCurrentRoot());
             filter[hierField] = filter[hierField].concat(Object.keys(this._options.openedPath));
          }
-         filter['ПутьКУзлу'] = true;
-         filter['ЗаголовокИерархии'] = this._options.displayField;
+         if(this._options.filterNodePath)
+            filter['ПутьКУзлу'] = true;
+         if(this._options.filterHierarchyTitle)
+            filter['ЗаголовокИерархии'] = this._options.displayField;
          return filter;
       },
       /**

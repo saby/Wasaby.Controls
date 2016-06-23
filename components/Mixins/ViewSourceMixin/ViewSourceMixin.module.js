@@ -77,6 +77,9 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
                var keyField = view.getProperty('keyField'),
                    recordSet;
 
+               /* Фильтр устанавливаем пораньше, чтобы запустилась синхронизация,
+                  и фильтры проставились в кнопку фильтров */
+               view.setFilter(queryFilter, true);
                view._toggleIndicator(false);
 
                if (keyField && keyField !== dataSet.getIdProperty()) {
@@ -91,7 +94,6 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
                });
 
                view.setDataSource(source, true);
-               view.setFilter(queryFilter, true);
                resultDef.callback(recordSet);
                //FIXME это временный придрод, уйдёт, как будет сделана отрисовка на сервере (3.7.3.200 - 3.7.4)
                view._notify('onDataLoad', recordSet);

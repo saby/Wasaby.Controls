@@ -3,22 +3,22 @@
 @globalDefaultFontSize:                         24px;
 @font-basic-size:                               @globalDefaultFontSize;
 @font-basic-line-height:                        24px;
+@data-grid-basic-height:                        44px;
 
 // data grid
 @default-itemHover-color:                       #E1ECF6;
-@data-grid-cell-height:                         44px;
+@data-grid-cell-height:                         @data-grid-basic-height;
 @data-grid-cell-padding:                        0 6px;
-@data-grid-columnValue-padding:                 8px 0;
 @data-grid-header-cell-font-size:               16px;
 @data-grid-header-cell-height:                  22px;
-@data-grid-cell-line-height:                    25px;
+@data-grid-cell-line-height:                    @data-grid-basic-height;
+@data-grid-checkbox-margin:                     2px 0 1px 3px;
 
 // tree view
 @font-folder-size:                              @globalDefaultFontSize;
-@tree-view-folder-title-margin:                 10px 0;
-@tree-view-expand-margin:                       10px 6px 8px 2px;
-@tree-view-editArrow-top:                       6px;
-@tree-view-ellipsis-wrapper-height:             40px;
+@tree-view-expand-margin:                       0 8px 8px 2px;
+@tree-view-editArrow-top:                       16px;
+@tree-view-ellipsis-wrapper-height:             @data-grid-basic-height;
 
 // back-button
 @menu-item-icon-top-offset:                     14px;
@@ -221,7 +221,7 @@
 @search-hover-border-color:                     @text-box-bottom-border-color;
 @search-bottom-border-color:                    @text-box-bottom-border-color;
 @search-form-disabled-border-bottom:            1px solid @text-box-disabled-border-bottom;
-@search-form-icon-padding:                      11px 8px 11px 0;
+@search-form-icon-padding:                      11px 0 0 0;
 @search-form-icon-disabled-display:             none;
 @search-loop-size:                              32px;
 @search-loop-padding:                           11px;
@@ -247,3 +247,7 @@
 @editdialog-applybutton-width:                  130px;
 @editdialog-template-minwidth:                  460px;
 
+//MoveDialog
+@controls-movedialog-activate-right:            65px;
+@controls-movedialog-activate-top:              10px;
+@controls-movedialog-min-width:                 455px;

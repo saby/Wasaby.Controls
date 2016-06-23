@@ -1045,11 +1045,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             switch(groupName) {
                case 'added':
                   //собираем добавленные элементы
-                  if (!afterItem || beforeItem === afterItem) {
+                  if (!afterItem) {
                      continue;
                   }
                   afterIndex = index;
-                  beforeIndex = Array.indexOf(before, afterItem, startFrom);
+                  beforeIndex = Array.indexOf(before, afterItem);
                   //если элемента не было - добавим его в список новых,
                   //если был - отдаем накопленный список новых, если там что-то есть
                   if (beforeIndex === -1) {
@@ -1063,11 +1063,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                
                case 'removed':
                   //собираем удаленные элементы
-                  if (!beforeItem || beforeItem === afterItem) {
+                  if (!beforeItem) {
                      continue;
                   }
                   beforeIndex = index;
-                  afterIndex = Array.indexOf(after, beforeItem, startFrom);
+                  afterIndex = Array.indexOf(after, beforeItem);
                   //если элемента не стало - добавим его в список старых,
                   //если остался - отдаем накопленный список старых, если там что-то есть
                   if (afterIndex === -1) {
@@ -1084,7 +1084,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                      continue;
                   }
                   afterIndex = index;
-                  beforeIndex = Array.indexOf(before, afterItem, startFrom);
+                  beforeIndex = Array.indexOf(before, afterItem);
                   //если элемент на месте, но изменилось его содержимое - добавим новый в список новых, а для старого генерим новую обертку, которую добавим в список старых
                   //если остался - отдаем накопленные списки старых и новых, если в них что-то есть
                   if (
@@ -1102,7 +1102,16 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                case 'moved':
                   //собираем перемещенные элементы
                   if (before.length !== after.length) {
-                     throw new Error('The "before" and "after" arrays are not synchronized by the length - "move" can\'t be applied.');
+                     //TODO: вернуть в 3.7.4.
+                     //throw new Error('The "before" and "after" arrays are not synchronized by the length - "move" can\'t be applied.');
+                     return {
+                        newItems: [],
+                        newItemsIndex: 0,
+                        oldItems: [],
+                        oldItemsIndex: 0,
+                        endAt: -1,
+                        offset: 0
+                     };
                   }
                   if (!beforeItem || beforeItem === afterItem) {
                      continue;

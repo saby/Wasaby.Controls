@@ -31,6 +31,12 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Online', function () {
 				actions.click(this.item2);
                 actions.click(this.box);
             })
+			
+			.capture('disabled', function (actions) {
+				actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('FastDataFilter').setEnabled(false);
+                });
+            })
     });
 
     gemini.suite('multiselect', function (test) {
@@ -69,6 +75,12 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Online', function () {
                 actions.wait(100);
                 actions.click(this.box);
                 actions.wait(100);
+            })
+			
+			.capture('disabled', function (actions) {
+				actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('FastDataFilter').setEnabled(false);
+                });
             })
     });
 

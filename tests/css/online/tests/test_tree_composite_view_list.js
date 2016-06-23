@@ -21,22 +21,22 @@ gemini.suite('SBIS3.CONTROLS.TreeCompositeViewList Online', function () {
 
             .capture('hovered_item', function (actions) {
                 actions.mouseMove(this.item6);
-				actions.wait(1000);
+				actions.wait(500);
             })
 
             .capture('selected_item', function (actions) {
                 actions.click(this.item6);
-				actions.wait(1000);
+				actions.wait(500);
             })
 			
 			.capture('hovered_folder', function (actions) {
                 actions.mouseMove(this.item4);
-				actions.wait(1000);
+				actions.wait(500);
             })
 
             .capture('selected_folder', function (actions) {
                 actions.click(this.item4_checker);
-				actions.wait(1000);
+				actions.wait(500);
             })
     });
 	
