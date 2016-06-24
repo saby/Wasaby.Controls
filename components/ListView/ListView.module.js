@@ -1700,8 +1700,12 @@ define('js!SBIS3.CONTROLS.ListView',
                    * хранить только идентификатор и данный код станет не нужен*/
                   hash = hoveredItemContainer.attr('data-hash');
                   projItem = this._getItemsProjection().getByHash(hash);
+                  /* Если в проекции нет элемента и этого элемента нет в DOM'e,
+                     но на него осталась jQuery ссылка, то надо её затереть */
                   if (projItem) {
                      hoveredItemContainer = this._getDomElementByItem(projItem);
+                  } else {
+                     hoveredItemContainer = null;
                   }
                }
 
