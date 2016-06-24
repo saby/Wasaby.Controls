@@ -131,7 +131,9 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          config.handlers = {
             onAfterClose: function (e, meta) {
                self._dialog = undefined;
-               self._notifyOnExecuted(meta, self._record);
+               // В виду того, что сейчас доступны две технологии работы с источником и сейчас не все перешли на новую - поддерживаем старую, забирая record из FloatArea
+               // Выпилить по задаче: https://inside.tensor.ru/opendoc.html?guid=21a3feb5-6431-42f0-9136-edad2206ca83&description=
+               self._notifyOnExecuted(meta, this._record || self._record);
                self._record = undefined;
             }
          };
