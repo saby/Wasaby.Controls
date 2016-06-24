@@ -112,7 +112,7 @@ gemini.suite('SBIS3.CONTROLS.EditAtPlace Online', function () {
 
 	gemini.suite('with_tabs_date_range', function (test) {
 
-        test.setUrl('/regression_edit_at_place_online_5.html').setTolerance(250).setCaptureElements('.capture')
+        test.setUrl('/regression_edit_at_place_online_5.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="TabControl"]', 40000);
