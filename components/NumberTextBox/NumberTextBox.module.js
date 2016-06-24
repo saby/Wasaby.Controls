@@ -162,12 +162,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          this._inputField.bind('blur', function(){
             // Прятать нулевую дробную часть при потере фокуса
             self._hideEmptyDecimals();
-         }).bind('focus', function(){
-            // Показывать нулевую дробную часть при фокусировки не зависимо от опции hideEmptyDecimals
-            if (self._options.hideEmptyDecimals) {
-               self._options.text = self._formatText(self._options.text);
-               $(this).val(self._options.text);
-            }
          });
 
          if (typeof this._options.numericValue === 'number' && !isNaN(this._options.numericValue)) {
@@ -177,6 +171,15 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          this._setNumericValue(this._options.text);
          this._inputField.val(this._options.text);
          this._hideEmptyDecimals();
+      },
+
+      _inputFocusInHandler: function() {
+         // Показывать нулевую дробную часть при фокусировки не зависимо от опции hideEmptyDecimals
+         if (this._options.hideEmptyDecimals) {
+            this._options.text = this._formatText(this._options.text);
+            this._inputField.val(this._options.text);
+         }
+         NumberTextBox.superclass._inputFocusInHandler.apply(this, arguments);
       },
 
       _checkMaxLength: function(value){
