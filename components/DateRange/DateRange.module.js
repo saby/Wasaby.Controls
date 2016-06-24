@@ -61,10 +61,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
             self._notify('onDateRangeChange', self._options.startDate, self._options.endDate);
          });
          this._datePickerStart.subscribe('onInputFinished', function() {
-            //TODO: курсор встаёт в поле только если ставить его асинхронно. Нужно разбираться почему.
-            setTimeout(function() {
-               self._datePickerEnd.setActive(true);
-            }, 0);
+            self._datePickerEnd.setActive(true);
          });
          this._datePickerEnd.subscribe('onDateChange', function(e, date) {
             self.clearMark();
