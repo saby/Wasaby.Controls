@@ -77,7 +77,8 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        */
       print: function () {
          var self = this;
-         this._prepareSerializer(rk('Печать записей...')).addCallback(function(reportText){
+         this._createLoadIndicator(rk('Печать записей...'));
+         this._prepareSerializer().addCallback(function(reportText){
             $ws.helpers.showHTMLForPrint({
                htmlText: reportText,
                minWidth : self._options.minWidth,
@@ -87,21 +88,10 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                      self._destroyLoadIndicator();
                   }
                }
-            }).addCallback(function(printDialog){
+            }).addCallback(function() {
                self._destroyLoadIndicator();
             });
          });
-      },
-      /**
-       * @deprecated метод unload переименован в exportData
-       * @param fileType - Имя объекта выгрузки (Например Excel)
-       * @param methodName - Име метода объекта выгрцзки (например Сохранить)
-       * @param fileName - Имя файла
-       * @param [cfg] Если задана конфигурация выгрузки, то в метод уйдет только заданная конфигурация (она же фильтр)
-       * @param useGET
-       */
-      unload: function (fileType, methodName, fileName, cfg, useGET) {
-         this.exportData(fileType, methodName, fileName, cfg, useGET);
       },
       /**
        * Выгрузить данные, создав HTML на клиенте через xslt-преобразоование
@@ -112,39 +102,35 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        * @param useGET
        */
       exportData: function (fileType, methodName, fileName, cfg, useGET) {
-         var self = this,
-            uniqueToken = ('' + Math.random()).substr(2)* 10;
+         var self = this;
          //fileName = idReport ? idReport : (isSaveColumns ? 'Выбранные столбцы' : 'Как на экране'), ??
          if (!cfg) {
-            this._prepareSerializer(rk('Подождите, идет выгрузка данных в') + ' ' + fileType).addCallback(function(reportText){
+            this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + fileType);
+            this._prepareSerializer().addCallback(function(reportText){
+               self._destroyLoadIndicator();
                $ws.helpers.saveToFile(fileType, methodName, {
                   'html': reportText,
-                  'Название': fileName,//idReport || Standart
-                  'fileDownloadToken': uniqueToken
-               }, undefined, useGET).addErrback(function(error){
-                  return error;
-               }).addBoth(function(){
-                  self._destroyLoadIndicator();
-               });
+                  'Название': fileName//idReport || Standart
+               }, undefined, useGET, fileType === "Excel");
             });
          } else {
             //TODO: В iOS не работает выгрузка с помощью POST запроса.
             //Возможно у нас что-то неверно сконфигурировано. Выписал задачу чтобы разобраться в этой ситуации:
             //https://inside.tensor.ru/opendoc.html?guid=03308a7c-ae3b-47c5-9c57-02a79adaf64b&description=
-            $ws.helpers.saveToFile(fileType, methodName, cfg, undefined, useGET || $ws._const.browser.isMobileIOS);
+            $ws.helpers.saveToFile(fileType, methodName, cfg, undefined, useGET || $ws._const.browser.isMobileIOS, fileType === "Excel");
          }
       },
       /**
        * Выгрузить данные с помощью готовой HTML-верстки
-       * @param fileName
+       * @param {String} fileName
        * @param {String} fileType PDF или Excel
-       * @param [methodName] - имя метода объекта fileType
-       * @param {Object} cfg - параметры метода methodName {FileName : имя файла, html: html верстка ввиде строки}
        * @param {number} pageOrientation 1 - потртетная, 2 - альбомная
        */
-      exportHTML: function(fileName, fileType, methodName, cfg, pageOrientation){
+      exportHTML: function(fileName, fileType, pageOrientation){
          var self = this;
-         this._prepareSerializer(rk('Подождите, идет выгрузка данных в') + ' ' + fileType).addCallback(function(reportText){
+         this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + fileType);
+         this._prepareSerializer().addCallback(function(reportText){
+            self._destroyLoadIndicator();
             var newCfg = {
                'FileName': fileName,
                'html': reportText
@@ -152,24 +138,18 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             if (fileType === "PDF") {
                newCfg.PageOrientation = typeof pageOrientation === 'number' ? pageOrientation : 1;
             }
-            self.exportFileTransfer(fileType, methodName || 'SaveHTML', cfg || newCfg).addErrback(function(error){
-               return error;
-            }).addBoth(function(){
-               self._destroyLoadIndicator();
-            });
+            self.exportFileTransfer(fileType, 'SaveHTML', newCfg);
 
          });
       },
       /**
        * Выгрузить данные в Excel или PDF по фильтру списочного метода
-       * @param fileName
+       * @param {String} fileName
        * @param {String} fileType PDF или Excel
-       * @param [methodName] имя метода объекта fileType
        * @param {Object} cfg - параметры метода methodName
        * @param {number} pageOrientation 1 - потртетная, 2 - альбомная
        */
-      exportList: function(fileName, fileType, methodName, cfg, pageOrientation){
-         var self = this;
+      exportList: function(fileName, fileType, cfg, pageOrientation){
          cfg = cfg || {};
          if (fileName) {
             cfg.FileName = fileName;
@@ -177,21 +157,17 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          if (pageOrientation) {
             cfg.PageOrientation = pageOrientation;
          }
-         this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + fileType);
-         this.exportFileTransfer(fileType, methodName || 'SaveList', cfg).addBoth(function(){
-            self._destroyLoadIndicator();
-         });
+         this.exportFileTransfer(fileType, 'SaveList', cfg);
       },
       /**
        * Выгрузить данные в Excel или PDF по набору данных
        * @param fileName
        * @param {String} fileType PDF или Excel
-       * @param [methodName] - имя метода объекта fileType
        * @param {Object} cfg - параметры метода methodName
        * @param {number} pageOrientation 1 - потртетная, 2 - альбомная
        */
-      exportDataSet: function(fileName, fileType, methodName, cfg, pageOrientation){
-         var self = this,
+      exportDataSet: function(fileName, fileType, cfg, pageOrientation){
+         var
             columns  = $ws.core.clone(this._options.columns),
             records,
             rawData  = {s : [], d : []},
@@ -223,10 +199,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             }
          }
 
-         this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + fileType);
-         this.exportFileTransfer(fileType, methodName || 'SaveRecordSet', cfg).addBoth(function(){
-            self._destroyLoadIndicator();
-         });
+         this.exportFileTransfer(fileType, 'SaveRecordSet', cfg);
       },
       /**
        * Универсальная выгрузка данных через сервис file-transfer
@@ -237,15 +210,23 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        */
       exportFileTransfer: function(object, methodName, cfg){
          var self = this,
+             exportDeferred,
              source = new SbisService({
                 endpoint: object
             });
-         return source.call(methodName, cfg).addCallback(function(ds){
-            self.downloadFile(ds.getScalar());
-         }).addErrback(function (error){
+         exportDeferred = source.call(methodName, cfg).addErrback(function(error) {
             $ws.single.ioc.resolve('ILogger').log(rk('DataProcessor. Ошибка выгрузки данных'), error.details);
             return error;
          });
+         if (object !== "Excel") {
+            this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + object);
+            exportDeferred.addCallback(function(ds) {
+               self.downloadFile(ds.getScalar());
+            }).addBoth(function() {
+               self._destroyLoadIndicator();
+            });
+         }
+         return exportDeferred;
       },
       /**
        * Загрузить файл по готовому id
@@ -318,12 +299,11 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          }
          return cfg;
       },
-      _prepareSerializer: function(title){
+      _prepareSerializer: function(){
          var serializer = new Serializer({
                   columns: this._options.columns,
                   report: this._options.report
                });
-         this._createLoadIndicator(title);
          return serializer.prepareReport(this._options.xsl, this._options.dataSet);
       },
       _createLoadIndicator: function (message) {
