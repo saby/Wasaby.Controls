@@ -107,7 +107,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          doNext = true,
          item;
       while (doNext && (item = enumerator.getNext())) {
-         if (item.isNode() && !item.isExpanded()) {
+         // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
+         if (item.isNode() && !item.isExpanded() && projection.getCollection().getChildItems(item.getContents().getId(), undefined, projection.getParentProperty()).length) {
             item.setExpanded(true);
             doNext = false;
             expandAllItems(projection);
@@ -860,6 +861,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       setCurrentRoot: function(key) {
          var
             filter = this.getFilter() || {};
+         // todo Удалить при отказе от режима "hover" у редактирования по месту [Image_2016-06-23_17-54-50_0108] https://inside.tensor.ru/opendoc.html?guid=5bcdb10f-9d69-49a0-9807-75925b726072&description=
+         this._destroyEditInPlace();
          if (key !== undefined && key !== null) {
             filter[this._options.hierField] = key;
          } else {

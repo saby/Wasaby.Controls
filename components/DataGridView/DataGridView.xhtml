@@ -8,7 +8,6 @@
          </div>
       </div>
    </div>
-   <div class="controls-ListView-scrollIndicator ws-hidden{{?it.infiniteScroll === 'up'}} controls-ListView-scrollIndicator__up {{?}}"></div>
    <table class="controls-DataGridView__table {{?it.fixedHeader}}ws-fixed-header__table{{?}}">
       <tbody class="controls-DataGridView__tbody"></tbody>
       <tfoot class="controls-DataGridView__tfoot">
@@ -20,5 +19,6 @@
    {{? it.showPaging}}
       <div class="controls-Pager-container"></div>
    {{?}}
+   <div class="controls-ListView-scrollIndicator ws-hidden{{?it.infiniteScroll === 'up'}} controls-ListView-scrollIndicator__up {{?}}"></div>
    <div class="controls-ListView__ItemsToolbar-container ws-hidden"></div>
 </div>

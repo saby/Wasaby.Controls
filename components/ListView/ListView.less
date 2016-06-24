@@ -76,6 +76,12 @@
          background-image: url('img/ajax-loader-indicator.gif'), linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0.7) 50%,rgba(255,255,255,0.69) 51%,rgba(255,255,255,0) 100%);
       }
    }
+   &.controls-ListView__outside-scroll-loader{
+      .controls-ListView-scrollIndicator{
+         position: relative;
+      }
+   }
+
    &.controls-ListView__showCheckBoxes {
       .controls-ListView__itemCheckBox {
          background: @check-box-icon-bg;
