@@ -1,6 +1,6 @@
 /*global $ws, define*/
 define('js!SBIS3.CONTROLS.MultiSelectableNew', [
-   'js!WS.Data.Utils'
+   'js!WS.Data/Utils'
 ], function(Utils) {
 
    /**

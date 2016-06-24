@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.Demo.MyTreeDataGridView',
     [
         'js!SBIS3.CORE.CompoundControl',
-        'js!WS.Data.Source.Memory',
+        'js!WS.Data/Source/Memory',
         'js!SBIS3.CONTROLS.ComponentBinder',
         'html!SBIS3.CONTROLS.Demo.MyTreeDataGridView',
         'css!SBIS3.CONTROLS.Demo.MyTreeDataGridView',

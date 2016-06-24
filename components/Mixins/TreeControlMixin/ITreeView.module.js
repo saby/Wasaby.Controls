@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.TreeControl.ITreeView', [], function () {
 
       /**
        * Перерисовывает узел целиком
-       * @param {WS.Data.Display.TreeItem} node Узел
+       * @param {WS.Data/Display/TreeItem} node Узел
        */
       renderNode: function (node) {
          throw new Error('Method must be implemented');
@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.TreeControl.ITreeView', [], function () {
 
       /**
        * Разворачивает/сворачивает узел дерева
-       * @param {WS.Data.Display.TreeItem} node Узел
+       * @param {WS.Data/Display/TreeItem} node Узел
        * @param {Boolean} expanded Узел развернут
        */
       setNodeExpanded: function (node, expanded) {

@@ -66,7 +66,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             if (items instanceof Array) {
                rawData = items;
             }
-            if (!rawData && $ws.helpers.instanceOfModule(items,'WS.Data.Collection.RecordSet')) {
+            if (!rawData && $ws.helpers.instanceOfModule(items,'WS.Data/Collection/RecordSet')) {
                rawData = items.getRawData();
             }
             if (!rawData) {

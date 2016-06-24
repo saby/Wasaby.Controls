@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
-   'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data.Display.Tree'], function (BreadCrumbs, groupByTpl, TreeProjection) {
+   'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree'], function (BreadCrumbs, groupByTpl, TreeProjection) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -909,7 +909,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       getParentKey: function (DataSet, item) {
          var
             itemParent = this._options._itemsProjection.getItemBySourceItem(item).getParent().getContents();
-         return $ws.helpers.instanceOfModule(itemParent, 'WS.Data.Entity.Record') ? itemParent.getId() : itemParent;
+         return $ws.helpers.instanceOfModule(itemParent, 'WS.Data/Entity/Record') ? itemParent.getId() : itemParent;
       },
 
       _dropPageSave: function(){

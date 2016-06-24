@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', ['js!SBIS3.CONTROLS.Utils.KbLayo
       },
 
       _chooseCallback: function(result) {
-         if(result && $ws.helpers.instanceOfModule(result[0], 'WS.Data.Entity.Model')) {
+         if(result && $ws.helpers.instanceOfModule(result[0], 'WS.Data/Entity/Model')) {
             var item = result[0];
             this._onListItemSelect(item.getId(), item);
          }

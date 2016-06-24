@@ -1,7 +1,7 @@
 /* global define, $ws */
 
 define('js!SBIS3.CONTROLS.SelectableNew', [
-   'js!WS.Data.Utils'
+   'js!WS.Data/Utils'
 ], function (Utils) {
    'use strict';
 
@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
          _onProjectionCurrentChange: null,
 
          /**
-          * @var {WS.Data.Display.CollectionEnumerator} Служебный энумератор
+          * @var {WS.Data/Display/CollectionEnumerator} Служебный энумератор
           */
          _utilityEnumerator: undefined
       },
@@ -136,7 +136,7 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
        * @see getSelectedKey
        */
       setSelectedKey: function(id) {
-         if ($ws.helpers.instanceOfMixin(this._items, 'WS.Data.Collection.LoadableListMixin') && !this._items.isLoaded()) {
+         if ($ws.helpers.instanceOfMixin(this._items, 'WS.Data/Collection/LoadableListMixin') && !this._items.isLoaded()) {
             var self = this;
             this._items.once('onAfterLoadedApply', function (){
                self._setSelectedKey(id);
@@ -297,8 +297,8 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
     * Обработчк события изменения текущего элемента проекции
     * @param {$ws.proto.EventObject} event Дескриптор события.
     * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-    * @param {WS.Data.Display.CollectionItem} newCurrent Новый текущий элемент
-    * @param {WS.Data.Display.CollectionItem} oldCurrent Старый текущий элемент
+    * @param {WS.Data/Display/CollectionItem} newCurrent Новый текущий элемент
+    * @param {WS.Data/Display/CollectionItem} oldCurrent Старый текущий элемент
     * @param {Number} newPosition Новая позиция
     * @param {Number} oldPosition Старая позиция
     */

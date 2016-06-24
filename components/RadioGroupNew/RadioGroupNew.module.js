@@ -6,7 +6,7 @@
 
 define('js!SBIS3.CONTROLS.RadioGroupNew', [
    'js!SBIS3.CONTROLS.RadioGroupBaseNew',
-   'js!WS.Data.Utils',
+   'js!WS.Data/Utils',
    'html!SBIS3.CONTROLS.RadioGroup',
    'js!SBIS3.CONTROLS.RadioButton'
 ], function(RadioGroupBase, Utils, dotTpl) {

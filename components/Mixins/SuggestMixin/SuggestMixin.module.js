@@ -565,7 +565,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
       /**
        * Возвращает dataSet списка, если список уже инициализирован
-       * @returns {WS.Data.Collection.List|undefined}
+       * @returns {WS.Data/Collection/List|undefined}
        * @private
        */
       _getListItems: function() {

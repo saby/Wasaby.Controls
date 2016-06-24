@@ -1,6 +1,6 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.DisplayFieldMixin', [
-   'js!WS.Data.Utils'
+   'js!WS.Data/Utils'
 ], function (Utils) {
    'use strict';
 

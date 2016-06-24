@@ -1,14 +1,14 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.PagerMore', [
    'js!SBIS3.CORE.CompoundControl',
-   'js!WS.Data.Collection.ISourceLoadable',
+   'js!WS.Data/Collection/ISourceLoadable',
    'html!SBIS3.CONTROLS.PagerMore',
    'i18n!SBIS3.CONTROLS.PagerMore'
 ], function(CompoundControl, ISourceLoadable, dotTplFn) {
    'use strict';
 
    /**
-    * Пейдер - загружает записи в коллекцию c реализацией интерфейса WS.Data.Collection.ISourceLoadable постранично
+    * Пейдер - загружает записи в коллекцию c реализацией интерфейса WS.Data/Collection/ISourceLoadable постранично
     * @class SBIS3.CONTROLS.PagerMore
     * @extends $ws.proto.CompoundControl
     * @public
@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
       $protected: {
          _options: {
             /**
-             * @cfg {WS.Data.Collection.ISourceLoadable} Коллекция, в которую загружаются записи
+             * @cfg {WS.Data/Collection/ISourceLoadable} Коллекция, в которую загружаются записи
              * @name items
              */
 
@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
          },
          
          /**
-          * @var {WS.Data.Collection.ISourceLoadable} Коллекция, в которую загружаются записи
+          * @var {WS.Data/Collection/ISourceLoadable} Коллекция, в которую загружаются записи
           */
          _items: undefined,
 
@@ -138,7 +138,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
 
       /**
        * Возвращает коллекцию, в которую загружаются записи
-       * @returns {WS.Data.Collection.ISourceLoadable}
+       * @returns {WS.Data/Collection/ISourceLoadable}
        * @see items
        * @see setItems
        */
@@ -148,14 +148,14 @@ define('js!SBIS3.CONTROLS.PagerMore', [
 
       /**
        * Устанавливает коллекцию, в которую загружаются записи
-       * @param {WS.Data.Collection.ISourceLoadable} items Коллекция
+       * @param {WS.Data/Collection/ISourceLoadable} items Коллекция
        * @see items
        * @see getItems
        */
       setItems: function(items) {
          this._unsubscribeItems();
 
-         if (items && $ws.helpers.instanceOfModule(items, 'WS.Data.Display.TreeItem')) {
+         if (items && $ws.helpers.instanceOfModule(items, 'WS.Data/Display/TreeItem')) {
             items = items.getChildren();
          }
          this._items = items;
@@ -239,7 +239,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
             return;
          }
          
-         if ($ws.helpers.instanceOfMixin(this._items, 'WS.Data.Query.IQueryable')) {
+         if ($ws.helpers.instanceOfMixin(this._items, 'WS.Data/Query/IQueryable')) {
             this._items.getQuery()
                .offset(this._getOffset())
                .limit(this._options.pageSize);
@@ -260,7 +260,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
        */
       _loadAttempt: function() {
          if (!this._options.items ||
-            !$ws.helpers.instanceOfMixin(this._items, 'WS.Data.Collection.ISourceLoadable') ||
+            !$ws.helpers.instanceOfMixin(this._items, 'WS.Data/Collection/ISourceLoadable') ||
             this._isItemsLoading
          ) {
             return;

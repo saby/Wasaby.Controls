@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CORE.CompoundActiveFixMixin',
       'js!SBIS3.CONTROLS.ItemsControlMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
-      'js!WS.Data.Query.Query',
+      'js!WS.Data/Query/Query',
       'js!SBIS3.CONTROLS.Selectable',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.DecorableMixin',
@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.EditInPlaceClickController',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.ScrollWatcher',
-      'js!WS.Data.Collection.IBind',
+      'js!WS.Data/Collection/IBind',
       'i18n!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
       'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
@@ -175,7 +175,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * @event onBeginAdd Возникает перед началом добавления записи по месту
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @returns {Object|WS.Data.Entity.Model} Данные которые попадут в поля созданного элемента.
+          * @returns {Object|WS.Data/Entity/Model} Данные которые попадут в поля созданного элемента.
           */
          /**
           * @event onAfterBeginEdit Возникает после начала редактирования (при непосредственном его начале)
@@ -185,7 +185,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * @event onEndEdit Возникает перед окончанием редактирования (и перед валидацией области редактирования).
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {WS.Data.Entity.Model} model Редактируемая модель.
+          * @param {WS.Data/Entity/Model} model Редактируемая модель.
           * @param {Boolean} withSaving Признак, по которому определяют тип завершения редактирования.
           * true - редактирование завершается сохранением изменений; false - отмена сохранения изменений путём нажатия клавиши Esc или переводом фокуса на другой контрол.
           * @returns {*} Возможные значения:
@@ -400,7 +400,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Аргументы функции:
                 * <ol>
                 *    <li>id - идентификатор элемента коллекции - строки, по которой был произведён клик.</li>
-                *    <li>item - элемент коллекции, по строке отображения которого был произведён клик; экземпляр класса {@link WS.Data.Entity.Record} с данными выбранной записи.</li>
+                *    <li>item - элемент коллекции, по строке отображения которого был произведён клик; экземпляр класса {@link WS.Data/Entity/Record} с данными выбранной записи.</li>
                 *    <li>target - контейнер визуального отображения (DOM-элемент) строки, по которой был произведён клик.</li>
                 * </ol>
                 * Установить или заменить функцию - обработчик клика на строку можно с помощью метода {@link setElemClickHandler}
@@ -2245,7 +2245,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @property {String} [parentId] Идентификатор узла, в котором будет происходить добавление.
           * @property {String} [addPosition = bottom] Расположение строки с добавлением по месту.
           * Опция может принимать значение 'top' или 'bottom'.
-          * @property {WS.Data.Entity.Model|Object} [model] Модель элемента коллекции, значения полей которой будут использованы при создании нового элемента.
+          * @property {WS.Data/Entity/Model|Object} [model] Модель элемента коллекции, значения полей которой будут использованы при создании нового элемента.
           * В упрощенном варианте можно передать объект, свойствами которого будут поля создаваемого элемента коллекции. Например, установим создание нового элемента с предопределенным значением поля 'Наименование':
           * <pre>
           * {
@@ -2286,7 +2286,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @remark
           * Используется для активации редактирования по месту без клика пользователя по элементу коллекции.
           * При выполнении команды происходят события {@link onBeginEdit} и {@link onAfterBeginEdit}.
-          * @param {WS.Data.Entity.Model} record Элемент коллекции, для которого требуется активировать редактирование по месту.
+          * @param {WS.Data/Entity/Model} record Элемент коллекции, для которого требуется активировать редактирование по месту.
           * @example
           * <pre>
           *    myListView.sendCommand('beginEdit', record);

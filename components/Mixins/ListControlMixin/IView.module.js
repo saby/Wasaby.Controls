@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.ListControl.IView', [], function () {
 
       /**
        * Отрисовывает представление
-       * @param {WS.Data.Display.Collection} items Проекция коллекции
+       * @param {WS.Data/Display/Collection} items Проекция коллекции
        */
       render: function (items) {
          throw new Error('Method must be implemented');
@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.ListControl.IView', [], function () {
       },
       /**
        * Добавляет элемент в представление
-       * @param {WS.Data.Display.CollectionItem} item Элемент
+       * @param {WS.Data/Display/CollectionItem} item Элемент
        * @param {Number} at Позиция, в которую добавляется элемент
        */
       addItem: function (item, at) {
@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.ListControl.IView', [], function () {
 
       /**
        * Обновляет элемент в представлении
-       * @param {WS.Data.Display.CollectionItem} item Элемент
+       * @param {WS.Data/Display/CollectionItem} item Элемент
        */
       updateItem: function (item) {
          throw new Error('Method must be implemented');
@@ -103,7 +103,7 @@ define('js!SBIS3.CONTROLS.ListControl.IView', [], function () {
 
       /**
        * Удаляет элемент
-       * @param {WS.Data.Display.CollectionItem} item Элемент
+       * @param {WS.Data/Display/CollectionItem} item Элемент
        */
       removeItem: function (item) {
          throw new Error('Method must be implemented');
@@ -111,7 +111,7 @@ define('js!SBIS3.CONTROLS.ListControl.IView', [], function () {
 
       /**
        * Перемещает элемент
-       * @param {WS.Data.Display.CollectionItem} item Элемент
+       * @param {WS.Data/Display/CollectionItem} item Элемент
        * @param {Number} to Позиция, на которую переместить
        */
       moveItem: function (item, to) {
@@ -120,7 +120,7 @@ define('js!SBIS3.CONTROLS.ListControl.IView', [], function () {
 
       /**
        * Отображает элемент в выделенном состоянии
-       * @param {WS.Data.Display.CollectionItem} item Элемент
+       * @param {WS.Data/Display/CollectionItem} item Элемент
        */
       selectItem: function (item) {
          throw new Error('Method must be implemented');
@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS.ListControl.IView', [], function () {
 
       /**
        * Отображает элемент в состоянии "под указателем"
-       * @param {WS.Data.Display.CollectionItem} item Элемент
+       * @param {WS.Data/Display/CollectionItem} item Элемент
        */
       hoverItem: function (item) {
          throw new Error('Method must be implemented');
@@ -136,7 +136,7 @@ define('js!SBIS3.CONTROLS.ListControl.IView', [], function () {
 
       /**
        * Прокручивает список к элементу
-       * @param {WS.Data.Display.CollectionItem} item Элемент
+       * @param {WS.Data/Display/CollectionItem} item Элемент
        */
       scrollToItem: function (item) {
          throw new Error('Method must be implemented');
@@ -160,7 +160,7 @@ define('js!SBIS3.CONTROLS.ListControl.IView', [], function () {
 
       /**
        * Отображает индикатор загрузки
-       * @param {WS.Data.Display} target Коллекция, содержимое которой загружается
+       * @param {WS.Data/Display} target Коллекция, содержимое которой загружается
        */
       showLoadingIndicator: function () {
          throw new Error('Method must be implemented');
@@ -168,7 +168,7 @@ define('js!SBIS3.CONTROLS.ListControl.IView', [], function () {
 
       /**
        * Скрывает индикатор загрузки
-       * @param {WS.Data.Display} target Коллекция, содержимое которой загрузилось
+       * @param {WS.Data/Display} target Коллекция, содержимое которой загрузилось
        */
       hideLoadingIndicator: function () {
          throw new Error('Method must be implemented');
@@ -176,7 +176,7 @@ define('js!SBIS3.CONTROLS.ListControl.IView', [], function () {
 
       /**
        * Возвращает узел DOM под pager
-       * @param {WS.Data.Display} items Проекция коллекции
+       * @param {WS.Data/Display} items Проекция коллекции
        * @returns {jQuery}
        */
       getPagerContainer: function (items) {

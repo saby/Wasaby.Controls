@@ -120,7 +120,7 @@ define('js!SBIS3.CONTROLS.ListControl', [
             var contents = item.getContents();
             this._options.elemClickHandler.call(
                this,
-               contents && $ws.helpers.instanceOfModule(contents, 'WS.Data.Entity.Model') ? contents.getId() : undefined,
+               contents && $ws.helpers.instanceOfModule(contents, 'WS.Data/Entity/Model') ? contents.getId() : undefined,
                item
             );
          }

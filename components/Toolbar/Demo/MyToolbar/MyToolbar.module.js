@@ -1,8 +1,8 @@
 define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Demo.MyToolbar',
-   'js!WS.Data.Collection.List',
-   'js!WS.Data.Collection.RecordSet',
+   'js!WS.Data/Collection/List',
+   'js!WS.Data/Collection/RecordSet',
    'css!SBIS3.CONTROLS.Demo.MyToolbar',
    'js!SBIS3.CONTROLS.Toolbar',
    'js!SBIS3.CONTROLS.TextArea',

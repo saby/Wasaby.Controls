@@ -5,7 +5,7 @@
 define('js!SBIS3.CONTROLS.CheckBoxGroupNew', [
       'js!SBIS3.CONTROLS.CheckBoxGroupBaseNew',
       'html!SBIS3.CONTROLS.CheckBoxGroup',
-      'js!WS.Data.Utils',
+      'js!WS.Data/Utils',
       'js!SBIS3.CONTROLS.CheckBox'
    ],
    function(CheckBoxGroupBase, dotTplFn, Utils) {

@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {String} cellTemplate Шаблон отображения ячейки
              * Данные, которые передаются в cellTemplate:
              * <ol>
-             *    <li>item - отрисовываемая запись {@link WS.Data.Entity.Record}</li>
+             *    <li>item - отрисовываемая запись {@link WS.Data/Entity/Record}</li>
              *    <li>hierField - поле иерархии</li>
              *    <li>isNode - является ли узлом</li>
              *    <li>decorators - объект декораторов</li>

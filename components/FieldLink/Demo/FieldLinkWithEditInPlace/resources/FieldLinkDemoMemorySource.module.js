@@ -1,10 +1,10 @@
 define('js!SBIS3.CONTROLS.Demo.FieldLinkMemorySource', [
-   'js!WS.Data.Source.Memory'
+   'js!WS.Data/Source/Memory'
 ], function (MemorySource) {
    /**
     * SBIS3.CONTROLS.Demo.FieldLinkMemorySource
     * @class SBIS3.CONTROLS.Demo.FieldLinkMemorySource
-    * @extends WS.Data.Source.Memory
+    * @extends WS.Data/Source/Memory
     * @control
     */
    var FieldLinkMemorySource = MemorySource.extend(/** @lends SBIS3.CONTROLS.Demo.FieldLinkMemorySource.prototype */{

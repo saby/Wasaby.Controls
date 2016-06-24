@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        * @event onSetRoot Происходит при загрузке данных и перед установкой корня иерархии.
        * @remark
        * При каждой загрузке данных, например вызванной методом {@link SBIS3.CONTROLS.ListView#reload}, происходит событие onSetRoot.
-       * В этом есть необходимость, потому что в переданных данных может быть установлен новый path - путь для хлебных крошек (см. {@link WS.Data.Collection.RecordSet#meta}).
+       * В этом есть необходимость, потому что в переданных данных может быть установлен новый path - путь для хлебных крошек (см. {@link WS.Data/Collection/RecordSet#meta}).
        * Хлебные крошки не перерисовываются, так как корень не поменялся.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String|Number|Null} curRoot Идентификатор узла, который установлен в качестве текущего корня иерархии.
@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        *    <li>parent - идентификатор предыдущего узла иерархии;</li>
        *    <li>title - значение поля отображения (см. {@link SBIS3.CONTROLS.DSMixin#displayField});</li>
        *    <li>color - значение поля записи, хранящее данные об отметке цветом (см. {@link SBIS3.CONTROLS.DecorableMixin#colorField});</li>
-       *    <li>data - запись узла иерархии, экземпляр класса {@link WS.Data.Entity.Record}.</li>
+       *    <li>data - запись узла иерархии, экземпляр класса {@link WS.Data/Entity/Record}.</li>
        * </ul>
        * @see onBeforeSetRoot
        */
@@ -162,8 +162,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       },
       /**
        * Возвращает идентификатор родительской записи.
-       * @param {WS.Data.Collection.RecordSet} DataSet Набор данных.
-       * @param {WS.Data.Entity.Record} record Запись, для которой нужно определить идентификатор родителя.
+       * @param {WS.Data/Collection/RecordSet} DataSet Набор данных.
+       * @param {WS.Data/Entity/Record} record Запись, для которой нужно определить идентификатор родителя.
        * @returns {*|{d: Array, s: Array}|String|Number}
        */
       getParentKey: function (DataSet, record) {

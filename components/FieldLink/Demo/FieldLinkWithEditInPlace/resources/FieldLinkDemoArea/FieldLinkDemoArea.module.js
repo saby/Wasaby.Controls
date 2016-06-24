@@ -3,8 +3,8 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoArea', [
    'html!SBIS3.CONTROLS.Demo.FieldLinkDemoArea',
    'js!SBIS3.CONTROLS.DataGridView',
    'js!SBIS3.CONTROLS.Demo.FieldLinkDemoMemory',
-   'js!WS.Data.Entity.Model',
-   'js!WS.Data.Adapter.Sbis',
+   'js!WS.Data/Entity/Model',
+   'js!WS.Data/Adapter/Sbis',
    'css!SBIS3.CONTROLS.Demo.FieldLinkDemoArea',
    'js!SBIS3.CONTROLS.FieldLink'
 ], function(CompoundControl, dotTplFn, DataGridView, FieldLinkDemoMemory, Model, SbisAdapter) {

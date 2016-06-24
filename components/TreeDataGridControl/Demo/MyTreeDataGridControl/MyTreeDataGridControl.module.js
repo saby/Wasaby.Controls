@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.Demo.MyTreeDataGridControl', [
    'html!SBIS3.CONTROLS.Demo.MyTreeDataGridControl/resources/CellTemplate',
    'css!SBIS3.CONTROLS.Demo.MyTreeDataGridControl',
    'js!SBIS3.CONTROLS.TreeDataGridControl',
-   'js!WS.Data.Source.Memory'
+   'js!WS.Data/Source/Memory'
 ], function(CompoundControl, ComponentBinder, dotTplFn) {
    /**
     * SBIS3.CONTROLS.Demo.MyTreeDataGridControl

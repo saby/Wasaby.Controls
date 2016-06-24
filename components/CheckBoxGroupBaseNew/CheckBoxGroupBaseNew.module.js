@@ -5,7 +5,7 @@
 define('js!SBIS3.CONTROLS.CheckBoxGroupBaseNew', [
    'js!SBIS3.CONTROLS.ButtonGroupBaseDSNew',
    'js!SBIS3.CONTROLS.MultiSelectableNew',
-   'js!WS.Data.Utils'
+   'js!WS.Data/Utils'
 ], function(ButtonGroupBase, MultiSelectable, Utils) {
 
    'use strict';

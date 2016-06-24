@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
    'js!SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator',
-   'js!WS.Data.Utils'
+   'js!WS.Data/Utils'
 ], function (AbstractDecorator, Utils) {
    'use strict';
 

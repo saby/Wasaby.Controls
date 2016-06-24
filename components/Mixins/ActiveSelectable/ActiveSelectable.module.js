@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 24.11.2015.
  */
-define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!WS.Data.Entity.Model'], function(Model) {
+define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!WS.Data/Entity/Model'], function(Model) {
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента
     * @mixin SBIS3.CONTROLS.ActiveSelectable
@@ -13,8 +13,8 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!WS.Data.Entity.Model'], functi
       $protected: {
          _options: {
             /**
-             * @cfg {WS.Data.Entity.Model} Устанавливает выбранным элемент коллекции по переданному экземпляру класса.
-             * Устанавливает экземпляр класса {@link WS.Data.Entity.Model} с данными выбранной записи.
+             * @cfg {WS.Data/Entity/Model} Устанавливает выбранным элемент коллекции по переданному экземпляру класса.
+             * Устанавливает экземпляр класса {@link WS.Data/Entity/Model} с данными выбранной записи.
              * Опция актуальна, когда контрол находится в режиме единичного выбора значений.
              * @see setSelectedItem
              * @see getSelectedItem
@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!WS.Data.Entity.Model'], functi
       },
       /**
        * Устанавливает выбранный элемент коллекции.
-       * @param {WS.Data.Entity.Model} item Выбранный элемент коллекции.
+       * @param {WS.Data/Entity/Model} item Выбранный элемент коллекции.
        * @example
        * <pre>
        *     var selItem = this.getChildControlByName('MyControl').getSelectedItem();
@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!WS.Data.Entity.Model'], functi
       /**
        * Возвращает выбранный элемент коллекции.
        * @param loadItem загружать ли запись, если о ней нет информации в dataSet
-       * @returns {null|WS.Data.Entity.Model}
+       * @returns {null|WS.Data/Entity/Model}
        * @example
        * <pre>
        *     var myItem = this.getChildControlByName('MyControl').getSelectedItem();

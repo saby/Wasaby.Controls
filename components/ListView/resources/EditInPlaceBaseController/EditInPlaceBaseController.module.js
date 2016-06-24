@@ -6,8 +6,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    [
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.EditInPlace',
-      'js!WS.Data.Entity.Model',
-      'js!WS.Data.Di'
+      'js!WS.Data/Entity/Model',
+      'js!WS.Data/Di'
    ],
    function (CompoundControl, EditInPlace, Model, Di) {
 
