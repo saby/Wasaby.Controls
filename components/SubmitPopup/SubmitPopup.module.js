@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
     */
    function(InformationPopup, template){
       'use strict';
-      var module = InformationPopup.extend({
+      var module = InformationPopup.extend( /** @lends SBIS3.CONTROLS.SubmitPopup.prototype */ {
          $protected: {
             _options: {
                /**

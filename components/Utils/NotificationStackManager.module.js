@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
       //Отступ справа
       var RIGHT = 16;
 
-      var module = Control.Control.extend({
+      var module = Control.Control.extend( /** @lends SBIS3.CONTROLS.Utils.NotificationStackManager.prototype */ {
          $protected: {
             _options: {
 

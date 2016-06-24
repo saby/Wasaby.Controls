@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.InformationPopup',
     */
    function(CompoundControl, PopupMixin, dotTpl){
       'use strict';
-      var module = CompoundControl.extend([PopupMixin], {
+      var module = CompoundControl.extend([PopupMixin], /** @lends SBIS3.CONTROLS.InformationPopup.prototype */ {
          _dotTplFn : dotTpl,
          $protected: {
             _options: {

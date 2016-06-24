@@ -175,6 +175,9 @@
                <li>
                   <div id="FilterButtonHistory"></div>
                </li>
+               <li>
+                  <div id="InformationWindows"></div>
+               </li>
             </ul>
          </td>
          <td>
@@ -518,7 +521,14 @@
                caption: 'FilterButtonHistory',
                href: '/pages/FilterButtonHistory.html'
             })
-         }); 
+         });
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "InformationWindows",
+               caption: 'InformationWindows',
+               href: '/pages/informationWindows.html'
+            })
+         });
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
                element: "VD_ListView",

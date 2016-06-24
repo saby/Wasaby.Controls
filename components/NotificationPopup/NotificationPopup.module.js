@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
     */
    function(InformationPopup, template, headerTpl){
       'use strict';
-      var module = InformationPopup.extend({
+      var module = InformationPopup.extend( /** @lends SBIS3.CONTROLS.NotificationPopup.prototype */ {
          $protected: {
             _options: {
 
