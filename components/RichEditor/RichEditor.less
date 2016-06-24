@@ -87,23 +87,23 @@
       word-wrap: break-word;
    }
 
-}
-.controls-RichEditor__DataReview {
-   z-index: 1;
-   width: 100%;
-   height: 100%;
-   overflow-y: auto;
-   padding-top: 6px;
-   :first-child {
-      margin-top: 8px /* 8 = 6(как отступ у ws-editor-frame) +1(border ws-editor-frame) +1(border контрола) */;
+   .controls-RichEditor__DataReview {
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      padding: 6px 0 0 4px; /* отступы у параграфов через padding родительского блока без first-child */
+      border: 1px solid transparent;
+      box-sizing: border-box;
+   }
+   .controls-RichEditor__EditorFrame.ws-basic-style {
+      overflow: auto;
+      padding: 6px 0 0 4px;
+      box-sizing: border-box;
+      word-wrap: break-word;
    }
 }
-.controls-RichEditor__EditorFrame.ws-basic-style {
-   overflow: auto;
-   padding: 6px 0 0 4px;
-   box-sizing: border-box;
-   word-wrap: break-word;
-}
+
 .ws-is-mobile-safari {
    .controls-RichEditor {
       ::-webkit-scrollbar {
