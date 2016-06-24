@@ -114,8 +114,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
          _modifyOptions: function(options) {
             options = RichEditor.superclass._modifyOptions.apply(this, arguments);
             options._prepareReviewContent = this._prepareReviewContent.bind(this);
-            //todo: с витей обсудить почему у дочерних компонентов buildmarkup зовётся раньше конструктора
-            this._options = options;
             return options;
          },
 
@@ -1677,12 +1675,12 @@ define('js!SBIS3.CONTROLS.RichEditor',
                this._dataReview.html(this._prepareReviewContent(value));
             }
          },
-         _prepareReviewContent: function(value) {
+         _prepareReviewContent: function(value, it) {
             if (value && value[0] !== '<') {
                value = '<p>' + value.replace(/\n/gi, '<br/>') + '</p>';
             }
             value = Sanitize(value);
-            return this._options.highlightLinks ? $ws.helpers.wrapURLs($ws.helpers.wrapFiles(value), true) : value;
+            return (this._options || it).highlightLinks ? $ws.helpers.wrapURLs($ws.helpers.wrapFiles(value), true) : value;
          },
 
          _onValueChangeHandler: function(noAutoComplete, onKeyUp) {
