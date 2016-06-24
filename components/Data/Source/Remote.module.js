@@ -155,6 +155,70 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
          }).bind(this));
       },
 
+      move: function (from, to, meta) {
+         var self = this,
+            suffix = meta.after ? 'После':'До',
+            def = new $ws.proto.ParallelDeferred(),
+            params = this._prepareMoveArguments(to, meta),
+            parent = to.get(self._options.hierField);
+
+         if (!this._orderProvider) {
+            this._orderProvider = DI.resolve(
+               'source.provider.sbis-business-logic', {
+                  endpoint: {
+                     contract: this._options.moveContract
+                  }
+               }
+            );
+         }
+
+         $ws.helpers.forEach(from, function(record) {
+            params['ИдО'] = self._prepareComplexId(record.getId());
+            record.set(self._options.hierField, parent);
+            def.push(this._makeCall(
+               command,
+               data
+            ));
+         });
+         return def.done().getResult();
+      },
+
+      /**
+       * Возвращает параметры перемещения записей
+       * @param {String} to Значение поля, в позицию которого перемещаем (по умолчанию - значение первичного ключа)
+       * @param {Boolean} after Дополнительная информация о перемещении
+       * @returns {Object}
+       * @private
+       */
+      _getMoveParams: function(to, after) {
+         var params = {
+               'ПорядковыйНомер': this._options.moveDefaultColumn,
+               'Иерархия': this._options.hierField || null,
+               'Объект': this._options.contract
+            },
+            id = this._prepareComplexId(to.getId());
+
+         if (after) {
+            params['ИдОПосле'] = id;
+         } else {
+            params['ИдОДо'] = id;
+
+         }
+         return params;
+      },
+      /**
+       * подготавливает сложный идентификатор
+       * @param id
+       * @private
+       */
+      _prepareComplexId: function (id){
+         var preparedId = String.prototype.split.call(id, ',', 2);
+         if (preparedId.length < 2) {
+            preparedId.push(this._options.contract);
+         }
+         return preparedId;
+      },
+
       //endregion SBIS3.CONTROLS.Data.Source.ISource
 
       //region Public methods

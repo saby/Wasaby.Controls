@@ -203,35 +203,26 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          );
       },
 
-      call: function (command, data) {
-         data = data || {};
-         switch(command) {
-            case 'move':
-               return this._move(data.from, data.to, data.details);
-         }
-         throw new Error('Not supported');
-      },
-
       //endregion SBIS3.CONTROLS.Data.Source.ISource
 
       //region Protected methods
 
-      _move: function (from, to, details) {
-         details = details || {};
+      move: function (from, to, meta) {
+         meta = meta || {};
          var sourceKey =  from.get(this._options.idProperty),
             sourcePosition = this._getIndexByKey(sourceKey),
             targetPosition = -1;
          if (to) {
             var toKey = to.get(this._options.idProperty),
                tableAdapter = this._getTableAdapter();
-            if (details.column && details.column !== this._options.idProperty) {
+            if (meta.column && meta.column !== this._options.idProperty) {
                //TODO: indexed search
                var adapter = this.getAdapter();
                for (var index = 0, count = tableAdapter.getCount(); index < count; index++) {
                   if (toKey === adapter.forRecord(
                         tableAdapter.at(index)
                      ).get(
-                        details.column
+                        meta.column
                      )
                   ) {
                      targetPosition = index;
@@ -245,7 +236,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             if (targetPosition === -1) {
                return $ws.proto.Deferred().fail('Can\'t find target position');
             }
-            if (details.after && sourcePosition > targetPosition) {
+            if (meta.after && sourcePosition > targetPosition) {
                targetPosition++;
             }
             tableAdapter.move(sourcePosition, targetPosition);

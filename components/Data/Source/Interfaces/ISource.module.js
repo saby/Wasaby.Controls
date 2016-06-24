@@ -582,6 +582,34 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        */
       call: function (command, data) {
          throw new Error('Method must be implemented');
+      },
+      /**
+       *
+       * @param {SBIS3.CONTROLS.Data.Model} from
+       * @param {SBIS3.CONTROLS.Data.Model} to Обновляемая модель
+       * @param {Object} [meta] Дополнительные мета данные
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
+       * @example
+       * Обновляем статью в источнике данных:
+       * <pre>
+       *    var dataSource = new RestSource({
+       *       endpoint: '/articles/'
+       *    }),
+       *    article = new Model({
+       *       rawData: {
+       *          Id: 'how-to-update-an-item',
+       *          Title: 'How to update an item'
+       *       }
+       *    });
+       *    dataSource.update(article).addCallback(function() {
+       *       $ws.helpers.alert('The article was updated successfully');
+       *    }).addErrback(function() {
+       *       $ws.helpers.alert('Can\'t update the article');
+       *    });
+       * </pre>
+       */
+      move: function (from, to, meta) {
+         throw new Error('Method must be implemented');
       }
    };
 });

@@ -758,11 +758,11 @@ define([
             it('should move ' + existsId + ' instead ' + existsId2, function (done) {
                source.read(existsId).addCallback(function (model1) {
                   source.read(existsId2).addCallback(function (model2) {
-                     source.call('move', {
-                        from: model1,
-                        to: model2,
-                        details: {after: false}
-                     }).addCallbacks(function() {
+                     source.move(
+                        model1,
+                        model2,
+                        {after: false}
+                     ).addCallbacks(function() {
                         if (data[existsPosition2]['Ид'] === existsId && data[existsPosition2 + 1]['Ид'] === existsId2) {
                            done();
                         } else {
@@ -778,11 +778,11 @@ define([
             it('should move ' + existsId2 + ' instead ' + existsId, function (done) {
                source.read(existsId2).addCallback(function (model1) {
                   source.read(existsId).addCallback(function (model2) {
-                     source.call('move', {
-                        from: model1,
-                        to: model2,
-                        details: {after: false}
-                     }).addCallbacks(function() {
+                     source.move(
+                        model1,
+                        model2,
+                        {after: false}
+                     ).addCallbacks(function() {
                         if (data[existsPosition]['Ид'] === existsId && data[1 + existsPosition]['Ид'] === existsId2) {
                            done();
                         } else {
@@ -799,11 +799,11 @@ define([
             it('should move ' + existsId + ' after ' + existsId2, function (done) {
                source.read(existsId).addCallback(function (model1) {
                   source.read(existsId2).addCallback(function (model2) {
-                     source.call('move', {
-                        from: model1,
-                        to: model2,
-                        details: {after: true}
-                     }).addCallbacks(function() {
+                     source.move(
+                        model1,
+                        model2,
+                        {after: true}
+                     ).addCallbacks(function() {
                         if(data[existsPosition2]['Ид'] === existsId2 && data[1 + existsPosition2]['Ид'] === existsId) {
                            done();
                         } else {
@@ -820,11 +820,11 @@ define([
             it('should move ' + existsId2 + ' after ' + existsId, function (done) {
                source.read(existsId2).addCallback(function (model1) {
                   source.read(existsId).addCallback(function (model2) {
-                     source.call('move', {
-                        from: model1,
-                        to: model2,
-                        details: {after: true}
-                     }).addCallbacks(function() {
+                     source.move(
+                        model1,
+                        model2,
+                        {after: true}
+                     ).addCallbacks(function() {
                         if(data[existsPosition]['Ид'] === existsId && data[1 + existsPosition]['Ид'] === existsId2) {
                            done();
                         } else {
@@ -843,11 +843,11 @@ define([
                   newPos = 3;
                source.read(existsId).addCallback(function (model) {
                   source.read(existsId2).addCallback(function (model2) {
-                     source.call('move', {
-                        from: model,
-                        to: model2,
-                        details: {column: 'ПорНом', after: false}
-                     }).addCallbacks(function() {
+                     source.move(
+                        model,
+                        model2,
+                        {column: 'ПорНом', after: false}
+                     ).addCallbacks(function() {
                         if(data[newPos]['Ид'] === existsId && data[1 + newPos]['ПорНом'] === pn) {
                            done();
                         } else {
@@ -865,11 +865,11 @@ define([
                   newPos = 4;
                source.read(existsId).addCallback(function (model) {
                   source.read(existsId2).addCallback(function (model2) {
-                     source.call('move', {
-                        from: model,
-                        to: model2,
-                        details: {column: 'ПорНом', after: true}
-                     }).addCallbacks(function() {
+                     source.move(
+                        model,
+                        model2,
+                        {column: 'ПорНом', after: true}
+                     ).addCallbacks(function() {
                         if(data[newPos]['Ид'] === existsId && data[newPos - 1]['ПорНом'] === pn) {
                            done();
                         } else {
