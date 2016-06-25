@@ -193,7 +193,6 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Model
             });
          } else if(!self._isItemSelected(items.at(0))) {
             newItems.push(items.at(0));
-            this._options.selectedItems && this._options.selectedItems.clear();
          }
 
          if(newItems.length) {
@@ -201,6 +200,9 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Model
                асинхронный getSelectedItems, который либо сразу вернёт набор, либо когда загрузятся все записи */
             this.getSelectedItems(true).addCallback(function (selectedItems) {
                if(selectedItems) {
+                  if(!self._options.multiselect) {
+                     selectedItems.clear();
+                  }
                   selectedItems.append(newItems);
                } else {
                   self._options.selectedItems = self._makeList(newItems);
