@@ -87,33 +87,35 @@ define('js!SBIS3.CONTROLS.ListView',
       var ListView = CompoundControl.extend([CompoundActiveFixMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
-          * @event onChangeHoveredItem При переводе курсора мыши на другую запись
-          * @remark
-          * Событие срабатывает при смене записи под курсором мыши.
+          * @event onChangeHoveredItem Происходит при переводе курсора мыши на другой элемент коллекции списка.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} hoveredItem Объект
-          * @param {Number|String} hoveredItem.key ключ элемента представления данных
-          * @param {jQuery|false} hoveredItem.container элемент представления данных
-          * @param {Object} hoveredItem.position координаты контейнера элемента
-          * @param {Number} hoveredItem.top отступ сверху
-          * @param {Number} hoveredItem.left отступ слева
-          * @param {Object} hoveredItem.size размеры контейнера элемента
-          * @param {Number} hoveredItem.height высота
-          * @param {Number} hoveredItem.width ширина
+          * @param {Object} hoveredItem Объект, свойства которого описывают данные элемента коллекции списка, на который навели курсор мыши.
+          * @param {SBIS3.CONTROLS.Data.Model} record Элемент коллекции, на который перевели курсор.
+          * @param {Number|String} hoveredItem.key Первичный ключ элемента.
+          * @param {jQuery|false} hoveredItem.container Контейнер визуального отображения элемента (DOM-элемент).
+          * @param {Object} hoveredItem.position Объект, свойства которого описывают координаты контейнера визуального отображения элемента.
+          * @param {Number} hoveredItem.position.top Отступ от верхней границы контейнера визуального отображения элемента до верхней границы контейнера визуального отображения списка. Значение в px. При расчете учитывается текущий скролл в списке.
+          * @param {Number} hoveredItem.position.left Отступ от левой границы контейнера визуального отображения элемента до левой границы контейнера визуального отображения списка. Значение в px.
+          * @param {Object} hoveredItem.size Объект, свойства которого описывают высоту и ширину контейнера визуального отображения элемента.
+          * @param {Number} hoveredItem.size.height Высота контейнера визуального отображения элемента. Значение в px.
+          * @param {Number} hoveredItem.size.width Ширина контейнера визуального отображения элемента. Значение в px.
           * @example
+          * При наведении курсора мыши на запись справа от неё отображаются операции (см. <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">Быстрый доступ к операциям по наведению курсора</a>).
+          * Ниже приведён код, с помощью которого можно изменять отображение набора операций для записей списка.
           * <pre>
-          *     DataGridView.subscribe('onChangeHoveredItem', function(hoveredItem) {
-           *        var actions = DataGridView.getItemsActions(),
-           *        instances = actions.getItemsInstances();
-           *
-           *        for (var i in instances) {
-           *           if (instances.hasOwnProperty(i)) {
-           *              //Будем скрывать кнопку удаления для всех строк
-           *              instances[i][i === 'delete' ? 'show' : 'hide']();
-           *           }
-           *        }
-           *     });
+          *    dataGrid.subscribe('onChangeHoveredItem', function(eventObject, hoveredItem) {
+          *       var actions = DataGridView.getItemsActions(),
+          *           instances = actions.getItemsInstances();
+          *       for (var i in instances) {
+          *          if (instances.hasOwnProperty(i)) {
+          *             //Будем скрывать кнопку удаления для всех строк
+          *             instances[i][i === 'delete' ? 'show' : 'hide']();
+          *          }
+          *       }
+          *    });
           * </pre>
+          * Подобная задача часто сводится к отображению различных операций для узлов, скрытых узлов и листьев для иерархических списков.
+          * Пример конфигурации списка для решения подобной задачи вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/mode/">здесь</a>.
           * @see itemsActions
           * @see setItemsActions
           * @see getItemsActions
@@ -901,14 +903,25 @@ define('js!SBIS3.CONTROLS.ListView',
             return scrollContainer;
          },
 
+         /**
+          * Метод, меняющий текущий выделеный по ховеру элемент
+          * @param {jQuery} target Новый выделеный по ховеру элемент
+          * когда ключ элемента не поменялся, но сам он изменился (перерисовался)
+          * @private
+          */
          _changeHoveredItem: function(target) {
             var targetKey = target[0].getAttribute('data-id');
-            if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
-               this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
-               target.addClass('controls-ListView__hoveredItem');
-               this._hoveredItem = this._getElementData(target);
-               this._notifyOnChangeHoveredItem();
+
+            if (targetKey !== undefined && (this._hoveredItem.key !== targetKey)) {
+               this._updateHoveredItem(target);
             }
+         },
+
+         _updateHoveredItem: function(target) {
+            this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
+            target.addClass('controls-ListView__hoveredItem');
+            this._hoveredItem = this._getElementData(target);
+            this._notifyOnChangeHoveredItem();
          },
 
          _getDomElementByItem : function(item) {
@@ -982,9 +995,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
-            if (this._isSupportedItemsToolbar() && !this._touchSupport) {
+            if (this._isSupportedItemsToolbar()) {
          		if (target.container){
-                  this._showItemsToolbar(target);
+                  if (!this._touchSupport) {
+                     this._showItemsToolbar(target);
+                  }
                } else {
                   this._hideItemsToolbar();
                }
@@ -1102,7 +1117,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _drawSelectedItems: function (idArray) {
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__multiSelected');
             for (var i = 0; i < idArray.length; i++) {
-               $(".controls-ListView__item[data-id='" + idArray[i] + "']", this._container).addClass('controls-ListView__item__multiSelected');
+               $('.controls-ListView__item[data-id="' + idArray[i] + '"]', this._container).addClass('controls-ListView__item__multiSelected');
             }
          },
 
@@ -1110,7 +1125,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //рисуем от ключа
             var selId = id;
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
-            $(".controls-ListView__item[data-id='" + selId + "']", this._container).addClass('controls-ListView__item__selected');
+            $('.controls-ListView__item[data-id="' + selId + '"]', this._container).addClass('controls-ListView__item__selected');
          },
          /**
           * Перезагружает набор записей представления данных с последующим обновлением отображения.
@@ -1130,6 +1145,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             this._firstScrollTop = true;
+            this._unlockItemsToolbar();
             this._hideItemsToolbar();
             this._destroyEditInPlace();
             return ListView.superclass.reload.apply(this, arguments);
@@ -1274,7 +1290,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var target = hoveredItem.container;
             if (target && !(target.hasClass('controls-editInPlace') || target.hasClass('controls-editInPlace__editing'))) {
                this.showEip(target, this.getItems().getRecordById(hoveredItem.key), { isEdit: false });
-            } else {
+               // todo Удалить при отказе от режима "hover" у редактирования по месту [Image_2016-06-23_17-54-50_0108] https://inside.tensor.ru/opendoc.html?guid=5bcdb10f-9d69-49a0-9807-75925b726072&description=
+            } else if (this._hasEditInPlace()) {
                this._getEditInPlace().hide();
             }
          },
@@ -1522,6 +1539,11 @@ define('js!SBIS3.CONTROLS.ListView',
          _showItemsToolbar: function(target) {
             this._getItemsToolbar().show(target, this._touchSupport);
          },
+         _unlockItemsToolbar: function() {
+            if (this._itemsToolbar) {
+               this._itemsToolbar.unlockToolbar();
+            }
+         },
          _hideItemsToolbar: function (animate) {
             if (this._itemsToolbar) {
                this._itemsToolbar.hide(animate);
@@ -1649,11 +1671,12 @@ define('js!SBIS3.CONTROLS.ListView',
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
          //*********************************//
          _drawItemsCallback: function () {
-            var
-               hoveredItem,
-               hoveredItemContainer,
-               hash,
-               projItem;
+            var hoveredItem,
+                hoveredItemContainer,
+                hash,
+                projItem,
+                containsHoveredItem;
+
             ListView.superclass._drawItemsCallback.apply(this, arguments);
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
@@ -1662,26 +1685,37 @@ define('js!SBIS3.CONTROLS.ListView',
 
             hoveredItem = this.getHoveredItem();
             hoveredItemContainer = hoveredItem.container;
-            /*TODO сейчас зачем то в ховеред итем хранится ссылка на DOM элемент
-            * но этот элемент может теряться в ходе перерисовок. Выписана задача по которой мы будем
-            * хранить только идентификатор и данный код станет не нужен*/
-            if (hoveredItemContainer) {
-               hash = hoveredItemContainer.attr('data-hash');
-               projItem = this._getItemsProjection().getByHash(hash);
-               if (projItem) {
-                  hoveredItemContainer = this._getDomElementByItem(projItem);
-               }
-            }
 
              /* Если после перерисовки выделенный элемент удалился из DOM дерава,
                то событие mouseLeave не сработает, поэтому вызовем руками метод,
                если же он остался, то обновим положение кнопки опций*/
             if(hoveredItemContainer){
-               if(!$.contains(this._getItemsContainer()[0], hoveredItemContainer[0])) {
-                  this._mouseLeaveHandler();
-               }else {
-                  hoveredItem.container = hoveredItemContainer;
-                  this._setHoveredItem(hoveredItem);
+               // FIXME УДАЛИТЬ, вызывается, чтобы проходили тесты, просто создаёт индекс по хэшу в енумераторе
+               this._getItemsProjection().getByHash(null);
+               containsHoveredItem = $ws.helpers.contains(this._getItemsContainer()[0], hoveredItemContainer[0]);
+
+               if(!containsHoveredItem && hoveredItemContainer) {
+                  /*TODO сейчас зачем то в ховеред итем хранится ссылка на DOM элемент
+                   * но этот элемент может теряться в ходе перерисовок. Выписана задача по которой мы будем
+                   * хранить только идентификатор и данный код станет не нужен*/
+                  hash = hoveredItemContainer.attr('data-hash');
+                  projItem = this._getItemsProjection().getByHash(hash);
+                  /* Если в проекции нет элемента и этого элемента нет в DOM'e,
+                     но на него осталась jQuery ссылка, то надо её затереть */
+                  if (projItem) {
+                     hoveredItemContainer = this._getDomElementByItem(projItem);
+                  } else {
+                     hoveredItemContainer = null;
+                  }
+               }
+
+               if(!containsHoveredItem) {
+                  if(!hoveredItemContainer) {
+                     this._mouseLeaveHandler();
+                  } else {
+                     this._updateHoveredItem(hoveredItemContainer);
+                  }
+               } else {
                   this._updateItemsToolbar();
                }
             }
@@ -1689,6 +1723,9 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notifyOnSizeChanged(true);
             this._drawResults();
             this._needToRedraw = true;
+            //После отрисовки оповещаем аккардеон что поменялись размеры и возможно нужно обновить fixed позиционирование
+            //TODO: выпилить в 3.7.4.100 когда будет независимый скролл аккардеона
+            $ws.single.EventBus.globalChannel().notify('ContentScrolling', null);
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
@@ -1747,6 +1784,11 @@ define('js!SBIS3.CONTROLS.ListView',
          _nextLoad: function () {
             var self = this,
                loadAllowed  = this._isAllowInfiniteScroll();
+            if (!this._scrollWatcher.hasScroll(this.getContainer())){
+               this._container.addClass('controls-ListView__outside-scroll-loader');
+            } else {
+               this._container.removeClass('controls-ListView__outside-scroll-loader');
+            }
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && $ws.helpers.isElementVisible(this.getContainer()) &&
                   this._hasNextPage(this.getItems().getMetaData().more, this._infiniteScrollOffset) && !this.isLoading()) {
@@ -1761,9 +1803,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   var hasNextPage = self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset);
                   //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                   this.getItems().setMetaData(dataSet.getMetaData());
-                  if (hasNextPage) {
-                     self._infiniteScrollOffset += self._limit;
-                  } else {
+                  self._infiniteScrollOffset += self._limit;
+                  if (!hasNextPage) {
                      self._hideLoadingIndicator();
                      this._toggleEmptyData(!self.getItems().getCount());
                   }
@@ -1858,7 +1899,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _scrollToItem: function(itemId) {
             ListView.superclass._scrollToItem.call(this, itemId);
-            var itemContainer = $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer());
+            var itemContainer = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
             //TODO: будет работать только если есть infiniteScrollContainer, нужно сделать просто scrollContainer так как подгрузки может и не быть
             if (this._options.infiniteScrollContainer && this._options.infiniteScrollContainer.length && itemContainer.length){
                this._options.infiniteScrollContainer[0].scrollTop = itemContainer[0].offsetTop;

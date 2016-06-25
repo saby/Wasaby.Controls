@@ -104,11 +104,12 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
 
       _getItemTemplate: function(item) {
-         var isEnabled = item.get('enabled'),
-             visible = item.get('visible');
-
-         var options = {
+         var
+             isEnabled = item.get('enabled'),
+             visible = item.get('visible'),
+             options = {
                className: item.get('className'),
+               activableByClick: false,
                command: item.get('command'),
                enabled: isEnabled === undefined ? true : isEnabled,
                visible: visible === undefined ? true : visible,
@@ -306,6 +307,16 @@ define('js!SBIS3.CONTROLS.Menu', [
             }
          }
          return config;
+      },
+
+      /* Само меню не должно вызывать перерасчёта у соседних элементов,
+         т.к. создаётся абсолютом в body, однако, в меню могу лежать контролы,
+         которым требуется расчитывать ширину, поэтому запускаем расчёты только для дочерних */
+      _setVisibility: function(show) {
+         Menu.superclass._setVisibility.apply(this, arguments);
+         if(show) {
+            this._resizeChilds();
+         }
       },
 
       destroy : function(){
