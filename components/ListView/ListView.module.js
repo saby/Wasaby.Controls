@@ -80,6 +80,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__bottomStyle Оформляет операции строки под строкой
        * @cssModifier controls-ListView__pagerNoSizePicker Скрыть выбор размера страницы в пейджинге.
        * @cssModifier controls-ListView__pagerNoAmount Скрыть отображение количества записей на странице в пейджинге.
+       * @cssModifier controls-ListView__pagerHideEndButton Скрыть кнопку "Перейти к последней странице"
        * Т.е. текст "1-10" при отображении 10 записей на 1-ой странице
        */
 
