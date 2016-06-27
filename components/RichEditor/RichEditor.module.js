@@ -61,9 +61,11 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   tools: 'inserttable',
                   invalid_elements: 'script',
                   paste_data_images: false,
+                  paste_convert_word_fake_lists: false, //TODO: убрать когда починят https://github.com/tinymce/tinymce/issues/2933
                   statusbar: false,
                   toolbar: false,
-                  menubar: false
+                  menubar: false,
+                  browser_spellcheck: true
                },
                placeholder: '',
                toolbar: true,
@@ -106,17 +108,12 @@ define('js!SBIS3.CONTROLS.RichEditor',
             _toggleToolbarButton: undefined,
             _needPasteImage: false,
             _buttonsState: undefined,
-            _clipboardText: undefined,
-            _lastRng: undefined
+            _clipboardText: undefined
          },
 
          _modifyOptions: function(options) {
             options = RichEditor.superclass._modifyOptions.apply(this, arguments);
-            if (options.editorConfig === undefined || Object.prototype.toString.call(options.editorConfig) !== '[object Object]') {
-               options.editorConfig = {};
-            }
             options._prepareReviewContent = this._prepareReviewContent.bind(this);
-            options.editorConfig.browser_spellcheck = options.spellcheck;
             return options;
          },
 
@@ -170,7 +167,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             } else {
                this._inputControl.css('height',  editorHeight + 'px');
             }
-            this._options.editorConfig.selector = '#' + this.getId() + ' .controls-RichEditor__EditorFrame';
+            this._options.editorConfig.selector = '#' + this.getId() + ' > .controls-RichEditor__EditorFrame';
             if (!this._options.editorConfig.height) {
                this._options.editorConfig.height =  editorHeight;
             }
@@ -348,7 +345,11 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   this._curval = this._getTinyEditorValue();
                } else {
                   this._curval = ctxVal || '';
-                  this._inputControl.html(Sanitize(this._curval));
+                  if (this._tinyReady.isReady()) {
+                     this._tinyEditor.setContent(this._curval);
+                  } else {
+                     this._inputControl.html(Sanitize(this._curval));
+                  }
                }
                this._options.text = this._curval;
                this._notify('onTextChange', this._curval);
@@ -437,6 +438,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   if (!data) {
                      data = event.clipboardData.getData ? event.clipboardData.getData('text/plain') : window.clipboardData.getData('Text');
                   }
+                  //EndFragment и StartFragment превращаются в <p> при вставке в tiny
+                  data = data.replace(/<!--StartFragment-->\r\n|<!--StartFragment-->/,'');
+                  data = data.replace(/\r\n(<!--EndFragment-->)|<!--EndFragment-->/,'');
                   //получение результата из события  BeforePastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
                   //withStyles: true нужно чтобы в нашем обработчике BeforePastePreProcess мы не обрабатывали а прокинули результат в обработчик тини
                   eventResult= self.getTinyEditor().fire('BeforePastePreProcess', {content: data, withStyles: true});
@@ -489,7 +493,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
                      });
                   });
                };
-            this._tinyEditor.selection.lastFocusBookmark = null;
             $ws.single.Indicator.show();
             PluginManager.getPlugin('Clipboard', '1.0.1.0', {silent: true}).addCallback(function(clipboard) {
                if (clipboard.getContentType && clipboard.getHtml) {
@@ -497,6 +500,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
                      clipboard[ContentType === 'Text/Html' || ContentType === 'Text/Rtf' || ContentType === 'Html' || ContentType === 'Rtf' ? 'getHtml' : 'getText']()
                         .addCallback(function(html) {
                            $ws.single.Indicator.hide();
+                           //EndFragment и StartFragment превращаются в <p> при вставке в tiny
+                           html = html.replace(/<!--StartFragment-->\r\n|<!--StartFragment-->/,'');
+                           html = html.replace(/\r\n(<!--EndFragment-->)|<!--EndFragment-->/,'');
                            //получение результата из события  BeforePastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
                            //withStyles: true нужно чтобы в нашем обработчике BeforePastePreProcess мы не обрабатывали а прокинули результат в обработчик тини
                            eventResult = self.getTinyEditor().fire('BeforePastePreProcess', {content: html, withStyles: true});
@@ -569,8 +575,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
           * @private
           */
          setFontStyle: function(style) {
-            this._checkFocus();
-            this.setActive(true);
             if (style !== 'mainText') {
                this._tinyEditor.formatter.apply(style);
                this._textFormats[style] = true;
@@ -592,13 +596,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
           * @private
           */
          setFontColor: function(color) {
-            //setActive в ie перестаёт работать применение цвета к выделенному тексту
-            if (!$ws._const.browser.isIE) {
-               this.setActive(true);
-            }
-            this._checkFocus();
             this._tinyEditor.formatter.apply('forecolor', {value: color});
-            this._tinyEditor.focus();
+            this._tinyEditor.undoManager.add(); //todo Разобраться с undoManager и ВЕЗДЕ убрать undoManager.add
+            this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._onValueChangeHandler();
          },
@@ -647,7 +647,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             if (this._options.toolbarVisible !== visible) {
                newHeight = this._inputControl.outerHeight();
                this._options.toolbarVisible = visible === true ? true : visible === false ? false : !this._options.toolbarVisible;
-               newHeight += this._options.toolbarVisible ? -constants.toolbarHeight : constants.toolbarHeight;
+               newHeight += this._options.toolbarVisible ? - constants.toolbarHeight : constants.toolbarHeight;
 
                if (this._options.toolbarVisible) {
                   this._container.removeClass('controls-RichEditor__HideToolbar');
@@ -688,8 +688,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   }
                });
                if (typeof smile === 'object') {
-                  this._checkFocus();
-                  this.insertHtml(this._smileHtml(smile.key, smile.value));
+                  this.insertHtml(this._smileHtml(smile.key, smile.value, smile.alt));
                }
             }
          },
@@ -706,15 +705,8 @@ define('js!SBIS3.CONTROLS.RichEditor',
           * @public
           */
          execCommand: function(command) {
-            //TODO: избавиться от this._lastRng
-            if (!$ws._const.browser.isMobilePlatform) {
-               this._tinyEditor.selection.lastFocusBookmark = null;
-            } else {
-               this._lastRng && this._tinyEditor.selection.setRng(this._lastRng);
-            }
             this._changeValueFromSetText = false;
             this._tinyEditor.execCommand(command);
-            this._checkFocus();
          },
 
          /**
@@ -863,12 +855,14 @@ define('js!SBIS3.CONTROLS.RichEditor',
          _showImagePropertiesDialog: function(target) {
             var
                $image = $(target),
-               editor = this._tinyEditor;
+               editor = this._tinyEditor,
+               self = this;
             require(['js!SBIS3.CORE.Dialog'], function(Dialog) {
                new Dialog({
                   name: 'imagePropertiesDialog',
                   template: 'js!SBIS3.CONTROLS.RichEditor.ImagePropertiesDialog',
                   selectedImage: $image,
+                  editorWidth: self._inputControl.width(),
                   handlers: {
                      onBeforeShow: function () {
                         $ws.single.CommandDispatcher.declareCommand(this, 'saveImage', function () {
@@ -894,8 +888,8 @@ define('js!SBIS3.CONTROLS.RichEditor',
             });
          },
 
-         _smileHtml: function(smile, name) {
-            return '<img class="ws-fre__smile smile'+smile+'" data-mce-resize="false" unselectable ="on" src="'+constants.blankImgPath+'" ' + (name ? ' title="' + name + '"' : '') + ' />';
+         _smileHtml: function(smile, name, alt) {
+            return '<img class="ws-fre__smile smile'+smile+'" data-mce-resize="false" unselectable ="on" src="'+constants.blankImgPath+'" ' + (name ? ' title="' + name + '"' : '') + ' alt=" ' + alt + ' " />';
          },
 
          /**
@@ -918,8 +912,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             if (!this._doAnimate && this.isEnabled()) {
                this._doAnimate = true;
                this.toggleToolbar();
-               this._tinyEditor.selection.lastFocusBookmark = null;
-               this._tinyEditor.focus();
+               this._tinyEditor.execCommand('');
             }
          },
 
@@ -961,6 +954,8 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
                if (this._options.toolbar ) {
                   this._drawAndBindItems();
+                  this._toolbarContainer.on('mousedown focus', this._blockFocusEvents);
+                  this._toggleToolbarButton.on('mousedown focus', this._blockFocusEvents);
                }
 
                if (self._options.uploadImageOnDrop) {
@@ -975,6 +970,16 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   this._container.bind('touchstart', this._onClickHandler.bind(this));
                }
 
+               if (!$ws._const.browser.firefox) { //в firefox работает нативно
+                  this._inputControl.bind('mouseup', function (e) { //в ie криво отрабатывает клик
+                     if (e.ctrlKey) {
+                        var target = e.target;
+                        if (target.nodeName === 'A' && target.href) {
+                           window.open(target.href, '_blank');
+                        }
+                     }
+                  });
+               }
                this._notifyOnSizeChanged();
 
                if (!self._readyContolDeffered.isReady()) {
@@ -998,6 +1003,16 @@ define('js!SBIS3.CONTROLS.RichEditor',
                this._inputControl = $(editor.getBody());
                RichUtil.markRichContentOnCopy(this._inputControl);
                self._tinyReady.callback();
+
+               //Правки Клепикова при необходимости сжечь
+               this._inputControl.bind('focus', function() {
+                  if ($(this).attr('contenteditable') !== 'false') {
+                     $ws.single.EventBus.globalChannel().notify('MobileInputFocus');
+                  }
+               });
+               this._inputControl.bind('blur', function () {
+                  $ws.single.EventBus.globalChannel().notify('MobileInputFocusOut');
+               });
             }.bind(this));
 
             //БИНДЫ НА ВСТАВКУ КОНТЕНТА И ДРОП
@@ -1005,7 +1020,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                var image;
                if (e.content.indexOf('<img') === 0) {
                   image = $('<div>' + e.content + '</div>').find('img:first');
-                  if (image.length) {
+                  if (image.length && !!image.attr('src').indexOf('data:image') && (!image.attr('class') || !!image.attr('class').indexOf('ws-fre__smile'))) {
                      self._needPasteImage = image.get(0).outerHTML;
                      return false;
                   }
@@ -1211,15 +1226,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
                }
             });
 
-            //НА мобильных устройствах при потере фокуса не запоминается последнее выделение(tinymce tnx)
-            //запоминаем сами выделение
-            //TODO: ИЗбавиться от  _lastRng
-            if ($ws._const.browser.isMobilePlatform) {
-               editor.on('focusout', function () {
-                  self._lastRng = editor.selection.getRng();
-               });
-            }
-
             //Сообщаем компоненту об изменении размеров редактора
             editor.on('resizeEditor', function() {
                self._notifyOnSizeChanged();
@@ -1241,6 +1247,10 @@ define('js!SBIS3.CONTROLS.RichEditor',
             $ws._const.$win.bind('beforeunload', this._saveBeforeWindowClose);
          },
 
+         _blockFocusEvents: function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+         },
          _bindChangeButtonsState: function() {
             var
                editor = this._tinyEditor,
@@ -1315,6 +1325,10 @@ define('js!SBIS3.CONTROLS.RichEditor',
          },
 
          _setEnabled: function(enabled) {
+            if (enabled && this._options.toolbarVisible) {
+               this._container.removeClass('controls-RichEditor__HideToolbar');
+               this._toolbarContainer.css('height', constants.toolbarHeight + 'px');
+            }
             this._enabled = enabled;
             if (!this._tinyReady.isReady() && enabled) {
                this._tinyReady.addCallback(function() {
@@ -1440,8 +1454,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   bottom: 0,
                   left: 0
                });
-            //тоже самое что при execCommand
-            this._tinyEditor.selection.lastFocusBookmark = null;
             img.on('load', function() {
                var
                   isIEMore8 = $ws._const.browser.isIE && !$ws._const.browser.isIE8,
@@ -1488,15 +1500,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
             //если смена стиля будет сразу после setValue то контент не установится,
             //так как через форматттер не стреляет change
             this._onValueChangeHandler();
-         },
-
-         _checkFocus: function() {
-            var tinyEditor = this._tinyEditor;
-            if (tinyEditor.lastRng) {
-               tinyEditor.selection.setRng(tinyEditor.lastRng);
-            } else {
-               tinyEditor.focus();
-            }
          },
 
          _setButtonsState: function(state, ignoreSourceButton) {
@@ -1552,6 +1555,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                         richEditor: this,
                         cssClassName: 'controls-RichEditor__ToolbarItem mce-',
                         linkedContext: itemsContext,
+                        activableByClick: false,
                         renderStyle: isButton ? 'asLink' : 'hover'
                      }, itemsArray[i].config);
                   if (isButton) {
@@ -1569,23 +1573,18 @@ define('js!SBIS3.CONTROLS.RichEditor',
                      itemCfg.opener = this;
                      itemCfg.keyField = 'key';
                      result[i] = new MenuButton(itemCfg);
-                  }
-                  else if (type === 'dropdown') {
+                  } else if (type === 'dropdown') {
                      itemCfg.flipVertical = true;
                      result[i] = new Dropdown(itemCfg);
+                     //TODO: переделать при переходе на dropdownlist
+                     result[i]._optCont.on('mousedown focus', this._blockFocusEvents);
                   }
                   result[i].getContainer().attr('tabindex', '-1');
                   result[i].getOwner = function() {
                      return this._options.richEditor;
                   };
-                  result[i].setActive = this._setActiveControlsButton;
                }
             }
-         },
-
-         _setActiveControlsButton: function() {
-            //Заглушка, чтобы кнопки не забирали на себя фокус, так как у них нет перента, и фокус уйдёт отовсюду.
-            //Например из DialogRecord и тот станет закрываться.
          },
 
          _onChangeAreaValue: function() {
@@ -1680,12 +1679,12 @@ define('js!SBIS3.CONTROLS.RichEditor',
                this._dataReview.html(this._prepareReviewContent(value));
             }
          },
-         _prepareReviewContent: function(value) {
+         _prepareReviewContent: function(value, it) {
             if (value && value[0] !== '<') {
                value = '<p>' + value.replace(/\n/gi, '<br/>') + '</p>';
             }
             value = Sanitize(value);
-            return this._options.highlightLinks ? $ws.helpers.wrapURLs($ws.helpers.wrapFiles(value), true) : value;
+            return (this._options || it).highlightLinks ? $ws.helpers.wrapURLs($ws.helpers.wrapFiles(value), true) : value;
          },
 
          _onValueChangeHandler: function(noAutoComplete, onKeyUp) {
