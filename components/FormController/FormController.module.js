@@ -203,6 +203,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       },
 
       _onBeforeNavigate: function(event, activeElement, isIconClick){
+         //Если показан диалог о сохранении, то не даем перейти в другой раздел аккордеона, пока его не закроют
          if (!isIconClick) {
             event.setResult(!this._isConfirmDialogShowed);
          }
