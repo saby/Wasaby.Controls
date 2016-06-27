@@ -221,14 +221,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
              */
             allowToggleHead: true,
             /**
-             * @cfg {Boolean} Фиксация шапки таблицы.
-             * Позволяет зафискировать заголовок таблицы в шапке страницы / всплывающей панели.
+             * @cfg {Boolean} Включает фиксацию / прилипание заголовков таблицы к шапке страницы / всплывающей панели.
              * @example
              * <pre>
-             *     <option name="fixedHeader">true</option>
+             *     <option name="stickyHeader">true</option>
              * </pre>
              */
-            fixedHeader: false
+            stickyHeader: false
          }
       },
 
@@ -473,7 +472,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              Пример можно посмотреть в реестре номенклатур. */
             this._setColumnWidthForPartScroll();
          }
-         if (this._options.fixedHeader){
+         if (this._options.stickyHeader){
             FixedHeaderManager.tableHeadRedrawn(this.getContainer().find('table:first'));
          }
          this._notify('onDrawHead');

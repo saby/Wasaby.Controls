@@ -94,14 +94,13 @@ define('js!SBIS3.CONTROLS.TabControl', [
              */
             loadType: 'cached',
             /**
-             * @cfg {Boolean} Фиксация корешков закладок.
-             * Позволяет зафискировать корешки закладок в шапке страницы / всплывающей панели.
+             * @cfg {Boolean} Включает фиксацию / прилипание корешков закладок к шапке страницы / всплывающей панели.
              * @example
              * <pre>
-             *     <option name="fixedHeader">true</option>
+             *     <option name="stickyHeader">true</option>
              * </pre>
              */
-            fixedHeader: false,
+            stickyHeader: false,
             /**
              * @cfg {String} Дополнительный класс, который будет повешен на корешки закладок.
              * Нужен, например, для того, чтобы однозначно определить корешки закладок после их фиксации в заголовке страницы.
