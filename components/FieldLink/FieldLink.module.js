@@ -415,7 +415,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 if(item.getId() == key) {
                    this._notify('onItemActivate', {item: item, id: key});
                 }
-             })
+             }, this)
           },
           _onClosePickerItemsCollection: function() {
              this._pickerStateChangeHandler(false);
