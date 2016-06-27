@@ -44,6 +44,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
           $constructor: function() {
              this._listHistory = new List({items: this.getHistory() || []});
+             this._prepareListHistory();
              this._changeHistoryFnc = this._changeHistoryHandler.bind(this);
              this._applyHandlerDebounced = this._onApplyFilterHandler.debounce(0).bind(this);
 
@@ -137,6 +138,32 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              });
 
              return structureCopy;
+          },
+
+          /* Структура может меняться динамически,
+             этот метод сверяем стуктуру из истории и текущую стуркуру фильтров,
+             и, если надо, правит структуру из истории */
+          _prepareListHistory: function() {
+             var toDelete = [],
+                 self = this;
+
+             this._listHistory.each(function(historyElem) {
+                var linkText = FilterToStringUtil.string(self._prepareStructureElemForApply(historyElem.filter), 'historyItemTemplate');
+
+                if(linkText) {
+                   if(historyElem.linkText !== linkText) {
+                      historyElem.linkText = linkText;
+                   }
+                } else {
+                   toDelete.push(historyElem);
+                }
+             });
+
+             if(toDelete.length) {
+                $ws.helpers.forEach(toDelete, function(elem) {
+                   self._listHistory.remove(elem);
+                });
+             }
           },
 
           _prepareStructureElemForApply: function(structure) {
@@ -246,6 +273,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 }
                 return;
              }
+
+             this._prepareListHistory();
 
              /* Если фильтров больше 10 - удалим последний */
              if (this._listHistory.getCount() === MAX_FILTERS_AMOUNT) {
