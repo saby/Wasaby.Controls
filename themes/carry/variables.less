@@ -13,7 +13,9 @@
 @data-grid-header-cell-font-size:               16px;
 @data-grid-header-cell-height:                  22px;
 @data-grid-cell-line-height:                    25px;
-@data-grid-checkbox-margin:                     2px 0 1px 3px;
+@data-grid-checkbox-margin:                     12px 0 1px 10px;
+@data-grid-td-checkbox-width:                   30px;
+@data-grid-td-visible-checkbox-width:           40px;
 
 // tree view
 @font-folder-size:                              @globalDefaultFontSize;
@@ -235,6 +237,26 @@
 @breadcrumbs-small-items-top:                   @breadcrumbs-arrow-top;
 @icon-height:                                   24px;
 
+// -------- //
+// Checkbox //
+// -------- //
+
+@check-box-icon-width:                          24px;
+@check-box-icon-height:                         24px;
+@check-box-icon-line-height:                    24px;
+
+@check-box-icon-bg:                             url(@check-box-icon-spritesheet) -4px -2px;
+@check-box-icon-hover-bg:                       url(@check-box-icon-spritesheet) -4px 28px;
+@check-box-icon-checked-bg:                     url(@check-box-icon-spritesheet) -4px 74px;
+@check-box-icon-checked-hover-bg:               url(@check-box-icon-spritesheet) -4px 74px;
+
+@check-box-icon-third-state-bg:                 url(@check-box-icon-spritesheet) -4px 51px;
+
+@check-box-icon-disabled-bg:                    url(@check-box-icon-spritesheet) 30px -2px;
+@check-box-icon-disabled-checked-bg:            url(@check-box-icon-spritesheet) 30px 76px;
+@check-box-icon-disabled-third-state-bg:        url(@check-box-icon-spritesheet) 30px 76px;
+
+
 
 // Popup
 @font-popup-size:                               @font-basic-size;
@@ -244,6 +266,8 @@
 @menu-item-icon-top-offset:                     14px;
 
 @list-view-actions-menu-icon-width:             24px;
+@listView-check-box-width:                      24px;
+@listView-check-box-height:                     24px;
 
 // EditDialog
 @editdialog-applybutton-width:                  130px;
