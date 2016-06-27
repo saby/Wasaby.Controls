@@ -84,6 +84,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          _activateChildControlDeferred: undefined,
          _previousDocumentTitle: undefined,
          _dataSource: null,
+         _isConfirmDialogShowed: false,
          _options: {
             /**
              * @cfg {String} Устанавливает первичный ключ записи, редактируемой на диалоге.
@@ -158,6 +159,9 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          $ws.single.CommandDispatcher.declareCommand(this, 'create', this._create);
          $ws.single.CommandDispatcher.declareCommand(this, 'notify', this._actionNotify);
          $ws.single.CommandDispatcher.declareCommand(this, 'activateChildControl', this._createChildControlActivatedDeferred);
+
+         this.subscribeTo($ws.single.EventBus.channel('navigation'), 'onBeforeNavigate', $ws.helpers.forAliveOnly(this._onBeforeNavigate, this));
+
          this._updateDocumentTitle();
          this._setDefaultContextRecord();
          this._panel = this.getTopParent();
@@ -197,6 +201,13 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
 
          this._panel.subscribe('onAfterShow', this._updateIndicatorZIndex.bind(this));
       },
+
+      _onBeforeNavigate: function(event, activeElement, isIconClick){
+         if (!isIconClick) {
+            event.setResult(!this._isConfirmDialogShowed);
+         }
+      },
+
       _setDefaultContextRecord: function(){
          var ctx = new $ws.proto.Context({restriction: 'set'}).setPrevious(this.getLinkedContext());
          ctx.setValue('record', this._options.record || new Record());
@@ -294,7 +305,9 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             return this._updateRecord(dResult, config);
          }
          else{
+            this._isConfirmDialogShowed = true;
             $ws.helpers.question(rk('Сохранить изменения?'), questionConfig, this).addCallback(function(result){
+               self._isConfirmDialogShowed = false;
                if (typeof result === 'string'){
                   self._saving = false;
                   return;
