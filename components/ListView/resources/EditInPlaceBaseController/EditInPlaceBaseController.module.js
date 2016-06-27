@@ -484,6 +484,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (!this._savingDeferred.isReady()) {
                   this._savingDeferred.errback();
                }
+               //Снимем блокировку, если редактирование разрушается
+               if (this._editingDeferred) {
+                  this._editingDeferred.callback();
+               }
                EditInPlaceBaseController.superclass.destroy.apply(this, arguments);
             }
          });
