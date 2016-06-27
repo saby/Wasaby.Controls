@@ -345,7 +345,11 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   this._curval = this._getTinyEditorValue();
                } else {
                   this._curval = ctxVal || '';
-                  this._inputControl.html(Sanitize(this._curval));
+                  if (this._tinyReady.isReady()) {
+                     this._tinyEditor.setContent(this._curval);
+                  } else {
+                     this._inputControl.html(Sanitize(this._curval));
+                  }
                }
                this._options.text = this._curval;
                this._notify('onTextChange', this._curval);
