@@ -250,8 +250,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       /**
        * Базовая логика при событии ouUpdate. Обновляем рекорд в связном списке
        */
-      _updateModel: function (model, isNewModel) {
-         if (isNewModel){
+      _updateModel: function (model, additionalData) {
+         if (additionalData && additionalData.isNewRecord){
             this._createRecord(model);
          }
          else{
