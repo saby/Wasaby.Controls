@@ -481,7 +481,7 @@ define(
       setActive: function(active) {
          var date;
          if (!active && !this.formatModel.isFilled()) {
-            date = this._getDateByText(this._options.text, new Date(), true);
+            date = this._getDateByText(this._options.text, this._options.date, true);
             if (date) {
                this.setDate(date);
             }
@@ -500,19 +500,20 @@ define(
          var
             //используем старую дату как основу, чтобы сохранять части даты, отсутствующие в маске
             //new Date от старой даты делаем, чтобы контекст увидел новый объект
-            date = (DateUtil.isValidDate(oldDate)) ? new Date(oldDate.getTime())  : new Date(),
+            date = (DateUtil.isValidDate(oldDate)) ? new Date(oldDate.getTime()) : null,
             item,
             value,
             filled = [],
             notFilled = [],
-            curYear = new Date().getFullYear(),
-            yyyy = date.getFullYear(),
-            mm   = date.getMonth(),
-            dd   = date.getDate(),
-            hh   = date.getHours(),
-            ii   = date.getMinutes(),
-            ss   = date.getSeconds(),
-            uuu  = date.getMilliseconds();
+            now = new Date(),
+            curYear = now.getFullYear(),
+            yyyy = date ? date.getFullYear() : 0,
+            mm   = date ? date.getMonth() : 0,
+            dd   = date ? date.getDate() : 1,
+            hh   = date ? date.getHours() : 0,
+            ii   = date ? date.getMinutes() : 0,
+            ss   = date ? date.getSeconds() : 0,
+            uuu  = date ? date.getMilliseconds() : 0;
          for (var i = 0; i < this.formatModel.model.length; i++) {
             item = this.formatModel.model[i];
             if ( !item.isGroup) {
@@ -562,10 +563,13 @@ define(
                //TODO: На данный момент по требованиям данной задачи: (https://inside.tensor.ru/opendoc.html?guid=a46626d6-abed-453f-92fe-c66f345863ef&description=)
                //автодополнение работает только если 1) заполнен день и не заполнены месц и год; 2) заполнены день и месяц и не заполнен год;
                //Нужно более общий сценарий работы автодополнения! Выписана задача: (https://inside.tensor.ru/opendoc.html?guid=0be02625-2d2f-4f74-940e-4d0e24b369e4&description=)
-               if (Array.indexOf(filled, "DD") !== -1 &&
-                  (Array.indexOf(notFilled, "MM") !== -1 && (Array.indexOf(notFilled, "YY") !== -1 || Array.indexOf(notFilled, "YYYY") !== -1) ||
-                   Array.indexOf(filled, "MM") !== -1 && (Array.indexOf(notFilled, "YY") !== -1 || Array.indexOf(notFilled, "YYYY") !== -1))) {
-                  return new Date(yyyy, mm, dd, hh, ii, ss, uuu);
+               if (Array.indexOf(filled, "DD") !== -1) {
+                  if (Array.indexOf(notFilled, "MM") !== -1 && (Array.indexOf(notFilled, "YY") !== -1 || Array.indexOf(notFilled, "YYYY") !== -1)) {
+                     return new Date(now.getFullYear(), now.getMonth(), dd, hh, ii, ss, uuu);
+                  }
+                  if (Array.indexOf(filled, "MM") !== -1 && (Array.indexOf(notFilled, "YY") !== -1 || Array.indexOf(notFilled, "YYYY") !== -1)) {
+                     return new Date(now.getFullYear(), mm, dd, hh, ii, ss, uuu);
+                  }
                }
             }
          }
