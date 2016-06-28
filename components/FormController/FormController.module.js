@@ -377,7 +377,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             changedRec.addField(record.getFormat().at(formatIndex), i, record.get(key))
          });
 
-         record._changedFields = {};
+         record.acceptChanges();
          return changedRec;
       },
       /**
