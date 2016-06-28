@@ -75,7 +75,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       return itemParent ? itemParent.isExpanded() ? isVisibleItem(itemParent) : false : true;
    },
    projectionFilter = function(item, index, itemProj) {
-      return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
+      // Добавил проверку на скрытый узел. Мы ожидаем, что скрытый узел при поиске не должен быть раскрытым (а его связанные записи - не должны сразу отрисовываться).
+      var
+          itemParent = itemProj.getParent(),
+          itemParentContent = itemParent && itemParent.getContents();
+      return ($ws.helpers.instanceOfModule(itemParentContent, 'SBIS3.CONTROLS.Data.Record') && itemParentContent.get(this.hierField + '@') !== false && this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
    },
    projectionFilterOnlyFolders = function(item, index, itemProj) {
       return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj, true);
