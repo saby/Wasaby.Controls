@@ -1,5 +1,5 @@
-define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CORE.LoadingIndicator', 'js!SBIS3.CONTROLS.Data.Record', 'js!SBIS3.CONTROLS.Data.Source.SbisService', 'i18n!SBIS3.CONTROLS.FormController'],
-   function(CompoundControl, LoadingIndicator, Record, SbisService) {
+define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CORE.LoadingIndicator', 'js!SBIS3.CONTROLS.Data.Record', 'js!SBIS3.CONTROLS.Data.Model', 'js!SBIS3.CONTROLS.Data.Source.SbisService', 'i18n!SBIS3.CONTROLS.FormController'],
+   function(CompoundControl, LoadingIndicator, Record, Model, SbisService) {
    /**
     * Компонент, на основе которого создают диалоги редактирования записей.
     * Подробнее о создании диалогов вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/">Диалоги редактирования</a>.
@@ -107,6 +107,10 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
              * @see dataSource
              */
             record: null,
+            /**
+             * @cfg {Boolean} Сохранять только измененные поля
+             */
+            diffOnly: false,
             /**
              * @cfg {Object} Устанавливает ассоциативный массив, который используют только при создании новой записи для инициализации её начальными значениями.
              * @remark
@@ -321,7 +325,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
              def;
          if (this.validate()) {
             if (this._options.record.isChanged() || self._newRecord) {
-               def = this._dataSource.update(this._options.record);
+               def = this._dataSource.update(this._getRecordForUpdate());
                if (!config.hideIndicator) {
                   this._showLoadingIndicator();
                }
@@ -357,6 +361,27 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             this._saving = false;
          }
          return dResult;
+      },
+      _getRecordForUpdate: function () {
+         if (!this._options.diffOnly){
+            return this._options.record;
+         }
+
+         var record = this._options.record,
+            changedRec = new Model({
+               idProperty: record.getIdProperty(),
+               adapter: record.getAdapter()
+            }),
+            changedFields = record.getChanged();
+         changedFields.push(record.getIdProperty());
+
+         $.each(changedFields, function(i, key){
+            var formatIndex = record.getFormat().getFieldIndex(key);
+            changedRec.addField(record.getFormat().at(formatIndex), i, record.get(key))
+         });
+
+         record.acceptChanges();
+         return changedRec;
       },
       /**
        * Прочитать запись по первичному ключу из источника данных диалога редактирования.
