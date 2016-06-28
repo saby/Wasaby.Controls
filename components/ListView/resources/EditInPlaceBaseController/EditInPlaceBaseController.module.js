@@ -210,12 +210,15 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this.endEdit(true).addCallback(function() {
                   return self._prepareEdit(record).addCallback(function(preparedRecord) {
                      if (preparedRecord) {
-                        var itemProjItem = self._options.itemsProjection.getItemBySourceItem(preparedRecord);
+                        var
+                            parentProjItem,
+                            itemProjItem = self._options.itemsProjection.getItemBySourceItem(preparedRecord);
                         self._eip.edit(target, preparedRecord, itemProjItem);
                         self._notify('onAfterBeginEdit', preparedRecord);
                         //TODO: необходимо разбивать контроллер редактирования по месту, для плоских и иерархических представлений
                         if (self._options.hierField) {
-                           self._lastTargetAdding = itemProjItem.getParent();
+                           parentProjItem = itemProjItem.getParent();
+                           self._lastTargetAdding = parentProjItem.isRoot() ? null : parentProjItem;
                         }
                         return preparedRecord;
                      }
