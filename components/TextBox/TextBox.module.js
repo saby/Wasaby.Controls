@@ -374,6 +374,12 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
                self._inputField.get(0).focus();
             }
          });
+      },
+
+      destroy: function() {
+         this._inputField.off('*');
+         this._inputField = undefined;
+         TextBox.superclass.destroy.apply(this, arguments);
       }
    });
 

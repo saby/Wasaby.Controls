@@ -876,6 +876,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
           destroy: function() {
              this._linksWrapper = undefined;
              this._inputWrapper = undefined;
+             this._afterFieldWrapper = undefined;
+             this._beforeFieldWrapper = undefined;
 
              if(this._linkCollection) {
                 this._linkCollection.destroy();
