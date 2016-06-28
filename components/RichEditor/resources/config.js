@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.RichEditor/resources/config', ['i18n!js!SBIS3.CONTROLS.RichEditor'], function () {
+define('js!SBIS3.CONTROLS.RichEditor/resources/config', ['i18n!SBIS3.CONTROLS.RichEditor'], function () {
 
    'use strict';
 
