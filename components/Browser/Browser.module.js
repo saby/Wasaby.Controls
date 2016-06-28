@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.Browser', [
             this._backButton = this._getBackButton();
             this._breadCrumbs = this._getBreadCrumbs();
                if (this._backButton && this._breadCrumbs) {
-                  this._backButton.subscribe('onArrowActivated', this._folderEditHandler);
+                  this._backButton.subscribe('onArrowActivated', this._folderEditHandler.bind(this));
                   this._componentBinder = new ComponentBinder({
                      backButton : this._backButton,
                      breadCrumbs : this._breadCrumbs,
@@ -175,7 +175,8 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
 
       _folderEditHandler: function(){
-         this._notify('onEditCurrentFolder', this._componentBinder.getCurrentRootRecord());
+         var self = this;
+         this._notify('onEditCurrentFolder', self._componentBinder.getCurrentRootRecord());
       },
 
       addItem: function(metaData) {
