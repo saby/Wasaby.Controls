@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                   self._choose(false);
                });
 
-               if(this._options.threeButton){
+               if(this._options.hasCancelButton){
                   this.subscribeTo(this.getChildControlByName('cancelButton'), 'onActivated', function(){
                      self._choose();
                   });
