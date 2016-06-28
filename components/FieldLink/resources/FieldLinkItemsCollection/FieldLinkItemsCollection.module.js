@@ -166,6 +166,13 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                   }
                }
             };
+         },
+
+         destroy: function() {
+            if (this._picker) {
+               this._picker.getContainer().off('click');
+            }
+            FieldLinkItemsCollection.superclass.destroy.apply(this, arguments);
          }
       });
 

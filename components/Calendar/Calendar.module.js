@@ -288,6 +288,11 @@ define(
             obj.isCalendar = isCalendar;
 
             array.push(obj);
+         },
+
+         destroy: function() {
+            ControlHierarchyManager.removeNode(this, this.getParent());
+            Calendar.superclass.destroy.apply(this, arguments);
          }
       });
 
