@@ -85,6 +85,10 @@
 .controls-FieldLink {
    display: inline-block;
    border-color: @controls-FieldLink-border-color;
+   position: relative;
+   overflow: hidden;
+   white-space: nowrap;
+   vertical-align: middle;
 
    &.controls-Picker__show,
    &.ws-has-focus,
@@ -120,6 +124,11 @@
 
    .controls-TextBox__afterFieldWrapper {
       padding: @controls-FieldLink-afterField-padding;
+      height: 22px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: #ffffff;
       > *{
          vertical-align: middle;
       }
