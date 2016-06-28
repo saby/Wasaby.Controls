@@ -19,6 +19,7 @@ def copyThemesLess(file):
 copyReplace("components")
 copyReplace("themes")
 copyReplace("build")
+copyReplace("resources")
 
 copyThemesLess("general.less")
 copyThemesLess("mixins.less")
