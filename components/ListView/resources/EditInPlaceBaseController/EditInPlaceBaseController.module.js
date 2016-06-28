@@ -73,6 +73,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                };
                this._createEip();
                this._savingDeferred = $ws.proto.Deferred.success();
+               this._editingDeferred = $ws.proto.Deferred.success();
             },
 
             isEdit: function() {
@@ -485,6 +486,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                //Сохранение при этом продолжит работать в обычном режиме.
                if (!this._savingDeferred.isReady()) {
                   this._savingDeferred.errback();
+               }
+               //Снимем блокировку, если редактирование разрушается
+               if (!this._editingDeferred.isReady()) {
+                  this._editingDeferred.callback();
                }
                EditInPlaceBaseController.superclass.destroy.apply(this, arguments);
             }
