@@ -69,3 +69,15 @@
       line-height: 24px;
    }
 }
+.ws-is-desktop-platform {
+   .controls-Link:not(.ws-disabled) {
+      &:hover {
+         color: @link-hover-text-color;
+         cursor: @link-cursor;
+         text-decoration: @link-hover-text-decoration;
+         .controls-Link__icon{
+            color: @primary-color!important;
+         }
+      }
+   }
+}

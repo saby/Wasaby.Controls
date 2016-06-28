@@ -3,12 +3,6 @@
    position: relative;
    text-decoration: @menu-link-text-decoration;
    color: @menu-link-text-color;
-   &.ws-enabled {
-      &:hover {
-         text-decoration: @menu-link-hover-text-decoration;
-         color: @menu-link-hover-text-color;
-      }
-   }
 }
 
 // Menu
@@ -32,6 +26,17 @@
       .controls-Menu__header {
          .icon-16 {
             margin-top: -1px;
+         }
+      }
+   }
+}
+
+.ws-is-desktop-platform {
+   .controls-MenuLink {
+      &.ws-enabled {
+         &:hover {
+            text-decoration: @menu-link-hover-text-decoration;
+            color: @menu-link-hover-text-color;
          }
       }
    }

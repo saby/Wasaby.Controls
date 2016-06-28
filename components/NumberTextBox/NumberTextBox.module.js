@@ -161,16 +161,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
          this._inputField.bind('blur', function(){
             // Прятать нулевую дробную часть при потере фокуса
-            var value = $(this).val();
-            if (self._options.hideEmptyDecimals && (value && value.indexOf('.') != -1)){
-               while (value[value.length - 1] == '0' || value[value.length - 1] == '.'){
-                  value = value.substr(0, value.length - 1);
-                  if (value.indexOf('.') == -1) { // удаляем только дробную часть
-                     break;
-                  }
-               }
-            }
-            $(this).val(value);
+            self._hideEmptyDecimals();
          });
 
          if (typeof this._options.numericValue === 'number' && !isNaN(this._options.numericValue)) {
@@ -179,6 +170,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          this._options.text = this._formatText(this._options.text, this._options.hideEmptyDecimals);
          this._setNumericValue(this._options.text);
          this._inputField.val(this._options.text);
+         this._hideEmptyDecimals();
       },
 
       _inputFocusInHandler: function() {
@@ -216,6 +208,19 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          this._setNumericValue(text);
          text = this._formatText(text);
          NumberTextBox.superclass.setText.call(this, text);
+      },
+
+      _hideEmptyDecimals: function () {
+         var value = this._inputField.val();
+         if (this._options.hideEmptyDecimals && (value && value.indexOf('.') != -1)){
+            while (value[value.length - 1] == '0' || value[value.length - 1] == '.'){
+               value = value.substr(0, value.length - 1);
+               if (value.indexOf('.') == -1) { // удаляем только дробную часть
+                  break;
+               }
+            }
+         }
+         this._inputField.val(value);
       },
 
        /**

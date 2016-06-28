@@ -15,13 +15,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'Core/ParserUtilities'
 ], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities) {
 
-   /**
-    * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
-    * @mixin SBIS3.CONTROLS.ItemsControlMixin
-    * @public
-    * @author Крайнов Дмитрий Олегович
-    */
-
    function propertyUpdateWrapper(func) {
       return function() {
          return this.runInPropertiesUpdate(func, arguments);
@@ -90,7 +83,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          idProperty : keyField
       })
    };
-
+   /**
+    * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
+    * @mixin SBIS3.CONTROLS.ItemsControlMixin
+    * @public
+    * @author Крайнов Дмитрий Олегович
+    */
    var ItemsControlMixin = /**@lends SBIS3.CONTROLS.ItemsControlMixin.prototype  */{
        /**
         * @event onDrawItems После отрисовки всех элементов коллекции
@@ -228,7 +226,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             displayField: null,
              /**
               * @cfg {Array.<Object.<String,String>>} Масив объектов. Набор исходных данных, по которому строится отображение
-              * @name SBIS3.CONTROLS.ListControlMixin#items
+              * @name SBIS3.CONTROLS.ItemsControlMixin#items
               * @remark
               * !Важно: данные для коллекции элементов можно задать либо в этой опции,
               * либо через источник данных методом {@link setDataSource}.

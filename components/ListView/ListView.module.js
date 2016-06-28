@@ -87,33 +87,35 @@ define('js!SBIS3.CONTROLS.ListView',
       var ListView = CompoundControl.extend([CompoundActiveFixMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
-          * @event onChangeHoveredItem При переводе курсора мыши на другую запись
-          * @remark
-          * Событие срабатывает при смене записи под курсором мыши.
+          * @event onChangeHoveredItem Происходит при переводе курсора мыши на другой элемент коллекции списка.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} hoveredItem Объект
-          * @param {Number|String} hoveredItem.key ключ элемента представления данных
-          * @param {jQuery|false} hoveredItem.container элемент представления данных
-          * @param {Object} hoveredItem.position координаты контейнера элемента
-          * @param {Number} hoveredItem.top отступ сверху
-          * @param {Number} hoveredItem.left отступ слева
-          * @param {Object} hoveredItem.size размеры контейнера элемента
-          * @param {Number} hoveredItem.height высота
-          * @param {Number} hoveredItem.width ширина
+          * @param {Object} hoveredItem Объект, свойства которого описывают данные элемента коллекции списка, на который навели курсор мыши.
+          * @param {SBIS3.CONTROLS.Data.Model} record Элемент коллекции, на который перевели курсор.
+          * @param {Number|String} hoveredItem.key Первичный ключ элемента.
+          * @param {jQuery|false} hoveredItem.container Контейнер визуального отображения элемента (DOM-элемент).
+          * @param {Object} hoveredItem.position Объект, свойства которого описывают координаты контейнера визуального отображения элемента.
+          * @param {Number} hoveredItem.position.top Отступ от верхней границы контейнера визуального отображения элемента до верхней границы контейнера визуального отображения списка. Значение в px. При расчете учитывается текущий скролл в списке.
+          * @param {Number} hoveredItem.position.left Отступ от левой границы контейнера визуального отображения элемента до левой границы контейнера визуального отображения списка. Значение в px.
+          * @param {Object} hoveredItem.size Объект, свойства которого описывают высоту и ширину контейнера визуального отображения элемента.
+          * @param {Number} hoveredItem.size.height Высота контейнера визуального отображения элемента. Значение в px.
+          * @param {Number} hoveredItem.size.width Ширина контейнера визуального отображения элемента. Значение в px.
           * @example
+          * При наведении курсора мыши на запись справа от неё отображаются операции (см. <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">Быстрый доступ к операциям по наведению курсора</a>).
+          * Ниже приведён код, с помощью которого можно изменять отображение набора операций для записей списка.
           * <pre>
-          *     DataGridView.subscribe('onChangeHoveredItem', function(hoveredItem) {
-           *        var actions = DataGridView.getItemsActions(),
-           *        instances = actions.getItemsInstances();
-           *
-           *        for (var i in instances) {
-           *           if (instances.hasOwnProperty(i)) {
-           *              //Будем скрывать кнопку удаления для всех строк
-           *              instances[i][i === 'delete' ? 'show' : 'hide']();
-           *           }
-           *        }
-           *     });
+          *    dataGrid.subscribe('onChangeHoveredItem', function(eventObject, hoveredItem) {
+          *       var actions = DataGridView.getItemsActions(),
+          *           instances = actions.getItemsInstances();
+          *       for (var i in instances) {
+          *          if (instances.hasOwnProperty(i)) {
+          *             //Будем скрывать кнопку удаления для всех строк
+          *             instances[i][i === 'delete' ? 'show' : 'hide']();
+          *          }
+          *       }
+          *    });
           * </pre>
+          * Подобная задача часто сводится к отображению различных операций для узлов, скрытых узлов и листьев для иерархических списков.
+          * Пример конфигурации списка для решения подобной задачи вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/mode/">здесь</a>.
           * @see itemsActions
           * @see setItemsActions
           * @see getItemsActions
@@ -372,12 +374,25 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                }],
                /**
-                * @cfg {String} Разрешено или нет перемещение элементов "Drag-and-Drop"
-                * @variant "" Запрещено
-                * @variant allow Разрешено
+                * @cfg {String|Boolean} Устанавливает возможность перемещения элементов с помощью курсора мыши.
+                * @variant "" Запрещено перемещение.
+                * @variant allow Разрешено перемещение.
+                * @variant false Запрещено перемещение.
+                * @variant true Разрешено перемещение.
                 * @example
+                * Подробнее о способах передачи значения в опцию вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/">Вёрстка компонента</a>.
+                * <b>Пример 1.</b> Ограничим возможность перемещения записей с помощью курсора мыши.
                 * <pre>
-                *     <option name="itemsDragNDrop">allow</option>
+                *     <option name="itemsDragNDrop" value=""></option>      <!-- Передаём пустую строку в атрибуте value. Иным способом пустая строка не распознаётся -->
+                *     <option name="itemsDragNDrop" value="false"></option> <!-- Первый способ передачи false -->
+                *     <option name="itemsDragNDrop">false</option>          <!-- Второй способ передачи false -->
+                * </pre>
+                * <b>Пример 2.</b> Разрешим перемещение записей с помощью курсора мыши.
+                * <pre>
+                *     <option name="itemsDragNDrop" type="string" value="allow"></option> <!-- Первый способ передачи allow -->
+                *     <option name="itemsDragNDrop" type="string">allow</option>          <!-- Второй способ передачи allow -->
+                *     <option name="itemsDragNDrop" value="false"></option> <!-- Первый способ передачи true -->
+                *     <option name="itemsDragNDrop">false</option>          <!-- Второй способ передачи true -->
                 * </pre>
                 */
                itemsDragNDrop: 'allow',
@@ -2025,17 +2040,34 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
          },
          _toggleIndicator: function(show){
+            var self = this,
+                container = this.getContainer(),
+                ajaxLoader = container.find('.controls-AjaxLoader').eq(0),
+                indicator, centerCord, scrollContainer;
+
+
             this._showedLoading = show;
-            var self = this;
             if (show) {
                setTimeout(function(){
                   if (self._showedLoading) {
-                     self._container.find('.controls-AjaxLoader').toggleClass('ws-hidden', false);
+                     scrollContainer = self._getScrollContainer();
+                     indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
+                     if(scrollContainer && container[0].scrollHeight > scrollContainer[0].offsetHeight) {
+                        /* Ищем кординату, которая находится по середине отображаемой области грида */
+                        centerCord =
+                           (Math.max(scrollContainer[0].getBoundingClientRect().bottom, 0) - Math.max(container[0].getBoundingClientRect().top, 0))/2;
+                        /* Располагаем индикатор, учитывая прокрутку */
+                        indicator[0].style.top = centerCord + scrollContainer[0].scrollTop + 'px';
+                     } else {
+                        /* Если скрола нет, то сбросим кординату, чтобы индикатор сам расположился по середине */
+                        indicator[0].style.top = '';
+                     }
+                     ajaxLoader.removeClass('ws-hidden');
                   }
                }, 750);
             }
             else {
-               self._container.find('.controls-AjaxLoader').toggleClass('ws-hidden', true);
+               ajaxLoader.addClass('ws-hidden');
             }
          },
          _toggleEmptyData: function(show) {
