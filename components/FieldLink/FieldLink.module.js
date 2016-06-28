@@ -250,21 +250,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  *     "></option>
                  * </pre>
                  */
-                itemTemplate: ''
+                itemTemplate: null
              }
           },
 
           $constructor: function() {
              var commandDispatcher = $ws.single.CommandDispatcher;
 
-             this.getContainer().addClass('controls-FieldLink');
              this._publish('onItemActivate');
 
              /* Проиницализируем переменные */
              this._setVariables();
-
-             /* Создём контрол, который рисует выбранные элементы  */
-             this._linkCollection = this._getLinkCollection();
 
              commandDispatcher.declareCommand(this, 'clearAllItems', this._dropAllItems);
              commandDispatcher.declareCommand(this, 'showAllItems', this._showAllItems);
@@ -287,8 +283,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           init: function() {
              FieldLink.superclass.init.apply(this, arguments);
-             /* Надо задавать элементы для меню рекордсетом, чтобы не портились хэндлеры сериализатором */
-             this.getChildControlByName('fieldLinkMenu').setItems(this._prepareFieldLinkMenuItems(this._options.dictionaries));
+             this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
           },
 
            _getShowAllConfig: function(){
@@ -326,7 +321,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           setDictionaries: function(dictionaries) {
              this._options.dictionaries = dictionaries;
-             this.getChildControlByName('fieldLinkMenu').setItems(this._prepareFieldLinkMenuItems(dictionaries));
+             this.getChildControlByName('fieldLinkMenu').setItems(dictionaries);
              this._notifyOnPropertyChanged('dictionaries');
           },
 
@@ -388,19 +383,47 @@ define('js!SBIS3.CONTROLS.FieldLink',
              };
           },
 
+          _modifyOptions: function() {
+             var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments);
+
+             /* className вешаем через modifyOptions,
+                так меньше работы с DOM'ом */
+             cfg.className += ' controls-FieldLink';
+             cfg.itemTemplate = TemplateUtil.prepareTemplate(cfg.itemTemplate);
+             return cfg;
+          },
+
           _getLinkCollection: function() {
              if(!this._linkCollection) {
-                return this._drawFieldLinkItemsCollection();
+                return (this._linkCollection = this.getChildControlByName('FieldLinkItemsCollection'));
              }
              return this._linkCollection;
           },
 
-          _prepareFieldLinkMenuItems: function (items) {
-             return new RecordSet({
-                rawData : items,
-                idProperty : 'caption'
-             })
+          /** Обработчики событий контрола отрисовки элементов **/
+          _onDrawItemsCollection: function() {
+             this._updateInputWidth();
           },
+          _onCrossClickItemsCollection: function(key) {
+             this.removeItemsSelection([key]);
+             if(!this._options.multiselect && this._options.alwaysShowTextBox) {
+                this.setText('');
+             }
+          },
+          _onItemActivateItemsCollection: function(key) {
+             this.getSelectedItems(false).each(function(item) {
+                if(item.getId() == key) {
+                   this._notify('onItemActivate', {item: item, id: key});
+                }
+             }, this)
+          },
+          _onClosePickerItemsCollection: function() {
+             this._pickerStateChangeHandler(false);
+          },
+          _onShowPickerItemsCollection: function() {
+             this._pickerStateChangeHandler(true);
+          },
+          /**************************************************************/
 
           _observableControlFocusHandler: function() {
              /* Не надо обрабатывать приход фокуса, если у нас есть выбрынные
@@ -639,49 +662,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
              FieldLink.superclass.setListFilter.apply(this, arguments);
           },
 
-          _drawFieldLinkItemsCollection: function() {
-             var self = this,
-                 tpl = this.getProperty('itemTemplate');
-             return new FieldLinkItemsCollection({
-                element: this._linksWrapper.find('.controls-FieldLink__linksContainer'),
-                displayField: this._options.displayField,
-                keyField: this._options.keyField,
-                itemTemplate: tpl ? TemplateUtil.prepareTemplate(tpl) : undefined,
-                userItemAttributes: this._options.userItemAttributes,
-                parent: this,
-                itemCheckFunc: this._checkItemBeforeDraw.bind(this),
-                handlers: {
-                   /* После окончания отрисовки, обновим размеры поля ввода */
-                   onDrawItems: this._updateInputWidth.bind(this),
-
-                   /* При клике на крест, удалим ключ из выбранных */
-                   onCrossClick: function(e, key){
-                      self.removeItemsSelection([key]);
-                      if(!self._options.multiselect && self._options.alwaysShowTextBox) {
-                         self.setText('');
-                      }
-                   },
-
-                   onItemActivate: function(e, key) {
-                      self.getSelectedItems(false).each(function(item) {
-                         if(item.getId() == key) {
-                            self._notify('onItemActivate', {item: item, id: key});
-                         }
-                      })
-                   },
-
-                   /* При закрытии пикера надо скрыть кнопку удаления всех выбранных, при открытии - показать */
-                   onClosePicker: self._pickerStateChangeHandler.bind(self, false),
-                   onShowPicker: self._pickerStateChangeHandler.bind(self, true)
-                }
-             });
-          },
-
           showPicker: function() {
              /* Если открыт пикер, который показывает все выбранные записи, то не показываем автодополнение */
-             if(!this._linkCollection.isPickerVisible()) {
-                FieldLink.superclass.showPicker.apply(this, arguments);
+             if(this._getLinkCollection().isPickerVisible()) {
+                return;
              }
+             FieldLink.superclass.showPicker.apply(this, arguments);
           },
           /**
            * Проверяет, нужно ли отрисовывать элемент или надо показать троеточие

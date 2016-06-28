@@ -1,4 +1,7 @@
-define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3.CONTROLS.TextBox'], function(TextBoxBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.TextBox', [
+   'js!SBIS3.CONTROLS.TextBoxBase',
+   'html!SBIS3.CONTROLS.TextBox',
+   'js!SBIS3.CONTROLS.Utils.TemplateUtil'], function(TextBoxBase, dotTplFn, TemplateUtil) {
 
    'use strict';
 
@@ -155,7 +158,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
                      text = newText;
                   }
                   self._inputField.val(text);
-                  self.setText(self._formatText(text));   
+                  self.setText(self._formatText(text));
                }
             }, 100);
          });
@@ -191,6 +194,15 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          this._container.bind("mouseenter", function(e){
             self._applyTooltip();
          });
+      },
+
+      _modifyOptions: function() {
+         var cfg = TextBox.superclass._modifyOptions.apply(this, arguments);
+         /* Надо подготовить шаблоны beforeFieldWrapper и afterFieldWrapper,
+            чтобы у них был __vStorage, для возможности обращаться к опциям по ссылке (ref) */
+         cfg.beforeFieldWrapper = TemplateUtil.prepareTemplate(cfg.beforeFieldWrapper);
+         cfg.afterFieldWrapper = TemplateUtil.prepareTemplate(cfg.afterFieldWrapper);
+         return cfg;
       },
 
       /**
