@@ -17,16 +17,6 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Base', [
       $protected: {
          _options:{
             /**
-             * @cfg {String} Имя объекта бизнес-логики, у которго происходит перемещение записей.
-             * @example
-             * <pre>
-             *    <option name="contract">СвязьПапок</option>
-             * </pre>
-             * @see move
-             */
-            contract: undefined,
-
-            /**
              * @cfg {String} Имя поля, по которому строится иерархия.
              * @see hierarhyMove
              */
@@ -42,20 +32,11 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Base', [
          _orderProvider: undefined
       },
 
-      $constructor: function (cfg){
-         cfg = cfg || {};
-         //Deprecated
-         if ('resource' in cfg && !('contract' in cfg)) {
-            Utils.logger.stack(this._moduleName + '::$constructor(): option "resource" is deprecated and will be removed in 3.7.4. Use "contract" instead.', 2);
-            this._options.contract = cfg.resource;
-         }
-      },
-
       move: function (from, to, after) {
          var def = new $ws.proto.ParallelDeferred(),
             self = this;
          $ws.helpers.forEach(from, function(record){
-            def.push(self._options.dataSource.call('move', {from: record, to: to, details: {after: after}}));
+            def.push(self._options.dataSource.move(record,  to, !after));
          });
          return def.done().getResult();
       },

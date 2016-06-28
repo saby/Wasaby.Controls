@@ -241,9 +241,30 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
          }).bind(this));
 
          return result;
-      }
+      },
 
+      /**
+       * Устанавливает объект бизнес логики используемый для перемещения
+       * @param {String} name Название объекта бизнес логики
+       * @protected может использоваться только стратегии перемещения, нужно на время переходного периода
+       * @returns {String}
+       */
+      setMoveContract: function (name) {
+         this.getEndpoint().moveContract = name;
+      },
+
+      /**
+       * Устанавливает методы бизнес логики используемые для перемещения
+       * @param {String} prefix Префикс методов бизнес логики
+       * @protected может использоваться только стратегии перемещения, нужно на время переходного периода
+       * @returns {String}
+       */
+      setMoveMethods: function (prefix) {
+         this.getBinding().moveBefore = prefix + 'До';
+         this.getBinding().moveAfter = prefix + 'После';
+      }
       //endregion SBIS3.CONTROLS.BaseSource
+
 
    });
 

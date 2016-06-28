@@ -122,7 +122,8 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
                query: '',
                copy: '',
                merge: '',
-               move: ''
+               moveBefore: '',
+               moveAfter: ''
             },
 
             /**
@@ -236,7 +237,9 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
             }
          }
       },
-
+      /** @typedef {Object} MoveMetaConfig
+       * @property {Boolean} before Если true вставить запись перед переданной, по умолчанию после.
+      */
       /**
        * Возвращает конечную точку, обеспечивающую доступ клиента к функциональным возможностям источника данных
        * @returns {Endpoint}

@@ -115,7 +115,9 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                destroy: 'Удалить',
                query: 'Список',
                copy: 'Копировать',
-               merge: 'Объединить'
+               merge: 'Объединить',
+               moveBefore: 'ВставитьДо',
+               moveAfter: 'ВставитьПосле'
             },
 
             /**
@@ -156,7 +158,12 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              */
             metaConfig: {
                hasMore: 'hasMore'
-            }
+            },
+            /**
+             * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
+             * @see move
+            */
+            moveProperty: 'ПорНомер'
          },
 
          /**
@@ -365,6 +372,25 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          };
       },
 
+      /**
+       * Возвращает параметры перемещения записей
+       * @param {String} to Значение поля, в позицию которого перемещаем (по умолчанию - значение первичного ключа)
+       * @param {Boolean} meta Дополнительная информация о перемещении
+       * @returns {Object}
+       * @private
+       */
+      _prepareMoveArguments: function(from, to, meta) {
+         var params = {
+               'ПорядковыйНомер': this._options.moveProperty,
+               'Иерархия': meta.hierField || null,
+               'Объект': this._options.endpoint.moveContract,
+               'ИдО': this._prepareComplexId(from.getId())
+            };
+
+         params[meta.before ? 'ИдОДо' : 'ИдОПосле'] = this._prepareComplexId(to.getId());
+
+         return params;
+      },
       //endregion SBIS3.CONTROLS.Data.Source.Remote
 
       //region Protected methods
@@ -609,6 +635,18 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             return ido[1];
          }
          return this._options.endpoint.contract;
+      },
+      /**
+       * подготавливает сложный идентификатор
+       * @param id
+       * @private
+       */
+      _prepareComplexId: function (id){
+         var preparedId = String.prototype.split.call(id, ',', 2);
+         if (preparedId.length < 2) {
+            preparedId.push(this._options.contract);
+         }
+         return preparedId;
       },
 
       //endregion Protected methods

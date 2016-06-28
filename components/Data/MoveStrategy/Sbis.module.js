@@ -21,22 +21,25 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
          _options:{
 
             /**
+             * @deprecated используйте ednpoint.moveContract на источнике данных
              * @cfg {String} Имя объекта бизнес-логики, реализующего перемещение записей. По умолчанию 'ПорядковыйНомер'.
              * @example
              * <pre>
              *    <option name="moveContract">ПорядковыйНомер</option>
              * </pre>
-             * @see move
+             * @see #SBIS3.CONTROLS.Data.Source.SbisService.ednpoint
              */
             moveContract: 'ПорядковыйНомер',
 
             /**
+             * @deprecated используйте binding.moveAfter, binding.moveBefore на источнике данных
              * @cfg {String} Префикс имени метода, который используется для перемещения записи. По умолчанию 'Вставить'.
-             * @see move
+             * @see #SBIS3.CONTROLS.Data.Source.SbisService.binding
              */
             moveMethodPrefix: 'Вставить',
 
             /**
+             * @deprecated
              * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
              * @see move
              */
@@ -51,18 +54,29 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
 
          _orderProvider: undefined
       },
-      $constructor: function (cfg){
+      $constructor: function (cfg) {
          cfg = cfg || {};
 
-         //Deprecated
-         if ('moveResource' in cfg && !('moveContract' in cfg)) {
-            Utils.logger.stack(this._moduleName + '::$constructor(): option "moveResource" is deprecated and will be removed in 3.7.4. Use "moveContract" instead.', 1);
-            this._options.moveContract = cfg.moveResource;
+         if (!('dataSource' in cfg) && !('listView' in cfg)) {
+            this._options.dataSource = DI.resolve('source.sbis-service',{});
+            this._options.dataSource.setMoveMethods(this._options.moveMethodPrefix);
+         } else if (('listView' in cfg)) {
+            this._options.dataSource = cfg.listView.getDataSource();
          }
 
-         if (!this._options.contract) {
-            this._options.contract = this._options.dataSource.getEndpoint().contract;
+         //Deprecated
+         if ('moveContract' in cfg) {
+            Utils.logger.stack(this._moduleName + '::$constructor(): option "moveContract" is deprecated and will be removed in 3.8.0. Use "moveContract" on the DataSource', 1);
+            this._options.getDataSource().setMoveContract(this._options.moveContract);
          }
+
+         if ('moveMethodPrefix' in cfg) {
+            Utils.logger.stack(this._moduleName + '::$constructor(): option "moveMethodPrefix" is deprecated and will be removed in 3.8.0. Use "binding.moveAfter" and "binding.moveBefore" on the DataSource', 1);
+            this._options.getDataSource().setMoveMethods(this._options.moveMethodPrefix);
+         }
+
+
+
       }
 
 

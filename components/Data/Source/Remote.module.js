@@ -72,7 +72,15 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
              *    });
              * </pre>
              */
-            provider: null
+            provider: null,
+            /**
+             * @cfg {SBIS3.CONTROLS.Data.Source.Provider.IAbstract|String} Provider используемый для перемещения
+             * @remark Так как методы перемещения могут быть реализованы на другом объекте бизнес логики, по умолчанию  на
+             * объекте ПорядковыйНомер, то для них нужен свой провайдер
+             * @see provider
+             * @see SBIS3.CONTROLS.Data.Di
+             */
+            moveProvider: null
          }
       },
 
@@ -157,66 +165,13 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
 
       move: function (from, to, meta) {
          var self = this,
-            suffix = meta.after ? 'После':'До',
-            def = new $ws.proto.ParallelDeferred(),
-            params = this._prepareMoveArguments(to, meta),
-            parent = to.get(self._options.hierField);
+            moveMethod = meta.before ? this._options.binding.moveBefore: this._options.binding.moveAfter;
 
-         if (!this._orderProvider) {
-            this._orderProvider = DI.resolve(
-               'source.provider.sbis-business-logic', {
-                  endpoint: {
-                     contract: this._options.moveContract
-                  }
-               }
-            );
-         }
-
-         $ws.helpers.forEach(from, function(record) {
-            params['ИдО'] = self._prepareComplexId(record.getId());
-            record.set(self._options.hierField, parent);
-            def.push(this._makeCall(
-               command,
-               data
-            ));
-         });
-         return def.done().getResult();
-      },
-
-      /**
-       * Возвращает параметры перемещения записей
-       * @param {String} to Значение поля, в позицию которого перемещаем (по умолчанию - значение первичного ключа)
-       * @param {Boolean} after Дополнительная информация о перемещении
-       * @returns {Object}
-       * @private
-       */
-      _getMoveParams: function(to, after) {
-         var params = {
-               'ПорядковыйНомер': this._options.moveDefaultColumn,
-               'Иерархия': this._options.hierField || null,
-               'Объект': this._options.contract
-            },
-            id = this._prepareComplexId(to.getId());
-
-         if (after) {
-            params['ИдОПосле'] = id;
-         } else {
-            params['ИдОДо'] = id;
-
-         }
-         return params;
-      },
-      /**
-       * подготавливает сложный идентификатор
-       * @param id
-       * @private
-       */
-      _prepareComplexId: function (id){
-         var preparedId = String.prototype.split.call(id, ',', 2);
-         if (preparedId.length < 2) {
-            preparedId.push(this._options.contract);
-         }
-         return preparedId;
+         return this._makeCall(
+            moveMethod,
+            this._prepareMoveArguments(from, to, meta),
+            self.getMoveProvider()
+         );
       },
 
       //endregion SBIS3.CONTROLS.Data.Source.ISource
@@ -239,22 +194,18 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
        * @see provider
        */
       getProvider: function () {
-         if (!this._options.provider) {
-            throw new Error('Remote access provider is not defined');
-         }
-         if (typeof this._options.provider === 'string') {
-            this._options.provider = Di.resolve(this._options.provider, {
-               endpoint: this._options.endpoint,
-               options: this._options.options,
-               //TODO: remove pass 'service' and 'resource'
-               service: this._options.endpoint.address,
-               resource: this._options.endpoint.contract
-            });
-         }
-
-         return this._options.provider;
+         return this._options.provider = this._getProvider(this._options.provider);
       },
 
+
+      /**
+       * Возвращает объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
+       * @returns {SBIS3.CONTROLS.Data.Source.Provider.IAbstract}
+       * @see provider
+       */
+      getMoveProvider: function() {
+         return this._options.moveProvider = this._getProvider(this._options.moveProvider);
+      },
       //endregion Public methods
 
       //region Protected methods
@@ -320,6 +271,28 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
 
       _prepareQueryArguments: function(query) {
          return [query];
+      },
+
+      _prepareMoveArguments: function(from, to, meta) {
+         return [from, to, meta];
+      },
+
+
+      _getProvider: function(provider){
+         if (!provider) {
+            throw new Error('Remote access provider is not defined');
+         }
+         if (typeof provider === 'string') {
+            provider = Di.resolve(provider, {
+               endpoint: this._options.endpoint,
+               options: this._options.options,
+               //TODO: remove pass 'service' and 'resource'
+               service: this._options.endpoint.address,
+               resource: this._options.endpoint.contract
+            });
+         }
+
+         return provider;
       }
 
       //endregion Protected methods
