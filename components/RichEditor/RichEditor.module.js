@@ -1153,11 +1153,8 @@ define('js!SBIS3.CONTROLS.RichEditor',
             });
 
             editor.on('keydown', function(e) {
-               var
-                  selection,
-                  node,
-                  offset;
                self._typeInProcess = true;
+
                if (e.which === $ws._const.key.pageDown || e.which === $ws._const.key.pageUp || (e.which === $ws._const.key.insert && !e.shiftKey && !e.ctrlKey)) {
                   e.stopPropagation();
                   e.preventDefault();
@@ -1173,22 +1170,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   e.stopImmediatePropagation();
                   e.preventDefault();
                   return false;
-               } else if (e.which === $ws._const.key.space) {
-                  selection = editor.selection.getSel();
-                  node = selection.anchorNode;
-                  offset = selection.anchorOffset;
-                  /* Невероятный костыль, направленный на сохранение ВСЕХ добавляемых пользователем пробелов.
-                   Будет жить до тех пор, пока TinyMCE в одной из версий не сделают нормальный парсер пробельных символов с чередованием nbsp и пробелов.
-                   Описание: добавляем &nbsp; в следующих случаях:
-                   1. Если каретка находится в начале строки и это верхний DOM-элемент строки (предыдущего сиблинка либо нет, либо его родитель - inputControl
-                   2. Если предыдущий или следующий символ - пробел */
-                  if (offset === 0 && (node.previousSibling === null || node.previousSibling.parentElement == self._inputControl[0]) ||
-                     node.nodeValue && (node.nodeValue[offset - 1] === ' ' || node.nodeValue[offset + 1] === ' ')) {
-                     editor.insertContent('&nbsp;');
-                     e.stopImmediatePropagation();
-                     e.preventDefault();
-                     return false;
-                  }
                } else if (e.which === $ws._const.key.enter && e.ctrlKey) {
                   self._container.trigger(e);
                   e.stopImmediatePropagation();
