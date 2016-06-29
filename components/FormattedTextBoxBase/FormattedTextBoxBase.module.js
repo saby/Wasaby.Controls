@@ -672,9 +672,7 @@ define(
          });
          //keypress учитывает расскладку, keydown - нет
          this._inputField.keypress(function(event) {
-            //FF зачем то кидает событие keypress для управляющих символов, в отличии от всех остальных браузеров.
-            //Просто проигнорируем это событие, т.к. управляющая клавиша уже обработана в keydown.
-            if (!($ws._const.browser.firefox && event.charCode === 0)) {
+            if (!this._isFirefoxKeypressBug(event)) {
                self._keyPressBind(event);
             }
          });
@@ -703,6 +701,12 @@ define(
                }
             }, 100);
          });
+      },
+      //FF зачем то кидает событие keypress для управляющих символов(charCode === 0), в отличии от всех остальных браузеров.
+      //Просто проигнорируем это событие, т.к. управляющая клавиша уже обработана в keydown. Так же отдельно обработаем
+      //ctrl+A, т.к. для этой комбинации keypress так же вызываться не должен.
+      _isFirefoxKeypressBug: function(event) {
+         return $ws._const.browser.firefox && (event.charCode === 0 || event.ctrlKey && event.charCode === 97);
       },
 
       init: function(){
