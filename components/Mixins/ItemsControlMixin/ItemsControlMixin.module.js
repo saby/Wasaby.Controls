@@ -1195,11 +1195,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         */
       setPageSize: function(pageSize, noLoad){
          this._options.pageSize = pageSize;
-         this._dropPageSave();
-         this._notify('onPageSizeChange', this._options.pageSize);
-         if(!noLoad) {
-            this.reload(this._options.filter, this.getSorting(), 0, pageSize);
-         }
+          this._dropPageSave();
+          this._notify('onPageSizeChange', this._options.pageSize);
+          if(!noLoad) {
+             this.reload(this._options.filter, this.getSorting(), 0, pageSize);
+          } else if (this._options.pageSize) {
+             this._limit = Number(this._options.pageSize);
+          }
       },
       /**
        * Метод получения количества элементов на одной странице.
