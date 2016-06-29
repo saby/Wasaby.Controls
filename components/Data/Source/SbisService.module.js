@@ -154,6 +154,12 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             provider: 'source.provider.sbis-business-logic',
 
             /**
+             * @cfg провайдер, который будет использоваться для методов перемещения
+             * @see provider
+             */
+            moveProvider: 'source.provider.sbis-business-logic',
+
+            /**
              * @cfg {MetaConfig} Объект, хранящий названия свойств мета-данных, в которых хранится служебная информация, необходимая для формирования некоторых аргументов методов БЛ
              */
             metaConfig: {
@@ -166,10 +172,6 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             moveProperty: 'ПорНомер'
          },
 
-         /**
-          * @member {SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic} Объект, который умеет ходить на бизнес-логику, для смены порядковых номеров
-          */
-         _orderProvider: undefined
       },
 
       $constructor: function(cfg) {
@@ -198,6 +200,9 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                this._options.endpoint.address = cfg.resource.serviceUrl || '';
                this._options.endpoint.contract = cfg.resource.name || '';
             }
+         }
+         if (!this._options.endpoint.moveContract ) {
+            this._options.endpoint.moveContract = 'ПорядковыйНомер';
          }
          if (!('binding' in cfg)) {
             if ('formatMethodName' in cfg) {

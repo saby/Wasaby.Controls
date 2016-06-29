@@ -194,7 +194,13 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
        * @see provider
        */
       getProvider: function () {
-         return this._options.provider = this._getProvider(this._options.provider);
+         return this._options.provider = this._getProvider(this._options.provider, {
+            endpoint: this._options.endpoint,
+            options: this._options.options,
+            //TODO: remove pass 'service' and 'resource'
+            service: this._options.endpoint.address,
+            resource: this._options.endpoint.contract
+         });
       },
 
 
@@ -204,7 +210,13 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
        * @see provider
        */
       getMoveProvider: function() {
-         return this._options.moveProvider = this._getProvider(this._options.moveProvider);
+         return this._options.moveProvider = this._getProvider(this._options.moveProvider, {
+            endpoint: {
+               address: this._options.endpoint.address,
+               contract: this._options.endpoint.moveContract
+            },
+            options: this._options.options
+         });
       },
       //endregion Public methods
 
@@ -278,18 +290,12 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
       },
 
 
-      _getProvider: function(provider){
+      _getProvider: function(provider, options) {
          if (!provider) {
             throw new Error('Remote access provider is not defined');
          }
          if (typeof provider === 'string') {
-            provider = Di.resolve(provider, {
-               endpoint: this._options.endpoint,
-               options: this._options.options,
-               //TODO: remove pass 'service' and 'resource'
-               service: this._options.endpoint.address,
-               resource: this._options.endpoint.contract
-            });
+            provider = Di.resolve(provider, options);
          }
 
          return provider;
