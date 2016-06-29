@@ -376,6 +376,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                   view.setSelectedIndex(0);
                   view.setActive(true);
                   event.stopPropagation();
+                  event.preventDefault();
                }
             });
          }
