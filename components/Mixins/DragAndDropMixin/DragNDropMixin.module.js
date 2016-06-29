@@ -133,6 +133,14 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
          this._isShifted = false;
       },
 
+      /*
+      * Возвращает флаг, сигнализирующий о том что юзер начал сдвиг.
+      * @returns {Boolean} isShifted
+      */
+      isShifted: function() {
+         return this._isShifted;
+      },
+
       _callMoveHandlerStandart: function(e, element) {
          var target = this.getCurrentElement();
          if (!this._containerCoords) {

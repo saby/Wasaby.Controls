@@ -335,7 +335,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             return true;
          }
          var keyCode = (event.which >= 96 && event.which <= 105) ? event.which - 48 : event.which;
-         if(keyCode == 190 || keyCode == 110/*точка*/){
+         /*точка*/
+         if ((keyCode == 190 || keyCode == 110 || keyCode == 191 || keyCode == 188) && (event.key == ',' || event.key == '.'|| event.key == 'Decimal' || $ws._const.browser.isMacOSDesktop || $ws._const.browser.isMacOSMobile)) {
             this._dotHandler(event);
             return;
          }
