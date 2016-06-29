@@ -45,10 +45,10 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          _type : 'window',                      //Тип "Отслеживателя": container, window, floatArea
          _isScrollUp: false,                       //Проверка, в какую сторону scroll. Первый скролл вверх не может быть.
          _lastScrollTop: 0,                        //Последний сохраненный скролл
+         _scrollingContainer: undefined,
          _onWindowScrollHandler : undefined,
          _floatAreaScrollHandler : undefined,
-         _onContainerScrollHandler: undefined,
-         _onBeforeBodyMarkupChangedHandler: undefined
+         _onContainerScrollHandler: undefined
       },
 
       $constructor: function() {
@@ -56,20 +56,28 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
              opener = this.getOpener(),
              topParent;
          this._publish('onScroll');
+         this._scrollingContainer = this._options.element;
          this._type = (this._options.element ? 'container' : 'window');
          if (opener){
             topParent = opener.getTopParent();
             //Если уже определен тип отслежтивания в контейнере, то это имеет большее значение, чем то, находимся ли мы на floatArea или нет.
-            this._type = $ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea') && this._inWindow() ? 'floatArea' : this._type
+            this._type = $ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea') && this._inWindow() ? 'floatArea' : this._type;
+         }
+         if (this._type === 'window'){
+            var scrollingContent = $('.ws-body-scrolling-content');
+            if (scrollingContent && scrollingContent.length){
+               this._scrollingContainer = scrollingContent;
+               this._type = 'container';
+            }
          }
 
          //В зависимости от настроек высоты подписываемся либо на скролл у окна, либо у контейнера
          if (this._inContainer()) {
             this._onContainerScrollHandler =  this._onContainerScroll.bind(this);
-            this._options.element.bind('scroll.wsScrollWatcher', this._onContainerScrollHandler);
+            this._scrollingContainer.bind('scroll.wsScrollWatcher', this._onContainerScrollHandler);
             //Нужно чтобы вызвать скролл у контейнеров без видимого скролла.
-            $ws.helpers.wheel(this._options.element, function(event){
-               $(self._options.element).scrollTop($(self._options.element).scrollTop() - event.wheelDelta/2);
+            $ws.helpers.wheel(this._scrollingContainer, function(event){
+               $(self._scrollingContainer).scrollTop($(self._scrollingContainer).scrollTop() - event.wheelDelta/2);
             });
 
          } else if (this._inWindow()) {
@@ -84,27 +92,13 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
                self.destroy();
             });
          }
-         //Обработка открывающихся стек-панелей
-         $ws.single.EventBus.globalChannel().subscribe('onBeforeBodyMarkupChanged',
-               self._onBeforeBodyMarkupChangedHandler = self._onBeforeBodyMarkupChanged.bind(self));
 
-      },
-      _onBeforeBodyMarkupChanged:function(event, changeEventArg){
-         if ($ws.helpers.isElementVisible(this._getContainer())) {
-            if (changeEventArg.floatAreaStack) {
-               $(window).unbind('scroll', this._onWindowScrollHandler);
-               $(changeEventArg.contentScrollBlock).bind('scroll.wsScrollPaging', this._onContainerScroll.bind(this));
-            } else {
-               $(window).bind('scroll', this._onWindowScrollHandler);
-               $(changeEventArg.contentScrollBlock).unbind('.wsScrollPaging');
-            }
-         }
       },
       getOpener : function(){
          return this._options.opener;
       },
       _getContainer: function(){
-         return this._options.element || (this._inWindow() ?  $('body') : this.getOpener().getTopParent().getContainer().parent());
+         return this._scrollingContainer || (this._inWindow() ?  $('body') : this.getOpener().getTopParent().getContainer().parent());
       },
       _inFloatArea: function(){
          return this._type === 'floatArea';
@@ -169,8 +163,8 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
 
       getScrollContainer: function(element){
          var scrollable;
-         if (this._inContainer() && this._options.element.length){
-            return this._options.element[0];
+         if (this._inContainer() && this._scrollingContainer.length){
+            return this._scrollingContainer[0].scrollHeight;
          }
          if (this._inWindow()){
             if (element) {
@@ -210,8 +204,8 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * @returns {Number}
        */
       getContainerHeight: function(){
-         if (this._inContainer() && this._options.element.length){
-            return this._options.element[0].offsetHeight;
+         if (this._inContainer() && this._scrollingContainer.length){
+            return this._scrollingContainer[0].offsetHeight;
          }
          if (this._inWindow()){
             return $(window).height();
@@ -233,9 +227,6 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          if (this._inWindow()) {
             $(window).unbind('scroll.wsScrollWatcher', this._onWindowScrollHandler);
             this._onWindowScrollHandler = undefined;
-         }
-         if (this._onBeforeBodyMarkupChangedHandler) {
-            $ws.single.EventBus.globalChannel().unsubscribe('onBeforeBodyMarkupChanged', this._onBeforeBodyMarkupChangedHandler);
          }
          $ws.proto.ScrollWatcher.superclass.destroy.call(this);
       }
