@@ -380,7 +380,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          $.each(changedFields, function(i, key){
             var formatIndex = record.getFormat().getFieldIndex(key);
             if (formatIndex > -1) {
-               changedRec.addField(record.getFormat().at(formatIndex), i, record.get(key));
+               changedRec.addField(record.getFormat().at(formatIndex), undefined, record.get(key));
                if ($ws.helpers.instanceOfModule(record.getAdapter(), 'SBIS3.CONTROLS.Data.Adapter.Sbis')) {
                   var newFormatIndex = changedRec.getFormat().getFieldIndex(key);
                   //todo сделать нормальную сериализацию формата, щас не сериализуется поле связь и при копировании уходит как строка
