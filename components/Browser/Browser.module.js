@@ -175,8 +175,7 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
 
       _folderEditHandler: function(){
-         var self = this;
-         this._notify('onEditCurrentFolder', self._componentBinder.getCurrentRootRecord());
+         this._notify('onEditCurrentFolder', this._componentBinder.getCurrentRootRecord());
       },
 
       addItem: function(metaData) {
