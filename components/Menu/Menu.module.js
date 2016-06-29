@@ -240,6 +240,8 @@ define('js!SBIS3.CONTROLS.Menu', [
                   if (self._subContainers[id]) {
                      if (!self._subMenus[id]) {
                         self._subMenus[id] = self._createSubMenu(this, parent, isFirstLevel, item);
+                        // Предотвращаем всплытие focus и mousedown с контейнера меню, т.к. это приводит к потере фокуса
+                        self._subMenus[id]._container.on('mousedown focus', self._blockFocusEvents);
                         self._subContainers[id].show();
                         self._subMenus[id].getContainer().append(self._subContainers[id]);
                      }
@@ -254,7 +256,6 @@ define('js!SBIS3.CONTROLS.Menu', [
       _createSubMenu : function(target, parent, isFirstLevel, item) {
          target = $(target);
          var config = this._getSubMenuConfig(isFirstLevel, item);
-
          config.element = $('<div class="controls-Menu__Popup controls-Menu__SubMenuPopup"></div>');
          config.parent = parent;
          config.opener = typeof parent.getOpener == 'function' ? parent.getOpener() : parent;
