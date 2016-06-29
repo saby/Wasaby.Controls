@@ -145,10 +145,12 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              и, если надо, правит структуру из истории */
           _prepareListHistory: function() {
              var toDelete = [],
+                 currentStructure = this._options.filterButton.getFilterStructure(),
                  self = this;
 
              this._listHistory.each(function(historyElem) {
-                var linkText = FilterToStringUtil.string(self._prepareStructureElemForApply(historyElem.filter), 'historyItemTemplate');
+                prepareNewStructure(currentStructure, historyElem.filter);
+                var linkText = FilterToStringUtil.string(historyElem.filter, 'historyItemTemplate');
 
                 if(linkText) {
                    if(historyElem.linkText !== linkText) {
@@ -169,6 +171,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           _prepareStructureElemForApply: function(structure) {
              /* Чтобы не портить текущую историю, сделаем копию (иначе не применится фильтр) */
              var currentStructureCopy = $ws.core.clone(this._options.filterButton.getFilterStructure());
+             prepareNewStructure(currentStructureCopy, structure);
 
              /* Алгоритм следующий:
                   1) Пробегаемся по структуре (она первична, в ней можно менять только фильтры, саму струкруту менять нельзя!!) и ищем
@@ -273,8 +276,6 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 }
                 return;
              }
-
-             this._prepareListHistory();
 
              /* Если фильтров больше 10 - удалим последний */
              if (this._listHistory.getCount() === MAX_FILTERS_AMOUNT) {
@@ -410,6 +411,24 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              FilterHistoryController.superclass.destroy.apply(this, arguments);
           }
        });
+
+       function prepareNewStructure(currentStructure, newStructure) {
+          var toDelete = [];
+
+          $ws.helpers.forEach(newStructure, function(newStructureElem, key) {
+             var elemFromCurrentStructure = $ws.helpers.find(currentStructure, function(elem) {
+                return newStructureElem.internalValueField === elem.internalValueField;
+             });
+
+             if(!elemFromCurrentStructure) {
+                toDelete.push(key);
+             }
+          });
+
+          $ws.helpers.forEach(toDelete, function(elem) {
+             delete newStructure[elem];
+          });
+       }
 
        return FilterHistoryController;
 
