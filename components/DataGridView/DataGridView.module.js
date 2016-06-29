@@ -218,7 +218,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *     <option name="allowToggleHead">false</option>
              * </pre>
              */
-            allowToggleHead: true
+            allowToggleHead: true,
+            /**
+             * @cfg {Boolean} Включает фиксацию / прилипание заголовков таблицы к шапке страницы / всплывающей панели.
+             * @example
+             * <pre>
+             *     <option name="stickyHeader">true</option>
+             * </pre>
+             */
+            stickyHeader: false
          }
       },
 
