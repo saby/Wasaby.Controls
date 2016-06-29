@@ -1394,12 +1394,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       redrawItem: function(item, projItem) {
          projItem = projItem || this._getItemProjectionByItemId(item.getId());
+         var ladder = this._decorators.getByName('ladder');
+         ladder && ladder.setMarkLadderColumn(true);
          var
             targetElement = this._getElementByModel(item),
             newElement = this._createItemInstance(projItem);/*раньше здесь звался _drawItem, но он звал лишнюю группировку, а при перерисовке одного итема она не нужна*/
          this._addItemAttributes(newElement, projItem);
          this._clearItems(targetElement);
          targetElement.after(newElement).remove();
+         ladder && ladder.setMarkLadderColumn(false);
+         this._ladderCompare([newElement.prev(), newElement, newElement.next()]);
          this.reviveComponents();
          this._notifyOnDrawItems();
       },
