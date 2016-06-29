@@ -680,7 +680,7 @@ define(
          });
          //keypress учитывает расскладку, keydown - нет
          this._inputField.keypress(function(event) {
-            if (!this._isFirefoxKeypressBug(event)) {
+            if (!self._isFirefoxKeypressBug(event)) {
                self._keyPressBind(event);
             }
          });
