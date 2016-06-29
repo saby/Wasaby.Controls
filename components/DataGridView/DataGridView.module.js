@@ -976,9 +976,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
          data = $ws.helpers.map(this.getColumns(), function(col, index){
             value = resultsRecord.get(col.field);
             if (value == undefined){
-               return index == 0 ? self._options.resultsText : '';
+               value = index == 0 ? self._options.resultsText : '';
             }
-            return self._getColumnResultTemplate(col, index, $ws.render.defaultColumn.integer(value), resultsRecord);
+            else{
+               value = $ws.render.defaultColumn.integer(value);
+            }
+            return self._getColumnResultTemplate(col, index, value, resultsRecord);
          });
          return data;
       },
