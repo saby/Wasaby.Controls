@@ -377,7 +377,9 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
 
          $.each(changedFields, function(i, key){
             var formatIndex = record.getFormat().getFieldIndex(key);
-            changedRec.addField(record.getFormat().at(formatIndex), i, record.get(key))
+            if (formatIndex > -1) {
+               changedRec.addField(record.getFormat().at(formatIndex), i, record.get(key));
+            }
          });
 
          record.acceptChanges();
