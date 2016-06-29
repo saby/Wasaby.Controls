@@ -169,7 +169,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
             cont = this.getContainer(),
             previousStatus = this._prevValidationResult;
          this.clearMark();
-         if (this._validating || !this._canValidate() || !cont || cont.hasClass('ws-hidden') === true) {
+         if (this._validating || !this.isEnabled() || !cont || cont.hasClass('ws-hidden') === true) {
             return true;
          }
 
