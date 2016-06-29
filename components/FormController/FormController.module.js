@@ -344,6 +344,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                   this._showLoadingIndicator();
                }
                dResult.dependOn(def.addCallbacks(function (result) {
+                  //если установлен флаг diffOnly то в update уйдет другой рекорд и этому ни кто setStored не проставит
+                  self._options.record.setStored(true);
                   self._notify('onUpdateModel', self._options.record, additionalData);
                   self._newRecord = false;
                   return result;
