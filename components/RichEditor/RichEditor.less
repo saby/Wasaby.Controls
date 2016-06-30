@@ -509,20 +509,24 @@
    }
 }
 //Выпадающий список с выбором стиля текста
-.controls-RichEditor__styleText-title {
-   font-size: 18px;
-}
+.controls-RichEditor__ToolbarItem {
+   &.custom-options-container .custom-options-container-list, &.custom-options-container .custom-options-container-head,.custom-select-text {
+      .controls-RichEditor__styleText-title {
+         font-size: 18px;
+      }
 
-.controls-RichEditor__styleText-subTitle {
-   font-size: 15px;
-}
+      .controls-RichEditor__styleText-subTitle {
+         font-size: 15px;
+      }
 
-.controls-RichEditor__styleText-selectedMainText {
-   font-weight: bold;
-}
+      .controls-RichEditor__styleText-selectedMainText {
+         font-weight: bold;
+      }
 
-.controls-RichEditor__styleText-additionalText {
-   font-size: 12px;
+      .controls-RichEditor__styleText-additionalText {
+         font-size: 12px;
+      }
+   }
 }
 //Стили для окна добавления/редактирования ссылки
 .controls-RichEditor__InsertLinkHrefLabel,
