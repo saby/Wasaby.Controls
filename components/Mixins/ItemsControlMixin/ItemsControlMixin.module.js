@@ -171,7 +171,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _groupHash: {},
          _itemsProjection: null,
          _items : null,
-         _itemsInitializedBySource: false,
          _itemsInstances: {},
          _offset: 0,
          _limit: undefined,
@@ -1001,7 +1000,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         */
       setDataSource: function (source, noLoad) {
           this._unsetItemsEventHandlers();
-          this._itemsInitializedBySource = false;
           this._prepareConfig(source);
           if (!noLoad) {
              return this.reload();
@@ -1064,8 +1062,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
                    self._notify('onDataLoad', list);
-
-                   if (this._itemsInitializedBySource) {
+                   if ((list.getModel() === this.getItems().getModel()) && (list._moduleName == this.getItems()._moduleName)) {
                       this._options._items.setMetaData(list.getMetaData());
                       this._options._items.assign(list);
                       if(!self._options.autoRedraw) {
@@ -1079,7 +1076,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       this._setItemsEventHandlers();
                       this._notify('onItemsReady');
                       this._itemsReadyCallback();
-                      this._itemsInitializedBySource = true;
                       self.redraw();
                    }
 
@@ -1322,36 +1318,27 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see onDrawItems
         * @see onDataLoad
         */
-       setItems: function (items, itemsBySource, reload) {
+       setItems: function (items) {
           this._options.items = items;
           this._unsetItemsEventHandlers();
           this._options._items = null;
-          this._itemsInitializedBySource = !!itemsBySource;
           this._prepareConfig(undefined, items);
-          this._notify('onDataLoad', this.getItems()); //TODO на это событие завязались. аккуратно спилить
+
           this._dataLoadedCallback(); //TODO на это завязаны хлебные крошки, нужно будет спилить
-          //Из-за костыля для постраничной навигации в отчетности сделали this.reload(), но отвалилось в проектах, которые делают setItems при наличии DataSource.
-          //Поэтому пока по умолчанию вернем как было, а в отчетности специально передадим флаг reload
-          //При этом в отчетности делают неправильно и должны переделать. Если им нужна постраничная навигация, значит они должны задать статический источник данных, вместо Items
-          //После этого параметр reload нужно будет удалить и логику перезагрузки тоже
-          if(!reload) {
-             this.redraw();
-          } else {
-             $ws.single.ioc.resolve('ILogger').log('ListView', 'Параметр reload в методе setItems будет удален в 3.7.4');
-             if (items instanceof Array) {
-                if (this._options.pageSize && (items.length > this._options.pageSize)) {
-                   $ws.single.ioc.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
-                }
-                if (!this._options.keyField) {
-                   this._options.keyField = findKeyField(this._options.items)
-                }
-                this._dataSource = new MemorySource({
-                   data: this._options.items,
-                   idProperty: this._options.keyField
-                });
+
+          if (items instanceof Array) {
+             if (this._options.pageSize && (items.length > this._options.pageSize)) {
+                $ws.single.ioc.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
              }
-             this.reload();
+             if (!this._options.keyField) {
+                this._options.keyField = findKeyField(this._options.items)
+             }
+             this._dataSource = new MemorySource({
+                data: this._options.items,
+                idProperty: this._options.keyField
+             });
           }
+          this.redraw();
       },
 
       _drawItemsCallback: function () {
