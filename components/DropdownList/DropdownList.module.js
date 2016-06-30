@@ -250,6 +250,15 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._currentSelection[keys[i]] = true;
             }
          },
+         _initializePicker: function() {
+            DropdownList.superclass._initializePicker.apply(this, arguments);
+            // Предотвращаем всплытие focus и mousedown с контейнера меню, т.к. это приводит к потере фокуса
+            this._picker.getContainer().on('mousedown focus', this._blockFocusEvents);
+         },
+         _blockFocusEvents: function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+         },
          _getCurrentSelection: function(){
             var keys = [];
             for (var i in this._currentSelection) {
