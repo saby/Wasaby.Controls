@@ -842,7 +842,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
          /**
           * Возвращает контейнер, используемый компонентом для ввода данных
           * @returns {*|jQuery|HTMLElement}
+          * @deprecated
           */
+         //TODO:придумать дургое решение
          getInputContainer: function() {
             return this._inputControl;
          },
