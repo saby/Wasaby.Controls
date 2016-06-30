@@ -23,12 +23,13 @@
 
    //Для редактирования по месту групп, убираем крайние отступы, т.к. они уже предусмотрены классом controls-TabButton__inner
    .controls-EditAtPlaceGroup{
-     & :first-child .controls-TextBox__fieldWrapper{
+      margin-left:-1px;
+      & :first-child .controls-TextBox__fieldWrapper{
          padding-left: 0;
-     }
-     & :last-child .controls-TextBox__fieldWrapper{
-       padding-right: 0;
-     }
+      }
+      & :last-child .controls-TextBox__fieldWrapper{
+         padding-right: 0;
+      }
    }
 
    .controls-TabButton__bottomLine{
