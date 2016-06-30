@@ -146,7 +146,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             displayField: null,
              /**
-              * @cfg {Array.<Object.<String,String>>} Устанавливает набор исходных данных, по которому строится отображение.
+              * @cfg {Array.<Object>} Устанавливает набор исходных данных, по которому строится отображение.
               * @remark
               * Набор исходных данных - это данные определенного формата, которые будут преобразованы
               * в элементы коллекции (экземпляры класса {@link SBIS3.CONTROLS.Data.Model Model}).
@@ -156,7 +156,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               *
               * Данные для коллекции элементов задаются либо с помощью этой опции,
               * либо через источник данных методом {@link setDataSource}.
-              * Опция {@link SBIS3.CONTROLS.hierarchyMixin#hierField} устанавливает поле,
+              * Опция {@link SBIS3.CONTROLS.TreeMixin#hierField} устанавливает поле,
               * по которому будет построена иерархия.
               * @example
               * Задаем набор данных для отображения календаря; использован класс {@link SBIS3.CONTROLS.TreeDataGridView}:
@@ -191,7 +191,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               * @see keyField
               * @see displayField
               * @see setDataSource
-              * @see SBIS3.CONTROLS.hierarchyMixin#hierField
+              * @see SBIS3.CONTROLS.TreeMixin#hierField
               */
             items: null,
             /**
