@@ -371,7 +371,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (item) {
                this._defaultId = item.getId();
                if (this._buttonHasMore) {
-                  this._buttonHasMore[this._hasNextPage(this._dataSet.getMetaData().more, 0) ? 'show' : 'hide']();
+                  var needShowHasMoreButton = this._hasNextPage(this._dataSet.getMetaData().more, 0);
+                  if (!this._options.multiselect){
+                     this._buttonHasMore.getContainer().closest('.controls-DropdownList__buttonsBlock').toggleClass('ws-hidden', !needShowHasMoreButton);
+                  }
+                  else{
+                     this._buttonHasMore[needShowHasMoreButton ? 'show' : 'hide']();
+                  }
                }
             }
          },
@@ -392,6 +398,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._pickerBodyContainer = pickerContainer.find('.controls-DropdownList__body');
             this._pickerHeadContainer = pickerContainer.find('.controls-DropdownList__header');
             this._pickerFooterContainer = pickerContainer.find('.controls-DropdownList__footer');
+            this._buttonHasMore = this._picker.getChildControlByName('DropdownList_buttonHasMore');
+            this._buttonHasMore.subscribe('onActivated', function(){
+               self._notify('onClickMore');
+               self.hidePicker();
+            });
             if (this._options.multiselect) {
                this._buttonChoose = this._picker.getChildControlByName('DropdownList_buttonChoose');
                this._buttonChoose.subscribe('onActivated', function(){
@@ -400,11 +411,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   if (!self._isSimilarArrays(self.getSelectedKeys(), currSelection)) {
                      self.setSelectedKeys(currSelection);
                   }
-                  self.hidePicker();
-               });
-               this._buttonHasMore = this._picker.getChildControlByName('DropdownList_buttonHasMore');
-               this._buttonHasMore.subscribe('onActivated', function(){
-                  self._notify('onClickMore');
                   self.hidePicker();
                });
             }
