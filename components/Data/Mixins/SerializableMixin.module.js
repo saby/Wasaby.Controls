@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
        * @returns {Object}
        */
       toJSON: function() {
-         this._checkModuleName(true, true);
+         this._checkModuleName(true);
 
          return {
             $serialized$: 'inst',
@@ -69,39 +69,22 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
       //region Protected methods
 
       /**
-       * Добавляет в метод extend() модуля проверку на установку значения свойства _moduleName
-       * @param {Function} module Модуль
-       * @protected
-       * @static
-       */
-      _checkExtender: function(module) {
-         module.extend = module.extend.callBefore(function() {
-            var extender = arguments[0];
-            if (extender instanceof Array) {
-               extender = arguments[1];
-            }
-            SerializableMixin._checkModuleName.call(extender || {});
-         });
-      },
-
-      /**
        * Проверяет, что в прототипе указано имя модуля для requirejs, иначе не будет работать десериализация
        * @param {Boolean} critical Отсутствие имени модуля критично
-       * @param {Boolean} isInstance Проверка вызвана на экземпляре класса (в противном случае - на прототипе)
        * @protected
        */
-      _checkModuleName: function(critical, isInstance) {
+      _checkModuleName: function(critical) {
          var proto = this;
          if (!proto._moduleName) {
             SerializableMixin._createModuleNameError('Property "_moduleName" with module name for requirejs is not defined in a prototype', critical);
+            return;
          }
          //TODO: переделать на Object.getPrototypeOf(this), после перевода на $ws.single.simpleExtender::extend()
-         if (isInstance) {
-            if (!_protoSupported) {
-               return;
-            }
-            proto = this.__proto__;
+         if (!_protoSupported) {
+            return;
          }
+
+         proto = this.__proto__;
          if (!proto.hasOwnProperty('_moduleName')) {
             SerializableMixin._createModuleNameError('Property "_moduleName" with module name for requirejs should be defined in a prototype of each sub module of SerializableMixin', critical);
          }
