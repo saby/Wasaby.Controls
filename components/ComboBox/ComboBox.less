@@ -10,7 +10,6 @@
          }
          &.controls-ComboBox__fieldNotEditable {
             display: none;
-            .text-overflow();
          }
          &.controls-ComboBox__fieldNotEditable__placeholder {
             color: @text-box-placeholder-color;
@@ -99,6 +98,16 @@
             border-style: @combo-box-arrow-disabled-border-style;
             border-color: @combo-box-arrow-disabled-border-color;
             background: @combo-box-arrow-disabled-bg;
+         }
+      }
+   }
+
+   &.controls-ComboBox__ellipsis {
+      .controls-TextBox__fieldWrapper {
+         .controls-TextBox__field {
+            &.controls-ComboBox__fieldNotEditable {
+               .text-overflow();
+            }
          }
       }
    }
