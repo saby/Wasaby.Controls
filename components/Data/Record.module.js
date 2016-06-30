@@ -531,8 +531,6 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       //endregion Protected methods
    });
 
-   SerializableMixin._checkExtender(Record);
-
    Di.register('record', Record);
 
    $ws.proto.Context.registerFieldType(new ContextFieldRecord({module: Record}));

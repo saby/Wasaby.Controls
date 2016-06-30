@@ -390,8 +390,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
    });
 
-   SerializableMixin._checkExtender(List);
-
    Di.register('collection.list', List);
 
    $ws.proto.Context.registerFieldType(new ContextFieldList({module: List}));

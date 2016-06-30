@@ -579,8 +579,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       //endregion SBIS3.CONTROLS.Record
    });
 
-   SerializableMixin._checkExtender(Model);
-
    Di.register('model', Model);
 
    return Model;
