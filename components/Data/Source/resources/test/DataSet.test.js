@@ -161,6 +161,16 @@ define([
                });
                assert.equal(ds.getAll('some.prop').getCount(), 0);
             });
+
+            it('should throw an error when ', function () {
+               var ds = new DataSet({
+                  rawData: {d:[1], s:[{n:'Id',t:'Число целое'}], _type:'record'},
+                  adapter:'adapter.sbis'
+               });
+               assert.Throw(function(){
+                  ds.getAll();
+               });
+            });
          });
 
          describe('.getRow()', function () {
