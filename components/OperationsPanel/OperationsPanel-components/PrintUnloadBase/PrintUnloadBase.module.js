@@ -130,8 +130,6 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
             columns: columns
          };
          this.applyOperation(cfg);
-         //Снимем выделение
-         this._getView().removeItemsSelectionAll();
       },
       _prepareOperationColumns: function(){
          var columns = this._getView().getColumns(),
