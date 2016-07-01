@@ -8,20 +8,25 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
    'use strict';
 
    /**
-    * Контрол, отображающий обычную кнопку
+    * Класс контрола, который предназначен для отображения кнопки в виде иконки.
+    *
     * @class SBIS3.CONTROLS.IconButton
-	 * @demo SBIS3.CONTROLS.Demo.MyIconButton
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
+    * @public
+    *
+    * @mixes SBIS3.CONTROLS.IconMixin
+    *
+    * @demo SBIS3.CONTROLS.Demo.MyIconButton
+    *
+    * @author Борисов Петр Сергеевич
+    *
+    * @category Buttons
+    *
     * @initial
     * <component data-component='SBIS3.CONTROLS.IconButton'>
-    *    <option name="icon">sprite:icon-16 icon-AddButton icon-primary</option>
+    *    <option name="icon" value="icon-16 icon-AddButton icon-primary"></option>
     * </component>
-    * @public
-    * @author Крайнов Дмитрий Олегович
-    * @category Buttons
-    * @mixes SBIS3.CONTROLS.IconMixin
-    * @mixes SBIS3.CONTROLS.Clickable
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
@@ -43,7 +48,8 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     *
-    * @cssModifier controls-IconButton__round-border Устанавливает круглую границу вокруг иконки. Цвет границы соответствует цвету иконки, установленной в опции {@link icon}.
+    * @cssModifier controls-IconButton__round-border Добавляет круглую границу вокруг иконки. Размер границы подстраивается под размеры иконки.
+    * По умолчанию граница серого цвета. При наведении курсора цвет границы изменяется в соответствии с цветом иконки, установленной в опции {@link icon}.
     * @cssModifier controls-IconButton__round-border-24 Устанавливает круглую границу (диаметр в 24 px) вокруг иконки быстрой операции, доступной по наведению курсора. Подробнее о таких типах операций вы можете прочитать <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">здесь</a>.
     * Модификатор применяется совместно с иконками размерами 16 px. Цвет границы соответствует цвету иконки, установленной в опции {@link icon}.
     */
