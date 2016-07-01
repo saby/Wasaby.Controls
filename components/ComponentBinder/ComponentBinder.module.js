@@ -460,7 +460,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                      var rec = hier[i];
                      if (rec){
                         var c = createBreadCrumb(rec);
-                        if (self._currentRoot ) {
+                        if (self._currentRoot && !Object.isEmpty(self._currentRoot)) {
                            self._path.push(self._currentRoot);
                         } else {
 
