@@ -418,7 +418,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           $ws.helpers.forEach(newStructure, function(newStructureElem, key) {
              var elemFromCurrentStructure = $ws.helpers.find(currentStructure, function(elem) {
                 /* По неустановленной причине, в структуре из истории могут появляться null'ы,
-                   скорее всего, это прикладная ошибка, но надо от этого защититься */
+                   скорее всего, это прикладная ошибка, но надо от этого защититься (повторяется только на некоторых фильтрах ЭДО) */
                 if(!newStructureElem) {
                    $ws.single.ioc.resolve('ILogger').error('FilterHistoryControllerrol', 'В стукрутре из истории присутствуют null элементы');
                    return false;
