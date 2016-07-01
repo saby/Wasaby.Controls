@@ -317,6 +317,45 @@ define([
 
          });
 
+         describe('.isLoaded', function() {
+            it('should return false by default', function () {
+               var item = new TreeItem({
+                  contents: {
+                     id: null,
+                     title: 'Root'
+                  }
+               });
+
+               assert.isFalse(item.isLoaded());
+            });
+
+            it('should return value passed to the option', function () {
+               var item = new TreeItem({
+                  contents: {
+                     id: null,
+                     title: 'Root'
+                  },
+                  loaded: true
+               });
+
+               assert.isTrue(item.isLoaded());
+            });
+         });
+
+         describe('.setLoaded', function() {
+            it('should set loaded to true', function () {
+               var item = new TreeItem();
+               item.setLoaded(true);
+               assert.isTrue(item.isLoaded());
+            });
+
+            it('should set loaded to false', function () {
+               var item = new TreeItem();
+               item.setLoaded(false);
+               assert.isFalse(item.isLoaded());
+            });
+         });
+
          describe('.$constructor()', function(){
             it('should sort projection so first folder then next leaf', function(){
                var items = new Tree({
