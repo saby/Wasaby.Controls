@@ -358,4 +358,19 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 				actions.click(this.input);
             })
     });
+	
+	gemini.suite('with_cell_template_and_image', function (test) {
+
+        test.setUrl('/regression_tree_data_grid_view_online_14.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+				this.input = find('[sbisname="TextBox 1"] input');
+            })
+
+            .capture('expanded', function (actions) {
+				actions.click(this.input);
+            })
+    });
 });
