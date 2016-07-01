@@ -189,7 +189,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
                   node: true,
                   expanded: true,
                   contents: this._$root,
-                  loadedProperty: this._$loadedProperty
+                  //FIXME: костыль для Раздел$, для которого смыл инвертирован
+                  loaded: !Utils.getItemPropertyValue(this._$root, this._$loadedProperty)
                });
             }
          }
@@ -291,7 +292,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
             contents: item,
             owner: this,
             node: !!Utils.getItemPropertyValue(item, this._$nodeProperty),
-            loadedProperty: this._$loadedProperty
+            //FIXME: костыль для Раздел$, для которого смыл инвертирован
+            loaded: !Utils.getItemPropertyValue(item, this._$loadedProperty)
          });
       },
 

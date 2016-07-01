@@ -35,31 +35,23 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
       _$expanded: false,
 
       /**
+       * @cfg {Boolean} Загружен ли узел. По умолчанию не загружен.
+       * @name SBIS3.CONTROLS.Data.Projection.TreeItem#expanded
+       */
+      _$loaded: false,
+
+      /**
        * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется для анализа на наличие дочерних элементов.
        * @name SBIS3.CONTROLS.Data.Projection.TreeItem#childrenProperty
        */
       _$childrenProperty: '',
-
-      /**
-       * @cfg {String} Название свойства, содержащего признак загруженности узла
-       * @example
-       * <pre>
-       *    new TreeItem({
-       *       loadedProperty: 'Раздел$'
-       *    })
-       * </pre>
-       *
-       */
-      _$loadedProperty: '',
 
       _hashPrefix: 'tree-item-',
 
       constructor: function $TreeItem(options) {
          TreeItem.superclass.constructor.call(this, options);
          this._$node = !!this._$node;
-         if (this._$loadedProperty) {
-            this.setLoaded(!Utils.getItemPropertyValue(this.getContents(), this._$loadedProperty));
-         }
+         this._$loaded = !!this._$loaded;
       },
 
       //region Public methods
@@ -154,8 +146,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
        * @returns {Boolean}
        */
       isLoaded: function () {
-         this._checkLoadedProperty();
-         return this._isLoaded;
+         return this._$loaded;
       },
 
       /**
@@ -163,8 +154,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
        * @param {Boolean} value
        */
       setLoaded: function (value) {
-         this._checkLoadedProperty();
-         this._isLoaded = !!value;
+         this._$loaded = !!value;
       },
 
 
@@ -192,12 +182,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
          var rootOwner = this.getRoot().getOwner();
          if (rootOwner && rootOwner !== this._$owner) {
             rootOwner.notifyItemChange(this, property);
-         }
-      },
-
-      _checkLoadedProperty: function() {
-         if(!this._$loadedProperty) {
-            throw new Error('Loaded property is not defined.');
          }
       }
 

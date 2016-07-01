@@ -318,90 +318,41 @@ define([
          });
 
          describe('.isLoaded', function() {
-            it('should set loaded property', function () {
+            it('should return false by default', function () {
                var item = new TreeItem({
                   contents: {
                      id: null,
-                     title: 'Root',
-                     isLoaded: true
-                  },
-                  loadedProperty: 'isLoaded'
+                     title: 'Root'
+                  }
                });
 
                assert.isFalse(item.isLoaded());
             });
 
-            it('should set loaded property', function () {
+            it('should return value passed to the option', function () {
                var item = new TreeItem({
                   contents: {
                      id: null,
-                     title: 'Root',
-                     isLoaded: false
+                     title: 'Root'
                   },
-                  loadedProperty: 'isLoaded'
+                  loaded: true
                });
 
                assert.isTrue(item.isLoaded());
-            });
-
-            it('should throw an error becouse loaded property is undefined', function () {
-               var item = new TreeItem({
-                  contents: {
-                     id: null,
-                     title: 'Root',
-                     isLoaded: false
-                  }
-               });
-               assert.Throw(function(){
-                  item.isLoaded();
-               });
             });
          });
 
          describe('.setLoaded', function() {
-            it('should set loaded false when its true', function () {
-               var item = new TreeItem({
-                  contents: {
-                     id: null,
-                     title: 'Root',
-                     isLoaded: true,
-                     setIsLoaded: function(val){
-                        this['isLoaded'] = val;
-                     }
-                  },
-                  loadedProperty: 'isLoaded'
-               });
-               item.setLoaded(false);
-               assert.isFalse(item.isLoaded());
-            });
-
-            it('should set loaded true when its false', function () {
-               var item = new TreeItem({
-                  contents: {
-                     id: null,
-                     title: 'Root',
-                     isLoaded: false,
-                     setIsLoaded: function(val){
-                        this['isLoaded'] = val;
-                     }
-                  },
-                  loadedProperty: 'isLoaded'
-               });
+            it('should set loaded to true', function () {
+               var item = new TreeItem();
                item.setLoaded(true);
                assert.isTrue(item.isLoaded());
             });
 
-            it('should throw an error becouse loaded property is undefined', function () {
-               var item = new TreeItem({
-                  contents: {
-                     id: null,
-                     title: 'Root',
-                     isLoaded: false
-                  }
-               });
-               assert.Throw(function(){
-                  item.setLoaded(true);
-               });
+            it('should set loaded to false', function () {
+               var item = new TreeItem();
+               item.setLoaded(false);
+               assert.isFalse(item.isLoaded());
             });
          });
 
