@@ -461,4 +461,62 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
             })
     });
+	
+	gemini.suite('add_and_edit_again', function (test) {
+
+        test.setUrl('/integration_datagrid_edit_at_place_19.html').skip('firefox').setCaptureElements('[sbisname="ТипНоменклатуры"]')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
+				this.focus = find('[sbisname="Фокус"]');
+				this.editor_input = find('[sbisname="Содержимоеbind"] input');
+				this.save = find('[title="Сохранить"]');
+				this.data = find('.controls-DataGridView__tbody tr:nth-child(1)');
+				this.clearData = find('[sbisname="Данные"] .controls-Button__text');
+            })
+
+            .capture('plain', function (actions) {
+				actions.wait(150);
+				actions.executeJS(function (window) {
+                    window.$('[sbisname="Данные"] .controls-Button__text').click();
+                });
+				actions.click(this.clearData);
+				actions.wait(350);
+                actions.click(this.focus);
+            })
+
+			.capture('begin_add', function (actions) {
+                actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('ТипНоменклатуры').sendCommand('beginAdd');
+                });
+				actions.waitForElementToShow('[sbisname="Содержимоеbind"] input', 2000)
+				actions.waitForElementToShow('[title="Сохранить"]');
+				actions.sendKeys(this.editor_input, 'test')
+				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.ARROW_LEFT)
+            })
+
+			.capture('confirm_adding', function (actions) {
+                actions.sendKeys(this.editor_input, gemini.ENTER)
+				actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('ТипНоменклатуры').reload({});
+                });
+				actions.wait(250);
+            })
+			
+			.capture('open_editor', function (actions) {
+                actions.executeJS(function (window) {
+                    window.$('.controls-DataGridView__tbody tr:first').click();
+                });
+				actions.wait(500);
+            })
+			
+			.after(function (actions, find) {
+				actions.wait(150);
+				actions.executeJS(function (window) {
+                    window.$('[sbisname="Данные"] .controls-Button__text').click();
+                });
+				actions.click(this.clearData);
+				actions.wait(350);
+            })
+    });
 });
