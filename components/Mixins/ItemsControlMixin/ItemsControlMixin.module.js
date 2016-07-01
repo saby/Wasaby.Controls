@@ -1694,8 +1694,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _getItemTemplate: function (item) {
          if (this._options.itemTemplate) {
             return this._options.itemTemplate;
-         }
-         else {
+         } else if (this._options.itemTpl) {
+            return this._options.itemTpl;
+         } else {
             return this._options._defaultItemTemplate;
          }
       },
