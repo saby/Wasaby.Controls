@@ -166,7 +166,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._inputField.change(function(){
             var newText = $(this).val();
             if (newText != self._options.text) {
-               self.setText(self._options.text);
+               self.setText(newText);
             }
          });
 
