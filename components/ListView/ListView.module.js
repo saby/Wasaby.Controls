@@ -58,7 +58,6 @@ define('js!SBIS3.CONTROLS.ListView',
             return records;
          };
       var
-         DRAG_AVATAR_OFFSET = 5,
          START_NEXT_LOAD_OFFSET = 180;
 
       /**
@@ -2379,10 +2378,11 @@ define('js!SBIS3.CONTROLS.ListView',
                 currentElement = this.getCurrentElement(),
                 target = this._findItemByElement($(e.target));
 
+
             this._clearDragHighlight();
-            if (currentElement.component !== this || target.length && target.data('id') != currentElement.targetId) {
+            if (this.getDragOwner() !== this || target.length && target.data('id') != currentElement.targetId) {
                insertAfter = this._getDirectionOrderChange(e, target);
-               if (insertAfter !== undefined && currentElement.component === this) {
+               if (insertAfter !== undefined && this.getDragOwner() === this) {
                   neighborItem = this[insertAfter ? 'getNextItemById' : 'getPrevItemById'](target.data('id'));
                   if (neighborItem && neighborItem.data('id') == currentElement.targetId) {
                      insertAfter = undefined;
@@ -2405,9 +2405,11 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _clearDragHighlight: function() {
-            var target = this.getCurrentElement().target;
-            if (target) {
-               target.removeClass('controls-DragNDrop__insertBefore controls-DragNDrop__insertAfter');
+            if(this.getCurrentElement()) {
+               var target = this.getCurrentElement().target;
+               if (target) {
+                  target.removeClass('controls-DragNDrop__insertBefore controls-DragNDrop__insertAfter');
+               }
             }
          },
          _drawDragHighlight: function(target, insertAfter) {
@@ -2422,16 +2424,11 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _createAvatar: function(e) {
             var count = this.getCurrentElement().keys.length;
-            this._avatar = $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>')
-                .css('z-index', $ws.single.WindowManager.acquireZIndex(false)).appendTo($('body'));
+            this.setDragAvatar($('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>')
+                .css('z-index', $ws.single.WindowManager.acquireZIndex(false)).appendTo($('body')));
             this._setAvatarPosition(e);
          },
-         _setAvatarPosition: function(e) {
-            this._avatar.css({
-               'left': e.pageX + DRAG_AVATAR_OFFSET,
-               'top': e.pageY + DRAG_AVATAR_OFFSET
-            });
-         },
+
          _callDropHandler: function(e) {
             var
                 clickHandler,
@@ -2449,15 +2446,15 @@ define('js!SBIS3.CONTROLS.ListView',
                };
             }
             if (currentTarget.length) {
-               var remoteItems = currentElement.component.getItems(),
+               var remoteItems = this.getDragOwner().getItems(),
                   checkedItems = [];
                for (var i = currentElement.keys.length - 1; i >= 0; i--) {
                   checkedItems.push(remoteItems.getRecordById(currentElement.keys[i]));
                }
                var res = this._notify('onDragEnd', this.getItems().getRecordById(currentTarget.data('id')),
-                  checkedItems, currentElement.insertAfter, currentElement.component);
+                  checkedItems, currentElement.insertAfter, this.getDragOwner());
                if (res !== false) {
-                  if (currentElement.component === this) {
+                  if (this.getDragOwner() === this) {
                      this._move(currentElement.keys, currentTarget.data('id'), currentElement.insertAfter);
                   }
                }
@@ -2465,15 +2462,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _beginDropDown: function(e) {
             this.setSelectedKey(this.getCurrentElement().targetId);
-            this._isShifted = true;
             this._createAvatar(e);
             this._hideItemsToolbar();
          },
          _endDropDown: function() {
-            $ws.single.WindowManager.releaseZIndex(this._avatar.css('z-index'));
+            $ws.single.WindowManager.releaseZIndex(this.getDragAvatar().css('z-index'));
             this._clearDragHighlight();
-            this._avatar.remove();
-            this._isShifted = false;
             this._updateItemsToolbar();
          },
          /*DRAG_AND_DROP END*/

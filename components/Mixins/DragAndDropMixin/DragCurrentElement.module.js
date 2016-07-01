@@ -8,7 +8,13 @@ define('js!SBIS3.CONTROLS.DragCurrentElement', [], function() {
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var DragTarget = {
+   var DragTarget = $ws.proto.Abstract.extend({
+
+      $protected: {
+         _owner: undefined,
+         _currentElementConfig:undefined,
+         _avatar: undefined
+      },
 
       get: function() {
          return this._currentElementConfig;
@@ -21,8 +27,21 @@ define('js!SBIS3.CONTROLS.DragCurrentElement', [], function() {
 
       getOwner: function() {
          return this._owner;
-      }
-   };
+      },
 
-   return DragTarget;
+      reset: function () {
+         this._currentElementConfig = undefined;
+         this._owner = undefined;
+      },
+
+      getAvatar: function() {
+         return this._avatar;
+      },
+
+      setAvatar: function(avatar) {
+         this._avatar = avatar;
+      }
+   });
+
+   return new DragTarget();
 });
