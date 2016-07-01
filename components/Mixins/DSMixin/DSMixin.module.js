@@ -886,24 +886,25 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return this._itemsProjection;
       },
        /**
-        * Метод установки либо замены коллекции элементов, заданных опцией {@link items}.
-        * @param {Object} items Набор новых данных, по которому строится отображение.
+        * Устанавливает набор элементов коллекции.
+        * @param {Array.<Object>} items Набор новых данных, по которому строится отображение.
         * @example
         * <pre>
-        *     setItems: [
-        *        {
-        *           id: 1,
-        *           title: 'Сообщения'
-        *        },{
-        *           id: 2,
-        *           title: 'Прочитанные',
-        *           parent: 1
-        *        },{
-        *           id: 3,
-        *           title: 'Непрочитанные',
-        *           parent: 1
-        *        }
-        *     ]
+        *     var myItems = [ // Подготавливаем новый набор элементов коллекции
+        *         {
+        *            id: 1,
+        *            title: 'Сообщения'
+        *         },{
+        *            id: 2,
+        *            title: 'Прочитанные',
+        *            parent: 1
+        *         },{
+        *            id: 3,
+        *            title: 'Непрочитанные',
+        *            parent: 1
+        *         }
+        *     ];
+        *     myControl.setItems(myItems); // Устанавливаем новый набор элементов коллекции.
         * </pre>
         * @see items
         * @see addItem
