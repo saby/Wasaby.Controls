@@ -317,46 +317,6 @@ define([
 
          });
 
-         describe('.getLoadedProperty()', function(){
-            it('should return loaded property', function(){
-               var item = new TreeItem({
-                  contents: {
-                     id: null,
-                     title: 'Root'
-                  },
-                  loadedProperty: 'isLoaded'
-               });
-
-               assert.equal(item.getLoadedProperty(), 'isLoaded');
-            });
-
-            it('should return loaded property when item gets into projections', function(){
-               var  root = new TreeItem({contents: {
-                     id: null,
-                     title: 'Root'
-                  }}),
-                  tree = new Tree({
-                     collection: items,
-                     root: root,
-                     idProperty: 'id',
-                     loadedProperty: 'isLoaded'
-                  });
-
-               assert.equal(tree.at(0).getLoadedProperty(), 'isLoaded');
-            });
-         });
-         describe('.setLoadedProperty()', function() {
-            it('should set loaded property', function () {
-               var item = new TreeItem({
-                  contents: {
-                     id: null,
-                     title: 'Root'
-                  }
-               });
-               item.setLoadedProperty('isLoaded');
-               assert.equal(item.getLoadedProperty(), 'isLoaded');
-            });
-         });
          describe('.isLoaded', function() {
             it('should set loaded property', function () {
                var item = new TreeItem({
@@ -368,7 +328,7 @@ define([
                   loadedProperty: 'isLoaded'
                });
 
-               assert.isTrue(item.isLoaded());
+               assert.isFalse(item.isLoaded());
             });
 
             it('should set loaded property', function () {
@@ -381,7 +341,7 @@ define([
                   loadedProperty: 'isLoaded'
                });
 
-               assert.isFalse(item.isLoaded());
+               assert.isTrue(item.isLoaded());
             });
 
             it('should throw an error becouse loaded property is undefined', function () {

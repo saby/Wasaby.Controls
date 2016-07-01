@@ -42,6 +42,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
 
       /**
        * @cfg {String} Название свойства, содержащего признак загруженности узла
+       * @example
        * <pre>
        *    new TreeItem({
        *       loadedProperty: 'Раздел$'
@@ -56,6 +57,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
       constructor: function $TreeItem(options) {
          TreeItem.superclass.constructor.call(this, options);
          this._$node = !!this._$node;
+         if (this._$loadedProperty) {
+            this.setLoaded(!Utils.getItemPropertyValue(this.getContents(), this._$loadedProperty));
+         }
       },
 
       //region Public methods
@@ -127,24 +131,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
       },
 
       /**
-       * Устанавливает свойство наличия дочерних элементов
-       * @param {String} name
-       * @see loadedProperty
-       */
-      setLoadedProperty: function (name) {
-         this._$loadedProperty = name;
-      },
-
-      /**
-       * Возвращает название свойства наличия дочерних элементов
-       * @returns {String}
-       * @see loadedProperty
-       */
-      getLoadedProperty: function () {
-         return this._$loadedProperty;
-      },
-
-      /**
        * Устанавливает признак, что узел развернут или свернут
        * @param {Boolean} expanded Развернут или свернут узел
        */
@@ -169,7 +155,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
        */
       isLoaded: function () {
          this._checkLoadedProperty();
-         return Utils.getItemPropertyValue(this.getContents(), this.getLoadedProperty());
+         return this._isLoaded;
       },
 
       /**
@@ -178,7 +164,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
        */
       setLoaded: function (value) {
          this._checkLoadedProperty();
-         Utils.setItemPropertyValue(this.getContents(), this.getLoadedProperty(), !!value);
+         this._isLoaded = !!value;
       },
 
 
@@ -210,8 +196,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
       },
 
       _checkLoadedProperty: function() {
-         if(!this.getLoadedProperty()) {
-            throw new Error('Loaded property is not defined, please set it and try again.');
+         if(!this._$loadedProperty) {
+            throw new Error('Loaded property is not defined.');
          }
       }
 
