@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function (Infobox) {
    /**
     * Миксин, который добавляет функционал валидаторов.
-    * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/">Валидация вводимых данных</a>.
+    * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/index/">Валидация вводимых данных</a>.
     * @mixin SBIS3.CONTROLS.FormWidgetMixin
     * @public
     * @author Крайнов Дмитрий Олегович
@@ -46,13 +46,13 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
              * @cfg {Validator[]} Устанавливает валидаторы контрола.
              * Подробнее о валидации можно прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/validation/ руководстве разработчика}.
              * @example
-             * Пример массива, описывающего валидаторы:
+             * Пример массива, описывающего валидацию значения из опции text. Такой валидатор, например, можно использовать в контроле {@link SBIS3.CONTROLS.TextBox}.
              * <pre class="brush: xml">
              *     <options name="validators" type="array">
              *        <options>
-             *           <option name="validator" type="function" value="js!SBIS3.CONTROLS.ControlsValidators:required"></option>
-             *           <option name="option">text</option>
-             *           <option name="errorMessage">Пожалуйста, введите в данное поле ваше имя!</option>
+             *           <option name="validator" type="function" value="js!SBIS3.CONTROLS.ControlsValidators:required"></option> <!-- Устанавливаем функцию валидации -->
+             *           <option name="option">text</option>                                                                      <!-- Устанавливаем опцию контрола, значение которой нужно валидировать -->
+             *           <option name="errorMessage">Пожалуйста, введите в данное поле ваше имя!</option>                         <!-- Устанавливаем текст сообщение об ошибке валидации -->
              *        </options>
              *     </options>
              * </pre>
