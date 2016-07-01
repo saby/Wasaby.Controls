@@ -92,7 +92,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.LoadableTreeItem', [
                where[parentProperty] = idValue;
                query.where(where);
                //FIXME: поддержать аргумент mode
-               this._getSourceCollection().load(ISourceLoadable.MODE_APPEND)
+               this._getSourceCollection().load(ISourceLoadable.MODE_APPEND);
             }
          }
       }
