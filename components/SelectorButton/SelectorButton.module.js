@@ -79,6 +79,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
                   linkTextArray.push(item.get(self._options.displayField));
                });
                self._setCaption(linkTextArray.join(', '));
+               return list;
             });
          } else {
             this._setCaption(this._options.defaultCaption);
