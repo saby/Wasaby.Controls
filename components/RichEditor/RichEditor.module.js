@@ -43,9 +43,53 @@ define('js!SBIS3.CONTROLS.RichEditor',
          _defaultItems: defaultConfig || {},
          $protected : {
             _options : {
+               /**
+                * @cfg {Boolean} Включение режима автовысоты
+                * <wiTag group="Управление">
+                * Режим автовысоты текстового редактора.
+                * @example
+                * <pre>
+                *     <option name="autoHeight">true</option>
+                * </pre>
+                */
+               autoHeight: false,
+               /**
+                * @cfg {Number} Минимальная высота (в пикселях)
+                * <wiTag group="Управление">
+                * Минимальная высота текстового поля (для режима с автовысотой).
+                * @example
+                * <pre>
+                *     <option name="autoHeight">true</option>
+                *     <option name="minimalHeight">100</option>
+                * </pre>
+                */
                minimalHeight: 200,
+               /**
+                * @cfg {Number} Максимальная высота (в пикселях)
+                * <wiTag group="Управление">
+                * Максимальная высота текстового поля (для режима с автовысотой).
+                * Для задания неограниченной высоты необходимо выставить в значении опции 0.
+                * @example
+                * <pre>
+                *     <option name="autoHeight">true</option>
+                *     <option name="maximalHeight">0</option>
+                * </pre>
+                */
                maximalHeight: 300,
+               /**
+                * @cfg {Boolean} Загрузка файлов в хранилище при их дропе (с десктопа) в поле редактора
+                * <wiTag group="Управление">
+                * @example
+                * <pre>
+                *     <option name="uploadImageOnDrop">true</option>
+                * </pre>
+                */
                uploadImageOnDrop: true,
+               /**
+                * @cfg {Object} Объект с настройками для tinyMCE
+                * <wiTag group="Управление">
+                *
+                */
                editorConfig: {
                   plugins: 'media,paste,lists',
                   inline: true,
@@ -67,9 +111,69 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   menubar: false,
                   browser_spellcheck: true
                },
+               /**
+                * @cfg {String} Значение Placeholder`а
+                * При пустом значении редактора отображается placeholder
+                * @translatable
+                */
                placeholder: '',
+               /**
+                * @cfg {Boolean} Панель инструментов
+                * <wiTag group="Отображение">
+                * Возможные значения:
+                * <ol>
+                *    <li>true - использовать панель инструментов вместе с редактором;</li>
+                *    <li>false - оставить только поле ввода.</li>
+                * </ol>
+                */
                toolbar: true,
+               /**
+                * @cfg {Boolean} Видимость панели инструментов
+                * <wiTag group="Отображение">
+                * При скрытии панели инструментов работа в текстовом редакторе будет осуществляться только с клавиатуры.
+                * Возможные значения:
+                * <ol>
+                *    <li>true - панель инструментов показана;</li>
+                *    <li>false - скрыта.</li>
+                * </ol>
+                * @see toggleToolbar
+                */
                toolbarVisible: true,
+               /**
+                * @cfg {Object} Объект с настройками платформенных и пользовательских кнопок
+                * Для пользовательской кнопки доступны настройки:
+                * <ul>
+                *    <li>caption - текст: на кнопке без иконки, справа от кнопки с иконкой;</li>
+                *    <li>image - иконка: путь до икноки или sprite;</li>
+                *    <li>tooltip - подсказка;</li>
+                *    <li>handlers - объект с обработчиками действия клика по кнопке;</li>
+                *    <li>visible - видимость;</li>
+                *    <li>enabled - активность (доступность к взаимодействию);<li>
+                * </ul>
+                * Пользовательские кнопки вставляются после платформенных в заявленном порядке.
+                *
+                * Для платформенных кнопок возможно управление только их видимостью (visible) и активностью (enabled).
+                * Список платформенных кнопок:
+                * <ol>
+                *    <li>undo - Шаг назад;</li>
+                *    <li>redo - Шаг вперед;</li>
+                *    <li>style - Стиль текста;</li>
+                *    <li>bold - Полужирный;</li>
+                *    <li>italic - Курсив;</li>
+                *    <li>underLine - Подчеркнутый;</li>
+                *    <li>strike - Зачеркнутый;</li>
+                *    <li>justify - Выравнивание текста;</li>
+                *    <li>textColor - Цвет текста;</li>
+                *    <li>list - Вставить/Удалить список;</li>
+                *    <li>link - Вставить/редактировать ссылку;</li>
+                *    <li>unlink - Убрать ссылку;</li>
+                *    <li>table - Добавить таблицу - ведутся работы, не использовать!!!;</li>
+                *    <li>image - Вставить картинку;</li>
+                *    <li>smile - Смайлики;</li>
+                *    <li>history - История ввода;</li>
+                *    <li>source - html-разметка;</li>
+                * </ol>
+                */
                userItems: {}
             },
             _fakeArea: undefined, //textarea для перехода фкуса по табу
@@ -325,6 +429,18 @@ define('js!SBIS3.CONTROLS.RichEditor',
             }
          },
 
+         /**
+          * Устанавливает текстовое значение внутри поля ввода.
+          * @param {String} text Текстовое значение, которое будет установлено в поле ввода.
+          * @example
+          * <pre>
+          *     if (control.getText() == "Введите ФИО") {
+          *        control.setText("");
+          *     }
+          * </pre>
+          * @see text
+          * @see getText
+          */
          setText: function(ctxVal) {
             var autoFormat = true;
             if (!this._typeInProcess && !$ws.helpers.compareValues(ctxVal, this._curValue()) && ctxVal !== undefined) {
@@ -420,13 +536,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
          },
 
          /**
-          * <wiTag group="Управление">
-          * Сохранить в историю.
-          * Сохраняет на бизнес логику, в пользовательский конфиг, строку прявязывая её к имени контрола.
-          * В памяти истории может хранится до 10 значений.
-          * @param valParam {String} строковое значение
-          * @see userItems
-          * @public
+          * Метод открывает диалог, позволяющий добавлять контент с учетом стилей
+          * @param onAfterCloseHandler Функция, вызываемая после закрытия диалога
+          * @param target объект рядом с которым будет позиционироваться  диалог если нотификатор отсутствует
           */
          pasteFromBufferWithStyles: function(onAfterCloseHandler, target) {
             var
@@ -524,7 +636,15 @@ define('js!SBIS3.CONTROLS.RichEditor',
                createDialog();
             });
          },
-
+         /**
+          * <wiTag group="Управление">
+          * Сохранить в историю.
+          * Сохраняет на бизнес логику, в пользовательский конфиг, строку прявязывая её к имени контрола.
+          * В памяти истории может хранится до 10 значений.
+          * @param valParam {String} строковое значение
+          * @see userItems
+          * @public
+          */
          saveToHistory: function(valParam) {
             var
                self = this,
@@ -615,7 +735,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
             styles.textColor = tinyMCE.DOM.getStyle(this._tinyEditor.selection.getNode(), 'color', true);
             return styles;
          },
-
+         /**
+          * Получить экземпляр редактора tinyMCE
+          */
          getTinyEditor: function() {
             return this._tinyEditor;
          },
@@ -676,7 +798,41 @@ define('js!SBIS3.CONTROLS.RichEditor',
                }
             }
          },
-
+         /**
+          * <wiTag group="Управление">
+          * Вставить смайл.
+          * Вставляет смайл по его строковому соответствию^
+          * <ul>
+          *    <li>Smile - улыбка;</li>
+          *    <li>Nerd - умник;</li>
+          *    <li>Angry - злой;</li>
+          *    <li>Annoyed - раздраженный;</li>
+          *    <li>Blind - слепой;</li>
+          *    <li>Cool - крутой;</li>
+          *    <li>Cry - плачет;</li>
+          *    <li>Devil - дьявол;</li>
+          *    <li>Dumb - тупица;</li>
+          *    <li>Inlove - влюблен;</li>
+          *    <li>Kiss - поцелуй;</li>
+          *    <li>Laugh - смеётся;</li>
+          *    <li>Money - алчный;</li>
+          *    <li>Neutral - нейтральный;</li>
+          *    <li>Puzzled - недоумевает;</li>
+          *    <li>Rofl - подстолом;</li>
+          *    <li>Sad - расстроен;</li>
+          *    <li>Shocked - шокирован;</li>
+          *    <li>Snooze - дремлет;</li>
+          *    <li>Tongue - дразнит;</li>
+          *    <li>Wink - подмигивает;</li>
+          *    <li>Yawn - зевает;</li>
+          * </ul>
+          * @public
+          * @example
+          * <pre>
+          *    fre.insertSmile('Angry')
+          * </pre>
+          * @param {String} smile название смайла
+          */
          insertSmile: function(smile) {
             var smiles;
             if (typeof smile === 'string') {
@@ -712,6 +868,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
          /**
           * Метод открывает диалог, позволяющий вставить ссылку
           * @param onAfterCloseHandler Функция, вызываемая после закрытия диалога
+          * @param target объект рядом с которым будет позиционироваться  диалог вставки ссылки
           */
          insertLink: function(onAfterCloseHandler, target) {
             var
@@ -823,7 +980,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
          /**
           * Установить курсор в конец контента.
-          * @private
           */
          setCursorToTheEnd: function() {
             var
