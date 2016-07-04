@@ -844,7 +844,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
           * @returns {*|jQuery|HTMLElement}
           * @deprecated
           */
-         //TODO:придумать дургое решение
+         //TODO:придумать дургое решение: https://inside.tensor.ru/opendoc.html?guid=c7676fdd-b4de-4ac6-95f5-ab28d4816c27&description=
          getInputContainer: function() {
             return this._inputControl;
          },
