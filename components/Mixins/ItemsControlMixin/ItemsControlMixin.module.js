@@ -999,7 +999,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see onDataLoad
         */
       setDataSource: function (source, noLoad) {
-          this._unsetItemsEventHandlers();
           this._prepareConfig(source);
           if (!noLoad) {
              return this.reload();
@@ -1071,6 +1070,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                          self._drawItemsCallback();
                       }
                    } else {
+                      this._unsetItemsEventHandlers();
                       this._options._items = list;
                       this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
                       this._setItemsEventHandlers();
@@ -1679,8 +1679,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _getItemTemplate: function (item) {
          if (this._options.itemTemplate) {
             return this._options.itemTemplate;
-         }
-         else {
+         } else if (this._options.itemTpl) {
+            return this._options.itemTpl;
+         } else {
             return this._options._defaultItemTemplate;
          }
       },
