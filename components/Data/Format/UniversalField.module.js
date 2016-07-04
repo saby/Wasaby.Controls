@@ -9,8 +9,7 @@ define('js!SBIS3.CONTROLS.Data.Format.UniversalField', [
     * @author Мальцев Алексей
     */
 
-   var UniversalField = function() /** @lends SBIS3.CONTROLS.Data.Format.UniversalField.prototype */{
-   };
+   var UniversalField = function() {};
 
    /**
     * @member {String} Название модуля
