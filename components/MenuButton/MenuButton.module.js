@@ -66,6 +66,9 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       init: function(){
          var self = this;
          this._container.addClass('controls-MenuButton');
+         if(this._container.hasClass('controls-Button__big')){
+            this._options.pickerClassName += ' controls-Menu__big';
+         }
          this.reload();
          MenuButton.superclass.init.call(this);
       },

@@ -103,6 +103,12 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
             }.bind(this), 1);
          }
       },
+
+      validate: function() {
+         /* Т.к. buttonBase это составной контрол, то он должен валидировать как себя (радиокнопки должны валидировать себя),
+            так и детей. */
+         return ButtonBase.superclass.validate.apply(this, arguments) && Control.prototype.validate.apply(this, arguments);
+      },
       /**
        * Получить текст на кнопке.
        * Метод получения текста, заданного либо опцией {@link caption}, либо методом {@link setCaption}.

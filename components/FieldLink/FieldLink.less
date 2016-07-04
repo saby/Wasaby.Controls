@@ -85,6 +85,8 @@
 .controls-FieldLink {
    display: inline-block;
    border-color: @controls-FieldLink-border-color;
+   position: relative;
+   white-space: nowrap;
 
    &.controls-Picker__show,
    &.ws-has-focus,
@@ -100,9 +102,15 @@
    .controls-TextBox__fieldWrapper {
       margin: @controls-FieldLink-fieldWrapper-margin;
       display: inline-block;
+
+      .controls-TextBox__field {
+         width: 0;
+      }
    }
 
    .controls-TextBox__beforeFieldWrapper {
+      max-width: 100%;
+      overflow: hidden;
 
       .controls-FieldLink__showAllLinks,
       .controls-FieldLink__dropAllLinks {
@@ -120,6 +128,11 @@
 
    .controls-TextBox__afterFieldWrapper {
       padding: @controls-FieldLink-afterField-padding;
+      height: 22px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: #ffffff;
       > *{
          vertical-align: middle;
       }

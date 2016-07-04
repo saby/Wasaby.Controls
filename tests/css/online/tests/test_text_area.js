@@ -127,5 +127,11 @@ gemini.suite('SBIS3.CONTROLS.TextArea Online', function () {
 				}
 				actions.sendKeys(this.input, gemini.TAB);
             })
+			
+			.capture('with_scroll_and_disabled', function (actions) {
+                actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('TextArea 1').setEnabled(false);
+                });
+            })
     });
 });

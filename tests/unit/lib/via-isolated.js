@@ -33,12 +33,13 @@ exports.run = function (config, wsConfig, rootPath) {
       }
    });
 
-   //Подключаем конфиг requirejs из ядра
-   requirejs(path.join(wsConfig.wsRoot, 'ext/requirejs/config.js'));
-   //FIXME: config.js сбрасывает baseUrl на '/'
-   requirejs.config({
-      baseUrl: rootPath
-   });
+   //Конфигурируем requirejs
+   var requireCfg = require(path.join(rootPath, wsConfig.wsRoot, 'ext/requirejs/config'))(
+      rootPath,
+      wsConfig.wsRoot,
+      wsConfig.resourceRoot
+   );
+   requirejs.config(requireCfg);
 
    //Подключаем ядро
    requirejs(path.join(wsConfig.wsRoot, 'lib/core.js'));
@@ -57,7 +58,7 @@ exports.run = function (config, wsConfig, rootPath) {
    });
    $ws.single.ioc.bindSingle('ILogger', 'TestConsoleLogger');
 
-   //Подключаем контролы к requirejs
+   //Загружаем оглавление
    var contents = require(path.join(rootPath, wsConfig.resourceRoot, 'contents.json'));
    $ws.core.loadContents(contents, false, {
       service: rootPath,

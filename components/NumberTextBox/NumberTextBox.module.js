@@ -39,6 +39,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     *
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
     * @ignoreEvents onReady
+    *
+    * @cssModifier controls-NumberTextBox__text-align-right Выравнивает содержимое поля ввода по правому краю.
     */
 
    var NumberTextBox;
@@ -162,12 +164,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          this._inputField.bind('blur', function(){
             // Прятать нулевую дробную часть при потере фокуса
             self._hideEmptyDecimals();
-         }).bind('focus', function(){
-            // Показывать нулевую дробную часть при фокусировки не зависимо от опции hideEmptyDecimals
-            if (self._options.hideEmptyDecimals) {
-               self._options.text = self._formatText(self._options.text);
-               $(this).val(self._options.text);
-            }
          });
 
          if (typeof this._options.numericValue === 'number' && !isNaN(this._options.numericValue)) {
@@ -177,6 +173,15 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          this._setNumericValue(this._options.text);
          this._inputField.val(this._options.text);
          this._hideEmptyDecimals();
+      },
+
+      _inputFocusInHandler: function() {
+         // Показывать нулевую дробную часть при фокусировки не зависимо от опции hideEmptyDecimals
+         if (this._options.hideEmptyDecimals) {
+            this._options.text = this._formatText(this._options.text);
+            this._inputField.val(this._options.text);
+         }
+         NumberTextBox.superclass._inputFocusInHandler.apply(this, arguments);
       },
 
       _checkMaxLength: function(value){
@@ -332,7 +337,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             return true;
          }
          var keyCode = (event.which >= 96 && event.which <= 105) ? event.which - 48 : event.which;
-         if(keyCode == 190 || keyCode == 110/*точка*/){
+         /*точка*/
+         if ((keyCode == 190 || keyCode == 110 || keyCode == 191 || keyCode == 188) && (event.key == ',' || event.key == '.'|| event.key == 'Decimal' || $ws._const.browser.isMacOSDesktop || $ws._const.browser.isMacOSMobile)) {
             this._dotHandler(event);
             return;
          }

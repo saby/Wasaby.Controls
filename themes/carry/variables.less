@@ -5,20 +5,28 @@
 @font-basic-line-height:                        24px;
 @data-grid-basic-height:                        44px;
 
+@default-itemSelected-color:                    #FDECD9;
+
 // data grid
 @default-itemHover-color:                       #E1ECF6;
-@data-grid-cell-height:                         @data-grid-basic-height;
+@data-grid-cell-height:                         44px;;
 @data-grid-cell-padding:                        0 6px;
+@data-grid-columnValue-padding:                 8px 0;
 @data-grid-header-cell-font-size:               16px;
 @data-grid-header-cell-height:                  22px;
-@data-grid-cell-line-height:                    @data-grid-basic-height;
-@data-grid-checkbox-margin:                     2px 0 1px 3px;
+@data-grid-cell-line-height:                    25px;
+@data-grid-checkbox-margin:                     12px 0 1px 10px;
+@data-grid-td-checkbox-width:                   30px;
+@data-grid-td-visible-checkbox-width:           40px;
+
+@data-grid-first-cell-separator-color:          #EAEAEA;
 
 // tree view
 @font-folder-size:                              @globalDefaultFontSize;
-@tree-view-expand-margin:                       0 8px 8px 2px;
+@tree-view-folder-title-margin:                 10px 0;
+@tree-view-expand-margin:                       10px 6px 8px 2px;
 @tree-view-editArrow-top:                       16px;
-@tree-view-ellipsis-wrapper-height:             @data-grid-basic-height;
+@tree-view-ellipsis-wrapper-height:             40px;
 
 // back-button
 @menu-item-icon-top-offset:                     14px;
@@ -37,6 +45,15 @@
 
 //FieldLink
 @controls-FieldLink-afterField-padding:         10px 16px 0px 0;
+
+// --------- //
+// List view //
+// --------- //
+@list-view-actions-menu-close-right:            2px;
+@list-view-actions-menu-close-height:           24px;
+@list-view-actions-menu-close-width:            24px;
+
+@list-view-actions-menu-padding:                0;
 
 // ------ //
 // Button //
@@ -233,17 +250,73 @@
 @breadcrumbs-small-items-top:                   @breadcrumbs-arrow-top;
 @icon-height:                                   24px;
 
+// -------- //
+// Checkbox //
+// -------- //
+
+@check-box-icon-width:                          24px;
+@check-box-icon-height:                         24px;
+@check-box-icon-line-height:                    24px;
+
+@check-box-icon-bg:                             url(@check-box-icon-spritesheet) -4px -2px;
+@check-box-icon-hover-bg:                       url(@check-box-icon-spritesheet) -4px 28px;
+@check-box-icon-checked-bg:                     url(@check-box-icon-spritesheet) -4px 74px;
+@check-box-icon-checked-hover-bg:               url(@check-box-icon-spritesheet) -4px 74px;
+
+@check-box-icon-third-state-bg:                 url(@check-box-icon-spritesheet) -4px 51px;
+
+@check-box-icon-disabled-bg:                    url(@check-box-icon-spritesheet) 30px -2px;
+@check-box-icon-disabled-checked-bg:            url(@check-box-icon-spritesheet) 30px 76px;
+@check-box-icon-disabled-third-state-bg:        url(@check-box-icon-spritesheet) 30px 76px;
+
+
 
 // Popup
 @font-popup-size:                               @font-basic-size;
 
 @menu-item-height:                              44px;
-@menu-item-text-margin:                         5px 0 0 34px;
+@menu-item-text-margin:                         0 0 0 34px;
 @menu-item-icon-top-offset:                     14px;
 
 @list-view-actions-menu-icon-width:             24px;
+@listView-check-box-width:                      24px;
+@listView-check-box-height:                     24px;
 
 // EditDialog
 @editdialog-applybutton-width:                  130px;
 @editdialog-template-minwidth:                  460px;
 
+//MoveDialog
+@controls-movedialog-activate-right:            65px;
+@controls-movedialog-activate-top:              10px;
+@controls-movedialog-min-width:                 455px;
+
+// --------------- //
+// OperationsPanel //
+// --------------- //
+
+@controls-OperationsPanel-height:               40px;
+@controls-OperationsPanel-separator-height:     27px;
+@controls-OperationsPanel-separator-line-height:40px;
+@controls-OperationsPanel-actions-margin:       0 8px;
+@controls-OperationsPanel-actions-padding-left: 8px;
+@controls-OperationsMark-checkBox-margin:       0 8px 0 8px;
+
+// ----------------------- //
+// OperationsPanelButton  //
+// ----------------------- //
+
+@controls-OperationsPanelButton-height:         32px;
+@controls-OperationsPanelButton-width:          32px;
+
+// --------- //
+// Menu link //
+// --------- //
+
+@menu-link-line-height:                         38px;
+
+// ----------------------- //
+//      EditInPlace        //
+// ----------------------- //
+@controls-editInPlace-editor-margin-top:        2px;
+@controls-editInPlace-editor-margin-bottom:     2px;

@@ -3,28 +3,37 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
    'use strict';
 
    /**
-    * Кнопка с выпадающим меню
+    * Класс контрола, который предназначен для отображения кнопки в виде иконки с выпадающим меню.
+    *
     * @class SBIS3.CONTROLS.MenuIcon
-	* @demo SBIS3.CONTROLS.Demo.MyMenuIcon
+    * @extends SBIS3.CONTROLS.IconButton
     * @control
+    * @public
+    *
+    * @mixes SBIS3.CONTROLS.PickerMixin
+    * @mixes SBIS3.CONTROLS.DSMixin
+    * @mixes SBIS3.CONTROLS.MenuButtonMixin
+    *
+    * @demo SBIS3.CONTROLS.Demo.MyMenuIcon
+    *
+    * @author Борисов Петр Сергеевич
+    *
+    * @category Buttons
+    *
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuIcon'>
-    *    <option name="icon">sprite:icon-24 icon-AddButton icon-primary</option>
+    *    <option name="icon" value="icon-24 icon-AddButton icon-primary"></option>
     *    <options name="items" type="array">
     *        <options>
-    *            <option name="id">1</option>
-    *            <option name="title">Пункт1</option>
+    *            <option name="id" value="1"></option>
+    *            <option name="title" value="Пункт1"></option>
     *         </options>
     *         <options>
-    *            <option name="id">2</option>
-    *            <option name="title">Пункт2</option>
+    *            <option name="id" value="2"></option>
+    *            <option name="title" value="Пункт2"></option>
     *         </options>
     *      </options>
     * </component>
-    * @extends SBIS3.CONTROLS.IconButton
-    * @public
-    * @author Крайнов Дмитрий Олегович
-    * @category Buttons
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
@@ -45,8 +54,7 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
     * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.MenuButtonMixin
     *
-    * @cssModifier controls-Menu__hide-menu-header скрыть заголовок у выпадающего меню
-    * @cssModifier controls-IconButton__round-border круглый бордер вокруг иконки
+    * @cssModifier controls-Menu__hide-menu-header Скрывает из выпадающего меню заголовок, который устанавливают с помощью опции {@link caption}.
     */
 
    var MenuIcon = IconButton.extend( [PickerMixin, DSMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuIcon.prototype */ {
