@@ -134,8 +134,10 @@ define('js!SBIS3.CONTROLS.Data.ContextField.List', [
 
       subscribe: function (value, fn) {
          var handler = fn.debounce(1);
+         value.subscribe('onCollectionChange', handler);
          value.subscribe('onCollectionItemChange', handler);
          return function () {
+            value.unsubscribe('onCollectionChange', handler);
             value.unsubscribe('onCollectionItemChange', handler);
          };
       }

@@ -28,8 +28,8 @@
       left: 0;
    }
    .controls-ListView__itemCheckBox {
-      width: 16px;
-      height: 16px;
+      width: @listView-check-box-width;
+      height: @listView-check-box-height;
       background: none;
       cursor: pointer;
       display: none;
@@ -62,10 +62,9 @@
       display: block;
       margin: 0 auto;
       height: @list-view-scroll-height;
-      width: @list-view-scroll-width;
       bottom: 0;
       position: absolute;
-      z-index: 1;         
+      z-index: 1;
       right: 0;
       width: 100%;
       background-repeat: no-repeat;
@@ -76,6 +75,12 @@
          background-image: url('img/ajax-loader-indicator.gif'), linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0.7) 50%,rgba(255,255,255,0.69) 51%,rgba(255,255,255,0) 100%);
       }
    }
+   &.controls-ListView__outside-scroll-loader{
+      .controls-ListView-scrollIndicator{
+         position: relative;
+      }
+   }
+
    &.controls-ListView__showCheckBoxes {
       .controls-ListView__itemCheckBox {
          background: @check-box-icon-bg;
@@ -100,6 +105,10 @@
       display: none;
    }
 
+   &.controls-ListView__pagerHideEndButton .controls-Pager-container .ws-paging-end{
+     display: none;
+   }
+
    &.controls-ListView__orangeMarker {
       .controls-ListView__item__selected {
          background-image: url('img/rowSelect.png');
@@ -114,37 +123,37 @@
    }
 }
 .controls-AjaxLoader{
-   background: none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
+   background: @controls-AjaxLoader-background;
    position: absolute;
-   top: 0;
-   bottom: 0;
-   left: 0;
-   right: 0;
+   top: @controls-AjaxLoader-default-cord;
+   bottom: @controls-AjaxLoader-default-cord;
+   left: @controls-AjaxLoader-default-cord;
+   right: @controls-AjaxLoader-default-cord;
    width: 100%;
    height: 100%;
-   z-index: 2;
+   z-index: @controls-AjaxLoader-zIndex;
    overflow: hidden;
-   min-height: 32px;
+   min-height: @controls-AjaxLoader-minHeight;
    .controls-AjaxLoader__outer{
-      height: 36px;
+      height: @controls-AjaxLoader-outer-height;
       position: relative;
-      top: 50%;
-      line-height: 30px;
+      top: @controls-AjaxLoader-outer-top;
+      line-height: @controls-AjaxLoader-outer-lineHeight;
       .controls-AjaxLoader__block{
-         width: 32px;
+         width: @controls-AjaxLoader-block-width;
          border: none;
          box-shadow: none;
-         background: none repeat scroll 0 0 transparent !important;
+         background: @controls-AjaxLoader-block-background;
          margin-left: auto;
          margin-right: auto;
          position: relative;
-         top: -50%;
-         padding: 2px;
+         top: @controls-AjaxLoader-block-top;
+         padding: @controls-AjaxLoader-block-padding;
          .controls-AjaxLoader__LoadingIndicator{
             position: absolute;
             background: @list-view-scroll-bg;
-            padding-left: 32px;
-            height: 32px;
+            padding-left: @controls-AjaxLoader-indicator-padding-left;
+            height: @controls-AjaxLoader-indicator-height;
          }
       }
    }

@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.TabControl', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.TabControl',
-   'js!SBIS3.CORE.SwitchableArea',
+   'js!SBIS3.CONTROLS.SwitchableArea',
    'js!SBIS3.CONTROLS.TabButtons'
 ], function(CompoundControl, dotTplFn) {
 
@@ -92,7 +92,20 @@ define('js!SBIS3.CONTROLS.TabControl', [
              * @variant all инстанцировать все области сразу;
              * @variant cached инстанцировать только 1 область, при смене предыдущую не уничтожать (кэширование областей).
              */
-            loadType: 'cached'
+            loadType: 'cached',
+            /**
+             * @cfg {Boolean} Включает фиксацию / прилипание корешков закладок к шапке страницы / всплывающей панели.
+             * @example
+             * <pre>
+             *     <option name="stickyHeader">true</option>
+             * </pre>
+             */
+            stickyHeader: false,
+            /**
+             * @cfg {String} Дополнительный класс, который будет повешен на корешки закладок.
+             * Нужен, например, для того, чтобы однозначно определить корешки закладок после их фиксации в заголовке страницы.
+             */
+            tabButtonsExtraClass: ''
          }
       },
 

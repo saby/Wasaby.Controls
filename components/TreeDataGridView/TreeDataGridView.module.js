@@ -116,19 +116,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              *     <option name="editArrow" type="boolean">false</option>
              * </pre>
              */
-            editArrow: true,
-            /**
-             * @cfg {String} Разрешено или нет перемещение элементов "Drag-and-Drop"
-             * @variant "" Запрещено
-             * @variant allow Разрешено
-             * @variant onlyChangeOrder Разрешено только изменение порядка
-             * @variant onlyChangeParent Разрешено только перемещение в папку
-             * @example
-             * <pre>
-             *     <option name="itemsDragNDrop">onlyChangeParent</option>
-             * </pre>
-             */
-            itemsDragNDrop: 'allow'
+            editArrow: false
          },
          _dragStartHandler: undefined,
          _editArrow: undefined
@@ -148,15 +136,17 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (this._container.hasClass('controls-TreeDataGridView__withPhoto')){
             this._options._paddingSize = 42;
          }
+         if (this._options._serverRender) {
+            this._createAllFolderFooters();
+         }
+      },
+
+      redraw: function() {
+         TreeDataGridView.superclass.redraw.apply(this, arguments);
+         this._createAllFolderFooters();
       },
 
       _drawItemsCallback: function() {
-         $ws.helpers.forEach(this._options.openedPath, function(val, key) {
-            //Рисуем футер, только если узел есть в проекции, иначе он скрыт и футер рисовать не нужно
-            if (this._getItemProjectionByItemId(key)) {
-               this._createFolderFooter(key);
-            }
-         },this);
          this._updateEditArrow();
          TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
@@ -248,7 +238,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
        */
       getEditArrow: function() {
          var self = this;
-         if(!this._editArrow && this._options.editArrow) {
+         if(!this._editArrow && (this._options.editArrow || this._options.arrowActivatedHandler)) {
             this._editArrow = new IconButton({
                element: this._container.find('> .controls-TreeView__editArrow-container'),
                icon: 'icon-16 icon-View icon-primary action-hover icon-size',
@@ -322,7 +312,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _updateEditArrow: function() {
-         if(this._options.editArrow) {
+         if(this._options.editArrow || this._options.arrowActivatedHandler) {
             if(this.getHoveredItem().container) {
                this._showEditArrow();
             } else {
@@ -364,14 +354,14 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _onLeftSwipeHandler: function() {
-         if(this._options.editArrow) {
+         if(this._options.editArrow || this._options.arrowActivatedHandler) {
             this._showEditArrow();
          }
          TreeDataGridView.superclass._onLeftSwipeHandler.apply(this, arguments);
       },
 
       _onRightSwipeHandler: function() {
-         if(this._options.editArrow) {
+         if(this._options.editArrow || this._options.arrowActivatedHandler) {
             this._hideEditArrow();
          }
          TreeDataGridView.superclass._onRightSwipeHandler.apply(this, arguments);
@@ -380,7 +370,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _isHoverControl: function(target) {
          var res = TreeDataGridView.superclass._isHoverControl.apply(this, arguments);
 
-         if(!res && this._options.editArrow) {
+         if(!res && (this._options.editArrow || this._options.arrowActivatedHandler)) {
             return this.getEditArrow().getContainer()[0] === target[0];
          }
          return res;
@@ -421,10 +411,21 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
       },
 
+      _notifyOnItemClick: function(id, data, target) {
+         if(!$(target).hasClass('js-controls-TreeView__expand')) {
+            return TreeDataGridView.superclass._notifyOnItemClick.apply(this, arguments);
+         }
+      },
+
       _elemClickHandlerInternal: function(data, id, target) {
          var $target =  $(target),
              closestExpand = this._findExpandByElement($target),
              nodeID = $target.closest('.controls-ListView__item').data('id');
+
+         /* Не обрабатываем клики по чекбоку и по стрелке редактирования, они обрабатываются в elemClickHandler'e */
+         if ($target.hasClass('js-controls-TreeView__editArrow') || $target.hasClass('js-controls-ListView__itemCheckBox')) {
+            return;
+         }
 
          /* При клике по треугольнику надо просто раскрыть ветку */
          if (closestExpand.hasClass('js-controls-TreeView__expand') && closestExpand.hasClass('has-child')) {
@@ -435,7 +436,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (this._options.allowEnterToFolder){
             /* Не обрабатываем клики по чекбоку и по стрелке редактирования, они обрабатываются в elemClickHandler'e */
             if ($target.hasClass('js-controls-TreeView__editArrow') || $target.hasClass('js-controls-ListView__itemCheckBox')) {
-               return;
+               return false;
             } else if (data.get(this._options.hierField + '@')) {
                this.setCurrentRoot(nodeID);
                this.reload();
@@ -451,18 +452,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             else {
                this._activateItem(id);
             }
-         }
-      },
-      _notifyOnDragMove: function(target, insertAfter) {
-         //Если происходит изменение порядкового номера и оно разрешено или если происходит смена родителся и она разрешена, стрельнём событием
-         if (typeof insertAfter === 'boolean' && this._options.itemsDragNDrop !== 'onlyChangeParent' || insertAfter === undefined && this._options.itemsDragNDrop !== 'onlyChangeOrder') {
-            return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter) !== false;
-         }
-      },
-
-      _getDirectionOrderChange: function() {
-         if (this._options.itemsDragNDrop !== 'onlyChangeParent') {
-            return TreeDataGridView.superclass._getDirectionOrderChange.apply(this, arguments);
          }
       },
 

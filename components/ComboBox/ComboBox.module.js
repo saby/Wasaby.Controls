@@ -286,7 +286,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          ComboBox.superclass._drawText.apply(this, arguments);
          this._drawNotEditablePlaceholder(text);
          $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder);
-         this._setKeyByText();
+         if (this._options.editable) {
+            this._setKeyByText();
+         }
       },
 
       _drawNotEditablePlaceholder: function (text) {
@@ -295,9 +297,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _drawSelectedItem: function (key, index) {
          function clearSelection() {
-            ComboBox.superclass.setText.call(self, '');
-            self._drawNotEditablePlaceholder('');
-            $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text('');
+            ComboBox.superclass.setText.call(this, '');
+            this._drawNotEditablePlaceholder('');
+            $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text('');
             if (this._picker) {
                $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
             }
@@ -306,9 +308,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var item, def;
          def = new $ws.proto.Deferred();
          if (this._dataSet) {
-            if ((index !== null) && (typeof index != 'undefined') && (index != '-1')) {
-               item = this._itemsProjection.at(index).getContents();
-               def.callback(item);
+            if (typeof key !== 'undefined') {
+               item = this.getItems().getRecordById(key);
+               if (item) {
+                  def.callback(item);
+               }
             }
             else {
                if (this._dataSource) {
@@ -374,6 +378,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                }
                self.setSelectedKey(strKey);
                self.hidePicker();
+               // чтобы не было выделения текста, когда фокус вернули в выпадашку
+               self._fromTab = false;
+               self.setActive(true);
             }
             e.stopPropagation();
          });
@@ -597,7 +604,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          return def;
       },
       setSelectedKey : function(key) {
-         if (key == null) {
+         if (key == null && !(this.getItems() && this.getItems().getRecordById(key))) {
             this._isClearing = true;
          }
          ComboBox.superclass.setSelectedKey.apply(this, arguments);

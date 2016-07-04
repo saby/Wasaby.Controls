@@ -48,7 +48,7 @@ gemini.suite('SBIS3.CONTROLS.Toolbar Online', function () {
 			
 			.capture('hovered_menu_item_2', function (actions) {
                 actions.mouseMove(this.menu_item2);
-				actions.wait(1000);
+				actions.wait(500);
             })
 			
 			.capture('disabled', function (actions) {
@@ -64,6 +64,23 @@ gemini.suite('SBIS3.CONTROLS.Toolbar Online', function () {
 			
 			.capture('disabled_and_hovered_menu_button', function (actions) {
                 actions.mouseMove(this.menu);
+            })
+    });
+	
+	gemini.suite('with_link', function (test) {
+
+        test.setUrl('/regression_toolbar_online_2.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="Toolbar 1"]', 40000);
+                this.data = find('[sbisname="Toolbar 1"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[sbisname="TextBox 1"] input');
+				this.item_1 = find('.controls-ToolBar__itemsContainer [data-id="3"]');
+            })
+
+            .capture('plain', function (actions) {
+				actions.click(this.input);
             })
     });
 });

@@ -7,8 +7,18 @@
   line-height: @link-line-height;
   padding: @link-padding;
   box-sizing: border-box;
+  font-family: @font-basic-name;
+  font-size: @font-basic-size;
   &.ws-area{
    height: auto;
+  }
+  &:hover {
+    cursor: @link-cursor;
+    color: @link-hover-text-color;
+    text-decoration: @link-hover-text-decoration;
+    .controls-Link__icon .icon-primary{
+      color: @primary-color!important;
+    }
   }
 
   &.controls-Click__active {
@@ -60,7 +70,7 @@
    }
 }
 .ws-is-desktop-platform {
-   .controls-Link {
+   .controls-Link:not(.ws-disabled) {
       &:hover {
          color: @link-hover-text-color;
          cursor: @link-cursor;

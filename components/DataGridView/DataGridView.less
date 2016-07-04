@@ -26,6 +26,11 @@
       .controls-DataGridView__table .controls-DataGridView__td{
          border-top-color: @data-grid-cell-separator-color;
       }
+      .controls-DataGridView__table .controls-DataGridView__tr:first-child {
+        .controls-DataGridView__td{
+          border-top-color: @data-grid-first-cell-separator-color;
+        }
+      }
    }
 
    .controls-DataGridView__td__textAlignRight{
@@ -221,6 +226,19 @@
          cursor: @list-view-disabled-cursor;
       }
    }
+
+  &.controls-ListView__multiselect {
+    > .controls-DataGridView__table {
+         >.controls-DataGridView__colgroup {
+           col:first-child {
+            width: @data-grid-td-visible-checkbox-width;
+          }
+        }
+         .controls-DataGridView__td__checkBox {
+          width: @data-grid-td-visible-checkbox-width;
+        }
+      }
+  }
 
    &.controls-ListView__hideCheckBoxes {
       &.controls-ListView__multiselect {

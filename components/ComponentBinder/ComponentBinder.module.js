@@ -16,7 +16,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             }),
             view = this._options.view,
             groupBy = view.getSearchGroupBy(searchParamName),
-            self = this;
+            self = this,
+            mode = searchMode;
          if (searchCrumbsTpl) {
             groupBy.breadCrumbsTpl = searchCrumbsTpl;
          }
@@ -42,7 +43,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          }
          //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
          if (this._options.backButton) {
-            this._options.backButton.getContainer().css({'visibility': 'hidden'});
+            this._options.backButton.getContainer().css({'display': 'none'});
          }
 
          if (searchMode == 'root'){
@@ -50,17 +51,19 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          }
 
          view.once('onDataLoad', function(event, data){
-            var root = view._options.root !== undefined ? view._options.root : null,
-                newText;
+            var root;
 
             toggleSearchKbLayoutRevert.call(self, view, false);
             processDataKbLayoutRevert.call(self, data, view, searchForm, searchParamName);
-            //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
-            view._options._itemsProjection.setEventRaising(false);
-            //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
-            view._options._itemsProjection.setRoot(root);
-            view._options._curRoot = root;
-            view._options._itemsProjection.setEventRaising(true);
+            if (mode === 'root') {
+               root = view._options.root !== undefined ? view._options.root : null;
+               //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
+               view._options._itemsProjection.setEventRaising(false);
+               //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
+               view._options._itemsProjection.setRoot(root);
+               view._options._curRoot = root;
+               view._options._itemsProjection.setEventRaising(true);
+            }
          });
 
          view.reload(filter, view.getSorting(), 0).addCallback(function(){
@@ -143,7 +146,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             this._options.breadCrumbs._redraw();
          }
          if (this._options.backButton) {
-            this._options.backButton.getContainer().css({'visibility': 'visible'});
+            this._options.backButton.getContainer().css({'display': ''});
          }
       } else {
          //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
@@ -334,7 +337,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                      self._pathDSRawData = $ws.core.clone(crumbsItems ? crumbsItems.getRawData() : []);
                   }
                   if (self._options.backButton) {
-                     self._options.backButton.getContainer().css({'visibility': 'visible'});
+                     self._options.backButton.getContainer().css({'display': ''});
                   }
                }
             });
@@ -373,6 +376,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                   view.setSelectedIndex(0);
                   view.setActive(true);
                   event.stopPropagation();
+                  event.preventDefault();
                }
             });
          }
@@ -456,7 +460,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                      var rec = hier[i];
                      if (rec){
                         var c = createBreadCrumb(rec);
-                        if (self._currentRoot ) {
+                        if (self._currentRoot && !Object.isEmpty(self._currentRoot)) {
                            self._path.push(self._currentRoot);
                         } else {
 
@@ -562,12 +566,17 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             noSaveFilters: noSaveFilters
          });
 
+         filterButton.setHistoryController(historyController);
          if(applyOnLoad) {
             filter = historyController.getActiveFilter();
 
-            filterButton.setHistoryController(historyController);
-            /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
-            filterButton.setFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
+            if(filter) {
+               /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
+               filterButton.setFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
+               /* Это синхронизирует фильтр и структуру, т.к. некоторые фильтры возможно мы не сохраняли,
+                  и надо, чтобы это отразилось в структуре */
+               view.setFilter(filter.viewFilter, true);
+            }
          }
          setTimeout($ws.helpers.forAliveOnly(function() {
             // Через timeout, чтобы можно было подписаться на соыбтие, уйдёт с серверным рендерингом

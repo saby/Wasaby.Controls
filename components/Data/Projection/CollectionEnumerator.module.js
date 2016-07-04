@@ -95,8 +95,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
 
       //region SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin
 
-      reIndex: function () {
-         IndexedEnumeratorMixin.reIndex.call(this);
+      reIndex: function (action, start, count) {
+         IndexedEnumeratorMixin.reIndex.call(this, action, start, count);
          this._internalToSource = null;
          this._sourceToInternal = [];
          this._position = -1;
@@ -106,11 +106,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       },
 
       _createIndex: function (property) {
-         var savedPosition = this._position,
-            result = IndexedEnumeratorMixin._createIndex.call(this, property);
-
+         var savedPosition = this._position;
+         IndexedEnumeratorMixin._createIndex.call(this, property);
          this._position = savedPosition;
-         return result;
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin
@@ -155,6 +153,15 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          this._checkPosition(position);
          this._position = position;
          this._setCurrentByPosition();
+      },
+
+      /**
+       * Возвращает признак корректности позиции
+       * @param {Number} position Позиция
+       * @returns {Boolean}
+       */
+      isValidPosition: function (position) {
+         return position >= -1 && position < this._$items.length;
       },
 
       /**
@@ -256,7 +263,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        * @protected
        */
       _checkPosition: function (position) {
-         if (!this._isValidPosition(position)) {
+         if (!this.isValidPosition(position)) {
             throw new Error(this._moduleName + ': position is out of bounds');
          }
       },
@@ -286,16 +293,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          } else {
             this._current = undefined;
          }
-      },
-
-      /**
-       * Возвращает признак корректности позиции
-       * @param {Number} position Позиция
-       * @returns {Boolean}
-       * @protected
-       */
-      _isValidPosition: function (position) {
-         return position >= -1 && position < this._$items.length;
       }
 
       //endregion Protected methods

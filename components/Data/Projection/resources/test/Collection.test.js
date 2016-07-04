@@ -757,6 +757,41 @@ define([
                });
                list.removeAt(0);
             });
+
+            it('should fire after wake up', function(done) {
+               var
+                  actions = [IBindCollectionProjection.ACTION_ADD, IBindCollectionProjection.ACTION_REMOVE, IBindCollectionProjection.ACTION_MOVE],
+                  contents = [list.at(0), list.at(0), list.at(0)],
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     try {
+                        assert.strictEqual(action, actions[fireId]);
+                        switch (action) {
+                           case IBindCollectionProjection.ACTION_ADD:
+                              assert.strictEqual(newItems[0].getContents(), contents[fireId]);
+                              break;
+                           case IBindCollectionProjection.ACTION_REMOVE:
+                           case IBindCollectionProjection.ACTION_MOVE:
+                              assert.strictEqual(oldItems[0].getContents(), contents[fireId]);
+                              break;
+                        }
+                        if (fireId === actions.length - 1) {
+                           done();
+                        }
+                     } catch (err) {
+                        done(err);
+                     }
+                     fireId++;
+                  },
+                  fireId = 0;
+
+               projection.subscribe('onCollectionChange', handler);
+               projection.setEventRaising(false, true);
+               var item = list.at(0);
+               list.removeAt(0);
+               list.add(item, 1);
+               projection.setEventRaising(true, true);
+               projection.unsubscribe('onCollectionChange', handler);
+            });
          });
 
          describe('.isEventRaising()', function() {

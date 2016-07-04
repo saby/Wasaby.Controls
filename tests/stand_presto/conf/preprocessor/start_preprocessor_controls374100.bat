@@ -1,0 +1,1 @@
+"c:\Program Files\iojs\node.exe" master.js start --port 47320 --no-auth > 373100.txt

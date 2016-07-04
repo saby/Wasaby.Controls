@@ -67,28 +67,20 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
          /* По готовности компонента установим данные */
          this.subscribe('onInit', function() {
             var browser = browserName ? this.getChildControlByName(browserName) : this,
-                view = browser.getView(),
-                filterButton = browser._getFilterButton();
+                view = browser.getView();
 
             /* Т.к. запрос вызывается отдельно, то и индикатор надо показать самим,
                иногда БЛ может подтупливать и в этом случае может долго висеть пустой реестр, который вводит пользователя в заблуждение  */
             view._toggleIndicator(true);
-
-            /* Т.к. запрос вызывается отдельно и пока он выполняется можно делать разные действия, то надо выключить кнопку фильтров на время выполнения запроса,
-               иначе, в неё можно нажать и будет рассинхрон данных и фильтрации */
-            if(filterButton) {
-               filterButton.setEnabled(false);
-            }
+            /* Фильтр устанавливаем пораньше, до ответа query, чтобы запустилась синхронизация,
+             и фильтры проставились в кнопку фильтров */
+            view.setFilter(queryFilter, true);
 
             queryDef.addCallback(function(dataSet) {
                var keyField = view.getProperty('keyField'),
                    recordSet;
 
                view._toggleIndicator(false);
-
-               if(filterButton) {
-                  filterButton.setEnabled(true);
-               }
 
                if (keyField && keyField !== dataSet.getIdProperty()) {
                   dataSet.setIdProperty(keyField);
@@ -102,7 +94,6 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
                });
 
                view.setDataSource(source, true);
-               view.setFilter(queryFilter, true);
                resultDef.callback(recordSet);
                //FIXME это временный придрод, уйдёт, как будет сделана отрисовка на сервере (3.7.3.200 - 3.7.4)
                view._notify('onDataLoad', recordSet);

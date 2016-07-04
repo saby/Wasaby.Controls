@@ -119,6 +119,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
        var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, DSMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
           /**
+           * @name SBIS3.CONTROLS.FieldLink#textValue
+           * @cfg {String} Хранит строку, сформированную из значений поля отображения выбранных элементов коллекции.
+           * @remark
+           * Значения в строке перечислены через запятую. Отображаемые значения в строке определяются с помощью опции {@link displayField} или {@link itemTemplate}.
+           * Опция доступна только на чтение. Запрещена двусторонняя привязка к полю контекста.
+           * @see getTexValue
+           * @see displayField
+           * @see itemTemplate
+           */
+          /**
            * @event onItemActivate Происходит при клике по выбранному элементу коллекции.
            * @param {$ws.proto.EventObject} eventObject Дескриптор события.
            * @param {Object} meta Объект, описывающий метаданные события. В его свойствах передаются идентификатор и экземпляр выбранного значения.
@@ -250,21 +260,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  *     "></option>
                  * </pre>
                  */
-                itemTemplate: ''
+                itemTemplate: null
              }
           },
 
           $constructor: function() {
              var commandDispatcher = $ws.single.CommandDispatcher;
 
-             this.getContainer().addClass('controls-FieldLink');
              this._publish('onItemActivate');
 
              /* Проиницализируем переменные */
              this._setVariables();
-
-             /* Создём контрол, который рисует выбранные элементы  */
-             this._linkCollection = this._getLinkCollection();
 
              commandDispatcher.declareCommand(this, 'clearAllItems', this._dropAllItems);
              commandDispatcher.declareCommand(this, 'showAllItems', this._showAllItems);
@@ -287,8 +293,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           init: function() {
              FieldLink.superclass.init.apply(this, arguments);
-             /* Надо задавать элементы для меню рекордсетом, чтобы не портились хэндлеры сериализатором */
-             this.getChildControlByName('fieldLinkMenu').setItems(this._prepareFieldLinkMenuItems(this._options.dictionaries));
+             this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
           },
 
            _getShowAllConfig: function(){
@@ -326,7 +331,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           setDictionaries: function(dictionaries) {
              this._options.dictionaries = dictionaries;
-             this.getChildControlByName('fieldLinkMenu').setItems(this._prepareFieldLinkMenuItems(dictionaries));
+             this.getChildControlByName('fieldLinkMenu').setItems(dictionaries);
              this._notifyOnPropertyChanged('dictionaries');
           },
 
@@ -388,28 +393,60 @@ define('js!SBIS3.CONTROLS.FieldLink',
              };
           },
 
+          _modifyOptions: function() {
+             var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments);
+
+             /* className вешаем через modifyOptions,
+                так меньше работы с DOM'ом */
+             cfg.className += ' controls-FieldLink';
+             cfg.itemTemplate = TemplateUtil.prepareTemplate(cfg.itemTemplate);
+             return cfg;
+          },
+
           _getLinkCollection: function() {
              if(!this._linkCollection) {
-                return this._drawFieldLinkItemsCollection();
+                return (this._linkCollection = this.getChildControlByName('FieldLinkItemsCollection'));
              }
              return this._linkCollection;
           },
 
-          _prepareFieldLinkMenuItems: function (items) {
-             return new RecordSet({
-                rawData : items,
-                idProperty : 'caption'
-             })
+          /** Обработчики событий контрола отрисовки элементов **/
+          _onDrawItemsCollection: function() {
+             this._updateInputWidth();
           },
+          _onCrossClickItemsCollection: function(key) {
+             this.removeItemsSelection([key]);
+             if(!this._options.multiselect && this._options.alwaysShowTextBox) {
+                this.setText('');
+             }
+          },
+          _onItemActivateItemsCollection: function(key) {
+             this.getSelectedItems(false).each(function(item) {
+                if(item.getId() == key) {
+                   this._notify('onItemActivate', {item: item, id: key});
+                }
+             }, this)
+          },
+          _onClosePickerItemsCollection: function() {
+             this._pickerStateChangeHandler(false);
+          },
+          _onShowPickerItemsCollection: function() {
+             this._pickerStateChangeHandler(true);
+          },
+          /**************************************************************/
 
           _observableControlFocusHandler: function() {
              /* Не надо обрабатывать приход фокуса, если у нас есть выбрынные
               элементы при единичном выборе, в противном случае, автодополнение будет посылать лишний запрос,
               хотя ему отображаться не надо. */
-             if(!this._options.multiselect && !this._isEmptySelection()) {
+             if(!this._needShowSuggest()) {
                 return false;
              }
              FieldLink.superclass._observableControlFocusHandler.apply(this, arguments);
+          },
+
+          _needShowSuggest: function() {
+             return !(!this._isEmptySelection() && !this._options.multiselect);
           },
 
           /**
@@ -445,9 +482,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
            /**
             * Возвращает строку, сформированную из текстовых значений полей выбранных элементов коллекции.
             * @remark
-            * Метод формирует строку из значений полей, отображаемых в поле связи, перечисленных через запятую.
+            * Метод формирует строку из значений полей выбранных элементов коллекции. Значения в строке будут перечислены через запятую.
             * Отображаемые значения определяются с помощью опции {@link displayField} или {@link itemTemplate}.
             * @returns {string} Строка, сформированная из отображаемых значений в поле связи.
+            * @see texValue
             * @see displayField
             * @see itemTemplate
             */
@@ -542,10 +580,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @private
            */
           _onListItemSelect: function(id, item) {
-             this.hidePicker();
              /* Чтобы не было лишнего запроса на БЛ, добавим рекорд в набор выбранных */
              this.addSelectedItems(item instanceof Array ? item : [item]);
              this.setText('');
+             /* При выборе скрываем саггест, если он попадает под условия,
+                когда его не надо показывать см. _needShowSuggest */
+             if(!this._needShowSuggest()) {
+                this.hidePicker();
+             /* При выборе фокус могу перевести, надо проверить это */
+             } else if(this.isActive()) {
+                this._observableControlFocusHandler();
+             }
           },
 
 
@@ -628,49 +673,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
              FieldLink.superclass.setListFilter.apply(this, arguments);
           },
 
-          _drawFieldLinkItemsCollection: function() {
-             var self = this,
-                 tpl = this.getProperty('itemTemplate');
-             return new FieldLinkItemsCollection({
-                element: this._linksWrapper.find('.controls-FieldLink__linksContainer'),
-                displayField: this._options.displayField,
-                keyField: this._options.keyField,
-                itemTemplate: tpl ? TemplateUtil.prepareTemplate(tpl) : undefined,
-                userItemAttributes: this._options.userItemAttributes,
-                parent: this,
-                itemCheckFunc: this._checkItemBeforeDraw.bind(this),
-                handlers: {
-                   /* После окончания отрисовки, обновим размеры поля ввода */
-                   onDrawItems: this._updateInputWidth.bind(this),
-
-                   /* При клике на крест, удалим ключ из выбранных */
-                   onCrossClick: function(e, key){
-                      self.removeItemsSelection([key]);
-                      if(!self._options.multiselect && self._options.alwaysShowTextBox) {
-                         self.setText('');
-                      }
-                   },
-
-                   onItemActivate: function(e, key) {
-                      self.getSelectedItems(false).each(function(item) {
-                         if(item.getId() == key) {
-                            self._notify('onItemActivate', {item: item, id: key});
-                         }
-                      })
-                   },
-
-                   /* При закрытии пикера надо скрыть кнопку удаления всех выбранных, при открытии - показать */
-                   onClosePicker: self._pickerStateChangeHandler.bind(self, false),
-                   onShowPicker: self._pickerStateChangeHandler.bind(self, true)
-                }
-             });
-          },
-
           showPicker: function() {
              /* Если открыт пикер, который показывает все выбранные записи, то не показываем автодополнение */
-             if(!this._linkCollection.isPickerVisible()) {
-                FieldLink.superclass.showPicker.apply(this, arguments);
+             if(this._getLinkCollection().isPickerVisible()) {
+                return;
              }
+             FieldLink.superclass.showPicker.apply(this, arguments);
           },
           /**
            * Проверяет, нужно ли отрисовывать элемент или надо показать троеточие
@@ -717,14 +725,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           setSelectedItem: function(item) {
              var hasRequiredFields,
-                 key, displayValue;
+                 isModel = item  && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model');
 
              /* Т.к. ключ может быть как 0, а ключевое поле как '', то надо проверять на null/undefined */
              function isEmpty(val) {
                 return val === null || val === undefined;
              }
 
-             if(item  && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')) {
+             if(isModel) {
                 /* Проверяем запись на наличие ключевых полей */
                 hasRequiredFields = !isEmpty(item.get(this._options.displayField)) && !isEmpty(item.get(this._options.keyField));
 
@@ -736,8 +744,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 }
              }
 
-             /* Вызываем родительский метод, если передали запись с обязательными полями или null */
-             if(hasRequiredFields || item === null) {
+             /* Вызываем родительский метод, если:
+                1) передали запись с обязательными полями
+                2) передали null
+                3) передали запись без ключевых полей, но у нас есть выделенные ключи,
+                   такое может произойти, когда запись сбрасывается через контекст */
+             if( hasRequiredFields ||
+                 item === null  ||
+                (!hasRequiredFields && !this._isEmptySelection() && isModel) ) {
                 FieldLink.superclass.setSelectedItem.apply(this, arguments);
              }
           },
@@ -859,6 +873,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
           destroy: function() {
              this._linksWrapper = undefined;
              this._inputWrapper = undefined;
+             this._afterFieldWrapper = undefined;
+             this._beforeFieldWrapper = undefined;
 
              if(this._linkCollection) {
                 this._linkCollection.destroy();

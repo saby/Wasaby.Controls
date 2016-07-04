@@ -26,7 +26,19 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
              * Подробный пример использования футера для решения этой прикладной задачи вы можете найти в разделе {@link /doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
              * @see SBIS3.CONTROLS.List#footerTpl
              */
-            folderFooterTpl: undefined
+            folderFooterTpl: undefined,
+            /**
+             * @cfg {String} Разрешено или нет перемещение элементов "Drag-and-Drop"
+             * @variant "" Запрещено
+             * @variant allow Разрешено
+             * @variant onlyChangeOrder Разрешено только изменение порядка
+             * @variant onlyChangeParent Разрешено только перемещение в папку
+             * @example
+             * <pre>
+             *     <option name="itemsDragNDrop">onlyChangeParent</option>
+             * </pre>
+             */
+            itemsDragNDrop: 'allow'
          }
       },
       /**
@@ -40,6 +52,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             ladderDecorator = this._decorators.getByName('ladder');
          this._closeAllExpandedNode(key);
          this._options.openedPath[expandedItem.getContents().getId()] = true;
+         this._folderOffsets[expandedItem.getContents().getKey()] = 0;
          if (this._dataSource && !this._loadedNodes[key] && this._options.partialyReload) {
             this._toggleIndicator(true);
             this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), 0, this._limit);
@@ -47,6 +60,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
                // так как на него много всего завязано. (пользуется Янис)
                this._folderHasMore[key] = list.getMetaData().more;
+               this._createFolderFooter(key);
                this._loadedNodes[key] = true;
                ladderDecorator && ladderDecorator.setIgnoreEnabled(true);
                this._options._items.merge(list, {remove: false});
@@ -59,14 +73,13 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                this._drawExpandedItem(expandedItem);
             }.bind(this));
          } else {
+            this._createFolderFooter(key);
             this._drawExpandedItem(expandedItem);
          }
       },
       _drawExpandedItem: function(expandedItem) {
          //todo При переходе на Virtual DOM удалить работу с expandedItemContainer
-         var
-            expandedItemContainer = this._getItemsContainer().find('[data-hash="'+ expandedItem.getHash() + '"]');
-         this._folderOffsets[expandedItem.getContents().getKey()] = 0;
+         var expandedItemContainer = this._getItemsContainer().find('[data-hash="'+ expandedItem.getHash() + '"]');
          expandedItemContainer.find('.js-controls-TreeView__expand').addClass('controls-TreeView__expand__open');
          this._notify('onNodeExpand', expandedItem.getContents().getId(), expandedItemContainer);
       },
@@ -125,6 +138,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             this._treePagers[key] = new TreePagingLoader({
                pageSize: this._options.pageSize,
                opener: this,
+               parent: this,
                hasMore: nextPage,
                element: container,
                id: key,
@@ -151,14 +165,20 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             return typeof (more) !== 'boolean' ? more > (this._folderOffsets[id] + this._options.pageSize) : !!more;
          }
       },
+      //********************************//
+      //       FolderFooter_Start       //
+      //********************************//
       /**
        * Создать футер для веток
        * @param key
        * @private
        */
       _createFolderFooter: function(key) {
+         var template = this._getFolderFooterWrapper();
          this._destroyItemsFolderFooter([key]);
-         this._foldersFooters[key] = $(this._getFolderFooterWrapper()(this._getFolderFooterOptions(key)));
+         if (typeof template === "function") {
+            this._foldersFooters[key] = $(template(this._getFolderFooterOptions(key)));
+         }
       },
       /**
        * Получить опции футера для ветки
@@ -193,6 +213,17 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             }
          }
       },
+      _createAllFolderFooters: function() {
+         $ws.helpers.forEach(this._options.openedPath, function(val, key) {
+            //Рисуем футер, только если узел есть в проекции, иначе он скрыт и футер рисовать не нужно
+            if (this._getItemProjectionByItemId(key)) {
+               this._createFolderFooter(key);
+            }
+         },this);
+      },
+      //********************************//
+      //        FolderFooter_End        //
+      //********************************//
       _getLastChildByParent: function(itemsContainer, parent) {
          var
              lastContainer,
@@ -203,6 +234,14 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             currentContainer =  $('.controls-ListView__item[data-parent-hash="' + currentContainer.attr('data-hash') + '"]', itemsContainer.get(0)).last();
          }
          return lastContainer;
+      },
+      instead: {
+         _notifyOnDragMove: function(target, insertAfter) {
+            //Если происходит изменение порядкового номера и оно разрешено или если происходит смена родителся и она разрешена, стрельнём событием
+            if (typeof insertAfter === 'boolean' && this._options.itemsDragNDrop !== 'onlyChangeParent' || insertAfter === undefined && this._options.itemsDragNDrop !== 'onlyChangeOrder') {
+               return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter) !== false;
+            }
+         }
       },
       around: {
          _onCollectionRemove: function(parentFunc, items, notCollapsed) {
@@ -234,14 +273,26 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
           * @param property
           * @private
           */
-         _changeItemProperties: function(parentFunc, item, property) {
+         _onUpdateItemProperty: function(parentFunc, item, property) {
+            var ladderDecorator = this._decorators.getByName('ladder'),
+                isIgnoreEnabled;
+            if (ladderDecorator){
+               isIgnoreEnabled = ladderDecorator.getIgnoreEnabled();
+               ladderDecorator.setIgnoreEnabled(false);
+            }
             if (property === 'expanded') {
                this._onChangeItemExpanded(item);
-            } else {
-               parentFunc.call(this, item, property);
+            }
+            parentFunc.call(this, item, property);
+            ladderDecorator && ladderDecorator.setIgnoreEnabled(isIgnoreEnabled);
+         },
+         _getDirectionOrderChange: function(parentFunc, e, target) {
+            if (this._options.itemsDragNDrop !== 'onlyChangeParent') {
+               return parentFunc.call(this, e, target);
             }
          }
       },
+
       before: {
          _keyboardHover: function (e) {
             switch (e.which) {

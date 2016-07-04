@@ -250,6 +250,15 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._currentSelection[keys[i]] = true;
             }
          },
+         _initializePicker: function() {
+            DropdownList.superclass._initializePicker.apply(this, arguments);
+            // Предотвращаем всплытие focus и mousedown с контейнера меню, т.к. это приводит к потере фокуса
+            this._picker.getContainer().on('mousedown focus', this._blockFocusEvents);
+         },
+         _blockFocusEvents: function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+         },
          _getCurrentSelection: function(){
             var keys = [];
             for (var i in this._currentSelection) {
@@ -362,7 +371,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (item) {
                this._defaultId = item.getId();
                if (this._buttonHasMore) {
-                  this._buttonHasMore[this._hasNextPage(this._dataSet.getMetaData().more, 0) ? 'show' : 'hide']();
+                  var needShowHasMoreButton = this._hasNextPage(this._dataSet.getMetaData().more, 0);
+                  if (!this._options.multiselect){
+                     this._buttonHasMore.getContainer().closest('.controls-DropdownList__buttonsBlock').toggleClass('ws-hidden', !needShowHasMoreButton);
+                  }
+                  else{
+                     this._buttonHasMore[needShowHasMoreButton ? 'show' : 'hide']();
+                  }
                }
             }
          },
@@ -383,6 +398,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._pickerBodyContainer = pickerContainer.find('.controls-DropdownList__body');
             this._pickerHeadContainer = pickerContainer.find('.controls-DropdownList__header');
             this._pickerFooterContainer = pickerContainer.find('.controls-DropdownList__footer');
+            this._buttonHasMore = this._picker.getChildControlByName('DropdownList_buttonHasMore');
+            this._buttonHasMore.subscribe('onActivated', function(){
+               self._notify('onClickMore');
+               self.hidePicker();
+            });
             if (this._options.multiselect) {
                this._buttonChoose = this._picker.getChildControlByName('DropdownList_buttonChoose');
                this._buttonChoose.subscribe('onActivated', function(){
@@ -391,11 +411,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   if (!self._isSimilarArrays(self.getSelectedKeys(), currSelection)) {
                      self.setSelectedKeys(currSelection);
                   }
-                  self.hidePicker();
-               });
-               this._buttonHasMore = this._picker.getChildControlByName('DropdownList_buttonHasMore');
-               this._buttonHasMore.subscribe('onActivated', function(){
-                  self._notify('onClickMore');
                   self.hidePicker();
                });
             }
@@ -506,6 +521,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                //Если мы не в ховер-моде, нужно отключить эту опцию, чтобы попап после клика сразу не схлапывался
                closeByExternalOver: this._options.mode === 'hover' && !this._options.multiselect,
                closeByExternalClick : true,
+               activableByClick: false,
                targetPart: true,
                template : MarkupTransformer(dotTplFnPicker)({
                   'multiselect' : this._options.multiselect,

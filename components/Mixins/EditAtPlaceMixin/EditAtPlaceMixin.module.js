@@ -1,4 +1,9 @@
-define('js!SBIS3.CONTROLS.EditAtPlaceMixin', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CONTROLS.ControlHierarchyManager'], function(IconButton, Dialog, ControlHierarchyManager) {
+define('js!SBIS3.CONTROLS.EditAtPlaceMixin', 
+   ['js!SBIS3.CONTROLS.IconButton', 
+    'js!SBIS3.CORE.Dialog', 
+    'js!SBIS3.CONTROLS.ControlHierarchyManager',
+    'js!SBIS3.CORE.ModalOverlay'
+    ], function(IconButton, Dialog, ControlHierarchyManager, ModalOverlay) {
       /**
        * @mixin SBIS3.CONTROLS.EditAtPlaceMixin
        * @public
@@ -54,9 +59,9 @@ define('js!SBIS3.CONTROLS.EditAtPlaceMixin', ['js!SBIS3.CONTROLS.IconButton', 'j
             var result,
                deferred = new $ws.proto.Deferred();
             this._dialogConfirm = new Dialog({
-               parent: this,
-               opener: this,
-               template: 'confirmRecordActionsDialog',
+               parent: this._options.editInPopup ? this._picker : this,
+               opener: this._options.editInPopup ? this._picker : this,
+               template: 'js!SBIS3.CORE.ConfirmRecordActionsDialog',
                resizable: false,
                handlers: {
                   onReady: function () {
@@ -107,21 +112,26 @@ define('js!SBIS3.CONTROLS.EditAtPlaceMixin', ['js!SBIS3.CONTROLS.IconButton', 'j
          after: {
             _initializePicker: function(){
                var self = this;
+               this.subscribeTo(ModalOverlay, 'onClick', function(event) {
+                  if (this.isVisible() && this._picker._zIndex - $ws.single.ModalOverlay.getZIndex() === 1) {
+                     if (self._requireDialog) {
+                        self._openConfirmDialog().addCallback(function (result) {
+                           switch (result) {
+                              case 'yesButton':
+                                 self._applyEdit();
+                                 break;
+                              case 'noButton':
+                                 self._cancelEdit();
+                                 break;
+                           }
+                        });
+                     }
+                  }
+               }.bind(this));
+
                this._picker.subscribe('onClose', function(event){
                   event.setResult(!self._requireDialog);
-                  if (self._requireDialog) {
-                     self._openConfirmDialog().addCallback(function (result) {
-                        switch (result) {
-                           case 'yesButton':
-                              self._applyEdit();
-                              break;
-                           case 'noButton':
-                              self._cancelEdit();
-                              break;
-                        }
-                     });
-                  }
-               });
+               })
             },
 
             showPicker: function(){

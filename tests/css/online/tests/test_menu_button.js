@@ -1359,4 +1359,36 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
                 }, 2000);
             })
     });*/
+	
+	gemini.suite('with_picker_class_name', function (test) {
+
+        test.setUrl('/regression_menu_button_online_23.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="MenuButton 1"]', 40000);
+                this.button = find('[name="MenuButton 1"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.text_box = find('[sbisname="TextBox 1"] input');
+				this.item_1 = find('[data-id="1"]');
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.text_box);
+            })
+
+            .capture('hovered', function (actions) {
+                actions.mouseMove(this.button);
+            })
+			
+			.capture('menu_opened', function (actions) {
+                actions.click(this.button);
+				actions.waitForElementToShow('[data-id="1"]', 1000);
+				actions.waitForElementToShow('[data-id="2"]', 1000);
+				actions.wait(1000);
+            })
+			
+			.capture('hovered_item', function (actions) {
+                actions.mouseMove(this.item_1);
+            })
+    });
 });

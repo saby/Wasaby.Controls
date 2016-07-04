@@ -6,6 +6,7 @@
 
    .controls-TreeView__folderTitle {
       overflow: hidden;
+      margin: @tree-view-folder-title-margin;
    }
 
    .controls-TreeView__ellipsis-wrapper {
@@ -59,14 +60,6 @@
 }
 .controls-ListView__item-type-node {
    font-size: @font-folder-size;
-   &.controls-ListView__item__multiSelected {
-      .controls-DataGridView__td {
-         .controls-TreeView__ellipsis-copyArrow {
-            background-color: @data-grid-row-selected-bg;
-            .box-shadow(@tree-view-ellipsis-copyArrow-shadow @data-grid-row-selected-bg);
-         }
-      }
-   }
 
    &.controls-ListView__item__selected {
       .controls-DataGridView__td {
@@ -77,10 +70,17 @@
       }
    }
 
-   &.controls-ListView__hoveredItem {
-
+   &.controls-ListView__item__multiSelected {
       .controls-DataGridView__td {
+         .controls-TreeView__ellipsis-copyArrow {
+            background-color: @data-grid-row-selected-bg;
+            .box-shadow(@tree-view-ellipsis-copyArrow-shadow @data-grid-row-selected-bg);
+         }
+      }
+   }
 
+   &.controls-ListView__hoveredItem {
+      .controls-DataGridView__td {
          .controls-TreeView__ellipsis-copyArrow {
             background-color: @data-grid-row-hover-bg;
             .box-shadow(@tree-view-ellipsis-copyArrow-shadow @data-grid-row-hover-bg);
@@ -91,7 +91,6 @@
    .controls-TreeView__ellipsis-wrapper {
       overflow: hidden;
       height: @tree-view-ellipsis-wrapper-height;
-      margin: @tree-view-ellipsis-wrapper-margin;
 
       .controls-TreeView__ellipsis-container {
          float: left;

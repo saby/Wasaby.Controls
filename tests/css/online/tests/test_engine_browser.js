@@ -92,6 +92,16 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 				actions.sendKeys(this.search_input, 'за')
 				actions.click(this.input);
             })
+			
+			.capture('disabled_and_clicked_check_box', function (actions, find) {
+				this.box = find('.controls-OperationsMark-checkBox');
+				actions.click(this.box)
+				actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('brows').setEnabled(false);
+                });
+				actions.waitForElementToShow('[data-id="34"] .controls-ListView__itemCheckBox', 2000);
+				actions.click(this.box)
+            })
     });
 	
 	 gemini.suite('with_dialogs', function (test) {

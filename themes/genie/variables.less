@@ -38,6 +38,7 @@
 // Link //
 // ---- //
 
+@link-font:                               @font-basic-size @font-basic-name;
 @link-cursor:                             pointer;
 @link-text-color:                         @primary-color;
 @link-disabled-text-color:                @gray-ccc-color;
@@ -183,6 +184,13 @@
 @button-big-disabled-shadow:              @button-disabled-shadow;
 @button-big-disabled-bg:                  @button-disabled-bg;
 
+@button-icon-32-top-offset:               0;
+@button-icon-32-left-offset:              0;
+
+@button-big-icon-32-top-offset:           0;
+
+@button-big-icon-32-top-offset:           0;
+@button-big-icon-32-left-offset:          0;
 
 
 // ------------ //
@@ -244,7 +252,6 @@
 @tab-buttons-display:                           table;
 @tab-buttons-width:                             100%;
 @tab-buttons-border-collapse:                   collapse;
-@tab-buttons-font-size:                         0;
 @tab-buttons-border-bottom:                     1px solid #CCCCCC;
 @tab-buttons-div-display:                       table-cell;
 @tab-buttons-div-space:                         nowrap;
@@ -1361,6 +1368,7 @@
 @list-view-actions-menu-close-revVert-bottom:   4px;
 @list-view-actions-menu-close-revVert-top:      auto;
 @list-view-actions-menu-item-padding-right:     24px;
+@list-view-actions-menu-padding:                @menu-padding;
 
 @list-view-scroll-spritesheet :                 'img/ajax-loader-indicator.gif';
 @list-view-scroll-bg:                           url(@list-view-scroll-spritesheet) 0 0 no-repeat;
@@ -1375,6 +1383,7 @@
 
 @controls-toolbar-display:                      inline-block;
 @controls-toolbar-item-margin-right:            8px;
+@controls-toolbar-item-vertical-align:          middle;
 
 // --------- //
 // Tree view //
@@ -1416,8 +1425,8 @@
 @tree-view-expand-open-hover-border-color:      @tree-view-expand-open-border-color;
 @tree-view-expand-open-hover-bg:                @tree-view-expand-open-bg;
 
-@tree-view-ellipsis-wrapper-height:             19px;
-@tree-view-ellipsis-wrapper-margin:             0;
+@tree-view-ellipsis-wrapper-height:             @data-grid-cell-line-height;
+@tree-view-folder-title-margin:                 0;
 @tree-view-ellipsis-copyArrow-shadow:           -10px 2px 8px -5px;
 @tree-view-ellipsis-copyArrow-padding:          0 0 0 3px;
 @tree-view-ellipsis-copyArrow-width:            16px;
@@ -1486,6 +1495,7 @@
 
 @data-grid-cell-border-width:                   1px 0;
 @data-grid-cell-separator-color:                #F5F5F5;
+@data-grid-first-cell-separator-color:          @data-grid-cell-separator-color;
 @data-grid-cell-border-style:                   solid;
 @data-grid-cell-border-color:                   transparent;
 
@@ -1496,9 +1506,13 @@
 @data-grid-cell-hover-bg:                       @data-grid-cell-bg;
 
 @data-grid-td-checkbox-width:                   16px;
+@data-grid-td-visible-checkbox-width:           24px;
 @data-grid-td-hidden-checkbox-width:            4px;
-@data-grid-checkbox-margin:                     3px 0 0 0;
+//Отрицательный margin снизу нужен, чтобы чекбокс не распирал td, а соответственно и tr
+@data-grid-checkbox-margin:                     2px 0 -2px 0;
 @data-grid-folder-font-size: 							15px;
+
+@data-grid-columnValue-padding:                 0;
 
 @data-grid-table-layot: 								fixed;
 // ---------- //
@@ -1525,7 +1539,6 @@
 @data-grid-partScroll-arrowRight-left-shift:    4px;
 @data-grid-partScroll-arrowRight-float:         right;
 
-@data-grid-columnValue-padding:                 0;
 
 // --------------- //
 // OperationsPanel //
@@ -1562,6 +1575,8 @@
 @controls-OperationsPanel-separator-width:          1px;
 @controls-OperationsPanel-separator-height:         21px;
 @controls-OperationsPanel-separator-line-height:    30px;
+
+@controls-OperationsPanel-actions-padding-left:     0;
 
 // ----------------------- //
 // OperationsPanelButton  //
@@ -1614,8 +1629,10 @@
 //    MultiView    //
 // --------------- //
 @multiView-tile-itemsContainer-padding:             4px 0 0 1px;
-@listView-check-box-left:                          3px;
-@listView-check-box-top:                           5px;
+@listView-check-box-left:                           3px;
+@listView-check-box-top:                            5px;
+@listView-check-box-width:                          16px;
+@listView-check-box-height:                         16px;
 @multiView-tile-item-border:                        1px solid @gray-light-color;
 @multiView-tile-item-min-width:                     128px;
 @multiView-tile-item-min-height:                    128px;
@@ -1711,6 +1728,9 @@
 @controls-filterButton-area-text-margin:          0 12px 0 0;
 
 @controls-filterButton-area-content-padding:      12px;
+@controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
+@controls-filterButton-line-height:               @font-basic-line-height;
+@controls-filterButton-apply-margin-right:        0;
 
 //FilterButtonHistory
 @controls-filterButton-history-area-padding:      0 12px 12px 4px;
@@ -1842,3 +1862,30 @@
 @breadcrumbs-smallItems-font-size:                 13px;
 @breadcrumbs-arrow-top:                            2px;
 @breadcrumbs-small-items-top:                      inherit;
+
+// EditDialog
+@editdialog-applybutton-width:                     90px;
+@editdialog-template-minwidth:                     auto;
+
+//MoveDialog
+@controls-movedialog-activate-right:               38px;
+@controls-movedialog-activate-top:                 8px;
+@controls-movedialog-min-width:                    auto;
+
+//ListView AjaxIndicator
+@controls-AjaxLoader-background:                   none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
+@controls-AjaxLoader-default-cord:                 0;
+@controls-AjaxLoader-zIndex:                       2;
+@controls-AjaxLoader-minHeight:                    32px;
+
+@controls-AjaxLoader-outer-height:                 36px;
+@controls-AjaxLoader-outer-top:                    50%;
+@controls-AjaxLoader-outer-lineHeight:             30px;
+
+@controls-AjaxLoader-block-width:                  32px;
+@controls-AjaxLoader-block-background:             none repeat scroll 0 0 transparent !important;
+@controls-AjaxLoader-block-top:                    -50%;
+@controls-AjaxLoader-block-padding:                2px;
+
+@controls-AjaxLoader-indicator-padding-left:       32px;
+@controls-AjaxLoader-indicator-height:             32px;

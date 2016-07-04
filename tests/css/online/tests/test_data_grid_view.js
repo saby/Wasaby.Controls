@@ -20,12 +20,12 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 
             .capture('hovered_row', function (actions) {
                 actions.mouseMove(this.data2);
-				actions.wait(1000);
+				actions.wait(500);
             })
 
             .capture('selected_row', function (actions) {
                 actions.click(this.data6);
-				actions.wait(1000);
+				actions.wait(500);
             })
     });
 	
@@ -47,12 +47,12 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 
             .capture('hovered_row', function (actions) {
                 actions.mouseMove(this.data2);
-				actions.wait(1000);
+				actions.wait(500);
             })
 
             .capture('selected_row', function (actions) {
                 actions.click(this.data6);
-				actions.wait(1000);
+				actions.wait(500);
             })
     });
 	
@@ -77,12 +77,16 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 
             .capture('hovered_row', function (actions) {
                 actions.mouseMove(this.data2);
-				actions.wait(1000);
+				actions.wait(500);
             })
 
             .capture('selected_row', function (actions) {
                 actions.click(this.data6);
-				actions.wait(1000);
+				actions.wait(500);
+            })
+			
+			.capture('clicked_in_box', function (actions) {
+                actions.click('[data-id="1"] .controls-ListView__itemCheckBox');
             })
     });
 
@@ -197,5 +201,26 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 				actions.mouseUp(this.thumb);
 				actions.mouseMove(this.arrow_right);
             })			
+    });
+	
+	gemini.suite('data_grid_in_row', function (test) {
+
+        test.setUrl('/regression_data_grid_view_online_8.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="DataGridView 1"]', 40000);
+                this.data2 = find('[data-id="1"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+				this.input = find('[sbisname="TextBox 1"] input');
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.input);
+            })
+
+            .capture('hovered_row', function (actions) {
+                actions.mouseMove(this.data2);
+				actions.wait(500);
+            })
     });
 });

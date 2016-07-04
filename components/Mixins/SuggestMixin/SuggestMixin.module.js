@@ -328,7 +328,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
          for(var i = 0, len = changedFields.length; i < len; i++) {
             if(String(this._options.listFilter[changedFields[i]]).length >= this._options.startChar) {
-               this._startSearch();
+               this._startListSearch();
                return;
             }
          }
@@ -338,7 +338,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       },
 
       // TODO использовать searchMixin 3.7.3.100
-      _startSearch: function() {
+      _startListSearch: function() {
          var self = this;
 
          this._clearDelayTimer();
@@ -379,7 +379,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /* Если фокус уходит на список - вернём его обратно в контрол, с которого фокус ушёл */
             this.subscribeTo(control, 'onFocusOut', function(e, destroyed, focusedControl) {
-               if(self._list && self._list === focusedControl) {
+               /* Если фокус ушёл на список, или на дочерний контрол списка - возвращаем обратно в поле ввода */
+               if(self._list && (self._list === focusedControl || ~Array.indexOf(self._list.getChildControls(), focusedControl))) {
                   focusedControl.setActive(false, false, false, this);
                   this.setActive(true);
                }
@@ -393,7 +394,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _observableControlFocusHandler: function() {
          if(this._options.autoShow) {
-            this._checkPickerState() ? this.showPicker() : this._startSearch();
+            this._checkPickerState() ? this.showPicker() : this._startListSearch();
          }
       },
 
@@ -460,6 +461,12 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
                if(options.itemsDragNDrop === undefined) {
                   options.itemsDragNDrop = false;
+               }
+
+               /* По стандарту маркер в списке должен ставиться,
+                но надо оставить возможность это отключить, т.к. не всем это надо */
+               if(options.allowEmptySelection === undefined) {
+                  options.allowEmptySelection = false;
                }
 
                options.parent = this._picker;

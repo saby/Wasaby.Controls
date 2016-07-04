@@ -75,7 +75,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       return itemParent ? itemParent.isExpanded() ? isVisibleItem(itemParent) : false : true;
    },
    projectionFilter = function(item, index, itemProj) {
-      return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
+      // Добавил проверку на скрытый узел. Мы ожидаем, что скрытый узел при поиске не должен быть раскрытым (а его связанные записи - не должны сразу отрисовываться).
+      var
+          itemParent = itemProj.getParent(),
+          itemParentContent = itemParent && itemParent.getContents();
+      return ($ws.helpers.instanceOfModule(itemParentContent, 'SBIS3.CONTROLS.Data.Record') && itemParentContent.get(this.hierField + '@') !== false && this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
    },
    projectionFilterOnlyFolders = function(item, index, itemProj) {
       return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj, true);
@@ -107,7 +111,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          doNext = true,
          item;
       while (doNext && (item = enumerator.getNext())) {
-         if (item.isNode() && !item.isExpanded()) {
+         // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
+         if (item.isNode() && !item.isExpanded() && projection.getCollection().getChildItems(item.getContents().getId(), undefined, projection.getParentProperty()).length) {
             item.setExpanded(true);
             doNext = false;
             expandAllItems(projection);
@@ -291,12 +296,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              */
             allowEnterToFolder: true,
             /**
-             * @cfg {Function}
+             * @cfg {Function|null}
              * Метод используется для сортировки элементов, если передать null то данные сортироваться не будут
              * По умолчанию данные сортируются так: с начала папки потом листья
              * @example
              * <pre>
-             *    <option name="itemsSortMethod">null</option>
+             *    <option name="itemsSortMethod" value="null"></option>
              * </pre>
              * <pre>
              *    var tree = new Tree({
@@ -600,14 +605,20 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                /*Если в текущем списке есть предыдущий путь, значит это выход из папки*/
                if (this.getItems().getRecordById(this._previousRoot)) {
                   this.setSelectedKey(this._previousRoot);
-                  this._scrollToItem(this._previousRoot);
+                  //todo Это единственный на текущий момент способ проверить, что наш контейнер уже в контейнере ListView и тогда осуществлять scrollTo не нужно!
+                  if (!this._container.parents('.controls-ListView').length) {
+                     this._scrollToItem(this._previousRoot);
+                  }
                }
                else {
                   /*иначе вход в папку*/
                   item = this.getItems() && this.getItems().at(0);
                   if (item){
                      this.setSelectedKey(item.getId());
-                     this._scrollToItem(item.getId());
+                     if (!this._container.parents('.controls-ListView').length) {
+                        //todo Это единственный на текущий момент способ проверить, что наш контейнер уже в контейнере ListView и тогда осуществлять scrollTo не нужно!
+                        this._scrollToItem(item.getId());
+                     }
                   }
                }
 
@@ -840,6 +851,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       setCurrentRoot: function(key) {
          var
             filter = this.getFilter() || {};
+         // todo Удалить при отказе от режима "hover" у редактирования по месту [Image_2016-06-23_17-54-50_0108] https://inside.tensor.ru/opendoc.html?guid=5bcdb10f-9d69-49a0-9807-75925b726072&description=
+         this._destroyEditInPlace();
          if (key !== undefined && key !== null) {
             filter[this._options.hierField] = key;
          } else {

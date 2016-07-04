@@ -212,30 +212,42 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
          });
       },
       _afterOrderChange: function(items, moveToItem, up) {
+         this._options._itemsProjection.setEventRaising(false, true);
          var moveToIndex;
          $ws.helpers.forEach(items, function(item) {
-            this._options._items.remove(item);
-
-            moveToIndex = this._options._items.getIndex(moveToItem);
-            if(!up) {
-               moveToIndex = this._options._itemsProjection.getIndexBySourceIndex(moveToIndex);
-               var projectionItem = this._options._itemsProjection.getNext(
-                   this._options._itemsProjection.at(moveToIndex)
+            var projectionItem =  this._options._itemsProjection.getItemBySourceItem(item);
+            if(up) { //Если перемещаем вверх то надо вставить перемещаемую запись перед записью к которой перемещаем.
+               moveToIndex = this._options._items.getIndex(moveToItem);
+               moveToIndex = moveToIndex > -1 ?  moveToIndex : 0;//если не нашли то всталяем вначало
+            } else {
+               //Если перемещаем вниз то нужно найти следующий элемент в проекции потом его индекс в рекордсете
+               //и вставить запись после него, потомучто может быть перемещение через dragndrop а оно может вставить куда угодно.
+               var nextProjectionItem = this._options._itemsProjection.getNext(
+                  this._options._itemsProjection.getItemBySourceItem(moveToItem)
                );
-               if(projectionItem) {
+               if(nextProjectionItem) {
                   moveToIndex = this._options._itemsProjection.getSourceIndexByIndex(
-                      this._options._itemsProjection.getIndex(projectionItem)
+                     this._options._itemsProjection.getIndex(nextProjectionItem)
                   );
-               } else {
+               } else { //если не найден то вставляем в конец
                   moveToIndex = this._options._items.getCount();
                }
             }
-
+            if (this._options._items.getIndex(item) < moveToIndex ) {
+               moveToIndex--; //если запись по списку сдвигается вниз то после ее удаления индексы сдвинутся
+            }
+            this._options._items.remove(item);
             this._options._items.add(
-                item,
-                moveToIndex < this._options._items.getCount() ? moveToIndex : undefined
+               item,
+               moveToIndex < this._options._items.getCount() ? moveToIndex : undefined
             );
+            //todo нужно сделать цепочки операций на рекордсете тогда можно будет объединить remove и add
+            //todo а пока создается новый элемент проекции и если он был открыт то восттановим ему состояние
+            if ($ws.helpers.instanceOfModule(projectionItem, 'SBIS3.CONTROLS.Data.Projection.TreeItem') && projectionItem.isExpanded()) {
+               this._options._itemsProjection.getItemBySourceItem(item).setExpanded(true);
+            }
          }.bind(this));
+         this._options._itemsProjection.setEventRaising(true, true);
       }
    };
 

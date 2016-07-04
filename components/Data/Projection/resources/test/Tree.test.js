@@ -317,6 +317,45 @@ define([
 
          });
 
+         describe('.isLoaded', function() {
+            it('should return false by default', function () {
+               var item = new TreeItem({
+                  contents: {
+                     id: null,
+                     title: 'Root'
+                  }
+               });
+
+               assert.isFalse(item.isLoaded());
+            });
+
+            it('should return value passed to the option', function () {
+               var item = new TreeItem({
+                  contents: {
+                     id: null,
+                     title: 'Root'
+                  },
+                  loaded: true
+               });
+
+               assert.isTrue(item.isLoaded());
+            });
+         });
+
+         describe('.setLoaded', function() {
+            it('should set loaded to true', function () {
+               var item = new TreeItem();
+               item.setLoaded(true);
+               assert.isTrue(item.isLoaded());
+            });
+
+            it('should set loaded to false', function () {
+               var item = new TreeItem();
+               item.setLoaded(false);
+               assert.isFalse(item.isLoaded());
+            });
+         });
+
          describe('.$constructor()', function(){
             it('should sort projection so first folder then next leaf', function(){
                var items = new Tree({
@@ -604,6 +643,63 @@ define([
                   tree.getCollection().removeAt(firstNodeItemIndex);
                   tree.unsubscribe('onCollectionChange', handler);
                   if (firesCount === 1) {
+                     done();
+                  }
+               });
+
+               it('should properly fire with dublicates', function(done) {
+                  var list = new ObservableList({
+                        items: [{
+                           id: 'a',
+                           pid: 0
+                        }, {
+                           id: 'aa',
+                           pid: 'a'
+                        }, {
+                           id: 'aaa',
+                           pid: 'aa'
+                        }, {
+                           id: 'b',
+                           pid: 0
+                        }, {
+                           id: 'ba',
+                           pid: 'b'
+                        }, {
+                           id: 'bb',
+                           pid: 'b'
+                        }]
+                     }),
+                     tree = getObservableTree(list),
+                     expectNewItems = [['aa1'], ['a']],
+                     expectNewItemsIndex = [3, 7],
+                     firesCount = 0,
+                     handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                        try {
+                           assert.strictEqual(action, IBindCollectionProjection.ACTION_ADD);
+
+                           assert.strictEqual(newItems.length, expectNewItems[firesCount].length);
+                           assert.strictEqual(newItemsIndex, expectNewItemsIndex[firesCount]);
+                           for (var i = 0; i < newItems.length; i++) {
+                              assert.strictEqual(newItems[i].getContents().id, expectNewItems[firesCount][i]);
+                           }
+
+                           assert.strictEqual(oldItems.length, 0);
+                           assert.strictEqual(oldItemsIndex, 0);
+                        } catch (err) {
+                           done(err);
+                        }
+                        firesCount++;
+                     };
+                  tree.subscribe('onCollectionChange', handler);
+                  list.append([{
+                     id: 'a',
+                     pid: 0
+                  }, {
+                     id: 'aa1',
+                     pid: 'a'
+                  }]);
+                  tree.unsubscribe('onCollectionChange', handler);
+                  if (firesCount === 2) {
                      done();
                   }
                });
