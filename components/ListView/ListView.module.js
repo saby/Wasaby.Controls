@@ -2331,7 +2331,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //Как временное решение добавлена проверка на SBIS3.CONTROLS.TextBoxBase.
             //Необходимо разобраться можно ли на уровне TextBoxBase или Control для события mousedown
             //сделать stopPropagation, тогда от данной проверки можно будет избавиться.
-            return !this._isShifted && this._options.enabled && !$ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
+            return !this.isDragging() && this._options.enabled && !$ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
          },
          _onDragStart: function(e) {
             var
@@ -2401,7 +2401,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _notifyOnDragMove: function(target, insertAfter) {
             if (typeof insertAfter === 'boolean') {
-               return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter, this.getCurrentElement().component) !== false;
+               return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter, this.getDragOwner()) !== false;
             }
          },
          _clearDragHighlight: function() {
@@ -2422,11 +2422,11 @@ define('js!SBIS3.CONTROLS.ListView',
          _getOrderPosition: function(offset, metric) {
             return offset < 10 ? false : offset > metric - 10 ? true : undefined;
          },
-         _createAvatar: function(e) {
+
+         _getAvatar: function(e) {
             var count = this.getCurrentElement().keys.length;
-            this.setDragAvatar($('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>')
-                .css('z-index', $ws.single.WindowManager.acquireZIndex(false)).appendTo($('body')));
-            this._setAvatarPosition(e);
+            return $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>')
+               .css('z-index', $ws.single.WindowManager.acquireZIndex(false));
          },
 
          _callDropHandler: function(e) {

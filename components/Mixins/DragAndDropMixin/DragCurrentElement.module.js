@@ -13,7 +13,8 @@ define('js!SBIS3.CONTROLS.DragCurrentElement', [], function() {
       $protected: {
          _owner: undefined,
          _currentElementConfig:undefined,
-         _avatar: undefined
+         _avatar: undefined,
+         _dragging: undefined
       },
 
       get: function() {
@@ -32,6 +33,7 @@ define('js!SBIS3.CONTROLS.DragCurrentElement', [], function() {
       reset: function () {
          this._currentElementConfig = undefined;
          this._owner = undefined;
+         this.setAvatar(null);
       },
 
       getAvatar: function() {
@@ -39,7 +41,25 @@ define('js!SBIS3.CONTROLS.DragCurrentElement', [], function() {
       },
 
       setAvatar: function(avatar) {
+         this.removeAvatar();
+         if (avatar) {
+            avatar.appendTo($('body'));
+         }
          this._avatar = avatar;
+      },
+
+      removeAvatar: function() {
+         if (this._avatar) {
+            this._avatar.remove();
+         }
+      },
+
+      isDragging: function() {
+         return this._dragging;
+      },
+
+      setDragging: function(dragging) {
+         this._dragging = dragging;
       }
    });
 

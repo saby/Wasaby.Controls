@@ -33,8 +33,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
             _shiftX: null,
             _shiftY: null,
 
-            //флаг сигнализирующий о том что юзер начал сдвиг
-            _isShifted: false,
             //текущий перемещаемый объект
             _currentComponent: null,
             //константа показывающая на сколько надо сдвинуть мышь, чтобы началось перемещение
@@ -47,15 +45,15 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
          },
 
          $constructor: function () {
-            this._publish(['onDrag', 'onDragStart', 'onDragStop']);
+            this._publish(['onDragMove', 'onDragBegin', 'onDragEnd']);
             //$ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMouseup', this.endDropDown, this);
             $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMousemove', this.onMousemove, this);
          },
 
          init: function(){
             $(this.getContainer()).bind('mouseup touchend', this.onMouseup.bind(this));
-            this.s
          },
+
          preparePageXY: function (e) {
             if (e.type == "touchstart" || e.type == "touchmove") {
                e.pageX = e.originalEvent.touches[0].pageX;
@@ -65,7 +63,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
 
          onMouseup: function (e) {
             //определяем droppable контейнер
-            if (this._isShifted) {
+            if (this.isDragging()) {
                var droppable = this._findDragDropContainer(e, e.target);
 
                if (droppable) {
@@ -78,7 +76,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
          onMousemove: function (buse, e) {
 
             // Если нет выделенных компонентов, то уходим
-            if (!this.isDragStrated()) {
+            if (!this.getCurrentElement()) {
                return;
             }
 
@@ -86,7 +84,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
             // определяем droppable контейнер
                movable = this._findDragDropContainer(e, e.target);
 
-            if (!this._isShifted) {
+            if (!this.isDragging()) {
                //начало переноса
                this.preparePageXY(e);
                var
@@ -119,7 +117,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
             this._moveBeginX = e.pageX;
             this._moveBeginY = e.pageY;
             DragCurrentElement.set(elementConfig, this);
-            this._isShifted = false;
             this._dropCache();
          },
 
@@ -135,28 +132,26 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
          },
 
          beginDropDown: function(e, movable){
+            this.notify('onDragBegin', e, movable);
             this._beginDropDown(e, movable);
-            this._isShifted = true;
+            DragCurrentElement.setDragging(true);
          },
 
-         isDragStrated: function () {
-            return !!DragCurrentElement.get();
+         isDragging: function () {
+            return DragCurrentElement.isDragging();
          },
 
          endDropDown: function () {
-            if (this._isShifted) {
+            if (this.isDragging()) {
                this._endDropDown();
-               DragCurrentElement.set(null, null);
-               if (this._avatar) {
-                  this._avatar = null;
-               }
+               DragCurrentElement.reset();
                this._position = null;
-               this._isShifted = false;
+               DragCurrentElement.setDragging(false);
                $('body').removeClass('dragdropBody cantDragDrop');
             }
          },
 
-         _callMoveHandlerStandart: function (e, element) {
+         _callMoveHandler: function (e, element) {
             var target = this.getCurrentElement();
             if (!this._containerCoords) {
                this._containerCoords = {
@@ -170,19 +165,16 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
                top: e.pageY - this._containerCoords.y,
                left: e.pageX - this._containerCoords.x
             });
+            this._notify('onDragMove', e, element);
          },
 
-         _callMoveHandler: function (e, element) {
-            throw new Error('Method _callMoveHandler must be implemented');
-         },
          _callMoveOutHandler: function (e) {
             throw new Error('Method callMoveOutHandler must be implemented');
          },
-         _callDropHandlerStandart: function (e, element) {
+
+         _callDropHandler: function () {
             this._containerCoords = null;
-         },
-         _callDropHandler: function (e, element) {
-            throw new Error('Method _callDropHandler must be implemented');
+            this._notify('onDragEnd', this.getCurrentElement);
          },
 
          _findDragDropContainerStandart: function (e, target) {
@@ -202,6 +194,13 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
             return $(element).hasClass('genie-dragdrop');
          },
 
+         _createAvatar: function(e) {
+            var count = this.getCurrentElement().keys.length,
+               avatar = this._getAvatar();
+            this.setDragAvatar(avatar);
+            this._setAvatarPosition(e);
+         },
+
          getDragAvatar: function() {
             return DragCurrentElement.getAvatar();
          },
@@ -212,10 +211,12 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
 
          _setAvatarPosition: function(e){
             //смещение нужно чтобы событие onmouseup сработало над контролом, а не над аватаром
-            DragCurrentElement.getAvatar().css({
-               'left': e.pageX + DRAG_AVATAR_OFFSET,
-               'top': e.pageY + DRAG_AVATAR_OFFSET
-            });
+            if (DragCurrentElement.getAvatar()) {
+               DragCurrentElement.getAvatar().css({
+                  'left': e.pageX + DRAG_AVATAR_OFFSET,
+                  'top': e.pageY + DRAG_AVATAR_OFFSET
+               });
+            }
          }
       };
 
