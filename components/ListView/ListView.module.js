@@ -220,7 +220,6 @@ define('js!SBIS3.CONTROLS.ListView',
             _loadingIndicator: undefined,
             _editInPlace: null,
             _infiniteScrollOffset: null,
-            _allowInfiniteScroll: true,
             _pageChangeDeferred : undefined,
             _pager : undefined,
             _previousGroupBy : undefined,
@@ -585,7 +584,6 @@ define('js!SBIS3.CONTROLS.ListView',
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
             _searchParamName: undefined, //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
-            _updateByReload: false, //todo: Убрать в 150, когда будет правильный рендер изменившихся данных. Флаг, означающий то, что обновление происходит из-за перезагрузки данных.
             _scrollOnBottom: true, // TODO: Придрот для скролла вниз при первой подгрузке. Если включена подгрузка вверх то изначально нужно проскроллить контейнер вниз,
             //но после загрузки могут долетать данные (картинки в docviewer например), которые будут скроллить вверх.
             _scrollOnBottomTimer: null //TODO: см. строчкой выше
@@ -663,7 +661,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._createLoadingIndicator();
                //для подгрузки вверх пока поставим 0 - иначе при постоянной прокрутке может сразу много данных
                //загрузиться - будет некрасиво доскроллено
-               scrollWatcherCfg.checkOffset = this._options.infiniteScroll === 'down' ?  START_NEXT_LOAD_OFFSET : 0;
+               scrollWatcherCfg.checkOffset = START_NEXT_LOAD_OFFSET;
                scrollWatcherCfg.opener = this;
                if (this._options.infiniteScrollContainer) {
                   this._options.infiniteScrollContainer = this._options.infiniteScrollContainer instanceof jQuery
@@ -690,9 +688,13 @@ define('js!SBIS3.CONTROLS.ListView',
                   });
                }
                this._scrollWatcher.subscribe('onScroll', function(event, type){
-                  //top || bottom
-                  self._loadChecked((type === 'top' && self._options.infiniteScroll === 'up') ||
-                     (type === 'bottom' && self._options.infiniteScroll === 'down'));
+                  var scrollOnEdge = (type === 'top' && self._options.infiniteScroll === 'up') || // скролл вверх и доскролили до верхнего края
+                                     (type === 'bottom' && self._options.infiniteScroll === 'down') || // скролл вниз и доскролили то нижнего края
+                                     self._options.infiniteScroll === 'both' //скролл в обе стороны и доскролили до любого края
+                  if (scrollOnEdge) {
+                     self._scrollDirection = type;
+                     self._loadChecked(type);
+                  }
                });
             }
          },
@@ -1139,7 +1141,6 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          reload: function () {
-            this._updateByReload = true; //todo Убрать в 150 когда будет правильный рендер изменившихся данных
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             this._firstScrollTop = true;
@@ -1163,7 +1164,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _reloadInfiniteScrollParams : function(){
-            if (this.isInfiniteScroll() || this._isAllowInfiniteScroll()) {
+            if (this.isInfiniteScroll()) {
                this._infiniteScrollOffset = this._offset;
             }
          },
@@ -1305,22 +1306,8 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          redraw: function () {
             ListView.superclass.redraw.apply(this, arguments);
-            this._checkScroll(); //todo Убрать в 150, когда будет правильный рендер изменившихся данных
          },
 
-
-         /**
-          * todo Убрать в 150, когда будет правильный рендер изменившихся данных
-          */
-         _checkScroll: function() {
-            //Если перерисовка случилась из-за reload, то прроверяем наличие скролла и догружаем ещё одну страницу если скролла нет
-            if (this._updateByReload) {
-               this._updateByReload = false;
-               if (this._scrollWatcher && !this._scrollWatcher.hasScroll(this.getContainer())) {
-                  this._nextLoad();
-               }
-            }
-         },
          /**
           * Проверить наличие скрола, и догрузить еще данные если его нет
           * @return {[type]} [description]
@@ -1741,7 +1728,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          //-----------------------------------infiniteScroll------------------------
-         //TODO (?) избавиться от _allowInfiniteScroll - пусть все будет завязано на опцию infiniteScroll
          /**
           * Используется ли подгрузка по скроллу.
           * @returns {Boolean} Возможные значения:
@@ -1758,31 +1744,43 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see setInfiniteScroll
           */
          isInfiniteScroll: function () {
-            return this._options.infiniteScroll && this._allowInfiniteScroll;
+            return !!this._options.infiniteScroll;
          },
          /**
           *  Общая проверка и загрузка данных для всех событий по скроллу
           */
-         _loadChecked: function (result) {
+         _loadChecked: function (edge) {
             //Важно, чтобы датасет уже был готов к моменту, когда мы попытаемся грузить данные
-            if (this.getItems() && result) {
-               this._nextLoad();
+            if (this.getItems()) {
+               this._nextLoad(edge);
             }
          },
          _cancelLoading: function(){
             ListView.superclass._cancelLoading.apply(this, arguments);
-            if (this._isAllowInfiniteScroll()){
+            if (this.isInfiniteScroll()){
                this._hideLoadingIndicator();
             }
          },
-         _nextLoad: function () {
+
+         _getScrollOffset: function(){
+
+         },
+
+         /**
+          * Подгрузить еще данные вверх или вниз
+          * @param  {String} edge в какую сторону грузим
+          */
+         _nextLoad: function (edge) {
             var self = this,
-               loadAllowed  = this._isAllowInfiniteScroll();
+               loadAllowed  = this.isInfiniteScroll();
             if (!this._scrollWatcher.hasScroll(this.getContainer())){
                this._container.addClass('controls-ListView__outside-scroll-loader');
             } else {
                this._container.removeClass('controls-ListView__outside-scroll-loader');
             }
+
+            this._getScrollOffset(edge);
+
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && $ws.helpers.isElementVisible(this.getContainer()) &&
                   this._hasNextPage(this.getItems().getMetaData().more, this._infiniteScrollOffset) && !this.isLoading()) {
@@ -1811,7 +1809,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         self._needToRedraw = false;
                      }
                      var at = null;
-                     if (self._options.infiniteScroll === 'up') {
+                     if (edge === 'top') {
                         self._containerScrollHeight = self._scrollWatcher.getScrollHeight();
                         self._needSrollTopCompensation = true;
                         //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
@@ -1854,9 +1852,6 @@ define('js!SBIS3.CONTROLS.ListView',
                });
             }
          },
-         _isAllowInfiniteScroll : function(){
-            return this._allowInfiniteScroll;
-         },
          /**
           * Функция догрузки данных пока не появится скролл.Если появился и мы грузили и дорисовывали вверх, нужно поуправлять скроллом.
           * @private
@@ -1877,7 +1872,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _moveTopScroll : function(){
             var scrollAmount;
             //сюда попадем только когда уже точно есть скролл
-            if (this.isInfiniteScroll() && this._options.infiniteScroll == 'up' && this._needSrollTopCompensation){
+            if (this.isInfiniteScroll() && this._scrollDirection == 'top' && this._needSrollTopCompensation){
                scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
                this._needSrollTopCompensation = false;
                //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
@@ -1959,18 +1954,18 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see infiniteScroll
           * @see isInfiniteScroll
           */
-         setInfiniteScroll: function (allow, noLoad) {
-            this._allowInfiniteScroll = allow;
-            if (allow && !noLoad) {
+         setInfiniteScroll: function (type, noLoad) {
+            this._options.infiniteScroll = type;
+            if (type && !noLoad) {
                this._nextLoad();
                return;
             }
             //НА саом деле если во время infiniteScroll произошла ошибка загрузки, я о ней не смогу узнать, но при выключении нужно убрать индикатор
-            if (!allow && this._loadingIndicator && this._loadingIndicator.is(':visible')){
+            if (!type && this._loadingIndicator && this._loadingIndicator.is(':visible')){
                this._cancelLoading();
             }
             //Убираем текст Еще 10, если включили бесконечную подгрузку
-            this.getContainer().find('.controls-TreePager-container').toggleClass('ws-hidden', allow);
+            this.getContainer().find('.controls-TreePager-container').toggleClass('ws-hidden', !!type);
             this._hideLoadingIndicator();
          },
          /**
