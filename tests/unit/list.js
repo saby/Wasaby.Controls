@@ -1,6 +1,4 @@
 define([
-'../../components/Action/List/resources/test/ListViewMove.test',
-'../../components/Action/List/resources/test/ReorderMove.test',
 '../../components/Action/resources/test/Base.test',
 '../../components/Data/Adapter/resources/test/Json.test',
 '../../components/Data/Adapter/resources/test/JsonRecord.test',
