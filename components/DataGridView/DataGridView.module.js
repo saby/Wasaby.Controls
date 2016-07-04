@@ -837,6 +837,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._movableElems = this._container.find('.controls-DataGridView__scrolledCell');
       },
 
+      _appendResultsContainer: function(container, resultRow){
+         DataGridView.superclass._appendResultsContainer.call(this, container, resultRow);
+         this.updateScrollAndColumns();
+      },
+
       _checkThumbPosition: function(cords) {
          if (cords.left <= 0){
             this._toggleActiveArrow(this._arrowLeft, false);
