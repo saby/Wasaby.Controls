@@ -164,7 +164,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
       getScrollContainer: function(element){
          var scrollable;
          if (this._inContainer() && this._scrollingContainer.length){
-            return this._scrollingContainer[0].scrollHeight;
+            return this._scrollingContainer[0];
          }
          if (this._inWindow()){
             if (element) {
@@ -174,7 +174,12 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
                }
                return element[0];
             }
-            return document.body;
+            var scrollingConainer = document.getElementsByClassName('ws-body-scrolling-content');
+            if (scrollingConainer.length){
+               return document.getElementsByClassName('ws-body-scrolling-content');
+            } else {
+               return document.body;
+            }
          }
          if (this._inFloatArea()) {
             return this.getOpener().getTopParent().getContainer().closest('.ws-scrolling-content')[0];
