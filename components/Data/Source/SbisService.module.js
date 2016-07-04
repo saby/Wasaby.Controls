@@ -49,9 +49,16 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @property {String} [query=Список] Имя метода для получения списка записей через {@link query}
        * @property {String} [copy=Копировать] Имя метода для копирования записей через {@link copy}
        * @property {String} [merge=Объединить] Имя метода для объединения записей через {@link merge}
+       * @property {String} [moveBefore=ВставитьДо] Имя метода перемещения записи перед указанной {@link merge}
+       * @property {String} [moveAfter=ВставитьПосле] Имя метода перемещения записи после указанной {@link merge}
        * @property {String} [format] Имя метода для получения формата записи через {@link create}, {@link read} и {@link copy}. Метод должен быть декларативным.
        */
-
+      /**
+       * @typedef {Object} Endpoint
+       * @property {String} [address] Адрес - указывает место расположения сервиса, к которому будет осуществлено подключение
+       * @property {String} contract Контракт - определяет доступные операции
+       * @property {String} [moveContract=ПорядковыйНомер] Название объекта бл в которому принадлежат методы перемещения
+       */
       /**
        * @typedef {Object} MetaConfig
        * @property {String} [hasMore=hasMore] Свойство мета-данных, отвечающий за поле 'ЕстьЕще' параметра 'Навигация' списочного метода
