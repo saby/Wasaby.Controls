@@ -38,19 +38,21 @@ define([
 
          describe('.move()', function() {
             it('should move record to up', function () {
-               ds.move = function(params) {
-                  assert.deepEqual(params.from, rs.at(0));
-                  assert.deepEqual(params.to, rs.at(1));
-                  assert.isFalse(params.details.after);
+               ds.move = function(from, to, meta) {
+                  assert.deepEqual(from, rs.at(0));
+                  assert.deepEqual(to, rs.at(1));
+                  assert.isTrue(meta.before);
+                  return new $ws.proto.Deferred().callback();
                };
                moveStrategy.move([rs.at(0)], rs.at(1), false);
             });
 
             it('should move record to down', function () {
-               ds.move = function(params) {
-                  assert.deepEqual(params.from, rs.at(0));
-                  assert.deepEqual(params.to, rs.at(1));
-                  assert.isTrue(params.details.after);
+               ds.move = function(from, to, meta) {
+                  assert.deepEqual(from, rs.at(0));
+                  assert.deepEqual(to, rs.at(1));
+                  assert.isFalse(meta.before);
+                  return new $ws.proto.Deferred().callback();
                };
                moveStrategy.move([rs.at(0)], rs.at(1), true);
             });

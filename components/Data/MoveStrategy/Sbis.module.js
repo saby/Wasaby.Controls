@@ -60,7 +60,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
          if (!('dataSource' in cfg) && !('listView' in cfg)) {
             this._options.dataSource = DI.resolve('source.sbis-service',{});
             this._options.dataSource.setMoveMethods(this._options.moveMethodPrefix);
-         } else if (('listView' in cfg)) {
+         } else if (('listView' in cfg) && !this._options.dataSource) {
             this._options.dataSource = cfg.listView.getDataSource();
          }
 

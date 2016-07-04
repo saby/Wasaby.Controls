@@ -215,14 +215,14 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          if (to) {
             var toKey = to.get(this._options.idProperty),
                tableAdapter = this._getTableAdapter();
-            if (meta.column && meta.column !== this._options.idProperty) {
+            if (this._options.moveProperty && this._options.moveProperty !== this._options.idProperty) {
                //TODO: indexed search
                var adapter = this.getAdapter();
                for (var index = 0, count = tableAdapter.getCount(); index < count; index++) {
                   if (toKey === adapter.forRecord(
                         tableAdapter.at(index)
                      ).get(
-                        meta.column
+                        this._options.moveProperty
                      )
                   ) {
                      targetPosition = index;

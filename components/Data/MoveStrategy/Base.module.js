@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Base', [
          var def = new $ws.proto.ParallelDeferred(),
             self = this;
          $ws.helpers.forEach(from, function(record){
-            def.push(self._options.dataSource.move(record,  to, !after));
+            def.push(self._options.dataSource.move(record,  to, {before: !after}));
          });
          return def.done().getResult();
       },

@@ -17,7 +17,8 @@ define([
             existsPosition2 = 0,
             notExistsId = 33,
             data,
-            source;
+            source,
+            sourcePm;
 
          beforeEach(function () {
             data = [{
@@ -85,6 +86,12 @@ define([
             source = new MemorySource({
                data: data,
                idProperty: 'Ид'
+            });
+
+            sourcePm = new MemorySource({
+               data: data,
+               idProperty: 'Ид',
+               moveProperty: 'ПорНом'
             });
          });
 
@@ -761,7 +768,7 @@ define([
                      source.move(
                         model1,
                         model2,
-                        {after: false}
+                        {before: true}
                      ).addCallbacks(function() {
                         if (data[existsPosition2]['Ид'] === existsId && data[existsPosition2 + 1]['Ид'] === existsId2) {
                            done();
@@ -781,7 +788,7 @@ define([
                      source.move(
                         model1,
                         model2,
-                        {after: false}
+                        {before: true}
                      ).addCallbacks(function() {
                         if (data[existsPosition]['Ид'] === existsId && data[1 + existsPosition]['Ид'] === existsId2) {
                            done();
@@ -802,9 +809,9 @@ define([
                      source.move(
                         model1,
                         model2,
-                        {after: true}
+                        {before: false}
                      ).addCallbacks(function() {
-                        if(data[existsPosition2]['Ид'] === existsId2 && data[1 + existsPosition2]['Ид'] === existsId) {
+                        if(data[existsPosition2]['Ид'] === existsId && data[1 + existsPosition2]['Ид'] === existsId2) {
                            done();
                         } else {
                            done(new Error('Unexpected value'));
@@ -823,7 +830,7 @@ define([
                      source.move(
                         model1,
                         model2,
-                        {after: true}
+                        {before: false}
                      ).addCallbacks(function() {
                         if(data[existsPosition]['Ид'] === existsId && data[1 + existsPosition]['Ид'] === existsId2) {
                            done();
@@ -841,12 +848,12 @@ define([
             it('should move before record with ПорНом=6', function (done) {
                var pn = 6,
                   newPos = 3;
-               source.read(existsId).addCallback(function (model) {
-                  source.read(existsId2).addCallback(function (model2) {
-                     source.move(
+               sourcePm.read(existsId).addCallback(function (model) {
+                  sourcePm.read(existsId2).addCallback(function (model2) {
+                     sourcePm.move(
                         model,
                         model2,
-                        {column: 'ПорНом', after: false}
+                        {before: false}
                      ).addCallbacks(function() {
                         if(data[newPos]['Ид'] === existsId && data[1 + newPos]['ПорНом'] === pn) {
                            done();
@@ -863,14 +870,14 @@ define([
             it('should move after record with ПорНом=6', function (done) {
                var pn = 6,
                   newPos = 4;
-               source.read(existsId).addCallback(function (model) {
-                  source.read(existsId2).addCallback(function (model2) {
-                     source.move(
+               sourcePm.read(existsId).addCallback(function (model) {
+                  sourcePm.read(existsId2).addCallback(function (model2) {
+                     sourcePm.move(
                         model,
                         model2,
-                        {column: 'ПорНом', after: true}
+                        {before: true}
                      ).addCallbacks(function() {
-                        if(data[newPos]['Ид'] === existsId && data[newPos - 1]['ПорНом'] === pn) {
+                        if(data[newPos-1]['Ид'] === existsId && data[newPos]['ПорНом'] === pn) {
                            done();
                         } else {
                            done(new Error('Unexpected value'));

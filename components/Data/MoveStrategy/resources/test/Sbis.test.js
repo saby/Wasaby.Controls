@@ -120,37 +120,15 @@ define([
                listView: {
                   getItems: function () {
                      return rs;
+                  },
+                  getDataSource: function() {
+                     return Di.resolve('source.sbis-service',{});
                   }
                }
             });
 
             //Replace of standard with mock
             Di.register('source.provider.sbis-business-logic', SbisBusinessLogic);
-         });
-
-         describe('.$constructor', function (){
-            it('should throw error when create with empty params', function() {
-               assert.throw(function(){
-                  moveStrategy = new SbisMoveStrategy({});
-               });
-            });
-            it('should get contract from data source', function() {
-               var service = new SbisService({
-                  endpoint: 'Товар'
-               });
-               moveStrategy = new SbisMoveStrategy({
-                  dataSource: service
-               });
-               assert.equal(moveStrategy._options.contract, 'Товар');
-            });
-            it('should support deprecated options', function() {
-               moveStrategy = new SbisMoveStrategy({
-                  resource: 'Товар',
-                  moveResource: 'ТоварПеремещ'
-               });
-               assert.equal(moveStrategy._options.contract, 'Товар');
-               assert.equal(moveStrategy._options.moveContract, 'ТоварПеремещ');
-            });
          });
 
          describe('.move()', function() {
@@ -180,12 +158,6 @@ define([
                assert.equal(SbisBusinessLogic.lastRequest.args.ИдО[1], objectName);
             });
 
-            it('should move record form folder to root', function () {
-               moveStrategy.move([rs.at(3)], rs.at(0));
-               assert.equal(rs.at(3).get('parent'), rs.at(0).get('parent'));
-            });
-
-
             it('should return error when move method return error', function(done) {
                moveStrategy.move([rsComplex.at(0)], rsComplex.at(2), true).addErrback(function (){
                   done();
@@ -199,26 +171,6 @@ define([
                moveStrategy.hierarhyMove([rs.at(0)], rs.at(1));
                assert.equal(rs.at(0).get('parent'), rs.at(1).get('id'));
                assert.equal(rs.at(1).has('parent$'), false);
-            });
-
-            it('should change parent$ after move', function(done){
-               var moveStrategy = new SbisMoveStrategy({
-                  dataSource: new SbisService({
-                     endpoint: 'test'
-                  }),
-                  hierField: 'parent',
-                  listView: {
-                     getItems: function () {
-                        return rs$;
-                     }
-                  }
-               });
-               moveStrategy.hierarhyMove([rs$.getRecordById('121')], rs$.getRecordById('11')).addCallback(function(){
-                  assert.equal(rs$.getRecordById('121').get('parent'), 11);
-                  assert.equal(rs$.getRecordById('11').get('parent$'), true);
-                  assert.equal(rs$.getRecordById('12').get('parent$'), false);
-                  done();
-               });
             });
 
             it('should not throw an error when from records parent miss in resordset', function(){
