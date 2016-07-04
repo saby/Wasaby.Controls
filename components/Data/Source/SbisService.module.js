@@ -154,17 +154,17 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             provider: 'source.provider.sbis-business-logic',
 
             /**
-             * @cfg провайдер, который будет использоваться для методов перемещения
-             * @see provider
-             */
-            moveProvider: 'source.provider.sbis-business-logic',
-
-            /**
              * @cfg {MetaConfig} Объект, хранящий названия свойств мета-данных, в которых хранится служебная информация, необходимая для формирования некоторых аргументов методов БЛ
              */
             metaConfig: {
                hasMore: 'hasMore'
-            }
+            },
+
+            /**
+             * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
+             * @see move
+             */
+            moveProperty: 'ПорНомер'
 
          },
 
@@ -175,7 +175,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
           * @see provider
           * @see SBIS3.CONTROLS.Data.Di
           */
-         moveProvider: null
+         _moveProvider: 'source.provider.sbis-business-logic'
       },
 
       $constructor: function(cfg) {
@@ -214,6 +214,17 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                this._options.binding.format = cfg.formatMethodName;
             }
          }
+      },
+
+      move: function (from, to, meta) {
+         var self = this,
+            moveMethod = meta.before ? this._options.binding.moveBefore: this._options.binding.moveAfter;
+
+         return this._makeCall(
+            moveMethod,
+            this._prepareMoveArguments(from, to, meta),
+            this._getMoveProvider()
+         );
       },
 
       //region SBIS3.CONTROLS.Data.Source.ISource
@@ -658,6 +669,21 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          return preparedId;
       },
 
+      /**
+       * Возвращает объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
+       * @returns {SBIS3.CONTROLS.Data.Source.Provider.IAbstract}
+       * @see provider
+       */
+      _getMoveProvider: function() {
+         return this._options.moveProvider = this._getProvider(this._moveProvider, {
+            endpoint: {
+               address: this._options.endpoint.address,
+               contract: this._options.endpoint.moveContract
+            },
+            options: this._options.options
+         });
+      },
+
       //endregion Protected methods
 
       //region Deprecated
@@ -696,7 +722,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @protected может использоваться только стратегии перемещения, нужно на время переходного периода
        * @returns {String}
        */
-      setMoveContract: function (name) {
+      _setMoveContract: function (name) {
          this.getEndpoint().moveContract = name;
       },
 

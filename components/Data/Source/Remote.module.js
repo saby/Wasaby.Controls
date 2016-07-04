@@ -157,13 +157,9 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
       },
 
       move: function (from, to, meta) {
-         var self = this,
-            moveMethod = meta.before ? this._options.binding.moveBefore: this._options.binding.moveAfter;
-
          return this._makeCall(
-            moveMethod,
-            this._prepareMoveArguments(from, to, meta),
-            self.getMoveProvider()
+            this._options.binding.move,
+            this._prepareMoveArguments(from, to, meta)
          );
       },
 
@@ -197,20 +193,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
       },
 
 
-      /**
-       * Возвращает объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
-       * @returns {SBIS3.CONTROLS.Data.Source.Provider.IAbstract}
-       * @see provider
-       */
-      getMoveProvider: function() {
-         return this._options.moveProvider = this._getProvider(this._options.moveProvider, {
-            endpoint: {
-               address: this._options.endpoint.address,
-               contract: this._options.endpoint.moveContract
-            },
-            options: this._options.options
-         });
-      },
+
       //endregion Public methods
 
       //region Protected methods
