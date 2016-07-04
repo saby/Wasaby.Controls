@@ -599,7 +599,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //    Задача в разработку: доработка listView, для поддержки touch устройств с возможностью управление мышью
             this._touchSupport = $ws._const.browser.isMobilePlatform;
 
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onDragEnd');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
 
             /* За счёт того, что разделено поведения отображения операций и ховера,
                в зависимости от события, которое произошло, то можно смело подписаться на все событие,
@@ -2564,12 +2564,12 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
          },
-         _beginDropDown: function(e) {
+         _beginDropDownHandler: function(e) {
             this.setSelectedKey(this.getCurrentElement().targetId);
             this._createAvatar(e);
             this._hideItemsToolbar();
          },
-         _endDropDown: function() {
+         _endDropDownHandler: function() {
             $ws.single.WindowManager.releaseZIndex(this.getDragAvatar().css('z-index'));
             this._clearDragHighlight();
             this._updateItemsToolbar();
