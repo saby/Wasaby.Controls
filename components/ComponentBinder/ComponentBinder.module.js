@@ -436,11 +436,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             }
             view.reload();
          }
-         $(backButton.getContainer()).hover(function(){
-            $(this).append(view.getEditArrow().getContainer());
-         }, function() {
-            $(this).find('.controls-TreeView__editArrow-container').remove();
-         });
+
          view.subscribe('onSetRoot', function(event, id, hier){
             //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде),
             //при этом не нужно пересчитывать хлебные крошки
