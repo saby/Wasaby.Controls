@@ -72,15 +72,8 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
              *    });
              * </pre>
              */
-            provider: null,
-            /**
-             * @cfg {SBIS3.CONTROLS.Data.Source.Provider.IAbstract|String} Provider используемый для перемещения
-             * @remark Так как методы перемещения могут быть реализованы на другом объекте бизнес логики, по умолчанию  на
-             * объекте ПорядковыйНомер, то для них нужен свой провайдер
-             * @see provider
-             * @see SBIS3.CONTROLS.Data.Di
-             */
-            moveProvider: null
+            provider: null
+
          }
       },
 

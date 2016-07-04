@@ -164,14 +164,18 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              */
             metaConfig: {
                hasMore: 'hasMore'
-            },
-            /**
-             * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
-             * @see move
-            */
-            moveProperty: 'ПорНомер'
+            }
+
          },
 
+         /**
+          * @cfg {SBIS3.CONTROLS.Data.Source.Provider.IAbstract|String} Provider используемый для перемещения
+          * @remark Так как методы перемещения могут быть реализованы на другом объекте бизнес логики, по умолчанию  на
+          * объекте ПорядковыйНомер, то для них нужен свой провайдер
+          * @see provider
+          * @see SBIS3.CONTROLS.Data.Di
+          */
+         moveProvider: null
       },
 
       $constructor: function(cfg) {
@@ -680,9 +684,34 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          };
 
          return this.getAdapter().serialize(args);
-      }
+      },
 
       //endregion Deprecated
+
+      //region SBIS3.CONTROLS.Data.Source.SbisService
+
+      /**
+       * Устанавливает объект бизнес логики используемый для перемещения
+       * @param {String} name Название объекта бизнес логики
+       * @protected может использоваться только стратегии перемещения, нужно на время переходного периода
+       * @returns {String}
+       */
+      setMoveContract: function (name) {
+         this.getEndpoint().moveContract = name;
+      },
+
+      /**
+       * Устанавливает методы бизнес логики используемые для перемещения
+       * @param {String} prefix Префикс методов бизнес логики
+       * @protected может использоваться только стратегии перемещения, нужно на время переходного периода
+       * @returns {String}
+       */
+      setMoveMethods: function (prefix) {
+         this.getBinding().moveBefore = prefix + 'До';
+         this.getBinding().moveAfter = prefix + 'После';
+      }
+
+      //endregion SBIS3.CONTROLS.Data.Source.SbisService
    });
 
    Di.register('source.sbis-service', SbisService);

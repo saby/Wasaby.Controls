@@ -122,8 +122,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
                query: '',
                copy: '',
                merge: '',
-               moveBefore: '',
-               moveAfter: ''
+               move: ''
             },
 
             /**
@@ -234,7 +233,13 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              */
             options: {
                debug: false
-            }
+            },
+
+            /**
+             * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
+             * @see move
+             */
+            moveProperty: 'ПорНомер'
          }
       },
       /** @typedef {Object} MoveMetaConfig
