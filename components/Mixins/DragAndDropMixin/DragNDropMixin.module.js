@@ -184,12 +184,21 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
          },
          /**
           * шаблонныйц метод endDropDown
-          * @private
           */
-         _endDropDownHandler: function(){
+         _endDropDownHandler: function(e){
 
          },
-         _beginDropDownHandler: function(){
+         /**
+          * шаблонныйц метод beginDropDown
+          */
+         _beginDropDownHandler: function(e){
+
+         },
+         /**
+          * Метод должен создать JQuery объект в котором будет лежать аватар
+          * @returns {JQuery}
+          */
+         _createAvatar: function() {
 
          },
          //endregion handlers
@@ -211,9 +220,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
           * @param  {Event} e
           * @private
           */
-         _createAvatar: function(e) {
-            var count = this.getCurrentElement().keys.length,
-               avatar = this._getAvatar();
+         _showAvatar: function(e) {
+            var avatar = this._createAvatar();
             this.setDragAvatar(avatar);
             this._setAvatarPosition(e);
          },
@@ -237,22 +245,28 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
           * @param e
           * @param movable
           */
-         beginDropDown: function(e, movable){
-            this.notify('onDragBegin', e, movable);
-            this._beginDropDownHandler(e, movable);
-            DragCurrentElement.setDragging(true);
+         _beginDropDown: function(e, movable){
+            var res = this.notify('onDragBegin', e, movable);
+            if (res !== false) {
+               this._beginDropDownHandler(e, movable);
+               this._showAvatar(e);
+               DragCurrentElement.setDragging(true);
+            }
+
          },
          /**
           *
           */
-         _endDropDown: function () {
-            if (this.isDragging()) {
-               this._endDropDownHandler();
-               DragCurrentElement.reset();
-               this._position = null;
-               DragCurrentElement.setDragging(false);
-               $('body').removeClass('dragdropBody cantDragDrop');
+         _endDropDown: function (e) {
+            var res = this._notify('onDragEnd', this.getCurrentElement(), this.getDragOwner());
+            if (res !== false) {
+               this._endDropDownHandler(e);
             }
+
+            DragCurrentElement.reset();
+            this._position = null;
+            DragCurrentElement.setDragging(false);
+            $('body').removeClass('dragdropBody cantDragDrop');
          },
          //endregion protected
          //region mouseHandler
@@ -268,8 +282,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
                if (droppable) {
                   this._callDropHandler(e, droppable);
                }
+               this._endDropDown(e);
             }
-            this.endDropDown();
          },
          /**
           *
@@ -298,7 +312,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
                if ((Math.abs(moveX) < this._constShiftLimit) && (Math.abs(moveY) < this._constShiftLimit)) {
                   return;
                }
-               this.beginDropDown(e, movable);
+               this._beginDropDown(e, movable);
             }
 
             $('body').addClass('dragdropBody');

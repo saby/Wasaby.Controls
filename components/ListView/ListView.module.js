@@ -2527,7 +2527,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return offset < 10 ? false : offset > metric - 10 ? true : undefined;
          },
 
-         _getAvatar: function(e) {
+         _createAvatar: function(e) {
             var count = this.getCurrentElement().keys.length;
             return $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>')
                .css('z-index', $ws.single.WindowManager.acquireZIndex(false));
@@ -2536,7 +2536,6 @@ define('js!SBIS3.CONTROLS.ListView',
          _callDropHandler: function(e) {
             var
                 clickHandler,
-                currentElement = this.getCurrentElement(),
                 currentTarget = this._findItemByElement($(e.target));
             //После опускания мыши, ещё раз позовём обработку перемещения, т.к. в момент перед отпусканием мог произойти
             //переход границы между сменой порядкового номера и перемещением в папку, а обработчик перемещения не вызваться,
@@ -2549,27 +2548,27 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._elemClickHandler = clickHandler;
                };
             }
+
+         },
+
+         _beginDropDownHandler: function(e) {
+            this.setSelectedKey(this.getCurrentElement().targetId);
+            this._hideItemsToolbar();
+         },
+
+         _endDropDownHandler: function() {
+            var currentTarget = this._findItemByElement($(e.target)).length;
             if (currentTarget.length) {
                var remoteItems = this.getDragOwner().getItems(),
                   checkedItems = [];
-               for (var i = currentElement.keys.length - 1; i >= 0; i--) {
-                  checkedItems.push(remoteItems.getRecordById(currentElement.keys[i]));
-               }
-               var res = this._notify('onDragEnd', this.getItems().getRecordById(currentTarget.data('id')),
-                  checkedItems, currentElement.insertAfter, this.getDragOwner());
-               if (res !== false) {
-                  if (this.getDragOwner() === this) {
-                     this._move(currentElement.keys, currentTarget.data('id'), currentElement.insertAfter);
-                  }
+               for (var i = this.getCurrentElement().keys.length - 1; i >= 0; i--) {
+                  checkedItems.push(remoteItems.getRecordById(this.getCurrentElement().keys[i]));
                }
             }
-         },
-         _beginDropDownHandler: function(e) {
-            this.setSelectedKey(this.getCurrentElement().targetId);
-            this._createAvatar(e);
-            this._hideItemsToolbar();
-         },
-         _endDropDownHandler: function() {
+            if (this.getDragOwner() === this) {
+               this._move(this.getCurrentElement().keys, currentTarget.data('id'), this.getCurrentElement().insertAfter);
+            }
+
             $ws.single.WindowManager.releaseZIndex(this.getDragAvatar().css('z-index'));
             this._clearDragHighlight();
             this._updateItemsToolbar();
