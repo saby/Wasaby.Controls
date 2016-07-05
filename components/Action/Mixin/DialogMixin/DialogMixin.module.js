@@ -61,12 +61,11 @@ define('js!SBIS3.CONTROLS.Action.DialognMixin', [
        * @property {SBIS3.CONTROLS.Data.Model} record Редактируемая запись. Если передаётся ключ свойством key, то запись передавать необязательно.
        * @property {$ws.proto.Context} ctx Контекст, который нужно установить для диалога редактирования записи.
        */
-      _$constructor: function(cfg) {
-         cfg = cfg||{};
+      $constructor: function() {
 
-         if ('dialogComponent' in cfg) {
+         if ( this._options.dialogComponent && !this._options.template) {
             Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.8.0', 1);
-            this._options.template = cfg.dialogComponent;
+            this._options.template = this._options.dialogComponent;
          }
 
       },
@@ -107,7 +106,7 @@ define('js!SBIS3.CONTROLS.Action.DialognMixin', [
             editDeffered = new $ws.proto.Deferred(),
             config = {
                opener: this,
-               template: template,
+               template: template||this._options.template,
                componentOptions: compOptions
             };
 
