@@ -101,8 +101,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              *    var dataSource = new RpcSource({
              *       endpoint: {
              *          address: '//some.server/rpc-gate/',
-             *          contract: 'Users',
-             *          moveContract: 'move'
+             *          contract: 'Users'
              *       },
              *       binding: {
              *          create: 'Add',//dataSource.create() calls UsersAdd() via RPC
