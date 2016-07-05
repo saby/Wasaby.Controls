@@ -218,7 +218,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *     <option name="allowToggleHead">false</option>
              * </pre>
              */
-            allowToggleHead: true
+            allowToggleHead: true,
+            /**
+             * @cfg {Boolean} Включает фиксацию / прилипание заголовков таблицы к шапке страницы / всплывающей панели.
+             * @example
+             * <pre>
+             *     <option name="stickyHeader">true</option>
+             * </pre>
+             */
+            stickyHeader: false
          }
       },
 
@@ -829,6 +837,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._movableElems = this._container.find('.controls-DataGridView__scrolledCell');
       },
 
+      _appendResultsContainer: function(container, resultRow){
+         DataGridView.superclass._appendResultsContainer.call(this, container, resultRow);
+         this.updateScrollAndColumns();
+      },
+
       _checkThumbPosition: function(cords) {
          if (cords.left <= 0){
             this._toggleActiveArrow(this._arrowLeft, false);
@@ -976,9 +989,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
          data = $ws.helpers.map(this.getColumns(), function(col, index){
             value = resultsRecord.get(col.field);
             if (value == undefined){
-               return index == 0 ? self._options.resultsText : '';
+               value = index == 0 ? self._options.resultsText : '';
             }
-            return self._getColumnResultTemplate(col, index, $ws.render.defaultColumn.integer(value), resultsRecord);
+            else{
+               value = $ws.render.defaultColumn.integer(value);
+            }
+            return self._getColumnResultTemplate(col, index, value, resultsRecord);
          });
          return data;
       },

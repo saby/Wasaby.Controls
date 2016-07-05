@@ -202,4 +202,25 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 				actions.mouseMove(this.arrow_right);
             })			
     });
+	
+	gemini.suite('data_grid_in_row', function (test) {
+
+        test.setUrl('/regression_data_grid_view_online_8.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="DataGridView 1"]', 40000);
+                this.data2 = find('[data-id="1"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+				this.input = find('[sbisname="TextBox 1"] input');
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.input);
+            })
+
+            .capture('hovered_row', function (actions) {
+                actions.mouseMove(this.data2);
+				actions.wait(500);
+            })
+    });
 });

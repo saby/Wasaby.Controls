@@ -24,18 +24,18 @@ gemini.suite('SBIS3.CONTROLS.DateRange Online', function () {
 				actions.waitForElementToShow('[sbisname="apply"] .ws-button-caption', 1000);
 				actions.waitForElementToShow('.ws-window-titlebar-action.close', 1000);
             })
-			
+			/*
 			.capture('selected_week', function (actions, find) {
 				actions.waitForElementToShow('[id="ws-date-range-choose-month-3"]', 1000);
 				this.april = find('[id="ws-date-range-choose-month-3"]');
 				actions.mouseMove(this.april);
 				this.day = find('table tr[week="4"] td:nth-child(3)');
 				actions.click(this.day);
-            })
+            })*/
 			
 			.capture('selected_range', function (actions, find) {
-				this.check_range = find('[sbisname="date-range-choose-TypeSelection"] div.box');
-				actions.click(this.check_range);
+				/*this.check_range = find('[sbisname="date-range-choose-TypeSelection"] div.box');
+				actions.click(this.check_range);*/
 				this.day1 = find('table tr[week="2"] td:nth-child(2)');
 				actions.click(this.day1);
 				this.day2 = find('table tr[week="4"] td:nth-child(5)');

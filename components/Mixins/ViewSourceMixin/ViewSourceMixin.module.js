@@ -72,14 +72,14 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
             /* Т.к. запрос вызывается отдельно, то и индикатор надо показать самим,
                иногда БЛ может подтупливать и в этом случае может долго висеть пустой реестр, который вводит пользователя в заблуждение  */
             view._toggleIndicator(true);
+            /* Фильтр устанавливаем пораньше, до ответа query, чтобы запустилась синхронизация,
+             и фильтры проставились в кнопку фильтров */
+            view.setFilter(queryFilter, true);
 
             queryDef.addCallback(function(dataSet) {
                var keyField = view.getProperty('keyField'),
                    recordSet;
 
-               /* Фильтр устанавливаем пораньше, чтобы запустилась синхронизация,
-                  и фильтры проставились в кнопку фильтров */
-               view.setFilter(queryFilter, true);
                view._toggleIndicator(false);
 
                if (keyField && keyField !== dataSet.getIdProperty()) {

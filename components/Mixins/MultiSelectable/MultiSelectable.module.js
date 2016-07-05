@@ -143,6 +143,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
 
       after : {
          init: function () {
+            if(this._options.selectedItems) {
+               this._options.selectedKeys = this._convertToKeys(this._options.selectedItems);
+            }
             this._drawSelectedItems(this._options.selectedKeys);
          }
       },

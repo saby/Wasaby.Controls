@@ -36,6 +36,7 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBas
              result = {
                source: meta.source,
                key : meta.id,
+               diffOnly : meta.diffOnly,
                initValues : meta.filter,
                record: record
             };

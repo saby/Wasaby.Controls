@@ -73,6 +73,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                };
                this._createEip();
                this._savingDeferred = $ws.proto.Deferred.success();
+               this._editingDeferred = $ws.proto.Deferred.success();
             },
 
             isEdit: function() {
@@ -209,12 +210,15 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this.endEdit(true).addCallback(function() {
                   return self._prepareEdit(record).addCallback(function(preparedRecord) {
                      if (preparedRecord) {
-                        var itemProjItem = self._options.itemsProjection.getItemBySourceItem(preparedRecord);
+                        var
+                            parentProjItem,
+                            itemProjItem = self._options.itemsProjection.getItemBySourceItem(preparedRecord);
                         self._eip.edit(target, preparedRecord, itemProjItem);
                         self._notify('onAfterBeginEdit', preparedRecord);
                         //TODO: необходимо разбивать контроллер редактирования по месту, для плоских и иерархических представлений
                         if (self._options.hierField) {
-                           self._lastTargetAdding = itemProjItem.getParent();
+                           parentProjItem = itemProjItem.getParent();
+                           self._lastTargetAdding = parentProjItem.isRoot() ? null : parentProjItem;
                         }
                         return preparedRecord;
                      }
@@ -485,6 +489,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                //Сохранение при этом продолжит работать в обычном режиме.
                if (!this._savingDeferred.isReady()) {
                   this._savingDeferred.errback();
+               }
+               //Снимем блокировку, если редактирование разрушается
+               if (!this._editingDeferred.isReady()) {
+                  this._editingDeferred.callback();
                }
                EditInPlaceBaseController.superclass.destroy.apply(this, arguments);
             }

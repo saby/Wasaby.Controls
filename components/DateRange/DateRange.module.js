@@ -49,23 +49,28 @@ define('js!SBIS3.CONTROLS.DateRange', [
 
          var self = this;
 
+         this._dateRangeButton = this.getChildControlByName('DateRange__Button');
          this._datePickerStart = this.getChildControlByName('DateRange__DatePickerStart');
+         this._datePickerEnd = this.getChildControlByName('DateRange__DatePickerEnd');
          this._datePickerStart.subscribe('onDateChange', function(e, date) {
+            self.clearMark();
             //передаем false, чтобы не зацикливать событие
             self._setStartDate(date, false);
             self._notifyOnPropertyChanged('startDate');
             self._notify('onStartDateChange', self._options.startDate);
             self._notify('onDateRangeChange', self._options.startDate, self._options.endDate);
          });
-         this._datePickerEnd = this.getChildControlByName('DateRange__DatePickerEnd');
+         this._datePickerStart.subscribe('onInputFinished', function() {
+            self._datePickerEnd.setActive(true);
+         });
          this._datePickerEnd.subscribe('onDateChange', function(e, date) {
+            self.clearMark();
             self._setEndDate(date, false);
             self._notifyOnPropertyChanged('endDate');
             self._notify('onEndDateChange',   self._options.endDate);
             self._notify('onDateRangeChange', self._options.startDate, self._options.endDate);
          });
 
-         this._dateRangeButton = this.getChildControlByName('DateRange__Button');
          this._dateRangeButton.subscribe('onActivated', this._onDateRangeButtonActivated.bind(this));
 
          this._dateRangeChoose = this.getChildControlByName('DateRange__DateRangeChoose');

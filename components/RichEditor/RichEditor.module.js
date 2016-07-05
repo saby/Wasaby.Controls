@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
       'js!SBIS3.CONTROLS.Utils.ImageUtil',
       'js!SBIS3.CONTROLS.Utils.Sanitize',
       'css!SBIS3.CORE.RichContentStyles',
-      'i18n!js!SBIS3.CONTROLS.RichEditor'
+      'i18n!SBIS3.CONTROLS.RichEditor'
    ], function(TextBoxBase, dotTplFn, Button, RichUtil, FileLoader, defaultConfig, ToggleButton, MenuButton, Dropdown,  PluginManager, ImageUtil, Sanitize) {
       'use strict';
 
@@ -43,9 +43,53 @@ define('js!SBIS3.CONTROLS.RichEditor',
          _defaultItems: defaultConfig || {},
          $protected : {
             _options : {
+               /**
+                * @cfg {Boolean} Включение режима автовысоты
+                * <wiTag group="Управление">
+                * Режим автовысоты текстового редактора.
+                * @example
+                * <pre>
+                *     <option name="autoHeight">true</option>
+                * </pre>
+                */
+               autoHeight: false,
+               /**
+                * @cfg {Number} Минимальная высота (в пикселях)
+                * <wiTag group="Управление">
+                * Минимальная высота текстового поля (для режима с автовысотой).
+                * @example
+                * <pre>
+                *     <option name="autoHeight">true</option>
+                *     <option name="minimalHeight">100</option>
+                * </pre>
+                */
                minimalHeight: 200,
+               /**
+                * @cfg {Number} Максимальная высота (в пикселях)
+                * <wiTag group="Управление">
+                * Максимальная высота текстового поля (для режима с автовысотой).
+                * Для задания неограниченной высоты необходимо выставить в значении опции 0.
+                * @example
+                * <pre>
+                *     <option name="autoHeight">true</option>
+                *     <option name="maximalHeight">0</option>
+                * </pre>
+                */
                maximalHeight: 300,
+               /**
+                * @cfg {Boolean} Загрузка файлов в хранилище при их дропе (с десктопа) в поле редактора
+                * <wiTag group="Управление">
+                * @example
+                * <pre>
+                *     <option name="uploadImageOnDrop">true</option>
+                * </pre>
+                */
                uploadImageOnDrop: true,
+               /**
+                * @cfg {Object} Объект с настройками для tinyMCE
+                * <wiTag group="Управление">
+                *
+                */
                editorConfig: {
                   plugins: 'media,paste,lists',
                   inline: true,
@@ -61,13 +105,75 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   tools: 'inserttable',
                   invalid_elements: 'script',
                   paste_data_images: false,
+                  paste_convert_word_fake_lists: false, //TODO: убрать когда починят https://github.com/tinymce/tinymce/issues/2933
                   statusbar: false,
                   toolbar: false,
-                  menubar: false
+                  menubar: false,
+                  browser_spellcheck: true
                },
+               /**
+                * @cfg {String} Значение Placeholder`а
+                * При пустом значении редактора отображается placeholder
+                * @translatable
+                */
                placeholder: '',
+               /**
+                * @cfg {Boolean} Панель инструментов
+                * <wiTag group="Отображение">
+                * Возможные значения:
+                * <ol>
+                *    <li>true - использовать панель инструментов вместе с редактором;</li>
+                *    <li>false - оставить только поле ввода.</li>
+                * </ol>
+                */
                toolbar: true,
+               /**
+                * @cfg {Boolean} Видимость панели инструментов
+                * <wiTag group="Отображение">
+                * При скрытии панели инструментов работа в текстовом редакторе будет осуществляться только с клавиатуры.
+                * Возможные значения:
+                * <ol>
+                *    <li>true - панель инструментов показана;</li>
+                *    <li>false - скрыта.</li>
+                * </ol>
+                * @see toggleToolbar
+                */
                toolbarVisible: true,
+               /**
+                * @cfg {Object} Объект с настройками платформенных и пользовательских кнопок
+                * Для пользовательской кнопки доступны настройки:
+                * <ul>
+                *    <li>caption - текст: на кнопке без иконки, справа от кнопки с иконкой;</li>
+                *    <li>image - иконка: путь до икноки или sprite;</li>
+                *    <li>tooltip - подсказка;</li>
+                *    <li>handlers - объект с обработчиками действия клика по кнопке;</li>
+                *    <li>visible - видимость;</li>
+                *    <li>enabled - активность (доступность к взаимодействию);<li>
+                * </ul>
+                * Пользовательские кнопки вставляются после платформенных в заявленном порядке.
+                *
+                * Для платформенных кнопок возможно управление только их видимостью (visible) и активностью (enabled).
+                * Список платформенных кнопок:
+                * <ol>
+                *    <li>undo - Шаг назад;</li>
+                *    <li>redo - Шаг вперед;</li>
+                *    <li>style - Стиль текста;</li>
+                *    <li>bold - Полужирный;</li>
+                *    <li>italic - Курсив;</li>
+                *    <li>underLine - Подчеркнутый;</li>
+                *    <li>strike - Зачеркнутый;</li>
+                *    <li>justify - Выравнивание текста;</li>
+                *    <li>textColor - Цвет текста;</li>
+                *    <li>list - Вставить/Удалить список;</li>
+                *    <li>link - Вставить/редактировать ссылку;</li>
+                *    <li>unlink - Убрать ссылку;</li>
+                *    <li>table - Добавить таблицу - ведутся работы, не использовать!!!;</li>
+                *    <li>image - Вставить картинку;</li>
+                *    <li>smile - Смайлики;</li>
+                *    <li>history - История ввода;</li>
+                *    <li>source - html-разметка;</li>
+                * </ol>
+                */
                userItems: {}
             },
             _fakeArea: undefined, //textarea для перехода фкуса по табу
@@ -106,17 +212,12 @@ define('js!SBIS3.CONTROLS.RichEditor',
             _toggleToolbarButton: undefined,
             _needPasteImage: false,
             _buttonsState: undefined,
-            _clipboardText: undefined,
-            _lastRng: undefined
+            _clipboardText: undefined
          },
 
          _modifyOptions: function(options) {
             options = RichEditor.superclass._modifyOptions.apply(this, arguments);
-            if (options.editorConfig === undefined || Object.prototype.toString.call(options.editorConfig) !== '[object Object]') {
-               options.editorConfig = {};
-            }
             options._prepareReviewContent = this._prepareReviewContent.bind(this);
-            options.editorConfig.browser_spellcheck = options.spellcheck;
             return options;
          },
 
@@ -170,7 +271,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             } else {
                this._inputControl.css('height',  editorHeight + 'px');
             }
-            this._options.editorConfig.selector = '#' + this.getId() + ' .controls-RichEditor__EditorFrame';
+            this._options.editorConfig.selector = '#' + this.getId() + ' > .controls-RichEditor__EditorFrame';
             if (!this._options.editorConfig.height) {
                this._options.editorConfig.height =  editorHeight;
             }
@@ -328,6 +429,18 @@ define('js!SBIS3.CONTROLS.RichEditor',
             }
          },
 
+         /**
+          * Устанавливает текстовое значение внутри поля ввода.
+          * @param {String} text Текстовое значение, которое будет установлено в поле ввода.
+          * @example
+          * <pre>
+          *     if (control.getText() == "Введите ФИО") {
+          *        control.setText("");
+          *     }
+          * </pre>
+          * @see text
+          * @see getText
+          */
          setText: function(ctxVal) {
             var autoFormat = true;
             if (!this._typeInProcess && !$ws.helpers.compareValues(ctxVal, this._curValue()) && ctxVal !== undefined) {
@@ -348,7 +461,11 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   this._curval = this._getTinyEditorValue();
                } else {
                   this._curval = ctxVal || '';
-                  this._inputControl.html(Sanitize(this._curval));
+                  if (this._tinyReady.isReady()) {
+                     this._tinyEditor.setContent(this._curval);
+                  } else {
+                     this._inputControl.html(Sanitize(this._curval));
+                  }
                }
                this._options.text = this._curval;
                this._notify('onTextChange', this._curval);
@@ -419,13 +536,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
          },
 
          /**
-          * <wiTag group="Управление">
-          * Сохранить в историю.
-          * Сохраняет на бизнес логику, в пользовательский конфиг, строку прявязывая её к имени контрола.
-          * В памяти истории может хранится до 10 значений.
-          * @param valParam {String} строковое значение
-          * @see userItems
-          * @public
+          * Метод открывает диалог, позволяющий добавлять контент с учетом стилей
+          * @param onAfterCloseHandler Функция, вызываемая после закрытия диалога
+          * @param target объект рядом с которым будет позиционироваться  диалог если нотификатор отсутствует
           */
          pasteFromBufferWithStyles: function(onAfterCloseHandler, target) {
             var
@@ -437,6 +550,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   if (!data) {
                      data = event.clipboardData.getData ? event.clipboardData.getData('text/plain') : window.clipboardData.getData('Text');
                   }
+                  //EndFragment и StartFragment превращаются в <p> при вставке в tiny
+                  data = data.replace(/<!--StartFragment-->\r\n|<!--StartFragment-->/,'');
+                  data = data.replace(/\r\n(<!--EndFragment-->)|<!--EndFragment-->/,'');
                   //получение результата из события  BeforePastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
                   //withStyles: true нужно чтобы в нашем обработчике BeforePastePreProcess мы не обрабатывали а прокинули результат в обработчик тини
                   eventResult= self.getTinyEditor().fire('BeforePastePreProcess', {content: data, withStyles: true});
@@ -489,7 +605,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
                      });
                   });
                };
-            this._tinyEditor.selection.lastFocusBookmark = null;
             $ws.single.Indicator.show();
             PluginManager.getPlugin('Clipboard', '1.0.1.0', {silent: true}).addCallback(function(clipboard) {
                if (clipboard.getContentType && clipboard.getHtml) {
@@ -497,6 +612,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
                      clipboard[ContentType === 'Text/Html' || ContentType === 'Text/Rtf' || ContentType === 'Html' || ContentType === 'Rtf' ? 'getHtml' : 'getText']()
                         .addCallback(function(html) {
                            $ws.single.Indicator.hide();
+                           //EndFragment и StartFragment превращаются в <p> при вставке в tiny
+                           html = html.replace(/<!--StartFragment-->\r\n|<!--StartFragment-->/,'');
+                           html = html.replace(/\r\n(<!--EndFragment-->)|<!--EndFragment-->/,'');
                            //получение результата из события  BeforePastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
                            //withStyles: true нужно чтобы в нашем обработчике BeforePastePreProcess мы не обрабатывали а прокинули результат в обработчик тини
                            eventResult = self.getTinyEditor().fire('BeforePastePreProcess', {content: html, withStyles: true});
@@ -518,7 +636,15 @@ define('js!SBIS3.CONTROLS.RichEditor',
                createDialog();
             });
          },
-
+         /**
+          * <wiTag group="Управление">
+          * Сохранить в историю.
+          * Сохраняет на бизнес логику, в пользовательский конфиг, строку прявязывая её к имени контрола.
+          * В памяти истории может хранится до 10 значений.
+          * @param valParam {String} строковое значение
+          * @see userItems
+          * @public
+          */
          saveToHistory: function(valParam) {
             var
                self = this,
@@ -569,8 +695,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
           * @private
           */
          setFontStyle: function(style) {
-            this._checkFocus();
-            this.setActive(true);
             if (style !== 'mainText') {
                this._tinyEditor.formatter.apply(style);
                this._textFormats[style] = true;
@@ -592,13 +716,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
           * @private
           */
          setFontColor: function(color) {
-            //setActive в ie перестаёт работать применение цвета к выделенному тексту
-            if (!$ws._const.browser.isIE) {
-               this.setActive(true);
-            }
-            this._checkFocus();
             this._tinyEditor.formatter.apply('forecolor', {value: color});
-            this._tinyEditor.focus();
+            this._tinyEditor.undoManager.add(); //todo Разобраться с undoManager и ВЕЗДЕ убрать undoManager.add
+            this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._onValueChangeHandler();
          },
@@ -615,7 +735,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
             styles.textColor = tinyMCE.DOM.getStyle(this._tinyEditor.selection.getNode(), 'color', true);
             return styles;
          },
-
+         /**
+          * Получить экземпляр редактора tinyMCE
+          */
          getTinyEditor: function() {
             return this._tinyEditor;
          },
@@ -647,7 +769,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             if (this._options.toolbarVisible !== visible) {
                newHeight = this._inputControl.outerHeight();
                this._options.toolbarVisible = visible === true ? true : visible === false ? false : !this._options.toolbarVisible;
-               newHeight += this._options.toolbarVisible ? -constants.toolbarHeight : constants.toolbarHeight;
+               newHeight += this._options.toolbarVisible ? - constants.toolbarHeight : constants.toolbarHeight;
 
                if (this._options.toolbarVisible) {
                   this._container.removeClass('controls-RichEditor__HideToolbar');
@@ -676,7 +798,41 @@ define('js!SBIS3.CONTROLS.RichEditor',
                }
             }
          },
-
+         /**
+          * <wiTag group="Управление">
+          * Вставить смайл.
+          * Вставляет смайл по его строковому соответствию^
+          * <ul>
+          *    <li>Smile - улыбка;</li>
+          *    <li>Nerd - умник;</li>
+          *    <li>Angry - злой;</li>
+          *    <li>Annoyed - раздраженный;</li>
+          *    <li>Blind - слепой;</li>
+          *    <li>Cool - крутой;</li>
+          *    <li>Cry - плачет;</li>
+          *    <li>Devil - дьявол;</li>
+          *    <li>Dumb - тупица;</li>
+          *    <li>Inlove - влюблен;</li>
+          *    <li>Kiss - поцелуй;</li>
+          *    <li>Laugh - смеётся;</li>
+          *    <li>Money - алчный;</li>
+          *    <li>Neutral - нейтральный;</li>
+          *    <li>Puzzled - недоумевает;</li>
+          *    <li>Rofl - подстолом;</li>
+          *    <li>Sad - расстроен;</li>
+          *    <li>Shocked - шокирован;</li>
+          *    <li>Snooze - дремлет;</li>
+          *    <li>Tongue - дразнит;</li>
+          *    <li>Wink - подмигивает;</li>
+          *    <li>Yawn - зевает;</li>
+          * </ul>
+          * @public
+          * @example
+          * <pre>
+          *    fre.insertSmile('Angry')
+          * </pre>
+          * @param {String} smile название смайла
+          */
          insertSmile: function(smile) {
             var smiles;
             if (typeof smile === 'string') {
@@ -688,8 +844,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   }
                });
                if (typeof smile === 'object') {
-                  this._checkFocus();
-                  this.insertHtml(this._smileHtml(smile.key, smile.value));
+                  this.insertHtml(this._smileHtml(smile.key, smile.value, smile.alt));
                }
             }
          },
@@ -706,20 +861,14 @@ define('js!SBIS3.CONTROLS.RichEditor',
           * @public
           */
          execCommand: function(command) {
-            //TODO: избавиться от this._lastRng
-            if (!$ws._const.browser.isMobilePlatform) {
-               this._tinyEditor.selection.lastFocusBookmark = null;
-            } else {
-               this._lastRng && this._tinyEditor.selection.setRng(this._lastRng);
-            }
             this._changeValueFromSetText = false;
             this._tinyEditor.execCommand(command);
-            this._checkFocus();
          },
 
          /**
           * Метод открывает диалог, позволяющий вставить ссылку
           * @param onAfterCloseHandler Функция, вызываемая после закрытия диалога
+          * @param target объект рядом с которым будет позиционироваться  диалог вставки ссылки
           */
          insertLink: function(onAfterCloseHandler, target) {
             var
@@ -734,7 +883,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                dom = editor.dom,
                protocol = /(https?|ftp|file):\/\//gi,
                dialogWidth = 440;
-            require(['js!SBIS3.CORE.Dialog'], function(Dialog) {
+            require(['js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FieldString'], function(Dialog, FieldString) {
                new Dialog({
                   title: rk('Вставить/редактировать ссылку'),
                   disableActions: true,
@@ -831,7 +980,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
          /**
           * Установить курсор в конец контента.
-          * @private
           */
          setCursorToTheEnd: function() {
             var
@@ -847,6 +995,15 @@ define('js!SBIS3.CONTROLS.RichEditor',
             editor.selection.collapse(false);
          },
 
+         /**
+          * Возвращает контейнер, используемый компонентом для ввода данных
+          * @returns {*|jQuery|HTMLElement}
+          * @deprecated
+          */
+         //TODO:придумать дургое решение: https://inside.tensor.ru/opendoc.html?guid=c7676fdd-b4de-4ac6-95f5-ab28d4816c27&description=
+         getInputContainer: function() {
+            return this._inputControl;
+         },
          /*БЛОК ПУБЛИЧНЫХ МЕТОДОВ*/
 
          /*БЛОК ПРИВАТНЫХ МЕТОДОВ*/
@@ -863,12 +1020,14 @@ define('js!SBIS3.CONTROLS.RichEditor',
          _showImagePropertiesDialog: function(target) {
             var
                $image = $(target),
-               editor = this._tinyEditor;
+               editor = this._tinyEditor,
+               self = this;
             require(['js!SBIS3.CORE.Dialog'], function(Dialog) {
                new Dialog({
                   name: 'imagePropertiesDialog',
                   template: 'js!SBIS3.CONTROLS.RichEditor.ImagePropertiesDialog',
                   selectedImage: $image,
+                  editorWidth: self._inputControl.width(),
                   handlers: {
                      onBeforeShow: function () {
                         $ws.single.CommandDispatcher.declareCommand(this, 'saveImage', function () {
@@ -894,8 +1053,8 @@ define('js!SBIS3.CONTROLS.RichEditor',
             });
          },
 
-         _smileHtml: function(smile, name) {
-            return '<img class="ws-fre__smile smile'+smile+'" data-mce-resize="false" unselectable ="on" src="'+constants.blankImgPath+'" ' + (name ? ' title="' + name + '"' : '') + ' />';
+         _smileHtml: function(smile, name, alt) {
+            return '<img class="ws-fre__smile smile'+smile+'" data-mce-resize="false" unselectable ="on" src="'+constants.blankImgPath+'" ' + (name ? ' title="' + name + '"' : '') + ' alt=" ' + alt + ' " />';
          },
 
          /**
@@ -918,8 +1077,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             if (!this._doAnimate && this.isEnabled()) {
                this._doAnimate = true;
                this.toggleToolbar();
-               this._tinyEditor.selection.lastFocusBookmark = null;
-               this._tinyEditor.focus();
+               this._tinyEditor.execCommand('');
             }
          },
 
@@ -961,6 +1119,8 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
                if (this._options.toolbar ) {
                   this._drawAndBindItems();
+                  this._toolbarContainer.on('mousedown focus', this._blockFocusEvents);
+                  this._toggleToolbarButton.on('mousedown focus', this._blockFocusEvents);
                }
 
                if (self._options.uploadImageOnDrop) {
@@ -975,6 +1135,16 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   this._container.bind('touchstart', this._onClickHandler.bind(this));
                }
 
+               if (!$ws._const.browser.firefox) { //в firefox работает нативно
+                  this._inputControl.bind('mouseup', function (e) { //в ie криво отрабатывает клик
+                     if (e.ctrlKey) {
+                        var target = e.target;
+                        if (target.nodeName === 'A' && target.href) {
+                           window.open(target.href, '_blank');
+                        }
+                     }
+                  });
+               }
                this._notifyOnSizeChanged();
 
                if (!self._readyContolDeffered.isReady()) {
@@ -998,6 +1168,16 @@ define('js!SBIS3.CONTROLS.RichEditor',
                this._inputControl = $(editor.getBody());
                RichUtil.markRichContentOnCopy(this._inputControl);
                self._tinyReady.callback();
+
+               //Правки Клепикова при необходимости сжечь
+               this._inputControl.bind('focus', function() {
+                  if ($(this).attr('contenteditable') !== 'false') {
+                     $ws.single.EventBus.globalChannel().notify('MobileInputFocus');
+                  }
+               });
+               this._inputControl.bind('blur', function () {
+                  $ws.single.EventBus.globalChannel().notify('MobileInputFocusOut');
+               });
             }.bind(this));
 
             //БИНДЫ НА ВСТАВКУ КОНТЕНТА И ДРОП
@@ -1005,7 +1185,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                var image;
                if (e.content.indexOf('<img') === 0) {
                   image = $('<div>' + e.content + '</div>').find('img:first');
-                  if (image.length) {
+                  if (image.length && !!image.attr('src').indexOf('data:image') && (!image.attr('class') || !!image.attr('class').indexOf('ws-fre__smile'))) {
                      self._needPasteImage = image.get(0).outerHTML;
                      return false;
                   }
@@ -1138,11 +1318,8 @@ define('js!SBIS3.CONTROLS.RichEditor',
             });
 
             editor.on('keydown', function(e) {
-               var
-                  selection,
-                  node,
-                  offset;
                self._typeInProcess = true;
+
                if (e.which === $ws._const.key.pageDown || e.which === $ws._const.key.pageUp || (e.which === $ws._const.key.insert && !e.shiftKey && !e.ctrlKey)) {
                   e.stopPropagation();
                   e.preventDefault();
@@ -1158,22 +1335,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   e.stopImmediatePropagation();
                   e.preventDefault();
                   return false;
-               } else if (e.which === $ws._const.key.space) {
-                  selection = editor.selection.getSel();
-                  node = selection.anchorNode;
-                  offset = selection.anchorOffset;
-                  /* Невероятный костыль, направленный на сохранение ВСЕХ добавляемых пользователем пробелов.
-                   Будет жить до тех пор, пока TinyMCE в одной из версий не сделают нормальный парсер пробельных символов с чередованием nbsp и пробелов.
-                   Описание: добавляем &nbsp; в следующих случаях:
-                   1. Если каретка находится в начале строки и это верхний DOM-элемент строки (предыдущего сиблинка либо нет, либо его родитель - inputControl
-                   2. Если предыдущий или следующий символ - пробел */
-                  if (offset === 0 && (node.previousSibling === null || node.previousSibling.parentElement == self._inputControl[0]) ||
-                     node.nodeValue && (node.nodeValue[offset - 1] === ' ' || node.nodeValue[offset + 1] === ' ')) {
-                     editor.insertContent('&nbsp;');
-                     e.stopImmediatePropagation();
-                     e.preventDefault();
-                     return false;
-                  }
                } else if (e.which === $ws._const.key.enter && e.ctrlKey) {
                   self._container.trigger(e);
                   e.stopImmediatePropagation();
@@ -1211,15 +1372,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
                }
             });
 
-            //НА мобильных устройствах при потере фокуса не запоминается последнее выделение(tinymce tnx)
-            //запоминаем сами выделение
-            //TODO: ИЗбавиться от  _lastRng
-            if ($ws._const.browser.isMobilePlatform) {
-               editor.on('focusout', function () {
-                  self._lastRng = editor.selection.getRng();
-               });
-            }
-
             //Сообщаем компоненту об изменении размеров редактора
             editor.on('resizeEditor', function() {
                self._notifyOnSizeChanged();
@@ -1241,6 +1393,10 @@ define('js!SBIS3.CONTROLS.RichEditor',
             $ws._const.$win.bind('beforeunload', this._saveBeforeWindowClose);
          },
 
+         _blockFocusEvents: function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+         },
          _bindChangeButtonsState: function() {
             var
                editor = this._tinyEditor,
@@ -1315,6 +1471,10 @@ define('js!SBIS3.CONTROLS.RichEditor',
          },
 
          _setEnabled: function(enabled) {
+            if (enabled && this._options.toolbarVisible) {
+               this._container.removeClass('controls-RichEditor__HideToolbar');
+               this._toolbarContainer.css('height', constants.toolbarHeight + 'px');
+            }
             this._enabled = enabled;
             if (!this._tinyReady.isReady() && enabled) {
                this._tinyReady.addCallback(function() {
@@ -1440,8 +1600,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   bottom: 0,
                   left: 0
                });
-            //тоже самое что при execCommand
-            this._tinyEditor.selection.lastFocusBookmark = null;
             img.on('load', function() {
                var
                   isIEMore8 = $ws._const.browser.isIE && !$ws._const.browser.isIE8,
@@ -1488,15 +1646,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
             //если смена стиля будет сразу после setValue то контент не установится,
             //так как через форматттер не стреляет change
             this._onValueChangeHandler();
-         },
-
-         _checkFocus: function() {
-            var tinyEditor = this._tinyEditor;
-            if (tinyEditor.lastRng) {
-               tinyEditor.selection.setRng(tinyEditor.lastRng);
-            } else {
-               tinyEditor.focus();
-            }
          },
 
          _setButtonsState: function(state, ignoreSourceButton) {
@@ -1552,6 +1701,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                         richEditor: this,
                         cssClassName: 'controls-RichEditor__ToolbarItem mce-',
                         linkedContext: itemsContext,
+                        activableByClick: false,
                         renderStyle: isButton ? 'asLink' : 'hover'
                      }, itemsArray[i].config);
                   if (isButton) {
@@ -1569,23 +1719,18 @@ define('js!SBIS3.CONTROLS.RichEditor',
                      itemCfg.opener = this;
                      itemCfg.keyField = 'key';
                      result[i] = new MenuButton(itemCfg);
-                  }
-                  else if (type === 'dropdown') {
+                  } else if (type === 'dropdown') {
                      itemCfg.flipVertical = true;
                      result[i] = new Dropdown(itemCfg);
+                     //TODO: переделать при переходе на dropdownlist
+                     result[i]._optCont.on('mousedown focus', this._blockFocusEvents);
                   }
                   result[i].getContainer().attr('tabindex', '-1');
                   result[i].getOwner = function() {
                      return this._options.richEditor;
                   };
-                  result[i].setActive = this._setActiveControlsButton;
                }
             }
-         },
-
-         _setActiveControlsButton: function() {
-            //Заглушка, чтобы кнопки не забирали на себя фокус, так как у них нет перента, и фокус уйдёт отовсюду.
-            //Например из DialogRecord и тот станет закрываться.
          },
 
          _onChangeAreaValue: function() {
@@ -1680,12 +1825,12 @@ define('js!SBIS3.CONTROLS.RichEditor',
                this._dataReview.html(this._prepareReviewContent(value));
             }
          },
-         _prepareReviewContent: function(value) {
+         _prepareReviewContent: function(value, it) {
             if (value && value[0] !== '<') {
                value = '<p>' + value.replace(/\n/gi, '<br/>') + '</p>';
             }
             value = Sanitize(value);
-            return this._options.highlightLinks ? $ws.helpers.wrapURLs($ws.helpers.wrapFiles(value), true) : value;
+            return (this._options || it).highlightLinks ? $ws.helpers.wrapURLs($ws.helpers.wrapFiles(value), true) : value;
          },
 
          _onValueChangeHandler: function(noAutoComplete, onKeyUp) {

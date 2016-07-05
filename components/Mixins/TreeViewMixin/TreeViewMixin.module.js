@@ -51,7 +51,6 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             key = expandedItem.getContents().getId(),
             ladderDecorator = this._decorators.getByName('ladder');
          this._closeAllExpandedNode(key);
-         this._createFolderFooter(key);
          this._options.openedPath[expandedItem.getContents().getId()] = true;
          this._folderOffsets[expandedItem.getContents().getKey()] = 0;
          if (this._dataSource && !this._loadedNodes[key] && this._options.partialyReload) {
@@ -61,6 +60,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
                // так как на него много всего завязано. (пользуется Янис)
                this._folderHasMore[key] = list.getMetaData().more;
+               this._createFolderFooter(key);
                this._loadedNodes[key] = true;
                ladderDecorator && ladderDecorator.setIgnoreEnabled(true);
                this._options._items.merge(list, {remove: false});
@@ -73,6 +73,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                this._drawExpandedItem(expandedItem);
             }.bind(this));
          } else {
+            this._createFolderFooter(key);
             this._drawExpandedItem(expandedItem);
          }
       },
@@ -137,6 +138,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             this._treePagers[key] = new TreePagingLoader({
                pageSize: this._options.pageSize,
                opener: this,
+               parent: this,
                hasMore: nextPage,
                element: container,
                id: key,
@@ -272,10 +274,17 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
           * @private
           */
          _onUpdateItemProperty: function(parentFunc, item, property) {
+            var ladderDecorator = this._decorators.getByName('ladder'),
+                isIgnoreEnabled;
+            if (ladderDecorator){
+               isIgnoreEnabled = ladderDecorator.getIgnoreEnabled();
+               ladderDecorator.setIgnoreEnabled(false);
+            }
             if (property === 'expanded') {
                this._onChangeItemExpanded(item);
             }
             parentFunc.call(this, item, property);
+            ladderDecorator && ladderDecorator.setIgnoreEnabled(isIgnoreEnabled);
          },
          _getDirectionOrderChange: function(parentFunc, e, target) {
             if (this._options.itemsDragNDrop !== 'onlyChangeParent') {

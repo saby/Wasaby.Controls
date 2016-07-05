@@ -9,11 +9,11 @@
    height: @icon-height;
 }
 
-@text-box-height-carryBig:   60px;
+@carry-big-height:   60px;
 @text-box-height-carryFont:  42px;
 .controls-TextBox {
    &.controls-TextBox__big {
-      height: @text-box-height-carryBig;
+      height: @carry-big-height;
       .controls-TextBox__fieldWrapper {
          .controls-TextBox__field {
             font-size: @text-box-height-carryFont;
@@ -37,6 +37,66 @@
          &:active {
             background: @closeFilterButtonImageHover;
          }
+      }
+   }
+}
+
+.controls-MenuButton__Menu {
+   &.controls-Menu__big {
+      .controls-ListView__item {
+         height: @carry-big-height;
+         line-height: @carry-big-height;
+         font-size: 24px;
+         .controls-MenuItem__content {
+            .controls-MenuItem__text {
+               margin: 0 0 0 40px;
+            }
+
+            .icon-size {
+               font-size: 32px !important;
+               width: 32px;
+               height: 32px;
+            }
+         }
+      }
+   }
+}
+
+.ws-window-titlebar {
+   height: 60px !important;
+   line-height: 60px !important;
+   .ws-float-area-title {
+      font-weight: normal !important;
+   }
+}
+.ws-window-title  {
+   margin-left: 8px !important;
+   font-size: 32px !important;
+   padding: 10px 0 !important;
+}
+.ws-window-titlebar-custom {
+   .ws-window-title {
+      color: #313E78 !important;
+   }
+}
+.ws-window-titlebar {
+   &.active {
+      background-color: #F4F4F4 !important;
+   }
+
+   .ws-window-titlebar-action {
+      top: 10px !important;
+   }
+
+   .ws-window-titlebar-action.close {
+      width: 60px !important;
+      height: 40px !important;
+      background: @closeFilterButtonImage !important;
+      &:hover {
+         background: @closeFilterButtonImageHover !important;
+      }
+      &:active {
+         background: @closeFilterButtonImageHover !important;
       }
    }
 }

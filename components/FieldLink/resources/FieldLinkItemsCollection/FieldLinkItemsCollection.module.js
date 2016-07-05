@@ -5,9 +5,10 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.DSMixin',
       'js!SBIS3.CONTROLS.PickerMixin',
+      'html!SBIS3.CONTROLS.FieldLinkItemsCollection',
       'html!SBIS3.CONTROLS.FieldLinkItemsCollection/itemTpl'
    ],
-   function(CompoundControl, DSMixin, PickerMixin, itemTpl) {
+   function(CompoundControl, DSMixin, PickerMixin, dotTplFn, itemTpl) {
 
       var PICKER_BORDER_WIDTH = 2;
 
@@ -19,22 +20,67 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
        * @extends SBIS3.CORE.CompoundControl
        */
 
+      function itemTemplateRender(opts) {
+         var items = [],
+             tplArgs = {
+                itemTpl: opts.itemTemplate,
+                displayField: opts.displayField,
+                className: 'controls-ListView__item'
+             },
+             res = [];
+
+         if(opts._preRenderValues.selectedItem && $ws.helpers.instanceOfModule(opts._preRenderValues.selectedItem, 'SBIS3.CONTROLS.Data.Model')) {
+            items = [opts._preRenderValues.selectedItem]
+         } else if(opts._preRenderValues.selectedItems) {
+            items = opts._preRenderValues.selectedItems.toArray();
+         }
+
+         if(items.length) {
+            $ws.helpers.forEach(items, function(item) {
+               tplArgs.item = item;
+               res.push(itemTpl(tplArgs));
+            })
+         }
+
+         return res.join('');
+      }
+
       var FieldLinkItemsCollection =  CompoundControl.extend([DSMixin, PickerMixin], {
+         _dotTplFn: dotTplFn,
          $protected: {
             _options: {
-               /**
-                * Метод, который проверяет, нужно ли отрисовывать элемент коллекции
-                */
-               itemCheckFunc: undefined,
-               tabindex: 0
+               _preRenderFunction: itemTemplateRender,
+               _preRenderValues: {}
             },
-            flContainer: undefined
+            _parentFieldLink: undefined
          },
 
          $constructor: function() {
             this._publish('onCrossClick', 'onItemActivate', 'onShowPicker', 'onClosePicker');
+
             /* Запомним контейнер поля связи */
-            this._flContainer = this.getParent().getContainer();
+            this._parentFieldLink = this.getParent();
+         },
+
+         _eventHandler: function(event, arg) {
+            var fieldLink = this._parentFieldLink;
+            switch (event.name) {
+               case 'onDrawItems':
+                  fieldLink._onDrawItemsCollection.call(fieldLink);
+                  break;
+               case 'onCrossClick':
+                  fieldLink._onCrossClickItemsCollection.call(fieldLink, arg);
+                  break;
+               case 'onItemActivate':
+                  fieldLink._onItemActivateItemsCollection.call(fieldLink, arg);
+                  break;
+               case 'onShowPicker':
+                  fieldLink._onShowPickerItemsCollection.call(fieldLink);
+                  break;
+               case 'onClosePicker':
+                  fieldLink._onClosePickerItemsCollection.call(fieldLink);
+                  break;
+            }
          },
 
          _onClickHandler: function(e) {
@@ -48,7 +94,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
 
             /* Переводим фокус на поле связи, надо делать после оповещения события,
                иначе, если в поле связи единичный выбор, то при удалении фокус потеряется  */
-            this.getParent().setActive(true);
+            this._parentFieldLink.setActive(true);
          },
 
          /**
@@ -58,7 +104,8 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             return {
                item: item,
                itemTpl: this._options.itemTemplate,
-               displayField: this._options.displayField
+               displayField: this._options.displayField,
+               className: ''
             }
          },
 
@@ -99,7 +146,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          _appendItemTemplate:function(item, targetContainer, itemInstance) {
-            if(this._options.itemCheckFunc(itemInstance)) {
+            if(this._parentFieldLink._checkItemBeforeDraw.call(this._parentFieldLink, itemInstance)) {
                FieldLinkItemsCollection.superclass._appendItemTemplate.apply(this, arguments);
             }
          },
@@ -128,7 +175,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
 
          _setPickerContent: function () {
             var pickerContainer = this._picker.getContainer(),
-                flWidth = this._flContainer[0].offsetWidth - PICKER_BORDER_WIDTH;
+                flWidth = this._parentFieldLink.getContainer()[0].offsetWidth - PICKER_BORDER_WIDTH;
             pickerContainer.on('click', '.controls-ListView__item', this._onClickHandler.bind(this));
             /* Не очень правильное решение, пикер может сам менять ширину, поэтому устанавливаю минимальну и максимальную */
             pickerContainer[0].style.maxWidth = flWidth + 'px';
@@ -143,8 +190,8 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             var self = this;
             return {
                corner: 'bl',
-               target: this._flContainer,
-               opener: this.getParent(),
+               target: this._parentFieldLink.getContainer(),
+               opener: this._parentFieldLink,
                closeByExternalClick: true,
                targetPart: true,
                className: 'controls-FieldLink__picker',
@@ -166,6 +213,13 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                   }
                }
             };
+         },
+
+         destroy: function() {
+            if (this._picker) {
+               this._picker.getContainer().off('click');
+            }
+            FieldLinkItemsCollection.superclass.destroy.apply(this, arguments);
          }
       });
 
