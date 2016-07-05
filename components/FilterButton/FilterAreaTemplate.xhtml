@@ -7,19 +7,24 @@
             <option name="command">apply-filter</option>
         </component>
         <component data-component="SBIS3.CONTROLS.Link" class="controls__filter-button__clear-filter">
-            <option name="caption">Сбросить</option>
+            <option name="caption">По умолчанию</option>
             <option name="command">reset-filter-internal</option>
             <option name="enabled" bind="sbis3-controls-filter-button/filterChanged" type="boolean">false</option>
         </component>
     </div>
     <div class="controls__filterButton__area-content">
         <div class="controls__filterButton__templatedArea">
-            {{?it.template}}{{=it.template}}{{?}}
+            {{?it.template}}{{=it.template()}}{{?}}
         </div>
     </div>
     <div class="controls__filterButton__area-footer">
+        {{? it.additionalFilterParamsTemplate}}
+            <component data-component="SBIS3.CONTROLS.AdditionalFilterParams" name="additionalFilterParams">
+                <opt name="template" type="ref">{{@it.additionalFilterParamsTemplate}}</opt>
+            </component>
+        {{?}}
         {{? it.historyController}}
-        <component data-component="SBIS3.CONTROLS.FilterHistory" name="filterHistory"/>
+            <component data-component="SBIS3.CONTROLS.FilterHistory" name="filterHistory"></component>
         {{?}}
     </div>
 </div>

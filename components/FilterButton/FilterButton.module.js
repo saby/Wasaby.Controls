@@ -7,13 +7,15 @@ define('js!SBIS3.CONTROLS.FilterButton',
        'js!SBIS3.CONTROLS.PickerMixin',
        'js!SBIS3.CONTROLS.ControlHierarchyManager',
        'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
+       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
        'js!SBIS3.CONTROLS.Link',
        'js!SBIS3.CONTROLS.Button',
        'js!SBIS3.CONTROLS.FilterButton.FilterLine',
        'js!SBIS3.CONTROLS.FilterHistory',
+       'js!SBIS3.CONTROLS.AdditionalFilterParams',
        'i18n!SBIS3.CONTROLS.FilterButton'
     ],
-    function(CompoundControl, dotTplFn, dotTplForPicker, FilterMixin, PickerMixin, ControlHierarchyManager, FilterToStringUtil) {
+    function(CompoundControl, dotTplFn, dotTplForPicker, FilterMixin, PickerMixin, ControlHierarchyManager, FilterToStringUtil, TemplateUtil) {
 
        'use strict';
        /**
@@ -30,22 +32,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
         * @control
         * @public
         */
-       var filterStructureElementDef = {
-          internalValueField: null,
-          internalCaptionField: null
-          /* По умолчанию их нет
-           caption: NonExistentValue,
-           value: NonExistentValue,
-           resetValue: NonExistentValue,
-           resetCaption: NonExistentValue,
-           */
-       };
-
-       function propertyUpdateWrapper(func) {
-          return function() {
-             this.runInPropertiesUpdate(func, arguments);
-          };
-       }
 
    function isFieldResetValue(element, fieldName, filter) {
       var hasResetValue = 'resetValue' in element,
@@ -72,19 +58,24 @@ define('js!SBIS3.CONTROLS.FilterButton',
                  */
                 filterAlign: 'left',
                 /**
-                 * @сfg {String} template Шаблон для всплывающей панели.
+                 * @сfg {String} template Шаблон для фильтров всплывающей панели.
+                 * @example
+                 * <pre>
+                 *   <option name="template" value="SBIS3.EDO.CtxFilter"/>
+                 * </pre>
+                 *
                  * <wiTag group="Данные">
                  * В данной опции задаётся шаблон для всплывающей панели, открываемой нажатием на кнопку фильтров.
                  */
                 template: '',
                 /**
-                 * @cfg {String} Дополнительный CSS-класс для сплывающей панели
-                 * @remark
-                 * Дополнительный CSS-класс, который будет присвоен всплывающей панели контрола.
-                 * Этот класс добавляется при построении всплывающей панели в атрибут class к уже заданным CSS-классам.
-                 * <wiTag group="Отображение">
+                 * @сfg {String} additionalFilterTemplate Шаблон для блока "Можно отобрать" на всплывающей панели.
+                 * @example
+                 * <pre>
+                 *   <option name="additionalFilterTemplate" value="SBIS3.EDO.additionalFilters"/>
+                 * </pre>
                  */
-                pickerClassName: '',
+                additionalFilterParamsTemplate: '',
                 /**
                  * @cfg {String} Текст, который будет отображаться рядом с иконкой фильтра
                  * <wiTag group="Управление">
@@ -107,51 +98,76 @@ define('js!SBIS3.CONTROLS.FilterButton',
              _pickerContext: null,        /* Контекст пикера */
              _filterStructure: null,      /* Структура фильтра */
              _historyController: null,    /* Контроллер для работы с историей */
-             _filterComponent: null       /* Компонент, который будет отображаться на панели фильтрации */
+             _filterComponent: null,      /* Компонент, который будет отображаться на панели фильтрации */
+             _filterAdditional: null
           },
 
           $constructor: function() {
-             var showButtonEl = this._container.find('.controls__filterButton__filterLine-items, .controls__filterButton-button'),
-                 dispatcher = $ws.single.CommandDispatcher,
-                 declCmd = dispatcher.declareCommand.bind(dispatcher, this),
+             var dispatcher = $ws.single.CommandDispatcher,
+                 declareCmd = dispatcher.declareCommand.bind(dispatcher, this),
                  showPicker = this.showPicker.bind(this);
 
              this._container.removeClass('ws-area');
 
-             declCmd('apply-filter', this.applyFilter.bind(this));
-             declCmd('reset-filter-internal', this._resetFilter.bind(this, true));
-             declCmd('reset-filter', this._resetFilter.bind(this, false));
-             declCmd('show-filter', showPicker);
+             declareCmd('apply-filter', this.applyFilter.bind(this));
+             declareCmd('reset-filter-internal', this._resetFilter.bind(this, true));
+             declareCmd('reset-filter', this._resetFilter.bind(this, false));
+             declareCmd('show-filter', showPicker);
+             declareCmd('change-field-internal', this._changeFieldInternal.bind(this));
 
-             showButtonEl.click(showPicker);
+             this.getContainer().removeClass('ws-area')
+                                .on('click', '.controls__filterButton__filterLine-items, .controls__filterButton-button', showPicker);
           },
 
           showPicker: function() {
              var self = this,
-                 showPicker = FilterButton.superclass.showPicker.bind(this),
-                 template = this._options.template;
+                 template = this._options.template,
+                 additionalTemplate = this._options.additionalFilterParamsTemplate,
+                 toLoad = [];
+
+             function templateChecker(template) {
+                return /^(js!)?SBIS3.*/.test(template);
+             }
+
+             function templatePrepare(template) {
+               return (template.indexOf('js!') !== 0 ? 'js!' : '') + template
+             }
+
+             function showPicker() {
+                FilterButton.superclass.showPicker.call(self);
+                /* Если поле открытия фокус не на пикере, то вернём фокус в него.
+                 т.к. сам пикер при открытии не переводит на себя фокус, однако активация
+                 может вызываться дочериними контролами, то надо проверить на активность */
+                if(!self._picker.isActive()) {
+                   self._picker.setActive(true);
+                }
+             }
 
              /* Не показываем кнопку фильтров, если она выключена */
              if(!this.isEnabled()) return;
 
-             /* Если шаблон указали как имя компонента (строки которые начинаются с SBIS3 или js!SBIS3),
-                то перед отображением панели фильтров сначала загрузим компонент. */
-             if(!this._picker && /^(js!)?SBIS3.*/.test(template)) {
-                require([(template.indexOf('js!') !== 0 ? 'js!' : '') + template], function(ctrl) {
-                   self._filterComponent = ctrl;
+             if(!this._picker) {
+                /* Если шаблон указали как имя компонента (строки которые начинаются с SBIS3 или js!SBIS3),
+                 то перед отображением панели фильтров сначала загрузим компонент. */
+                if(template && templateChecker(template)) {
+                   toLoad.push(templatePrepare(template));
+                }
+
+                if(additionalTemplate && templateChecker(additionalTemplate)) {
+                   toLoad.push(templatePrepare(additionalTemplate));
+                }
+
+                if(toLoad.length) {
+                   $ws.require(toLoad).addCallback(function(ctrls) {
+                      self._filterComponent = ctrls[0];
+                      self._filterAdditional = ctrls[1];
+                      showPicker();
+                   });
+                } else {
                    showPicker();
-                   /* Если поле открытия фокус не на пикере, то вернём фокус в него.
-                      т.к. сам пикер при открытии не переводит на себя фокус, однако активация
-                      может вызываться дочериними контролами, то надо проверить на активность */
-                   if(!self._picker.isActive()) {
-                      self._picker.setActive(true);
-                   }
-                });
+                }
              } else {
                 showPicker();
-                if(!self._picker.isActive()) {
-                   self._picker.setActive(true);
-                }
              }
           },
 
@@ -159,6 +175,14 @@ define('js!SBIS3.CONTROLS.FilterButton',
              if(this._picker.validate()) {
                 this.hidePicker();
                 FilterButton.superclass.applyFilter.call(this);
+             }
+          },
+
+          _changeFieldInternal: function(field, val) {
+             var pickerContext = this._getCurrentContext();
+
+             if(pickerContext) {
+                pickerContext.setValueSelf(field, val);
              }
           },
 
@@ -191,31 +215,35 @@ define('js!SBIS3.CONTROLS.FilterButton',
           },
 
           _setPickerConfig: function () {
-             var ctx = new $ws.proto.Context({restriction: 'set'}),
-                 btnCtx = this.getLinkedContext(),
+             var context = new $ws.proto.Context({restriction: 'set'}),
                  rootName = this._options.internalContextFilterName,
+                 isRightAlign = this._options.filterAlign === 'right',
                  firstTime = true,
                  self = this,
-                 updatePickerContext = function () {
-                    ctx.setValue(rootName, {
-                       filterChanged: btnCtx.getValue('filterChanged'),
-                       filter: self.getFilter(),
-                       caption: self._mapFilterStructureByProp('caption')
-                    });
-                 },
-                 isRightAlign = this._options.filterAlign === 'right';
+                 byFilter, byCaption, byVisibility;
 
-             this._pickerContext = ctx;
+             function updatePickerContext() {
+                context.setValue(rootName, {
+                   filterChanged: self.getLinkedContext().getValue('filterChanged'),
+                   filter: self.getFilter(),
+                   caption: self._mapFilterStructureByProp('caption'),
+                   visibility: self._mapFilterStructureByVisibilityField('visibilityValue')
+                });
+             }
 
+             this._pickerContext = context;
              updatePickerContext();
 
-             ctx.subscribe('onFieldNameResolution', function(event, fieldName) {
-                var byFilter = self._findFilterStructureElement(function(element) {
-                       return element.internalValueField === fieldName;
-                    }),
-                    byCaption = !byFilter && self._findFilterStructureElement(function(element) {
-                           return element.internalCaptionField === fieldName;
-                        });
+             context.subscribe('onFieldNameResolution', function(event, fieldName) {
+                byFilter = self._findFilterStructureElement(function(element) {
+                   return element.internalValueField === fieldName;
+                });
+                byCaption = !byFilter && self._findFilterStructureElement(function(element) {
+                   return element.internalCaptionField === fieldName;
+                });
+                byVisibility = !byFilter && !byCaption && self._findFilterStructureElement(function(element) {
+                   return element.internalVisibilityField === fieldName;
+                });
 
                 if (byFilter) {
                    event.setResult(rootName + '/filter/' + byFilter.internalValueField);
@@ -224,14 +252,29 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 if (byCaption) {
                    event.setResult(rootName + '/caption/' + byCaption.internalValueField);
                 }
+
+                if(byVisibility) {
+                   event.setResult(rootName + '/visibility/' + byVisibility.internalVisibilityField);
+                }
              });
 
-             ctx.subscribe('onFieldsChanged', function() {
-                var filter = ctx.getValue(rootName + '/filter'),
-                    changed = $ws.helpers.reduce(self._filterStructure, function(result, element) {
-                       return result || !isFieldResetValue.call(self, element, element.internalValueField, filter);
-                    }, false, self);
-                ctx.setValueSelf(rootName + '/filterChanged', changed);
+             context.subscribe('onFieldChange', function(ev, fieldChanged, value) {
+                var field = self._findFilterStructureElement(function(elem) {
+                   return elem.internalValueField === fieldChanged;
+                });
+
+                if(field && field.internalVisibilityField) {
+                   if(FilterToStringUtil.isEqualValues(value, field.resetValue)) {
+                      self._changeFieldInternal(rootName + '/visibility/' + field.internalVisibilityField, false);
+                   }
+                }
+             });
+
+             context.subscribe('onFieldsChanged', function() {
+                var changed = $ws.helpers.reduce(self._filterStructure, function(result, element) {
+                       return result || !isFieldResetValue(element, element.internalValueField, context.getValue(rootName + '/filter'));
+                    }, false);
+                self._changeFieldInternal(rootName + '/filterChanged', changed);
              });
 
              return {
@@ -245,10 +288,11 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 },
                 closeButton: true,
                 closeByExternalClick: true,
-                context: ctx,
+                context: context,
                 className: 'controls__filterButton__picker',
-                template: dotTplForPicker.call(this, {
-                   template: this._filterComponent ? null : this._options.template,
+                template: TemplateUtil.prepareTemplate(dotTplForPicker)({
+                   template: this._filterComponent ? null : TemplateUtil.prepareTemplate(this._options.template),
+                   additionalFilterParamsTemplate: TemplateUtil.prepareTemplate(this._options.additionalFilterParamsTemplate),
                    historyController: this._historyController
                 }),
                 handlers: {
@@ -287,30 +331,48 @@ define('js!SBIS3.CONTROLS.FilterButton',
           _getCurrentContext : function(){
              return this._pickerContext;
           },
+
           _syncContext: function(fromContext) {
-             var
-                 context = this._getCurrentContext(),
+             var context = this._getCurrentContext(),
                  pickerVisible = this._picker && this._picker.isVisible(),
-                 descrPath = this._options.internalContextFilterName + '/caption',
-                 filterPath = this._options.internalContextFilterName + '/filter',
+                 internalName = this._options.internalContextFilterName,
+                 filterPath = internalName + '/filter',
+                 descriptionPath = internalName + '/visibility',
                  toSet;
 
              if (fromContext) {
-                this._updateFilterStructure(undefined, context.getValue(filterPath), context.getValue(descrPath));
+                this._updateFilterStructure(
+                    undefined,
+                    context.getValue(internalName + '/filter'),
+                    context.getValue(internalName + '/caption'),
+                    context.getValue(internalName + '/visibility')
+                );
              } else if (pickerVisible) {
                 toSet = {};
                 toSet[filterPath] = this.getFilter();
-                toSet[descrPath] = this._mapFilterStructureByProp('caption');
-                context.setValueSelf(toSet);
+                toSet[descriptionPath] = this._mapFilterStructureByProp('caption');
+                this._changeFieldInternal(toSet);
              }
           },
+
+          /**
+           * Устанавливает текст по-умолчанию (если фильтр не изменён) для строки у кнопки фильтров.
+           * @param {String} text
+           */
           setResetLinkText: function(text) {
              if (this._options.resetLinkText !== text) {
                 this._options.resetLinkText = text;
-
                 this._recalcInternalContext();
-                this._notify('onPropertyChanged', 'resetLinkText');
+                this._notifyOnPropertyChanged('resetLinkText');
              }
+          },
+
+          /**
+           * Возваращет текст по-умолчанию (если фильтр не изменён) для строки у кнопки фильтров.
+           * @returns {String}
+           */
+          getResetLintText: function() {
+             return this._options.resetLinkText;
           },
 
           /**
