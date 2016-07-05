@@ -5,11 +5,12 @@
 define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    [
       'js!SBIS3.CORE.CompoundControl',
+      'html!SBIS3.CONTROLS.EditInPlaceBaseController/AddRowTpl',
       'js!SBIS3.CONTROLS.EditInPlace',
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Di'
    ],
-   function (CompoundControl, EditInPlace, Model, Di) {
+   function (CompoundControl, AddRowTpl, EditInPlace, Model, Di) {
 
       'use strict';
 
@@ -405,14 +406,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _createAddTarget: function(options) {
                var
-                  lastTarget,
-                  currentTarget,
-                  targetHash = options.target ? options.target.getHash() : null,
-                  addTarget = this._options.columns ?
-                      $('<tr><td colspan="' + (this._options.columns.length + (this._options.ignoreFirstColumn ? 1 : 0)) + '"></td></tr>') :
-                      $('<div>');
+                   lastTarget,
+                   currentTarget,
+                   targetHash = options.target ? options.target.getHash() : null,
+                   addTarget = $(AddRowTpl({
+                      columns: this._options.columns,
+                      ignoreFirstColumn: this._options.ignoreFirstColumn
+                   }));
 
-               addTarget.addClass("js-controls-ListView__item controls-ListView__item");
                if (targetHash) {
                   currentTarget = $('.controls-ListView__item[data-hash="' + targetHash + '"]', this._options.itemsContainer.get(0));
                   if (options.addPosition !== 'top') {
