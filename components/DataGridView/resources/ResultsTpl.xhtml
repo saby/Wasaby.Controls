@@ -3,6 +3,6 @@
         <td class="controls-DataGridView__td"></td>
     {{?}}
     {{~it.columns :column:index}}
-        <td class="controls-DataGridView__td {{=column.className}}">{{=it.results[index]}}</td>
+        <td class="controls-DataGridView__td {{=column.className}}{{?it.startScrollColumn!== undefined}} {{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}} ">{{=it.results[index]}}</td>
     {{~}}
 </tr>
