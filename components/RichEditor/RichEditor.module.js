@@ -883,7 +883,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                dom = editor.dom,
                protocol = /(https?|ftp|file):\/\//gi,
                dialogWidth = 440;
-            require(['js!SBIS3.CORE.Dialog'], function(Dialog) {
+            require(['js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FieldString'], function(Dialog, FieldString) {
                new Dialog({
                   title: rk('Вставить/редактировать ссылку'),
                   disableActions: true,
