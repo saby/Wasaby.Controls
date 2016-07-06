@@ -1,0 +1,35 @@
+<div class="controls-MoveDialogTemplate">
+   <div class="ws-window-titlebar-custom">
+      <component data-component="SBIS3.CONTROLS.Button" class="controls-MoveDialogTemplate__activateMove">
+         <option name="name" value="MoveDialogTemplate-moveButton"></option>
+         <option name="caption" value="Перенести"></option>
+         <option name="primary" type="boolean" value="true"></option>
+         <options name="handlers">
+            <option name="onActivated" type="function">js!SBIS3.CONTROLS.MoveDialogTemplate:prototype._onMoveButtonActivated</option>
+         </options>
+      </component>
+   </div>
+   <component data-component="SBIS3.CONTROLS.TreeDataGridView" class="controls-MoveDialogTemplate-TreeDataGridView">
+      <option name="name" value="MoveDialogTemplate-TreeDataGridView"></option>
+      <options name="itemsActions" type="array"></options>
+      <option name="allowEnterToFolder">false</option>
+      <option name="showHead" type="boolean">false</option>
+      <option name="expand" type="boolean">false</option>
+      <option name="displayType" type="string">folders</option>
+      <option name="showPaging" type="boolean">false</option>
+      <option name="itemsDragNDrop" type="boolean">false</option>
+      <option name="allowEmptySelection" type="boolean">true</option>
+      <options name="columns" type="array">
+         <options>
+            <option name="title"></option>
+            <option name="field">{{=it.displayField}}</option>
+            <option name="className">controls-DataGridView-cell-overflow-ellipsis</option>
+         </options>
+      </options>
+      <option name="keyField" type="boolean">{{=it.keyField}}</option>
+      <option name="hierField" type="boolean">{{=it.hierField}}</option>
+      <options name="handlers">
+         <option name="onDrawItems" type="function">js!SBIS3.CONTROLS.MoveDialogTemplate:prototype._createRoot</option>
+      </options>
+   </component>
+</div>

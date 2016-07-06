@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
             return;
          }
          var removed = this._data.d.splice(source, 1);
-         this._data.d.splice(target, 0, removed.shift());
+         target === -1 ? this._data.d.unshift(removed.shift()) : this._data.d.splice(target, 0, removed.shift());
       },
 
       merge: function(acceptor, donor){
