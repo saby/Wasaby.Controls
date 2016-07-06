@@ -106,9 +106,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       },
 
       _createIndex: function (property) {
-         var savedPosition = this._position;
+         var savedPosition = this._position,
+            savedCurrent = this._current;
          IndexedEnumeratorMixin._createIndex.call(this, property);
          this._position = savedPosition;
+         this._current = savedCurrent;
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin
