@@ -144,7 +144,7 @@ define('js!SBIS3.CONTROLS.Menu', [
 
       _getTargetContainer : function(item) {
          if (!this._options.hierField) {
-            return this._container;
+            return this._getItemsContainer();
          }
          else {
             var parId = this.getParentKey(this._items, item);
@@ -162,6 +162,11 @@ define('js!SBIS3.CONTROLS.Menu', [
             }
          }
       },
+
+      _getItemsContainer: function () {
+         return $('.controls-Menu__itemsContainer', this._container);
+      },
+   
       _drawItems : function() {
          this.destroySubObjects();
          this._checkIcons();

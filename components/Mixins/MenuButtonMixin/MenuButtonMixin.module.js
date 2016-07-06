@@ -82,7 +82,8 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
                side: 'left'
             },
             closeByExternalClick: true,
-            targetPart: true
+            targetPart: true,
+            footerTpl: this._options.footerTpl
          };
          menuconfig = this._modifyPickerOptions(menuconfig);
          if (this._dataSource) {
