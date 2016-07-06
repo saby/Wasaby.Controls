@@ -202,9 +202,7 @@ define([
                enumerator.getIndexByValue('index', 999);
                assert.strictEqual(enumerator.getPosition(), position);
             });
-         });
-
-         describe('.getIndexByValue()', function() {
+            
             it('should save the current unchanged', function() {
                enumerator.setPosition(1);
                var current = enumerator.getCurrent();
