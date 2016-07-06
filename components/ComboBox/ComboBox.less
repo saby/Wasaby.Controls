@@ -12,7 +12,6 @@
          }
          &.controls-ComboBox__fieldNotEditable {
             display: none;
-            .text-overflow();
          }
          &.controls-ComboBox__fieldNotEditable__placeholder {
             color: @text-box-placeholder-color;
@@ -98,6 +97,16 @@
       .controls-TextBox__afterFieldWrapper {
          .controls-ComboBox__arrowDown {
             display: none;
+         }
+      }
+   }
+
+   &.controls-ComboBox__ellipsis {
+      .controls-TextBox__fieldWrapper {
+         .controls-TextBox__field {
+            &.controls-ComboBox__fieldNotEditable {
+               .text-overflow();
+            }
          }
       }
    }
