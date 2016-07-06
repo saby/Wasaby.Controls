@@ -195,6 +195,24 @@ define([
             });
          });
 
+         describe('.getIndexByValue()', function() {
+            it('should save the position unchanged', function() {
+               var position = 1;
+               enumerator.setPosition(position);
+               enumerator.getIndexByValue('index', 999);
+               assert.strictEqual(enumerator.getPosition(), position);
+            });
+         });
+
+         describe('.getIndexByValue()', function() {
+            it('should save the current unchanged', function() {
+               enumerator.setPosition(1);
+               var current = enumerator.getCurrent();
+               enumerator.getIndexByValue('index', 999);
+               assert.strictEqual(enumerator.getCurrent(), current);
+            });
+         });
+
          describe('.getPosition()', function() {
             it('should return -1 by default', function() {
                assert.strictEqual(-1, enumerator.getPosition());
