@@ -132,7 +132,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
           * @private
           */
          _onDrag: function (e, element) {
-            var res = this._notify('onDrag', e, element);
+            var res = this._notify('onDrag', DragObject, e);
             if (res !== false) {
               this._onDragHandler(e);
             }

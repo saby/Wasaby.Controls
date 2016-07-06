@@ -16,7 +16,8 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
          _target:undefined,
          _avatar: undefined,
          _dragging: undefined,
-         _meta: undefined
+         _meta: undefined,
+         _jsEvent: undefined
       },
       /**
        * Возвращает элемент который сейчас тащат
@@ -64,6 +65,18 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
          return this._avatar;
       },
       /**
+       *
+       */
+      getMeta: function() {
+         return this._meta;
+      },
+      /**
+       *
+       */
+      setMeta: function(meta) {
+         this._meta = meta;
+      },
+      /**
        * Устанавливает аватар
        * @param {JQuery} avatar
        * @see getAvatar
@@ -95,6 +108,13 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
        */
       isDragging: function() {
          return this._dragging;
+      },
+      /**
+       * Возвращает контрол над которым сейчас находится курсор
+       * @returns {SBIS3.CONTROLS.Control}
+       */
+      getTargetsControl: function() {
+         return this._jsEvent ? $(this._jsEvent.target).wsControl() : undefined;
       },
       //region protected
       /**

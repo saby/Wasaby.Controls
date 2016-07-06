@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.ScrollWatcher',
       'js!SBIS3.CONTROLS.Data.Bind.ICollection',
+      'js!SBIS3.CONTROLS.DragObject',
       'i18n!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
       'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
@@ -37,7 +38,7 @@ define('js!SBIS3.CONTROLS.ListView',
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
-             Link, ScrollWatcher, IBindCollection, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate) {
+             Link, ScrollWatcher, IBindCollection, DragObject, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate) {
 
       'use strict';
 
@@ -2470,7 +2471,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onDragHandler: function(e) {
-            var targetControl = $(e.target).wsControl();   
+            var targetControl = $(e.target).wsControl();
             if (targetControl && this === targetControl || !targetControl) {
                this._updateDragTarget(e);
             }
@@ -2480,12 +2481,13 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                 insertAfter,
                 neighborItem,
-                currentElement = this.getCurrentElement(),
+                currentElement = DragObject.getMeta() || {},
+                targetId = DragObject.getTarget() ? DragObject.getTarget().getId() : undefined,
                 target = this._findItemByElement($(e.target));
 
 
             this._clearDragHighlight();
-            if (this.getDragOwner() !== this || target.length && target.data('id') != currentElement.targetId) {
+            if (this.getDragOwner() !== this || target.length && target.data('id') != DragObject.getTarget().getId()) {
                insertAfter = this._getDirectionOrderChange(e, target);
                if (insertAfter !== undefined && this.getDragOwner() === this) {
                   neighborItem = this[insertAfter ? 'getNextItemById' : 'getPrevItemById'](target.data('id'));
@@ -2503,7 +2505,9 @@ define('js!SBIS3.CONTROLS.ListView',
             } else {
                currentElement.insertAfter = currentElement.target = null;
             }
+            DragObject.setMeta(currentElement);
          },
+
          _notifyOnDragMove: function(target, insertAfter) {
             if (typeof insertAfter === 'boolean') {
                return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter, this.getDragOwner()) !== false;
