@@ -75,7 +75,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                  *   <option name="additionalFilterTemplate" value="SBIS3.EDO.additionalFilters"/>
                  * </pre>
                  */
-                additionalFilterParamsTemplate: '',
+                additionalFilterParamsTemplate: null,
                 /**
                  * @cfg {String} Текст, который будет отображаться рядом с иконкой фильтра
                  * <wiTag group="Управление">
