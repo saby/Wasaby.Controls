@@ -51,12 +51,12 @@
          border: @controls-filterButton-toggleButton-border;
          background-color: @controls-filterButton-toggleButton-bgColor;
 
-         line-height: 20px!important;
-         font-size: 26px!important;
-         font-family: acordion-font!important;
+         line-height: @controls-filterButton-toggleButton-lineHeight;
+         font-size: @controls-filterButton-toggleButton-fontSize;
+         font-family: @controls-filterButton-toggleButton-fontFamily;
          width: auto;
          color: #CCCCCC;
-         height: 24px;
+         height: @controls-filterButton-toggleButton-height;
          box-sizing: border-box;
          display: block;
          text-align: center;
@@ -69,24 +69,24 @@
 
          .controls-filterButton__toggleButton-icon {
             display: inline-block;
-            width: 24px;
-            height: 24px;
+            width: @controls-filterButton-toggleButton-icon-width;
+            height: @controls-filterButton-toggleButton-icon-height;
             position: relative;
             top: auto;
             left: auto;
          }
 
          .controls-filterButton__toggleButton-icon:before {
-            content: "\e902";
-            font-style: normal;
-            font-size: 41px!important;
+            content: @controls-filterButton-toggleButton-icon-down;
+            font-style: @controls-filterButton-toggleButton-icon-style;
+            font-size: @controls-filterButton-toggleButton-icon-fontSize;
             position: absolute;
-            top: 3px;
-            left: -9px;
+            top: @controls-filterButton-toggleButton-icon-top;
+            left: @controls-filterButton-toggleButton-icon-left;
          }
          &.controls-Checked__checked {
             .controls-filterButton__toggleButton-icon:before {
-               content: "\e904";
+               content: @controls-filterButton-toggleButton-icon-up;
             }
          }
       }
