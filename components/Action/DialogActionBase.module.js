@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.Action.DialognMixin','js!SBIS3.CONTROLS.ActionBase'], function(DialognMixin, ActionBase) {
+define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.Action.DialogMixin','js!SBIS3.CONTROLS.ActionBase'], function(DialogMixin, ActionBase) {
    'use strict';
 
    /**
@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.Action.DialognM
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     */
-   var OpenDialogAction = ActionBase.extend([DialognMixin],/** @lends SBIS3.CONTROLS.DialogActionBase.prototype */{
+   var OpenDialogAction = ActionBase.extend([DialogMixin],/** @lends SBIS3.CONTROLS.DialogActionBase.prototype */{
 
       execute : function(meta) {
          return this._opendEditComponent(meta);
@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.Action.DialognM
          });
       },
 
-      /*на время переходного периода нужно для DialognMixin, в 374,100 надо перейти на SBIS3.CONTROLS.Action.Action */
+      /*на время переходного периода нужно для DialogMixin, в 374,100 надо перейти на SBIS3.CONTROLS.Action.Action */
       _callHandlerMethod: function (args, event, method) {
          var evenResult = this._notify.apply(this, [event].concat(args)),
             call = typeof this[evenResult] === 'function' ? this[evenResult] : this[method];
