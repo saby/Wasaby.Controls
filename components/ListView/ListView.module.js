@@ -1230,10 +1230,10 @@ define('js!SBIS3.CONTROLS.ListView',
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
          _isHoverEditMode: function() {
-            return !this._touchSupport && this._options.editMode.indexOf('hover') !== -1;
+            return !$ws._const.compatibility.touch && this._options.editMode.indexOf('hover') !== -1;
          },
          _isClickEditMode: function() {
-            return this._options.editMode.indexOf('click') !== -1 || (this._touchSupport && this._options.editMode.indexOf('hover') !== -1);
+            return this._options.editMode.indexOf('click') !== -1 || ($ws._const.compatibility.touch && this._options.editMode.indexOf('hover') !== -1);
          },
          initEditInPlace: function() {
             this._notifyOnItemClick = this.beforeNotifyOnItemClick();
