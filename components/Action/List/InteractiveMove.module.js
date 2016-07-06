@@ -2,9 +2,9 @@
 define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'js!SBIS3.CONTROLS.Action.List.Move',
       'js!SBIS3.CONTROLS.Action.List.HierarchicalMoveMixin',
-      'js!SBIS3.CONTROLS.Action.DialognMixin'
+      'js!SBIS3.CONTROLS.Action.DialogMixin'
    ],
-   function (ListMove, HierarchicalMoveMixin, DialognMixin) {
+   function (ListMove, HierarchicalMoveMixin, DialogMixin) {
       'use strict';
       /**
        * Действие перемещения по иерархии с выбором места перемещения через диалог
@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
        * @public
        * @extends SBIS3.CONTROLS.Action.List.Move
        * @mixes SBIS3.CONTROLS.Action.List.HierarchicalMoveMixin
-       * @mixes SBIS3.CONTROLS.Action.DialognMixin
+       * @mixes SBIS3.CONTROLS.Action.DialogMixin
        * @author Крайнов Дмитрий Олегович
        * <pre>
        *    var move = new InteractiveMove({
@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
        * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
        */
 
-      var InteractiveMove = ListMove.extend([HierarchicalMoveMixin, DialognMixin],/** @lends SBIS3.CONTROLS.Action.List.InteractiveMove.prototype */{
+      var InteractiveMove = ListMove.extend([HierarchicalMoveMixin, DialogMixin],/** @lends SBIS3.CONTROLS.Action.List.InteractiveMove.prototype */{
          $protected:{
             _options : {
                template : 'js!SBIS3.CONTROLS.MoveDialogTemplate'

@@ -1,5 +1,5 @@
 /*global define, $ws*/
-define('js!SBIS3.CONTROLS.Action.DialognMixin', [
+define('js!SBIS3.CONTROLS.Action.DialogMixin', [
    'js!SBIS3.CONTROLS.ActionBase',
    'js!SBIS3.CORE.Dialog',
    'js!SBIS3.CORE.FloatArea',
@@ -10,11 +10,11 @@ define('js!SBIS3.CONTROLS.Action.DialognMixin', [
 
    /**
     * Действие открытия окна с заданным шаблоном
-    * @mixin  SBIS3.CONTROLS.Action.DialognMixin
+    * @mixin  SBIS3.CONTROLS.Action.DialogMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var DialognMixin = /** @lends SBIS3.CONTROLS.Action.DialognMixin.prototype */{
+   var DialogMixin = /** @lends SBIS3.CONTROLS.Action.DialogMixin.prototype */{
       $protected : {
          _options : {
             /**
@@ -224,10 +224,10 @@ define('js!SBIS3.CONTROLS.Action.DialognMixin', [
       },
       /**
        * Переопределяемый метод
-       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_CUSTOM, чтобы
+       * В случае, если все действия выполняются самостоятельноно, надо вернуть DialogMixin.ACTION_CUSTOM, чтобы
        * не выполнялась базовая логика
        * @param model Запись, с которой работаем
-       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
+       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем DialogMixin.ACTION_CUSTOM
        */
       _onUpdateModel: function(model){
       },
@@ -245,10 +245,10 @@ define('js!SBIS3.CONTROLS.Action.DialognMixin', [
 
       /**
        * Переопределяемый метод
-       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_CUSTOM, чтобы
+       * В случае, если все действия выполняются самостоятельноно, надо вернуть DialogMixin.ACTION_CUSTOM, чтобы
        * не выполнялась базовая логика
        * @param model Запись, с которой работаем
-       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
+       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем DialogMixin.ACTION_CUSTOM
        */
       _onReadModel: function(model){
       },
@@ -256,10 +256,10 @@ define('js!SBIS3.CONTROLS.Action.DialognMixin', [
       },
       /**
        * Переопределяемый метод
-       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_CUSTOM, чтобы
+       * В случае, если все действия выполняются самостоятельноно, надо вернуть DialogMixin.ACTION_CUSTOM, чтобы
        * не выполнялась базовая логика
        * @param model Запись, с которой работаем
-       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
+       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем DialogMixin.ACTION_CUSTOM
        */
       _onDestroyModel: function(model){
       },
@@ -283,16 +283,16 @@ define('js!SBIS3.CONTROLS.Action.DialognMixin', [
       },
       /**
        * Переопределяемый метод
-       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_CUSTOM, чтобы
+       * В случае, если все действия выполняются самостоятельноно, надо вернуть DialogMixin.ACTION_CUSTOM, чтобы
        * не выполнялась базовая логика
        * @param model Запись, с которой работаем
-       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
+       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем DialogMixin.ACTION_CUSTOM
        */
       _onCreateModel: function(model){
       },
       /**
        * Обработка событий formController'a. Выполнение переопределяемых методов и notify событий.
-       * Если из обработчиков событий и переопределяемых методов вернули не OpenDialogAction.ACTION_CUSTOM, то выполняем базовую логику.
+       * Если из обработчиков событий и переопределяемых методов вернули не DialogMixin.ACTION_CUSTOM, то выполняем базовую логику.
        */
       _actionHandler: function(event, model) {
          var eventName = event.name,
@@ -312,11 +312,11 @@ define('js!SBIS3.CONTROLS.Action.DialognMixin', [
          eventResult = actionResult = this._notify.apply(this, [eventName].concat(args));
 
          genericMethod = genericMethods[eventName];
-         if (eventResult !== OpenDialogAction.ACTION_CUSTOM) {
+         if (eventResult !== DialogMixin.ACTION_CUSTOM) {
             methodResult  = this['_' + eventName].apply(this, args);
             actionResult = methodResult || eventResult;
          }
-         if (actionResult === OpenDialogAction.ACTION_CUSTOM || !this._options.linkedObject) {
+         if (actionResult === DialogMixin.ACTION_CUSTOM || !this._options.linkedObject) {
             return;
          }
          if (actionResult !== undefined){
@@ -426,9 +426,9 @@ define('js!SBIS3.CONTROLS.Action.DialognMixin', [
       }
    };
 
-   DialognMixin.ACTION_MERGE = '_mergeRecords';
-   DialognMixin.ACTION_ADD = '_createRecord'; //что добавляем? сделал через create
-   DialognMixin.ACTION_RELOAD = '_collectionReload';
-   DialognMixin.ACTION_DELETE = '_destroyModel';
-   return DialognMixin;
+   DialogMixin.ACTION_MERGE = '_mergeRecords';
+   DialogMixin.ACTION_ADD = '_createRecord'; //что добавляем? сделал через create
+   DialogMixin.ACTION_RELOAD = '_collectionReload';
+   DialogMixin.ACTION_DELETE = '_destroyModel';
+   return DialogMixin;
 });
