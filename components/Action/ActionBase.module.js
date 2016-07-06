@@ -1,13 +1,13 @@
-define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBase'], function(DialogActionBase){
+define('js!SBIS3.CONTROLS.ActionBase', ['js!SBIS3.CORE.Control'], function(Control){
    'use strict';
 
    /**
-    * Класс, описывающий действие открытия окна с заданным шаблоном. Применяется для работы с диалогами редактирования списков.
-    * Подробнее об использовании класса вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component-control/">Управление диалогом редактирования списка.</a>.
-    * @class SBIS3.CONTROLS.OpenDialogAction
+    * Класс базовый для всех стандартных действий, которые можно использовать в интерфейсе
+    * @class SBIS3.CONTROLS.ActionBase
     * @public
-    * @extends SBIS3.CONTROLS.DialogActionBase
+    * @extends $ws.proto.Control
     * @author Крайнов Дмитрий Олегович
+    * @deprecated используйте SBIS3.CONTROLS.Action.Action
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     * @ignoreOptions visible tooltip tabindex enabled className alwaysShowExtendedTooltip allowChangeEnable
@@ -29,23 +29,23 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBas
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop
     */
-   var OpenDialogAction = DialogActionBase.extend(/** @lends SBIS3.CONTROLS.OpenDialogAction.prototype */{
-      _buildComponentConfig: function(meta) {
-         //Если запись в meta-информации отсутствует, то передаем null. Это нужно для правильной работы DataBoundMixin с контекстом и привязкой значений по имени компонента
-         var record = ($ws.helpers.instanceOfModule(meta.item, 'SBIS3.CONTROLS.Data.Record') ? meta.item.clone() : meta.item) || null,
-             result = {
-               source: meta.source,
-               key : meta.id,
-               diffOnly : meta.diffOnly,
-               initValues : meta.filter,
-               record: record
-            };
-         //в дальнейшем будем мержить опции на этот конфиг и если в мете явно не передали dataSource
-         //то в объекте не нужно создавать свойство, иначе мы затрем опции на FormController.
-         if(meta.dataSource)
-            result.dataSource = meta.dataSource;
-         return result;
+   //TODO наследуемся от контрола, чтоб можно было размещать в xhtml
+   var ActionBase = Control.Control.extend(/** @lends SBIS3.CONTROLS.ActionBase.prototype */{
+      /**
+       * @event onExecuted Происходит после завершения работы действия.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Boolean|Object} meta Результат работы.
+       * @param {SBIS3.CONTROLS.Data.Record} record Редактируемая запись.
+       */
+      /**
+       * Запускает выполнение действия.
+       */
+      execute: function() {
+         this._notifyOnExecuted();
+      },
+      _notifyOnExecuted: function(meta, record) {
+         this._notify('onExecuted', meta, record)
       }
    });
-   return OpenDialogAction;
+   return ActionBase;
 });

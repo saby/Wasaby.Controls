@@ -1,4 +1,5 @@
 define([
+'../../components/Action/resources/test/Base.test',
 '../../components/Data/Adapter/resources/test/Json.test',
 '../../components/Data/Adapter/resources/test/JsonRecord.test',
 '../../components/Data/Adapter/resources/test/JsonTable.test',
