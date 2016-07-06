@@ -1,11 +1,10 @@
 /*global define, $ws*/
 define('js!SBIS3.CONTROLS.Action.DialogMixin', [
-   'js!SBIS3.CONTROLS.ActionBase',
    'js!SBIS3.CORE.Dialog',
    'js!SBIS3.CORE.FloatArea',
    'js!SBIS3.CONTROLS.Data.Model',
    'js!SBIS3.CONTROLS.Data.Utils'
-], function(ActionBase, Dialog, FloatArea, Model, Utils){
+], function(Dialog, FloatArea, Model, Utils){
    'use strict';
 
    /**
@@ -234,8 +233,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       /**
        * Базовая логика при событии ouUpdate. Обновляем рекорд в связном списке
        */
-      _updateModel: function (model, isNewModel) {
-         if (isNewModel){
+      _updateModel: function (model, additionalData) {
+         if (additionalData && additionalData.isNewRecord){
             this._createRecord(model);
          }
          else{
@@ -301,39 +300,13 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
                onUpdateModel : '_updateModel',
                onReadModel: '_readModel'
             },
-            args = Array.prototype.slice.call(arguments, 0),
-            self = this,
-            eventResult,
-            actionResult,
-            methodResult,
-            genericMethod;
+            args = Array.prototype.slice.call(arguments, 0);
 
          args.splice(0, 1); //Обрежем первый аргумент типа EventObject, его не нужно прокидывать в события и переопределяемый метод
-         eventResult = actionResult = this._notify.apply(this, [eventName].concat(args));
 
-         genericMethod = genericMethods[eventName];
-         if (eventResult !== DialogMixin.ACTION_CUSTOM) {
-            methodResult  = this['_' + eventName].apply(this, args);
-            actionResult = methodResult || eventResult;
-         }
-         if (actionResult === DialogMixin.ACTION_CUSTOM || !this._options.linkedObject) {
-            return;
-         }
-         if (actionResult !== undefined){
-            genericMethod = actionResult;
-         }
-         if (actionResult instanceof $ws.proto.Deferred){
-            actionResult.addCallback(function(result){
-               if (self[genericMethod]){
-                  self[genericMethod].apply(this, args);
-               }
-            })
-         } else {
-            if (this[genericMethod]){
-               this[genericMethod].apply(this, args);
-            }
-         }
+         this._callHandlerMethod(args, eventName, genericMethods[eventName]);
       },
+
 
       _createRecord: function(model, at){
          var collection = this._options.linkedObject,
