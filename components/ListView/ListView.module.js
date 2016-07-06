@@ -599,7 +599,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //    Задача в разработку: доработка listView, для поддержки touch устройств с возможностью управление мышью
             this._touchSupport = $ws._const.browser.isMobilePlatform;
 
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onDragMove', 'onDropItem');
 
             /* За счёт того, что разделено поведения отображения операций и ховера,
                в зависимости от события, которое произошло, то можно смело подписаться на все событие,
@@ -2468,13 +2468,14 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _callMoveOutHandler: function() {
          },
-         _callMoveHandler: function(e, movable) {
+
+         _onDragHandler: function(e) {
             var targetControl = $(e.target).wsControl();   
             if (targetControl && this === targetControl || !targetControl) {
                this._updateDragTarget(e);
             }
-            this._setAvatarPosition(e);
          },
+
          _updateDragTarget: function(e) {
             var
                 insertAfter,
@@ -2529,14 +2530,13 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _createAvatar: function(e) {
             var count = this.getCurrentElement().keys.length;
-            return $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>')
-               .css('z-index', $ws.single.WindowManager.acquireZIndex(false));
+            return $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>');
          },
 
          _callDropHandler: function(e) {
             var
-                clickHandler,
-                currentTarget = this._findItemByElement($(e.target));
+               clickHandler,
+               currentTarget = this._findItemByElement($(e.target));
             //После опускания мыши, ещё раз позовём обработку перемещения, т.к. в момент перед отпусканием мог произойти
             //переход границы между сменой порядкового номера и перемещением в папку, а обработчик перемещения не вызваться,
             //т.к. он срабатывают так часто, насколько это позволяет внутренняя система взаимодействия с мышью браузера.
@@ -2551,25 +2551,45 @@ define('js!SBIS3.CONTROLS.ListView',
 
          },
 
-         _beginDropDownHandler: function(e) {
+         _beginDragHandler: function(e) {
             this.setSelectedKey(this.getCurrentElement().targetId);
             this._hideItemsToolbar();
          },
 
-         _endDropDownHandler: function() {
-            var currentTarget = this._findItemByElement($(e.target)).length;
-            if (currentTarget.length) {
-               var remoteItems = this.getDragOwner().getItems(),
-                  checkedItems = [];
-               for (var i = this.getCurrentElement().keys.length - 1; i >= 0; i--) {
-                  checkedItems.push(remoteItems.getRecordById(this.getCurrentElement().keys[i]));
+         _endDragHandler: function(e, droppable) {
+            if (droppable) {
+               var
+                  clickHandler,
+                  currentTarget = this._findItemByElement($(e.target)),
+                  currentElement = this.getCurrentElement();
+               //После опускания мыши, ещё раз позовём обработку перемещения, т.к. в момент перед отпусканием мог произойти
+               //переход границы между сменой порядкового номера и перемещением в папку, а обработчик перемещения не вызваться,
+               //т.к. он срабатывают так часто, насколько это позволяет внутренняя система взаимодействия с мышью браузера.
+               this._updateDragTarget(e);
+               //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
+               if (currentTarget.length && currentTarget.data('id') == this.getSelectedKey()) {
+                  clickHandler = this._elemClickHandler;
+                  this._elemClickHandler = function () {
+                     this._elemClickHandler = clickHandler;
+                  };
+               }
+
+               if (currentTarget.length) {
+                  var remoteItems = this.getDragOwner().getItems(),
+                     checkedItems = [];
+                  for (var i = currentElement.keys.length - 1; i >= 0; i--) {
+                     checkedItems.push(remoteItems.getRecordById(this.getCurrentElement().keys[i]));
+                  }
+               }
+               var res = this._notify('onDropItem', this.getItems().getRecordById(currentTarget.data('id')),
+                  checkedItems, currentElement.insertAfter, this.getDragOwner());
+               if (res !== false) {
+                  if (this.getDragOwner() === this) {
+                     this._move(currentElement.keys, currentTarget.data('id'), currentElement.insertAfter);
+                  }
                }
             }
-            if (this.getDragOwner() === this) {
-               this._move(this.getCurrentElement().keys, currentTarget.data('id'), this.getCurrentElement().insertAfter);
-            }
 
-            $ws.single.WindowManager.releaseZIndex(this.getDragAvatar().css('z-index'));
             this._clearDragHighlight();
             this._updateItemsToolbar();
          },

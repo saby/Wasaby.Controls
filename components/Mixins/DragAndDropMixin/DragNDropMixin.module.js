@@ -39,19 +39,18 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
             _constShiftLimit: 3,
 
             _position: null,
-            _lines: [],
-            _dragNDropGroupEvent: undefined
+            _lines: []
 
          },
          //region public
          $constructor: function () {
-            this._publish(['onDragMove', 'onDragBegin', 'onDragEnd']);
-            //$ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMouseup', this.endDropDown, this);
+            this._publish(['onDrag', 'onDragBegin', 'onDragEnd']);
+            $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMouseup', this.onMouseupOutside, this);
             $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMousemove', this.onMousemove, this);
          },
 
          init: function(){
-            $(this.getContainer()).bind('mouseup touchend', this.onMouseup.bind(this));
+            $(this.getContainer()).bind('mouseup touchend', this.onMouseupInside.bind(this));
          },
 
          preparePageXY: function (e) {
@@ -60,7 +59,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
                e.pageY = e.originalEvent.touches[0].pageY;
             }
          },
-
 
          /**
           * текущий активный компонент, либо по gdi (если переносим)
@@ -133,21 +131,12 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
           * @param element
           * @private
           */
-         _callMoveHandler: function (e, element) {
-            var target = this.getCurrentElement();
-            if (!this._containerCoords) {
-               this._containerCoords = {
-                  x: this._moveBeginX - parseInt(target.css('left'), 10),
-                  y: this._moveBeginY - parseInt(target.css('top'), 10)
-               };
+         _onDrag: function (e, element) {
+            var res = this._notify('onDrag', e, element);
+            if (res !== false) {
+              this._onDragHandler(e);
             }
-
-            this.preparePageXY(e);
-            target.css({
-               top: e.pageY - this._containerCoords.y,
-               left: e.pageX - this._containerCoords.x
-            });
-            this._notify('onDragMove', e, element);
+            this._setAvatarPosition(e);
          },
          /**
           * оработчик на MoveOut
@@ -157,16 +146,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
           */
          _callMoveOutHandler: function (e) {
             throw new Error('Method callMoveOutHandler must be implemented');
-         },
-         /**
-          * оработчик на mouseUP
-          * @param e
-          * @param droppable
-          * @private
-          */
-         _callDropHandler: function (e, droppable) {
-            this._containerCoords = null;
-            this._notify('onDragEnd', this.getCurrentElement);
          },
          /**
           * стандартный поиск контейнера
@@ -185,13 +164,19 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
          /**
           * шаблонныйц метод endDropDown
           */
-         _endDropDownHandler: function(e){
+         _endDragHandler: function(e){
+
+         },
+         /**
+          * шаблонныйц метод endDropDown
+          */
+         _onDragHandler: function(e) {
 
          },
          /**
           * шаблонныйц метод beginDropDown
           */
-         _beginDropDownHandler: function(e){
+         _beginDragHandler: function(e){
 
          },
          /**
@@ -241,26 +226,30 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
             }
          },
          /**
-          *
+          * Начало перетаскивания
           * @param e
           * @param movable
           */
-         _beginDropDown: function(e, movable){
-            var res = this.notify('onDragBegin', e, movable);
+         _beginDrag: function(e, movable) {
+            var res = this._notify('onDragBegin', e, movable);
             if (res !== false) {
-               this._beginDropDownHandler(e, movable);
+               this._beginDragHandler(e, movable);
                this._showAvatar(e);
                DragCurrentElement.setDragging(true);
             }
 
          },
+
          /**
-          *
+          * Конец перетаскивание
+          * @param {Event} e js событие
+          * @param {Boolean} droppable Закончили над droppable контейнером
+          * @private
           */
-         _endDropDown: function (e) {
-            var res = this._notify('onDragEnd', this.getCurrentElement(), this.getDragOwner());
+         _endDrag: function (e, droppable) {
+            var res = this._notify('onDragEnd', e, this.getCurrentElement(), this.getDragOwner());
             if (res !== false) {
-               this._endDropDownHandler(e);
+               this._endDragHandler(e, droppable);
             }
 
             DragCurrentElement.reset();
@@ -274,15 +263,18 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
           *
           * @param e
           */
-         onMouseup: function (e) {
+         onMouseupInside: function (e) {
             //определяем droppable контейнер
             if (this.isDragging()) {
                var droppable = this._findDragDropContainer(e, e.target);
+               this._endDrag(e, droppable);
+            }
+         },
 
-               if (droppable) {
-                  this._callDropHandler(e, droppable);
-               }
-               this._endDropDown(e);
+
+         onMouseupOutside: function(e){
+            if (this.isDragging()) {
+               this._endDrag(e, false);
             }
          },
          /**
@@ -293,7 +285,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
           */
          onMousemove: function (buse, e) {
             // Если нет выделенных компонентов, то уходим
-            if (!this.getCurrentElement()) {
+            if (!this.getCurrentElement() ) {
                return;
             }
 
@@ -312,19 +304,17 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
                if ((Math.abs(moveX) < this._constShiftLimit) && (Math.abs(moveY) < this._constShiftLimit)) {
                   return;
                }
-               this._beginDropDown(e, movable);
+               this._beginDrag(e, movable);
             }
 
             $('body').addClass('dragdropBody');
             //двигаем компонент
-            if (movable) {
-               this._callMoveHandler(e, movable);
-            } else {
-               this._callMoveOutHandler(e);
-            }
+
+            this._onDrag(e, movable);
 
             return false;
          }
+
          //endregion mouseHandler
       };
 

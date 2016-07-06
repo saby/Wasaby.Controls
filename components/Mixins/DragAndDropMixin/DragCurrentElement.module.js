@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.DragCurrentElement', [], function() {
        * Очищает текущий элемент
        */
       reset: function () {
-         this._currentElementConfig = undefined;
+         this._currentElement = undefined;
          this._owner = undefined;
          this.setAvatar(null);
       },
@@ -66,7 +66,12 @@ define('js!SBIS3.CONTROLS.DragCurrentElement', [], function() {
          this.removeAvatar();
          if (avatar) {
             avatar.appendTo($('body'));
+            avatar.css({
+               'z-index': $ws.single.WindowManager.acquireZIndex(false),
+               position: 'absolute'
+            });
          }
+
          this._avatar = avatar;
       },
       /**
