@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DragCurrentElement', [], function() {
+define('js!SBIS3.CONTROLS.DragObject', [], function() {
    'use strict';
    /**
     * Синглтон который обеспечивает работу с элементом который сейчас перетаскивают
@@ -8,28 +8,35 @@ define('js!SBIS3.CONTROLS.DragCurrentElement', [], function() {
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var DragTarget = $ws.proto.Abstract.extend({
+   var DragObject = $ws.proto.Abstract.extend({
 
       $protected: {
          _owner: undefined,
-         _currentElement:undefined,
+         _source:undefined,
+         _target:undefined,
          _avatar: undefined,
-         _dragging: undefined
+         _dragging: undefined,
+         _meta: undefined
       },
       /**
-       * Возвращает перетаскиваемый элемент
-       * @returns {Object}
+       * Возвращает элемент который сейчас тащат
+       * @returns {*}
        */
-      get: function() {
-         return this._currentElement;
+      getSource: function() {
+         return this._source;
       },
       /**
-       * Устанавливает текущий элемент
-       * @param {Object} element - элемент который перетаскивают
-       * @param {SBIS3.CONTROLS.Control} owner - контрол который устанавливает текущий элемент
+       * Возвращает элемент над которым находится курсор
+       * @returns {*}
        */
-      set: function(element, owner) {
-         this._currentElement = element;
+      getTarget: function() {
+         return this._target;
+      },
+      /**
+       * метод должен вызываться из SBIS3.CONTROLS.DragNDropMixin
+       * @param {SBIS3.CONTROLS.Control} owner контрол который с которого тащят элемент
+       */
+      setOwner: function(owner) {
          this._owner = owner;
       },
       /**
@@ -65,7 +72,7 @@ define('js!SBIS3.CONTROLS.DragCurrentElement', [], function() {
       setAvatar: function(avatar) {
          this.removeAvatar();
          if (avatar) {
-            avatar.appendTo($('body'));
+            $(avatar).appendTo($('body'));
             avatar.css({
                'z-index': $ws.single.WindowManager.acquireZIndex(false),
                position: 'absolute'
@@ -89,6 +96,7 @@ define('js!SBIS3.CONTROLS.DragCurrentElement', [], function() {
       isDragging: function() {
          return this._dragging;
       },
+      //region protected
       /**
        * @protected
        * Устанавливает признак перемещения вызывается только из SBIS3.CONTROLS.DragNDropMixin
@@ -96,8 +104,25 @@ define('js!SBIS3.CONTROLS.DragCurrentElement', [], function() {
        */
       setDragging: function(dragging) {
          this._dragging = !!dragging;
+      },
+      /**
+       * @protected
+       * Устанавливает элемент который будут перетаскивать
+       * @param source
+       */
+      setSource: function(source) {
+         this._source = source;
+      },
+      /**
+       * @protected
+       * Устанавливает элемент над которым находится курсор
+       * @param target
+       */
+      setTarget: function(target) {
+         this._target = target;
       }
+      //endregion protected
    });
 
-   return new DragTarget();
+   return new DragObject();
 });

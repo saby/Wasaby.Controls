@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElement'], function (DragCurrentElement) {
+define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], function (DragObject) {
    'use strict';
 
    if (typeof window !== 'undefined') {
@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
             this.preparePageXY(e);
             this._moveBeginX = e.pageX;
             this._moveBeginY = e.pageY;
-            DragCurrentElement.set(elementConfig, this);
+            DragObject.set(elementConfig, this);
             this._dropCache();
          },
          /**
@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
           * @returns {Object}
           */
          getCurrentElement: function () {
-            return DragCurrentElement.get();
+            return DragObject.get();
          },
 
          /**
@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
           * @returns {*}
           */
          getDragOwner: function () {
-            return DragCurrentElement.getOwner();
+            return DragObject.getOwner();
          },
 
          /**
@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
           * @returns {*}
           */
          isDragging: function () {
-            return DragCurrentElement.isDragging();
+            return DragObject.isDragging();
          },
 
          /**
@@ -111,14 +111,14 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
           * @returns {*}
           */
          getDragAvatar: function() {
-            return DragCurrentElement.getAvatar();
+            return DragObject.getAvatar();
          },
          /**
           * устанавливает аватар
           * @param {JQuery} avatar
           */
          setDragAvatar: function(avatar) {
-            DragCurrentElement.setAvatar(avatar);
+            DragObject.setAvatar(avatar);
          },
          //endregion public
 
@@ -164,19 +164,19 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
          /**
           * шаблонныйц метод endDropDown
           */
-         _endDragHandler: function(e){
+         _endDragHandler: function(e, dragObject){
 
          },
          /**
           * шаблонныйц метод endDropDown
           */
-         _onDragHandler: function(e) {
+         _onDragHandler: function(e, dragObject) {
 
          },
          /**
           * шаблонныйц метод beginDropDown
           */
-         _beginDragHandler: function(e){
+         _beginDragHandler: function(e, dragObject){
 
          },
          /**
@@ -218,8 +218,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
           */
          _setAvatarPosition: function(e){
             //смещение нужно чтобы событие onmouseup сработало над контролом, а не над аватаром
-            if (DragCurrentElement.getAvatar()) {
-               DragCurrentElement.getAvatar().css({
+            if (DragObject.getAvatar()) {
+               DragObject.getAvatar().css({
                   'left': e.pageX + DRAG_AVATAR_OFFSET,
                   'top': e.pageY + DRAG_AVATAR_OFFSET
                });
@@ -235,7 +235,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
             if (res !== false) {
                this._beginDragHandler(e, movable);
                this._showAvatar(e);
-               DragCurrentElement.setDragging(true);
+               DragObject.setDragging(true);
             }
 
          },
@@ -249,12 +249,12 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
          _endDrag: function (e, droppable) {
             var res = this._notify('onDragEnd', e, this.getCurrentElement(), this.getDragOwner());
             if (res !== false) {
-               this._endDragHandler(e, droppable);
+               this._endDragHandler(e, DragObject);
             }
 
-            DragCurrentElement.reset();
+            DragObject.reset();
             this._position = null;
-            DragCurrentElement.setDragging(false);
+            DragObject.setDragging(false);
             $('body').removeClass('dragdropBody cantDragDrop');
          },
          //endregion protected
@@ -270,7 +270,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragCurrentElemen
                this._endDrag(e, droppable);
             }
          },
-
 
          onMouseupOutside: function(e){
             if (this.isDragging()) {
