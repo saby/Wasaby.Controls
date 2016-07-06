@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       $constructor: function() {
 
          if ( this._options.dialogComponent && !this._options.template) {
-            Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.8.0', 1);
+            Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.7.4.100', 1);
             this._options.template = this._options.dialogComponent;
          }
 
@@ -396,6 +396,11 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
       _buildComponentConfig: function() {
          return {};
+      },
+
+      setDialogComponent: function(val) {
+         Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.7.4.100', 1);
+         this._options.template = val;
       }
    };
 
