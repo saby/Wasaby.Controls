@@ -1,21 +1,20 @@
-/*
 var gemini = require('gemini');
 
-gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
+gemini.suite('SBIS3.CONTROLS.RichFieldEditor WS', function () {
 
     gemini.suite('base', function (test) {
 
-        test.setUrl('/IntRichFieldEditor2.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
+        test.setUrl('/IntRichFieldEditorWS2.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
-				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__EditorFrame');
-				this.input2 = find('[sbisname="FieldRichEditor 2"] .controls-RichEditor__EditorFrame');
+				this.input = find('[sbisname="FieldRichEditor 1"] .ws-editor-frame');
+				this.input2 = find('[sbisname="FieldRichEditor 2"] .ws-editor-frame');
 				this.textColor = find('[sbisname="FieldRichEditor 1"] [sbisname="textColor"] .custom-select-arrow')
 				this.textAlign = find('[sbisname="FieldRichEditor 1"] [sbisname="justify"] .custom-select-arrow')
 				this.textList = find('[sbisname="FieldRichEditor 1"] [sbisname="list"] .custom-select-arrow')
 				this.textStyle = find('[sbisname="FieldRichEditor 1"] [sbisname="style"] .custom-select-arrow')
-				this.toolbar = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__ToolbarToggleButton')
+				this.toolbar = find('[sbisname="FieldRichEditor 1"] .ws-field-rich-editor-toolbar-toggle-button')
 				this.bold = find('[sbisname="FieldRichEditor 1"] [sbisname="bold"]')
 				this.italic = find('[sbisname="FieldRichEditor 1"] [sbisname="italic"]')
 				this.underline = find('[sbisname="FieldRichEditor 1"] [sbisname="underline"]')
@@ -44,14 +43,14 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 			
 			.capture('opened_color_menu', function (actions) {
 				actions.mouseMove(this.textColor);
-				actions.waitForElementToShow('.controls-RichEditor__ColorBlack', 2000);
-				actions.waitForElementToShow('.controls-RichEditor__ColorGrey', 2000);
+				actions.waitForElementToShow('.ws-fre-black', 2000);
+				actions.waitForElementToShow('.ws-fre-grey', 2000);
 			})
 			
 			.capture('opened_align_menu', function (actions) {
 				actions.mouseMove(this.textAlign);
-				actions.waitForElementToShow('.controls-RichEditor__alignleft', 2000);
-				actions.waitForElementToShow('.controls-RichEditor__alignjustify', 2000);
+				actions.waitForElementToShow('.ws-fre__alignleft', 2000);
+				actions.waitForElementToShow('.ws-fre__alignjustify', 2000);
 			})
 			
 			.capture('opened_list_menu', function (actions) {
@@ -62,8 +61,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 			
 			.capture('opened_style_menu', function (actions) {
 				actions.mouseMove(this.textStyle);
-				actions.waitForElementToShow('.controls-RichEditor__styleText-title', 2000);
-				actions.waitForElementToShow('.controls-RichEditor__styleText-additionalText', 2000);
+				actions.waitForElementToShow('.ws-fre__styleText-title', 2000);
+				actions.waitForElementToShow('.ws-fre__styleText-additionalText', 2000);
 			})
 			
 			.capture('hovered_style_button', function (actions) {
@@ -103,17 +102,17 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
 	gemini.suite('styles', function (test) {
 
-        test.setUrl('/IntRichFieldEditor2.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
+        test.setUrl('/IntRichFieldEditorWS2.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
-				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__EditorFrame');
-				this.input2 = find('[sbisname="FieldRichEditor 2"] .controls-RichEditor__EditorFrame');
+				this.input = find('[sbisname="FieldRichEditor 1"] .ws-editor-frame');
+				this.input2 = find('[sbisname="FieldRichEditor 2"] .ws-editor-frame');
 				this.textColor = find('[sbisname="FieldRichEditor 1"] [sbisname="textColor"] .custom-select-arrow')
 				this.textAlign = find('[sbisname="FieldRichEditor 1"] [sbisname="justify"] .custom-select-arrow')
 				this.textList = find('[sbisname="FieldRichEditor 1"] [sbisname="list"] .custom-select-arrow')
 				this.textStyle = find('[sbisname="FieldRichEditor 1"] [sbisname="style"] .custom-select-arrow')
-				this.toolbar = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__ToolbarToggleButton')
+				this.toolbar = find('[sbisname="FieldRichEditor 1"] .ws-field-rich-editor-toolbar-toggle-button')
 				this.bold = find('[sbisname="FieldRichEditor 1"] [sbisname="bold"]')
 				this.italic = find('[sbisname="FieldRichEditor 1"] [sbisname="italic"]')
 				this.underline = find('[sbisname="FieldRichEditor 1"] [sbisname="underline"]')
@@ -164,8 +163,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
 				actions.click(this.textColor);
-				actions.waitForElementToShow('.controls-RichEditor__ColorRed', 2000);
-				actions.click('.controls-RichEditor__ColorRed');
+				actions.waitForElementToShow('.ws-fre-red', 2000);
+				actions.click('.ws-fre-red');
 				actions.sendKeys(this.input, gemini.TAB);
 			})
 			
@@ -174,8 +173,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
 				actions.click(this.textColor);
-				actions.waitForElementToShow('.controls-RichEditor__ColorGreen', 2000);
-				actions.click('.controls-RichEditor__ColorGreen');
+				actions.waitForElementToShow('.ws-fre-green', 2000);
+				actions.click('.ws-fre-green');
 				actions.sendKeys(this.input, gemini.TAB);
 			})
 			
@@ -184,8 +183,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
 				actions.click(this.textColor);
-				actions.waitForElementToShow('.controls-RichEditor__ColorBlue', 2000);
-				actions.click('.controls-RichEditor__ColorBlue');
+				actions.waitForElementToShow('.ws-fre-blue', 2000);
+				actions.click('.ws-fre-blue');
 				actions.sendKeys(this.input, gemini.TAB);
 			})
 			
@@ -194,8 +193,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
 				actions.click(this.textColor);
-				actions.waitForElementToShow('.controls-RichEditor__ColorPurple', 2000);
-				actions.click('.controls-RichEditor__ColorPurple');
+				actions.waitForElementToShow('.ws-fre-purple', 2000);
+				actions.click('.ws-fre-purple');
 				actions.sendKeys(this.input, gemini.TAB);
 			})
 			
@@ -204,8 +203,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
 				actions.click(this.textColor);
-				actions.waitForElementToShow('.controls-RichEditor__ColorGrey', 2000);
-				actions.click('.controls-RichEditor__ColorGrey');
+				actions.waitForElementToShow('.ws-fre-grey', 2000);
+				actions.click('.ws-fre-grey');
 				actions.sendKeys(this.input, gemini.TAB);
 			})
 			
@@ -214,8 +213,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
 				actions.click(this.textColor);
-				actions.waitForElementToShow('.controls-RichEditor__ColorBlack', 2000);
-				actions.click('.controls-RichEditor__ColorBlack');
+				actions.waitForElementToShow('.ws-fre-black', 2000);
+				actions.click('.ws-fre-black');
 				actions.sendKeys(this.input, gemini.TAB);
 			})
 			
@@ -224,8 +223,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
 				actions.mouseMove(this.textStyle);
-				actions.waitForElementToShow('[dropdown-owner-name="style"] .controls-RichEditor__styleText-title', 2000);
-				actions.click('[dropdown-owner-name="style"] .controls-RichEditor__styleText-title');
+				actions.waitForElementToShow('[dropdown-owner-name="style"] .ws-fre__styleText-title', 2000);
+				actions.click('[dropdown-owner-name="style"] .ws-fre__styleText-title');
 				actions.sendKeys(this.input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.input, gemini.TAB);
 			})
@@ -235,8 +234,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
 				actions.mouseMove(this.textStyle);
-				actions.waitForElementToShow('[dropdown-owner-name="style"] .controls-RichEditor__styleText-subTitle', 2000);
-				actions.click('[dropdown-owner-name="style"] .controls-RichEditor__styleText-subTitle');
+				actions.waitForElementToShow('[dropdown-owner-name="style"] .ws-fre__styleText-subTitle', 2000);
+				actions.click('[dropdown-owner-name="style"] .ws-fre__styleText-subTitle');
 				actions.sendKeys(this.input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.input, gemini.TAB);
 			})
@@ -246,8 +245,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
 				actions.mouseMove(this.textStyle);
-				actions.waitForElementToShow('[dropdown-owner-name="style"] .controls-RichEditor__styleText-selectedMainText', 2000);
-				actions.click('[dropdown-owner-name="style"] .controls-RichEditor__styleText-selectedMainText');
+				actions.waitForElementToShow('[dropdown-owner-name="style"] .ws-fre__styleText-selectedMainText', 2000);
+				actions.click('[dropdown-owner-name="style"] .ws-fre__styleText-selectedMainText');
 				actions.sendKeys(this.input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.input, gemini.TAB);
 			})
@@ -257,8 +256,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
 				actions.mouseMove(this.textStyle);
-				actions.waitForElementToShow('[dropdown-owner-name="style"] .controls-RichEditor__styleText-additionalText', 2000);
-				actions.click('[dropdown-owner-name="style"] .controls-RichEditor__styleText-additionalText');
+				actions.waitForElementToShow('[dropdown-owner-name="style"] .ws-fre__styleText-additionalText', 2000);
+				actions.click('[dropdown-owner-name="style"] .ws-fre__styleText-additionalText');
 				actions.sendKeys(this.input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.input, gemini.TAB);
 			})
@@ -268,8 +267,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
 				actions.mouseMove(this.textStyle);
-				actions.waitForElementToShow('[dropdown-owner-name="style"] .controls-RichEditor__styleText-mainText', 2000);
-				actions.click('[dropdown-owner-name="style"] .controls-RichEditor__styleText-mainText');
+				actions.waitForElementToShow('[dropdown-owner-name="style"] .ws-fre__styleText-mainText', 2000);
+				actions.click('[dropdown-owner-name="style"] .ws-fre__styleText-mainText');
 				actions.sendKeys(this.input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.input, gemini.TAB);
 			})
@@ -301,8 +300,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
 				actions.mouseMove(this.textAlign);
-				actions.waitForElementToShow('.controls-RichEditor__aligncenter', 2000);
-				actions.click('.controls-RichEditor__aligncenter');
+				actions.waitForElementToShow('.ws-fre__aligncenter', 2000);
+				actions.click('.ws-fre__aligncenter');
 				actions.sendKeys(this.input, gemini.TAB);
 			})
 			
@@ -311,8 +310,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
 				actions.mouseMove(this.textAlign);
-				actions.waitForElementToShow('.controls-RichEditor__alignright', 2000);
-				actions.click('.controls-RichEditor__alignright');
+				actions.waitForElementToShow('.ws-fre__alignright', 2000);
+				actions.click('.ws-fre__alignright');
 				actions.sendKeys(this.input, gemini.TAB);
 			})
 			
@@ -321,19 +320,19 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
 				actions.mouseMove(this.textAlign);
-				actions.waitForElementToShow('.controls-RichEditor__alignjustify', 2000);
-				actions.click('.controls-RichEditor__alignjustify');
+				actions.waitForElementToShow('.ws-fre__alignjustify', 2000);
+				actions.click('.ws-fre__alignjustify');
 				actions.sendKeys(this.input, gemini.TAB);
 			})
     });
 	
 	gemini.suite('delete_content', function (test) {
 
-        test.setUrl('/IntRichFieldEditor14.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
+        test.setUrl('/IntRichFieldEditorWS14.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
-				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__EditorFrame');
+				this.input = find('[sbisname="FieldRichEditor 1"] .ws-editor-frame');
 				actions.wait(500);				
             })
 			
@@ -368,11 +367,11 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 	
 	gemini.suite('set_value', function (test) {
 
-        test.setUrl('/IntRichFieldEditor2.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
+        test.setUrl('/IntRichFieldEditorWS2.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
-				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__EditorFrame');
+				this.input = find('[sbisname="FieldRichEditor 1"] .ws-editor-frame');
 				actions.wait(500);				
             })
 			
@@ -397,11 +396,11 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 	
 	gemini.suite('tiny_in_tiny', function (test) {
 
-        test.setUrl('/IntRichFieldEditor8.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
+        test.setUrl('/IntRichFieldEditorWS8.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
-				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__EditorFrame');
+				this.input = find('[sbisname="FieldRichEditor 1"] .ws-editor-frame');
 				actions.wait(500);				
             })
 
@@ -410,11 +409,11 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 	
 	gemini.suite('null_in_context', function (test) {
 
-        test.setUrl('/IntRichFieldEditor9.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
+        test.setUrl('/IntRichFieldEditorWS9.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
-				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__EditorFrame');
+				this.input = find('[sbisname="FieldRichEditor 1"] .ws-editor-frame');
 				actions.wait(500);
 				actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').setEnabled(false);
@@ -426,12 +425,12 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 	
 	gemini.suite('image_resize', function (test) {
 
-        test.setUrl('/IntRichFieldEditor12.html').setCaptureElements('html')
+        test.setUrl('/IntRichFieldEditorWS12.html').setCaptureElements('html')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
-				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__EditorFrame');
-				this.image = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__EditorFrame img');
+				this.input = find('[sbisname="FieldRichEditor 1"] .ws-editor-frame');
+				this.image = find('[sbisname="FieldRichEditor 1"] .ws-editor-frame img');
 				this.height = find('input[name="imageHeight"]');
 				this.apply = find('[sbisname="applyButton"] .ws-button-caption');
 				this.menu = find('[data-lmtype="Dialog"] .ws-field-dropdown-simple .custom-select-text')
@@ -442,7 +441,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
 			.capture('opened_resize_menu_dialog', function (actions) {
 				actions.executeJS(function (window) {
-                    window.$('[sbisname="FieldRichEditor 1"] .controls-RichEditor__EditorFrame img').dblclick();
+                    window.$('[sbisname="FieldRichEditor 1"] .ws-editor-frame img').dblclick();
                 });	
 				actions.waitForElementToShow('input[name="imageHeight"]', 2000);				
 				actions.sendKeys(this.height, gemini.ARROW_RIGHT);
@@ -465,11 +464,11 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 	
 	gemini.suite('with_closed_toolbar', function (test) {
 
-        test.setUrl('/IntRichFieldEditor11.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
+        test.setUrl('/IntRichFieldEditorWS11.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
-				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__EditorFrame');
+				this.input = find('[sbisname="FieldRichEditor 1"] .ws-editor-frame');
 				actions.wait(2000);				
             })
 
@@ -488,7 +487,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 	
 	gemini.suite('toolbar_after_enebled', function (test) {
 
-        test.setUrl('/IntRichFieldEditor10.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
+        test.setUrl('/IntRichFieldEditorWS10.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
@@ -507,12 +506,12 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 	
 	gemini.suite('toggle_toolbar', function (test) {
 
-        test.setUrl('/IntRichFieldEditor.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
+        test.setUrl('/IntRichFieldEditorWS.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
-				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__EditorFrame');
-				this.toolbar = find('.controls-RichEditor__ToolbarToggleButton');
+				this.input = find('[sbisname="FieldRichEditor 1"] .ws-editor-frame');
+				this.toolbar = find('.ws-field-rich-editor-toolbar-toggle-button');
 				actions.wait(2000);				
             })
 
@@ -528,12 +527,12 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 	
 	gemini.suite('selection_on_toggle_toolbar', function (test) {
 
-        test.setUrl('/IntRichFieldEditor.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
+        test.setUrl('/IntRichFieldEditorWS.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
-				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__EditorFrame');
-				this.toolbar = find('.controls-RichEditor__ToolbarToggleButton');
+				this.input = find('[sbisname="FieldRichEditor 1"] .ws-editor-frame');
+				this.toolbar = find('.ws-field-rich-editor-toolbar-toggle-button');
 				actions.wait(2000);				
             })
 
@@ -565,12 +564,12 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 	
 	gemini.suite('image_resize_2', function (test) {
 
-        test.setUrl('/IntRichFieldEditor13.html').setCaptureElements('html')
+        test.setUrl('/IntRichFieldEditorWS13.html').setCaptureElements('html')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
-				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__EditorFrame');
-				this.image = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__EditorFrame img');
+				this.input = find('[sbisname="FieldRichEditor 1"] .ws-editor-frame');
+				this.image = find('[sbisname="FieldRichEditor 1"] .ws-editor-frame img');
 				this.height = find('input[name="imageHeight"]');
 				this.apply = find('[sbisname="applyButton"] .ws-button-caption');
 				this.menu = find('[data-lmtype="Dialog"] .ws-field-dropdown-simple .custom-select-text')
@@ -585,21 +584,21 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 	
 	gemini.suite('with_closed_toolbar_2', function (test) {
 
-        test.setUrl('/IntRichFieldEditor15.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
+        test.setUrl('/IntRichFieldEditorWS15.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
-				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__EditorFrame');
+				this.input = find('[sbisname="FieldRichEditor 1"] .ws-editor-frame');
 				this.textColor = find('[sbisname="FieldRichEditor 1"] [sbisname="textColor"] .custom-select-arrow')
 				this.textAlign = find('[sbisname="FieldRichEditor 1"] [sbisname="justify"] .custom-select-arrow')
 				this.textList = find('[sbisname="FieldRichEditor 1"] [sbisname="list"] .custom-select-arrow')
 				this.textStyle = find('[sbisname="FieldRichEditor 1"] [sbisname="style"] .custom-select-arrow')
-				this.toolbar = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__ToolbarToggleButton')
+				this.toolbar = find('[sbisname="FieldRichEditor 1"] .ws-field-rich-editor-toolbar-toggle-button')
 				this.bold = find('[sbisname="FieldRichEditor 1"] [sbisname="bold"]')
 				this.italic = find('[sbisname="FieldRichEditor 1"] [sbisname="italic"]')
 				this.underline = find('[sbisname="FieldRichEditor 1"] [sbisname="underline"]')
 				this.strikethrough = find('[sbisname="FieldRichEditor 1"] [sbisname="strikethrough"]')
-				this.toolbar = find('.controls-RichEditor__ToolbarToggleButton');
+				this.toolbar = find('.ws-field-rich-editor-toolbar-toggle-button');
 				actions.wait(2000);				
             })
 
@@ -609,29 +608,29 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, 'Заголовок');
 				actions.sendKeys(this.input, gemini.SHIFT+gemini.HOME);
 				actions.mouseMove(this.textStyle);
-				actions.waitForElementToShow('[dropdown-owner-name="style"] .controls-RichEditor__styleText-title', 2000);
-				actions.click('[dropdown-owner-name="style"] .controls-RichEditor__styleText-title');
+				actions.waitForElementToShow('[dropdown-owner-name="style"] .ws-fre__styleText-title', 2000);
+				actions.click('[dropdown-owner-name="style"] .ws-fre__styleText-title');
 				actions.sendKeys(this.input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.input, gemini.ENTER);
 				actions.sendKeys(this.input, 'Подзаголовок');
 				actions.sendKeys(this.input, gemini.SHIFT+gemini.HOME);
 				actions.mouseMove(this.textStyle);
-				actions.waitForElementToShow('[dropdown-owner-name="style"] .controls-RichEditor__styleText-subTitle', 2000);
-				actions.click('[dropdown-owner-name="style"] .controls-RichEditor__styleText-subTitle');
+				actions.waitForElementToShow('[dropdown-owner-name="style"] .ws-fre__styleText-subTitle', 2000);
+				actions.click('[dropdown-owner-name="style"] .ws-fre__styleText-subTitle');
 				actions.sendKeys(this.input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.input, gemini.ENTER);
 				actions.sendKeys(this.input, 'Выделенный основной');
 				actions.sendKeys(this.input, gemini.SHIFT+gemini.HOME);
 				actions.mouseMove(this.textStyle);
-				actions.waitForElementToShow('[dropdown-owner-name="style"] .controls-RichEditor__styleText-selectedMainText', 2000);
-				actions.click('[dropdown-owner-name="style"] .controls-RichEditor__styleText-selectedMainText');
+				actions.waitForElementToShow('[dropdown-owner-name="style"] .ws-fre__styleText-selectedMainText', 2000);
+				actions.click('[dropdown-owner-name="style"] .ws-fre__styleText-selectedMainText');
 				actions.sendKeys(this.input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.input, gemini.ENTER);
 				actions.sendKeys(this.input, 'Дополнительный текст');
 				actions.sendKeys(this.input, gemini.SHIFT+gemini.HOME);
 				actions.mouseMove(this.textStyle);
-				actions.waitForElementToShow('[dropdown-owner-name="style"] .controls-RichEditor__styleText-additionalText', 2000);
-				actions.click('[dropdown-owner-name="style"] .controls-RichEditor__styleText-additionalText');
+				actions.waitForElementToShow('[dropdown-owner-name="style"] .ws-fre__styleText-additionalText', 2000);
+				actions.click('[dropdown-owner-name="style"] .ws-fre__styleText-additionalText');
 				actions.sendKeys(this.input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.input, gemini.ENTER);
 				actions.click(this.bold)
@@ -651,18 +650,18 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.ENTER);
 				actions.sendKeys(this.input, 'по середине');
 				actions.mouseMove(this.textAlign);
-				actions.waitForElementToShow('.controls-RichEditor__aligncenter', 2000);
-				actions.click('.controls-RichEditor__aligncenter');
+				actions.waitForElementToShow('.ws-fre__aligncenter', 2000);
+				actions.click('.ws-fre__aligncenter');
 				actions.sendKeys(this.input, gemini.ENTER);
 				actions.sendKeys(this.input, 'справа');
 				actions.mouseMove(this.textAlign);
-				actions.waitForElementToShow('.controls-RichEditor__alignright', 2000);
-				actions.click('.controls-RichEditor__alignright');
+				actions.waitForElementToShow('.ws-fre__alignright', 2000);
+				actions.click('.ws-fre__alignright');
 				actions.sendKeys(this.input, gemini.ENTER);
 				actions.sendKeys(this.input, 'по ширине');
 				actions.mouseMove(this.textAlign);
-				actions.waitForElementToShow('.controls-RichEditor__alignjustify', 2000);
-				actions.click('.controls-RichEditor__alignjustify');
+				actions.waitForElementToShow('.ws-fre__alignjustify', 2000);
+				actions.click('.ws-fre__alignjustify');
 				actions.sendKeys(this.input, gemini.ENTER);
 				actions.sendKeys(this.input, 'список с точками');
 				actions.mouseMove(this.textList);
@@ -696,4 +695,4 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
                 });	
 			})
     });
-});*/
+});
