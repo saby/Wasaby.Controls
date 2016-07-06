@@ -1,11 +1,10 @@
 /*global define, $ws*/
 define('js!SBIS3.CONTROLS.Action.DialogMixin', [
-   'js!SBIS3.CONTROLS.ActionBase',
    'js!SBIS3.CORE.Dialog',
    'js!SBIS3.CORE.FloatArea',
    'js!SBIS3.CONTROLS.Data.Model',
    'js!SBIS3.CONTROLS.Data.Utils'
-], function(ActionBase, Dialog, FloatArea, Model, Utils){
+], function(Dialog, FloatArea, Model, Utils){
    'use strict';
 
    /**
