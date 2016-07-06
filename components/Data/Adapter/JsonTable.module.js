@@ -119,7 +119,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
             return;
          }
          var removed = this._data.splice(source, 1);
-         this._data.splice(target, 0, removed.shift());
+         target === -1 ? this._data.unshift(removed.shift()) : this._data.splice(target, 0, removed.shift());
       },
 
       merge: function(acceptor, donor, idProperty) {
