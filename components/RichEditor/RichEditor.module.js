@@ -1576,7 +1576,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
          _togglePlaceholder:function(value){
             var
                curValue = value || this.getText();
-            this.getContainer().toggleClass('fre-empty', (curValue === '' || curValue === undefined || curValue === null) && this._inputControl.html().indexOf('</li>') < 0 && this._inputControl.html().indexOf('<p>&nbsp;') < 0);
+            this.getContainer().toggleClass('controls-RichEditor__Empty', (curValue === '' || curValue === undefined || curValue === null) && this._inputControl.html().indexOf('</li>') < 0 && this._inputControl.html().indexOf('<p>&nbsp;') < 0);
          },
 
          _addToHistory: function(valParam) {

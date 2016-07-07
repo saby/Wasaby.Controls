@@ -214,7 +214,7 @@
       -ms-user-select: none;
       user-select: none;
    }
-   &.fre-empty .controls-RichEditor__Placeholder{
+   &.controls-RichEditor__Empty .controls-RichEditor__Placeholder{
       display: block;
       cursor: text;
    }
@@ -586,9 +586,22 @@
          }
       }
    }
-   .fre-empty .controls-RichEditor__EditorFrame.ws-basic-style {
-      background-color: black;
-      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+   .controls-RichEditor{
+      box-sizing: border-box;
+   }
+   .controls-RichEditor__Empty {
+      .controls-RichEditor__EditorFrame.ws-basic-style {
+         background-color: black;
+         -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+         border: none;
+      }
+      .controls-RichEditor__Toolbar{
+         padding-left: 5px;
+      }
+      .controls-RichEditor__ToolbarToggleButton {
+         right: -1px;
+      }
+      border: 1px solid @fieldRichEditorBorderColor;
    }
 }
 
