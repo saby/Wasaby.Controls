@@ -24,11 +24,6 @@
 
 @carry-big-height:            60px;
 @text-box-height-carryFont:   42px;
-.ws-button-classic {
-   background-color: @button-primary-bg  !important;
-   border-radius: 0  !important;
-   border: 1px solid transparent  !important;
-}
 
 .ws-button-classic {
    background-color: @button-primary-bg  !important;
@@ -43,16 +38,6 @@
          background-color: @button-primary-active-bg  !important;
       }
    }
-}
-
-.ws-field-button {
-   font-size: 24px  !important;
-   min-height: 40px  !important;
-   height: 40px  !important;
-   line-height: 38px !important;
-}
-
-.ws-button-classic {
    .ws-button-caption, .ws-button-image {
       line-height: 38px  !important;
    }
@@ -74,6 +59,22 @@
          }
       }
    }
+}
+
+.ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
+   &.ws-field-button {
+      width: 36px !important;
+      height: 24px !important;
+      min-height: 24px  !important;
+      background-color: transparent !important;
+   }
+}
+
+.ws-field-button {
+   font-size: 24px  !important;
+   min-height: 40px  !important;
+   height: 40px  !important;
+   line-height: 38px !important;
 }
 
 .ws-smp-dlg h2 {
