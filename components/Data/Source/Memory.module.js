@@ -247,7 +247,10 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             }
             if (details.after && sourcePosition > targetPosition) {
                targetPosition++;
+            } else if( !details.after) {
+               targetPosition--;
             }
+
             tableAdapter.move(sourcePosition, targetPosition);
             this._reIndex();
 

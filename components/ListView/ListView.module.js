@@ -2608,6 +2608,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var item = this._getResultsRecord(),
                self = this;
             return MarkupTransformer(TemplateUtil.prepareTemplate(this._options.resultsTpl)({
+               startScrollColumn: self._options.startScrollColumn,
                results: resultsData,
                item: item,
                columns: $ws.core.clone(self._options.columns),

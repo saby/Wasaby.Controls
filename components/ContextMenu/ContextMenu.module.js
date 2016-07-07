@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.ContextMenu', ['js!SBIS3.CONTROLS.Menu', 'js!SBIS3.CON
     * @public
     * @author Крайнов Дмитрий Олегович
     * @extends SBIS3.CONTROLS.Menu
-    * @mixes SBIS3.CONTROLS.CollectionMixin
+    * @mixes SBIS3.CONTROLS.PopupMixin
     */
 
    var ContextMenu = Menu.extend([PopupMixin], /** @lends SBIS3.CONTROLS.ContextMenu.prototype */ {

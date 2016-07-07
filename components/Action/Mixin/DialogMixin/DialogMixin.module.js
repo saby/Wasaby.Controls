@@ -1,36 +1,28 @@
-define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!SBIS3.CONTROLS.Data.Model'], function(ActionBase, Dialog, FloatArea, Model){
+/*global define, $ws*/
+define('js!SBIS3.CONTROLS.Action.DialogMixin', [
+   'js!SBIS3.CONTROLS.ActionBase',
+   'js!SBIS3.CORE.Dialog',
+   'js!SBIS3.CORE.FloatArea',
+   'js!SBIS3.CONTROLS.Data.Model',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function(ActionBase, Dialog, FloatArea, Model, Utils){
    'use strict';
 
    /**
-    * Класс, который описывает действие открытия окна с заданным шаблоном.
-    * @class SBIS3.CONTROLS.DialogActionBase
+    * Действие открытия окна с заданным шаблоном
+    * @mixin  SBIS3.CONTROLS.Action.DialogMixin
     * @public
-    * @extends SBIS3.CONTROLS.ActionBase
     * @author Крайнов Дмитрий Олегович
-    *
-    * @ignoreOptions validators independentContext contextRestriction extendedTooltip
-    * @ignoreOptions visible tooltip tabindex enabled className alwaysShowExtendedTooltip allowChangeEnable
-    *
-    * @ignoreMethods activateFirstControl activateLastControl addPendingOperation applyEmptyState applyState clearMark
-    * @ignoreMethods changeControlTabIndex destroyChild detectNextActiveChildControl disableActiveCtrl findParent
-    * @ignoreMethods focusCatch getActiveChildControl getChildControlById getChildControlByName getChildControls
-    * @ignoreMethods getClassName getContext getEventBusOf getEventHandlers getEvents getExtendedTooltip getOpener
-    * @ignoreMethods getImmediateChildControls getLinkedContext getNearestChildControlByName getOwner getOwnerId
-    * @ignoreMethods getReadyDeferred getStateKey getTabindex getUserData getValue hasActiveChildControl hasChildControlByName
-    * @ignoreMethods hasEventHandlers isActive isAllReady isDestroyed isMarked isReady makeOwnerName setOwner setSize
-    * @ignoreMethods markControl moveFocus moveToTop once registerChildControl registerDefaultButton saveToContext
-    * @ignoreMethods sendCommand setActive setChildActive setClassName setExtendedTooltip setOpener setStateKey activate
-    * @ignoreMethods setTabindex setTooltip setUserData setValidators setValue storeActiveChild subscribe unregisterChildControl
-    * @ignoreMethods unregisterDefaultButton unsubscribe validate waitAllPendingOperations waitChildControlById waitChildControlByName
-    * @ignoreMethods setVisible toggle show isVisible hide getTooltip isAllowChangeEnable isEnabled isVisibleWithParents
-    *
-    * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
-    * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
-    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop
     */
-   var OpenDialogAction = ActionBase.extend(/** @lends SBIS3.CONTROLS.DialogActionBase.prototype */{
+   var DialogMixin = /** @lends SBIS3.CONTROLS.Action.DialogMixin.prototype */{
       $protected : {
          _options : {
+            /**
+             * @deprecated используйте template
+             * @cfg {String} Устанавливает компонент, который будет использован в качестве диалога редактирования записи.
+             * @see template
+             */
+            dialogComponent: '',
             /**
              * @cfg {String} Устанавливает компонент, который будет использован в качестве диалога редактирования записи.
              * @remark
@@ -39,23 +31,17 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
              * Режим отображения диалога редактирования устанавливают с помощью опции {@link mode}.
              * @see mode
              */
-            dialogComponent : '',
+            template : '',
             /**
              * @cfg {String} Устанавливает режим открытия диалога редактирования компонента.
              * @variant dialog Открытие производится в новом диалоговом окне.
              * @variant floatArea Открытие производится на всплывающей панели.
              * @remark
-             * Диалог редактирования устанавливают с помощью опции {@link dialogComponent}.
-             * @see dialogComponent
+             * Диалог редактирования устанавливают с помощью опции {@link template}.
+             * @see template
              */
-            mode: 'dialog',
-            /**
-             * @cfg {*} Устанавливает связанный список, для которого будет открываться диалог редактирования записей.
-             * @remark
-             * Список должен быть с примесью миксинов ({@link SBIS3.CONTROLS.DSMixin} или {@link SBIS3.CONTROLS.Data.Collection.IList}) для работы с однотипными элементами.
-             * Подробнее о базовых платформенных списках вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-types/">Виды списков</a>.
-             */
-            linkedObject: undefined
+            mode: 'dialog'
+
          },
          _dialog: undefined,
          /**
@@ -64,10 +50,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
           * К примеру в реестре задач ключ записи в реестре и ключ редактируемой записи различается, т.к. одна и та же задача может находиться в нескольких различных фазах
           */
          _linkedModelKey: undefined,
-         /**
-          * @var {SBIS3.CONTROLS.Data.Model} Запись которая пришла на редктирование, из метода прочитать или создать
-          */
-         _record: undefined
       },
       /**
        * @typedef {Object} ExecuteMetaConfig
@@ -76,9 +58,17 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        * @property {Boolean} newModel Признак: true - в диалоге редактирования открыта новая запись, которой не существует в источнике данных.
        * @property {Object} filter Объект, данные которого будут использованы в качестве инициализирующих данных при создании новой записи.
        * Название свойства - это название поля записи, а значение свойства - это значение для инициализации.
-       * @property {SBIS3.CONTROLS.Data.Record} record Редактируемая запись. Если передаётся ключ свойством key, то запись передавать необязательно.
+       * @property {SBIS3.CONTROLS.Data.Model} record Редактируемая запись. Если передаётся ключ свойством key, то запись передавать необязательно.
        * @property {$ws.proto.Context} ctx Контекст, который нужно установить для диалога редактирования записи.
        */
+      $constructor: function() {
+
+         if ( this._options.dialogComponent && !this._options.template) {
+            Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.8.0', 1);
+            this._options.template = this._options.dialogComponent;
+         }
+
+      },
       /**
        * Открывает диалог редактирования записи.
        * @param {ExecuteMetaConfig} meta Параметры, которые будут использованы для конфигурации диалога редактирования.
@@ -95,19 +85,16 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        * });
        *
       */
-      execute : function(meta) {
-         this._opendEditComponent(meta, this._options.dialogComponent);
+      _doExecute: function(meta) {
+         return this._opendEditComponent(meta, this._options.template);
       },
-
-      _openDialog: function(meta, dialogComponent){
-         this._opendEditComponent(meta, dialogComponent, 'dialog');
+      _openDialog: function(meta, template) {
+         this._opendEditComponent(meta, template, 'dialog');
       },
-
-      _openFloatArea: function(meta, dialogComponent){
-         this._opendEditComponent(meta, dialogComponent, 'floatArea');
+      _openFloatArea: function(meta, template) {
+         this._opendEditComponent(meta, template, 'floatArea');
       },
-
-      _opendEditComponent: function(meta, dialogComponent, mode){
+      _opendEditComponent: function(meta, template, mode) {
          this._linkedModelKey = meta.id;
          //Производим корректировку идентификатора только в случае, когда идентификатор передан
          if (meta.hasOwnProperty('id')) {
@@ -115,13 +102,14 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          }
 
          var self = this,
-            config,
-            compOptions = this._buildComponentConfig(meta);
+            compOptions = this._buildComponentConfig(meta),
+            editDeffered = new $ws.proto.Deferred(),
             config = {
-            opener: this,
-            template: dialogComponent,
-            componentOptions: compOptions
-         };
+               opener: this,
+               template: template||this._options.template,
+               componentOptions: compOptions
+            };
+
          if (meta.title) {
             config.title = meta.title;
          }
@@ -131,10 +119,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          config.handlers = {
             onAfterClose: function (e, meta) {
                self._dialog = undefined;
-               // В виду того, что сейчас доступны две технологии работы с источником и сейчас не все перешли на новую - поддерживаем старую, забирая record из FloatArea
-               // Выпилить по задаче: https://inside.tensor.ru/opendoc.html?guid=21a3feb5-6431-42f0-9136-edad2206ca83&description=
-               self._notifyOnExecuted(meta, this._record || self._record);
-               self._record = undefined;
+               editDeffered.callback(meta, this._record);
             }
          };
 
@@ -142,11 +127,12 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if (meta.controllerSource && ( !config.componentOptions.record || meta.preloadRecord !== false )) {
             //Загружаем компонент, отнаследованный от formController'a, чтобы с его прототипа вычитать запись, которую мы прокинем при инициализации компонента
             //Сделано в рамках ускорения
-            require([dialogComponent], this._initTemplateComponentCallback.bind(this, config, meta, mode));
+            require([template], this._initTemplateComponentCallback.bind(this, config, meta, mode));
          }
          else {
             this._showDialog(config, meta, mode);
          }
+         return editDeffered;
       },
 
       _initTemplateComponentCallback: function (config, meta, mode, templateComponent) {
@@ -156,7 +142,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if (getRecordProtoMethod){
             def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
             def.addCallback(function (record) {
-               self._record = record;
                config.componentOptions.record = record;
                if (def.isNewRecord)
                    config.componentOptions.isNewRecord = true;
@@ -237,21 +222,20 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             onCreateModel: this._actionHandler.bind(this)
          }
       },
-
       /**
        * Переопределяемый метод
-       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_CUSTOM, чтобы
+       * В случае, если все действия выполняются самостоятельноно, надо вернуть DialogMixin.ACTION_CUSTOM, чтобы
        * не выполнялась базовая логика
        * @param model Запись, с которой работаем
-       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
+       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем DialogMixin.ACTION_CUSTOM
        */
       _onUpdateModel: function(model){
       },
       /**
        * Базовая логика при событии ouUpdate. Обновляем рекорд в связном списке
        */
-      _updateModel: function (model, additionalData) {
-         if (additionalData && additionalData.isNewRecord){
+      _updateModel: function (model, isNewModel) {
+         if (isNewModel){
             this._createRecord(model);
          }
          else{
@@ -261,22 +245,21 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
 
       /**
        * Переопределяемый метод
-       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_CUSTOM, чтобы
+       * В случае, если все действия выполняются самостоятельноно, надо вернуть DialogMixin.ACTION_CUSTOM, чтобы
        * не выполнялась базовая логика
        * @param model Запись, с которой работаем
-       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
+       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем DialogMixin.ACTION_CUSTOM
        */
       _onReadModel: function(model){
       },
       _readModel: function(model){
       },
-
       /**
        * Переопределяемый метод
-       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_CUSTOM, чтобы
+       * В случае, если все действия выполняются самостоятельноно, надо вернуть DialogMixin.ACTION_CUSTOM, чтобы
        * не выполнялась базовая логика
        * @param model Запись, с которой работаем
-       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
+       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем DialogMixin.ACTION_CUSTOM
        */
       _onDestroyModel: function(model){
       },
@@ -298,19 +281,18 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          }
          collection.remove(collectionRecord);
       },
-
       /**
        * Переопределяемый метод
-       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_CUSTOM, чтобы
+       * В случае, если все действия выполняются самостоятельноно, надо вернуть DialogMixin.ACTION_CUSTOM, чтобы
        * не выполнялась базовая логика
        * @param model Запись, с которой работаем
-       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
+       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем DialogMixin.ACTION_CUSTOM
        */
       _onCreateModel: function(model){
       },
       /**
        * Обработка событий formController'a. Выполнение переопределяемых методов и notify событий.
-       * Если из обработчиков событий и переопределяемых методов вернули не OpenDialogAction.ACTION_CUSTOM, то выполняем базовую логику.
+       * Если из обработчиков событий и переопределяемых методов вернули не DialogMixin.ACTION_CUSTOM, то выполняем базовую логику.
        */
       _actionHandler: function(event, model) {
          var eventName = event.name,
@@ -330,11 +312,11 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          eventResult = actionResult = this._notify.apply(this, [eventName].concat(args));
 
          genericMethod = genericMethods[eventName];
-         if (eventResult !== OpenDialogAction.ACTION_CUSTOM) {
+         if (eventResult !== DialogMixin.ACTION_CUSTOM) {
             methodResult  = this['_' + eventName].apply(this, args);
             actionResult = methodResult || eventResult;
          }
-         if (actionResult === OpenDialogAction.ACTION_CUSTOM || !this._options.linkedObject) {
+         if (actionResult === DialogMixin.ACTION_CUSTOM || !this._options.linkedObject) {
             return;
          }
          if (actionResult !== undefined){
@@ -387,7 +369,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             }
          }
       },
-
       /**
        * Мержим поля из редактируемой записи в существующие поля записи из связного списка.
        */
@@ -399,7 +380,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             return;
          }
 
-         if (newModel){
+         if (newModel) {
             collectionRecord.set(collectionData.getIdProperty(), model.getKey().toString());
          }
 
@@ -417,7 +398,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             }
          });
       },
-      _collectionReload: function(){
+      _collectionReload: function() {
          this._options.linkedObject.reload();
       },
       /**
@@ -433,23 +414,21 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          }
          return undefined;
       },
-
-      _getCollectionData:function(){
+      _getCollectionData: function() {
          var collection = this._options.linkedObject;
          if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.ItemsControlMixin')) {
             collection = collection.getItems();
          }
          return collection;
       },
-
       _buildComponentConfig: function() {
-         return {}
+         return {};
       }
-   });
-   OpenDialogAction.ACTION_CUSTOM = 'custom';
-   OpenDialogAction.ACTION_MERGE = '_mergeRecords';
-   OpenDialogAction.ACTION_ADD = '_createRecord'; //что добавляем? сделал через create
-   OpenDialogAction.ACTION_RELOAD = '_collectionReload';
-   OpenDialogAction.ACTION_DELETE = '_destroyModel';
-   return OpenDialogAction;
+   };
+
+   DialogMixin.ACTION_MERGE = '_mergeRecords';
+   DialogMixin.ACTION_ADD = '_createRecord'; //что добавляем? сделал через create
+   DialogMixin.ACTION_RELOAD = '_collectionReload';
+   DialogMixin.ACTION_DELETE = '_destroyModel';
+   return DialogMixin;
 });
