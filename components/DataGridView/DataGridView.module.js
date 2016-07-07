@@ -42,6 +42,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
     *    </options>
     * </component>
     * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
+    * @cssModifier controls-DataGridView__markerRight Маркер отображается не слева строки, а справа.
     * @cssModifier controls-DataGridView__hasSeparator Включает линии разделители между строками
     * @cssModifier controls-DataGridView__td__textAlignRight Стиль задается колонке, выравнивает текст во всех ячейках этой колонки по правой стороне
     * @ignoreEvents onDragStop onDragIn onDragOut onDragStart

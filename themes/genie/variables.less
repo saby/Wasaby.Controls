@@ -1824,6 +1824,7 @@
 @controls-FieldLink-showAllLinks-top:              2px;
 @controls-FieldLink-showAllLinks-padding:          0 4px;
 @controls-FieldLink-showAllLinks-lineHeight:       22px;
+@controls-FieldLink-linkItem-line-height:          18px;
 @controls-FieldLink-linkContainer-padding:         4px 0;
 
 @controls-FieldLink-picker-max-height:             500px;
@@ -1841,12 +1842,16 @@
 
 @controls-FieldLink-disabled-item-padding:         0 4px;
 @controls-FieldLink-afterField-padding:            0 4px;
+@controls-FieldLink-afterField-height:             22px;
+
+@controls-FieldLink-afterField-background:         @white-color;
 
 //SelectorButton
 @controls-SelectorButton-height:                   24px;
 @controls-SelectorButton-line-height:              24px;
 @controls-SelectorButton-align:                    middle;
 @controls-SelectorButton-margin:                   4px 0 0 0;
+@controls-SelectorButton-error-outline:            1px solid #ff302b;
 
 // Search button
 @search-loop-size:                                 22px;
@@ -1868,6 +1873,8 @@
 
 // EditDialog
 @editdialog-applybutton-width:                     90px;
+@editdialog-applybutton-right:                     38px; /*ширина кнопки закрытия окна 36px + 2px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
+@editdialog-window-title-margin-right:             128px; /*ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 2px на небольшой отступ между ними */
 @editdialog-template-minwidth:                     auto;
 
 //MoveDialog

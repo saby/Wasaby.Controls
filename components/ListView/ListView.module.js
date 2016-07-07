@@ -318,23 +318,37 @@ define('js!SBIS3.CONTROLS.ListView',
                itemTemplate: '',
                /**
                 * @typedef {Array} ItemsActions
-                * @property {String} name Имя кнопки.
-                * @property {String} icon Путь до иконки.
-                * @property {String} caption Текст на кнопке.
-                * @property {String} parent Идентификатор родительского пункта меню (name). Опция задаётся для подменю.
-                * @property {String} tooltip Всплывающая подсказка.
-                * @property {Boolean} isMainAction Отображать ли кнопку на строке или только выпадающем в меню.
-                * На строке кнопки отображаются в том же порядке, в каком они перечислены.
-                * На строке может быть только три кнопки, полный список будет в меню.
-                * @property {Function} onActivated Действие кнопки.
+                * @property {String} name Уникальное имя кнопки. Обязательная для конфигурации подопция. Её значение, в том числе, может быть использовано в пользовательских обработчиках для отображения или скрытия набора операций.
+                * @property {String} icon Иконка на кнопке. Необязательная подопция. В качестве значения в опцию передаётся строка, описывающая класс иконки.
+                * Набор классов и список иконок, разрешённых для использования, можно найти <a href="https://wi.sbis.ru/docs/3-8-0/icons/">здесь</a>.
+                * <ul>
+                *    <li>Если кнопка отображается не в выпадающем меню (см. подопцию isMainAction) и установлена подопция icon, то использование подопции caption необязательно.</li>
+                *    <li>Если кнопка отображается в выпадающем меню (см. подопцию isMainAction), то производят конфигурацию подопций icon и caption.</li>
+                * </ul>
+                * @property {String} caption Подпись на кнопке.
+                * <ul>
+                *    <li>Если кнопка отображается не в выпадающем меню (см. подопцию isMainAction) и установлена подопция icon, то использование подопции caption необязательно.</li>
+                *    <li>Если кнопка отображается в выпадающем меню (см. подопцию isMainAction), то производят конфигурацию подопций icon и caption.</li>
+                * </ul>
+                * @property {String} tooltip Текст всплывающей подсказки.
+                * @property {Boolean} isMainAction Признак, по которому устанавливается отображение кнопки в подменю.
+                * @property {Function} onActivated Функция, которая будет выполнена при клике по кнопке. Внутри функции указатель this возвращает экземпляр класса представления данных. Аргументы функции:
+                * <ul>
+                *    <li>contaner - контейнер визуального отображения записи.</li>
+                *    <li>id - идентификатор записи.</li>
+                *    <li>item - запись (экземпляр класса {@link SBIS3.CONTROLS.Data.Model}).</li>
+                * </ul>
+                * @property {Boolean} allowChangeEnable Признак, по которому устанавливается возможность использования операций в случае, если взаимодействие с контролом запрещено (см. опцию {@link $ws.proto.Control#enabled}).
                 * @editor icon ImageEditor
                 * @translatable caption tooltip
                 */
                /**
-                * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок
+                * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок при наведении курсора мыши на запись.
                 * @remark
-                * Можно использовать для массовых операций.
+                * Если для контрола установлено значение false в опции {@link $ws.proto.Control#enabled}, то операции не будут отображаться при наведении курсора мыши.
+                * Однако с помощью подопции allowChangeEnable можно изменить это поведение.
                 * @example
+                * <b>Пример 1.</b> Конфигурация операций через вёрстку компонента.
                 * <pre>
                 *     <options name="itemsActions" type="array">
                 *        <options>
@@ -353,6 +367,26 @@ define('js!SBIS3.CONTROLS.ListView',
                 *         </options>
                 *     </options>
                 * </pre>
+                * <b>Пример 2.</b> Конфигурация операций через JS-код компонента.
+                * <pre>
+                *     DataGridView.setItemsActions([{
+                *        name: 'delete',
+                *        icon: 'sprite:icon-16 icon-Erase icon-error',
+                *        caption: 'Удалить',
+                *        isMainAction: true,
+                *        onActivated: function(item) {
+                *           this.deleteRecords(item.data('id'));
+                *        }
+                *     }, {
+                *        name: 'addRecord',
+                *        icon: 'sprite:icon-16 icon-Add icon-error',
+                *        caption: 'Добавить',
+                *        isMainAction: true,
+                *        onActivated: function(item) {
+                *           this.showRecordDialog();
+                *        }
+                *     }]
+                * <pre>
                 * @see setItemsActions
                 */
                itemsActions: [{
@@ -1196,10 +1230,10 @@ define('js!SBIS3.CONTROLS.ListView',
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
          _isHoverEditMode: function() {
-            return !this._touchSupport && this._options.editMode.indexOf('hover') !== -1;
+            return !$ws._const.compatibility.touch && this._options.editMode.indexOf('hover') !== -1;
          },
          _isClickEditMode: function() {
-            return this._options.editMode.indexOf('click') !== -1 || (this._touchSupport && this._options.editMode.indexOf('hover') !== -1);
+            return this._options.editMode.indexOf('click') !== -1 || ($ws._const.compatibility.touch && this._options.editMode.indexOf('hover') !== -1);
          },
          initEditInPlace: function() {
             this._notifyOnItemClick = this.beforeNotifyOnItemClick();
@@ -1595,8 +1629,8 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._itemsToolbar;
          },
          /**
-          * Метод получения операций над записью.
-          * @returns {Object} Компонент "операции над записью".
+          * Возвращает массив, описывающий установленный набор операций над записью, доступных по наведению курсора.
+          * @returns {ItemsActions[]}
           * @example
           * <pre>
           *     DataGridView.subscribe('onChangeHoveredItem', function(hoveredItem) {
@@ -1618,17 +1652,8 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._getItemsToolbar().getItemsActions();
          },
          /**
-          * Метод установки или замены кнопок операций над записью, заданных в опции {@link itemsActions}
-          * @remark
-          * В метод нужно передать массив обьектов.
-          * @param {Array} itemsActions Объект формата {name: ..., icon: ..., caption: ..., onActivated: ..., isMainOption: ...}
-          * @param {String} itemsActions.name Имя кнопки операции над записью.
-          * @param {String} itemsActions.icon Иконка кнопки.
-          * @param {String} itemsActions.caption Текст на кнопке.
-          * @param {String} itemsActions.onActivated Обработчик клика по кнопке.
-          * @param {String} itemsActions.tooltip Всплывающая подсказка.
-          * @param {String} itemsActions.title Текст кнопки в выпадающем меню.
-          * @param {String} itemsActions.isMainOption На строке ли кнопка (или в меню).
+          * Устанавливает набор операций над записью, доступных по наведению курсора.
+          * @param {ItemsActions[]} itemsActions
           * @example
           * <pre>
           *     DataGridView.setItemsActions([{
@@ -1927,14 +1952,20 @@ define('js!SBIS3.CONTROLS.ListView',
                return (scrollableContainer.scrollHeight - (scrollableContainer.scrollTop + scrollContainer.height())) == 0;
             }
          },
-         //Проверка есть ли открытые stack FloatArea, они могут збирать на себя скролл у body
+         //Проверка есть ли открытые stack FloatArea или maximize Window, они могут збирать на себя скролл у body
          _existFloatArea: function(){
             var areas = $ws.single.FloatAreaManager._areas;
+            var windows = $ws.single.WindowManager.getStack();
             for (var area in areas){
                if (areas.hasOwnProperty(area)){
                   if (areas[area].isVisible() && areas[area]._options.isStack){
                      return true;
                   }
+               }
+            }
+            for (var i = 0; i < windows.length; i++){
+               if (windows[i].window._options.maximize){
+                  return true;
                }
             }
             return false;

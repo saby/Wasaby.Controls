@@ -174,7 +174,13 @@ define('js!SBIS3.CONTROLS.RichEditor',
                 *    <li>source - html-разметка;</li>
                 * </ol>
                 */
-               userItems: {}
+               userItems: {},
+               /**
+                * Позволяет в задизабленном режиме подсвечивать ссылки на файлы и URL
+                * @cfg {Boolean} Подсвечивать ссылки
+                * <wiTag group="Управление">
+                */
+               highlightLinks: false
             },
             _fakeArea: undefined, //textarea для перехода фкуса по табу
             _tinyEditor: undefined, //экземпляр tinyMCE
@@ -1268,10 +1274,12 @@ define('js!SBIS3.CONTROLS.RichEditor',
                      naturalSizes = ImageUtil.getNaturalSizes($images[i]);
                      currentWidth = $($images[i]).width();
                      width = currentWidth > maximalWidth ? maximalWidth : currentWidth === 0 ? naturalSizes.width > maximalWidth ? maximalWidth : naturalSizes.width : currentWidth;
-                     $($images[i]).css({
-                        'width': width,
-                        'height': 'auto'
-                     });
+                     if (!$images[i].style || !$images[i].style.width || $images[i].style.width.indexOf('%') < 0) {
+                        $($images[i]).css({
+                           'width': width,
+                           'height': 'auto'
+                        });
+                     }
                   }
                }
                this._changeValueFromSetText = false;

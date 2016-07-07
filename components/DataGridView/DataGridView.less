@@ -33,6 +33,22 @@
       }
    }
 
+   &.controls-DataGridView__markerRight{
+      .controls-ListView__item__selected {
+         .controls-DataGridView__td {
+            &:first-child {
+               background-image: none;
+            }
+            &:last-child {
+               .marker(right top);
+            }
+         }
+      }
+      .controls-ItemsToolbar {
+         margin-right: 3px;
+      }
+   }
+
    .controls-DataGridView__td__textAlignRight{
      text-align: right!important;
    }

@@ -42,8 +42,6 @@
 @breadcrumbs-top:                               6px;
 @breadcrumbs-arrow-top:                         2px;
 
-//FieldLink
-@controls-FieldLink-afterField-padding:         10px 16px 0px 0;
 
 // --------- //
 // Combo box //
@@ -210,6 +208,7 @@
 @button-checked-bg:                             #C1D7F0;
 
 //FilterButton
+@controls-filterButton-button-margin:           6px 8px 8px 8px;
 @controls-filterButton-area-header-padding:     24px 44px 16px 12px;
 @controls-filterButton-area-header-height:      40px;
 @controls-filterButton-area-text-size:          @globalDefaultFontSize;
@@ -300,6 +299,8 @@
 
 // EditDialog
 @editdialog-applybutton-width:                  130px;
+@editdialog-applybutton-right:                  64px; /*ширина кнопки закрытия окна 60px + 4px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
+@editdialog-window-title-margin-right:          194px; /*ширина кнопки закрытия окна 60px + 90px ширина кнопки сохранить + 4px на небольшой отступ между ними */
 @editdialog-template-minwidth:                  460px;
 
 //MoveDialog
@@ -341,3 +342,18 @@
 // ----------------------- //
 @controls-editInPlace-editor-margin-top:        2px;
 @controls-editInPlace-editor-margin-bottom:     2px;
+
+//FieldLink
+
+@controls-FieldLink-linkItem-margin:            0;
+@controls-FieldLink-linkItem-padding:           0 24px 0 8px;
+@controls-FieldLink-afterField-padding:         8px 16px 0px 0;
+@controls-FieldLink-afterField-height:          @text-box-height;
+@controls-FieldLink-linkItem-caption-height:    @text-box-height;
+@controls-FieldLink-linkItem-line-height:       40px;
+@controls-FieldLink-showAllLinks-lineHeight:    @controls-FieldLink-linkItem-line-height;
+
+@controls-FieldLink-linkItem-cross-right:       3px;
+@controls-FieldLink-linkItem-cross-top:         14px;
+
+@controls-FieldLink-afterField-background:      transparent;
