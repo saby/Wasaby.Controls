@@ -316,7 +316,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             hierField: cfg.hierField,
             getColumnVal: getColumnVal,
             decorators : args.decorators,
-            displayField : args.displayField
+            displayField : args.displayField,
+            isSearch : args.isSearch
          };
          args.startScrollColumn = cfg.startScrollColumn;
 
