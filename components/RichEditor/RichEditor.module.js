@@ -702,12 +702,12 @@ define('js!SBIS3.CONTROLS.RichEditor',
           */
          setFontStyle: function(style) {
             if (style !== 'mainText') {
-               this._tinyEditor.formatter.apply(style);
+               this._applyFormat(style, true);
                this._textFormats[style] = true;
             }
             for (var stl in constants.styles) {
                if (style !== stl) {
-                  this._tinyEditor.formatter.remove(stl);
+                  this._removeFormat(stl);
                   this._textFormats[stl] = false;
                }
             }
@@ -722,8 +722,8 @@ define('js!SBIS3.CONTROLS.RichEditor',
           * @private
           */
          setFontColor: function(color) {
-            this._tinyEditor.formatter.apply('forecolor', {value: color});
-            this._tinyEditor.undoManager.add(); //todo Разобраться с undoManager и ВЕЗДЕ убрать undoManager.add
+            this._applyFormat('forecolor', color);
+            this._tinyEditor.execCommand('');
             this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._onValueChangeHandler();
@@ -1635,6 +1635,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
           * @private
           */
          _setTextAlign: function(align) {
+            //TODO: перейти на  this.execCommand('JustifyRight'), http://archive.tinymce.com/wiki.php/Tutorials:Command_identifiers
             var
             // выбираем ноду из выделения
                $selectionContent = $(this._tinyEditor.selection.getNode()),
@@ -1984,6 +1985,31 @@ define('js!SBIS3.CONTROLS.RichEditor',
                }
                this._instances.style.setValue(textFormat);
             }
+         },
+         /**
+          * Применить формат к выделенному текст
+          * @param {string} format  имя формата
+          * @param {string} value  значение формата
+          * @private
+          * функция взята из textColor плагина для tinyMCE:
+          * https://github.com/tinymce/tinymce/commit/2adfc8dc5467c4af77ff0e5403d00ae33298ed52
+          */
+         _applyFormat : function(format, value) {
+            this._tinyEditor.focus();
+            this._tinyEditor.formatter.apply(format, {value: value});
+            this._tinyEditor.nodeChanged();
+         },
+         /**
+          * Убрать формат выделенного текста
+          * @param {string} format  имя формата
+          * @private
+          * функция взята из textColor плагина для tinyMCE:
+          * https://github.com/tinymce/tinymce/commit/2adfc8dc5467c4af77ff0e5403d00ae33298ed52
+          */
+         _removeFormat : function(format) {
+            this._tinyEditor.focus();
+            this._tinyEditor.formatter.remove(format, {value: null}, null, true);
+            this._tinyEditor.nodeChanged();
          },
 
          _focusOutHandler: function(){}
