@@ -130,6 +130,15 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       },
 
       /**
+       * Возвращает кол-во элементов
+       * @returns {Number}
+       */
+      getCount: function () {
+         this._initInternalMap();
+         return this._internalToSource.length;
+      },
+
+      /**
        * Устанавливает текущий элемент
        * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Текущий элемент
        */
@@ -163,7 +172,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        * @returns {Boolean}
        */
       isValidPosition: function (position) {
-         return position >= -1 && position < this._$items.length;
+         return position >= -1 && position < this.getCount();
       },
 
       /**
@@ -184,7 +193,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        * @returns {*}
        */
       getNext: function () {
-         if (this._position >= this._$items.length - 1) {
+         if (this._position >= this.getCount() - 1) {
             return;
          }
          this._position++;
