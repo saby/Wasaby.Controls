@@ -420,7 +420,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 /* По неустановленной причине, в структуре из истории могут появляться null'ы,
                    скорее всего, это прикладная ошибка, но надо от этого защититься (повторяется только на некоторых фильтрах ЭДО) */
                 if(!newStructureElem) {
-                   $ws.single.ioc.resolve('ILogger').error('FilterHistoryControllerrol', 'В стукрутре из истории присутствуют null элементы');
+                   $ws.single.ioc.resolve('ILogger').log('FilterHistoryController', 'В стукрутре из истории присутствуют null элементы');
                    return false;
                 } else {
                    return newStructureElem.internalValueField === elem.internalValueField;

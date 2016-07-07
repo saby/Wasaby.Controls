@@ -1132,7 +1132,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                dataSet.setIdProperty(this._options.keyField);
             }
             var recordSet = dataSet.getAll();
-            recordSet.setMetaData(this._prepareMetaData(dataSet));
+            // Задаем meta, помержив текущие meta-данные с meta-данными в формате SBIS
+            recordSet.setMetaData($ws.core.merge(recordSet.getMetaData(), this._prepareMetaData(dataSet)));
             return recordSet;
          }).bind(this));
       },
@@ -1156,9 +1157,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              })).toObject() :
              {};
 
-         meta.results = dataSet.getProperty('r');
+         if (dataSet.hasProperty('r')) {
+            meta.results = dataSet.getProperty('r');
+         }
          meta.more = dataSet.getTotal();
-         meta.path = dataSet.getProperty('p');
+         if (dataSet.hasProperty('p')) {
+            meta.path = dataSet.getProperty('p');
+         }
 
          return meta;
       },
