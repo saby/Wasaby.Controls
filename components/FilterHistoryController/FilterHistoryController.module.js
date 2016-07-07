@@ -192,6 +192,9 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                    if(elemFromHistory.caption !== undefined) {
                       elem.caption = elemFromHistory.caption;
                    }
+                   if(elemFromHistory.visibilityValue !== undefined) {
+                      elem.visibilityValue = elemFromHistory.visibilityValue;
+                   }
                 } else if(elem.value && elem.resetValue && !$ws.helpers.isEqualObject(elem.value, elem.resetValue)) {
                    elem.value = elem.resetValue;
                 }

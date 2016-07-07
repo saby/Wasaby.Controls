@@ -19,6 +19,7 @@
 
                 <!-- По умолчанию будет NDS -->
                 <opt name="internalCaptionField">NDSText</opt>
+                <opt name="internalVisibilityField">ndsVisibility</opt>
 
                 <!-- По умолчанию будет "ничего" - если по привязке нет, и тут нет -->
                 <opt name="caption" bind="filterDescr/NDS"></opt>
@@ -53,45 +54,41 @@
             </opts>
             <opts>
                 <opt name="internalValueField">using</opt>
-
                 <opt name="internalCaptionField">usingText</opt>
-
-                <opt name="internalVisibilityField">comboBox2</opt>
+                <opt name="internalVisibilityField">usingVisibility</opt>
                 <opt name="resetVisibilityValue" type="boolean">false</opt>
-
                 <opt name="caption" bind="filterDescr/using"></opt>
+                <opt name="value" bind="filter/using">1</opt>
+                <opt name="resetValue">1</opt>
+            </opts>
 
-                <opt name="value" bind="filter/using"></opt>
+            <opts>
+                <opt name="internalValueField">title</opt>
+                <opt name="internalCaptionField">titleText</opt>
+                <opt name="internalVisibilityField">titleVisibility</opt>
+                <opt name="resetVisibilityValue" type="boolean">false</opt>
+                <opt name="caption" bind="filterDescr/title"></opt>
+                <opt name="value" bind="filter/title"></opt>
+                <opt name="resetValue" type="null"></opt>
+            </opts>
 
-                <opt name="resetValue"></opt>
+            <opts>
+                <opt name="internalValueField">filterAuthor</opt>
+                <opt name="internalCaptionField">filterAuthorText</opt>
+                <opt name="internalVisibilityField">filterAuthorVisibility</opt>
+                <opt name="resetVisibilityValue" type="boolean">false</opt>
+                <opt name="caption" bind="filterDescr/user"></opt>
+                <opt name="value" bind="filter/user"></opt>
+                <opt name="resetValue" type="null"></opt>
             </opts>
         </opts>
 
         <opt name="additionalFilterParamsTemplate">
-            <div>
-                <component data-component="SBIS3.CONTROLS.Link">
-                    <opt name="caption">Покажу комбобокс 1</opt>
-                    <opt name="command">change-field-internal</opt>
-                    <opts name="commandArgs" type="array">
-                        <opt>comboBox1</opt>
-                        <opt type="boolean">true</opt>
-                    </opts>
-                </component>
-            </div>
-            <div>
-                <component data-component="SBIS3.CONTROLS.Link">
-                    <opt name="caption">Покажу комбобокс 2</opt>
-                    <opt name="command">change-field-internal</opt>
-                    <opts name="commandArgs" type="array">
-                        <opt>comboBox2</opt>
-                        <opt type="boolean">true</opt>
-                    </opts>
-                </component>
-            </div>
+            <component data-component="SBIS3.CONTROLS.Demo.AdditionalFilterTemplate"></component>
         </opt>
 
         <opt name="template">
-            <component data-component="SBIS3.CONTROLS.Demo.FilterButtonFilterContent"></component>
+            <component data-component="SBIS3.CONTROLS.Demo.FilterButtonFilterContentFull"></component>
         </opt>
     </component>
 
