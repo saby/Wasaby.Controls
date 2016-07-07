@@ -1522,6 +1522,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _findItemByElement: function(target){
+            //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
+            //она есть в _items(например при добавлении или фейковый корень). Метод _findItemByElement в данном случае вернёт
+            //пустой массив. В .150 править этот метод опасно, потому что он много где используется. В .200 переписать метод
+            //_findItemByElement, без завязки на _items.
             if(!target.length) {
                return [];
             }
@@ -2408,10 +2412,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
-            if (!this._dragStartHandler) {
-               this._dragStartHandler = this._onDragStart.bind(this);
-            }
-            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._dragStartHandler);
+            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._beginDrag.bind(this));
          },
          /**
           * Получить текущую конфигурацию перемещения элементов с помощью DragNDrop.
@@ -2438,7 +2439,8 @@ define('js!SBIS3.CONTROLS.ListView',
             //сделать stopPropagation, тогда от данной проверки можно будет избавиться.
             return !this.isDragging() && this._options.enabled && !$ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
          },
-         _onDragStart: function(e) {
+
+         _beginDragHandler: function(e) {
             var
                 id,
                 target;
@@ -2450,22 +2452,18 @@ define('js!SBIS3.CONTROLS.ListView',
                //_findItemByElement, без завязки на _items.
                if (target.length) {
                   id = target.data('id');
-                  this.setCurrentElement(e, {
+                  DragObject.setMeta({
                      keys: this._getDragItems(id),
                      targetId: id,
                      target: target,
                      insertAfter: undefined
                   });
+                  this.setSelectedKey(id);
+                  this._hideItemsToolbar();
+                  return true;
                }
-               //TODO: Сейчас появилась проблема, что если к компьютеру подключен touch-телевизор он не вызывает
-               //preventDefault и при таскании элементов мышкой происходит выделение текста.
-               //Раньше тут была проверка !$ws._const.compatibility.touch и preventDefault не вызывался для touch устройств
-               //данная проверка была добавлена, потому что когда в строке были отрендерены кнопки, при нажатии на них
-               //и выполнении preventDefault впоследствии не вызывался click. Написал демку https://jsfiddle.net/9uwphct4/
-               //с воспроизведением сценария, на iPad и Android click отрабатывает. Возможно причина была ещё в какой-то
-               //ошибке. При возникновении ошибок на мобильных устройствах нужно будет добавить проверку !$ws._const.browser.isMobilePlatform.
-               e.preventDefault();
             }
+            return false;
          },
          _callMoveOutHandler: function() {
          },
@@ -2475,6 +2473,16 @@ define('js!SBIS3.CONTROLS.ListView',
             if (targetControl && this === targetControl || !targetControl) {
                this._updateDragTarget(e);
             }
+         },
+
+         _getDragTarget: function(e) {
+            var target = this._findItemByElement($(e.target)),
+               item = this._getItemsProjection().getByHash(target.data('hash'));
+            return  item ? item.getContents() : undefined;
+         },
+
+         _getDragSource: function(e){
+            return this._getDragTarget(e);
          },
 
          _updateDragTarget: function(e) {
@@ -2510,12 +2518,12 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _notifyOnDragMove: function(target, insertAfter) {
             if (typeof insertAfter === 'boolean') {
-               return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter, this.getDragOwner()) !== false;
+               return this._notify('onDragMove', DragObject.getMeta().keys, target.data('id'), insertAfter, this.getDragOwner()) !== false;
             }
          },
          _clearDragHighlight: function() {
-            if(this.getCurrentElement()) {
-               var target = this.getCurrentElement().target;
+            if(DragObject.getMeta()) {
+               var target = DragObject.getMeta().target;
                if (target) {
                   target.removeClass('controls-DragNDrop__insertBefore controls-DragNDrop__insertAfter');
                }
@@ -2533,7 +2541,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _createAvatar: function(e) {
-            var count = this.getCurrentElement().keys.length;
+            var count = DragObject.getMeta().keys.length;
             return $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>');
          },
 
@@ -2555,17 +2563,12 @@ define('js!SBIS3.CONTROLS.ListView',
 
          },
 
-         _beginDragHandler: function(e) {
-            this.setSelectedKey(this.getCurrentElement().targetId);
-            this._hideItemsToolbar();
-         },
-
          _endDragHandler: function(e, droppable) {
             if (droppable) {
                var
                   clickHandler,
                   currentTarget = this._findItemByElement($(e.target)),
-                  currentElement = this.getCurrentElement();
+                  currentElement = DragObject.getMeta();
                //После опускания мыши, ещё раз позовём обработку перемещения, т.к. в момент перед отпусканием мог произойти
                //переход границы между сменой порядкового номера и перемещением в папку, а обработчик перемещения не вызваться,
                //т.к. он срабатывают так часто, насколько это позволяет внутренняя система взаимодействия с мышью браузера.
@@ -2582,7 +2585,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   var remoteItems = this.getDragOwner().getItems(),
                      checkedItems = [];
                   for (var i = currentElement.keys.length - 1; i >= 0; i--) {
-                     checkedItems.push(remoteItems.getRecordById(this.getCurrentElement().keys[i]));
+                     checkedItems.push(remoteItems.getRecordById(DragObject.getMeta().keys[i]));
                   }
                }
                var res = this._notify('onDropItem', this.getItems().getRecordById(currentTarget.data('id')),

@@ -1,3 +1,4 @@
+/*global define $ws $*/
 define('js!SBIS3.CONTROLS.DragObject', [], function() {
    'use strict';
    /**
@@ -51,8 +52,11 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
        * Очищает текущий элемент
        */
       reset: function () {
-         this._currentElement = undefined;
+         this._source = undefined;
+         this._target = undefined;
          this._owner = undefined;
+         this._meta = undefined;
+         this._jsEvent = undefined;
          this.setAvatar(null);
       },
       /**
@@ -140,6 +144,10 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
        */
       setTarget: function(target) {
          this._target = target;
+      },
+
+      setEvent: function(e){
+         this._jsEvent = e;
       }
       //endregion protected
    });

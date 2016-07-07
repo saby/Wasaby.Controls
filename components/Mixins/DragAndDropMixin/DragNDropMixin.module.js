@@ -1,3 +1,4 @@
+/*global $ws, define, $ */
 define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], function (DragObject) {
    'use strict';
 
@@ -40,7 +41,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
 
             _position: null,
             _lines: []
-
          },
          //region public
          $constructor: function () {
@@ -53,8 +53,25 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
             $(this.getContainer()).bind('mouseup touchend', this.onMouseupInside.bind(this));
          },
 
+         _getDragItems: function(key) {
+            var keys = this._options.multiselect ? $ws.core.clone(this.getSelectedKeys()) : [];
+            if (Array.indexOf(keys, key) === -1 && Array.indexOf(keys, String(key)) === -1) {
+               keys.push(key);
+            }
+            return keys;
+         },
+         _canDragStart: function(e) {
+            //TODO: При попытке выделить текст в поле ввода, вместо выделения начинается перемещения элемента.
+            //Как временное решение добавлена проверка на SBIS3.CONTROLS.TextBoxBase.
+            //Необходимо разобраться можно ли на уровне TextBoxBase или Control для события mousedown
+            //сделать stopPropagation, тогда от данной проверки можно будет избавиться.
+            return !this.isDragging() && this._options.enabled && !$ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
+         },
+
+
+
          preparePageXY: function (e) {
-            if (e.type == "touchstart" || e.type == "touchmove") {
+            if (e.type === "touchstart" || e.type === "touchmove") {
                e.pageX = e.originalEvent.touches[0].pageX;
                e.pageY = e.originalEvent.touches[0].pageY;
             }
@@ -66,20 +83,13 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
           * @param {Event} e
           * @param {Object} elementConfig
           */
-         setCurrentElement: function (e, elementConfig) {
+         setCurrentElement: function (e, Source) {
             //координаты с которых начато движение
             this.preparePageXY(e);
             this._moveBeginX = e.pageX;
             this._moveBeginY = e.pageY;
-            DragObject.set(elementConfig, this);
+            DragObject.setSource(Source);
             this._dropCache();
-         },
-         /**
-          * возвращает текущий элемент
-          * @returns {Object}
-          */
-         getCurrentElement: function () {
-            return DragObject.get();
          },
 
          /**
@@ -186,6 +196,20 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
          _createAvatar: function() {
 
          },
+         /**
+          *
+          * @private
+          */
+         _getDragSource: function(){
+
+         },
+         /**
+          *
+          * @private
+          */
+         _getDragTarget: function(){
+
+         },
          //endregion handlers
 
          //region protected
@@ -231,13 +255,33 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
           * @param movable
           */
          _beginDrag: function(e, movable) {
-            var res = this._notify('onDragBegin', e, movable);
-            if (res !== false) {
-               this._beginDragHandler(e, movable);
-               this._showAvatar(e);
-               DragObject.setDragging(true);
-            }
+            this.preparePageXY(e);
+            var
+               moveX = e.pageX - this._moveBeginX,
+               moveY = e.pageY - this._moveBeginY;
 
+            //начинаем движение только если сдвинули сильно
+            if ((Math.abs(moveX) < this._constShiftLimit) && (Math.abs(moveY) < this._constShiftLimit)) {
+               return;
+            }
+            DragObject.reset();
+            if (this._beginDragHandler(e, movable) !== false) {
+               if (this._notify('onDragBegin', e, movable) !== false) {
+                  this._showAvatar(e);
+                  DragObject.setSource(
+                     this._getDragSource(e)
+                  );
+                  DragObject.setDragging(true);
+               }
+            }
+            //TODO: Сейчас появилась проблема, что если к компьютеру подключен touch-телевизор он не вызывает
+            //preventDefault и при таскании элементов мышкой происходит выделение текста.
+            //Раньше тут была проверка !$ws._const.compatibility.touch и preventDefault не вызывался для touch устройств
+            //данная проверка была добавлена, потому что когда в строке были отрендерены кнопки, при нажатии на них
+            //и выполнении preventDefault впоследствии не вызывался click. Написал демку https://jsfiddle.net/9uwphct4/
+            //с воспроизведением сценария, на iPad и Android click отрабатывает. Возможно причина была ещё в какой-то
+            //ошибке. При возникновении ошибок на мобильных устройствах нужно будет добавить проверку !$ws._const.browser.isMobilePlatform.
+            e.preventDefault();
          },
 
          /**
@@ -247,7 +291,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
           * @private
           */
          _endDrag: function (e, droppable) {
-            var res = this._notify('onDragEnd', e, this.getCurrentElement(), this.getDragOwner());
+            var res = this._notify('onDragEnd', DragObject, e);
             if (res !== false) {
                this._endDragHandler(e, DragObject);
             }
@@ -271,7 +315,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
             }
          },
 
-         onMouseupOutside: function(e){
+         onMouseupOutside: function(buse, e) {
             if (this.isDragging()) {
                this._endDrag(e, false);
             }
@@ -284,33 +328,16 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
           */
          onMousemove: function (buse, e) {
             // Если нет выделенных компонентов, то уходим
-            if (!this.getCurrentElement() ) {
+            if (!DragObject.isDragging() ) {
                return;
             }
 
             var
             // определяем droppable контейнер
                movable = this._findDragDropContainer(e, e.target);
-
-            if (!this.isDragging()) {
-               //начало переноса
-               this.preparePageXY(e);
-               var
-                  moveX = e.pageX - this._moveBeginX,
-                  moveY = e.pageY - this._moveBeginY;
-
-               //начинаем движение только если сдвинули сильно
-               if ((Math.abs(moveX) < this._constShiftLimit) && (Math.abs(moveY) < this._constShiftLimit)) {
-                  return;
-               }
-               this._beginDrag(e, movable);
-            }
-
             $('body').addClass('dragdropBody');
             //двигаем компонент
-
             this._onDrag(e, movable);
-
             return false;
          }
 
