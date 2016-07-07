@@ -1478,6 +1478,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            }
                            this._hideItemsToolbar();
                         }
+                        this.setSelectedKey(model.getId());
                         event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
                      }.bind(this)
                   }
