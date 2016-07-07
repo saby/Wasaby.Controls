@@ -174,7 +174,13 @@ define('js!SBIS3.CONTROLS.RichEditor',
                 *    <li>source - html-разметка;</li>
                 * </ol>
                 */
-               userItems: {}
+               userItems: {},
+               /**
+                * Позволяет в задизабленном режиме подсвечивать ссылки на файлы и URL
+                * @cfg {Boolean} Подсвечивать ссылки
+                * <wiTag group="Управление">
+                */
+               highlightLinks: false
             },
             _fakeArea: undefined, //textarea для перехода фкуса по табу
             _tinyEditor: undefined, //экземпляр tinyMCE
