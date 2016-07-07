@@ -10,17 +10,19 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var
-         filterStructureElementDef = {
-            internalValueField: null,
-            internalCaptionField: null
-            /* По умолчанию их нет
-             caption: NonExistentValue,
-             value: NonExistentValue,
-             resetValue: NonExistentValue,
-             resetCaption: NonExistentValue,
-             */
-         };
+   var FILTER_STRUCTURE_DEFAULT_ELEMENT = {
+      internalValueField: null,
+      internalCaptionField: null,
+      internalVisibilityField: null
+      /* По умолчанию их нет
+       value: NonExistentValue,
+       resetValue: NonExistentValue,
+       customValue: NonExistentValue,
+       resetCustomValue: NonExistentValue,
+       caption: NonExistentValue,
+       resetCaption: NonExistentValue,
+       */
+   };
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -35,9 +37,12 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
              * @typedef {Array} filterStructure
              * @property {String} internalValueField Название поля, которое хранит значение элемента. По-умолчанию null.
              * @property {String} internalCaptionField Название поля, которое хранит текстовое отображение значения. По-умолчанию null.
+             * @property {String} internalVisibilityField Название поля, которое хранит отображение элемента в зависимости от значения. По-умолчанию null.
              * @property {String} caption Текущее текстовое отображение значения. Может быть не определено.
+             * @property {Object} visibilityValue ТТекущее состояние отображения элемента. Может быть не определено.
              * @property {null|Object|String|Boolean|Number} value Текущее значение элемента. Может быть не определено.
              * @property {null|Object|String|Boolean|Number} resetValue Значение поля при сбрасывании фильтра, или при пустом значении в value. Может быть не определено.
+             * @property {Boolean} resetVisibilityValue Значение поля при сбрасывании фильтра, или при пустом значении в value. Может быть не определено.
              * @property {String} resetCaption Текст по умолчанию. Если задали, то при пустом (или заданном в resetValue) значении будет
              * отображаться заданный здесь текст. Может быть не определено.
              * @translatable caption resetCaption
@@ -77,13 +82,15 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
          this._updateFilterStructure(this._options.filterStructure || {});
       },
       _syncContext: function(fromContext) {
-         var
-               context = this._getCurrentContext(),
-               descrPath = this._options.internalContextFilterName + '/caption',
-               filterPath = this._options.internalContextFilterName + '/filter';
+         var context = this._getCurrentContext(),
+             contextName = this.getProperty('internalContextFilterName');
 
          if (fromContext) {
-            this._updateFilterStructure(undefined, context.getValue(filterPath), context.getValue(descrPath));
+            this._updateFilterStructure(
+                undefined,
+                context.getValue(contextName + '/caption'),
+                context.getValue(contextName + '/filter')
+            );
          }
       },
 
@@ -93,22 +100,21 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
       },
 
       applyFilter: propertyUpdateWrapper(function() {
-
          this._syncContext(true);
-
          this._notify('onApplyFilter');
          this._notifyFilterUpdate();
       }),
-      _updateFilterStructure: function(filterStructure, filter, captions) {
+
+      _updateFilterStructure: function(filterStructure, filter, captions, visibility) {
          if (filterStructure) {
             this._filterStructure = $ws.helpers.map(filterStructure, function(element) {
-               var
-                     newEl = $ws.core.clone(filterStructureElementDef);
-               $ws.core.merge(newEl, element);
+               var newEl;
 
-               if (!newEl.internalValueField || typeof newEl.internalValueField !== 'string') {
+               if(typeof element.internalValueField !== 'string') {
                   throw new Error('У элемента структуры должно быть поле internalValueField');
                }
+
+               newEl = $ws.core.merge($ws.core.clone(FILTER_STRUCTURE_DEFAULT_ELEMENT), element);
 
                if (!newEl.internalCaptionField) {
                   newEl.internalCaptionField = newEl.internalValueField;
@@ -122,7 +128,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
                var newElement = $ws.core.clone(element),
                    field = newElement.internalValueField;
 
-               function setDescrWithReset(descr, deleteDescr) {
+               function setDescriptionWithReset(description, deleteDescription) {
                   var hasResetValue = element.hasOwnProperty('resetValue'),
                       hasInternalValue = filter.hasOwnProperty(field);
 
@@ -133,32 +139,42 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
                      } else {
                         delete newElement.caption;
                      }
-                  } else if (deleteDescr) {
+                  } else if(deleteDescription) {
                      delete newElement.caption;
                   } else {
-                     newElement.caption = descr;
+                     newElement.caption = description;
                   }
                }
 
-               if (field in filter) {
+
+               if(filter.hasOwnProperty(field)) {
                   newElement.value = filter[field];
                } else {
                   delete newElement.value;
                }
 
-               if (captions && (field in captions)) {
-                  setDescrWithReset.call(this, captions[field]);
-               } else if (field in filter) {
-                  setDescrWithReset.call(this, filter[field]);
+               if (captions && (captions.hasOwnProperty(field))) {
+                  setDescriptionWithReset(captions[field]);
+               } else if (filter.hasOwnProperty(field)) {
+                  setDescriptionWithReset(filter[field]);
                } else {
-                  setDescrWithReset.call(this, undefined, true);
+                  setDescriptionWithReset(undefined, true);
+               }
+
+               if(newElement.hasOwnProperty('internalVisibilityField')) {
+                  if(newElement.hasOwnProperty('value')) {
+                     newElement.visibilityValue = !FilterToStringUtil.isEqualValues(newElement.value, newElement.resetValue);
+                  } else {
+                     newElement.visibilityValue = newElement.hasOwnProperty('resetVisibilityValue') ? newElement.resetVisibilityValue : false;
+                  }
                }
 
                return newElement;
-            }, this);
+            });
          }
          this._recalcInternalContext();
       },
+
       _getFilterSctructureItemIndex : function(field){
          for (var i = 0; i < this._filterStructure.length; i++) {
             if (this._filterStructure[i].internalValueField === field) {
@@ -172,32 +188,35 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
             return func(element);
          });
       },
-      _recalcInternalContext: function() {
-         var changed = $ws.helpers.reduce(this._filterStructure, function(result, element) {
-            return result || (element.hasOwnProperty('value') ? !FilterToStringUtil.isEqualValues(element.resetValue, element.value) : false);
-         }, false, this);
 
+      _recalcInternalContext: function() {
          this.getLinkedContext().setValueSelf({
-            filterChanged: changed,
+            filterChanged: $ws.helpers.reduce(this._filterStructure, function(result, element) {
+               return result || (element.value ? !FilterToStringUtil.isEqualValues(element.resetValue, element.value) : false);
+            }, false),
             filterStructure: this._filterStructure,
             filterResetLinkText: this.getProperty('resetLinkText')
          });
       },
 
       _resetFilter: function(internalOnly) {
-         var resetFilter = this.getResetFilter(),
-             context = this._getCurrentContext(),
-             self = this;
+         var context = this._getCurrentContext(),
+             resetFilter = this.getResetFilter(),
+             toSet = {};
 
          /* Синхронизация св-в должна происходить один раз, поэтому делаю обёртку */
          propertyUpdateWrapper(function() {
             if (context) {
-               context.setValueSelf(self._options.internalContextFilterName + '/filter', resetFilter);
+               toSet[this._options.internalContextFilterName] = {
+                  filter: resetFilter,
+                  visibility: this.getResetVisibilityValue()
+               };
+               context.setValueSelf(toSet);
             }
 
             if (!internalOnly) {
-               self._updateFilterStructure(undefined, resetFilter);
-               self._notifyFilterUpdate();
+               this._updateFilterStructure(undefined, resetFilter);
+               this._notifyFilterUpdate();
             }
          }).call(this);
 
@@ -214,16 +233,14 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
 
       setFilterStructure: propertyUpdateWrapper(function(filterStructure) {
          this._options.filterStructure = filterStructure;
-
          this._updateFilterStructure(filterStructure);
-
          this._syncContext(false);
-
          this._notifyFilterUpdate();
       }),
+
       _mapFilterStructureByProp: function(prop) {
          return $ws.helpers.reduce(this._filterStructure, function(result, element) {
-            if (prop in element) {
+            if (element.hasOwnProperty(prop)) {
                /* Отдаём клон значения, чтобы его не испортили извне,
                   т.к. структуру можно менять только через setFilterStructure +
                   контролы будут правильно приниматься значения при открытии панели фильтрации*/
@@ -233,9 +250,26 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
          }, {});
       },
 
+      _mapFilterStructureByVisibilityField: function(prop) {
+         return $ws.helpers.reduce(this._filterStructure, function(result, element) {
+            if(element.internalVisibilityField) {
+               if (element.hasOwnProperty(prop)) {
+                  result[element.internalVisibilityField] = element[prop];
+               } else {
+                  result[element.internalVisibilityField] = false;
+               }
+            }
+            return result;
+         }, {});
+      },
+
 
       getFilter: function() {
          return this._mapFilterStructureByProp('value');
+      },
+
+      getResetVisibilityValue: function() {
+         return this._mapFilterStructureByVisibilityField('resetVisibilityValue');
       },
 
       getFilterStructure: function() {
