@@ -305,13 +305,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
                if (!withSaving || eip.validate()) {
                   this._sendLockCommand(this._savingDeferred);
-                  if (withSaving) {
-                     eip.applyChanges().addCallback(function() {
-                        this._afterEndEdit(eip, withSaving);
-                     }.bind(this))
-                  } else {
-                     this._afterEndEdit(eip, withSaving);
-                  }
+                  this._afterEndEdit(eip, withSaving);
                   return this._savingDeferred;
                } else {
                   this._savingDeferred.errback();
@@ -323,6 +317,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _afterEndEdit: function(eip, withSaving) {
                var
+                  self = this,
                   eipRecord = eip.getEditingRecord(),
                   isAdd = !eipRecord.isStored();
                if (this._editingRecord) {
@@ -331,13 +326,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
                if (withSaving) {
                   this._options.dataSource.update(eipRecord).addCallback(function(recordId) {
+                     eip.applyChanges();
                      if (isAdd) {
-                        eipRecord.set(eipRecord.getKeyField(), recordId)
-                        this._options.dataSet.push(this._cloneWithFormat(eipRecord, this._options.dataSet));
+                        eipRecord.set(eipRecord.getKeyField(), recordId);
+                        self._options.dataSet.push(self._cloneWithFormat(eipRecord, self._options.dataSet));
                      }
-                  }.bind(this)).addBoth(function() {
-                     this._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
-                  }.bind(this));
+                  }).addBoth(function() {
+                     self._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
+                  });
                } else {
                   this._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
                }
