@@ -849,10 +849,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
              /* Для поля связи в задизейбленом состоянии считаем, ширина инпута - 0, т.к. он визуально не отображается */
              if(this.isEnabled()) {
                 inputWidth = this._getInputWidth();
+
+                /* По неустановленным причинам, после обновления хрома, он для некоторых элементов начинает возвращать нулевую ширину,
+                   после чистки кэша или перезагрузки браузера проблема исчезает, но надо от этого защититься (повторялось только в хроме) */
+                if(!inputWidth && this._isEmptySelection()) {
+                   inputWidth = 'auto';
+                }
              } else  {
                 inputWidth = 0;
              }
-             this._inputField[0].style.width = inputWidth + 'px';
+             this._inputField[0].style.width = (inputWidth === 'auto' ? inputWidth : inputWidth + 'px');
           },
 
           /* Заглушка, само поле связи не занимается отрисовкой */
