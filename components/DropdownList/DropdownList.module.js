@@ -233,13 +233,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (idArray.length > 1) {
                for (var i = 0; i < idArray.length; i++) {
                   if (idArray[i] == this._defaultId){
-                     idArray = idArray.splice(i, 1);
+                     idArray.splice(i, 1);
                      break;
                   }
                }
-
             }
-            DropdownList.superclass.setSelectedKeys.apply(this, arguments);
+            DropdownList.superclass.setSelectedKeys.call(this, idArray);
             this._updateCurrentSelection();
          },
          _updateCurrentSelection: function(){
