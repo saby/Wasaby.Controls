@@ -14,17 +14,21 @@ define('js!SBIS3.CONTROLS.InformationPopup',
     */
    function(CompoundControl, PopupMixin, dotTpl){
       'use strict';
-      var module = CompoundControl.extend([PopupMixin], /** @lends SBIS3.CONTROLS.InformationPopup.prototype */ {
+      var InformationPopup = CompoundControl.extend([PopupMixin], /** @lends SBIS3.CONTROLS.InformationPopup.prototype */ {
+         /**
+          * @typedef {String} State
+          * @variant default  Окно без состояния. Цвет линии в шапке - синий, иконка по умолчанию не задана.
+          * @variant success  "Успешно". Цвет линии в шапке - зеленый, иконка - зелёная галка.
+          * @variant error    "Ошибка". Цвет линии в шапке - красный, иконка - треугольник с воскл.знаком.
+          * @variant warning  "Предупреждение". Цвет линии в шапке - оранжевый, иконка по умолчанию не задана.
+          */
+
          _dotTplFn : dotTpl,
          $protected: {
             _options: {
 
                /**
-                * @cfg {String} Состояние окна. От состояния зависит цвет линии в шапке.
-                * @variant default  Цвет линии будет синим
-                * @variant success  Цвет линии будет зеленым
-                * @variant error    Цвет линии будет красным
-                * @variant warning  Цвет линии будет оранжевым
+                * @cfg {State} Состояние окна. От состояния заивисит цвет линии в шапке и иконка по умолчани.
                 */
                state: 'default',
 
@@ -38,12 +42,12 @@ define('js!SBIS3.CONTROLS.InformationPopup',
          },
 
          init : function() {
-            module.superclass.init.call(this);
+            InformationPopup.superclass.init.call(this);
          },
 
          /**
           * Установить новое состояние
-          * @param state
+          * @param {State} state
           */
          setState: function(state){
             if(state === 'default' || state === 'success' || state === 'error' || state === 'warning'){
@@ -53,7 +57,7 @@ define('js!SBIS3.CONTROLS.InformationPopup',
          }
       });
 
-      module.resizable = false;
-      return module;
+      InformationPopup.resizable = false;
+      return InformationPopup;
    }
 );
