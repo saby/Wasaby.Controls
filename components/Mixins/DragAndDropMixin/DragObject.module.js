@@ -18,7 +18,8 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
          _avatar: undefined,
          _dragging: undefined,
          _meta: undefined,
-         _jsEvent: undefined
+         _jsEvent: undefined,
+         _targetsControl: undefined
       },
       /**
        * Возвращает элемент который сейчас тащат
@@ -113,12 +114,13 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
       isDragging: function() {
          return this._dragging;
       },
+
       /**
        * Возвращает контрол над которым сейчас находится курсор
        * @returns {SBIS3.CONTROLS.Control}
        */
       getTargetsControl: function() {
-         return this._jsEvent ? $(this._jsEvent.target).wsControl() : undefined;
+         return this._targetsControl;
       },
       //region protected
       /**
@@ -145,10 +147,18 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
       setTarget: function(target) {
          this._target = target;
       },
-
-      setEvent: function(e){
-         this._jsEvent = e;
+      /**
+       * устанавливает контрол над которым находится курсор
+       * @param {Event} e
+       * @protected
+       */
+      setTargetsControlByEvent: function(e) {
+         if (this._jsEvent !== e) {
+            this._jsEvent = e;
+            this._targetsControl = $(e.target).wsControl();
+         }
       }
+
       //endregion protected
    });
 
