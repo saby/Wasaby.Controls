@@ -877,6 +877,26 @@ define([
                });
 
             });
+
+            it('should return an error if "to" is not found', function (done) {
+               var toModel = new Model({
+                  rawData: {
+                     'Ид': 333,
+                     'ПорНом': 3
+                  }
+               });
+               source.read(5).addCallback(function (fromModel) {
+                  source.call('move', {
+                     from: fromModel,
+                     to: toModel,
+                     details: {column: 'ПорНом'}
+                  }).addCallbacks(function() {
+                     done(new Error('Errback expected'));
+                  }, function(err) {
+                     done();
+                  });
+               });
+            });
          });
          
          context('when use recordset as data', function () {
