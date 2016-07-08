@@ -74,7 +74,14 @@ define('js!SBIS3.CONTROLS.Browser', [
              */
             searchMode: 'current',
             /**
-             * @cfg {String} Id для работы с историей фильтров
+             * @cfg {String} Устанавливает Id для работы с историей фильтров.
+             * @remark
+             * Опция задает идентификатор, под которым будет сохраняться история фильтрации.
+             * Если значение для опции установлено, история фильтрации будет включена.
+             * @example
+             * <pre>
+             *     <option name="historyId">bankPayDocBrowser</option>
+             * </pre>
              */
             historyId : '',
             /**
