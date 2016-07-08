@@ -1,4 +1,4 @@
-/*global define $ws $*/
+/*global define, $ws, $*/
 define('js!SBIS3.CONTROLS.DragObject', [], function() {
    'use strict';
    /**
@@ -9,7 +9,8 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var DragObject = $ws.proto.Abstract.extend({
+   var  DRAG_AVATAR_OFFSET = 5,
+      DragObject = $ws.proto.Abstract.extend({
 
       $protected: {
          _owner: undefined,
@@ -90,14 +91,13 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
       setAvatar: function(avatar) {
          this.removeAvatar();
          if (avatar) {
-            $(avatar).appendTo($('body'));
-            avatar.css({
+            this._avatar = $(avatar);
+            this._setAvatarPosition(this._jsEvent);
+            this._avatar.css({
                'z-index': $ws.single.WindowManager.acquireZIndex(false),
                position: 'absolute'
-            });
+            }).appendTo($('body'));
          }
-
-         this._avatar = avatar;
       },
       /**
        * удаляет аватар
@@ -105,6 +105,7 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
       removeAvatar: function() {
          if (this._avatar) {
             this._avatar.remove();
+            this._avatar = null;
          }
       },
       /**
@@ -147,18 +148,35 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
       setTarget: function(target) {
          this._target = target;
       },
+
+      _preparePageXY: function (e) {
+         if (e.type === "touchstart" || e.type === "touchmove") {
+            e.pageX = e.originalEvent.touches[0].pageX;
+            e.pageY = e.originalEvent.touches[0].pageY;
+         }
+      },
       /**
-       * устанавливает контрол над которым находится курсор
-       * @param {Event} e
-       * @protected
+       * устанавливает позицию аватара
+       * @param  {Event} e
        */
-      setTargetsControlByEvent: function(e) {
+      _setAvatarPosition: function(e){
+         //смещение нужно чтобы событие onmouseup сработало над контролом, а не над аватаром
+         if (this.getAvatar()) {
+            this._preparePageXY(e);
+            this.getAvatar().css({
+               'left': e.pageX + DRAG_AVATAR_OFFSET,
+               'top': e.pageY + DRAG_AVATAR_OFFSET
+            });
+         }
+      },
+
+      onDragHandler: function(e) {
          if (this._jsEvent !== e) {
             this._jsEvent = e;
             this._targetsControl = $(e.target).wsControl();
+            this._setAvatarPosition(e);
          }
       }
-
       //endregion protected
    });
 

@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
 
    }
    var
-      DRAG_AVATAR_OFFSET = 5,
+
       buildTplArgsLV = function (cfg) {
          var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
          tplOptions.multiselect = cfg.multiselect;
@@ -53,12 +53,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
             $(this.getContainer()).bind('mouseup touchend', this.onMouseupInside.bind(this));
          },
 
-         _preparePageXY: function (e) {
-            if (e.type === "touchstart" || e.type === "touchmove") {
-               e.pageX = e.originalEvent.touches[0].pageX;
-               e.pageY = e.originalEvent.touches[0].pageY;
-            }
-         },
+
 
          /**
           * текущий активный компонент, либо по gdi (если переносим)
@@ -99,20 +94,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
          isDragDropContainer: function (element) {
             return $(element).hasClass('genie-dragdrop');
          },
-         /**
-          * возвращает аватар
-          * @returns {*}
-          */
-         getDragAvatar: function() {
-            return DragObject.getAvatar();
-         },
-         /**
-          * устанавливает аватар
-          * @param {JQuery} avatar
-          */
-         setDragAvatar: function(avatar) {
-            DragObject.setAvatar(avatar);
-         },
          //endregion public
 
          //region handlers
@@ -125,7 +106,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
           * @private
           */
          _onDrag: function (e, movable) {
-            console.log(this.getName());
             this._updateDragTarget(DragObject, e);
             var res = this._notify('onDrag', DragObject, e);
             if (res !== false) {
@@ -208,31 +188,15 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
           */
          _showAvatar: function(e) {
             var avatar = this._createAvatar(DragObject, e);
-            this.setDragAvatar(avatar);
-            this._setAvatarPosition(e);
+            DragObject.setAvatar(avatar);
          },
 
-         /**
-          * устанавливает позицию аватара
-          * @param  {Event} e
-          * @private
-          */
-         _setAvatarPosition: function(e){
-            //смещение нужно чтобы событие onmouseup сработало над контролом, а не над аватаром
-            if (DragObject.getAvatar()) {
-               DragObject.getAvatar().css({
-                  'left': e.pageX + DRAG_AVATAR_OFFSET,
-                  'top': e.pageY + DRAG_AVATAR_OFFSET
-               });
-            }
-         },
          /**
           * Начало перетаскивания
           * @param e
           * @param movable
           */
          _beginDrag: function(e) {
-            this._preparePageXY(e);
             var
                moveX = e.pageX - this._moveBeginX,
                moveY = e.pageY - this._moveBeginY;
@@ -242,6 +206,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
                return;
             }
             DragObject.reset();
+            DragObject.onDragHandler(e);
             if (this._beginDragHandler(DragObject, e) !== false) {
                if (this._notify('onDragBegin', DragObject, e) !== false) {
                   this._showAvatar(e);
@@ -269,6 +234,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
             //После опускания мыши, ещё раз позовём обработку перемещения, т.к. в момент перед отпусканием мог произойти
             //переход границы между сменой порядкового номера и перемещением в папку, а обработчик перемещения не вызваться,
             //т.к. он срабатывают так часто, насколько это позволяет внутренняя система взаимодействия с мышью браузера.
+            DragObject.onDragHandler(e);
             this._updateDragTarget(DragObject, e);
             var res = this._notify('onDragEnd', DragObject, e);
             if (res !== false) {
@@ -310,8 +276,9 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
             if (!this.isDragging()) {
                return;
             }
-            DragObject.setTargetsControlByEvent(e);
-            if (DragObject.getTargetsControl() === this ) {
+            DragObject.onDragHandler(e);
+            //если этот контрол начал перемещение или тащат над ним тогда стреяем событием _onDrag
+            if (DragObject.getOwner() === this || DragObject.getTargetsControl() === this ) {
                var
                // определяем droppable контейнер
                   movable = this._findDragDropContainer(e, e.target);
@@ -320,8 +287,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
                this._onDrag(e, movable);
                return false;
             }
-            this._setAvatarPosition(e);
-
          }
 
          //endregion mouseHandler

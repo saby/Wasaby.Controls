@@ -58,7 +58,12 @@ define('js!SBIS3.CONTROLS.ListView',
             return records;
          };
       var
-         START_NEXT_LOAD_OFFSET = 180;
+         START_NEXT_LOAD_OFFSET = 180,
+         DRAG_META_INSERT = {
+            on: 'on',
+            after: 'after',
+            before: 'before'
+         };
 
       /**
        * Контрол, отображающий внутри себя набор однотипных сущностей.
@@ -2411,7 +2416,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
-            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._beginDrag.bind(this));
+            this._getItemsContainer()[allowDragNDrop ? DRAG_META_INSERT.on : 'off']('mousedown', '.js-controls-ListView__item', this._beginDrag.bind(this));
          },
          /**
           * Получить текущую конфигурацию перемещения элементов с помощью DragNDrop.
@@ -2469,9 +2474,36 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onDragHandler: function(dragObject, e) {
-            var targetControl = $(e.target).wsControl();
-            if (targetControl && this === targetControl || !targetControl) {
-               this._updateDragTarget(dragObject, e);
+            if (dragObject.getTargetsControl() === this) {
+               var
+                  insert,
+                  neighborItem,
+                  currentElement = dragObject.getMeta() || {},
+                  target = this._findItemByElement($(e.target));
+
+
+               this._clearDragHighlight(dragObject);
+               if (this.getDragOwner() !== this || target.length && target.data('id') !== currentElement.targetId) {
+                  insert = this._getDirectionOrderChange(e, target);
+                  if (insert !== DRAG_META_INSERT.on && this.getDragOwner() === this) {
+                     neighborItem = this[insert === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](target.data('id'));
+                     if (neighborItem && neighborItem.data('id') === currentElement.targetId) {
+                        insert = DRAG_META_INSERT.on;
+                     }
+                  }
+                  if (this._notifyOnDragMove(target, insert, dragObject)) {
+                     currentElement.insert = insert;
+                     currentElement.target = target;
+                     this._drawDragHighlight(target, insert);
+                  } else {
+                     currentElement.insert = DRAG_META_INSERT.on;
+                     currentElement.target = null;
+                  }
+               } else {
+                  currentElement.insert = DRAG_META_INSERT.on;
+                  currentElement.target = null;
+               }
+               dragObject.setMeta(currentElement);
             }
          },
 
@@ -2487,41 +2519,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _updateDragTarget: function(dragObject, e) {
-            var
-                insert,
-                neighborItem,
-                currentElement = dragObject.getMeta() || {},
-                target = this._findItemByElement($(e.target));
-
-
-            this._clearDragHighlight(dragObject);
-            if (this.getDragOwner() !== this || target.length && target.data('id') !== currentElement.targetId) {
-               insert = this._getDirectionOrderChange(e, target);
-               if (insert !== 'on' && this.getDragOwner() === this) {
-                  neighborItem = this[insert === 'after' ? 'getNextItemById' : 'getPrevItemById'](target.data('id'));
-                  if (neighborItem && neighborItem.data('id') === currentElement.targetId) {
-                     insert = 'on';
-                  }
-               }
-               if (this._notifyOnDragMove(target, insert, dragObject)) {
-                  currentElement.insert = insert;
-                  currentElement.target = target;
-                  this._drawDragHighlight(target, insert);
-               } else {
-                  currentElement.insert = 'on';
-                  currentElement.target = null;
-               }
-            } else {
-               currentElement.insert = 'on';
-               currentElement.target = null;
-            }
-            dragObject.setMeta(currentElement);
             dragObject.setTarget(this._getDragTarget(e));
          },
 
          _notifyOnDragMove: function(target, insert, dragObject) {
-            if (insert !== 'on') {
-               return this._notify('onDragMove', dragObject.getMeta().keys, target.data('id'), insert === 'after', this.getDragOwner()) !== false;
+            if (insert !== DRAG_META_INSERT.on) {
+               return this._notify('onDragMove', dragObject.getMeta().keys, target.data('id'), insert === DRAG_META_INSERT.after, this.getDragOwner()) !== false;
             }
          },
          _clearDragHighlight: function(dragObject) {
@@ -2533,14 +2536,14 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _drawDragHighlight: function(target, insert) {
-            target.toggleClass('controls-DragNDrop__insertAfter', insert === 'after');
-            target.toggleClass('controls-DragNDrop__insertBefore', insert === 'before');
+            target.toggleClass('controls-DragNDrop__insertAfter', insert === DRAG_META_INSERT.after);
+            target.toggleClass('controls-DragNDrop__insertBefore', insert === DRAG_META_INSERT.before);
          },
          _getDirectionOrderChange: function(e, target) {
             return this._getOrderPosition(e.pageY - (target.offset() ? target.offset().top : 0), target.height());
          },
          _getOrderPosition: function(offset, metric) {
-            return offset < 10 ? 'before' : offset > metric - 10 ? 'after' : 'on';
+            return offset < 10 ? DRAG_META_INSERT.before : offset > metric - 10 ? DRAG_META_INSERT.after : DRAG_META_INSERT.on;
          },
 
          _createAvatar: function(dragObject) {
@@ -2564,7 +2567,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }
 
                if (dragObject.getOwner() === this) {
-                  this._move([dragObject.getSource()], dragObject.getTarget(), currentElement.insert === 'after');
+                  this._move([dragObject.getSource()], dragObject.getTarget(), currentElement.insert === DRAG_META_INSERT.after);
                }
             }
 
