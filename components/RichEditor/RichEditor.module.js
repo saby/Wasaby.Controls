@@ -1820,11 +1820,23 @@ define('js!SBIS3.CONTROLS.RichEditor',
          _updateHeight: function() {
             var curHeight;
             if (this.isVisible()) {
+               if ($ws._const.browser.isMobileIOS) {
+                  this._scrollTo($(this._tinyEditor.selection.getNode()));
+               }
                curHeight = this._container.height();
                if (curHeight !== this._lastHeight) {
                   this._lastHeight = curHeight;
                   this._notifyOnSizeChanged();
                }
+            }
+         },
+         _scrollTo: function(target){
+            var
+               targetOffset = target[0].getBoundingClientRect(),
+               koef = (window.innerHeight > window.innerWidth) ? 0.65 : 0.39; //Для альбома и портрета коэффициенты разные.
+            if (targetOffset.top > window.innerHeight*koef) {
+               target[0].scrollIntoView({block: 'start', behavior: 'smooth'});
+
             }
          },
 
