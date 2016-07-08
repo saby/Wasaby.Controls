@@ -125,8 +125,10 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._editingRecord = record.clone();
                this.getContext().setValue(CONTEXT_RECORD_FIELD, this._editingRecord);
             },
-            _onRecordChange: function() {
-               this._editingRecord.merge(this._record);
+            _onRecordChange: function(event, fields) {
+               for (var fld in fields) {
+                  this._editingRecord.set(fld, fields[fld]);
+               }
             },
             _toggleOnRecordChangeHandler: function(toggle) {
                this._record[toggle ? 'subscribe' : 'unsubscribe']('onPropertyChange', this._onRecordChangeHandler);
