@@ -444,15 +444,18 @@ define('js!SBIS3.CONTROLS.RichEditor',
           */
          setText: function(text) {
             var
-               newText = this._drawText(text);
-            this._textChanged = true;
-            this._options.text = newText;
-            this._notify('onTextChange', newText);
-            this._notifyOnPropertyChanged('text');
-            this._updateDataReview(newText);
-            this._togglePlaceholder(newText);
-            this._updateHeight();
-            this.clearMark();
+               newText = this._prepareContent(text);
+            if (text !== this._options.text) {
+               newText = this._drawText(newText);
+               this._textChanged = true;
+               this._options.text = newText;
+               this._notify('onTextChange', newText);
+               this._notifyOnPropertyChanged('text');
+               this._updateDataReview(newText);
+               this._togglePlaceholder(newText);
+               this._updateHeight();
+               this.clearMark();
+            }
          },
 
          setActive: function(active) {
