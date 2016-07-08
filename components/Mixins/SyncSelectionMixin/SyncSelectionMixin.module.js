@@ -22,6 +22,11 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], func
 
    var SyncSelectionMixin = /**@lends SBIS3.CONTROLS.SyncSelectionMixin.prototype  */{
       $constructor: function() {
+         /* Если уже в конструкторе есть selectedItem, то синхронизируем с selectedItems */
+         if(this._options.selectedItem instanceof Model) {
+            this.initializeSelectedItems();
+            this._options.selectedItems.assign([this._options.selectedItem]);
+         }
          /* Почему событие onPropertyChanged: если изменить св-во контрола в событии onPropertyChanged,
             то корректно произойдёт синхронизация с контекстом  */
          this.subscribe('onPropertyChanged', function(e, propName) {

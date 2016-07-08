@@ -441,6 +441,13 @@ define('js!SBIS3.CONTROLS.Image',
                   handlers: {
                      onAfterClose: function() {
                         $ws.helpers.toggleLocalIndicator(self._container, false);
+                     },
+                     onBeforeControlsLoad: function() {
+                        $ws.single.Indicator.setMessage('Открытие диалога редактирования...');
+                        $ws.single.Indicator.show();
+                     },
+                     onAfterShow: function() {
+                        $ws.single.Indicator.hide();
                      }
                   }
                });

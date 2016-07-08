@@ -297,6 +297,7 @@ define(
       setDate: function(date) {
          this._setDate(date);
          this._notify('onDateChange', this._options.date);
+         this._notifyOnPropertyChanged('date');
       },
 
       /**

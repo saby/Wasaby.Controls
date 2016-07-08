@@ -23,6 +23,26 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!WS.Data/Entity/Model'], functi
          }
       },
 
+      after: {
+         _modifyOptions: function(opts) {
+            if(opts.selectedItem instanceof Model) {
+               return opts;
+            }
+
+            /* Пре-инициализация selectedItem, если selectedItem пришёл как объект
+               требуется проинициализировать, чтобы была возможность построить вёрстку на уровне шаблонизатора */
+            if(opts.selectedItem && !Object.isEmpty(opts.selectedItem) && opts.selectedItem[opts.keyField] && opts.selectedItem[opts.displayField]) {
+               opts.selectedItem = new Model({
+                  idProperty: opts.keyField,
+                  rawData: opts.selectedItem
+               });
+               opts.selectedKey = opts.selectedItem.getId();
+            }
+
+            return opts;
+         }
+      },
+
       $constructor: function() {
          if(!$ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.Selectable')) {
             throw new Error('Selectable mixin is required');

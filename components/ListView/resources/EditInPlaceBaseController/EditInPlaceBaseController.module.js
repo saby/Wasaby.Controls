@@ -5,11 +5,12 @@
 define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    [
       'js!SBIS3.CORE.CompoundControl',
+      'html!SBIS3.CONTROLS.EditInPlaceBaseController/AddRowTpl',
       'js!SBIS3.CONTROLS.EditInPlace',
       'js!WS.Data/Entity/Model',
       'js!WS.Data/Di'
    ],
-   function (CompoundControl, EditInPlace, Model, Di) {
+   function (CompoundControl, AddRowTpl, EditInPlace, Model, Di) {
 
       'use strict';
 
@@ -305,13 +306,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
                if (!withSaving || eip.validate()) {
                   this._sendLockCommand(this._savingDeferred);
-                  if (withSaving) {
-                     eip.applyChanges().addCallback(function() {
-                        this._afterEndEdit(eip, withSaving);
-                     }.bind(this))
-                  } else {
-                     this._afterEndEdit(eip, withSaving);
-                  }
+                  this._afterEndEdit(eip, withSaving);
                   return this._savingDeferred;
                } else {
                   this._savingDeferred.errback();
@@ -323,6 +318,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _afterEndEdit: function(eip, withSaving) {
                var
+                  self = this,
                   eipRecord = eip.getEditingRecord(),
                   isAdd = eipRecord.getState() === 'Added';
                if (this._editingRecord) {
@@ -331,13 +327,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
                if (withSaving) {
                   this._options.dataSource.update(eipRecord).addCallback(function(recordId) {
+                     eip.applyChanges();
                      if (isAdd) {
-                        eipRecord.set(eipRecord.getKeyField(), recordId)
-                        this._options.dataSet.push(this._cloneWithFormat(eipRecord, this._options.dataSet));
+                        eipRecord.set(eipRecord.getKeyField(), recordId);
+                        self._options.dataSet.push(self._cloneWithFormat(eipRecord, self._options.dataSet));
                      }
-                  }.bind(this)).addBoth(function() {
-                     this._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
-                  }.bind(this));
+                  }).addBoth(function() {
+                     self._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
+                  });
                } else {
                   this._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
                }
@@ -408,14 +405,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _createAddTarget: function(options) {
                var
-                  lastTarget,
-                  currentTarget,
-                  targetHash = options.target ? options.target.getHash() : null,
-                  addTarget = this._options.columns ?
-                      $('<tr><td colspan="' + (this._options.columns.length + (this._options.ignoreFirstColumn ? 1 : 0)) + '"></td></tr>') :
-                      $('<div>');
+                   lastTarget,
+                   currentTarget,
+                   targetHash = options.target ? options.target.getHash() : null,
+                   addTarget = $(AddRowTpl({
+                      columns: this._options.columns,
+                      ignoreFirstColumn: this._options.ignoreFirstColumn
+                   }));
 
-               addTarget.addClass("js-controls-ListView__item controls-ListView__item");
                if (targetHash) {
                   currentTarget = $('.controls-ListView__item[data-hash="' + targetHash + '"]', this._options.itemsContainer.get(0));
                   if (options.addPosition !== 'top') {

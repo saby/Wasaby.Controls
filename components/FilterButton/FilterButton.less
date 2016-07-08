@@ -22,10 +22,6 @@
             margin: @controls-filterButton-area-text-margin;
          }
 
-         .controls__filterButton__area-text, .controls__filter-button__clear-filter {
-            float: left;
-         }
-
          .controls__filter-button__apply-filter {
             float: right;
             margin-right: @controls-filterButton-apply-margin-right;
@@ -39,81 +35,115 @@
          }
       }
 
+      .controls-filterButton__secondary-title {
+         font-size: @controls-filterButton-title-fontSize;
+         color: @controls-filterButton-title-text-color;
+         display: inline-block;
+         height: 24px;
+         line-height: 24px;
+         cursor: default;
+      }
 
 
-      /* Стилик для кнопки раскрытия списка в кнопке фильтров */
+
+      /* Стили для кнопки раскрытия списка в кнопке фильтров */
       .controls-filterButton__toggleButton {
          border: @controls-filterButton-toggleButton-border;
          background-color: @controls-filterButton-toggleButton-bgColor;
 
-         &.ws-enabled {
-            &:hover {
-               .controls-Button__text {
-                  color: @primary-color;
-               }
+         line-height: @controls-filterButton-toggleButton-lineHeight;
+         font-size: @controls-filterButton-toggleButton-fontSize;
+         font-family: @controls-filterButton-toggleButton-fontFamily;
+         width: auto;
+         color: #CCCCCC;
+         height: @controls-filterButton-toggleButton-height;
+         box-sizing: border-box;
+         display: block;
+         text-align: center;
 
-               .controls-filterButton__toggleButton-icon {
-                  border-color: @primary-color;
-                  color: @primary-color;
-               }
+         &:hover {
+            .controls-filterButton__toggleButton-icon {
+               color: @controls-filterButton-history-title-color;
             }
-         }
-
-         .controls-Button__text {
-            font-size: @controls-filterButton-toggleButton-fontSize;
-            color: @controls-filterButton-toggleButton-text-color;
          }
 
          .controls-filterButton__toggleButton-icon {
-            top: @controls-filterButton-toggleButton-icon-top;
-            font-style: @controls-filterButton-toggleButton-icon-style;
-            font-size: @controls-filterButton-toggleButton-icon-size;
-            .border-radius(@controls-filterButton-toggleButton-icon-radius);
-            border: @controls-filterButton-toggleButton-icon-border;
-            background-color: @controls-filterButton-toggleButton-icon-bgColor;
+            display: inline-block;
             width: @controls-filterButton-toggleButton-icon-width;
             height: @controls-filterButton-toggleButton-icon-height;
+            position: relative;
+            top: auto;
+            left: auto;
+         }
 
-            &:before {
+         .controls-filterButton__toggleButton-icon:before {
+            content: @controls-filterButton-toggleButton-icon-down;
+            font-style: @controls-filterButton-toggleButton-icon-style;
+            font-size: @controls-filterButton-toggleButton-icon-fontSize;
+            position: absolute;
+            top: @controls-filterButton-toggleButton-icon-top;
+            left: @controls-filterButton-toggleButton-icon-left;
+         }
+         &.controls-Checked__checked {
+            .controls-filterButton__toggleButton-icon:before {
                content: @controls-filterButton-toggleButton-icon-up;
             }
          }
+      }
 
-         &.controls-Checked__checked {
-            .controls-filterButton__toggleButton-icon {
-               &:before {
-                  content: @controls-filterButton-toggleButton-icon-down;
-               }
+      .controls__filterButton__filterLink {
+         color: @controls-filterButton-title-text-color;
+
+         &:hover {
+            color: @controls-filterButton-title-text-color;
+         }
+      }
+
+      .controls__filterButton__filterText {
+         height: @controls-filterButton-button-height;
+         line-height: @controls-filterButton-button-height;
+         display: inline-block;
+         cursor: default;
+
+         .controls__filterButton__FilterText__caption {
+            line-height: @controls-filterButton-button-height;
+            display: inline-block;
+         }
+         .controls__filterButton__FilterText__reset {
+            cursor: pointer;
+            visibility: hidden;
+            position: relative;
+            top: 2px;
+            left: -5px;
+         }
+         &:hover {
+            .controls__filterButton__FilterText__reset {
+               visibility: visible;
             }
-         }
-
-         .controls-Button__icon + .controls-Button__text {
-            margin-right: @controls-filterButton-toggleButton-text-marginR;
-            margin-left: @controls-filterButton-toggleButton-text-marginL;
-         }
-
-         .controls-Button__icon {
-            left: @controls-filterButton-toggleButton-icon-left;
-            right: @controls-filterButton-toggleButton-icon-right;
          }
       }
 
       .controls__filterButton__area-footer {
+         margin: 0 12px 12px 12px;
+
+         .controls-filterButton__footerAreas-maxHeight {
+            max-height: @controls-filterButton-history-maxHeight-height;
+         }
+
+         .controls-filterButton__footerAreas-wrapper {
+            display: block;
+            overflow: hidden;
+            margin: 6px 0 0 14px;
+         }
+
+         .controls-filterButton__additionalFilterParams-area {
+            margin-bottom: 6px;
+         }
 
          .controls-filterButton__history-area {
-            padding: @controls-filterButton-history-area-padding;
 
-            .controls-filterButton__toggleButton {
-               margin-left: @controls-filterButton-history-tButton-margin;
-            }
-            .controls-filterButton__historyView-wrapper {
-               padding-top: @controls-filterButton-history-wrapper-padding;
-               overflow: @controls-filterButton-history-maxHeight-overflow;
-
-               &.controls-filterButton__historyView-maxHeight {
-                  max-height: @controls-filterButton-history-maxHeight-height;
-                  padding-bottom: @controls-filterButton-history-maxHeight-padding;
-               }
+            .controls-filterButton__footerAreas-wrapper {
+               margin-left: -4px;
             }
 
             .controls-filterButton__historyView {
@@ -141,6 +171,7 @@
                      position: @controls-filterButton-history-titleCont-position;
                      right: @controls-filterButton-history-titleCont-right;
                      left: @controls-filterButton-history-titleCont-left;
+                     top: 2px;
 
                      .controls-filterButton__historyView-item-title {
                         display: @controls-filterButton-history-title-display;
@@ -155,7 +186,7 @@
                      background-color: transparent !important;
 
                      .controls-filterButton__historyView-item-title {
-                        color: @link-hover-text-color;
+                        text-decoration: underline;
                      }
                   }
                }
@@ -165,7 +196,7 @@
    }
 
    .controls__filterButton__area-content {
-      padding: @controls-filterButton-area-content-padding;
+      margin: @controls-filterButton-area-content-margin;
       overflow: hidden;
    }
 }
@@ -178,7 +209,6 @@
       width: @controls-filterButton-button-width;
       height: @controls-filterButton-button-height;
       margin: @controls-filterButton-button-margin;
-      background: @controls-filterButton-button-image;
       display: inline-block;
       cursor: pointer;
       float: right;
@@ -194,7 +224,6 @@
    &.ws-disabled {
       .controls__filterButton-button {
          cursor: default;
-         background-position: @controls-filterButton-button-image-disabled;
       }
    }
 

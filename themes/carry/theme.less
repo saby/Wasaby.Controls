@@ -1,7 +1,10 @@
 @import "../online/theme";
 
-@closeFilterButtonImage:                        url('img/areaBigCloseButton.png') 0 0;
-@closeFilterButtonImageHover:                  url('img/areaBigCloseButton.png') 0 -40px;
+@globalFontFamily :                       'TensorFont Regular', 'TensorFont';
+@closeFilterButtonImage:                  url('img/areaBigCloseButton.png') 0 0;
+@closeFilterButtonImageHover:             url('img/areaBigCloseButton.png') 0 -40px;
+@carry-big-height:                        60px;
+@text-box-height-carryFont:               42px;
 
 .icon-size {
    font-size: @icon-size !important;
@@ -9,8 +12,107 @@
    height: @icon-height;
 }
 
-@carry-big-height:   60px;
-@text-box-height-carryFont:  42px;
+.controls__filterButton {
+   .controls__filterButton-button {
+      &.icon-size {
+         font-size: 32px !important;
+         width: 32px;
+         height: 32px;
+      }
+   }
+}
+
+@carry-big-height:            60px;
+@text-box-height-carryFont:   42px;
+
+.ws-button-classic {
+   background-color: @button-primary-bg  !important;
+   background-size: 100% 100%;
+   border-radius: 0  !important;
+   border: @button-border  !important;
+   &.ws-enabled {
+      &:hover {
+         background-color: @button-primary-hover-bg  !important;
+      }
+      &:active, &.ws-field-button-element-active, &.ws-button-pressed {
+         background-color: @button-primary-active-bg  !important;
+      }
+   }
+   .ws-button-caption, .ws-button-image {
+      line-height: 38px  !important;
+   }
+
+   &.ws-smp-dlg-button {
+      height: 60px !important;
+      line-height: 60px !important;
+      .ws-button-caption, .ws-button-image {
+         line-height: 60px !important;
+      }
+   }
+
+   &.ws-default-button {
+      &.ws-field-button {
+         &.ws-smp-dlg-button{
+            &:active {
+               background-color: @button-primary-active-bg  !important;
+            }
+         }
+      }
+   }
+}
+
+.ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
+   &.ws-field-button {
+      width: 36px !important;
+      height: 24px !important;
+      min-height: 24px  !important;
+      background-color: transparent !important;
+   }
+}
+
+.ws-field-button {
+   font-size: 24px  !important;
+   min-height: 40px  !important;
+   height: 40px  !important;
+   line-height: 38px !important;
+}
+
+.ws-smp-dlg h2 {
+   font: normal 24px @globalFontFamily  !important;
+   padding: 24px 0 8px 0  !important;
+}
+.ws-smp-dlg {
+   .ws-smp-header {
+      font: bold 32px @globalFontFamily !important;
+   }
+   &.ws-smp-dlg-error {
+      .ws-smp-header {
+         color: #EF463A;
+      }
+   }
+}
+
+.ws-smp-dlg p {
+   padding: 0 !important;
+   font-size: 24px !important;
+}
+
+.ws-smp-dlg-btns {
+   height:  60px !important;
+   padding: 24px 0 !important;
+   background: none;
+}
+
+.ws-smp-dlg-brd {
+   background: none no-repeat center 0 #0055BB;
+}
+
+.ws-window {
+   &.radius {
+      border-radius: 0 !important;
+   }
+}
+
 .controls-TextBox {
    &.controls-TextBox__big {
       height: @carry-big-height;

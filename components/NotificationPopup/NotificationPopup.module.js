@@ -6,14 +6,14 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
 
    /**
     * Всплывающее нотификационное уведомление с иконкой, заголовком и дополнительным содержимым.
-    * @class SBIS3.CONTROLS.InformationPopup
-    * @extends SBIS3.CONTROLS.FloatArea
+    * @class SBIS3.CONTROLS.NotificationPopup
+    * @extends SBIS3.CONTROLS.InformationPopup
     * @control
     * @author Степин П.В.
     */
    function(InformationPopup, template, headerTpl){
       'use strict';
-      var module = InformationPopup.extend( /** @lends SBIS3.CONTROLS.NotificationPopup.prototype */ {
+      var NotificationPopup = InformationPopup.extend( /** @lends SBIS3.CONTROLS.NotificationPopup.prototype */ {
          $protected: {
             _options: {
 
@@ -40,17 +40,9 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
 
                /**
                 * @cfg {String} Заголовок. Отображается в шапке.
+                * @translatable
                 */
                caption: null,
-
-               /**
-                * @cfg {String} Состояние окна.
-                * @variant default  Цвет линии в шапке будет синим.
-                * @variant success  Цвет линии в шапке будет зеленым.
-                * @variant error    Цвет линии в шапке будет красным.
-                * @variant warning  Цвет линии в шапке будет оранжевым.
-                */
-               state: 'default',
 
                /*
                * @noShow
@@ -67,7 +59,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
          },
 
          init : function() {
-            module.superclass.init.call(this);
+            NotificationPopup.superclass.init.call(this);
 
             if(!this._options.icon){
                switch(this._options.state){
@@ -83,7 +75,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
 
          /**
           * Установить заголовок
-          * @param caption
+          * @param {String} caption Новый заголовок
           */
          setCaption: function(caption){
             if(typeof caption === 'string'){
@@ -93,7 +85,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
 
          /**
           * Установить иконку
-          * @param icon
+          * @param {String} icon Новая иконка
           */
          setIcon: function(icon){
             if(typeof icon === 'string'){
@@ -102,6 +94,6 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
             }
          }
       });
-      return module;
+      return NotificationPopup;
    }
 );

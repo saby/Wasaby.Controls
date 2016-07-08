@@ -85,6 +85,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          _previousDocumentTitle: undefined,
          _dataSource: null,
          _isConfirmDialogShowed: false,
+         _panelReadyDeferred: undefined,
          _options: {
             /**
              * @cfg {String} Устанавливает первичный ключ записи, редактируемой на диалоге.
@@ -155,7 +156,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
 
       $constructor: function(cfg) {
          this._newRecord = cfg.isNewRecord || false;
-         this._publish('onFail', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel');
+         this._publish('onFail', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel', 'onAfterFormLoad');
          $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
          $ws.single.CommandDispatcher.declareCommand(this, 'read', this._read);
          $ws.single.CommandDispatcher.declareCommand(this, 'update', this.update);
@@ -202,8 +203,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             event.setResult(false);
             this._saveRecord({});
          }.bind(this));
-
-         this._panel.subscribe('onAfterShow', this._updateIndicatorZIndex.bind(this));
+         var self = this;
+         this._panelReadyDeferred = new $ws.proto.Deferred();
+         this._panel.subscribe('onAfterShow', function() {
+            self._updateIndicatorZIndex();
+            self._panelReadyDeferred.callback();
+         });
       },
 
       _onBeforeNavigate: function(event, activeElement, isIconClick){
@@ -601,6 +606,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          }
          this._updateDocumentTitle();
          this._setContextRecord(record);
+         var self = this;
+         this._panelReadyDeferred.addCallback(function(){
+            self._actionNotify('onAfterFormLoad');
+         });
+
+
       },
       /**
        * Удалить запись из источника данных диалога редактирования.

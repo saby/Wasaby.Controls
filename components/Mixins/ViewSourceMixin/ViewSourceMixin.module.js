@@ -80,8 +80,6 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
                var keyField = view.getProperty('keyField'),
                    recordSet;
 
-               view._toggleIndicator(false);
-
                if (keyField && keyField !== dataSet.getIdProperty()) {
                   dataSet.setIdProperty(keyField);
                }
@@ -93,11 +91,15 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
                   path: dataSet.getProperty('p')
                });
 
-               view.setDataSource(source, true);
+               if (!view.isDestroyed()) { //Пока выполнялся запрос - view уже мог успеть уничтожиться. В таком случае не трогаем view
+                  view._toggleIndicator(false);
+                  view.setDataSource(source, true);
+                  //FIXME это временный придрод, уйдёт, как будет сделана отрисовка на сервере (3.7.3.200 - 3.7.4)
+                  view._notify('onDataLoad', recordSet);
+                  view.setItems(recordSet);
+               }
+
                resultDef.callback(recordSet);
-               //FIXME это временный придрод, уйдёт, как будет сделана отрисовка на сервере (3.7.3.200 - 3.7.4)
-               view._notify('onDataLoad', recordSet);
-               view.setItems(recordSet);
 
                return recordSet;
             });

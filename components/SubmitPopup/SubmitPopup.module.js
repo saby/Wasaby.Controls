@@ -5,27 +5,31 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
    ],
 
    /**
-    * Информационный окно.
-    * В зависимости от состояния, может быть диалогом подтверждения, с кнопками "Да", "Нет", "Отмена" (опционально),
-    * и диалогами с кнопкой "Ок".
-    * @class SBIS3.CONTROLS.InformationPopup
-    * @extends SBIS3.CONTROLS.FloatArea
+    * Информационное окно.
+    * В зависимости от состояния, может быть диалогом подтверждения, с кнопками "Да", "Нет" и (опционально) "Отмена",
+    * или диалогом с кнопкой "Ок".
+    * @class SBIS3.CONTROLS.SubmitPopup
+    * @extends SBIS3.CONTROLS.InformationPopup
     * @control
     * @author Степин П.В.
     */
    function(InformationPopup, template){
       'use strict';
-      var module = InformationPopup.extend( /** @lends SBIS3.CONTROLS.SubmitPopup.prototype */ {
+      var SubmitPopup = InformationPopup.extend( /** @lends SBIS3.CONTROLS.SubmitPopup.prototype */ {
+         /**
+          * @typedef {Boolean|undefined} ChosenState
+          * @variant true Нажата кнопка "Да"
+          * @variant false Нажата кнопка "Нет"
+          * @variant undefined Нажата кнопка "ОК" или "Отмена"
+          */
+         /**
+          * @event onChoose Событие нажатия на кнопку в окне.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {ChosenState} Вариант диалога, выбранный нажатием соответствующей кнопки
+          * @variant
+          */
          $protected: {
             _options: {
-               /**
-                * @cfg {String} Состояние окна.
-                * @variant default  Окно подтверждения. Содержит кнопки "Да", "Нет", "Отмена" (опционально) и синию линию сверху.
-                * @variant success  Окно успешного выполения команды. Содержит одну кнопку "Ок" и зеленую линию сверху.
-                * @variant error    Окно ошибки. Содержит одну кнопку "Ок" и красную линию сверху.
-                * @variant warning  Окно предупреждения. Содержит одну кнопку "Ок" и оранжевую линию сверху.
-                */
-               state: 'default',
 
                /**
                 * @cfg {String} Отображаемое сообщение.
@@ -51,11 +55,11 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
             }
          },
          $constructor : function(){
-            this._publish('onChoose')
+            this._publish('onChoose');
          },
 
          init : function() {
-            module.superclass.init.call(this);
+            SubmitPopup.superclass.init.call(this);
 
             var self = this;
 
@@ -80,11 +84,14 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
             }
          },
 
+         /*
+          * @private
+          */
          _choose: function(value){
             this._notify('onChoose', value);
             this.close();
          }
       });
-      return module;
+      return SubmitPopup;
    }
 );

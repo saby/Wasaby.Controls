@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.FilterHistory',
 
    'use strict';
 
-    var MAX_MINIMIZE_HISTORY_ITEMS = 3;
+    var MAX_MINIMIZE_HISTORY_ITEMS = 5;
 
    /**
     * Контрол, отображающий историю фильтров в кнопке фильтров
@@ -34,6 +34,7 @@ define('js!SBIS3.CONTROLS.FilterHistory',
 
       $constructor: function() {
          this._container.removeClass('ws-area');
+         $ws.single.CommandDispatcher.declareCommand(this, 'toggleHistory', this.toggleHistoryBlock);
       },
 
       _historyItemTpl: dotTplForItem,
@@ -44,8 +45,8 @@ define('js!SBIS3.CONTROLS.FilterHistory',
          this._historyView = this.getChildControlByName('historyView');
          this._toggleHistoryButton = this.getChildControlByName('toggleHistory');
 
-         /* При нажатии развернём/свернём список истории */
-         this.subscribeTo(this._toggleHistoryButton, 'onActivated', this.toggleHistoryBlock.bind(this));
+         ///* При нажатии развернём/свернём список истории */
+         //this.subscribeTo(this._toggleHistoryButton, 'onActivated', this.toggleHistoryBlock.bind(this));
 
          /* Проинициализируем список: подпишемся на события, проставим операции над записью */
          this._initHistoryView();
@@ -88,7 +89,7 @@ define('js!SBIS3.CONTROLS.FilterHistory',
             /* Если записей в истории нет - скроем историю */
             self._container.toggleClass('ws-hidden', !dsCount);
             /* Если записей < 3, то выключим кнопку разворота истории */
-            self._toggleHistoryButton.setEnabled(dsCount > MAX_MINIMIZE_HISTORY_ITEMS);
+            self._toggleHistoryButton[dsCount > MAX_MINIMIZE_HISTORY_ITEMS ? 'show' : 'hide']();
          });
       },
 
@@ -109,8 +110,8 @@ define('js!SBIS3.CONTROLS.FilterHistory',
       toggleHistoryBlock: function(closed) {
          var isBooleanArg = typeof closed === 'boolean';
 
-         this._container.find('.controls-filterButton__historyView-wrapper')
-                        .toggleClass('controls-filterButton__historyView-maxHeight', isBooleanArg ? closed : undefined);
+         this._container.find('.controls-filterButton__footerAreas-wrapper')
+                        .toggleClass('controls-filterButton__footerAreas-maxHeight', isBooleanArg ? closed : undefined);
 
          if(isBooleanArg) {
             this._toggleHistoryButton.setChecked(!closed);
