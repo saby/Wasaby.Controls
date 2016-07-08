@@ -1,4 +1,4 @@
 <div class="controls-Menu">
    <div class="controls-Menu__itemsContainer"></div>
-   <div class="controls-Menu__footer">{{=it.footerTpl()}}</div>
+   {{?it.footerTpl}}<div class="controls-Menu__footer">{{=it.footerTpl()}}</div>{{?}}
 </div>
