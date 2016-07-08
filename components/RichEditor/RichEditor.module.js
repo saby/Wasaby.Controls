@@ -724,7 +724,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
          setFontColor: function(color) {
             this._applyFormat('forecolor', color);
             this._tinyEditor.execCommand('');
-            this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._onValueChangeHandler();
          },
