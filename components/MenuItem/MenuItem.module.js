@@ -21,6 +21,18 @@ define('js!SBIS3.CONTROLS.MenuItem', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS
       $constructor: function() {
          this._iconContainer = $('.js-controls-MenuItem__icon',this.getContainer());
       },
+
+      setCaption: function(caption){
+         MenuItem.superclass.setCaption.call(this, caption);
+         caption = this._options.caption;
+         var $caption = $('.js-controls-MenuItem__text', this._container);
+         if (this._options.caption) {
+            if ($caption.length){
+               $caption.html(caption);
+            }
+         }
+      },
+
       setIcon: function(){
          this._iconContainer && this._iconContainer.removeClass(this._oldIcon);
          MenuItem.superclass.setIcon.apply(this, arguments);
