@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
           */
          _linkedModelKey: undefined,
          /**
-          * @var {SBIS3.CONTROLS.Data.Model} Запись которая пришла на редктирование, из метода прочитать или создать
+          * @var {WS.Data/Entity/Model} Запись которая пришла на редктирование, из метода прочитать или создать
           */
          _record: undefined
       },

@@ -91,7 +91,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @event onChangeHoveredItem Происходит при переводе курсора мыши на другой элемент коллекции списка.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Object} hoveredItem Объект, свойства которого описывают данные элемента коллекции списка, на который навели курсор мыши.
-          * @param {SBIS3.CONTROLS.Data.Model} record Элемент коллекции, на который перевели курсор.
+          * @param {WS.Data/Entity/Model} record Элемент коллекции, на который перевели курсор.
           * @param {Number|String} hoveredItem.key Первичный ключ элемента.
           * @param {jQuery|false} hoveredItem.container Контейнер визуального отображения элемента (DOM-элемент).
           * @param {Object} hoveredItem.position Объект, свойства которого описывают координаты контейнера визуального отображения элемента.
@@ -336,7 +336,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * <ul>
                 *    <li>contaner - контейнер визуального отображения записи.</li>
                 *    <li>id - идентификатор записи.</li>
-                *    <li>item - запись (экземпляр класса {@link SBIS3.CONTROLS.Data.Model}).</li>
+                *    <li>item - запись (экземпляр класса {@link WS.Data/Entity/Model}).</li>
                 * </ul>
                 * @property {Boolean} allowChangeEnable Признак, по которому устанавливается возможность использования операций в случае, если взаимодействие с контролом запрещено (см. опцию {@link $ws.proto.Control#enabled}).
                 * @editor icon ImageEditor
