@@ -1325,7 +1325,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                //    то, он оставит сверху один пустой абзац, который не удалить через визуальный режим, и будет писать в новом
                // </проблема>
                if (!editor.selection.isCollapsed()) {
-                  if (editor.selection.getContent() == self._getTinyEditorValue()) {
+                  if (editor.selection.getContent() == self._curValue()) {
                      if (!e.ctrlKey && e.charCode !== 0) {
                         editor.bodyElement.innerHTML = '';
                      }
@@ -1819,7 +1819,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   if (this.isActive() && !this._sourceContainerIsActive() && !!text) {
                      this.setCursorToTheEnd();
                   }
-                  newText = this._getTinyEditorValue();
+                  newText = this._curValue();
                } else {
                   newText = text || '';
                   if (this._tinyReady.isReady()) {
