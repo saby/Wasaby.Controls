@@ -60,7 +60,6 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
                // так как на него много всего завязано. (пользуется Янис)
                this._folderHasMore[key] = list.getMetaData().more;
-               this._createFolderFooter(key);
                this._loadedNodes[key] = true;
                ladderDecorator && ladderDecorator.setIgnoreEnabled(true);
                this._options._items.merge(list, {remove: false});
@@ -70,6 +69,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                }
                this._notify('onDataMerge', list);
                this._toggleIndicator(false);
+               this._createFolderFooter(key);
                this._drawExpandedItem(expandedItem);
             }.bind(this));
          } else {
