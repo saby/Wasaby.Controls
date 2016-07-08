@@ -136,19 +136,19 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
             return elem;
          },
          /**
-          * шаблонныйц метод endDropDown
+          * шаблонный метод endDropDown
           */
          _endDragHandler: function(dragObject, e) {
 
          },
          /**
-          * шаблонныйц метод endDropDown
+          * шаблонный метод endDropDown
           */
          _onDragHandler: function(dragObject, e) {
 
          },
          /**
-          * шаблонныйц метод beginDropDown
+          * шаблонный метод beginDropDown
           */
          _beginDragHandler: function(dragObject, e) {
 
@@ -225,7 +225,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
          },
 
          /**
-          * Конец перетаскивание
+          * Конец перетаскивания
           * @param {Event} e js событие
           * @param {Boolean} droppable Закончили над droppable контейнером
           * @private
@@ -266,7 +266,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
             }
          },
          /**
-          *
+          * обработчик  соь
           * @param buse
           * @param e
           * @returns {boolean}

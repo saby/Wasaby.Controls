@@ -71,20 +71,20 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
          return this._avatar;
       },
       /**
-       *
+       * Возвращает метаданные объекта
        */
       getMeta: function() {
          return this._meta;
       },
       /**
-       *
+       * Устанавливает метаданные объекта
        */
       setMeta: function(meta) {
          this._meta = meta;
       },
       /**
        * Устанавливает аватар
-       * @param {JQuery} avatar
+       * @param {String} avatar строка содержащая верстку аватара
        * @see getAvatar
        * @see removeAvatar
        */
