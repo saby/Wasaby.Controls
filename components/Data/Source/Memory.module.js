@@ -243,7 +243,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
                targetPosition = this._getIndexByKey(toKey);
             }
             if (targetPosition === -1) {
-               return $ws.proto.Deferred().fail('Can\'t find target position');
+               return $ws.proto.Deferred.fail('Can\'t find target position');
             }
             if (details.after && sourcePosition > targetPosition) {
                targetPosition++;
