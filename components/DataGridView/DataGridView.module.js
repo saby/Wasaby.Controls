@@ -845,7 +845,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _appendResultsContainer: function(container, resultRow){
          DataGridView.superclass._appendResultsContainer.call(this, container, resultRow);
-         this.updateScrollAndColumns();
+         if(this.hasPartScroll()) {
+            this.updateScrollAndColumns();
+         }
       },
 
       _checkThumbPosition: function(cords) {
