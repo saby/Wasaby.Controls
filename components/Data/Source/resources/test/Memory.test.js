@@ -91,7 +91,7 @@ define([
             sourcePm = new MemorySource({
                data: data,
                idProperty: 'Ид',
-               moveProperty: 'ПорНом'
+               orderProperty: 'ПорНом'
             });
          });
 
@@ -765,11 +765,11 @@ define([
             it('should move 5 to begin list', function (done) {
                source.read(5).addCallback(function (model1) {
                   source.read(6).addCallback(function (model2) {
-                     source.call('move', {
-                        from: model1,
-                        to: model2,
-                        details: {after: false}
-                     }).addCallbacks(function() {
+                     source.move(
+                        model1,
+                        model2,
+                        {before: true}
+                     ).addCallbacks(function() {
                         if (data[0]['Ид'] === 5) {
                            done();
                         } else {
@@ -785,11 +785,11 @@ define([
             it('should move 6 before 5', function (done) {
                source.read(6).addCallback(function (model1) {
                   source.read(5).addCallback(function (model2) {
-                     source.call('move', {
-                        from: model1,
-                        to: model2,
-                        details: {after: false}
-                     }).addCallbacks(function() {
+                     source.move(
+                        model1,
+                        model2,
+                        {before: true}
+                     ).addCallbacks(function() {
                         if (data[5]['Ид'] === 6 && data[6]['Ид'] === 5) {
                            done();
                         } else {
@@ -806,11 +806,11 @@ define([
             it('should move 6 after 5', function (done) {
                source.read(6).addCallback(function (model1) {
                   source.read(5).addCallback(function (model2) {
-                     source.call('move', {
-                        from: model1,
-                        to: model2,
-                        details: {after: true}
-                     }).addCallbacks(function() {
+                     source.move(
+                        model1,
+                        model2,
+                        {before: false}
+                     ).addCallbacks(function() {
                         if(data[5]['Ид'] === 5 && data[6]['Ид'] === 6) {
                            done();
                         } else {
@@ -827,11 +827,11 @@ define([
             it('should move 6 to end list', function (done) {
                source.read(6).addCallback(function (model1) {
                   source.read(3).addCallback(function (model2) {
-                     source.call('move', {
-                        from: model1,
-                        to: model2,
-                        details: {after: true}
-                     }).addCallbacks(function() {
+                     source.move(
+                        model1,
+                        model2,
+                        {before: false}
+                     ).addCallbacks(function() {
                         if(data[data.length-1]['Ид'] === 6) {
                            done();
                         } else {
@@ -847,11 +847,11 @@ define([
             it('should move before record with ПорНом=6', function (done) {
                source.read(5).addCallback(function (model) {
                   source.read(6).addCallback(function (model2) {
-                     source.call('move', {
-                        from: model,
-                        to: model2,
-                        details: {column: 'ПорНом', after: false}
-                     }).addCallbacks(function() {
+                     sourcePm.move(
+                        model,
+                        model2,
+                        {before: true}
+                     ).addCallbacks(function() {
                         if(data[2]['Ид'] === 5) {
                            done();
                         } else {
@@ -867,11 +867,11 @@ define([
             it('should move after record with ПорНом=6', function (done) {
                source.read(5).addCallback(function (model) {
                   source.read(6).addCallback(function (model2) {
-                     source.call('move', {
-                        from: model,
-                        to: model2,
-                        details: {column: 'ПорНом', after: true}
-                     }).addCallbacks(function() {
+                     sourcePm.move(
+                        model,
+                        model2,
+                        {before: false}
+                     ).addCallbacks(function() {
                         if(data[4]['Ид'] === 5) {
                            done();
                         } else {
@@ -893,11 +893,11 @@ define([
                   }
                });
                source.read(5).addCallback(function (fromModel) {
-                  source.call('move', {
-                     from: fromModel,
-                     to: toModel,
-                     details: {column: 'ПорНом'}
-                  }).addCallbacks(function() {
+                  source.move(
+                     fromModel,
+                     toModel,
+                     {column: 'ПорНом', before: true}
+                  ).addCallbacks(function() {
                      done(new Error('Errback expected'));
                   }, function(err) {
                      done();

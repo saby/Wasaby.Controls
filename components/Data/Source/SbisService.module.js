@@ -171,7 +171,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
              * @see move
              */
-            moveProperty: 'ПорНомер'
+            orderProperty: 'ПорНомер'
 
          },
 
@@ -408,7 +408,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        */
       _prepareMoveArguments: function(from, to, meta) {
          var params = {
-               'ПорядковыйНомер': this._options.moveProperty,
+               'ПорядковыйНомер': this._options.orderProperty,
                'Иерархия': meta.hierField || null,
                'Объект': this._options.endpoint.moveContract,
                'ИдО': this._prepareComplexId(from.getId())

@@ -238,7 +238,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки.
              * @see move
              */
-            moveProperty: ''
+            orderProperty: ''
          }
       },
       /** @typedef {Object} MoveMetaConfig

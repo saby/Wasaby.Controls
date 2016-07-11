@@ -215,14 +215,14 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          if (to) {
             var toKey = to.get(this._options.idProperty),
                tableAdapter = this._getTableAdapter();
-            if (this._options.moveProperty && this._options.moveProperty !== this._options.idProperty) {
+            if (this._options.orderProperty && this._options.orderProperty !== this._options.idProperty) {
                //TODO: indexed search
                var adapter = this.getAdapter();
                for (var index = 0, count = tableAdapter.getCount(); index < count; index++) {
                   if (toKey === adapter.forRecord(
                         tableAdapter.at(index)
                      ).get(
-                        this._options.moveProperty
+                        this._options.orderProperty
                      )
                   ) {
                      targetPosition = index;
@@ -236,9 +236,9 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             if (targetPosition === -1) {
                return $ws.proto.Deferred.fail('Can\'t find target position');
             }
-            if (meta.after && sourcePosition > targetPosition) {
+            if (!meta.before && sourcePosition > targetPosition) {
                targetPosition++;
-            } else if( !details.after) {
+            } else if( meta.before) {
                targetPosition--;
             }
 

@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
 
          _doExecute: function (params) {
             if (params) {
-               return this._move(params.from, params.to, params.down);
+               return this._move(params.from, params.to, params.up);
             }
          },
 
