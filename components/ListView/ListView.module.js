@@ -1174,10 +1174,10 @@ define('js!SBIS3.CONTROLS.ListView',
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
          _isHoverEditMode: function() {
-            return !$ws._const.compatibility.touch && this._options.editMode.indexOf('hover') !== -1;
+            return !this._touchSupport && this._options.editMode.indexOf('hover') !== -1;
          },
          _isClickEditMode: function() {
-            return this._options.editMode.indexOf('click') !== -1 || ($ws._const.compatibility.touch && this._options.editMode.indexOf('hover') !== -1);
+            return this._options.editMode.indexOf('click') !== -1 || (this._touchSupport && this._options.editMode.indexOf('hover') !== -1);
          },
          initEditInPlace: function() {
             this._notifyOnItemClick = this.beforeNotifyOnItemClick();
@@ -1768,13 +1768,14 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _nextLoad: function () {
-            var self = this,
-               loadAllowed  = this._isAllowInfiniteScroll();
+            //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него.
             if (!this._scrollWatcher.hasScroll(this.getContainer())){
                this._container.addClass('controls-ListView__outside-scroll-loader');
             } else {
                this._container.removeClass('controls-ListView__outside-scroll-loader');
             }
+            var self = this,
+               loadAllowed  = this._isAllowInfiniteScroll();
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && $ws.helpers.isElementVisible(this.getContainer()) &&
                   this._hasNextPage(this.getItems().getMetaData().more, this._infiniteScrollOffset) && !this.isLoading()) {
@@ -1790,8 +1791,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                   this.getItems().setMetaData(dataSet.getMetaData());
                   self._infiniteScrollOffset += self._limit;
+                  self._hideLoadingIndicator();
                   if (!hasNextPage) {
-                     self._hideLoadingIndicator();
                      this._toggleEmptyData(!self.getItems().getCount());
                   }
                   self._notify('onDataMerge', dataSet);
@@ -1902,20 +1903,14 @@ define('js!SBIS3.CONTROLS.ListView',
                return (scrollableContainer.scrollHeight - (scrollableContainer.scrollTop + scrollContainer.height())) == 0;
             }
          },
-         //Проверка есть ли открытые stack FloatArea или maximize Window, они могут збирать на себя скролл у body
+         //Проверка есть ли открытые stack FloatArea, они могут збирать на себя скролл у body
          _existFloatArea: function(){
             var areas = $ws.single.FloatAreaManager._areas;
-            var windows = $ws.single.WindowManager.getStack();
             for (var area in areas){
                if (areas.hasOwnProperty(area)){
                   if (areas[area].isVisible() && areas[area]._options.isStack){
                      return true;
                   }
-               }
-            }
-            for (var i = 0; i < windows.length; i++){
-               if (windows[i].window._options.maximize){
-                  return true;
                }
             }
             return false;
