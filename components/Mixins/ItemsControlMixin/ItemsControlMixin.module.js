@@ -1440,11 +1440,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   hierField: this._options.hierField + '@'
                },
                targetContainer,
-               itemInstance;
+               itemInstance, groupTemplateFnc;
          targetContainer = this._getTargetContainer(item);
          tplOptions.item = item;
          tplOptions.colspan = tplOptions.columns.length + this._options.multiselect;
-         itemInstance = this._buildTplItem(projItem, groupBy.template(tplOptions));
+         groupTemplateFnc = TemplateUtil.prepareTemplate(groupBy.template);
+         itemInstance = this._buildTplItem(projItem, groupTemplateFnc(tplOptions));
          //Навесим класс группировки и удалим лишний класс на item, если он вдруг добавился
          itemInstance.addClass('controls-GroupBy')
             .removeClass('controls-ListView__item');
