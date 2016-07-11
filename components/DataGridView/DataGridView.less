@@ -33,6 +33,22 @@
       }
    }
 
+   &.controls-DataGridView__markerRight{
+      .controls-ListView__item__selected {
+         .controls-DataGridView__td {
+            &:first-child {
+               background-image: none;
+            }
+            &:last-child {
+               .marker(right top);
+            }
+         }
+      }
+      .controls-ItemsToolbar {
+         margin-right: 3px;
+      }
+   }
+
    .controls-DataGridView__td__textAlignRight{
      text-align: right!important;
    }
@@ -204,6 +220,16 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+
+        &.controls-DataGridView-cell-verticalAlignTop{
+          vertical-align: top;
+        }
+        &.controls-DataGridView-cell-verticalAlignMiddle{
+          vertical-align: middle;
+        }
+        &.controls-DataGridView-cell-verticalAlignBottom{
+          vertical-align: bottom;
         }
       }
    }

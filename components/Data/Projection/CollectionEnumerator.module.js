@@ -106,9 +106,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       },
 
       _createIndex: function (property) {
-         var savedPosition = this._position;
+         var savedPosition = this._position,
+            savedCurrent = this._current;
          IndexedEnumeratorMixin._createIndex.call(this, property);
          this._position = savedPosition;
+         this._current = savedCurrent;
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin
@@ -125,6 +127,15 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          return index === undefined ?
             undefined :
             this._$items[this.getSourceByInternal(index)];
+      },
+
+      /**
+       * Возвращает кол-во элементов
+       * @returns {Number}
+       */
+      getCount: function () {
+         this._initInternalMap();
+         return this._internalToSource.length;
       },
 
       /**
@@ -161,7 +172,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        * @returns {Boolean}
        */
       isValidPosition: function (position) {
-         return position >= -1 && position < this._$items.length;
+         return position >= -1 && position < this.getCount();
       },
 
       /**
@@ -182,7 +193,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        * @returns {*}
        */
       getNext: function () {
-         if (this._position >= this._$items.length - 1) {
+         if (this._position >= this.getCount() - 1) {
             return;
          }
          this._position++;

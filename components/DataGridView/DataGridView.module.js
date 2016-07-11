@@ -42,8 +42,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
     *    </options>
     * </component>
     * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
+    * @cssModifier controls-DataGridView__markerRight Маркер отображается не слева строки, а справа.
     * @cssModifier controls-DataGridView__hasSeparator Включает линии разделители между строками
-    * @cssModifier controls-DataGridView__td__textAlignRight Стиль задается колонке, выравнивает текст во всех ячейках этой колонки по правой стороне
     * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
     */
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
@@ -87,7 +87,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {Boolean} [highlight=true] Подсвечивать фразу при поиске
              * @property {String} resultTemplate Шаблон отображения колонки в строке результатов
              * @property {String} className Имя класса, который будет применён к каждой ячейке столбца
-             * Стилевые классы: controls-DataGridView-cell-overflow-ellipsis - текст внутри ячейки будет обрезаться троеточием (актуально для однострочных ячеек)
+             * Стилевые классы:
+             *    controls-DataGridView-cell-overflow-ellipsis - текст внутри ячейки будет обрезаться троеточием (актуально для однострочных ячеек)
+             *    controls-DataGridView__td__textAlignRight Стиль задается колонке, выравнивает текст во всех ячейках этой колонки по правой стороне
+             *    controls-DataGridView-cell-verticalAlignTop - содержимое ячейки будет выравниваться по верхнему краю
+             *    controls-DataGridView-cell-verticalAlignMiddle - содержимое ячейки будет выравниваться по середине
+             *    controls-DataGridView-cell-verticalAlignBottom - содержимое ячейки будет выравниваться по нижнему краю
              * @property {String} headTemplate Шаблон отображения шапки колонки
              * @property {String} headTooltip Всплывающая подсказка шапки колонки
              * @property {String} editor Устанавливает редактор колонки для режима редактирования по месту.
@@ -324,7 +329,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             hierField: cfg.hierField,
             getColumnVal: getColumnVal,
             decorators : args.decorators,
-            displayField : args.displayField
+            displayField : args.displayField,
+            isSearch : args.isSearch
          };
          args.startScrollColumn = cfg.startScrollColumn;
 
@@ -835,6 +841,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _findMovableCells: function() {
          this._movableElems = this._container.find('.controls-DataGridView__scrolledCell');
+      },
+
+      _appendResultsContainer: function(container, resultRow){
+         DataGridView.superclass._appendResultsContainer.call(this, container, resultRow);
+         if(this.hasPartScroll()) {
+            this.updateScrollAndColumns();
+         }
       },
 
       _checkThumbPosition: function(cords) {

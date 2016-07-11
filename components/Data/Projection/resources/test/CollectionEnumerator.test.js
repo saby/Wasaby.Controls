@@ -109,6 +109,28 @@ define([
             });
          });
 
+         describe('.setCurrent()', function() {
+            it('should set the current item', function() {
+               var i,
+                  item;
+               for (i = 0; i < items.length; i++) {
+                  item = items[i];
+                  enumerator.setCurrent(item);
+                  assert.strictEqual(item, enumerator.getCurrent());
+               }
+            });
+
+            it('should change the current position', function() {
+               var i,
+                  item;
+               for (i = 0; i < items.length; i++) {
+                  item = items[i];
+                  enumerator.setCurrent(item);
+                  assert.strictEqual(i, enumerator.getPosition());
+               }
+            });
+         });
+
          describe('.getNext()', function() {
             it('should return undefined for empty list', function() {
                var enumerator = new ProjectionEnumerator();
@@ -127,7 +149,7 @@ define([
 
             it('should work fine with repeated elements', function() {
                var items = ['a', 'b', 'c', 'd', 'e'],
-                  sortMap = [0, 1, 2, 1, 3, 4, 2, 5, 0, 0, 4, 5],
+                  sortMap = [0, 1, 2, 1, 3, 4, 2, 4, 0, 0, 4, 3],
                   enumerator = new ProjectionEnumerator({
                      items: items,
                      filterMap: [true, true, true, true, true],
@@ -141,6 +163,7 @@ define([
                   itemIndex = sortMap[index];
                   assert.strictEqual(items[itemIndex], item);
                }
+               assert.strictEqual(index, sortMap.length - 1);
             });
          });
 
@@ -192,6 +215,69 @@ define([
                   index++;
                   assert.strictEqual(items[index], enumerator.getCurrent());
                }
+            });
+         });
+
+         describe('.at()', function() {
+            it('should return element at given position', function() {
+               var index,
+                  itemIndex;
+               for (index = 0; index < sortMap.length; index++) {
+                  itemIndex = sortMap[index];
+                  assert.strictEqual(items[itemIndex], enumerator.at(index));
+               }
+            });
+         });
+
+         describe('.getCount()', function() {
+            it('should return value equal to items count', function() {
+               assert.strictEqual(items.length, enumerator.getCount());
+            });
+
+            it('should return value equal to sort map count', function() {
+               var items = ['a', 'b', 'c', 'd', 'e'],
+                  sortMap = [0, 1, 2, 1, 3, 4, 2, 4, 0, 0, 4, 3],
+                  filterMap = [true, true, true, true, true],
+                  enumerator = new ProjectionEnumerator({
+                     items: items,
+                     filterMap: filterMap,
+                     sortMap: sortMap
+                  });
+
+               assert.strictEqual(sortMap.length, enumerator.getCount());
+            });
+
+            it('should return value equal to sort map count reduced by filter map', function() {
+               var items = ['a', 'b', 'c', 'd', 'e'],
+                  sortMap = [0, 1, 2, 1, 3, 4, 2, 4, 0, 0, 4, 3],
+                  filterMap = [true, false, true, true, false],
+                  expectedCount = $ws.helpers.reduce(sortMap, function(prev, cur) {
+                     var match = filterMap[cur];
+                     return prev + (match ? 1 : 0);
+                  }, 0);
+                  enumerator = new ProjectionEnumerator({
+                     items: items,
+                     filterMap: filterMap,
+                     sortMap: sortMap
+                  });
+
+               assert.strictEqual(expectedCount, enumerator.getCount());
+            });
+         });
+
+         describe('.getIndexByValue()', function() {
+            it('should save the position unchanged', function() {
+               var position = 1;
+               enumerator.setPosition(position);
+               enumerator.getIndexByValue('index', 999);
+               assert.strictEqual(enumerator.getPosition(), position);
+            });
+            
+            it('should save the current unchanged', function() {
+               enumerator.setPosition(1);
+               var current = enumerator.getCurrent();
+               enumerator.getIndexByValue('index', 999);
+               assert.strictEqual(enumerator.getCurrent(), current);
             });
          });
 

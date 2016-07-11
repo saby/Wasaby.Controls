@@ -251,9 +251,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       },
 
       getCount: function () {
-         return $ws.helpers.reduce(this._sortMap, function(prev, current) {
-            return prev + (this._filterMap[current] ? 1 : 0);
-         }, 0, this);
+         return this._getServiceEnumerator().getCount();
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IList

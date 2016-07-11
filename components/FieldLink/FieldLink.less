@@ -18,6 +18,7 @@
    margin: @controls-FieldLink-linkItem-margin;
    position: @controls-FieldLink-linkItem-position;
    padding: @controls-FieldLink-linkItem-padding;
+   line-height: @controls-FieldLink-linkItem-line-height;
    .text-overflow();
 
    .controls-FieldLink__linkItem-caption {
@@ -128,13 +129,19 @@
 
    .controls-TextBox__afterFieldWrapper {
       padding: @controls-FieldLink-afterField-padding;
-      height: 22px;
+      height: @controls-FieldLink-afterField-height;
       position: absolute;
       top: 0;
       right: 0;
-      background-color: #ffffff;
+      background-color: @controls-FieldLink-afterField-background;
       > *{
          vertical-align: middle;
       }
    }
+   &.ws-validation-error {
+      .controls-TextBox__afterFieldWrapper {
+         background-color: @text-box-error-bg;
+      }
+   }
+
 }

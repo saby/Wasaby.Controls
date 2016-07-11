@@ -174,7 +174,13 @@ define('js!SBIS3.CONTROLS.RichEditor',
                 *    <li>source - html-разметка;</li>
                 * </ol>
                 */
-               userItems: {}
+               userItems: {},
+               /**
+                * Позволяет в задизабленном режиме подсвечивать ссылки на файлы и URL
+                * @cfg {Boolean} Подсвечивать ссылки
+                * <wiTag group="Управление">
+                */
+               highlightLinks: false
             },
             _fakeArea: undefined, //textarea для перехода фкуса по табу
             _tinyEditor: undefined, //экземпляр tinyMCE
@@ -696,12 +702,12 @@ define('js!SBIS3.CONTROLS.RichEditor',
           */
          setFontStyle: function(style) {
             if (style !== 'mainText') {
-               this._tinyEditor.formatter.apply(style);
+               this._applyFormat(style, true);
                this._textFormats[style] = true;
             }
             for (var stl in constants.styles) {
                if (style !== stl) {
-                  this._tinyEditor.formatter.remove(stl);
+                  this._removeFormat(stl);
                   this._textFormats[stl] = false;
                }
             }
@@ -716,8 +722,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
           * @private
           */
          setFontColor: function(color) {
-            this._tinyEditor.formatter.apply('forecolor', {value: color});
-            this._tinyEditor.undoManager.add(); //todo Разобраться с undoManager и ВЕЗДЕ убрать undoManager.add
+            this._applyFormat('forecolor', color);
             this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._onValueChangeHandler();
@@ -883,7 +888,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                dom = editor.dom,
                protocol = /(https?|ftp|file):\/\//gi,
                dialogWidth = 440;
-            require(['js!SBIS3.CORE.Dialog'], function(Dialog) {
+            require(['js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FieldString'], function(Dialog, FieldString) {
                new Dialog({
                   title: rk('Вставить/редактировать ссылку'),
                   disableActions: true,
@@ -1268,10 +1273,12 @@ define('js!SBIS3.CONTROLS.RichEditor',
                      naturalSizes = ImageUtil.getNaturalSizes($images[i]);
                      currentWidth = $($images[i]).width();
                      width = currentWidth > maximalWidth ? maximalWidth : currentWidth === 0 ? naturalSizes.width > maximalWidth ? maximalWidth : naturalSizes.width : currentWidth;
-                     $($images[i]).css({
-                        'width': width,
-                        'height': 'auto'
-                     });
+                     if (!$images[i].style || !$images[i].style.width || $images[i].style.width.indexOf('%') < 0) {
+                        $($images[i]).css({
+                           'width': width,
+                           'height': 'auto'
+                        });
+                     }
                   }
                }
                this._changeValueFromSetText = false;
@@ -1627,6 +1634,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
           * @private
           */
          _setTextAlign: function(align) {
+            //TODO: перейти на  this.execCommand('JustifyRight'), http://archive.tinymce.com/wiki.php/Tutorials:Command_identifiers
             var
             // выбираем ноду из выделения
                $selectionContent = $(this._tinyEditor.selection.getNode()),
@@ -1812,11 +1820,23 @@ define('js!SBIS3.CONTROLS.RichEditor',
          _updateHeight: function() {
             var curHeight;
             if (this.isVisible()) {
+               if ($ws._const.browser.isMobileIOS) {
+                  this._scrollTo($(this._tinyEditor.selection.getNode()));
+               }
                curHeight = this._container.height();
                if (curHeight !== this._lastHeight) {
                   this._lastHeight = curHeight;
                   this._notifyOnSizeChanged();
                }
+            }
+         },
+         _scrollTo: function(target){
+            var
+               targetOffset = target[0].getBoundingClientRect(),
+               koef = (window.innerHeight > window.innerWidth) ? 0.65 : 0.39; //Для альбома и портрета коэффициенты разные.
+            if (targetOffset.top > window.innerHeight*koef) {
+               target[0].scrollIntoView({block: 'start', behavior: 'smooth'});
+
             }
          },
 
@@ -1976,6 +1996,31 @@ define('js!SBIS3.CONTROLS.RichEditor',
                }
                this._instances.style.setValue(textFormat);
             }
+         },
+         /**
+          * Применить формат к выделенному текст
+          * @param {string} format  имя формата
+          * @param {string} value  значение формата
+          * @private
+          * функция взята из textColor плагина для tinyMCE:
+          * https://github.com/tinymce/tinymce/commit/2adfc8dc5467c4af77ff0e5403d00ae33298ed52
+          */
+         _applyFormat : function(format, value) {
+            this._tinyEditor.focus();
+            this._tinyEditor.formatter.apply(format, {value: value});
+            this._tinyEditor.nodeChanged();
+         },
+         /**
+          * Убрать формат выделенного текста
+          * @param {string} format  имя формата
+          * @private
+          * функция взята из textColor плагина для tinyMCE:
+          * https://github.com/tinymce/tinymce/commit/2adfc8dc5467c4af77ff0e5403d00ae33298ed52
+          */
+         _removeFormat : function(format) {
+            this._tinyEditor.focus();
+            this._tinyEditor.formatter.remove(format, {value: null}, null, true);
+            this._tinyEditor.nodeChanged();
          },
 
          _focusOutHandler: function(){}

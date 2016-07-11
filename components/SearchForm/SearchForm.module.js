@@ -60,7 +60,9 @@ define('js!SBIS3.CONTROLS.SearchForm', [
          });
 
          $('.js-controls-SearchForm__search', this.getContainer().get(0)).click(function() {
-            self.applySearch(true);
+            if(self.isEnabled()) {
+               self.applySearch(true);
+            }
          });
       },
 

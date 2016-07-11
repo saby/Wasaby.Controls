@@ -298,9 +298,10 @@
          content: none;
       }
    }
+   //TODO:избавиться при переходе на dropdownlist
    &.custom-options-container {
       margin: 0;
-      padding-top: 2px;
+      padding-top: 3px;
       &.custom-options-container-hover{
          padding-left: 7px;
       }
@@ -314,6 +315,7 @@
          }
          .custom-select-option{
             height: 30px;
+            margin-top: -1px !important;
          }
       }
    }
@@ -366,6 +368,7 @@
 
    .custom-select-arrow-open.custom-select-arrow-hover {
       padding-top: 0;
+      margin-top: -1px;
    }
 }
 
@@ -509,20 +512,25 @@
    }
 }
 //Выпадающий список с выбором стиля текста
-.controls-RichEditor__styleText-title {
-   font-size: 18px;
-}
+//TODO: убрать при переходе на dropdownlist
+.controls-RichEditor__ToolbarItem {
+   &.custom-options-container .custom-options-container-list, &.custom-options-container .custom-options-container-head,.custom-select-text {
+      .controls-RichEditor__styleText-title {
+         font-size: 18px;
+      }
 
-.controls-RichEditor__styleText-subTitle {
-   font-size: 15px;
-}
+      .controls-RichEditor__styleText-subTitle {
+         font-size: 15px;
+      }
 
-.controls-RichEditor__styleText-selectedMainText {
-   font-weight: bold;
-}
+      .controls-RichEditor__styleText-selectedMainText {
+         font-weight: bold;
+      }
 
-.controls-RichEditor__styleText-additionalText {
-   font-size: 12px;
+      .controls-RichEditor__styleText-additionalText {
+         font-size: 12px;
+      }
+   }
 }
 //Стили для окна добавления/редактирования ссылки
 .controls-RichEditor__InsertLinkHrefLabel,
@@ -572,9 +580,9 @@
 }
 .ws-is-ie8 {
    .controls-RichEditor__Toolbar {
-      .controls-RichEditor__ToolbarItem {
+      .controls-RichEditor__ToolbarItem.controls-Button {
          .custom-select-arrow {
-            top: -3px;
+            top: -4px;
          }
       }
    }

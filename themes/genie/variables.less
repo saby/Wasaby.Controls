@@ -288,11 +288,11 @@
 
 @tab-button-bottomLine-start-display:           none;
 @tab-button-bottomLine-position:                absolute;
-@tab-button-bottomLine-bottom:                  -1px;
+@tab-button-bottomLine-bottom:                  -2px;
 @tab-button-bottomLine-left:                    1px;
 @tab-button-bottomLine-right:                   1px;
 @tab-button-bottomLine-background:              #fff;
-@tab-button-bottomLine-height:                  1px;
+@tab-button-bottomLine-height:                  2px;
 @tab-button-bottomLine-display:                 block;
 
 @tab-button-checked-height:                     28px;
@@ -1010,6 +1010,9 @@
 @combo-box-picker-item-selected-text-color:     @gray-color;
 @combo-box-picker-item-selected-bg:             @white-color;
 
+@compo-box-fieldWrapper-margin:                 @text-box-field-after-margin;
+@combo-box-after-width:                         @text-box-after-width;
+
 // TODO: check whether it's required
 @combo-box-input-wrapper-right-offset:          18px;
 
@@ -1720,67 +1723,62 @@
 
 @controls-filterButton-area-header-padding:       12px 44px 12px 12px;
 @controls-filterButton-area-header-height:        24px;
-@controls-filterButton-area-header-width:         270px;
+@controls-filterButton-area-header-width:         310px;
 @controls-filterButton-area-header-border:        1px solid @gray-light-color;
 
 @controls-filterButton-area-text-size:            18px;
 @controls-filterButton-area-text-weight:          bold;
 @controls-filterButton-area-text-margin:          0 12px 0 0;
 
-@controls-filterButton-area-content-padding:      12px;
+@controls-filterButton-title-fontSize:            15px;
+@controls-filterButton-title-text-color:          #313e78;
+
+@controls-filterButton-area-content-margin:       12px;
 @controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
 @controls-filterButton-line-height:               @font-basic-line-height;
 @controls-filterButton-apply-margin-right:        0;
 
 //FilterButtonHistory
-@controls-filterButton-history-area-padding:      0 12px 12px 4px;
-@controls-filterButton-history-tButton-margin:    8px;
 @controls-filterButton-history-wrapper-padding:   6px;
-@controls-filterButton-history-maxHeight-height:  64px;
+@controls-filterButton-history-maxHeight-height:  120px;
 @controls-filterButton-history-maxHeight-overflow:hidden;
-@controls-filterButton-history-maxHeight-padding: 3px;
 @controls-filterButton-history-actions-right:     auto !important;
 @controls-filterButton-history-actions-left:      -4px !important;
-@controls-filterButton-history-actions-margin:    3px;
+@controls-filterButton-history-actions-margin:    0;
 
 @controls-filterButton-history-item-min-height:   24px;
 
 @controls-filterButton-history-pin-float:         left;
 @controls-filterButton-history-pin-position:      relative;
-@controls-filterButton-history-pin-top:           2px;
+@controls-filterButton-history-pin-top:           5px;
 
 @controls-filterButton-history-titleCont-position:absolute;
-@controls-filterButton-history-titleCont-right:   0;
+@controls-filterButton-history-titleCont-right:   8px;
 @controls-filterButton-history-titleCont-left:    18px;
 
 @controls-filterButton-history-title-display:     inline-block;
 @controls-filterButton-history-title-height:      24px;
 @controls-filterButton-history-title-verAlign:    middle;
-@controls-filterButton-history-title-color:       #8991A9;
+@controls-filterButton-history-title-color:       #313e78;
 @controls-filterButton-history-title-width:       100%;
 
 //FilterButtonToggleButton
+@controls-filterButton-toggleButton-lineHeight:   20px !important;
+@controls-filterButton-toggleButton-fontSize:     26px !important;
+@controls-filterButton-toggleButton-fontFamily:   acordion-font!important;
+@controls-filterButton-toggleButton-height:       24px;
+
+@controls-filterButton-toggleButton-icon-width:   24px;
+@controls-filterButton-toggleButton-icon-height:  24px;
+@controls-filterButton-toggleButton-icon-fontSize:41px !important;
+@controls-filterButton-toggleButton-icon-top:     3px;
+@controls-filterButton-toggleButton-icon-left:    -9px;
+@controls-filterButton-toggleButton-icon-style:   normal;
+@controls-filterButton-toggleButton-icon-down:    "\e902";
+@controls-filterButton-toggleButton-icon-up:      "\e904";
+
 @controls-filterButton-toggleButton-border:       none;
 @controls-filterButton-toggleButton-bgColor:      transparent;
-@controls-filterButton-toggleButton-fontSize:     15px;
-@controls-filterButton-toggleButton-text-color:   #8991A9;
-
-@controls-filterButton-toggleButton-icon-size:    18px;
-@controls-filterButton-toggleButton-icon-style:   normal;
-@controls-filterButton-toggleButton-icon-top:     0;
-@controls-filterButton-toggleButton-icon-left:    auto;
-@controls-filterButton-toggleButton-icon-right:   0;
-@controls-filterButton-toggleButton-icon-radius:  16px;
-@controls-filterButton-toggleButton-icon-width:   22px;
-@controls-filterButton-toggleButton-icon-height:  22px;
-@controls-filterButton-toggleButton-icon-bgColor: #F2F2F2;
-@controls-filterButton-toggleButton-icon-border:  1px solid #E4E4E4;
-@controls-filterButton-toggleButton-icon-down:    "\e001";
-@controls-filterButton-toggleButton-icon-up:      "\e000";
-@controls-filterButton-toggleButton-icon-margin:  2px;
-
-@controls-filterButton-toggleButton-text-marginR: 31px;
-@controls-filterButton-toggleButton-text-marginL: 0;
 
 //FilterLine
 @controls-filterLine-padding:                     8px 8px 8px 0;
@@ -1821,6 +1819,7 @@
 @controls-FieldLink-showAllLinks-top:              2px;
 @controls-FieldLink-showAllLinks-padding:          0 4px;
 @controls-FieldLink-showAllLinks-lineHeight:       22px;
+@controls-FieldLink-linkItem-line-height:          18px;
 @controls-FieldLink-linkContainer-padding:         4px 0;
 
 @controls-FieldLink-picker-max-height:             500px;
@@ -1838,12 +1837,16 @@
 
 @controls-FieldLink-disabled-item-padding:         0 4px;
 @controls-FieldLink-afterField-padding:            0 4px;
+@controls-FieldLink-afterField-height:             22px;
+
+@controls-FieldLink-afterField-background:         @white-color;
 
 //SelectorButton
 @controls-SelectorButton-height:                   24px;
 @controls-SelectorButton-line-height:              24px;
 @controls-SelectorButton-align:                    middle;
 @controls-SelectorButton-margin:                   4px 0 0 0;
+@controls-SelectorButton-error-outline:            1px solid #ff302b;
 
 // Search button
 @search-loop-size:                                 22px;
@@ -1865,6 +1868,8 @@
 
 // EditDialog
 @editdialog-applybutton-width:                     90px;
+@editdialog-applybutton-right:                     38px; /*ширина кнопки закрытия окна 36px + 2px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
+@editdialog-window-title-margin-right:             128px; /*ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 2px на небольшой отступ между ними */
 @editdialog-template-minwidth:                     auto;
 
 //MoveDialog

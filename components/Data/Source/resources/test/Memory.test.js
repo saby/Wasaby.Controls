@@ -762,15 +762,15 @@ define([
          });
 
          describe('.move()', function () {
-            it('should move ' + existsId + ' instead ' + existsId2, function (done) {
-               source.read(existsId).addCallback(function (model1) {
-                  source.read(existsId2).addCallback(function (model2) {
-                     source.move(
-                        model1,
-                        model2,
-                        {before: true}
-                     ).addCallbacks(function() {
-                        if (data[existsPosition2]['Ид'] === existsId && data[existsPosition2 + 1]['Ид'] === existsId2) {
+            it('should move 5 to begin list', function (done) {
+               source.read(5).addCallback(function (model1) {
+                  source.read(6).addCallback(function (model2) {
+                     source.call('move', {
+                        from: model1,
+                        to: model2,
+                        details: {after: false}
+                     }).addCallbacks(function() {
+                        if (data[0]['Ид'] === 5) {
                            done();
                         } else {
                            done(new Error('Unexpected value'));
@@ -782,36 +782,15 @@ define([
                });
             });
 
-            it('should move ' + existsId2 + ' instead ' + existsId, function (done) {
-               source.read(existsId2).addCallback(function (model1) {
-                  source.read(existsId).addCallback(function (model2) {
-                     source.move(
-                        model1,
-                        model2,
-                        {before: true}
-                     ).addCallbacks(function() {
-                        if (data[existsPosition]['Ид'] === existsId && data[1 + existsPosition]['Ид'] === existsId2) {
-                           done();
-                        } else {
-                           done(new Error('Unexpected value'));
-                        }
-                     }, function(err){
-                        done(err);
-                     });
-                  });
-               });
-
-            });
-
-            it('should move ' + existsId + ' after ' + existsId2, function (done) {
-               source.read(existsId).addCallback(function (model1) {
-                  source.read(existsId2).addCallback(function (model2) {
-                     source.move(
-                        model1,
-                        model2,
-                        {before: false}
-                     ).addCallbacks(function() {
-                        if(data[existsPosition2]['Ид'] === existsId && data[1 + existsPosition2]['Ид'] === existsId2) {
+            it('should move 6 before 5', function (done) {
+               source.read(6).addCallback(function (model1) {
+                  source.read(5).addCallback(function (model2) {
+                     source.call('move', {
+                        from: model1,
+                        to: model2,
+                        details: {after: false}
+                     }).addCallbacks(function() {
+                        if (data[5]['Ид'] === 6 && data[6]['Ид'] === 5) {
                            done();
                         } else {
                            done(new Error('Unexpected value'));
@@ -824,15 +803,15 @@ define([
 
             });
 
-            it('should move ' + existsId2 + ' after ' + existsId, function (done) {
-               source.read(existsId2).addCallback(function (model1) {
-                  source.read(existsId).addCallback(function (model2) {
-                     source.move(
-                        model1,
-                        model2,
-                        {before: false}
-                     ).addCallbacks(function() {
-                        if(data[existsPosition]['Ид'] === existsId && data[1 + existsPosition]['Ид'] === existsId2) {
+            it('should move 6 after 5', function (done) {
+               source.read(6).addCallback(function (model1) {
+                  source.read(5).addCallback(function (model2) {
+                     source.call('move', {
+                        from: model1,
+                        to: model2,
+                        details: {after: true}
+                     }).addCallbacks(function() {
+                        if(data[5]['Ид'] === 5 && data[6]['Ид'] === 6) {
                            done();
                         } else {
                            done(new Error('Unexpected value'));
@@ -843,19 +822,37 @@ define([
                   });
                });
 
+            });
+
+            it('should move 6 to end list', function (done) {
+               source.read(6).addCallback(function (model1) {
+                  source.read(3).addCallback(function (model2) {
+                     source.call('move', {
+                        from: model1,
+                        to: model2,
+                        details: {after: true}
+                     }).addCallbacks(function() {
+                        if(data[data.length-1]['Ид'] === 6) {
+                           done();
+                        } else {
+                           done(new Error('Unexpected value'));
+                        }
+                     }, function(err){
+                        done(err);
+                     });
+                  });
+               });
             });
 
             it('should move before record with ПорНом=6', function (done) {
-               var pn = 6,
-                  newPos = 3;
-               sourcePm.read(existsId).addCallback(function (model) {
-                  sourcePm.read(existsId2).addCallback(function (model2) {
-                     sourcePm.move(
-                        model,
-                        model2,
-                        {before: false}
-                     ).addCallbacks(function() {
-                        if(data[newPos]['Ид'] === existsId && data[1 + newPos]['ПорНом'] === pn) {
+               source.read(5).addCallback(function (model) {
+                  source.read(6).addCallback(function (model2) {
+                     source.call('move', {
+                        from: model,
+                        to: model2,
+                        details: {column: 'ПорНом', after: false}
+                     }).addCallbacks(function() {
+                        if(data[2]['Ид'] === 5) {
                            done();
                         } else {
                            done(new Error('Unexpected value'));
@@ -868,26 +865,44 @@ define([
             });
 
             it('should move after record with ПорНом=6', function (done) {
-               var pn = 6,
-                  newPos = 4;
-               sourcePm.read(existsId).addCallback(function (model) {
-                  sourcePm.read(existsId2).addCallback(function (model2) {
-                     sourcePm.move(
-                        model,
-                        model2,
-                        {before: true}
-                     ).addCallbacks(function() {
-                        if(data[newPos-1]['Ид'] === existsId && data[newPos]['ПорНом'] === pn) {
+               source.read(5).addCallback(function (model) {
+                  source.read(6).addCallback(function (model2) {
+                     source.call('move', {
+                        from: model,
+                        to: model2,
+                        details: {column: 'ПорНом', after: true}
+                     }).addCallbacks(function() {
+                        if(data[4]['Ид'] === 5) {
                            done();
                         } else {
                            done(new Error('Unexpected value'));
                         }
-                     }, function(err){
+                     }, function(err) {
                         done(err);
                      });
                   });
                });
 
+            });
+
+            it('should return an error if "to" is not found', function (done) {
+               var toModel = new Model({
+                  rawData: {
+                     'Ид': 333,
+                     'ПорНом': 3
+                  }
+               });
+               source.read(5).addCallback(function (fromModel) {
+                  source.call('move', {
+                     from: fromModel,
+                     to: toModel,
+                     details: {column: 'ПорНом'}
+                  }).addCallbacks(function() {
+                     done(new Error('Errback expected'));
+                  }, function(err) {
+                     done();
+                  });
+               });
             });
          });
          

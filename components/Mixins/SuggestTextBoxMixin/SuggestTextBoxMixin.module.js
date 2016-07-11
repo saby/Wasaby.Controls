@@ -21,15 +21,13 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', ['js!SBIS3.CONTROLS.Utils.KbLayo
 
          /* Проверяем на изменение раскладки */
          this.once('onListReady', function(e, list) {
-            self.subscribeTo(list, 'onDataLoad', function(event, data) {
-               if(KbLayoutRevertUtil.needRevert(data)) {
+            self.subscribeTo(list, 'onDataLoad', function (event, data) {
+               if (data.getMetaData()['Switched']) {
                   self.setText(KbLayoutRevertUtil.process(self.getText()));
                }
             });
          });
-
       },
-
       _getLoadingContainer : function() {
          return this.getContainer().find('.controls-TextBox__fieldWrapper');
       },
