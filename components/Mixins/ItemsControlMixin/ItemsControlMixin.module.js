@@ -1482,6 +1482,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._redraw();
          }
       },
+      /**
+       * Возвращает значение опции groupBy
+       */
+      getGroupBy : function() {
+         return this._options.groupBy;
+      },
+
       _getGroupTpl : function(){
          throw new Error('Method _getGroupTpl() must be implemented');
       },
