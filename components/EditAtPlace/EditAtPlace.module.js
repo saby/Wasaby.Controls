@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                self = this;
 
             editorComponent.subscribe('onFocusOut', function(){
-               if (!self._isEditInGroup){
+               if (!self._isEditInGroup && self._options.text !== self._oldText){
                   self._editorFocusOutHandler();
                }
             });
