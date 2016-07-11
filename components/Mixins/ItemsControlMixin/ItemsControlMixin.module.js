@@ -430,8 +430,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       around: {
-         _modifyOptions : function(parentFnc, cfg) {
-            var newCfg = parentFnc.call(this, cfg);
+         _modifyOptions : function(parentFnc, cfg, parsedCfg) {
+            var newCfg = parentFnc.call(this, cfg), proj;
             newCfg._itemsTemplate = ItemsTemplate;
             if (newCfg.items) {
                if (newCfg.items instanceof Array) {
@@ -443,7 +443,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                else {
                   newCfg._items = cfg.items;
                }
-               newCfg._itemsProjection = cfg._createDefaultProjection(cfg._items, cfg);
+               if (parsedCfg && parsedCfg._itemsProjection) {
+                  newCfg._itemsProjection = parsedCfg._itemsProjection;
+               } else {
+                  proj = cfg._createDefaultProjection(cfg._items, cfg);
+                  newCfg._itemsProjection = proj;
+                  parsedCfg._itemsProjection = proj;
+               }
                if (cfg._canServerRender && !cfg.userItemAttributes && !cfg.itemTemplate && Object.isEmpty(cfg.groupBy)) {
                   newCfg._serverRender = true;
                   newCfg._itemData = cfg._buildTplArgs(cfg);
