@@ -380,4 +380,143 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
             })
     });*/
+
+	gemini.suite('item_actions_in_edit_at_place', function (test) {
+
+        test.setUrl('/regression_data_grid_view_edit_at_place_online_8.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
+                this.item5 = find('[sbisname="ТипНоменклатуры"] [data-id="5"]');
+				this.item7 = find('[sbisname="ТипНоменклатуры"] [data-id="7"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[name="TextBox 1"] .controls-TextBox__field');
+				this.cancell = find('[title="Отмена"]');
+				this.save = find('[title="Сохранить"]');
+				this.editor_input = find('[sbisname="Содержимоеbind"] input')
+            })
+
+            .capture('opened_editor', function (actions) {
+                actions.click(this.item5);
+				actions.waitForElementToShow('[title="Отмена"]', 2000);
+				actions.waitForElementToShow('[title="Сохранить"]', 2000);
+				actions.sendKeys(this.editor_input, gemini.ARROW_RIGHT);
+				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
+            })
+			
+			.capture('without_delete_on_add_at_place', function (actions) {
+                actions.click(this.item7);
+				actions.waitForElementToShow('[title="Отмена"]', 2000);
+				actions.waitForElementToShow('[title="Сохранить"]', 2000);
+				actions.sendKeys(this.editor_input, gemini.RETURN);
+				actions.waitForElementToShow('[title="Отмена"]', 2000);
+				actions.waitForElementToShow('[title="Сохранить"]', 2000);
+				actions.sendKeys(this.editor_input, 'Тест');
+				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
+				actions.mouseMove(this.input);
+            })
+    });
+	
+	gemini.suite('edit_at_place_and_multeselect_false', function (test) {
+
+        test.setUrl('/regression_data_grid_view_edit_at_place_online_9.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
+                this.item5 = find('[sbisname="ТипНоменклатуры"] [data-id="5"]');
+				this.item7 = find('[sbisname="ТипНоменклатуры"] [data-id="7"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[name="TextBox 1"] .controls-TextBox__field');
+				this.cancell = find('[title="Отмена"]');
+				this.save = find('[title="Сохранить"]');
+				this.editor_input = find('[sbisname="Содержимоеbind"] input')
+            })
+
+            .capture('opened_editor', function (actions) {
+                actions.click(this.item5);
+				actions.wait(2000);
+            })
+    });
+	
+	gemini.suite('add_new_data_in_folder_top', function (test) {
+
+        test.setUrl('/regression_data_grid_view_edit_at_place_online_10.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="browserView"]', 40000);
+                this.item1 = find('[sbisname="browserView"] [data-id="1"]');
+				this.item1_expander = find('[sbisname="browserView"] [data-id="1"] .controls-TreeView__expand');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[name="TextBox 1"] .controls-TextBox__field');
+				this.editor_input = find('[sbisname="TextBoxAddInPlace1"] input')
+				this.add = find('[sbisname="addItemIn__1"] .controls-Link__field');
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.item1_expander);
+				actions.waitForElementToShow('[sbisname="addItemIn__1"] .controls-Link__field', 2000);
+				actions.click(this.add);
+				actions.waitForElementToShow('[sbisname="TextBoxAddInPlace1"] input', 2000);
+				actions.sendKeys(this.editor_input, 'Тест');
+				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
+            })
+    });
+	
+	gemini.suite('add_and_edit_again', function (test) {
+
+        test.setUrl('/integration_datagrid_edit_at_place_19.html').skip('firefox').setCaptureElements('[sbisname="ТипНоменклатуры"]')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
+				this.focus = find('[sbisname="Фокус"]');
+				this.editor_input = find('[sbisname="Содержимоеbind"] input');
+				this.save = find('[title="Сохранить"]');
+				this.data = find('.controls-DataGridView__tbody tr:nth-child(1)');
+				this.clearData = find('[sbisname="Данные"] .controls-Button__text');
+            })
+
+            .capture('plain', function (actions) {
+				actions.wait(150);
+				actions.executeJS(function (window) {
+                    window.$('[sbisname="Данные"] .controls-Button__text').click();
+                });
+				actions.click(this.clearData);
+				actions.wait(350);
+                actions.click(this.focus);
+            })
+
+			.capture('begin_add', function (actions) {
+                actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('ТипНоменклатуры').sendCommand('beginAdd');
+                });
+				actions.waitForElementToShow('[sbisname="Содержимоеbind"] input', 2000)
+				actions.waitForElementToShow('[title="Сохранить"]');
+				actions.sendKeys(this.editor_input, 'test')
+				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.ARROW_LEFT)
+            })
+
+			.capture('confirm_adding', function (actions) {
+                actions.sendKeys(this.editor_input, gemini.ENTER)
+				actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('ТипНоменклатуры').reload({});
+                });
+				actions.wait(250);
+            })
+			
+			.capture('open_editor', function (actions) {
+                actions.executeJS(function (window) {
+                    window.$('.controls-DataGridView__tbody tr:first').click();
+                });
+				actions.wait(500);
+            })
+			
+			.after(function (actions, find) {
+				actions.wait(150);
+				actions.executeJS(function (window) {
+                    window.$('[sbisname="Данные"] .controls-Button__text').click();
+                });
+				actions.click(this.clearData);
+				actions.wait(350);
+            })
+    });
 });

@@ -23,6 +23,10 @@
 
       .controls-SearchForm__search, .controls-SearchForm__reset {
         display: @search-form-icon-disabled-display;
+        cursor: default;
+      }
+      .controls-SearchForm__reset{
+        display: none;
       }
     }
   }
@@ -35,15 +39,12 @@
   .controls-TextBox__afterFieldWrapper {
     width: @search-buttons-wrapper-width;
   }
-  .controls-SearchForm__search {
-    padding-top: @search-loop-padding;
+  .controls-SearchForm__search, .controls-SearchForm__reset {
+    display: block;
+    float: right;
+    cursor: pointer;
+    padding: @search-form-icon-padding;
     width: @search-loop-size;
     height: @search-loop-size;
   }
-}
-.controls-SearchForm__search, .controls-SearchForm__reset {
-  display: block;
-  float: right;
-  cursor: pointer;
-  padding:  @search-form-icon-padding;
 }

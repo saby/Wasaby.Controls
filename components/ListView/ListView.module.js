@@ -80,6 +80,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__bottomStyle Оформляет операции строки под строкой
        * @cssModifier controls-ListView__pagerNoSizePicker Скрыть выбор размера страницы в пейджинге.
        * @cssModifier controls-ListView__pagerNoAmount Скрыть отображение количества записей на странице в пейджинге.
+       * @cssModifier controls-ListView__pagerHideEndButton Скрыть кнопку "Перейти к последней странице"
        * Т.е. текст "1-10" при отображении 10 записей на 1-ой странице
        */
 
@@ -87,33 +88,35 @@ define('js!SBIS3.CONTROLS.ListView',
       var ListView = CompoundControl.extend([CompoundActiveFixMixin, DecorableMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
-          * @event onChangeHoveredItem При переводе курсора мыши на другую запись
-          * @remark
-          * Событие срабатывает при смене записи под курсором мыши.
+          * @event onChangeHoveredItem Происходит при переводе курсора мыши на другой элемент коллекции списка.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} hoveredItem Объект
-          * @param {Number|String} hoveredItem.key ключ элемента представления данных
-          * @param {jQuery|false} hoveredItem.container элемент представления данных
-          * @param {Object} hoveredItem.position координаты контейнера элемента
-          * @param {Number} hoveredItem.top отступ сверху
-          * @param {Number} hoveredItem.left отступ слева
-          * @param {Object} hoveredItem.size размеры контейнера элемента
-          * @param {Number} hoveredItem.height высота
-          * @param {Number} hoveredItem.width ширина
+          * @param {Object} hoveredItem Объект, свойства которого описывают данные элемента коллекции списка, на который навели курсор мыши.
+          * @param {SBIS3.CONTROLS.Data.Model} record Элемент коллекции, на который перевели курсор.
+          * @param {Number|String} hoveredItem.key Первичный ключ элемента.
+          * @param {jQuery|false} hoveredItem.container Контейнер визуального отображения элемента (DOM-элемент).
+          * @param {Object} hoveredItem.position Объект, свойства которого описывают координаты контейнера визуального отображения элемента.
+          * @param {Number} hoveredItem.position.top Отступ от верхней границы контейнера визуального отображения элемента до верхней границы контейнера визуального отображения списка. Значение в px. При расчете учитывается текущий скролл в списке.
+          * @param {Number} hoveredItem.position.left Отступ от левой границы контейнера визуального отображения элемента до левой границы контейнера визуального отображения списка. Значение в px.
+          * @param {Object} hoveredItem.size Объект, свойства которого описывают высоту и ширину контейнера визуального отображения элемента.
+          * @param {Number} hoveredItem.size.height Высота контейнера визуального отображения элемента. Значение в px.
+          * @param {Number} hoveredItem.size.width Ширина контейнера визуального отображения элемента. Значение в px.
           * @example
+          * При наведении курсора мыши на запись справа от неё отображаются операции (см. <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">Быстрый доступ к операциям по наведению курсора</a>).
+          * Ниже приведён код, с помощью которого можно изменять отображение набора операций для записей списка.
           * <pre>
-          *     DataGridView.subscribe('onChangeHoveredItem', function(hoveredItem) {
-           *        var actions = DataGridView.getItemsActions(),
-           *        instances = actions.getItemsInstances();
-           *
-           *        for (var i in instances) {
-           *           if (instances.hasOwnProperty(i)) {
-           *              //Будем скрывать кнопку удаления для всех строк
-           *              instances[i][i === 'delete' ? 'show' : 'hide']();
-           *           }
-           *        }
-           *     });
+          *    dataGrid.subscribe('onChangeHoveredItem', function(eventObject, hoveredItem) {
+          *       var actions = DataGridView.getItemsActions(),
+          *           instances = actions.getItemsInstances();
+          *       for (var i in instances) {
+          *          if (instances.hasOwnProperty(i)) {
+          *             //Будем скрывать кнопку удаления для всех строк
+          *             instances[i][i === 'delete' ? 'show' : 'hide']();
+          *          }
+          *       }
+          *    });
           * </pre>
+          * Подобная задача часто сводится к отображению различных операций для узлов, скрытых узлов и листьев для иерархических списков.
+          * Пример конфигурации списка для решения подобной задачи вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/mode/">здесь</a>.
           * @see itemsActions
           * @see setItemsActions
           * @see getItemsActions
@@ -315,23 +318,37 @@ define('js!SBIS3.CONTROLS.ListView',
                itemTemplate: '',
                /**
                 * @typedef {Array} ItemsActions
-                * @property {String} name Имя кнопки.
-                * @property {String} icon Путь до иконки.
-                * @property {String} caption Текст на кнопке.
-                * @property {String} parent Идентификатор родительского пункта меню (name). Опция задаётся для подменю.
-                * @property {String} tooltip Всплывающая подсказка.
-                * @property {Boolean} isMainAction Отображать ли кнопку на строке или только выпадающем в меню.
-                * На строке кнопки отображаются в том же порядке, в каком они перечислены.
-                * На строке может быть только три кнопки, полный список будет в меню.
-                * @property {Function} onActivated Действие кнопки.
+                * @property {String} name Уникальное имя кнопки. Обязательная для конфигурации подопция. Её значение, в том числе, может быть использовано в пользовательских обработчиках для отображения или скрытия набора операций.
+                * @property {String} icon Иконка на кнопке. Необязательная подопция. В качестве значения в опцию передаётся строка, описывающая класс иконки.
+                * Набор классов и список иконок, разрешённых для использования, можно найти <a href="https://wi.sbis.ru/docs/3-8-0/icons/">здесь</a>.
+                * <ul>
+                *    <li>Если кнопка отображается не в выпадающем меню (см. подопцию isMainAction) и установлена подопция icon, то использование подопции caption необязательно.</li>
+                *    <li>Если кнопка отображается в выпадающем меню (см. подопцию isMainAction), то производят конфигурацию подопций icon и caption.</li>
+                * </ul>
+                * @property {String} caption Подпись на кнопке.
+                * <ul>
+                *    <li>Если кнопка отображается не в выпадающем меню (см. подопцию isMainAction) и установлена подопция icon, то использование подопции caption необязательно.</li>
+                *    <li>Если кнопка отображается в выпадающем меню (см. подопцию isMainAction), то производят конфигурацию подопций icon и caption.</li>
+                * </ul>
+                * @property {String} tooltip Текст всплывающей подсказки.
+                * @property {Boolean} isMainAction Признак, по которому устанавливается отображение кнопки в подменю.
+                * @property {Function} onActivated Функция, которая будет выполнена при клике по кнопке. Внутри функции указатель this возвращает экземпляр класса представления данных. Аргументы функции:
+                * <ul>
+                *    <li>contaner - контейнер визуального отображения записи.</li>
+                *    <li>id - идентификатор записи.</li>
+                *    <li>item - запись (экземпляр класса {@link SBIS3.CONTROLS.Data.Model}).</li>
+                * </ul>
+                * @property {Boolean} allowChangeEnable Признак, по которому устанавливается возможность использования операций в случае, если взаимодействие с контролом запрещено (см. опцию {@link $ws.proto.Control#enabled}).
                 * @editor icon ImageEditor
                 * @translatable caption tooltip
                 */
                /**
-                * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок
+                * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок при наведении курсора мыши на запись.
                 * @remark
-                * Можно использовать для массовых операций.
+                * Если для контрола установлено значение false в опции {@link $ws.proto.Control#enabled}, то операции не будут отображаться при наведении курсора мыши.
+                * Однако с помощью подопции allowChangeEnable можно изменить это поведение.
                 * @example
+                * <b>Пример 1.</b> Конфигурация операций через вёрстку компонента.
                 * <pre>
                 *     <options name="itemsActions" type="array">
                 *        <options>
@@ -350,6 +367,26 @@ define('js!SBIS3.CONTROLS.ListView',
                 *         </options>
                 *     </options>
                 * </pre>
+                * <b>Пример 2.</b> Конфигурация операций через JS-код компонента.
+                * <pre>
+                *     DataGridView.setItemsActions([{
+                *        name: 'delete',
+                *        icon: 'sprite:icon-16 icon-Erase icon-error',
+                *        caption: 'Удалить',
+                *        isMainAction: true,
+                *        onActivated: function(item) {
+                *           this.deleteRecords(item.data('id'));
+                *        }
+                *     }, {
+                *        name: 'addRecord',
+                *        icon: 'sprite:icon-16 icon-Add icon-error',
+                *        caption: 'Добавить',
+                *        isMainAction: true,
+                *        onActivated: function(item) {
+                *           this.showRecordDialog();
+                *        }
+                *     }]
+                * <pre>
                 * @see setItemsActions
                 */
                itemsActions: [{
@@ -372,12 +409,25 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                }],
                /**
-                * @cfg {String} Разрешено или нет перемещение элементов "Drag-and-Drop"
-                * @variant "" Запрещено
-                * @variant allow Разрешено
+                * @cfg {String|Boolean} Устанавливает возможность перемещения элементов с помощью курсора мыши.
+                * @variant "" Запрещено перемещение.
+                * @variant allow Разрешено перемещение.
+                * @variant false Запрещено перемещение.
+                * @variant true Разрешено перемещение.
                 * @example
+                * Подробнее о способах передачи значения в опцию вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/">Вёрстка компонента</a>.
+                * <b>Пример 1.</b> Ограничим возможность перемещения записей с помощью курсора мыши.
                 * <pre>
-                *     <option name="itemsDragNDrop">allow</option>
+                *     <option name="itemsDragNDrop" value=""></option>      <!-- Передаём пустую строку в атрибуте value. Иным способом пустая строка не распознаётся -->
+                *     <option name="itemsDragNDrop" value="false"></option> <!-- Первый способ передачи false -->
+                *     <option name="itemsDragNDrop">false</option>          <!-- Второй способ передачи false -->
+                * </pre>
+                * <b>Пример 2.</b> Разрешим перемещение записей с помощью курсора мыши.
+                * <pre>
+                *     <option name="itemsDragNDrop" type="string" value="allow"></option> <!-- Первый способ передачи allow -->
+                *     <option name="itemsDragNDrop" type="string">allow</option>          <!-- Второй способ передачи allow -->
+                *     <option name="itemsDragNDrop" value="false"></option> <!-- Первый способ передачи true -->
+                *     <option name="itemsDragNDrop">false</option>          <!-- Второй способ передачи true -->
                 * </pre>
                 */
                itemsDragNDrop: 'allow',
@@ -980,9 +1030,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
-            if (this._isSupportedItemsToolbar() && !this._touchSupport) {
+            if (this._isSupportedItemsToolbar()) {
          		if (target.container){
-                  this._showItemsToolbar(target);
+                  if (!this._touchSupport) {
+                     this._showItemsToolbar(target);
+                  }
                } else {
                   this._hideItemsToolbar();
                }
@@ -1100,7 +1152,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _drawSelectedItems: function (idArray) {
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__multiSelected');
             for (var i = 0; i < idArray.length; i++) {
-               $(".controls-ListView__item[data-id='" + idArray[i] + "']", this._container).addClass('controls-ListView__item__multiSelected');
+               $('.controls-ListView__item[data-id="' + idArray[i] + '"]', this._container).addClass('controls-ListView__item__multiSelected');
             }
          },
 
@@ -1108,19 +1160,26 @@ define('js!SBIS3.CONTROLS.ListView',
             //рисуем от ключа
             var selId = id;
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
-            $(".controls-ListView__item[data-id='" + selId + "']", this._container).addClass('controls-ListView__item__selected');
+            $('.controls-ListView__item[data-id="' + selId + '"]', this._container).addClass('controls-ListView__item__selected');
          },
          /**
           * Перезагружает набор записей представления данных с последующим обновлением отображения.
+          * @remark
+          * Производится запрос на выборку записей из источника данных по установленным параметрам:
+          * <ol>
+          *    <li>Параметры фильтрации, которые устанавливают с помощью опции {@link SBIS3.CONTROLS.ItemsControlMixin#filter}.</li>
+          *    <li>Параметры сортировки, которые устанавливают с помощью опции {@link SBIS3.CONTROLS.ItemsControlMixin#sorting}.</li>
+          *    <li>Порядковый номер записи в источнике, с которого будет производиться отбор записей для выборки. Устанавливают с помощью метода {@link SBIS3.CONTROLS.ItemsControlMixin#setOffset}.</li>
+          *    <li>Масимальное число записей, которые будут присутствовать в выборке. Устанавливают с помощью метода {@link SBIS3.CONTROLS.ItemsControlMixin#pageSize}.</li>
+          * </ol>
+          * Вызов метода инициирует событие {@link SBIS3.CONTROLS.ItemsControlMixin#onBeforeDataLoad}. В случае успешной перезагрузки набора записей происходит событие {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoad}, а в случае ошибки - {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoadError}.
+          * Если источник данных не установлен, производит перерисовку установленного набора данных.
+          * @return {$ws.proto.Deferred}
           * @example
           * <pre>
-          *    var btn = new Button({
-           *         element: "buttonReload",
-           *         caption: 'reload offset: 450'
-           *    }).subscribe('onActivated', function(event, id){
-           *           //При нажатии на кнопку перезагрузим DataGridView  с 450ой записи
-           *           DataGridViewBL.reload(DataGridViewBL._filter, DataGridViewBL.getSorting(), 450, DataGridViewBL._limit);
-           *    });
+          *    btn.subscribe('onActivated', function() {
+          *       DataGridViewBL.reload();
+          *    });
           * </pre>
           */
          reload: function () {
@@ -1128,6 +1187,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             this._firstScrollTop = true;
+            this._unlockItemsToolbar();
             this._hideItemsToolbar();
             this._destroyEditInPlace();
             return ListView.superclass.reload.apply(this, arguments);
@@ -1170,10 +1230,10 @@ define('js!SBIS3.CONTROLS.ListView',
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
          _isHoverEditMode: function() {
-            return !this._touchSupport && this._options.editMode.indexOf('hover') !== -1;
+            return !$ws._const.compatibility.touch && this._options.editMode.indexOf('hover') !== -1;
          },
          _isClickEditMode: function() {
-            return this._options.editMode.indexOf('click') !== -1 || (this._touchSupport && this._options.editMode.indexOf('hover') !== -1);
+            return this._options.editMode.indexOf('click') !== -1 || ($ws._const.compatibility.touch && this._options.editMode.indexOf('hover') !== -1);
          },
          initEditInPlace: function() {
             this._notifyOnItemClick = this.beforeNotifyOnItemClick();
@@ -1272,7 +1332,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var target = hoveredItem.container;
             if (target && !(target.hasClass('controls-editInPlace') || target.hasClass('controls-editInPlace__editing'))) {
                this.showEip(target, this.getItems().getRecordById(hoveredItem.key), { isEdit: false });
-            } else {
+               // todo Удалить при отказе от режима "hover" у редактирования по месту [Image_2016-06-23_17-54-50_0108] https://inside.tensor.ru/opendoc.html?guid=5bcdb10f-9d69-49a0-9807-75925b726072&description=
+            } else if (this._hasEditInPlace()) {
                this._getEditInPlace().hide();
             }
          },
@@ -1417,6 +1478,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            }
                            this._hideItemsToolbar();
                         }
+                        this.setSelectedKey(model.getId());
                         event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
                      }.bind(this)
                   }
@@ -1429,7 +1491,10 @@ define('js!SBIS3.CONTROLS.ListView',
             // DataGridView. В виду одинакового атрибута "data-id", это единственный способ отличить строку DataGridView от строки EditInPlace.
             return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getId() + '"]:not(".controls-editInPlace")');
          },
-
+         /**
+          * Возвращает признак, по которому можно установить: активно или нет редактирование по месту в данный момент.
+          * @returns {Boolean} Значение true нужно интерпретировать как "Редактирование по месту активно".
+          */
          isEdit: function() {
             return this._hasEditInPlace() && this._getEditInPlace().isEdit();
          },
@@ -1520,6 +1585,11 @@ define('js!SBIS3.CONTROLS.ListView',
          _showItemsToolbar: function(target) {
             this._getItemsToolbar().show(target, this._touchSupport);
          },
+         _unlockItemsToolbar: function() {
+            if (this._itemsToolbar) {
+               this._itemsToolbar.unlockToolbar();
+            }
+         },
          _hideItemsToolbar: function (animate) {
             if (this._itemsToolbar) {
                this._itemsToolbar.hide(animate);
@@ -1560,8 +1630,8 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._itemsToolbar;
          },
          /**
-          * Метод получения операций над записью.
-          * @returns {Object} Компонент "операции над записью".
+          * Возвращает массив, описывающий установленный набор операций над записью, доступных по наведению курсора.
+          * @returns {ItemsActions[]}
           * @example
           * <pre>
           *     DataGridView.subscribe('onChangeHoveredItem', function(hoveredItem) {
@@ -1583,17 +1653,8 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._getItemsToolbar().getItemsActions();
          },
          /**
-          * Метод установки или замены кнопок операций над записью, заданных в опции {@link itemsActions}
-          * @remark
-          * В метод нужно передать массив обьектов.
-          * @param {Array} itemsActions Объект формата {name: ..., icon: ..., caption: ..., onActivated: ..., isMainOption: ...}
-          * @param {String} itemsActions.name Имя кнопки операции над записью.
-          * @param {String} itemsActions.icon Иконка кнопки.
-          * @param {String} itemsActions.caption Текст на кнопке.
-          * @param {String} itemsActions.onActivated Обработчик клика по кнопке.
-          * @param {String} itemsActions.tooltip Всплывающая подсказка.
-          * @param {String} itemsActions.title Текст кнопки в выпадающем меню.
-          * @param {String} itemsActions.isMainOption На строке ли кнопка (или в меню).
+          * Устанавливает набор операций над записью, доступных по наведению курсора.
+          * @param {ItemsActions[]} itemsActions
           * @example
           * <pre>
           *     DataGridView.setItemsActions([{
@@ -1676,8 +1737,12 @@ define('js!SBIS3.CONTROLS.ListView',
                    * хранить только идентификатор и данный код станет не нужен*/
                   hash = hoveredItemContainer.attr('data-hash');
                   projItem = this._getItemsProjection().getByHash(hash);
+                  /* Если в проекции нет элемента и этого элемента нет в DOM'e,
+                     но на него осталась jQuery ссылка, то надо её затереть */
                   if (projItem) {
                      hoveredItemContainer = this._getDomElementByItem(projItem);
+                  } else {
+                     hoveredItemContainer = null;
                   }
                }
 
@@ -1695,6 +1760,9 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notifyOnSizeChanged(true);
             this._drawResults();
             this._needToRedraw = true;
+            //После отрисовки оповещаем аккардеон что поменялись размеры и возможно нужно обновить fixed позиционирование
+            //TODO: выпилить в 3.7.4.100 когда будет независимый скролл аккардеона
+            $ws.single.EventBus.globalChannel().notify('ContentScrolling', null);
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
@@ -1753,6 +1821,11 @@ define('js!SBIS3.CONTROLS.ListView',
          _nextLoad: function () {
             var self = this,
                loadAllowed  = this._isAllowInfiniteScroll();
+            if (!this._scrollWatcher.hasScroll(this.getContainer())){
+               this._container.addClass('controls-ListView__outside-scroll-loader');
+            } else {
+               this._container.removeClass('controls-ListView__outside-scroll-loader');
+            }
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && $ws.helpers.isElementVisible(this.getContainer()) &&
                   this._hasNextPage(this.getItems().getMetaData().more, this._infiniteScrollOffset) && !this.isLoading()) {
@@ -1767,9 +1840,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   var hasNextPage = self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset);
                   //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                   this.getItems().setMetaData(dataSet.getMetaData());
-                  if (hasNextPage) {
-                     self._infiniteScrollOffset += self._limit;
-                  } else {
+                  self._infiniteScrollOffset += self._limit;
+                  if (!hasNextPage) {
                      self._hideLoadingIndicator();
                      this._toggleEmptyData(!self.getItems().getCount());
                   }
@@ -1864,7 +1936,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _scrollToItem: function(itemId) {
             ListView.superclass._scrollToItem.call(this, itemId);
-            var itemContainer = $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer());
+            var itemContainer = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
             //TODO: будет работать только если есть infiniteScrollContainer, нужно сделать просто scrollContainer так как подгрузки может и не быть
             if (this._options.infiniteScrollContainer && this._options.infiniteScrollContainer.length && itemContainer.length){
                this._options.infiniteScrollContainer[0].scrollTop = itemContainer[0].offsetTop;
@@ -1881,14 +1953,20 @@ define('js!SBIS3.CONTROLS.ListView',
                return (scrollableContainer.scrollHeight - (scrollableContainer.scrollTop + scrollContainer.height())) == 0;
             }
          },
-         //Проверка есть ли открытые stack FloatArea, они могут збирать на себя скролл у body
+         //Проверка есть ли открытые stack FloatArea или maximize Window, они могут збирать на себя скролл у body
          _existFloatArea: function(){
             var areas = $ws.single.FloatAreaManager._areas;
+            var windows = $ws.single.WindowManager.getStack();
             for (var area in areas){
                if (areas.hasOwnProperty(area)){
                   if (areas[area].isVisible() && areas[area]._options.isStack){
                      return true;
                   }
+               }
+            }
+            for (var i = 0; i < windows.length; i++){
+               if (windows[i].window._options.maximize){
+                  return true;
                }
             }
             return false;
@@ -2005,17 +2083,34 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
          },
          _toggleIndicator: function(show){
+            var self = this,
+                container = this.getContainer(),
+                ajaxLoader = container.find('.controls-AjaxLoader').eq(0),
+                indicator, centerCord, scrollContainer;
+
+
             this._showedLoading = show;
-            var self = this;
             if (show) {
                setTimeout(function(){
                   if (self._showedLoading) {
-                     self._container.find('.controls-AjaxLoader').toggleClass('ws-hidden', false);
+                     scrollContainer = self._getScrollContainer();
+                     indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
+                     if(scrollContainer && container[0].scrollHeight > scrollContainer[0].offsetHeight) {
+                        /* Ищем кординату, которая находится по середине отображаемой области грида */
+                        centerCord =
+                           (Math.max(scrollContainer[0].getBoundingClientRect().bottom, 0) - Math.max(container[0].getBoundingClientRect().top, 0))/2;
+                        /* Располагаем индикатор, учитывая прокрутку */
+                        indicator[0].style.top = centerCord + scrollContainer[0].scrollTop + 'px';
+                     } else {
+                        /* Если скрола нет, то сбросим кординату, чтобы индикатор сам расположился по середине */
+                        indicator[0].style.top = '';
+                     }
+                     ajaxLoader.removeClass('ws-hidden');
                   }
                }, 750);
             }
             else {
-               self._container.find('.controls-AjaxLoader').toggleClass('ws-hidden', true);
+               ajaxLoader.addClass('ws-hidden');
             }
          },
          _toggleEmptyData: function(show) {
@@ -2545,6 +2640,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var item = this._getResultsRecord(),
                self = this;
             return MarkupTransformer(TemplateUtil.prepareTemplate(this._options.resultsTpl)({
+               startScrollColumn: self._options.startScrollColumn,
                results: resultsData,
                item: item,
                columns: $ws.core.clone(self._options.columns),

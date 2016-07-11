@@ -22,8 +22,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
        * @param {*} data Сырые данные
        */
       constructor: function (data) {
+         if (data && data._type && data._type !== 'recordset') {
+            throw new Error('Wrong data type. Recordset cant be built for this data.');
+         }
          SbisTable.superclass.constructor.call(this, data);
          SbisFormatMixin.constructor.call(this, data);
+
          this._data._type = 'recordset';
       },
 
@@ -86,7 +90,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
             return;
          }
          var removed = this._data.d.splice(source, 1);
-         this._data.d.splice(target, 0, removed.shift());
+         target === -1 ? this._data.d.unshift(removed.shift()) : this._data.d.splice(target, 0, removed.shift());
       },
 
       merge: function(acceptor, donor){

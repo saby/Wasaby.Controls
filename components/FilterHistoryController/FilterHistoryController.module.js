@@ -44,6 +44,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
           $constructor: function() {
              this._listHistory = new List({items: this.getHistory() || []});
+             this._prepareListHistory();
              this._changeHistoryFnc = this._changeHistoryHandler.bind(this);
              this._applyHandlerDebounced = this._onApplyFilterHandler.debounce(0).bind(this);
 
@@ -139,9 +140,38 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              return structureCopy;
           },
 
+          /* Структура может меняться динамически,
+             этот метод сверяем стуктуру из истории и текущую стуркуру фильтров,
+             и, если надо, правит структуру из истории */
+          _prepareListHistory: function() {
+             var toDelete = [],
+                 currentStructure = this._options.filterButton.getFilterStructure(),
+                 self = this;
+
+             this._listHistory.each(function(historyElem) {
+                prepareNewStructure(currentStructure, historyElem.filter);
+                var linkText = FilterToStringUtil.string(historyElem.filter, 'historyItemTemplate');
+
+                if(linkText) {
+                   if(historyElem.linkText !== linkText) {
+                      historyElem.linkText = linkText;
+                   }
+                } else {
+                   toDelete.push(historyElem);
+                }
+             });
+
+             if(toDelete.length) {
+                $ws.helpers.forEach(toDelete, function(elem) {
+                   self._listHistory.remove(elem);
+                });
+             }
+          },
+
           _prepareStructureElemForApply: function(structure) {
              /* Чтобы не портить текущую историю, сделаем копию (иначе не применится фильтр) */
              var currentStructureCopy = $ws.core.clone(this._options.filterButton.getFilterStructure());
+             prepareNewStructure(currentStructureCopy, structure);
 
              /* Алгоритм следующий:
                   1) Пробегаемся по структуре (она первична, в ней можно менять только фильтры, саму струкруту менять нельзя!!) и ищем
@@ -161,6 +191,9 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                    }
                    if(elemFromHistory.caption !== undefined) {
                       elem.caption = elemFromHistory.caption;
+                   }
+                   if(elemFromHistory.visibilityValue !== undefined) {
+                      elem.visibilityValue = elemFromHistory.visibilityValue;
                    }
                 } else if(elem.value && elem.resetValue && !$ws.helpers.isEqualObject(elem.value, elem.resetValue)) {
                    elem.value = elem.resetValue;
@@ -369,6 +402,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 } else if(b.isActiveFilter) {
                    return 1;
                 }
+                return 0;
              })
              )
           },
@@ -380,6 +414,31 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              FilterHistoryController.superclass.destroy.apply(this, arguments);
           }
        });
+
+       function prepareNewStructure(currentStructure, newStructure) {
+          var toDelete = [];
+
+          $ws.helpers.forEach(newStructure, function(newStructureElem, key) {
+             var elemFromCurrentStructure = $ws.helpers.find(currentStructure, function(elem) {
+                /* По неустановленной причине, в структуре из истории могут появляться null'ы,
+                   скорее всего, это прикладная ошибка, но надо от этого защититься (повторяется только на некоторых фильтрах ЭДО) */
+                if(!newStructureElem) {
+                   $ws.single.ioc.resolve('ILogger').log('FilterHistoryController', 'В стукрутре из истории присутствуют null элементы');
+                   return false;
+                } else {
+                   return newStructureElem.internalValueField === elem.internalValueField;
+                }
+             });
+
+             if(!elemFromCurrentStructure) {
+                toDelete.push(key);
+             }
+          });
+
+          $ws.helpers.forEach(toDelete, function(elem) {
+             delete newStructure[elem];
+          });
+       }
 
        return FilterHistoryController;
 

@@ -194,12 +194,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
     *    </options>
     * </component>
     * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
+    * @cssModifier controls-DataGridView__markerRight Маркер отображается не слева строки, а справа.
     * @cssModifier controls-DataGridView__hasSeparator Включает линии разделители между строками
-    * @cssModifier controls-DataGridView__td__textAlignRight Стиль задается колонке, выравнивает текст во всех ячейках этой колонки по правой стороне
     * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
     */
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
       _dotTplFn : dotTplFn,
+      /**
+       * @event onDrawHead Возникает после отрисовки шапки
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       */
       $protected: {
          _rowTpl : rowTpl,
          _rowData : [],
@@ -239,7 +243,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {Boolean} [highlight=true] Подсвечивать фразу при поиске
              * @property {String} resultTemplate Шаблон отображения колонки в строке результатов
              * @property {String} className Имя класса, который будет применён к каждой ячейке столбца
-             * Стилевые классы: controls-DataGridView-cell-overflow-ellipsis - текст внутри ячейки будет обрезаться троеточием (актуально для однострочных ячеек)
+             * Стилевые классы:
+             *    controls-DataGridView-cell-overflow-ellipsis - текст внутри ячейки будет обрезаться троеточием (актуально для однострочных ячеек)
+             *    controls-DataGridView__td__textAlignRight Стиль задается колонке, выравнивает текст во всех ячейках этой колонки по правой стороне
+             *    controls-DataGridView-cell-verticalAlignTop - содержимое ячейки будет выравниваться по верхнему краю
+             *    controls-DataGridView-cell-verticalAlignMiddle - содержимое ячейки будет выравниваться по середине
+             *    controls-DataGridView-cell-verticalAlignBottom - содержимое ячейки будет выравниваться по нижнему краю
              * @property {String} headTemplate Шаблон отображения шапки колонки
              * @property {String} headTooltip Всплывающая подсказка шапки колонки
              * @property {String} editor Устанавливает редактор колонки для режима редактирования по месту.
@@ -370,7 +379,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *     <option name="allowToggleHead">false</option>
              * </pre>
              */
-            allowToggleHead: true
+            allowToggleHead: true,
+            /**
+             * @cfg {Boolean} Включает фиксацию / прилипание заголовков таблицы к шапке страницы / всплывающей панели.
+             * @example
+             * <pre>
+             *     <option name="stickyHeader">true</option>
+             * </pre>
+             */
+            stickyHeader: false
          }
       },
 
@@ -472,7 +489,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             hierField: cfg.hierField,
             getColumnVal: getColumnVal,
             decorators : args.decorators,
-            displayField : args.displayField
+            displayField : args.displayField,
+            isSearch : args.isSearch
          };
          args.startScrollColumn = cfg.startScrollColumn;
 
@@ -881,6 +899,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._movableElems = this._container.find('.controls-DataGridView__scrolledCell');
       },
 
+      _appendResultsContainer: function(container, resultRow){
+         DataGridView.superclass._appendResultsContainer.call(this, container, resultRow);
+         if(this.hasPartScroll()) {
+            this.updateScrollAndColumns();
+         }
+      },
+
       _checkThumbPosition: function(cords) {
          if (cords.left <= 0){
             this._toggleActiveArrow(this._arrowLeft, false);
@@ -1017,9 +1042,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
          data = $ws.helpers.map(this.getColumns(), function(col, index){
             value = resultsRecord.get(col.field);
             if (value == undefined){
-               return index == 0 ? self._options.resultsText : '';
+               value = index == 0 ? self._options.resultsText : '';
             }
-            return self._getColumnResultTemplate(col, index, $ws.render.defaultColumn.integer(value), resultsRecord);
+            else{
+               value = $ws.render.defaultColumn.integer(value);
+            }
+            return self._getColumnResultTemplate(col, index, value, resultsRecord);
          });
          return data;
       },

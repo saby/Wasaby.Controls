@@ -27,8 +27,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableList', [
       }
    });
 
-   SerializableMixin._checkExtender(ObservableList);
-
    Di.register('collection.observable-list', ObservableList);
 
    return ObservableList;

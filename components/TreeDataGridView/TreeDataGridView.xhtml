@@ -8,8 +8,7 @@
          </div>
       </div>
    </div>
-   <div class="controls-ListView-scrollIndicator ws-hidden{{?it.infiniteScroll === 'up'}} controls-ListView-scrollIndicator__up {{?}}"></div>
-   <table class="controls-DataGridView__table">
+   <table class="controls-DataGridView__table {{?it.stickyHeader}}ws-sticky-header__table{{?}}">
       {{=it._colGroupTpl(it._colgroupData)}}
       {{?it.showHead}}
          {{=it._headTpl(it._headData)}}
@@ -35,4 +34,5 @@
    {{? it.editArrow || it.arrowActivatedHandler}}
       <div class="controls-TreeView__editArrow-container ws-hidden"></div>
    {{?}}
+   <div class="controls-ListView-scrollIndicator ws-hidden{{?it.infiniteScroll === 'up'}} controls-ListView-scrollIndicator__up {{?}}"></div>
 </div>

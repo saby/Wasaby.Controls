@@ -75,7 +75,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       return itemParent ? itemParent.isExpanded() ? isVisibleItem(itemParent) : false : true;
    },
    projectionFilter = function(item, index, itemProj) {
-      return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
+      // Добавил проверку на скрытый узел. Мы ожидаем, что скрытый узел при поиске не должен быть раскрытым (а его связанные записи - не должны сразу отрисовываться).
+      var
+          itemParent = itemProj.getParent(),
+          itemParentContent = itemParent && itemParent.getContents();
+      return ($ws.helpers.instanceOfModule(itemParentContent, 'SBIS3.CONTROLS.Data.Record') && itemParentContent.get(this.hierField + '@') !== false && this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
    },
    projectionFilterOnlyFolders = function(item, index, itemProj) {
       return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj, true);
@@ -107,7 +111,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          doNext = true,
          item;
       while (doNext && (item = enumerator.getNext())) {
-         if (item.isNode() && !item.isExpanded() && projection.getChildren(item).getCount()) {
+         // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
+         if (item.isNode() && !item.isExpanded() && projection.getCollection().getChildItems(item.getContents().getId(), undefined, projection.getParentProperty()).length) {
             item.setExpanded(true);
             doNext = false;
             expandAllItems(projection);
@@ -315,17 +320,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              * @see SBIS3.CONTROLS.ItemsControlMixin#itemsSortMethod
              * @see SBIS3.CONTROLS.ItemsControlMixin#setItemsSortMethod
              */
-            itemsSortMethod: _defaultItemsSortMethod,
-            /**
-             * @cfg {Boolean}
-             * Передавать ли в параметрах фильтрации параметр "ПутьКУзлу"
-             */
-            filterNodePath: false,
-            /**
-             * @cfg {Boolean}
-             * Передавать ли в параметрах фильтрации параметр "ЗаголовокИерархии"
-             */
-            filterHierarchyTitle: false
+            itemsSortMethod: _defaultItemsSortMethod
          },
          _foldersFooters: {},
          _breadCrumbs : [],
@@ -526,10 +521,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             filter[hierField].push(this.getCurrentRoot());
             filter[hierField] = filter[hierField].concat(Object.keys(this._options.openedPath));
          }
-         if(this._options.filterNodePath)
-            filter['ПутьКУзлу'] = true;
-         if(this._options.filterHierarchyTitle)
-            filter['ЗаголовокИерархии'] = this._options.displayField;
          return filter;
       },
       /**
@@ -860,6 +851,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       setCurrentRoot: function(key) {
          var
             filter = this.getFilter() || {};
+         // todo Удалить при отказе от режима "hover" у редактирования по месту [Image_2016-06-23_17-54-50_0108] https://inside.tensor.ru/opendoc.html?guid=5bcdb10f-9d69-49a0-9807-75925b726072&description=
+         this._destroyEditInPlace();
          if (key !== undefined && key !== null) {
             filter[this._options.hierField] = key;
          } else {

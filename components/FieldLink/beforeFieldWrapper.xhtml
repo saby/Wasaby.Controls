@@ -2,15 +2,35 @@
     <component data-component="SBIS3.CONTROLS.Link" class="controls-FieldLink__showAllLinks ws-hidden">
         <opt name="caption">&#133;</opt>
         <opt name="command">showAllItems</opt>
-        <opt name="visible" type="boolean" value="false"/>
-        <opt name="allowChangeEnable" type="boolean" value="false"/>
+        <opt name="visible" type="boolean">false</opt>
+        <opt name="allowChangeEnable" type="boolean">false</opt>
+        <opt name="activableByClick" type="boolean">false</opt>
     </component>
     <component data-component="SBIS3.CONTROLS.Link" class="controls-FieldLink__dropAllLinks ws-hidden">
         <opt name="caption">Очистить все</opt>
         <opt name="command">clearAllItems</opt>
-        <opt name="visible" type="boolean" value="false"/>
+        <opt name="visible" type="boolean">false</opt>
+        <opt name="activableByClick" type="boolean">false</opt>
     </component>
 {{?}}
 <div class="controls-FieldLink__linksWrapper">
-    <div class="controls-FieldLink__linksContainer"></div>
+    <component data-component="SBIS3.CONTROLS.FieldLinkItemsCollection" class="controls-FieldLink__linksContainer">
+        <option name="name">FieldLinkItemsCollection</option>
+        <option name="tabindex">0</option>
+        <option name="displayField">{{=it.displayField}}</option>
+        <option name="userItemAttributes">{{=it.userItemAttributes}}</option>
+        <option name="keyField">{{=it.keyField}}</option>
+        <option name="itemTemplate" type="ref">{{@it.itemTemplate}}</option>
+        <options name="_preRenderValues">
+            <option name="selectedItems" type="ref">{{@it.selectedItems}}</option>
+            <option name="selectedItem" type="ref">{{@it.selectedItem}}</option>
+        </options>
+        <options name="handlers">
+            <option name="onDrawItems" type="function">js!SBIS3.CONTROLS.FieldLinkItemsCollection:prototype._eventHandler</option>
+            <option name="onCrossClick" type="function">js!SBIS3.CONTROLS.FieldLinkItemsCollection:prototype._eventHandler</option>
+            <option name="onItemActivate" type="function">js!SBIS3.CONTROLS.FieldLinkItemsCollection:prototype._eventHandler</option>
+            <option name="onClosePicker" type="function">js!SBIS3.CONTROLS.FieldLinkItemsCollection:prototype._eventHandler</option>
+            <option name="onShowPicker" type="function">js!SBIS3.CONTROLS.FieldLinkItemsCollection:prototype._eventHandler</option>
+        </options>
+    </component>
 </div>

@@ -79,6 +79,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
                   linkTextArray.push(item.get(self._options.displayField));
                });
                self._setCaption(linkTextArray.join(', '));
+               return list;
             });
          } else {
             this._setCaption(this._options.defaultCaption);
@@ -98,6 +99,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       _clickHandler: function(e) {
          if($(e.target).hasClass('controls-SelectorButton__cross')) {
             this.removeItemsSelectionAll();
+            //люди биндятся на опцию selectedItem. И при сбросе значения на крестик, selectedItem тоже должен сбрасываться.
+            this.setSelectedKey(null);
          } else {
             //TODO Пока делаю выбор из одного справочника, в дальнейшем доработать выбор из нескольких
             var dic = this._options.dictionaries[0];

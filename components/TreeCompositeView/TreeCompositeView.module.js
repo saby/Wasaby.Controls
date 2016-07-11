@@ -35,7 +35,17 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
       $protected: {
          _options: {
             /**
-             * Шаблон, используемый при отрисовке папки
+             * @cfg {String} Устанавливает шаблон, который используется для отрисовки папки в режимах "Список" и "Плитка"
+             * @remark
+             * Когда опция не задана, используется стандартный шаблон. Для его работы требуется установить опцию {@link SBIS3.CONTROLS.DSMixin#displayField}.
+             * Для режима отображения "Список" можно переопределить шаблон папки с помощью опции {@link listFolderTemplate}.
+             * Кроме шаблона папки, можно установить шаблон отображения элементов коллекции с помощью опций {@link SBIS3.CONTROLS.DataGridView/Columns.typedef cellTemplate}, {@link SBIS3.CONTROLS.ListView#itemTemplate}, {@link SBIS3.CONTROLS.CompositeViewMixin#listTemplate} и {@link SBIS3.CONTROLS.CompositeViewMixin#tileTemplate}.
+             * @see listFolderTemplate
+             * SBIS3.CONTROLS.DSMixin#displayField
+             * @see SBIS3.CONTROLS.DataGridView/Columns.typedef
+             * @see SBIS3.CONTROLS.ListView#itemTemplate
+             * @see SBIS3.CONTROLS.CompositeViewMixin#listTemplate
+             * @see SBIS3.CONTROLS.CompositeViewMixin#tileTemplate
              * @example
              * <pre>
              *    <div class="controls-ListView__demo-folder">\
@@ -45,7 +55,17 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
              */
             folderTemplate: undefined,
             /**
-             * Шаблон, используемый при отрисовке папки в режиме списка
+             * @cfg {String} Устанавливает шаблон, который используется для отрисовки папки в режимах "Список"
+             * @remark
+             * Когда опция не задана, используется стандартный шаблон. Для его работы требуется установить опцию {@link SBIS3.CONTROLS.DSMixin#displayField}.
+             * Для режима отображения "Плитка" можно переопределить шаблон папки с помощью опции {@link folderTemplate}.
+             * Кроме шаблона папки, можно установить шаблон отображения элементов коллекции с помощью опций {@link SBIS3.CONTROLS.DataGridView/Columns.typedef cellTemplate}, {@link SBIS3.CONTROLS.ListView#itemTemplate}, {@link SBIS3.CONTROLS.CompositeViewMixin#listTemplate} и {@link SBIS3.CONTROLS.CompositeViewMixin#tileTemplate}.
+             * @see folderTemplate
+             * SBIS3.CONTROLS.DSMixin#displayField
+             * @see SBIS3.CONTROLS.DataGridView/Columns.typedef
+             * @see SBIS3.CONTROLS.ListView#itemTemplate
+             * @see SBIS3.CONTROLS.CompositeViewMixin#listTemplate
+             * @see SBIS3.CONTROLS.CompositeViewMixin#tileTemplate
              * <pre>
              *    <div class="controls-ListView__demo-folder">\
              *       {{=it.item.get("title")}}\
@@ -82,23 +102,13 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                      dotTpl = this._options.listFolderTemplate || this._options.folderTemplate || folderTpl;
                   } else {
                      if (this._options.listTemplate) {
-                        if (this._options.listTemplate instanceof Function) {
-                           dotTpl = this._options.listTemplate;
-                        } else {
-                           dotTpl = doT.template(this._options.listTemplate);
-                        }
+                        dotTpl = this._options.listTemplate;
                      }
                      else {
-                        dotTpl = doT.template('<div style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply($ws.helpers.escapeHtml(it.item.get(it.description)))}}</div>');
+                        dotTpl = '<div style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply($ws.helpers.escapeHtml(it.item.get(it.description)))}}</div>';
                      }
                   }
-                  resultTpl = dotTpl({
-                     item: item,
-                     decorators: this._options._decorators,
-                     color: this._options.colorField ? item.get(this._options.colorField) : '',
-                     description: this._options.displayField,
-                     image: this._options.imageField
-                  });
+                  resultTpl = dotTpl;
                   break;
                }
                case 'tile' : {
@@ -106,11 +116,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                      dotTpl = this._options.folderTemplate ? this._options.folderTemplate : folderTpl;
                   } else {
                      if (this._options.tileTemplate) {
-                        if (this._options.tileTemplate instanceof Function) {
-                           dotTpl = this._options.tileTemplate;
-                        } else {
-                           dotTpl = doT.template(this._options.tileTemplate);
-                        }
+                        dotTpl = this._options.tileTemplate;
                      }
                      else {
                         var src;
@@ -119,21 +125,25 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                         } else {
                            src = '{{=it.item.get(it.image)}}';
                         }
-                        dotTpl = doT.template('<div class="controls-CompositeView__verticalItemActions js-controls-CompositeView__verticalItemActions"><div class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></div><img class="controls-CompositeView__tileImg" src="' + src + '"/><div class="controls-CompositeView__tileTitle" style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply($ws.helpers.escapeHtml(it.item.get(it.description)))}}</div></div>');
+                        dotTpl = '<div class="controls-CompositeView__verticalItemActions js-controls-CompositeView__verticalItemActions"><div class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></div><img class="controls-CompositeView__tileImg" src="' + src + '"/><div class="controls-CompositeView__tileTitle" style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply($ws.helpers.escapeHtml(it.item.get(it.description)))}}</div></div>';
                      }
                   }
-                  resultTpl = dotTpl({
-                     item: item,
-                     decorators: this._options._decorators,
-                     color: this._options.colorField ? item.get(this._options.colorField) : '',
-                     description: this._options.displayField,
-                     image: this._options.imageField
-                  });
+                  resultTpl = dotTpl;
                   break;
                }
 
             }
             return resultTpl;
+      },
+
+      _buildTplArgs: function(item) {
+         var parentOptions = TreeCompositeView.superclass._buildTplArgs.call(this, item);
+         if ((this._options.viewMode == 'list') || (this._options.viewMode == 'tile')) {
+            parentOptions.image = this._options.imageField;
+            parentOptions.description = this._options.displayField;
+            parentOptions.color = this._options.colorField ? item.get(this._options.colorField) : '';
+         }
+         return parentOptions;
       },
 
       _getTargetContainer: function (item) {
@@ -145,6 +155,20 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
       _processPaging: function() {
          TreeCompositeView.superclass._processPaging.call(this);
          this._processPagingStandart();
+      },
+      /**
+       * Устанавливает шаблон, который используется для отрисовки папки в режимах "Список" и "Плитка"
+       * @see folderTemplate
+       */
+      setFolderTemplate : function(tpl) {
+         this._options.folderTemplate = tpl;
+      },
+      /**
+       * Устанавливает шаблон, который используется для отрисовки папки в режимах "Список"
+       * @see listFolderTemplate
+       */
+      setListFolderTemplate : function(tpl) {
+         this._options.listFolderTemplate = tpl;
       },
       /*
        TODO НЕ ИСПОЛЬЗОВАТЬ БЕЗ САМОЙ КРАЙНЕЙ НЕОБХОДИМОСТИ!
@@ -190,7 +214,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             },
             //Метод удаляет или перерисовывает переданную строку
             removeOrRedraw = function(dataSet, row, recordOffset) {
-               var record = needRedraw ? dataSet.getRecordByKey(row.key) : false,
+               var
+                  indexForRemove,
+                  record = needRedraw ? dataSet.getRecordByKey(row.key) : false,
                   environment = [row.$row.prev(), row.$row.next()];
 
                //Если запись найдена в обновленном DataSet, то перерисовываем её
@@ -198,7 +224,10 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                   currentDataSet.getRecordByKey(row.key).merge(record);
                   self.redrawItem(record);
                } else { //Иначе - удаляем запись
-                  currentDataSet.removeAt(currentDataSet.getIndexById(row.key));
+                  indexForRemove = currentDataSet.getIndexById(row.key);
+                  if (indexForRemove) {
+                     currentDataSet.removeAt(indexForRemove);
+                  }
                   self._destroyItemsFolderFooter([row.key]);
                   self._ladderCompare(environment);
                   row.$row.remove();

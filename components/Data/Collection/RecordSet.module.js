@@ -958,8 +958,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //endregion Protected methods
    });
 
-   SerializableMixin._checkExtender(RecordSet);
-
    Di.register('collection.recordset', RecordSet);
 
    return RecordSet;

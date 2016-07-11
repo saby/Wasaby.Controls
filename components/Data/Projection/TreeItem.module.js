@@ -1,8 +1,9 @@
 /* global define, require, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
    'js!SBIS3.CONTROLS.Data.Projection.CollectionItem',
-   'js!SBIS3.CONTROLS.Data.Di'
-], function (CollectionItem, Di) {
+   'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (CollectionItem, Di, Utils) {
    'use strict';
 
    /**
@@ -34,6 +35,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
       _$expanded: false,
 
       /**
+       * @cfg {Boolean} Загружен ли узел. По умолчанию не загружен.
+       * @name SBIS3.CONTROLS.Data.Projection.TreeItem#expanded
+       */
+      _$loaded: false,
+
+      /**
        * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется для анализа на наличие дочерних элементов.
        * @name SBIS3.CONTROLS.Data.Projection.TreeItem#childrenProperty
        */
@@ -44,6 +51,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
       constructor: function $TreeItem(options) {
          TreeItem.superclass.constructor.call(this, options);
          this._$node = !!this._$node;
+         this._$loaded = !!this._$loaded;
       },
 
       //region Public methods
@@ -132,6 +140,23 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
       toggleExpanded: function () {
          this.setExpanded(!this.isExpanded());
       },
+
+      /**
+       * Возвращает значение свойства загруженности узла
+       * @returns {Boolean}
+       */
+      isLoaded: function () {
+         return this._$loaded;
+      },
+
+      /**
+       * Устанавливает свойство загруженности узла
+       * @param {Boolean} value
+       */
+      setLoaded: function (value) {
+         this._$loaded = !!value;
+      },
+
 
       /**
        * Возвращает название свойства, содержащего дочерние элементы узла

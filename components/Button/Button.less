@@ -210,12 +210,11 @@
 // Normal offsets' override for Firefox
 @-moz-document url-prefix() {
   .controls-Button {
-     padding-bottom: 2px; // FF only
     .controls-Button__icon {
       top: @button-icon-top-offset - @button-border-width;
 
       &.icon-24 {
-        top: @button-icon-big-top-offset - @button-border-width;
+        top: @button-icon-big-top-offset - @button-border-width - 1;
       }
     }
 
@@ -239,7 +238,15 @@
    .controls-Button__icon {
       top: 0 !important;
       &.icon-24 {
-         top: -4px !important;
+         top: -3px !important;
       }
    }
+}
+// хак для ie9, 10, 11 выравнивающий иконки
+@media screen and (min-width:~"0\0") {
+  .controls-Button__icon {
+    &.icon-24 {
+      top: -2px !important;
+    }
+  }
 }

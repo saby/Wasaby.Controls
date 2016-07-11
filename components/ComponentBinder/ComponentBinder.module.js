@@ -8,96 +8,126 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
     * @public
     */
    /*методы для поиска*/
-   function startHierSearch(text, searchParamName, searchCrumbsTpl, searchMode, searchForm) {
-      if (text) {
-         var filter = $ws.core.merge(this._options.view.getFilter(), {
-               'Разворот': 'С разворотом',
-               'usePages': 'full'
-            }),
-            view = this._options.view,
-            groupBy = view.getSearchGroupBy(searchParamName),
-            self = this,
-            mode = searchMode;
-         if (searchCrumbsTpl) {
-            groupBy.breadCrumbsTpl = searchCrumbsTpl;
+   var startHierSearch = function hierSearch(text, searchParamName, searchCrumbsTpl, searchMode, searchForm) {
+          if (text) {
+             var filter = $ws.core.merge(this._options.view.getFilter(), {
+                    'Разворот': 'С разворотом',
+                    'usePages': 'full'
+                 }),
+                 view = this._options.view,
+                 groupBy = view.getSearchGroupBy(searchParamName),
+                 args = arguments,
+                 self = this,
+                 mode = searchMode;
+             if (searchCrumbsTpl) {
+                groupBy.breadCrumbsTpl = searchCrumbsTpl;
+             }
+             filter[searchParamName] = text;
+             view.setHighlightText(text, false);
+             view.setHighlightEnabled(true);
+             view.setInfiniteScroll(true, true);
+             view.setGroupBy(groupBy);
+             if (this._firstSearch) {
+                this._lastRoot = view.getCurrentRoot();
+                //Запомнили путь в хлебных крошках перед тем как их сбросить для режима поиска
+                if (this._options.breadCrumbs && this._options.breadCrumbs.getItems()){
+                   this._pathDSRawData = $ws.core.clone(this._options.breadCrumbs.getItems().getRawData());
+                }
+             }
+             this._firstSearch = false;
+             //Флаг обозначает, что ввод был произведен пользователем
+             this._searchReload = true;
+             //Это нужно чтобы поиск был от корня, а крошки при этом отображаться не должны
+             //Почему тут просто не скрыть их через css?
+             if (this._options.breadCrumbs) {
+                this._options.breadCrumbs.setItems([]);
+             }
+             //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
+             if (this._options.backButton) {
+                this._options.backButton.getContainer().css({'display': 'none'});
+             }
+
+             if (searchMode == 'root'){
+                filter[view.getHierField()] = undefined;
+             }
+
+             view.once('onDataLoad', function(event, data){
+                var root;
+
+                afterSearchProcess.call(self, hierSearch, args, data, view, searchForm, searchParamName);
+
+                if (mode === 'root') {
+                   root = view._options.root !== undefined ? view._options.root : null;
+                   //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
+                   view._options._itemsProjection.setEventRaising(false);
+                   //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
+                   view._options._itemsProjection.setRoot(root);
+                   view._options._curRoot = root;
+                   view._options._itemsProjection.setEventRaising(true);
+                }
+             });
+
+             view.reload(filter, view.getSorting(), 0).addCallback(function(){
+                view._container.addClass('controls-GridView__searchMode');
+             });
+             this._searchMode = true;
+          }
+       },
+       startSearch = function search(text, searchParamName, searchForm){
+          if (text){
+             var view = this._options.view,
+                 filter = $ws.core.merge(view.getFilter(), {
+                    'usePages': 'full'
+                 }),
+                 args = arguments;
+
+             filter[searchParamName] = text;
+             view.setHighlightText(text, false);
+             view.setHighlightEnabled(true);
+             view.setInfiniteScroll(true, true);
+
+             view.once('onDataLoad', function(event, data) {
+                afterSearchProcess.call(this, search, args, data, view, searchForm, searchParamName);
+             }.bind(this));
+
+             view.reload(filter, view.getSorting(), 0);
+          }
+       };
+
+   function afterSearchProcess(mainFunc, mainFuncArgs, data, view, searchForm, searchParamName) {
+      var args = Array.prototype.slice.call(mainFuncArgs, 0),
+          viewFilter = view.getFilter(),
+          newText = args[0];
+
+      if(data.getCount()) {
+         /* Если есть данные, и параметр поиска не транслитизировался,
+            то не будем менять текст в строке поиска */
+         if(this._searchTextTranslated) {
+            searchForm.setText(newText);
+            this._searchTextTranslated = false;
          }
-         filter[searchParamName] = text;
-         view.setHighlightText(text, false);
-         view.setHighlightEnabled(true);
-         view.setInfiniteScroll(true, true);
-         view.setGroupBy(groupBy);
-         if (this._firstSearch) {
-            this._lastRoot = view.getCurrentRoot();
-            //Запомнили путь в хлебных крошках перед тем как их сбросить для режима поиска
-            if (this._options.breadCrumbs && this._options.breadCrumbs.getItems()){
-               this._pathDSRawData = $ws.core.clone(this._options.breadCrumbs.getItems().getRawData());
-            }
+      } else {
+         /* Если данных нет, то обработаем два случая:
+            1) Была сменена раскладка - просто возвращаем фильтр в исходное состояние,
+               текст в строке поиска не меняем
+            2) Смены раскладки не было, то транслитизируем текст поиска, и поищем ещё раз   */
+         newText = KbLayoutRevertUtil.process(newText);
+         if(this._searchTextTranslated) {
+            viewFilter[searchParamName] = newText;
+            view.setFilter(viewFilter, true);
+            this._searchTextTranslated = false;
+         } else {
+            args[0] = newText;
+            this._searchTextTranslated = true;
+            mainFunc.apply(this, args);
          }
-         this._firstSearch = false;
-         //Флаг обозначает, что ввод был произведен пользователем
-         this._searchReload = true;
-         //Это нужно чтобы поиск был от корня, а крошки при этом отображаться не должны
-         //Почему тут просто не скрыть их через css?
-         if (this._options.breadCrumbs) {
-            this._options.breadCrumbs.setItems([]);
-         }
-         //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
-         if (this._options.backButton) {
-            this._options.backButton.getContainer().css({'visibility': 'hidden'});
-         }
-
-         if (searchMode == 'root'){
-            filter[view.getHierField()] = undefined;
-         }
-
-         view.once('onDataLoad', function(event, data){
-            var root;
-
-            toggleSearchKbLayoutRevert.call(self, view, false);
-            processDataKbLayoutRevert.call(self, data, view, searchForm, searchParamName);
-            if (mode === 'root') {
-               root = view._options.root !== undefined ? view._options.root : null;
-               //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
-               view._options._itemsProjection.setEventRaising(false);
-               //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
-               view._options._itemsProjection.setRoot(root);
-               view._options._curRoot = root;
-               view._options._itemsProjection.setEventRaising(true);
-            }
-         });
-
-         view.reload(filter, view.getSorting(), 0).addCallback(function(){
-            view._container.addClass('controls-GridView__searchMode');
-         });
-         this._searchMode = true;
-      }
-   }
-
-   function startSearch(text, searchParamName, searchForm){
-      if (text){
-         var view = this._options.view,
-             filter = $ws.core.merge(view.getFilter(), {
-                'usePages': 'full'
-             }),
-             self = this,
-             newText;
-
-         filter[searchParamName] = text;
-         view.once('onDataLoad', function(event, data) {
-            toggleSearchKbLayoutRevert.call(self, view, false);
-            processDataKbLayoutRevert.call(self, data, view, searchForm, searchParamName);
-         });
-         view.setHighlightText(text, false);
-         view.setHighlightEnabled(true);
-         view.setInfiniteScroll(true, true);
-         view.reload(filter, view.getSorting(), 0);
       }
    }
 
    function resetSearch(searchParamName){
-      var
-         view = this._options.view,
-         filter = view.getFilter();
+      var view = this._options.view,
+          filter = view.getFilter();
+
       delete (filter[searchParamName]);
       view.setHighlightText('', false);
       view.setHighlightEnabled(false);
@@ -146,7 +176,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             this._options.breadCrumbs._redraw();
          }
          if (this._options.backButton) {
-            this._options.backButton.getContainer().css({'visibility': 'visible'});
+            this._options.backButton.getContainer().css({'display': ''});
          }
       } else {
          //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
@@ -185,47 +215,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
       }, this)
    }
 
-   function toggleSearchKbLayoutRevert(view, needSet, searchParamName) {
-      var filter = view.getFilter(),
-          source;
-
-      if(needSet) {
-         if(!this._lastViewSource) {
-            this._lastViewSource = view.getDataSource();
-         }
-         /* Подготовим фильтр и сорс для запроса со сменой раскладки */
-         if(!this._searchSource) {
-            this._searchSource = KbLayoutRevertUtil.prepareSearchSource(this._lastViewSource);
-         }
-
-         source = this._searchSource;
-         filter = KbLayoutRevertUtil.prepareSearchFilter(this._lastViewSource, filter, searchParamName);
-
-
-         view.setDataSource(source, true);
-         view.setFilter(filter, true);
-      } else {
-         filter = KbLayoutRevertUtil.revertSearchFilter(filter);
-         source = this._lastViewSource;
-
-         view.setFilter(filter, true);
-         if(source) {
-            view.setDataSource(source, true);
-            this._lastViewSource = null;
-         }
-      }
-   }
-
-   function processDataKbLayoutRevert(data, view, searchForm, searchParamName) {
-      var newText;
-      /* Меняем раскладку, если требуется + меняем фильтр по которому искали */
-      if(KbLayoutRevertUtil.needRevert(data)) {
-         newText = KbLayoutRevertUtil.process(searchForm.getText());
-         searchForm.setText(newText);
-         view.setHighlightText(newText, false);
-         view.getFilter()[searchParamName] = newText;
-      }
-   }
    /**
     * Контроллер, позволяющий связывать компоненты осуществляя базовое взаимодейтсие между ними
     * @author Крайнов Дмитрий
@@ -243,9 +232,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          _currentRoot: null,
          _pathDSRawData : [],
          _firstSearch: true,
-         _lastViewMode: null,
-         _lastViewSource: null,
-         _searchSource: null,
+         _searchTextTranslated: false,
          _path: [],
          _options: {
             /**
@@ -337,7 +324,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                      self._pathDSRawData = $ws.core.clone(crumbsItems ? crumbsItems.getRawData() : []);
                   }
                   if (self._options.backButton) {
-                     self._options.backButton.getContainer().css({'visibility': 'visible'});
+                     self._options.backButton.getContainer().css({'display': ''});
                   }
                }
             });
@@ -353,7 +340,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          this._isInfiniteScroll = view.isInfiniteScroll();
          function subscribeOnSearchFormEvents() {
             searchForm.subscribe('onReset', function (event, text) {
-               toggleSearchKbLayoutRevert.call(self, view, false, searchParamName);
                if (isTree) {
                   resetGroup.call(self, searchParamName);
                } else {
@@ -362,7 +348,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             });
 
             searchForm.subscribe('onSearch', function (event, text) {
-               toggleSearchKbLayoutRevert.call(self, view, true, searchParamName);
                if (isTree) {
                   startHierSearch.call(self, text, searchParamName, undefined, searchMode, searchForm);
                } else {
@@ -376,6 +361,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                   view.setSelectedIndex(0);
                   view.setActive(true);
                   event.stopPropagation();
+                  event.preventDefault();
                }
             });
          }
@@ -459,7 +445,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                      var rec = hier[i];
                      if (rec){
                         var c = createBreadCrumb(rec);
-                        if (self._currentRoot ) {
+                        if (self._currentRoot && !Object.isEmpty(self._currentRoot)) {
                            self._path.push(self._currentRoot);
                         } else {
 

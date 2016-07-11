@@ -43,6 +43,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.Selectable
+    *
+    * @cssModifier controls-ComboBox__ellipsis При нехватке ширины текст в поле ввода оборвётся многоточием.
+    * !Важно: при добавлении этого класса сломается "Базовая линия".
     */
 
    var ComboBox = TextBox.extend([PickerMixin, DSMixin, Selectable, DataBindMixin, SearchMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
@@ -378,6 +381,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                }
                self.setSelectedKey(strKey);
                self.hidePicker();
+               // чтобы не было выделения текста, когда фокус вернули в выпадашку
+               self._fromTab = false;
+               self.setActive(true);
             }
             e.stopPropagation();
          });

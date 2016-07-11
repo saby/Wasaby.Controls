@@ -72,12 +72,13 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
             /* Т.к. запрос вызывается отдельно, то и индикатор надо показать самим,
                иногда БЛ может подтупливать и в этом случае может долго висеть пустой реестр, который вводит пользователя в заблуждение  */
             view._toggleIndicator(true);
+            /* Фильтр устанавливаем пораньше, до ответа query, чтобы запустилась синхронизация,
+             и фильтры проставились в кнопку фильтров */
+            view.setFilter(queryFilter, true);
 
             queryDef.addCallback(function(dataSet) {
                var keyField = view.getProperty('keyField'),
                    recordSet;
-
-               view._toggleIndicator(false);
 
                if (keyField && keyField !== dataSet.getIdProperty()) {
                   dataSet.setIdProperty(keyField);
@@ -90,12 +91,15 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
                   path: dataSet.getProperty('p')
                });
 
-               view.setDataSource(source, true);
-               view.setFilter(queryFilter, true);
+               if (!view.isDestroyed()) { //Пока выполнялся запрос - view уже мог успеть уничтожиться. В таком случае не трогаем view
+                  view._toggleIndicator(false);
+                  view.setDataSource(source, true);
+                  //FIXME это временный придрод, уйдёт, как будет сделана отрисовка на сервере (3.7.3.200 - 3.7.4)
+                  view._notify('onDataLoad', recordSet);
+                  view.setItems(recordSet);
+               }
+
                resultDef.callback(recordSet);
-               //FIXME это временный придрод, уйдёт, как будет сделана отрисовка на сервере (3.7.3.200 - 3.7.4)
-               view._notify('onDataLoad', recordSet);
-               view.setItems(recordSet);
 
                return recordSet;
             });
