@@ -184,7 +184,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _searchFilter: function(model){
-         if (model.get(this._options.displayField).match(this.getText())){
+         var itemText = model.get(this._options.displayField).toLowerCase(),
+             text = this.getText().toLowerCase()
+         if (itemText.match(text)){
             return true;
          }
          return false;
