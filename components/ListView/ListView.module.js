@@ -1821,6 +1821,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _nextLoad: function () {
             var self = this,
                loadAllowed  = this._isAllowInfiniteScroll();
+            //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
             if (!this._scrollWatcher.hasScroll(this.getContainer())){
                this._container.addClass('controls-ListView__outside-scroll-loader');
             } else {
@@ -1841,8 +1842,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                   this.getItems().setMetaData(dataSet.getMetaData());
                   self._infiniteScrollOffset += self._limit;
+                  self._hideLoadingIndicator();
                   if (!hasNextPage) {
-                     self._hideLoadingIndicator();
                      this._toggleEmptyData(!self.getItems().getCount());
                   }
                   self._notify('onDataMerge', dataSet);
