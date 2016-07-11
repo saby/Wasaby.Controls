@@ -93,7 +93,11 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
          if (currentWindow.getSelection) {
             //В хроме getSelection().toString() отдаёт переносы в виде \n блокнот их не воспринимает, необходимо переделывать их в \r\n
             textData = currentWindow.getSelection().toString().replace(/\r\n|\n/gi,'\r\n');
-            textData = $ws.helpers.unEscapeASCII($ws.helpers.escapeASCII(textData).replace(/&#160;/gi, '&#32;')); //наилютейший костыль смотри описание коммита
+            /** В текстовом формате nbsp имеет 160 код, в FAR (там OEM text формат) вставляется как неведомый символ
+            * через обычный textData.replace(new regExp(String.fromCharCode(160), 'gi'), ' ') не помогает,
+            * поэтому перевожу строку в ascii заменяю код символа и обратно
+            **/
+            textData = $ws.helpers.unEscapeASCII($ws.helpers.escapeASCII(textData).replace(/&#160;/gi, '&#32;'));
             selectionRange = currentWindow.getSelection().getRangeAt(0);
             selectionContent = canCut ? selectionRange.extractContents() : selectionRange.cloneContents();
          }
