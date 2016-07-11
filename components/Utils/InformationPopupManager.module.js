@@ -59,14 +59,10 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           */
 
          /**
-          * @typedef {Object} NotificationCfgWithoutState
-          * @property {String} caption Заголовок (основной текст) информационного окна.
-          */
-
-         /**
           * @typedef {Object} NotificationCfg
           * @property {String} caption Заголовок (основной текст) информационного окна.
-          * @property {State} state Состояние окна. От состояния заивисит цвет линии в шапке и иконка по умолчани.
+          * @property {State} state Состояние окна. От состояния заивисит цвет линии в шапке и иконка по умолчанию.
+          * @property {Function} [template] Шаблон содержимого информационного окна. Используется для персонализированных уведомлений.
           */
 
          /**
@@ -87,32 +83,8 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           * @param {OneButtonDialogCfg} config Объект настроек диалога
           * @param {Function} handler Обработчик нажатия на кнопку "Ок"
           */
-         showErrorDialog: function(config, handler){
-            showSubmitDialog($ws.core.merge(config, {
-               state: 'error'
-            }), null, null, handler);
-         },
-
-         /**
-          * Показать диалог с состоянием "Успешно"
-          * @param {OneButtonDialogCfg} config Объект настроек диалога
-          * @param {Function} handler Обработчик нажатия на кнопку "Ок"
-          */
-         showSuccessDialog: function(config, handler){
-            showSubmitDialog($ws.core.merge(config, {
-               state: 'success'
-            }), null, null, handler);
-         },
-
-         /**
-          * Показать диалог с состоянием "Предупреждение"
-          * @param {OneButtonDialogCfg} config Объект настроек диалога
-          * @param {Function} handler Обработчик нажатия на кнопку "Ок"
-          */
-         showWarningDialog: function(config, handler){
-            showSubmitDialog($ws.core.merge(config, {
-               state: 'warning'
-            }), null, null, handler);
+         showDialog: function(config, handler){
+            showSubmitDialog(config, null, null, handler);
          },
 
          /**
@@ -125,36 +97,6 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
             }, config));
 
             NotificationManager.showNotification(popup);
-         },
-
-         /**
-          * Показать нотификационное окно с состоянием "Успешно"
-          * @param {NotificationCfgWithoutState} config Объект настроек для SBIS3.CONTROLS.NotificationPopup
-          */
-         showSuccessNotification: function(config){
-            this.showNotification($ws.core.merge(config, {
-               state: 'success'
-            }));
-         },
-
-         /**
-          * Показать нотификационное окно с состоянием "Ошибка"
-          * @param {NotificationCfgWithoutState} config Объект настроек для SBIS3.CONTROLS.NotificationPopup
-          */
-         showErrorNotification: function(config){
-            this.showNotification($ws.core.merge(config, {
-               state: 'error'
-            }));
-         },
-
-         /**
-          * Показать нотификационное окно с состоянием "Предупреждение"
-          * @param {NotificationCfgWithoutState} config Объект настроек для SBIS3.CONTROLS.NotificationPopup
-          */
-         showWarningNotification: function(config){
-            this.showNotification($ws.core.merge(config, {
-               state: 'warning'
-            }));
          }
       };
    }
