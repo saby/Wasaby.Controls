@@ -61,7 +61,10 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
          init : function() {
             NotificationPopup.superclass.init.call(this);
 
-            if(!this._options.icon){
+            if (this._options.icon){
+               this.setIcon(this._options.icon);
+            }
+            else{
                switch(this._options.state){
                   case 'success':
                      this.setIcon('icon-24 icon-Yes icon-done');
