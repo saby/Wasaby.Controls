@@ -42,6 +42,9 @@
 
                 <opt name="internalCaptionField">sellingText</opt>
 
+                <opt name="internalVisibilityField">comboBox1</opt>
+                <opt name="resetVisibilityValue" type="boolean">false</opt>
+
                 <opt name="caption" bind="filterDescr/selling"></opt>
 
                 <opt name="value" bind="filter/selling"></opt>
@@ -53,6 +56,9 @@
 
                 <opt name="internalCaptionField">usingText</opt>
 
+                <opt name="internalVisibilityField">comboBox2</opt>
+                <opt name="resetVisibilityValue" type="boolean">false</opt>
+
                 <opt name="caption" bind="filterDescr/using"></opt>
 
                 <opt name="value" bind="filter/using"></opt>
@@ -60,6 +66,29 @@
                 <opt name="resetValue"></opt>
             </opts>
         </opts>
+
+        <opt name="additionalFilterParamsTemplate">
+            <div>
+                <component data-component="SBIS3.CONTROLS.Link">
+                    <opt name="caption">Покажу комбобокс 1</opt>
+                    <opt name="command">change-field-internal</opt>
+                    <opts name="commandArgs" type="array">
+                        <opt>comboBox1</opt>
+                        <opt type="boolean">true</opt>
+                    </opts>
+                </component>
+            </div>
+            <div>
+                <component data-component="SBIS3.CONTROLS.Link">
+                    <opt name="caption">Покажу комбобокс 2</opt>
+                    <opt name="command">change-field-internal</opt>
+                    <opts name="commandArgs" type="array">
+                        <opt>comboBox2</opt>
+                        <opt type="boolean">true</opt>
+                    </opts>
+                </component>
+            </div>
+        </opt>
 
         <opt name="template">
             <component data-component="SBIS3.CONTROLS.Demo.FilterButtonFilterContent"></component>

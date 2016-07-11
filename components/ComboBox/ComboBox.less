@@ -1,23 +1,26 @@
 .controls-ComboBox {
    line-height: normal;
    cursor: @combo-box-cursor;
+
    .controls-TextBox__fieldWrapper {
       position: relative;
       .controls-TextBox__field {
          &.controls-ComboBox__field {
             font: @combo-box-field-font;
+            font-size: @text-box-field-font-size;
             color: @combo-box-field-text-color;
          }
          &.controls-ComboBox__fieldNotEditable {
             display: none;
-            .text-overflow();
          }
          &.controls-ComboBox__fieldNotEditable__placeholder {
             color: @text-box-placeholder-color;
          }
       }
    }
+
    .controls-TextBox__afterFieldWrapper {
+      width: @combo-box-after-width;
       .controls-ComboBox__arrowDown {
          position: absolute;
          top: @combo-box-arrow-top-offset;
@@ -30,7 +33,6 @@
          border-width: @combo-box-arrow-border-width;
          border-style: @combo-box-arrow-border-style;
          border-color: @combo-box-arrow-border-color;
-         background: @combo-box-arrow-bg;
 
          .box-sizing(border-box);
          &:hover {
@@ -38,7 +40,6 @@
             border-width: @combo-box-arrow-hover-border-width;
             border-style: @combo-box-arrow-hover-border-style;
             border-color: @combo-box-arrow-hover-border-color;
-            background: @combo-box-arrow-hover-bg;
          }
       }
    }
@@ -53,6 +54,7 @@
             }
             &.controls-ComboBox__fieldNotEditable {
                font: @combo-box-field-font;
+               font-size: @text-box-field-font-size;
                display: inline-block;
                color: @combo-box-field-text-color;
             }
@@ -65,18 +67,18 @@
                border-width: @combo-box-arrow-hover-border-width;
                border-style: @combo-box-arrow-hover-border-style;
                border-color: @combo-box-arrow-hover-border-color;
-               background: @combo-box-arrow-hover-bg;
             }
          }
       }
    }
    &.controls-Picker__show {
+      background-color: @text-box-focus-bg;
+
       .controls-TextBox__afterFieldWrapper {
          .controls-ComboBox__arrowDown {
             border-width: @combo-box-arrow-active-border-width;
             border-style: @combo-box-arrow-active-border-style;
             border-color: @combo-box-arrow-active-border-color;
-            background: @combo-box-arrow-active-bg;
          }
       }
       &:hover {
@@ -85,7 +87,6 @@
                border-width: @combo-box-arrow-active-hover-border-width;
                border-style: @combo-box-arrow-active-hover-border-style;
                border-color: @combo-box-arrow-active-hover-border-color;
-               background: @combo-box-arrow-active-hover-bg;
             }
          }
       }
@@ -95,10 +96,17 @@
       cursor: @combo-box-disabled-cursor;
       .controls-TextBox__afterFieldWrapper {
          .controls-ComboBox__arrowDown {
-            border-width: @combo-box-arrow-disabled-border-width;
-            border-style: @combo-box-arrow-disabled-border-style;
-            border-color: @combo-box-arrow-disabled-border-color;
-            background: @combo-box-arrow-disabled-bg;
+            display: none;
+         }
+      }
+   }
+
+   &.controls-ComboBox__ellipsis {
+      .controls-TextBox__fieldWrapper {
+         .controls-TextBox__field {
+            &.controls-ComboBox__fieldNotEditable {
+               .text-overflow();
+            }
          }
       }
    }
@@ -111,6 +119,7 @@
    .border-radius(@combo-box-picker-border-radius);
    .controls-ComboBox__itemRow {
       font: @combo-box-picker-item-font;
+      font-size: @text-box-field-font-size;
       padding: @combo-box-picker-item-padding;
       cursor: @combo-box-cursor;
       color: @combo-box-picker-item-text-color;

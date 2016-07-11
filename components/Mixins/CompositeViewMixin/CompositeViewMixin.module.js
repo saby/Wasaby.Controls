@@ -166,13 +166,9 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
                case 'list':
                   {
                      if (this._options.listTemplate) {
-                        if (this._options.listTemplate instanceof Function) {
-                           dotTpl = this._options.listTemplate;
-                        } else {
-                           dotTpl = doT.template(this._options.listTemplate);
-                        }
+                        dotTpl = this._options.listTemplate;
                      } else {
-                        dotTpl = doT.template('<div style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply(it.item.get(it.description))}}</div>');
+                        dotTpl = '<div style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply(it.item.get(it.description))}}</div>';
                      }
                      resultTpl = dotTpl;
                      break;
@@ -180,11 +176,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
                case 'tile':
                   {
                      if (this._options.tileTemplate) {
-                        if (this._options.tileTemplate instanceof Function) {
-                           dotTpl = this._options.tileTemplate;
-                        } else {
-                           dotTpl = doT.template(this._options.tileTemplate);
-                        }
+                        dotTpl = this._options.tileTemplate;
                      } else {
                         var src;
                         if (!item.get(this._options.imageField)) {
@@ -192,7 +184,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
                         } else {
                            src = '{{=it.item.get(it.image)}}';
                         }
-                        dotTpl = doT.template('<div class="controls-CompositeView__verticalItemActions js-controls-CompositeView__verticalItemActions"><div class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></div><img class="controls-CompositeView__tileImg" src="' + src + '"/><div class="controls-CompositeView__tileTitle" style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply(it.item.get(it.description))}}</div></div>');
+                        dotTpl = '<div class="controls-CompositeView__verticalItemActions js-controls-CompositeView__verticalItemActions"><div class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></div><img class="controls-CompositeView__tileImg" src="' + src + '"/><div class="controls-CompositeView__tileTitle" style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply(it.item.get(it.description))}}</div></div>';
                      }
                      resultTpl = dotTpl;
                      break;
@@ -244,11 +236,28 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
 
          //TODO заглушка для CompositeView
          _isSlowDrawing: function(parentFnc) {
-            var flag = parentFnc.call(this)
+            var flag = parentFnc.call(this);
             if (this._options.viewMode == 'list' || this._options.viewMode == 'tile') {
                flag = true;
             }
             return flag;
+         },
+
+         /**
+          * Устанавливает Шаблон отображения строки в режиме "Список".
+          * @see listTemplate
+          */
+         setListTepmplate : function(tpl) {
+            this._options.listTemplate = tpl;
+         },
+
+
+         /**
+         * Устанавливает Шаблон отображения строки в режиме "Плитка".
+         * @see tileTemplate
+         */
+         setTileTemplate : function(tpl) {
+            this._options.tileTemplate = tpl;
          }
       }
 

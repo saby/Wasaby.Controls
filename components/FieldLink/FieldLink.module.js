@@ -60,7 +60,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *    <li>
         *       <b>Через справочник.</b>
         *       Справочник - это диалог выбора значений. Диалог строится на основе пользовательского компонента.
-        *       Подробнее о правилах создания компонента для справочника поля связи вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/">Поле связи</a>.
+        *       Подробнее о правилах создания компонента для справочника поля связи вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/dictionary/">Поле связи</a>.
         *       Набор справочников устанавливают с помощью опции {@link dictionaries}, а режим отображения открытого справочника - с помощью опции {@link chooserMode}.
         *    </li>
         *    <li>
@@ -111,7 +111,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @public
         * @author Крайнов Дмитрий Олегович
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
-        * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings showAllConfig footerTpl emptyHTML groupBy
+        * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings footerTpl emptyHTML groupBy
         * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip setEmptyHTML setGroupBy
         *
         * ignoreEvents onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
@@ -860,10 +860,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
              /* Для поля связи в задизейбленом состоянии считаем, ширина инпута - 0, т.к. он визуально не отображается */
              if(this.isEnabled()) {
                 inputWidth = this._getInputWidth();
+
+                /* По неустановленным причинам, после обновления хрома, он для некоторых элементов начинает возвращать нулевую ширину,
+                   после чистки кэша или перезагрузки браузера проблема исчезает, но надо от этого защититься (повторялось только в хроме) */
+                if(!inputWidth && this._isEmptySelection()) {
+                   inputWidth = 'auto';
+                }
              } else  {
                 inputWidth = 0;
              }
-             this._inputField[0].style.width = inputWidth + 'px';
+             this._inputField[0].style.width = (inputWidth === 'auto' ? inputWidth : inputWidth + 'px');
           },
 
           /* Заглушка, само поле связи не занимается отрисовкой */
