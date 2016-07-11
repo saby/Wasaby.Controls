@@ -20,6 +20,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          idProperty: cfg.keyField || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
          parentProperty: cfg.hierField,
          nodeProperty: cfg.hierField + '@',
+         loadedProperty: cfg.hierField + '$',
          root: root
       });
       var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
@@ -114,6 +115,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
          if (item.isNode() && !item.isExpanded() && projection.getCollection().getChildItems(item.getContents().getId(), undefined, projection.getParentProperty()).length) {
             item.setExpanded(true);
+            item.setLoaded(true);
             doNext = false;
             expandAllItems(projection);
          }
@@ -504,6 +506,31 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             var
                itemParent = projItem.getParent();
             return parentFn.call(this, projItem) && itemParent && itemParent.isRoot();
+         },
+         /* ToDo. Используется для вызова перерисовки родительских элементов при изменении количества дочерних
+          Удалить функцию, когда будет сделана нотификация по заданию: https://inside.tensor.ru/opendoc.html?guid=b53fc873-6355-4f06-b387-04df928a7681&description= */
+         _onCollectionAddMoveRemove: function(parentFn, event, action, newItems, newItemsIndex, oldItems) {
+            var
+               branches = {},
+               fillBranchesForRedraw = function (items) {
+                  var idx, parent;
+                  for (idx = 0; idx < items.length; idx++) {
+                     parent = items[idx].getParent();
+                     if (!parent.isRoot()) {
+                        if (!branches[parent.getContents().getId()]) {
+                           branches[parent.getContents().getId()] = parent;
+                        }
+                     }
+                  }
+               }.bind(this);
+            parentFn.call(this, event, action, newItems, newItemsIndex, oldItems);
+            fillBranchesForRedraw(newItems);
+            fillBranchesForRedraw(oldItems);
+            for (idx in branches) {
+               if (branches.hasOwnProperty(idx)) {
+                  this._redrawItem(branches[idx]);
+               }
+            }
          }
       },
       _getFilterForReload: function(filter, sorting, offset, limit, deepReload) {
