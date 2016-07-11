@@ -604,7 +604,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //    Задача в разработку: доработка listView, для поддержки touch устройств с возможностью управление мышью
             this._touchSupport = $ws._const.browser.isMobilePlatform;
 
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onDragMove', 'onDropItem');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onDragMove');
 
             /* За счёт того, что разделено поведения отображения операций и ховера,
                в зависимости от события, которое произошло, то можно смело подписаться на все событие,
@@ -2436,19 +2436,19 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             return keys;
          },
-         _canDragStart: function(e) {
+         _canDragStart: function(dragObject) {
             //TODO: При попытке выделить текст в поле ввода, вместо выделения начинается перемещения элемента.
             //Как временное решение добавлена проверка на SBIS3.CONTROLS.TextBoxBase.
             //Необходимо разобраться можно ли на уровне TextBoxBase или Control для события mousedown
             //сделать stopPropagation, тогда от данной проверки можно будет избавиться.
-            return !this.isDragging() && this._options.enabled && !$ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
+            return !dragObject.isDragging() && this._options.enabled && !$ws.helpers.instanceOfModule(dragObject.getTargetsControl(), 'SBIS3.CONTROLS.TextBoxBase');
          },
 
          _beginDragHandler: function(dragObject, e) {
             var
                 id,
                 target;
-            if (this._canDragStart(e)) {
+            if (this._canDragStart(dragObject)) {
                target = this._findItemByElement($(e.target));
                //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
                //она есть в _items(например при добавлении или фейковый корень). Метод _findItemByElement в данном случае вернёт
@@ -2483,9 +2483,9 @@ define('js!SBIS3.CONTROLS.ListView',
 
 
                this._clearDragHighlight(dragObject);
-               if (this.getDragOwner() !== this || target.length && target.data('id') !== currentElement.targetId) {
+               if (dragObject.getOwner() !== this || target.length && target.data('id') !== currentElement.targetId) {
                   insert = this._getDirectionOrderChange(e, target);
-                  if (insert !== DRAG_META_INSERT.on && this.getDragOwner() === this) {
+                  if (insert !== DRAG_META_INSERT.on && dragObject.getOwner() === this) {
                      neighborItem = this[insert === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](target.data('id'));
                      if (neighborItem && neighborItem.data('id') === currentElement.targetId) {
                         insert = DRAG_META_INSERT.on;
@@ -2524,7 +2524,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _notifyOnDragMove: function(target, insert, dragObject) {
             if (insert !== DRAG_META_INSERT.on) {
-               return this._notify('onDragMove', dragObject.getMeta().keys, target.data('id'), insert === DRAG_META_INSERT.after, this.getDragOwner()) !== false;
+               return this._notify('onDragMove', dragObject.getMeta().keys, target.data('id'), insert === DRAG_META_INSERT.after, dragObject.getOwner()) !== false;
             }
          },
          _clearDragHighlight: function(dragObject) {

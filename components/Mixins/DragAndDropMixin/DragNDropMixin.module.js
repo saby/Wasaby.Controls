@@ -71,22 +71,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
          },
 
          /**
-          * Возвращает контрол с которого тащат элемент
-          * @returns {*}
-          */
-         getDragOwner: function () {
-            return DragObject.getOwner();
-         },
-
-         /**
-          * Идет ли сейчас перетаскивание
-          * @returns {*}
-          */
-         isDragging: function () {
-            return DragObject.isDragging();
-         },
-
-         /**
           * проверяет наличие контейнера
           * @param element
           * @returns {jQuery}
@@ -254,14 +238,14 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
           */
          onMouseupInside: function (e) {
             //определяем droppable контейнер
-            if (this.isDragging()) {
+            if (DragObject.isDragging()) {
                var droppable = this._findDragDropContainer(e, e.target);
                this._endDrag(e, droppable);
             }
          },
 
          onMouseupOutside: function(buse, e) {
-            if (this.isDragging()) {
+            if (DragObject.isDragging()) {
                this._endDrag(e, false);
             }
          },
@@ -273,7 +257,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
           */
          onMousemove: function (buse, e) {
             // Если нет выделенных компонентов, то уходим
-            if (!this.isDragging()) {
+            if (!DragObject.isDragging()) {
                return;
             }
             DragObject.onDragHandler(e);
