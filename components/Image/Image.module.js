@@ -260,10 +260,9 @@ define('js!SBIS3.CONTROLS.Image',
                if (this._options.imageBar) {
                   this._buttonEdit = this.getChildControlByName('ButtonEdit');
                   this._buttonReset = this.getChildControlByName('ButtonReset');
-                  this._fileLoader = this.getChildControlByName('FileLoader');
-                  //todo Удалить, временная опция для поддержки смены логотипа компании
+                 //todo Удалить, временная опция для поддержки смены логотипа компании
                   if (dataSource) {
-                     this._fileLoader.setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
+                     this._getFileLoader().setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
                   }
                   this._bindToolbarEvents();
                }
@@ -474,7 +473,7 @@ define('js!SBIS3.CONTROLS.Image',
                ------------------------------------------------------------ */
             _uploadImage: function(originalEvent) {
                if (this.getDataSource()) {
-                  this._fileLoader.selectFile(originalEvent, false);
+                  this._getFileLoader().selectFile(originalEvent, false);
                }
             },
             _editImage: function() {
@@ -527,10 +526,8 @@ define('js!SBIS3.CONTROLS.Image',
             setDataSource: function(dataSource, noReload) {
                if (dataSource instanceof SbisService) {
                   this._options.dataSource = dataSource;
-                  if (this._options.imageBar) {
-                     //todo Удалить, временная опция для поддержки смены логотипа компании
-                     this._fileLoader.setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
-                  }
+                  //todo Удалить, временная опция для поддержки смены логотипа компании
+                  this._getFileLoader().setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
                   if (!noReload) {
                      this.reload();
                   }
@@ -560,7 +557,36 @@ define('js!SBIS3.CONTROLS.Image',
              */
             getFilter: function() {
                return this._options.filter;
+            },
+
+            _getFileLoader: function() {
+               if (!this._fileLoader) {
+                  this._createFileLoader();
+               }
+               return this._fileLoader;
+            },
+
+            /**
+             * Создание загрузчика файлов
+             * @private
+             */
+            _createFileLoader: function(){
+               var
+                  self = this,
+                  cont = $('<div class="controls-image__file-loader"></div>');
+               this.getContainer().append(cont);
+               this._fileLoader = new FileLoader({
+                  extensions: ['image'],
+                  element: cont,
+                  name: 'FileLoader',
+                  parent: self,
+                  handlers: {
+                     onLoadStarted: self._onBeginLoad,
+                     onLoaded: self._onEndLoad
+                  }
+               });
             }
+
          });
       return Image;
    });
