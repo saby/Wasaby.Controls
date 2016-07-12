@@ -427,20 +427,33 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       around: {
-         _modifyOptions : function(parentFnc, cfg) {
-            var newCfg = parentFnc.call(this, cfg);
+         _modifyOptions : function(parentFnc, cfg, parsedCfg) {
+            var newCfg = parentFnc.call(this, cfg), proj, items;
             newCfg._itemsTemplate = ItemsTemplate;
             if (newCfg.items) {
-               if (newCfg.items instanceof Array) {
-                  if (!newCfg.keyField) {
-                     newCfg.keyField = findKeyField(newCfg.items);
+               if (parsedCfg._itemsProjection) {
+                  newCfg._itemsProjection = parsedCfg._itemsProjection;
+                  newCfg._items = parsedCfg._items;
+               } else {
+                  if (newCfg.items instanceof Array) {
+                     if (!newCfg.keyField) {
+                        var key = findKeyField(newCfg.items);
+                        newCfg.keyField = key;
+                        parsedCfg.keyField = key;
+                     }
+                     items = JSONToRecordset(cfg.items, newCfg.keyField);
+                     newCfg._items = items;
+                     parsedCfg._items = items;
                   }
-                  newCfg._items = JSONToRecordset(cfg.items, newCfg.keyField);
+                  else {
+                     newCfg._items = newCfg.items;
+                     parsedCfg._items = newCfg.items;
+                  }
+                  proj = newCfg._createDefaultProjection(newCfg._items, newCfg);
+                  newCfg._itemsProjection = proj;
+                  parsedCfg._itemsProjection = proj;
                }
-               else {
-                  newCfg._items = cfg.items;
-               }
-               newCfg._itemsProjection = cfg._createDefaultProjection(cfg._items, cfg);
+
                if (cfg._canServerRender && !cfg.userItemAttributes && !cfg.itemTemplate && Object.isEmpty(cfg.groupBy)) {
                   newCfg._serverRender = true;
                   newCfg._itemData = cfg._buildTplArgs(cfg);
