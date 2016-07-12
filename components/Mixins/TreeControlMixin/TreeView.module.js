@@ -148,7 +148,7 @@ define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
 
          itemData.contentsClass = this._сssPrefix + this._treeItemContentsСssClass;
 
-         if ($ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Projection.TreeItem')) {
+         if ($ws.helpers.instanceOfModule(item, 'WS.Data/Display/TreeItem')) {
             itemData.level = item.getLevel() - this._levelOffset;
             if (item.isNode()) {
                itemData.containerClass += ' ' + this._сssPrefix + (item.isExpanded() ? this._treeExpandedСssClass : this._treeCollapsedСssClass);
@@ -178,12 +178,12 @@ define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
 
       /**
        * Возвращает узел c индикатором загрузки
-       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem} target Узел, который загружается
+       * @param {WS.Data/Display/TreeItem} target Узел, который загружается
        * @returns {jQuery}
        * @private
        */
       _getLoadingNode: function(target) {
-         if (!target || !$ws.helpers.instanceOfModule(target, 'SBIS3.CONTROLS.Data.Projection.TreeItem')) {
+         if (!target || !$ws.helpers.instanceOfModule(target, 'WS.Data/Display/TreeItem')) {
             return TreeView.superclass._getLoadingNode.call(this, target);
          }
 

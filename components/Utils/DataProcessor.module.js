@@ -2,10 +2,10 @@
  * Created by ad.chistyakova on 14.04.2015.
  */
 define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
-   'js!SBIS3.CONTROLS.Data.Source.SbisService',
+   'js!WS.Data/Source/SbisService',
    'js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer',
    'js!SBIS3.CORE.LoadingIndicator',
-   'js!SBIS3.CONTROLS.Data.Source.SbisService',
+   'js!WS.Data/Source/SbisService',
    'i18n!SBIS3.CONTROLS.Utils.DataProcessor'
 ], function(Source, Serializer, LoadingIndicator, SbisService) {
    /**

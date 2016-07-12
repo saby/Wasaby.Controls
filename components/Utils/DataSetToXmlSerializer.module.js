@@ -94,7 +94,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                recordElement,
                currentElement,
                pkColumnName;
-         if ($ws.helpers.instanceOfModule( object , 'SBIS3.CONTROLS.DataSet') || $ws.helpers.instanceOfModule( object , 'SBIS3.CONTROLS.Data.Collection.RecordSet')){
+         if ($ws.helpers.instanceOfModule( object , 'SBIS3.CONTROLS.DataSet') || $ws.helpers.instanceOfModule( object , 'WS.Data/Collection/RecordSet')){
             var self = this;
             parentElement.appendChild(currentElement = document.createElement('RecordSet'));
             object.each(function(record){

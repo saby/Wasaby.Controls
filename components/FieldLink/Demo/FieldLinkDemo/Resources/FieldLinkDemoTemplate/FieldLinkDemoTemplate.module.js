@@ -5,8 +5,8 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate', // Устанавлива
    [ // Массив зависимостей компонента
       'js!SBIS3.CORE.CompoundControl', // Подключаем базовый класс, от которого далее будем наследоваться
       'html!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate', // Подключаем вёрстку диалога выбора
-      'js!SBIS3.CONTROLS.Data.Adapter.Sbis', // Подключаем класс адаптера, который предназначен для работы с данными в формате JSON-RPC
-      'js!SBIS3.CONTROLS.Data.Source.Memory', // Подключаем класс для работы со статическим источником данных
+      'js!WS.Data/Adapter/Sbis', // Подключаем класс адаптера, который предназначен для работы с данными в формате JSON-RPC
+      'js!WS.Data/Source/Memory', // Подключаем класс для работы со статическим источником данных
       'js!SBIS3.CONTROLS.DataGridView', // Подключаем класс представления данных
       'js!SBIS3.CONTROLS.Button', // Подключаем класс кнопки
       'css!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate' // Подключаем CSS-файл

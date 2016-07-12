@@ -1,36 +1,6 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.HashableMixin', function () {
+define('js!SBIS3.CONTROLS.Data.HashableMixin', ['js!WS.Data/Entity/HashableMixin'], function (HashableMixin) {
    'use strict';
-
-   /**
-    * Миксин, позволяющий генерировать уникальный (в рамках миксина) хеш для экземпляра класса
-    * @mixin SBIS3.CONTROLS.Data.HashableMixin
-    * @implements SBIS3.CONTROLS.Data.IHashable
-    * @public
-    * @author Мальцев Алексей
-    */
-
-   var HashableMixin = /**@lends SBIS3.CONTROLS.Data.HashableMixin.prototype  */{
-      /**
-       * @member {String} Префикс значений хеша
-       */
-      _hashPrefix: 'id-',
-
-      /**
-       * @member {String} Уникальный хеш
-       */
-      _hash: '',
-
-      //region SBIS3.CONTROLS.Data.IHashable
-
-      getHash: function () {
-         return this._hash || (this._hash = this._hashPrefix + _hashCounter++);
-      }
-
-      //endregion SBIS3.CONTROLS.Data.IHashable
-   };
-
-   var _hashCounter = 0;
-
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.HashableMixin', 'Module is no longer available since version 3.7.4.100. Use WS.Data/Entity/HashableMixin instead.');
    return HashableMixin;
 });

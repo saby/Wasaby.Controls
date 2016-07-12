@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 14.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS3.CONTROLS.Data.Bind.ICollection'], function(Utils, IBindCollection) {
+define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collection/IBind'], function(Utils, IBindCollection) {
 
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного.
