@@ -1,37 +1,6 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.ContextField.Flags', [
-   'js!SBIS3.CONTROLS.Data.ContextField.RecordMixin',
-   'js!SBIS3.CONTROLS.Data.ContextField.Base'
-], function (RecordMixin, ContextFieldBase) {
+define('js!SBIS3.CONTROLS.Data.ContextField.Flags', ['js!WS.Data/ContextField/Flags'], function (Flags) {
    'use strict';
-
-   /**
-    * Поддержка типа флаги в контексте
-    * @class SBIS3.CONTROLS.Data.ContextField.Flags
-    * @mixes SBIS3.CONTROLS.Data.ContextField.RecordMixin
-    * @extends SBIS3.CONTROLS.Data.ContextField.Base
-    * @author Мальцев Алексей
-    */
-   return $ws.core.extend(ContextFieldBase, [RecordMixin], /** @lends SBIS3.CONTROLS.Data.ContextField.Flags.prototype*/{
-      $protected: {
-         _options: {
-            module: undefined
-         }
-
-      },
-      name: 'ControlsFieldTypeFlags',
-
-      toJSON: function (value, deep) {
-         if (deep) {
-            var result = {};
-            value.each(function (name){
-               result[name] = value.get(name);
-            });
-            return result;
-         }
-
-         return value.get();
-      }
-   });
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.ContextField.Flags', 'Module is no longer available since version 3.7.4.100. Use WS.Data/ContextField/Flags instead.');
+   return Flags;
 });
-

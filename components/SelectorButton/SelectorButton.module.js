@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
 
       _chooseCallback: function(result) {
          if(result && result.length) {
-            $ws.helpers.instanceOfModule(result[0], 'SBIS3.CONTROLS.Data.Model') ?
+            $ws.helpers.instanceOfModule(result[0], 'WS.Data/Entity/Model') ?
                 this.addSelectedItems(result) :
                 this.addItemsSelection(result);
          }
