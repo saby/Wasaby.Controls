@@ -75,6 +75,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
             if (this._options.usePicker && this.isPickerVisible()) {
                SearchForm.superclass._keyUpBind.apply(this, arguments);
             } else {
+               this._checkInputVal();
                this.applySearch(true);
             }
             event.stopPropagation();
