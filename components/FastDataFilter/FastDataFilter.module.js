@@ -108,6 +108,15 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                dataSource: item.get('dataSource'),
                filter: item.get('filter')
             };
+            if(item.has('headTemplate')){
+               cfg.headTemplate = item.get('headTemplate');
+            }
+            if(item.has('itemTemplate')){
+               cfg.itemTemplate = item.get('itemTemplate');
+            }
+            if(item.has('includedTemplates')){
+               cfg.includedTemplates = item.get('includedTemplates');
+            }
             return '<component data-component="SBIS3.CONTROLS.DropdownList" config="' + $ws.helpers.encodeCfgAttr(cfg) + '">' +
                         //'<opts name="selectedKeys" type="array" bind="' + cfg.filterName +'" ></opts>' + //direction="fromProperty" oneWay="true"
                         //'<opt name="caption" type="array" bind="'+ cfg.displayField +'" direction="fromProperty" oneWay="true"></opt>' +
