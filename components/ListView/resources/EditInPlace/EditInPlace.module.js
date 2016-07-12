@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                var
                   raw1, raw2,
                   result = [];
-               if ($ws.helpers.instanceOfModule(this._editingRecord, 'SBIS3.CONTROLS.Data.Model')) {
+               if ($ws.helpers.instanceOfModule(this._editingRecord, 'WS.Data/Entity/Model')) {
                   this._editingRecord.each(function(field, value) {
                      if (value != this._previousRecordState.get(field)) {
                         result.push(field);

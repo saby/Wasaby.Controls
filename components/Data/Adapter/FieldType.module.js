@@ -1,28 +1,5 @@
-define('js!SBIS3.CONTROLS.Data.Adapter.FieldType', [], function(){
+define('js!SBIS3.CONTROLS.Data.Adapter.FieldType', ['js!WS.Data/Adapter/SbisFieldType'], function(FieldType){
    'use strict';
-   return {
-      Boolean: 'Логическое',
-      Integer: 'Число целое',
-      Real: 'Число вещественное',
-      Double: 'Число вещественное',
-      Money: 'Деньги',
-      String: 'Строка',
-      Text: 'Текст',
-      Xml: 'XML-файл',
-      DateTime: 'Дата и время',
-      Date: 'Дата',
-      Time: 'Время',
-      TimeInterval: 'Временной интервал',
-      Identity: 'Идентификатор',
-      Enum: 'Перечисляемое',
-      Flags: 'Флаги',
-      Record: 'Запись',
-      RecordSet: 'Выборка',
-      Binary: 'Двоичное',
-      Uuid: 'UUID',
-      RpcFile: 'Файл-rpc',
-      Hierarchy: 'Иерархия',
-      Object: 'JSON-объект',
-      Array: 'Массив'
-   };
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Adapter.FieldType', 'Module is no longer available since version 3.7.4.100. Use WS.Data/Adapter/SbisFieldType instead.');
+   return FieldType;
 });
