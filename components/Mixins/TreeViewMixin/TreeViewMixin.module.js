@@ -274,7 +274,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
           * @private
           */
          _onUpdateItemProperty: function(parentFunc, item, property) {
-            var ladderDecorator = this._decorators.getByName('ladder'),
+            var ladderDecorator = this._options._decorators.getByName('ladder'),
                 isIgnoreEnabled;
             if (ladderDecorator){
                isIgnoreEnabled = ladderDecorator.getIgnoreEnabled();
