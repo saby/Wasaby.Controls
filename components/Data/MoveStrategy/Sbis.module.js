@@ -67,12 +67,12 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
          //Deprecated
          if ('moveContract' in cfg) {
             Utils.logger.stack(this._moduleName + '::$constructor(): option "moveContract" is deprecated and will be removed in 3.8.0. Use "moveContract" on the DataSource', 1);
-            this._options.getDataSource().setMoveContract(this._options.moveContract);
+            this._options.dataSource.setMoveContract(this._options.moveContract);
          }
 
          if ('moveMethodPrefix' in cfg) {
             Utils.logger.stack(this._moduleName + '::$constructor(): option "moveMethodPrefix" is deprecated and will be removed in 3.8.0. Use "binding.moveAfter" and "binding.moveBefore" on the DataSource', 1);
-            this._options.getDataSource().setMoveMethods(this._options.moveMethodPrefix);
+            this._options.dataSource.setMoveMethods(this._options.moveMethodPrefix);
          }
 
 

@@ -224,6 +224,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       },
 
       move: function (from, to, meta) {
+         meta = meta || {};
          var self = this,
             moveMethod = meta.before ? this._options.binding.moveBefore: this._options.binding.moveAfter;
 
@@ -682,7 +683,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @see provider
        */
       _getMoveProvider: function() {
-         return this._options.moveProvider = this._getProvider(this._moveProvider, {
+         return this._moveProvider = this._getProvider(this._moveProvider, {
             endpoint: {
                address: this._options.endpoint.address,
                contract: this._options.endpoint.moveContract
