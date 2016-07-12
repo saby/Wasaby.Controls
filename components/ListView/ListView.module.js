@@ -2448,7 +2448,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
-            this._getItemsContainer()[allowDragNDrop ? DRAG_META_INSERT.on : 'off']('mousedown', '.js-controls-ListView__item', this._beginDrag.bind(this));
+            this._getItemsContainer()[allowDragNDrop ? DRAG_META_INSERT.on : 'off']('mousedown', '.js-controls-ListView__item', this._initDrag.bind(this));
          },
          /**
           * Получить текущую конфигурацию перемещения элементов с помощью DragNDrop.

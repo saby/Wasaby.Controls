@@ -131,7 +131,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          args.editArrow = this._options.editArrow;
          return args;
       },
-      init: function(){
+      init: function() {
          TreeDataGridView.superclass.init.call(this);
          if (this._container.hasClass('controls-TreeDataGridView__withPhoto')){
             this._options._paddingSize = 42;

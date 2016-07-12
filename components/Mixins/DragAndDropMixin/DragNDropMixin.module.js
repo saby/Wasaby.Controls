@@ -53,23 +53,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
             $(this.getContainer()).bind('mouseup touchend', this.onMouseupInside.bind(this));
          },
 
-
-
-         /**
-          * текущий активный компонент, либо по gdi (если переносим)
-          * либо отдаем тип, если создаем из палитры
-          * @param {Event} e
-          * @param {Object} elementConfig
-          */
-         setCurrentElement: function (e, Source) {
-            //координаты с которых начато движение
-            this._preparePageXY(e);
-            this._moveBeginX = e.pageX;
-            this._moveBeginY = e.pageY;
-            DragObject.setSource(Source);
-            this._dropCache();
-         },
-
          /**
           * проверяет наличие контейнера
           * @param element
@@ -175,23 +158,32 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
             DragObject.setAvatar(avatar);
          },
 
+         _initDrag: function(clickEvent) {
+            var
+               self = this,
+               dragStrarter = function(bus, moveEvent){
+                  if (self._isDrag(moveEvent)) {
+                     self._beginDrag(clickEvent);
+                     $ws.single.EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
+                  }
+               };
+            this._moveBeginX = clickEvent.pageX;
+            this._moveBeginY = clickEvent.pageY;
+            $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMousemove', dragStrarter);
+            $ws.single.EventBus.channel('DragAndDropChannel').once('onMouseup', function(){
+               $ws.single.EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
+            });
+         },
          /**
           * Начало перетаскивания
           * @param e
           * @param movable
           */
          _beginDrag: function(e) {
-            var
-               moveX = e.pageX - this._moveBeginX,
-               moveY = e.pageY - this._moveBeginY;
-
-            //начинаем движение только если сдвинули сильно
-            if ((Math.abs(moveX) < this._constShiftLimit) && (Math.abs(moveY) < this._constShiftLimit)) {
-               return;
-            }
             DragObject.reset();
             DragObject.onDragHandler(e);
             if (this._beginDragHandler(DragObject, e) !== false) {
+               $('body').addClass('dragdropBody ws-unSelectable');
                if (this._notify('onDragBegin', DragObject, e) !== false) {
                   this._showAvatar(e);
                   DragObject.setOwner(this);
@@ -208,6 +200,22 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
             e.preventDefault();
          },
 
+         /**
+          * Метод определяет был ли сдвиг или просто кликнули по элементу
+          * @param e
+          * @returns {boolean} если true то было смещение
+          * @private
+          */
+         _isDrag: function(e) {
+            var
+               moveX = e.pageX - this._moveBeginX,
+               moveY = e.pageY - this._moveBeginY;
+
+            if ((Math.abs(moveX) < this._constShiftLimit) && (Math.abs(moveY) < this._constShiftLimit)) {
+               return false;
+            }
+            return true;
+         },
          /**
           * Конец перетаскивания
           * @param {Event} e js событие
@@ -228,7 +236,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
             DragObject.reset();
             this._position = null;
             DragObject.setDragging(false);
-            $('body').removeClass('dragdropBody cantDragDrop');
+            $('body').removeClass('dragdropBody cantDragDrop ws-unSelectable');
          },
          //endregion protected
          //region mouseHandler
@@ -237,17 +245,19 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
           * @param e
           */
          onMouseupInside: function (e) {
-            //определяем droppable контейнер
-            if (DragObject.isDragging()) {
-               var droppable = this._findDragDropContainer(e, e.target);
-               this._endDrag(e, droppable);
-            }
+            this._mouseUp(e, true);
          },
 
          onMouseupOutside: function(buse, e) {
-            if (DragObject.isDragging()) {
-               this._endDrag(e, false);
+            this._mouseUp(e, false);
+         },
+
+         _mouseUp: function(e, inside){
+            if(DragObject.isDragging() && DragObject.getOwner() === this) {
+               this._endDrag(e, inside ? this._findDragDropContainer(e, e.target) : false);
             }
+            this._moveBeginX = null;
+            this._moveBeginY = null;
          },
          /**
           * обработчик  соь
@@ -261,12 +271,12 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
                return;
             }
             DragObject.onDragHandler(e);
+
             //если этот контрол начал перемещение или тащат над ним тогда стреяем событием _onDrag
             if (DragObject.getOwner() === this || DragObject.getTargetsControl() === this ) {
                var
                // определяем droppable контейнер
                   movable = this._findDragDropContainer(e, e.target);
-               $('body').addClass('dragdropBody');
                //двигаем компонент
                this._onDrag(e, movable);
                return false;
