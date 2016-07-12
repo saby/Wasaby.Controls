@@ -503,7 +503,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
                this._readyContolDeffered.errback();
             }
             for (var i in this._instances) {
-               this._instances[i].destroy instanceof Function && this._instances[i].destroy();
+               if (this._instances.hasOwnProperty(i)) {
+                  this._instances[i].destroy instanceof Function && this._instances[i].destroy();
+               }
             }
             if (this._options.toolbar) {
                this._toggleToolbarButton.unbind('click');
