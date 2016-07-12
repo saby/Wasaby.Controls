@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
 
                /**
                 * @cfg {String} Иконка. Отображается в шапке.
-                * По умолчанию иконка зависит от опции state.
+                * По умолчанию иконка зависит от опции status.
                 */
                icon: null,
 
@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
             NotificationPopup.superclass.init.call(this);
 
             if(!this._options.icon){
-               switch(this._options.state){
+               switch(this._options.status){
                   case 'success':
                      this.setIcon('icon-24 icon-Yes icon-done');
                      break;

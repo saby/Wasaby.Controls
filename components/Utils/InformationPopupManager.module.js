@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           */
 
          /**
-          * @typedef {String} State
+          * @typedef {String} NotificationStatus
           * @variant default  Окно без состояния. Цвет линии в шапке - синий, иконка по умолчанию не задана.
           * @variant success  "Успешно". Цвет линии в шапке - зеленый, иконка - зелёная галка.
           * @variant error    "Ошибка". Цвет линии в шапке - красный, иконка - треугольник с воскл.знаком.
@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
          /**
           * @typedef {Object} NotificationCfg
           * @property {String} caption Заголовок (основной текст) информационного окна.
-          * @property {State} state Состояние окна. От состояния заивисит цвет линии в шапке и иконка по умолчанию.
+          * @property {NotificationStatus} status Состояние окна. От состояния заивисит цвет линии в шапке и иконка по умолчанию.
           * @property {Function} [template] Шаблон содержимого информационного окна. Используется для персонализированных уведомлений.
           */
 
@@ -74,7 +74,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           */
          showConfirmDialog: function(config, positiveHandler, negativeHandler, cancelHandler){
             showSubmitDialog($ws.core.merge(config, {
-               state: 'default'
+               status: 'confirm'
             }), positiveHandler, negativeHandler, cancelHandler);
          },
 
@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           * @param {OneButtonDialogCfg} config Объект настроек диалога
           * @param {Function} handler Обработчик нажатия на кнопку "Ок"
           */
-         showDialog: function(config, handler){
+         showMessageDialog: function(config, handler){
             showSubmitDialog(config, null, null, handler);
          },
 
