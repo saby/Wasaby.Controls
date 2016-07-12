@@ -1191,12 +1191,14 @@ define('js!SBIS3.CONTROLS.RichEditor',
                if (e.withStyles) {
                   return e;
                }
-               if (isRichContent && $ws._const.browser.isIE8) {
-                  //в IE8 оборачиваем контент в div  надо его вырезать
-                  //потому что в контент летит еще и внешняя дивка с -99999 и absolute
-                  content = content.substring(content.indexOf('<DIV>') + 5, content.length - 11);
-                  if (content.indexOf('&nbsp;') === 0) {
-                     content = content.substring(6);
+               if (isRichContent) {
+                  if ($ws._const.browser.isIE8) {
+                     //в IE8 оборачиваем контент в div  надо его вырезать
+                     //потому что в контент летит еще и внешняя дивка с -99999 и absolute
+                     content = content.substring(content.indexOf('<DIV>') + 5, content.length - 11);
+                     if (content.indexOf('&nbsp;') === 0) {
+                        content = content.substring(6);
+                     }
                   }
                   e.content =  content.replace('<!--content=SBIS.FRE-->','');
                }
