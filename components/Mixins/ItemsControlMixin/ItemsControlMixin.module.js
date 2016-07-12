@@ -448,7 +448,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      newCfg._items = items;
                      parsedCfg._items = items;
                   }
-                  proj = cfg._createDefaultProjection(cfg._items, cfg);
+                  else {
+                     newCfg._items = newCfg.items;
+                     parsedCfg._items = newCfg.items;
+                  }
+                  proj = newCfg._createDefaultProjection(newCfg._items, newCfg);
                   newCfg._itemsProjection = proj;
                   parsedCfg._itemsProjection = proj;
                }
