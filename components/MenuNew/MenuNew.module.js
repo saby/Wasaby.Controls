@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.MenuNew', [
    'js!SBIS3.CONTROLS.HierarchyControlMixin',
    'js!SBIS3.CONTROLS.TreeControlMixin',
    'js!SBIS3.CONTROLS.FloatArea',
-   'js!SBIS3.CONTROLS.Data.Utils',
+   'js!WS.Data/Utils',
    'html!SBIS3.CONTROLS.MenuNew'
 ], function(MenuView, ButtonGroupBase, ListControlMixin, HierarchyControlMixin, TreeControlMixin, FloatArea, Utils, MenuViewTemplate) {
 
@@ -125,7 +125,7 @@ define('js!SBIS3.CONTROLS.MenuNew', [
       _getItemTemplate: function() {
          return (function(item) {
             var itemData = item.item;
-            if ($ws.helpers.instanceOfModule(itemData, 'SBIS3.CONTROLS.Data.Projection.TreeItem')) {
+            if ($ws.helpers.instanceOfModule(itemData, 'WS.Data/Display/TreeItem')) {
                itemData = itemData.getContents();
             }
 

@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
              },
              res = [];
 
-         if(opts._preRenderValues.selectedItem && $ws.helpers.instanceOfModule(opts._preRenderValues.selectedItem, 'SBIS3.CONTROLS.Data.Model')) {
+         if(opts._preRenderValues.selectedItem && $ws.helpers.instanceOfModule(opts._preRenderValues.selectedItem, 'WS.Data/Entity/Model')) {
             items = [opts._preRenderValues.selectedItem]
          } else if(opts._preRenderValues.selectedItems) {
             items = opts._preRenderValues.selectedItems.toArray();

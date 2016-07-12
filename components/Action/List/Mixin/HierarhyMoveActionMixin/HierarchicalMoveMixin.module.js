@@ -20,8 +20,8 @@ define('js!SBIS3.CONTROLS.Action.List.HierarchicalMoveMixin',[
          },
          /**
           * реализация перемещения по иерархии
-          * @param {SBIS3.CONTROLS.Data.Model} from
-          * @param {SBIS3.CONTROLS.Data.Model} to
+          * @param {WS.Data/Entity/Model} from
+          * @param {WS.Data/Entity/Model} to
           * @returns {$ws.proto.Deferred}
           */
          _move: function (from, to) {

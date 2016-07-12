@@ -1,17 +1,17 @@
 define('js!SBIS3.CONTROLS.ItemsControlMixin', [
-   'js!SBIS3.CONTROLS.Data.Source.Memory',
-   'js!SBIS3.CONTROLS.Data.Source.SbisService',
-   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
-   'js!SBIS3.CONTROLS.Data.Query.Query',
+   'js!WS.Data/Source/Memory',
+   'js!WS.Data/Source/SbisService',
+   'js!WS.Data/Collection/RecordSet',
+   'js!WS.Data/Query/Query',
    'js!SBIS3.CORE.MarkupTransformer',
-   'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
-   'js!SBIS3.CONTROLS.Data.Projection.Projection',
-   'js!SBIS3.CONTROLS.Data.Bind.ICollection',
-   'js!SBIS3.CONTROLS.Data.Projection.Collection',
+   'js!WS.Data/Collection/ObservableList',
+   'js!WS.Data/Display/Display',
+   'js!WS.Data/Collection/IBind',
+   'js!WS.Data/Display/Collection',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
-   'js!SBIS3.CONTROLS.Data.Utils',
-   'js!SBIS3.CONTROLS.Data.Model',
+   'js!WS.Data/Utils',
+   'js!WS.Data/Entity/Model',
    'Core/ParserUtilities'
 ], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities) {
 
@@ -258,7 +258,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
               */
             items: null,
             /**
-             * @cfg {DataSource|SBIS3.CONTROLS.Data.Source.ISource|Function} Набор исходных данных, по которому строится отображение
+             * @cfg {DataSource|WS.Data/Source/ISource|Function} Набор исходных данных, по которому строится отображение
              * @noShow
              * @see setDataSource
              */
@@ -418,7 +418,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              *    }
              * </pre>
              * @see setItemsSortMethod
-             * @see SBIS3.CONTROLS.Data.Projection.Collection#setSort
+             * @see WS.Data/Display/Collection#setSort
              */
             itemsSortMethod: undefined
          },
@@ -428,25 +428,32 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       around: {
          _modifyOptions : function(parentFnc, cfg, parsedCfg) {
-            var newCfg = parentFnc.call(this, cfg), proj;
+            var newCfg = parentFnc.call(this, cfg), proj, items;
             newCfg._itemsTemplate = ItemsTemplate;
             if (newCfg.items) {
-               if (newCfg.items instanceof Array) {
-                  if (!newCfg.keyField) {
-                     newCfg.keyField = findKeyField(newCfg.items);
-                  }
-                  newCfg._items = JSONToRecordset(cfg.items, newCfg.keyField);
-               }
-               else {
-                  newCfg._items = cfg.items;
-               }
-               if (parsedCfg && parsedCfg._itemsProjection) {
+               if (parsedCfg._itemsProjection) {
                   newCfg._itemsProjection = parsedCfg._itemsProjection;
+                  newCfg._items = parsedCfg._items;
                } else {
-                  proj = cfg._createDefaultProjection(cfg._items, cfg);
+                  if (newCfg.items instanceof Array) {
+                     if (!newCfg.keyField) {
+                        var key = findKeyField(newCfg.items);
+                        newCfg.keyField = key;
+                        parsedCfg.keyField = key;
+                     }
+                     items = JSONToRecordset(cfg.items, newCfg.keyField);
+                     newCfg._items = items;
+                     parsedCfg._items = items;
+                  }
+                  else {
+                     newCfg._items = newCfg.items;
+                     parsedCfg._items = newCfg.items;
+                  }
+                  proj = newCfg._createDefaultProjection(newCfg._items, newCfg);
                   newCfg._itemsProjection = proj;
                   parsedCfg._itemsProjection = proj;
                }
+
                if (cfg._canServerRender && !cfg.userItemAttributes && !cfg.itemTemplate && Object.isEmpty(cfg.groupBy)) {
                   newCfg._serverRender = true;
                   newCfg._itemData = cfg._buildTplArgs(cfg);
@@ -931,7 +938,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                result = sourceOpt.call(this);
                break;
             case 'object':
-               if ($ws.helpers.instanceOfMixin(sourceOpt, 'SBIS3.CONTROLS.Data.Source.ISource')) {
+               if ($ws.helpers.instanceOfMixin(sourceOpt, 'WS.Data/Source/ISource')) {
                   result = sourceOpt;
                }
                if ('module' in sourceOpt) {
@@ -945,8 +952,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       /**
        * Возвращает отображаемую контролом коллекцию, сделанную на основе источника данных
-       * @param {SBIS3.CONTROLS.Data.Source.ISource} source
-       * @returns {SBIS3.CONTROLS.Data.Collection.IList}
+       * @param {WS.Data/Source/ISource} source
+       * @returns {WS.Data/Collection/IList}
        * @private
        */
       _convertDataSourceToItems: function (source) {
@@ -984,7 +991,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * <pre>
         *     define(
         *     'SBIS3.MY.Demo',
-        *     'js!SBIS3.CONTROLS.Data.Source.Memory',
+        *     'js!WS.Data/Source/Memory',
         *     function(MemorySource){
         *        //коллекция элементов
         *        var arrayOfObj = [
@@ -1446,11 +1453,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   hierField: this._options.hierField + '@'
                },
                targetContainer,
-               itemInstance;
+               itemInstance, groupTemplateFnc;
          targetContainer = this._getTargetContainer(item);
          tplOptions.item = item;
          tplOptions.colspan = tplOptions.columns.length + this._options.multiselect;
-         itemInstance = this._buildTplItem(projItem, groupBy.template(tplOptions));
+         groupTemplateFnc = TemplateUtil.prepareTemplate(groupBy.template);
+         itemInstance = this._buildTplItem(projItem, groupTemplateFnc(tplOptions));
          //Навесим класс группировки и удалим лишний класс на item, если он вдруг добавился
          itemInstance.addClass('controls-GroupBy')
             .removeClass('controls-ListView__item');
@@ -1488,6 +1496,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._redraw();
          }
       },
+      /**
+       * Возвращает значение опции groupBy
+       */
+      getGroupBy : function() {
+         return this._options.groupBy;
+      },
+
       _getGroupTpl : function(){
          throw new Error('Method _getGroupTpl() must be implemented');
       },
@@ -1883,7 +1898,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /**
        * Устанавливает метод сортировки элементов на клиенте.
        * @param {Function} sort функция сортировка элементов, если передать undefined сортировка сбросится
-       * @see SBIS3.CONTROLS.Data.Projection.Collection:setSort
+       * @see WS.Data/Display/Collection:setSort
        */
       setItemsSortMethod: function(sort){
          this._options.itemsSortMethod = sort;
@@ -1893,7 +1908,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
       /**
        * Возвращает последний элемент по проекции
-       * @return {SBIS3.CONTROLS.Data.Model}
+       * @return {WS.Data/Entity/Model}
        */
       getLastItemByProjection: function(){
          if(this._options._itemsProjection && this._options._itemsProjection.getCount()) {
@@ -1922,9 +1937,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * Обрабатывает событие об изменении коллекции
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} action Действие, приведшее к изменению.
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem[]} newItems Новые элементы коллеции.
+       * @param {WS.Data/Display/CollectionItem[]} newItems Новые элементы коллеции.
        * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem[]} oldItems Удаленные элементы коллекции.
+       * @param {WS.Data/Display/CollectionItem[]} oldItems Удаленные элементы коллекции.
        * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
        * @private
        */

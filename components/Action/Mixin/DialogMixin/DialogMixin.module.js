@@ -2,8 +2,8 @@
 define('js!SBIS3.CONTROLS.Action.DialogMixin', [
    'js!SBIS3.CORE.Dialog',
    'js!SBIS3.CORE.FloatArea',
-   'js!SBIS3.CONTROLS.Data.Model',
-   'js!SBIS3.CONTROLS.Data.Utils'
+   'js!WS.Data/Entity/Model',
+   'js!WS.Data/Utils'
 ], function(Dialog, FloatArea, Model, Utils){
    'use strict';
 
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
        * @property {Boolean} newModel Признак: true - в диалоге редактирования открыта новая запись, которой не существует в источнике данных.
        * @property {Object} filter Объект, данные которого будут использованы в качестве инициализирующих данных при создании новой записи.
        * Название свойства - это название поля записи, а значение свойства - это значение для инициализации.
-       * @property {SBIS3.CONTROLS.Data.Model} record Редактируемая запись. Если передаётся ключ свойством key, то запись передавать необязательно.
+       * @property {WS.Data/Entity/Model} record Редактируемая запись. Если передаётся ключ свойством key, то запись передавать необязательно.
        * @property {$ws.proto.Context} ctx Контекст, который нужно установить для диалога редактирования записи.
        */
       $constructor: function() {

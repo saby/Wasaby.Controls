@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.InformationPopup',
       'use strict';
       var InformationPopup = CompoundControl.extend([PopupMixin], /** @lends SBIS3.CONTROLS.InformationPopup.prototype */ {
          /**
-          * @typedef {String} State
+          * @typedef {String} InformationPopupStatus
           * @variant default  Окно без состояния. Цвет линии в шапке - синий, иконка по умолчанию не задана.
           * @variant success  "Успешно". Цвет линии в шапке - зеленый, иконка - зелёная галка.
           * @variant error    "Ошибка". Цвет линии в шапке - красный, иконка - треугольник с воскл.знаком.
@@ -28,9 +28,9 @@ define('js!SBIS3.CONTROLS.InformationPopup',
             _options: {
 
                /**
-                * @cfg {State} Состояние окна. От состояния заивисит цвет линии в шапке и иконка по умолчани.
+                * @cfg {InformationPopupStatus} Состояние окна. От состояния заивисит цвет линии в шапке и иконка по умолчани.
                 */
-               state: 'default',
+               status: 'default',
 
                /**
                 * @cfg {Function} Шаблон содержимого
@@ -45,14 +45,18 @@ define('js!SBIS3.CONTROLS.InformationPopup',
             InformationPopup.superclass.init.call(this);
          },
 
+         _isLegalStatus: function(){
+            return status === 'default' || status === 'success' || status === 'error' || status === 'warning';
+         },
+
          /**
           * Установить новое состояние
-          * @param {State} state
+          * @param {InformationPopupStatus} status
           */
-         setState: function(state){
-            if(state === 'default' || state === 'success' || state === 'error' || state === 'warning'){
-               this.getContainer().removeClass('controls-InformationPopup__state-' + this._options.state).addClass('controls-InformationPopup__state-' + state);
-               this._options.state = state;
+         setStatus: function(status){
+            if(this._isLegalStatus(status)){
+               this.getContainer().removeClass('controls-InformationPopup__status-' + this._options.status).addClass('controls-InformationPopup__status-' + status);
+               this._options.status = status;
             }
          }
       });

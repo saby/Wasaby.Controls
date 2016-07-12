@@ -3,7 +3,7 @@
  */
 
 define('js!SBIS3.CONTROLS.ViewSourceMixin', [
-   'js!SBIS3.CONTROLS.Data.Query.Query'
+   'js!WS.Data/Query/Query'
 ], function(Query) {
 
    var ViewSourceMixin = /**@lends SBIS3.CONTROLS.ViewSourceMixin.prototype  */{
@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
        * Устанавливает dataSource для представления данных.
        * Для этого делается запрос на БЛ, можно вызывать в конструкторе.
        *
-       * @param {SBIS3.CONTROLS.Data.Source.SbisService} source Источник данных
+       * @param {WS.Data/Source/SbisService} source Источник данных
        * @param {String} browserName Имя браузера. Если миксин подмешан в браузер, можно не передавать.
        * @param {Object} filter Параметры фильтрации
        * @param {String|Number} offset Элемент, с которого перезагружать данные.

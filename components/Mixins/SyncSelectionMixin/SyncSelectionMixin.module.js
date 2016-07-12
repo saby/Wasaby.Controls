@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 28.01.2016.
  */
-define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!SBIS3.CONTROLS.Data.Model'], function(Model) {
+define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], function(Model) {
 
    /**
     * Миксин, добавляющий синхронизацию выбранных элементов
@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!SBIS3.CONTROLS.Data.Model'],
                 */
                switch (propName) {
                   case 'selectedItem':
-                     if($ws.helpers.instanceOfModule(propValue, 'SBIS3.CONTROLS.Data.Model')) {
+                     if($ws.helpers.instanceOfModule(propValue, 'WS.Data/Entity/Model')) {
                         this.setSelectedItems([propValue]);
                      } else {
                         this.clearSelectedItems();

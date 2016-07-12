@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 26.10.2015.
  */
-define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Model'], function(Model) {
+define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!WS.Data/Entity/Model'], function(Model) {
 
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Model
       /**
        * Устанавливает набор выбранных элементов коллекции.
        * Опция актуальна, когда контрол находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
-       * @param {Array|SBIS3.CONTROLS.Data.Collection.List} list Выбранные элементы коллекции.
+       * @param {Array|WS.Data/Collection/List} list Выбранные элементы коллекции.
        * @example
        * <pre>
        *    var selectedItems = myGrid.getSelectedItems();
@@ -92,14 +92,14 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Model
          if(items instanceof Array) {
             selectedItems = this.getSelectedItems();
 
-            if($ws.helpers.instanceOfModule(selectedItems, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            if($ws.helpers.instanceOfModule(selectedItems, 'WS.Data/Collection/RecordSet')) {
                preparedItems = this._makeList(this._convertRecordsFormat(items, selectedItems));
             } else {
                preparedItems = this._makeList(items);
             }
          } else if (items === null) {
             preparedItems = this._makeList();
-         } else if(!$ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.List')) {
+         } else if(!$ws.helpers.instanceOfModule(items, 'WS.Data/Collection/List')) {
             throw new Error('ActiveMultiSelectable::setSelectedItems called with invalid argument');
          } else {
             preparedItems = items;
@@ -160,7 +160,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Model
       /**
        * Добавляет новые элементы коллекции к набору выбранных.
        * Опция актуальна, когда контрол находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
-       * @param {Array | SBIS3.CONTROLS.Data.Collection.List} items Массив элементов, которые нужно добавить в набор.
+       * @param {Array | WS.Data/Collection/List} items Массив элементов, которые нужно добавить в набор.
        * @see SBIS3.CONTROLS.MultiSelectable#multiselect
        * @see selectedItems
        * @see selectedKeys

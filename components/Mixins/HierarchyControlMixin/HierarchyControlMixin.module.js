@@ -1,9 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
    'js!SBIS3.CONTROLS.HierarchyControl.HierarchyView',
-   'js!SBIS3.CONTROLS.Data.Bind.ICollection',
-   'js!SBIS3.CONTROLS.Data.Projection.Tree',
-   'js!SBIS3.CONTROLS.Data.Collection.LoadableList'
+   'js!WS.Data/Collection/IBind',
+   'js!WS.Data/Display/Tree',
+   'js!WS.Data/Collection/LoadableList'
 ], function (HierarchyView, IBindCollection, TreeProjection, LoadableList) {
    'use strict';
 
@@ -24,32 +24,32 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
             idProperty: '',
 
             /**
-             * @cfg {String} Название свойства, содержащего идентификатор родительского узла. Используется только в случае, если {@link items} не реализует {@link SBIS3.CONTROLS.Data.Projection.Tree}.
-             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Projection.Tree}
+             * @cfg {String} Название свойства, содержащего идентификатор родительского узла. Используется только в случае, если {@link items} не реализует {@link WS.Data/Display/Tree}.
+             * @remark Нужно только для того, чтобы передать в конструктор {@link WS.Data/Display/Tree}
              */
             parentProperty: '',
 
             /**
-             * @cfg {String} Название свойства, содержащего признак узла. Используется только в случае, если {@link items} не реализует {@link SBIS3.CONTROLS.Data.Projection.Tree}.
-             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Projection.Tree}
+             * @cfg {String} Название свойства, содержащего признак узла. Используется только в случае, если {@link items} не реализует {@link WS.Data/Display/Tree}.
+             * @remark Нужно только для того, чтобы передать в конструктор {@link WS.Data/Display/Tree}
              */
             nodeProperty: '',
 
             /**
-             * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется только в случае, если {@link items} является массивом и не реализует {@link SBIS3.CONTROLS.Data.Projection.Tree}.
-             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Projection.Tree}
+             * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется только в случае, если {@link items} является массивом и не реализует {@link WS.Data/Display/Tree}.
+             * @remark Нужно только для того, чтобы передать в конструктор {@link WS.Data/Display/Tree}
              */
             childrenProperty: '',
 
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Projection.TreeItem|Object|String|Number} Корневой узел или его содержимое, или его идентификатор
-             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Projection.Tree}
+             * @cfg {WS.Data/Display/TreeItem|Object|String|Number} Корневой узел или его содержимое, или его идентификатор
+             * @remark Нужно только для того, чтобы передать в конструктор {@link WS.Data/Display/Tree}
              */
             root: undefined
          },
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Projection.Tree} Проекция дерева
+          * @var {WS.Data/Display/Tree} Проекция дерева
           */
          _itemsProjection: undefined,
 
@@ -66,7 +66,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
          _changeRootOnClick: true,
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Projection.TreeItem} Текущий узел дерева
+          * @var {WS.Data/Display/TreeItem} Текущий узел дерева
           */
          _currentRoot: undefined,
 
@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
 
       around: {
          _setItems: function (prevFn, items) {
-            if (!$ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Projection.Projection')) {
+            if (!$ws.helpers.instanceOfModule(items, 'WS.Data/Display/Display')) {
                items = new TreeProjection({
                   collection: this._convertItems(items),
                   idProperty: this._options.idProperty || (this._options.dataSource ? this._options.dataSource.getIdProperty() : ''),
@@ -131,7 +131,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
          );
          this.redraw();
 
-         if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable') &&
+         if ($ws.helpers.instanceOfMixin(item, 'WS.Data/Collection/ISourceLoadable') &&
             (!item.isLoaded() || item.isQueryChanged())
          ) {
             item.load();
@@ -146,7 +146,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
       
       /**
        * Устанавливает текущий отображаемый узел
-       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem} node Узел
+       * @param {WS.Data/Display/TreeItem} node Узел
        * @private
        */
       _setCurrentRoot: function (node) {
@@ -177,9 +177,9 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
     * @param {Function} prevFn Оборачиваемый метод
     * @param {$ws.proto.EventObject} event Дескриптор события.
     * @param {String} action Действие, приведшее к изменению.
-    * @param {SBIS3.CONTROLS.Data.Projection.TreeItem[]} [newItems] Новые элементы коллеции.
+    * @param {WS.Data/Display/TreeItem[]} [newItems] Новые элементы коллеции.
     * @param {Integer} [newItemsIndex] Индекс, в котором появились новые элементы.
-    * @param {SBIS3.CONTROLS.Data.Projection.TreeItem[]} [oldItems] Удаленные элементы коллекции.
+    * @param {WS.Data/Display/TreeItem[]} [oldItems] Удаленные элементы коллекции.
     * @param {Integer} [oldItemsIndex] Индекс, в котором удалены элементы.
     * @private
     */

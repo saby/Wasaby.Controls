@@ -1,30 +1,6 @@
 /* global define */
-define('js!SBIS3.CONTROLS.Data.Collection.IEnumerable', [], function () {
+define('js!SBIS3.CONTROLS.Data.Collection.IEnumerable', ['js!WS.Data/Collection/IEnumerable'], function (IEnumerable) {
    'use strict';
-
-   /**
-    * Интерфейс коллеции c последовательным доступом
-    * @mixin SBIS3.CONTROLS.Data.Collection.IEnumerable
-    * @public
-    * @author Мальцев Алексей
-    */
-
-   return /** @lends SBIS3.CONTROLS.Data.Collection.IEnumerable.prototype */{
-      /**
-       * Возвращает энумератор для перебора элементов коллеции
-       * @returns {SBIS3.CONTROLS.Data.Collection.IEnumerator}
-       */
-      getEnumerator: function () {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Перебирает все элементы коллекции, начиная с первого
-       * @param {Function(*, Number)} callback Ф-я обратного вызова для каждого элемента коллекции
-       * @param {Object} [context] Конекст
-       */
-      each: function (callback, context) {
-         throw new Error('Method must be implemented');
-      }
-   };
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Collection.IEnumerable', 'Module is no longer available since version 3.7.4.100. Use WS.Data/Collection/IEnumerable instead.');
+   return IEnumerable;
 });
