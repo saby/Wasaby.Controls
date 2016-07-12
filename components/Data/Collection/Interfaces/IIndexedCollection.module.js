@@ -1,33 +1,6 @@
 /* global define */
-define('js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection', [], function () {
+define('js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection', ['js!WS.Data/Collection/IIndexedCollection'], function (IIndexedCollection) {
    'use strict';
-
-   /**
-    * Интерфейс коллеции c индексированным поиском элементов
-    * @mixin SBIS3.CONTROLS.Data.Collection.IIndexedCollection
-    * @author Мальцев Алексей
-    * @public
-    */
-
-   return /** @lends SBIS3.CONTROLS.Data.Collection.IIndexedCollection.prototype */{
-      /**
-       * Возвращает индекс первого элемента с указанным значением свойства. Если такого элемента нет - вернет -1.
-       * @param {String} property Название свойства элемента.
-       * @param {*} value Значение свойства элемента.
-       * @returns {Number}
-       */
-      getIndexByValue: function (property, value) {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Возвращает индексы всех элементов с указанным значением свойства.
-       * @param {String} property Название свойства элемента.
-       * @param {*} value Значение свойства элемента.
-       * @returns {Array.<Number>}
-       */
-      getIndicesByValue: function (property, value) {
-         throw new Error('Method must be implemented');
-      }
-   };
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Collection.IIndexedCollection', 'Module is no longer available since version 3.7.4.100. Use WS.Data/Collection/IIndexedCollection instead.');
+   return IIndexedCollection;
 });

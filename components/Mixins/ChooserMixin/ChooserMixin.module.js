@@ -2,8 +2,8 @@
  * Created by am.gerasimov on 21.01.2016.
  */
 define('js!SBIS3.CONTROLS.ChooserMixin', [
-   'js!SBIS3.CONTROLS.Data.Model',
-   'js!SBIS3.CONTROLS.Data.Adapter.Sbis'
+   'js!WS.Data/Entity/Model',
+   'js!WS.Data/Adapter/Sbis'
 ], function(Model, SbisAdapter) {
    /**
     * Миксин, добавляющий интерфейс для открытия окна выбора.
