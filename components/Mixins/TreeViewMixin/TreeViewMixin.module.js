@@ -4,6 +4,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
     * @mixin SBIS3.CONTROLS.TreeViewMixin
     * @public
     * @author Крайнов Дмитрий Олегович
+    * @cssModifier controls-ListView__item-without-child Класс добавляется к визуальному представлению папки, у которой отсутствуют дочерние элементы.
     */
 
    var TreeViewMixin = /** @lends SBIS3.CONTROLS.TreeViewMixin.prototype */{
@@ -70,6 +71,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                this._notify('onDataMerge', list);
                this._toggleIndicator(false);
                this._createFolderFooter(key);
+               this._getItemProjectionByItemId(key).setLoaded(true);
                this._drawExpandedItem(expandedItem);
             }.bind(this));
          } else {
