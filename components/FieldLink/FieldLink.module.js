@@ -248,16 +248,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * Шаблон может быть реализован отдельным XHTML-файлом.
                  * В этом случае чтобы передать его содержимое в опцию, он должен быть подключен в массив зависимостей компонента (см. примеры).
                  * @example
-                 * Пример 1. Шаблон создан в отдельном XHTML-файле. Сначала его нужно подключить в массив зависимостей компонента,
-                 * затем в опции указать путь до шаблона.
+                 * Пример. Шаблон создан в отдельном XHTML-файле. Сначала его нужно подключить в массив зависимостей компонента, затем в опции указать путь до шаблона.
                  * <pre class="brush: xml">
-                 *     <option name="itemTemplate" type="string">html!SBIS3.MyArea.MyComponent/template</option>
-                 * </pre>
-                 * Пример 2. Шаблон имеет простую структуру, поэтому его полностью описываем в качестве значения опции.
-                 * <pre>
-                 *     <option name="itemTemplate" type="string" value="
-                 *        <div class='fieldLinkText'>{{=it.item.get('title')}}</div>
-                 *     "></option>
+                 *     <option name="itemTemplate" type="string">html!SBIS3.MyArea.MyComponent/resources/myTemplate</option>
                  * </pre>
                  */
                 itemTemplate: null
