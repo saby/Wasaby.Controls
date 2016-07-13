@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
       _onExpandItem: function(expandedItem) {
          var
             key = expandedItem.getContents().getId(),
-            ladderDecorator = this._decorators.getByName('ladder');
+            ladderDecorator = this._options._decorators.getByName('ladder');
          this._closeAllExpandedNode(key);
          this._options.openedPath[expandedItem.getContents().getId()] = true;
          this._folderOffsets[expandedItem.getContents().getKey()] = 0;
@@ -276,7 +276,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
           * @private
           */
          _onUpdateItemProperty: function(parentFunc, item, property) {
-            var ladderDecorator = this._decorators.getByName('ladder'),
+            var ladderDecorator = this._options._decorators.getByName('ladder'),
                 isIgnoreEnabled;
             if (ladderDecorator){
                isIgnoreEnabled = ladderDecorator.getIgnoreEnabled();
