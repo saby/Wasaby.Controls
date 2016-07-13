@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.Image.CropPlugin',
    [
-      'js!SBIS3.CONTROLS.Data.Source.SbisService',
+      'js!WS.Data/Source/SbisService',
       'js!SBIS3.CONTROLS.Utils.ImageUtil',
       "browser!js!SBIS3.CORE.FieldImage/resources/ext/jcrop/jquery.Jcrop.min",
       "css!SBIS3.CORE.FieldImage/resources/ext/jcrop/jquery.Jcrop.min"

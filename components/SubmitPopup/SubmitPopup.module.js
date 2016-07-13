@@ -17,7 +17,15 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
       'use strict';
       var SubmitPopup = InformationPopup.extend( /** @lends SBIS3.CONTROLS.SubmitPopup.prototype */ {
          /**
-          * @typedef {Boolean|undefined} ChosenState
+          * @typedef {String} SubmitPopupStatus
+          * @variant confirm  Диалог подтверждения. Имеет кнопки "Да", "Нет" и (опционально) "Отмена". Цвет диалога - синий.
+          * @variant success  "Успешно". Имеет кнопку "ОК". Цвет диалога - зеленый.
+          * @variant error    "Ошибка". Имеет кнопку "ОК". Цвет диалога - красный.
+          * @variant warning  "Предупреждение". Имеет кнопку "ОК". Цвет диалога - оранжевый.
+          */
+
+         /**
+          * @typedef {Boolean|undefined} ChosenStatus
           * @variant true Нажата кнопка "Да"
           * @variant false Нажата кнопка "Нет"
           * @variant undefined Нажата кнопка "ОК" или "Отмена"
@@ -25,12 +33,16 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
          /**
           * @event onChoose Событие нажатия на кнопку в окне.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {ChosenState} Вариант диалога, выбранный нажатием соответствующей кнопки
+          * @param {ChosenStatus} Вариант диалога, выбранный нажатием соответствующей кнопки
           * @variant
           */
          $protected: {
             _options: {
 
+               /**
+                * @cfg {SubmitPopupStatus} Состояние диалога. От состояния заивисит цвет линии в шапке и набор кнопок.
+                */
+               status: 'default',
                /**
                 * @cfg {String} Отображаемое сообщение.
                 */
@@ -63,7 +75,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
 
             var self = this;
 
-            if(this._options.state === 'default'){
+            if(this._options.status === 'confirm'){
                this.subscribeTo(this.getChildControlByName('positiveButton'), 'onActivated', function(){
                   self._choose(true);
                });
@@ -90,6 +102,10 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
          _choose: function(value){
             this._notify('onChoose', value);
             this.close();
+         },
+
+         _isLegalStatus: function(){
+            return status === 'confirm' || SubmitPopup.superclass._isLegalStatus.call(this);
          }
       });
       return SubmitPopup;

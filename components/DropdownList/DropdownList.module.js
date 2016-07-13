@@ -188,6 +188,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _modifyOptions: function(opts) {
             opts.pickerClassName += ' controls-DropdownList__picker';
+            opts.headTemplate = TemplateUtil.prepareTemplate(opts.headTemplate);
             return DropdownList.superclass._modifyOptions.call(this, opts);
          },
          _setPickerContent : function () {

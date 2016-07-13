@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
    'js!SBIS3.CONTROLS.IMenuNewView',
    'js!SBIS3.CONTROLS.TreeControl.TreeView',
    'js!SBIS3.CONTROLS.FloatArea',
-   'js!SBIS3.CONTROLS.Data.Utils'
+   'js!WS.Data/Utils'
 ], function(IMenuNewView,TreeView, FloatArea, DataUtils) {
    'use strict';
    /**
@@ -120,7 +120,7 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
       _getItemRenderData: function(item, index, level) {
          level = level || 0;
          var itemData = TreeView.superclass._getItemRenderData.call(this, item, index);
-         if($ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Projection.TreeItem')) {
+         if($ws.helpers.instanceOfModule(item, 'WS.Data/Display/TreeItem')) {
             itemData.level = level;
             if(item.isNode()) {
                var expandClass = ' ' + this._сssPrefix + (item.isExpanded()?this._treeExpandedСssClass:this._treeCollapsedСssClass);

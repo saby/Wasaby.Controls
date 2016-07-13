@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.Demo.MyMenuButton',
     ['js!SBIS3.CORE.CompoundControl',
-     'html!SBIS3.CONTROLS.Demo.MyMenuButton', 'js!SBIS3.CONTROLS.Data.Source.Memory',
+     'html!SBIS3.CONTROLS.Demo.MyMenuButton', 'js!WS.Data/Source/Memory',
      'css!SBIS3.CONTROLS.Demo.MyMenuButton',
      'js!SBIS3.CONTROLS.MenuButton',
      'js!SBIS3.CONTROLS.MenuLink',

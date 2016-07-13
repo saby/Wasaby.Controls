@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                var
                   raw1, raw2,
                   result = [];
-               if ($ws.helpers.instanceOfModule(this._editingRecord, 'SBIS3.CONTROLS.Data.Model')) {
+               if ($ws.helpers.instanceOfModule(this._editingRecord, 'WS.Data/Entity/Model')) {
                   this._editingRecord.each(function(field, value) {
                      if (value != this._previousRecordState.get(field)) {
                         result.push(field);
@@ -127,7 +127,9 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             },
             _onRecordChange: function(event, fields) { //todo Удалить этот метод вообще в 3.7.4.100
                for (var fld in fields) {
-                  this._editingRecord.set(fld, fields[fld]);
+                  if (fields.hasOwnProperty(fld)) {
+                     this._editingRecord.set(fld, fields[fld]);
+                  }
                }
             },
             _toggleOnRecordChangeHandler: function(toggle) {

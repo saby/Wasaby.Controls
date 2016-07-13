@@ -1,41 +1,6 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Format.ArrayField', [
-   'js!SBIS3.CONTROLS.Data.Format.Field'
-], function (Field) {
+define('js!SBIS3.CONTROLS.Data.Format.ArrayField', ['js!WS.Data/Format/ArrayField'], function (ArrayField) {
    'use strict';
-
-   /**
-    * Формат поля для массива значений
-    * @class SBIS3.CONTROLS.Data.Format.ArrayField
-    * @extends SBIS3.CONTROLS.Data.Format.Field
-    * @public
-    * @author Мальцев Алексей
-    */
-
-   var ArrayField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.ArrayField.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Format.ArrayField',
-
-      /**
-       * @cfg {String} Тип элементов
-       * @name SBIS3.CONTROLS.Data.Format.ArrayField#kind
-       * @see getKind
-       */
-      _$kind: '',
-
-      /**
-       * Возвращает тип элементов
-       * @returns {String}
-       * @see dictionary
-       */
-      getKind: function () {
-         return this._$kind;
-      }
-
-      //region Public methods
-
-      //endregion Public methods
-
-   });
-
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Format.ArrayField', 'Module is no longer available since version 3.7.4.100. Use WS.Data/Format/ArrayField instead.');
    return ArrayField;
 });

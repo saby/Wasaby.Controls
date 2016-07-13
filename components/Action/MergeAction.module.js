@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.MergeAction', [
                  */
                 hierField: undefined,
                 /**
-                 * @cfg {DataSource|SBIS3.CONTROLS.Data.Source.ISource|Function} Устанавливает источник данных.
+                 * @cfg {DataSource|WS.Data/Source/ISource|Function} Устанавливает источник данных.
                  * @see setDataSource
                  *
                  */
@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.MergeAction', [
         },
         /**
          * Устанавливает источник данных для окна объединения записей.
-         * @param {DataSource|SBIS3.CONTROLS.Data.Source.ISource|Function} ds Источник данных.
+         * @param {DataSource|WS.Data/Source/ISource|Function} ds Источник данных.
          * @see dataSource
          */
         setDataSource: function(ds) {

@@ -1,7 +1,7 @@
 /**
  * Created by as.suhoruchkin on 21.07.2015.
  */
-define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', 'js!SBIS3.CONTROLS.Data.MoveStrategy.Base', 'i18n!SBIS3.CONTROLS.MoveHandlers'], function(Dialog, SbisMoveStrategy, BaseMoveStrategy) {
+define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/MoveStrategy/Sbis', 'js!WS.Data/MoveStrategy/Base', 'i18n!SBIS3.CONTROLS.MoveHandlers'], function(Dialog, SbisMoveStrategy, BaseMoveStrategy) {
    var MoveHandlers = {
       $protected: {
         _moveStrategy: undefined
@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
             isChangeOrder = insertAfter !== undefined;
 
          if (moveTo !== null) {
-            if ($ws.helpers.instanceOfModule(moveTo, 'SBIS3.CONTROLS.Data.Model')) {
+            if ($ws.helpers.instanceOfModule(moveTo, 'WS.Data/Entity/Model')) {
                recordTo = moveTo;
                moveTo = recordTo.getId();
             } else {
@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
 
          if (this._checkRecordsForMove(records, recordTo, isChangeOrder)) {
             for (var i = 0; i < records.length; i++) {
-               records[i] = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model') ?
+               records[i] = $ws.helpers.instanceOfModule(records[i], 'WS.Data/Entity/Model') ?
                   this.getItems().getRecordById(records[i].getId()) : //todo может прийти рекорд инстанса которого нет в рекордсете замеять все рекорды для этого плохо.
                   this._options._items.getRecordById(records[i]);
             }
@@ -108,7 +108,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
          if (recordTo !== null && $ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.TreeMixin')) {
             toMap = this._getParentsMap(recordTo.getId());
             for (var i = 0; i < records.length; i++) {
-               key = '' + (($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record')||$ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model')) ? records[i].getId() : records[i]);
+               key = '' + (($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record')||$ws.helpers.instanceOfModule(records[i], 'WS.Data/Entity/Model')) ? records[i].getId() : records[i]);
                if ($.inArray(key, toMap) !== -1) {
                   return false;
                }
@@ -150,19 +150,19 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
       },
       /**
        * Возвращает стратегию перемещения
-       * @see SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy
-       * @returns {SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy}
+       * @see WS.Data/MoveStrategy/IMoveStrategy
+       * @returns {WS.Data/MoveStrategy/IMoveStrategy}
        */
       getMoveStrategy: function () {
          return this._moveStrategy || (this._moveStrategy = this._makeMoveStrategy());
       },
       /**
        * Создает стратегию перемещения в зависимости от источника данных
-       * @returns {SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy}
+       * @returns {WS.Data/MoveStrategy/IMoveStrategy}
        * @private
        */
       _makeMoveStrategy: function () {
-         if($ws.helpers.instanceOfModule(this._dataSource,'SBIS3.CONTROLS.Data.Source.SbisService') ||
+         if($ws.helpers.instanceOfModule(this._dataSource,'WS.Data/Source/SbisService') ||
             $ws.helpers.instanceOfModule(this._dataSource,'SBIS3.CONTROLS.SbisServiceSource')
          ) {
             return new SbisMoveStrategy({
@@ -179,12 +179,12 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
       },
       /**
        * Устанавливает стратегию перемещения
-       * @see SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy
-       * @param {SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy} strategy - стратегия перемещения
+       * @see WS.Data/MoveStrategy/IMoveStrategy
+       * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
        */
       setMoveStrategy: function (strategy){
-         if(!$ws.helpers.instanceOfMixin(strategy,'SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy')){
-            throw new Error('The strategy must implemented interfaces the SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy.')
+         if(!$ws.helpers.instanceOfMixin(strategy,'WS.Data/MoveStrategy/IMoveStrategy')){
+            throw new Error('The strategy must implemented interfaces the WS.Data/MoveStrategy/IMoveStrategy.')
          }
          this._moveStrategy = strategy;
       },
@@ -247,7 +247,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
             );
             //todo нужно сделать цепочки операций на рекордсете тогда можно будет объединить remove и add
             //todo а пока создается новый элемент проекции и если он был открыт то восттановим ему состояние
-            if ($ws.helpers.instanceOfModule(projectionItem, 'SBIS3.CONTROLS.Data.Projection.TreeItem') && projectionItem.isExpanded()) {
+            if ($ws.helpers.instanceOfModule(projectionItem, 'WS.Data/Display/TreeItem') && projectionItem.isExpanded()) {
                this._options._itemsProjection.getItemBySourceItem(item).setExpanded(true);
             }
          }.bind(this));

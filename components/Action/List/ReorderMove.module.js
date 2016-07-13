@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
 
          /**
           * метод выполнящий перемещение
-          * @param {SBIS3.CONTROLS.Data.Model} from элемент который будет перемещен
+          * @param {WS.Data/Entity/Model} from элемент который будет перемещен
           * @returns {$ws.proto.Deferred}
           * @private
           */
@@ -77,8 +77,8 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
          },
          /**
           * возвращает соседий элемент
-          * @param {SBIS3.CONTROLS.Data.Model} item
-          * @returns {SBIS3.CONTROLS.Data.Model}
+          * @param {WS.Data/Entity/Model} item
+          * @returns {WS.Data/Entity/Model}
           * @private
           */
          _getNearestItem: function (item) {

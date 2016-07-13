@@ -12,17 +12,17 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', function () {
             /**
              * @cfg {*} связанный список.
              * @remark
-             * Список должен быть с примесью миксинов ({@link SBIS3.CONTROLS.ItemsControlMixin} или {@link SBIS3.CONTROLS.Data.Collection.IList}) для работы с однотипными элементами.
+             * Список должен быть с примесью миксинов ({@link SBIS3.CONTROLS.ItemsControlMixin} или {@link WS.Data/Collection/IList}) для работы с однотипными элементами.
              * Подробнее о базовых платформенных списках вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-types/">Виды списков</a>.
              * @see getLinkedObject
              * @see setLinkedObject
              */
             linkedObject: undefined,
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Source.ISource} связанный истоник данных.
+             * @cfg {WS.Data/Source/ISource} связанный истоник данных.
              * @see getDataSource
              * @see setDataSource
-             * @see #SBIS3.CONTROLS.Data.Source.ISource
+             * @see #WS.Data/Source/ISource
              */
             dataSource: undefined
          }
@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', function () {
       },
       /**
        * Возвращает связанный источник данных
-       * @returns {SBIS3.CONTROLS.Data.Source.ISource} dataSource
+       * @returns {WS.Data/Source/ISource} dataSource
        * @see dataSource
        */
       getDataSource: function() {
