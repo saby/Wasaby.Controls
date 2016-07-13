@@ -33080,13 +33080,14 @@
           * See: https://connect.microsoft.com/IE/feedback/details/743881
           */
          function renderEmptyBlocksFix() {
+            //tinymce issues https://github.com/tinymce/tinymce/issues/2512
             var emptyBlocksCSS;
 
             // IE10+
             if (getDocumentMode() >= 10) {
                emptyBlocksCSS = '';
                each('p div h1 h2 h3 h4 h5 h6'.split(' '), function(name, i) {
-                  emptyBlocksCSS += (i > 0 ? ',' : '') + name + ':empty';
+                  emptyBlocksCSS += (i > 0 ? ',' : '') + '.controls-richEditor ' + name + ':empty';
                });
 
                editor.contentStyles.push(emptyBlocksCSS + '{padding-right: 1px !important}');
@@ -48600,6 +48601,10 @@ tinymce.PluginManager.add('media', function(editor, url) {
                   plainTextMode = true;
                }
 
+               if (editor.fire('onBeforePaste', {content: content}) === false) {
+                  return;
+               }
+
                // Grab plain text from Clipboard API or convert existing HTML to plain text
                if (plainTextMode) {
                   // Use plain text contents from Clipboard API unless the HTML contains paragraphs then
@@ -48667,7 +48672,10 @@ tinymce.PluginManager.add('media', function(editor, url) {
                   });
 
                   editor.getDoc().execCommand('Paste', false, null);
-                  clipboardContent["text/html"] = getPasteBinHtml();
+                  //TODO:https://github.com/tinymce/tinymce/issues/2976
+                  if ( Env.ie != 12) {
+                     clipboardContent["text/html"] = getPasteBinHtml();
+                  }
                }
 
                // If clipboard API has HTML then use that directly
