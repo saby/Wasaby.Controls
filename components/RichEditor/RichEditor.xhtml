@@ -6,7 +6,7 @@
    {{?}}
    <div class="controls-RichEditor__DataReview{{? it.enabled}} ws-hidden{{?}} ws-basic-style" tabindex="1">{{? !it.enabled && it.text}}{{=it._prepareReviewContent(it.text, it)}}{{?}}</div>
    <div class="controls-RichEditor__Placeholder" >{{=it.placeholder}}</div>
-   <div class="controls-RichEditor__EditorFrame ws-basic-style {{? !it.enabled}} ws-hidden{{?}}" {{? it.autoHeight && (it.minimalHeight || it.maximalHeight}}style="{{? it.minimalHeight}}min-height:{{=it.minimalHeight}}px;{{?}}{{? it.maximalHeight}}max-height:{{=it.maximalHeight}}px;{{?}}"{{?}}>{{? it.enabled && it.text}}{{=it._prepareReviewContent(it.text, it)}}{{?}}</div>
+   <div class="controls-RichEditor__EditorFrame ws-basic-style {{? !it.enabled}} ws-hidden{{?}}" {{? it.autoHeight && (it.minimalHeight || it.maximalHeight)}}style="{{? it.minimalHeight}}min-height:{{=it.minimalHeight}}px;{{?}}{{? it.maximalHeight}}max-height:{{=it.maximalHeight}}px;{{?}}"{{?}}>{{? it.enabled && it.text}}{{=it._prepareReviewContent(it.text, it)}}{{?}}</div>
    <textarea class="controls-RichEditor__FakeArea" tabindex="0"></textarea>
    <div class="controls-RichEditor__SourceContainer ws-hidden"><textarea class="controls-RichEditor__SourceArea"></textarea></div>
 </div>

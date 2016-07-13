@@ -1,25 +1,6 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Format.StringField', [
-   'js!SBIS3.CONTROLS.Data.Format.Field'
-], function (Field) {
+define('js!SBIS3.CONTROLS.Data.Format.StringField', ['js!WS.Data/Format/StringField'], function (StringField) {
    'use strict';
-
-   /**
-    * Формат поля для строк
-    * @class SBIS3.CONTROLS.Data.Format.StringField
-    * @extends SBIS3.CONTROLS.Data.Format.Field
-    * @public
-    * @author Мальцев Алексей
-    */
-
-   var StringField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.StringField.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Format.StringField'
-
-      //region Public methods
-
-      //endregion Public methods
-
-   });
-
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Format.StringField', 'Module is no longer available since version 3.7.4.100. Use WS.Data/Format/StringField instead.');
    return StringField;
 });

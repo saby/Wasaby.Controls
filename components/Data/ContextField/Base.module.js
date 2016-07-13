@@ -1,25 +1,6 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.ContextField.Base', [], function () {
+define('js!SBIS3.CONTROLS.Data.ContextField.Base', ['js!WS.Data/ContextField/Base'], function (Base) {
    'use strict';
-   /**
-    * Базовый класс для поддержки типов в контексте
-    * @class SBIS3.CONTROLS.Data.ContextField.Base
-    * @author Мальцев Алексей
-    */
-   return $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Data.ContextField.Base.prototype*/{
-      $protected: {
-         _options: {
-            module: undefined
-         }
-      },
-
-      is: function (value) {
-         return value instanceof this._options.module;
-      },
-
-      toJSON: function (value, deep) {
-         return deep ? value.toObject() : value;
-      }
-   });
-
+   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.ContextField.Base', 'Module is no longer available since version 3.7.4.100. Use WS.Data/ContextField/Base instead.');
+   return Base;
 });

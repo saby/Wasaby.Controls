@@ -2,8 +2,8 @@
 define('js!SBIS3.CONTROLS.Action.DialogMixin', [
    'js!SBIS3.CORE.Dialog',
    'js!SBIS3.CORE.FloatArea',
-   'js!SBIS3.CONTROLS.Data.Model',
-   'js!SBIS3.CONTROLS.Data.Utils'
+   'js!WS.Data/Entity/Model',
+   'js!WS.Data/Utils'
 ], function(Dialog, FloatArea, Model, Utils){
    'use strict';
 
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
        * @property {Boolean} newModel Признак: true - в диалоге редактирования открыта новая запись, которой не существует в источнике данных.
        * @property {Object} filter Объект, данные которого будут использованы в качестве инициализирующих данных при создании новой записи.
        * Название свойства - это название поля записи, а значение свойства - это значение для инициализации.
-       * @property {SBIS3.CONTROLS.Data.Model} record Редактируемая запись. Если передаётся ключ свойством key, то запись передавать необязательно.
+       * @property {WS.Data/Entity/Model} record Редактируемая запись. Если передаётся ключ свойством key, то запись передавать необязательно.
        * @property {$ws.proto.Context} ctx Контекст, который нужно установить для диалога редактирования записи.
        */
       $constructor: function() {
@@ -275,7 +275,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.MultiSelectable')) {
             collection.removeItemsSelection([collectionRecord.getId()]);
          }
-         if ($ws.helpers.instanceOfModule(collection.getDataSet && collection.getDataSet(), 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+         if ($ws.helpers.instanceOfModule(collection.getDataSet && collection.getDataSet(), 'WS.Data/Collection/RecordSet')) {
             collection = collection.getDataSet();
          }
          collection.remove(collectionRecord);
@@ -312,7 +312,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          var collection = this._options.linkedObject,
             rec;
          at = at || 0;
-         if ($ws.helpers.instanceOfModule(collection.getDataSet(), 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+         if ($ws.helpers.instanceOfModule(collection.getDataSet(), 'WS.Data/Collection/RecordSet')) {
             //Создаем новую модель, т.к. Record не знает, что такое первичный ключ - это добавляется на модели.
             rec = new Model({
                format: collection.getDataSet().getFormat(),
@@ -323,7 +323,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          } else  {
             rec = model.clone();
          }
-         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList')) {
+         if ($ws.helpers.instanceOfMixin(collection, 'WS.Data/Collection/IList')) {
             collection.add(rec, at);
          }
          else {
@@ -381,7 +381,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          var collectionData = this._getCollectionData(),
             index;
 
-         if (collectionData && $ws.helpers.instanceOfMixin(collectionData, 'SBIS3.CONTROLS.Data.Collection.IList') && $ws.helpers.instanceOfMixin(collectionData, 'SBIS3.CONTROLS.Data.Collection.IIndexedCollection')) {
+         if (collectionData && $ws.helpers.instanceOfMixin(collectionData, 'WS.Data/Collection/IList') && $ws.helpers.instanceOfMixin(collectionData, 'WS.Data/Collection/IIndexedCollection')) {
             index = collectionData.getIndexByValue(collectionData.getIdProperty(), this._linkedModelKey || model.getId());
             return collectionData.at(index);
          }
