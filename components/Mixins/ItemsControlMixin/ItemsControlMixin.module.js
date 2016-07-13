@@ -1074,7 +1074,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
                    self._notify('onDataLoad', list);
-                   if (this.getItems() && (list.getModel() === this.getItems().getModel()) && (list._moduleName == this.getItems()._moduleName)) {
+                   if (
+                      this.getItems()
+                      && (list.getModel() === this.getItems().getModel())
+                      && (list._moduleName == this.getItems()._moduleName)
+                      && (list.getAdapter() == this.getItems().getAdapter())
+                   ) {
                       this._options._items.setMetaData(list.getMetaData());
                       this._options._items.assign(list);
                       if(!self._options.autoRedraw) {
