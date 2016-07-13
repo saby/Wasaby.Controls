@@ -1910,7 +1910,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _preScrollLoading: function(){
-            if (this._scrollWatcher && (!this._scrollWatcher.hasScroll(this.getContainer()) || this.isScrollOnBottom())) {
+            var hasScroll = this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer()), 
+               existFloatArea = this._existFloatArea(),
+               isScrollOnBottom = this.isScrollOnBottom();
+            // Если нет скролла или скролл внизу, значит нужно догружать еще записи (floatArea отжирает скролл, поэтому если она открыта - не грузим)
+            if ((!hasScroll || isScrollOnBottom) && !existFloatArea) {
                this._nextLoad();
             } else {
                this._moveTopScroll();
@@ -1953,7 +1957,7 @@ define('js!SBIS3.CONTROLS.ListView',
             scrollContainer = isBody ? $(window) : this._options.infiniteScrollContainer;
             // Если scrollContainer это body и есть floatArea со скроллом, то у body скролла нет, а значит он не может быть снизу (его же нет!)
             // Todo: когда будут классные скроллы (3.7.4.100?) - можно будет выпилить
-            if (scrollableContainer && isBody && !this._existFloatArea()){
+            if (scrollableContainer){
                scrollContainer = $(scrollContainer);
                return (scrollableContainer.scrollHeight - (scrollableContainer.scrollTop + scrollContainer.height())) == 0;
             }
