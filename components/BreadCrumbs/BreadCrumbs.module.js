@@ -229,49 +229,51 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          }
 
          var targetContainer = this._getTargetContainer(),
-            containerWidth = this._container.width(),
+            maxWidth = parseFloat(this._container.css('max-width')),
+            containerWidth = maxWidth ? maxWidth : this._container.width(),
             crumbs = $('.controls-BreadCrumbs__crumb', targetContainer),
             i = crumbs.length - 1;
 
-         if (crumbs.length){
-            //Добавляем троеточие если пункты не убираются в контейнер
-            if ((targetContainer.width() + this._homeIconWidth >= containerWidth) && crumbs.length > 2) {
-               $(crumbs[i - 1]).before(dots);
-               //скрываем пункты левее троеточия пока не уберемся в контейнер
-               for (i; i > 1; i--) {
-                  if (targetContainer.width() + this._homeIconWidth < containerWidth || i == 1) {
-                     break;
-                  }
-                  crumbs[i - 1].className += ' ws-hidden';
+         if (!crumbs.length){
+            return;
+         }
+         //Добавляем троеточие если пункты не убираются в контейнер
+         if ((targetContainer.width() + this._homeIconWidth >= containerWidth) && crumbs.length > 2) {
+            $(crumbs[i - 1]).before(dots);
+            //скрываем пункты левее троеточия пока не уберемся в контейнер
+            for (i; i > 1; i--) {
+               if (targetContainer.width() + this._homeIconWidth < containerWidth || i == 1) {
+                  break;
                }
+               crumbs[i - 1].className += ' ws-hidden';
             }
-            
-            //Если после всех манипуляций все еще не убираемся в контейнер, будем обрезать текст
-            crumbs = $('.controls-BreadCrumbs__crumb', targetContainer).not('.ws-hidden').not('.controls-BreadCrumbs__dots');
+         }
+         
+         //Если после всех манипуляций все еще не убираемся в контейнер, будем обрезать текст
+         crumbs = $('.controls-BreadCrumbs__crumb', targetContainer).not('.ws-hidden').not('.controls-BreadCrumbs__dots');
 
-            //Минимум остается первая и последняя хлебная крошка
-            if (targetContainer.width() + this._homeIconWidth >= containerWidth) {
-               //ширина декоротивных элементов -  блок с домиком, троеточие, стрелки 
-               var dotsWidth = $('.controls-BreadCrumbs__dots', this._container).outerWidth(true) || 0;
-               var width = this._homeIconWidth + dotsWidth + this._arrowWidth * 2;
-               var halfWidth = Math.floor((containerWidth - width) / 2);
-               //Если два элемента
-               if (crumbs.length == 2){
-                  var first = crumbs.eq(0), firstWidth = first.width(),
-                     last = crumbs.eq(1), lastWidth = last.width();
+         //Минимум остается первая и последняя хлебная крошка
+         if (targetContainer.width() + this._homeIconWidth >= containerWidth) {
+            //ширина декоротивных элементов -  блок с домиком, троеточие, стрелки 
+            var dotsWidth = $('.controls-BreadCrumbs__dots', this._container).outerWidth(true) || 0,
+               width = this._homeIconWidth + dotsWidth + this._arrowWidth * 2,
+               halfWidth = Math.floor((containerWidth - width) / 2);
+            //Если два элемента
+            if (crumbs.length == 2){
+               var first = crumbs.eq(0), firstWidth = first.width(),
+                  last = crumbs.eq(1), lastWidth = last.width();
 
-                  if (firstWidth > halfWidth && lastWidth > halfWidth){
-                     $('.controls-BreadCrumbs__title', crumbs).css('max-width', halfWidth);
-                  } else {
-                     if (firstWidth > halfWidth) {
-                        $('.controls-BreadCrumbs__title', first).css('max-width', containerWidth - width - lastWidth);
-                     } else {
-                        $('.controls-BreadCrumbs__title', last).css('max-width', containerWidth - width - firstWidth);
-                     }
-                  }
+               if (firstWidth > halfWidth && lastWidth > halfWidth){
+                  $('.controls-BreadCrumbs__title', crumbs).css('max-width', halfWidth);
                } else {
-                  $('.controls-BreadCrumbs__title', crumbs).css('max-width', containerWidth - width);
+                  if (firstWidth > halfWidth) {
+                     $('.controls-BreadCrumbs__title', first).css('max-width', containerWidth - width - lastWidth);
+                  } else {
+                     $('.controls-BreadCrumbs__title', last).css('max-width', containerWidth - width - firstWidth);
+                  }
                }
+            } else {
+               $('.controls-BreadCrumbs__title', crumbs).css('max-width', containerWidth - width);
             }
          }
       },
