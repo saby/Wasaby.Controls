@@ -2,7 +2,7 @@
 define('js!SBIS3.CONTROLS.MenuIconNew', [
    'js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.CONTROLS.ContextMenuNew', 'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.ListControlMixin',  'js!SBIS3.CONTROLS.MenuButtonNewMixin',
-   'js!SBIS3.CONTROLS.MenuIconView', 'js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS3.CONTROLS.HierarchyControlMixin',
+   'js!SBIS3.CONTROLS.MenuIconView', 'js!WS.Data/Utils', 'js!SBIS3.CONTROLS.HierarchyControlMixin',
    'js!SBIS3.CONTROLS.TreeControlMixin'
 ], function(IconButton, ContextMenu, PickerMixin,
       ListControlMixin, MenuButtonMixin,

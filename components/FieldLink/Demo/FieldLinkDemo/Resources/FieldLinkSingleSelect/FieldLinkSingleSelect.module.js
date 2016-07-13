@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkSingleSelect', // Устанавлива
    [ // Массив зависимостей компонента
       'js!SBIS3.CORE.CompoundControl', // Подключаем базовый класс, от которого далее будем наследоваться
       'html!SBIS3.CONTROLS.Demo.FieldLinkSingleSelect', // Подключаем вёрстку демо-компонента
-      'js!SBIS3.CONTROLS.Data.Source.Memory', // Подключаем класс для работы со статическим источником данных
+      'js!WS.Data/Source/Memory', // Подключаем класс для работы со статическим источником данных
       'css!SBIS3.CONTROLS.Demo.FieldLinkSingleSelect', // Подключаем CSS-файл демо-компонента
       'js!SBIS3.CONTROLS.FieldLink', // Подключаем контрол поля связи
       'js!SBIS3.CONTROLS.DataGridView' // Подключаем контрол табличного представления данных, используется для построения автодополнения

@@ -1,6 +1,6 @@
 /*global define, $ws*/
 define('js!SBIS3.CONTROLS.Action.List.RelativeMoveMixin',[
-   'js!SBIS3.CONTROLS.Data.Di'
+   'js!WS.Data/Di'
    ],
    function (DI) {
       'use strict';
@@ -47,13 +47,13 @@ define('js!SBIS3.CONTROLS.Action.List.RelativeMoveMixin',[
          /**
           *
           * перемещает элемент from к элементу to
-          * @param {SBIS3.CONTROLS.Data.Model} from
-          * @param {SBIS3.CONTROLS.Data.Model} to
+          * @param {WS.Data/Entity/Model} from
+          * @param {WS.Data/Entity/Model} to
           * @param {Boolean} down  Направление перемещения, если true то елемент from встанет ниже эелемента to
           * @returns {$ws.proto.Deferred}
           */
          _move: function (from, to, down) {
-            var  moveMethod = $ws.helpers.instanceOfModule(this.getDataSource(), 'SBIS3.CONTROLS.Data.Source.SbisService') ?
+            var  moveMethod = $ws.helpers.instanceOfModule(this.getDataSource(), 'WS.Data/Source/SbisService') ?
                   '_sbisOrderMove' : '_baseOrderMove',
                self = this;
             if ($ws.helpers.type(from) !== 'array') {
@@ -92,7 +92,7 @@ define('js!SBIS3.CONTROLS.Action.List.RelativeMoveMixin',[
                         record.set(self._options.parentProperty, parent);
                      }
                   }, function (error) {
-                     $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.MoveStrategy.Sbis::move()', error);
+                     $ws.single.ioc.resolve('ILogger').log('WS.Data/MoveStrategy/Sbis::move()', error);
                      return error;
                   })
                );

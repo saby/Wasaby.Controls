@@ -5,10 +5,9 @@ define(
    'js!SBIS3.CONTROLS.TimeInterval',
    [
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
-      'js!SBIS3.CONTROLS.PickerMixin',
       'html!SBIS3.CONTROLS.TimeInterval'
    ],
-   function (FormattedTextBoxBase, PickerMixin, dotTplFn) {
+   function (FormattedTextBoxBase, dotTplFn) {
 
       'use strict';
 
@@ -23,7 +22,7 @@ define(
        * @author Крайнов Дмитрий Олегович
        */
 
-      var TimeInterval = FormattedTextBoxBase.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.TimeInterval.prototype */{
+      var TimeInterval = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS.TimeInterval.prototype */{
           /**
            * @event onChangeInterval Срабатывает при изменении временного интервала.
            * @param {$ws.proto.EventObject} eventObject Дескриптор события.

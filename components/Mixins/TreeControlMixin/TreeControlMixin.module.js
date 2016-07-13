@@ -2,7 +2,7 @@
 define('js!SBIS3.CONTROLS.TreeControlMixin', [
    'js!SBIS3.CONTROLS.TreeControl.TreeView',
    'js!SBIS3.CONTROLS.ListControlMixin',
-   'js!SBIS3.CONTROLS.Data.Bind.ICollection',
+   'js!WS.Data/Collection/IBind',
    'html!SBIS3.CONTROLS.TreeControl.TreeView',
    'js!SBIS3.CONTROLS.PagerMore'
 ], function (TreeView, ListControlMixin, IBindCollection, TreeViewTemplate, PagerMore) {
@@ -182,9 +182,9 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
     * @param {Function} prevFn Оборачиваемый метод
     * @param {$ws.proto.EventObject} event Дескриптор события.
     * @param {String} action Действие, приведшее к изменению.
-    * @param {SBIS3.CONTROLS.Data.Projection.TreeItem[]} [newItems] Новые элементы коллеции.
+    * @param {WS.Data/Display/TreeItem[]} [newItems] Новые элементы коллеции.
     * @param {Integer} [newItemsIndex] Индекс, в котором появились новые элементы.
-    * @param {SBIS3.CONTROLS.Data.Projection.TreeItem[]} [oldItems] Удаленные элементы коллекции.
+    * @param {WS.Data/Display/TreeItem[]} [oldItems] Удаленные элементы коллекции.
     * @param {Integer} [oldItemsIndex] Индекс, в котором удалены элементы.
     * @private
     */
@@ -198,7 +198,7 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
             ) {
                var pagerContainer;
                if (this._options.pageSize > 0 &&
-                  $ws.helpers.instanceOfMixin(newItemsNode, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable') &&
+                  $ws.helpers.instanceOfMixin(newItemsNode, 'WS.Data/Collection/ISourceLoadable') &&
                   newItemsNode.hasMore()
                ) {
                   pagerContainer = this._view.getPagerContainer(newItemsNode);
@@ -231,7 +231,7 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
     * Обрабатывает событие об изменении элемента коллекции
     * @param {Function} prevFn Оборачиваемый метод
     * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {SBIS3.CONTROLS.Data.Projection.TreeItem} item Измененный элемент коллеции.
+    * @param {WS.Data/Display/TreeItem} item Измененный элемент коллеции.
     * @param {Integer} index Индекс измененного элемента.
     * @param {String} [property] Измененное свойство элемента
     * @private
@@ -240,7 +240,7 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
       switch (property) {
          case 'expanded':
             if (item.isExpanded() &&
-               $ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable') &&
+               $ws.helpers.instanceOfMixin(item, 'WS.Data/Collection/ISourceLoadable') &&
                (!item.isLoaded() || item.isQueryChanged())
             ) {
                item.load();

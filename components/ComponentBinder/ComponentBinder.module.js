@@ -321,7 +321,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                   //Похоже на то, что его достаточно запоминать только непосредственно перед началом поиска
                   if (self._options.breadCrumbs && self._options.breadCrumbs.getItems()){
                      var crumbsItems = self._options.breadCrumbs.getItems();
-                     self._pathDSRawData = $ws.core.clone(crumbsItems ? crumbsItems.getRawData() : []);
+                     self._pathDSRawData = crumbsItems ? crumbsItems.getRawData() : [];
                   }
                   if (self._options.backButton) {
                      self._options.backButton.getContainer().css({'display': ''});
