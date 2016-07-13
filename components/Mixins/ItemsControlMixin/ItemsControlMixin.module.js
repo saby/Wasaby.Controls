@@ -288,7 +288,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              *    <options name="datsSource">
              *       <option name="module" value="SBIS3.CONTROLS.Data.Source.SbisService"></options>
              *       <options name="options">
-             *          <options name="endpoint">
+             *          <options name="binding">
              *             <option name="contract" value="Отчеты"></option>
              *             <option name="address" value="myNewService/service/sbis-rpc-service300.dll"></option>
              *          </options>
@@ -301,7 +301,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * </pre>
              *
              * <b>Пример 3.</b> Конфигурация источника данных через вёрстку компонента.
-             * Второй способ основан на использовании функции, которая возвращает конфигурацию источника.
+             * Второй способ основан на использовании функции, которая возвращает экземпляр класса источника.
              * <pre>
              *    <option name="dataSource" type="function">js!SBIS3.MyArea.MyComponent:prototype.getMyDataSource</option>
              * </pre>
