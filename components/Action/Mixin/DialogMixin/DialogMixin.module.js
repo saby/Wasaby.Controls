@@ -102,7 +102,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
 
          var self = this,
             compOptions = this._buildComponentConfig(meta),
-            editDeffered = new $ws.proto.Deferred(),
+            editDeferred = new $ws.proto.Deferred(),
             config = {
                opener: this,
                template: template||this._options.template,
@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          config.handlers = {
             onAfterClose: function (e, meta) {
                self._dialog = undefined;
-               editDeffered.callback(meta, this._record);
+               editDeferred.callback(meta, this._record);
             }
          };
 
@@ -131,7 +131,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          else {
             this._showDialog(config, meta, mode);
          }
-         return editDeffered;
+         return editDeferred;
       },
 
       _initTemplateComponentCallback: function (config, meta, mode, templateComponent) {

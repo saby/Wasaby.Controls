@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.Action.List.RelativeMoveMixin',[
                from = [from];
             }
             $ws.helpers.forEach(from, function(record) {
-               def.push(self.getDataSource().move(to, record, {before: up}));
+               def.push(self.getDataSource().move(record.getId(), to.getId(), {before: up}));
             });
             return  def.done().getResult().addCallback(function() {
                self.moveInItems(from, to, up);
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.Action.List.RelativeMoveMixin',[
 
          moveInItems: function (from, to, up) {
             if ($ws.helpers.instanceOfModule(this.getLinkedObject(), 'js!SBIS3.CONTROLS.ListView')) {
-               this.getLinkedObject().moveInItems(from, to, !up);
+               this.getLinkedObject().moveInItems(from, to, up);
             }
          }
 
