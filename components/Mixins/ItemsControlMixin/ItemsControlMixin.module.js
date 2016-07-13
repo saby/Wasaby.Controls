@@ -1399,7 +1399,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       redrawItem: function(item, projItem) {
          projItem = projItem || this._getItemProjectionByItemId(item.getId());
-         var ladder = this._decorators.getByName('ladder');
+         var ladder = this._options._decorators.getByName('ladder');
          ladder && ladder.setMarkLadderColumn(true);
          var
             targetElement = this._getElementByModel(item),
