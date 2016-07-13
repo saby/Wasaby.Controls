@@ -119,19 +119,32 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
          return model;
       },
 
-      _prepareUpdateResult: function(model, key) {
+      _prepareUpdateResult: function(data, key) {
          var idProperty = this.getIdProperty();
-         if (key &&
-            idProperty &&
-            !model.isStored() &&
-            !model.get(idProperty)
-         ) {
-            model.set(idProperty, key);
-         }
-         model.setStored(true);
-         model.applyChanges();
 
-         return key;
+         var prepare = function(model) {
+            model.setStored(true);
+            model.applyChanges();
+         };
+
+         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            var keys = [];
+            data.each(function(model){
+               prepare(model);
+               keys.push(model.get(idProperty));
+            });
+            return keys;
+         } else {
+            if (key &&
+               idProperty &&
+               !data.isStored() &&
+               !data.get(idProperty)
+            ) {
+               data.set(idProperty, key);
+            }
+            prepare(data);
+            return key;
+         }
       },
 
       _prepareQueryResult: function(data, itemsProperty, totalProperty) {

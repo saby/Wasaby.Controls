@@ -117,29 +117,41 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          }
       },
 
-      update: function (model) {
-         var idProperty = this.getIdProperty(),
-            key = idProperty ? model.get(idProperty) : null;
-         if (!key) {
-            key = $ws.helpers.randomId('k');
-         }
+      update: function (data) {
+         var
+            _update = function(model) {
+               var idProperty = this.getIdProperty(),
+                  key = idProperty ? model.get(idProperty) : null;
+               if (!key) {
+                  key = $ws.helpers.randomId('k');
+               }
 
-         var adapter = this._getTableAdapter(),
-             index = this._getIndexByKey(key);
-         if (index === -1) {
-            adapter.add(
-               model.getRawData()
-            );
-            this._index[key] = adapter.getCount() - 1;
+               var adapter = this._getTableAdapter(),
+                  index = this._getIndexByKey(key);
+               if (index === -1) {
+                  adapter.add(
+                     model.getRawData()
+                  );
+                  this._index[key] = adapter.getCount() - 1;
+               } else {
+                  adapter.replace(
+                     model.getRawData(),
+                     index
+                  );
+               }
+               return key;
+            }, key,
+            self = this;
+
+         if($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.RecordSet')){
+            data.each(function(model){
+               _update.call(self, model);
+            });
          } else {
-            adapter.replace(
-               model.getRawData(),
-               index
-            );
+            key = _update.call(self, data);
          }
-
          return $ws.proto.Deferred.success(
-            this._prepareUpdateResult(model, key)
+            this._prepareUpdateResult(data, key)
          );
       },
 
