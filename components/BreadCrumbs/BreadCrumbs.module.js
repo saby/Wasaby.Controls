@@ -181,10 +181,10 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             this._dataSet.each(function(record) {
                if (record.get(self._options.keyField)){
                   var point = $('<div class="controls-MenuItem js-controls-BreadCrumbs__crumb"></div>');
-                     point.html(self._decorators.apply(
+                     point.html(self._options._decorators.apply(
                            $ws.helpers.escapeHtml(record.get(self._options.displayField))
                      ))
-                     .attr('style', self._decorators.apply(
+                     .attr('style', self._options._decorators.apply(
                         self._options.colorField ? record.get(self._options.colorField) : '', 'color'
                      ));
                      point.data(self._options.keyField, record.get(self._options.keyField));
@@ -223,7 +223,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                      dots: true,
                      get: function(field) {return this[field];}
                   },
-                  decorators: this._decorators,
+                  decorators: this._options._decorators,
                   displayField: this._options.displayField
                }));
          }
@@ -302,7 +302,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          return {
             item: item,
             displayField: this._options.displayField,
-            decorators: this._decorators
+            decorators: this._options._decorators
          };
       },
 
