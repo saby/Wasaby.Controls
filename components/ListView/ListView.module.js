@@ -1348,6 +1348,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this._drawSelectedItem(this.getSelectedKey());
          },
          redraw: function () {
+            /*TODO Косяк с миксинами - не вызывается before из decorableMixin временное решение*/
+            if (this._options._decorators) {
+               this._options._decorators.update(this);
+            }
             ListView.superclass.redraw.apply(this, arguments);
             this._checkScroll(); //todo Убрать в 150, когда будет правильный рендер изменившихся данных
          },
