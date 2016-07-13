@@ -514,6 +514,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          this._redrawColgroup();
          this._bindHead();
+         this._notify('onDrawHead');
       },
 
       _bindHead: function() {
@@ -536,7 +537,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
              Пример можно посмотреть в реестре номенклатур. */
             this._setColumnWidthForPartScroll();
          }
-         this._notify('onDrawHead');
       },
 
       _redrawColgroup : function() {
@@ -552,6 +552,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _drawItemsCallback: function () {
          if (this.hasPartScroll()) {
+            if (!this._thead) {
+               this._bindHead();
+            }
             var needShowScroll = this._isTableWide();
 
             this._isPartScrollVisible ?
