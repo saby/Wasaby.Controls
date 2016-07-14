@@ -647,12 +647,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else {
                dot = data.defaultItemTpl;
             }
+
+               var ladder = this._options._decorators.getByName('ladder');
+               ladder && ladder.setMarkLadderColumn(true);
+
             markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this._options);
             /*TODO посмотреть не вызывает ли это тормоза*/
             this._clearItems(targetElement);
-            /*TODO С этим отдельно разобраться*/
-
             targetElement.after(markup).remove();
+
+               ladder && ladder.setMarkLadderColumn(false);
+
             itemContainer = this._getDomElementByItem(item);
             this._ladderCompare([itemContainer.prev(), itemContainer, itemContainer.next()]);
             this._reviveItems();
