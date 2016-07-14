@@ -1445,7 +1445,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            this._getItemsToolbar().unlockToolbar();
                            //Отображаем кнопки редактирования
                            this._getItemsToolbar().showEditActions();
-                           if (!model.getState() === Record.RecordState.DETACHED) {
+                           if (model.getState() === Record.RecordState.DETACHED) {
                               if (this.getItemsActions()) {
                                  itemsInstances = this.getItemsActions().getItemsInstances();
                                  if (itemsInstances['delete']) {
