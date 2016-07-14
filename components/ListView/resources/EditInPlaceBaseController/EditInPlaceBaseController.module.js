@@ -5,13 +5,14 @@
 define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    [
       'js!SBIS3.CORE.CompoundControl',
+      'js!SBIS3.CORE.PendingOperationProducerMixin',
       'html!SBIS3.CONTROLS.EditInPlaceBaseController/AddRowTpl',
       'js!SBIS3.CONTROLS.EditInPlace',
       'js!WS.Data/Entity/Model',
       'js!WS.Data/Di',
       'js!WS.Data/Entity/Record'
    ],
-   function (CompoundControl, AddRowTpl, EditInPlace, Model, Di, Record) {
+   function (CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Di, Record) {
 
       'use strict';
 
@@ -24,7 +25,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
 
       var
          CONTEXT_RECORD_FIELD = 'sbis3-controls-edit-in-place',
-         EditInPlaceBaseController = CompoundControl.extend(/** @lends SBIS3.CONTROLS.EditInPlaceBaseController.prototype */ {
+         EditInPlaceBaseController = CompoundControl.extend([PendingOperationProducerMixin],/** @lends SBIS3.CONTROLS.EditInPlaceBaseController.prototype */ {
             $protected: {
                _options: {
                   editingTemplate: undefined,
@@ -59,8 +60,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                // Используется для хранения Deferred при сохранении в редактировании по месту.
                // Обязательно нужен, т.к. лишь таким способом можно обработать несколько последовательных вызовов endEdit и вернуть ожидаемый результат (Deferred).
                _savingDeferred: undefined,
-               _editingDeferred: undefined,
                _editingRecord: undefined,
+               _pendingOperation: undefined, // Используется для хранения операции ожидания, зарегистрированной у первого родителя с SBIS3.CORE.PendingOperationParentMixin
                _eipHandlers: null,
                //TODO: Данная переменная нужна для автодобавления по enter(mode autoadd), чтобы определить в какой папке происходит добавление элемента
                //Вариант решения проблемы не самый лучший, и добавлен как временное решение для выпуска 3.7.3.150. В версию .200 придумать нормальное решение.
@@ -75,7 +76,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                };
                this._createEip();
                this._savingDeferred = $ws.proto.Deferred.success();
-               this._editingDeferred = $ws.proto.Deferred.success();
             },
 
             isEdit: function() {
@@ -121,15 +121,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      onInit: function() {
                         self._notify('onInitEditInPlace', this);
                      },
-                     onChangeHeight: this._onChangeHeight.bind(this),
-                     //TODO: EIP Авраменко, Сухоручкин: сейчас сделано через pendingOperation, в будущем переделать на команды блокировки родительких компонентов
-                     onBeginEdit: function() {
-                        self._editingDeferred = new $ws.proto.Deferred();
-                        self._sendLockCommand(self._editingDeferred);
-                     },
-                     onEndEdit: function() {
-                        self._editingDeferred.callback();
-                     }
+                     onChangeHeight: this._onChangeHeight.bind(this)
                   }
                };
                if (this._options.endEditByFocusOut) {
@@ -222,7 +214,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                            parentProjItem = itemProjItem.getParent();
                            self._lastTargetAdding = parentProjItem.isRoot() ? null : parentProjItem;
                         }
-                        return preparedRecord;
+                        self._addPendingOperation();
                      }
                      return preparedRecord;
                   })
@@ -257,20 +249,35 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
             },
             /**
-             * Отправить команду блокировки
-             * todo EIP Авраменко, Сухоручкин: сейчас сделано через pendingOperation, в будущем переделать на команды блокировки родительких компонентов
+             * Регистрирует операцию ожидания у родителя, к которому подмешан SBIS3.CORE.PendingOperationParentMixin
              * @private
              */
-            _sendLockCommand: function(savingDeferred) {
+            _addPendingOperation: function() {
                var
-                  opener = this.getOpener(),
-                  dialog;
+                  opener = this.getOpener();
                if (opener) {
-                  dialog = opener.getParentByClass('SBIS3.CORE.RecordArea') || opener.getTopParent();
-                  if (dialog) {
-                     dialog.addPendingOperation(savingDeferred);
-                  }
+                  this._pendingOperation = this._registerPendingOperation('EditInPlaceController', this._handlePendingOperation.bind(this), opener);
                }
+            },
+            /**
+             * Разрегистрирует операцию ожидания у родителя, к которому подмешан SBIS3.CORE.PendingOperationParentMixin
+             * @private
+             */
+            _removePendingOperation: function() {
+               var
+                  opener = this.getOpener();
+               if (opener) {
+                  this._unregisterPendingOperation(this._pendingOperation);
+               }
+            },
+            /**
+             * Обрабатывает операцию ожидания, пришедшую от родителя, в котором была зарегистрирована эта операция (метод _addPendingOperation)
+             * @param withSave
+             * @returns {*}
+             * @private
+             */
+            _handlePendingOperation: function(withSave) {
+               return this.endEdit(!!withSave);
             },
             /**
              * Завершить редактирование по месту
@@ -306,7 +313,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   withSaving = endEditResult;
                }
                if (!withSaving || eip.validate()) {
-                  this._sendLockCommand(this._savingDeferred);
                   this._afterEndEdit(eip, withSaving);
                   return this._savingDeferred;
                } else {
@@ -339,6 +345,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                } else {
                   this._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
                }
+               this._removePendingOperation();
             },
             //TODO: метод нужен для того, чтобы подогнать формат рекорда под формат рекордсета.
             //Выписана задача Мальцеву, который должен убрать этот метод отсюда, и предаставить механизм выполняющий необходимую задачу.
@@ -387,6 +394,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         //т.к. при добавлении создаётся новая tr у которой изначально нет высоты и опции записи не могут верно спозиционироваться.
                         self._eip.recalculateHeight();
                         self._notify('onAfterBeginEdit', model);
+                        self._addPendingOperation();
                         return model;
                      });
                   });
@@ -487,10 +495,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                //Сохранение при этом продолжит работать в обычном режиме.
                if (!this._savingDeferred.isReady()) {
                   this._savingDeferred.errback();
-               }
-               //Снимем блокировку, если редактирование разрушается
-               if (!this._editingDeferred.isReady()) {
-                  this._editingDeferred.callback();
                }
                EditInPlaceBaseController.superclass.destroy.apply(this, arguments);
             }
