@@ -8,8 +8,8 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CORE.CompoundActiveFixMixin',
       'js!SBIS3.CONTROLS.ItemsControlMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
-      'js!WS.Data/Query/Query',
-      'js!WS.Data/Entity/Record',
+      'js!SBIS3.CONTROLS.Data.Query.Query',
+      'js!SBIS3.CONTROLS.Data.Record',
       'js!SBIS3.CONTROLS.Selectable',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.DecorableMixin',
@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.EditInPlaceClickController',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.ScrollWatcher',
-      'js!WS.Data/Collection/IBind',
+      'js!SBIS3.CONTROLS.Data.Bind.ICollection',
       'i18n!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
       'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
@@ -1032,7 +1032,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _onChangeHoveredItem: function (target) {
             if (this._isSupportedItemsToolbar()) {
-         		if (target.container){
+               if (target.container){
                   if (!this._touchSupport) {
                      this._showItemsToolbar(target);
                   }
@@ -1148,6 +1148,17 @@ define('js!SBIS3.CONTROLS.ListView',
             /* Клик по чекбоксу не должен вызывать активацию элемента */
             if(!$(target).hasClass('js-controls-ListView__itemCheckBox')) {
                this._activateItem(id);
+            }
+         },
+         //TODO: Временное решение для выделения "всех" (на самом деле первой тысячи) записей
+         setSelectedAll : function() {
+            if (this._options.infiniteScroll){
+               this.reload(this.getFilter(), this.getSorting(), 0, 1000)
+                  .addCallback(function() {
+                     ListView.superclass.setSelectedItemsAll.call(this);
+                  }.bind(this));
+            } else {
+               ListView.superclass.setSelectedItemsAll.call(this);
             }
          },
          _drawSelectedItems: function (idArray) {
