@@ -722,7 +722,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
        * @noShow
        */
       initializeSelectedItems: function() {
-         this._options.selectedItems =  new List();
+         this._options.selectedItems =  new List({
+            ownerShip: false
+         });
       },
 
       _dataLoadedCallback : function(){
