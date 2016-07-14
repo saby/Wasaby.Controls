@@ -444,9 +444,13 @@ define('js!SBIS3.CONTROLS.RichEditor',
           */
          setText: function(text) {
             var
-               newText = this._prepareContent(text);
-            if (text !== this._options.text) {
-               newText = this._drawText(newText);
+               newText = this._prepareContent(text);//приведение текста к валидному значению
+            //если в редакторе или в контексте значение отличается то переписываем его
+            if (newText !== this._getTinyEditorValue() || text !== this.getText()) {
+               ///вначале надо проставить значение в редактор ( оно может поменяться ) только потом нотифицировать новым значением
+               this._drawText(newText);
+               //в контекст кладём тескст без пустых строк вначале и в конце
+               newText = this._trimText(this._curValue());
                this._textChanged = true;
                this._options.text = newText;
                this._notify('onTextChange', newText);
@@ -503,7 +507,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
                this._readyContolDeffered.errback();
             }
             for (var i in this._instances) {
-               this._instances[i].destroy instanceof Function && this._instances[i].destroy();
+               if (this._instances.hasOwnProperty(i)) {
+                  this._instances[i].destroy instanceof Function && this._instances[i].destroy();
+               }
             }
             if (this._options.toolbar) {
                this._toggleToolbarButton.unbind('click');
@@ -688,7 +694,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             }
             this._tinyEditor.focus();
             //при установке стиля(через форматтер) не стреляет change
-            this.setText(this._curValue());
+            this.setText(this._getTinyEditorValue());
          },
 
          /**
@@ -700,7 +706,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             this._applyFormat('forecolor', color);
             this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
-            this.setText(this._curValue());
+            this.setText(this._getTinyEditorValue());
          },
 
          /**
@@ -1266,7 +1272,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             if ($ws._const.browser.isMobileIOS || $ws._const.browser.isMobileAndroid) {
                //TODO: https://github.com/tinymce/tinymce/issues/2533
                this._inputControl.on('input', function() {
-                  self.setText(self._curValue());
+                  self.setText(self._getTinyEditorValue());
                });
             }
 
@@ -1287,7 +1293,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
             editor.on('keyup', function(e) {
                self._typeInProcess = false;
-               self.setText(self._curValue());
+               self.setText(self._getTinyEditorValue());
             });
 
             editor.on('keydown', function(e) {
@@ -1326,19 +1332,19 @@ define('js!SBIS3.CONTROLS.RichEditor',
                //    то, он оставит сверху один пустой абзац, который не удалить через визуальный режим, и будет писать в новом
                // </проблема>
                if (!editor.selection.isCollapsed()) {
-                  if (editor.selection.getContent() == self._curValue()) {
+                  if (editor.selection.getContent() == self._getTinyEditorValue()) {
                      if (!e.ctrlKey && e.charCode !== 0) {
                         editor.bodyElement.innerHTML = '';
                      }
                   }
                }
                setTimeout(function() {
-                  self._togglePlaceholder(self._curValue());
+                  self._togglePlaceholder(self._getTinyEditorValue());
                }, 1);
             });
 
             editor.on('change', function(e) {
-               self.setText(self._curValue());
+               self.setText(self._getTinyEditorValue());
             });
 
             //Сообщаем компоненту об изменении размеров редактора
@@ -1348,11 +1354,11 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
             //реагируем на то что редактор изменился при undo/redo
             editor.on('undo', function() {
-               self.setText(self._curValue());
+               self.setText(self._getTinyEditorValue());
             });
 
             editor.on('redo', function() {
-               self.setText(self._curValue());
+               self.setText(self._getTinyEditorValue());
             });
 
             //сохранение истории при закрытии окна
@@ -1504,24 +1510,27 @@ define('js!SBIS3.CONTROLS.RichEditor',
           * @returns {*} Текущее значение (в формате html-кода)
           */
          _getTinyEditorValue: function(){
-            var
-               trim = function(str) {
-                  var
-                     beginReg = new RegExp('^<p>(&nbsp; *)*</p>'),// регулярка начала строки
-                     endReg = new RegExp('<p>(&nbsp; *)*</p>$'),// регулярка начала строки
-                     regResult;
-                  while ((regResult = beginReg.exec(str)) !== null)
-                  {
-                     str = str.substr(regResult[0].length + 1);
-                  }
-                  while ((regResult = endReg.exec(str)) !== null)
-                  {
-                     str = str.substr(0, str.length - regResult[0].length - 1);
-                  }
-                  return (str === null || str === undefined) ? '' : ('' + str).replace(/^\s*|\s*$/g, '');
-               };
+            return this._tinyEditor.serializer.serialize(this._tinyEditor.getBody(), {format: 'html', get: true, getInner: true});
+         },
 
-            return trim(this._tinyEditor.serializer.serialize(this._tinyEditor.getBody(), {format: 'html', get: true, getInner: true}));
+         /**
+          * Убрать пустые строки из начала и конца текста
+          * @returns {*} текст без пустх строк вначале и конце
+          */
+         _trimText: function(text) {
+            var
+               beginReg = new RegExp('^<p>(&nbsp; *)*</p>'),// регулярка начала строки
+               endReg = new RegExp('<p>(&nbsp; *)*</p>$'),// регулярка начала строки
+               regResult;
+            while ((regResult = beginReg.exec(text)) !== null)
+            {
+               text = text.substr(regResult[0].length + 1);
+            }
+            while ((regResult = endReg.exec(text)) !== null)
+            {
+               text = text.substr(0, text.length - regResult[0].length - 1);
+            }
+            return (text === null || text === undefined) ? '' : ('' + text).replace(/^\s*|\s*$/g, '');
          },
 
          /**
@@ -1543,7 +1552,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
          _togglePlaceholder:function(value){
             var
                curValue = value || this.getText();
-            this.getContainer().toggleClass('fre-empty', (curValue === '' || curValue === undefined || curValue === null) && this._inputControl.html().indexOf('</li>') < 0 && this._inputControl.html().indexOf('<p>&nbsp;') < 0);
+            this.getContainer().toggleClass('controls-RichEditor__empty', (curValue === '' || curValue === undefined || curValue === null) && this._inputControl.html().indexOf('</li>') < 0 && this._inputControl.html().indexOf('<p>&nbsp;') < 0);
          },
 
          _addToHistory: function(valParam) {
@@ -1615,7 +1624,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             this._tinyEditor.formatter.apply(align, true);
             //если смена стиля будет сразу после setValue то контент не установится,
             //так как через форматттер не стреляет change
-            this.setText(this._curValue());
+            this.setText(this._getTinyEditorValue());
          },
 
          _setButtonsState: function(state, ignoreSourceButton) {
@@ -1818,9 +1827,8 @@ define('js!SBIS3.CONTROLS.RichEditor',
          //установка значения в редактор
          _drawText: function(text) {
             var
-               autoFormat = true,
-               newText = text;
-            if (!this._typeInProcess && !$ws.helpers.compareValues(text, this._curValue()) && text !== undefined) {
+               autoFormat = true;
+            if (!this._typeInProcess && !$ws.helpers.compareValues(text, this._curValue())) {
                //Подготовка значения если пришло не в html формате
                if (text && text[0] !== '<') {
                   text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
@@ -1828,22 +1836,20 @@ define('js!SBIS3.CONTROLS.RichEditor',
                }
                text = this._replaceWhitespaces(text);
                if (this.isEnabled() && this._tinyReady.isReady()) {
-                  this._tinyEditor.setContent(this._prepareContent(text), autoFormat ? undefined : {format: 'raw'});
+                  this._tinyEditor.setContent(text, autoFormat ? undefined : {format: 'raw'});
                   this._tinyEditor.undoManager.add();
                   if (this.isActive() && !this._sourceContainerIsActive() && !!text) {
                      this.setCursorToTheEnd();
                   }
-                  newText = this._curValue();
                } else {
-                  newText = text || '';
+                  text = text || '';
                   if (this._tinyReady.isReady()) {
-                     this._tinyEditor.setContent(newText);
+                     this._tinyEditor.setContent(text);
                   } else {
-                     this._inputControl.html(Sanitize(newText));
+                     this._inputControl.html(Sanitize(text));
                   }
                }
             }
-            return newText;
          },
 
          _fillHistory: function() {

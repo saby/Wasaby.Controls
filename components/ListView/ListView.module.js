@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.ItemsControlMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
       'js!WS.Data/Query/Query',
+      'js!WS.Data/Entity/Record',
       'js!SBIS3.CONTROLS.Selectable',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.DecorableMixin',
@@ -34,7 +35,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
-   function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query,
+   function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
              Link, ScrollWatcher, IBindCollection, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate) {
@@ -45,7 +46,7 @@ define('js!SBIS3.CONTROLS.ListView',
          buildTplArgsLV = function(cfg) {
             var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
             tplOptions.multiselect = cfg.multiselect;
-            tplOptions.decorators = this._decorators;
+            tplOptions.decorators = cfg._decorators;
             tplOptions.colorField = cfg.colorField;
 
             return tplOptions;
@@ -85,7 +86,7 @@ define('js!SBIS3.CONTROLS.ListView',
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
-      var ListView = CompoundControl.extend([CompoundActiveFixMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
+      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DecorableMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem Происходит при переводе курсора мыши на другой элемент коллекции списка.
@@ -1348,6 +1349,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this._drawSelectedItem(this.getSelectedKey());
          },
          redraw: function () {
+            /*TODO Косяк с миксинами - не вызывается before из decorableMixin временное решение*/
+            if (this._options._decorators) {
+               this._options._decorators.update(this);
+            }
             ListView.superclass.redraw.apply(this, arguments);
             this._checkScroll(); //todo Убрать в 150, когда будет правильный рендер изменившихся данных
          },
@@ -1440,7 +1445,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            this._getItemsToolbar().unlockToolbar();
                            //Отображаем кнопки редактирования
                            this._getItemsToolbar().showEditActions();
-                           if (!model.isStored()) {
+                           if (model.getState() === Record.RecordState.DETACHED) {
                               if (this.getItemsActions()) {
                                  itemsInstances = this.getItemsActions().getItemsInstances();
                                  if (itemsInstances['delete']) {
@@ -1865,7 +1870,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         //TODO новый миксин не задействует декоратор лесенки в принципе при любых действиях, кроме первичной отрисовки
                         //это неправильно, т.к. лесенка умеет рисовать и дорисовывать данные, если они добавляются последовательно
                         //здесь мы говорим, чтобы лесенка отработала при отрисовке данных
-                        var ladder = this._decorators.getByName('ladder');
+                        var ladder = this._options._decorators.getByName('ladder');
                         if (ladder){
                            ladder.setIgnoreEnabled(true);
                         }
@@ -1906,7 +1911,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _preScrollLoading: function(){
-            if (this._scrollWatcher && (!this._scrollWatcher.hasScroll(this.getContainer()) || this.isScrollOnBottom())) {
+            var hasScroll = this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer()), 
+               existFloatArea = this._existFloatArea(),
+               isScrollOnBottom = this.isScrollOnBottom();
+            // Если нет скролла или скролл внизу, значит нужно догружать еще записи (floatArea отжирает скролл, поэтому если она открыта - не грузим)
+            if ((!hasScroll || isScrollOnBottom) && !existFloatArea) {
                this._nextLoad();
             } else {
                this._moveTopScroll();
@@ -1949,7 +1958,7 @@ define('js!SBIS3.CONTROLS.ListView',
             scrollContainer = isBody ? $(window) : this._options.infiniteScrollContainer;
             // Если scrollContainer это body и есть floatArea со скроллом, то у body скролла нет, а значит он не может быть снизу (его же нет!)
             // Todo: когда будут классные скроллы (3.7.4.100?) - можно будет выпилить
-            if (scrollableContainer && isBody && !this._existFloatArea()){
+            if (scrollableContainer){
                scrollContainer = $(scrollContainer);
                return (scrollableContainer.scrollHeight - (scrollableContainer.scrollTop + scrollContainer.height())) == 0;
             }
