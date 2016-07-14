@@ -36,7 +36,7 @@
       }
    }
    .ws-button-caption, .ws-button-image {
-      line-height: 38px  !important;
+      line-height: 40px  !important;
    }
 
    &.ws-smp-dlg-button {
@@ -76,7 +76,7 @@
    font-size: 24px  !important;
    min-height: 40px  !important;
    height: 40px  !important;
-   line-height: 38px !important;
+   line-height: 40px !important;
 }
 
 .ws-smp-dlg h2 {
@@ -170,14 +170,6 @@
       }
    }
 }
-
-.ws-window-titlebar {
-   height: 60px !important;
-   line-height: 60px !important;
-   .ws-float-area-title {
-      font-weight: normal !important;
-   }
-}
 .ws-window-title  {
    margin-left: 8px !important;
    font-size: 32px !important;
@@ -188,15 +180,18 @@
       color: #313E78 !important;
    }
 }
-.ws-window-titlebar {
+.ws-window-titlebar, .ws-date-range-choose-menu-dates {
+   height: 60px !important;
+   line-height: 60px !important;
+   .ws-float-area-title, .ws-window-titlebar-action {
+      top: 10px !important;
+      font-weight: normal !important;
+   }
    &.active {
       background-color: #F4F4F4 !important;
    }
-
-   .ws-window-titlebar-action {
-      top: 10px !important;
-   }
-
+}
+.ws-window-titlebar, .ws-date-range-choose-menu-block {
    .ws-window-titlebar-action.close {
       width: 60px !important;
       height: 40px !important;
@@ -206,6 +201,45 @@
       }
       &:active {
          background: @closeFilterButtonImageHover !important;
+      }
+   }
+}
+.ws-date-range-choose-menu-block {
+   .ws-window-titlebar-action.close {
+      top: 10px !important;
+   }
+}
+
+.ws-date-range-choose-menu-dates {
+   padding: 0 !important;
+   .ws-date-range-choose-confirm{
+      top: 10px;
+      right: 75px;
+
+      &.ws-date-range-choose-confirm-button {
+         width: 115px;
+      }
+   }
+   .ws-date-range-choose-navigation{
+      top: 20px;
+      right: 210px;
+   }
+
+   .ws-date-range-choose-input-block{
+      padding: 10px 0;
+      height: 40px;
+      max-width: 200px;
+
+      .ws-field-date .ws-field {
+         border: 1px solid transparent;
+         height: 40px;
+      }
+
+      .ws-date-range-choose-input-block-text{
+         font-size: 24px;
+         color: #000000;
+         text-align: left;
+         line-height: 40px;
       }
    }
 }
