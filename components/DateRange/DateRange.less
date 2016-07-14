@@ -1,5 +1,5 @@
 .controls-DateRange {
-   line-height: 24px;
+   line-height: @date-range-line-height;
 
    &.ws-validation-error {
       outline-width: @formatted-text-box-error-border-width;
@@ -12,6 +12,7 @@
       border-radius: 0;
       .controls-Button__text {
          margin: 0 8px;
+         line-height: @date-range-text-line-height;
       }
    }
 }
