@@ -218,7 +218,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             _needPasteImage: false,
             _buttonsState: undefined,
             _clipboardText: undefined,
-            _mousedown: false //magic
+            _mouseIsPressed: false //Флаг того что мышь была зажата в редакторе
          },
 
          _modifyOptions: function(options) {
@@ -447,7 +447,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             var
                newText = this._prepareContent(text);//приведение текста к валидному значению
             //если в редакторе или в контексте значение отличается то переписываем его
-            if (newText !== this._getTinyEditorValue() || text !== this.getText()) {
+            if (newText !== this._curValue() || text !== this.getText()) {
                ///вначале надо проставить значение в редактор ( оно может поменяться ) только потом нотифицировать новым значением
                this._drawText(newText);
                //в контекст кладём тескст без пустых строк вначале и в конце
@@ -1366,19 +1366,19 @@ define('js!SBIS3.CONTROLS.RichEditor',
             //Клик окончится на каком то элементе, listview например стрельнет фокусом на себе
             //если  есть активный редактор то запомнится выделение(lastFocusBookmark) и прежде чем
             //введется символ сработает focusin(который не перебить непонятно почему)
-            //в нём сработает воостановление выделения, а выделенного уже и нет => error
+            //в нём сработает восстановление выделения, а выделенного уже и нет => error
             //Решение: в mouseLeave смотреть зажата ли мышь, и если зажата убирать activeEditor
             //тк activeEditor будет пустой не запомнится LastFocusBookmark и не будет восстановления выделения
-            //activeEditor восстановится сразу после ввода символа а может и раньше, главно что восстновления авыделения не будет
+            //activeEditor восстановится сразу после ввода символа а может и раньше, главное что восстновления выделения не будет
             if (!$ws._const.browser.isMobileIOS && !$ws._const.browser.isMobileAndroid) {
                editor.on('mousedown', function(e) {
-                  self._mousedown = true;
+                  self._mouseIsPressed = true;
                });
                editor.on('mouseup', function(e) {
-                  self._mousedown = false;
+                  self._mouseIsPressed = false;
                });
                editor.on('focusout', function(e) {
-                  if (self._mousedown){
+                  if (self._mouseIsPressed){
                      editor.editorManager.activeEditor = false;
                   }
                });
