@@ -1655,8 +1655,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
       _isNeedToRedraw: function(){
-         //Проверяем _needToRedraw для поддержки старой медленной отрисовки
-      	return !!this._getItemsContainer() && this._needToRedraw;
+         // Проверяем _needToRedraw для поддержки старой медленной отрисовки
+         // Если быстрая отрисовка - считаем, что перерисовка необходима
+         return !!this._getItemsContainer() && (!this._isSlowDrawing() || this._needToRedraw);
       },
 
       _changeItemProperties: function(item, property) {
