@@ -17,8 +17,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          tplOptions = cfg._buildTplArgsDG.call(this, cfg);
          tvOptions = cfg._buildTplArgsTV.call(this, cfg);
          $ws.core.merge(tplOptions, tvOptions);
-         tvOptions.arrowActivatedHandler = cfg.arrowActivatedHandler;
-         tvOptions.editArrow = cfg.editArrow;
+         tplOptions.arrowActivatedHandler = cfg.arrowActivatedHandler;
+         tplOptions.editArrow = cfg.editArrow;
          return tplOptions;
       };
 
