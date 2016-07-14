@@ -8,9 +8,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
       'html!SBIS3.CONTROLS.EditInPlaceBaseController/AddRowTpl',
       'js!SBIS3.CONTROLS.EditInPlace',
       'js!WS.Data/Entity/Model',
-      'js!WS.Data/Di'
+      'js!WS.Data/Di',
+      'js!WS.Data/Entity/Record'
    ],
-   function (CompoundControl, AddRowTpl, EditInPlace, Model, Di) {
+   function (CompoundControl, AddRowTpl, EditInPlace, Model, Di, Record) {
 
       'use strict';
 
@@ -251,7 +252,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   //Запрет на редактирование может быть только у существующих элементов. Если происходит добавление по месту,
                   //то не логично запрещать его. Например почти все кто использует редактирование, запрещают редактирование папок,
                   //но не нужно запрещать редактирование только что добавленных папок.
-                  allowEdit = record.getState() === 'Added' || beginEditResult !== false;
+                  allowEdit = record.getState() === Record.RecordState.DETACHED || beginEditResult !== false;
                   return $ws.proto.Deferred.success(allowEdit ? record : false);
                }
             },
@@ -320,7 +321,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                var
                   self = this,
                   eipRecord = eip.getEditingRecord(),
-                  isAdd = eipRecord.getState() === 'Added';
+                  isAdd = eipRecord.getState() === Record.RecordState.DETACHED;
                if (this._editingRecord) {
                   this._editingRecord.merge(eipRecord);
                   this._editingRecord = undefined;
