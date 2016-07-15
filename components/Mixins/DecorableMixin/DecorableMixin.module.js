@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.DecorableMixin', [
    var DecorableMixin = /** @lends SBIS3.CONTROLS.DecorableMixin.prototype */{
       $protected: {
          _options: {
+            _decorators: null,
             /**
              * @cfg {Boolean} Использовать подсветку фразы
              * @see isHighlightEnabled
@@ -43,33 +44,33 @@ define('js!SBIS3.CONTROLS.DecorableMixin', [
              * @see setColorField
              */
             colorField: ''
-         },
-
-         /**
-          * @var {SBIS3.CONTROLS.Utils.HtmlDecorators} Набор декораторов
-          */
-         _decorators: null
+         }
       },
 
-      $constructor: function () {
-         this._decorators = new HtmlDecorators();
+      around : {
+         _modifyOptions : function(parentFnc, cfg) {
+            var newCfg = parentFnc.call(this, cfg);
+            newCfg._decorators = new HtmlDecorators();
 
-         this._decorators.add(new HighlightDecorator({
-            enabledGetter: 'isHighlightEnabled',
-            textGetter: 'getHighlightText'
-         }));
+            newCfg._decorators.add(new HighlightDecorator({
+               enabledGetter: 'isHighlightEnabled',
+               textGetter: 'getHighlightText'
+            }));
 
-         this._decorators.add(new ColorMarkDecorator({
-            enabledGetter: 'isColorMarkEnabled'
-         }), 'color');
+            newCfg._decorators.add(new ColorMarkDecorator({
+               enabledGetter: 'isColorMarkEnabled'
+            }), 'color');
+            return newCfg;
+         }
       },
+
 
       before: {
          destroy: function () {
-            this._decorators.destroy();
+            this._options._decorators.destroy();
          },
          redraw: function () {
-            this._decorators.update(this);
+            this._options._decorators.update(this);
          }
       },
       after: {

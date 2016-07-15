@@ -1197,7 +1197,12 @@
 @month-picker-item-year-text-alignment:         center;
 @month-picker-item-year-padding:                2px;
 
+// ---------- //
+// Data Range //
+// ---------- //
 
+@date-range-line-height:                        24px;
+@date-range-text-line-height:                   normal;
 
 // ------------- //
 // Edit at place //
@@ -1600,25 +1605,23 @@
 @DropdownList-picker-border:                          2px solid @DropdownList-border-color;
 @DropdownList-picker-head-border-radius:              5px 5px 0 0;
 @DropdownList-picker-list-border-radius:              0 0 5px 5px;
-@DropdownList-picker-list-right-border-radius:        0 0 5px 5px;
-@DropdownList-picker-list-left-border-radius:         0 0 5px 5px;
+@DropdownList-picker-list-right-border-radius:        0 5px 5px 5px;
+@DropdownList-picker-list-left-border-radius:         5px 0 5px 5px;
 @DropdownList-picker-menu-font-size:                  15px;
 @DropdownList-picker-menu-white-space:                nowrap;
-@DropdownList-picker-menu-item-padding:               4px 20px;
-@DropdownList-picker-menu-check-box-margin:           0 2px;
+@DropdownList-picker-menu-item-padding:               4px 16px 4px 16px;
 @DropdownList-picker-menu-item-margin:                0;
 @DropdownList-picker-menu-item-multiselect-padding:   0;
 @DropdownList-picker-menu-item-color:                 @white-color;
 @DropdownList-picker-menu-item-hover:                 #F0F5FB;
-@DropdownList-picker-list-padding:                    4px 0;
 @DropdownList-linkStyleColor:                         #0055bb;
 @DropdownList-linkStyleHoverColor:                    #ff7033;
 @DropdownList-footer-buttonsBlock-position:           relative;
-@DropdownList-footer-buttonsBlock-height:             24px;
-@DropdownList-footer-buttonsBlock-padding-top:        4px;
+@DropdownList-footer-buttonsBlock-height:             32px;
 @DropdownList-footer-buttons-position:                absolute;
-@DropdownList-footer-hasMore-left:                    20px;
-@DropdownList-footer-select-right:                    20px;
+@DropdownList-footer-hasMore-left:                    16px;
+@DropdownList-footer-select-right:                    4px;
+@DropdownList-footer-select-top:                      @DropdownList-footer-select-right;
 //ProgressBar
 @controls-ProgressBar-height:                     17px;
 @controls-ProgressBar-empty-bg:                   #F3F3F3;
@@ -1792,7 +1795,7 @@
 
 // BreadCrumbs
 @breadcrumbs-top:                                  4px;
-@breadcrumbs-smallItems-font-size:                 13px;
+@breadcrumbs-smallItems-font-size:                 14px;
 @breadcrumbs-arrow-top:                            2px;
 @breadcrumbs-small-items-top:                      @breadcrumbs-top;
 
@@ -1811,10 +1814,10 @@
 @controls-InformationPopup-bg:                                white;
 @controls-InformationPopup-border:                            1px solid #CCCCCC;
 @controls-InformationPopup-border-top:                        3px solid;
-@controls-InformationPopup-default-state-border-top-color:    #0055BB;
-@controls-InformationPopup-success-state-border-top-color:    #7ACB49;
-@controls-InformationPopup-error-state-border-top-color:      #EF463A;
-@controls-InformationPopup-warning-state-border-top-color:    #FEC63F;
+@controls-InformationPopup-default-status-border-top-color:    #0055BB;
+@controls-InformationPopup-success-status-border-top-color:    #7ACB49;
+@controls-InformationPopup-error-status-border-top-color:      #EF463A;
+@controls-InformationPopup-warning-status-border-top-color:    #FEC63F;
 
 //NotificationPopup
 @controls-NotificationPopup-header-height:                                   48px;

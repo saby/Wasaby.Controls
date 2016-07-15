@@ -8,7 +8,8 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CORE.CompoundActiveFixMixin',
       'js!SBIS3.CONTROLS.ItemsControlMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
-      'js!SBIS3.CONTROLS.Data.Query.Query',
+      'js!WS.Data/Query/Query',
+      'js!WS.Data/Entity/Record',
       'js!SBIS3.CONTROLS.Selectable',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.DecorableMixin',
@@ -26,7 +27,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.EditInPlaceClickController',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.ScrollWatcher',
-      'js!SBIS3.CONTROLS.Data.Bind.ICollection',
+      'js!WS.Data/Collection/IBind',
       'js!WS.Data/Di',
       'i18n!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
@@ -36,10 +37,10 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
-   function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query,
-             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, DragEntityRow, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
+   function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
+             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
-             Link, ScrollWatcher, IBindCollection, Di, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate) {
+             Link, ScrollWatcher, IBindCollection, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate) {
 
       'use strict';
 
@@ -47,7 +48,7 @@ define('js!SBIS3.CONTROLS.ListView',
          buildTplArgsLV = function(cfg) {
             var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
             tplOptions.multiselect = cfg.multiselect;
-            tplOptions.decorators = this._decorators;
+            tplOptions.decorators = cfg._decorators;
             tplOptions.colorField = cfg.colorField;
 
             return tplOptions;
@@ -91,13 +92,13 @@ define('js!SBIS3.CONTROLS.ListView',
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
-      var ListView = CompoundControl.extend([CompoundActiveFixMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
+      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DecorableMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem Происходит при переводе курсора мыши на другой элемент коллекции списка.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Object} hoveredItem Объект, свойства которого описывают данные элемента коллекции списка, на который навели курсор мыши.
-          * @param {SBIS3.CONTROLS.Data.Model} record Элемент коллекции, на который перевели курсор.
+          * @param {WS.Data/Entity/Model} record Элемент коллекции, на который перевели курсор.
           * @param {Number|String} hoveredItem.key Первичный ключ элемента.
           * @param {jQuery|false} hoveredItem.container Контейнер визуального отображения элемента (DOM-элемент).
           * @param {Object} hoveredItem.position Объект, свойства которого описывают координаты контейнера визуального отображения элемента.
@@ -184,7 +185,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * @event onBeginAdd Возникает перед началом добавления записи по месту
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @returns {Object|SBIS3.CONTROLS.Data.Model} Данные которые попадут в поля созданного элемента.
+          * @returns {Object|WS.Data/Entity/Model} Данные которые попадут в поля созданного элемента.
           */
          /**
           * @event onAfterBeginEdit Возникает после начала редактирования (при непосредственном его начале)
@@ -194,7 +195,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * @event onEndEdit Возникает перед окончанием редактирования (и перед валидацией области редактирования).
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {SBIS3.CONTROLS.Data.Model} model Редактируемая модель.
+          * @param {WS.Data/Entity/Model} model Редактируемая модель.
           * @param {Boolean} withSaving Признак, по которому определяют тип завершения редактирования.
           * true - редактирование завершается сохранением изменений; false - отмена сохранения изменений путём нажатия клавиши Esc или переводом фокуса на другой контрол.
           * @returns {*} Возможные значения:
@@ -342,7 +343,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * <ul>
                 *    <li>contaner - контейнер визуального отображения записи.</li>
                 *    <li>id - идентификатор записи.</li>
-                *    <li>item - запись (экземпляр класса {@link SBIS3.CONTROLS.Data.Model}).</li>
+                *    <li>item - запись (экземпляр класса {@link WS.Data/Entity/Model}).</li>
                 * </ul>
                 * @property {Boolean} allowChangeEnable Признак, по которому устанавливается возможность использования операций в случае, если взаимодействие с контролом запрещено (см. опцию {@link $ws.proto.Control#enabled}).
                 * @editor icon ImageEditor
@@ -443,7 +444,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Аргументы функции:
                 * <ol>
                 *    <li>id - идентификатор элемента коллекции - строки, по которой был произведён клик.</li>
-                *    <li>item - элемент коллекции, по строке отображения которого был произведён клик; экземпляр класса {@link SBIS3.CONTROLS.Data.Record} с данными выбранной записи.</li>
+                *    <li>item - элемент коллекции, по строке отображения которого был произведён клик; экземпляр класса {@link WS.Data/Entity/Record} с данными выбранной записи.</li>
                 *    <li>target - контейнер визуального отображения (DOM-элемент) строки, по которой был произведён клик.</li>
                 * </ol>
                 * Установить или заменить функцию - обработчик клика на строку можно с помощью метода {@link setElemClickHandler}
@@ -1358,6 +1359,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this._drawSelectedItem(this.getSelectedKey());
          },
          redraw: function () {
+            /*TODO Косяк с миксинами - не вызывается before из decorableMixin временное решение*/
+            if (this._options._decorators) {
+               this._options._decorators.update(this);
+            }
             ListView.superclass.redraw.apply(this, arguments);
             this._checkScroll(); //todo Убрать в 150, когда будет правильный рендер изменившихся данных
          },
@@ -1450,7 +1455,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            this._getItemsToolbar().unlockToolbar();
                            //Отображаем кнопки редактирования
                            this._getItemsToolbar().showEditActions();
-                           if (!model.isStored()) {
+                           if (model.getState() === Record.RecordState.DETACHED) {
                               if (this.getItemsActions()) {
                                  itemsInstances = this.getItemsActions().getItemsInstances();
                                  if (itemsInstances['delete']) {
@@ -1567,10 +1572,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _findItemByElement: function(target){
-            //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
-            //она есть в _items(например при добавлении или фейковый корень). Метод _findItemByElement в данном случае вернёт
-            //пустой массив. В .150 править этот метод опасно, потому что он много где используется. В .200 переписать метод
-            //_findItemByElement, без завязки на _items.
             if(!target.length) {
                return [];
             }
@@ -1835,6 +1836,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _nextLoad: function () {
             var self = this,
                loadAllowed  = this._isAllowInfiniteScroll();
+            //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
             if (!this._scrollWatcher.hasScroll(this.getContainer())){
                this._container.addClass('controls-ListView__outside-scroll-loader');
             } else {
@@ -1855,8 +1857,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                   this.getItems().setMetaData(dataSet.getMetaData());
                   self._infiniteScrollOffset += self._limit;
+                  self._hideLoadingIndicator();
                   if (!hasNextPage) {
-                     self._hideLoadingIndicator();
                      this._toggleEmptyData(!self.getItems().getCount());
                   }
                   self._notify('onDataMerge', dataSet);
@@ -1878,7 +1880,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         //TODO новый миксин не задействует декоратор лесенки в принципе при любых действиях, кроме первичной отрисовки
                         //это неправильно, т.к. лесенка умеет рисовать и дорисовывать данные, если они добавляются последовательно
                         //здесь мы говорим, чтобы лесенка отработала при отрисовке данных
-                        var ladder = this._decorators.getByName('ladder');
+                        var ladder = this._options._decorators.getByName('ladder');
                         if (ladder){
                            ladder.setIgnoreEnabled(true);
                         }
@@ -1919,7 +1921,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _preScrollLoading: function(){
-            if (this._scrollWatcher && (!this._scrollWatcher.hasScroll(this.getContainer()) || this.isScrollOnBottom())) {
+            var hasScroll = this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer()),
+               existFloatArea = this._existFloatArea(),
+               isScrollOnBottom = this.isScrollOnBottom();
+            // Если нет скролла или скролл внизу, значит нужно догружать еще записи (floatArea отжирает скролл, поэтому если она открыта - не грузим)
+            if ((!hasScroll || isScrollOnBottom) && !existFloatArea) {
                this._nextLoad();
             } else {
                this._moveTopScroll();
@@ -1962,7 +1968,7 @@ define('js!SBIS3.CONTROLS.ListView',
             scrollContainer = isBody ? $(window) : this._options.infiniteScrollContainer;
             // Если scrollContainer это body и есть floatArea со скроллом, то у body скролла нет, а значит он не может быть снизу (его же нет!)
             // Todo: когда будут классные скроллы (3.7.4.100?) - можно будет выпилить
-            if (scrollableContainer && isBody && !this._existFloatArea()){
+            if (scrollableContainer){
                scrollContainer = $(scrollContainer);
                return (scrollableContainer.scrollHeight - (scrollableContainer.scrollTop + scrollContainer.height())) == 0;
             }
@@ -2313,7 +2319,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @property {String} [parentId] Идентификатор узла, в котором будет происходить добавление.
           * @property {String} [addPosition = bottom] Расположение строки с добавлением по месту.
           * Опция может принимать значение 'top' или 'bottom'.
-          * @property {SBIS3.CONTROLS.Data.Model|Object} [model] Модель элемента коллекции, значения полей которой будут использованы при создании нового элемента.
+          * @property {WS.Data/Entity/Model|Object} [model] Модель элемента коллекции, значения полей которой будут использованы при создании нового элемента.
           * В упрощенном варианте можно передать объект, свойствами которого будут поля создаваемого элемента коллекции. Например, установим создание нового элемента с предопределенным значением поля 'Наименование':
           * <pre>
           * {
@@ -2354,7 +2360,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @remark
           * Используется для активации редактирования по месту без клика пользователя по элементу коллекции.
           * При выполнении команды происходят события {@link onBeginEdit} и {@link onAfterBeginEdit}.
-          * @param {SBIS3.CONTROLS.Data.Model} record Элемент коллекции, для которого требуется активировать редактирование по месту.
+          * @param {WS.Data/Entity/Model} record Элемент коллекции, для которого требуется активировать редактирование по месту.
           * @example
           * <pre>
           *    myListView.sendCommand('beginEdit', record);
@@ -2685,10 +2691,6 @@ define('js!SBIS3.CONTROLS.ListView',
                resultRow.remove();
             }
          }
-      });
-
-      Di.register('listview.defaultdragfactory', function(dragObject, e) {
-         return new DragEntityRow();
       });
 
       return ListView;

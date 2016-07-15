@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!SBIS3.CONTROLS.Data.Model'], function(ActionBase, Dialog, FloatArea, Model){
+define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!WS.Data/Entity/Model'], function(ActionBase, Dialog, FloatArea, Model){
    'use strict';
 
    /**
@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             /**
              * @cfg {*} Устанавливает связанный список, для которого будет открываться диалог редактирования записей.
              * @remark
-             * Список должен быть с примесью миксинов ({@link SBIS3.CONTROLS.DSMixin} или {@link SBIS3.CONTROLS.Data.Collection.IList}) для работы с однотипными элементами.
+             * Список должен быть с примесью миксинов ({@link SBIS3.CONTROLS.DSMixin} или {@link WS.Data/Collection/IList}) для работы с однотипными элементами.
              * Подробнее о базовых платформенных списках вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-types/">Виды списков</a>.
              */
             linkedObject: undefined
@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
           */
          _linkedModelKey: undefined,
          /**
-          * @var {SBIS3.CONTROLS.Data.Model} Запись которая пришла на редктирование, из метода прочитать или создать
+          * @var {WS.Data/Entity/Model} Запись которая пришла на редктирование, из метода прочитать или создать
           */
          _record: undefined
       },
@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        * @property {Boolean} newModel Признак: true - в диалоге редактирования открыта новая запись, которой не существует в источнике данных.
        * @property {Object} filter Объект, данные которого будут использованы в качестве инициализирующих данных при создании новой записи.
        * Название свойства - это название поля записи, а значение свойства - это значение для инициализации.
-       * @property {SBIS3.CONTROLS.Data.Record} record Редактируемая запись. Если передаётся ключ свойством key, то запись передавать необязательно.
+       * @property {WS.Data/Entity/Record} record Редактируемая запись. Если передаётся ключ свойством key, то запись передавать необязательно.
        * @property {$ws.proto.Context} ctx Контекст, который нужно установить для диалога редактирования записи.
        */
       /**
@@ -293,7 +293,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.MultiSelectable')) {
             collection.removeItemsSelection([collectionRecord.getId()]);
          }
-         if ($ws.helpers.instanceOfModule(collection.getDataSet && collection.getDataSet(), 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+         if ($ws.helpers.instanceOfModule(collection.getDataSet && collection.getDataSet(), 'WS.Data/Collection/RecordSet')) {
             collection = collection.getDataSet();
          }
          collection.remove(collectionRecord);
@@ -357,7 +357,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          var collection = this._options.linkedObject,
             rec;
          at = at || 0;
-         if ($ws.helpers.instanceOfModule(collection.getDataSet(), 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+         if ($ws.helpers.instanceOfModule(collection.getDataSet(), 'WS.Data/Collection/RecordSet')) {
             //Создаем новую модель, т.к. Record не знает, что такое первичный ключ - это добавляется на модели.
             rec = new Model({
                format: collection.getDataSet().getFormat(),
@@ -368,7 +368,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          } else  {
             rec = model.clone();
          }
-         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList')) {
+         if ($ws.helpers.instanceOfMixin(collection, 'WS.Data/Collection/IList')) {
             collection.add(rec, at);
          }
          else {
@@ -427,7 +427,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          var collectionData = this._getCollectionData(),
             index;
 
-         if (collectionData && $ws.helpers.instanceOfMixin(collectionData, 'SBIS3.CONTROLS.Data.Collection.IList') && $ws.helpers.instanceOfMixin(collectionData, 'SBIS3.CONTROLS.Data.Collection.IIndexedCollection')) {
+         if (collectionData && $ws.helpers.instanceOfMixin(collectionData, 'WS.Data/Collection/IList') && $ws.helpers.instanceOfMixin(collectionData, 'WS.Data/Collection/IIndexedCollection')) {
             index = collectionData.getIndexByValue(collectionData.getIdProperty(), this._linkedModelKey || model.getId());
             return collectionData.at(index);
          }

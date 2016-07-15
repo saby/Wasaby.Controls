@@ -191,7 +191,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _searchFilter: function(model){
-         if (model.get(this._options.displayField).match(this.getText())){
+         //TODO: Обобщить поиск с автодополнением и строкой поиска
+         //Сделать общую точку входа для поиска, для понимания где искать на источнике или на проекции
+         var itemText = model.get(this._options.displayField).toLowerCase(),
+             text = this.getText().toLowerCase()
+         if (itemText.match(text)){
             return true;
          }
          return false;

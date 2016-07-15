@@ -11,7 +11,16 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
    var HIER_WRAPPER_WIDTH = 16,
        //Число 17 это сумма padding'ов, margin'ов элементов которые составляют отступ у первого поля, по которому строится лесенка отступов в дереве
-       ADDITIONAL_LEVEL_OFFSET = 17;
+       ADDITIONAL_LEVEL_OFFSET = 17,
+      buildTplArgsTDG = function(cfg) {
+         var tplOptions, tvOptions;
+         tplOptions = cfg._buildTplArgsDG.call(this, cfg);
+         tvOptions = cfg._buildTplArgsTV.call(this, cfg);
+         $ws.core.merge(tplOptions, tvOptions);
+         tplOptions.arrowActivatedHandler = cfg.arrowActivatedHandler;
+         tplOptions.editArrow = cfg.editArrow;
+         return tplOptions;
+      };
 
    'use strict';
 
@@ -70,7 +79,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       $protected: {
          _footerWrapperTemplate: FooterWrapperTemplate,
          _options: {
-            _canServerRender: false,
+            _buildTplArgs: buildTplArgsTDG,
+            _canServerRender: true,
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
             /**
@@ -124,14 +134,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
       $constructor: function() {
       },
-      _buildTplArgs: function(item) {
-         var
-            args = TreeDataGridView.superclass._buildTplArgs.apply(this, arguments);
-         args.arrowActivatedHandler = this._options.arrowActivatedHandler;
-         args.editArrow = this._options.editArrow;
-         return args;
-      },
-      init: function() {
+      init: function(){
          TreeDataGridView.superclass.init.call(this);
          if (this._container.hasClass('controls-TreeDataGridView__withPhoto')){
             this._options._paddingSize = 42;
