@@ -1,5 +1,7 @@
 /*global define, $ws, $*/
-define('js!SBIS3.CONTROLS.DragObject', [], function() {
+define('js!SBIS3.CONTROLS.DragObject', [
+   'js!SBIS3.CONTROLS.DragEntity.Entity'
+], function () {
    'use strict';
    /**
     * Синглтон который обеспечивает работу с элементом который сейчас перетаскивают
@@ -9,13 +11,12 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var  DRAG_AVATAR_OFFSET = 5,
-      DragObject = $ws.proto.Abstract.extend({
-
+   var DRAG_AVATAR_OFFSET = 5;
+   var DragObject = $ws.proto.Abstract.extend(/**@lends SBIS3.CONTROLS.DragObject.prototype*/{
       $protected: {
          _owner: undefined,
-         _source:undefined,
-         _target:undefined,
+         _source: undefined,
+         _target: undefined,
          _avatar: undefined,
          _dragging: undefined,
          _meta: undefined,
@@ -26,28 +27,28 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
        * Возвращает элемент который сейчас тащат
        * @returns {*}
        */
-      getSource: function() {
+      getSource: function () {
          return this._source;
       },
       /**
        * Возвращает элемент над которым находится курсор
        * @returns {*}
        */
-      getTarget: function() {
+      getTarget: function () {
          return this._target;
       },
       /**
        * метод должен вызываться из SBIS3.CONTROLS.DragNDropMixin
        * @param {SBIS3.CONTROLS.Control} owner контрол который с которого тащят элемент
        */
-      setOwner: function(owner) {
+      setOwner: function (owner) {
          this._owner = owner;
       },
       /**
        * Возвращает контрол которому принадлежит элемент
        * @returns {SBIS3.CONTROLS.Control}
        */
-      getOwner: function() {
+      getOwner: function () {
          return this._owner;
       },
       /**
@@ -67,19 +68,19 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
        * @see removeAvatar
        * @returns {JQuery}
        */
-      getAvatar: function() {
+      getAvatar: function () {
          return this._avatar;
       },
       /**
        * Возвращает метаданные объекта
        */
-      getMeta: function() {
+      getMeta: function () {
          return this._meta;
       },
       /**
        * Устанавливает метаданные объекта
        */
-      setMeta: function(meta) {
+      setMeta: function (meta) {
          this._meta = meta;
       },
       /**
@@ -88,7 +89,7 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
        * @see getAvatar
        * @see removeAvatar
        */
-      setAvatar: function(avatar) {
+      setAvatar: function (avatar) {
          this.removeAvatar();
          if (avatar) {
             this._avatar = $(avatar);
@@ -102,7 +103,7 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
       /**
        * удаляет аватар
        */
-      removeAvatar: function() {
+      removeAvatar: function () {
          if (this._avatar) {
             this._avatar.remove();
             this._avatar = null;
@@ -112,7 +113,7 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
        * Вернет true если сейчас тащат элемент
        * @returns {Boolean}
        */
-      isDragging: function() {
+      isDragging: function () {
          return this._dragging;
       },
 
@@ -120,7 +121,7 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
        * Возвращает контрол над которым сейчас находится курсор
        * @returns {SBIS3.CONTROLS.Control}
        */
-      getTargetsControl: function() {
+      getTargetsControl: function () {
          return this._targetsControl;
       },
       //region protected
@@ -129,7 +130,7 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
        * Устанавливает признак перемещения вызывается только из SBIS3.CONTROLS.DragNDropMixin
        * @param {Boolean} dragging
        */
-      setDragging: function(dragging) {
+      setDragging: function (dragging) {
          this._dragging = !!dragging;
       },
       /**
@@ -137,7 +138,7 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
        * Устанавливает элемент который будут перетаскивать
        * @param source
        */
-      setSource: function(source) {
+      setSource: function (source) {
          this._source = source;
       },
       /**
@@ -145,7 +146,7 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
        * Устанавливает элемент над которым находится курсор
        * @param target
        */
-      setTarget: function(target) {
+      setTarget: function (target) {
          this._target = target;
       },
 
@@ -159,7 +160,7 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
        * устанавливает позицию аватара
        * @param  {Event} e
        */
-      _setAvatarPosition: function(e){
+      _setAvatarPosition: function (e) {
          //смещение нужно чтобы событие onmouseup сработало над контролом, а не над аватаром
          if (this.getAvatar()) {
             this._preparePageXY(e);
@@ -170,7 +171,7 @@ define('js!SBIS3.CONTROLS.DragObject', [], function() {
          }
       },
 
-      onDragHandler: function(e) {
+      onDragHandler: function (e) {
          if (this._jsEvent !== e) {
             this._jsEvent = e;
             this._targetsControl = $(e.target).wsControl();

@@ -1,5 +1,4 @@
-/*global $ws, define, $ */
-define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], function (DragObject) {
+define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
    'use strict';
 
    if (typeof window !== 'undefined') {
@@ -12,279 +11,181 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', ['js!SBIS3.CONTROLS.DragObject'], fun
          EventBusChannel.notify('onMouseup', e);
       });
 
-      $(document).bind('mousemove touchmove', function (e) {
+      $(document).bind('mousemove touchmove', function(e) {
          EventBusChannel.notify('onMousemove', e);
       });
 
    }
-   var
 
-      buildTplArgsLV = function (cfg) {
-         var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
-         tplOptions.multiselect = cfg.multiselect;
-         tplOptions.decorators = this._decorators;
-         tplOptions.colorField = cfg.colorField;
+   var DragAndDropMixin = {
+      $protected: {
+         _moveBeginX: null,
+         _moveBeginY: null,
+         _shiftX: null,
+         _shiftY: null,
 
-         return tplOptions;
+         //флаг сигнализирующий о том что юзер начал сдвиг
+         _isShifted: false,
+         //текущий перемещаемый объект
+         _currentComponent: null,
+         //константа показывающая на сколько надо сдвинуть мышь, чтобы началось перемещение
+         _constShiftLimit: 3,
+
+         _avatar: null,
+         _position: null,
+         _lines: []
       },
-      DragAndDropMixin = {
-         $protected: {
-            _moveBeginX: null,
-            _moveBeginY: null,
-            _shiftX: null,
-            _shiftY: null,
 
-            //текущий перемещаемый объект
-            _currentComponent: null,
-            //константа показывающая на сколько надо сдвинуть мышь, чтобы началось перемещение
-            _constShiftLimit: 3,
+      $constructor: function() {
+         var self = this;
+         self._publish('onDragMove');
+         $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMouseup', this.onMouseup, this);
+         $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMousemove', this.onMousemove, this);
+      },
 
-            _position: null,
-            _lines: []
-         },
-         //region public
-         $constructor: function () {
-            this._publish(['onDrag', 'onDragBegin', 'onDragEnd']);
-            $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMouseup', this.onMouseupOutside, this);
-            $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMousemove', this.onMousemove, this);
-         },
+      preparePageXY: function(e) {
+         if (e.type == "touchstart" || e.type == "touchmove") {
+            e.pageX = e.originalEvent.touches[0].pageX;
+            e.pageY = e.originalEvent.touches[0].pageY;
+         }
+      },
 
-         init: function(){
-            $(this.getContainer()).bind('mouseup touchend', this.onMouseupInside.bind(this));
-         },
+      onMouseup: function(buse, e) {
+         //определяем droppable контейнер
+         if (this._isShifted) {
+            var droppable = this._findDragDropContainer(e, e.target);
 
-         /**
-          * проверяет наличие контейнера
-          * @param element
-          * @returns {jQuery}
-          */
-         isDragDropContainer: function (element) {
-            return $(element).hasClass('genie-dragdrop');
-         },
-         //endregion public
-
-         //region handlers
-         _dropCache: function () {
-         },
-         /**
-          * обработчик на Mousemove
-          * @param e
-          * @param element
-          * @private
-          */
-         _onDrag: function (e, movable) {
-            this._updateDragTarget(DragObject, e);
-            var res = this._notify('onDrag', DragObject, e);
-            if (res !== false) {
-              this._onDragHandler(DragObject, e);
+            if (droppable) {
+               this._callDropHandler(e, droppable);
             }
-         },
-         /**
-          * оработчик на MoveOut
-          * @param e
-          * @param target
-          * @private
-          */
-         _callMoveOutHandler: function (e) {
-            throw new Error('Method callMoveOutHandler must be implemented');
-         },
-         /**
-          * стандартный поиск контейнера
-          * @param e
-          * @param target
-          * @returns {*}
-          * @private
-          */
-         _findDragDropContainerStandart: function (e, target) {
-            var elem = target;
-            while (elem !== null && (!($(elem).hasClass('genie-dragdrop')))) {
-               elem = elem.parentNode;
-            }
-            return elem;
-         },
-         /**
-          * шаблонный метод endDropDown
-          */
-         _endDragHandler: function(dragObject, e) {
 
-         },
-         /**
-          * шаблонный метод endDropDown
-          */
-         _onDragHandler: function(dragObject, e) {
+            this._endDropDown();
+         }
 
-         },
-         /**
-          * шаблонный метод beginDropDown
-          */
-         _beginDragHandler: function(dragObject, e) {
+         this._currentComponent = null;
 
-         },
-         /**
-          * Метод должен создать JQuery объект в котором будет лежать аватар
-          * @returns {JQuery}
-          */
-         _createAvatar: function(dragObject, e) {
+         if (this._avatar) {
+            this._avatar = null;
+         }
 
-         },
-         /**
-          *
-          */
-         _updateDragTarget: function(dragObject, e) {
+         this._position = null;
+         $('body').removeClass('dragdropBody cantDragDrop');
+      },
 
-         },
+      onMousemove: function(buse, e) {
+         // Если нет выделенных компонентов, то уходим
+         if (!this._currentComponent) {
+            return;
+         }
+         var
+            // определяем droppable контейнер
+            movable = this._findDragDropContainer(e, e.target);
 
-         //endregion handlers
-
-         //region protected
-         /**
-          * ищет контейнер
-          * @param e
-          * @param target
-          * @returns {*}
-          * @private
-          */
-         _findDragDropContainer: function (e, target) {
-            return this._findDragDropContainerStandart(e, target);
-         },
-
-         /**
-          * создает аватар
-          * @param  {Event} e
-          * @private
-          */
-         _showAvatar: function(e) {
-            var avatar = this._createAvatar(DragObject, e);
-            DragObject.setAvatar(avatar);
-         },
-
-         _initDrag: function(clickEvent) {
-            var
-               self = this,
-               dragStrarter = function(bus, moveEvent){
-                  if (self._isDrag(moveEvent)) {
-                     self._beginDrag(clickEvent);
-                     $ws.single.EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
-                  }
-               };
-            this._moveBeginX = clickEvent.pageX;
-            this._moveBeginY = clickEvent.pageY;
-            $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMousemove', dragStrarter);
-            $ws.single.EventBus.channel('DragAndDropChannel').once('onMouseup', function(){
-               $ws.single.EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
-            });
-         },
-         /**
-          * Начало перетаскивания
-          * @param e
-          * @param movable
-          */
-         _beginDrag: function(e) {
-            DragObject.reset();
-            DragObject.onDragHandler(e);
-            if (this._beginDragHandler(DragObject, e) !== false) {
-               $('body').addClass('dragdropBody ws-unSelectable');
-               if (this._notify('onDragBegin', DragObject, e) !== false) {
-                  this._showAvatar(e);
-                  DragObject.setOwner(this);
-                  DragObject.setDragging(true);
-               }
-            }
-            //TODO: Сейчас появилась проблема, что если к компьютеру подключен touch-телевизор он не вызывает
-            //preventDefault и при таскании элементов мышкой происходит выделение текста.
-            //Раньше тут была проверка !$ws._const.compatibility.touch и preventDefault не вызывался для touch устройств
-            //данная проверка была добавлена, потому что когда в строке были отрендерены кнопки, при нажатии на них
-            //и выполнении preventDefault впоследствии не вызывался click. Написал демку https://jsfiddle.net/9uwphct4/
-            //с воспроизведением сценария, на iPad и Android click отрабатывает. Возможно причина была ещё в какой-то
-            //ошибке. При возникновении ошибок на мобильных устройствах нужно будет добавить проверку !$ws._const.browser.isMobilePlatform.
-            e.preventDefault();
-         },
-
-         /**
-          * Метод определяет был ли сдвиг или просто кликнули по элементу
-          * @param e
-          * @returns {boolean} если true то было смещение
-          * @private
-          */
-         _isDrag: function(e) {
+         if (!this._isShifted) {
+            //начало переноса
+            this.preparePageXY(e);
             var
                moveX = e.pageX - this._moveBeginX,
                moveY = e.pageY - this._moveBeginY;
 
+            //начинаем движение только если сдвинули сильно
             if ((Math.abs(moveX) < this._constShiftLimit) && (Math.abs(moveY) < this._constShiftLimit)) {
-               return false;
-            }
-            return true;
-         },
-         /**
-          * Конец перетаскивания
-          * @param {Event} e js событие
-          * @param {Boolean} droppable Закончили над droppable контейнером
-          * @private
-          */
-         _endDrag: function (e, droppable) {
-            //После опускания мыши, ещё раз позовём обработку перемещения, т.к. в момент перед отпусканием мог произойти
-            //переход границы между сменой порядкового номера и перемещением в папку, а обработчик перемещения не вызваться,
-            //т.к. он срабатывают так часто, насколько это позволяет внутренняя система взаимодействия с мышью браузера.
-            DragObject.onDragHandler(e);
-            this._updateDragTarget(DragObject, e);
-            var res = this._notify('onDragEnd', DragObject, e);
-            if (res !== false) {
-               this._endDragHandler(DragObject, droppable, e);
-            }
-
-            DragObject.reset();
-            this._position = null;
-            DragObject.setDragging(false);
-            $('body').removeClass('dragdropBody cantDragDrop ws-unSelectable');
-         },
-         //endregion protected
-         //region mouseHandler
-         /**
-          *
-          * @param e
-          */
-         onMouseupInside: function (e) {
-            this._mouseUp(e, true);
-         },
-
-         onMouseupOutside: function(buse, e) {
-            this._mouseUp(e, false);
-         },
-
-         _mouseUp: function(e, inside){
-            if(DragObject.isDragging() && DragObject.getOwner() === this) {
-               this._endDrag(e, inside ? this._findDragDropContainer(e, e.target) : false);
-            }
-            this._moveBeginX = null;
-            this._moveBeginY = null;
-         },
-         /**
-          * обработчик  соь
-          * @param buse
-          * @param e
-          * @returns {boolean}
-          */
-         onMousemove: function (buse, e) {
-            // Если нет выделенных компонентов, то уходим
-            if (!DragObject.isDragging()) {
                return;
             }
-            DragObject.onDragHandler(e);
-
-            //если этот контрол начал перемещение или тащат над ним тогда стреяем событием _onDrag
-            if (DragObject.getOwner() === this || DragObject.getTargetsControl() === this ) {
-               var
-               // определяем droppable контейнер
-                  movable = this._findDragDropContainer(e, e.target);
-               //двигаем компонент
-               this._onDrag(e, movable);
-               return false;
-            }
+            this._beginDropDown(e, movable);
          }
 
-         //endregion mouseHandler
-      };
+         $('body').addClass('dragdropBody');
+         //двигаем компонент
+         if (movable) {
+            this._callMoveHandler(e, movable);
+         } else {
+            this._callMoveOutHandler(e);
+         }
+
+         return false;
+      },
+
+      //текущий активный компонент, либо по gdi (если переносим)
+      //либо отдаем тип, если создаем из палитры
+      setCurrentElement: function(e, elementConfig) {
+         //координаты с которых начато движение
+         this.preparePageXY(e);
+         this._moveBeginX = e.pageX;
+         this._moveBeginY = e.pageY;
+         this._currentComponent = elementConfig;
+
+         this._isShifted = false;
+         this._dropCache();
+      },
+
+      _dropCache: function() {},
+
+      getCurrentElement: function() {
+         return this._currentComponent;
+      },
+
+      _beginDropDown: function() {
+         this._isShifted = true;
+      },
+
+      _endDropDown: function() {
+         this._isShifted = false;
+      },
+
+      /*
+      * Возвращает флаг, сигнализирующий о том что юзер начал сдвиг.
+      * @returns {Boolean} isShifted
+      */
+      isShifted: function() {
+         return this._isShifted;
+      },
+
+      _callMoveHandlerStandart: function(e, element) {
+         var target = this.getCurrentElement();
+         if (!this._containerCoords) {
+            this._containerCoords = {
+               x: this._moveBeginX - parseInt(target.css('left'), 10),
+               y: this._moveBeginY - parseInt(target.css('top'), 10)
+            };
+         }
+
+         this.preparePageXY(e);
+         target.css({
+            top: e.pageY - this._containerCoords.y,
+            left: e.pageX - this._containerCoords.x
+         });
+      },
+
+      _callMoveHandler: function(e, element) {
+         throw new Error('Method _callMoveHandler must be implemented');
+      },
+      _callMoveOutHandler: function(e) {
+         throw new Error('Method callMoveOutHandler must be implemented');
+      },
+      _callDropHandlerStandart: function(e, element) {
+         this._containerCoords = null;
+      },
+      _callDropHandler: function(e, element) {
+         throw new Error('Method _callDropHandler must be implemented');
+      },
+
+      _findDragDropContainerStandart: function(e, target) {
+         var elem = target;
+         while (elem !== null && (!($(elem).hasClass('genie-dragdrop')))) {
+            elem = elem.parentNode;
+         }
+         return elem;
+      },
+
+      _findDragDropContainer: function(e, target) {
+         return this._findDragDropContainerStandart(e, target);
+      },
+      //отвлавливает ли контейнер drag'n'drop внутри себя
+      isDragDropContainer: function(element) {
+         return $(element).hasClass('genie-dragdrop');
+      }
+   };
 
    return DragAndDropMixin;
 });

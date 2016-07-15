@@ -12,7 +12,8 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Selectable',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.DecorableMixin',
-      'js!SBIS3.CONTROLS.DragNDropMixin',
+      'js!SBIS3.CONTROLS.DragNDropMixinNew',
+      'js!SBIS3.CONTROLS.DragEntity.Row',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
       'js!SBIS3.CONTROLS.ItemsToolbar',
       'js!SBIS3.CORE.MarkupTransformer',
@@ -26,6 +27,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.ScrollWatcher',
       'js!SBIS3.CONTROLS.Data.Bind.ICollection',
+      'js!WS.Data/Di',
       'i18n!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
       'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
@@ -35,9 +37,9 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query,
-             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
+             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, DragEntityRow, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
-             Link, ScrollWatcher, IBindCollection, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate) {
+             Link, ScrollWatcher, IBindCollection, Di, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate) {
 
       'use strict';
 
@@ -619,7 +621,11 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @cfg {Boolean} Использовать режим частичной навигации
                 * Задаёт какой режим навигации использовать: полный или частичный.
                 */
-               partialPaging: true
+               partialPaging: true,
+               /**
+                * @cfg
+                */
+               dragEntity: 'dragentity.row'
             },
             //Флаг обозначает необходимость компенсировать подгрузку по скроллу вверх, ее нельзя делать безусловно, так как при подгрузке вверх могут добавлятся элементы и вниз тоже
             _needSrollTopCompensation: false,
@@ -638,7 +644,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //    Задача в разработку: доработка listView, для поддержки touch устройств с возможностью управление мышью
             this._touchSupport = $ws._const.browser.isMobilePlatform;
 
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onDragMove');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
 
             /* За счёт того, что разделено поведения отображения операций и ховера,
                в зависимости от события, которое произошло, то можно смело подписаться на все событие,
@@ -2488,13 +2494,10 @@ define('js!SBIS3.CONTROLS.ListView',
                //_findItemByElement, без завязки на _items.
                if (target.length) {
                   id = target.data('id');
-                  dragObject.setMeta({
-                     keys: this._getDragItems(id),
-                     targetId: id,
-                     target: target,
-                     insert: undefined
-                  });
-                  dragObject.setSource(this._getDragTarget(e));
+                  dragObject.setSource([this.getDragEntity({
+                     domElement: this._findItemByElement($(e.target)),
+                     model: this._getDragTarget(e)
+                  })]);
                   this.setSelectedKey(id);
                   this._hideItemsToolbar();
                   return true;
@@ -2502,41 +2505,30 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             return false;
          },
-         _callMoveOutHandler: function() {
-         },
 
          _onDragHandler: function(dragObject, e) {
-            if (dragObject.getTargetsControl() === this) {
+            if (this._canDragMove(dragObject)) {
                var
-                  insert,
-                  neighborItem,
-                  currentElement = dragObject.getMeta() || {},
-                  target = this._findItemByElement($(e.target));
-
-
+                  target = dragObject.getTarget(),
+                  targetsModel = target.getModel(),
+                  source = dragObject.getSource(),
+                  sourceModels = [];
                this._clearDragHighlight(dragObject);
-               if (dragObject.getOwner() !== this || target.length && target.data('id') !== currentElement.targetId) {
-                  insert = this._getDirectionOrderChange(e, target);
-                  if (insert !== DRAG_META_INSERT.on && dragObject.getOwner() === this) {
-                     neighborItem = this[insert === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](target.data('id'));
-                     if (neighborItem && neighborItem.data('id') === currentElement.targetId) {
-                        insert = DRAG_META_INSERT.on;
-                     }
+               if (targetsModel) {
+                  $ws.helpers.forEach(source, function (item) {
+                     sourceModels.push(item.getModel());
+                  });
+                  if (dragObject.getOwner() !== this || sourceModels.indexOf(targetsModel) < 0) {
+                     this._drawDragHighlight(target);
                   }
-                  if (this._notifyOnDragMove(target, insert, dragObject)) {
-                     currentElement.insert = insert;
-                     currentElement.target = target;
-                     this._drawDragHighlight(target, insert);
-                  } else {
-                     currentElement.insert = DRAG_META_INSERT.on;
-                     currentElement.target = null;
-                  }
-               } else {
-                  currentElement.insert = DRAG_META_INSERT.on;
-                  currentElement.target = null;
                }
-               dragObject.setMeta(currentElement);
             }
+         },
+
+         _canDragMove: function(dragObject) {
+            return dragObject.getTarget() &&
+               dragObject.getTargetsControl() === this &&
+               $ws.helpers.instanceOfModule(dragObject.getSource()[0], 'js!SBIS3.CONTROLS.DragEntity.Row');
          },
 
          _getDragTarget: function(e) {
@@ -2551,25 +2543,39 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _updateDragTarget: function(dragObject, e) {
-            dragObject.setTarget(this._getDragTarget(e));
+            var model = this._getDragTarget(e),
+               target;
+            if (model) {
+               var domElement = this._findItemByElement($(e.target)),
+                  position = this._getDirectionOrderChange(e, domElement);
+               if (position !== DRAG_META_INSERT.on && dragObject.getOwner() === this) {
+                  var neighborItem = this[position === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](model.getId()),
+                     sourceIds = [];
+                  $ws.helpers.forEach(dragObject.getSource(), function (item) {
+                     sourceIds.push(item.getModel().getId());
+                  });
+                  if (neighborItem && sourceIds.indexOf(neighborItem.data('id')) > -1) {
+                     position = DRAG_META_INSERT.on;
+                  }
+               }
+               target = this.getDragEntity({
+                  domElement: domElement,
+                  model: model,
+                  position: position
+               });
+            }
+            dragObject.setTarget(target);
          },
 
-         _notifyOnDragMove: function(target, insert, dragObject) {
-            if (insert !== DRAG_META_INSERT.on) {
-               return this._notify('onDragMove', dragObject.getMeta().keys, target.data('id'), insert === DRAG_META_INSERT.after, dragObject.getOwner()) !== false;
-            }
-         },
          _clearDragHighlight: function(dragObject) {
-            if(dragObject.getMeta()) {
-               var target = dragObject.getMeta().target;
-               if (target) {
-                  target.removeClass('controls-DragNDrop__insertBefore controls-DragNDrop__insertAfter');
-               }
-            }
+            this.getContainer()
+               .find('.controls-DragNDrop__insertBefore, .controls-DragNDrop__insertAfter')
+               .removeClass('controls-DragNDrop__insertBefore controls-DragNDrop__insertAfter');
          },
-         _drawDragHighlight: function(target, insert) {
-            target.toggleClass('controls-DragNDrop__insertAfter', insert === DRAG_META_INSERT.after);
-            target.toggleClass('controls-DragNDrop__insertBefore', insert === DRAG_META_INSERT.before);
+         _drawDragHighlight: function(target) {
+            var domelement = target.getDomElement();
+            domelement.toggleClass('controls-DragNDrop__insertAfter', target.getPosition() === DRAG_META_INSERT.after);
+            domelement.toggleClass('controls-DragNDrop__insertBefore', target.getPosition() === DRAG_META_INSERT.before);
          },
          _getDirectionOrderChange: function(e, target) {
             return this._getOrderPosition(e.pageY - (target.offset() ? target.offset().top : 0), target.height());
@@ -2579,7 +2585,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _createAvatar: function(dragObject) {
-            var count = dragObject.getMeta().keys.length;
+            var count = dragObject.getSource().length;
             return $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>');
          },
 
@@ -2587,19 +2593,24 @@ define('js!SBIS3.CONTROLS.ListView',
             if (droppable) {
                var
                   clickHandler,
-                  currentTarget = this._findItemByElement($(e.target)),
-                  currentElement = dragObject.getMeta();
+                  target = dragObject.getTarget();
 
                //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
-               if (currentTarget.length && currentTarget.data('id') == this.getSelectedKey()) {
-                  clickHandler = this._elemClickHandler;
-                  this._elemClickHandler = function () {
-                     this._elemClickHandler = clickHandler;
-                  };
-               }
+               if (target) {
+                  if (target.getModel().getId() == this.getSelectedKey()) {
+                     clickHandler = this._elemClickHandler;
+                     this._elemClickHandler = function () {
+                        this._elemClickHandler = clickHandler;
+                     };
+                  }
 
-               if (dragObject.getOwner() === this) {
-                  this._move([dragObject.getSource()], dragObject.getTarget(), currentElement.insert === DRAG_META_INSERT.after);
+                  if (dragObject.getOwner() === this) {
+                     var models = [];
+                     $ws.helpers.forEach(dragObject.getSource(), function(item){
+                        models.push(item.getModel());
+                     });
+                     this._move(models, target.getModel(), target.getPosition() === DRAG_META_INSERT.after);
+                  }
                }
             }
 
@@ -2674,6 +2685,10 @@ define('js!SBIS3.CONTROLS.ListView',
                resultRow.remove();
             }
          }
+      });
+
+      Di.register('listview.defaultdragfactory', function(dragObject, e) {
+         return new DragEntityRow();
       });
 
       return ListView;
