@@ -598,13 +598,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _redrawItems: function() {
          //FIXME в 3.7.4 поправить, не всегда надо перерисовывать, а только когда изменились колонки
-         if(this._options.showHead) {
-            this._redrawHead();
-         } else {
-            /* Надо перерисовывать колгруп, при полной перерисовке item'ов,
-               т.к. могли измениться колонки */
-            this._redrawColgroup();
-         }
+         this._redrawHead();
          DataGridView.superclass._redrawItems.apply(this, arguments);
       },
       _onItemClickHandler: function(event, id, record, target) {
