@@ -529,8 +529,23 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       /**
        * Получить текущий набор открытых элементов иерархии
        */
-      getOpenedPath: function(){
+      getOpenedPath: function() {
          return this._options.openedPath;
+      },
+      /**
+       * Устанавливает набор раскрытых узлов, метод работает только для уже ЗАГРУЖЕННЫХ узлов и только если у них есть дочерние записи
+       * @param openedPath Список раскрываемых узлов
+       * @example
+       * <pre>
+       *    DataGridView.setOpenedPath({
+       *       1: true,
+       *       3: true
+       *    });
+       * </pre>
+       */
+      setOpenedPath: function(openedPath) {
+         this._options.openedPath = openedPath;
+         this._applyExpandToItemsProjection();
       },
       around: {
          _canApplyGrouping: function(parentFn, projItem) {
