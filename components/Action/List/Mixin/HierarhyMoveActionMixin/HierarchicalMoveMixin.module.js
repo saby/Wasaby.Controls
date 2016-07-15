@@ -24,10 +24,10 @@ define('js!SBIS3.CONTROLS.Action.List.HierarchicalMoveMixin',[
           * @param {WS.Data/Entity/Model} to
           * @returns {$ws.proto.Deferred}
           */
-         hierarhyMove: function (from, to) {
+         _move: function (from, to) {
             var def = new $ws.proto.ParallelDeferred(),
                newParent = to ? to.getId() : null,
-               dataSource = this._options.linkedObject.getDataSource(),
+               dataSource = this.getDataSource(),
                self = this;
             if ($ws.helpers.type(from) !== 'array') {
                from = [from];
