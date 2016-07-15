@@ -149,6 +149,12 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
             this._drawSelectedItems(this._options.selectedKeys);
          }
       },
+      before : {
+         setItems: function() {
+            /*все таки очищаем выделение при setItems*/
+            this._options.selectedKeys = [];
+         }
+      },
       /**
        * По массиву идентификаторов устанавливает массив выбранных элементов коллекции для контрола, который находится в режиме множественного выбора.
        * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
