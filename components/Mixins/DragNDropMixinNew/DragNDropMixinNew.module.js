@@ -48,8 +48,10 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMousemove', this.onMousemove, this);
          },
 
-         init: function(){
-            $(this.getContainer()).bind('mouseup touchend', this.onMouseupInside.bind(this));
+         after: {
+            init: function () {
+               $(this.getContainer()).bind('mouseup touchend', this.onMouseupInside.bind(this));
+            }
          },
 
          /**
