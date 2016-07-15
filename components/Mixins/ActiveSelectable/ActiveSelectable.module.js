@@ -98,12 +98,14 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!WS.Data/Entity/Model'], functi
        * @see setSelectedItem
        */
       getSelectedItem: function(loadItem) {
-         var dResult = new $ws.proto.Deferred(),
-             selItem = this._options.selectedItem,
-             selKey = this._options.selectedKey,
-             self = this;
+         var
+            dResult = new $ws.proto.Deferred(),
+            selItem, selKey, self = this;
 
          this._syncSelectedItem();
+
+         selItem = this._options.selectedItem;
+         selKey = this._options.selectedKey;
 
          if(!loadItem) {
             return selItem;

@@ -20,6 +20,9 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
                   handlers: {
                      onPrepareFilterOnMove: function(event, rec) {
                         event.setResult(self._notify('onPrepareFilterOnMove', rec))
+                     },
+                     onMove: function(e, records, moveTo) {
+                        self._move( records, moveTo);
                      }
                   }
                }

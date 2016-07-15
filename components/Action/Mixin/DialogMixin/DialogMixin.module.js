@@ -93,8 +93,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       _openFloatArea: function(meta, template) {
          this._opendEditComponent(meta, template, 'floatArea');
       },
+
       _opendEditComponent: function(meta, template, mode) {
-         this._linkedModelKey = meta.id;
          //Производим корректировку идентификатора только в случае, когда идентификатор передан
          if (meta.hasOwnProperty('id')) {
             meta.id = this._getEditKey(meta.item) || meta.id;
@@ -113,7 +113,6 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             config.title = meta.title;
          }
 
-         config.componentOptions.handlers = this._getFormControllerHandlers();
 
          config.handlers = {
             onAfterClose: function (e, meta) {
@@ -122,45 +121,16 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             }
          };
 
-         //делам загрузку компонента, только если в мете явно указали, что на прототипе в опциях есть данные об источнике данных
-         if (meta.controllerSource && ( !config.componentOptions.record || meta.preloadRecord !== false )) {
-            //Загружаем компонент, отнаследованный от formController'a, чтобы с его прототипа вычитать запись, которую мы прокинем при инициализации компонента
-            //Сделано в рамках ускорения
-            require([template], this._initTemplateComponentCallback.bind(this, config, meta, mode));
-         }
-         else {
-            this._showDialog(config, meta, mode);
-         }
-         return editDeferred;
-      },
+         this._showDialog(config, meta, mode);
 
-      _initTemplateComponentCallback: function (config, meta, mode, templateComponent) {
-         var self = this,
-             def;
-         var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource;
-         if (getRecordProtoMethod){
-            def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
-            def.addCallback(function (record) {
-               config.componentOptions.record = record;
-               if (def.isNewRecord)
-                   config.componentOptions.isNewRecord = true;
-               if (!config.componentOptions.key){
-                  //Если не было ключа, то отработал метод "создать". Запоминаем ключ созданной записи
-                  config.componentOptions.key = record.getKey();
-               }
-               self._showDialog(config, meta, mode);
-            });
-         }
-         else{
-            self._showDialog(config, meta, mode);
-         }
+         return editDeffered;
       },
 
       _showDialog: function(config, meta, mode){
          var floatAreaCfg,
              Component;
          mode = mode || this._options.mode;
-         if (mode == 'floatArea'){
+         if (mode == 'floatArea') {
             Component = FloatArea;
             floatAreaCfg = this._getFloatAreaConfig(meta);
             $ws.core.merge(config, floatAreaCfg);
@@ -176,6 +146,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             this._dialog = new Component(config);
          }
       },
+
       _getFloatAreaConfig: function(meta){
          var defaultConfig = {
                isStack: true,
@@ -196,204 +167,6 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          return floatAreaCfg;
       },
 
-      /**
-       * Устанавливает связанный список, для которого будет открываться диалог редактирования записей.
-       * @param linkedObject связанный список
-       */
-      setLinkedObject: function(linkedObject){
-        this._options.linkedObject = linkedObject;
-      },
-
-      /**
-       * Должен вернуть ключ записи, которую редактируем в диалоге
-       */
-      _getEditKey: function(item){
-      },
-
-      /**
-       * Возвращает обработчики на события formController'a
-       */
-      _getFormControllerHandlers: function(){
-         return {
-            onReadModel: this._actionHandler.bind(this),
-            onUpdateModel: this._actionHandler.bind(this),
-            onDestroyModel: this._actionHandler.bind(this),
-            onCreateModel: this._actionHandler.bind(this)
-         }
-      },
-      /**
-       * Переопределяемый метод
-       * В случае, если все действия выполняются самостоятельноно, надо вернуть DialogMixin.ACTION_CUSTOM, чтобы
-       * не выполнялась базовая логика
-       * @param model Запись, с которой работаем
-       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем DialogMixin.ACTION_CUSTOM
-       */
-      _onUpdateModel: function(model){
-      },
-      /**
-       * Базовая логика при событии ouUpdate. Обновляем рекорд в связном списке
-       */
-      _updateModel: function (model, additionalData) {
-         if (additionalData && additionalData.isNewRecord){
-            this._createRecord(model);
-         }
-         else{
-            this._mergeRecords(model);
-         }
-      },
-
-      /**
-       * Переопределяемый метод
-       * В случае, если все действия выполняются самостоятельноно, надо вернуть DialogMixin.ACTION_CUSTOM, чтобы
-       * не выполнялась базовая логика
-       * @param model Запись, с которой работаем
-       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем DialogMixin.ACTION_CUSTOM
-       */
-      _onReadModel: function(model){
-      },
-      _readModel: function(model){
-      },
-      /**
-       * Переопределяемый метод
-       * В случае, если все действия выполняются самостоятельноно, надо вернуть DialogMixin.ACTION_CUSTOM, чтобы
-       * не выполнялась базовая логика
-       * @param model Запись, с которой работаем
-       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем DialogMixin.ACTION_CUSTOM
-       */
-      _onDestroyModel: function(model){
-      },
-      /**
-       * Базовая логика при событии ouDestroy. Дестроим рекорд в связном списке
-       */
-      _destroyModel: function(model){
-         var collectionRecord = this._getCollectionRecord(model),
-            collection = this._options.linkedObject;
-         if (!collectionRecord){
-            return;
-         }
-         //Уберём удаляемый элемент из массива выбранных у контрола, являющегося linkedObject.
-         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.MultiSelectable')) {
-            collection.removeItemsSelection([collectionRecord.getId()]);
-         }
-         if ($ws.helpers.instanceOfModule(collection.getDataSet && collection.getDataSet(), 'WS.Data/Collection/RecordSet')) {
-            collection = collection.getDataSet();
-         }
-         collection.remove(collectionRecord);
-      },
-      /**
-       * Переопределяемый метод
-       * В случае, если все действия выполняются самостоятельноно, надо вернуть DialogMixin.ACTION_CUSTOM, чтобы
-       * не выполнялась базовая логика
-       * @param model Запись, с которой работаем
-       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем DialogMixin.ACTION_CUSTOM
-       */
-      _onCreateModel: function(model){
-      },
-      /**
-       * Обработка событий formController'a. Выполнение переопределяемых методов и notify событий.
-       * Если из обработчиков событий и переопределяемых методов вернули не DialogMixin.ACTION_CUSTOM, то выполняем базовую логику.
-       */
-      _actionHandler: function(event, model) {
-         var eventName = event.name,
-            genericMethods = {
-               onDestroyModel: '_destroyModel',
-               onUpdateModel : '_updateModel',
-               onReadModel: '_readModel'
-            },
-            args = Array.prototype.slice.call(arguments, 0);
-
-         args.splice(0, 1); //Обрежем первый аргумент типа EventObject, его не нужно прокидывать в события и переопределяемый метод
-
-         this._callHandlerMethod(args, eventName, genericMethods[eventName]);
-      },
-
-
-      _createRecord: function(model, at){
-         var collection = this._options.linkedObject,
-            rec;
-         at = at || 0;
-         if ($ws.helpers.instanceOfModule(collection.getDataSet(), 'WS.Data/Collection/RecordSet')) {
-            //Создаем новую модель, т.к. Record не знает, что такое первичный ключ - это добавляется на модели.
-            rec = new Model({
-               format: collection.getDataSet().getFormat(),
-               idProperty: collection.getItems().getIdProperty(),
-               adapter: collection.getItems().getAdapter()
-            });
-            this._mergeRecords(model, rec, true);
-         } else  {
-            rec = model.clone();
-         }
-         if ($ws.helpers.instanceOfMixin(collection, 'WS.Data/Collection/IList')) {
-            collection.add(rec, at);
-         }
-         else {
-            if (collection.getItems()){
-               collection.getItems().add(rec, at);
-            }
-            else{
-               if (collection.isLoading()){
-                  collection.once('onItemsReady', function(){
-                     this.getItems().add(rec, at);
-                  });
-               }
-               else{
-                  collection.setItems([rec]);
-               }
-            }
-         }
-      },
-      /**
-       * Мержим поля из редактируемой записи в существующие поля записи из связного списка.
-       */
-      _mergeRecords: function(model, colRec, newModel){
-         var collectionRecord = colRec || this._getCollectionRecord(model),
-             collectionData = this._getCollectionData(),
-             recValue;
-         if (!collectionRecord) {
-            return;
-         }
-
-         if (newModel) {
-            collectionRecord.set(collectionData.getIdProperty(), model.getKey().toString());
-         }
-
-         collectionRecord.each(function (key, value) {
-            recValue = model.get(key);
-            if (model.has(key) && recValue != value && key !== model.getIdProperty()) {
-               //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
-               try {
-                  this.set(key, recValue);
-               } catch (e) {
-                  if (!(e instanceof ReferenceError)) {
-                     throw e;
-                  }
-               }
-            }
-         });
-      },
-      _collectionReload: function() {
-         this._options.linkedObject.reload();
-      },
-      /**
-       * Получаем запись из связного списка по ключу редактируемой записи
-       */
-      _getCollectionRecord: function(model){
-         var collectionData = this._getCollectionData(),
-            index;
-
-         if (collectionData && $ws.helpers.instanceOfMixin(collectionData, 'WS.Data/Collection/IList') && $ws.helpers.instanceOfMixin(collectionData, 'WS.Data/Collection/IIndexedCollection')) {
-            index = collectionData.getIndexByValue(collectionData.getIdProperty(), this._linkedModelKey || model.getId());
-            return collectionData.at(index);
-         }
-         return undefined;
-      },
-      _getCollectionData: function() {
-         var collection = this._options.linkedObject;
-         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.ItemsControlMixin')) {
-            collection = collection.getItems();
-         }
-         return collection;
-      },
       _buildComponentConfig: function() {
          return {};
       },
@@ -404,9 +177,5 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       }
    };
 
-   DialogMixin.ACTION_MERGE = '_mergeRecords';
-   DialogMixin.ACTION_ADD = '_createRecord'; //что добавляем? сделал через create
-   DialogMixin.ACTION_RELOAD = '_collectionReload';
-   DialogMixin.ACTION_DELETE = '_destroyModel';
    return DialogMixin;
 });
