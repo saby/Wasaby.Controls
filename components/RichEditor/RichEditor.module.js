@@ -102,7 +102,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   paste_as_text: true,
                   extended_valid_elements: 'div[class|onclick|style],img[unselectable|class|src|alt|title|width|height|align|name|style]',
                   body_class: 'ws-basic-style',
-                  tools: 'inserttable',
                   invalid_elements: 'script',
                   paste_data_images: false,
                   paste_convert_word_fake_lists: false, //TODO: убрать когда починят https://github.com/tinymce/tinymce/issues/2933
