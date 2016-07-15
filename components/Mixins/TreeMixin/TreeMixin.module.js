@@ -365,8 +365,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          return this._options.hierField;
       },
       /**
-       * Закрывает узел (папку) по переданному идентификатору
-       * @param {String} key Идентификатор закрываемого узла
+       * Закрывает узел по переданному идентификатору
+       * @param {String} id Идентификатор закрываемого узла
        * @remark
        * Метод используют для программного управления видимостью содержимого узла в общей иерархии.
        * Чтобы раскрыть узел по переданному идентификатору, используйте метод {@link expandNode}.
@@ -374,29 +374,61 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        * @see expandNode
        * @see toggleNode
        */
-      collapseNode: function(key) {
-         this._getItemProjectionByItemId(key).setExpanded(false);
+      collapseNode: function(id) {
+         this._getItemProjectionByItemId(id).setExpanded(false);
+         return new $ws.proto.Deferred.success();
       },
       /**
        * Закрыть или открыть определенный узел
-       * @param {String} key Идентификатор раскрываемого узла
+       * @param {String} id Идентификатор переключаемого узла
        */
-      toggleNode: function(key) {
-         var ladderDecorator = this._options._decorators.getByName('ladder');
-         if (ladderDecorator){
-            ladderDecorator.removeNodeData(key);
-            ladderDecorator.setIgnoreEnabled(true);
-         }
-         this._getItemProjectionByItemId(key).toggleExpanded();
-         ladderDecorator && ladderDecorator.setIgnoreEnabled(false);
+      toggleNode: function(id) {
+         return this[this._getItemProjectionByItemId(id).isExpanded() ? 'collapseNode' : 'expandNode'](id);
       },
       /**
-       * Развернуть ветку
-       * @param key
+       * Развернуть узел
+       * @param id Идентификатор раскрываемого узла
        * @returns {$ws.proto.Deferred}
        */
-      expandNode: function(key) {
-         this._getItemProjectionByItemId(key).setExpanded(true);
+      expandNode: function(id) {
+         var
+            item = this._getItemProjectionByItemId(id);
+         if (item.isExpanded()) {
+            return $ws.proto.Deferred.success();
+         } else {
+            this._closeAllExpandedNode(id);
+            this._options.openedPath[id] = true;
+            this._folderOffsets[id] = 0;
+            return this._loadNode(id).addCallback(function() {
+               var
+                  ladderDecorator = this._options._decorators.getByName('ladder');
+               if (ladderDecorator){
+                  ladderDecorator.removeNodeData(id);
+                  ladderDecorator.setIgnoreEnabled(true);
+               }
+               this._getItemProjectionByItemId(id).setExpanded(true);
+               ladderDecorator && ladderDecorator.setIgnoreEnabled(false);
+            }.bind(this));
+         }
+      },
+      _loadNode: function(id) {
+         if (this._dataSource && !this._loadedNodes[id] && this._options.partialyReload) {
+            this._toggleIndicator(true);
+            this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), 0, this._limit);
+            return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(function (list) {
+               this._folderHasMore[id] = list.getMetaData().more;
+               this._loadedNodes[id] = true;
+               this._options._items.merge(list, {remove: false});
+               this._notify('onDataMerge', list); // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
+               if (this._isSlowDrawing()) {
+                  this._options._items.getTreeIndex(this._options.hierField, true);
+               }
+               this._toggleIndicator(false);
+               this._getItemProjectionByItemId(id).setLoaded(true);
+            }.bind(this));
+         } else {
+            return $ws.proto.Deferred.success();
+         }
       },
       /**
        * Получить список записей для отрисовки
