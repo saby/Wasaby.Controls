@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.Action.Action',
       //TODO наследуемся от контрола, чтоб можно было размещать в xhtml
       var Action = Control.Control.extend(/** @lends SBIS3.CONTROLS.Action.Action.prototype */{
          /**
-          * @event onExecute Перед началом работы действия. Если из события вернуть deffered то основное действие выполнится
+          * @event onExecute Перед началом работы действия. Если из события вернуть deferred то основное действие выполнится
           * в коллбеке, если вернуть false или 'custom' то действие будет отменено.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Object} meta Объект содержащий мета параметры Action'а
@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.Action.Action',
           *
           * Дает возможность пользоватeлю переопределить стандартное поведение(вызов метода method) через вызов события event
           * _callHandlerMethod подымает событие event и вызывает метод method, если из события возвращается false или custom то
-          * method не вызывается, если из события возвращается deffered то method вызовется в коллбеке, так же
+          * method не вызывается, если из события возвращается deferred то method вызовется в коллбеке, так же
           * событие может вернуть название другого метода и он будет вызван вместо method
           * @param {Array} args  Параметры которые будут переданы в event и method
           * @param {String} event  Название события которое надо поднято
