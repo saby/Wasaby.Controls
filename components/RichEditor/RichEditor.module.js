@@ -446,11 +446,11 @@ define('js!SBIS3.CONTROLS.RichEditor',
             var
                newText = this._prepareContent(text);//приведение текста к валидному значению
             //если в редакторе или в контексте значение отличается то переписываем его
-            if (newText !== this._getTinyEditorValue() || text !== this.getText()) {
+            if (newText !== this._curValue() || text !== this.getText()) {
                ///вначале надо проставить значение в редактор ( оно может поменяться ) только потом нотифицировать новым значением
                this._drawText(newText);
                //в контекст кладём тескст без пустых строк вначале и в конце
-               newText = this._trimText(this._curValue());
+               newText = this._trimText(this.isEnabled() ? this._curValue() : newText);
                this._textChanged = true;
                this._options.text = newText;
                this._notify('onTextChange', newText);
