@@ -20,6 +20,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          idProperty: cfg.keyField || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
          parentProperty: cfg.hierField,
          nodeProperty: cfg.hierField + '@',
+         loadedProperty: cfg.hierField + '$',
          root: root
       });
       var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
@@ -93,7 +94,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          if (cfg.openedPath.hasOwnProperty(idx)) {
             item = projection.getItemBySourceItem(cfg._items.getRecordById(idx));
             if (item && !item.isExpanded()) {
-               if (projection.getChildren(item).getCount()) {
+               // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
+               if (projection.getCollection().getChildItems(item.getContents().getId(), undefined, projection.getParentProperty()).length) {
                   item.setExpanded(true);
                } else {
                   delete cfg.openedPath[idx];
@@ -114,6 +116,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
          if (item.isNode() && !item.isExpanded() && projection.getCollection().getChildItems(item.getContents().getId(), undefined, projection.getParentProperty()).length) {
             item.setExpanded(true);
+            item.setLoaded(true);
             doNext = false;
             expandAllItems(projection);
          }
@@ -379,7 +382,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        * @param {String} key Идентификатор раскрываемого узла
        */
       toggleNode: function(key) {
-         var ladderDecorator = this._decorators.getByName('ladder');
+         var ladderDecorator = this._options._decorators.getByName('ladder');
          if (ladderDecorator){
             ladderDecorator.removeNodeData(key);
             ladderDecorator.setIgnoreEnabled(true);
@@ -430,7 +433,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             if (this._options.openedPath.hasOwnProperty(idx)) {
                item = this._getItemProjectionByItemId(idx);
                if (item && !item.isExpanded()) {
-                  if (this._itemsProjection.getChildren(item).getCount()) {
+                  // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
+                  if (this._itemsProjection.getCollection().getChildItems(item.getContents().getId(), undefined, this._itemsProjection.getParentProperty()).length) {
                      item.setExpanded(true);
                   } else {
                      delete this._options.openedPath[idx];
@@ -504,6 +508,31 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             var
                itemParent = projItem.getParent();
             return parentFn.call(this, projItem) && itemParent && itemParent.isRoot();
+         },
+         /* ToDo. Используется для вызова перерисовки родительских элементов при изменении количества дочерних
+          Удалить функцию, когда будет сделана нотификация по заданию: https://inside.tensor.ru/opendoc.html?guid=b53fc873-6355-4f06-b387-04df928a7681&description= */
+         _onCollectionAddMoveRemove: function(parentFn, event, action, newItems, newItemsIndex, oldItems) {
+            var
+               branches = {},
+               fillBranchesForRedraw = function (items) {
+                  var idx, parent;
+                  for (idx = 0; idx < items.length; idx++) {
+                     parent = items[idx].getParent();
+                     if (!parent.isRoot()) {
+                        if (!branches[parent.getContents().getId()]) {
+                           branches[parent.getContents().getId()] = parent;
+                        }
+                     }
+                  }
+               }.bind(this);
+            parentFn.call(this, event, action, newItems, newItemsIndex, oldItems);
+            fillBranchesForRedraw(newItems);
+            fillBranchesForRedraw(oldItems);
+            for (idx in branches) {
+               if (branches.hasOwnProperty(idx)) {
+                  this._redrawItem(branches[idx]);
+               }
+            }
          }
       },
       _getFilterForReload: function(filter, sorting, offset, limit, deepReload) {

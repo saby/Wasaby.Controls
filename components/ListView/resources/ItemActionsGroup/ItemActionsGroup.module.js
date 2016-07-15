@@ -172,10 +172,12 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          _onBeforeMenuShowHandler: function() {
             var menuInstances = this._itemActionsMenu.getItemsInstances(),
                 itemActionsInstances = this.getItemsInstances();
-
             for(var i in menuInstances) {
                if(menuInstances.hasOwnProperty(i)) {
                   menuInstances[i].getContainer()[itemActionsInstances.hasOwnProperty(i) && itemActionsInstances[i].isVisible() ? 'show' : 'hide']();
+                  menuInstances[i].setCaption(itemActionsInstances.hasOwnProperty(i) && itemActionsInstances[i].getCaption());
+                  menuInstances[i].setTooltip(itemActionsInstances.hasOwnProperty(i) && itemActionsInstances[i].getTooltip());
+                  menuInstances[i].setIcon(itemActionsInstances.hasOwnProperty(i) && itemActionsInstances[i].getIcon());
                }
             }
 

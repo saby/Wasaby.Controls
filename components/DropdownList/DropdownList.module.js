@@ -183,6 +183,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
          init : function () {
             DropdownList.superclass.init.apply(this, arguments);
             if (!this._picker) {
+               if (this._container.hasClass('controls-DropdownList__withoutCross')){
+                  this._options.pickerClassName += ' controls-DropdownList__withoutCross';
+               }
                this._initializePicker();
             }
          },
@@ -470,7 +473,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
                      self._pickerHeadContainer.html(headTpl);
                      self._selectedItemContainer.html(headTpl);
                   }
-                  self._setResetButtonVisibility(id[0] === self._defaultId);
+                  if(id[0] === self._defaultId){
+                     self._getPickerContainer().addClass('controls-DropdownList__hideCross');
+                     self._setResetButtonVisibility(true);
+                  }else{
+                     self._getPickerContainer().removeClass('controls-DropdownList__hideCross');
+                     self._setResetButtonVisibility(false);
+                  }
+
                });
             }
          },

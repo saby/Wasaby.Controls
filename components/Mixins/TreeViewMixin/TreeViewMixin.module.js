@@ -4,6 +4,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
     * @mixin SBIS3.CONTROLS.TreeViewMixin
     * @public
     * @author Крайнов Дмитрий Олегович
+    * @cssModifier controls-ListView__item-without-child Класс добавляется к визуальному представлению папки, у которой отсутствуют дочерние элементы.
     */
 
    var TreeViewMixin = /** @lends SBIS3.CONTROLS.TreeViewMixin.prototype */{
@@ -49,7 +50,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
       _onExpandItem: function(expandedItem) {
          var
             key = expandedItem.getContents().getId(),
-            ladderDecorator = this._decorators.getByName('ladder');
+            ladderDecorator = this._options._decorators.getByName('ladder');
          this._closeAllExpandedNode(key);
          this._options.openedPath[expandedItem.getContents().getId()] = true;
          this._folderOffsets[expandedItem.getContents().getKey()] = 0;
@@ -70,6 +71,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                this._notify('onDataMerge', list);
                this._toggleIndicator(false);
                this._createFolderFooter(key);
+               this._getItemProjectionByItemId(key).setLoaded(true);
                this._drawExpandedItem(expandedItem);
             }.bind(this));
          } else {
@@ -274,7 +276,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
           * @private
           */
          _onUpdateItemProperty: function(parentFunc, item, property) {
-            var ladderDecorator = this._decorators.getByName('ladder'),
+            var ladderDecorator = this._options._decorators.getByName('ladder'),
                 isIgnoreEnabled;
             if (ladderDecorator){
                isIgnoreEnabled = ladderDecorator.getIgnoreEnabled();
