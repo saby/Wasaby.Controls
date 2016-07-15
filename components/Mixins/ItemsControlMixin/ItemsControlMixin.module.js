@@ -12,8 +12,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
    'js!WS.Data/Utils',
    'js!WS.Data/Entity/Model',
-   'Core/ParserUtilities'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities) {
+   'Core/ParserUtilities',
+   'js!SBIS3.CONTROLS.Utils.Sanitize'
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -40,7 +41,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    buildTplArgs = function(cfg) {
       var tplOptions = {}, itemTpl, itemContentTpl;
 
-
+      tplOptions.Sanitize = Sanitize;
       tplOptions.displayField = cfg.displayField;
       tplOptions.templateBinding = cfg.templateBinding;
 
