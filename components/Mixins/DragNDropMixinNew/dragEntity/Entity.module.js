@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.DragEntity.Entity', [], function() {
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var Entity = $ws.proto.Abstract.extend(/**@lends SBIS3.CONTROLS.DragEntity.Entity*/{
+   var Entity = $ws.proto.Abstract.extend(/**@lends SBIS3.CONTROLS.DragEntity.Entity.prototype*/ {
 
    });
 
