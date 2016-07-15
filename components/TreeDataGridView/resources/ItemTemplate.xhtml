@@ -1,7 +1,10 @@
 <!--WS-EXPERT
 {{var
    hierType = it.item.get(it.hierField + '@'),
-   addClasses = 'controls-ListView__item-type-' + (hierType == null ? 'leaf' : hierType == true ? 'node' : 'hidden');
+   hierField$ = it.projItem.getContents().get(it.hierField + '$'),
+   hasLoadedChild = !!it.projItem.getOwner().getCollection().getChildItems(it.projItem.getContents().getId(), undefined, it.projItem.getOwner().getParentProperty()).length,
+   loadedNodeWithoutChilds = it.projItem.isLoaded() && !hasLoadedChild && hierField$ != null,
+   addClasses = 'controls-ListView__item-type-' + (hierType == null ? 'leaf' : hierType == true ? 'node' : 'hidden') + (loadedNodeWithoutChilds ? ' controls-ListView__item-without-child' : '');
    it.isNode = it.projItem.getContents().get(it.hierField + '@'); it.hasChilds = it.projItem.getContents().get(it.hierField + '$') !== false;
 }}
 <tr class="controls-DataGridView__tr controls-ListView__item js-controls-ListView__item {{=it.className}}{{?addClasses}} {{=addClasses}}{{?}}" style="{{=it.decorators.apply((it.colorField ? it.item.get(it.colorField) : ''), 'color')}}" data-parent-hash="{{?it.projItem.getParent()}}{{=it.projItem.getParent().getHash()}}{{?}}" data-hash="{{=it.projItem.getHash()}}" data-id="{{=it.item.getId()}}"

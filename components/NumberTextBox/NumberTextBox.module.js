@@ -172,6 +172,10 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          this._options.text = this._formatText(this._options.text, this._options.hideEmptyDecimals);
          this._setNumericValue(this._options.text);
          this._inputField.val(this._options.text);
+      },
+
+      init: function() {
+         NumberTextBox.superclass.init.apply(this, arguments);
          this._hideEmptyDecimals();
       },
 

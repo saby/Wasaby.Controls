@@ -476,7 +476,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
          breadCrumbs.subscribe('onItemClick', function(event, id){
             self._currentRoot = this._dataSet.getRecordByKey(id);
-            self._currentRoot = self._currentRoot ? self._currentRoot.getRaw() : null;
+            self._currentRoot = self._currentRoot ? self._currentRoot.getRawData() : null;
             if (id === null){
                self._path = [];
             }
