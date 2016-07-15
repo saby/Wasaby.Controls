@@ -340,8 +340,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             filter = this.getFilter() || {};
          cfg = cfg || {};
          this._publish('onSearchPathClick', 'onNodeExpand', 'onNodeCollapse', 'onSetRoot', 'onBeforeSetRoot');
+         this._options._curRoot = this._options.root;
          if (typeof this._options.root != 'undefined') {
-            this._options._curRoot = this._options.root;
             filter[this._options.hierField] = this._options.root;
          }
          if (this._options.expand) {
