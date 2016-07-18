@@ -450,7 +450,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                ///вначале надо проставить значение в редактор ( оно может поменяться ) только потом нотифицировать новым значением
                this._drawText(newText);
                //в контекст кладём тескст без пустых строк вначале и в конце
-               newText = this._trimText(this._curValue());
+               newText = this._trimText(this.isEnabled() ? this._curValue() : newText);
                this._textChanged = true;
                this._options.text = newText;
                this._notify('onTextChange', newText);
