@@ -85,6 +85,9 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
             }
          });
       },
+      _updateHeadAfterInit: function() {
+         this._redrawHead();
+      },
       /**
        * Устанавливает режим отображения данных.
        * @param {String} mode Режим отображения данных: table (таблица), list (список) и tile (плитка).
