@@ -661,7 +661,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             itemContainer = this._getDomElementByItem(item);
             this._ladderCompare([itemContainer.prev(), itemContainer, itemContainer.next()]);
             this._reviveItems();
-            this._notifyOnDrawItems(true);
+            this._notifyOnDrawItems(item.getKey() != this._options.selectedKey);
          }
       },
 
@@ -1420,7 +1420,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          ladder && ladder.setMarkLadderColumn(false);
          this._ladderCompare([newElement.prev(), newElement, newElement.next()]);
          this.reviveComponents();
-         this._notifyOnDrawItems(true);
+         this._notifyOnDrawItems(item.getKey() != this._options.selectedKey);
       },
 
       _getElementByModel: function(item) {
