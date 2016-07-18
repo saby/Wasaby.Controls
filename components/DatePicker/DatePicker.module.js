@@ -197,7 +197,23 @@ define(
              * @see mask
              * @see setDate
              */
-            isCalendarIconShown: true
+            isCalendarIconShown: true,
+            /**
+             * @cfg {String} Режим нотификации об изменении даты.
+             * @variant 'focus' Нотификация будет происходить только по уходу фокуса
+             * @variant 'change' Нотификация будет происходить только при изменении даты
+             * @example
+             * Нотификация будет только по уходу фокуса
+             * <pre>
+             *     <option name="notificationType">focus</option>
+             * </pre>
+             * Нотификация будет при изменении даты и по уходу фокуса
+             * <pre>
+             *     <option name="notificationType">change|focus</option>
+             * </pre>
+             * @see onDateChange
+             */
+            notificationType: 'focus'
          }
       },
 
@@ -358,7 +374,7 @@ define(
        */
       setDate: function (date) {
          this._setDate(date);
-         this._notifyOnDateChanged();
+         this._notifyOnDateChanged('change');
       },
 
       /**
@@ -452,27 +468,30 @@ define(
        * @private
        */
       _updateText: function() {
-         // Запоминаем стый текст для последующего сравнения и генерации события
-         var oldText = this._options.text;
+         // Запоминаем старый текст для последующего сравнения и генерации события
+         var
+             oldText = this._options.text,
+             oldDate = this._options.date;
 
          DatePicker.superclass._updateText.apply(this, arguments);
 
-         // Если дата изменилась -- генерировать событие.
+         // Если текст изменился -- возможно изменилась и дата.
          if (oldText !== this._options.text) {
             this._options.date = this._getDateByText(this._options.text, this._options.date);
-            if (DateUtil.isValidDate(this._options.date)) {
-               //если в текст ввели невалидную дату, например 05.14 (14-месяц) и произошла корректировка
-               this._options.text = this._getTextByDate(this._options.date);
-            } else {
+            if (!DateUtil.isValidDate(this._options.date)) {
                this._options.date = null;
             }
-            this._notifyOnDateChanged();
+            if (oldDate !== this._options.date) {
+               this._notifyOnDateChanged('change');
+            }
          }
       },
 
-      _notifyOnDateChanged: function() {
-         this._notifyOnPropertyChanged('date', this._options.date);
-         this._notify('onDateChange', this._options.date);
+      _notifyOnDateChanged: function(initType) {
+         if (this._options.notificationType.indexOf(initType) !== -1) {
+            this._notifyOnPropertyChanged('date', this._options.date);
+            this._notify('onDateChange', this._options.date);
+         }
          //TODO: логика валидации находится на уровне TextBoxBase, но сейчас форматные поля не вызывают функции базового контрола поэтому
          //приходится дублировать логику, в 3.7.4.100 нужно сделать чтобы форматные поля и поля даты вызывали функции родительского контрола
          this._textChanged = true;
@@ -480,11 +499,14 @@ define(
       },
       setActive: function(active) {
          var date;
-         if (!active && !this.formatModel.isFilled()) {
-            date = this._getDateByText(this._options.text, this._options.date, true);
-            if (date) {
-               this.setDate(date);
+         if (!active) {
+            if (!this.formatModel.isFilled()) {
+               date = this._getDateByText(this._options.text, this._options.date, true);
+               if (date) {
+                  this.setDate(date);
+               }
             }
+            this._notifyOnDateChanged('focus');
          }
          DatePicker.superclass.setActive.apply(this, arguments);
       },
