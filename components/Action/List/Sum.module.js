@@ -2,7 +2,7 @@
 define('js!SBIS3.CONTROLS.Action.List.Sum', [
         'js!SBIS3.CONTROLS.Action.Action',
         'js!SBIS3.CONTROLS.Action.List.ListMixin',
-        'js!SBIS3.CONTROLS.Action.DialognMixin',
+        'js!SBIS3.CONTROLS.Action.DialogMixin',
         'js!SBIS3.CONTROLS.Data.Source.SbisService',
         'js!SBIS3.CONTROLS.Data.Record',
         'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
