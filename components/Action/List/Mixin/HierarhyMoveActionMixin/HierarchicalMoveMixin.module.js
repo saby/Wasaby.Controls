@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.Action.List.HierarchicalMoveMixin',[
           * @param {WS.Data/Entity/Model} to
           * @returns {$ws.proto.Deferred}
           */
-         hierarhyMove: function (from, to) {
+         _move: function (from, to) {
             var def = new $ws.proto.ParallelDeferred(),
                self = this,
                updateItems;

@@ -75,8 +75,10 @@
          background-image: none !important;
       }
       &.controls-ListView__item {
-         border-color: transparent;
-         background-color: transparent !important;
+         &:not(.controls-ListView__hoveredItem) {
+            border-color: transparent;
+            background-color: transparent !important;
+         }
       }
    }
 }

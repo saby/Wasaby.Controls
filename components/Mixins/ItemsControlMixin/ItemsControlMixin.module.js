@@ -647,12 +647,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else {
                dot = data.defaultItemTpl;
             }
+
+               var ladder = this._options._decorators.getByName('ladder');
+               ladder && ladder.setMarkLadderColumn(true);
+
             markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this._options);
             /*TODO посмотреть не вызывает ли это тормоза*/
             this._clearItems(targetElement);
-            /*TODO С этим отдельно разобраться*/
-
             targetElement.after(markup).remove();
+
+               ladder && ladder.setMarkLadderColumn(false);
+
             itemContainer = this._getDomElementByItem(item);
             this._ladderCompare([itemContainer.prev(), itemContainer, itemContainer.next()]);
             this._reviveItems();
@@ -1650,8 +1655,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
       _isNeedToRedraw: function(){
-         //Проверяем _needToRedraw для поддержки старой медленной отрисовки
-      	return !!this._getItemsContainer() && this._needToRedraw;
+         // Проверяем _needToRedraw для поддержки старой медленной отрисовки
+         // Если быстрая отрисовка - считаем, что перерисовка необходима
+         return !!this._getItemsContainer() && (!this._isSlowDrawing() || this._needToRedraw);
       },
 
       _changeItemProperties: function(item, property) {
