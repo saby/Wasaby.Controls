@@ -193,7 +193,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                //1. если это было создание
                //2. если есть ключ (метод создать его вернул)
                //3. ничего не поменяли в рекорде, но закрывают либо поменяли, но нажали нет
-               if (this._newRecord && record.getKey() && (!this._saving && !record.isChanged() || result === false)){
+               if (this._newRecord && record.getId() && (!this._saving && !record.isChanged() || result === false)){
                   this._destroyModel();
                }
                this._saving = false;
@@ -599,7 +599,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          var newKey;
          this._options.record = this._panel._record = record;
          if (updateKey){
-            newKey = record.getKey();
+            newKey = record.getId();
             this._options.key = newKey;
          }
          this._updateDocumentTitle();
