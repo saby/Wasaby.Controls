@@ -1347,6 +1347,15 @@ define('js!SBIS3.CONTROLS.RichEditor',
                self.setText(self._getTinyEditorValue());
             });
 
+            editor.on( 'cut',function(e){
+               if (self._options.editorConfig.paste_as_text) { // в костроме отключают нашу утилиту
+                  e.stopImmediatePropagation();
+                  editor.execCommand('forwardDelete');
+               }
+               setTimeout(function() {
+                  self.setText(self._getTinyEditorValue());
+               }, 1);
+            });
             //Сообщаем компоненту об изменении размеров редактора
             editor.on('resizeEditor', function() {
                self._notifyOnSizeChanged();
