@@ -408,7 +408,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       init: function() {
          DataGridView.superclass.init.call(this);
-         this._bindHead();
+         if (this._options._serverRender) {
+            this._bindHead();
+         }
+         else {
+            this._redrawHead();
+         }
+
       },
 
       _mouseMoveHandler: function(e) {
