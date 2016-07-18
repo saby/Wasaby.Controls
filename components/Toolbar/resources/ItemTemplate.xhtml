@@ -1,6 +1,7 @@
 {{var
     subItems,
     item = it.item,
+    options = item.get('options') || {},
     className = item.get('className') || '',
     itemKey = item.get(it.keyField),
     visible = !!(item.get('showType') == it.showType.MENU_TOOLBAR || item.get('showType') == it.showType.TOOLBAR );
@@ -11,10 +12,16 @@
             if (subItems[i].parent == itemKey ) {
                 delete subItems[i].parent;
             }
+        if (subItems.length) {
+            options.items = subItems;
+            options.keyField = it.keyField;
+            options.hierField = it.hierField;
+            options.displayField = it.displayField;
+        }
         }
     }
 }}
-<component data-component="{{=item.get('componentType').substr(3)}}"
+<component data-component="{{=item.get('componentType').substr(3)}}" config="{{=$ws.helpers.encodeCfgAttr(options)}}"
            data-hash="{{=it.projItem.getHash()}}"
            data-id="{{=itemKey}}"
            class="controls-ListView__item js-controls-ListView__item controls-ToolBar__item {{=className}}">
@@ -22,10 +29,4 @@
     {{?item.get('icon')}}<option name="icon">{{=item.get('icon')}}</option>{{?}}
     {{?item.get('caption')}}<option name="caption">{{=item.get('caption')}}</option>{{?}}
     {{?item.get('command')}}<option name="command">{{=item.get('command')}}</option>{{?}}
-    {{?visible && subItems.length}}
-        <option name="items" type="boolean">{{=subItems}}</option>
-        <option name="keyField" type="boolean">{{=it.keyField}}</option>
-        <option name="hierField" type="boolean">{{=it.hierField}}</option>
-        <option name="displayField" type="boolean">{{=it.displayField}}</option>
-    {{?}}
 </component>
