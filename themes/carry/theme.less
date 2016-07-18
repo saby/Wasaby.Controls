@@ -63,15 +63,6 @@
    }
 }
 
-.ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
-   &.ws-field-button {
-      width: 36px !important;
-      height: 24px !important;
-      min-height: 24px  !important;
-      background-color: transparent !important;
-   }
-}
-
 .ws-field-button {
    font-size: 24px  !important;
    min-height: 40px  !important;
@@ -115,6 +106,7 @@
 }
 
 .ws-window {
+   border-color: #fff !important;
    &.radius {
       border-radius: 0 !important;
    }
@@ -126,25 +118,6 @@
       .controls-TextBox__fieldWrapper {
          .controls-TextBox__field {
             font-size: @text-box-height-carryFont;
-         }
-      }
-   }
-}
-
-.controls-FloatArea {
-   &.controls__filterButton__picker {
-      .controls-PopupMixin__closeButton {
-         top: @controls-filterButton-closeButton-top;
-         height: 40px;
-         width:  60px;
-
-
-         background: @closeFilterButtonImage;
-         &:hover {
-            background: @closeFilterButtonImageHover;
-         }
-         &:active {
-            background: @closeFilterButtonImageHover;
          }
       }
    }
@@ -191,19 +164,27 @@
       background-color: #F4F4F4 !important;
    }
 }
-.ws-window-titlebar, .ws-date-range-choose-menu-block {
-   .ws-window-titlebar-action.close {
-      width: 60px !important;
-      height: 40px !important;
-      background: @closeFilterButtonImage !important;
-      &:hover {
-         background: @closeFilterButtonImageHover !important;
-      }
-      &:active {
-         background: @closeFilterButtonImageHover !important;
+
+.ws-window-titlebar-action.close, .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled.ws-button-classic, .controls-PopupMixin__closeButton {
+   width: 60px !important;
+   height: 40px !important;
+   background: @closeFilterButtonImage !important;
+   &:hover {
+      background: @closeFilterButtonImageHover !important;
+   }
+   &:active {
+      background: @closeFilterButtonImageHover !important;
+   }
+}
+
+.controls-FloatArea {
+   &.controls__filterButton__picker {
+      .controls-PopupMixin__closeButton {
+         top: @controls-filterButton-closeButton-top;
       }
    }
 }
+
 .ws-date-range-choose-menu-block {
    .ws-window-titlebar-action.close {
       top: 10px !important;

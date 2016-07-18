@@ -47,24 +47,29 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             _canExecute: true
          },
 
-         _doExecute: function() {
-            var records = this.getSelectedItems();
+         _doExecute: function(meta) {
+            meta = meta || {};
+            var records = meta.records || this.getSelectedItems();
             this._opendEditComponent({
                title: rk('Перенести') + ' ' + records.length + $ws.helpers.wordCaseByNumber(records.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
                cssClassName: 'controls-moveDialog',
-               opener: this._options.linkedObject
+               opener: this._options.linkedObject,
+               records: records
             }, this._options.template);
          },
 
-         _buildComponentConfig: function() {
+         _buildComponentConfig: function(meta) {
             var self = this;
-            var records = this.getSelectedItems();
             return {
                linkedView: this._options.linkedObject,
-               records: records,
+               dataSource: this._options.dataSource,
+               records: meta.records,
                handlers: {
                   onPrepareFilterOnMove: function(event, rec) {
                      event.setResult(self._options.linkedObject._notify('onPrepareFilterOnMove', rec));
+                  },
+                  onMove: function(e, records, moveTo) {
+                     self._move(records, moveTo);
                   }
                }
             };

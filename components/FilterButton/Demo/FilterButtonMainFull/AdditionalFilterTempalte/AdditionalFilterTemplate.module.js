@@ -5,7 +5,8 @@ define('js!SBIS3.CONTROLS.Demo.AdditionalFilterTemplate', [
        'js!SBIS3.CORE.CompoundControl',
        'html!SBIS3.CONTROLS.Demo.AdditionalFilterTemplate',
        'css!SBIS3.CONTROLS.Demo.AdditionalFilterTemplate',
-       'js!SBIS3.CONTROLS.ComboBox'
+       'js!SBIS3.CONTROLS.ComboBox',
+       'js!SBIS3.CONTROLS.FilterLink'
     ],
     function(CompoundControl, ContentTpl) {
 
