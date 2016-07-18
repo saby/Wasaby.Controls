@@ -375,6 +375,7 @@ define(
       setDate: function (date) {
          this._setDate(date);
          this._notifyOnDateChanged('change');
+         this._onTextChanged();
       },
 
       /**
@@ -484,7 +485,14 @@ define(
             if (oldDate !== this._options.date) {
                this._notifyOnDateChanged('change');
             }
+            this._onTextChanged();
          }
+      },
+      //TODO: логика валидации находится на уровне TextBoxBase, но сейчас форматные поля не вызывают функции базового контрола поэтому
+      //приходится дублировать логику, в 3.7.4.100 нужно сделать чтобы форматные поля и поля даты вызывали функции родительского контрола
+      _onTextChanged: function() {
+         this._textChanged = true;
+         this.clearMark();
       },
 
       _notifyOnDateChanged: function(initType) {
@@ -492,10 +500,6 @@ define(
             this._notifyOnPropertyChanged('date', this._options.date);
             this._notify('onDateChange', this._options.date);
          }
-         //TODO: логика валидации находится на уровне TextBoxBase, но сейчас форматные поля не вызывают функции базового контрола поэтому
-         //приходится дублировать логику, в 3.7.4.100 нужно сделать чтобы форматные поля и поля даты вызывали функции родительского контрола
-         this._textChanged = true;
-         this.clearMark();
       },
       setActive: function(active) {
          var date;
