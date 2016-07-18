@@ -374,7 +374,7 @@ define(
        */
       setDate: function (date) {
          this._setDate(date);
-         this._notifyOnDateChanged('change');
+         this._notifyOnDateChanged();
          this._onTextChanged();
       },
 
@@ -496,7 +496,7 @@ define(
       },
 
       _notifyOnDateChanged: function(initType) {
-         if (this._options.notificationType.indexOf(initType) !== -1) {
+         if (!initType || this._options.notificationType.indexOf(initType) !== -1) {
             this._notifyOnPropertyChanged('date', this._options.date);
             this._notify('onDateChange', this._options.date);
          }
