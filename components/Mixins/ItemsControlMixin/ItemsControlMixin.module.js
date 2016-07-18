@@ -661,7 +661,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             itemContainer = this._getDomElementByItem(item);
             this._ladderCompare([itemContainer.prev(), itemContainer, itemContainer.next()]);
             this._reviveItems();
-            this._notifyOnDrawItems();
          }
       },
 
@@ -828,7 +827,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   }
                   /*TODO Лесенка*/
                }
-               this._notifyOnDrawItems();
             }
          }
       },
