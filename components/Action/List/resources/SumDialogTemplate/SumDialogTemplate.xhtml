@@ -4,9 +4,10 @@
         {{while (field = enumerator.getNext()) {}}
             <div class="controls-SumDialogTemplate__row">
                 {{title = it.fields[field] || field;}}
+                {{value = model.get(field);}}
                 {{?model.getType(field) === "Деньги"}}
                     {{value = $ws.render.defaultColumn.money(model.get(field));}}
-                {{??}}
+                {{??model.getType(field) === "Число целое"}}
                     {{value = $ws.render.defaultColumn.integer(model.get(field));}}
                 {{?}}
                 <div class="controls-SumDialogTemplate__row-title" title="{{=title}}">{{=title}}</div>
