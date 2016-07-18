@@ -213,7 +213,7 @@ define(
              * </pre>
              * @see onDateChange
              */
-            notificationType: 'focus'
+            notificationType: 'change'
          }
       },
 
