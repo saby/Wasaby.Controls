@@ -1,0 +1,31 @@
+.controls-SumDialogTemplate {
+
+   .controls-SumDialogTemplate__modelView {
+      margin: @controls-SumDialogTemplate-modelView-margin;
+
+      .controls-SumDialogTemplate__row {
+         height: @controls-SumDialogTemplate-row-height;
+
+         .controls-SumDialogTemplate__row-title, .controls-SumDialogTemplate__row-value {
+            .text-overflow();
+            display: inline-block;
+         }
+         .controls-SumDialogTemplate__row-title {
+            max-width: @controls-SumDialogTemplate-row-title-max-width;
+         }
+         .controls-SumDialogTemplate__row-value {
+            max-width: @controls-SumDialogTemplate-row-value-max-width;
+            float: @controls-SumDialogTemplate-row-value-float;
+         }
+      }
+   }
+
+   .controls-SumDialogTemplate__OK-container {
+      text-align: @controls-SumDialogTemplate-OK-align;
+
+      .controls-SumDialogTemplate__OK {
+         width: @controls-SumDialogTemplate-OK-width;
+         margin-bottom: @controls-SumDialogTemplate-OK-margin-bottom;
+      }
+   }
+}
