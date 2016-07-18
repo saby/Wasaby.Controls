@@ -257,7 +257,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
               */
             items: null,
             /**
-             * @cfg {DataSource|SBIS3.CONTROLS.Data.Source.ISource|Function|Object} Устанавливает набор исходных данных, по которому строится отображение.
+             * @cfg {DataSource|WS.Data/Source/ISource|Function|Object} Устанавливает набор исходных данных, по которому строится отображение.
              * @remark
              * Если установлен источник данных, то значение опции {@link items} будет проигнорировано.
              * @example
@@ -267,14 +267,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              *    var myDataSource = new SbisService({ // Инициализация источника данных
              *        endpoint: {
              *           contract: 'Отчеты', // Устанавливаем объект БЛ, в котором есть методы для работы с данными таблицы
-             *           address: 'myNewService/service/sbis-rpc-service300.dll' // Устанавливаем точка входа в другой сервис
-             *       },
-             *       binding: {
-             *          query: 'Список' // Устанавливаем списочный метод
-             *       },
-             *       idProperty: '@Идентификатор' // Устанавливаем поле первичного ключа
+             *           address: 'myNewService/service/sbis-rpc-service300.dll' // Устанавливаем точку входа в другой сервис
+             *        },
+             *        binding: {
+             *           query: 'Список' // Устанавливаем списочный метод
+             *        },
+             *        idProperty: '@Идентификатор' // Устанавливаем поле первичного ключа
              *    });
-             *    myView.setDataSource(myDataSource); // Устанавливаем источник данных представлению данных
+             *    myView.setDataSource(myDataSource); // Устанавливаем представлению новый источник данных
              * </pre>
              *
              * <b>Пример 2.</b> Конфигурация источника данных через вёрстку компонента.
@@ -285,8 +285,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * </ul>
              * Аналогичная предыдущему примеру конфигурация будет выглядеть следующим образом:
              * <pre>
-             *    <options name="datsSource">
-             *       <option name="module" value="SBIS3.CONTROLS.Data.Source.SbisService"></options>
+             *    <options name="dataSource">
+             *       <option name="module" value="WS.Data/Source/SbisService"></options>
              *       <options name="options">
              *          <options name="binding">
              *             <option name="contract" value="Отчеты"></option>
@@ -1040,7 +1040,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * Устанавливает источник данных.
         * @remark
         * Если источник данных установлен, значение опции {@link items} будет проигнорировано.
-        * @param {DataSource|SBIS3.CONTROLS.Data.Source.ISource|} source Новый источник данных.
+        * @param {DataSource|WS.Data/Source/ISource} source Новый источник данных.
         * @param {Boolean} noLoad Признак, с помощью устанавливается необходимость запроса нового набора данных по установленному источнику.
         * Если параметр установлен в значение true, то данные не будут подгружены, а также не произойдут события {@link onBeforeDataLoad}, {@link onDataLoad}, {@link onItemsReady} или {@link onDataLoadError}.
         * @example
@@ -1048,7 +1048,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         *     define( 'SBIS3.MyArea.MyComponent',
         *        [ // Массив зависимостей компонента
         *           ... ,
-        *           'js!SBIS3.CONTROLS.Data.Source.Memory' // Подключаем класс для работы со статическим источником данных
+        *           'js!WS.Data/Source/Memory' // Подключаем класс для работы со статическим источником данных
         *        ],
         *        function(
         *           ...,
@@ -1064,7 +1064,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         *              data: arrayOfObj,                // Передаём набор "сырых" данных
         *              idProperty: '@Заметка'           // Устанавливаем поле первичного ключа в источнике данных
         *           });
-        *           this.getChildControlByName("ComboBox 1").setDataSource(ds1); // Устанавливаем источник представлению данных
+        *           this.getChildControlByName('ComboBox 1').setDataSource(ds1); // Устанавливаем источник представлению данных
         *        }
         *     );
         * </pre>
