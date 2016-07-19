@@ -1490,7 +1490,12 @@ define('js!SBIS3.CONTROLS.ListView',
                               this.getItemsActions().getItemsInstances()['delete'].toggle(this._lastDeleteActionState);
                               this._lastDeleteActionState = undefined;
                            }
-                           this._hideItemsToolbar();
+                           // Если после редактирования более hoveredItem остался - то нотифицируем об его изменении, в остальных случаях просто скрываем тулбар
+                           if (this.getHoveredItem().container) {
+                              this._notifyOnChangeHoveredItem();
+                           } else {
+                              this._hideItemsToolbar();
+                           }
                         }
                         this.setSelectedKey(model.getId());
                         event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));

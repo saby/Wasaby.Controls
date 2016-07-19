@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
             if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
                deferred.addCallback(function() {
                   if (isChangeOrder) {
-                     self._afterOrderChange(records, recordTo, !insertAfter);
+                     self.moveInItems(records, recordTo, !insertAfter);
                   } else {
                      //TODO: пока дерево не перевели на проекции, нужно пересчитывать дерево индексов, т.к. после set
                      //в поле иерархии он сам этого не сделает
@@ -209,16 +209,20 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
          var self = this,
              moveToItem = this._options._items.getRecordById(moveToId);
          this.getMoveStrategy().move([item], moveToItem, !up).addCallback(function() {
-            self._afterOrderChange([item], moveToItem, up);
+            self.moveInItems([item], moveToItem, up);
          }).addErrback(function(e) {
             $ws.core.alert(e.message);
          });
       },
-      _afterOrderChange: function(items, moveToItem, up) {
+      moveInItems: function(items, moveToItem, up) {
          this._options._itemsProjection.setEventRaising(false, true);
          var moveToIndex;
          $ws.helpers.forEach(items, function(item) {
             var projectionItem =  this._options._itemsProjection.getItemBySourceItem(item);
+            if (this._options.hierField) {
+               //если перемещение было по порядку и иерархии одновременно, то надо обновить hierField
+               item.set(this._options.hierField, moveToItem.get(this._options.hierField));
+            }
             if(up) { //Если перемещаем вверх то надо вставить перемещаемую запись перед записью к которой перемещаем.
                moveToIndex = this._options._items.getIndex(moveToItem);
                moveToIndex = moveToIndex > -1 ?  moveToIndex : 0;//если не нашли то всталяем вначало

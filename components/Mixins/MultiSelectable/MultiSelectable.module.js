@@ -58,10 +58,12 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
             multiselect : true,
             /**
              * @cfg {String[]} Устанавливает массив идентификаторов, по которым будет установлен набор выбранных элементов коллекции.
-             * @remark file MultiSelectable-selectedKeys.md
+             * @remark
+             * Устанавливает массив идентификаторов элементов коллекции, которые будут по умолчанию выбраны для контрола.
+             * Опция актуальна только для контрола в режиме множественного выбора значений, который устанавливают с помощью опции {@link multiselect}.
+             * Чтобы элементы коллекции были выбраны, для контрола дополнительно должны быть установлены {@link SBIS3.CONTROLS.DSMixin#keyField поле первичного ключа} и {@link SBIS3.CONTROLS.DSMixin#dataSource источник данных}.
              * @example
-             * В контрол, отображающий набор данных в виде таблицы {@link SBIS3.CONTROLS.DataGridView},
-             * переданы три идентификатора элементов коллекции:
+             * В контрол, отображающий набор данных в виде таблицы {@link SBIS3.CONTROLS.DataGridView},  переданы три идентификатора элементов коллекции:
              * ![](/MultiSelectable03.png)
              * фрагмент верстки:
              * <pre class="brush: xml">

@@ -48,36 +48,8 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
        * @private
        */
       _onExpandItem: function(expandedItem) {
-         var
-            key = expandedItem.getContents().getId(),
-            ladderDecorator = this._options._decorators.getByName('ladder');
-         this._closeAllExpandedNode(key);
-         this._options.openedPath[expandedItem.getContents().getId()] = true;
-         this._folderOffsets[expandedItem.getContents().getKey()] = 0;
-         if (this._dataSource && !this._loadedNodes[key] && this._options.partialyReload) {
-            this._toggleIndicator(true);
-            this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), 0, this._limit);
-            return this._callQuery(this._createTreeFilter(key), this.getSorting(), 0, this._limit).addCallback(function (list) {
-               // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
-               // так как на него много всего завязано. (пользуется Янис)
-               this._folderHasMore[key] = list.getMetaData().more;
-               this._loadedNodes[key] = true;
-               ladderDecorator && ladderDecorator.setIgnoreEnabled(true);
-               this._options._items.merge(list, {remove: false});
-               ladderDecorator && ladderDecorator.setIgnoreEnabled(false);
-               if (this._isSlowDrawing()) {
-                  this._options._items.getTreeIndex(this._options.hierField, true);
-               }
-               this._notify('onDataMerge', list);
-               this._toggleIndicator(false);
-               this._createFolderFooter(key);
-               this._getItemProjectionByItemId(key).setLoaded(true);
-               this._drawExpandedItem(expandedItem);
-            }.bind(this));
-         } else {
-            this._createFolderFooter(key);
-            this._drawExpandedItem(expandedItem);
-         }
+         this._createFolderFooter(expandedItem.getContents().getId());
+         this._drawExpandedItem(expandedItem);
       },
       _drawExpandedItem: function(expandedItem) {
          //todo При переходе на Virtual DOM удалить работу с expandedItemContainer
