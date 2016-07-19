@@ -844,7 +844,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             cfg = {
                element : elem,
                items: this._createPathItemsDS(path),
-               parent: this.getTopParent(),
+               parent: this,
                highlightEnabled: this._options.highlightEnabled,
                highlightText: this._options.highlightText,
                colorMarkEnabled: this._options.colorMarkEnabled,
