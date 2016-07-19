@@ -205,7 +205,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          }.bind(this));
          var self = this;
          this._panelReadyDeferred = new $ws.proto.Deferred();
-         this._panel.subscribe('onAfterShow', function() {
+         this._panel.once('onAfterShow', function() {
             self._updateIndicatorZIndex();
             self._panelReadyDeferred.callback();
          });
