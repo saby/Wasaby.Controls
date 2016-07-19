@@ -421,7 +421,7 @@ define('js!SBIS3.CONTROLS.Image',
                   template: 'js!SBIS3.CONTROLS.Image.EditDialog',
                   opener: this,
                   visible: false,
-                  minWidth: 315,
+                  minWidth: 390,
                   cssClassName: 'controls-EditDialog__template',
                   componentOptions: $ws.core.merge({
                      dataSource: dataSource,
