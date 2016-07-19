@@ -33,12 +33,13 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
       'browser!html!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
+      'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
-             Link, ScrollWatcher, IBindCollection, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate) {
+             Link, ScrollWatcher, IBindCollection, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager) {
 
       'use strict';
 
@@ -1032,7 +1033,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _onChangeHoveredItem: function (target) {
             if (this._isSupportedItemsToolbar()) {
-         		if (target.container){
+               if (target.container){
                   if (!this._touchSupport) {
                      this._showItemsToolbar(target);
                   }
@@ -1148,6 +1149,24 @@ define('js!SBIS3.CONTROLS.ListView',
             /* Клик по чекбоксу не должен вызывать активацию элемента */
             if(!$(target).hasClass('js-controls-ListView__itemCheckBox')) {
                this._activateItem(id);
+            }
+         },
+         //TODO: Временное решение для выделения "всех" (на самом деле первой тысячи) записей
+         setSelectedAll: function() {
+            if (this._options.infiniteScroll && this.getItems().getCount() < 1000){
+               this.reload(this.getFilter(), this.getSorting(), 0, 1000)
+                  .addCallback(function(dataSet) {
+                     ListView.superclass.setSelectedItemsAll.call(this);
+                     if (dataSet.getMetaData().more){
+                        InformationPopupManager.showMessageDialog({
+                           status: 'success', 
+                           message: 'Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.', 
+                           details: 'Дополнительный текст'
+                        });
+                     }
+                  }.bind(this));
+            } else {
+               ListView.superclass.setSelectedItemsAll.call(this);
             }
          },
          _drawSelectedItems: function (idArray) {
