@@ -2,6 +2,12 @@
    display: inline-block;
    min-height: @DropdownList-min-height;
    box-sizing: @DropdownList-box-sizing;
+   .controls-DropdownList__selectedItem {
+      font-size: 0;
+      * {
+         font-size: @font-basic-size;
+      }
+   }
    .controls-DropdownList__selectedItem > * {
       display: inline-block;
    }
@@ -20,16 +26,11 @@
    .controls-DropdownList__afterCaptionWrapper {
       display: inline-block;
       position: relative;
-      margin-left: -4px;
       top: 2px;
 
       .controls-DropdownList__crossIcon {
          display: inline-block;
       }
-   }
-
-   .controls-DropdownList__textWrapper {
-      margin-left: -4px;
    }
 
    &.controls-DropdownList__withoutArrow{
@@ -43,9 +44,6 @@
    &.controls-DropdownList__withoutCross, &.ws-disabled{
       & .controls-DropdownList__afterCaptionWrapper{
          display: none;
-      }
-      .controls-DropdownList__textWrapper {
-         padding-right: 4px;
       }
    }
    &:hover{
@@ -127,12 +125,6 @@
       }
    }
 
-   &.controls-DropdownList__hideCross, &.controls-DropdownList__withoutCross {
-      .controls-DropdownList__item {
-         padding-right: 4px;
-      }
-   }
-
 
    &.controls-DropdownList__showSelectedInList{
       .controls-DropdownList__item.controls-DropdownList__item__selected{
@@ -157,6 +149,14 @@
    }
    .controls-DropdownList__multiselect {
       padding-left: @DropdownList-picker-menu-item-multiselect-padding;
+
+      &.controls-ListView__item {
+         font-size: 0;
+         * {
+            font-size: @DropdownList-picker-menu-font-size;
+         }
+      }
+
       &.controls-DropdownList__item__selected {
          display: block;
       }
@@ -182,12 +182,14 @@
          background: @check-box-icon-bg-pathFilter;
          visibility: hidden;
       }
-
-      .controls-DropdownList__itemTextWrapper {
-         margin-left: -4px;
-      }
    }
    .controls-DropdownList__linkStyle{
       color: @DropdownList-linkStyleHoverColor;
+   }
+}
+
+&.controls-DropdownList__hideCross, &.controls-DropdownList__withoutCross {
+   .controls-DropdownList__item, .controls-DropdownList__selectedItem {
+      padding-right: 4px;
    }
 }
