@@ -507,6 +507,7 @@ define(
             notFilled = [],
             now = new Date(),
             curYear = now.getFullYear(),
+            curCentury = (curYear - curYear % 100),
             yyyy = date ? date.getFullYear() : 0,
             mm   = date ? date.getMonth() : 0,
             dd   = date ? date.getDate() : 1,
@@ -526,8 +527,9 @@ define(
             if (value.indexOf(this._maskReplacer) === -1) {
                switch (item.mask) {
                   case 'YY' :
-                     //Если год задаётся двумя числами, то считаем что это текущий век.
-                     yyyy = (curYear - curYear % 100) + Number(value);
+                     value = Number(value);
+                     //Если год задаётся двумя числами, то считаем что это текущий век если год меньше 90, если же год больше 90 то это прошлый век.
+                     yyyy = value + 10 < 100 ? curCentury + value : (curCentury - 100) + value;
                      break;
                   case 'YYYY' :
                      yyyy = value;
