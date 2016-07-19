@@ -49,7 +49,11 @@ define('js!SBIS3.CONTROLS.DecorableMixin', [
 
       around : {
          _modifyOptions : function(parentFnc, cfg) {
-            var newCfg = parentFnc.call(this, cfg);
+            var newArgs = [];
+            for (var i = 1; i < arguments.length; i++) {
+               newArgs.push(arguments[i]);
+            }
+            var newCfg = parentFnc.apply(this, newArgs);
             newCfg._decorators = new HtmlDecorators();
 
             newCfg._decorators.add(new HighlightDecorator({

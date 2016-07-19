@@ -85,6 +85,11 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             targetPart: true,
             footerTpl: this._options.footerTpl
          };
+         if (this._options.pickerConfig){
+            $ws.helpers.forEach(this._options.pickerConfig, function(val, key) {
+               pickerConfig[key] = val;
+            });
+         }
          menuconfig = this._modifyPickerOptions(menuconfig);
          if (this._dataSource) {
             menuconfig.dataSource = this._dataSource;
