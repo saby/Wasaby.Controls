@@ -675,7 +675,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Обрабатывает событие о нахождении указателя над элементом коллекции
-       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} hash Хэш элемента, на который произошло наведение указателя
        * @param {Boolean} isHover Указатель наведен или ушел за пределы конейнера элемента
        * @param {Element} item DOM элемент
@@ -690,7 +690,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Обрабатывает событие о клике по элементу коллекции
-       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} hash Хэш элемента, на котором произошел клик
        * @private
        */
@@ -704,7 +704,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Обрабатывает событие о двойном клике по элементу коллекции
-       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} hash Хэш элемента, на котором произошел двойной клик
        * @private
        */
@@ -761,7 +761,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Вызывается просле загрузки данных через источник
-       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} [mode=WS.Data/Collection/ISourceLoadable/MODE_REPLACE] Режим загрузки
        * @param {Object} items Коллекция, полученная из источника
        * @private
@@ -793,7 +793,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
    /**
     * Обрабатывает событие об изменении коллекции
-    * @param {$ws.proto.EventObject} event Дескриптор события.
+    * @param {$ws.proto.EventObject} eventObject Дескриптор события.
     * @param {String} action Действие, приведшее к изменению.
     * @param {WS.Data/Display/CollectionItem[]} newItems Новые элементы коллеции.
     * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
@@ -855,7 +855,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
    /**
     * Обрабатывает событие об изменении элемента коллекции
-    * @param {$ws.proto.EventObject} event Дескриптор события.
+    * @param {$ws.proto.EventObject} eventObject Дескриптор события.
     * @param {WS.Data/Display/CollectionItem} item Измененный элемент коллеции.
     * @param {Integer} index Индекс измененного элемента.
     * @param {String} [property] Измененное свойство элемента

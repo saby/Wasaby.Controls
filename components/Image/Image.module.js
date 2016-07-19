@@ -16,6 +16,8 @@ define('js!SBIS3.CONTROLS.Image',
       var
          //Продолжительность анимации при отображения панели изображения
          ANIMATION_DURATION = 300,
+         MIN_TOOLBAR_WIDTH = 125, //минимальный размер тулбара для которого убирается  напись "загрузить" и кнопка "удалить"
+         MIN_TOOLBAR_WIDTH_WITH_EDIT = 155,// минимальный размер тулбара для которого убирается  напись "загрузить" и все оставльные кнопки
          /**
           * Контрол "Изображение". Позволяет отображать и редактировать изображение
           * @class SBIS3.CONTROLS.Image
@@ -237,6 +239,7 @@ define('js!SBIS3.CONTROLS.Image',
                _fileLoader: undefined,
                _buttonReset: undefined,
                _buttonEdit: undefined,
+               _buttonUpload: undefined,
                _boundEvents: undefined,
                _saveIndicator: undefined,
                _firstLoaded: false
@@ -253,16 +256,21 @@ define('js!SBIS3.CONTROLS.Image',
             },
             init: function() {
                var
-                  dataSource = this.getDataSource();
-                Image.superclass.init.call(this);
+                  dataSource = this.getDataSource(),
+                  width = this._container.width();
+               Image.superclass.init.call(this);
                this._bindEvens();
                //Находим компоненты, необходимые для работы (если нужно)
                if (this._options.imageBar) {
                   this._buttonEdit = this.getChildControlByName('ButtonEdit');
+                  this._buttonUpload = this.getChildControlByName('ButtonUpload');
                   this._buttonReset = this.getChildControlByName('ButtonReset');
                  //todo Удалить, временная опция для поддержки смены логотипа компании
                   if (dataSource) {
                      this._getFileLoader().setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
+                  }
+                  if (width !==0 &&((width < MIN_TOOLBAR_WIDTH && !this._options.edit )||(this._options.edit && width < MIN_TOOLBAR_WIDTH_WITH_EDIT ))){
+                     this._buttonUpload.setCaption('');
                   }
                   this._bindToolbarEvents();
                }
@@ -413,7 +421,7 @@ define('js!SBIS3.CONTROLS.Image',
                   template: 'js!SBIS3.CONTROLS.Image.EditDialog',
                   opener: this,
                   visible: false,
-                  minWidth: 315,
+                  minWidth: 390,
                   cssClassName: 'controls-EditDialog__template',
                   componentOptions: $ws.core.merge({
                      dataSource: dataSource,

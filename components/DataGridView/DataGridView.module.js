@@ -116,7 +116,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   curColSplitTitle = [supportDouble.value, curColSplitTitle];
                }
                if (nextCol && (curColSplitTitle.length == nextColSplitTitle.length) && (curColSplitTitle.length == 2) && (curColSplitTitle[0] == nextColSplitTitle[0])){
-                  supportDouble.value = curColSplitTitle[0];
+                  supportDouble.value = supportDouble.title = curColSplitTitle[0];
                   supportDouble.colspan = ++supportDouble.colspan || 2;
                   curCol.title = curColSplitTitle[1];
                   nextCol.title = nextColSplitTitle[1];
@@ -408,6 +408,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       init: function() {
          DataGridView.superclass.init.call(this);
+         this._updateHeadAfterInit();
+      },
+
+      _updateHeadAfterInit: function() {
          this._bindHead();
       },
 
@@ -598,13 +602,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _redrawItems: function() {
          //FIXME в 3.7.4 поправить, не всегда надо перерисовывать, а только когда изменились колонки
-         if(this._options.showHead) {
-            this._redrawHead();
-         } else {
-            /* Надо перерисовывать колгруп, при полной перерисовке item'ов,
-               т.к. могли измениться колонки */
-            this._redrawColgroup();
-         }
+         this._redrawHead();
          DataGridView.superclass._redrawItems.apply(this, arguments);
       },
       _onItemClickHandler: function(event, id, record, target) {

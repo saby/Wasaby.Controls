@@ -4,9 +4,6 @@
     options = item.get('options') || {},
     className = item.get('className') || '',
     itemKey = item.get(it.keyField),
-    icon = item.get('icon') ? '<option name="icon">' + item.get('icon') + '</option>' : '',
-    caption = item.get('caption') ? '<option name="caption">' + item.get('caption') + '</option>' : '',
-    command = item.get('command') ? '<option name="command">' + item.get('command') + '</option>' : '',
     visible = !!(item.get('showType') == it.showType.MENU_TOOLBAR || item.get('showType') == it.showType.TOOLBAR );
     if (visible) {
         subItems = it.getSubItems(itemKey, null, it.items, it.keyField, it.hierField);
@@ -15,12 +12,12 @@
             if (subItems[i].parent == itemKey ) {
                 delete subItems[i].parent;
             }
-        }
         if (subItems.length) {
             options.items = subItems;
             options.keyField = it.keyField;
             options.hierField = it.hierField;
             options.displayField = it.displayField;
+        }
         }
     }
 }}
@@ -29,5 +26,7 @@
            data-id="{{=itemKey}}"
            class="controls-ListView__item js-controls-ListView__item controls-ToolBar__item {{=className}}">
     <option name="visible" type="boolean">{{=visible}}</option>
-    {{=icon}}{{=caption}}{{=command}}
+    {{?item.get('icon')}}<option name="icon">{{=item.get('icon')}}</option>{{?}}
+    {{?item.get('caption')}}<option name="caption">{{=item.get('caption')}}</option>{{?}}
+    {{?item.get('command')}}<option name="command">{{=item.get('command')}}</option>{{?}}
 </component>

@@ -231,6 +231,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
                multiselect: this._options.multiselect
             };
          },
+         setItems: function () {
+            DropdownList.superclass.setItems.apply(this, arguments);
+            /* После установки нового набора элементов, надо сбросить ранее выбранные */
+            this.removeItemsSelectionAll();
+         },
          setSelectedKeys : function(idArray){
             //Если у нас есть выбранные элементы, нцжно убрать DefaultId из набора
             //Т.к. ключи могут отличаться по типу (0 !== '0'), то придется перебирать массив самостоятельно.

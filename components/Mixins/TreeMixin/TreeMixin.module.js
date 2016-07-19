@@ -340,8 +340,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             filter = this.getFilter() || {};
          cfg = cfg || {};
          this._publish('onSearchPathClick', 'onNodeExpand', 'onNodeCollapse', 'onSetRoot', 'onBeforeSetRoot');
+         this._options._curRoot = this._options.root;
          if (typeof this._options.root != 'undefined') {
-            this._options._curRoot = this._options.root;
             filter[this._options.hierField] = this._options.root;
          }
          if (this._options.expand) {
@@ -365,8 +365,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          return this._options.hierField;
       },
       /**
-       * Закрывает узел (папку) по переданному идентификатору
-       * @param {String} key Идентификатор закрываемого узла
+       * Закрывает узел по переданному идентификатору
+       * @param {String} id Идентификатор закрываемого узла
        * @remark
        * Метод используют для программного управления видимостью содержимого узла в общей иерархии.
        * Чтобы раскрыть узел по переданному идентификатору, используйте метод {@link expandNode}.
@@ -374,29 +374,61 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        * @see expandNode
        * @see toggleNode
        */
-      collapseNode: function(key) {
-         this._getItemProjectionByItemId(key).setExpanded(false);
+      collapseNode: function(id) {
+         this._getItemProjectionByItemId(id).setExpanded(false);
+         return new $ws.proto.Deferred.success();
       },
       /**
        * Закрыть или открыть определенный узел
-       * @param {String} key Идентификатор раскрываемого узла
+       * @param {String} id Идентификатор переключаемого узла
        */
-      toggleNode: function(key) {
-         var ladderDecorator = this._options._decorators.getByName('ladder');
-         if (ladderDecorator){
-            ladderDecorator.removeNodeData(key);
-            ladderDecorator.setIgnoreEnabled(true);
-         }
-         this._getItemProjectionByItemId(key).toggleExpanded();
-         ladderDecorator && ladderDecorator.setIgnoreEnabled(false);
+      toggleNode: function(id) {
+         return this[this._getItemProjectionByItemId(id).isExpanded() ? 'collapseNode' : 'expandNode'](id);
       },
       /**
-       * Развернуть ветку
-       * @param key
+       * Развернуть узел
+       * @param id Идентификатор раскрываемого узла
        * @returns {$ws.proto.Deferred}
        */
-      expandNode: function(key) {
-         this._getItemProjectionByItemId(key).setExpanded(true);
+      expandNode: function(id) {
+         var
+            item = this._getItemProjectionByItemId(id);
+         if (item.isExpanded()) {
+            return $ws.proto.Deferred.success();
+         } else {
+            this._closeAllExpandedNode(id);
+            this._options.openedPath[id] = true;
+            this._folderOffsets[id] = 0;
+            return this._loadNode(id).addCallback(function() {
+               var
+                  ladderDecorator = this._options._decorators.getByName('ladder');
+               if (ladderDecorator){
+                  ladderDecorator.removeNodeData(id);
+                  ladderDecorator.setIgnoreEnabled(true);
+               }
+               this._getItemProjectionByItemId(id).setExpanded(true);
+               ladderDecorator && ladderDecorator.setIgnoreEnabled(false);
+            }.bind(this));
+         }
+      },
+      _loadNode: function(id) {
+         if (this._dataSource && !this._loadedNodes[id] && this._options.partialyReload) {
+            this._toggleIndicator(true);
+            this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), 0, this._limit);
+            return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(function (list) {
+               this._folderHasMore[id] = list.getMetaData().more;
+               this._loadedNodes[id] = true;
+               this._options._items.merge(list, {remove: false});
+               this._notify('onDataMerge', list); // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
+               if (this._isSlowDrawing()) {
+                  this._options._items.getTreeIndex(this._options.hierField, true);
+               }
+               this._toggleIndicator(false);
+               this._getItemProjectionByItemId(id).setLoaded(true);
+            }.bind(this));
+         } else {
+            return $ws.proto.Deferred.success();
+         }
       },
       /**
        * Получить список записей для отрисовки
@@ -497,8 +529,23 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       /**
        * Получить текущий набор открытых элементов иерархии
        */
-      getOpenedPath: function(){
+      getOpenedPath: function() {
          return this._options.openedPath;
+      },
+      /**
+       * Устанавливает набор раскрытых узлов, метод работает только для уже ЗАГРУЖЕННЫХ узлов и только если у них есть дочерние записи
+       * @param openedPath Список раскрываемых узлов
+       * @example
+       * <pre>
+       *    DataGridView.setOpenedPath({
+       *       1: true,
+       *       3: true
+       *    });
+       * </pre>
+       */
+      setOpenedPath: function(openedPath) {
+         this._options.openedPath = openedPath;
+         this._applyExpandToItemsProjection();
       },
       around: {
          _canApplyGrouping: function(parentFn, projItem) {
@@ -718,7 +765,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          if (this._lastParent === undefined) {
             this._lastParent = this._options._curRoot;
          }
-         key = record.getKey();
+         key = record.getId();
          curRecRoot = record.get(this._options.hierField);
          //TODO для SBISServiceSource в ключе находится массив, а теперь он еще и к строке приводится...
          curRecRoot = curRecRoot instanceof Array ? curRecRoot[0] : curRecRoot;
@@ -746,7 +793,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             //Если текущий раздел у записи есть в lastPath, то возьмем все элементы до этого ключа
             kInd = -1;
             for (var k = 0; k < this._lastPath.length; k++) {
-               if (this._lastPath[k].getKey() == curRecRoot){
+               if (this._lastPath[k].getId() == curRecRoot){
                   kInd = k;
                   break;
                }
@@ -797,7 +844,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             cfg = {
                element : elem,
                items: this._createPathItemsDS(path),
-               parent: this.getTopParent(),
+               parent: this,
                highlightEnabled: this._options.highlightEnabled,
                highlightText: this._options.highlightText,
                colorMarkEnabled: this._options.colorMarkEnabled,
@@ -845,7 +892,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             //TODO для SBISServiceSource в ключе находится массив
             parentID = pathRecords[i].get(this._options.hierField);
             dsItems.push({
-               id: pathRecords[i].getKey(),
+               id: pathRecords[i].getId(),
                title: pathRecords[i].get(this._options.displayField),
                parentId: parentID instanceof Array ? parentID[0] : parentID,
                data: pathRecords[i]

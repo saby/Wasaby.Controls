@@ -494,6 +494,7 @@
 @switcher-cursor-disabled:                      default;
 @switcher-width:                                46px;
 @switcher-height:                               24px;
+@switcher-line-height:                          @switcher-height;
 @switcher-border:                               1px solid @gray-light-color;
 @switcher-border-radius:                        30px;
 @switcher-line-width:                           36px;
@@ -532,6 +533,7 @@
 
 @switcher-do-horizontal-toggle-width:           @switcher-width;
 @switcher-do-horizontal-toggle-height:          @switcher-height;
+@switcher-do-horizontal-toggle-line-height:     @switcher-line-height;
 @switcher-do-horizontal-toggle-margin:          0 6px;
 
 @switcher-do-vertical-toggle-width:             24px;
@@ -1540,6 +1542,18 @@
 @controls-MergeDialogTemplate-radioButton-margin-top:             6px;
 @controls-MergeDialogTemplate-mergeButton-margin-left:            5px;
 
+// --------------- //
+//   OperationSum  //
+// --------------- //
+@controls-SumDialogTemplate-modelView-margin:                     5px 15px;
+@controls-SumDialogTemplate-row-height:                           30px;
+@controls-SumDialogTemplate-row-title-max-width:                  170px;
+@controls-SumDialogTemplate-row-value-max-width:                  100px;
+@controls-SumDialogTemplate-row-value-float:                      right;
+@controls-SumDialogTemplate-OK-align:                             center;
+@controls-SumDialogTemplate-OK-width:                             80px;
+@controls-SumDialogTemplate-OK-margin-bottom:                     10px;
+
 // ----------------------- //
 // OperationsPanelButton  //
 // ----------------------- //
@@ -1655,7 +1669,6 @@
 @controls-filterButton-area-header-padding:       12px 44px 12px 12px;
 @controls-filterButton-area-header-height:        24px;
 @controls-filterButton-area-header-width:         310px;
-@controls-filterButton-area-header-border:        1px solid @gray-light-color;
 
 @controls-filterButton-area-text-size:            18px;
 @controls-filterButton-area-text-weight:          bold;

@@ -84,6 +84,11 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             closeByExternalClick: true,
             targetPart: true
          };
+         if (this._options.pickerConfig){
+            $ws.helpers.forEach(this._options.pickerConfig, function(val, key) {
+               menuconfig[key] = val;
+            });
+         }
          menuconfig = this._modifyPickerOptions(menuconfig);
          if (this._dataSource) {
             menuconfig.dataSource = this._dataSource;
