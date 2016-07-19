@@ -94,7 +94,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              *
              * Аргументы функции:
              * <ol>
-             *    <li>item - элемент коллекции (узел или скрытый узел), по кнопке которого был произведён клик. Экземпляр класса {@link SBIS3.CONTROLS.Data.Model}.</li>
+             *    <li>item - элемент коллекции (узел или скрытый узел), по кнопке которого был произведён клик. Экземпляр класса {@link WS.Data/Entity/Model}.</li>
              *    <li>id - идентификатор элемента коллекции (узел или скрытый узел), по кнопке которого был произведён клик.</li>
              *    <li>target - контейнер визуального отображения (DOM-элемент) кнопки, по которой произвели клик.</li>
              * </ol>
@@ -229,7 +229,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
 
       _clearLadderData: function(key){
-         var ladderDecorator = this._decorators.getByName('ladder');
+         var ladderDecorator = this._options._decorators.getByName('ladder');
          if (ladderDecorator){
             ladderDecorator.removeNodeData(key);
          }

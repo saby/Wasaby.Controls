@@ -2688,9 +2688,9 @@ define('js!SBIS3.CONTROLS.ListView',
             $(container)[position](resultRow);
             this.reviveComponents();
          },
-         _removeDrawnResults: function() {
+         _removeDrawnResults: function(){
             var resultRow = $('.controls-DataGridView__results', this.getContainer());
-            if (resultRow.length) {
+            if (resultRow.length){
                this._destroyControls(resultRow);
                resultRow.remove();
             }
