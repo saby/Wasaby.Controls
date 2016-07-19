@@ -16,7 +16,6 @@
       outline: none;
    }
 
-   border-top: 1px solid #EAEAEA;
    background-color: #ffffff;
    overflow: hidden;
    position: relative;
@@ -24,10 +23,9 @@
    &.controls-RichEditor__overflowVisible {
       overflow: visible;
    }
-   .controls-RichEditor__EditorFrame {
+   .controls-RichEditor__editorFrame {
       z-index: 1;
       border: 1px solid #EAEAEA;
-      border-top-color: #FFFFFF;
       position: relative;
 
       &:empty{
@@ -45,7 +43,7 @@
          margin-bottom:6px;
       }
    }
-   .controls-RichEditor__SourceArea{
+   .controls-RichEditor__sourceArea{
       display: block;
       height: 100%;
       width:100%;
@@ -61,7 +59,7 @@
       overflow-x: hidden;
       overflow-y: auto;
    }
-   .controls-RichEditor__FakeArea{
+   .controls-RichEditor__fakeArea{
       height: 0;
       width: 0;
       border: none;
@@ -70,24 +68,19 @@
       padding: 0px;
    }
    &.ws-validation-error {
-      .controls-RichEditor__EditorFrame {
+      .controls-RichEditor__editorFrame {
          border: 1px solid #FF302B !important;
       }
    }
 
    &.ws-disabled {
-      border-top: 1px solid transparent;
-      .controls-RichEditor__EditorFrame {
+      .controls-RichEditor__editorFrame {
          display: none;
       }
       background-color: transparent;
    }
 
-   .controls-RichEditor__DataReview {
-      word-wrap: break-word;
-   }
-
-   .controls-RichEditor__DataReview {
+   .controls-RichEditor__dataReview {
       z-index: 1;
       width: 100%;
       height: 100%;
@@ -95,8 +88,9 @@
       padding: 6px 0 0 4px; /* отступы у параграфов через padding родительского блока без first-child */
       border: 1px solid transparent;
       box-sizing: border-box;
+      word-wrap: break-word;
    }
-   .controls-RichEditor__EditorFrame.ws-basic-style {
+   .controls-RichEditor__editorFrame.ws-basic-style {
       overflow: auto;
       padding: 6px 0 0 4px;
       box-sizing: border-box;
@@ -120,58 +114,6 @@
 }
 .controls-RichEditor {
 
-   &__toolbar {
-      border-left: 1px solid @fieldRichEditorBorderColor;
-      border-right: 1px solid @fieldRichEditorBorderColor;
-   }
-
-
-   &.controls-RichEditor__HideToolbar {
-      .controls-RichEditor__ToolbarToggleButton {
-         background-image: @freToolbarShowButtonPrimary;
-         &:hover {
-            background-image: @freToolbarShowButtonHover;
-         }
-      }
-      .controls-RichEditor__Toolbar {
-         display: none;
-      }
-   }
-
-   //Основные стили для кнопки переключения видимости тулбара
-   .controls-RichEditor__ToolbarToggleButton {
-      background-size: 100% 100%;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      -khtml-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-      position: absolute;
-      display: block;
-      height: 28px;
-      width: 16px;
-      right: 0px;
-      top: 0px;
-      z-index: 2;
-      border: none;
-      padding: 0px;
-      background-color: transparent;
-      background-image: @freToolbarHideButtonPrimary;
-      &:hover {
-         cursor: pointer;
-         background-image: @freToolbarHideButtonHover;
-      }
-      .box-shadow(none);
-   }
-
-   &.ws-disabled {
-      .controls-RichEditor__Toolbar , .controls-RichEditor__ToolbarToggleButton {
-         display: none;
-      }
-   }
-
-
    &.request-result {
       display: block;
       overflow: hidden;
@@ -188,20 +130,16 @@
       visibility: hidden;
    }
 
-   .controls-RichEditor__SourceContainer{
+   .controls-RichEditor__sourceContainer{
       overflow: hidden;
-   }
-
-   .controls-RichEditor__DataReview {
-      word-wrap: break-word;
    }
 
    img.ws-fre__smile {
       outline: none;
    }
-   .controls-RichEditor__Placeholder {
+   .controls-RichEditor__placeholder {
       color:  #ccc;
-      /* +1px к каждой стороне отступа тк у controls-RichEditor__EditorFrame  есть border 1px*/
+      /* +1px к каждой стороне отступа тк у controls-RichEditor__editorFrame  есть border 1px*/
       padding: 7px 17px 1px 5px;
       background-color: transparent;
       position: absolute;
@@ -214,407 +152,72 @@
       -ms-user-select: none;
       user-select: none;
    }
-   &.controls-RichEditor__empty .controls-RichEditor__Placeholder{
+   &.controls-RichEditor__empty .controls-RichEditor__placeholder{
       display: block;
       cursor: text;
    }
 }
-
-.controls-RichEditor__Toolbar {
-   height: 24px;
-   background-color: @fieldRichEditorToolbarColor;
-   text-align: left;
-   display: block;
-   padding-left: 6px;
-   overflow: hidden;
-   -webkit-touch-callout: none;
-   -webkit-user-select: none;
-   -khtml-user-select: none;
-   -moz-user-select: none;
-   -ms-user-select: none;
-   user-select: none;
-}
-
-//Стили для элементов тулбара богатого редактора
-.controls-RichEditor__ToolbarItem {
-   margin: 0 2px;
-   float: left;
-
-   &.controls-Button {
-      display: inline-block;
-      overflow: hidden;
-      &.ws-disabled:hover .controls-Button__icon{
-         color:  #ccc !important;
-      }
-      &:hover .controls-Button__icon{
-         color: #ff7033 !important;
-      }
-      .controls-Button__icon {
-         position: relative;
-         left: 0px;
-         top: 0px;
-      }
-      padding: 0;
-      border:none !important;
-      outline: 0;
-      border-radius: 0;
-      background: none !important;
-      text-decoration: none;
-      &.controls-Checked__checked{
-         background: @fieldRichEditorButtonsCheckedColor !important;
-         border:none !important;
-         &.controls-MenuButton {
-            padding-bottom: 2px;
-         }
-         &.controls-Picker__show{
-            background: #ffffff !important;
-            border-top: 2px solid #e4e4e4 !important;
-            border-right: 2px solid #e4e4e4 !important;
-            border-left: 2px solid #e4e4e4 !important;
-            border-top-left-radius: 4px;
-            border-top-right-radius: 4px;
-         }
-         .custom-select-arrow{
-            top: -3px;
-            padding-right: 4px !important;//checked стрелочка смещается на 2 пикселя надо уменьшить padding
-         }
-      }
-      .custom-select-arrow{
-         top: -1px;
-         padding-right: 6px !important;
-      }
-      .controls-Button__emptyCaption{
-         display:none;
-      }
-   }
-   .custom-select-arrow {
-      background-image:@RichEditorDropdownArrow !important;
-      width: 16px;
-      position: absolute !important;
-      right: 4px !important;
-      left: auto !important;
-      top:-2px;
-      &:before {
-         content: none;
-      }
-   }
-   //TODO:избавиться при переходе на dropdownlist
-   &.custom-options-container {
-      margin: 0;
-      padding-top: 3px;
-      &.custom-options-container-hover{
-         padding-left: 7px;
-      }
-      .custom-options-container-list {
-         padding: 0;
-      }
-      .custom-options-container-head {
-         padding-right: 12px ;
-         .controls-RichEditor__DropdownIcon{
-            color: #ff7033;
-         }
-         .custom-select-option{
-            height: 30px;
-            margin-top: -1px !important;
-         }
-      }
-   }
-
-   .custom-select-text {
-      line-height: 21px !important;
-   }
-
-   .ws-field-dropdown{
-      background-color: transparent;
-   }
-
-   .custom-select {
-      padding-right: 12px;
-      margin: 0px 1px 0;
-   }
-
-   .controls-RichEditor__DropdownText{
-      height:24px;
-      padding-right: 12px;
-      overflow-x: hidden;
-      text-overflow: ellipsis;
-   }
-
-   .controls-RichEditor__DropdownIcon{
-      margin: 0 auto;
-      text-align: left;
-      width: 100%;
-      padding: 2px 0;
-      &:empty{
-         padding-right: 0px !important;
-      }
-   }
-
-   .custom-select-option {
-      margin: 0 !important;
-      line-height: 21px;
-      height: 24px;
-      overflow: hidden;
-      padding: 0 0 0 3px !important;
-      vertical-align: middle;
-      &:hover {
-         background-color: @fieldRichEditorMenuHover;
-      }
-   }
-
-   .selected-option {
-      color: #ff7033 !important;
-   }
-
-   .custom-select-arrow-open.custom-select-arrow-hover {
-      padding-top: 0;
-      margin-top: -1px;
-   }
-}
-
-//Стили для элементов НА(!) тулбаре богатого редактора
-.controls-RichEditor__Toolbar .controls-RichEditor__ToolbarItem {
-   &.controls-MenuButton {
-      width:38px;
-      margin: 0;
-      text-align: left;
-      .controls-Button__icon {
-         padding-left:4px;
-      }
-      &.controls-Checked__checked {
-         .controls-Button__icon {
-            padding-left:2px;
-            //перебить стили темы online ( в ie8 ломается отображение при ховере)
-            left: 0px;
-            top:0px;
-         }
-      }
-   }
-   .custom-select-arrow {
-      background-position: 0 0 !important;
-      position: absolute !important;
-      width: 16px;
-      right: 0px !important;
-      left: auto !important;
-      text-align: center !important;
-      padding-right: 2px;
-   }
-   &.ws-field-dropdown-container.ws-field-dropdown-hover .custom-select-text {
-      margin: 0 !important;
-      overflow-x: hidden;
-      text-overflow: ellipsis;
-   }
-
-   &.ws-field-dropdown-hover .ws-field-dropdown {
-      height: 100%;
-   }
-   &.ws-disabled {
-      .custom-select-arrow {
-         background-image: @RichEditorDropdownArrow;
-      }
-      .custom-select-text {
-         color: #ccc;;
-      }
-   }
-}
-
-/* Блок смайлов */
-.fre-smiles {
-   &.controls-MenuButton__Menu {
-      width: 165px;
-      padding: 1px 0;
-      .controls-ListView__item {
-         display: block;
-         float:left;
-         padding: 4px!important;
-         height: 32px;
-      }
-   }
-   &.controls-MenuButton {
-      .ws-fre__smile {
-         height: 24px;
-      }
-   }
-   .controls-MenuItem {
-      .controls-MenuItem__text{
-         margin: 0 !important;
-      }
-      .ws-fre__smile {
-         height: 24px;
-      }
-   }
-}
-/*Блок вставки удаления списка*/
-.fre-list{
-   .controls-ListView__item {
-      width:34px;
-   }
-}
-/*Блок выбора цвета*/
-.fre-color {
-   &.controls-RichEditor__MenuButtonPicker {
-      .controls-ListView__item {
-         display: block;
-         height: 24px;
-         width: 34px;
-         .controls-MenuItem__text {
-            margin: 0px;
-         }
-         .controls-RichEditor__Color {
-            height: 16px;
-            width: 16px;
-            margin: 4px 3px;
-            &Black {
-               background-color: black;
-            }
-            &Red {
-               background-color: red;
-            }
-            &Green {
-               background-color: green;
-            }
-            &Blue {
-               background-color: blue;
-            }
-            &Purple {
-               background-color: purple;
-            }
-            &Grey {
-               background-color: grey;
-            }
-         }
-      }
-   }
-}
-/*Блок истории ввода*/
-.controls-RichEditor__History{
-   &.controls-MenuButton__Menu {
-      width: 400px;
-      .controls-MenuItem__text {
-         margin: 0px;
-      }
-      .controls-RichEditor__HistoryText{
-         font-size: 11px;
-         word-break: break-all;
-         max-height: 48px;
-         white-space: normal;
-         border-bottom: 1px solid #DBDBDB;
-      }
-   }
-   &.controls-MenuButton {
-      width:28px!important;
-      .controls-Button__icon {
-         left: 2px!important;
-      }
-   }
-   .custom-select-arrow{
-      display: none; // у истории ввода по стандарту нет стрелки
-   }
-}
-//Выпадающий список с выбором стиля текста
-//TODO: убрать при переходе на dropdownlist
-.controls-RichEditor__ToolbarItem {
-   &.custom-options-container .custom-options-container-list, &.custom-options-container .custom-options-container-head,.custom-select-text {
-      .controls-RichEditor__styleText-title {
-         font-size: 18px;
-      }
-
-      .controls-RichEditor__styleText-subTitle {
-         font-size: 15px;
-      }
-
-      .controls-RichEditor__styleText-selectedMainText {
-         font-weight: bold;
-      }
-
-      .controls-RichEditor__styleText-additionalText {
-         font-size: 12px;
-      }
-   }
-}
 //Стили для окна добавления/редактирования ссылки
-.controls-RichEditor__InsertLinkHrefLabel,
-.controls-RichEditor__InsertLinkHref.ws-field-string,
-.controls-RichEditor__InsertLinkButton {
+.controls-RichEditor__insertLinkHrefLabel,
+.controls-RichEditor__insertLinkHref.ws-field-string,
+.controls-RichEditor__insertLinkButton {
    display: block;
    position: absolute;
 }
 
-.controls-RichEditor__InsertLinkHrefLabel{
+.controls-RichEditor__insertLinkHrefLabel{
    color: #999999;
    text-align: right;
 }
 
-.controls-RichEditor__InsertLinkHrefLabel {
+.controls-RichEditor__insertLinkHrefLabel {
    left: 16px;
    top: 12px;
    width: 35px;
    height: 24px;
 }
 
-.controls-RichEditor__InsertLinkHref {
+.controls-RichEditor__insertLinkHref {
    height: 24px;
    width: 364px;
    left: 60px;
    top: 8px;
 }
 
-.controls-RichEditor__InsertLinkButton {
+.controls-RichEditor__insertLinkButton {
    right: 36px;
    top: 8px;
    width: 90px;
 }
 
 /*вставка со стилями*/
-.controls-RichEditor__PasteWithStyles{
+.controls-RichEditor__pasteWithStyles{
    text-align: center;
-   .controls-RichEditor__PasteWithStylesLabel {
+   .controls-RichEditor__pasteWithStylesLabel {
       font-family:  'TensorFont Regular', 'TensorFont';
       color: #000000;
       font-size: 15px;
       margin: 20px;
    }
-   .controls-RichEditor__PasteWithStylesButton{
+   .controls-RichEditor__pasteWithStylesButton{
       margin-bottom: 20px;
    }
 }
 .ws-is-ie8 {
-   .controls-RichEditor__Toolbar {
-      .controls-RichEditor__ToolbarItem.controls-Button {
-         .custom-select-arrow {
-            top: -4px;
-         }
-      }
-   }
    .controls-RichEditor{
       box-sizing: border-box;
    }
    .controls-RichEditor__empty {
-      .controls-RichEditor__EditorFrame.ws-basic-style {
+      .controls-RichEditor__editorFrame.ws-basic-style {
          background-color: black;
          -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
          border: none;
       }
-      .controls-RichEditor__Toolbar{
-         padding-left: 5px;
-      }
-      .controls-RichEditor__ToolbarToggleButton {
-         right: -1px;
-      }
       border: 1px solid @fieldRichEditorBorderColor;
    }
 }
-
-//TODO: выпилить при переходе в на dropdownlists
-.ws-is-ie10{
-   .controls-RichEditor__ToolbarItem {
-      .custom-select-arrow-open.custom-select-arrow-hover {
-         right: 3px !important;
-      }
-   }
-}
 .ws-is-chrome {
-   .controls-RichEditor__EditorFrame.ws-basic-style p:empty{
+   .controls-RichEditor__editorFrame.ws-basic-style p:empty{
       min-height: 18px;
    }
 }
