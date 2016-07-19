@@ -1176,11 +1176,16 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _drawSelectedItem: function (id, index) {
+         /*TODO третий аргумент - временное решение, пока выделенность не будет идти через состояние
+         * делаем его, чтоб не после каждого чмха перерисовывать выделение
+         * */
+         _drawSelectedItem: function (id, index, lightVer) {
             //рисуем от ключа
             var selId = id;
-            $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
-            $('.controls-ListView__item[data-id="' + selId + '"]', this._container).addClass('controls-ListView__item__selected');
+            if (!lightVer) {
+               $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
+               $('.controls-ListView__item[data-id="' + selId + '"]', this._container).addClass('controls-ListView__item__selected');
+            }
          },
          /**
           * Перезагружает набор записей представления данных с последующим обновлением отображения.
