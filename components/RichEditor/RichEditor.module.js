@@ -1977,7 +1977,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                state = true;
             }
             this._textState[obj.format] = state;
-            if (this._instances[obj.format] && obj.node && $(obj.node).closest('.ws-field-rich-editor').length) {
+            if (this._instances[obj.format] && obj.node && $(obj.node).closest('.controls-RichEditor').length) {
                this._instances[obj.format].setChecked(this._textState[obj.format]);
             }
          },
