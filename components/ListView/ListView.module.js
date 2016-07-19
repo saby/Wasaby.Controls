@@ -2619,7 +2619,10 @@ define('js!SBIS3.CONTROLS.ListView',
                      $ws.helpers.forEach(dragObject.getSource(), function(item){
                         models.push(item.getModel());
                      });
-                     this._move(models, target.getModel(), target.getPosition() === DRAG_META_INSERT.after);
+                     var position = target.getPosition();
+                     this._move(models, target.getModel(),
+                        position === DRAG_META_INSERT.on ? undefined : position === DRAG_META_INSERT.after
+                     );
                   }
                }
             }
