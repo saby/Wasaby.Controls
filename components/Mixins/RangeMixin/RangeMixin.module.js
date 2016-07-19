@@ -84,6 +84,7 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
          if (changed) {
             this._notifyOnRangeChanged();
          }
+         return changed;
       },
 
       _notifyOnRangeChangedAfterSetters: function (value, oldValue, silent) {
@@ -118,7 +119,10 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
 
          if (oldValue === value) {
             return false;
+         } else if ((oldValue instanceof Date) && (value instanceof Date) && oldValue.getTime() === value.getTime()) {
+            return false;
          }
+
 
          if (validationFunction) {
             value = callFunction(this, validationFunction, [value, oldValue]);
