@@ -195,9 +195,65 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               */
             items: null,
             /**
-             * @cfg {DataSource|WS.Data/Source/ISource|Function} Набор исходных данных, по которому строится отображение
-             * @noShow
+             * @cfg {DataSource|WS.Data/Source/ISource|Function|Object} Устанавливает набор исходных данных, по которому строится отображение.
+             * @remark
+             * Если установлен источник данных, то значение опции {@link items} будет проигнорировано.
+             * @example
+             * <b>Пример 1.</b> Чтобы установить конфигурацию источника данных через JS-код компонента, необходимо его инициализировать и установить с помощью метода {@link setDataSource}.
+             * <pre>
+             *    // SbisService - это переменная, в которую импортирован класс источника данных из массива зависимостей
+             *    var myDataSource = new SbisService({ // Инициализация источника данных
+             *        endpoint: {
+             *           contract: 'Отчеты', // Устанавливаем объект БЛ, в котором есть методы для работы с данными таблицы
+             *           address: 'myNewService/service/sbis-rpc-service300.dll' // Устанавливаем точку входа в другой сервис
+             *        },
+             *        binding: {
+             *           query: 'Список' // Устанавливаем списочный метод
+             *        },
+             *        idProperty: '@Идентификатор' // Устанавливаем поле первичного ключа
+             *    });
+             *    myView.setDataSource(myDataSource); // Устанавливаем представлению источник данных
+             * </pre>
+             *
+             * <b>Пример 2.</b> Конфигурация источника данных через вёрстку компонента.
+             * Первый способ основан на использовании объекта со следующими свойствами:
+             * <ul>
+             *    <li>module - название класса источника данных;</li>
+             *    <li>options - конфигурация источника данных.</li>
+             * </ul>
+             * Аналогичная предыдущему примеру конфигурация будет выглядеть следующим образом:
+             * <pre>
+             *    <options name="dataSource">
+             *       <option name="module" value="WS.Data/Source/SbisService"></options>
+             *       <options name="options">
+             *          <options name="binding">
+             *             <option name="contract" value="Отчеты"></option>
+             *             <option name="address" value="myNewService/service/sbis-rpc-service300.dll"></option>
+             *          </options>
+             *          <options name="endpoint">
+             *             <option name="query" value="Список"></option>
+             *          </options>
+             *          <option name="idProperty" value="@Идентификатор"></option>
+             *       </options>
+             *    </options>
+             * </pre>
+             *
+             * <b>Пример 3.</b> Конфигурация источника данных через вёрстку компонента.
+             * Второй способ основан на использовании функции, которая возвращает конфигурацию источника.
+             * <pre>
+             *    <option name="dataSource" type="function">js!SBIS3.MyArea.MyComponent:prototype.getMyDataSource</option>
+             * </pre>
+             * Функция должна возвращать объект с конфигурацией источника данных.
+             * <pre>
+             *    getMyDataSource: function() {
+             *       return new MemorySource({
+             *          ...
+             *       });
+             *    }
+             * </pre>
              * @see setDataSource
+             * @see getDataSource
+             * @see items
              */
             dataSource: undefined,
              /**
@@ -571,37 +627,47 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this.unsubscribeFrom(this._itemsProjection, 'onCollectionChange', this._onCollectionChange);
          this.unsubscribeFrom(this._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
       },
-       /**
-        * Устанавливает источник данных.
-        * @remark
-        * Данные могут быть заданы либо этим методом, либо опцией {@link items}.
-        * @param source Новый источник данных.
-        * @param noLoad Установить новый источник данных без запроса на БЛ.
-        * @example
-        * <pre>
-        *     define(
-        *     'SBIS3.MY.Demo',
-        *     'js!WS.Data/Source/Memory',
-        *     function(MemorySource){
-        *        //коллекция элементов
-        *        var arrayOfObj = [
-        *           {'@Заметка': 1, 'Содержимое': 'Пункт 1', 'Завершена': false},
-        *           {'@Заметка': 2, 'Содержимое': 'Пункт 2', 'Завершена': false},
-        *           {'@Заметка': 3, 'Содержимое': 'Пункт 3', 'Завершена': true}
-        *        ];
-        *        //источник статических данных
-        *        var ds1 = new MemorySource({
-        *           data: arrayOfObj,
-        *           idProperty: '@Заметка'
-        *        });
-        *        this.getChildControlByName("ComboBox 1").setDataSource(ds1);
-        *     })
-        * </pre>
-        * @see dataSource
-        * @see getDataSource
-        * @see onDrawItems
-        * @see onDataLoad
-        */
+      /**
+       * Устанавливает источник данных.
+       * @remark
+       * Если источник данных установлен, значение опции {@link items} будет проигнорировано.
+       * @param {DataSource|WS.Data/Source/ISource} source Новый источник данных.
+       * @param {Boolean} noLoad Признак, с помощью устанавливается необходимость запроса нового набора данных по установленному источнику.
+       * Если параметр установлен в значение true, то данные не будут подгружены, а также не произойдут события {@link onBeforeDataLoad}, {@link onDataLoad}, {@link onItemsReady} или {@link onDataLoadError}.
+       * @example
+       * <pre>
+       *     define( 'SBIS3.MyArea.MyComponent',
+       *        [ // Массив зависимостей компонента
+       *           ... ,
+       *           'js!WS.Data/Source/Memory' // Подключаем класс для работы со статическим источником данных
+       *        ],
+       *        function(
+       *           ...,
+       *           MemorySource // Импортируем в переменную класс для работы со статическим источником данных
+       *        ){
+       *           ...
+       *           var arrayOfObj = [ // Формируем набор "сырых" данных
+       *              {'@Заметка': 1, 'Содержимое': 'Пункт 1', 'Завершена': false},
+       *              {'@Заметка': 2, 'Содержимое': 'Пункт 2', 'Завершена': false},
+       *              {'@Заметка': 3, 'Содержимое': 'Пункт 3', 'Завершена': true}
+       *           ];
+       *           var dataSource = new MemorySource({ // Производим инициализацию статического источника данных
+       *              data: arrayOfObj,                // Передаём набор "сырых" данных
+       *              idProperty: '@Заметка'           // Устанавливаем поле первичного ключа в источнике данных
+       *           });
+       *           this.getChildControlByName("ComboBox 1").setDataSource(ds1); // Устанавливаем источник представлению данных
+       *        }
+       *     );
+       * </pre>
+       * @see dataSource
+       * @see getDataSource
+       * @see items
+       * @see onBeforeDataLoad
+       * @see onDataLoad
+       * @see onDataLoadError
+       * @see onItemsReady
+       * @see onDrawItems
+       */
       setDataSource: function (source, noLoad) {
           this._unsetItemsEventHandlers();
           this._prepareConfig(source);
@@ -1324,13 +1390,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       setEmptyHTML: function (html) {
          this._options.emptyHTML = html;
       },
-
       /**
        * Возвращает источник данных.
        * @remark
        * Метод создает экземпляр класса источника данных. Экземпляр класса будет содержать данные,
        * если источник данных - статический.
        * @returns {*}
+       * @see dataSource
        * @see setDataSource
        */
       getDataSource: function(){
