@@ -100,6 +100,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                         hoveredEip.edit(target, record);
                         this._hoveredEip = null;
                         this._notify('onAfterBeginEdit', record);
+                        this._addPendingOperation();
                         return record;
                      }
                   } else {
