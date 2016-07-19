@@ -577,7 +577,7 @@ define(
       },
       _dateIsValid: function(yyyy, mm, dd, hh, ii, ss) {
          var lastMonthDay = (new Date(yyyy, mm)).setLastMonthDay().getDate();
-         return ss < 60 && ii < 60 && hh < 24 && mm < 12 && dd <= lastMonthDay;
+         return ss < 60 && ii < 60 && hh < 24 && mm < 12 && mm >= 0 && dd <= lastMonthDay && dd > 0;
       },
       /**
        * Получить дату в формате строки по объекту Date. Строка соответсвует изначальной маске.
