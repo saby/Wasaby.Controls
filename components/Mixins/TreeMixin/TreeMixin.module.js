@@ -547,7 +547,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        */
       setOpenedPath: function(openedPath) {
          this._options.openedPath = openedPath;
-         this._applyExpandToItemsProjection();
+         if (this._getItemsProjection()) { // Если имеется проекция - то применяем разворот к итемам, иначе он применится после создания проекции
+            this._applyExpandToItemsProjection();
+         }
       },
       around: {
          _canApplyGrouping: function(parentFn, projItem) {
