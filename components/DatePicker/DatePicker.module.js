@@ -197,23 +197,7 @@ define(
              * @see mask
              * @see setDate
              */
-            isCalendarIconShown: true,
-            /**
-             * @cfg {String} Режим нотификации об изменении даты.
-             * @variant 'focus' Нотификация будет происходить только по уходу фокуса
-             * @variant 'change' Нотификация будет происходить только при изменении даты
-             * @example
-             * Нотификация будет только по уходу фокуса
-             * <pre>
-             *     <option name="notificationType">focus</option>
-             * </pre>
-             * Нотификация будет при изменении даты и по уходу фокуса
-             * <pre>
-             *     <option name="notificationType">change|focus</option>
-             * </pre>
-             * @see onDateChange
-             */
-            notificationType: 'change'
+            isCalendarIconShown: true
          }
       },
 
@@ -483,7 +467,7 @@ define(
                this._options.date = null;
             }
             if (oldDate !== this._options.date) {
-               this._notifyOnDateChanged('change');
+               this._notifyOnDateChanged();
             }
             this._onTextChanged();
          }
@@ -495,22 +479,17 @@ define(
          this.clearMark();
       },
 
-      _notifyOnDateChanged: function(initType) {
-         if (!initType || this._options.notificationType.indexOf(initType) !== -1) {
-            this._notifyOnPropertyChanged('date', this._options.date);
-            this._notify('onDateChange', this._options.date);
-         }
+      _notifyOnDateChanged: function() {
+         this._notifyOnPropertyChanged('date', this._options.date);
+         this._notify('onDateChange', this._options.date);
       },
       setActive: function(active) {
          var date;
-         if (!active) {
-            if (!this.formatModel.isFilled()) {
-               date = this._getDateByText(this._options.text, this._options.date, true);
-               if (date) {
-                  this.setDate(date);
-               }
+         if (!active && !this.formatModel.isFilled()) {
+            date = this._getDateByText(this._options.text, this._options.date, true);
+            if (date) {
+               this.setDate(date);
             }
-            this._notifyOnDateChanged('focus');
          }
          DatePicker.superclass.setActive.apply(this, arguments);
       },
