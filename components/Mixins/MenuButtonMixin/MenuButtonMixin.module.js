@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          };
          if (this._options.pickerConfig){
             $ws.helpers.forEach(this._options.pickerConfig, function(val, key) {
-               pickerConfig[key] = val;
+               menuconfig[key] = val;
             });
          }
          menuconfig = this._modifyPickerOptions(menuconfig);

@@ -162,7 +162,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
                   config.componentOptions.isNewRecord = true;
                if (!config.componentOptions.key){
                   //Если не было ключа, то отработал метод "создать". Запоминаем ключ созданной записи
-                  config.componentOptions.key = record.getKey();
+                  config.componentOptions.key = record.getId();
                }
                self._showDialog(config, meta, mode);
             });
@@ -400,7 +400,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          }
 
          if (newModel){
-            collectionRecord.set(collectionData.getIdProperty(), model.getKey().toString());
+            collectionRecord.set(collectionData.getIdProperty(), model.getId().toString());
          }
 
          collectionRecord.each(function (key, value) {
