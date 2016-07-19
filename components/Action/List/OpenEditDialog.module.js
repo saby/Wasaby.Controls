@@ -66,7 +66,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                   config.componentOptions.isNewRecord = true;
                if (!config.componentOptions.key){
                   //Если не было ключа, то отработал метод "создать". Запоминаем ключ созданной записи
-                  config.componentOptions.key = record.getKey();
+                  config.componentOptions.key = record.getId();
                }
             });
          }
@@ -219,7 +219,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          }
 
          if (newModel) {
-            collectionRecord.set(collectionData.getIdProperty(), model.getKey().toString());
+            collectionRecord.set(collectionData.getIdProperty(), model.getId().toString());
          }
 
          collectionRecord.each(function (key, value) {

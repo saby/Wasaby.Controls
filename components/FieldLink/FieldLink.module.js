@@ -85,7 +85,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *
         * @class SBIS3.CONTROLS.FieldLink
         * @extends SBIS3.CONTROLS.SuggestTextBox
+        * @control
+        * @public
+        *
         * @category Inputs
+        *
+        * @author Герасимов Александр Максимович
+        *
         * @mixes SBIS3.CONTROLS.Selectable
         * @mixes SBIS3.CONTROLS.MultiSelectable
         * @mixes SBIS3.CONTROLS.ActiveSelectable
@@ -107,9 +113,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *
         * @cssModifier controls-FieldLink__itemsEdited В поле связи при наведении курсора на выбранные значения применяется подчеркивание текста.
         * @cssModifier controls-FieldLink__itemsBold В поле связи для текста выбранных значений применяется полужирное начертание.
-        * @control
-        * @public
-        * @author Крайнов Дмитрий Олегович
+        *
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings footerTpl emptyHTML groupBy
         * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip setEmptyHTML setGroupBy
@@ -180,7 +184,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * Например, передаём опции для построения справочника:
                  * <pre class="brush: xml">
                  *     <option name="template">js!SBIS3.MyArea.MyDatGridView</option>
-                 *     <options name="componentOptions" type="array">
+                 *     <options name="componentOptions">
                  *        <option name="myShowHeadConfig" type="boolean">true</option>
                  *        <option name="myPageSizeConfig" type="number">5</option>
                  *     </options>
@@ -221,7 +225,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  */
                 dictionaries: [],
                 /**
-                 * @cfg {Boolean}  Устанавливает режим добавления комментариев в поле связи.
+                 * @cfg {Boolean} Устанавливает режим добавления комментариев в поле связи.
                  * * true Разрешается ввод комментариев в поле связи.
                  * * false Запрещается ввод комментариев в поле связи.
                  * @remark
@@ -308,16 +312,26 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           /**
-           * Устанавливает набор справочников для поля связи.
-           * Подробнее о справочниках вы можете прочитать в описании к опции {@link dictionaries}.
-           * @param {Array} dictionaries
+           * Устанавливает набор справочников для поля связи. Подробнее о справочниках вы можете прочитать в описании к опции {@link dictionaries}.
+           * @param {Array.<Dictionaries>} dictionaries Конфигурация справочников поля связи.
            * @example
-           * Устанавливаем для поля связи один справочник:
+           * Установим для поля связи два справочника:
            * <pre>
            *     myFieldLink.setDictionaries(
-           *        [{
-           *           'template': 'js!SBIS3.BUH.ChoiceAccount' // Компонент, на основе которого будет построен справочник поля связи
-           *        }]
+           *        [
+           *           {
+           *              caption: 'Сотрудники',
+           *              template: 'js!SBIS3.MyArea.DictEmployees' // Компонент, на основе которого будет построен справочник поля связи
+           *              componentOptions: {
+           *                 myShowHeadConfig: true,
+           *                 myPageSizeConfig: 5
+           *              }
+           *           },
+           *           {
+           *              caption: 'Сотрудники',
+           *              template: 'js!SBIS3.MyArea.DictEmployees' // Компонент, на основе которого будет построен справочник поля связи
+           *           }
+           *        ]
            *     );
            * </pre>
            * @see dictionaries
