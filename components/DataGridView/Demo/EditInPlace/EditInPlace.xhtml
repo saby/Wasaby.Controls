@@ -1,6 +1,12 @@
 <div>
+   <div class="ws-window-titlebar-custom">
+      <component data-component="SBIS3.CONTROLS.Button" class="demo-DataGridView-EditInPlace__save-button">
+         <opt name="caption" value="Сохранить"/>
+         <opt name="command" value="save"/>
+      </component>
+   </div>
    <component data-component="SBIS3.CONTROLS.DataGridView" name="Таблица">
-      <opt name="editMode" value="click"/>
+      <opt name="editMode" value="click|toolbar"/>
       <opt name="emptyHTML" value="Нет записей"/>
       <opts name="columns" type="array">
          <opts>
@@ -23,6 +29,12 @@
             <opt name="editor">
                <component data-component="SBIS3.CONTROLS.NumberTextBox">
                   <opt name="text" bind="count"/>
+                  <opts name="validators" type="array">
+                     <opts>
+                        <opt name="validator" type="function" value="js!SBIS3.CORE.CoreValidators:required"/>
+                        <opt name="errorMessage" value="Поле обязательно для заполнения"/>
+                     </opts>
+                  </opts>
                </component>
             </opt>
          </opts>

@@ -193,7 +193,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                //1. если это было создание
                //2. если есть ключ (метод создать его вернул)
                //3. ничего не поменяли в рекорде, но закрывают либо поменяли, но нажали нет
-               if (this._newRecord && record.getKey() && (!this._saving && !record.isChanged() || result === false)){
+               if (this._newRecord && record.getId() && (!this._saving && !record.isChanged() || result === false)){
                   this._destroyModel();
                }
                this._saving = false;
@@ -599,7 +599,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          var newKey;
          this._options.record = this._panel._record = record;
          if (updateKey){
-            newKey = record.getKey();
+            newKey = record.getId();
             this._options.key = newKey;
          }
          this._updateDocumentTitle();
@@ -701,8 +701,19 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._notify(eventName, this._options.record, additionalData);
       },
       /**
-       * Action, который позволяет выставить активность дочернего контрола после загрузки
+       * Выставить активность дочернего контрола после загрузки
        * @returns {$ws.proto.Deferred} Окончание чтения/создания модели
+       * @remark
+       * <br>
+       * Для выставления активности нужному контролу вызываем команду activateChildControl, которая вернет deferred, на который надо подписаться, чтобы выполнить необходимую логику
+       * @example
+       * В следующем примере организован переход фокуса после загрузки диалога на компонент textBox:
+       * <pre>
+       *    component.sendCommand('activateChildControl').addCallback(function(){
+       *       textBox.getContainer().focus();
+       *    });
+       * </pre>
+       * @command
        */
       _createChildControlActivatedDeferred: function(){
          this._activateChildControlDeferred = (new $ws.proto.Deferred()).addCallback(function(){

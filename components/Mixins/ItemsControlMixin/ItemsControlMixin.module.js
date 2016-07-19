@@ -12,8 +12,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
    'js!WS.Data/Utils',
    'js!WS.Data/Entity/Model',
-   'Core/ParserUtilities'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities) {
+   'Core/ParserUtilities',
+   'js!SBIS3.CONTROLS.Utils.Sanitize'
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -40,7 +41,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    buildTplArgs = function(cfg) {
       var tplOptions = {}, itemTpl, itemContentTpl;
 
-
+      tplOptions.Sanitize = Sanitize;
       tplOptions.displayField = cfg.displayField;
       tplOptions.templateBinding = cfg.templateBinding;
 
@@ -716,7 +717,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             itemContainer = this._getDomElementByItem(item);
             this._ladderCompare([itemContainer.prev(), itemContainer, itemContainer.next()]);
             this._reviveItems();
-            this._notifyOnDrawItems();
          }
       },
 
@@ -883,7 +883,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   }
                   /*TODO Лесенка*/
                }
-               this._notifyOnDrawItems();
             }
          }
       },
@@ -1386,25 +1385,25 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._options._itemsProjection;
       },
        /**
-        * Метод установки либо замены коллекции элементов, заданных опцией {@link items}.
-        * @param {Object} items Набор новых данных, по которому строится отображение.
-        * @param {Boolean} itemsBySource Флаг, говорящий о том, что items соответствуют сорсу, который в данный момент установлен. При этом после релоада не будет заменяться инстанс items, а произойдет перенос данных пришедших с БЛ в уже существующий инстанс items
+        * Устанавливает новый набор элементов коллекции.
+        * @param {Array.<Object>} items Набор новых данных, по которому строится отображение.
         * @example
+        * Для списка устанавливаем набор данных из трёх записей. Опция keyField установлена в значение id, а hierField - parent.
         * <pre>
-        *     setItems: [
+        *     myView.setItems([
         *        {
-        *           id: 1,
+        *           id: 1, // Поле с первичным ключом
         *           title: 'Сообщения'
         *        },{
         *           id: 2,
         *           title: 'Прочитанные',
-        *           parent: 1
+        *           parent: 1 // Поле иерархии
         *        },{
         *           id: 3,
         *           title: 'Непрочитанные',
         *           parent: 1
         *        }
-        *     ]
+        *     ]);
         * </pre>
         * @see items
         * @see addItem
