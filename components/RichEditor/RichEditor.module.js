@@ -1191,12 +1191,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   isYouTubeReady,
                   isRichContent = e.content.indexOf('content=SBIS.FRE') !== -1,
                   content = e.content;
-               // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
-               // и послыаем метку форматной вставки, если метка присутствует не надо обрабатывать событие
-               // нашим обработчиком, а просто прокинуть его в дальше
-               if (e.withStyles) {
-                  return e;
-               }
                if (isRichContent) {
                   if ($ws._const.browser.isIE8) {
                      //в IE8 оборачиваем контент в div  надо его вырезать
@@ -1207,6 +1201,12 @@ define('js!SBIS3.CONTROLS.RichEditor',
                      }
                   }
                   e.content =  content.replace('<!--content=SBIS.FRE-->','');
+               }
+               // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
+               // и послыаем метку форматной вставки, если метка присутствует не надо обрабатывать событие
+               // нашим обработчиком, а просто прокинуть его в дальше
+               if (e.withStyles) {
+                  return e;
                }
                if (!isRichContent) {
                   if (self._options.editorConfig.paste_as_text) {
