@@ -251,7 +251,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
           * Устанавливает Шаблон отображения строки в режиме "Список".
           * @see listTemplate
           */
-         setListTepmplate : function(tpl) {
+         setListTemplate : function(tpl) {
             this._options.listTemplate = tpl;
          },
 
