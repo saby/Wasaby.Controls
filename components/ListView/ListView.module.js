@@ -1074,7 +1074,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _drawEmptyData: function() {
             var html = this._options.emptyHTML;
-            this._emptyData = html && $(emptyDataTpl({emptyHTML: html})).insertAfter(this._getItemsContainer());
+            this._emptyData = html && $(emptyDataTpl({emptyHTML: html})).appendTo(this._container);
          },
          /**
           * Устанавливает шаблон отображения элемента коллекции.
