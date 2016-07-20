@@ -20,15 +20,15 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
       if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
          if (cfg.mode == 'part') {
             selId = parseInt(cfg.selectedKey, 10) || 1;  //TODO || 1 - не очень хорошо, это должно уже из Selectable приходить
-            if ((selId < count - 1) && (selId > 2)) {
+            if ((selId < count) && (selId > 1)) {
                firstElem = selId - 1;
                lastElem = selId + 1;
-            } else if (selId <= 2) {
+            } else if (selId < 2) {
                firstElem = 1;
                lastElem = 3;
             }
-            else if (selId >= count - 1) {
-               firstElem = count - 1;
+            else if (selId > count - 1) {
+               firstElem = count - 2;
                lastElem = count;
             }
          }
@@ -71,6 +71,17 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
          this._publish('onPageChange');
       },
       _modifyOptions: function(cfg) {
+         if (cfg.pagesCount && !cfg.items) {
+            cfg.items = [];
+            cfg.keyField = 'id';
+            cfg.displayField = 'text';
+            for (var i = 1; i <= cfg.pagesCount; i++) {
+               cfg.items.push({
+                  id : i,
+                  text : i.toString()
+               })
+            }
+         }
          var newCfg = Pager.superclass._modifyOptions.apply(this, arguments);
          newCfg._itemsTemplate = ItemsTemplate;
 
