@@ -259,7 +259,6 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
       },
 
       _getSelectedRangeItemsContainers: function () {
-         this._$items = null;
          if (!this._$items) {
             this._$items = this.getContainer().find(['.', this._SELECTABLE_RANGE_CSS_CLASSES.item].join(''));
          }

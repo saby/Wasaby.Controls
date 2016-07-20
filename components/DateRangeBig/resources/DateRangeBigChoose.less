@@ -1,0 +1,174 @@
+@import "MonthView";
+
+@blue-color: #0066ff;
+@blue-color2: #0055bb;
+@blue-color3: #cbd5e5;
+
+@borders-color: @gray-light-color;
+
+.range-vertical-button-bar-mixin() {
+   border: 0;
+   .border-radius(0);
+   width: 100%;
+
+   //&:hover {
+   //   background-color: #f0f5fb;
+   //}
+
+   .controls-Button__text {
+      margin: 0;
+   }
+   &.controls-RangeSelectable__item-selected {
+      border-color: @blue-color2;
+      background-color: @default-itemHover-color;
+      border-left: 1px solid @blue-color2;
+      &.controls-RangeSelectable__item-selectedStart,
+      &.controls-RangeSelectable__item-selectedEnd {
+         color: @white-color;
+         border-color: @blue-color2;
+         background-color: @blue-color;
+      }
+   }
+}
+
+.controls-DateRangeBigChoose {
+   background-color: #fff;
+   border: 3px solid @borders-color;
+   border-radius: 4px;
+   width: 348px;
+
+   .controls-DateRangeBigChoose__header {
+      background-color: #f9f9f9;
+      border-bottom: 1px solid @borders-color;
+      padding: 8px;
+   }
+
+   .controls-DateRangeBigChoose__left {
+      position: absolute;
+      width: 32px;
+   }
+
+   .controls-DateRangeBigChoose__center {
+      position: absolute;
+      left: 32px;
+      right: 32px;
+   }
+
+   .controls-DateRangeBigChoose__right {
+      position: absolute;
+      width: 32px;
+      right: 0;
+   }
+
+   .controls-DateRangeBigChoose__years {
+      border-bottom: 1px solid #e4e4e4;
+      height: 40px;
+      padding: 8px 0;
+      vertical-align: middle;
+      .box-sizing(border-box);
+
+      .controls-DateRangeBigChoose__yearsRange {
+         button {
+            border: 0;
+            .border-radius(0);
+            display: block;
+            float: left;
+            width: 16.6666%;
+
+            //&:hover {
+            //   background-color: #f0f5fb;
+            //}
+            .controls-Button__text {
+               margin: 0;
+            }
+            &.controls-DateRangeBigChoose__selected {
+               color: @white-color;
+               border-color: @blue-color2;
+               background-color: @blue-color;
+            }
+            &.controls-DateRangeBigChoose__selectedInner {
+               border-color: @blue-color2;
+               background-color: @default-itemHover-color;
+               border-top: 1px solid @blue-color2;
+               border-bottom: 1px solid @blue-color2;
+            }
+         }
+         button + button {
+            //border-top: 1px solid @borders-color;
+         }
+      }
+   }
+   .controls-DateRangeBigChoose__months {
+      position: relative;
+   }
+   .controls-DateRangeBigChoose__months {
+      height: 427px;
+      top: 0;
+      bottom: 0;
+
+      .controls-DateRangeBigChoose__left,
+      .controls-DateRangeBigChoose__right {
+         button {
+            .range-vertical-button-bar-mixin();
+         }
+         button + button {
+            border-top: 1px solid @borders-color;
+         }
+      }
+
+      .controls-DateRangeBigChoose__left {
+         button {
+            height: 104px;
+            border-right: 1px solid @borders-color;
+         }
+      }
+      .controls-DateRangeBigChoose__right {
+         button {
+            height: 209px;
+            border-left: 1px solid @borders-color;
+         }
+      }
+      .controls-DateRangeBigChoose__months-month {
+         height: 100%;
+         overflow: hidden;
+      }
+   }
+
+   .controls-DateRangeBigChoose__dates {
+      height: 427px;
+      position: relative;
+
+      .controls-DateRangeBigChoose__dates-months {
+         position: absolute;
+         width: 85px;
+
+         button {
+            .range-vertical-button-bar-mixin();
+            height: 35px;
+            border-right: 1px solid @borders-color;
+         }
+      }
+
+      .controls-DateRangeBigChoose__dates-dates {
+         position: absolute;
+         left: 95px;
+         right: 0;
+         top: 0;
+         bottom: 0;
+         overflow: hidden;
+      }
+   }
+
+   .controls-DateRangeBigChoose__header-date-pickers {
+      float: right;
+   }
+
+   .controls-DateRangeBigChoose__years-prevYearBtn {
+   }
+
+   .controls-DateRangeBigChoose__years-nextYearBtn {
+   }
+
+   .controls-DateRangeBigChoose__years-chooserWrapper {
+   }
+}
