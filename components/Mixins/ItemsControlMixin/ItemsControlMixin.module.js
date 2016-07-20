@@ -716,7 +716,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             itemContainer = this._getDomElementByItem(item);
             this._ladderCompare([itemContainer.prev(), itemContainer, itemContainer.next()]);
-            this._reviveItems();
+            this._reviveItems(item.getKey() != this._options.selectedKey);
          }
       },
 
@@ -891,15 +891,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._getItemsContainer().find('.js-controls-ListView__item[data-hash="' + item.getHash() + '"]')
       },
 
-      _reviveItems : function() {
-         this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
+      _reviveItems : function(lightVer) {
+         this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this, lightVer)).addErrback(function(e){
             throw e;
          });
       },
 
-      _notifyOnDrawItems: function() {
+      _notifyOnDrawItems: function(lightVer) {
          this._notify('onDrawItems');
-         this._drawItemsCallback();
+         this._drawItemsCallback(lightVer);
       },
 
       _clearItems: function (container) {
@@ -1485,7 +1485,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          ladder && ladder.setMarkLadderColumn(false);
          this._ladderCompare([newElement.prev(), newElement, newElement.next()]);
          this.reviveComponents();
-         this._notifyOnDrawItems();
+         this._notifyOnDrawItems(item.getKey() != this._options.selectedKey);
       },
 
       _getElementByModel: function(item) {

@@ -153,8 +153,8 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
             }
             this.subscribeTo(this._getItemsProjection(), 'onCollectionChange', this._onProjectionChange);
          },
-         _drawItemsCallback: function() {
-            this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);
+         _drawItemsCallback: function(lightVer) {
+            this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex, lightVer);
          },
          _unsetItemsEventHandlers : function() {
             if (this._utilityEnumerator) {
