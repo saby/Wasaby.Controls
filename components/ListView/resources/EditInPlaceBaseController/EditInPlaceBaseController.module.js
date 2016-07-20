@@ -22,6 +22,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
        * @control
        * @public
        */
+      var EndEditResult = {
+         CANCEL: 'Cancel',
+         SAVE: 'Save',
+         WITHOUT_SAVE: 'WithoutSave'
+      };
 
       var
          CONTEXT_RECORD_FIELD = 'sbis3-controls-edit-in-place',
@@ -309,15 +314,22 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this._savingDeferred.isReady() ? $ws.proto.Deferred.success() : this._savingDeferred;
             },
             _endEdit: function(eip, withSaving, endEditResult) {
-               if (endEditResult !== undefined) {
-                  withSaving = endEditResult;
+               //TODO: Поддержка старого варианта результата.
+               if (typeof endEditResult === "boolean") {
+                  endEditResult = endEditResult ? EndEditResult.SAVE : EndEditResult.WITHOUT_SAVE;
+                  $ws.single.ioc.resolve('ILogger').log('onEndEdit', 'Boolean result is deprecated. Use constants EditInPlaceBaseController.EndEditResult.');
                }
-               if (!withSaving || eip.validate()) {
-                  this._afterEndEdit(eip, withSaving);
-                  return this._savingDeferred;
-               } else {
+
+               if (endEditResult) {
+                  withSaving = endEditResult === EndEditResult.SAVE;
+               }
+
+               if (endEditResult === EndEditResult.CANCEL || !eip.validate() && withSaving) {
                   this._savingDeferred.errback();
                   return $ws.proto.Deferred.fail();
+               } else {
+                  this._afterEndEdit(eip, withSaving);
+                  return this._savingDeferred;
                }
             },
             _getEditingEip: function() {
@@ -499,6 +511,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                EditInPlaceBaseController.superclass.destroy.apply(this, arguments);
             }
          });
+
+      EditInPlaceBaseController.EndEditResult = EndEditResult;
 
       return EditInPlaceBaseController;
    });
