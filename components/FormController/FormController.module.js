@@ -205,7 +205,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          }.bind(this));
          var self = this;
          this._panelReadyDeferred = new $ws.proto.Deferred();
-         this._panel.subscribe('onAfterShow', function() {
+         this._panel.once('onAfterShow', function() {
             self._updateIndicatorZIndex();
             self._panelReadyDeferred.callback();
          });
@@ -701,8 +701,19 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._notify(eventName, this._options.record, additionalData);
       },
       /**
-       * Action, который позволяет выставить активность дочернего контрола после загрузки
+       * Выставить активность дочернего контрола после загрузки
        * @returns {$ws.proto.Deferred} Окончание чтения/создания модели
+       * @remark
+       * <br>
+       * Для выставления активности нужному контролу вызываем команду activateChildControl, которая вернет deferred, на который надо подписаться, чтобы выполнить необходимую логику
+       * @example
+       * В следующем примере организован переход фокуса после загрузки диалога на компонент textBox:
+       * <pre>
+       *    component.sendCommand('activateChildControl').addCallback(function(){
+       *       textBox.getContainer().focus();
+       *    });
+       * </pre>
+       * @command
        */
       _createChildControlActivatedDeferred: function(){
          this._activateChildControlDeferred = (new $ws.proto.Deferred()).addCallback(function(){

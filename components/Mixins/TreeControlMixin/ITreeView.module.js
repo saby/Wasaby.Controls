@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.TreeControl.ITreeView', [], function () {
    return /** @lends SBIS3.CONTROLS.HierarchyControl.IHierarchyView.prototype */{
       /**
        * @event onLeverageClicked Cобытие о клике по узлу, отвечаещему за разворот
-       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} hash Хэш элемента дерева
        */
 

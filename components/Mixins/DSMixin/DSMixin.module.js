@@ -1551,7 +1551,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
       /**
        * Обрабатывает событие об изменении коллекции.
-       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} action Действие, приведшее к изменению.
        * @param {WS.Data/Display/CollectionItem[]} newItems Новые элементы коллеции.
        * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.

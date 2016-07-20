@@ -716,7 +716,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             itemContainer = this._getDomElementByItem(item);
             this._ladderCompare([itemContainer.prev(), itemContainer, itemContainer.next()]);
-            this._reviveItems();
+            this._reviveItems(item.getContents().getId() != this._options.selectedKey);
          }
       },
 
@@ -891,15 +891,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._getItemsContainer().find('.js-controls-ListView__item[data-hash="' + item.getHash() + '"]')
       },
 
-      _reviveItems : function() {
-         this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
+      _reviveItems : function(lightVer) {
+         this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this, lightVer)).addErrback(function(e){
             throw e;
          });
       },
 
-      _notifyOnDrawItems: function() {
+      _notifyOnDrawItems: function(lightVer) {
          this._notify('onDrawItems');
-         this._drawItemsCallback();
+         this._drawItemsCallback(lightVer);
       },
 
       _clearItems: function (container) {
@@ -1385,25 +1385,25 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._options._itemsProjection;
       },
        /**
-        * Метод установки либо замены коллекции элементов, заданных опцией {@link items}.
-        * @param {Object} items Набор новых данных, по которому строится отображение.
-        * @param {Boolean} itemsBySource Флаг, говорящий о том, что items соответствуют сорсу, который в данный момент установлен. При этом после релоада не будет заменяться инстанс items, а произойдет перенос данных пришедших с БЛ в уже существующий инстанс items
+        * Устанавливает новый набор элементов коллекции.
+        * @param {Array.<Object>} items Набор новых данных, по которому строится отображение.
         * @example
+        * Для списка устанавливаем набор данных из трёх записей. Опция keyField установлена в значение id, а hierField - parent.
         * <pre>
-        *     setItems: [
+        *     myView.setItems([
         *        {
-        *           id: 1,
+        *           id: 1, // Поле с первичным ключом
         *           title: 'Сообщения'
         *        },{
         *           id: 2,
         *           title: 'Прочитанные',
-        *           parent: 1
+        *           parent: 1 // Поле иерархии
         *        },{
         *           id: 3,
         *           title: 'Непрочитанные',
         *           parent: 1
         *        }
-        *     ]
+        *     ]);
         * </pre>
         * @see items
         * @see addItem
@@ -1485,11 +1485,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          ladder && ladder.setMarkLadderColumn(false);
          this._ladderCompare([newElement.prev(), newElement, newElement.next()]);
          this.reviveComponents();
-         this._notifyOnDrawItems();
+         this._notifyOnDrawItems(item.getId() != this._options.selectedKey);
       },
 
       _getElementByModel: function(item) {
-         return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]');
+         return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getId() + '"]');
       },
 
 
