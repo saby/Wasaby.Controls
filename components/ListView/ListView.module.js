@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
       'browser!html!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
       'browser!js!SBIS3.CONTROLS.Utils.InformationPopupManager',
-      'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
+      'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
       'js!SBIS3.CONTROLS.DragEntity.Row'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
