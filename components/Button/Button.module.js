@@ -178,12 +178,12 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
          return !!this._options.primary;
       },
       _unregisterDefaultButton: function() {
-         var parent = this.getParent();
+         var parent = this.getLikeWindowParent();
          if(parent && parent.unregisterDefaultButton)
             parent.unregisterDefaultButton(this);
       },
       _registerDefaultButton: function() {
-         var parent = this.getParent();
+         var parent = this.getLikeWindowParent();
          if(parent && parent.registerDefaultButton)
             parent.registerDefaultButton(this);
       },
