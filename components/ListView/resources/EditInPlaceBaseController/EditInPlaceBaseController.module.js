@@ -339,6 +339,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         eipRecord.set(eipRecord.getKeyField(), recordId);
                         self._options.dataSet.push(self._cloneWithFormat(eipRecord, self._options.dataSet));
                      }
+                  }).addErrback(function(error) {
+                     $ws.helpers.alert(error);
                   }).addBoth(function() {
                      self._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
                   });
