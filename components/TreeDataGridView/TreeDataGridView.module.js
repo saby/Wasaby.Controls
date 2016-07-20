@@ -219,7 +219,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
       collapseNode: function (key) {
          this._clearLadderData(key);
-         TreeDataGridView.superclass.collapseNode.apply(this, arguments);
+         return TreeDataGridView.superclass.collapseNode.apply(this, arguments);
       },
 
       expandNode: function (key) {
