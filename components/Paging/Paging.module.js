@@ -63,7 +63,8 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
             _canServerRender: true,
             _getRecordsForRedraw : getRecordForRedraw,
             allowEmptySelection: false,
-            mode: 'part'
+            mode: 'part',
+            pagesCount: null
          }
       },
       $constructor: function(){
