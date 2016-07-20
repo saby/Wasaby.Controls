@@ -716,7 +716,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             itemContainer = this._getDomElementByItem(item);
             this._ladderCompare([itemContainer.prev(), itemContainer, itemContainer.next()]);
-            this._reviveItems(item.getKey() != this._options.selectedKey);
+            this._reviveItems(item.getContents().getId() != this._options.selectedKey);
          }
       },
 
@@ -1485,11 +1485,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          ladder && ladder.setMarkLadderColumn(false);
          this._ladderCompare([newElement.prev(), newElement, newElement.next()]);
          this.reviveComponents();
-         this._notifyOnDrawItems(item.getKey() != this._options.selectedKey);
+         this._notifyOnDrawItems(item.getId() != this._options.selectedKey);
       },
 
       _getElementByModel: function(item) {
-         return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]');
+         return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getId() + '"]');
       },
 
 
