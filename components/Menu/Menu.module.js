@@ -119,6 +119,7 @@ define('js!SBIS3.CONTROLS.Menu', [
                className: item.get('className'),
                activableByClick: false,
                command: item.get('command'),
+               commandArgs: item.get('commandArgs'),
                enabled: isEnabled === undefined ? true : isEnabled,
                visible: visible === undefined ? true : visible,
                icon: item.get('icon'),

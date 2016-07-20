@@ -214,6 +214,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          this._setNumericValue(text);
          text = this._formatText(text);
          NumberTextBox.superclass.setText.call(this, text);
+         if(!this.isActive() && this._options.hideEmptyDecimals) {
+            this._hideEmptyDecimals();
+         }
       },
 
       _hideEmptyDecimals: function () {
