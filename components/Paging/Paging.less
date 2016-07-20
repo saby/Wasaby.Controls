@@ -9,17 +9,6 @@
    float: left;
    position: relative;
    cursor: pointer;
-   &.controls-ListView__item__selected {
-      &:after {
-         content: '';
-         position: absolute;
-         background: @controls-Paging-marker-selected-color;
-         height: @controls-Paging-marker-height;
-         bottom: 0;
-         left: 0;
-         right: 0
-      }
-   }
    &:hover {
       &:after {
          content: '';
@@ -31,4 +20,16 @@
          right: 0
       }
    }
+   &.controls-ListView__item__selected {
+      &:after {
+         content: '';
+         position: absolute;
+         background: @controls-Paging-marker-selected-color;
+         height: @controls-Paging-marker-height;
+         bottom: 0;
+         left: 0;
+         right: 0
+      }
+   }
+
 }

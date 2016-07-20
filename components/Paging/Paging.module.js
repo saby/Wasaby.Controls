@@ -12,12 +12,36 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
     * @author Крайнов Дмитрий Олегович
     */
 
-   var getRecordForRedraw = function(projection) {
+   var getRecordForRedraw = function(projection, cfg) {
       var
+         selId, firstElem, lastElem,
+         count = projection.getCount(),
          records = [];
       if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
+         if (cfg.mode == 'part') {
+            selId = parseInt(cfg.selectedKey, 10) || 1;  //TODO || 1 - не очень хорошо, это должно уже из Selectable приходить
+            if ((selId < count - 1) && (selId > 2)) {
+               firstElem = selId - 1;
+               lastElem = selId + 1;
+            } else if (selId <= 2) {
+               firstElem = 1;
+               lastElem = 3;
+            }
+            else if (selId >= count - 1) {
+               firstElem = count - 1;
+               lastElem = count;
+            }
+         }
          projection.each(function (item) {
-            records.push(item);
+            if (cfg.mode == 'part') {
+               var curId = parseInt(item.getContents().getId(), 10);
+               if (curId >= firstElem && curId <= lastElem) {
+                  records.push(item);
+               }
+            }
+            else {
+               records.push(item);
+            }
          });
       }
       return records;
@@ -37,7 +61,9 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
          _dotTplFn: dotTplFn,
          _options: {
             _canServerRender: true,
-            _getRecordsForRedraw : getRecordForRedraw
+            _getRecordsForRedraw : getRecordForRedraw,
+            allowEmptySelection: false,
+            mode: 'part'
          }
       },
       $constructor: function(){
@@ -73,6 +99,11 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
          var selId = id;
          $(".controls-Paging__item", this._container).removeClass('controls-ListView__item__selected');
          $('.controls-Paging__item[data-id="' + selId + '"]', this._container).addClass('controls-ListView__item__selected');
+      },
+
+      setSelectedKey: function() {
+         Pager.superclass.setSelectedKey.apply(this, arguments);
+         this.redraw();
       }
 
    });
