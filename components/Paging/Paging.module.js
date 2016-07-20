@@ -15,33 +15,58 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
    var getRecordForRedraw = function(projection, cfg) {
       var
          selId, firstElem, lastElem,
+         dot1 = false,
+         dot2 = false,
          count = projection.getCount(),
          records = [];
       if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
-         if (cfg.mode == 'part') {
-            selId = parseInt(cfg.selectedKey, 10) || 1;  //TODO || 1 - не очень хорошо, это должно уже из Selectable приходить
-            if ((selId < count) && (selId > 1)) {
-               firstElem = selId - 1;
-               lastElem = selId + 1;
-            } else if (selId < 2) {
-               firstElem = 1;
-               lastElem = 3;
+         selId = parseInt(cfg.selectedKey, 10) || 1;  //TODO || 1 - не очень хорошо, это должно уже из Selectable приходить
+         firstElem = selId - 1;
+         lastElem = selId + 1;
+
+         if (firstElem < 1) {
+            firstElem = selId;
+            lastElem = selId + 2 > count ? count : selId + 2;
+         }
+         if (lastElem > count) {
+            firstElem = count - 2 < 0 ? 0 : count - 2;
+            lastElem = count;
+         }
+
+         if (cfg.mode == 'full') {
+            if (firstElem - 1 > 1) {
+               dot1 = true;
             }
-            else if (selId > count - 1) {
-               firstElem = count - 2;
-               lastElem = count;
+            if (lastElem + 1 < count) {
+               dot2 = true;
             }
          }
+
+         var counter = 1;
          projection.each(function (item) {
+            var curId = parseInt(item.getContents().getId(), 10);
             if (cfg.mode == 'part') {
-               var curId = parseInt(item.getContents().getId(), 10);
                if (curId >= firstElem && curId <= lastElem) {
                   records.push(item);
                }
             }
-            else {
-               records.push(item);
+            else if (cfg.mode == 'full') {
+               if (counter == 1 || counter == count) {
+                  records.push(item);
+               }
+               else {
+                  if (dot1 && counter == 2) {
+                     records.push('...');
+                  }
+                  if (dot2 && counter == count - 1) {
+                     records.push('...');
+                  }
+                  if (curId >= firstElem && curId <= lastElem) {
+                     records.push(item);
+                  }
+               }
             }
+            counter++;
          });
       }
       return records;
@@ -94,7 +119,7 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
 
       _onClickHandler: function(e) {
          var $target = $(e.target),
-            target = $target.closest('.controls-Paging__item'),
+            target = $target.closest('.js-controls-ListView__item'),
             hash, proj, item;
 
          if (target.length) {
