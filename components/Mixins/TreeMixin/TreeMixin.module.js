@@ -211,11 +211,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             _curRoot: null,
             _createDefaultProjection : createDefaultProjection,
             /**
-             * @cfg {String} Идентификатор узла, относительно которого надо отображать данные
+             * @cfg {String} Устанавливает идентификатор узла, относительно которого нужно отображать данные. Такой узел будет считаться вершиной иерархии.
              * @example
              * <pre>
              *    <option name="root">12688410,ПапкаДокументов</option>
              * </pre>
+             * @see setCurrentRoot
+             * @see getCurrentRoot
              */
             root: undefined,
 
@@ -545,7 +547,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        */
       setOpenedPath: function(openedPath) {
          this._options.openedPath = openedPath;
-         this._applyExpandToItemsProjection();
+         if (this._getItemsProjection()) { // Если имеется проекция - то применяем разворот к итемам, иначе он применится после создания проекции
+            this._applyExpandToItemsProjection();
+         }
       },
       around: {
          _canApplyGrouping: function(parentFn, projItem) {
@@ -765,7 +769,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          if (this._lastParent === undefined) {
             this._lastParent = this._options._curRoot;
          }
-         key = record.getKey();
+         key = record.getId();
          curRecRoot = record.get(this._options.hierField);
          //TODO для SBISServiceSource в ключе находится массив, а теперь он еще и к строке приводится...
          curRecRoot = curRecRoot instanceof Array ? curRecRoot[0] : curRecRoot;
@@ -793,7 +797,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             //Если текущий раздел у записи есть в lastPath, то возьмем все элементы до этого ключа
             kInd = -1;
             for (var k = 0; k < this._lastPath.length; k++) {
-               if (this._lastPath[k].getKey() == curRecRoot){
+               if (this._lastPath[k].getId() == curRecRoot){
                   kInd = k;
                   break;
                }
@@ -844,7 +848,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             cfg = {
                element : elem,
                items: this._createPathItemsDS(path),
-               parent: this.getTopParent(),
+               parent: this,
                highlightEnabled: this._options.highlightEnabled,
                highlightText: this._options.highlightText,
                colorMarkEnabled: this._options.colorMarkEnabled,
@@ -892,7 +896,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             //TODO для SBISServiceSource в ключе находится массив
             parentID = pathRecords[i].get(this._options.hierField);
             dsItems.push({
-               id: pathRecords[i].getKey(),
+               id: pathRecords[i].getId(),
                title: pathRecords[i].get(this._options.displayField),
                parentId: parentID instanceof Array ? parentID[0] : parentID,
                data: pathRecords[i]
@@ -914,15 +918,19 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          this._options.root = root;
       },
       /**
-       * Получить текущий корень иерархии
-       * @returns {*}
+       * Возвращает идентификатор узла, в который было установлено проваливание.
+       * @returns {String|Number}
+       * @see setCurrentRoot
+       * @see root
        */
       getCurrentRoot : function(){
          return this._options._curRoot;
       },
       /**
-       * Зайти в определенный узел
-       * @param {String} key Идентификатор раскрываемого узла
+       * Устанавливает проваливание в узел и вызывает отрисовку хлебных крошек (если они есть), относительно вершины иерархии (см. {@link root}).
+       * @param {String|Number} key Идентификатор узла, в который будет установлено проваливание.
+       * @see getCurrentRoot
+       * @see root
        */
       setCurrentRoot: function(key) {
          var

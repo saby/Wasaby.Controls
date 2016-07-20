@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                keyField: item.get('keyField'),
                mode: this._options.mode,
                multiselect : !!item.get('multiselect'),
-               showSelectedInList : !!item.get('multiselect'),
+               showSelectedInList : !!item.get('showSelectedInList'),
                displayField: item.get('displayField'),
                className: item.get('className') || 'controls-DropdownList__linkStyle',
                pickerClassName: (item.get('pickerClassName') + ' controls-DropdownList__picker') || 'controls-DropdownList__picker',
@@ -153,7 +153,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
 
                   //TODO из-за того, что ТЕПЕРЬ в multiselectable происходит сначала оповещение, а
                   //только потом перерисовка, то пользоваться здесь getText нельзя, смотрим в dataSet
-                  ds = this.getDataSet();
+                  ds = this.getItems();
                   for (var i = 0; i < idArray.length; i++) {
                      text.push(ds.getRecordByKey(idArray[i]).get(this._options.displayField))
                   }
