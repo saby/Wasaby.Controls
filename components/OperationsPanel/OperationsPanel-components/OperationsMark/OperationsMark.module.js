@@ -53,6 +53,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
               * @cfg {OperationsMarkItems[]} Операции отметки.
               */
             items: [
+               { name: 'selectAll', title: rk('Все') },
                { name: 'selectCurrentPage', title: rk('Всю страницу') },
                { name: 'removeSelection', title: rk('Снять') },
                { name: 'invertSelection', title: rk('Инвертировать') }
@@ -111,7 +112,11 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          }
       },
       _onCheckBoxActivated: function() {
-         this._markCheckBox.isChecked() === true ? this.selectCurrentPage() : this.removeSelection();
+         if (this._markCheckBox.isChecked()){
+            this.getItems().getRecordById('selectAll') ? this.selectAll() : this.selectCurrentPage();
+         } else {
+            this.removeSelection();
+         }   
       },
       _updateMarkCheckBox: function() {
          var view = this._options.linkedView,
@@ -148,6 +153,12 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
       },
       /**
        * Выбрать все элементы.
+       */
+      selectAll: function() {
+         this._options.linkedView.setSelectedAll()
+      },
+      /**
+       * Выбрать все видимые элементы.
        */
       selectCurrentPage: function() {
          this._options.linkedView.setSelectedItemsAll()

@@ -481,7 +481,7 @@ define(
       setActive: function(active) {
          var date;
          if (!active && !this.formatModel.isFilled()) {
-            date = this._getDateByText(this._options.text, new Date(), true);
+            date = this._getDateByText(this._options.text, this._options.date, true);
             if (date) {
                this.setDate(date);
             }
@@ -500,19 +500,21 @@ define(
          var
             //используем старую дату как основу, чтобы сохранять части даты, отсутствующие в маске
             //new Date от старой даты делаем, чтобы контекст увидел новый объект
-            date = (DateUtil.isValidDate(oldDate)) ? new Date(oldDate.getTime())  : new Date(),
+            date = (DateUtil.isValidDate(oldDate)) ? new Date(oldDate.getTime()) : null,
             item,
             value,
             filled = [],
             notFilled = [],
-            curYear = new Date().getFullYear(),
-            yyyy = date.getFullYear(),
-            mm   = date.getMonth(),
-            dd   = date.getDate(),
-            hh   = date.getHours(),
-            ii   = date.getMinutes(),
-            ss   = date.getSeconds(),
-            uuu  = date.getMilliseconds();
+            now = new Date(),
+            curYear = now.getFullYear(),
+            curCentury = (curYear - curYear % 100),
+            yyyy = date ? date.getFullYear() : 0,
+            mm   = date ? date.getMonth() : 0,
+            dd   = date ? date.getDate() : 1,
+            hh   = date ? date.getHours() : 0,
+            ii   = date ? date.getMinutes() : 0,
+            ss   = date ? date.getSeconds() : 0,
+            uuu  = date ? date.getMilliseconds() : 0;
          for (var i = 0; i < this.formatModel.model.length; i++) {
             item = this.formatModel.model[i];
             if ( !item.isGroup) {
@@ -525,8 +527,9 @@ define(
             if (value.indexOf(this._maskReplacer) === -1) {
                switch (item.mask) {
                   case 'YY' :
-                     //Если год задаётся двумя числами, то считаем что это текущий век.
-                     yyyy = (curYear - curYear % 100) + Number(value);
+                     value = Number(value);
+                     //Если год задаётся двумя числами, то считаем что это текущий век если год меньше 90, если же год больше 90 то это прошлый век.
+                     yyyy = value + 10 < 100 ? curCentury + value : (curCentury - 100) + value;
                      break;
                   case 'YYYY' :
                      yyyy = value;
@@ -562,10 +565,13 @@ define(
                //TODO: На данный момент по требованиям данной задачи: (https://inside.tensor.ru/opendoc.html?guid=a46626d6-abed-453f-92fe-c66f345863ef&description=)
                //автодополнение работает только если 1) заполнен день и не заполнены месц и год; 2) заполнены день и месяц и не заполнен год;
                //Нужно более общий сценарий работы автодополнения! Выписана задача: (https://inside.tensor.ru/opendoc.html?guid=0be02625-2d2f-4f74-940e-4d0e24b369e4&description=)
-               if (Array.indexOf(filled, "DD") !== -1 &&
-                  (Array.indexOf(notFilled, "MM") !== -1 && (Array.indexOf(notFilled, "YY") !== -1 || Array.indexOf(notFilled, "YYYY") !== -1) ||
-                   Array.indexOf(filled, "MM") !== -1 && (Array.indexOf(notFilled, "YY") !== -1 || Array.indexOf(notFilled, "YYYY") !== -1))) {
-                  return new Date(yyyy, mm, dd, hh, ii, ss, uuu);
+               if (Array.indexOf(filled, "DD") !== -1) {
+                  if (Array.indexOf(notFilled, "MM") !== -1 && (Array.indexOf(notFilled, "YY") !== -1 || Array.indexOf(notFilled, "YYYY") !== -1)) {
+                     return new Date(now.getFullYear(), now.getMonth(), dd, hh, ii, ss, uuu);
+                  }
+                  if (Array.indexOf(filled, "MM") !== -1 && (Array.indexOf(notFilled, "YY") !== -1 || Array.indexOf(notFilled, "YYYY") !== -1)) {
+                     return new Date(now.getFullYear(), mm, dd, hh, ii, ss, uuu);
+                  }
                }
             }
          }
@@ -573,7 +579,7 @@ define(
       },
       _dateIsValid: function(yyyy, mm, dd, hh, ii, ss) {
          var lastMonthDay = (new Date(yyyy, mm)).setLastMonthDay().getDate();
-         return ss < 60 && ii < 60 && hh < 24 && mm < 12 && dd <= lastMonthDay;
+         return ss < 60 && ii < 60 && hh < 24 && mm < 12 && mm >= 0 && dd <= lastMonthDay && dd > 0;
       },
       /**
        * Получить дату в формате строки по объекту Date. Строка соответсвует изначальной маске.

@@ -183,11 +183,15 @@ define('js!SBIS3.CONTROLS.DropdownList',
          init : function () {
             DropdownList.superclass.init.apply(this, arguments);
             if (!this._picker) {
+               if (this._container.hasClass('controls-DropdownList__withoutCross')){
+                  this._options.pickerClassName += ' controls-DropdownList__withoutCross';
+               }
                this._initializePicker();
             }
          },
          _modifyOptions: function(opts) {
             opts.pickerClassName += ' controls-DropdownList__picker';
+            opts.headTemplate = TemplateUtil.prepareTemplate(opts.headTemplate);
             return DropdownList.superclass._modifyOptions.call(this, opts);
          },
          _setPickerContent : function () {
@@ -227,19 +231,23 @@ define('js!SBIS3.CONTROLS.DropdownList',
                multiselect: this._options.multiselect
             };
          },
+         setItems: function () {
+            DropdownList.superclass.setItems.apply(this, arguments);
+            /* После установки нового набора элементов, надо сбросить ранее выбранные */
+            this.removeItemsSelectionAll();
+         },
          setSelectedKeys : function(idArray){
             //Если у нас есть выбранные элементы, нцжно убрать DefaultId из набора
             //Т.к. ключи могут отличаться по типу (0 !== '0'), то придется перебирать массив самостоятельно.
             if (idArray.length > 1) {
                for (var i = 0; i < idArray.length; i++) {
                   if (idArray[i] == this._defaultId){
-                     idArray = idArray.splice(i, 1);
+                     idArray.splice(i, 1);
                      break;
                   }
                }
-
             }
-            DropdownList.superclass.setSelectedKeys.apply(this, arguments);
+            DropdownList.superclass.setSelectedKeys.call(this, idArray);
             this._updateCurrentSelection();
          },
          _updateCurrentSelection: function(){
@@ -249,6 +257,15 @@ define('js!SBIS3.CONTROLS.DropdownList',
             for (var i = 0, len = keys.length; i < len; i++ ) {
                this._currentSelection[keys[i]] = true;
             }
+         },
+         _initializePicker: function() {
+            DropdownList.superclass._initializePicker.apply(this, arguments);
+            // Предотвращаем всплытие focus и mousedown с контейнера меню, т.к. это приводит к потере фокуса
+            this._picker.getContainer().on('mousedown focus', this._blockFocusEvents);
+         },
+         _blockFocusEvents: function(event) {
+            event.preventDefault();
+            event.stopPropagation();
          },
          _getCurrentSelection: function(){
             var keys = [];
@@ -362,7 +379,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (item) {
                this._defaultId = item.getId();
                if (this._buttonHasMore) {
-                  this._buttonHasMore[this._hasNextPage(this._dataSet.getMetaData().more, 0) ? 'show' : 'hide']();
+                  var needShowHasMoreButton = this._hasNextPage(this._dataSet.getMetaData().more, 0);
+                  if (!this._options.multiselect){
+                     this._buttonHasMore.getContainer().closest('.controls-DropdownList__buttonsBlock').toggleClass('ws-hidden', !needShowHasMoreButton);
+                  }
+                  else{
+                     this._buttonHasMore[needShowHasMoreButton ? 'show' : 'hide']();
+                  }
                }
             }
          },
@@ -383,6 +406,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._pickerBodyContainer = pickerContainer.find('.controls-DropdownList__body');
             this._pickerHeadContainer = pickerContainer.find('.controls-DropdownList__header');
             this._pickerFooterContainer = pickerContainer.find('.controls-DropdownList__footer');
+            this._buttonHasMore = this._picker.getChildControlByName('DropdownList_buttonHasMore');
+            this._buttonHasMore.subscribe('onActivated', function(){
+               self._notify('onClickMore');
+               self.hidePicker();
+            });
             if (this._options.multiselect) {
                this._buttonChoose = this._picker.getChildControlByName('DropdownList_buttonChoose');
                this._buttonChoose.subscribe('onActivated', function(){
@@ -391,11 +419,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   if (!self._isSimilarArrays(self.getSelectedKeys(), currSelection)) {
                      self.setSelectedKeys(currSelection);
                   }
-                  self.hidePicker();
-               });
-               this._buttonHasMore = this._picker.getChildControlByName('DropdownList_buttonHasMore');
-               this._buttonHasMore.subscribe('onActivated', function(){
-                  self._notify('onClickMore');
                   self.hidePicker();
                });
             }
@@ -455,7 +478,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
                      self._pickerHeadContainer.html(headTpl);
                      self._selectedItemContainer.html(headTpl);
                   }
-                  self._setResetButtonVisibility(id[0] === self._defaultId);
+                  if(id[0] === self._defaultId){
+                     self._getPickerContainer().addClass('controls-DropdownList__hideCross');
+                     self._setResetButtonVisibility(true);
+                  }else{
+                     self._getPickerContainer().removeClass('controls-DropdownList__hideCross');
+                     self._setResetButtonVisibility(false);
+                  }
+
                });
             }
          },

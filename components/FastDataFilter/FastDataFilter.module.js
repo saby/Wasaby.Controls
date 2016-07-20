@@ -101,13 +101,22 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                keyField: item.get('keyField'),
                mode: this._options.mode,
                multiselect : !!item.get('multiselect'),
-               showSelectedInList : !!item.get('multiselect'),
+               showSelectedInList : !!item.get('showSelectedInList'),
                displayField: item.get('displayField'),
                className: item.get('className') || 'controls-DropdownList__linkStyle',
                pickerClassName: (item.get('pickerClassName') + ' controls-DropdownList__picker') || 'controls-DropdownList__picker',
                dataSource: item.get('dataSource'),
                filter: item.get('filter')
             };
+            if(item.has('headTemplate')){
+               cfg.headTemplate = item.get('headTemplate');
+            }
+            if(item.has('itemTemplate')){
+               cfg.itemTemplate = item.get('itemTemplate');
+            }
+            if(item.has('includedTemplates')){
+               cfg.includedTemplates = item.get('includedTemplates');
+            }
             return '<component data-component="SBIS3.CONTROLS.DropdownList" config="' + $ws.helpers.encodeCfgAttr(cfg) + '">' +
                         //'<opts name="selectedKeys" type="array" bind="' + cfg.filterName +'" ></opts>' + //direction="fromProperty" oneWay="true"
                         //'<opt name="caption" type="array" bind="'+ cfg.displayField +'" direction="fromProperty" oneWay="true"></opt>' +
@@ -144,7 +153,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
 
                   //TODO из-за того, что ТЕПЕРЬ в multiselectable происходит сначала оповещение, а
                   //только потом перерисовка, то пользоваться здесь getText нельзя, смотрим в dataSet
-                  ds = this.getDataSet();
+                  ds = this.getItems();
                   for (var i = 0; i < idArray.length; i++) {
                      text.push(ds.getRecordByKey(idArray[i]).get(this._options.displayField))
                   }

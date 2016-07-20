@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 24.11.2015.
  */
-define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], function(Model) {
+define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!WS.Data/Entity/Model'], function(Model) {
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента
     * @mixin SBIS3.CONTROLS.ActiveSelectable
@@ -13,13 +13,33 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Model} Устанавливает выбранным элемент коллекции по переданному экземпляру класса.
-             * Устанавливает экземпляр класса {@link SBIS3.CONTROLS.Data.Model} с данными выбранной записи.
+             * @cfg {WS.Data/Entity/Model} Устанавливает выбранным элемент коллекции по переданному экземпляру класса.
+             * Устанавливает экземпляр класса {@link WS.Data/Entity/Model} с данными выбранной записи.
              * Опция актуальна, когда контрол находится в режиме единичного выбора значений.
              * @see setSelectedItem
              * @see getSelectedItem
              */
             selectedItem : null
+         }
+      },
+
+      after: {
+         _modifyOptions: function(opts) {
+            if(opts.selectedItem instanceof Model) {
+               return opts;
+            }
+
+            /* Пре-инициализация selectedItem, если selectedItem пришёл как объект
+               требуется проинициализировать, чтобы была возможность построить вёрстку на уровне шаблонизатора */
+            if(opts.selectedItem && !Object.isEmpty(opts.selectedItem) && opts.selectedItem[opts.keyField] && opts.selectedItem[opts.displayField]) {
+               opts.selectedItem = new Model({
+                  idProperty: opts.keyField,
+                  rawData: opts.selectedItem
+               });
+               opts.selectedKey = opts.selectedItem.getId();
+            }
+
+            return opts;
          }
       },
 
@@ -32,7 +52,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
       },
       /**
        * Устанавливает выбранный элемент коллекции.
-       * @param {SBIS3.CONTROLS.Data.Model} item Выбранный элемент коллекции.
+       * @param {WS.Data/Entity/Model} item Выбранный элемент коллекции.
        * @example
        * <pre>
        *     var selItem = this.getChildControlByName('MyControl').getSelectedItem();
@@ -69,7 +89,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
       /**
        * Возвращает выбранный элемент коллекции.
        * @param loadItem загружать ли запись, если о ней нет информации в dataSet
-       * @returns {null|SBIS3.CONTROLS.Data.Model}
+       * @returns {null|WS.Data/Entity/Model}
        * @example
        * <pre>
        *     var myItem = this.getChildControlByName('MyControl').getSelectedItem();
@@ -78,12 +98,14 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
        * @see setSelectedItem
        */
       getSelectedItem: function(loadItem) {
-         var dResult = new $ws.proto.Deferred(),
-             selItem = this._options.selectedItem,
-             selKey = this._options.selectedKey,
-             self = this;
+         var
+            dResult = new $ws.proto.Deferred(),
+            selItem, selKey, self = this;
 
          this._syncSelectedItem();
+
+         selItem = this._options.selectedItem;
+         selKey = this._options.selectedKey;
 
          if(!loadItem) {
             return selItem;

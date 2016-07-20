@@ -1,13 +1,13 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.ListControlMixin', [
    'js!SBIS3.CONTROLS.ListControl.View',
-   'js!SBIS3.CONTROLS.Data.Bind.ICollection',
-   'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
-   'js!SBIS3.CONTROLS.Data.Collection.LoadableList',
+   'js!WS.Data/Collection/IBind',
+   'js!WS.Data/Collection/ObservableList',
+   'js!WS.Data/Collection/LoadableList',
    'html!SBIS3.CONTROLS.ListControl.View',
    'js!SBIS3.CONTROLS.PagerMore',
-   'js!SBIS3.CONTROLS.Data.Projection.Projection',
-   'js!SBIS3.CONTROLS.Data.Projection.Collection'
+   'js!WS.Data/Display/Display',
+   'js!WS.Data/Display/Collection'
 ], function (ListView, IBindCollection, ObservableList, LoadableList, ListViewTemplate, PagerMore, Projection) {
    'use strict';
 
@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
        * @event onItemAction Уведомляет о необходимости выполнить действие по умолчанию для выбранного элемента
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {*} item Выбранный элемент
-       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} collectionItem Обертка выбранного элемента
+       * @param {WS.Data/Display/CollectionItem} collectionItem Обертка выбранного элемента
        */
 
       $protected: {
@@ -35,24 +35,24 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
             /**
              * @typedef {Object} DataSource
-             * @property {DataSourceModule} module Модуль, реализующий ISource, например js!SBIS3.CONTROLS.Data.Source.SbisService
+             * @property {DataSourceModule} module Модуль, реализующий ISource, например js!WS.Data/Source/SbisService
              * @property {Object} options Опции конструктора
              */
 
             /**
              * @typedef {String} DataSourceModule
-             * @variant js!SBIS3.CONTROLS.Data.Source.SbisService Источник данных на базе сервиса БЛ СБиС
-             * @variant js!SBIS3.CONTROLS.Data.Source.Memory Источник данных в памяти
+             * @variant js!WS.Data/Source/SbisService Источник данных на базе сервиса БЛ СБиС
+             * @variant js!WS.Data/Source/Memory Источник данных в памяти
              */
 
             /**
-             * @cfg {DataSource|SBIS3.CONTROLS.Data.Source.ISource} Источник данных. Если указан, то опция {@link items} не действует.
-             * @remark Нужен только для того, чтобы создать SBIS3.CONTROLS.Data.Collection.ISourceLoadable коллекцию в конструкторе. Далее не используется.
+             * @cfg {DataSource|WS.Data/Source/ISource} Источник данных. Если указан, то опция {@link items} не действует.
+             * @remark Нужен только для того, чтобы создать WS.Data/Collection/ISourceLoadable коллекцию в конструкторе. Далее не используется.
              * @example
              * Задаем источник данных декларативно:
              * <pre class="brush:xml">
              *     <options name="dataSource">
-             *        <option name="module">js!SBIS3.CONTROLS.Data.Source.SbisService</option>
+             *        <option name="module">js!WS.Data/Source/SbisService</option>
              *        <options name="options">
              *           <option name="service">Сотрудник</option>
              *        </options>
@@ -116,12 +116,12 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
          _isInitialized: false,
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Collection.IList} Список, отображаемый контролом
+          * @var {WS.Data/Collection/IList} Список, отображаемый контролом
           */
          _items: undefined,
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Projection.Collection} Проекция списка
+          * @var {WS.Data/Display/Collection} Проекция списка
           */
          _itemsProjection: undefined,
 
@@ -214,7 +214,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Возвращает источник данных
-       * @returns {SBIS3.CONTROLS.Data.Source.ISource}
+       * @returns {WS.Data/Source/ISource}
        */
       getDataSource: function () {
          return this._options.dataSource;
@@ -222,7 +222,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Устанавливает источник данных
-       * @param {SBIS3.CONTROLS.Data.Source.ISource} source
+       * @param {WS.Data/Source/ISource} source
        * @example
        * <pre>
        *    myListView.setDataSource(new SbisSevice({
@@ -270,7 +270,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Возвращает список, отображаемый контролом
-       * @returns {SBIS3.CONTROLS.Data.Collection.IList}
+       * @returns {WS.Data/Collection/IList}
        */
       getItems: function () {
          return this._items;
@@ -278,7 +278,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Устанавливает список, отображаемый контролом
-       * @param {Array|SBIS3.CONTROLS.Data.Collection.IEnumerable} items
+       * @param {Array|WS.Data/Collection/IEnumerable} items
        */
       setItems: function(items) {
          this._setItems(items);
@@ -287,7 +287,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Возвращает проекцию списка, отображаемого контролом
-       * @returns {SBIS3.CONTROLS.Data.Projection.Collection}
+       * @returns {WS.Data/Display/Collection}
        */
       getItemsProjection: function () {
          return this._itemsProjection;
@@ -343,10 +343,10 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
          this._view.render(items);
 
          if (this._options.pageSize > 0) {
-            var collection = $ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Projection.Projection') ?
+            var collection = $ws.helpers.instanceOfModule(items, 'WS.Data/Display/Display') ?
                items.getCollection() :
                items;
-            if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable') &&
+            if ($ws.helpers.instanceOfMixin(collection, 'WS.Data/Collection/ISourceLoadable') &&
                collection.hasMore()
             ) {
                //TODO: перенести в шаблон в новом шаблонизаторе
@@ -370,8 +370,8 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
        * Выполняет перезагрузку элементов {@link items} и перерисовку представления
        */
       reload: function () {
-         if (!$ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable')) {
-            throw new Error('Source collection should implement SBIS3.CONTROLS.Data.Collection.ISourceLoadable.');
+         if (!$ws.helpers.instanceOfMixin(this._items, 'WS.Data/Collection/ISourceLoadable')) {
+            throw new Error('Source collection should implement WS.Data/Collection/ISourceLoadable.');
          }
 
          this._items.load();
@@ -409,7 +409,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
                   this._options.dataSource = cfg.dataSource.call(this);
                   break;
                case 'object':
-                  if (!$ws.helpers.instanceOfMixin(cfg.dataSource, 'SBIS3.CONTROLS.Data.Source.ISource') &&
+                  if (!$ws.helpers.instanceOfMixin(cfg.dataSource, 'WS.Data/Source/ISource') &&
                      'module' in cfg.dataSource
                   ) {
                      var DataSourceConstructor = require(cfg.dataSource.module);
@@ -429,8 +429,8 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Возвращает отображаемую контролом коллекцию, сделанную на основе источника данных
-       * @param {SBIS3.CONTROLS.Data.Source.ISource} source
-       * @returns {SBIS3.CONTROLS.Data.Collection.IList}
+       * @param {WS.Data/Source/ISource} source
+       * @returns {WS.Data/Collection/IList}
        * @private
        */
       _convertDataSourceToItems: function (source) {
@@ -442,7 +442,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
       /**
        * Конвертирует список, отображаемый контролом, во внутреннее представление
        * @param {Object} items
-       * @returns {SBIS3.CONTROLS.Data.Collection.IList}
+       * @returns {WS.Data/Collection/IList}
        * @private
        */
       _convertItems: function (items) {
@@ -453,8 +453,8 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
             });
          }
 
-         if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            throw new Error('Items should implement SBIS3.CONTROLS.Data.Collection.IEnumerable');
+         if (!$ws.helpers.instanceOfMixin(items, 'WS.Data/Collection/IEnumerable')) {
+            throw new Error('Items should implement WS.Data/Collection/IEnumerable');
          }
 
          return items;
@@ -468,7 +468,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
       _setItems: function (items) {
          this._unsetItemsEventHandlers();
 
-         if ($ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Projection.Projection')) {
+         if ($ws.helpers.instanceOfModule(items, 'WS.Data/Display/Display')) {
             this._itemsProjection = items;
             this._items = this._convertItems(this._itemsProjection.getCollection());
          } else  {
@@ -490,7 +490,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
          this.subscribeTo(this._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
          this.subscribeTo(this._itemsProjection, 'onCurrentChange', this._onCurrentChange);
 
-         if (this._items && $ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable')) {
+         if (this._items && $ws.helpers.instanceOfMixin(this._items, 'WS.Data/Collection/ISourceLoadable')) {
             this._items.subscribe('onBeforeCollectionLoad', this._onBeforeItemsLoad);
             this._items.subscribe('onAfterCollectionLoad', this._onAfterItemsLoad);
             this._items.subscribe('onAfterLoadedApply', this._dataLoadedCallback);
@@ -506,7 +506,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
          this.unsubscribeFrom(this._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
          this.unsubscribeFrom(this._itemsProjection, 'onCurrentChange', this._onCurrentChange);
 
-         if (this._items && $ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable')) {
+         if (this._items && $ws.helpers.instanceOfMixin(this._items, 'WS.Data/Collection/ISourceLoadable')) {
             this._items.unsubscribe('onBeforeCollectionLoad', this._onBeforeItemsLoad);
             this._items.unsubscribe('onAfterCollectionLoad', this._onAfterItemsLoad);
             this._items.unsubscribe('onAfterLoadedApply', this._dataLoadedCallback);
@@ -533,7 +533,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
          this.redraw();
 
-         if ($ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable') &&
+         if ($ws.helpers.instanceOfMixin(this._items, 'WS.Data/Collection/ISourceLoadable') &&
             (!this._items.isLoaded() || this._items.isQueryChanged())
          ) {
             this._items.load();
@@ -623,7 +623,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Устанавливает коллекцию для контрола постраничной навигации
-       * @param {SBIS3.CONTROLS.Data.Projection.Collection} items
+       * @param {WS.Data/Display/Collection} items
        * @private
        */
       _setPagerItems: function(items) {
@@ -675,7 +675,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Обрабатывает событие о нахождении указателя над элементом коллекции
-       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} hash Хэш элемента, на который произошло наведение указателя
        * @param {Boolean} isHover Указатель наведен или ушел за пределы конейнера элемента
        * @param {Element} item DOM элемент
@@ -690,7 +690,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Обрабатывает событие о клике по элементу коллекции
-       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} hash Хэш элемента, на котором произошел клик
        * @private
        */
@@ -704,7 +704,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Обрабатывает событие о двойном клике по элементу коллекции
-       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} hash Хэш элемента, на котором произошел двойной клик
        * @private
        */
@@ -737,7 +737,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Производит действие по умолчанию для выбранного элемента
-       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Выбранный элемент
+       * @param {WS.Data/Display/CollectionItem} item Выбранный элемент
        * @private
        */
       _itemAction: function(item) {
@@ -748,7 +748,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Вызывает действие по умолчанию для выбранного элемента
-       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Выбранный элемент
+       * @param {WS.Data/Display/CollectionItem} item Выбранный элемент
        * @private
        */
       _callItemAction: function(item) {
@@ -761,8 +761,8 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Вызывается просле загрузки данных через источник
-       * @param {$ws.proto.EventObject} event Дескриптор события.
-       * @param {String} [mode=SBIS3.CONTROLS.Data.Collection.ISourceLoadable.MODE_REPLACE] Режим загрузки
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String} [mode=WS.Data/Collection/ISourceLoadable/MODE_REPLACE] Режим загрузки
        * @param {Object} items Коллекция, полученная из источника
        * @private
        */
@@ -777,8 +777,8 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
    /**
     * Обрабатывает событие об изменении позиции текущего элемента коллекции
     * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-    * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} newCurrent Новый текущий элемент
-    * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} oldCurrent Старый текущий элемент
+    * @param {WS.Data/Display/CollectionItem} newCurrent Новый текущий элемент
+    * @param {WS.Data/Display/CollectionItem} oldCurrent Старый текущий элемент
     * @param {Number} newPosition Новая позиция
     * @param {Number} oldPosition Старая позиция
     * @private
@@ -793,11 +793,11 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
    /**
     * Обрабатывает событие об изменении коллекции
-    * @param {$ws.proto.EventObject} event Дескриптор события.
+    * @param {$ws.proto.EventObject} eventObject Дескриптор события.
     * @param {String} action Действие, приведшее к изменению.
-    * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} newItems Новые элементы коллеции.
+    * @param {WS.Data/Display/CollectionItem[]} newItems Новые элементы коллеции.
     * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
-    * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} oldItems Удаленные элементы коллекции.
+    * @param {WS.Data/Display/CollectionItem[]} oldItems Удаленные элементы коллекции.
     * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
     * @private
     */
@@ -855,8 +855,8 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
    /**
     * Обрабатывает событие об изменении элемента коллекции
-    * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Измененный элемент коллеции.
+    * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+    * @param {WS.Data/Display/CollectionItem} item Измененный элемент коллеции.
     * @param {Integer} index Индекс измененного элемента.
     * @param {String} [property] Измененное свойство элемента
     * @private

@@ -60,9 +60,7 @@
 
 .controls-ListView__item__selected {
    .controls-DataGridView__td:first-child {
-      background-image: url('img/rowSelect.png');
-      background-position: left top;
-      background-repeat: repeat-y;
+      .marker()
    }
 }
 
@@ -77,8 +75,10 @@
          background-image: none !important;
       }
       &.controls-ListView__item {
-         border-color: transparent;
-         background-color: transparent !important;
+         &:not(.controls-ListView__hoveredItem) {
+            border-color: transparent;
+            background-color: transparent !important;
+         }
       }
    }
 }

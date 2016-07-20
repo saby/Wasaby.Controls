@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.List'], function(List) {
+define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], function(List) {
 
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
@@ -58,10 +58,12 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
             multiselect : true,
             /**
              * @cfg {String[]} Устанавливает массив идентификаторов, по которым будет установлен набор выбранных элементов коллекции.
-             * @remark file MultiSelectable-selectedKeys.md
+             * @remark
+             * Устанавливает массив идентификаторов элементов коллекции, которые будут по умолчанию выбраны для контрола.
+             * Опция актуальна только для контрола в режиме множественного выбора значений, который устанавливают с помощью опции {@link multiselect}.
+             * Чтобы элементы коллекции были выбраны, для контрола дополнительно должны быть установлены {@link SBIS3.CONTROLS.DSMixin#keyField поле первичного ключа} и {@link SBIS3.CONTROLS.DSMixin#dataSource источник данных}.
              * @example
-             * В контрол, отображающий набор данных в виде таблицы {@link SBIS3.CONTROLS.DataGridView},
-             * переданы три идентификатора элементов коллекции:
+             * В контрол, отображающий набор данных в виде таблицы {@link SBIS3.CONTROLS.DataGridView},  переданы три идентификатора элементов коллекции:
              * ![](/MultiSelectable03.png)
              * фрагмент верстки:
              * <pre class="brush: xml">
@@ -105,7 +107,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
               */
             allowEmptyMultiSelection : true,
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.List} Устанавливает набор элементов коллекции, которые будут по умолчанию выбраны для контрола в режиме множественного выбора значений {@link multiselect}.
+             * @cfg {WS.Data/Collection/List} Устанавливает набор элементов коллекции, которые будут по умолчанию выбраны для контрола в режиме множественного выбора значений {@link multiselect}.
              * @remark file MultiSelectable-selectedItems.md
              * @see multiselect
              * @see getSelectedItems
@@ -143,6 +145,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
 
       after : {
          init: function () {
+            if(this._options.selectedItems) {
+               this._options.selectedKeys = this._convertToKeys(this._options.selectedItems);
+            }
             this._drawSelectedItems(this._options.selectedKeys);
          }
       },
@@ -534,7 +539,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * @param {Boolean} loadItems Необходимость загрузки элементов коллекции, если их нет в текущем наборе выбранных элементов
        * и они отсутствуют в наборе данных, полученных из источника.
        * @param {Number} count Ограничение количества отдаваемых элементов коллекции.
-       * @returns {SBIS3.CONTROLS.Data.Collection.List|$ws.proto.Deferred|null} Коллекция элементов с доступом по индексу.
+       * @returns {WS.Data/Collection/List|$ws.proto.Deferred|null} Коллекция элементов с доступом по индексу.
        * @example
        * <pre>
        *    if (!checkBoxGroup.getSelectedItems().at(0).get('Текст') === 'Не выбрано') {
@@ -671,7 +676,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              selectedItems = this._options.selectedItems,
              index;
 
-         if($ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')) {
+         if($ws.helpers.instanceOfModule(item, 'WS.Data/Entity/Model')) {
             if(selectedItems) {
                index = selectedItems.getIndexByValue(item.getIdProperty(), item.getId());
             } else {
@@ -719,7 +724,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * @noShow
        */
       initializeSelectedItems: function() {
-         this._options.selectedItems =  new List();
+         this._options.selectedItems =  new List({
+            ownerShip: false
+         });
       },
 
       _dataLoadedCallback : function(){
@@ -780,7 +787,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
 
       /**
        * Ковертирует набор записей в массив из ключей
-       * @param {SBIS3.CONTROLS.Data.Collection.List} list
+       * @param {WS.Data/Collection/List} list
        * @returns {Array}
        * @private
        */

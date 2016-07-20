@@ -8,11 +8,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
 
       $(document).bind('mousedown touchstart', function (e) {
-         eventsChannel.notify('onDocumentClick', e.target, true);
+         eventsChannel.notify('onDocumentClick', e);
       });
 
       $(document).bind('mouseover', function (e) {
-         eventsChannel.notify('onDocumentMouseOver', e.target, false);
+         eventsChannel.notify('onDocumentMouseOver', e);
       });
 
       $(window).bind('scroll', function () {
@@ -253,7 +253,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                      left: this._fixed ? this._targetSizes.boundingClientRect.left : this._targetSizes.offset.left
                   },
                   buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner);
-               
+
                // Добавим пользовательский сдвиг с учетом того, разворачивались уже или нет
                offset.top = offset.top + this._getUserOffset('vertical');
                offset.left = offset.left + this._getUserOffset('horizontal');
@@ -404,21 +404,16 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          }
       },
 
-      _clickHandler: function (eventObject, target, isMouseDown) {
+      _clickHandler: function (eventObject, event) {
          if (this.isVisible()) {
             var self = this,
+               target = event.target,
                inTarget;
             if (self._options.target && self._options.targetPart) {
                inTarget = !!((self._options.target.get(0) == target) || self._options.target.find($(target)).length);
             }
             if (!inTarget && !ControlHierarchyManager.checkInclusion(self, target)) {
                if ($(target).hasClass('ws-window-overlay')) {
-                  // Придрот, так как clickHandler на самом деле mousedown, а ModalOverlay подписан на клик.
-                  // Таким образом при наличии оверлея, мы его сначала скрываем по mousedown, затем он спускается к следующему
-                  // модальному окну и происходит клик по нему - и он снова скрывается, хотя не должен.
-                  if (isMouseDown) {
-                     ModalOverlay._notify('onClick');
-                  }
                   if (parseInt($(target).css('z-index'), 10) < this._zIndex) {
                      self.hide();
                   }
@@ -571,7 +566,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             oppositeSide = (this._options.horizontalAlign.side == 'left') ? 'right' : 'left';
             offset = this._getGeneralOffset(this._options.verticalAlign.side, oppositeSide, oppositeCorner);
          }
-         offset.top += this._getUserOffset('vertical'); 
+         offset.top += this._getUserOffset('vertical');
          offset.left += this._getUserOffset('horizontal');
 
          return offset;
@@ -869,11 +864,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             //ControlHierarchyManager.zIndexManager.setFree(this._zIndex);
             $ws.helpers.trackElement(this._options.target, false);
             $ws.single.WindowManager.setHidden(this._zIndex);
-            if (this.isVisible()){
-               $ws.single.WindowManager.releaseZIndex(this._zIndex);
-               ControlHierarchyManager.removeNode(this);
-            }
+            $ws.single.WindowManager.releaseZIndex(this._zIndex);
+            ControlHierarchyManager.removeNode(this);
             this._unsubscribeTargetMove();
+            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._onResizeHandler, this);
             if (this._options.closeByExternalOver) {
                $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentMouseOver', this._clickHandler, this);
             }
@@ -889,27 +883,29 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       around: {
          hide: function (parentHide) {
             /* Если кто-то позвал hide, а контрол уже скрыт, то не будет запускать цепочку кода,
-               могут валиться ошибки */
+             могут валиться ошибки */
             if(!this.isVisible()) return;
 
             var self = this,
-                result = this._notify('onClose');
+                result = this._notify('onClose'),
+                clearZIndex = function() {
+                   $ws.single.WindowManager.setHidden(self._zIndex);
+                   $ws.single.WindowManager.releaseZIndex(self._zIndex);
+                   self._zIndex = null;
+                };
             if (result instanceof $ws.proto.Deferred) {
                result.addCallback(function (res) {
                   if (res !== false) {
                      parentHide.call(self);
-                     $ws.single.WindowManager.setHidden(this._zIndex);
-                     $ws.single.WindowManager.releaseZIndex(this._zIndex);
+                     clearZIndex();
                   }
                });
             } else if (result !== false) {
                parentHide.call(this);
-               $ws.single.WindowManager.setHidden(this._zIndex);
-               $ws.single.WindowManager.releaseZIndex(this._zIndex);
+               clearZIndex();
             }
          }
       }
-
    };
 
    return PopupMixin;

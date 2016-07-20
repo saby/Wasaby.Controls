@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
       /**
        * @event onApplyOperation Перед обработкой операции
        * Событие происходит при непосредственном выборе выгрузки или печати. Данные уже выбраны, но можно поменять колонки для выборки
-       * @param {$ws.proto.EventObject} Дескриптор события.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} type Имя операции. print или unload (Печать или выгрузка)
        * @return Результат обработчика события.
        * Если вернуть новый набор колонок, то напечатаны будут они
@@ -130,8 +130,6 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
             columns: columns
          };
          this.applyOperation(cfg);
-         //Снимем выделение
-         this._getView().removeItemsSelectionAll();
       },
       _prepareOperationColumns: function(){
          var columns = this._getView().getColumns(),

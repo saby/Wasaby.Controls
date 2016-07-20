@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton', ['js!SBIS3.CONTROLS.
          this.getContainer().on('mouseenter',this._mouseEnterHandler.bind(this));
       },
       _mouseEnterHandler: function(){
-         if (this.getItems().getRawData().length) {
+         if (this.getItems().getCount() > 0) {
             this.getContainer().addClass('controls-Checked__checked');
             this.showPicker();
             this._picker.getContainer().on('mouseleave', this._mouseLeaveHandler.bind(this));
@@ -52,6 +52,10 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton', ['js!SBIS3.CONTROLS.
       _initializePicker: function() {
          MenuButton.superclass._initializePicker.apply(this, arguments);
          this._picker.setOpener(this._options.opener);
+         this._picker.getContainer().on('mousedown focus', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+         });
       },
       _setWidth: function() {
          var self = this;

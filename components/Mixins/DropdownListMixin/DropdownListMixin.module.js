@@ -1,8 +1,8 @@
 /**
  * Created by iv.cheremushkin on 21.04.2015.
  */
-define('js!SBIS3.CONTROLS.DropdownListMixin', [],
-    function () {
+define('js!SBIS3.CONTROLS.DropdownListMixin', ['js!SBIS3.CONTROLS.Utils.TemplateUtil'],
+    function (TemplateUtil) {
         /**
          * @mixin SBIS3.CONTROLS.DropdownListMixin
          * @public
@@ -13,6 +13,10 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
         var DropdownListMixin = /**@lends SBIS3.CONTROLS.DropdownListMixin.prototype  */{
             $protected: {
                 _options: {
+                   /**
+                    * @cfg {Boolean} Обрабатывать двойной клик по элементу коллекции
+                    */
+                   allowDblClick: true,
                    /**
                     * @cfg {} Шаблон отображения каждого элемента коллекции
                     */
@@ -30,10 +34,11 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
             _getItemTemplate: function (item) {
                 var title = item.get(this._options.displayField);
                 if (this._options.itemTemplate) {
-                    return this._options.itemTemplate.call(this, {
+                    return TemplateUtil.prepareTemplate(this._options.itemTemplate).call(this, {
                        item: item,
                        title: title,
-                       multiselect : this._options.multiselect
+                       multiselect : this._options.multiselect,
+                       included : this._buildIncluded()
                     })
                 }
                 else {
@@ -41,9 +46,28 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
                 }
             },
 
+            // Метод собирающий вложенные шаблоны
+            // Он должен отрабатывать на уровне DSMixin,
+            // но вызов функции-шаблона DropdownList происходит здесь,
+            // поэтому чтобы не ломать логику работы и вследствии того, что DSMixin нужно выпилить
+            // добавил метод сюда
+            _buildIncluded: function() {
+                var included;
+                if (this._options.includedTemplates) {
+                    var tpls = this._options.includedTemplates;
+                    included = {};
+                    for (var j in tpls) {
+                        if (tpls.hasOwnProperty(j)) {
+                            included[j] = TemplateUtil.prepareTemplate(tpls[j]);
+                        }
+                    }
+                }
+                return included;
+            },
+
             _bindItemSelect: function () {
                 this._picker.getContainer().bind('mouseup', this._clickItemHandler.bind(this));
-                this._picker.getContainer().bind('dblclick', this._dblClickItemHandler.bind(this));
+                this._picker.getContainer().bind('dblclick', this._dblClickItem.bind(this));
             },
            _clickItemHandler : function (e) {
               var row = $(e.target).closest('.' + self._getItemClass());
@@ -52,7 +76,12 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
                  self.hidePicker();
               }
             },
-           _dblClickItemHandler : function(){
+           _dblClickItem : function(e){
+              if (this._options.allowDblClick){
+                 this._dblClickItemHandler(e);
+              }
+           },
+           _dblClickItemHandler : function(e){
               e.stopImmediatePropagation();
               /*Method can be implemented*/
            },
@@ -63,4 +92,3 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
 
         return DropdownListMixin;
     });
-

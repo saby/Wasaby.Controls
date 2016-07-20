@@ -4,8 +4,8 @@
 define('js!SBIS3.CONTROLS.OperationUnload', [
    'js!SBIS3.CONTROLS.PrintUnloadBase',
    'js!SBIS3.CONTROLS.Utils.DataProcessor',
-   'js!SBIS3.CONTROLS.Data.Record',
-   'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
+   'js!WS.Data/Entity/Record',
+   'js!WS.Data/Adapter/Sbis',
    'i18n!SBIS3.CONTROLS.OperationUnload'
 ], function(PrintUnloadBase, Exporter, Record, SbisAdapter, rk) {
    //TODO Идея! нужно просто вызвать у view.export, он в свою очередь поднимает событие onUnload, а событие подхыватит выгрузчик. тогда в кнопке вообще только визуализация будет
@@ -108,7 +108,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             itemId = items[i].id;
             //Меняем текст только у платформенных пунктов меню
             if (this._controlsId[itemId]) {
-               items[i].title = rk('Список')  + extraText + rk('в') + ' ' + this._controlsId[itemId].objectName;
+               items[i].title = rk('Список')  + extraText + rk('в', 'направление') + ' ' + this._controlsId[itemId].objectName;
                //TODO Возможно, когда-нибудь будет правильный метод для перерисовки внутренностей меню и внизу можно будет вызывать полную перерисовку picker без его уничтожения
                this._picker._container.find('>[data-id="' + itemId + '"]').find('.controls-MenuItem__text').text( items[i].title );
             }

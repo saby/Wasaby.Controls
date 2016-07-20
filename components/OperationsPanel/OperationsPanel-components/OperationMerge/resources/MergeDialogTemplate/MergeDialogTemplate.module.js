@@ -4,10 +4,10 @@
 define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
     'js!SBIS3.CORE.CompoundControl',
     'html!SBIS3.CONTROLS.MergeDialogTemplate',
-    'js!SBIS3.CONTROLS.Data.Source.SbisService',
-    'js!SBIS3.CONTROLS.Data.Source.Memory',
-    'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
-    'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
+    'js!WS.Data/Source/SbisService',
+    'js!WS.Data/Source/Memory',
+    'js!WS.Data/Adapter/Sbis',
+    'js!WS.Data/Collection/RecordSet',
     'i18n!SBIS3.CONTROLS.MergeDialogTemplate',
     'js!SBIS3.CONTROLS.Button',
     'js!SBIS3.CONTROLS.TreeDataGridView',
@@ -168,7 +168,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                     record = dataSet.getRecordByKey(rec.getId());
                     //Для текущей выбранной записи выставим isAvailable = false, потому что с бл может придти true, а для всех остальных
                     //записей false, тогда мы подумаем что есть записи, которые возможно слить и покажем кнопку подтверждения объединения
-                    isAvailable = rec.getKey() != key ? rec.get(AVAILABLE_FIELD_NAME) : false;
+                    isAvailable = rec.getId() != key ? rec.get(AVAILABLE_FIELD_NAME) : false;
                     showMergeButton = showMergeButton || isAvailable;
                     record.set(AVAILABLE_FIELD_NAME, isAvailable);
                     record.set(COMMENT_FIELD_NAME, rec.get(COMMENT_FIELD_NAME));

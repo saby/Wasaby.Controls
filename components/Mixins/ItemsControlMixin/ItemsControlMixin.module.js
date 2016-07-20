@@ -1,19 +1,20 @@
 define('js!SBIS3.CONTROLS.ItemsControlMixin', [
-   'js!SBIS3.CONTROLS.Data.Source.Memory',
-   'js!SBIS3.CONTROLS.Data.Source.SbisService',
-   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
-   'js!SBIS3.CONTROLS.Data.Query.Query',
+   'js!WS.Data/Source/Memory',
+   'js!WS.Data/Source/SbisService',
+   'js!WS.Data/Collection/RecordSet',
+   'js!WS.Data/Query/Query',
    'js!SBIS3.CORE.MarkupTransformer',
-   'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
-   'js!SBIS3.CONTROLS.Data.Projection.Projection',
-   'js!SBIS3.CONTROLS.Data.Bind.ICollection',
-   'js!SBIS3.CONTROLS.Data.Projection.Collection',
+   'js!WS.Data/Collection/ObservableList',
+   'js!WS.Data/Display/Display',
+   'js!WS.Data/Collection/IBind',
+   'js!WS.Data/Display/Collection',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
-   'js!SBIS3.CONTROLS.Data.Utils',
-   'js!SBIS3.CONTROLS.Data.Model',
-   'Core/ParserUtilities'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities) {
+   'js!WS.Data/Utils',
+   'js!WS.Data/Entity/Model',
+   'Core/ParserUtilities',
+   'js!SBIS3.CONTROLS.Utils.Sanitize'
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -40,7 +41,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    buildTplArgs = function(cfg) {
       var tplOptions = {}, itemTpl, itemContentTpl;
 
-
+      tplOptions.Sanitize = Sanitize;
       tplOptions.displayField = cfg.displayField;
       tplOptions.templateBinding = cfg.templateBinding;
 
@@ -171,7 +172,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _groupHash: {},
          _itemsProjection: null,
          _items : null,
-         _itemsInitializedBySource: false,
          _itemsInstances: {},
          _offset: 0,
          _limit: undefined,
@@ -225,11 +225,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             displayField: null,
              /**
-              * @cfg {Array.<Object.<String,String>>} Масив объектов. Набор исходных данных, по которому строится отображение
-              * @name SBIS3.CONTROLS.ItemsControlMixin#items
+              * @cfg {Array.<Object>} Устанавливает набор исходных данных, по которому строится отображение.
               * @remark
-              * !Важно: данные для коллекции элементов можно задать либо в этой опции,
-              * либо через источник данных методом {@link setDataSource}.
+              * Если установлен источник данных в опции {@link dataSource}, то значение опции items будет проигнорировано.
               * @example
               * <pre class="brush:xml">
               *     <options name="items" type="array">
@@ -251,17 +249,74 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
               *      </options>
               *      <option name="hierField">parent</option>
               * </pre>
+              * @see setItems
+              * @see getDataSet
               * @see keyField
               * @see displayField
-              * @see setDataSource
-              * @see getDataSet
               * @see hierField
+              * @see dataSource
               */
             items: null,
             /**
-             * @cfg {DataSource|SBIS3.CONTROLS.Data.Source.ISource|Function} Набор исходных данных, по которому строится отображение
-             * @noShow
+             * @cfg {DataSource|WS.Data/Source/ISource|Function|Object} Устанавливает набор исходных данных, по которому строится отображение.
+             * @remark
+             * Если установлен источник данных, то значение опции {@link items} будет проигнорировано.
+             * @example
+             * <b>Пример 1.</b> Чтобы установить конфигурацию источника данных через JS-код компонента, необходимо его инициализировать и установить с помощью метода {@link setDataSource}.
+             * <pre>
+             *    // SbisService - это переменная, в которую импортирован класс источника данных из массива зависимостей
+             *    var myDataSource = new SbisService({ // Инициализация источника данных
+             *        endpoint: {
+             *           contract: 'Отчеты', // Устанавливаем объект БЛ, в котором есть методы для работы с данными таблицы
+             *           address: 'myNewService/service/sbis-rpc-service300.dll' // Устанавливаем точку входа в другой сервис
+             *        },
+             *        binding: {
+             *           query: 'Список' // Устанавливаем списочный метод
+             *        },
+             *        idProperty: '@Идентификатор' // Устанавливаем поле первичного ключа
+             *    });
+             *    myView.setDataSource(myDataSource); // Устанавливаем представлению новый источник данных
+             * </pre>
+             *
+             * <b>Пример 2.</b> Конфигурация источника данных через вёрстку компонента.
+             * Первый способ основан на использовании объекта со следующими свойствами:
+             * <ul>
+             *    <li>module - название класса источника данных;</li>
+             *    <li>options - конфигурация источника данных.</li>
+             * </ul>
+             * Аналогичная предыдущему примеру конфигурация будет выглядеть следующим образом:
+             * <pre>
+             *    <options name="dataSource">
+             *       <option name="module" value="WS.Data/Source/SbisService"></options>
+             *       <options name="options">
+             *          <options name="binding">
+             *             <option name="contract" value="Отчеты"></option>
+             *             <option name="address" value="myNewService/service/sbis-rpc-service300.dll"></option>
+             *          </options>
+             *          <options name="endpoint">
+             *             <option name="query" value="Список"></option>
+             *          </options>
+             *          <option name="idProperty" value="@Идентификатор"></option>
+             *       </options>
+             *    </options>
+             * </pre>
+             *
+             * <b>Пример 3.</b> Конфигурация источника данных через вёрстку компонента.
+             * Второй способ основан на использовании функции, которая возвращает экземпляр класса источника.
+             * <pre>
+             *    <option name="dataSource" type="function">js!SBIS3.MyArea.MyComponent:prototype.getMyDataSource</option>
+             * </pre>
+             * Функция должна возвращать объект с конфигурацией источника данных.
+             * <pre>
+             *    getMyDataSource: function() {
+             *       return new MemorySource({
+             *          ...
+             *       });
+             *    }
+             * </pre>
              * @see setDataSource
+             * @see getDataSource
+             * @see items
              */
             dataSource: undefined,
              /**
@@ -419,7 +474,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              *    }
              * </pre>
              * @see setItemsSortMethod
-             * @see SBIS3.CONTROLS.Data.Projection.Collection#setSort
+             * @see WS.Data/Display/Collection#setSort
              */
             itemsSortMethod: undefined
          },
@@ -428,20 +483,33 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       around: {
-         _modifyOptions : function(parentFnc, cfg) {
-            var newCfg = parentFnc.call(this, cfg);
+         _modifyOptions : function(parentFnc, cfg, parsedCfg) {
+            var newCfg = parentFnc.call(this, cfg), proj, items;
             newCfg._itemsTemplate = ItemsTemplate;
             if (newCfg.items) {
-               if (newCfg.items instanceof Array) {
-                  if (!newCfg.keyField) {
-                     newCfg.keyField = findKeyField(newCfg.items);
+               if (parsedCfg._itemsProjection) {
+                  newCfg._itemsProjection = parsedCfg._itemsProjection;
+                  newCfg._items = parsedCfg._items;
+               } else {
+                  if (newCfg.items instanceof Array) {
+                     if (!newCfg.keyField) {
+                        var key = findKeyField(newCfg.items);
+                        newCfg.keyField = key;
+                        parsedCfg.keyField = key;
+                     }
+                     items = JSONToRecordset(cfg.items, newCfg.keyField);
+                     newCfg._items = items;
+                     parsedCfg._items = items;
                   }
-                  newCfg._items = JSONToRecordset(cfg.items, newCfg.keyField);
+                  else {
+                     newCfg._items = newCfg.items;
+                     parsedCfg._items = newCfg.items;
+                  }
+                  proj = newCfg._createDefaultProjection(newCfg._items, newCfg);
+                  newCfg._itemsProjection = proj;
+                  parsedCfg._itemsProjection = proj;
                }
-               else {
-                  newCfg._items = cfg.items;
-               }
-               newCfg._itemsProjection = cfg._createDefaultProjection(cfg._items, cfg);
+
                if (cfg._canServerRender && !cfg.userItemAttributes && !cfg.itemTemplate && Object.isEmpty(cfg.groupBy)) {
                   newCfg._serverRender = true;
                   newCfg._itemData = cfg._buildTplArgs(cfg);
@@ -599,7 +667,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          data.tplData = this._prepareItemData();
          //TODO опять же, перед полной перерисовкой данные лесенки достаточно сбросить, чтобы она правильно отработала
          //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
-         var ladder = this._decorators && this._decorators.getByName('ladder');
+         var ladder = this._options._decorators && this._options._decorators.getByName('ladder');
          ladder && ladder.setIgnoreEnabled(true);
          ladder && ladder.reset();
          markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
@@ -635,16 +703,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else {
                dot = data.defaultItemTpl;
             }
+
+               var ladder = this._options._decorators.getByName('ladder');
+               ladder && ladder.setMarkLadderColumn(true);
+
             markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this._options);
             /*TODO посмотреть не вызывает ли это тормоза*/
             this._clearItems(targetElement);
-            /*TODO С этим отдельно разобраться*/
-
             targetElement.after(markup).remove();
+
+               ladder && ladder.setMarkLadderColumn(false);
+
             itemContainer = this._getDomElementByItem(item);
             this._ladderCompare([itemContainer.prev(), itemContainer, itemContainer.next()]);
-            this._reviveItems();
-            this._notifyOnDrawItems();
+            this._reviveItems(item.getKey() != this._options.selectedKey);
          }
       },
 
@@ -708,7 +780,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
                /*TODO Лесенка*/
                if (this._options.ladder) {
-                  ladderDecorator = this._decorators.getByName('ladder');
+                  ladderDecorator = this._options._decorators.getByName('ladder');
                   ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
                }
                /*TODO Лесенка*/
@@ -811,7 +883,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   }
                   /*TODO Лесенка*/
                }
-               this._notifyOnDrawItems();
             }
          }
       },
@@ -820,15 +891,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._getItemsContainer().find('.js-controls-ListView__item[data-hash="' + item.getHash() + '"]')
       },
 
-      _reviveItems : function() {
-         this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
+      _reviveItems : function(lightVer) {
+         this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this, lightVer)).addErrback(function(e){
             throw e;
          });
       },
 
-      _notifyOnDrawItems: function() {
+      _notifyOnDrawItems: function(lightVer) {
          this._notify('onDrawItems');
-         this._drawItemsCallback();
+         this._drawItemsCallback(lightVer);
       },
 
       _clearItems: function (container) {
@@ -926,7 +997,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                result = sourceOpt.call(this);
                break;
             case 'object':
-               if ($ws.helpers.instanceOfMixin(sourceOpt, 'SBIS3.CONTROLS.Data.Source.ISource')) {
+               if ($ws.helpers.instanceOfMixin(sourceOpt, 'WS.Data/Source/ISource')) {
                   result = sourceOpt;
                }
                if ('module' in sourceOpt) {
@@ -940,8 +1011,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       /**
        * Возвращает отображаемую контролом коллекцию, сделанную на основе источника данных
-       * @param {SBIS3.CONTROLS.Data.Source.ISource} source
-       * @returns {SBIS3.CONTROLS.Data.Collection.IList}
+       * @param {WS.Data/Source/ISource} source
+       * @returns {WS.Data/Collection/IList}
        * @private
        */
       _convertDataSourceToItems: function (source) {
@@ -970,38 +1041,47 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this.unsubscribeFrom(this._options._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
       },
        /**
-        * Метод установки источника данных.
+        * Устанавливает источник данных.
         * @remark
-        * Данные могут быть заданы либо этим методом, либо опцией {@link items}.
-        * @param source Новый источник данных.
-        * @param noLoad Установить новый источник данных без запроса на БЛ.
+        * Если источник данных установлен, значение опции {@link items} будет проигнорировано.
+        * @param {DataSource|WS.Data/Source/ISource} source Новый источник данных.
+        * @param {Boolean} noLoad Признак, с помощью устанавливается необходимость запроса нового набора данных по установленному источнику.
+        * Если параметр установлен в значение true, то данные не будут подгружены, а также не произойдут события {@link onBeforeDataLoad}, {@link onDataLoad}, {@link onItemsReady} или {@link onDataLoadError}.
         * @example
         * <pre>
-        *     define(
-        *     'SBIS3.MY.Demo',
-        *     'js!SBIS3.CONTROLS.Data.Source.Memory',
-        *     function(MemorySource){
-        *        //коллекция элементов
-        *        var arrayOfObj = [
-        *           {'@Заметка': 1, 'Содержимое': 'Пункт 1', 'Завершена': false},
-        *           {'@Заметка': 2, 'Содержимое': 'Пункт 2', 'Завершена': false},
-        *           {'@Заметка': 3, 'Содержимое': 'Пункт 3', 'Завершена': true}
-        *        ];
-        *        //источник статических данных
-        *        var ds1 = new MemorySource({
-        *           data: arrayOfObj,
-        *           idProperty: '@Заметка'
-        *        });
-        *        this.getChildControlByName("ComboBox 1").setDataSource(ds1);
-        *     })
+        *     define( 'SBIS3.MyArea.MyComponent',
+        *        [ // Массив зависимостей компонента
+        *           ... ,
+        *           'js!WS.Data/Source/Memory' // Подключаем класс для работы со статическим источником данных
+        *        ],
+        *        function(
+        *           ...,
+        *           MemorySource // Импортируем в переменную класс для работы со статическим источником данных
+        *        ){
+        *           ...
+        *           var arrayOfObj = [ // Формируем набор "сырых" данных
+        *              {'@Заметка': 1, 'Содержимое': 'Пункт 1', 'Завершена': false},
+        *              {'@Заметка': 2, 'Содержимое': 'Пункт 2', 'Завершена': false},
+        *              {'@Заметка': 3, 'Содержимое': 'Пункт 3', 'Завершена': true}
+        *           ];
+        *           var dataSource = new MemorySource({ // Производим инициализацию статического источника данных
+        *              data: arrayOfObj,                // Передаём набор "сырых" данных
+        *              idProperty: '@Заметка'           // Устанавливаем поле первичного ключа в источнике данных
+        *           });
+        *           this.getChildControlByName('ComboBox 1').setDataSource(ds1); // Устанавливаем источник представлению данных
+        *        }
+        *     );
         * </pre>
         * @see dataSource
-        * @see onDrawItems
+        * @see getDataSource
+        * @see items
+        * @see onBeforeDataLoad
         * @see onDataLoad
+        * @see onDataLoadError
+        * @see onItemsReady
+        * @see onDrawItems
         */
       setDataSource: function (source, noLoad) {
-          this._unsetItemsEventHandlers();
-          this._itemsInitializedBySource = false;
           this._prepareConfig(source);
           if (!noLoad) {
              return this.reload();
@@ -1064,8 +1144,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
                    self._notify('onDataLoad', list);
-
-                   if (this._itemsInitializedBySource) {
+                   if (
+                      this.getItems()
+                      && (list.getModel() === this.getItems().getModel())
+                      && (list._moduleName == this.getItems()._moduleName)
+                      && (list.getAdapter() == this.getItems().getAdapter())
+                   ) {
                       this._options._items.setMetaData(list.getMetaData());
                       this._options._items.assign(list);
                       if(!self._options.autoRedraw) {
@@ -1074,12 +1158,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                          self._drawItemsCallback();
                       }
                    } else {
+                      this._unsetItemsEventHandlers();
                       this._options._items = list;
                       this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
                       this._setItemsEventHandlers();
                       this._notify('onItemsReady');
                       this._itemsReadyCallback();
-                      this._itemsInitializedBySource = true;
                       self.redraw();
                    }
 
@@ -1136,7 +1220,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                dataSet.setIdProperty(this._options.keyField);
             }
             var recordSet = dataSet.getAll();
-            recordSet.setMetaData(this._prepareMetaData(dataSet));
+            // Задаем meta, помержив текущие meta-данные с meta-данными в формате SBIS
+            recordSet.setMetaData($ws.core.merge(recordSet.getMetaData(), this._prepareMetaData(dataSet)));
             return recordSet;
          }).bind(this));
       },
@@ -1160,9 +1245,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              })).toObject() :
              {};
 
-         meta.results = dataSet.getProperty('r');
+         if (dataSet.hasProperty('r')) {
+            meta.results = dataSet.getProperty('r');
+         }
          meta.more = dataSet.getTotal();
-         meta.path = dataSet.getProperty('p');
+         if (dataSet.hasProperty('p')) {
+            meta.path = dataSet.getProperty('p');
+         }
 
          return meta;
       },
@@ -1193,11 +1282,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         */
       setPageSize: function(pageSize, noLoad){
          this._options.pageSize = pageSize;
-         this._dropPageSave();
-         this._notify('onPageSizeChange', this._options.pageSize);
-         if(!noLoad) {
-            this.reload(this._options.filter, this.getSorting(), 0, pageSize);
-         }
+          this._dropPageSave();
+          this._notify('onPageSizeChange', this._options.pageSize);
+          if(!noLoad) {
+             this.reload(this._options.filter, this.getSorting(), 0, pageSize);
+          } else if (this._options.pageSize) {
+             this._limit = Number(this._options.pageSize);
+          }
       },
       /**
        * Метод получения количества элементов на одной странице.
@@ -1294,25 +1385,25 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._options._itemsProjection;
       },
        /**
-        * Метод установки либо замены коллекции элементов, заданных опцией {@link items}.
-        * @param {Object} items Набор новых данных, по которому строится отображение.
-        * @param {Boolean} itemsBySource Флаг, говорящий о том, что items соответствуют сорсу, который в данный момент установлен. При этом после релоада не будет заменяться инстанс items, а произойдет перенос данных пришедших с БЛ в уже существующий инстанс items
+        * Устанавливает новый набор элементов коллекции.
+        * @param {Array.<Object>} items Набор новых данных, по которому строится отображение.
         * @example
+        * Для списка устанавливаем набор данных из трёх записей. Опция keyField установлена в значение id, а hierField - parent.
         * <pre>
-        *     setItems: [
+        *     myView.setItems([
         *        {
-        *           id: 1,
+        *           id: 1, // Поле с первичным ключом
         *           title: 'Сообщения'
         *        },{
         *           id: 2,
         *           title: 'Прочитанные',
-        *           parent: 1
+        *           parent: 1 // Поле иерархии
         *        },{
         *           id: 3,
         *           title: 'Непрочитанные',
         *           parent: 1
         *        }
-        *     ]
+        *     ]);
         * </pre>
         * @see items
         * @see addItem
@@ -1320,36 +1411,27 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see onDrawItems
         * @see onDataLoad
         */
-       setItems: function (items, itemsBySource, reload) {
+       setItems: function (items) {
           this._options.items = items;
           this._unsetItemsEventHandlers();
           this._options._items = null;
-          this._itemsInitializedBySource = !!itemsBySource;
           this._prepareConfig(undefined, items);
-          this._notify('onDataLoad', this.getItems()); //TODO на это событие завязались. аккуратно спилить
+
           this._dataLoadedCallback(); //TODO на это завязаны хлебные крошки, нужно будет спилить
-          //Из-за костыля для постраничной навигации в отчетности сделали this.reload(), но отвалилось в проектах, которые делают setItems при наличии DataSource.
-          //Поэтому пока по умолчанию вернем как было, а в отчетности специально передадим флаг reload
-          //При этом в отчетности делают неправильно и должны переделать. Если им нужна постраничная навигация, значит они должны задать статический источник данных, вместо Items
-          //После этого параметр reload нужно будет удалить и логику перезагрузки тоже
-          if(!reload) {
-             this.redraw();
-          } else {
-             $ws.single.ioc.resolve('ILogger').log('ListView', 'Параметр reload в методе setItems будет удален в 3.7.4');
-             if (items instanceof Array) {
-                if (this._options.pageSize && (items.length > this._options.pageSize)) {
-                   $ws.single.ioc.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
-                }
-                if (!this._options.keyField) {
-                   this._options.keyField = findKeyField(this._options.items)
-                }
-                this._dataSource = new MemorySource({
-                   data: this._options.items,
-                   idProperty: this._options.keyField
-                });
+
+          if (items instanceof Array) {
+             if (this._options.pageSize && (items.length > this._options.pageSize)) {
+                $ws.single.ioc.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
              }
-             this.reload();
+             if (!this._options.keyField) {
+                this._options.keyField = findKeyField(this._options.items)
+             }
+             this._dataSource = new MemorySource({
+                data: this._options.items,
+                idProperty: this._options.keyField
+             });
           }
+          this.redraw();
       },
 
       _drawItemsCallback: function () {
@@ -1392,14 +1474,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       redrawItem: function(item, projItem) {
          projItem = projItem || this._getItemProjectionByItemId(item.getId());
+         var ladder = this._options._decorators.getByName('ladder');
+         ladder && ladder.setMarkLadderColumn(true);
          var
             targetElement = this._getElementByModel(item),
             newElement = this._createItemInstance(projItem);/*раньше здесь звался _drawItem, но он звал лишнюю группировку, а при перерисовке одного итема она не нужна*/
          this._addItemAttributes(newElement, projItem);
          this._clearItems(targetElement);
          targetElement.after(newElement).remove();
+         ladder && ladder.setMarkLadderColumn(false);
+         this._ladderCompare([newElement.prev(), newElement, newElement.next()]);
          this.reviveComponents();
-         this._notifyOnDrawItems();
+         this._notifyOnDrawItems(item.getKey() != this._options.selectedKey);
       },
 
       _getElementByModel: function(item) {
@@ -1442,11 +1528,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   hierField: this._options.hierField + '@'
                },
                targetContainer,
-               itemInstance;
+               itemInstance, groupTemplateFnc;
          targetContainer = this._getTargetContainer(item);
          tplOptions.item = item;
          tplOptions.colspan = tplOptions.columns.length + this._options.multiselect;
-         itemInstance = this._buildTplItem(projItem, groupBy.template(tplOptions));
+         groupTemplateFnc = TemplateUtil.prepareTemplate(groupBy.template);
+         itemInstance = this._buildTplItem(projItem, groupTemplateFnc(tplOptions));
          //Навесим класс группировки и удалим лишний класс на item, если он вдруг добавился
          itemInstance.addClass('controls-GroupBy')
             .removeClass('controls-ListView__item');
@@ -1484,6 +1571,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._redraw();
          }
       },
+      /**
+       * Возвращает значение опции groupBy
+       */
+      getGroupBy : function() {
+         return this._options.groupBy;
+      },
+
       _getGroupTpl : function(){
          throw new Error('Method _getGroupTpl() must be implemented');
       },
@@ -1592,6 +1686,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /**
        * Возвращает источник данных.
        * @returns {*}
+       * @see dataSource
+       * @see setDataSource
        */
       getDataSource: function(){
          return this._dataSource;
@@ -1608,7 +1704,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _ladderCompare: function(rows){
-         var ladderDecorator = this._decorators.getByName('ladder');
+         var ladderDecorator = this._options._decorators.getByName('ladder');
          if (ladderDecorator && ladderDecorator.isIgnoreEnabled()){
             return;
          }
@@ -1626,8 +1722,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
       _isNeedToRedraw: function(){
-         //Проверяем _needToRedraw для поддержки старой медленной отрисовки
-      	return !!this._getItemsContainer() && this._needToRedraw;
+         // Проверяем _needToRedraw для поддержки старой медленной отрисовки
+         // Если быстрая отрисовка - считаем, что перерисовка необходима
+         return !!this._getItemsContainer() && (!this._isSlowDrawing() || this._needToRedraw);
       },
 
       _changeItemProperties: function(item, property) {
@@ -1686,8 +1783,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _getItemTemplate: function (item) {
          if (this._options.itemTemplate) {
             return this._options.itemTemplate;
-         }
-         else {
+         } else if (this._options.itemTpl) {
+            return this._options.itemTpl;
+         } else {
             return this._options._defaultItemTemplate;
          }
       },
@@ -1754,7 +1852,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _addItem: function (projItem, at, withoutNotify) {
          var
             item = projItem.getContents(),
-            ladderDecorator = this._decorators.getByName('ladder'),
+            ladderDecorator = this._options._decorators.getByName('ladder'),
             canApplyGrouping = this._canApplyGrouping(projItem),
             previousGroupBy = this._previousGroupBy;//После добавления записи восстанавливаем это значение, чтобы не сломалась группировка
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
@@ -1859,7 +1957,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
       _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems) {
          this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);
-         var ladderDecorator = this._decorators.getByName('ladder');
+         var ladderDecorator = this._options._decorators.getByName('ladder');
          //todo опять неверно вызывается ladderCompare, используем костыль, чтобы этого не было
 //         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
 //            ladderDecorator.setIgnoreEnabled(true);
@@ -1878,7 +1976,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /**
        * Устанавливает метод сортировки элементов на клиенте.
        * @param {Function} sort функция сортировка элементов, если передать undefined сортировка сбросится
-       * @see SBIS3.CONTROLS.Data.Projection.Collection:setSort
+       * @see WS.Data/Display/Collection:setSort
        */
       setItemsSortMethod: function(sort){
          this._options.itemsSortMethod = sort;
@@ -1888,7 +1986,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
       /**
        * Возвращает последний элемент по проекции
-       * @return {SBIS3.CONTROLS.Data.Model}
+       * @return {WS.Data/Entity/Model}
        */
       getLastItemByProjection: function(){
          if(this._options._itemsProjection && this._options._itemsProjection.getCount()) {
@@ -1917,9 +2015,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * Обрабатывает событие об изменении коллекции
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} action Действие, приведшее к изменению.
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem[]} newItems Новые элементы коллеции.
+       * @param {WS.Data/Display/CollectionItem[]} newItems Новые элементы коллеции.
        * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem[]} oldItems Удаленные элементы коллекции.
+       * @param {WS.Data/Display/CollectionItem[]} oldItems Удаленные элементы коллекции.
        * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
        * @private
        */

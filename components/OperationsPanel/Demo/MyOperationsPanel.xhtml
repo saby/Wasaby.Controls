@@ -11,6 +11,14 @@
                 </options>
             </options>
             <options>
+                <option name="name">sum</option>
+                <option name="componentType">js!SBIS3.CONTROLS.OperationSum</option>
+                <options name="type">
+                    <option name="mass">true</option>
+                    <option name="selection">true</option>
+                </options>
+            </options>
+            <options>
                 <option name="name">operationsMark</option>
                 <option name="componentType">js!SBIS3.CONTROLS.OperationsMark</option>
                 <options name="type">
@@ -36,6 +44,11 @@
             </options>
         </options>
     </component>
+    <!--ACTIONS_START-->
+    <component data-component="SBIS3.CONTROLS.Action.List.Sum" name="ActionSum">
+
+    </component>
+    <!--ACTIONS_END-->
     <component data-component="SBIS3.CONTROLS.BreadCrumbs" name="BreadCrumbs"></component>
     <component data-component="SBIS3.CONTROLS.BackButton" name="BackButton"></component>
     <component data-component="SBIS3.CONTROLS.TreeDataGridView" name="DataGridView">
@@ -49,6 +62,10 @@
                 <option name="title">Заголовок</option>
                 <option name="field">title</option>
             </options>
+            <options>
+                <option name="title">Количество</option>
+                <option name="field">count</option>
+            </options>
         </options>
         <option name="emptyHTML">Нет записей</option>
         <options name="items" type="array">
@@ -60,7 +77,9 @@
             <options>
                 <option name="id" type="string">3</option>
                 <option name="title">Третий</option>
+                <option name="count">40</option>
                 <option name="parent">1</option>
+                <option name="parent@">null</option>
             </options>
             <options>
                 <option name="id" type="string">2</option>
@@ -76,19 +95,27 @@
             <options>
                 <option name="id" type="string">5</option>
                 <option name="title">Пятый</option>
+                <option name="count">50</option>
                 <option name="parent">4</option>
+                <option name="parent@">null</option>
             </options>
             <options>
                 <option name="id" type="string">6</option>
                 <option name="title">Шестой</option>
+                <option name="count">10</option>
+                <option name="parent@">null</option>
             </options>
             <options>
                 <option name="id" type="string">7</option>
                 <option name="title">Седьмой</option>
+                <option name="count">30</option>
+                <option name="parent@">null</option>
             </options>
             <options>
                 <option name="id" type="string">8</option>
                 <option name="title">Восьмой</option>
+                <option name="count">25</option>
+                <option name="parent@">null</option>
             </options>
         </options>
         <option name="multiselect">true</option>

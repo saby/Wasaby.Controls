@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.Image',
    [
       'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.Data.Source.SbisService',
+      'js!WS.Data/Source/SbisService',
       'html!SBIS3.CONTROLS.Image',
       'js!SBIS3.CORE.FileLoader',
       'js!SBIS3.CORE.Dialog',
@@ -16,6 +16,8 @@ define('js!SBIS3.CONTROLS.Image',
       var
          //Продолжительность анимации при отображения панели изображения
          ANIMATION_DURATION = 300,
+         MIN_TOOLBAR_WIDTH = 125, //минимальный размер тулбара для которого убирается  напись "загрузить" и кнопка "удалить"
+         MIN_TOOLBAR_WIDTH_WITH_EDIT = 155,// минимальный размер тулбара для которого убирается  напись "загрузить" и все оставльные кнопки
          /**
           * Контрол "Изображение". Позволяет отображать и редактировать изображение
           * @class SBIS3.CONTROLS.Image
@@ -237,6 +239,7 @@ define('js!SBIS3.CONTROLS.Image',
                _fileLoader: undefined,
                _buttonReset: undefined,
                _buttonEdit: undefined,
+               _buttonUpload: undefined,
                _boundEvents: undefined,
                _saveIndicator: undefined,
                _firstLoaded: false
@@ -253,17 +256,21 @@ define('js!SBIS3.CONTROLS.Image',
             },
             init: function() {
                var
-                  dataSource = this.getDataSource();
-                Image.superclass.init.call(this);
+                  dataSource = this.getDataSource(),
+                  width = this._container.width();
+               Image.superclass.init.call(this);
                this._bindEvens();
                //Находим компоненты, необходимые для работы (если нужно)
                if (this._options.imageBar) {
                   this._buttonEdit = this.getChildControlByName('ButtonEdit');
+                  this._buttonUpload = this.getChildControlByName('ButtonUpload');
                   this._buttonReset = this.getChildControlByName('ButtonReset');
-                  this._fileLoader = this.getChildControlByName('FileLoader');
-                  //todo Удалить, временная опция для поддержки смены логотипа компании
+                 //todo Удалить, временная опция для поддержки смены логотипа компании
                   if (dataSource) {
-                     this._fileLoader.setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
+                     this._getFileLoader().setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
+                  }
+                  if (width !==0 &&((width < MIN_TOOLBAR_WIDTH && !this._options.edit )||(this._options.edit && width < MIN_TOOLBAR_WIDTH_WITH_EDIT ))){
+                     this._buttonUpload.setCaption('');
                   }
                   this._bindToolbarEvents();
                }
@@ -414,7 +421,7 @@ define('js!SBIS3.CONTROLS.Image',
                   template: 'js!SBIS3.CONTROLS.Image.EditDialog',
                   opener: this,
                   visible: false,
-                  minWidth: 315,
+                  minWidth: 390,
                   cssClassName: 'controls-EditDialog__template',
                   componentOptions: $ws.core.merge({
                      dataSource: dataSource,
@@ -441,6 +448,13 @@ define('js!SBIS3.CONTROLS.Image',
                   handlers: {
                      onAfterClose: function() {
                         $ws.helpers.toggleLocalIndicator(self._container, false);
+                     },
+                     onBeforeControlsLoad: function() {
+                        $ws.single.Indicator.setMessage('Открытие диалога редактирования...');
+                        $ws.single.Indicator.show();
+                     },
+                     onAfterShow: function() {
+                        $ws.single.Indicator.hide();
                      }
                   }
                });
@@ -467,7 +481,7 @@ define('js!SBIS3.CONTROLS.Image',
                ------------------------------------------------------------ */
             _uploadImage: function(originalEvent) {
                if (this.getDataSource()) {
-                  this._fileLoader.selectFile(originalEvent, false);
+                  this._getFileLoader().selectFile(originalEvent, false);
                }
             },
             _editImage: function() {
@@ -520,10 +534,8 @@ define('js!SBIS3.CONTROLS.Image',
             setDataSource: function(dataSource, noReload) {
                if (dataSource instanceof SbisService) {
                   this._options.dataSource = dataSource;
-                  if (this._options.imageBar) {
-                     //todo Удалить, временная опция для поддержки смены логотипа компании
-                     this._fileLoader.setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
-                  }
+                  //todo Удалить, временная опция для поддержки смены логотипа компании
+                  this._getFileLoader().setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
                   if (!noReload) {
                      this.reload();
                   }
@@ -553,7 +565,36 @@ define('js!SBIS3.CONTROLS.Image',
              */
             getFilter: function() {
                return this._options.filter;
+            },
+
+            _getFileLoader: function() {
+               if (!this._fileLoader) {
+                  this._createFileLoader();
+               }
+               return this._fileLoader;
+            },
+
+            /**
+             * Создание загрузчика файлов
+             * @private
+             */
+            _createFileLoader: function(){
+               var
+                  self = this,
+                  cont = $('<div class="controls-image__file-loader"></div>');
+               this.getContainer().append(cont);
+               this._fileLoader = new FileLoader({
+                  extensions: ['image'],
+                  element: cont,
+                  name: 'FileLoader',
+                  parent: self,
+                  handlers: {
+                     onLoadStarted: self._onBeginLoad,
+                     onLoaded: self._onEndLoad
+                  }
+               });
             }
+
          });
       return Image;
    });

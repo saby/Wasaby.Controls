@@ -4,23 +4,27 @@
 
 1. Клонировать репозиторий с контролами `sbis3-controls`:
 
-		git clone git@git.sbis.ru:root/sbis3-controls.git /path/to/sbis3-controls
+		git clone git@git.sbis.ru:sbis/controls.git /path/to/sbis3-controls
 
 2. Клонировать репозиторий `sbis3-ws` в поддиректорию `sbis3-ws`:
 
-        git clone git@git.sbis.ru:root/sbis3-ws.git /path/to/sbis3-controls/sbis3-ws
+        git clone git@git.sbis.ru:sbis/ws.git /path/to/sbis3-controls/sbis3-ws
 
-3. Установить [Node.js](http://nodejs.org/) и [NPM](http://npmjs.com).
+3. Клонировать репозиторий `ws-data` в поддиректорию `ws-data`:
 
-4. Установить глобально интерфейс командной строки [Grunt.js](http://gruntjs.com):
+        git clone git@git.sbis.ru:ws/data.git /path/to/sbis3-controls/ws-data
+
+4. Установить [Node.js](http://nodejs.org/) и [NPM](http://npmjs.com).
+
+5. Установить глобально интерфейс командной строки [Grunt.js](http://gruntjs.com):
 
         npm install -g grunt-cli
 
-5. Из корневой директории репозитория установить пакеты, требуемые для разработки:
+6. Из корневой директории репозитория установить пакеты, требуемые для разработки:
 
         npm install
 
-6. Собрать проект:
+7. Собрать проект:
 
         grunt
 

@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 28.01.2016.
  */
-define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!SBIS3.CONTROLS.Data.Model'], function(Model) {
+define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], function(Model) {
 
    /**
     * Миксин, добавляющий синхронизацию выбранных элементов
@@ -22,6 +22,11 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!SBIS3.CONTROLS.Data.Model'],
 
    var SyncSelectionMixin = /**@lends SBIS3.CONTROLS.SyncSelectionMixin.prototype  */{
       $constructor: function() {
+         /* Если уже в конструкторе есть selectedItem, то синхронизируем с selectedItems */
+         if(this._options.selectedItem instanceof Model) {
+            this.initializeSelectedItems();
+            this._options.selectedItems.assign([this._options.selectedItem]);
+         }
          /* Почему событие onPropertyChanged: если изменить св-во контрола в событии onPropertyChanged,
             то корректно произойдёт синхронизация с контекстом  */
          this.subscribe('onPropertyChanged', function(e, propName) {
@@ -47,7 +52,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!SBIS3.CONTROLS.Data.Model'],
                 */
                switch (propName) {
                   case 'selectedItem':
-                     if($ws.helpers.instanceOfModule(propValue, 'SBIS3.CONTROLS.Data.Model')) {
+                     if($ws.helpers.instanceOfModule(propValue, 'WS.Data/Entity/Model')) {
                         this.setSelectedItems([propValue]);
                      } else {
                         this.clearSelectedItems();

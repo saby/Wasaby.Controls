@@ -53,6 +53,10 @@
     margin: @link-icon-field-margin;
   }
 
+  .controls-Link__icon + .controls-Link__field:empty {
+    margin: @link-field-margin;
+  }
+
   &.controls-Button__ellipsis {
     &:extend(.controls-Button__ellipsis .controls-Button__text);
     vertical-align: text-bottom;
@@ -70,7 +74,7 @@
    }
 }
 .ws-is-desktop-platform {
-   .controls-Link {
+   .controls-Link:not(.ws-disabled) {
       &:hover {
          color: @link-hover-text-color;
          cursor: @link-cursor;

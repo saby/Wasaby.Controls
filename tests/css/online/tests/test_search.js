@@ -13,7 +13,7 @@ gemini.suite('SBIS3.CONTROLS.Search Online', function () {
                 this.input = find('[sbisname="TextBox 1"] input');
 				actions.waitForElementToShow('[sbisname="SearchForm 1"]', 40000);
                 this.search = find('[sbisname="SearchForm 1"] input');
-				this.reset = find('.controls-SearchForm__resetIcon');
+				this.reset = find('.controls-SearchForm__reset');
 				this.send = find('.controls-SearchForm__search');
             })
 
@@ -41,10 +41,6 @@ gemini.suite('SBIS3.CONTROLS.Search Online', function () {
 			
 			.capture('disabled_and_hovered_button', function (actions) {
                 actions.mouseMove(this.send);
-            })
-			
-			.capture('disabled_and_hovered_reset', function (actions) {
-                actions.mouseMove(this.reset);
             })
     });
 });

@@ -18,6 +18,7 @@
    margin: @controls-FieldLink-linkItem-margin;
    position: @controls-FieldLink-linkItem-position;
    padding: @controls-FieldLink-linkItem-padding;
+   line-height: @controls-FieldLink-linkItem-line-height;
    .text-overflow();
 
    .controls-FieldLink__linkItem-caption {
@@ -85,6 +86,8 @@
 .controls-FieldLink {
    display: inline-block;
    border-color: @controls-FieldLink-border-color;
+   position: relative;
+   white-space: nowrap;
 
    &.controls-Picker__show,
    &.ws-has-focus,
@@ -100,9 +103,15 @@
    .controls-TextBox__fieldWrapper {
       margin: @controls-FieldLink-fieldWrapper-margin;
       display: inline-block;
+
+      .controls-TextBox__field {
+         width: 0;
+      }
    }
 
    .controls-TextBox__beforeFieldWrapper {
+      max-width: 100%;
+      overflow: hidden;
 
       .controls-FieldLink__showAllLinks,
       .controls-FieldLink__dropAllLinks {
@@ -120,8 +129,19 @@
 
    .controls-TextBox__afterFieldWrapper {
       padding: @controls-FieldLink-afterField-padding;
+      height: @controls-FieldLink-afterField-height;
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: @controls-FieldLink-afterField-background;
       > *{
          vertical-align: middle;
       }
    }
+   &.ws-validation-error {
+      .controls-TextBox__afterFieldWrapper {
+         background-color: @text-box-error-bg;
+      }
+   }
+
 }

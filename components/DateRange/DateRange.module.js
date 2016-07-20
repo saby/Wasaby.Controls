@@ -61,10 +61,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
             self._notify('onDateRangeChange', self._options.startDate, self._options.endDate);
          });
          this._datePickerStart.subscribe('onInputFinished', function() {
-            //TODO: курсор встаёт в поле только если ставить его асинхронно. Нужно разбираться почему.
-            setTimeout(function() {
-               self._datePickerEnd.setActive(true);
-            }, 0);
+            self._datePickerEnd.setActive(true);
          });
          this._datePickerEnd.subscribe('onDateChange', function(e, date) {
             self.clearMark();
@@ -235,42 +232,6 @@ define('js!SBIS3.CONTROLS.DateRange', [
       _onRangeChooseChange: function(event, start, end) {
          this._datePickerStart.setDate(start);
          this._datePickerEnd.setDate(end);
-      },
-
-      //TODO: этот метод нужно перенести в helpers.
-      getFormattedValue: function() {
-         var
-             lastDay,
-             result = "",
-             startDate = this._options.startDate,
-             endDate = this._options.endDate;
-
-         if (startDate && endDate) {
-            lastDay = new Date(endDate.getTime()).setLastMonthDay().getDate();
-            //Если месяц целиком
-            if (startDate.getDate() == 1 && endDate.getDate() == lastDay) {
-               if (startDate.getFullYear() == endDate.getFullYear()) {
-                  if (startDate.getMonth() == endDate.getMonth()) {
-                     result = startDate.strftime("%f %Y");
-                  } else {
-                     result = startDate.strftime("%f") + ' - ' + endDate.strftime("%f %Y");
-                  }
-               } else {
-                  result = startDate.strftime("%f %Y") + ' - ' + endDate.strftime("%f %Y");
-               }
-            //Если даты совпадают
-            } else if (startDate.getDate() == endDate.getDate() && startDate.getMonth() == endDate.getMonth() && startDate.getFullYear() == endDate.getFullYear()) {
-               result = startDate.strftime("%e.%m.%y");
-            //Если даты различные
-            } else {
-               result = startDate.strftime("%e.%m.%y") + ' - ' + endDate.strftime("%e.%m.%y");
-            }
-         } else if (startDate) {
-            result = startDate.strftime("%e.%m.%y") + ' - ...';
-         } else if (endDate) {
-            result = '... - ' + endDate.strftime("%e.%m.%y");
-         }
-         return result;
       }
    });
    return DateRange;

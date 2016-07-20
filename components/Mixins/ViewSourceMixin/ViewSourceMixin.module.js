@@ -3,7 +3,7 @@
  */
 
 define('js!SBIS3.CONTROLS.ViewSourceMixin', [
-   'js!SBIS3.CONTROLS.Data.Query.Query'
+   'js!WS.Data/Query/Query'
 ], function(Query) {
 
    var ViewSourceMixin = /**@lends SBIS3.CONTROLS.ViewSourceMixin.prototype  */{
@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
        * Устанавливает dataSource для представления данных.
        * Для этого делается запрос на БЛ, можно вызывать в конструкторе.
        *
-       * @param {SBIS3.CONTROLS.Data.Source.SbisService} source Источник данных
+       * @param {WS.Data/Source/SbisService} source Источник данных
        * @param {String} browserName Имя браузера. Если миксин подмешан в браузер, можно не передавать.
        * @param {Object} filter Параметры фильтрации
        * @param {String|Number} offset Элемент, с которого перезагружать данные.
@@ -72,15 +72,13 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
             /* Т.к. запрос вызывается отдельно, то и индикатор надо показать самим,
                иногда БЛ может подтупливать и в этом случае может долго висеть пустой реестр, который вводит пользователя в заблуждение  */
             view._toggleIndicator(true);
+            /* Фильтр устанавливаем пораньше, до ответа query, чтобы запустилась синхронизация,
+             и фильтры проставились в кнопку фильтров */
+            view.setFilter(queryFilter, true);
 
             queryDef.addCallback(function(dataSet) {
                var keyField = view.getProperty('keyField'),
                    recordSet;
-
-               /* Фильтр устанавливаем пораньше, чтобы запустилась синхронизация,
-                  и фильтры проставились в кнопку фильтров */
-               view.setFilter(queryFilter, true);
-               view._toggleIndicator(false);
 
                if (keyField && keyField !== dataSet.getIdProperty()) {
                   dataSet.setIdProperty(keyField);
@@ -93,11 +91,15 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
                   path: dataSet.getProperty('p')
                });
 
-               view.setDataSource(source, true);
+               if (!view.isDestroyed()) { //Пока выполнялся запрос - view уже мог успеть уничтожиться. В таком случае не трогаем view
+                  view._toggleIndicator(false);
+                  view.setDataSource(source, true);
+                  //FIXME это временный придрод, уйдёт, как будет сделана отрисовка на сервере (3.7.3.200 - 3.7.4)
+                  view._notify('onDataLoad', recordSet);
+                  view.setItems(recordSet);
+               }
+
                resultDef.callback(recordSet);
-               //FIXME это временный придрод, уйдёт, как будет сделана отрисовка на сервере (3.7.3.200 - 3.7.4)
-               view._notify('onDataLoad', recordSet);
-               view.setItems(recordSet);
 
                return recordSet;
             });

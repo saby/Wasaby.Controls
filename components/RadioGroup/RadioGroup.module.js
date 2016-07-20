@@ -54,7 +54,7 @@ function(RadioGroupBase, dotTpl) {
        * @translatable title caption
        */
       /**
-        * @cfg {GroupItems} Набор исходных данных, по которому строится отображение
+        * @cfg {GroupItems[]} Набор исходных данных, по которому строится отображение
         * @name SBIS3.CONTROLS.RadioGroup#items
         * @example
         * <pre class="brush:xml">

@@ -105,8 +105,10 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
          return this._options.checked;
       },
 
-      _clickHandler : function() {
-         this.setChecked(!(this.isChecked()));
+      before: {
+         _clickHandler: function () {
+            this.setChecked(!(this.isChecked()));
+         }
       }
    };
 

@@ -379,7 +379,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /* Если фокус уходит на список - вернём его обратно в контрол, с которого фокус ушёл */
             this.subscribeTo(control, 'onFocusOut', function(e, destroyed, focusedControl) {
-               if(self._list && self._list === focusedControl) {
+               /* Если фокус ушёл на список, или на дочерний контрол списка - возвращаем обратно в поле ввода */
+               if(self._list && (self._list === focusedControl || ~Array.indexOf(self._list.getChildControls(), focusedControl))) {
                   focusedControl.setActive(false, false, false, this);
                   this.setActive(true);
                }
@@ -565,7 +566,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
       /**
        * Возвращает dataSet списка, если список уже инициализирован
-       * @returns {SBIS3.CONTROLS.Data.Collection.List|undefined}
+       * @returns {WS.Data/Collection/List|undefined}
        * @private
        */
       _getListItems: function() {

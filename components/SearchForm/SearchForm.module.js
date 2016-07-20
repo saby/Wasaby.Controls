@@ -60,7 +60,9 @@ define('js!SBIS3.CONTROLS.SearchForm', [
          });
 
          $('.js-controls-SearchForm__search', this.getContainer().get(0)).click(function() {
-            self.applySearch(true);
+            if(self.isEnabled()) {
+               self.applySearch(true);
+            }
          });
       },
 
@@ -73,6 +75,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
             if (this._options.usePicker && this.isPickerVisible()) {
                SearchForm.superclass._keyUpBind.apply(this, arguments);
             } else {
+               this._checkInputVal();
                this.applySearch(true);
             }
             event.stopPropagation();
@@ -87,7 +90,9 @@ define('js!SBIS3.CONTROLS.SearchForm', [
       },
 
       _startSearch: function() {
-         if (!this._options.usePicker) {
+         // Если используем автодополнении, то поиск не должен отрабатывать на реестре при наборе с клавиатуры
+         // но должен сбрасываться, если полностью удалили текст с помощью del и backspace
+         if (!this._options.usePicker || !this.getText()) {
             SearchForm.superclass._startSearch.apply(this, arguments);
          }
       },

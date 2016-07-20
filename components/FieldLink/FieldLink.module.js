@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        'js!SBIS3.CONTROLS.ActiveSelectable',
        'js!SBIS3.CONTROLS.SyncSelectionMixin',
        'js!SBIS3.CONTROLS.FieldLinkItemsCollection',
-       'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
+       'js!WS.Data/Collection/RecordSet',
        'html!SBIS3.CONTROLS.FieldLink/afterFieldWrapper',
        'html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper',
        'js!SBIS3.CONTROLS.Utils.DialogOpener',
@@ -60,7 +60,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *    <li>
         *       <b>Через справочник.</b>
         *       Справочник - это диалог выбора значений. Диалог строится на основе пользовательского компонента.
-        *       Подробнее о правилах создания компонента для справочника поля связи вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/">Поле связи</a>.
+        *       Подробнее о правилах создания компонента для справочника поля связи вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/dictionary/">Поле связи</a>.
         *       Набор справочников устанавливают с помощью опции {@link dictionaries}, а режим отображения открытого справочника - с помощью опции {@link chooserMode}.
         *    </li>
         *    <li>
@@ -85,7 +85,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *
         * @class SBIS3.CONTROLS.FieldLink
         * @extends SBIS3.CONTROLS.SuggestTextBox
+        * @control
+        * @public
+        *
         * @category Inputs
+        *
+        * @author Герасимов Александр Максимович
+        *
         * @mixes SBIS3.CONTROLS.Selectable
         * @mixes SBIS3.CONTROLS.MultiSelectable
         * @mixes SBIS3.CONTROLS.ActiveSelectable
@@ -107,17 +113,25 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *
         * @cssModifier controls-FieldLink__itemsEdited В поле связи при наведении курсора на выбранные значения применяется подчеркивание текста.
         * @cssModifier controls-FieldLink__itemsBold В поле связи для текста выбранных значений применяется полужирное начертание.
-        * @control
-        * @public
-        * @author Крайнов Дмитрий Олегович
+        *
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
-        * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings showAllConfig footerTpl emptyHTML groupBy
+        * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings footerTpl emptyHTML groupBy
         * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip setEmptyHTML setGroupBy
         *
         * ignoreEvents onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
         */
 
        var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, DSMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
+          /**
+           * @name SBIS3.CONTROLS.FieldLink#textValue
+           * @cfg {String} Хранит строку, сформированную из значений поля отображения выбранных элементов коллекции.
+           * @remark
+           * Значения в строке перечислены через запятую. Отображаемые значения в строке определяются с помощью опции {@link displayField} или {@link itemTemplate}.
+           * Опция доступна только на чтение. Запрещена двусторонняя привязка к полю контекста.
+           * @see getTexValue
+           * @see displayField
+           * @see itemTemplate
+           */
           /**
            * @event onItemActivate Происходит при клике по выбранному элементу коллекции.
            * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -170,7 +184,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * Например, передаём опции для построения справочника:
                  * <pre class="brush: xml">
                  *     <option name="template">js!SBIS3.MyArea.MyDatGridView</option>
-                 *     <options name="componentOptions" type="array">
+                 *     <options name="componentOptions">
                  *        <option name="myShowHeadConfig" type="boolean">true</option>
                  *        <option name="myPageSizeConfig" type="number">5</option>
                  *     </options>
@@ -211,7 +225,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  */
                 dictionaries: [],
                 /**
-                 * @cfg {Boolean}  Устанавливает режим добавления комментариев в поле связи.
+                 * @cfg {Boolean} Устанавливает режим добавления комментариев в поле связи.
                  * * true Разрешается ввод комментариев в поле связи.
                  * * false Запрещается ввод комментариев в поле связи.
                  * @remark
@@ -238,33 +252,22 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * Шаблон может быть реализован отдельным XHTML-файлом.
                  * В этом случае чтобы передать его содержимое в опцию, он должен быть подключен в массив зависимостей компонента (см. примеры).
                  * @example
-                 * Пример 1. Шаблон создан в отдельном XHTML-файле. Сначала его нужно подключить в массив зависимостей компонента,
-                 * затем в опции указать путь до шаблона.
+                 * Пример. Шаблон создан в отдельном XHTML-файле. Сначала его нужно подключить в массив зависимостей компонента, затем в опции указать путь до шаблона.
                  * <pre class="brush: xml">
-                 *     <option name="itemTemplate" type="string">html!SBIS3.MyArea.MyComponent/template</option>
-                 * </pre>
-                 * Пример 2. Шаблон имеет простую структуру, поэтому его полностью описываем в качестве значения опции.
-                 * <pre>
-                 *     <option name="itemTemplate" type="string" value="
-                 *        <div class='fieldLinkText'>{{=it.item.get('title')}}</div>
-                 *     "></option>
+                 *     <option name="itemTemplate" type="string">html!SBIS3.MyArea.MyComponent/resources/myTemplate</option>
                  * </pre>
                  */
-                itemTemplate: ''
+                itemTemplate: null
              }
           },
 
           $constructor: function() {
              var commandDispatcher = $ws.single.CommandDispatcher;
 
-             this.getContainer().addClass('controls-FieldLink');
              this._publish('onItemActivate');
 
              /* Проиницализируем переменные */
              this._setVariables();
-
-             /* Создём контрол, который рисует выбранные элементы  */
-             this._linkCollection = this._getLinkCollection();
 
              commandDispatcher.declareCommand(this, 'clearAllItems', this._dropAllItems);
              commandDispatcher.declareCommand(this, 'showAllItems', this._showAllItems);
@@ -287,8 +290,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           init: function() {
              FieldLink.superclass.init.apply(this, arguments);
-             /* Надо задавать элементы для меню рекордсетом, чтобы не портились хэндлеры сериализатором */
-             this.getChildControlByName('fieldLinkMenu').setItems(this._prepareFieldLinkMenuItems(this._options.dictionaries));
+             this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
           },
 
            _getShowAllConfig: function(){
@@ -310,23 +312,33 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           /**
-           * Устанавливает набор справочников для поля связи.
-           * Подробнее о справочниках вы можете прочитать в описании к опции {@link dictionaries}.
-           * @param {Array} dictionaries
+           * Устанавливает набор справочников для поля связи. Подробнее о справочниках вы можете прочитать в описании к опции {@link dictionaries}.
+           * @param {Array.<Dictionaries>} dictionaries Конфигурация справочников поля связи.
            * @example
-           * Устанавливаем для поля связи один справочник:
+           * Установим для поля связи два справочника:
            * <pre>
            *     myFieldLink.setDictionaries(
-           *        [{
-           *           'template': 'js!SBIS3.BUH.ChoiceAccount' // Компонент, на основе которого будет построен справочник поля связи
-           *        }]
+           *        [
+           *           {
+           *              caption: 'Сотрудники',
+           *              template: 'js!SBIS3.MyArea.DictEmployees' // Компонент, на основе которого будет построен справочник поля связи
+           *              componentOptions: {
+           *                 myShowHeadConfig: true,
+           *                 myPageSizeConfig: 5
+           *              }
+           *           },
+           *           {
+           *              caption: 'Сотрудники',
+           *              template: 'js!SBIS3.MyArea.DictEmployees' // Компонент, на основе которого будет построен справочник поля связи
+           *           }
+           *        ]
            *     );
            * </pre>
            * @see dictionaries
            */
           setDictionaries: function(dictionaries) {
              this._options.dictionaries = dictionaries;
-             this.getChildControlByName('fieldLinkMenu').setItems(this._prepareFieldLinkMenuItems(dictionaries));
+             this.getChildControlByName('fieldLinkMenu').setItems(dictionaries);
              this._notifyOnPropertyChanged('dictionaries');
           },
 
@@ -388,19 +400,47 @@ define('js!SBIS3.CONTROLS.FieldLink',
              };
           },
 
+          _modifyOptions: function() {
+             var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments);
+
+             /* className вешаем через modifyOptions,
+                так меньше работы с DOM'ом */
+             cfg.className += ' controls-FieldLink';
+             cfg.itemTemplate = TemplateUtil.prepareTemplate(cfg.itemTemplate);
+             return cfg;
+          },
+
           _getLinkCollection: function() {
              if(!this._linkCollection) {
-                return this._drawFieldLinkItemsCollection();
+                return (this._linkCollection = this.getChildControlByName('FieldLinkItemsCollection'));
              }
              return this._linkCollection;
           },
 
-          _prepareFieldLinkMenuItems: function (items) {
-             return new RecordSet({
-                rawData : items,
-                idProperty : 'caption'
-             })
+          /** Обработчики событий контрола отрисовки элементов **/
+          _onDrawItemsCollection: function() {
+             this._updateInputWidth();
           },
+          _onCrossClickItemsCollection: function(key) {
+             this.removeItemsSelection([key]);
+             if(!this._options.multiselect && this._options.alwaysShowTextBox) {
+                this.setText('');
+             }
+          },
+          _onItemActivateItemsCollection: function(key) {
+             this.getSelectedItems(false).each(function(item) {
+                if(item.getId() == key) {
+                   this._notify('onItemActivate', {item: item, id: key});
+                }
+             }, this)
+          },
+          _onClosePickerItemsCollection: function() {
+             this._pickerStateChangeHandler(false);
+          },
+          _onShowPickerItemsCollection: function() {
+             this._pickerStateChangeHandler(true);
+          },
+          /**************************************************************/
 
           _observableControlFocusHandler: function() {
              /* Не надо обрабатывать приход фокуса, если у нас есть выбрынные
@@ -425,7 +465,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              var isModel;
 
              if(result && result.length) {
-                isModel = $ws.helpers.instanceOfModule(result[0], 'SBIS3.CONTROLS.Data.Model');
+                isModel = $ws.helpers.instanceOfModule(result[0], 'WS.Data/Entity/Model');
                 this.setText('');
 
                 if(isModel) {
@@ -449,9 +489,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
            /**
             * Возвращает строку, сформированную из текстовых значений полей выбранных элементов коллекции.
             * @remark
-            * Метод формирует строку из значений полей, отображаемых в поле связи, перечисленных через запятую.
+            * Метод формирует строку из значений полей выбранных элементов коллекции. Значения в строке будут перечислены через запятую.
             * Отображаемые значения определяются с помощью опции {@link displayField} или {@link itemTemplate}.
             * @returns {string} Строка, сформированная из отображаемых значений в поле связи.
+            * @see texValue
             * @see displayField
             * @see itemTemplate
             */
@@ -639,49 +680,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
              FieldLink.superclass.setListFilter.apply(this, arguments);
           },
 
-          _drawFieldLinkItemsCollection: function() {
-             var self = this,
-                 tpl = this.getProperty('itemTemplate');
-             return new FieldLinkItemsCollection({
-                element: this._linksWrapper.find('.controls-FieldLink__linksContainer'),
-                displayField: this._options.displayField,
-                keyField: this._options.keyField,
-                itemTemplate: tpl ? TemplateUtil.prepareTemplate(tpl) : undefined,
-                userItemAttributes: this._options.userItemAttributes,
-                parent: this,
-                itemCheckFunc: this._checkItemBeforeDraw.bind(this),
-                handlers: {
-                   /* После окончания отрисовки, обновим размеры поля ввода */
-                   onDrawItems: this._updateInputWidth.bind(this),
-
-                   /* При клике на крест, удалим ключ из выбранных */
-                   onCrossClick: function(e, key){
-                      self.removeItemsSelection([key]);
-                      if(!self._options.multiselect && self._options.alwaysShowTextBox) {
-                         self.setText('');
-                      }
-                   },
-
-                   onItemActivate: function(e, key) {
-                      self.getSelectedItems(false).each(function(item) {
-                         if(item.getId() == key) {
-                            self._notify('onItemActivate', {item: item, id: key});
-                         }
-                      })
-                   },
-
-                   /* При закрытии пикера надо скрыть кнопку удаления всех выбранных, при открытии - показать */
-                   onClosePicker: self._pickerStateChangeHandler.bind(self, false),
-                   onShowPicker: self._pickerStateChangeHandler.bind(self, true)
-                }
-             });
-          },
-
           showPicker: function() {
              /* Если открыт пикер, который показывает все выбранные записи, то не показываем автодополнение */
-             if(!this._linkCollection.isPickerVisible()) {
-                FieldLink.superclass.showPicker.apply(this, arguments);
+             if(this._getLinkCollection().isPickerVisible()) {
+                return;
              }
+             FieldLink.superclass.showPicker.apply(this, arguments);
           },
           /**
            * Проверяет, нужно ли отрисовывать элемент или надо показать троеточие
@@ -728,7 +732,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           setSelectedItem: function(item) {
              var hasRequiredFields,
-                 isModel = item  && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model');
+                 isModel = item  && $ws.helpers.instanceOfModule(item, 'WS.Data/Entity/Model');
 
              /* Т.к. ключ может быть как 0, а ключевое поле как '', то надо проверять на null/undefined */
              function isEmpty(val) {
@@ -863,10 +867,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
              /* Для поля связи в задизейбленом состоянии считаем, ширина инпута - 0, т.к. он визуально не отображается */
              if(this.isEnabled()) {
                 inputWidth = this._getInputWidth();
+
+                /* По неустановленным причинам, после обновления хрома, он для некоторых элементов начинает возвращать нулевую ширину,
+                   после чистки кэша или перезагрузки браузера проблема исчезает, но надо от этого защититься (повторялось только в хроме) */
+                if(!inputWidth && this._isEmptySelection()) {
+                   inputWidth = 'auto';
+                }
              } else  {
                 inputWidth = 0;
              }
-             this._inputField[0].style.width = inputWidth + 'px';
+             this._inputField[0].style.width = (inputWidth === 'auto' ? inputWidth : inputWidth + 'px');
           },
 
           /* Заглушка, само поле связи не занимается отрисовкой */
@@ -876,6 +886,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
           destroy: function() {
              this._linksWrapper = undefined;
              this._inputWrapper = undefined;
+             this._afterFieldWrapper = undefined;
+             this._beforeFieldWrapper = undefined;
 
              if(this._linkCollection) {
                 this._linkCollection.destroy();

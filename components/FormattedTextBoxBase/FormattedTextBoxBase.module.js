@@ -679,7 +679,11 @@ define(
             e.preventDefault();
          });
          //keypress учитывает расскладку, keydown - нет
-         this._inputField.keypress(this._keyPressBind.bind(this));
+         this._inputField.keypress(function(event) {
+            if (!self._isFirefoxKeypressBug(event)) {
+               self._keyPressBind(event);
+            }
+         });
          //keydown ловит управляющие символы, keypress - нет
          this._inputField.keydown(this._keyDownBind.bind(this));
          this._inputField.bind('paste', function(e) {
@@ -706,6 +710,12 @@ define(
             }, 100);
             e.preventDefault();
          });
+      },
+      //FF зачем то кидает событие keypress для управляющих символов(charCode === 0), в отличии от всех остальных браузеров.
+      //Просто проигнорируем это событие, т.к. управляющая клавиша уже обработана в keydown. Так же отдельно обработаем
+      //ctrl+A, т.к. для этой комбинации keypress так же вызываться не должен.
+      _isFirefoxKeypressBug: function(event) {
+         return $ws._const.browser.firefox && (event.charCode === 0 || event.ctrlKey && event.charCode === 97);
       },
 
       init: function(){
@@ -826,13 +836,13 @@ define(
             lastGroupNum = this.formatModel.model.length - 1;
             lastGroupNum = this.formatModel.model[lastGroupNum].isGroup ? lastGroupNum : lastGroupNum - 1;
             this._notify('onTextChange', this._options.text);
+            //Заново ищем контейнер группы, т.к. после замены символа, снаружи значение текста может быть изменено(например setText)
+            //и html будет полность изменён, а в переменной container лежит элемент, которого в DOM уже нет, и курсор не сможет верно спозиционироваться
+            _moveCursor(_getContainerByIndex.call(this, keyInsertInfo.groupNum), position);
             //Если positionOffset = -1, это значит был нажат backspace, и onInputFinished в таком случае стрелять не надо
             if (positionOffset !== -1 && keyInsertInfo.groupNum == lastGroupNum  &&  keyInsertInfo.position == this.formatModel.model[lastGroupNum].mask.length - 1) {
                this._notify('onInputFinished');
             }
-            //Заново ищем контейнер группы, т.к. после замены символа, снаружи значение текста может быть изменено(например setText)
-            //и html будет полность изменён, а в переменной container лежит элемент, которого в DOM уже нет, и курсор не сможет верно спозиционироваться
-            _moveCursor(_getContainerByIndex.call(this, keyInsertInfo.groupNum), position);
          }
       },
 
@@ -867,7 +877,6 @@ define(
          //TODO неодинаковое поведение получается для разного text. Но нельзя this._options.text не обновлять, т.к. его getText() использует
          this._options.text = (this.formatModel._settedText !== null && typeof this.formatModel._settedText !== "undefined") ? this.formatModel.getText(this._maskReplacer) : this.formatModel._settedText;
          this._notifyOnPropertyChanged('text');
-         this._textChanged = true;
       },
 
       /**
@@ -991,6 +1000,7 @@ define(
       _setText: function(text){
          this.formatModel.setText(text, this._maskReplacer);
          this._updateText();
+         this._textChanged = true;
          //обновить html
          this._inputField.html(this._getHtmlMask());
       },

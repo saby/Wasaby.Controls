@@ -21,21 +21,19 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', ['js!SBIS3.CONTROLS.Utils.KbLayo
 
          /* Проверяем на изменение раскладки */
          this.once('onListReady', function(e, list) {
-            self.subscribeTo(list, 'onDataLoad', function(event, data) {
-               if(KbLayoutRevertUtil.needRevert(data)) {
+            self.subscribeTo(list, 'onDataLoad', function (event, data) {
+               if (data.getMetaData()['Switched']) {
                   self.setText(KbLayoutRevertUtil.process(self.getText()));
                }
             });
          });
-
       },
-
       _getLoadingContainer : function() {
          return this.getContainer().find('.controls-TextBox__fieldWrapper');
       },
 
       _chooseCallback: function(result) {
-         if(result && $ws.helpers.instanceOfModule(result[0], 'SBIS3.CONTROLS.Data.Model')) {
+         if(result && $ws.helpers.instanceOfModule(result[0], 'WS.Data/Entity/Model')) {
             var item = result[0];
             this._onListItemSelect(item.getId(), item);
          }

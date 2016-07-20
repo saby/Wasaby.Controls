@@ -43,7 +43,17 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePropertiesDialog', ['js!SBIS3.CORE.Com
                   return value !== 0;
                },
                errorMessage: 'Значение не может быть равно нулю!'
-            }];
+            }],
+            valueTypeChange = function() {
+               if (ctrlValueType.getValue() === 'per') {
+                  ctrlImageWidth.setValue(parseInt(100*$image.width()/ctrlDialog._options.editorWidth,10));
+                  ctrlImageHeight.setValue(parseInt(100*$image.width()/ctrlDialog._options.editorWidth,10));
+               } else {
+                  ctrlImageWidth.setValue($image.width());
+                  ctrlImageHeight.setValue( $image.height());
+               }
+            };
+
 
          ctrlImageHeight.setValidators(validators);
          ctrlImageWidth.setValidators(validators);
@@ -55,7 +65,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePropertiesDialog', ['js!SBIS3.CORE.Com
          }.bind(this));
          
          ctrlImageHeight.subscribe("onChange", updateCtrlImageWidth);
-         ctrlValueType.subscribe("onChange", updateCtrlImageWidth);
+         ctrlValueType.subscribe("onChange", valueTypeChange);
          
          ctrlImageWidth.subscribe("onChange", function(){
             var

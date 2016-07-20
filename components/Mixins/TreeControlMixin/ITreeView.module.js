@@ -11,13 +11,13 @@ define('js!SBIS3.CONTROLS.TreeControl.ITreeView', [], function () {
    return /** @lends SBIS3.CONTROLS.HierarchyControl.IHierarchyView.prototype */{
       /**
        * @event onLeverageClicked Cобытие о клике по узлу, отвечаещему за разворот
-       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} hash Хэш элемента дерева
        */
 
       /**
        * Перерисовывает узел целиком
-       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem} node Узел
+       * @param {WS.Data/Display/TreeItem} node Узел
        */
       renderNode: function (node) {
          throw new Error('Method must be implemented');
@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.TreeControl.ITreeView', [], function () {
 
       /**
        * Разворачивает/сворачивает узел дерева
-       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem} node Узел
+       * @param {WS.Data/Display/TreeItem} node Узел
        * @param {Boolean} expanded Узел развернут
        */
       setNodeExpanded: function (node, expanded) {

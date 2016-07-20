@@ -73,9 +73,6 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
                return false;
             };
          e.preventDefault();
-         if (canCut) {
-            e.stopImmediatePropagation();
-         }
          //рассчет родительского window элемента
          //если на странице есть youtube елемент то window.frames[0].document стреляет ошибкой доступа
          if (!_isDescendant(window.document.body, event.target)) {
@@ -92,9 +89,13 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
          // webkit && ie>9
          if (currentWindow.getSelection) {
             //В хроме getSelection().toString() отдаёт переносы в виде \n блокнот их не воспринимает, необходимо переделывать их в \r\n
-            textData = currentWindow.getSelection().toString().replace(/\r\n|\n/gi,'\r\n');;
+            textData = currentWindow.getSelection().toString().replace(/\r\n|\n/gi,'\r\n');
+            //В текстовом формате nbsp имеет 160 код, в FAR (там OEM text формат) вставляется как неведомый символ
+            textData = textData.replace(/\u00A0/gi,'\u0020');
             selectionRange = currentWindow.getSelection().getRangeAt(0);
-            selectionContent = canCut ? selectionRange.extractContents() : selectionRange.cloneContents();
+            selectionContent =  selectionRange.cloneContents();
+            //TODO: разобраться как правильно вырезать контент на 'cut' (взять за основу deleteRangeBetweenTextBlocks из tinymce
+            //сейчас вырезание будет происходить в редакторе
          }
          // ie8
          else {
@@ -112,6 +113,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
          if (event.clipboardData) {
             selectionNode.appendChild(selectionContent);
             clipboardData.setData('text/html', '<!--' + label.data + '-->' + selectionNode.innerHTML);
+            //TODO: при выделении через шифты в выделеном есть лишняя пустая строка <p></p>
             clipboardData.setData('text', textData);
          }
          // для ie

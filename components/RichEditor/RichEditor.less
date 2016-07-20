@@ -41,6 +41,9 @@
             margin-right: 16px;
          }
       }
+      li{
+         margin-bottom:6px;
+      }
    }
    .controls-RichEditor__SourceArea{
       display: block;
@@ -73,7 +76,7 @@
    }
 
    &.ws-disabled {
-      border-top: none;
+      border-top: 1px solid transparent;
       .controls-RichEditor__EditorFrame {
          display: none;
       }
@@ -84,23 +87,23 @@
       word-wrap: break-word;
    }
 
-}
-.controls-RichEditor__DataReview {
-   z-index: 1;
-   width: 100%;
-   height: 100%;
-   overflow-y: auto;
-   padding-top: 6px;
-   :first-child {
-      margin-top: 0;
+   .controls-RichEditor__DataReview {
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      padding: 6px 0 0 4px; /* отступы у параграфов через padding родительского блока без first-child */
+      border: 1px solid transparent;
+      box-sizing: border-box;
+   }
+   .controls-RichEditor__EditorFrame.ws-basic-style {
+      overflow: auto;
+      padding: 6px 0 0 4px;
+      box-sizing: border-box;
+      word-wrap: break-word;
    }
 }
-.controls-RichEditor__EditorFrame.ws-basic-style {
-   overflow: auto;
-   padding: 6px 0 0 4px;
-   box-sizing: border-box;
-   word-wrap: break-word;
-}
+
 .ws-is-mobile-safari {
    .controls-RichEditor {
       ::-webkit-scrollbar {
@@ -153,7 +156,7 @@
       z-index: 999;
       border: none;
       padding: 0px;
-      background-color: white;
+      background-color: transparent;
       background-image: @freToolbarHideButtonPrimary;
       &:hover {
          cursor: pointer;
@@ -211,7 +214,7 @@
       -ms-user-select: none;
       user-select: none;
    }
-   &.fre-empty .controls-RichEditor__Placeholder{
+   &.controls-RichEditor__empty .controls-RichEditor__Placeholder{
       display: block;
       cursor: text;
    }
@@ -295,9 +298,10 @@
          content: none;
       }
    }
+   //TODO:избавиться при переходе на dropdownlist
    &.custom-options-container {
       margin: 0;
-      padding-top: 2px;
+      padding-top: 3px;
       &.custom-options-container-hover{
          padding-left: 7px;
       }
@@ -311,6 +315,7 @@
          }
          .custom-select-option{
             height: 30px;
+            margin-top: -1px !important;
          }
       }
    }
@@ -363,6 +368,7 @@
 
    .custom-select-arrow-open.custom-select-arrow-hover {
       padding-top: 0;
+      margin-top: -1px;
    }
 }
 
@@ -506,20 +512,25 @@
    }
 }
 //Выпадающий список с выбором стиля текста
-.controls-RichEditor__styleText-title {
-   font-size: 18px;
-}
+//TODO: убрать при переходе на dropdownlist
+.controls-RichEditor__ToolbarItem {
+   &.custom-options-container .custom-options-container-list, &.custom-options-container .custom-options-container-head,.custom-select-text {
+      .controls-RichEditor__styleText-title {
+         font-size: 18px;
+      }
 
-.controls-RichEditor__styleText-subTitle {
-   font-size: 15px;
-}
+      .controls-RichEditor__styleText-subTitle {
+         font-size: 15px;
+      }
 
-.controls-RichEditor__styleText-selectedMainText {
-   font-weight: bold;
-}
+      .controls-RichEditor__styleText-selectedMainText {
+         font-weight: bold;
+      }
 
-.controls-RichEditor__styleText-additionalText {
-   font-size: 12px;
+      .controls-RichEditor__styleText-additionalText {
+         font-size: 12px;
+      }
+   }
 }
 //Стили для окна добавления/редактирования ссылки
 .controls-RichEditor__InsertLinkHrefLabel,
@@ -569,15 +580,41 @@
 }
 .ws-is-ie8 {
    .controls-RichEditor__Toolbar {
-      .controls-RichEditor__ToolbarItem {
+      .controls-RichEditor__ToolbarItem.controls-Button {
          .custom-select-arrow {
-            top: -3px;
+            top: -4px;
          }
       }
    }
-   .fre-empty .controls-RichEditor__EditorFrame.ws-basic-style {
-      background-color: black;
-      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+   .controls-RichEditor{
+      box-sizing: border-box;
+   }
+   .controls-RichEditor__empty {
+      .controls-RichEditor__EditorFrame.ws-basic-style {
+         background-color: black;
+         -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+         border: none;
+      }
+      .controls-RichEditor__Toolbar{
+         padding-left: 5px;
+      }
+      .controls-RichEditor__ToolbarToggleButton {
+         right: -1px;
+      }
+      border: 1px solid @fieldRichEditorBorderColor;
    }
 }
 
+//TODO: выпилить при переходе в на dropdownlists
+.ws-is-ie10{
+   .controls-RichEditor__ToolbarItem {
+      .custom-select-arrow-open.custom-select-arrow-hover {
+         right: 3px !important;
+      }
+   }
+}
+.ws-is-chrome {
+   .controls-RichEditor__EditorFrame.ws-basic-style p:empty{
+      min-height: 18px;
+   }
+}

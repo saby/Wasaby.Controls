@@ -1,13 +1,13 @@
 define('js!SBIS3.CONTROLS.DSMixin', [
-   'js!SBIS3.CONTROLS.Data.Source.Memory',
-   'js!SBIS3.CONTROLS.Data.Source.SbisService',
-   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
-   'js!SBIS3.CONTROLS.Data.Query.Query',
+   'js!WS.Data/Source/Memory',
+   'js!WS.Data/Source/SbisService',
+   'js!WS.Data/Collection/RecordSet',
+   'js!WS.Data/Query/Query',
    'js!SBIS3.CORE.MarkupTransformer',
-   'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
-   'js!SBIS3.CONTROLS.Data.Projection.Projection',
-   'js!SBIS3.CONTROLS.Data.Bind.ICollection',
-   'js!SBIS3.CONTROLS.Data.Projection.Collection',
+   'js!WS.Data/Collection/ObservableList',
+   'js!WS.Data/Display/Display',
+   'js!WS.Data/Collection/IBind',
+   'js!WS.Data/Display/Collection',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil'
 ], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil) {
 
@@ -146,17 +146,17 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             displayField: null,
              /**
-              * @cfg {Array.<Object.<String,String>>} Устанавливает набор исходных данных, по которому строится отображение.
+              * @cfg {Array.<Object>} Устанавливает набор исходных данных, по которому строится отображение.
               * @remark
               * Набор исходных данных - это данные определенного формата, которые будут преобразованы
-              * в элементы коллекции (экземпляры класса {@link SBIS3.CONTROLS.Data.Model Model}).
+              * в элементы коллекции (экземпляры класса {@link WS.Data/Entity/Model Model}).
               *
               * Опция items описывает набор данных, который будет преобразован в статический источник данных.
               * Изменять значение опции items можно с помощью метода {@link setItems}.
               *
               * Данные для коллекции элементов задаются либо с помощью этой опции,
               * либо через источник данных методом {@link setDataSource}.
-              * Опция {@link SBIS3.CONTROLS.hierarchyMixin#hierField} устанавливает поле,
+              * Опция {@link SBIS3.CONTROLS.TreeMixin#hierField} устанавливает поле,
               * по которому будет построена иерархия.
               * @example
               * Задаем набор данных для отображения календаря; использован класс {@link SBIS3.CONTROLS.TreeDataGridView}:
@@ -191,13 +191,69 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               * @see keyField
               * @see displayField
               * @see setDataSource
-              * @see SBIS3.CONTROLS.hierarchyMixin#hierField
+              * @see SBIS3.CONTROLS.TreeMixin#hierField
               */
             items: null,
             /**
-             * @cfg {DataSource|SBIS3.CONTROLS.Data.Source.ISource|Function} Набор исходных данных, по которому строится отображение
-             * @noShow
+             * @cfg {DataSource|WS.Data/Source/ISource|Function|Object} Устанавливает набор исходных данных, по которому строится отображение.
+             * @remark
+             * Если установлен источник данных, то значение опции {@link items} будет проигнорировано.
+             * @example
+             * <b>Пример 1.</b> Чтобы установить конфигурацию источника данных через JS-код компонента, необходимо его инициализировать и установить с помощью метода {@link setDataSource}.
+             * <pre>
+             *    // SbisService - это переменная, в которую импортирован класс источника данных из массива зависимостей
+             *    var myDataSource = new SbisService({ // Инициализация источника данных
+             *        endpoint: {
+             *           contract: 'Отчеты', // Устанавливаем объект БЛ, в котором есть методы для работы с данными таблицы
+             *           address: 'myNewService/service/sbis-rpc-service300.dll' // Устанавливаем точку входа в другой сервис
+             *        },
+             *        binding: {
+             *           query: 'Список' // Устанавливаем списочный метод
+             *        },
+             *        idProperty: '@Идентификатор' // Устанавливаем поле первичного ключа
+             *    });
+             *    myView.setDataSource(myDataSource); // Устанавливаем представлению источник данных
+             * </pre>
+             *
+             * <b>Пример 2.</b> Конфигурация источника данных через вёрстку компонента.
+             * Первый способ основан на использовании объекта со следующими свойствами:
+             * <ul>
+             *    <li>module - название класса источника данных;</li>
+             *    <li>options - конфигурация источника данных.</li>
+             * </ul>
+             * Аналогичная предыдущему примеру конфигурация будет выглядеть следующим образом:
+             * <pre>
+             *    <options name="dataSource">
+             *       <option name="module" value="WS.Data/Source/SbisService"></options>
+             *       <options name="options">
+             *          <options name="binding">
+             *             <option name="contract" value="Отчеты"></option>
+             *             <option name="address" value="myNewService/service/sbis-rpc-service300.dll"></option>
+             *          </options>
+             *          <options name="endpoint">
+             *             <option name="query" value="Список"></option>
+             *          </options>
+             *          <option name="idProperty" value="@Идентификатор"></option>
+             *       </options>
+             *    </options>
+             * </pre>
+             *
+             * <b>Пример 3.</b> Конфигурация источника данных через вёрстку компонента.
+             * Второй способ основан на использовании функции, которая возвращает конфигурацию источника.
+             * <pre>
+             *    <option name="dataSource" type="function">js!SBIS3.MyArea.MyComponent:prototype.getMyDataSource</option>
+             * </pre>
+             * Функция должна возвращать объект с конфигурацией источника данных.
+             * <pre>
+             *    getMyDataSource: function() {
+             *       return new MemorySource({
+             *          ...
+             *       });
+             *    }
+             * </pre>
              * @see setDataSource
+             * @see getDataSource
+             * @see items
              */
             dataSource: undefined,
              /**
@@ -236,7 +292,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @property {Function} method Функция, которая возвращает признак необходимости отображения как заголовка группы перед обрабатываемым элементом коллекции, так и самого элемента.
              * Аргументы функции:
              * <ol>
-             *    <li>item - обрабатываемый элемент коллекции, экземпляр класса {@link SBIS3.CONTROLS.Data.Model}.</li>
+             *    <li>item - обрабатываемый элемент коллекции, экземпляр класса {@link WS.Data/Entity/Model}.</li>
              *    <li>at.</li>
              *    <li>last - признак, по которому можно установить является ли обрабатываемый элемент последним в группе. В значении true - это последний элемент группы.</li>
              * </ol>
@@ -257,7 +313,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @property {Function} render Функция, дополняющая функционал обработки заголовка группы.
              * Аргументы функции:
              * <ol>
-             *    <li>item - элемент коллекции, который отрисовывается первым в группе. Экземпляр класса {@link SBIS3.CONTROLS.Data.Model}.</li>
+             *    <li>item - элемент коллекции, который отрисовывается первым в группе. Экземпляр класса {@link WS.Data/Entity/Model}.</li>
              *    <li>container - содержимое контейнера визуального отображения (DOM-элемента) заголовка группы.</li>
              *    <li>last - признак, по которому можно установить является ли первый элемент группы одновременно и последним.</li>
              * </ol>
@@ -308,7 +364,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             /**
              * @typedef {Function} UserItem
              * @property {String} container Контейнер визуального отображения (DOM-элемент) текущего элемента коллекции.
-             * @property {SBIS3.CONTROLS.Data.Model} item Текущий элемент коллекции.
+             * @property {WS.Data/Entity/Model} item Текущий элемент коллекции.
              */
             /**
              * @cfg {UserItem} Устанавливает метод, с помощью которого можно производить манипуляции с контейнером визуального отображения элементов коллекции.
@@ -319,7 +375,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              *
              * Аргументы метода:
              * 1. container: Контейнер визуального отображения (DOM-элемент) текущего элемента коллекции.
-             * 2. item: екущий элемент коллекции в виде экземпляра класса {@link SBIS3.CONTROLS.Data.Model Model}.
+             * 2. item: екущий элемент коллекции в виде экземпляра класса {@link WS.Data/Entity/Model Model}.
              * @example
              * Устанавливаем функцию из вёрстки компонента:
              * <pre class="brush:xml">
@@ -460,13 +516,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._dataSource = this._prepareSource(sourceOpt);
             this._items = null;
          } else if (itemsOpt) {
-            if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection.Projection')) {
+            if ($ws.helpers.instanceOfModule(itemsOpt, 'WS.Data/Display/Display')) {
                this._itemsProjection = itemsOpt;
                this._items = this._convertItems(this._itemsProjection.getCollection());
                this._setItemsEventHandlers();
                this._notify('onItemsReady');
                this._itemsReadyCallback();
-            } else if($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            } else if($ws.helpers.instanceOfModule(itemsOpt, 'WS.Data/Collection/RecordSet')) {
                this._processingData(itemsOpt);
             } else if (itemsOpt instanceof Array) {
                /*TODO уменьшаем количество ошибок с key*/
@@ -514,8 +570,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             });
          }
 
-         if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            throw new Error('Items should implement SBIS3.CONTROLS.Data.Collection.IEnumerable');
+         if (!$ws.helpers.instanceOfMixin(items, 'WS.Data/Collection/IEnumerable')) {
+            throw new Error('Items should implement WS.Data/Collection/IEnumerable');
          }
 
          return items;
@@ -528,7 +584,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                result = sourceOpt.call(this);
                break;
             case 'object':
-               if ($ws.helpers.instanceOfMixin(sourceOpt, 'SBIS3.CONTROLS.Data.Source.ISource')) {
+               if ($ws.helpers.instanceOfMixin(sourceOpt, 'WS.Data/Source/ISource')) {
                   result = sourceOpt;
                }
                if ('module' in sourceOpt) {
@@ -542,8 +598,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       /**
        * Возвращает отображаемую контролом коллекцию, сделанную на основе источника данных
-       * @param {SBIS3.CONTROLS.Data.Source.ISource} source
-       * @returns {SBIS3.CONTROLS.Data.Collection.IList}
+       * @param {WS.Data/Source/ISource} source
+       * @returns {WS.Data/Collection/IList}
        * @private
        */
       _convertDataSourceToItems: function (source) {
@@ -571,37 +627,47 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this.unsubscribeFrom(this._itemsProjection, 'onCollectionChange', this._onCollectionChange);
          this.unsubscribeFrom(this._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
       },
-       /**
-        * Устанавливает источник данных.
-        * @remark
-        * Данные могут быть заданы либо этим методом, либо опцией {@link items}.
-        * @param source Новый источник данных.
-        * @param noLoad Установить новый источник данных без запроса на БЛ.
-        * @example
-        * <pre>
-        *     define(
-        *     'SBIS3.MY.Demo',
-        *     'js!SBIS3.CONTROLS.Data.Source.Memory',
-        *     function(MemorySource){
-        *        //коллекция элементов
-        *        var arrayOfObj = [
-        *           {'@Заметка': 1, 'Содержимое': 'Пункт 1', 'Завершена': false},
-        *           {'@Заметка': 2, 'Содержимое': 'Пункт 2', 'Завершена': false},
-        *           {'@Заметка': 3, 'Содержимое': 'Пункт 3', 'Завершена': true}
-        *        ];
-        *        //источник статических данных
-        *        var ds1 = new MemorySource({
-        *           data: arrayOfObj,
-        *           idProperty: '@Заметка'
-        *        });
-        *        this.getChildControlByName("ComboBox 1").setDataSource(ds1);
-        *     })
-        * </pre>
-        * @see dataSource
-        * @see getDataSource
-        * @see onDrawItems
-        * @see onDataLoad
-        */
+      /**
+       * Устанавливает источник данных.
+       * @remark
+       * Если источник данных установлен, значение опции {@link items} будет проигнорировано.
+       * @param {DataSource|WS.Data/Source/ISource} source Новый источник данных.
+       * @param {Boolean} noLoad Признак, с помощью устанавливается необходимость запроса нового набора данных по установленному источнику.
+       * Если параметр установлен в значение true, то данные не будут подгружены, а также не произойдут события {@link onBeforeDataLoad}, {@link onDataLoad}, {@link onItemsReady} или {@link onDataLoadError}.
+       * @example
+       * <pre>
+       *     define( 'SBIS3.MyArea.MyComponent',
+       *        [ // Массив зависимостей компонента
+       *           ... ,
+       *           'js!WS.Data/Source/Memory' // Подключаем класс для работы со статическим источником данных
+       *        ],
+       *        function(
+       *           ...,
+       *           MemorySource // Импортируем в переменную класс для работы со статическим источником данных
+       *        ){
+       *           ...
+       *           var arrayOfObj = [ // Формируем набор "сырых" данных
+       *              {'@Заметка': 1, 'Содержимое': 'Пункт 1', 'Завершена': false},
+       *              {'@Заметка': 2, 'Содержимое': 'Пункт 2', 'Завершена': false},
+       *              {'@Заметка': 3, 'Содержимое': 'Пункт 3', 'Завершена': true}
+       *           ];
+       *           var dataSource = new MemorySource({ // Производим инициализацию статического источника данных
+       *              data: arrayOfObj,                // Передаём набор "сырых" данных
+       *              idProperty: '@Заметка'           // Устанавливаем поле первичного ключа в источнике данных
+       *           });
+       *           this.getChildControlByName("ComboBox 1").setDataSource(ds1); // Устанавливаем источник представлению данных
+       *        }
+       *     );
+       * </pre>
+       * @see dataSource
+       * @see getDataSource
+       * @see items
+       * @see onBeforeDataLoad
+       * @see onDataLoad
+       * @see onDataLoadError
+       * @see onItemsReady
+       * @see onDrawItems
+       */
       setDataSource: function (source, noLoad) {
           this._unsetItemsEventHandlers();
           this._prepareConfig(source);
@@ -886,24 +952,25 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return this._itemsProjection;
       },
        /**
-        * Метод установки либо замены коллекции элементов, заданных опцией {@link items}.
-        * @param {Object} items Набор новых данных, по которому строится отображение.
+        * Устанавливает набор элементов коллекции.
+        * @param {Array.<Object>} items Набор новых данных, по которому строится отображение.
         * @example
         * <pre>
-        *     setItems: [
-        *        {
-        *           id: 1,
-        *           title: 'Сообщения'
-        *        },{
-        *           id: 2,
-        *           title: 'Прочитанные',
-        *           parent: 1
-        *        },{
-        *           id: 3,
-        *           title: 'Непрочитанные',
-        *           parent: 1
-        *        }
-        *     ]
+        *     var myItems = [ // Подготавливаем новый набор элементов коллекции
+        *         {
+        *            id: 1,
+        *            title: 'Сообщения'
+        *         },{
+        *            id: 2,
+        *            title: 'Прочитанные',
+        *            parent: 1
+        *         },{
+        *            id: 3,
+        *            title: 'Непрочитанные',
+        *            parent: 1
+        *         }
+        *     ];
+        *     myControl.setItems(myItems); // Устанавливаем новый набор элементов коллекции.
         * </pre>
         * @see items
         * @see addItem
@@ -1323,13 +1390,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       setEmptyHTML: function (html) {
          this._options.emptyHTML = html;
       },
-
       /**
        * Возвращает источник данных.
        * @remark
        * Метод создает экземпляр класса источника данных. Экземпляр класса будет содержать данные,
        * если источник данных - статический.
        * @returns {*}
+       * @see dataSource
        * @see setDataSource
        */
       getDataSource: function(){
@@ -1484,11 +1551,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
       /**
        * Обрабатывает событие об изменении коллекции.
-       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} action Действие, приведшее к изменению.
-       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} newItems Новые элементы коллеции.
+       * @param {WS.Data/Display/CollectionItem[]} newItems Новые элементы коллеции.
        * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
-       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} oldItems Удаленные элементы коллекции.
+       * @param {WS.Data/Display/CollectionItem[]} oldItems Удаленные элементы коллекции.
        * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
        * @private
        */
