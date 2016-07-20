@@ -1,0 +1,34 @@
+.controls-Paging {
+   overflow: hidden;
+}
+.controls-Paging__item {
+   height: @controls-Paging-item-height;
+   width: @controls-Paging-item-width;
+   line-height: @controls-Paging-item-height;
+   text-align: center;
+   float: left;
+   position: relative;
+   cursor: pointer;
+   &.controls-ListView__item__selected {
+      &:after {
+         content: '';
+         position: absolute;
+         background: @controls-Paging-marker-selected-color;
+         height: @controls-Paging-marker-height;
+         bottom: 0;
+         left: 0;
+         right: 0
+      }
+   }
+   &:hover {
+      &:after {
+         content: '';
+         position: absolute;
+         background: @controls-Paging-marker-hover-color;
+         height: @controls-Paging-marker-height;
+         bottom: 0;
+         left: 0;
+         right: 0
+      }
+   }
+}
