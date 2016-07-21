@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
    [
       'js!SBIS3.CONTROLS.SubmitPopup',
       'js!SBIS3.CONTROLS.NotificationPopup',
-      'js!SBIS3.CONTROLS.Utils.NotificationStackManager'
+      'browser!js!SBIS3.CONTROLS.Utils.NotificationStackManager'
    ],
 
    /**
