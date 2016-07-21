@@ -364,6 +364,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   fieldName = field.getName();
                   clone.addField(field, undefined, record.get(fieldName));
                });
+               clone.setRawData(record.getRawData());
                clone.setState(record.getState());
                return clone;
             },
