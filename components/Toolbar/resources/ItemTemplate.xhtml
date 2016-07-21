@@ -12,12 +12,11 @@
             if (subItems[i].parent == itemKey ) {
                 delete subItems[i].parent;
             }
-        if (subItems.length) {
-            options.items = subItems;
-            options.keyField = it.keyField;
-            options.hierField = it.hierField;
-            options.displayField = it.displayField;
-        }
+            if (subItems.length) {
+                options.items = subItems;
+                options.hierField = it.hierField;
+                options.displayField = it.displayField;
+            }
         }
     }
 }}
@@ -26,6 +25,7 @@
            data-id="{{=itemKey}}"
            class="controls-ListView__item js-controls-ListView__item controls-ToolBar__item {{=className}}">
     <option name="visible" type="boolean">{{=visible}}</option>
+    <option name="keyField">{{=it.keyField}}</option>
     {{?item.get('icon')}}<option name="icon">{{=item.get('icon')}}</option>{{?}}
     {{?item.get('caption')}}<option name="caption">{{=item.get('caption')}}</option>{{?}}
     {{?item.get('command')}}<option name="command">{{=item.get('command')}}</option>{{?}}
