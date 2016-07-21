@@ -291,9 +291,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
              */
             endEdit: function(withSaving) {
                var
-                  eip = this._getEditingEip(),
                   record,
-                  endEditResult;
+                  endEditResult,
+                  self = this,
+                  eip = this._getEditingEip();
                //При начале редактирования строки(если до этого так же что-то редактировалось), данный метод вызывается два раза:
                //первый по уходу фокуса с предидущей строки, второй при начале редактирования новой строки. Если второй вызов метода
                //произойдёт раньше чем завершится первый, то мы два раза попытаемся завершить редактирование, что ведёт к 2 запросам
@@ -303,9 +304,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   record = eip.getEditingRecord();
                   endEditResult = this._notify('onEndEdit', record, withSaving);
                   if (endEditResult instanceof $ws.proto.Deferred) {
-                     return endEditResult.addCallback(function(result) {
-                        return this._endEdit(eip, withSaving, result);
-                     }.bind(this));
+                     return endEditResult.addBoth(function(result) {
+                        result = endEditResult.isSuccessful() ? result : EndEditResult.CANCEL;
+                        return self._endEdit(eip, withSaving, result);
+                     });
                   } else {
                      return this._endEdit(eip, withSaving, endEditResult);
                   }
