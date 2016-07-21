@@ -13,6 +13,14 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
     */
    function(InformationPopup, template, headerTpl){
       'use strict';
+
+      var ICONS = {
+         success: 'icon-24 icon-Yes icon-done',
+         error: 'icon-24 icon-Alert icon-error',
+         warning: '',
+         default: ''
+      };
+
       var NotificationPopup = InformationPopup.extend( /** @lends SBIS3.CONTROLS.NotificationPopup.prototype */ {
          $protected: {
             _options: {
@@ -45,15 +53,17 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
                caption: null,
 
                /*
-               * @noShow
-               */
+                * @noShow
+                */
                template: template,
 
                /*
                 * @noShow
                 */
                activableByClick: false
-            }
+            },
+
+            _customIcon: false
          },
          $constructor : function(){
          },
@@ -65,14 +75,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
                this.setIcon(this._options.icon);
             }
             else{
-               switch(this._options.status){
-                  case 'success':
-                     this.setIcon('icon-24 icon-Yes icon-done');
-                     break;
-                  case 'error':
-                     this.setIcon('icon-24 icon-Alert icon-error');
-                     break;
-               }
+               this.setStatus(this._options.status);
             }
          },
 
@@ -92,9 +95,27 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
           */
          setIcon: function(icon){
             if(typeof icon === 'string'){
-               this.getContainer().find('.controls-NotificationPopup__header_icon').removeClass(this._options.icon).addClass(icon);
-               this._options.icon = icon;
+               this._setIcon(icon);
+               this._customIcon = true;
             }
+         },
+
+         /**
+          * Установить новое состояние
+          * @param {InformationPopupStatus} status
+          */
+         setStatus: function(status){
+            if(!this._customIcon){
+               this._setIcon(ICONS[status] || '');
+               this._customIcon = false;
+            }
+
+            NotificationPopup.superclass.setStatus.call(this, status);
+         },
+
+         _setIcon: function(icon){
+            this.getContainer().find('.controls-NotificationPopup__header_icon').removeClass(this._options.icon).addClass(icon);
+            this._options.icon = icon;
          }
       });
       return NotificationPopup;
