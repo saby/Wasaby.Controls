@@ -357,7 +357,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                    fieldName,
                    clone = Di.resolve(recordSet.getModel(), {
                       'adapter': record.getAdapter(),
-                      'idProperty': record.getIdProperty()
+                      'idProperty': record.getIdProperty(),
+                      'format': []
                    });
 
                recordSet.getFormat().each(function(field) {

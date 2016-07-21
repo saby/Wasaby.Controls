@@ -225,7 +225,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                   self.redrawItem(record);
                } else { //Иначе - удаляем запись
                   indexForRemove = currentDataSet.getIndexById(row.key);
-                  if (indexForRemove) {
+                  if (indexForRemove >= 0) {
                      currentDataSet.removeAt(indexForRemove);
                   }
                   self._destroyItemsFolderFooter([row.key]);
