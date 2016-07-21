@@ -234,6 +234,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   }, 100);
                   return beginEditResult.addCallback(function(readRecord) {
                      self._editingRecord = readRecord;
+                     //При перечитывании записи она не является связанной с рекордсетом, и мы в последствии не сможем понять,
+                     //происходило ли добавление записи или редактирование. При редактировании выставим значение сами.
+                     if (record.getState() !== Record.RecordState.DETACHED) {
+                        readRecord.setState(Record.RecordState.UNCHANGED);
+                     }
                      return readRecord;
                   }).addBoth(function (result) {
                      clearTimeout(loadingIndicator);

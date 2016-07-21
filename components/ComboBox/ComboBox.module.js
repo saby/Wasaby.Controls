@@ -338,7 +338,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                      ComboBox.superclass.setText.call(self, newText);
                      self._drawNotEditablePlaceholder(newText);
                      $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(newText);
-                     self._container.removeClass('controls-ComboBox_emptyValue');
+                     if ((key != undefined) && (key !== null)) {
+                        self._container.removeClass('controls-ComboBox_emptyValue');
+                     }
                   }
                }
                else {

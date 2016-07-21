@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
                padding += 'padding-24';
             }
          }
-         $('> .controls-MenuItem', this._picker.getContainer()).each(function(){
+         $('> .controls-MenuItem', this._picker.getContainer().find('.controls-Menu__itemsContainer')).each(function(){
             var $this = $(this);
             if (!$this.find('.controls-MenuItem__icon').length) {
                $this.addClass(padding);
@@ -82,7 +82,8 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
                side: 'left'
             },
             closeByExternalClick: true,
-            targetPart: true
+            targetPart: true,
+            footerTpl: this._options.footerTpl
          };
          if (this._options.pickerConfig){
             $ws.helpers.forEach(this._options.pickerConfig, function(val, key) {

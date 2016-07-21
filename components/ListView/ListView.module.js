@@ -2371,7 +2371,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (!options) {
                options = {};
             }
-            options.target = this._getItemProjectionByItemId(options.parentId) || null;
+            options.target = this._getItemProjectionByItemId(options.parentId);
             return this.showEip(null, null, options);
          },
          /**
