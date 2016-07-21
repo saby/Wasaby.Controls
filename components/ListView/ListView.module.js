@@ -2490,7 +2490,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._options.itemsDragNDrop = allowDragNDrop;
             this._getItemsContainer()[allowDragNDrop ? DRAG_META_INSERT.on : 'off']('mousedown', '.js-controls-ListView__item', (function(e){
                if (this._canDragStart(e)) {
-                  this._initDrag.bind(this);
+                  this._initDrag.call(this, e);
                   //TODO: Сейчас появилась проблема, что если к компьютеру подключен touch-телевизор он не вызывает
                   //preventDefault и при таскании элементов мышкой происходит выделение текста.
                   //Раньше тут была проверка !$ws._const.compatibility.touch и preventDefault не вызывался для touch устройств
@@ -2520,34 +2520,32 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             return keys;
          },
-         _canDragStart: function(dragObject) {
+         _canDragStart: function(e) {
             //TODO: При попытке выделить текст в поле ввода, вместо выделения начинается перемещения элемента.
             //Как временное решение добавлена проверка на SBIS3.CONTROLS.TextBoxBase.
             //Необходимо разобраться можно ли на уровне TextBoxBase или Control для события mousedown
             //сделать stopPropagation, тогда от данной проверки можно будет избавиться.
-            return !dragObject.isDragging() && this._options.enabled && !$ws.helpers.instanceOfModule(dragObject.getTargetsControl(), 'SBIS3.CONTROLS.TextBoxBase');
+            return this._options.enabled && !$ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
          },
 
          _beginDragHandler: function(dragObject, e) {
             var
                 id,
                 target;
-            if (this._canDragStart(dragObject)) {
-               target = this._findItemByElement($(e.target));
-               //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
-               //она есть в _items(например при добавлении или фейковый корень). Метод _findItemByElement в данном случае вернёт
-               //пустой массив. В .150 править этот метод опасно, потому что он много где используется. В .200 переписать метод
-               //_findItemByElement, без завязки на _items.
-               if (target.length) {
-                  id = target.data('id');
-                  dragObject.setSource([this.getDragEntity({
-                     domElement: this._findItemByElement($(e.target)),
-                     model: this._getDragTarget(e)
-                  })]);
-                  this.setSelectedKey(id);
-                  this._hideItemsToolbar();
-                  return true;
-               }
+            target = this._findItemByElement($(e.target));
+            //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
+            //она есть в _items(например при добавлении или фейковый корень). Метод _findItemByElement в данном случае вернёт
+            //пустой массив. В .150 править этот метод опасно, потому что он много где используется. В .200 переписать метод
+            //_findItemByElement, без завязки на _items.
+            if (target.length) {
+               id = target.data('id');
+               dragObject.setSource([this.getDragEntity({
+                  domElement: this._findItemByElement($(e.target)),
+                  model: this._getDragTarget(e)
+               })]);
+               this.setSelectedKey(id);
+               this._hideItemsToolbar();
+               return true;
             }
             return false;
          },
