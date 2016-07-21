@@ -51,6 +51,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             _textField: null,
             _okButton: null,
             _oldText: '',
+            _oldEditorText: '',
             _requireDialog: false,
             _isEditInGroup: false, //Находится ли редактирование в группе
             _options: {
@@ -128,10 +129,18 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             var editor = $('.js-controls-EditAtPlace__editor', this._container.get(0)),
                editorComponent = this.getChildControls(undefined, false)[0], //Получим дочерний компонент на первом уровне вложенности
                self = this;
+            editorComponent.subscribe('onFocusIn', function(){
+               self._oldEditorText = this.getText();
+            });
 
             editorComponent.subscribe('onFocusOut', function(){
-               if (!self._isEditInGroup && self._options.text !== self._oldText){
-                  self._editorFocusOutHandler();
+               if (!self._isEditInGroup){
+                  if (this.getText() !== self._oldEditorText){
+                     self._editorFocusOutHandler(true);
+                  }
+                  else{
+                     self._editorFocusOutHandler(false);
+                  }
                }
             });
 
@@ -146,9 +155,9 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
           * При потере полем редактирования фокуса вызываем завершение редактирования
           * @private
           */
-         _editorFocusOutHandler: function(){
+         _editorFocusOutHandler: function(apply){
             if (!this._isEditInGroup && this._options.displayAsEditor){
-               this._applyEdit();
+               apply ? this._applyEdit() : this._cancelEdit();
             }
          },
 
