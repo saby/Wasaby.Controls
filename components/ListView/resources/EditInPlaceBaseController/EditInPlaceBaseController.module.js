@@ -357,14 +357,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                    fieldName,
                    clone = Di.resolve(recordSet.getModel(), {
                       'adapter': record.getAdapter(),
-                      'idProperty': record.getIdProperty()
+                      'idProperty': record.getIdProperty(),
+                      'format': []
                    });
 
                recordSet.getFormat().each(function(field) {
                   fieldName = field.getName();
                   clone.addField(field, undefined, record.get(fieldName));
                });
-               clone.setRawData(record.getRawData());
                clone.setState(record.getState());
                return clone;
             },
