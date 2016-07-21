@@ -1,5 +1,5 @@
 
-define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CONTROLS.Button'], function(ButtonBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'Core/CommandDispatcher', 'html!SBIS3.CONTROLS.Button'], function(ButtonBase, CommandDispatcher, dotTplFn) {
 
    'use strict';
 
@@ -178,14 +178,18 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
          return !!this._options.primary;
       },
       _unregisterDefaultButton: function() {
-         var parent = this.getLikeWindowParent();
-         if(parent && parent.unregisterDefaultButton)
-            parent.unregisterDefaultButton(this);
+         CommandDispatcher.sendCommand(this, 'unregisterDefaultAction');
       },
       _registerDefaultButton: function() {
-         var parent = this.getLikeWindowParent();
-         if(parent && parent.registerDefaultButton)
-            parent.registerDefaultButton(this);
+         var self = this;
+         CommandDispatcher.sendCommand(this, 'registerDefaultAction', function(e) {
+            if(self && self.isEnabled()) {
+               self._onClickHandler(e);
+               return false;
+            } else {
+               return true;
+            }
+         });
       },
        /**
         * @noShow
