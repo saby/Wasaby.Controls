@@ -96,12 +96,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
        */
       _onRangeControlMouseLeave: function () {
          if (this.isSelectionProcessing()) {
-            // Если пользователь убрал мышку с контрола, то считаем что он выбрал только первый эелемент,
-            // и, соответственно, выделен только он.
-            this._rangeSelection = false;
-            this._drawCurrentRangeSelection();
-            // когда пользователь возвратит мышку, то он будет иметь возможность выбрать последний элемент диапазона.
-            this._rangeSelection = true;
+            this._resetSelectionEndTmpItem();
          }
       },
       /**
@@ -165,6 +160,13 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
          }
       },
 
+      _resetSelectionEndTmpItem: function () {
+         if (this.isSelectionProcessing()) {
+            this._rangeSelectionEnd = null;
+            this._drawCurrentRangeSelection();
+         }
+      },
+
       /**
        * Обновить представление в соответствии с текущим состояние контрола
        * @private
@@ -174,12 +176,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
             end;
 
          // Если в данный момент пользователь выбирает дни, то в качестве конца интервала используем _rangeSelectionEnd
-         if (this.isSelectionProcessing()) {
-            end = this._getSelectionRangeEndItem();
-         } else {
-            end = this.getEndValue();
-         }
-
+         end = this._getSelectionRangeEndItem() || this.getEndValue();
          this._drawRangeSelection(start, end);
       },
 
@@ -190,12 +187,13 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
        * @private
        */
       _drawRangeSelection: function (start, end) {
-         var range = this._normalizeRange(start, end),
-            items;
+         var range, items;
+
+         end = end || start;
+         range = this._normalizeRange(start, end);
 
          start = range[0];
          end = range[1];
-         end = end || start;
 
          this._clearRangeSelection();
 

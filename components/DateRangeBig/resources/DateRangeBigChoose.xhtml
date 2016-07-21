@@ -37,7 +37,7 @@
          </div>
          <div class="controls-DateRangeBigChoose__rangeContainer controls-DateRangeBigChoose__yearsRange ws-hidden">
             {{~[0, 1, 2, 3, 4, 5] :yearCaption:yearIndex}}
-            <component data-component="SBIS3.CONTROLS.Button" name="YearsRangeBtn{{=yearIndex}}" data-selected-range-id="{{=yearIndex}}" class="controls-DateRangeBigChoose__years-yearsRange-btn controls-DateRangeBigChoose__rangeButton">
+            <component data-component="SBIS3.CONTROLS.Button" name="YearsRangeBtn{{=yearIndex}}" data-selected-range-id="{{=yearIndex}}" class="controls-DateRangeBigChoose__years-yearsRange-btn controls-DateRangeBigChoose__rangeButton controls-RangeSelectable__item">
                <option name="command">resetFilter</option>
             </component>
             {{~}}

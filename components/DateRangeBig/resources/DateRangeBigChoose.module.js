@@ -19,6 +19,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          selected: 'controls-DateRangeBigChoose__selected',
          selectedInner: 'controls-DateRangeBigChoose__selectedInner',
 
+         // Ключи должны совпадать с соотыветствующими selectionTypes
          range_containers: {
             years: 'controls-DateRangeBigChoose__yearsRange',
             halfyears: 'controls-DateRangeBigChoose__months-halfyearRange',
@@ -31,8 +32,8 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
       },
       selectionTypes = {
          years: 'years',
-         halfyear: 'halfyear',
-         quarters: 'quarter',
+         halfyears: 'halfyears',
+         quarters: 'quarters',
          months: 'months',
          days: 'days',
          daysMonths: 'daysMonths'
@@ -89,15 +90,16 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          this._toggleChooseYearBtn.subscribe('onActivated', this._toggleChooseYear.bind(this));
          this._currentYearBtn.subscribe('onActivated', this._onCurrentYearBtnClick.bind(this));
 
-         this.getChildControlByName('PrevYearButton').subscribe('onActivated', this._onPrevYearBtnClick.bind(this));
-         this.getChildControlByName('NextYearButton').subscribe('onActivated', this._onNextYearBtnClick.bind(this));
+         this.getChildControlByName('PrevYearButton').subscribe('onActivated', this._onPrevOrNextYearBtnClick.bind(this, -1));
+         this.getChildControlByName('NextYearButton').subscribe('onActivated', this._onPrevOrNextYearBtnClick.bind(this, 1));
          this.getChildControlByName('BackToYearButton').subscribe('onActivated', this._onBackToYearBtnClick.bind(this));
 
          this._initRangeButtonControl(selectionTypes.years, 'YearsRangeBtn', 6);
          this._initRangeButtonControl(selectionTypes.quarters, 'QuarterRangeBtn', 4);
-         this._initRangeButtonControl(selectionTypes.halfyear, 'HalfyearRangeBtn', 2);
+         this._initRangeButtonControl(selectionTypes.halfyears, 'HalfyearRangeBtn', 2);
 
          this._initRangeButtonControl(selectionTypes.daysMonths, 'MonthRangeBtn', 12);
+         this._initRangeContainers();
 
          container.find('.' + this.yearsRangeContainer + ' .' + this.rangeButton)
             .mouseenter(rangeButtonHandlerWrapper.bind(null, this._onYearsRangeBtnEnter));
@@ -151,29 +153,44 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
       },
 
       _initRangeButtonControl: function (selectionType, baseButtonName, buttonsCount) {
+         var control;
          for (var i = 0; i < buttonsCount; i++) {
-            this.getChildControlByName(baseButtonName + i).subscribe('onActivated', this._onRangeBtnClick.bind(this, selectionType));
+            control = this.getChildControlByName(baseButtonName + i);
+            control.subscribe('onActivated', this._onRangeBtnClick.bind(this, selectionType));
+            control.getContainer().mouseenter(this._onRangeBtnEnter.bind(this, selectionType));
          }
       },
 
-      _onPrevYearBtnClick: function () {
-         var year;
-         if (this._yearChooserState === YEAR_CHOOSER_STATE_1YEAR) {
-            this._setCurrentYear(this._getCurrentYear() - 1);
-         } else {
-            year = parseInt(this.getChildControlByName('YearsRangeBtn5').getCaption(), 10);
-            this._updateYearsRange(year - 1);
+      _initRangeContainers: function () {
+         var classes = [],
+             container = this.getContainer();
+         for (var cls in css_classes.range_containers) {
+            if (css_classes.range_containers.hasOwnProperty(cls)) {
+               container.find(
+                   ['.', css_classes.range_containers[cls]].join('')
+               ).mouseleave(
+                   this._onRangeControlMouseLeave.bind(this, cls)
+               );
+            }
          }
-
       },
 
-      _onNextYearBtnClick: function () {
-         var year;
+       /**
+        * Вызывается при нажатии на кнопки вперед или назад на панели годов.
+        * @param direction {Number} 1 - вперед, -1 незад
+        * @private
+        */
+      _onPrevOrNextYearBtnClick: function (direction) {
+         var year, control;
          if (this._yearChooserState === YEAR_CHOOSER_STATE_1YEAR) {
-            this._setCurrentYear(this._getCurrentYear() + 1);
+            year = this._getCurrentYear();
+            this._setCurrentYear(year + direction);
          } else {
             year = parseInt(this.getChildControlByName('YearsRangeBtn5').getCaption(), 10);
-            this._updateYearsRange(year + 1);
+            this._updateYearsRange(year + direction);
+         }
+         if (this.getStartValue() && this.getEndValue()) {
+            this._drawCurrentRangeSelection();
          }
       },
 
@@ -185,6 +202,9 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          return this.getLinkedContext().getValue('currentYear');
       },
       _setCurrentYear: function (value) {
+         if (value === this.getLinkedContext().getValue('currentYear')){
+            return;
+         }
          this.getLinkedContext().setValue('currentYear', value);
          this.getChildControlByName('MonthRangePicker').setYear(value);
       },
@@ -227,7 +247,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             case selectionTypes.years:
                end = new Date(end.getFullYear() + 1, 0, 0);
                break;
-            case selectionTypes.halfyear:
+            case selectionTypes.halfyears:
                end = new Date(end.getFullYear(), (end.getMonth()/6|0)*6 + 6, 0);
                break;
             case selectionTypes.quarters:
@@ -260,12 +280,38 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
       // Выбор периода по годам, полугодиям, кварталам и месяцам
       _onRangeBtnClick: function (selectionType, e) {
          var item = parseInt(e.getTarget().getContainer().attr(this._selectedRangeItemIdAtr), 10);
-
+         item = this._getSelectedRangeItemByItemId(item, selectionType);
          this._selectionToggle(item, selectionType);
       },
 
-      _onRangeBtnEnter: function (e) {
+      _onRangeBtnEnter: function (selectionType, e) {
+         var item;
+         if (selectionType === this.getSelectionType()) {
+            item = parseInt($(e.currentTarget).attr(this._selectedRangeItemIdAtr), 10);
+            item = this._getSelectedRangeItemByItemId(item, selectionType);
+            this._onRangeItemElementMouseEnter(item);
+         }
+      },
 
+      _onRangeControlMouseLeave: function (selectionType, e) {
+         if (this.getSelectionType() === selectionType) {
+            DateRangeBigChoose.superclass._onRangeControlMouseLeave.call(this);
+         }
+      },
+
+      _getSelectedRangeItemByItemId: function (itemId, selectionType) {
+         var year = this._getCurrentYear();
+         // Преобразуем item из числового идентификатора в дату
+         switch(selectionType) {
+            case selectionTypes.years:
+               return new Date(itemId, 0, 1);
+            case selectionTypes.halfyears:
+               return new Date(year, (itemId - 1) * 6, 1);
+            case selectionTypes.quarters:
+               return new Date(year, (itemId - 1)* 3, 1);
+            case selectionTypes.daysMonths:
+               return new Date(year, itemId, 1);
+         }
       },
 
       _getItemSelector: function (rangeSelector) {
@@ -273,26 +319,24 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
       },
 
       _selectionToggle: function (item, selectionType) {
-         var containerCssClass,
-            year = this._getCurrentYear();
+         var containerCssClass;
 
          // Преобразуем item из числового идентификатора в дату
          switch(selectionType) {
             case selectionTypes.years:
                containerCssClass = css_classes.range_containers.years;
-               item = new Date(item, 0, 1);
+               if (this.isSelectionProcessing()) {
+                  this._toggleChooseYear();
+               }
                break;
-            case selectionTypes.halfyear:
+            case selectionTypes.halfyears:
                containerCssClass = css_classes.range_containers.halfyears;
-               item = new Date(year, (item - 1) * 6, 1);
                break;
             case selectionTypes.quarters:
                containerCssClass = css_classes.range_containers.quarters;
-               item = new Date(year, (item - 1)* 3, 1);
                break;
             case selectionTypes.daysMonths:
                containerCssClass = css_classes.range_containers.daysMonth;
-               item = new Date(year, item, 1);
                break;
          }
 
@@ -311,16 +355,26 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
 
       _getSelectedRangeItems: function (start, end) {
          var items = [],
-            curYear = this._getCurrentYear();
-         if (start.getFullYear() > curYear || end.getFullYear() < curYear) {
+             startYear, endYear;
+
+         if (this.getSelectionType() === selectionTypes.years) {
+            endYear = parseInt(this.getChildControlByName('YearsRangeBtn5').getCaption());
+            startYear = endYear - 6;
+         } else {
+            startYear = this._getCurrentYear();
+            endYear = startYear;
+         }
+
+         if (start.getFullYear() > endYear || end.getFullYear() < startYear) {
             return items;
          }
-         if (start.getFullYear() < curYear) {
-            start = new Date(curYear, 0, 1);
+         if (start.getFullYear() < startYear) {
+            start = new Date(startYear, 0, 1);
          }
-         if (end.getFullYear() > curYear) {
-            end = new Date(curYear, 11, 1);
+         if (end.getFullYear() > endYear) {
+            end = new Date(endYear, 11, 1);
          }
+
          while (start <= end) {
             if (!this.getSelectionType()) {
                break
@@ -330,7 +384,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
                case selectionTypes.years:
                   start = new Date(start.getFullYear() + 1, 0, 1);
                   break;
-               case selectionTypes.halfyear:
+               case selectionTypes.halfyears:
                   start = new Date(start.getFullYear(), (start.getMonth()/6|0)*6 + 6, 1);
                   break;
                case selectionTypes.quarters:
@@ -349,7 +403,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             case selectionTypes.years:
                return item.getFullYear().toString();
                break;
-            case selectionTypes.halfyear:
+            case selectionTypes.halfyears:
                return this._getHalfyearByDate(item).toString();
                break;
             case selectionTypes.quarters:
@@ -376,13 +430,14 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          this._clearAllSelection();
       },
       _clearAllSelection: function () {
+         var items = this._$items;
          for (var css in css_classes.range_containers) {
             if (css_classes.range_containers.hasOwnProperty(css)) {
                this._$items = this.getContainer().find(this._getItemSelector(css_classes.range_containers[css]));
                this._clearRangeSelection();
             }
          }
-         this._$items = null;
+         this._$items = items;
       }
 
    });

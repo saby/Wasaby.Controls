@@ -81,9 +81,13 @@ define('js!SBIS3.CONTROLS.DateRangeBig.MonthRangePicker', [
 
          MonthRangePicker.superclass.init.call(this);
 
-         this.setDataSource(yearSource);
+         this.setDataSource(yearSource, true);
          this.subscribe('onRangeChange', this._onRangeChanged.bind(this));
          // this._scrollWatcher.subscribe('onScroll', this._onScroll.bind(this));
+
+         this._onMonthActivated = this._onMonthActivated.bind(this);
+         this._onActivated = this._onActivated.bind(this);
+         this._onItemEnter = this._onItemEnter.bind(this);
       },
 
       _onScroll: function(event, type) {
@@ -96,22 +100,22 @@ define('js!SBIS3.CONTROLS.DateRangeBig.MonthRangePicker', [
       },
 
       setYear: function (year) {
-         var delta = year - this._options.year,
-            i;
-         if (!delta) {
-            return;
-         }
-         for (i = 0; i < Math.abs(delta); i++) {
-            if (delta > 0) {
-               this.showNextYear();
-            } else {
-               this.showPrevYear();
-            }
-         }
-         // // TODO: временный хак. Базовый класс не релоудит данные если не установлен showPaging
-         // this.setOffset(this._getOffsetByYear(year));
-         // // this.setPage(pageNumber);
-         // this.reload();
+         // var delta = year - this._options.year,
+         //    i;
+         // if (!delta) {
+         //    return;
+         // }
+         // for (i = 0; i < Math.abs(delta); i++) {
+         //    if (delta > 0) {
+         //       this.showNextYear();
+         //    } else {
+         //       this.showPrevYear();
+         //    }
+         // }
+         // TODO: временный хак. Базовый класс не релоудит данные если не установлен showPaging
+         this.setOffset(this._getOffsetByYear(year));
+         // this.setPage(pageNumber);
+         this.reload();
       },
 
       showNextYear: function () {
@@ -127,7 +131,7 @@ define('js!SBIS3.CONTROLS.DateRangeBig.MonthRangePicker', [
       },
 
       _getOffsetByYear: function (year) {
-         return 1000000 + (year - (new Date()).getFullYear()) * this.getPageSize();
+         return YearSource.defaultOffset + (year - (new Date()).getFullYear()) * this.getPageSize();
       },
 
       setEndValue: function (end, silent) {
@@ -147,17 +151,25 @@ define('js!SBIS3.CONTROLS.DateRangeBig.MonthRangePicker', [
       // }
 
       _drawItemsCallback: function () {
-         var self = this;
+         var self = this,
+             container;
          MonthRangePicker.superclass._drawItemsCallback.apply(this, arguments);
-         // this.forEachMonthView(function(control) {
          $ws.helpers.forEach(this.getItemsInstances(), function(control) {
-            control.getContainer().addClass(self._SELECTABLE_RANGE_CSS_CLASSES.item);
-            control.subscribe('onMonthActivated', self._onMonthActivated.bind(self));
-            control.subscribe('onActivated', self._onActivated.bind(self));
-            // control.subscribe('onRangeChange', self._onMonthViewRageChanged.bind(self));
-            // control.subscribe('onSelectionStarted', self._onMonthViewSelectionStarted.bind(self));
-            // control.subscribe('onSelectingRangeEndDateChange', self._onMonthViewSelectingRangeEndDateChange.bind(self));
+            // Почему то в control иногда попадают левые контролы
+            if (!self._isMonthView(control)) {
+               return;
+            }
+            container = control.getContainer();
+            container.addClass(self._SELECTABLE_RANGE_CSS_CLASSES.item);
+            container.attr(self._selectedRangeItemIdAtr, self._selectedRangeItemToString(control.getMonth()));
+            container.off("mouseenter", self._onItemEnter);
+            container.mouseenter(self._onItemEnter);
+            control.unsubscribe('onMonthActivated', self._onMonthActivated);
+            control.subscribe('onMonthActivated', self._onMonthActivated);
+            control.unsubscribe('onActivated', self._onActivated);
+            control.subscribe('onActivated', self._onActivated);
          });
+         this._updateSelectionInInnerComponents();
       },
 
       _onMonthActivated: function (e) {
@@ -177,24 +189,35 @@ define('js!SBIS3.CONTROLS.DateRangeBig.MonthRangePicker', [
          return items;
       },
 
+      _getSelectedRangeItemsContainers: function () {
+         if (!this._$items) {
+            this._$items = this.getContainer().find(['.controls-ListView__itemsContainer>.', this._SELECTABLE_RANGE_CSS_CLASSES.item].join(''));
+         }
+         return this._$items;
+      },
+
       _onActivated: function (e) {
          this._onRangeItemElementClick(e.getTarget().getMonth());
       },
 
+      _onItemEnter: function (e) {
+         this._onRangeItemElementMouseEnter(Date.fromSQL($(e.currentTarget).attr(this._selectedRangeItemIdAtr)));
+      },
+
       _onRangeChanged: function (e, start, end) {
-         this.forEachMonthView(function(control) {
-            control.setRange(start, end, true);
-         });
+         this._updateSelectionInInnerComponents();
+      },
+
+      _updateSelectionInInnerComponents: function () {
+         $ws.helpers.forEach(this.getItemsInstances(), function(control) {
+            if (this._isMonthView(control)) {
+               control.setRange(this.getStartValue(), this.getEndValue(), true);
+            }
+         }.bind(this));
       },
 
       _isMonthView: function (control) {
-         return $ws.helpers.instanceOfModule(control, 'SBIS3.CONTROLS.MonthView');
-      },
-
-      forEachMonthView: function (func) {
-         $ws.helpers.forEach(this.getChildControls(false, false, this._isMonthView), function(control) {
-               func(control);
-         });
+         return $ws.helpers.instanceOfModule(control, 'SBIS3.CONTROLS.DateRangeBig.MonthView');
       }
 
    });

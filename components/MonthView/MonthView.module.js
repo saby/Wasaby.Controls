@@ -117,6 +117,9 @@ define(
             date = this._normalizeDate(date);
 
             changed = MonthView.superclass.setStartValue.call(this, date, silent);
+            if (changed) {
+               this.validateRangeSelectionItemsView();
+            }
             return changed;
          },
 
@@ -129,6 +132,9 @@ define(
             date = this._normalizeDate(date);
 
             changed = MonthView.superclass.setEndValue.call(this, date);
+            if (changed) {
+               this.validateRangeSelectionItemsView();
+            }
             return changed;
          },
 
