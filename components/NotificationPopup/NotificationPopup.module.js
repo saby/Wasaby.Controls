@@ -107,7 +107,6 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
          setStatus: function(status){
             if(!this._customIcon){
                this._setIcon(ICONS[status] || '');
-               this._customIcon = false;
             }
 
             NotificationPopup.superclass.setStatus.call(this, status);
