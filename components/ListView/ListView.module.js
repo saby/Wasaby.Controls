@@ -215,6 +215,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _dotItemTpl: null,
             _itemsContainer: null,
             _actsContainer: null,
+            _allowInfiniteScroll: true,
             _hoveredItem: {
                target: null,
                container: null,
@@ -678,6 +679,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.reload();
                }
             }
+            this._previousInfiniteScroll = this._options.infiniteScroll;
          },
          _modifyOptions : function(opts){
             var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
@@ -730,9 +732,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   });
                }
                this._scrollWatcher.subscribe('onScroll', function(event, type){
-                  var scrollOnEdge = (type === 'top' && self._options.infiniteScroll === 'up') || // скролл вверх и доскролили до верхнего края
-                                     (type === 'bottom' && self._options.infiniteScroll === 'down') || // скролл вниз и доскролили то нижнего края
-                                     self._options.infiniteScroll === 'both' //скролл в обе стороны и доскролили до любого края
+                  var scrollOnEdge = (self._options.infiniteScroll === 'up' && type === 'top') || // скролл вверх и доскролили до верхнего края
+                                     (self._options.infiniteScroll === 'down') //скролл в обе стороны и доскролили до любого края
                   if (scrollOnEdge) {
                      self._scrollDirection = type;
                      self._loadChecked(type == 'top' ? 'up' : 'down');
@@ -1794,7 +1795,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var self = this;
             if (this.getItems()){
                if (this._options.infiniteScroll == 'up' && this._scrollOnBottom){
-                  self._scrollWatcher.scrollTo('bottom');
+                  self._scrollWatcher && self._scrollWatcher.scrollTo('bottom');
                }
                //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
                if (this._scrollWatcher && !this._scrollWatcher.hasScroll(this.getContainer())){
@@ -1825,7 +1826,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see setInfiniteScroll
           */
          isInfiniteScroll: function () {
-            return !!this._options.infiniteScroll;
+            return this._allowInfiniteScroll && !!this._options.infiniteScroll;
          },
          /**
           *  Общая проверка и загрузка данных для всех событий по скроллу
@@ -1851,9 +1852,9 @@ define('js!SBIS3.CONTROLS.ListView',
             var loadAllowed  = this.isInfiniteScroll(),
                more = this.getItems().getMetaData().more,
                isContainerVisible = $ws.helpers.isElementVisible(this.getContainer()),
-               hasScroll = this._container.addClass('controls-ListView__outside-scroll-loader'),
-               hasNextPage = direction == 'up' ? this._scrollOffset.top > 0 : this._hasNextPage(more, this._scrollOffset.bottom),
-               offset = direction == 'up' ? this._scrollOffset.top - this._limit : this._scrollOffset.bottom + this._limit;
+               hasScroll = this._scrollWatcher.hasScroll(this.getContainer()),
+               hasNextPage = (direction == 'up' && this._options.infiniteScroll == 'down') ? this._scrollOffset.top > 0 : this._hasNextPage(more, this._scrollOffset.bottom),
+               offset = (direction == 'up' && this._options.infiniteScroll == 'down') ? this._scrollOffset.top - this._limit : this._scrollOffset.bottom + this._limit;
             
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
             this._container.toggleClass('controls-ListView__outside-scroll-loader', !hasScroll);
@@ -1878,12 +1879,13 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._notify('onDataMerge', dataSet);
                   //Если данные пришли, нарисуем
                   if (dataSet.getCount()) {
-                     //TODO вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
+                     //TODO: вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
                      //Возвращаем самостоятельную отрисовку данных, пришедших в загрузке по скроллу
                      if (this._isSlowDrawing()) {
                         this._needToRedraw = false;
                      }
                      this._drawPage(dataSet, direction);
+                     //И выключаем после отрисовки
                      if (this._isSlowDrawing()) {
                         this._needToRedraw = true;
                      }
@@ -1913,7 +1915,10 @@ define('js!SBIS3.CONTROLS.ListView',
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight();
                this._needSrollTopCompensation = true;
                var items =  dataSet.toArray();
+               //FixMe: Отавляем переворачивание для контактов, по нормальному надо что бы они присылали данные сразу перевернутыми
+               // и присылать не первую страницу, а последнюю
                if (this._options.infiniteScroll == 'up'){
+                  this._scrollOffset.bottom += this._limit;
                   items.reverse();
                }
                this.getItems().prepend(items);
@@ -2053,7 +2058,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see isInfiniteScroll
           */
          setInfiniteScroll: function (type, noLoad) {
-            this._options.infiniteScroll = type;
+            if (typeof type === 'boolean'){
+               this._allowInfiniteScroll = type;
+            } else {
+               this._options.infiniteScroll = type;
+               this._allowInfiniteScroll = true;
+            }
             if (type && !noLoad) {
                this._loadNextPage();
                return;
@@ -2261,9 +2271,6 @@ define('js!SBIS3.CONTROLS.ListView',
          setPage: function (pageNumber, noLoad) {
             pageNumber = parseInt(pageNumber, 10);
             var offset = this._offset;
-            if (this._options.infiniteScroll) {
-               this._options.infiniteScroll = 'both';
-            }
             if (this._isPageLoaded(pageNumber)){
                var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
                   itemId = this._options._itemsProjection.getItemBySourceIndex(itemIndex).getContents().getId(),
