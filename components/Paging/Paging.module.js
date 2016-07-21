@@ -141,6 +141,10 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
       setSelectedKey: function() {
          Pager.superclass.setSelectedKey.apply(this, arguments);
          this.redraw();
+      },
+
+      _getItemsContainer: function() {
+         return $('.controls-Paging__itemsContainer', this._container.get(0));
       }
 
    });
