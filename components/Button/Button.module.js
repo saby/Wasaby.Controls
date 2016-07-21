@@ -209,6 +209,10 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
           }
 
           this.setPrimary(isDefault);
+      },
+
+      destroy: function(){
+         this._unregisterDefaultButton();
       }
       /*TODO конец*/
    });
