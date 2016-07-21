@@ -192,7 +192,13 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                      var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(i)],
                            value = (fsObject.hasOwnProperty('value') && fsObject.value !== undefined) ?  instances[i]._options.multiselect ?  fsObject.value : [fsObject.value]: [instances[i].getDefaultId()];
                      if (!this._isSimilarArrays(instances[i].getSelectedKeys(), value)) {
-                        instances[i].setSelectedKeys(value);
+                        if(instances[i].getItems()){
+                           instances[i].setSelectedKeys(value);
+                        }else {
+                           instances[i].once('onItemsReady', function () {
+                              instances[i].setSelectedKeys(value);
+                           });
+                        }
                      }
                   }
                }
