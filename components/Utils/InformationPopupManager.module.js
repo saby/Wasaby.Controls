@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
    [
       'js!SBIS3.CONTROLS.SubmitPopup',
       'js!SBIS3.CONTROLS.NotificationPopup',
-      'js!SBIS3.CONTROLS.Utils.NotificationStackManager'
+      'browser!js!SBIS3.CONTROLS.Utils.NotificationStackManager'
    ],
 
    /**
@@ -44,10 +44,20 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           * @property {String} details Детали сообщения, отображаются под основным сообщением.
           * @property {Boolean} hasCancelButton Использовать ли кнопку "Отмена".
           */
+
+         /**
+          * @typedef {String} MessageDialogStatus
+          * @variant default  Окно без состояния. Цвет линии в шапке - синий.
+          * @variant success  "Успешно". Цвет линии в шапке - зеленый.
+          * @variant error    "Ошибка". Цвет линии в шапке - красный.
+          * @variant warning  "Предупреждение". Цвет линии в шапке - оранжевый.
+          */
+
          /**
           * @typedef {Object} OneButtonDialogCfg
           * @property {String} message Отображаемое сообщение.
           * @property {String} details Детали сообщения, отображаются под основным сообщением.
+          * @property {MessageDialogStatus} status Состояние диалога. От состояния заивисит цвет линии в шапке.
           */
 
          /**
@@ -62,7 +72,6 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           * @typedef {Object} NotificationCfg
           * @property {String} caption Заголовок (основной текст) информационного окна.
           * @property {NotificationStatus} status Состояние окна. От состояния заивисит цвет линии в шапке и иконка по умолчанию.
-          * @property {Function} [template] Шаблон содержимого информационного окна. Используется для персонализированных уведомлений.
           */
 
          /**
