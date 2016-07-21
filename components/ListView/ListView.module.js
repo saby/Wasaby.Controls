@@ -1497,6 +1497,8 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onEndEdit', model, withSaving));
                      }.bind(this),
                      onAfterEndEdit: function(event, model, target, withSaving) {
+                        this.setSelectedKey(model.getId());
+                        event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
                         if (this._options.editMode.indexOf('toolbar') !== -1) {
                            //Скрываем кнопки редактирования
                            this._getItemsToolbar().unlockToolbar();
@@ -1512,8 +1514,6 @@ define('js!SBIS3.CONTROLS.ListView',
                               this._hideItemsToolbar();
                            }
                         }
-                        this.setSelectedKey(model.getId());
-                        event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
                      }.bind(this)
                   }
                };
