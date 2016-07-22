@@ -2,5 +2,5 @@
    <component data-component="SBIS3.CONTROLS.IconButton" class="control-Paging__btn control-Paging__begin" name="PagingBegin">
    </component><component data-component="SBIS3.CONTROLS.IconButton" class="control-Paging__btn control-Paging__prev" name="PagingPrev">
    </component><div class="controls-Paging__itemsContainer">{{=it._itemsTemplate({records : it._records})}}</div><component data-component="SBIS3.CONTROLS.IconButton" class="control-Paging__btn control-Paging__next" name="PagingNext">
-   </component>   <component data-component="SBIS3.CONTROLS.IconButton" class="control-Paging__btn control-Paging__end" name="PagingEnd"><option name="visible" type="boolean">false</option></component>
+   </component>   <component data-component="SBIS3.CONTROLS.IconButton" class="control-Paging__btn control-Paging__end" name="PagingEnd"><option name="visible" type="boolean" value="{{=(it.mode == 'full')}}"></option></component>
 </div>

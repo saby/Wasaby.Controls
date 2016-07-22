@@ -607,6 +607,32 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                }
             }
          });
+      },
+
+      bindScrollPaging: function() {
+         /*var view = this._options.view, self = this;
+         this._paging = paging;
+         paging.subscribe('onSelectedItemChange', function(e, key){
+            var newPage, curPage;
+            if (key > 0) {
+               newPage = key - 1;
+               curPage = view.getPage();
+               if (curPage != newPage) {
+                  view.setPage(newPage);
+               }
+            }
+         });
+
+         view.subscribe('onPageChange', function(e, page){
+            var newKey, curKey;
+            if (page >= 0) {
+               newKey = page + 1;
+               curKey = parseInt(self._paging.getSelectedKey(), 10);
+               if (curKey != newKey) {
+                  self._paging.setSelectedKey(newKey);
+               }
+            }
+         });*/
       }
    });
 
