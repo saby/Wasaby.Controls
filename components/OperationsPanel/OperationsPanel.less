@@ -4,8 +4,13 @@
    line-height: @controls-OperationsPanel-height;
 
    .controls-operationsPanel__wrapper {
-      background-color: @controls-OperationsPanel-bg;
       height: @controls-OperationsPanel-height;
+
+      .controls-operationsPanel__wrapper-background {
+         width: 100%;
+         position: absolute;
+         background-color: @controls-OperationsPanel-bg;
+      }
 
       .controls-operationsPanel__actionMark, .controls-operationsPanel__actions {
          display: inline-block;
