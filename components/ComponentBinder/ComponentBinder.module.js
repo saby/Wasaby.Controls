@@ -622,7 +622,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          var view = this._options.view, self = this;
          this._paging = paging;
          paging.subscribe('onSelectedItemChange', function(e, key){
-            /*scrollToItem*/
+            /*проскроллиться к нужному элементу. Логика понимания в listview*/
          });
 
          view.subscribe('onScrollPageChange', function(e, page){
@@ -631,6 +631,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                newKey = page + 1;
                curKey = parseInt(self._paging.getSelectedKey(), 10);
                if (curKey != newKey) {
+                  if (newKey > self._paging.getItems().getCount()) {
+                     self._paging.setPagesCount(newKey);
+                  }
                   self._paging.setSelectedKey(newKey);
                }
             }
