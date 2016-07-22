@@ -594,11 +594,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             hierField = this._options.hierField;
             if (!(filter[hierField] instanceof Array)) {
                filter[hierField] = [];
-               if (this._options.filter[hierField]) {
-                  filter[hierField].push(this._options.filter[hierField]);
-               }
             }
-            filter[hierField].push(this.getCurrentRoot());
+            filter[hierField].push(this.getCurrentRoot() || null);
             filter[hierField] = filter[hierField].concat(Object.keys(this._options.openedPath));
          }
          return filter;
