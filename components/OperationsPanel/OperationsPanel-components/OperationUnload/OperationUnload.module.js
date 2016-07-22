@@ -163,7 +163,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
          if (methodName) {
             fullFilter['MethodName'] = methodName;
          }
-         exporter.exportList(this._getUnloadFileName(), this._currentItem, undefined, fullFilter, pageOrient );
+         exporter.exportList(this._getUnloadFileName(), this._currentItem, fullFilter, pageOrient );
       },
       _getPDFPageOrient: function(){
          var pageOrient;
@@ -213,7 +213,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             }
             exporter = new Exporter(cfg);
             //TODO что делать, если метод шибко прикладной?
-            exporter.exportHTML(this._getUnloadFileName(), this._currentItem, undefined, undefined, pageOrient);
+            exporter.exportHTML(this._getUnloadFileName(), this._currentItem, pageOrient);
          } else {
             exporter = new Exporter(this._prepareExporterConfig(cfg));
             methodName = this._getSaveMethodName(false);
@@ -231,9 +231,9 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                if (this._currentItem === 'PDF') {
                   delete fullFilter.HierarchyField;
                }
-               exporter.exportList(this._getUnloadFileName(), this._currentItem, undefined, fullFilter, pageOrient);
+               exporter.exportList(this._getUnloadFileName(), this._currentItem, fullFilter, pageOrient);
             } else {
-               exporter.exportDataSet(this._getUnloadFileName(), this._currentItem, undefined, undefined, pageOrient);
+               exporter.exportDataSet(this._getUnloadFileName(), this._currentItem, undefined, pageOrient);
             }
          }
          //p.exportData(this._controlsId[this._currentItem].objectName, this._controlsId[this._currentItem].method, this._getUnloadFileName() );
