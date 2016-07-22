@@ -580,6 +580,20 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          view.subscribe('onPageSizeChange', function(event, pageSize) {
             pagingHistoryController.setHistory(pageSize, true);
          });
+      },
+
+      bindPaging: function(paging) {
+         var view = this._options.view;
+         paging.subscribe('onSelectedItemChange', function(e, key){
+            var newPage, curPage;
+            if (key > 0) {
+               newPage = key - 1;
+               curPage = view.getPage();
+               if (curPage != newPage) {
+                  view.setPage(newPage);
+               }
+            }
+         })
       }
    });
 
