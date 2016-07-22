@@ -118,16 +118,16 @@ define('js!SBIS3.CONTROLS.DateRangeBig.MonthRangePicker', [
          this.reload();
       },
 
+      getYear: function () {
+         return this._options.year;
+      },
+
       showNextYear: function () {
          this.setPage(this.getPage() + 1);
       },
 
       showPrevYear: function () {
          this.setPage(this.getPage() - 1);
-      },
-
-      getYear: function () {
-         return this._options.year;
       },
 
       _getOffsetByYear: function (year) {

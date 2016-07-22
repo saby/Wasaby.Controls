@@ -86,7 +86,6 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
             this.setRange(item, item);
             this.validateRangeSelectionItemsView();
          }
-
       },
 
       /**
@@ -127,12 +126,13 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
        * Начинает выделение диапазона
        * @param start первый элемент
        * @param end последний элемент
+       * @param silent если true то не генерировать события
        * @private
        */
-      _startRangeSelection: function (start, end) {
+      _startRangeSelection: function (start, end, silent) {
          end = end || start;
-         this.setRange(start, end);
-         this._setSelectionRangeEndItem(this.getEndValue());
+         this.setRange(start, end, silent);
+         this._setSelectionRangeEndItem(this.getEndValue(), silent);
       },
       /**
        * Завершает выделение диапазона

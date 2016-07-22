@@ -17,10 +17,10 @@ define('js!SBIS3.CONTROLS.DateRangeBig.DateRangePicker.MonthSource', [
             end = offset + limit,
             now = new Date(),
             items = [];
-         offset = _startingOffset - offset;
+         offset = offset - _startingOffset;
 
          for (var i = 0; i < limit; i++) {
-            items.push({id: i, date: new Date(now.getFullYear(), now.getMonth() + i, 1)})
+            items.push({id: i, date: new Date(now.getFullYear(), offset + i, 1)});
          }
 
          this._each(

@@ -55,7 +55,10 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          _toggleStateBtn: null,
          _currentYearBtn: null,
          _yearButtons: [],
-         _yearChooserState: YEAR_CHOOSER_STATE_1YEAR
+         _yearChooserState: YEAR_CHOOSER_STATE_1YEAR,
+
+         _startDatePicker: null,
+         _endDatePicker: null
       },
 
       selectionTypes: selectionTypes,
@@ -110,7 +113,40 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             self.applyMonthState(month.getMonth());
          });
 
+         $ws.helpers.wheel(container.find('.controls-DateRangeBigChoose__months-month-picker'), this._onMonthPickerWheel.bind(this));
+         $ws.helpers.wheel(container.find('.controls-DateRangeBigChoose__dates-dates'), this._onDatesPickerWheel.bind(this));
+
+         this._startDatePicker = this.getChildControlByName('DatePickerStart');
+         this._endDatePicker = this.getChildControlByName('DatePickerEnd');
+         this._startDatePicker.subscribe('onDateChange', this._onDatePickerStartDateChanged.bind(this));
+         this._endDatePicker.subscribe('onDateChange', this._onDatePickerEndDateChanged.bind(this));
+
          this.subscribe('onRangeChange', this._onRangeChange.bind(this));
+      },
+
+      _onDatePickerStartDateChanged: function(e, date) {
+         if (!date) {
+            return;
+         }
+         var endDate = this._endDatePicker.getDate();
+         if (date > endDate) {
+            // setRange не вызываем, диапазон установится в обработчике _onDatePickerEndDateChanged
+            // TODO: когда будет возможность установить свойство без генерации событий надо будет убрать этот хак.
+            this._endDatePicker.setDate(date);
+         } else {
+            this.setRange(date, endDate);
+         }
+      },
+
+      _onDatePickerEndDateChanged: function(e, date) {
+         if (!date) {
+            return;
+         }
+         var startDate = this._startDatePicker.getDate();
+         if (date < startDate) {
+            date = startDate
+         }
+         this.setRange(startDate, date);
       },
 
       /**
@@ -121,13 +157,18 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
        * @private
        */
       _onRangeChange: function (e, startValue, endValue) {
-         // Обновляем контекст, что бы обновились компоненты через биндинг
-         // TODO: выпилить
-         this.getLinkedContext().setValue('startValue', startValue);
-         this.getLinkedContext().setValue('endValue', endValue);
+         var start = this._startDatePicker.getDate(),
+            end = this._endDatePicker.getDate();
+
+         if (start != startValue && $ws.helpers.compareDates(start, '!=', startValue)) {
+            this._startDatePicker.setDate(startValue);
+         }
+         if (end != endValue && $ws.helpers.compareDates(end, '!=', endValue)) {
+            this._endDatePicker.setDate(endValue);
+         }
          
          this.getChildControlByName('MonthRangePicker').setRange(startValue, endValue);
-         // this.getChildControlByName('MonthDateRangePicker').setRange(startValue, endValue);
+         this.getChildControlByName('MonthDateRangePicker').setRange(startValue, endValue);
          this._setCurrentYear(parseInt(endValue.getFullYear(), 10));
       },
 
@@ -194,6 +235,21 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          }
       },
 
+      _onMonthPickerWheel: function (event) {
+         this._onPrevOrNextYearBtnClick(event.wheelDelta > 0 ? 1 : -1);
+      },
+
+      _onDatesPickerWheel: function (event) {
+         var direction = event.wheelDelta > 0 ? 1 : -1,
+            monthPicker = this.getChildControlByName('MonthDateRangePicker'),
+            month = monthPicker.getMonth();
+         month = new Date(month.getFullYear(), month.getMonth() + direction, 1);
+         if ((month.getMonth() === 0 && direction > 0) || (month.getMonth() === 11 && direction < 0)) {
+            this._setCurrentYear(month.getFullYear());
+         }
+         monthPicker.setMonth(month);
+      },
+
       _onBackToYearBtnClick: function () {
          this.applyYearState();
       },
@@ -207,6 +263,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          }
          this.getLinkedContext().setValue('currentYear', value);
          this.getChildControlByName('MonthRangePicker').setYear(value);
+         // this.getChildControlByName('MonthDateRangePicker').setMonth(new Date(value, 0, 1));
       },
 
       _toggleChooseYear: function (e) {

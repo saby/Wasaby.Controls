@@ -286,7 +286,7 @@ define(
             if (start < monthStartDate) {
                start = monthStartDate;
             }
-            if (end.getFullYear() > monthEndDate) {
+            if (end > monthEndDate) {
                end = monthEndDate;
             }
 

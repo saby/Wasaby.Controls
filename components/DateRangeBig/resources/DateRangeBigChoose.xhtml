@@ -57,7 +57,7 @@
          {{~}}
       </div>
       <div class="controls-DateRangeBigChoose__months-month controls-DateRangeBigChoose__center">
-         <component data-component="SBIS3.CONTROLS.DateRangeBig.MonthRangePicker" name="MonthRangePicker">
+         <component data-component="SBIS3.CONTROLS.DateRangeBig.MonthRangePicker" name="MonthRangePicker" class="controls-DateRangeBigChoose__months-month-picker">
             <option name="infiniteScrollContainer">controls-DateRangeBigChoose__months-month</option>
          </component>
       </div>
@@ -73,7 +73,7 @@
    <div class="controls-DateRangeBigChoose__dates ws-hidden">
       <div class="controls-DateRangeBigChoose__dates-months">
          {{~['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'] :monthCaption:monthIndex}}
-         <component data-component="SBIS3.CONTROLS.Button" name="MonthRangeBtn{{=monthIndex}}" data-selected-range-id="{{=monthIndex + 1}}" class="controls-DateRangeBigChoose__dates-month-btn controls-RangeSelectable__item">
+         <component data-component="SBIS3.CONTROLS.Button" name="MonthRangeBtn{{=monthIndex}}" data-selected-range-id="{{=monthIndex}}" class="controls-DateRangeBigChoose__dates-month-btn controls-RangeSelectable__item">
             <option name="caption">{{=monthCaption}}</option>
          </component>
          {{~}}

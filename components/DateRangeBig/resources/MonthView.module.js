@@ -44,14 +44,14 @@ define('js!SBIS3.CONTROLS.DateRangeBig.MonthView', [
       },
 
       startSelection: function (start, end, silent) {
-         if (this.isSelectionProccess()) {
+         if (this.isSelectionProcessing()) {
             return;
          }
-         this._startSelection(start, end, silent);
+         this._startRangeSelection(start, end, silent);
       },
 
       _startRangeSelection: function (start, end, silent) {
-         MonthView.superclass._startRangeSelection.call(this, start, end);
+         MonthView.superclass._startRangeSelection.call(this, start, end, silent);
          if (!silent) {
             this._notify('onSelectionStarted', start, end);
          }
@@ -60,7 +60,7 @@ define('js!SBIS3.CONTROLS.DateRangeBig.MonthView', [
       _setSelectionRangeEndItem: function (date, silent) {
          var changed = MonthView.superclass._setSelectionRangeEndItem.call(this, date);
          if (changed && !silent) {
-            this._notify('onSelectingRangeEndDateChange', this._selectingRangeEndDate, date);
+            this._notify('onSelectingRangeEndDateChange', this._rangeSelectionEnd, date);
          }
          return changed
       }
