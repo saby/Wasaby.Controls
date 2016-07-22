@@ -234,6 +234,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          _firstSearch: true,
          _searchTextTranslated: false,
          _path: [],
+         _paging: null,
          _options: {
             /**
              * @cfg {SBIS3.CONROLS.DataGridView} объект представления данных
@@ -583,7 +584,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
       },
 
       bindPaging: function(paging) {
-         var view = this._options.view;
+         var view = this._options.view, self = this;
+         this._paging = paging;
          paging.subscribe('onSelectedItemChange', function(e, key){
             var newPage, curPage;
             if (key > 0) {
@@ -593,7 +595,18 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                   view.setPage(newPage);
                }
             }
-         })
+         });
+
+         view.subscribe('onPageChange', function(e, page){
+            var newKey, curKey;
+            if (page >= 0) {
+               newKey = page + 1;
+               curKey = parseInt(self._paging.getSelectedKey(), 10);
+               if (curKey != newKey) {
+                  self._paging.setSelectedKey(newKey);
+               }
+            }
+         });
       }
    });
 
