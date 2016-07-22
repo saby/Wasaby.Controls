@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
       var EndEditResult = {
          CANCEL: 'Cancel',
          SAVE: 'Save',
-         WITHOUT_SAVE: 'WithoutSave'
+         NOT_SAVE: 'NotSave'
       };
 
       var
