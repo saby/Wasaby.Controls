@@ -607,6 +607,15 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                }
             }
          });
+
+         view.subscribe('onDataLoad', function(e, list) {
+            if ((paging.getMode() == 'part')) {
+               var meta = list.getMetaData && list.getMetaData().more;
+               if  (meta && (paging.getSelectedKey() == paging.getItems().getCount()) && view._hasNextPage(meta)) {
+                  paging.setPagesCount(paging.getPagesCount() + 1);
+               }
+            }
+         })
       },
 
       bindScrollPaging: function() {

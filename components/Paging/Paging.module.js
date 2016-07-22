@@ -70,6 +70,20 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
          });
       }
       return records;
+   },
+
+   generateItems = function(cfg) {
+      if (cfg.pagesCount && !cfg.items) {
+         cfg.items = [];
+         cfg.keyField = 'id';
+         cfg.displayField = 'text';
+         for (var i = 1; i <= cfg.pagesCount; i++) {
+            cfg.items.push({
+               id : i,
+               text : i.toString()
+            })
+         }
+      }
    };
 
    var Pager = CompoundControl.extend([ItemsControlMixin, Selectable],/** @lends SBIS3.CONTROLS.Paging.prototype */{
@@ -98,17 +112,7 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
          this._publish('onPageChange');
       },
       _modifyOptions: function(cfg) {
-         if (cfg.pagesCount && !cfg.items) {
-            cfg.items = [];
-            cfg.keyField = 'id';
-            cfg.displayField = 'text';
-            for (var i = 1; i <= cfg.pagesCount; i++) {
-               cfg.items.push({
-                  id : i,
-                  text : i.toString()
-               })
-            }
-         }
+         generateItems(cfg);
          var newCfg = Pager.superclass._modifyOptions.apply(this, arguments);
          newCfg._itemsTemplate = ItemsTemplate;
 
@@ -119,6 +123,21 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
          if (!this._prevBtn) {
             this._bindControls();
          }
+      },
+
+      getMode: function() {
+         return this._options.mode;
+      },
+
+      getPagesCount: function() {
+         return this._options.pagesCount;
+      },
+
+      setPagesCount: function(count) {
+         this._options.pagesCount = count;
+         this._options.items = null;
+         generateItems(this._options);
+         this.setItems(this._options.items);
       },
 
       _onClickHandler: function(e) {
