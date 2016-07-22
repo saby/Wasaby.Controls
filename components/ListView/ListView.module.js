@@ -1487,7 +1487,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onAfterBeginEdit', model));
                      }.bind(this),
                      onChangeHeight: function() {
-                        if (this._getItemsToolbar().isVisible()) {
+                        if (this._getItemsToolbar().isToolbarLocking()) {
                            this._showItemsToolbar(this._getElementData(this._editingItem.target));
                         }
                      }.bind(this),
