@@ -143,8 +143,9 @@ define('js!SBIS3.CONTROLS.TabControl', [
       _onSelectedItemChange: function(event, id, index) {
          this._options.selectedKey = id;
          this._switchableArea._options.defaultArea = id;
-         this._switchableArea.setActiveArea(id);
-         this._notify('onSelectedItemChange', id, index);
+         this._switchableArea.setActiveArea(id).addCallback(function(){
+            this._notify('onSelectedItemChange', id, index);
+         }.bind(this));
       }
    });
 
