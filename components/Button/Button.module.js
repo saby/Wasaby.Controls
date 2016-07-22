@@ -168,7 +168,12 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
          Button.superclass.setEnabled.call(this, enabled);
          this._container.attr('disabled', !this.isEnabled());
       },
-
+      _notifyOnActivated: function(originalEvent){
+         Button.superclass._notifyOnActivated.apply(this, arguments);
+         //preventDefault тоже надо делать, поскольку иначе при нажатии enter на кнопки генерируется click, и onActivated стреляет два раза
+         // похоже, что это нативное поведение html у кнопки виновато
+         originalEvent.preventDefault();
+      },
       /*TODO методы для поддержки defaultButton*/
        /**
         * @noShow

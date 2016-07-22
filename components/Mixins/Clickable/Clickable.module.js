@@ -70,9 +70,6 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
          this._notify('onActivated', originalEvent);
          //Блокируем всплытие event'a, т.к. нажатие Enter на КНОПКЕ не должно приводить к срабатыванию дефолтной кнопки
          originalEvent.stopImmediatePropagation();
-         //preventDefault тоже надо делать, поскольку иначе при нажатии enter на кнопки генерируется click, и onActivated стреляет два раза
-         // похоже, что это нативное поведение html у кнопки виновато
-         originalEvent.preventDefault();
       },
 
       _keyboardHover: function(event){
