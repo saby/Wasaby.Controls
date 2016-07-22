@@ -148,7 +148,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          var isInit = !parseInt(this._header.css('top'));
          this._moveHeaderToButton(isInit);
          this._header.css({
-            'z-index': parseInt(this._picker._container.css('z-index'), 10) + 1,
+            'z-index': parseInt(this._picker.getContainer().css('z-index'), 10) + 1,
             position: this._picker.isFixed() ? 'fixed' : 'absolute'
          });
          this._header.removeClass('ws-hidden');
@@ -160,11 +160,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
                                   <i class="controls-MenuButton__headerCenter"></i>\
                                   <i class="controls-MenuButton__headerRight"></i>\
                                </span>');
-         $('.controls-MenuButton__headerCenter', this._header).width(this._container.outerWidth() - 26);
-         this._header.css({
-            width: this._container.outerWidth() + 18,  //ширина выступающей части обводки
-            height: this._container.outerHeight()
-         });
          var self = this;
          this._header.mousedown(function(){
             //TODO придрот, чтоб на кнопку вешался класс, как будто на кнопку нажали
@@ -180,6 +175,10 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          });
          if (this._header) {
             $('.controls-MenuButton__headerCenter', this._header).width(this._container.outerWidth() - 26);
+            this._header.css({
+               width: this._container.outerWidth() + 18,  //ширина выступающей части обводки
+               height: this._container.outerHeight()
+            });
          }
       },
 
