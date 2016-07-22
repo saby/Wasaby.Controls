@@ -123,7 +123,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
 
          this._showDialog(config, meta, mode);
 
-         return editDeffered;
+         return editDeferred;
       },
 
       _showDialog: function(config, meta, mode){
