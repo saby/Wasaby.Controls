@@ -618,21 +618,14 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          })
       },
 
-      bindScrollPaging: function() {
-         /*var view = this._options.view, self = this;
+      bindScrollPaging: function(paging) {
+         var view = this._options.view, self = this;
          this._paging = paging;
          paging.subscribe('onSelectedItemChange', function(e, key){
-            var newPage, curPage;
-            if (key > 0) {
-               newPage = key - 1;
-               curPage = view.getPage();
-               if (curPage != newPage) {
-                  view.setPage(newPage);
-               }
-            }
+            /*scrollToItem*/
          });
 
-         view.subscribe('onPageChange', function(e, page){
+         view.subscribe('onScrollPageChange', function(e, page){
             var newKey, curKey;
             if (page >= 0) {
                newKey = page + 1;
@@ -641,7 +634,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                   self._paging.setSelectedKey(newKey);
                }
             }
-         });*/
+         });
+
+         view.subscribe('onScrollInit', function() {
+            var numPage = 2; //TODO сделать нужное количество
+            paging.setPagesCount(numPage);
+         });
       }
    });
 
