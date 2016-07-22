@@ -608,8 +608,10 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._panelReadyDeferred.addCallback(function(){
             self._actionNotify('onAfterFormLoad');
          });
+      },
 
-
+      getRecord: function(){
+        return this._options.record;
       },
       /**
        * Удалить запись из источника данных диалога редактирования.
