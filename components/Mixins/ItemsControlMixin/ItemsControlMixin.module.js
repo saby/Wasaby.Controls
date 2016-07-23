@@ -1110,6 +1110,24 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          return this._options._items;
       },
+      /**
+       * Перевычитывает модель из источника данных, мержит изменения к текущим данным и перерисовывает запись
+       * @param id Идентификатор модели
+       * @param id Мета информация
+       * @returns {*}
+       */
+      reloadItem: function(id, meta) {
+         var
+            self = this,
+            currentItem = this.getItems().getRecordById(id);
+         if (this.getDataSource() && currentItem) {
+            return this.getDataSource().read(id, meta).addCallback(function(newItem) {
+               currentItem.merge(newItem);
+            });
+         } else {
+            return $ws.proto.deferred.success();
+         }
+      },
        /**
         * Метод перезагрузки данных.
         * Можно задать фильтрацию, сортировку.
