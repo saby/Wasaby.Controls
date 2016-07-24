@@ -1,6 +1,6 @@
-<component data-component="SBIS3.CONTROLS.TabButton">
-   <option name="caption">{{=it.caption}}</option>
-   <option name="id" value="{{=it.item.get('id')}}"></option>
+<component data-component="SBIS3.CONTROLS.TabButton" class="controls-ListView__item" data-hash="{{=it.projItem.getHash()}}" data-id="{{=it.item.getId()}}">
+   <option name="caption">{{=it.item.get(it.displayField)}}</option>
+   <option name="id" value="{{=it.item.getId()}}"></option>
    <option name="align" value="{{=it.item.get('align') || 'right'}}"></option>
    <option name="name" value="{{=it.item.get('name')}}"></option>
    <option name="className" value="{{=it.item.get('className')}}"></option>
@@ -8,4 +8,5 @@
    <option name="allowChangeEnable">{{= !!it.allowChangeEnable}}</option>
    <option name="enabled" value="{{=it.item.get('enabled') !== false}}"></option>
    <option name="visible" value="{{=it.item.get('visible') !== false}}"></option>
+   <option name="allowChangeEnable">{{= !!it.allowChangeEnable}}</option>
 </component>

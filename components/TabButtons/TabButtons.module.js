@@ -6,12 +6,12 @@ define(
    [
       'js!SBIS3.CONTROLS.RadioGroupBase',
       'html!SBIS3.CONTROLS.TabButtons',
-      'html!SBIS3.CONTROLS.TabButtons/ItemTpl',
+      'html!SBIS3.CONTROLS.TabButtons/resources/ItemTemplate',
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'js!SBIS3.CONTROLS.TabButton'
    ],
-   function (RadioGroupBase, TabButtonsTpl, itemTpl, MarkupTransformer, TemplateUtil) {
+   function (RadioGroupBase, TabButtonsTpl, ItemTemplate, MarkupTransformer, TemplateUtil) {
 
    'use strict';
 
@@ -35,20 +35,31 @@ define(
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyTabButtons
     */
-
+   var
+      buildTplArgs = function(cfg) {
+         var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
+         tplOptions.allowChangeEnable = cfg.allowChangeEnable;
+         return tplOptions;
+      },
+      getRecordsForRedraw = function(projection) {
+         var
+            records = {
+               'left' : [],
+               'right': []
+            };
+         if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
+            projection.each(function (item) {
+               var align = item.getContents().get('align') || 'right';
+               records[align].push(item);
+            });
+         }
+         return records;
+      };
    var TabButtons = RadioGroupBase.extend(/** @lends SBIS3.CONTROLS.TabButtons.prototype */ {
       $protected: {
          _options: {
-            /**
-             * @cfg {String} Шаблон отображения каждого элемента коллекции
-             * @example
-             * <pre>
-             *     <div class="tabButton">
-             *        {{=it.item.get("caption")}}
-             *     </div>
-             * </pre>
-             */
-            itemTemplate: itemTpl,
+            _canServerRender: true,
+            _defaultItemTemplate: ItemTemplate,
             /**
              * @cfg {Content} содержимое между вкладками
              * @example
@@ -60,7 +71,9 @@ define(
              *     </option>
              * </pre>
              */
-            tabSpaceTemplate: undefined
+            tabSpaceTemplate: undefined,
+            _getRecordsForRedraw: getRecordsForRedraw,
+            _buildTplArgs: buildTplArgs
          }
       },
       _dotTplFn: TabButtonsTpl,
@@ -68,11 +81,6 @@ define(
       $constructor: function () {
          this._leftContainer  = this.getContainer().find('.controls-TabButtons__leftContainer');
          this._rightContainer = this.getContainer().find('.controls-TabButtons__rightContainer');
-
-         //TODO эту проверку можно будет убрать в .100, т.к. там уже есть в DSMixin проверка на keyField
-         if (this._hasItems && !this._container.hasClass('hasKeyField')) {
-            $ws.single.ioc.resolve('ILogger').log('TabButtons. Option keyField is required');
-         }
       },
 
       /* Переопределяем получение контейнера для элементов */
