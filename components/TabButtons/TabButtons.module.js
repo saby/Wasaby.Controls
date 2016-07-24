@@ -80,18 +80,8 @@ define(
          return item.get('align') === 'left' ? this._leftContainer : this._rightContainer;
       },
 
-      _getItemTemplate: function (item) {
-         var displayField = this._options.displayField;
-         return this._options.itemTemplate.call(this,
-            {
-               item: item,
-               allowChangeEnable: this._options.allowChangeEnable,
-               caption: item.get(displayField)
-            }
-         );
-      },
       _modifyOptions: function (opts) {
-         opts = TabButtons.superclass._modifyOptions.call(this, opts);
+         opts = TabButtons.superclass._modifyOptions.apply(this, arguments);
          if (opts.tabSpaceTemplate) {
             opts.tabSpaceTemplate = MarkupTransformer(TemplateUtil.prepareTemplate(opts.tabSpaceTemplate));
          }
