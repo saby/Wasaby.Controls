@@ -234,6 +234,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          _firstSearch: true,
          _searchTextTranslated: false,
          _path: [],
+         _paging: null,
          _options: {
             /**
              * @cfg {SBIS3.CONROLS.DataGridView} объект представления данных
@@ -579,6 +580,68 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
          view.subscribe('onPageSizeChange', function(event, pageSize) {
             pagingHistoryController.setHistory(pageSize, true);
+         });
+      },
+
+      bindPaging: function(paging) {
+         var view = this._options.view, self = this;
+         this._paging = paging;
+         paging.subscribe('onSelectedItemChange', function(e, key){
+            var newPage, curPage;
+            if (key > 0) {
+               newPage = key - 1;
+               curPage = view.getPage();
+               if (curPage != newPage) {
+                  view.setPage(newPage);
+               }
+            }
+         });
+
+         view.subscribe('onPageChange', function(e, page){
+            var newKey, curKey;
+            if (page >= 0) {
+               newKey = page + 1;
+               curKey = parseInt(self._paging.getSelectedKey(), 10);
+               if (curKey != newKey) {
+                  self._paging.setSelectedKey(newKey);
+               }
+            }
+         });
+
+         view.subscribe('onDataLoad', function(e, list) {
+            if ((paging.getMode() == 'part')) {
+               var meta = list.getMetaData && list.getMetaData().more;
+               if  (meta && (paging.getSelectedKey() == paging.getItems().getCount()) && view._hasNextPage(meta)) {
+                  paging.setPagesCount(paging.getPagesCount() + 1);
+               }
+            }
+         })
+      },
+
+      bindScrollPaging: function(paging) {
+         var view = this._options.view, self = this;
+         this._paging = paging;
+         paging.subscribe('onSelectedItemChange', function(e, key){
+            /*проскроллиться к нужному элементу. Логика понимания в listview*/
+         });
+
+         view.subscribe('onScrollPageChange', function(e, page){
+            var newKey, curKey;
+            if (page >= 0) {
+               newKey = page + 1;
+               curKey = parseInt(self._paging.getSelectedKey(), 10);
+               if (curKey != newKey) {
+                  if (newKey > self._paging.getItems().getCount()) {
+                     self._paging.setPagesCount(newKey);
+                  }
+                  self._paging.setSelectedKey(newKey);
+               }
+            }
+         });
+
+         view.subscribe('onScrollInit', function() {
+            var numPage = 2; //TODO сделать нужное количество
+            paging.setPagesCount(numPage);
          });
       }
    });

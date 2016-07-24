@@ -958,6 +958,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return !!this._options.itemTemplate || !!this._options.userItemAttributes || !Object.isEmpty(this._options.groupBy);
       },
 
+      before : {
+         init: function() {
+            if (this._options.pageSize) {
+               this._limit = this._options.pageSize;
+            }
+         }
+      },
+
       /*переписанные методы для однопроходной отрисовки end*/
       after : {
          _modifyOptions: function (opts) {
@@ -972,9 +980,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             else if (this._dataSource) {
                this.reload();
-            }
-            if (this._options.pageSize) {
-               this._limit = this._options.pageSize;
             }
             if (this._options._serverRender) {
                this._notifyOnDrawItems();

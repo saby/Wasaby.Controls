@@ -70,9 +70,24 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
          });
       }
       return records;
+   },
+
+   generateItems = function(cfg) {
+      if (cfg.pagesCount && !cfg.items) {
+         cfg.items = [];
+         cfg.keyField = 'id';
+         cfg.displayField = 'text';
+         for (var i = 1; i <= cfg.pagesCount; i++) {
+            cfg.items.push({
+               id : i,
+               text : i.toString()
+            })
+         }
+      }
    };
 
    var Pager = CompoundControl.extend([ItemsControlMixin, Selectable],/** @lends SBIS3.CONTROLS.Paging.prototype */{
+      _dotTplFn: dotTplFn,
       /**
        * @event onPageChange При изменении страницы
        * <wiTag group="Управление">
@@ -83,7 +98,8 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
        * @example
        */
       $protected: {
-         _dotTplFn: dotTplFn,
+         _prevBtn: null,
+         _nextBtn: null,
          _options: {
             _canServerRender: true,
             _getRecordsForRedraw : getRecordForRedraw,
@@ -96,25 +112,32 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
          this._publish('onPageChange');
       },
       _modifyOptions: function(cfg) {
-         if (cfg.pagesCount && !cfg.items) {
-            cfg.items = [];
-            cfg.keyField = 'id';
-            cfg.displayField = 'text';
-            for (var i = 1; i <= cfg.pagesCount; i++) {
-               cfg.items.push({
-                  id : i,
-                  text : i.toString()
-               })
-            }
-         }
+         generateItems(cfg);
          var newCfg = Pager.superclass._modifyOptions.apply(this, arguments);
          newCfg._itemsTemplate = ItemsTemplate;
 
          return newCfg
       },
       init: function(){
-
          Pager.superclass.init.call(this);
+         if (!this._prevBtn) {
+            this._bindControls();
+         }
+      },
+
+      getMode: function() {
+         return this._options.mode;
+      },
+
+      getPagesCount: function() {
+         return this._options.pagesCount;
+      },
+
+      setPagesCount: function(count) {
+         this._options.pagesCount = count;
+         this._options.items = null;
+         generateItems(this._options);
+         this.setItems(this._options.items);
       },
 
       _onClickHandler: function(e) {
@@ -145,8 +168,68 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
 
       _getItemsContainer: function() {
          return $('.controls-Paging__itemsContainer', this._container.get(0));
-      }
+      },
 
+      _drawItemsCallback: function() {
+         Pager.superclass._drawItemsCallback.apply(this, arguments);
+         if (!this._prevBtn) {
+            this._bindControls();
+         }
+         if (this.getSelectedKey() == 1) {
+            this._prevBtn.setEnabled(false);
+            this._beginBtn.setEnabled(false);
+         }
+         else {
+            this._prevBtn.setEnabled(true);
+            this._beginBtn.setEnabled(true);
+         }
+         if (this.getSelectedKey() == this.getItems().getCount()) {
+            this._nextBtn.setEnabled(false);
+         }
+         else {
+            this._nextBtn.setEnabled(true);
+         }
+      },
+
+      destroy: function() {
+         Pager.superclass.destroy.apply(this, arguments);
+         this._prevBtn = null;
+         this._nextBtn = null;
+         this._beginBtn = null;
+         this._endBtn = null;
+      },
+      _bindControls: function() {
+         this._prevBtn = this.getChildControlByName('PagingPrev');
+         this._nextBtn = this.getChildControlByName('PagingNext');
+         this._beginBtn = this.getChildControlByName('PagingBegin');
+         this._endBtn = this.getChildControlByName('PagingEnd');
+
+         this._prevBtn.subscribe('onActivated', this._goToPrev.bind(this));
+         this._nextBtn.subscribe('onActivated', this._goToNext.bind(this));
+         this._beginBtn.subscribe('onActivated', this._goToBegin.bind(this));
+         this._endBtn.subscribe('onActivated', this._goToEnd.bind(this));
+      },
+
+      _goToNext: function() {
+         this._goToSibling(1);
+      },
+
+      _goToPrev: function() {
+         this._goToSibling(-1);
+      },
+
+      _goToSibling: function(dir) {
+         var selKey = parseInt(this.getSelectedKey(), 10);
+         this.setSelectedKey(selKey+dir);
+      },
+
+      _goToBegin: function() {
+         this.setSelectedKey(1);
+      },
+
+      _goToEnd: function() {
+
+      }
    });
 
    return Pager;
