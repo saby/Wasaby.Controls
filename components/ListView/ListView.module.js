@@ -876,7 +876,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 id;
 
             if (target.length && this._isViewElement(target)) {
-               id = target.data('id');
+               id = this._getItemsProjection().getByHash(target.data('hash')).getContents().getId();
                this._elemClickHandler(id, this.getItems().getRecordByKey(id), e.target);
             }
             if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox') && this.isEnabled()){
