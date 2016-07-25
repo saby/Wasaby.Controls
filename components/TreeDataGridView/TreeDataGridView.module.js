@@ -425,7 +425,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _elemClickHandlerInternal: function(data, id, target) {
          var $target =  $(target),
              closestExpand = this._findExpandByElement($target),
-             nodeID = $target.closest('.controls-ListView__item').data('id');
+             nodeID = this._getItemsProjection().getByHash($target.closest('.controls-ListView__item').data('hash')).getContents().getId();
 
          /* Не обрабатываем клики по чекбоку и по стрелке редактирования, они обрабатываются в elemClickHandler'e */
          if ($target.hasClass('js-controls-TreeView__editArrow') || $target.hasClass('js-controls-ListView__itemCheckBox')) {
