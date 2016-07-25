@@ -234,7 +234,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          _firstSearch: true,
          _searchTextTranslated: false,
          _path: [],
-         _paging: null,
+         _scrollPages: [],
          _options: {
             /**
              * @cfg {SBIS3.CONROLS.DataGridView} объект представления данных
@@ -259,7 +259,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             /**
              * @cfg {SBIS3.CONROLS.FilterButton} объект кнопки фильтров
              */
-            filterButton: undefined
+            filterButton: undefined,
+            /**
+             * @cfg {SBIS3.CONROLS.Pagign} объект пэйджинга
+             */
+            paging: undefined,
          }
       },
 
@@ -620,30 +624,71 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
       bindScrollPaging: function(paging) {
          var view = this._options.view, self = this;
-         this._paging = paging;
-         paging.subscribe('onSelectedItemChange', function(e, key){
-            /*проскроллиться к нужному элементу. Логика понимания в listview*/
-         });
+         paging = paging || this._options.paging;
+         paging.subscribe('onSelectedItemChange', function(e, page){
+            if (page != this._currentScrollPage){
+               var view = this._options.view,
+                  item = view.getItems().getRecordByKey(this._scrollPages[page - 1].id);
+               view.scrollToItem(item);
+               this._currentScrollPage = page;
+            }
+         }.bind(this));
 
          view.subscribe('onScrollPageChange', function(e, page){
-            var newKey, curKey;
+            var newKey, curKey,
+               paging = this._options.paging;
             if (page >= 0) {
                newKey = page + 1;
-               curKey = parseInt(self._paging.getSelectedKey(), 10);
+               curKey = parseInt(paging.getSelectedKey(), 10);
                if (curKey != newKey) {
-                  if (newKey > self._paging.getItems().getCount()) {
-                     self._paging.setPagesCount(newKey);
+                  if (newKey > paging.getItems().getCount()) {
+                     paging.setPagesCount(newKey);
                   }
-                  self._paging.setSelectedKey(newKey);
+                  this._currentScrollPage = newKey;
+                  paging.setSelectedKey(newKey);
                }
             }
+         }.bind(this));
+      },
+      _getScrollPage: function(){
+         var view = this._options.view,
+            scrollTop = view._scrollWatcher.getScrollContainer().scrollTop,
+            topElement = null;
+         for (var i = 0; i < this._scrollPages.length; i++){
+            var pageStart = this._scrollPages[i];
+            if (pageStart.element.offset().top + pageStart.element.height()>= 0){
+               return i - 1;
+            }
+         }
+      },
+      _updateScrollPages: function(){
+         var view = this._options.view, 
+            viewportHeight = $(view._scrollWatcher.getScrollContainer()).height(),
+            pageHeight = 0,
+            lastPageStart = 0,
+            self = this;
+         if (this._scrollPages.length){
+            lastPageStart = this._scrollPages[this._scrollPages.length - 1].element.index();
+         } else {
+            //Запушим первый элемент
+            this._scrollPages.push({
+               element: $('>.controls-ListView__item', view._getItemsContainer()).eq(0),
+               id: view.getItems().at(0).getId()
+            })
+         }
+         $('>.controls-ListView__item', view._getItemsContainer()).slice(lastPageStart).each(function(){
+            var $this = $(this);
+            pageHeight += $this.height();
+            if (pageHeight  > viewportHeight) {
+               self._scrollPages.push({
+                  element: $this,
+                  id: $this.data('id')
+               });
+               pageHeight = 0;
+            }
          });
-
-         view.subscribe('onScrollInit', function() {
-            var numPage = 2; //TODO сделать нужное количество
-            paging.setPagesCount(numPage);
-         });
-      }
+         this._options.paging.setPagesCount(this._scrollPages.length + 1)
+      },
    });
 
    return ComponentBinder;

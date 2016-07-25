@@ -34,12 +34,15 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
       'browser!html!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
       'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
+      'js!SBIS3.CONTROLS.Paging',
+      'js!SBIS3.CONTROLS.ComponentBinder',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
-             Link, ScrollWatcher, IBindCollection, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager) {
+             Link, ScrollWatcher, IBindCollection, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager, 
+             Paging, ComponentBinder) {
 
       'use strict';
 
@@ -629,7 +632,8 @@ define('js!SBIS3.CONTROLS.ListView',
             _searchParamName: undefined, //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
             _scrollOnBottom: true, // TODO: Придрот для скролла вниз при первой подгрузке. Если включена подгрузка вверх то изначально нужно проскроллить контейнер вниз,
             //но после загрузки могут долетать данные (картинки в docviewer например), которые будут скроллить вверх.
-            _scrollOnBottomTimer: null //TODO: см. строчкой выше
+            _scrollOnBottomTimer: null, //TODO: см. строчкой выше
+            _componentBinder: null
          },
 
          $constructor: function () {
@@ -679,7 +683,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.reload();
                }
             }
-            this._previousInfiniteScroll = this._options.infiniteScroll;
          },
          _modifyOptions : function(opts){
             var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
@@ -730,16 +733,42 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._options.infiniteScrollContainer.on('touchmove wheel', function(){
                      self._scrollOnBottom = false;
                   });
+                  
                }
-               this._scrollWatcher.subscribe('onScroll', function(event, type){
-                  var scrollOnEdge = (self._options.infiniteScroll === 'up' && type === 'top') || // скролл вверх и доскролили до верхнего края
-                                     (self._options.infiniteScroll === 'down') //скролл в обе стороны и доскролили до любого края
-                  if (scrollOnEdge) {
-                     self._scrollDirection = type;
-                     self._loadChecked(type == 'top' ? 'up' : 'down');
-                  }
-               });
+               this._previousInfiniteScroll = this._options.infiniteScroll;
+               if (this._options.infiniteScroll == 'down'){
+                  this._scrollPager = new Paging({
+                     element: $('.controls-ListView__scrollPager', this._container),
+                     pagesCount: 2
+                  });
+                  this._scrollBinder = new ComponentBinder({
+                     view: this,
+                     paging: this._scrollPager
+                  });
+                  this._scrollBinder.bindScrollPaging();
+                  this._scrollPager.subscribe('onPageChange', this._onScrollPageChange.bind(this));
+               }
+               this._scrollWatcher.subscribe('onScroll', this._onScrollHandler.bind(this));
+               this._scrollWatcher.subscribe('onScrollMove', this._onScrollMoveHandler.bind(this));
             }
+         },
+         _onScrollHandler: function(event, type){
+            var scrollOnEdge = (this._options.infiniteScroll === 'up' && type === 'top') || // скролл вверх и доскролили до верхнего края
+                               (this._options.infiniteScroll === 'down') //скролл в обе стороны и доскролили до любого края
+            if (scrollOnEdge) {
+               this._scrollDirection = type;
+               this._loadChecked(type == 'top' ? 'up' : 'down');
+            }
+         },
+         _onScrollPageChange: function(event, page){
+            if (page !== this._options.paging.getSelectedKey()){
+               var item = this.getItems().getRecordByKey(this._scrollPages[page - 1].id);
+               this.scrollToItem(item);
+            }
+         },
+         _onScrollMoveHandler: function(event, scrollTop){
+            var scrollPage = this._scrollBinder._getScrollPage();
+            this._notify('onScrollPageChange', scrollPage);
          },
          _keyboardHover: function (e) {
             var
@@ -1953,6 +1982,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var hasScroll = this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer()), 
                existFloatArea = this._existFloatArea(),
                isScrollOnBottom = this.isScrollOnBottom();
+            this._scrollBinder._updateScrollPages();
             // Если нет скролла или скролл внизу, значит нужно догружать еще записи (floatArea отжирает скролл, поэтому если она открыта - не грузим)
             if ((!hasScroll || isScrollOnBottom) && !existFloatArea) {
                this._loadNextPage();
