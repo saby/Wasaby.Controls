@@ -728,12 +728,13 @@ define('js!SBIS3.CONTROLS.ListView',
                      self._scrollOnBottom = false;
                   });
                }
-               this._scrollWatcher.subscribe('onScroll', function(event, type){
-                  //top || bottom
-                  self._loadChecked((type === 'top' && self._options.infiniteScroll === 'up') ||
-                     (type === 'bottom' && self._options.infiniteScroll === 'down'));
-               });
+               this._scrollWatcher.subscribe('onScroll', this._onScrollHandler.bind(this));
             }
+         },
+         _onScrollHandler: function(event, type){
+            //top || bottom
+            this._loadChecked((type === 'top' && this._options.infiniteScroll === 'up') ||
+               (type === 'bottom' && this._options.infiniteScroll === 'down'));
          },
          _keyboardHover: function (e) {
             var
@@ -1486,7 +1487,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onAfterBeginEdit', model));
                      }.bind(this),
                      onChangeHeight: function() {
-                        if (this._getItemsToolbar().isVisible()) {
+                        if (this._getItemsToolbar().isToolbarLocking()) {
                            this._showItemsToolbar(this._getElementData(this._editingItem.target));
                         }
                      }.bind(this),
@@ -2437,6 +2438,7 @@ define('js!SBIS3.CONTROLS.ListView',
          destroy: function () {
             this._destroyEditInPlace();
             if (this.isInfiniteScroll()) {
+               this._scrollWatcher.unsubscribe('onScroll', this._onScrollHandler);
                this._scrollWatcher.destroy();
                this._scrollWatcher = undefined;
             }

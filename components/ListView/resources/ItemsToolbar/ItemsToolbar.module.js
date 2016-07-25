@@ -187,6 +187,12 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              this._untrackingTarget();
           },
           /**
+           * Позволяет получить состояние заблокированности тулбара
+           */
+          isToolbarLocking: function() {
+             return this._lockingToolbar;
+          },
+          /**
            * Включает слежение за позицей currentTarget
            * @private
            */
