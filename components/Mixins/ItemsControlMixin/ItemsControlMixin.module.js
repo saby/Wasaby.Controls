@@ -8,13 +8,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'js!WS.Data/Display/Display',
    'js!WS.Data/Collection/IBind',
    'js!WS.Data/Display/Collection',
+   'js!WS.Data/Display/Enum',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'tmpl!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
    'js!WS.Data/Utils',
    'js!WS.Data/Entity/Model',
    'Core/ParserUtilities',
    'js!SBIS3.CONTROLS.Utils.Sanitize'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize) {
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, CollectionDisplay, EnumDisplay, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -27,6 +28,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          proj.setSort(cfg.itemsSortMethod);
       }
       return proj;
+   },
+   /*TODO метод нужен потому, что Лехина утилита не умеет работать с перечисляемым где contents имеет тип string*/
+   getPropertyValue = function(itemContents, field) {
+      if (typeof itemContents == 'string') {
+         return itemContents;
+      }
+      else {
+         return Utils.getItemPropertyValue(itemContents, field);
+      }
    },
    getRecordsForRedraw = function(projection) {
       var
@@ -44,6 +54,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       tplOptions.Sanitize = Sanitize;
       tplOptions.displayField = cfg.displayField;
       tplOptions.templateBinding = cfg.templateBinding;
+      tplOptions.getPropertyValue = getPropertyValue;
 
       if (cfg.itemContentTpl) {
          itemContentTpl = cfg.itemContentTpl;
