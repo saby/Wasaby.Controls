@@ -27,6 +27,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.ScrollWatcher',
       'js!WS.Data/Collection/IBind',
+      'js!WS.Data/Collection/List',
       'i18n!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
       'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
@@ -40,7 +41,7 @@ define('js!SBIS3.CONTROLS.ListView',
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
-             Link, ScrollWatcher, IBindCollection, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager) {
+             Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager) {
 
       'use strict';
 
@@ -2541,11 +2542,21 @@ define('js!SBIS3.CONTROLS.ListView',
             //_findItemByElement, без завязки на _items.
             if (target.length) {
                id = target.data('id');
-               dragObject.setSource([this.getDragEntity({
-                  domElement: this._findItemByElement($(e.target)),
-                  model: this._getDragTarget(e)
-               })]);
                this.setSelectedKey(id);
+               var items = this._getDragItems(id),
+                  source = [];
+               $ws.helpers.forEach(items, function (id) {
+                  var item = this.getItems().getRecordById(id),
+                     projItem = this._getItemsProjection().getItemBySourceItem(item);
+                  source.push(this.getDragEntity({
+                     model: item,
+                     domElement: this._getHtmlItemByProjectionItem(projItem)
+                  }));
+               }.bind(this));
+
+               dragObject.setSource(new List({
+                  items: source
+               }));
                this._hideItemsToolbar();
                return true;
             }
@@ -2561,7 +2572,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   sourceModels = [];
                this._clearDragHighlight(dragObject);
                if (targetsModel) {
-                  $ws.helpers.forEach(source, function (item) {
+                  source.each(function (item) {
                      sourceModels.push(item.getModel());
                   });
                   if (dragObject.getOwner() !== this || sourceModels.indexOf(targetsModel) < 0) {
@@ -2574,7 +2585,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _canDragMove: function(dragObject) {
             return dragObject.getTarget() &&
                dragObject.getTargetsControl() === this &&
-               $ws.helpers.instanceOfModule(dragObject.getSource()[0], 'js!SBIS3.CONTROLS.DragEntity.Row');
+               $ws.helpers.instanceOfModule(dragObject.getSource().at(0), 'js!SBIS3.CONTROLS.DragEntity.Row');
          },
 
          _getDragTarget: function(e) {
@@ -2597,7 +2608,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if (position !== DRAG_META_INSERT.on && dragObject.getOwner() === this) {
                   var neighborItem = this[position === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](model.getId()),
                      sourceIds = [];
-                  $ws.helpers.forEach(dragObject.getSource(), function (item) {
+                  dragObject.getSource().each(function (item) {
                      sourceIds.push(item.getModel().getId());
                   });
                   if (neighborItem && sourceIds.indexOf(neighborItem.data('id')) > -1) {
@@ -2631,7 +2642,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _createAvatar: function(dragObject) {
-            var count = dragObject.getSource().length;
+            var count = dragObject.getSource().getCount();
             return $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>');
          },
 
@@ -2652,7 +2663,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
                   if (dragObject.getOwner() === this) {
                      var models = [];
-                     $ws.helpers.forEach(dragObject.getSource(), function(item){
+                     dragObject.getSource().each(function(item){
                         models.push(item.getModel());
                      });
                      var position = target.getPosition();
