@@ -22,8 +22,11 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase',
          }
       },
 
-      _itemActivatedHandler : function(key) {
-         this.setSelectedKey(key);
+      _itemActivatedHandler : function(hash) {
+         var projItem, index;
+         projItem = this._getItemsProjection().getByHash(hash);
+         index = this._getItemsProjection().getIndex(projItem);
+         this.setSelectedIndex(index);
       },
 
       _drawSelectedItem : function(id, index) {
