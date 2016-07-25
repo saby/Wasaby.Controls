@@ -161,24 +161,22 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                } else if (key === $ws._const.key.enter || key === $ws._const.key.down || key === $ws._const.key.up) {
                   e.stopImmediatePropagation();
                   e.preventDefault();
-                  if (this._options.modeSingleEdit) {
-                     this.endEdit(true);
-                  } else {
-                     this._editNextTarget(this._getCurrentTarget(), key === $ws._const.key.down || key === $ws._const.key.enter);
-                  }
+                  this._editNextTarget(this._getCurrentTarget(), key === $ws._const.key.down || key === $ws._const.key.enter);
                }
             },
             _editNextTarget: function (currentTarget, editNextRow) {
                var
                   self = this,
                   nextTarget = this._getNextTarget(currentTarget, editNextRow);
-               if (nextTarget.length) {
+               if (nextTarget.length && !this._options.modeSingleEdit) {
                   this.edit(nextTarget, this._options.dataSet.getRecordByKey(nextTarget.attr('data-id'))).addCallback(function(result) {
                      if (!result) {
                         self._editNextTarget(nextTarget, editNextRow);
                      }
                   });
-               } else if (editNextRow && this._options.modeAutoAdd) {
+               // Запускаем добавление если нужно редактировать следующую строку, но строки нет и включен режим автодобавления
+               // и выключен режим редактирования единичной записи (или последняя редактируемая запись на самом деле добавляется)
+               } else if (editNextRow && this._options.modeAutoAdd && (!this._options.modeSingleEdit || this._getEditingEip().getEditingRecord().getState() === Record.RecordState.DETACHED)) {
                   this.add({
                      target: this._lastTargetAdding
                   });
