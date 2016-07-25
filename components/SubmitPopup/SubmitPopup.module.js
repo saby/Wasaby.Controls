@@ -102,10 +102,6 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
          _choose: function(value){
             this._notify('onChoose', value);
             this.close();
-         },
-
-         _isLegalStatus: function(){
-            return status === 'confirm' || SubmitPopup.superclass._isLegalStatus.call(this);
          }
       });
       return SubmitPopup;

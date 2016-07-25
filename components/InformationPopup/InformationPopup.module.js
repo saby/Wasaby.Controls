@@ -45,19 +45,13 @@ define('js!SBIS3.CONTROLS.InformationPopup',
             InformationPopup.superclass.init.call(this);
          },
 
-         _isLegalStatus: function(){
-            return status === 'default' || status === 'success' || status === 'error' || status === 'warning';
-         },
-
          /**
           * Установить новое состояние
           * @param {InformationPopupStatus} status
           */
          setStatus: function(status){
-            if(this._isLegalStatus(status)){
-               this.getContainer().removeClass('controls-InformationPopup__status-' + this._options.status).addClass('controls-InformationPopup__status-' + status);
-               this._options.status = status;
-            }
+            this.getContainer().removeClass('controls-InformationPopup__status-' + this._options.status).addClass('controls-InformationPopup__status-' + status);
+            this._options.status = status;
          }
       });
 

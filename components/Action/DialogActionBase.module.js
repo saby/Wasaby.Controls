@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!WS.Data/Entity/Model'], function(ActionBase, Dialog, FloatArea, Model){
+define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!WS.Data/Entity/Model', 'i18n!SBIS3.CONTROLS.DialogActionBase'], function(ActionBase, Dialog, FloatArea, Model){
    'use strict';
 
    /**
@@ -173,7 +173,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       },
 
       _showDialog: function(config, meta, mode){
-         var floatAreaCfg,
+         var self = this,
+            templateComponent,
+            currentRecord,
+            floatAreaCfg,
             Component;
          mode = mode || this._options.mode;
          if (mode == 'floatArea'){
@@ -185,12 +188,31 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          }
 
          if (this._dialog && !this._dialog.isAutoHide()){
-            $ws.core.merge(this._dialog._options, config);
-            this._dialog.reload();
+            templateComponent = this._dialog._getTemplateComponent();
+            currentRecord = templateComponent.getRecord();
+            if (currentRecord && currentRecord.isChanged()){
+               $ws.helpers.question(rk('Сохранить изменения?'), {opener: templateComponent}).addCallback(function(result){
+                  if (result){
+                     templateComponent.update({hideQuestion: true}).addCallback(function(){
+                        self._setNewDialogConfig(config);
+                     });
+                  }
+                  else {
+                     self._setNewDialogConfig(config);
+                  }
+               });
+            }
+            else{
+               this._setNewDialogConfig(config);
+            }
          }
          else{
             this._dialog = new Component(config);
          }
+      },
+      _setNewDialogConfig: function(config){
+         $ws.core.merge(this._dialog._options, config);
+         this._dialog.reload();
       },
       _getFloatAreaConfig: function(meta){
          var defaultConfig = {

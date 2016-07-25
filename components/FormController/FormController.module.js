@@ -608,8 +608,10 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._panelReadyDeferred.addCallback(function(){
             self._actionNotify('onAfterFormLoad');
          });
+      },
 
-
+      getRecord: function(){
+        return this._options.record;
       },
       /**
        * Удалить запись из источника данных диалога редактирования.
@@ -626,8 +628,10 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see dataSource
        */
       _destroyModel: function(){
-         this._dataSource.destroy(this._options.record.getId());
-         this._notify('onDestroyModel', this._options.record)
+         var self = this;
+         this._dataSource.destroy(this._options.record.getId()).addCallback(function(){
+            self._notify('onDestroyModel', self._options.record)
+         });
       },
 
       _getRecordFromSource: function(config) {
