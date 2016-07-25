@@ -9,10 +9,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
       'html!SBIS3.CONTROLS.EditInPlaceBaseController/AddRowTpl',
       'js!SBIS3.CONTROLS.EditInPlace',
       'js!WS.Data/Entity/Model',
-      'js!WS.Data/Di',
       'js!WS.Data/Entity/Record'
    ],
-   function (CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Di, Record) {
+   function (CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Record) {
 
       'use strict';
 
@@ -354,7 +353,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      eip.applyChanges();
                      if (isAdd) {
                         eipRecord.set(eipRecord.getKeyField(), recordId);
-                        self._options.dataSet.push(self._cloneWithFormat(eipRecord, self._options.dataSet));
+                        self._options.dataSet.push(eip._cloneWithFormat(eipRecord, self._options.dataSet));
                      }
                   }).addErrback(function(error) {
                      $ws.helpers.alert(error);
@@ -365,25 +364,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
                }
                this._removePendingOperation();
-            },
-            //TODO: метод нужен для того, чтобы подогнать формат рекорда под формат рекордсета.
-            //Выписана задача Мальцеву, который должен убрать этот метод отсюда, и предаставить механизм выполняющий необходимую задачу.
-            //https://inside.tensor.ru/opendoc.html?guid=85d18197-2094-4797-b823-5406424881e5&description=
-            _cloneWithFormat: function(record, recordSet) {
-               var
-                   fieldName,
-                   clone = Di.resolve(recordSet.getModel(), {
-                      'adapter': record.getAdapter(),
-                      'idProperty': record.getIdProperty(),
-                      'format': []
-                   });
-
-               recordSet.getFormat().each(function(field) {
-                  fieldName = field.getName();
-                  clone.addField(field, undefined, record.get(fieldName));
-               });
-               clone.setState(record.getState());
-               return clone;
             },
             //TODO: Нужно переименовать метод
             _notifyOnAfterEndEdit: function(eip, eipRecord, withSaving, isAdd) {
