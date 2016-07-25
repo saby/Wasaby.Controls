@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'js!WS.Data/Collection/IBind',
    'js!WS.Data/Display/Collection',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
+   'tmpl!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
    'js!WS.Data/Utils',
    'js!WS.Data/Entity/Model',
    'Core/ParserUtilities',
@@ -1836,6 +1836,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             //в 200 пусть поживут, а в новой отрисовке, отпилим у них
             if (buildedTpl instanceof $) {
                buildedTpl = buildedTpl.get(0).outerHTML;
+            }
+            if (buildedTpl.hasOwnProperty('html')) {
+               return $(MarkupTransformer(buildedTpl.html));
             }
             return $(ParserUtilities.buildInnerComponents(MarkupTransformer(buildedTpl), this._options));
          } else {

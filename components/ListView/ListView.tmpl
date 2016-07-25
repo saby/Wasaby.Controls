@@ -1,0 +1,24 @@
+<div class="controls-ListView{{ multiselect !== false ? ' controls-ListView__multiselect' : ' controls-ListView__multiselect__off'}}">
+    <div class="controls-AjaxLoader ws-hidden">
+        <div class="controls-AjaxLoader__outer">
+            <div class="controls-AjaxLoader__block">
+                <div class="controls-AjaxLoader__LoadingIndicator"></div>
+            </div>
+        </div>
+    </div>
+    <div class="controls-ListView__itemsContainer">
+        <ws:if data="{{ _serverRender }}">
+            <ws:partial template="{{_itemsTemplate}}" records="{{_records}}" tplData="{{_itemData}}" />
+        </ws:if>
+    </div>
+    <ws:if data="{{ footerTpl }}">
+        <div class="controls-ListView__footer">
+            <ws:partial template="{{footerTpl}}" scope="{{...}}" />
+        </div>
+    </ws:if>
+    <ws:if data="{{ showPaging }}">
+        <div class="controls-Pager-container"></div>
+    </ws:if>
+    <div class="controls-ListView-scrollIndicator ws-hidden{{ infiniteScroll === 'up' ? ' controls-ListView-scrollIndicator__up'}}"></div>
+    <div class="controls-ListView__ItemsToolbar-container ws-hidden"></div>
+</div>
