@@ -469,6 +469,11 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                   options.allowEmptySelection = false;
                }
 
+               /* Сорс могут устанавливать не через сеттер, а через опцию, надо его прокинуть в конфиг списка */
+               if(options.dataSource === undefined && this._options.dataSource) {
+                  options.dataSource = this._options.dataSource;
+               }
+
                options.parent = this._picker;
                this._list = new component(options);
                this._initList();
