@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
       'js!SBIS3.CONTROLS.ItemsToolbar',
       'js!SBIS3.CORE.MarkupTransformer',
-      'html!SBIS3.CONTROLS.ListView',
+      'tmpl!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'js!SBIS3.CONTROLS.CommonHandlers',
       'js!SBIS3.CONTROLS.MoveHandlers',
@@ -30,9 +30,9 @@ define('js!SBIS3.CONTROLS.ListView',
       'i18n!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
       'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
-      'browser!html!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
-      'browser!html!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
-      'browser!html!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
+      'browser!tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
+      'browser!tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
+      'browser!tmpl!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
       'browser!js!SBIS3.CONTROLS.Utils.InformationPopupManager',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
@@ -188,16 +188,18 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {Object} model Редактируемая модель
           */
          /**
+          * @typedef {String} EndEditResult
+          * @variant Cancel Отменить завершение редактирования.
+          * @variant Save Завершить редактирование с сохранением изменений.
+          * @variant NotSave Завершить редактирование без сохранения изменений.
+          */
+         /**
           * @event onEndEdit Возникает перед окончанием редактирования (и перед валидацией области редактирования).
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {WS.Data/Entity/Model} model Редактируемая модель.
           * @param {Boolean} withSaving Признак, по которому определяют тип завершения редактирования.
           * true - редактирование завершается сохранением изменений; false - отмена сохранения изменений путём нажатия клавиши Esc или переводом фокуса на другой контрол.
-          * @returns {*} Возможные значения:
-          * <ol>
-          *    <li>false - отменить редактирование;</li>
-          *    <li>* - продолжить редактирование в штатном режиме.</li>
-          * </ol>
+          * @returns {EndEditResult}
           */
          /**
           * @event onAfterEndEdit Возникает после окончания редактирования по месту
@@ -728,12 +730,13 @@ define('js!SBIS3.CONTROLS.ListView',
                      self._scrollOnBottom = false;
                   });
                }
-               this._scrollWatcher.subscribe('onScroll', function(event, type){
-                  //top || bottom
-                  self._loadChecked((type === 'top' && self._options.infiniteScroll === 'up') ||
-                     (type === 'bottom' && self._options.infiniteScroll === 'down'));
-               });
+               this._scrollWatcher.subscribe('onScroll', this._onScrollHandler.bind(this));
             }
+         },
+         _onScrollHandler: function(event, type){
+            //top || bottom
+            this._loadChecked((type === 'top' && this._options.infiniteScroll === 'up') ||
+               (type === 'bottom' && this._options.infiniteScroll === 'down'));
          },
          _keyboardHover: function (e) {
             var
@@ -1486,7 +1489,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onAfterBeginEdit', model));
                      }.bind(this),
                      onChangeHeight: function() {
-                        if (this._getItemsToolbar().isVisible()) {
+                        if (this._getItemsToolbar().isToolbarLocking()) {
                            this._showItemsToolbar(this._getElementData(this._editingItem.target));
                         }
                      }.bind(this),
@@ -1794,9 +1797,6 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notifyOnSizeChanged(true);
             this._drawResults();
             this._needToRedraw = true;
-            //После отрисовки оповещаем аккардеон что поменялись размеры и возможно нужно обновить fixed позиционирование
-            //TODO: выпилить в 3.7.4.100 когда будет независимый скролл аккардеона
-            $ws.single.EventBus.globalChannel().notify('ContentScrolling', null);
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
@@ -2437,6 +2437,7 @@ define('js!SBIS3.CONTROLS.ListView',
          destroy: function () {
             this._destroyEditInPlace();
             if (this.isInfiniteScroll()) {
+               this._scrollWatcher.unsubscribe('onScroll', this._onScrollHandler);
                this._scrollWatcher.destroy();
                this._scrollWatcher = undefined;
             }

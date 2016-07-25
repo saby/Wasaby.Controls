@@ -106,7 +106,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                className: item.get('className') || 'controls-DropdownList__linkStyle',
                pickerClassName: (item.get('pickerClassName') + ' controls-DropdownList__picker') || 'controls-DropdownList__picker',
                dataSource: item.get('dataSource'),
-               filter: item.get('filter')
+               filter: item.get('filter'),
+               allowDblClick: !!item.get('allowDblClick')
             };
             if(item.has('headTemplate')){
                cfg.headTemplate = item.get('headTemplate');

@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.Utils.TemplateUtil', [], function() {
 
          switch (typeof tpl) {
             case 'string' :
-               template = tpl.indexOf('html!') === 0 ?
+               template = tpl.indexOf('html!') === 0 || tpl.indexOf('tmpl!') === 0 ?
                    require(tpl) :
                    doT.template(tpl);
                break;
