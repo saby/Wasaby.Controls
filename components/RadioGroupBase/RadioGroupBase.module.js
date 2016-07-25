@@ -29,18 +29,17 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase',
       _drawSelectedItem : function(id, index) {
          //TODO не будет работать с перечисляемым. Переписать
          var
-            item = this.getItems().at(index),
-            key;
+            item = this._getItemsProjection().at(index);
          if (item) {
-            key = item.getId();
+            var hash = item.getHash();
             var controls = this.getItemsInstances();
             for (var i in controls) {
                if (controls.hasOwnProperty(i)) {
-                  if (!key && key != 0) {
+                  if (!hash) {
                      controls[i].setChecked(false);
                   }
                   else {
-                     if (controls[i].getContainer().data('id') == key) {
+                     if (controls[i].getContainer().data('hash') == hash) {
                         controls[i].setChecked(true);
                      }
                      else {

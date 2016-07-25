@@ -330,8 +330,10 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
 
       _setKeyByIndex: function() {
          if(this._hasItemByIndex()) {
-            var item = this._getItemsProjection().at(this._options.selectedIndex);
-            this._options.selectedKey = item.getContents().getId();
+            var itemContents = this._getItemsProjection().at(this._options.selectedIndex).getContents();
+            if ($ws.helpers.instanceOfModule(itemContents, 'WS.Data/Entity/Model')) {
+               this._options.selectedKey = itemContents.getContents().getId();
+            }
          }
       },
 

@@ -1600,8 +1600,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var childControls = this.getChildControls();
          for (var i = 0; i < childControls.length; i++) {
             if (childControls[i].getContainer().hasClass('controls-ListView__item')) {
-               var id = childControls[i].getContainer().attr('data-id');
-               this._itemsInstances[id] = childControls[i];
+               var hash = childControls[i].getContainer().attr('data-hash');
+               this._itemsInstances[hash] = childControls[i];
             }
          }
 
@@ -1642,8 +1642,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see getItemInstances
         */
       getItemInstance: function (id) {
+         var projItem = this._getItemProjectionByItemId(id);
          var instances = this.getItemsInstances();
-         return instances[id];
+         return instances[projItem.getHash()];
       },
       //TODO Сделать публичным? И перенести в другое место
       _hasNextPage: function (hasMore, offset) {
