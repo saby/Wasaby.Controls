@@ -192,7 +192,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
       _recalcInternalContext: function() {
          this.getLinkedContext().setValueSelf({
             filterChanged: $ws.helpers.reduce(this._filterStructure, function(result, element) {
-               return result || (element.value ? !FilterToStringUtil.isEqualValues(element.resetValue, element.value) : false);
+               return result || (element.hasOwnProperty('value') ? !FilterToStringUtil.isEqualValues(element.resetValue, element.value) : false);
             }, false),
             filterStructure: this._filterStructure,
             filterResetLinkText: this.getProperty('resetLinkText')
