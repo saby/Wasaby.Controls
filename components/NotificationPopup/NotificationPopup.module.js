@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
          success: 'icon-24 icon-Yes icon-done',
          error: 'icon-24 icon-Alert icon-error',
          warning: '',
-         default: ''
+         'default': ''
       };
 
       var NotificationPopup = InformationPopup.extend( /** @lends SBIS3.CONTROLS.NotificationPopup.prototype */ {
