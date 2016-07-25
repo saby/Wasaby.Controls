@@ -106,7 +106,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                className: item.get('className') || 'controls-DropdownList__linkStyle',
                pickerClassName: (item.get('pickerClassName') + ' controls-DropdownList__picker') || 'controls-DropdownList__picker',
                dataSource: item.get('dataSource'),
-               filter: item.get('filter')
+               filter: item.get('filter'),
+               allowDblClick: !!item.get('allowDblClick')
             };
             if(item.has('headTemplate')){
                cfg.headTemplate = item.get('headTemplate');
@@ -192,7 +193,13 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                      var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(i)],
                            value = (fsObject.hasOwnProperty('value') && fsObject.value !== undefined) ?  instances[i]._options.multiselect ?  fsObject.value : [fsObject.value]: [instances[i].getDefaultId()];
                      if (!this._isSimilarArrays(instances[i].getSelectedKeys(), value)) {
-                        instances[i].setSelectedKeys(value);
+                        if(instances[i].getItems()){
+                           instances[i].setSelectedKeys(value);
+                        }else {
+                           instances[i].once('onItemsReady', function () {
+                              instances[i].setSelectedKeys(value);
+                           });
+                        }
                      }
                   }
                }

@@ -22,6 +22,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
        * @control
        * @public
        */
+      var EndEditResult = {
+         CANCEL: 'Cancel',
+         SAVE: 'Save',
+         NOT_SAVE: 'NotSave'
+      };
 
       var
          CONTEXT_RECORD_FIELD = 'sbis3-controls-edit-in-place',
@@ -161,24 +166,22 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                } else if (key === $ws._const.key.enter || key === $ws._const.key.down || key === $ws._const.key.up) {
                   e.stopImmediatePropagation();
                   e.preventDefault();
-                  if (this._options.modeSingleEdit) {
-                     this.endEdit(true);
-                  } else {
-                     this._editNextTarget(this._getCurrentTarget(), key === $ws._const.key.down || key === $ws._const.key.enter);
-                  }
+                  this._editNextTarget(this._getCurrentTarget(), key === $ws._const.key.down || key === $ws._const.key.enter);
                }
             },
             _editNextTarget: function (currentTarget, editNextRow) {
                var
                   self = this,
                   nextTarget = this._getNextTarget(currentTarget, editNextRow);
-               if (nextTarget.length) {
+               if (nextTarget.length && !this._options.modeSingleEdit) {
                   this.edit(nextTarget, this._options.dataSet.getRecordByKey(nextTarget.attr('data-id'))).addCallback(function(result) {
                      if (!result) {
                         self._editNextTarget(nextTarget, editNextRow);
                      }
                   });
-               } else if (editNextRow && this._options.modeAutoAdd) {
+               // Запускаем добавление если нужно редактировать следующую строку, но строки нет и включен режим автодобавления
+               // и выключен режим редактирования единичной записи (или последняя редактируемая запись на самом деле добавляется)
+               } else if (editNextRow && this._options.modeAutoAdd && (!this._options.modeSingleEdit || this._getEditingEip().getEditingRecord().getState() === Record.RecordState.DETACHED)) {
                   this.add({
                      target: this._lastTargetAdding
                   });
@@ -234,6 +237,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   }, 100);
                   return beginEditResult.addCallback(function(readRecord) {
                      self._editingRecord = readRecord;
+                     //При перечитывании записи она не является связанной с рекордсетом, и мы в последствии не сможем понять,
+                     //происходило ли добавление записи или редактирование. При редактировании выставим значение сами.
+                     if (record.getState() !== Record.RecordState.DETACHED) {
+                        readRecord.setState(Record.RecordState.UNCHANGED);
+                     }
                      return readRecord;
                   }).addBoth(function (result) {
                      clearTimeout(loadingIndicator);
@@ -286,9 +294,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
              */
             endEdit: function(withSaving) {
                var
-                  eip = this._getEditingEip(),
                   record,
-                  endEditResult;
+                  endEditResult,
+                  self = this,
+                  eip = this._getEditingEip();
                //При начале редактирования строки(если до этого так же что-то редактировалось), данный метод вызывается два раза:
                //первый по уходу фокуса с предидущей строки, второй при начале редактирования новой строки. Если второй вызов метода
                //произойдёт раньше чем завершится первый, то мы два раза попытаемся завершить редактирование, что ведёт к 2 запросам
@@ -298,9 +307,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   record = eip.getEditingRecord();
                   endEditResult = this._notify('onEndEdit', record, withSaving);
                   if (endEditResult instanceof $ws.proto.Deferred) {
-                     return endEditResult.addCallback(function(result) {
-                        return this._endEdit(eip, withSaving, result);
-                     }.bind(this));
+                     return endEditResult.addBoth(function(result) {
+                        result = endEditResult.isSuccessful() ? result : EndEditResult.CANCEL;
+                        return self._endEdit(eip, withSaving, result);
+                     });
                   } else {
                      return this._endEdit(eip, withSaving, endEditResult);
                   }
@@ -309,15 +319,22 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this._savingDeferred.isReady() ? $ws.proto.Deferred.success() : this._savingDeferred;
             },
             _endEdit: function(eip, withSaving, endEditResult) {
-               if (endEditResult !== undefined) {
-                  withSaving = endEditResult;
+               //TODO: Поддержка старого варианта результата.
+               if (typeof endEditResult === "boolean") {
+                  endEditResult = endEditResult ? EndEditResult.SAVE : EndEditResult.WITHOUT_SAVE;
+                  $ws.single.ioc.resolve('ILogger').log('onEndEdit', 'Boolean result is deprecated. Use constants EditInPlaceBaseController.EndEditResult.');
                }
-               if (!withSaving || eip.validate()) {
-                  this._afterEndEdit(eip, withSaving);
-                  return this._savingDeferred;
-               } else {
+
+               if (endEditResult) {
+                  withSaving = endEditResult === EndEditResult.SAVE;
+               }
+
+               if (endEditResult === EndEditResult.CANCEL || !eip.validate() && withSaving) {
                   this._savingDeferred.errback();
                   return $ws.proto.Deferred.fail();
+               } else {
+                  this._afterEndEdit(eip, withSaving);
+                  return this._savingDeferred;
                }
             },
             _getEditingEip: function() {
@@ -339,6 +356,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         eipRecord.set(eipRecord.getKeyField(), recordId);
                         self._options.dataSet.push(self._cloneWithFormat(eipRecord, self._options.dataSet));
                      }
+                  }).addErrback(function(error) {
+                     $ws.helpers.alert(error);
                   }).addBoth(function() {
                      self._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
                   });
@@ -355,7 +374,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                    fieldName,
                    clone = Di.resolve(recordSet.getModel(), {
                       'adapter': record.getAdapter(),
-                      'idProperty': record.getIdProperty()
+                      'idProperty': record.getIdProperty(),
+                      'format': []
                    });
 
                recordSet.getFormat().each(function(field) {
@@ -499,6 +519,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                EditInPlaceBaseController.superclass.destroy.apply(this, arguments);
             }
          });
+
+      EditInPlaceBaseController.EndEditResult = EndEditResult;
 
       return EditInPlaceBaseController;
    });

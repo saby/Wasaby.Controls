@@ -128,6 +128,10 @@ define('js!SBIS3.CONTROLS.SwitcherDouble', ['js!SBIS3.CORE.Control', 'html!SBIS3
          this._switcher = $('.js-controls-Switcher__toggle', this._container.get(0));
       },
 
+      _notifyOnActivated : function() {
+         this._notify('onActivated', this.getState());
+      },
+
       _clickHandler : function(e) {
          if (e.target == this._textContainer.off.get(0)) {
             if (this.isEnabled()) {

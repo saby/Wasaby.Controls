@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'js!WS.Data/Collection/IBind',
    'js!WS.Data/Display/Collection',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
+   'tmpl!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
    'js!WS.Data/Utils',
    'js!WS.Data/Entity/Model',
    'Core/ParserUtilities',
@@ -597,7 +597,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * Метод получения проекции по ID итема
        */
       _getItemProjectionByItemId: function(id) {
-         return this._options._itemsProjection.getItemBySourceItem(this._options._items.getRecordById(id));
+         return this._getItemsProjection() ? this._getItemsProjection().getItemBySourceItem(this._options._items.getRecordById(id)) : null;
       },
 
       /**
@@ -716,7 +716,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             itemContainer = this._getDomElementByItem(item);
             this._ladderCompare([itemContainer.prev(), itemContainer, itemContainer.next()]);
-            this._reviveItems(item.getKey() != this._options.selectedKey);
+            this._reviveItems(item.getContents().getId() != this._options.selectedKey);
          }
       },
 
@@ -1115,6 +1115,24 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          return this._options._items;
       },
+      /**
+       * Перевычитывает модель из источника данных, мержит изменения к текущим данным и перерисовывает запись
+       * @param id Идентификатор модели
+       * @param id Мета информация
+       * @returns {*}
+       */
+      reloadItem: function(id, meta) {
+         var
+            self = this,
+            currentItem = this.getItems().getRecordById(id);
+         if (this.getDataSource() && currentItem) {
+            return this.getDataSource().read(id, meta).addCallback(function(newItem) {
+               currentItem.merge(newItem);
+            });
+         } else {
+            return $ws.proto.deferred.success();
+         }
+      },
        /**
         * Метод перезагрузки данных.
         * Можно задать фильтрацию, сортировку.
@@ -1490,11 +1508,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          ladder && ladder.setMarkLadderColumn(false);
          this._ladderCompare([newElement.prev(), newElement, newElement.next()]);
          this.reviveComponents();
-         this._notifyOnDrawItems(item.getKey() != this._options.selectedKey);
+         this._notifyOnDrawItems(item.getId() != this._options.selectedKey);
       },
 
       _getElementByModel: function(item) {
-         return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]');
+         return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getId() + '"]');
       },
 
 
@@ -1841,6 +1859,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             //в 200 пусть поживут, а в новой отрисовке, отпилим у них
             if (buildedTpl instanceof $) {
                buildedTpl = buildedTpl.get(0).outerHTML;
+            }
+            if (buildedTpl.hasOwnProperty('html')) {
+               return $(MarkupTransformer(buildedTpl.html));
             }
             return $(ParserUtilities.buildInnerComponents(MarkupTransformer(buildedTpl), this._options));
          } else {
