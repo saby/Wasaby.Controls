@@ -886,7 +886,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 id;
 
             if (target.length && this._isViewElement(target)) {
-               id = target.data('id');
+               id = this._getItemsProjection().getByHash(target.data('hash')).getContents().getId();
                this._elemClickHandler(id, this.getItems().getRecordByKey(id), e.target);
             }
             if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox') && this.isEnabled()){
@@ -984,7 +984,7 @@ define('js!SBIS3.CONTROLS.ListView',
                var cont = this._container[0],
                    containerCords = cont.getBoundingClientRect(),
                    targetKey = target[0].getAttribute('data-id'),
-                   item = this.getItems().getRecordById(targetKey),
+                   item = this.getItems() ? this.getItems().getRecordById(targetKey) : undefined,
                    correctTarget = target.hasClass('controls-editInPlace') ? this._getDomElementByItem(this._options._itemsProjection.getItemBySourceItem(item)) : target,
                    targetCords = correctTarget[0].getBoundingClientRect();
 

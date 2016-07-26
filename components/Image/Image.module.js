@@ -392,17 +392,19 @@ define('js!SBIS3.CONTROLS.Image',
                return this.isEnabled();
             },
             _setImage: function(url) {
-               var
-                  self = this;
-               //Из-за проблем, связанных с кэшированием - перезагружаем картинку специальным хелпером
-               $ws.helpers.reloadImage(this._image, url)
-                  .addCallback(function(){
-                     self._image.hasClass('ws-hidden') && self._image.removeClass('ws-hidden');
-                  })
-                  .addErrback(function(){
-                     self._boundEvents.onErrorLoad();
-                  });
-               this._imageUrl = url;
+               if (this._imageUrl !== url) {
+                  var
+                     self = this;
+                  //Из-за проблем, связанных с кэшированием - перезагружаем картинку специальным хелпером
+                  $ws.helpers.reloadImage(this._image, url)
+                     .addCallback(function(){
+                        self._image.hasClass('ws-hidden') && self._image.removeClass('ws-hidden');
+                     })
+                     .addErrback(function(){
+                        self._boundEvents.onErrorLoad();
+                     });
+                  this._imageUrl = url;
+               }
             }.debounce(0), //Оборачиваем именно в debounce, т.к. могут последовательно задать filter, dataSource и тогда изображения загрузка произойдет дважды.
             _showEditDialog: function(imageType) {
                var
