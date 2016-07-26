@@ -766,6 +766,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if(this._isHeaderScrolling) {
             this.getContainer().addClass('controls-DataGridView__scrollingNow');
          }
+         /* На touch устройствах надо перевести фокус(нативный) на ползунок,
+            т.к. сейчас взаимодействие происходит с ним. Иначе могут возникать проблемы,
+            когда курсор остаётся в поле ввода, или ховер останется на иконке другой */
+         if(this._touchSupport) {
+            this._thumb.focus();
+         }
          this._scrollingNow = true;
       },
 
