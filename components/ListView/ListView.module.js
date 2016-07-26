@@ -762,8 +762,10 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _onScrollMoveHandler: function(event, scrollTop){
-            var scrollPage = this._scrollBinder._getScrollPage();
-            this._notify('onScrollPageChange', scrollPage);
+            if (this._options.infiniteScroll == 'down'){
+               var scrollPage = this._scrollBinder._getScrollPage();
+               this._notify('onScrollPageChange', scrollPage);
+            }
          },
          _keyboardHover: function (e) {
             var
