@@ -2487,7 +2487,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          destroy: function () {
             this._destroyEditInPlace();
-            if (this.isInfiniteScroll()) {
+            if (this._scrollWatcher) {
                this._scrollWatcher.unsubscribe('onScroll', this._onScrollHandler);
                this._scrollWatcher.destroy();
                this._scrollWatcher = undefined;
