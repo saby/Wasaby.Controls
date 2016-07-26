@@ -2295,10 +2295,12 @@ define('js!SBIS3.CONTROLS.ListView',
             pageNumber = parseInt(pageNumber, 10);
             var offset = this._offset;
             if (this._isPageLoaded(pageNumber)){
-               var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
-                  itemId = this._options._itemsProjection.getItemBySourceIndex(itemIndex).getContents().getId(),
-                  item = this.getItems().getRecordById(itemId);
-               this.scrollToItem(item);
+               if (this._getItemsProjection()){
+                  this.scrollToItem(item);
+               }var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
+                     itemId = this._getItemsProjection().getItemBySourceIndex(itemIndex).getContents().getId(),
+                     item = this.getItems().getRecordById(itemId);
+                  
             } else {
                this._offset = this._options.pageSize * pageNumber;
                this._scrollOffset.top = this._offset;
