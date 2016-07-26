@@ -197,7 +197,15 @@ define(
              * @see mask
              * @see setDate
              */
-            isCalendarIconShown: true
+            isCalendarIconShown: true,
+            /**
+             * @cfg {String} Режим уведомления о смене даты.
+             * @variant 'complete' событие onDateChange стреляет только при окончании работы с полем даты(уход фокуса, выбор даты из календаря или нажатие клавиши insert).
+             * @variant 'change' событие onDateChange стреляет при каждом изменении значения даты.
+             * @noShow
+             * @deprecated
+             */
+            notificationMode: 'change'
          }
       },
 
@@ -466,7 +474,7 @@ define(
             if (!DateUtil.isValidDate(this._options.date)) {
                this._options.date = null;
             }
-            if (oldDate !== this._options.date) {
+            if (oldDate !== this._options.date && this._options.notificationMode === 'change') {
                this._notifyOnDateChanged();
             }
             this._onTextChanged();
@@ -489,6 +497,18 @@ define(
             date = this._getDateByText(this._options.text, this._options.date, true);
             if (date) {
                this.setDate(date);
+            }
+         }
+
+         if (!active) {
+            if (!this.formatModel.isFilled()) {
+               date = this._getDateByText(this._options.text, this._options.date, true);
+               if (date) {
+                  this.setDate(date);
+               }
+            }
+            if (this._options.notificationMode === 'complete') {
+               this._notifyOnDateChanged();
             }
          }
          DatePicker.superclass.setActive.apply(this, arguments);
