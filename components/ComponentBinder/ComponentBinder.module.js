@@ -235,6 +235,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          _searchTextTranslated: false,
          _path: [],
          _scrollPages: [],
+         _pageOffset: 0,
          _options: {
             /**
              * @cfg {SBIS3.CONROLS.DataGridView} объект представления данных
@@ -625,12 +626,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
       bindScrollPaging: function(paging) {
          var view = this._options.view, self = this;
          paging = paging || this._options.paging;
-         paging.subscribe('onSelectedItemChange', function(e, page){
-            if (page != this._currentScrollPage){
+         paging.subscribe('onSelectedItemChange', function(e, pageNumber){
+            if (pageNumber != this._currentScrollPage){
                var view = this._options.view,
-                  item = view.getItems().getRecordByKey(this._scrollPages[page - 1].id);
-               view.scrollToItem(item);
-               this._currentScrollPage = page;
+                  page = this._scrollPages[pageNumber - 1],
+                  item = view.getItems().getRecordByKey(page.id);
+               view._scrollWatcher.scrollTo(page.offset);
+               this._currentScrollPage = pageNumber;
             }
          }.bind(this));
 
@@ -653,11 +655,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
       _getScrollPage: function(){
          var view = this._options.view,
             scrollTop = view._scrollWatcher.getScrollContainer().scrollTop,
-            topElement = null;
+            offsetTop = view.getContainer().position().top;
          for (var i = 0; i < this._scrollPages.length; i++){
             var pageStart = this._scrollPages[i];
-            if (pageStart.element.offset().top + pageStart.element.height()>= 0){
-               return i - 1;
+            if (pageStart.element.offset().top + pageStart.element.height() >= offsetTop){
+               return i;
             }
          }
       },
@@ -673,16 +675,20 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             //Запушим первый элемент
             this._scrollPages.push({
                element: $('>.controls-ListView__item', view._getItemsContainer()).eq(0),
-               id: view.getItems().at(0).getId()
+               id: view.getItems().at(0).getId(),
+               offset: self._pageOffset
             })
          }
          $('>.controls-ListView__item', view._getItemsContainer()).slice(lastPageStart).each(function(){
-            var $this = $(this);
+            var $this = $(this),
+               offsetTop = self._options.view.getContainer().position().top;
             pageHeight += $this.height();
-            if (pageHeight  > viewportHeight) {
+            if (pageHeight  > viewportHeight - offsetTop) {
+               self._pageOffset += pageHeight;
                self._scrollPages.push({
                   element: $this,
-                  id: $this.data('id')
+                  id: $this.data('id'),
+                  offset: self._pageOffset
                });
                pageHeight = 0;
             }

@@ -748,7 +748,6 @@ define('js!SBIS3.CONTROLS.ListView',
                      paging: this._scrollPager
                   });
                   this._scrollBinder.bindScrollPaging();
-                  this._scrollPager.subscribe('onPageChange', this._onScrollPageChange.bind(this));
                }
                this._scrollWatcher.subscribe('onScroll', this._onScrollHandler.bind(this));
                this._scrollWatcher.subscribe('onScrollMove', this._onScrollMoveHandler.bind(this));
@@ -760,12 +759,6 @@ define('js!SBIS3.CONTROLS.ListView',
             if (scrollOnEdge) {
                this._scrollDirection = type;
                this._loadChecked(type == 'top' ? 'up' : 'down');
-            }
-         },
-         _onScrollPageChange: function(event, page){
-            if (page !== this._options.paging.getSelectedKey()){
-               var item = this.getItems().getRecordByKey(this._scrollPages[page - 1].id);
-               this.scrollToItem(item);
             }
          },
          _onScrollMoveHandler: function(event, scrollTop){
@@ -910,7 +903,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 id;
 
             if (target.length && this._isViewElement(target)) {
-               id = target.data('id');
+               id = this._getItemsProjection().getByHash(target.data('hash')).getContents().getId();
                this._elemClickHandler(id, this.getItems().getRecordByKey(id), e.target);
             }
             if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox') && this.isEnabled()){
@@ -1008,7 +1001,7 @@ define('js!SBIS3.CONTROLS.ListView',
                var cont = this._container[0],
                    containerCords = cont.getBoundingClientRect(),
                    targetKey = target[0].getAttribute('data-id'),
-                   item = this.getItems().getRecordById(targetKey),
+                   item = this.getItems() ? this.getItems().getRecordById(targetKey) : undefined,
                    correctTarget = target.hasClass('controls-editInPlace') ? this._getDomElementByItem(this._options._itemsProjection.getItemBySourceItem(item)) : target,
                    targetCords = correctTarget[0].getBoundingClientRect();
 
@@ -2229,7 +2222,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   handlers: {
                      'onPageChange': function (event, pageNum, deferred) {
                         var more = self.getItems().getMetaData().more,
-                            hasNextPage = self._hasNextPage(more, this._scrollOffset.bottom),
+                            hasNextPage = self._hasNextPage(more, self._scrollOffset.bottom),
                             maxPage = self._pager.getPaging()._maxPage;
                         //Старый Paging при включенной частичной навигации по нажатию кнопки "Перейти к последней странице" возвращает pageNum = 0 (у него индексы страниц начинаются с 1)
                         //В новом Pager'e индексация страниц начинается с 0 и такое поведение здесь не подходит
