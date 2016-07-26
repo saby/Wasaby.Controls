@@ -234,6 +234,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          _firstSearch: true,
          _searchTextTranslated: false,
          _path: [],
+         _scrollPages: [],
+         _pageOffset: 0,
          _options: {
             /**
              * @cfg {SBIS3.CONROLS.DataGridView} объект представления данных
@@ -258,7 +260,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             /**
              * @cfg {SBIS3.CONROLS.FilterButton} объект кнопки фильтров
              */
-            filterButton: undefined
+            filterButton: undefined,
+            /**
+             * @cfg {SBIS3.CONROLS.Pagign} объект пэйджинга
+             */
+            paging: undefined,
          }
       },
 
@@ -580,7 +586,115 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          view.subscribe('onPageSizeChange', function(event, pageSize) {
             pagingHistoryController.setHistory(pageSize, true);
          });
-      }
+      },
+
+      bindPaging: function(paging) {
+         var view = this._options.view, self = this;
+         this._paging = paging;
+         paging.subscribe('onSelectedItemChange', function(e, key){
+            var newPage, curPage;
+            if (key > 0) {
+               newPage = key - 1;
+               curPage = view.getPage();
+               if (curPage != newPage) {
+                  view.setPage(newPage);
+               }
+            }
+         });
+
+         view.subscribe('onPageChange', function(e, page){
+            var newKey, curKey;
+            if (page >= 0) {
+               newKey = page + 1;
+               curKey = parseInt(self._paging.getSelectedKey(), 10);
+               if (curKey != newKey) {
+                  self._paging.setSelectedKey(newKey);
+               }
+            }
+         });
+
+         view.subscribe('onDataLoad', function(e, list) {
+            if ((paging.getMode() == 'part')) {
+               var meta = list.getMetaData && list.getMetaData().more;
+               if  (meta && (paging.getSelectedKey() == paging.getItems().getCount()) && view._hasNextPage(meta)) {
+                  paging.setPagesCount(paging.getPagesCount() + 1);
+               }
+            }
+         })
+      },
+
+      bindScrollPaging: function(paging) {
+         var view = this._options.view, self = this;
+         paging = paging || this._options.paging;
+         paging.subscribe('onSelectedItemChange', function(e, pageNumber){
+            if (pageNumber != this._currentScrollPage){
+               var view = this._options.view,
+                  page = this._scrollPages[pageNumber - 1],
+                  item = view.getItems().getRecordByKey(page.id);
+               view._scrollWatcher.scrollTo(page.offset);
+               this._currentScrollPage = pageNumber;
+            }
+         }.bind(this));
+
+         view.subscribe('onScrollPageChange', function(e, page){
+            var newKey, curKey,
+               paging = this._options.paging;
+            if (page >= 0) {
+               newKey = page + 1;
+               curKey = parseInt(paging.getSelectedKey(), 10);
+               if (curKey != newKey) {
+                  if (newKey > paging.getItems().getCount()) {
+                     paging.setPagesCount(newKey);
+                  }
+                  this._currentScrollPage = newKey;
+                  paging.setSelectedKey(newKey);
+               }
+            }
+         }.bind(this));
+      },
+      _getScrollPage: function(){
+         var view = this._options.view,
+            scrollTop = view._scrollWatcher.getScrollContainer().scrollTop,
+            offsetTop = view.getContainer().position().top;
+         for (var i = 0; i < this._scrollPages.length; i++){
+            var pageStart = this._scrollPages[i];
+            if (pageStart.element.offset().top + pageStart.element.height() >= offsetTop){
+               return i;
+            }
+         }
+      },
+      _updateScrollPages: function(){
+         var view = this._options.view, 
+            viewportHeight = $(view._scrollWatcher.getScrollContainer()).height(),
+            pageHeight = 0,
+            lastPageStart = 0,
+            self = this;
+         if (this._scrollPages.length){
+            lastPageStart = this._scrollPages[this._scrollPages.length - 1].element.index();
+         } else {
+            //Запушим первый элемент
+            this._scrollPages.push({
+               element: $('>.controls-ListView__item', view._getItemsContainer()).eq(0),
+               id: view.getItems().at(0).getId(),
+               offset: self._pageOffset
+            })
+         }
+         $('>.controls-ListView__item', view._getItemsContainer()).slice(lastPageStart).each(function(){
+            var $this = $(this),
+               offsetTop = self._options.view.getContainer().position().top;
+            pageHeight += $this.height();
+            if (pageHeight  > viewportHeight - offsetTop) {
+               self._pageOffset += pageHeight;
+               self._scrollPages.push({
+                  element: $this,
+                  id: $this.data('id'),
+                  offset: self._pageOffset
+               });
+               pageHeight = 0;
+            }
+         });
+         this._options.paging.setPagesCount(this._scrollPages.length + 1)
+      },
    });
 
    return ComponentBinder;

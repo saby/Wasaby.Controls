@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          var self = this,
              opener = this.getOpener(),
              topParent;
-         this._publish('onScroll');
+         this._publish('onScroll', 'onScrollMove');
          this._scrollingContainer = this._options.element;
          this._type = (this._options.element ? 'container' : 'window');
          if (opener){
@@ -119,6 +119,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        */
       _processScrollEvent: function (isBottom, curScrollTop) {
          this._defineScrollDirection(curScrollTop);
+         this._notify('onScrollMove', curScrollTop);
          if (this._isScrollUp ) {
             if (this._isOnTop()) {
                this._notify('onScroll', 'top', curScrollTop);
