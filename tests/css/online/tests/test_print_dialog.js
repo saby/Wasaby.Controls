@@ -23,7 +23,7 @@ gemini.suite('SBIS3.CONTROLS.PrintDialog Online', function () {
                 actions.click(this.print);				
 				actions.waitForElementToShow('.ws-printdialog-titlebar .ws-window-title', 5000);
 				actions.waitForElementToShow('.ws-printdialog-print-button', 1000);
-				actions.wait(2000);
+				actions.wait(7000);
                 //actions.waitForElementToShow('[sbisname="controls-RadioButtons"] span[data-id="pickNum"]', 1000);
 				//actions.waitForElementToShow('[sbisname="controls-RadioButtons"] span[data-id="current"]', 1000);
             })
