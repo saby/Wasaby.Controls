@@ -1189,9 +1189,8 @@ define('js!SBIS3.CONTROLS.ListView',
                      ListView.superclass.setSelectedItemsAll.call(this);
                      if (dataSet.getMetaData().more){
                         InformationPopupManager.showMessageDialog({
-                           status: 'success', 
-                           message: 'Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.', 
-                           details: 'Дополнительный текст'
+                           status: 'default',
+                           message: 'Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.'
                         });
                      }
                   }.bind(this));
