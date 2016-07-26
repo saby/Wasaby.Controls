@@ -466,9 +466,6 @@ define(
             if (!DateUtil.isValidDate(this._options.date)) {
                this._options.date = null;
             }
-            if (oldDate !== this._options.date) {
-               this._notifyOnDateChanged();
-            }
             this._onTextChanged();
          }
       },
@@ -490,6 +487,16 @@ define(
             if (date) {
                this.setDate(date);
             }
+         }
+
+         if (!active) {
+            if (!this.formatModel.isFilled()) {
+               date = this._getDateByText(this._options.text, this._options.date, true);
+               if (date) {
+                  this.setDate(date);
+               }
+            }
+            this._notifyOnDateChanged();
          }
          DatePicker.superclass.setActive.apply(this, arguments);
       },
