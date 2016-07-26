@@ -482,12 +482,6 @@ define(
       },
       setActive: function(active) {
          var date;
-         if (!active && !this.formatModel.isFilled()) {
-            date = this._getDateByText(this._options.text, this._options.date, true);
-            if (date) {
-               this.setDate(date);
-            }
-         }
 
          if (!active) {
             if (!this.formatModel.isFilled()) {
