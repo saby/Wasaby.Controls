@@ -8,7 +8,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
        'js!SBIS3.CONTROLS.ActiveSelectable',
        'js!SBIS3.CONTROLS.SyncSelectionMixin',
        'js!SBIS3.CONTROLS.FieldLinkItemsCollection',
-       'js!WS.Data/Collection/RecordSet',
        'html!SBIS3.CONTROLS.FieldLink/afterFieldWrapper',
        'html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper',
        'js!SBIS3.CONTROLS.Utils.DialogOpener',
@@ -34,7 +33,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
         SyncSelectionMixin,
         FieldLinkItemsCollection,
-        RecordSet,
 
         /* Служебные шаблоны поля связи */
         afterFieldWrapper,
@@ -420,6 +418,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
           /** Обработчики событий контрола отрисовки элементов **/
           _onDrawItemsCollection: function() {
              this._updateInputWidth();
+             /* Валидацию надо производить именно после отрисовки элементов,
+                т.к. если валидировать по изменению ключей, будует возникать проблемы с отобржением.
+                + после отрисовки значения в контексте гарантированно лежат (некоторые проверяют при валидации и значения в контексте) */
+             this.validate();
           },
           _onCrossClickItemsCollection: function(key) {
              this.removeItemsSelection([key]);
