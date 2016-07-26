@@ -1469,7 +1469,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._oldRedraw();
          }
          else {
-            this._redrawItems();
+            if (this._getItemsProjection()) {
+               this._redrawItems();
+            }
          }
       },
       _redraw: function () {
