@@ -1681,10 +1681,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          targetOffset = target.offset();
 
-         if( (targetOffset.top - scrollContainerOffset.top - scrollContainer.scrollTop()) < 0) {
+         if( (targetOffset.top - scrollContainerOffset.top) < 0) {
             target[0].scrollIntoView(true);
             scrollNotify();
-         } else if ( (targetOffset.top + target.height() - scrollContainerOffset.top - scrollContainer.scrollTop()) > scrollContainer[0].clientHeight) {
+         } else if ( (targetOffset.top + target.height() - scrollContainerOffset.top) > scrollContainer[0].clientHeight) {
             target[0].scrollIntoView(false);
             scrollNotify();
          }
