@@ -2297,11 +2297,11 @@ define('js!SBIS3.CONTROLS.ListView',
             var offset = this._offset;
             if (this._isPageLoaded(pageNumber)){
                if (this._getItemsProjection()){
-                  this.scrollToItem(item);
-               }var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
+                  var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
                      itemId = this._getItemsProjection().getItemBySourceIndex(itemIndex).getContents().getId(),
                      item = this.getItems().getRecordById(itemId);
-                  
+                  this.scrollToItem(item);
+               }   
             } else {
                this._offset = this._options.pageSize * pageNumber;
                this._scrollOffset.top = this._offset;
