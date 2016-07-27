@@ -1,6 +1,9 @@
 .controls-Paging {
    overflow: hidden;
 }
+.controls-Paging__itemsContainer{
+   display: inline-block;
+}
 .controls-Paging__item {
    .user-select();
    height: @controls-Paging-item-height;
@@ -52,6 +55,7 @@
 }
 .control-Paging__next {
    background-position: 0 -@controls-Paging-btn-height;
+   float:right;
    &:hover {
       background-position: -@controls-Paging-btn-width -@controls-Paging-btn-height;
    }

@@ -236,6 +236,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          _path: [],
          _scrollPages: [],
          _pageOffset: 0,
+         _currentScrollPage: 1,
          _options: {
             /**
              * @cfg {SBIS3.CONROLS.DataGridView} объект представления данных
@@ -627,11 +628,26 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          var view = this._options.view, self = this;
          paging = paging || this._options.paging;
          paging.subscribe('onSelectedItemChange', function(e, pageNumber){
+            
+            var scrollToPage = function(page){
+               item = view.getItems().getRecordByKey(page.id);
+               view._scrollWatcher.scrollTo(page.offset - view.getContainer().position().top);
+            }
+
             if (pageNumber != this._currentScrollPage){
                var view = this._options.view,
-                  page = this._scrollPages[pageNumber - 1],
-                  item = view.getItems().getRecordByKey(page.id);
-               view._scrollWatcher.scrollTo(page.offset);
+                  page = this._scrollPages[pageNumber - 1];
+
+                  if (page){
+                     scrollToPage(page)
+                  } else {
+                     view.once('onDrawItems', function(){
+                        this._updateScrollPages();
+                        page = this._scrollPages[pageNumber - 1];
+                        scrollToPage(page);
+                     }.bind(this));
+                     view._loadNextPage();
+                  }
                this._currentScrollPage = pageNumber;
             }
          }.bind(this));
@@ -651,10 +667,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                }
             }
          }.bind(this));
+
       },
       _getScrollPage: function(){
          var view = this._options.view,
-            scrollTop = view._scrollWatcher.getScrollContainer().scrollTop,
             offsetTop = view.getContainer().position().top;
          for (var i = 0; i < this._scrollPages.length; i++){
             var pageStart = this._scrollPages[i];
@@ -663,12 +679,17 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             }
          }
       },
-      _updateScrollPages: function(){
+      _updateScrollPages: function(force){
          var view = this._options.view, 
             viewportHeight = $(view._scrollWatcher.getScrollContainer()).height(),
             pageHeight = 0,
             lastPageStart = 0,
             self = this;
+
+         if (force){
+            this._scrollPages.length = [];
+         }
+
          if (this._scrollPages.length){
             lastPageStart = this._scrollPages[this._scrollPages.length - 1].element.index();
          } else {
@@ -678,12 +699,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                id: view.getItems().at(0).getId(),
                offset: self._pageOffset
             })
+            self._viewOffsetTop = self._options.view.getContainer().get(0).getBoundingClientRect().top;
          }
          $('>.controls-ListView__item', view._getItemsContainer()).slice(lastPageStart).each(function(){
-            var $this = $(this),
-               offsetTop = self._options.view.getContainer().position().top;
+            var $this = $(this);
             pageHeight += $this.height();
-            if (pageHeight  > viewportHeight - offsetTop) {
+
+            if (pageHeight  > viewportHeight - self._viewOffsetTop) {
                self._pageOffset += pageHeight;
                self._scrollPages.push({
                   element: $this,
@@ -693,7 +715,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                pageHeight = 0;
             }
          });
-         this._options.paging.setPagesCount(this._scrollPages.length + 1)
+         this._options.paging.setPagesCount(this._scrollPages.length)
       },
    });
 

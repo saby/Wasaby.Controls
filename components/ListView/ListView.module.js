@@ -741,8 +741,10 @@ define('js!SBIS3.CONTROLS.ListView',
                if (this._options.infiniteScroll == 'down'){
                   this._scrollPager = new Paging({
                      element: $('.controls-ListView__scrollPager', this._container),
-                     pagesCount: 2
+                     pagesCount: 2,
+                     selectedKey: 1
                   });
+                  this._setScrollPagerPosition();
                   this._scrollBinder = new ComponentBinder({
                      view: this,
                      paging: this._scrollPager
@@ -763,9 +765,13 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _onScrollMoveHandler: function(event, scrollTop){
             if (this._options.infiniteScroll == 'down'){
-               var scrollPage = this._scrollBinder._getScrollPage();
+               var scrollPage = this._scrollBinder._getScrollPage(scrollTop);
                this._notify('onScrollPageChange', scrollPage);
             }
+         },
+         _setScrollPagerPosition: function(){
+            var right = $(window).width() - this.getContainer().get(0).getBoundingClientRect().right;
+            this._scrollPager.getContainer().css('right', right);
          },
          _keyboardHover: function (e) {
             var
@@ -1823,6 +1829,10 @@ define('js!SBIS3.CONTROLS.ListView',
                if (this._scrollWatcher && !this._scrollWatcher.hasScroll(this.getContainer())){
                   this._loadNextPage();
                }
+               if (this._scrollPager){
+                  this._setScrollPagerPosition();
+                  //this._scrollBinder._updateScrollPages(true);
+               }
             }
          },
          _removeItem: function(item){
@@ -1883,6 +1893,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && isContainerVisible && hasNextPage && !this.isLoading()) {
+
                this._showLoadingIndicator();
                this._toggleEmptyData(false);
                this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
@@ -1975,8 +1986,10 @@ define('js!SBIS3.CONTROLS.ListView',
             var hasScroll = this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer()), 
                existFloatArea = this._existFloatArea(),
                isScrollOnBottom = this.isScrollOnBottom();
+
             //TODO: Возможно тут просто нужно стрелять событием, а это перенести в биндер
             this._scrollBinder && this._scrollBinder._updateScrollPages();
+            
             // Если нет скролла или скролл внизу, значит нужно догружать еще записи (floatArea отжирает скролл, поэтому если она открыта - не грузим)
             if ((!hasScroll || isScrollOnBottom) && !existFloatArea) {
                this._loadNextPage();
