@@ -90,18 +90,6 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
             else {
                this._registerButton(this.getChildControlByName('okButton'));
             }
-
-            this._buttons.forEach(function(inst, index){
-               (function(index){
-                  self.subscribeTo(inst, 'onKeyPressed', function(e, event){
-                     switch(event.which){
-                        case $ws._const.key.esc: self._choose(); break;
-                        case $ws._const.key.left: self._switchButton(index, false); break;
-                        case $ws._const.key.right: self._switchButton(index, true); break;
-                     }
-                  });
-               })(index);
-            });
          },
 
          /*
@@ -119,10 +107,20 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
 
          _registerButton: function(inst, eventValue){
             var self = this;
+            var index = this._buttons.length;
+
             this._buttons.push(inst);
 
             this.subscribeTo(inst, 'onActivated', function(){
                self._choose(eventValue);
+            });
+
+            this.subscribeTo(inst, 'onKeyPressed', function(e, event){
+               switch(event.which){
+                  case $ws._const.key.esc: self._choose(); break;
+                  case $ws._const.key.left: self._switchButton(index, false); break;
+                  case $ws._const.key.right: self._switchButton(index, true); break;
+               }
             });
          }
       });
