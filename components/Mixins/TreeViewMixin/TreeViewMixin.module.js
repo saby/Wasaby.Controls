@@ -292,6 +292,12 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
          _modifyOptions: function (opts) {
             opts.folderFooterTpl = TemplateUtil.prepareTemplate(opts.folderFooterTpl);
             return opts;
+         },
+         //TODO: после переход на серверную вёрстку фолдерфутера, данный метод не понадобится
+         setOpenedPath: function(openedPath) {
+            $ws.helpers.forEach(openedPath, function(val, key) {
+               this._createFolderFooter(key);
+            }.bind(this));
          }
       },
       _elemClickHandlerInternal: function (data, id, target) {
