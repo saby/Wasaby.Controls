@@ -129,7 +129,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          if (this.isVisible() !== show) {
             this._isVisible = show;
             show && this._container.removeClass('ws-hidden');
-            this._blocks.wrapper.animate({'margin-top': show ? 0 : '-30px'}, {
+            var width = this._blocks.wrapper.width();
+            this._blocks.wrapper.animate({'margin-left': show ? 0 : -width + 'px'}, {
                duration: 150,
                easing: 'linear',
                queue: false,

@@ -1,22 +1,29 @@
 .controls-OperationsPanelButton {
-   border-radius: @controls-OperationsPanelButton-border-radius;
-   width: @controls-OperationsPanelButton-height;
-   height: @controls-OperationsPanelButton-width;
+   width: @controls-OperationsPanelButton-width;
+   height: @controls-OperationsPanelButton-height;
 
    &.ws-enabled {
       cursor: @controls-OperationsPanelButton-cursor;
-      &:hover {
-         background-color: @controls-OperationsPanelButton-hover-bg;
+
+      &:hover .controls-OperationsPanelButton__icon {
+         color: @controls-OperationsPanelButton-hover-icon-color;
       }
    }
    .controls-OperationsPanelButton__icon {
       position: relative;
-      left: @controls-OperationsPanelButton-icon-top;
-      top: @controls-OperationsPanelButton-icon-left;
+      left: @controls-OperationsPanelButton-icon-left;
+      top: @controls-OperationsPanelButton-icon-top;
+      color: @default-color;
+
+      &:before {
+         content: "\e6d9";
+      }
    }
    &.controls-Checked__checked {
+      background-color: @controls-OperationsPanel-bg;
+
       .controls-OperationsPanelButton__icon:before {
-         content: "\e67b";
+         content: "\e69c";
       }
    }
 }

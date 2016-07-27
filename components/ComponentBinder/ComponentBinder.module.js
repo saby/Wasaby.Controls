@@ -693,12 +693,14 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          if (this._scrollPages.length){
             lastPageStart = this._scrollPages[this._scrollPages.length - 1].element.index();
          } else {
-            //Запушим первый элемент
-            this._scrollPages.push({
-               element: $('>.controls-ListView__item', view._getItemsContainer()).eq(0),
-               id: view.getItems().at(0).getId(),
-               offset: self._pageOffset
-            })
+            //Запушим первый элемент, если он есть
+            if (view.getItems().getCount()){
+               this._scrollPages.push({
+                  element: $('>.controls-ListView__item', view._getItemsContainer()).eq(0),
+                  id: view.getItems().at(0).getId(),
+                  offset: self._pageOffset
+               })
+            }
             self._viewOffsetTop = self._options.view.getContainer().get(0).getBoundingClientRect().top;
          }
          $('>.controls-ListView__item', view._getItemsContainer()).slice(lastPageStart).each(function(){

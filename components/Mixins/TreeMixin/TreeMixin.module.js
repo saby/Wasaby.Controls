@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
           * @private
           */
          var items = [];
-         applyExpandToItemsProjection.call(this, projection, cfg);
+         applyExpandToItemsProjection.call(this, projection, cfg, false);
          projection.each(function(item) {
             items.push(item);
          });
@@ -85,9 +85,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
    projectionFilterOnlyFolders = function(item, index, itemProj) {
       return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj, true);
    },
-   applyExpandToItemsProjection = function(projection, cfg) {
+   applyExpandToItemsProjection = function(projection, cfg, analyze) {
       var idx, item, projFilter;
-      projection.setEventRaising(false);
+      projection.setEventRaising(false, analyze);
       projFilter = projection.getFilter();
       projection.setFilter(retTrue);
       for (idx in cfg.openedPath) {
@@ -105,7 +105,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       }
       var filterCallBack = projFilter;
       projection.setFilter(filterCallBack);
-      projection.setEventRaising(true);
+      projection.setEventRaising(true, analyze);
    },
    expandAllItems = function(projection) {
       var
@@ -503,7 +503,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       setOpenedPath: function(openedPath) {
          this._options.openedPath = openedPath;
          if (this._getItemsProjection()) { // Если имеется проекция - то применяем разворот к итемам, иначе он применится после создания проекции
-            applyExpandToItemsProjection(this._getItemsProjection(), this._options);
+            applyExpandToItemsProjection(this._getItemsProjection(), this._options, true);
          }
       },
       around: {
