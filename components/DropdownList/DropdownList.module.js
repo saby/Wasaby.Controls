@@ -527,6 +527,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return this._pickerListContainer;
          },
          _setPickerConfig: function () {
+            var hasContainerArrow = !this.getContainer().hasClass('controls-DropdownList__withoutArrow');
             return {
                corner: 'tl',
                verticalAlign: {
@@ -535,7 +536,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                },
                horizontalAlign: {
                   side: 'left',
-                  offset: -2
+                  offset: hasContainerArrow ? -2 : -6
                },
                //Если мы не в ховер-моде, нужно отключить эту опцию, чтобы попап после клика сразу не схлапывался
                closeByExternalOver: this._options.mode === 'hover' && !this._options.multiselect,
