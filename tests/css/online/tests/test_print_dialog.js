@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.PrintDialog Online', function () {
 
     gemini.suite('base', function (test) {
 
-        test.setUrl('/regression_print_dialog_online.html').setCaptureElements('body')
+        test.setUrl('/regression_print_dialog_online.html').skip('chrome').setCaptureElements('body')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="DataGridView 1"]', 40000);
