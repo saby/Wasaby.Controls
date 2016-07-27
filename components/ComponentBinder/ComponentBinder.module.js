@@ -627,7 +627,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          var view = this._options.view, self = this;
          paging = paging || this._options.paging;
          paging.subscribe('onSelectedItemChange', function(e, pageNumber){
-            if (pageNumber != this._currentScrollPage){
+            if (pageNumber != this._currentScrollPage && this._scrollPages.length){
                var view = this._options.view,
                   page = this._scrollPages[pageNumber - 1],
                   item = view.getItems().getRecordByKey(page.id);
@@ -672,12 +672,14 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          if (this._scrollPages.length){
             lastPageStart = this._scrollPages[this._scrollPages.length - 1].element.index();
          } else {
-            //Запушим первый элемент
-            this._scrollPages.push({
-               element: $('>.controls-ListView__item', view._getItemsContainer()).eq(0),
-               id: view.getItems().at(0).getId(),
-               offset: self._pageOffset
-            })
+            //Запушим первый элемент, если он есть
+            if (view.getItems().getCount()){
+               this._scrollPages.push({
+                  element: $('>.controls-ListView__item', view._getItemsContainer()).eq(0),
+                  id: view.getItems().at(0).getId(),
+                  offset: self._pageOffset
+               })
+            }
          }
          $('>.controls-ListView__item', view._getItemsContainer()).slice(lastPageStart).each(function(){
             var $this = $(this),
