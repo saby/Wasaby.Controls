@@ -90,6 +90,13 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
             else {
                this._registerButton(this.getChildControlByName('okButton'));
             }
+
+            //По esc закрываем диалог. Кидаем событие со значением undefined.
+            this.subscribe('onKeyPressed', function(e, event){
+               if(event.which === $ws._const.key.esc){
+                  self._choose();
+               }
+            });
          },
 
          /*
@@ -117,7 +124,6 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
 
             this.subscribeTo(inst, 'onKeyPressed', function(e, event){
                switch(event.which){
-                  case $ws._const.key.esc: self._choose(); break;
                   case $ws._const.key.left: self._switchButton(index, false); break;
                   case $ws._const.key.right: self._switchButton(index, true); break;
                }
