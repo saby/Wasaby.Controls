@@ -623,7 +623,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             var
                self = this,
                isDublicate = false;
-            if (valParam && typeof valParam === 'string' && self._textChanged === false) {
+            if (valParam && typeof valParam === 'string' && self._textChanged) {
                this.getHistory().addCallback(function(arrBL){
                   if( typeof arrBL  === 'object') {
                      $ws.helpers.forEach(arrBL, function (valBL, keyBL) {
