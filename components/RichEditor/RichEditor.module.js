@@ -1288,11 +1288,14 @@ define('js!SBIS3.CONTROLS.RichEditor',
                }
             });
 
-            //Запрещаем всплытие Enter
+            //Запрещаем всплытие Enter, Up и Down
             this._container.bind('keyup', function(e) {
                if (e.which === $ws._const.key.enter) {
                   e.stopPropagation();
                   e.preventDefault();
+               }
+               if (e.which === $ws._const.key.up || e.which === $ws._const.key.down) {
+                  e.stopPropagation();
                }
             });
 
