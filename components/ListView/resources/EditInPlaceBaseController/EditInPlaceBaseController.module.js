@@ -362,6 +362,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      self._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
                   });
                } else {
+                  if (isAdd && eipRecord.getId()) {
+                     this._options.dataSource.destroy(eipRecord.getId());
+                  }
                   this._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
                }
                this._removePendingOperation();
