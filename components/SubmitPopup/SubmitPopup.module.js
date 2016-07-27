@@ -15,10 +15,12 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
     */
    function(InformationPopup, template){
       'use strict';
-      var SubmitPopup = InformationPopup.extend( /** @lends SBIS3.CONTROLS.SubmitPopup.prototype */ {
+
+      var SubmitPopup = InformationPopup.extend(/** @lends SBIS3.CONTROLS.SubmitPopup.prototype */ {
          /**
           * @typedef {String} SubmitPopupStatus
           * @variant confirm  Диалог подтверждения. Имеет кнопки "Да", "Нет" и (опционально) "Отмена". Цвет диалога - синий.
+          * @variant default  "По умолчанию". Имеет кнопку "ОК". Цвет диалога - синий.
           * @variant success  "Успешно". Имеет кнопку "ОК". Цвет диалога - зеленый.
           * @variant error    "Ошибка". Имеет кнопку "ОК". Цвет диалога - красный.
           * @variant warning  "Предупреждение". Имеет кнопку "ОК". Цвет диалога - оранжевый.
@@ -64,7 +66,9 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                template: template,
 
                isModal: true
-            }
+            },
+
+            _buttons: []
          },
          $constructor : function(){
             this._publish('onChoose');
@@ -76,24 +80,23 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
             var self = this;
 
             if(this._options.status === 'confirm'){
-               this.subscribeTo(this.getChildControlByName('positiveButton'), 'onActivated', function(){
-                  self._choose(true);
-               });
-               this.subscribeTo(this.getChildControlByName('negativeButton'), 'onActivated', function(){
-                  self._choose(false);
-               });
+               this._registerButton(this.getChildControlByName('positiveButton'), true);
+               this._registerButton(this.getChildControlByName('negativeButton'), false);
 
                if(this._options.hasCancelButton){
-                  this.subscribeTo(this.getChildControlByName('cancelButton'), 'onActivated', function(){
-                     self._choose();
-                  });
+                  this._registerButton(this.getChildControlByName('cancelButton'));
                }
             }
             else {
-               this.subscribeTo(this.getChildControlByName('okButton'), 'onActivated', function(){
-                  self._choose();
-               });
+               this._registerButton(this.getChildControlByName('okButton'));
             }
+
+            //По esc закрываем диалог. Кидаем событие со значением undefined.
+            this.subscribe('onKeyPressed', function(e, event){
+               if(event.which === $ws._const.key.esc){
+                  self._choose();
+               }
+            });
          },
 
          /*
@@ -102,6 +105,29 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
          _choose: function(value){
             this._notify('onChoose', value);
             this.close();
+         },
+
+         _switchButton: function(index, next){
+            var newActiveButtonIndex = (index + (next ? 1 : -1) + this._buttons.length) % this._buttons.length;
+            this._buttons[newActiveButtonIndex].setActive(true);
+         },
+
+         _registerButton: function(inst, eventValue){
+            var self = this;
+            var index = this._buttons.length;
+
+            this._buttons.push(inst);
+
+            this.subscribeTo(inst, 'onActivated', function(){
+               self._choose(eventValue);
+            });
+
+            this.subscribeTo(inst, 'onKeyPressed', function(e, event){
+               switch(event.which){
+                  case $ws._const.key.left: self._switchButton(index, false); break;
+                  case $ws._const.key.right: self._switchButton(index, true); break;
+               }
+            });
          }
       });
       return SubmitPopup;
