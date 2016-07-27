@@ -312,7 +312,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   if ($ws._const.browser.isIE8) {
                      this._buttonChoose.getContainer().addClass('controls-Button__IE8Hack');
                      setTimeout(function() {
-                        this._buttonChoose.getContainer().addClass('controls-Button__IE8Hack');
+                        this._buttonChoose.getContainer().removeClass('controls-Button__IE8Hack');
                      }.bind(this), 1);
                   }
                   selected =  !row.hasClass('controls-DropdownList__item__selected');
