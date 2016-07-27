@@ -309,6 +309,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
                      this._changedSelectedKeys.splice(changedSelectionIndex, 1);
                   }
                   this._buttonChoose.getContainer().toggleClass('ws-invisible', !this._changedSelectedKeys.length);
+                  if ($ws._const.browser.isIE8) {
+                     this._buttonChoose.getContainer().addClass('controls-Button__IE8Hack');
+                     setTimeout(function() {
+                        this._buttonChoose.getContainer().addClass('controls-Button__IE8Hack');
+                     }.bind(this), 1);
+                  }
                   selected =  !row.hasClass('controls-DropdownList__item__selected');
                   row.toggleClass('controls-DropdownList__item__selected', selected);
                   this._currentSelection[row.data('id')] = selected;
