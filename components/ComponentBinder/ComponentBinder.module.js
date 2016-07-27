@@ -634,7 +634,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                view._scrollWatcher.scrollTo(page.offset - view.getContainer().position().top);
             }
 
-            if (pageNumber != this._currentScrollPage){
+            if (pageNumber != this._currentScrollPage && this._scrollPages.length){
                var view = this._options.view,
                   page = this._scrollPages[pageNumber - 1];
 
