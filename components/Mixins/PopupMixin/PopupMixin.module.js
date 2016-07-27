@@ -811,6 +811,15 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          $ws.single.WindowManager.setVisible(this._zIndex);
       },
 
+      /**
+       * <wiTag noShow>
+       * Получить z-index текущего окна
+       * @return {Number} z-index
+       */
+      getZIndex : function() {
+         return this._zIndex;
+      },
+
       after: {
          init: function () {
             ControlHierarchyManager.addNode(this, this.getParent());
