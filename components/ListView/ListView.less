@@ -114,12 +114,13 @@
    .controls-ListView__scrollPager{
       position: fixed;
       bottom: 0;
-      width: 125px;
       height: 32px;
-      left: 1600px;
       background: white;
       border-top: 1px solid @default-color;
-      display: none;
+      z-index: 10;
+      .control-Paging__prev{
+         display: none;
+      }
    }
 
 
