@@ -6,7 +6,7 @@
       cursor: @controls-OperationsPanelButton-cursor;
 
       &:hover .controls-OperationsPanelButton__icon {
-         color: @controls-OperationsPanelButton-hover-icon-color;
+         color: @controls-OperationsPanelButton-active-icon-color;
       }
    }
    .controls-OperationsPanelButton__icon {
@@ -22,8 +22,11 @@
    &.controls-Checked__checked {
       background-color: @controls-OperationsPanel-bg;
 
-      .controls-OperationsPanelButton__icon:before {
-         content: "\e69c";
+      .controls-OperationsPanelButton__icon {
+         color: @controls-OperationsPanelButton-active-icon-color;
+         &:before {
+            content: "\e69c";
+         }
       }
    }
 }
