@@ -11,14 +11,22 @@
       }
    }
    .controls-OperationsPanelButton__icon {
-      font: @controls-OperationsPanelButton-font;
+      font: 18px 'TensorFont Regular', 'TensorFont';
       position: relative;
       left: @controls-OperationsPanelButton-icon-left;
-      top: @controls-OperationsPanelButton-icon-top;
       color: @default-color;
 
-      &:before {
-         content: "\e007";
+      &.controls-OperationsPanelButton__icon-vertical-arrow {
+         top: @controls-OperationsPanelButton-vertical-icon-top;
+         &:before {
+            content: "\e011";
+         }
+      }
+      &.controls-OperationsPanelButton__icon-horizontal-arrow {
+         top: @controls-OperationsPanelButton-horizontal-icon-top;
+         &:before {
+            content: "\e007";
+         }
       }
    }
    &.controls-Checked__checked {
@@ -26,7 +34,10 @@
 
       .controls-OperationsPanelButton__icon {
          color: @controls-OperationsPanelButton-active-icon-color;
-         &:before {
+         &.controls-OperationsPanelButton__icon-vertical-arrow:before {
+            content: "\e012";
+         }
+         &.controls-OperationsPanelButton__icon-horizontal-arrow:before {
             content: "\e008";
          }
       }
