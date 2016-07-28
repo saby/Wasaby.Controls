@@ -979,7 +979,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
          _setText: function(text) {
             if (text !== this.getText()) {
-               this._textChanged = true;
+               if (!this._isEmptyValue(text) && !this._isEmptyValue(this._options.text)) {
+                  this._textChanged = true;
+               }
                this._options.text = text;
                this._notify('onTextChange', text);
                this._notifyOnPropertyChanged('text');
@@ -1292,7 +1294,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
             editor.on('keyup', function(e) {
                self._typeInProcess = false;
-               self._setTrimmedText(self._getTinyEditorValue());
+               if (!(e.keyCode === $ws._const.key.enter && e.ctrlKey)) { // Не нужно обрабатывать ctrl+enter, т.к. это сочетание для дефолтной кнопки
+                  self._setTrimmedText(self._getTinyEditorValue());
+               }
             });
 
             editor.on('keydown', function(e) {
