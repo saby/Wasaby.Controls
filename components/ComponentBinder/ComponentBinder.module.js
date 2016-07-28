@@ -307,7 +307,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
       bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, searchMode) {
          var self = this,
             view = this._options.view,
-            isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
+            isTree = this._isTreeView(view);
          searchForm = searchForm || this._options.searchForm;
          //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
          view._searchParamName = searchParamName;
@@ -624,9 +624,21 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          })
       },
 
+      _isTreeView: function(view){
+         return $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
+      },
+
       bindScrollPaging: function(paging) {
          var view = this._options.view, self = this;
          paging = paging || this._options.paging;
+         isTree = this._isTreeView(view);
+
+         if (isTree){
+            view.subscribe('onSetRoot', function(){
+               this._updateScrollPages(true);
+            }.bind(this));
+         }
+
          paging.subscribe('onSelectedItemChange', function(e, pageNumber){
             
             var scrollToPage = function(page){
@@ -679,17 +691,17 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             }
          }
       },
-      _updateScrollPages: function(force){
+      _updateScrollPages: function(reset){
          var view = this._options.view, 
             viewportHeight = $(view._scrollWatcher.getScrollContainer()).height(),
             pageHeight = 0,
             lastPageStart = 0,
             self = this;
 
-         if (force){
-            this._scrollPages.length = [];
+         if (reset){
+            this._scrollPages = [];
+            self._pageOffset = 0;
          }
-
          if (this._scrollPages.length){
             lastPageStart = this._scrollPages[this._scrollPages.length - 1].element.index();
          } else {
@@ -701,13 +713,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                   offset: self._pageOffset
                })
             }
-            self._viewOffsetTop = self._options.view.getContainer().get(0).getBoundingClientRect().top;
          }
          $('>.controls-ListView__item', view._getItemsContainer()).slice(lastPageStart).each(function(){
-            var $this = $(this);
+            var $this = $(this),
+               offsetTop = self._options.view.getContainer().position().top;
             pageHeight += $this.height();
-
-            if (pageHeight  > viewportHeight - self._viewOffsetTop) {
+            if (pageHeight  > viewportHeight - offsetTop) {
                self._pageOffset += pageHeight;
                self._scrollPages.push({
                   element: $this,
@@ -717,7 +728,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                pageHeight = 0;
             }
          });
-         this._options.paging.setPagesCount(this._scrollPages.length)
+         this._options.paging.setPagesCount(this._scrollPages.length + 1);
       },
    });
 
