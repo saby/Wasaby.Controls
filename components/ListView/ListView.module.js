@@ -1946,7 +1946,19 @@ define('js!SBIS3.CONTROLS.ListView',
          _drawPage: function(dataSet, direction){
             var at = null;
             //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
-            if (direction === 'up') {
+            if (direction === 'down') {
+               this._scrollOffset.bottom += this._limit;
+               //TODO новый миксин не задействует декоратор лесенки в принципе при любых действиях, кроме первичной отрисовки
+               //это неправильно, т.к. лесенка умеет рисовать и дорисовывать данные, если они добавляются последовательно
+               //здесь мы говорим, чтобы лесенка отработала при отрисовке данных
+               var ladder = this._options._decorators.getByName('ladder');
+               if (ladder){
+                  ladder.setIgnoreEnabled(true);
+               }
+               //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
+               this.getItems().append(dataSet);
+               ladder && ladder.setIgnoreEnabled(false);
+            } else {
                if (this._scrollOffset.top >= this._limit){
                   this._scrollOffset.top -= this._limit;
                } else {
@@ -1963,18 +1975,6 @@ define('js!SBIS3.CONTROLS.ListView',
                }
                this.getItems().prepend(items);
                at = {at: 0};
-            } else {
-               this._scrollOffset.bottom += this._limit;
-               //TODO новый миксин не задействует декоратор лесенки в принципе при любых действиях, кроме первичной отрисовки
-               //это неправильно, т.к. лесенка умеет рисовать и дорисовывать данные, если они добавляются последовательно
-               //здесь мы говорим, чтобы лесенка отработала при отрисовке данных
-               var ladder = this._options._decorators.getByName('ladder');
-               if (ladder){
-                  ladder.setIgnoreEnabled(true);
-               }
-               //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
-               this.getItems().append(dataSet);
-               ladder && ladder.setIgnoreEnabled(false);
             }
 
             if (this._isSlowDrawing()) {
