@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
    [
-      'js!SBIS3.CORE.Control'
+      'js!SBIS3.CORE.Control',
+      'js!SBIS3.CORE.LayoutManager'
    ],
 
    /**
@@ -9,7 +10,7 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
     * @public
     * @author Степин П.В.
     */
-   function(Control){
+   function(Control, LayoutManager){
       'use strict';
 
       //Расстояние между блоками
@@ -32,7 +33,10 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
             _hiddenItems: [],
 
             //Минимальный z-index сделаем 100
-            _zIndex: 100
+            _zIndex: 100,
+
+            //Отступ справа может меняться в зависимости от наличия скролла
+            _right: RIGHT
          },
          $constructor : function(){
          },
@@ -52,6 +56,12 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
                self._zIndex = Math.max(zIndex + 1, 100);
                self._updatePositions();
             });
+
+            var offset = LayoutManager.getScrollingContainerFixedOffsets();
+
+            if(offset && offset.hasOwnProperty('right')){
+               this._right += offset.right
+            }
          },
 
          /**
@@ -178,7 +188,7 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
 
                controlContainer.css({
                   bottom: bottom,
-                  right: RIGHT,
+                  right: this._right,
                   'z-index': this._zIndex
                });
 
