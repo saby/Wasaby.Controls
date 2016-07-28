@@ -166,7 +166,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
        * @see getSelectedKeys
        */
       setSelectedKeys : function(idArray) {
-         var difference;
+         var wasEmpty = this._isEmptySelection(),
+             difference;
 
          if (Array.isArray(idArray)) {
             difference = this._getArrayDifference(this._options.selectedKeys, idArray);
@@ -183,7 +184,13 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
                      this._options.selectedKeys = idArray.slice(0, 1);
                   }
                }
-            this._afterSelectionHandler(difference.added, difference.removed);
+
+            /* Т.к. у нас пустой массив и массив с [null] являются пустыми зачениями,
+               то надо проверить, реально ли что-то изменилось */
+            if(wasEmpty && this._isEmptySelection()) {
+               return;
+            }
+            this._afterSelectionHandler(difference.added, difference.removed, wasEmpty);
          } else {
             throw new Error('Argument must be instance of Array');
          }
