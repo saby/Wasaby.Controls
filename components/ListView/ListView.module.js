@@ -625,7 +625,8 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @cfg {Boolean} Использовать режим частичной навигации
                 * Задаёт какой режим навигации использовать: полный или частичный.
                 */
-               partialPaging: true
+               partialPaging: true,
+               scrollPaging: true //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
             },
             //Флаг обозначает необходимость компенсировать подгрузку по скроллу вверх, ее нельзя делать безусловно, так как при подгрузке вверх могут добавлятся элементы и вниз тоже
             _needSrollTopCompensation: false,
@@ -737,8 +738,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   });
                   
                }
-               this._previousInfiniteScroll = this._options.infiniteScroll;
-               if (this._options.infiniteScroll == 'down'){
+               if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                   this._createScrollPager();
                }
                this._scrollWatcher.subscribe('onScroll', this._onScrollHandler.bind(this));
@@ -2518,6 +2518,12 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._pager) {
                this._pager.destroy();
                this._pager = undefined;
+            }
+            if (this._scrollBinder){
+               this._scrollBinder.destroy();
+            }
+            if (this._scrollPager){
+               this._scrollPager.destroy();
             }
             ListView.superclass.destroy.call(this);
          },

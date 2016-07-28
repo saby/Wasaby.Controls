@@ -677,19 +677,18 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             }
          }.bind(this));
 
-         var $window = $(window);
+         $(window).bind('resize', this._resizeHandler.bind(this));
+      },
 
-         $window.bind('resize', function(){
-            var windowHeight = $window.height();
-            clearTimeout(this._windowResizeTimeout);
-            if (this._windowHeight != windowHeight){
-               this._windowHeight = windowHeight;
-               this._windowResizeTimeout = setTimeout(function(){
-                  this._updateScrollPages(true);
-               }.bind(this), 200);
-            }
-         }.bind(this))
-
+      _resizeHandler: function(){
+         var windowHeight = $(window).height();
+         clearTimeout(this._windowResizeTimeout);
+         if (this._windowHeight != windowHeight){
+            this._windowHeight = windowHeight;
+            this._windowResizeTimeout = setTimeout(function(){
+               this._updateScrollPages(true);
+            }.bind(this), 200);
+         }
       },
 
       _getScrollPage: function(){
@@ -751,6 +750,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             this._options.paging.setVisible(true);
          }
       },
+
+      destroy: function(){
+         $(window).unbind(this._resizeHandler);
+         ComponentBinder.superclass.destroy.call(this);
+      }
+
    });
 
    return ComponentBinder;
