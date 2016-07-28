@@ -749,7 +749,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          if (this._scrollPages.length){
             this._options.paging.setVisible(true);
          }
-      },
+      }
 
       destroy: function(){
          $(window).unbind(this._resizeHandler);
