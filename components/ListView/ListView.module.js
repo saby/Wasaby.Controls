@@ -739,17 +739,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }
                this._previousInfiniteScroll = this._options.infiniteScroll;
                if (this._options.infiniteScroll == 'down'){
-                  this._scrollPager = new Paging({
-                     element: $('.controls-ListView__scrollPager', this._container),
-                     pagesCount: 2,
-                     selectedKey: 1
-                  });
-                  this._setScrollPagerPosition();
-                  this._scrollBinder = new ComponentBinder({
-                     view: this,
-                     paging: this._scrollPager
-                  });
-                  this._scrollBinder.bindScrollPaging();
+                  this._createScrollPager();
                }
                this._scrollWatcher.subscribe('onScroll', this._onScrollHandler.bind(this));
                this._scrollWatcher.subscribe('onScrollMove', this._onScrollMoveHandler.bind(this));
@@ -763,6 +753,19 @@ define('js!SBIS3.CONTROLS.ListView',
                this._loadChecked(type == 'top' ? 'up' : 'down');
             }
          },
+         _createScrollPager: function(){
+            this._scrollPager = new Paging({
+               element: $('.controls-ListView__scrollPager', this._container),
+               visible: false
+            });
+            this._setScrollPagerPosition();
+            this._scrollBinder = new ComponentBinder({
+               view: this,
+               paging: this._scrollPager
+            });
+            this._scrollBinder.bindScrollPaging();
+         },
+
          _onScrollMoveHandler: function(event, scrollTop){
             if (this._options.infiniteScroll == 'down'){
                var scrollPage = this._scrollBinder._getScrollPage(scrollTop);
@@ -1812,6 +1815,10 @@ define('js!SBIS3.CONTROLS.ListView',
                } else {
                   this._updateItemsToolbar();
                }
+            }
+
+            if (this._scrollBinder){
+               this._scrollBinder._updateScrollPages(true);
             }
 
             this._notifyOnSizeChanged(true);
