@@ -1,6 +1,7 @@
 .controls-OperationsPanelButton {
    width: @controls-OperationsPanelButton-width;
    height: @controls-OperationsPanelButton-height;
+   line-height: @controls-OperationsPanelButton-height;
 
    &.ws-enabled {
       cursor: @controls-OperationsPanelButton-cursor;
@@ -10,13 +11,14 @@
       }
    }
    .controls-OperationsPanelButton__icon {
+      font: @controls-OperationsPanelButton-font;
       position: relative;
       left: @controls-OperationsPanelButton-icon-left;
       top: @controls-OperationsPanelButton-icon-top;
       color: @default-color;
 
       &:before {
-         content: "\e6d9";
+         content: "\e007";
       }
    }
    &.controls-Checked__checked {
@@ -25,7 +27,7 @@
       .controls-OperationsPanelButton__icon {
          color: @controls-OperationsPanelButton-active-icon-color;
          &:before {
-            content: "\e69c";
+            content: "\e008";
          }
       }
    }
