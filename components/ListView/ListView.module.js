@@ -2521,6 +2521,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             if (this._scrollBinder){
                this._scrollBinder.destroy();
+               this._scrollBinder = null;
             }
             if (this._scrollPager){
                this._scrollPager.destroy();
