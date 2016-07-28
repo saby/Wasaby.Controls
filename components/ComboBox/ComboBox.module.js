@@ -341,6 +341,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                      if ((key != undefined) && (key !== null)) {
                         self._container.removeClass('controls-ComboBox_emptyValue');
                      }
+                     else {
+                        self._container.addClass('controls-ComboBox_emptyValue');
+                     }
                   }
                }
                else {

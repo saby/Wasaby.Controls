@@ -236,6 +236,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          _path: [],
          _scrollPages: [],
          _pageOffset: 0,
+         _currentScrollPage: 1,
          _options: {
             /**
              * @cfg {SBIS3.CONROLS.DataGridView} объект представления данных
@@ -639,11 +640,26 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          }
 
          paging.subscribe('onSelectedItemChange', function(e, pageNumber){
+            
+            var scrollToPage = function(page){
+               item = view.getItems().getRecordByKey(page.id);
+               view._scrollWatcher.scrollTo(page.offset - view.getContainer().position().top);
+            }
+
             if (pageNumber != this._currentScrollPage && this._scrollPages.length){
                var view = this._options.view,
-                  page = this._scrollPages[pageNumber - 1],
-                  item = view.getItems().getRecordByKey(page.id);
-               view._scrollWatcher.scrollTo(page.offset);
+                  page = this._scrollPages[pageNumber - 1];
+
+                  if (page){
+                     scrollToPage(page)
+                  } else {
+                     view.once('onDrawItems', function(){
+                        this._updateScrollPages();
+                        page = this._scrollPages[pageNumber - 1];
+                        scrollToPage(page);
+                     }.bind(this));
+                     view._loadNextPage();
+                  }
                this._currentScrollPage = pageNumber;
             }
          }.bind(this));
@@ -663,10 +679,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                }
             }
          }.bind(this));
+
       },
       _getScrollPage: function(){
          var view = this._options.view,
-            scrollTop = view._scrollWatcher.getScrollContainer().scrollTop,
             offsetTop = view.getContainer().position().top;
          for (var i = 0; i < this._scrollPages.length; i++){
             var pageStart = this._scrollPages[i];
