@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.ListView',
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
-             Link, ScrollWatcher, IBindCollection, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager, 
+             Link, ScrollWatcher, IBindCollection, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder) {
 
       'use strict';
@@ -639,32 +639,18 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          $constructor: function () {
-            //TODO требуется доработка, для поддержки touch устройств с возможностью управление мышью
-            //    https://inside.tensor.ru/opendoc.html?guid=25dd3a2f-00e5-4765-9b94-a90d6d7a9d4f&description=
-            //    Задача в разработку: доработка listView, для поддержки touch устройств с возможностью управление мышью
-            this._touchSupport = $ws._const.browser.isMobilePlatform;
+            var dispatcher = $ws.single.CommandDispatcher;
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange');
-
-            /* За счёт того, что разделено поведения отображения операций и ховера,
-               в зависимости от события, которое произошло, то можно смело подписаться на все событие,
-               если его нет, то подписки не произодйдёт */
-            if(this._touchSupport) {
-               this._container.on('swipe', this._swipeHandler.bind(this))
-                              .on('tap', this._tapHandler.bind(this))
-                              .on('touchmove',this._mouseMoveHandler.bind(this));
-            } else {
-               this._container.on('mousemove', this._mouseMoveHandler.bind(this))
-                              .on('mouseleave', this._mouseLeaveHandler.bind(this));
-            }
+            this._container.on('swipe tap touchmove mousemove mouseleave', this._eventProxyHandler.bind(this));
 
             this.initEditInPlace();
             this.setItemsDragNDrop(this._options.itemsDragNDrop);
-            $ws.single.CommandDispatcher.declareCommand(this, 'activateItem', this._activateItem);
-            $ws.single.CommandDispatcher.declareCommand(this, 'beginAdd', this._beginAdd);
-            $ws.single.CommandDispatcher.declareCommand(this, 'beginEdit', this._beginEdit);
-            $ws.single.CommandDispatcher.declareCommand(this, 'cancelEdit', this._cancelEdit);
-            $ws.single.CommandDispatcher.declareCommand(this, 'commitEdit', this._commitEdit);
+            dispatcher.declareCommand(this, 'activateItem', this._activateItem);
+            dispatcher.declareCommand(this, 'beginAdd', this._beginAdd);
+            dispatcher.declareCommand(this, 'beginEdit', this._beginEdit);
+            dispatcher.declareCommand(this, 'cancelEdit', this._cancelEdit);
+            dispatcher.declareCommand(this, 'commitEdit', this._commitEdit);
          },
 
          init: function () {
@@ -702,6 +688,35 @@ define('js!SBIS3.CONTROLS.ListView',
             return lvOpts;
          },
 
+         _eventProxyHandler: function(e) {
+            var currentTouch = this._touchSupport;
+            this._touchSupport = Boolean(e.type === 'swipe' || e.type === 'tap' || (e.originalEvent.touches && e.originalEvent.touches.length === 1));
+
+            if(currentTouch !== this._touchSupport) {
+               this._container.toggleClass('controls-ListView__touchMode', this._touchSupport);
+
+               if(this._itemsToolbar) {
+                  this._itemsToolbar.setTouchMode(this._touchSupport);
+               }
+            }
+
+            switch (e.type) {
+               case 'mousemove':
+               case 'touchmove':
+                  this._mouseMoveHandler(e);
+                  break;
+               case 'swipe':
+                  this._swipeHandler(e);
+                  break;
+               case 'tap':
+                  this._tapHandler(e);
+                  break;
+               case 'mouseleave':
+                  this._mouseLeaveHandler(e);
+                  break;
+            }
+         },
+
          _prepareInfiniteScroll: function(){
             var topParent = this.getTopParent(),
                   self = this,
@@ -735,7 +750,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._options.infiniteScrollContainer.on('touchmove wheel', function(){
                      self._scrollOnBottom = false;
                   });
-                  
+
                }
                this._previousInfiniteScroll = this._options.infiniteScroll;
                if (this._options.infiniteScroll == 'down'){
@@ -747,7 +762,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _onScrollHandler: function(event, type){
             var scrollOnEdge = (this._options.infiniteScroll === 'up' && type === 'top') || // скролл вверх и доскролили до верхнего края
-                               (this._options.infiniteScroll === 'down') //скролл в обе стороны и доскролили до любого края
+                               (this._options.infiniteScroll === 'down'); //скролл в обе стороны и доскролили до любого края
             if (scrollOnEdge) {
                this._scrollDirection = type;
                this._loadChecked(type == 'top' ? 'up' : 'down');
@@ -1895,7 +1910,7 @@ define('js!SBIS3.CONTROLS.ListView',
                hasScroll = this._scrollWatcher.hasScroll(this.getContainer()),
                hasNextPage = (direction == 'up' && this._options.infiniteScroll == 'down') ? this._scrollOffset.top > 0 : this._hasNextPage(more, this._scrollOffset.bottom),
                offset = (direction == 'up' && this._options.infiniteScroll == 'down') ? this._scrollOffset.top - this._limit : this._scrollOffset.bottom + this._limit;
-            
+
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
             this._container.toggleClass('controls-ListView__outside-scroll-loader', !hasScroll);
 
@@ -1991,13 +2006,13 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _preScrollLoading: function(){
-            var hasScroll = this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer()), 
+            var hasScroll = this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer()),
                existFloatArea = this._existFloatArea(),
                isScrollOnBottom = this.isScrollOnBottom();
 
             //TODO: Возможно тут просто нужно стрелять событием, а это перенести в биндер
             this._scrollBinder && this._scrollBinder._updateScrollPages();
-            
+
             // Если нет скролла или скролл внизу, значит нужно догружать еще записи (floatArea отжирает скролл, поэтому если она открыта - не грузим)
             if ((!hasScroll || isScrollOnBottom) && !existFloatArea) {
                this._loadNextPage();
@@ -2322,7 +2337,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      itemId = this._getItemsProjection().getItemBySourceIndex(itemIndex).getContents().getId(),
                      item = this.getItems().getRecordById(itemId);
                   this.scrollToItem(item);
-               }   
+               }
             } else {
                this._offset = this._options.pageSize * pageNumber;
                this._scrollOffset.top = this._offset;
@@ -2336,7 +2351,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
 
          _isPageLoaded: function(pageNumber) {
-            var offset = pageNumber * this._options.pageSize
+            var offset = pageNumber * this._options.pageSize;
             return (offset <= this._scrollOffset.bottom && offset >= this._scrollOffset.top);
          },
 
