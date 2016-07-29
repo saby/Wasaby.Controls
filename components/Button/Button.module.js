@@ -218,6 +218,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
 
       destroy: function(){
          this._unregisterDefaultButton();
+         Button.superclass.destroy.apply(this, arguments);
       }
       /*TODO конец*/
    });
