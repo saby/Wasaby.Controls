@@ -189,7 +189,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
 
          if (this._dialog && !this._dialog.isAutoHide()){
             templateComponent = this._dialog._getTemplateComponent();
-            currentRecord = templateComponent.getRecord();
+            currentRecord = templateComponent.getRecord ? templateComponent.getRecord() : null; //Ярик говорит, что dialogActionBase используется не только для formController'a
             if (currentRecord && currentRecord.isChanged()){
                $ws.helpers.question(rk('Сохранить изменения?'), {opener: templateComponent}).addCallback(function(result){
                   if (result){
