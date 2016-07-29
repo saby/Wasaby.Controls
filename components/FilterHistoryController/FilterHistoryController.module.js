@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              this._saveParamsDeferred = saveDeferred;
 
              if(activeFilter) {
-                fb.setFilterStructure(activeFilter.filter);
+                fb.setFilterStructure(this._prepareStructureElemForApply(activeFilter.filter));
              } else {
                 fb.sendCommand('reset-filter');
              }

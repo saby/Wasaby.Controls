@@ -279,6 +279,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                if(this.getText() && !this._options.alwaysShowTextBox) {
                   this.setText('');
                }
+               this.validate();
             }.bind(this));
 
             if(this._options.oldViews) {
@@ -418,10 +419,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
           /** Обработчики событий контрола отрисовки элементов **/
           _onDrawItemsCollection: function() {
              this._updateInputWidth();
-             /* Валидацию надо производить именно после отрисовки элементов,
-                т.к. если валидировать по изменению ключей, будует возникать проблемы с отобржением.
-                + после отрисовки значения в контексте гарантированно лежат (некоторые проверяют при валидации и значения в контексте) */
-             this.validate();
           },
           _onCrossClickItemsCollection: function(key) {
              this.removeItemsSelection([key]);
