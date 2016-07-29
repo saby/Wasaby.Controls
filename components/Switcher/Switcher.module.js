@@ -34,6 +34,9 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CORE.Control', 'html!SBIS3.CONTR
 
    var Switcher = Control.Control.extend([Checkable, Clickable], /** @lends SBIS3.CONTROLS.Switcher.prototype */ {
       _dotTplFn: dotTplFn,
+      $protected: {
+         _checkClickByTap: true
+      },
       _clickHandler : function() {
          this.setChecked(!this._options.checked);
       }
