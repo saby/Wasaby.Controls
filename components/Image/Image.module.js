@@ -285,13 +285,10 @@ define('js!SBIS3.CONTROLS.Image',
              * Метод перезагрузки данных.
              */
             reload: function() {
-               var
-                  dataSource = this.getDataSource();
-               if (dataSource) {
-                  this._setImage($ws.helpers.prepareGetRPCInvocationURL(dataSource.getEndpoint().contract,
-                     dataSource.getBinding().read, this._options.filter, $ws.proto.BLObject.RETURN_TYPE_ASIS));
-               } else if (this._imageUrl != this._options.defaultImage) {
-                  this._setImage(this._options.defaultImage);
+              var
+                 url = this._getSourceUrl();
+               if (url !== false) {
+                  this._loadImage(url);
                }
             },
             /**
@@ -314,6 +311,17 @@ define('js!SBIS3.CONTROLS.Image',
             /* ------------------------------------------------------------
                Блок приватных методов
                ------------------------------------------------------------ */
+            _getSourceUrl: function() {
+               var
+                  dataSource = this.getDataSource();
+               if (dataSource) {
+                  return $ws.helpers.prepareGetRPCInvocationURL(dataSource.getEndpoint().contract,
+                     dataSource.getBinding().read, this._options.filter, $ws.proto.BLObject.RETURN_TYPE_ASIS);
+               } else if (this._imageUrl != this._options.defaultImage) {
+                  return this._options.defaultImage;
+               }
+               return false;
+            },
             _bindEvens: function() {
                this._boundEvents = {
                   onChangeImage: this._onChangeImage.bind(this),
@@ -349,7 +357,7 @@ define('js!SBIS3.CONTROLS.Image',
                   if (imageInstance._options.edit) {
                      imageInstance._showEditDialog('new');
                   } else {
-                     imageInstance.reload();
+                     imageInstance._setImage();
                      $ws.helpers.toggleLocalIndicator(imageInstance._container, false);
                   }
                }
@@ -392,20 +400,26 @@ define('js!SBIS3.CONTROLS.Image',
                return this.isEnabled();
             },
             _setImage: function(url) {
-               if (this._imageUrl !== url) {
-                  var
-                     self = this;
-                  //Из-за проблем, связанных с кэшированием - перезагружаем картинку специальным хелпером
-                  $ws.helpers.reloadImage(this._image, url)
-                     .addCallback(function(){
-                        self._image.hasClass('ws-hidden') && self._image.removeClass('ws-hidden');
-                     })
-                     .addErrback(function(){
-                        self._boundEvents.onErrorLoad();
-                     });
+               if (!url) {
+                  url =this._getSourceUrl();
+               }
+               if (url !== false) {
+                  this._loadImage(url);
                   this._imageUrl = url;
                }
             }.debounce(0), //Оборачиваем именно в debounce, т.к. могут последовательно задать filter, dataSource и тогда изображения загрузка произойдет дважды.
+            _loadImage: function(url) {
+               var
+                  self = this;
+               //Из-за проблем, связанных с кэшированием - перезагружаем картинку специальным хелпером
+               $ws.helpers.reloadImage(this._image, url)
+                  .addCallback(function(){
+                     self._image.hasClass('ws-hidden') && self._image.removeClass('ws-hidden');
+                  })
+                  .addErrback(function(){
+                     self._boundEvents.onErrorLoad();
+                  });
+            },
             _showEditDialog: function(imageType) {
                var
                   self = this,
@@ -439,7 +453,7 @@ define('js!SBIS3.CONTROLS.Image',
                         onEndSave: function (event, result) {
                            event.setResult(self._notify('onEndSave', result));
                            self._toggleSaveIndicator(false);
-                           self.reload();
+                           self._setImage();
                         },
                         onOpenError: function(event){
                            $ws.helpers.toggleLocalIndicator(self._container, false);
@@ -539,7 +553,7 @@ define('js!SBIS3.CONTROLS.Image',
                   //todo Удалить, временная опция для поддержки смены логотипа компании
                   this._getFileLoader().setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
                   if (!noReload) {
-                     this.reload();
+                     this._setImage();
                   }
                }
             },
@@ -558,7 +572,7 @@ define('js!SBIS3.CONTROLS.Image',
             setFilter: function(filter, noReload) {
                this._options.filter = filter;
                if (!noReload) {
-                  this.reload();
+                  this._setImage();
                }
             },
             /**
