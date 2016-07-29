@@ -29,16 +29,34 @@
          }
       }
    }
-   &.controls-Checked__checked {
-      background-color: @controls-OperationsPanel-bg;
-
-      .controls-OperationsPanelButton__icon {
-         color: @controls-OperationsPanelButton-active-icon-color;
-         &.controls-OperationsPanelButton__icon-vertical-arrow:before {
-            content: "\e012";
+   &.controls-OperationsPanelButton__vertical {
+      &.controls-Checked__checked {
+         .controls-OperationsPanelButton__icon {
+            &:before {
+               content: "\e012";
+            }
          }
-         &.controls-OperationsPanelButton__icon-horizontal-arrow:before {
-            content: "\e008";
+      }
+      .controls-OperationsPanelButton__icon {
+         top: @controls-OperationsPanelButton-vertical-icon-top;
+         :before {
+            content: "\e011";
+         }
+      }
+   }
+   &.controls-OperationsPanelButton__horizontal {
+      &.controls-Checked__checked {
+         background-color: @controls-OperationsPanel-bg;
+         .controls-OperationsPanelButton__icon {
+            &:before {
+               content: "\e008";
+            }
+         }
+      }
+      .controls-OperationsPanelButton__icon {
+         top: @controls-OperationsPanelButton-horizontal-icon-top;
+         &:before {
+            content: "\e007";
          }
       }
    }
