@@ -7,9 +7,10 @@ define('js!SBIS3.CONTROLS.EditInPlace',
       'js!SBIS3.CORE.CompoundControl',
       'html!SBIS3.CONTROLS.EditInPlace',
       'js!SBIS3.CORE.CompoundActiveFixMixin',
-      'js!SBIS3.CONTROLS.CompoundFocusMixin'
+      'js!SBIS3.CONTROLS.CompoundFocusMixin',
+      'js!WS.Data/Di'
    ],
-   function(Control, dotTplFn, CompoundActiveFixMixin, CompoundFocusMixin) {
+   function(Control, dotTplFn, CompoundActiveFixMixin, CompoundFocusMixin, Di) {
       'use strict';
 
       /**
@@ -73,11 +74,11 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                         }, 100);
                         this._editingDeferred = result.addBoth(function () {
                            clearTimeout(loadingIndicator);
-                           this._previousRecordState = this._editingRecord.clone();
+                           this._previousRecordState = this._cloneWithFormat(this._editingRecord, this._editingRecord.getOwner());
                            $ws.helpers.toggleIndicator(false);
                         }.bind(this));
                      } else {
-                        this._previousRecordState = this._editingRecord.clone();
+                        this._previousRecordState = this._cloneWithFormat(this._editingRecord, this._editingRecord.getOwner());
                      }
                   }
                }
@@ -121,8 +122,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
              */
             updateFields: function(record) {
                this._record = record;
-               this._previousRecordState = record.clone();
-               this._editingRecord = record.clone();
+               this._previousRecordState = this._cloneWithFormat(record, record.getOwner());
+               this._editingRecord = this._cloneWithFormat(record, record.getOwner());
                this.getContext().setValue(CONTEXT_RECORD_FIELD, this._editingRecord);
             },
             _onRecordChange: function(event, fields) { //todo Удалить этот метод вообще в 3.7.4.100
@@ -267,6 +268,29 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             destroy: function() {
                this._container.unbind('keypress keydown');
                EditInPlace.superclass.destroy.call(this);
+            },
+            //TODO: метод нужен для того, чтобы подогнать формат рекорда под формат рекордсета.
+            //Выписана задача Мальцеву, который должен убрать этот метод отсюда, и предаставить механизм выполняющий необходимую задачу.
+            //https://inside.tensor.ru/opendoc.html?guid=85d18197-2094-4797-b823-5406424881e5&description=
+            _cloneWithFormat: function(record, recordSet) {
+               var fieldName, clone;
+               if (recordSet) {
+                  fieldName,
+                  clone = Di.resolve(recordSet.getModel(), {
+                     'adapter': record.getAdapter(),
+                     'idProperty': record.getIdProperty(),
+                     'format': []
+                  });
+
+                  recordSet.getFormat().each(function(field) {
+                     fieldName = field.getName();
+                     clone.addField(field, undefined, record.get(fieldName));
+                  });
+                  clone.setState(record.getState());
+                  return clone;
+               } else {
+                  return record.clone();
+               }
             }
          });
 
