@@ -38,7 +38,6 @@
          display: none;
       }
       .controls-DropdownList__textWrapper {
-         padding-left:4px;
          line-height: 24px;
       }
    }
@@ -100,12 +99,19 @@
          color: #ff7033;
       }
    }
+
+   .controls-DropdownList__withoutArrow {
+     .controls-DropdownList__textWrapper {
+       padding-left: 4px;
+     }
+   }
    .controls-DropdownList__body {
       z-index: 1;
       border: @DropdownList-picker-border;
       border-radius: @DropdownList-picker-list-right-border-radius;
       background: @DropdownList-picker-bg;
       margin-top: -2px;
+      padding: 4px 0;
    }
    &.controls-FloatArea {
       background: transparent;

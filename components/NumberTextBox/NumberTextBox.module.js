@@ -263,6 +263,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          } else {
             this._options.numericValue = parseFloat(value);
          }
+         this._notifyOnPropertyChanged('numericValue');
       },
       /**
        * Установить количество знаков после запятой

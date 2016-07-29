@@ -200,6 +200,16 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              $ws.helpers.trackElement(this._currentTarget.container, true).subscribe('onMove', this._recalculatePosition, this);
           },
           /**
+           * Меняет режим отображения тулбара, если touch - то тулбар отображается с анимацией
+           * @param {Boolean} mode
+           */
+          setTouchMode: function(mode) {
+             this._options.touchMode = mode;
+             if(this._itemsActions) {
+                this._itemsActions.setTouchMode(mode);
+             }
+          },
+          /**
            * Отключает слежение за позицей currentTarget
            * @private
            */
