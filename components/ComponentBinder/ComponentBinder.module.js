@@ -752,7 +752,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
       },
 
       destroy: function(){
-         $(window).unbind(this._resizeHandler);
+         $(window).unbind('resize', this._resizeHandler);
          ComponentBinder.superclass.destroy.apply(this, arguments);
       }
 
