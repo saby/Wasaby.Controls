@@ -151,10 +151,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             });
          }
          container.appendTo('body');
-         this._defaultCorner = this._options.corner;
-         this._defaultVerticalAlignSide = this._options.verticalAlign.side;
-         this._defaultHorizontalAlignSide = this._options.horizontalAlign.side;
 
+         this._saveDefault();
          this._resetToDefault();
       },
 
@@ -207,6 +205,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          this._notify('onChangeFixed', false);
          this._fixed = false;
          $(this._container).css({position : 'absolute'});
+      },
+
+      _saveDefault: function() {
+         this._defaultCorner = this._options.corner;
+         this._defaultVerticalAlignSide = this._options.verticalAlign.side;
+         this._defaultHorizontalAlignSide = this._options.horizontalAlign.side;
       },
 
       isFixed: function(){
@@ -298,6 +302,30 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          this._checkFixed(target);
          this._subscribeTargetMove();
          this.recalcPosition(true);
+      },
+
+      /**
+       * Устанавливает вертикальное выравнивание всплывающего окна относительно точки его построения.
+       * @param align
+       */
+      setVerticalAlign: function(align) {
+         this._options.verticalAlign = align;
+         this._saveDefault();
+         if(this.isVisible()) {
+            this.recalcPosition(true);
+         }
+      },
+
+      /**
+       * Устанавливает горизонтальное выравнивание всплывающего окна относительно точки его построения.
+       * @param align
+       */
+      setHorizontalAlign: function(align) {
+         this._options.horizontalAlign = align;
+         this._saveDefault();
+         if(this.isVisible()) {
+            this.recalcPosition(true);
+         }
       },
 
       /**

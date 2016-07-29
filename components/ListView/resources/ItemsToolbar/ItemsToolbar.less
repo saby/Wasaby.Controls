@@ -118,65 +118,63 @@
       }
    }
 }
-.ws-is-mobile-platform {
 
-   .controls-ListView {
-      .controls-ItemsToolbar {
+.controls-ListView.controls-ListView__touchMode {
+   .controls-ItemsToolbar {
+      overflow: hidden;
+      margin: 0;
+      box-shadow: none;
+      background-color: transparent;
+
+      .controls-ItemsToolbar__container {
+         position: relative;
+         background-color: #E7EFF8;
+         border-left: 1px solid #D0D8E0;
          overflow: hidden;
-         margin: 0;
-         box-shadow: none;
-         background-color: transparent;
+         height: 100%;
 
-         .controls-ItemsToolbar__container {
-            position: relative;
-            background-color: #E7EFF8;
-            border-left: 1px solid #D0D8E0;
-            overflow: hidden;
+         .controls-ItemActions {
             height: 100%;
 
-            .controls-ItemActions {
+            .controls-ItemActions__itemsContainer {
                height: 100%;
-
-               .controls-ItemActions__itemsContainer {
-                  height: 100%;
-               }
-            }
-
-            .controls-ItemsToolbar__editActions {
-               height: 100%;
-
-               .controls-IconButton {
-                  position: relative;
-                  top: 50%;
-                  margin-top: -24px;
-               }
             }
          }
 
-         &.controls-ItemsToolbar__vertical {
+         .controls-ItemsToolbar__editActions {
+            height: 100%;
 
-            .controls-ItemActions {
-               width: auto;
-               margin: 0;
+            .controls-IconButton {
+               position: relative;
+               top: 50%;
+               margin-top: -24px;
             }
          }
       }
 
-      &.controls-ListView__bottomStyle {
-         .controls-ItemsToolbar {
-            border-bottom: none;
-            background-color: transparent;
+      &.controls-ItemsToolbar__vertical {
 
-            &:before {
-               content: none;
-            }
-            &:after {
-               content: none;
-            }
+         .controls-ItemActions {
+            width: auto;
+            margin: 0;
+         }
+      }
+   }
 
-            .controls-ItemsToolbar__container {
-               margin: 0;
-            }
+   &.controls-ListView__bottomStyle {
+      .controls-ItemsToolbar {
+         border-bottom: none;
+         background-color: transparent;
+
+         &:before {
+            content: none;
+         }
+         &:after {
+            content: none;
+         }
+
+         .controls-ItemsToolbar__container {
+            margin: 0;
          }
       }
    }
