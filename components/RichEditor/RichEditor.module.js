@@ -519,19 +519,20 @@ define('js!SBIS3.CONTROLS.RichEditor',
                self = this,
                dialog,
                eventResult,
-               onPaste = function(event) {
-                  var data = event.clipboardData.getData ? event.clipboardData.getData('text/html') : '';
-                  if (!data) {
-                     data = event.clipboardData.getData ? event.clipboardData.getData('text/plain') : window.clipboardData.getData('Text');
-                  }
-                  //EndFragment и StartFragment превращаются в <p> при вставке в tiny
-                  data = data.replace(/<!--StartFragment-->\r\n|<!--StartFragment-->/,'');
-                  data = data.replace(/\r\n(<!--EndFragment-->)|<!--EndFragment-->/,'');
+               prepareAndInsertContent = function(content) {
+                  //Вычищаем все ненужные теги, т.к. они в конечном счёте превращаютя в <p>
+                  content = content.replace(new RegExp('<!--StartFragment-->|<!--EndFragment-->|<html>|<body>|</html>|</body>', 'img'), '').trim();
                   //получение результата из события  BeforePastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
                   //withStyles: true нужно чтобы в нашем обработчике BeforePastePreProcess мы не обрабатывали а прокинули результат в обработчик тини
-                  eventResult= self.getTinyEditor().fire('BeforePastePreProcess', {content: data, withStyles: true});
-                  data = eventResult.content;
-                  self.insertHtml(data);
+                  eventResult = self.getTinyEditor().fire('BeforePastePreProcess', {content: content, withStyles: true});
+                  self.insertHtml(eventResult.content);
+               },
+               onPaste = function(event) {
+                  var content = event.clipboardData.getData ? event.clipboardData.getData('text/html') : '';
+                  if (!content) {
+                     content = event.clipboardData.getData ? event.clipboardData.getData('text/plain') : window.clipboardData.getData('Text');
+                  }
+                  prepareAndInsertContent(content);
                   dialog.close();
                   event.stopPropagation();
                   event.preventDefault();
@@ -584,16 +585,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
                if (clipboard.getContentType && clipboard.getHtml) {
                   clipboard.getContentType().addCallback(function(ContentType) {
                      clipboard[ContentType === 'Text/Html' || ContentType === 'Text/Rtf' || ContentType === 'Html' || ContentType === 'Rtf' ? 'getHtml' : 'getText']()
-                        .addCallback(function(html) {
+                        .addCallback(function(content) {
                            $ws.single.Indicator.hide();
-                           //EndFragment и StartFragment превращаются в <p> при вставке в tiny
-                           html = html.replace(/<!--StartFragment-->\r\n|<!--StartFragment-->/,'');
-                           html = html.replace(/\r\n(<!--EndFragment-->)|<!--EndFragment-->/,'');
-                           //получение результата из события  BeforePastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
-                           //withStyles: true нужно чтобы в нашем обработчике BeforePastePreProcess мы не обрабатывали а прокинули результат в обработчик тини
-                           eventResult = self.getTinyEditor().fire('BeforePastePreProcess', {content: html, withStyles: true});
-                           html = eventResult.content;
-                           self.insertHtml(html);
+                           prepareAndInsertContent(content);
                            if (typeof onAfterCloseHandler === 'function') {
                               onAfterCloseHandler();
                            }
@@ -985,7 +979,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
          _setText: function(text) {
             if (text !== this.getText()) {
-               this._textChanged = true;
+               if (!this._isEmptyValue(text) && !this._isEmptyValue(this._options.text)) {
+                  this._textChanged = true;
+               }
                this._options.text = text;
                this._notify('onTextChange', text);
                this._notifyOnPropertyChanged('text');
@@ -1196,6 +1192,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   isYouTubeReady,
                   isRichContent = e.content.indexOf('content=SBIS.FRE') !== -1,
                   content = e.content;
+               e.content =  content.replace('<!--content=SBIS.FRE-->','');
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
                // и послыаем метку форматной вставки, если метка присутствует не надо обрабатывать событие
                // нашим обработчиком, а просто прокинуть его в дальше
@@ -1211,7 +1208,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
                         content = content.substring(6);
                      }
                   }
-                  e.content =  content.replace('<!--content=SBIS.FRE-->','');
                }
                if (!isRichContent) {
                   if (self._options.editorConfig.paste_as_text) {
@@ -1298,7 +1294,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
             editor.on('keyup', function(e) {
                self._typeInProcess = false;
-               self._setTrimmedText(self._getTinyEditorValue());
+               if (!(e.keyCode === $ws._const.key.enter && e.ctrlKey)) { // Не нужно обрабатывать ctrl+enter, т.к. это сочетание для дефолтной кнопки
+                  self._setTrimmedText(self._getTinyEditorValue());
+               }
             });
 
             editor.on('keydown', function(e) {
