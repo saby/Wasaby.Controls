@@ -321,7 +321,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _endEdit: function(eip, withSaving, endEditResult) {
                //TODO: Поддержка старого варианта результата.
                if (typeof endEditResult === "boolean") {
-                  endEditResult = endEditResult ? EndEditResult.SAVE : EndEditResult.WITHOUT_SAVE;
+                  endEditResult = endEditResult ? EndEditResult.SAVE : EndEditResult.NOT_SAVE;
                   $ws.single.ioc.resolve('ILogger').log('onEndEdit', 'Boolean result is deprecated. Use constants EditInPlaceBaseController.EndEditResult.');
                }
 
