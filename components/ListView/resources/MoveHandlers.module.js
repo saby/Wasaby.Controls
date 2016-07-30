@@ -214,8 +214,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
             $ws.core.alert(e.message);
          });
       },
+
       moveInItems: function(items, moveToItem, up) {
-         this._options._itemsProjection.setEventRaising(false, true);
          var moveToIndex;
          $ws.helpers.forEach(items, function(item) {
             var projectionItem =  this._options._itemsProjection.getItemBySourceItem(item);
@@ -243,18 +243,19 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
             if (this._options._items.getIndex(item) < moveToIndex ) {
                moveToIndex--; //если запись по списку сдвигается вниз то после ее удаления индексы сдвинутся
             }
+            this.getItems().setEventRaising(false, true);
             this._options._items.remove(item);
             this._options._items.add(
                item,
                moveToIndex < this._options._items.getCount() ? moveToIndex : undefined
             );
+            this.getItems().setEventRaising(true, true);
             //todo нужно сделать цепочки операций на рекордсете тогда можно будет объединить remove и add
             //todo а пока создается новый элемент проекции и если он был открыт то восттановим ему состояние
             if ($ws.helpers.instanceOfModule(projectionItem, 'WS.Data/Display/TreeItem') && projectionItem.isExpanded()) {
                this._options._itemsProjection.getItemBySourceItem(item).setExpanded(true);
             }
          }.bind(this));
-         this._options._itemsProjection.setEventRaising(true, true);
       }
    };
 
