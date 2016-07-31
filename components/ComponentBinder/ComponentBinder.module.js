@@ -722,7 +722,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          } else {
             //Запушим первый элемент, если он есть
             var element = listItems.eq(0);
-            if (view.getItems().getCount() && element.length){
+            if (view.getItems() && view.getItems().getCount() && element.length){
                this._scrollPages.push({
                   element: element,
                   offset: self._pageOffset
