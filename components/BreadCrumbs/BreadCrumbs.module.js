@@ -284,7 +284,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          this._toggleHomeIcon(isEmpty);
          this._container.toggleClass('ws-hidden', isEmpty);
          BreadCrumbs.superclass._redraw.call(this);
-         if (this.getItems().getCount()){
+         if (this.getItems() && this.getItems().getCount()){
             this._calculateSizes();
          }
       },
