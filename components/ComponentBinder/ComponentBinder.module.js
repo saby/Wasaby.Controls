@@ -637,6 +637,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             view.subscribe('onSetRoot', function(){
                this._updateScrollPages(true);
             }.bind(this));
+
+            view.subscribe('onNodeExpand', function(){
+               this._updateScrollPages(true);
+            }.bind(this));
          }
 
          paging.subscribe('onSelectedItemChange', function(e, pageNumber){
@@ -746,9 +750,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
          this._options.paging.setPagesCount(this._scrollPages.length + 1);
          //Если есть страницы - покажем paging
-         if (this._scrollPages.length){
-            this._options.paging.setVisible(true);
-         }
+         this._options.paging.setVisible(this._scrollPages.length > 1);
       },
 
       destroy: function(){
