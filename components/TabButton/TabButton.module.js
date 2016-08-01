@@ -3,8 +3,13 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.TabButton',
-   ['js!SBIS3.CONTROLS.RadioButtonBase', 'html!SBIS3.CONTROLS.TabButton','js!SBIS3.CONTROLS.IconMixin'], function (RadioButtonBase, dotTplFn,IconMixin) {
+define(
+   'js!SBIS3.CONTROLS.TabButton',
+   [
+      'js!SBIS3.CONTROLS.RadioButtonBase',
+      'html!SBIS3.CONTROLS.TabButton',
+      'js!SBIS3.CONTROLS.IconMixin'
+   ], function (RadioButtonBase, dotTplFn, IconMixin) {
 
    'use strict';
    /**
@@ -43,6 +48,13 @@ define('js!SBIS3.CONTROLS.TabButton',
       _drawIcon: function() {
          var newIcon = $('<span></span>').addClass(this._options._iconClass);
          this.getContainer().find('.controls-TabButton__icon').html(newIcon);
+      },
+
+      setCaption: function(caption){
+         TabButton.superclass.setCaption.apply(this, arguments);
+         var $caption = $('.controls-TabButton__caption', this.getContainer());
+         $caption.html(caption);
+         this.reviveComponents();
       }
    });
 
