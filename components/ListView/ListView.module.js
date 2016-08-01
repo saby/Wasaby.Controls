@@ -57,9 +57,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          getRecordsForRedrawLV = function (projection, cfg){
             var records = cfg._getRecordsForRedrawSt.call(this, projection);
-            if (cfg.infiniteScroll === 'up' && this._isSearchMode && !this._isSearchMode()) {
-               return records.reverse();
-            }
             return records;
          };
       var
@@ -1978,11 +1975,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight();
                this._needSrollTopCompensation = true;
                var items = dataSet.toArray();
-               //FixMe: Оcтавляем переворачивание для контактов, по нормальному надо что бы они присылали данные сразу перевернутыми
-               // и присылать не первую страницу, а последнюю
-               if (this._options.infiniteScroll == 'up'){
-                  items.reverse();
-               }
                this.getItems().prepend(items);
                at = {at: 0};
             }
