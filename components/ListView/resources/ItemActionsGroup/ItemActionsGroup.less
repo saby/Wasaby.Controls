@@ -16,81 +16,79 @@
    }
 }
 
-.ws-is-mobile-platform{
-   .controls-ListView {
-      .controls-ItemActions {
-         overflow: hidden;
-         margin: 0;
+.controls-ListView.controls-ListView__touchMode {
+   .controls-ItemActions {
+      overflow: hidden;
+      margin: 0;
 
-         .controls-ItemActions__itemsContainer {
-            .controls-ItemActions__item {
-               padding: 0 12px;
-               margin: 0;
-               height: 100%;
+      .controls-ItemActions__itemsContainer {
+         .controls-ItemActions__item {
+            padding: 0 12px;
+            margin: 0;
+            height: 100%;
 
-               outline: 4px solid #E7EFF8;
-               outline-offset: -4px;
-               border-right: 5px solid #D0D8E0;
-               border-top: none;
+            outline: 4px solid #E7EFF8;
+            outline-offset: -4px;
+            border-right: 5px solid #D0D8E0;
+            border-top: none;
 
 
-               &.controls-Link  {
-                  display: table;
+            &.controls-Link  {
+               display: table;
 
-                  .controls-Link-link {
-                     display: table-cell;
-                     vertical-align: middle;
-                  }
-               }
-
-               &.controls-IconButton:before{
-                  top: 50%;
-                  margin-top: -@list-view-actions-item-height / 2;
-                  position: absolute;
+               .controls-Link-link {
+                  display: table-cell;
+                  vertical-align: middle;
                }
             }
 
-            .controls-ItemActions__menu-button,
-            .controls-ItemActions__menu-button:hover {
-               padding: 0;
-               border: none;
+            &.controls-IconButton:before{
                top: 50%;
-               position: relative;
-               margin-top: -@list-view-actions-menu-touch-height / 2;
-               margin-left: 0;
-               background: @list-view-actions-menu-touch-icon;
-               height: @list-view-actions-menu-touch-height;
-               width: @list-view-actions-menu-touch-width;
-               background-size: @list-view-actions-menu-touch-size;
-               background-position: center;
+               margin-top: -@list-view-actions-item-height / 2;
+               position: absolute;
             }
-            .controls-ItemActions__menu-button:before {
-               content: none;
-            }
+         }
+
+         .controls-ItemActions__menu-button,
+         .controls-ItemActions__menu-button:hover {
+            padding: 0;
+            border: none;
+            top: 50%;
+            position: relative;
+            margin-top: -@list-view-actions-menu-touch-height / 2;
+            margin-left: 0;
+            background: @list-view-actions-menu-touch-icon;
+            height: @list-view-actions-menu-touch-height;
+            width: @list-view-actions-menu-touch-width;
+            background-size: @list-view-actions-menu-touch-size;
+            background-position: center;
+         }
+         .controls-ItemActions__menu-button:before {
+            content: none;
          }
       }
    }
-   .controls-ItemActions__menu-container {
-      .controls-MenuItem {
-         padding-right: 42px;
+}
+.controls-ItemActions__menu-container.controls-ItemActions__menu-touchMode {
+   .controls-MenuItem {
+      padding-right: 42px;
+   }
+   .controls-PopupMixin__closeButton {
+      position: absolute;
+      top: @list-view-actions-menu-touch-close-top;
+      right: @controls-Popup-closeButton-right;
+      width: @closeButtonWidth;
+      height: @closeButtonHeight;
+      cursor: pointer;
+      background: @closeButtonImage;
+      &:hover {
+         background: @closeButtonImageHover;
       }
-      .controls-PopupMixin__closeButton {
-         position: absolute;
-         top: @list-view-actions-menu-touch-close-top;
-         right: @controls-Popup-closeButton-right;
-         width: @closeButtonWidth;
-         height: @closeButtonHeight;
-         cursor: pointer;
-         background: @closeButtonImage;
-         &:hover {
-            background: @closeButtonImageHover;
-         }
-         &:active {
-            background: @closeButtonImageHover;
-         }
-         &:before {
-            content: none;
-         }
+      &:active {
+         background: @closeButtonImageHover;
+      }
+      &:before {
+         content: none;
       }
    }
 }

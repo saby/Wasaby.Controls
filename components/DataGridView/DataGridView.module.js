@@ -522,7 +522,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _bindHead: function() {
-         this._thead = $('.controls-DataGridView__thead', this._container.get(0));
+         if (!this._thead) {
+            // при фиксации заголовка таблицы в шапке реальный thead перемещён в шапку, а в контроле лежит заглушка
+            this._thead = $('.controls-DataGridView__thead', this._container.get(0));
+         }
          this._colgroup = $('.controls-DataGridView__colgroup', this._container.get(0));
          if(this._options.showHead) {
             this._isPartScrollVisible = false;
@@ -765,6 +768,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._isHeaderScrolling = $(e.currentTarget).hasClass('controls-DataGridView__th');
          if(this._isHeaderScrolling) {
             this.getContainer().addClass('controls-DataGridView__scrollingNow');
+         }
+         /* На touch устройствах надо перевести фокус(нативный) на ползунок,
+            т.к. сейчас взаимодействие происходит с ним. Иначе могут возникать проблемы,
+            когда курсор остаётся в поле ввода, или ховер останется на иконке другой */
+         if(this._touchSupport) {
+            this._thumb.focus();
          }
          this._scrollingNow = true;
       },

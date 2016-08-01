@@ -56,6 +56,13 @@ define(
         *    datePicker.subscribe('onDateChange', dateChangeFn);
         * </pre>
         */
+      /**
+       * @event onDateSelect Происходит при окончании выбора даты.
+       * @remark
+       * Окончанием выбора даты является уход фокуса из поля ввода, на не дочерние контролы.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Date} date Дата, которую установили.
+       */
       $protected: {
          _dotTplFn: dotTplFn,
          /**
@@ -197,12 +204,21 @@ define(
              * @see mask
              * @see setDate
              */
-            isCalendarIconShown: true
-         }
+            isCalendarIconShown: true,
+            /**
+             * @cfg {String} Режим уведомления о смене даты.
+             * @variant 'complete' событие onDateChange стреляет только при окончании работы с полем даты(уход фокуса, выбор даты из календаря или нажатие клавиши insert).
+             * @variant 'change' событие onDateChange стреляет при каждом изменении значения даты.
+             * @noShow
+             * @deprecated
+             */
+            notificationMode: 'change'
+         },
+         _onFocusInHandler: undefined
       },
 
       $constructor: function () {
-         this._publish('onDateChange');
+         this._publish('onDateChange', 'onDateSelect');
 
          // Проверить тип маски -- дата, время или и дата, и время. В случае времени -- сделать isCalendarIconShown = false
          this._checkTypeOfMask(this._options);
@@ -466,7 +482,7 @@ define(
             if (!DateUtil.isValidDate(this._options.date)) {
                this._options.date = null;
             }
-            if (oldDate !== this._options.date) {
+            if (oldDate !== this._options.date && this._options.notificationMode === 'change') {
                this._notifyOnDateChanged();
             }
             this._onTextChanged();
@@ -483,15 +499,37 @@ define(
          this._notifyOnPropertyChanged('date', this._options.date);
          this._notify('onDateChange', this._options.date);
       },
-      setActive: function(active) {
+      setActive: function(active, shiftKey, noFocus, focusedControl) {
          var date;
-         if (!active && !this.formatModel.isFilled()) {
-            date = this._getDateByText(this._options.text, this._options.date, true);
-            if (date) {
-               this.setDate(date);
+
+         if (!active) {
+            if (!this.formatModel.isFilled()) {
+               date = this._getDateByText(this._options.text, this._options.date, true);
+               if (date) {
+                  this.setDate(date);
+               }
             }
+            if (this._options.notificationMode === 'complete') {
+               this._notifyOnDateChanged();
+            }
+         } else {
+            this._initFocusInHandler()
          }
          DatePicker.superclass.setActive.apply(this, arguments);
+      },
+
+      _initFocusInHandler: function() {
+         if (!this._onFocusInHandler) {
+            this._onFocusInHandler = this._onFocusIn.bind(this);
+            this.subscribeTo($ws.single.EventBusGlobalChannel, 'onFocusIn', this._onFocusInHandler);
+         }
+      },
+
+      _onFocusIn: function(event) {
+         if (!$ws.helpers.isChildControl(this, event.getTarget())) {
+            this._notify('onDateSelect');
+            this.unsubscribeFrom($ws.single.EventBusGlobalChannel, 'onFocusIn', this._onFocusInHandler);
+         }
       },
 
       /**

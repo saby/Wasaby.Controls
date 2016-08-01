@@ -1,8 +1,10 @@
 <div class="controls-operationsPanel {{?!it.visible}}ws-hidden{{?}}">
    <div class="controls-operationsPanel__wrapper controls-operationsPanel__massMode">
-      {{?it.hasMarkBlock}}
-         <div class="controls-operationsPanel__actionMark"></div>
-      {{?}}
-      <div class="controls-operationsPanel__actions"></div>
+      <div class="controls-operationsPanel__wrapper-background">
+         {{?it.hasMarkBlock}}
+            <div class="controls-operationsPanel__actionMark"></div>
+         {{?}}
+         <div class="controls-operationsPanel__actions"></div>
+      </div>
    </div>
 </div>

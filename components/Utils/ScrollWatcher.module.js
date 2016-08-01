@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          var self = this,
              opener = this.getOpener(),
              topParent;
-         this._publish('onScroll');
+         this._publish('onScroll', 'onScrollMove');
          this._scrollingContainer = this._options.element;
          this._type = (this._options.element ? 'container' : 'window');
          if (opener){
@@ -75,10 +75,6 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          if (this._inContainer()) {
             this._onContainerScrollHandler =  this._onContainerScroll.bind(this);
             this._scrollingContainer.bind('scroll.wsScrollWatcher', this._onContainerScrollHandler);
-            //Нужно чтобы вызвать скролл у контейнеров без видимого скролла.
-            $ws.helpers.wheel(this._scrollingContainer, function(event){
-               $(self._scrollingContainer).scrollTop($(self._scrollingContainer).scrollTop() - event.wheelDelta/2);
-            });
 
          } else if (this._inWindow()) {
             this._onWindowScrollHandler = this._onWindowScroll.bind(this);
@@ -119,6 +115,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        */
       _processScrollEvent: function (isBottom, curScrollTop) {
          this._defineScrollDirection(curScrollTop);
+         this._notify('onScrollMove', curScrollTop);
          if (this._isScrollUp ) {
             if (this._isOnTop()) {
                this._notify('onScroll', 'top', curScrollTop);

@@ -442,7 +442,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @see list
        */
       getList: function () {
-         var options, component;
+         var options, component, dataSource;
 
          if (!this._list) {
             if ($ws.helpers.instanceOfMixin(this._options.list, 'SBIS3.CONTROLS.DSMixin')) {
@@ -469,8 +469,22 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                   options.allowEmptySelection = false;
                }
 
+               /* Сорс могут устанавливать не через сеттер, а через опцию */
+               if(options.dataSource !== undefined) {
+                  dataSource = options.dataSource;
+                  delete options.dataSource
+               } else if(this._options.dataSource) {
+                  dataSource = this._options.dataSource
+               }
+
                options.parent = this._picker;
                this._list = new component(options);
+
+               /* Устанавливаем сорс после инициализации компонента (если есть опция), иначе будет лишний запрос */
+               if(dataSource) {
+                  this._list.setDataSource(dataSource, true);
+               }
+
                this._initList();
 
                return this._list;

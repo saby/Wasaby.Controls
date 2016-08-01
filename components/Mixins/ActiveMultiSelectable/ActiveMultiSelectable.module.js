@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!WS.Data/Entity/Model'], f
          if(list) {
             list = this._prepareItems(list);
 
-            if ( (selItems && selItems.equals(list)) || (!selItems && !list.getCount()) ) {
+            if ( (selItems && selItems.isEqual(list)) || (!selItems && !list.getCount()) ) {
                return;
             }
 
