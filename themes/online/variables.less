@@ -1275,6 +1275,7 @@
 @list-view-items-toolbar-locked-box-shadow:          -2px -2px 5px @default-itemSelected-color;
 @list-view-items-toolbar-vertical-box-shadow:        -2px  2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-vertical-locked-box-shadow: -2px  2px 5px @default-itemSelected-color;
+@list-view-items-toolbar-vertical-line-height:       24px;
 @list-view-items-toolbar-bg:                         @data-grid-row-hover-bg;
 @list-view-items-toolbar-locked-bg:                  @default-itemSelected-color;
 @list-view-items-toolbar-margin-bottom:              2px;
@@ -1366,7 +1367,6 @@
 @tree-view-expand-open-hover-border-color:      @tree-view-expand-open-border-color;
 
 @tree-view-ellipsis-wrapper-height:             @data-grid-cell-line-height;
-@tree-view-folder-title-margin:                 0;
 @tree-view-ellipsis-copyArrow-shadow:           -10px 2px 8px -5px;
 @tree-view-ellipsis-copyArrow-padding:          0 0 0 3px;
 @tree-view-ellipsis-copyArrow-width:            16px;
@@ -1453,8 +1453,6 @@
 //Отрицательный margin снизу нужен, чтобы чекбокс не распирал td, а соответственно и tr
 @data-grid-checkbox-margin:                     2px 0 -2px 0;
 
-@data-grid-columnValue-padding:                 0;
-
 @data-grid-table-layot: 								fixed;
 // ---------- //
 // PartScroll //
@@ -1501,7 +1499,7 @@
 @controls-OperationsPanel-cursor: pointer;
 
 @controls-OperationsPanel-line-height:              @controls-OperationsPanel-height;
-@controls-OperationsPanel-bg:                       #E5ECF5;
+@controls-OperationsPanel-bg:                       #E6ECF5;
 @controls-OperationsPanel-padding-left:             @controls-OperationsPanel-opened-closed-width;
 
 @controls-OperationsPanel-triangle-height:          @controls-OperationsPanel-height;
@@ -1559,13 +1557,12 @@
 // OperationsPanelButton  //
 // ----------------------- //
 
-@controls-OperationsPanelButton-border-radius:     7px;
-@controls-OperationsPanelButton-height:            24px;
+@controls-OperationsPanelButton-height:            30px;
 @controls-OperationsPanelButton-width:             24px;
 @controls-OperationsPanelButton-cursor:            pointer;
-@controls-OperationsPanelButton-icon-top:          4px;
+@controls-OperationsPanelButton-icon-top:          7px;
 @controls-OperationsPanelButton-icon-left:         4px;
-@controls-OperationsPanelButton-hover-bg:          #E6ECF5;
+@controls-OperationsPanelButton-hover-icon-color:  #313E78;
 
 // ----------------------- //
 //      EditInPlace        //
@@ -1678,7 +1675,7 @@
 @controls-filterButton-title-fontSize:            15px;
 @controls-filterButton-title-text-color:          #313e78;
 
-@controls-filterButton-area-content-margin:       12px;
+@controls-filterButton-area-content-margin:       0 12px 12px 26px;
 @controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
 @controls-filterButton-line-height:               @font-basic-line-height;
 @controls-filterButton-apply-margin-right:        0;
@@ -1736,6 +1733,7 @@
 @controls-filterLine-items-padding:               0;
 @controls-filterLine-arrow-height:                19px;
 @controls-filterLine-link-color:                  #0055bb;
+@controls-filterLine-link-hover-color:            @primary-color;
 
 @controls-filterLine-copyCross-top:               -20px;
 @controls-filterLine-copyCross-margin:            -30px;
@@ -1870,3 +1868,13 @@
 
 @controls-AjaxLoader-indicator-padding-left:       32px;
 @controls-AjaxLoader-indicator-height:             32px;
+
+@controls-Paging-item-width:                       24px;
+@controls-Paging-item-height:                      32px;
+@controls-Paging-marker-height:                    3px;
+@controls-Paging-marker-hover-color:               @gray-ccc-color;
+@controls-Paging-marker-selected-color:            @primary-color;
+@controls-Paging-btn-width:                        16px;
+@controls-Paging-btn-height:                       16px;
+@controls-Paging-btn-margin:                       8px 0;
+@controls-Paging-btn-sprite:                       url('img/PagingArrows.png');

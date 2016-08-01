@@ -2,6 +2,7 @@ define('js!SBIS3.CONTROLS.InformationPopup',
    [
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.PopupMixin',
+      'js!SBIS3.CORE.LikeWindowMixin',
       'html!SBIS3.CONTROLS.InformationPopup'
    ],
 
@@ -12,9 +13,9 @@ define('js!SBIS3.CONTROLS.InformationPopup',
     * @control
     * @author Степин П.В.
     */
-   function(CompoundControl, PopupMixin, dotTpl){
+   function(CompoundControl, PopupMixin, LikeWindowMixin, dotTpl){
       'use strict';
-      var InformationPopup = CompoundControl.extend([PopupMixin], /** @lends SBIS3.CONTROLS.InformationPopup.prototype */ {
+      var InformationPopup = CompoundControl.extend([PopupMixin, LikeWindowMixin], /** @lends SBIS3.CONTROLS.InformationPopup.prototype */ {
          /**
           * @typedef {String} InformationPopupStatus
           * @variant default  Окно без состояния. Цвет линии в шапке - синий, иконка по умолчанию не задана.

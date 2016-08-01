@@ -71,9 +71,17 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
 
          if (this._checkRecordsForMove(records, recordTo, isChangeOrder)) {
             for (var i = 0; i < records.length; i++) {
-               records[i] = $ws.helpers.instanceOfModule(records[i], 'WS.Data/Entity/Model') ?
-                  this.getItems().getRecordById(records[i].getId()) : //todo может прийти рекорд инстанса которого нет в рекордсете замеять все рекорды для этого плохо.
-                  this._options._items.getRecordById(records[i]);
+               var record = records[i];
+               if ($ws.helpers.instanceOfModule(record, 'WS.Data/Entity/Model')) {
+                  if (this.getItems().getIndex(record) === -1) {
+                     var itemsRecord =  this.getItems().getRecordById(record.getId());
+                     if (itemsRecord) {
+                        records[i] = itemsRecord;
+                     }
+                  }
+               } else {
+                  records[i] = this.getItems().getRecordById(records[i]);
+               }
             }
             this._toggleIndicator(true);
 

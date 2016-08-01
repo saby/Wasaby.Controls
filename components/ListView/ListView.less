@@ -19,13 +19,11 @@
    }
 
    .controls-ListView__EmptyData{
-      color: @gray-color;
+      color: @black-color;
       .box-sizing(border-box);
-      padding-left: 8px;
-      min-height: 33px;
-      position: relative;
-      top: 0;
-      left: 0;
+      padding-top: 48px;
+      font-size: 15px;
+      text-align: center;
    }
    .controls-ListView__itemCheckBox {
       width: @listView-check-box-width;
@@ -111,6 +109,19 @@
      display: none;
    }
 
+   .controls-ListView__scrollPager{
+      position: fixed;
+      bottom: 0;
+      height: 32px;
+      background: white;
+      border-top: 1px solid @default-color;
+      z-index: 10;
+      .control-Paging__prev{
+         display: none;
+      }
+   }
+
+
    &.controls-ListView__orangeMarker {
       .controls-ListView__item__selected {
          background-image: url('img/rowSelect.png');
@@ -195,4 +206,14 @@
 .controls-DataGridView__results{
   background: #F0F0F0;
   font-weight: bold;
+}
+
+@ie8: \0screen;
+@media @ie8 {
+   .controls-ListView-scrollIndicator{
+      background-image: url('img/ajax-loader-indicator.gif');
+      &.controls-ListView-scrollIndicator__up{
+         background-image: url('img/ajax-loader-indicator.gif');
+      }
+   }
 }
