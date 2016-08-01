@@ -265,7 +265,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             /**
              * @cfg {SBIS3.CONROLS.Pagign} объект пэйджинга
              */
-            paging: undefined,
+            paging: undefined
          }
       },
 
