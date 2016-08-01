@@ -466,7 +466,7 @@ define(
              oldText = this._options.text,
              oldDate = this._options.date;
 
-         DatePicker.superclass._updateText.apply(this, arguments);
+         this._updateTextFromModel();
 
          // Если текст изменился -- возможно изменилась и дата.
          if (oldText !== this._options.text) {
@@ -499,8 +499,9 @@ define(
                }
             }
             this._notifyOnDateChanged();
+            this._notifyOnTextChange();
          } else {
-            this._initFocusInHandler()
+            this._initFocusInHandler();
          }
          DatePicker.superclass.setActive.apply(this, arguments);
       },
