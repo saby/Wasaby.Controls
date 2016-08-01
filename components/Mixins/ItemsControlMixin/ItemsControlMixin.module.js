@@ -608,7 +608,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * Метод получения проекции по ID итема
        */
       _getItemProjectionByItemId: function(id) {
-         return this._getItemsProjection() ? this._getItemsProjection().getItemBySourceItem(this._options._items.getRecordById(id)) : null;
+         return this._getItemsProjection() ? this._getItemsProjection().getItemBySourceItem(this.getItems().getRecordById(id)) : null;
       },
 
       /**
