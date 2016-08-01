@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.ListView',
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
-             Link, ScrollWatcher, IBindCollection, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
+             Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder) {
 
       'use strict';
@@ -632,9 +632,10 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Задаёт какой режим навигации использовать: полный или частичный.
                 */
                partialPaging: true,
-               scrollPaging: true //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
+               scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
                /**
-                * @cfg
+                * @cfg Конструктор перемещяемой сущности должен вернуть элемент наследник класса SBIS3.CONTROLS.DragEntity.Row
+                * @see SBIS3.CONTROLS.DragEntity.Row
                 */
                dragEntity: 'dragentity.row'
             },
