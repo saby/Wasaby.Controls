@@ -1012,7 +1012,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _updateHoveredItem: function(target) {
-            this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
+            this._hasHoveredItem() && this.getHoveredItem().container.removeClass('controls-ListView__hoveredItem');
             target.addClass('controls-ListView__hoveredItem');
             this._hoveredItem = this._getElementData(target);
             this._notifyOnChangeHoveredItem();
@@ -1601,21 +1601,33 @@ define('js!SBIS3.CONTROLS.ListView',
                this._changeHoveredItem(target);
                this._onLeftSwipeHandler();
             } else {
-               this._clearHoveredItem();
                this._onRightSwipeHandler();
+               if(this._hasHoveredItem()) {
+                  this._clearHoveredItem();
+                  this._notifyOnChangeHoveredItem();
+               }
             }
             e.stopPropagation();
          },
 
          _onLeftSwipeHandler: function() {
             if (this._isSupportedItemsToolbar()) {
-               if (this._hoveredItem.key) {
+               if (this._hasHoveredItem()) {
                   this._showItemsToolbar(this._hoveredItem);
                   this.setSelectedKey(this._hoveredItem.key);
                } else {
                   this._hideItemsToolbar();
                }
             }
+         },
+
+         /**
+          * Возвращает, есть ли сейчас выделенный элемент в представлении
+          * @returns {boolean}
+          * @private
+          */
+         _hasHoveredItem: function () {
+            return !!this._hoveredItem.container;
          },
 
          _onRightSwipeHandler: function() {
@@ -2004,7 +2016,7 @@ define('js!SBIS3.CONTROLS.ListView',
                } else {
                   this._scrollOffset.top = 0;
                }
-               //FixMe: увеличиваем нижний оффсет для контактов - их скролл верх на самом деле скролл вниз + reverse               
+               //FixMe: увеличиваем нижний оффсет для контактов - их скролл верх на самом деле скролл вниз + reverse
                if (this._options.infiniteScroll == 'up'){
                   this._scrollOffset.bottom += this._limit;
                }
