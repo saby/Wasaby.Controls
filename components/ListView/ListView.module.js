@@ -690,14 +690,22 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _eventProxyHandler: function(e) {
-            var currentTouch = this._touchSupport;
-            this._touchSupport = Boolean(e.type === 'swipe' || e.type === 'tap' || (e.originalEvent.touches && e.originalEvent.touches.length === 1));
+            /* На устройствах с поддержкой touch при клике по элементу генегируется событие mousemove,
+               которое не имеет никаких опознавательных знаков, по которым можно определить,
+               что это событие сгенерировано прикосновением.
+               Поэтому если событие mousemove было сгенерировано, а передвижения курсора не произошло,
+               то не будем обрабатывать это событие на touch/mouse.
+             */
+            if(e.type !== 'mousemove' || (e.type === 'mousemove' && (e.originalEvent.movementX || e.originalEvent.movementY))) {
+               var currentTouch = this._touchSupport;
+               this._touchSupport = Boolean(e.type === 'swipe' || e.type === 'tap' || (e.originalEvent.touches && e.originalEvent.touches.length === 1));
 
-            if(currentTouch !== this._touchSupport) {
-               this._container.toggleClass('controls-ListView__touchMode', this._touchSupport);
+               if (currentTouch !== this._touchSupport) {
+                  this._container.toggleClass('controls-ListView__touchMode', this._touchSupport);
 
-               if(this._itemsToolbar) {
-                  this._itemsToolbar.setTouchMode(this._touchSupport);
+                  if (this._itemsToolbar) {
+                     this._itemsToolbar.setTouchMode(this._touchSupport);
+                  }
                }
             }
 
