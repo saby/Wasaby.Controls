@@ -3,8 +3,8 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
    'js!SBIS3.CONTROLS.Action.Action',
    'js!SBIS3.CONTROLS.Action.DialogMixin',
    'js!SBIS3.CONTROLS.Action.List.ListMixin',
-   'js!SBIS3.CONTROLS.Data.Model',
-   'js!SBIS3.CONTROLS.Data.Utils'
+   'js!WS.Data/Entity/Model',
+   'js!WS.Data/Utils'
 ], function(Action, DialogMixin, ListMixin, Model, Utils){
    'use strict';
 
@@ -141,7 +141,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.MultiSelectable')) {
             collection.removeItemsSelection([collectionRecord.getId()]);
          }
-         if ($ws.helpers.instanceOfModule(collection.getDataSet && collection.getDataSet(), 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+         if ($ws.helpers.instanceOfModule(collection.getDataSet && collection.getDataSet(), 'WS.Data/Adapter/RecordSet')) {
             collection = collection.getDataSet();
          }
          collection.remove(collectionRecord);
@@ -177,7 +177,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          var collection = this._options.linkedObject,
             rec;
          at = at || 0;
-         if ($ws.helpers.instanceOfModule(collection.getDataSet(), 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+         if ($ws.helpers.instanceOfModule(collection.getDataSet(), 'WS.Data/Adapter/RecordSet')) {
             //Создаем новую модель, т.к. Record не знает, что такое первичный ключ - это добавляется на модели.
             rec = new Model({
                format: collection.getDataSet().getFormat(),
@@ -188,7 +188,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          } else  {
             rec = model.clone();
          }
-         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList')) {
+         if ($ws.helpers.instanceOfMixin(collection, 'WS.Data/Collection/IList')) {
             collection.add(rec, at);
          }
          else {
@@ -247,7 +247,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          var collectionData = this._getItems(),
             index;
 
-         if (collectionData && $ws.helpers.instanceOfMixin(collectionData, 'SBIS3.CONTROLS.Data.Collection.IList') && $ws.helpers.instanceOfMixin(collectionData, 'SBIS3.CONTROLS.Data.Collection.IIndexedCollection')) {
+         if (collectionData && $ws.helpers.instanceOfMixin(collectionData, 'WS.Data/Collection/IList') && $ws.helpers.instanceOfMixin(collectionData, 'WS.Data/Collection/IIndexedCollection')) {
             index = collectionData.getIndexByValue(collectionData.getIdProperty(), this._linkedModelKey || model.getId());
             return collectionData.at(index);
          }
