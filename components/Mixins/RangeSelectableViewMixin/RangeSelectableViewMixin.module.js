@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
       $protected: {
          _options: {
             /**
+             * Режим выбора диапазона
              * @cfg {Boolean} Если true, то включена возможность выделения диапазона,
              * иначе можно выделить только 1 элемент.
              */
@@ -131,6 +132,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
        */
       _startRangeSelection: function (start, end, silent) {
          end = end || start;
+         this._rangeSelection = true;
          this.setRange(start, end, silent);
          this._setSelectionRangeEndItem(this.getEndValue(), silent);
       },
@@ -189,32 +191,43 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
       _drawRangeSelection: function (start, end) {
          var range, items;
 
+         this._clearRangeSelection();
+
+         if (start == null) {
+            return;
+         }
+
          end = end || start;
          range = this._normalizeRange(start, end);
 
          start = range[0];
          end = range[1];
 
-         this._clearRangeSelection();
+         range = this._getSelectedRangeItemsIds(start, end);
 
-         items = this._getSelectedRangeItems(start, end);
-
-         this._drawSelectedRangeItems(items, start, end);
+         if (range && range.items.length) {
+            this._drawSelectedRangeItems(range.items, range.start, range.end);
+         }
       },
 
       /**
-       * Возвращает элементы которые должны быть выделены.
+       * Возвращает идентификаторы элементов которые должны быть выделены.
        * @param start первый элемент
        * @param end последний элемент
-       * @returns {Array} Массив элементов представления которых должны быть выделены.
+       * @returns {Object} Объект содержащий поля items - массив идентификаторов элементов представления которых должны быть выделены,
+       * start - идентификатор элемента который должен быть подсвечен как первый, end - идентификатор последнего элемента
        * @private
        */
-      _getSelectedRangeItems: function (start, end) {
+      _getSelectedRangeItemsIds: function (start, end) {
          var items = [];
          for(var i = start; i <= end; i++) {
             items.push(i);
          }
-         return items;
+         return {
+            items: items,
+            start: start,
+            end: end
+         };
       },
 
       _clearRangeSelection: function () {
@@ -225,14 +238,21 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
          ].join(' '));
       },
 
-      _drawSelectedRangeItems: function (idArray, start, end) {
+      /**
+       * Применяет классы выделения к dom элементам с идентификаторами idArray, startId, endId
+       * @param idArray идентификаторы выделенных элементов
+       * @param startId идентифкатор dom элемента соответсвующий первому элементу
+       * @param endId идентифиактор dom элемента соответствующий последнему элементу
+       * @private
+       */
+      _drawSelectedRangeItems: function (idArray, startId, endId) {
          this._addSelectedRangeClassToItems(idArray, this._SELECTABLE_RANGE_CSS_CLASSES.selected);
 
-         if (start) {
-            this._addSelectedRangeClassToItems(start, this._SELECTABLE_RANGE_CSS_CLASSES.selectedStart);
+         if (startId) {
+            this._addSelectedRangeClassToItems(startId, this._SELECTABLE_RANGE_CSS_CLASSES.selectedStart);
          }
-         if (end) {
-            this._addSelectedRangeClassToItems(end, this._SELECTABLE_RANGE_CSS_CLASSES.selectedEnd);
+         if (endId) {
+            this._addSelectedRangeClassToItems(endId, this._SELECTABLE_RANGE_CSS_CLASSES.selectedEnd);
          }
       },
 
@@ -241,14 +261,14 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
             ids = [ids];
          }
 
-         ids = $ws.helpers.map(ids, function (item) {
+         ids = $ws.helpers.map(ids, function (itemId) {
             return [
                '.',
                this._SELECTABLE_RANGE_CSS_CLASSES.item,
                '[',
                this._selectedRangeItemIdAtr,
                '="',
-               this._selectedRangeItemToString(item),
+               itemId,
                '"]'
             ].join('');
          }.bind(this));
@@ -263,9 +283,9 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
          return this._$items;
       },
 
-      _selectedRangeItemToString: function (item) {
-         return item.toString();
-      },
+      // _selectedRangeItemToString: function (item) {
+      //    return item.toString();
+      // },
 
       /**
        * Помечает контрол, что его представление не соотвтетсвует модели. После того как текущий код отработает,

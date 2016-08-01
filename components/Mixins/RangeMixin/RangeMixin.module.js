@@ -66,22 +66,26 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
        * @param startValue Начальное значение диапазона.
        * @param endValue Конечное значение диапазона.
        */
-      setRange: function(startValue, endValue) {
+      setRange: function(startValue, endValue, silent) {
          var changed = false;
 
          if (this.setStartValue(startValue, true)) {
-            this._notifyOnPropertyChanged('startValue');
-            this._notify('onStartValueChange', this._options.startValue);
+            if (!silent) {
+               this._notifyOnPropertyChanged('startValue');
+               this._notify('onStartValueChange', this._options.startValue);
+            }
             changed = true;
          }
 
          if (this.setEndValue(endValue, true)) {
-            this._notifyOnPropertyChanged('endValue');
-            this._notify('onEndValueChange', this._options.endValue);
+            if (!silent) {
+               this._notifyOnPropertyChanged('endValue');
+               this._notify('onEndValueChange', this._options.endValue);
+            }
             changed = true;
          }
 
-         if (changed) {
+         if (changed && !silent) {
             this._notifyOnRangeChanged();
          }
          return changed;

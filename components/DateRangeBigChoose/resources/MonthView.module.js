@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DateRangeBig.MonthView', [
+define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView', [
    'js!SBIS3.CONTROLS.MonthView'
 ], function (MonthView) {
    'use strict';
@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.DateRangeBig.MonthView', [
    var MonthView = MonthView.extend(/** @lends SBIS3.CONTROLS.DateRangeBig.MonthView.prototype */{
       $protected: {
          _options: {
-            
+            className: 'controls-DateRangeBigChoose-MonthView'
          }
       },
       $constructor: function () {
@@ -25,8 +25,6 @@ define('js!SBIS3.CONTROLS.DateRangeBig.MonthView', [
          var self = this,
             container = this.getContainer();
          
-         // container.addClass('controls-DateRangeBigChoose-MonthView');
-         
          container.find('.' + this._CSS_CLASSES.CAPTION).click(function () {
             self._notify('onActivated');
          });
@@ -34,6 +32,10 @@ define('js!SBIS3.CONTROLS.DateRangeBig.MonthView', [
          container.find('.' + this._CSS_CLASSES.DAY_TABLE).click(function () {
             self._notify('onMonthActivated');
          });
+      },
+
+      _moveFocusToSelf: function(dontChangeDomFocus) {
+         // Контрол не должен принимать на себя фокус
       },
 
       /**

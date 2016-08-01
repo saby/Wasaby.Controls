@@ -1,6 +1,7 @@
 /*global define*/
 define('js!SBIS3.CONTROLS.DateRangeBig', [
    'js!SBIS3.CORE.CompoundControl',
+   'js!SBIS3.CONTROLS.PickerMixin',
    'html!SBIS3.CONTROLS.DateRangeBig',
    'js!SBIS3.CONTROLS.Utils.DateUtil',
    'js!SBIS3.CONTROLS.FormWidgetMixin',
@@ -8,8 +9,8 @@ define('js!SBIS3.CONTROLS.DateRangeBig', [
    'i18n!SBIS3.CONTROLS.DateRangeBig',
    'js!SBIS3.CONTROLS.DatePicker',
    'js!SBIS3.CONTROLS.Button',
-   'js!SBIS3.CORE.DateRangeChoose'
-], function (CompoundControl, dotTplFn, DateUtil, FormWidgetMixin, RangeMixin) {
+   'js!SBIS3.CONTROLS.DateRangeBigChoose'
+], function (CompoundControl, PickerMixin, dotTplFn, DateUtil, FormWidgetMixin, RangeMixin) {
    'use strict';
    /**
     * SBIS3.CONTROLS.DateRangeBig
@@ -20,7 +21,7 @@ define('js!SBIS3.CONTROLS.DateRangeBig', [
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyDateRangeBig
     */
-   var DateRangeBig = CompoundControl.extend([RangeMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateRange.prototype */{
+   var DateRangeBig = CompoundControl.extend([RangeMixin, PickerMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateRange.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
@@ -103,10 +104,10 @@ define('js!SBIS3.CONTROLS.DateRangeBig', [
          return DateRangeBig.superclass.setEndValue.call(this, value, silent);
       },
 
-      setRange: function(startValue, endValue) {
+      setRange: function(startValue, endValue, silent) {
          startValue = this._normalizeDate(startValue);
          endValue = this._normalizeDate(endValue);
-         return DateRangeBig.superclass.setRange.call(this, startValue, endValue);
+         return DateRangeBig.superclass.setRange.call(this, startValue, endValue, silent);
       },
 
       _normalizeDate: function(date) {
@@ -130,7 +131,6 @@ define('js!SBIS3.CONTROLS.DateRangeBig', [
          if (this._calendarIsShow) {
             //TODO Если DateRangeChoose не отобразить, то позиция окна считается не верно. Нужно на что-то заменить
             this._dateRangeChoose.setVisible(true);
-            this._dateRangeChoose._showMenu();
             this._dateRangeChoose.setVisible(false);
          } else {
             this._dateRangeChoose._hideMenu();

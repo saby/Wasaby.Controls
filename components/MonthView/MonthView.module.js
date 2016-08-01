@@ -89,9 +89,7 @@ define(
             var self = this;
 
             // Первоначальная установка даты
-            // this._setDate(this._options.startValue || new Date());
             this._options.month = this._options.month || new Date();
-            this._options.month = DateUtil.valueToDate(this._options.month);
             this._options.month = this._normalizeMonth(this._options.month);
             if (!this._options.month) {
                throw new Error('MonthView. Неверный формат даты');
@@ -145,7 +143,6 @@ define(
           */
          setMonth: function (month) {
             var oldMonth = this._options.month;
-            month = DateUtil.valueToDate(month);
             month = this._normalizeMonth(month);
             if (month === oldMonth ||
                (month && oldMonth && month.getTime() === this._options.month.getTime())) {
@@ -185,6 +182,8 @@ define(
          _getDaysArray: function () {
             var
                date = this._options.month,
+               today = new Date(),
+               isCurrentMonth = today.getFullYear() === date.getFullYear() && today.getMonth() === date.getMonth(),
                dayOfWeek,
                days,
                workingDate = new Date(date),
@@ -194,12 +193,14 @@ define(
                weeksArray = [],
                week = [];
 
+            today = today.getDate();
+
             // Заполняем нулевые дни вначале таблицы
             workingDate.setDate(1);
             dayOfWeek = workingDate.getDay() != 0 ? workingDate.getDay() : 7;
             days = this._daysInMonth(new Date(workingDate.setMonth(workingDate.getMonth() - 1)));
             while( dayOfWeek - 1 > 0 ){
-               this._pushDayIntoArray(week, days - dayOfWeek + 2, false);
+               this._pushDayIntoArray(week, days - dayOfWeek + 2, false, false);
                dayOfWeek--
             }
             workingDate = new Date(date);
@@ -207,7 +208,7 @@ define(
             // Заполняем календарные дни
             days = this._daysInMonth(date);
             for ( var i = 1; i <= days; i++ ){
-               this._pushDayIntoArray(week, i, true);
+               this._pushDayIntoArray(week, i, true, isCurrentMonth && today === i);
 
                if ( week.length == 7 ) {
                   weeksArray.push(week);
@@ -222,7 +223,7 @@ define(
                dayOfWeek = workingDate.getDay();
 
                while( dayOfWeek != 7 ){
-                  this._pushDayIntoArray(week, dayOfWeek - workingDate.getDay() + 1, false);
+                  this._pushDayIntoArray(week, dayOfWeek - workingDate.getDay() + 1, false, false);
                   dayOfWeek++;
                }
                weeksArray.push(week);
@@ -275,26 +276,30 @@ define(
             return MonthView.superclass._setSelectionRangeEndItem.call(this, item);
          },
 
-         _getSelectedRangeItems: function (start, end) {
+         _getSelectedRangeItemsIds: function (start, end) {
             var items = [],
                monthStartDate = new Date(this.getMonth().getFullYear(), this.getMonth().getMonth(), 1),
-               monthEndDate = new Date(this.getMonth().getFullYear(), this.getMonth().getMonth() + 1, 0);
+               monthEndDate = new Date(this.getMonth().getFullYear(), this.getMonth().getMonth() + 1, 0),
+               startItem = start, endItem = end,
+               startId = start.getDate(), endId = end.getDate();
 
             if (start > monthEndDate || end < monthStartDate) {
-               return items;
+               return {items: items, start: null, end: null};
             }
-            if (start < monthStartDate) {
-               start = monthStartDate;
+            if (startItem < monthStartDate) {
+               startItem = monthStartDate;
+               startId = null;
             }
-            if (end > monthEndDate) {
-               end = monthEndDate;
+            if (endItem > monthEndDate) {
+               endItem = monthEndDate;
+               endId = null;
             }
 
-            end = end.getDate();
-            for(var i = start.getDate(); i <= end; i++) {
+            endItem = endItem.getDate();
+            for(var i = startItem.getDate(); i <= endItem; i++) {
                items.push(i);
             }
-            return items;
+            return {items: items, start: startId, end: endId};
          },
 
          /**
@@ -315,12 +320,14 @@ define(
           * @param array
           * @param day
           * @param isCalendar
+          * @param today
           * @private
           */
-         _pushDayIntoArray: function (array, day, isCalendar) {
+         _pushDayIntoArray: function (array, day, isCalendar, today) {
             var obj = {};
             obj.day = day;
             obj.isCalendar = isCalendar;
+            obj.today = today;
 
             array.push(obj);
          },
@@ -332,6 +339,7 @@ define(
           * @private
           */
          _normalizeDate: function (date) {
+            date = DateUtil.valueToDate(date);
             if(!(date instanceof Date)) {
                return null;
             }
@@ -345,6 +353,7 @@ define(
           * @private
           */
          _normalizeMonth: function (month) {
+            month = DateUtil.valueToDate(month);
             if(!(month instanceof Date)) {
                return null;
             }

@@ -1,0 +1,296 @@
+@import "resources/MonthRangePicker";
+@import "resources/DateRangePicker";
+
+@blue-color: #0066ff;
+@blue-color2: #0055bb;
+@blue-color3: #cbd5e5;
+
+@borders-color: @gray-light-color;
+
+.buttonbar-selected-button () {
+   border-color: @blue-color2;
+   background-color: @default-itemHover-color;
+   border: 1px solid @blue-color2;
+}
+
+.buttonbar-selected-boundary-button () {
+   color: @white-color;
+   background-color: @blue-color;
+}
+
+.range-button-bar-mixin () {
+   button {
+      .border-radius(0);
+      &.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
+         .buttonbar-selected-button();
+         &.controls-RangeSelectable__item-selectedStart,
+         &.controls-RangeSelectable__item-selectedEnd {
+            .buttonbar-selected-boundary-button();
+         }
+      }
+   }
+
+   .controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
+      button {
+         .buttonbar-selected-button();
+      }
+
+      &.controls-RangeSelectable__item-selectedStart,
+      &.controls-RangeSelectable__item-selectedEnd {
+         button {
+            .buttonbar-selected-boundary-button();
+         }
+      }
+   }
+}
+
+.range-vertical-button-bar-mixin() {
+   .range-button-bar-mixin();
+   button {
+      border: 1px solid @borders-color;
+      border-top: none;
+      .controls-Button__text {
+         margin: 0;
+      }
+   }
+   .controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
+      button {
+         border-top: none;
+      }
+   }
+}
+
+.controls-DateRangeBigChoose {
+   background-color: #fff;
+   border: 3px solid @borders-color;
+   border-radius: 4px;
+   width: 350px;
+
+   .controls-DateRangeBigChoose__header {
+      background-color: #f9f9f9;
+      border-bottom: 1px solid @borders-color;
+      padding: 6px 0 6px 6px;
+
+      .controls-DateRangeBigChoose__header-date-pickers {
+         float: right;
+         margin-right: 40px;
+      }
+   }
+
+   .controls-DateRangeBigChoose__left {
+      position: absolute;
+      width: 32px;
+   }
+
+   .controls-DateRangeBigChoose__center {
+      position: absolute;
+      left: 32px;
+      right: 32px;
+   }
+
+   .controls-DateRangeBigChoose__right {
+      position: absolute;
+      width: 32px;
+      right: 0;
+   }
+
+   .controls-DateRangeBigChoose__years {
+      border-bottom: 1px solid #e4e4e4;
+      height: 40px;
+      padding: 8px 0;
+      vertical-align: middle;
+      .box-sizing(border-box);
+
+      .controls-DateRangeBigChoose__yearsRange {
+         .range-button-bar-mixin();
+
+         button.controls-Button {
+            border: none;
+            display: block;
+            float: left;
+            width: 16.6666%;
+            font-size: 15px;
+            color: #CCCCCC;
+            text-align: center;
+
+            &:hover {
+               color: #000000;
+               font-weight: bold;
+            }
+            .controls-Button__text {
+               margin: 0;
+            }
+            &.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
+               border-left: none;
+            }
+         }
+      }
+   }
+
+   .controls-DateRangeBigChoose__months {
+      position: relative;
+      height: 403px;
+      top: 0;
+      bottom: 0;
+
+      //.controls-DateRangeBigChoose__left,
+      //.controls-DateRangeBigChoose__right {
+      //   .range-vertical-button-bar-mixin();
+      //}
+
+      .controls-DateRangeBigChoose__months-quarterRange,
+      .controls-DateRangeBigChoose__months-halfyearRange {
+         width: auto;
+         .range-vertical-button-bar-mixin();
+
+         .controls-DateRangeBigChoose__months-range-btn-wrapper {
+            width: 100%;
+            &.controls-RangeSelectable__item-selected {
+               background-color: @default-itemHover-color;
+            }
+         }
+      }
+
+      .controls-DateRangeBigChoose__months-quarterRange {
+         right: 32px;
+         left: 0;
+
+         button.controls-Button {
+            width: 32px;
+            height: 105px;
+            &.controls-DateRangeBigChoose__range-btn1, &.controls-DateRangeBigChoose__range-btn2 {
+               height: 97px;
+            }
+         }
+      }
+
+      .controls-DateRangeBigChoose__months-halfyearRange {
+         right: 0;
+         left: 32px;
+
+         .controls-DateRangeBigChoose__months-range-btn-wrapper {
+            height: 202px;
+         }
+         button.controls-Button {
+            width: 32px;
+            height: 202px;
+            float: right;
+            &:after {
+                content:"";
+                display:block;
+                clear:both;
+            }
+         }
+      }
+
+      .controls-DateRangeBigChoose__months-month {
+         height: 100%;
+         overflow: hidden;
+      }
+   }
+
+   .controls-DateRangeBigChoose__dates {
+      height: 427px;
+      position: relative;
+
+      .controls-DateRangeBigChoose__dates-months {
+         position: absolute;
+         width: 86px;
+         .range-vertical-button-bar-mixin();
+
+         button.controls-Button {
+            width: 100%;
+            height: 35px;
+            border-top: none;
+            border-bottom: none;
+            color: @date-range-big-choose-months-color;
+            font-size: @date-range-big-choose-months-font-size;
+            text-align: left;
+            padding-left: 8px;
+
+            &.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
+               border-top: none;
+               border-bottom: none;
+            }
+         }
+      }
+      .controls-DateRangeBigChoose__dates-dates-wrapper{
+      //.controls-DateRangeBigChoose__dates-dates {
+         position: absolute;
+         left: 94px;
+         right: 8px;
+         top: 0;
+         bottom: 0;
+         overflow: hidden;
+      }
+      .controls-DateRangeBigChoose__dates-dates {
+         top: -262px;
+         position: absolute;
+      }
+      .controls-DateRangeBigChoose__dates-dates-top-gradient {
+         position: absolute;
+         left: 0;
+         right: 0;
+         height: 40px;
+         background: @date-range-big-choose-date-range-picker-calendar-top-bg;
+      }
+      .controls-DateRangeBigChoose__dates-dates-bottom-gradient {
+         position: absolute;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         height: 40px;
+         background: @date-range-big-choose-date-range-picker-calendar-bottom-bg;
+      }
+   }
+
+   .controls-DateRangeBigChoose__years-panel-wrapper {
+      width: 33%;
+      float: left;
+      > * {
+         font-size: 18px;
+         font-weight: bold;
+         font-style: normal;
+         display: block;
+         margin: 0 auto;
+      }
+   }
+
+   .controls-DateRangeBigChoose__yearsRange {
+      .controls-RangeSelectable__item {
+         color: #c7c7c7;
+      }
+   }
+
+   .controls-DateRangeBigChoose__years-prevYearBtn {
+      margin: 0 4px;
+   }
+
+   .controls-DateRangeBigChoose__years-nextYearBtn {
+      margin: 0 4px;
+   }
+
+   .controls-DateRangeBigChoose__years-toggleChooseYearBtn {
+      border: none;
+      background: none;
+   }
+
+   .controls-DateRangeBigChoose__years-currentYearBtn {
+      border: none;
+      background: none;
+   }
+
+   .controls-DateRangeBigChoose__iconPrevYear {
+      background: @date-range-big-left-arrow-icon-bg;
+      &:hover {
+         background: @date-range-big-left-arrow-icon-hover-bg;
+      }
+   }
+
+   .controls-DateRangeBigChoose__iconNextYear {
+      background: @date-range-big-right-arrow-icon-bg;
+      &:hover {
+         background: @date-range-big-right-arrow-icon-hover-bg;
+      }
+   }
+}

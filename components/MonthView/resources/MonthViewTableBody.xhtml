@@ -3,7 +3,7 @@
       <tr class="controls-MonthView__tableBodyRow">
          {{~week :value:indexOfDay}}
             {{?value.isCalendar}}
-            <td data-selected-range-id="{{=value.day}}" class="controls-MonthView__tableElement controls-RangeSelectable__item{{?indexOfDay === 5 || indexOfDay === 6}} controls-MonthView__weekend{{?}}">{{=value.day}}</td>
+            <td data-selected-range-id="{{=value.day}}" class="controls-MonthView__tableElement controls-RangeSelectable__item{{?indexOfDay === 5 || indexOfDay === 6}} controls-MonthView__weekend{{?}}{{?value.today}} controls-MonthView__today{{?}}">{{=value.day}}</td>
             {{??}}
             <td class="controls-MonthView__tableElement controls-MonthView__tableElementFog{{?indexOfDay === 5 || indexOfDay === 6}} controls-MonthView__weekend{{?}}"></td>
             {{?}}

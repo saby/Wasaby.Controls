@@ -5,6 +5,9 @@
 @gray-color:                              #999;
 @gray-light-color:                        #E4E4E4;
 @gray-ccc-color:                          #CCC;
+@lightgray-color:                         #CBD5E5;
+@darkcyan-color:                          #0055BB;
+@dodgerblue-color:                        #0066FF;
 
 @blue-dark-color:                         #313E78;
 
@@ -1206,6 +1209,35 @@
 
 @date-range-line-height:                        24px;
 @date-range-text-line-height:                   normal;
+
+// -------------- //
+// Date Range Big //
+// -------------- //
+
+@date-range-big-spritesheet:                   'img/DateRangeBig-images.png';
+@date-range-big-bg-spritesheet:                'img/DateRangeBig-images2.png';
+
+@date-range-big-left-arrow-icon-bg:             url(@date-range-big-spritesheet) 0 0 no-repeat;
+@date-range-big-left-arrow-icon-hover-bg:       url(@date-range-big-spritesheet) 0 -24px no-repeat;
+@date-range-big-right-arrow-icon-bg:            url(@date-range-big-spritesheet) 0 -48px no-repeat;
+@date-range-big-right-arrow-icon-hover-bg:      url(@date-range-big-spritesheet) 0 -72px no-repeat;
+
+@date-range-big-choose-months-color:            @darkcyan-color;
+@date-range-big-choose-months-font-size:        16px;
+
+@date-range-big-choose-month-range-picker-caption-text-hovered-bg:         @default-itemHover-color;
+@date-range-big-choose-month-range-picker-calendar-selected-bg:            @default-itemHover-color;
+@date-range-big-choose-month-range-picker-calendar-boundary-selected-bg:   @dodgerblue-color;
+@date-range-big-choose-month-range-picker-month-hovered-border:             1px dotted @gray-ccc-color;
+
+
+@date-range-big-choose-date-range-picker-calendar-item-hover-bg:           @default-itemHover-color;
+@date-range-big-choose-date-range-picker-calendar-item-border-color:       @darkcyan-color;
+@date-range-big-choose-date-range-picker-calendar-item-border:             1px solid @date-range-big-choose-date-range-picker-calendar-item-border-color;
+@date-range-big-choose-date-range-picker-calendar-item-selected-bg:        @default-itemHover-color;
+@date-range-big-choose-date-range-picker-calendar-top-bg:                  url(@date-range-big-bg-spritesheet) 0 0 repeat-x;
+@date-range-big-choose-date-range-picker-calendar-bottom-bg:               url(@date-range-big-bg-spritesheet) 0 -40px repeat-x;
+@date-range-big-choose-month-range-picker-calendar-boundary-item-selected-bg:   @dodgerblue-color;
 
 // ------------- //
 // Edit at place //
