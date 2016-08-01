@@ -25,7 +25,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
              filter[searchParamName] = text;
              view.setHighlightText(text, false);
              view.setHighlightEnabled(true);
+             self._isInfiniteScroll = view.isInfiniteScroll();
              view.setInfiniteScroll(true, true);
+             self._lastGroup = view._options.groupBy;
              view.setGroupBy(groupBy);
              if (this._firstSearch) {
                 this._lastRoot = view.getCurrentRoot();
@@ -343,8 +345,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             });
          }
 
-         this._lastGroup = view._options.groupBy;
-         this._isInfiniteScroll = view.isInfiniteScroll();
          function subscribeOnSearchFormEvents() {
             searchForm.subscribe('onReset', function (event, text) {
                if (isTree) {
