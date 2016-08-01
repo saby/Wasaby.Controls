@@ -2003,7 +2003,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
       _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems) {
          this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);
-         var ladderDecorator = this._options._decorators.getByName('ladder');
+         var ladderDecorator = this._options._decorators && this._options._decorators.getByName('ladder');
          //todo опять неверно вызывается ladderCompare, используем костыль, чтобы этого не было
 //         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
 //            ladderDecorator.setIgnoreEnabled(true);

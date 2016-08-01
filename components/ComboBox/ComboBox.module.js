@@ -198,7 +198,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          //TODO: Обобщить поиск с автодополнением и строкой поиска
          //Сделать общую точку входа для поиска, для понимания где искать на источнике или на проекции
          var itemText = model.get(this._options.displayField).toLowerCase(),
-             text = this.getText().toLowerCase()
+             text = this.getText().toLowerCase();
          if (itemText.match(text)){
             return true;
          }
@@ -207,14 +207,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _onSearch: function(){
          this.setSelectedIndex(-1);
-         this._itemsProjection.setFilter(this._searchFilter.bind(this));
+         this._getItemsProjection().setFilter(this._searchFilter.bind(this));
          this.redraw();
          this.showPicker();
       },
 
       _onResetSearch: function(){
          this.setSelectedIndex(-1);
-         this._itemsProjection.setFilter(null);
+         this._getItemsProjection().setFilter(null);
          this.redraw();
       },
 
