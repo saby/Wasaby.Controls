@@ -2,12 +2,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'js!SBIS3.CONTROLS.TextBox',
    'html!SBIS3.CONTROLS.ComboBox',
    'js!SBIS3.CONTROLS.PickerMixin',
-   'js!SBIS3.CONTROLS.DSMixin',
+   'js!SBIS3.CONTROLS.ItemsControlMixin',
    'js!SBIS3.CONTROLS.Selectable',
    'js!SBIS3.CONTROLS.DataBindMixin',
    'js!SBIS3.CONTROLS.SearchMixin',
-   'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown'
-], function (TextBox, dotTplFn, PickerMixin, DSMixin, Selectable, DataBindMixin, SearchMixin, arrowTpl) {
+   'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown',
+   'html!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate',
+   'html!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate'
+], function (TextBox, dotTplFn, PickerMixin, ItemsControlMixin, Selectable, DataBindMixin, SearchMixin, arrowTpl, ItemTemplate, ItemContentTemplate) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора.
@@ -48,7 +50,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * !Важно: при добавлении этого класса сломается "Базовая линия".
     */
 
-   var ComboBox = TextBox.extend([PickerMixin, DSMixin, Selectable, DataBindMixin, SearchMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
+   var ComboBox = TextBox.extend([PickerMixin, ItemsControlMixin, Selectable, DataBindMixin, SearchMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       _dotTplFn: dotTplFn,
       /**
        * @typedef {Object} ItemsComboBox
@@ -93,6 +95,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          _isClearing: false,
          _keysWeHandle: [$ws._const.key.up, $ws._const.key.down, $ws._const.key.enter],
          _options: {
+            _defaultItemTemplate: ItemTemplate,
+            _defaultItemContentTemplate: ItemContentTemplate,
             searchDelay: 0,
             startCharacter: 1,
             focusOnActivatedOnMobiles: false,
@@ -237,11 +241,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
          }
          else {
-            if (this._dataSet) {
+            if (this.getItems()) {
                var num = null, i = 0, nextRec, prevRec;
-               if (this._dataSet.getCount()) {
+               if (this.getItems().getCount()) {
                   if (selectedKey) {
-                     this._dataSet.each(function (rec) {
+                     this.getItems().each(function (rec) {
                         if (rec.getId() == selectedKey) {
                            num = i;
                         }
@@ -249,22 +253,22 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                      });
                      if (num !== null) {
                         if (num == 0) {
-                           nextRec = this._dataSet.at(num + 1);
-                           prevRec = this._dataSet.at(0)
+                           nextRec = this.getItems().at(num + 1);
+                           prevRec = this.getItems().at(0)
                         }
-                        else if (num == this._dataSet.getCount() - 1) {
-                           nextRec = this._dataSet.at(this._dataSet.getCount() - 1);
-                           prevRec = this._dataSet.at(num - 1)
+                        else if (num == this.getItems().getCount() - 1) {
+                           nextRec = this.getItems().at(this.getItems().getCount() - 1);
+                           prevRec = this.getItems().at(num - 1)
                         }
                         else {
-                           nextRec = this._dataSet.at(num + 1);
-                           prevRec = this._dataSet.at(num - 1)
+                           nextRec = this.getItems().at(num + 1);
+                           prevRec = this.getItems().at(num - 1)
                         }
                      }
                   }
                   else {
-                     prevRec = this._dataSet.at(0);
-                     nextRec = this._dataSet.at(0);
+                     prevRec = this.getItems().at(0);
+                     nextRec = this.getItems().at(0);
                   }
                   if (e.which === $ws._const.key.up) {
                      this.setSelectedKey(prevRec.getId());
@@ -314,7 +318,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
          var item, def;
          def = new $ws.proto.Deferred();
-         if (this._dataSet) {
+         if (this.getItems()) {
             if (typeof key !== 'undefined') {
                item = this.getItems().getRecordById(key);
                if (item) {

@@ -670,29 +670,34 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _redrawItems : function() {
          this._groupHash = {};
          var
-            $itemsContainer = this._getItemsContainer(),
-            itemsContainer = $itemsContainer.get(0),
-            data = this._prepareItemsData(),
-            markup;
+            $itemsContainer = this._getItemsContainer();
+         //в контролах типа комбобокса этого контейнера может не быть, пока пикер не создан
+         if ($itemsContainer) {
+            var
+               itemsContainer = $itemsContainer.get(0),
+               data = this._prepareItemsData(),
+               markup;
 
-         data.tplData = this._prepareItemData();
-         //TODO опять же, перед полной перерисовкой данные лесенки достаточно сбросить, чтобы она правильно отработала
-         //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
-         var ladder = this._options._decorators && this._options._decorators.getByName('ladder');
-         ladder && ladder.setIgnoreEnabled(true);
-         ladder && ladder.reset();
-         markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
-         ladder && ladder.setIgnoreEnabled(false);
-         //TODO это может вызвать тормоза
-         this._destroyInnerComponents($itemsContainer);
-         if (markup.length) {
-            if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
-               $itemsContainer.append(markup);
-            } else {
-               itemsContainer.innerHTML = markup;
+            data.tplData = this._prepareItemData();
+            //TODO опять же, перед полной перерисовкой данные лесенки достаточно сбросить, чтобы она правильно отработала
+            //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
+            var ladder = this._options._decorators && this._options._decorators.getByName('ladder');
+            ladder && ladder.setIgnoreEnabled(true);
+            ladder && ladder.reset();
+            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
+            ladder && ladder.setIgnoreEnabled(false);
+            //TODO это может вызвать тормоза
+            this._destroyInnerComponents($itemsContainer);
+            if (markup.length) {
+               if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
+                  $itemsContainer.append(markup);
+               } else {
+                  itemsContainer.innerHTML = markup;
+               }
             }
+            this._toggleEmptyData(!(data.records && data.records.length) && this._options.emptyHTML);
+
          }
-         this._toggleEmptyData(!(data.records && data.records.length) && this._options.emptyHTML);
          this._reviveItems();
          this._container.addClass('controls-ListView__dataLoaded');
       },
