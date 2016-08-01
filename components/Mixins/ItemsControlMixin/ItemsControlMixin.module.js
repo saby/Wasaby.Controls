@@ -189,6 +189,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _dataSource: undefined,
          _dataSet: null,
          _dotItemTpl: null,
+         _propertyValueGetter: getPropertyValue,
          _options: {
             _canServerRender: false,
             _serverRender: false,

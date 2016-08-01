@@ -316,14 +316,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
             this._container.addClass('controls-ComboBox_emptyValue');
          }
-         var item, def;
+         var def;
          def = new $ws.proto.Deferred();
-         if (this.getItems()) {
-            if (typeof key !== 'undefined') {
-               item = this.getItems().getRecordById(key);
-               if (item) {
-                  def.callback(item);
-               }
+
+         if (this._getItemsProjection()) {
+            if (!this._isEmptyIndex(index)) {
+               var projItem = this._getItemsProjection().at(index);
+               def.callback(projItem.getContents());
             }
             else {
                if (this._dataSource) {
@@ -337,7 +336,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             var self = this;
             def.addCallback(function (item) {
                if (item) {
-                  var newText = item.get(self._options.displayField);
+                  var newText = self._propertyValueGetter(item, self._options.displayField);
                   if (newText != self._options.text) {
                      ComboBox.superclass.setText.call(self, newText);
                      self._drawNotEditablePlaceholder(newText);
@@ -384,15 +383,16 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._picker.getContainer().mouseup(function (e) {
             var row = $(e.target).closest('.js-controls-ComboBox__itemRow');
             if (row.length) {
-               var strKey = $(row).attr('data-id');
-               if (strKey == 'null') {
-                  strKey = null;
-               }
+
+               var hash = $(row).attr('data-hash');
+               var projItem, index;
+               projItem = self._getItemsProjection().getByHash(hash);
+               index = self._getItemsProjection().getIndex(projItem);
                if (self._options.autocomplete){
                   self._itemsProjection.setFilter(null);
                   self.redraw();
                }
-               self.setSelectedKey(strKey);
+               self.setSelectedIndex(index);
                self.hidePicker();
                // чтобы не было выделения текста, когда фокус вернули в выпадашку
                self._fromTab = false;
