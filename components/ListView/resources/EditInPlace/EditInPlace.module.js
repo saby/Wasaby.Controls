@@ -74,11 +74,11 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                         }, 100);
                         this._editingDeferred = result.addBoth(function () {
                            clearTimeout(loadingIndicator);
-                           this._previousRecordState = this._cloneWithFormat(this._editingRecord, this._editingRecord.getOwner());
+                           this._previousRecordState = this._cloneWithFormat(this._editingRecord);
                            $ws.helpers.toggleIndicator(false);
                         }.bind(this));
                      } else {
-                        this._previousRecordState = this._cloneWithFormat(this._editingRecord, this._editingRecord.getOwner());
+                        this._previousRecordState = this._cloneWithFormat(this._editingRecord);
                      }
                   }
                }
@@ -122,8 +122,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
              */
             updateFields: function(record) {
                this._record = record;
-               this._previousRecordState = this._cloneWithFormat(record, record.getOwner());
-               this._editingRecord = this._cloneWithFormat(record, record.getOwner());
+               this._previousRecordState = this._cloneWithFormat(record);
+               this._editingRecord = this._cloneWithFormat(record);
                this.getContext().setValue(CONTEXT_RECORD_FIELD, this._editingRecord);
             },
             _onRecordChange: function(event, fields) { //todo Удалить этот метод вообще в 3.7.4.100
@@ -273,24 +273,29 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             //Выписана задача Мальцеву, который должен убрать этот метод отсюда, и предаставить механизм выполняющий необходимую задачу.
             //https://inside.tensor.ru/opendoc.html?guid=85d18197-2094-4797-b823-5406424881e5&description=
             _cloneWithFormat: function(record, recordSet) {
-               var fieldName, clone;
-               if (recordSet) {
+               var
                   fieldName,
-                  clone = Di.resolve(recordSet.getModel(), {
+                  format,
+                  recordModule = require('js!' + record._moduleName),
+                  clone = new recordModule({
                      'adapter': record.getAdapter(),
                      'idProperty': record.getIdProperty(),
                      'format': []
                   });
-
-                  recordSet.getFormat().each(function(field) {
-                     fieldName = field.getName();
-                     clone.addField(field, undefined, record.get(fieldName));
-                  });
-                  clone.setState(record.getState());
-                  return clone;
+               if (recordSet && recordSet.getFormat().getCount()) {
+                  format = recordSet.getFormat();
                } else {
-                  return record.clone();
+                  format = record.getFormat();
                }
+               format.each(function(field) {
+                  fieldName = field.getName();
+                  clone.addField(field, undefined, record.get(fieldName));
+               });
+               if (!record.isChanged()) {
+                  clone.applyChanges();
+               }
+               clone.setState(record.getState());
+               return clone;
             }
          });
 
