@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       var idx, item, projFilter;
       projection.setEventRaising(false, analyze);
       projFilter = projection.getFilter();
-      projection.setFilter(retTrue);
+      projection.setFilter(function() { return true });
       for (idx in cfg.openedPath) {
          if (cfg.openedPath.hasOwnProperty(idx)) {
             item = projection.getItemBySourceItem(cfg._items.getRecordById(idx));
