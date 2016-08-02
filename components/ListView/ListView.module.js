@@ -784,7 +784,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onScrollMoveHandler: function(event, scrollTop){
-            if (this._options.infiniteScroll == 'down'){
+            if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                var scrollPage = this._scrollBinder._getScrollPage(scrollTop);
                this._notify('onScrollPageChange', scrollPage);
             }
