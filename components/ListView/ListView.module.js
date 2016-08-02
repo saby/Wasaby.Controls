@@ -1239,7 +1239,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //рисуем от ключа
             var selId = id;
             if (!lightVer) {
-               $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
+               $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
                $('.controls-ListView__item[data-id="' + selId + '"]', this._container).addClass('controls-ListView__item__selected');
             }
          },
@@ -2024,7 +2024,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._scrollBinder && this._scrollBinder._updateScrollPages();
 
             // Если нет скролла или скролл внизу, значит нужно догружать еще записи (floatArea отжирает скролл, поэтому если она открыта - не грузим)
-            if ((!hasScroll || isScrollOnBottom) && !existFloatArea) {
+            if ((!hasScroll || (isScrollOnBottom && this._options.infiniteScroll == 'down')) && !existFloatArea) {
                this._loadNextPage();
             } else {
                this._moveTopScroll();
