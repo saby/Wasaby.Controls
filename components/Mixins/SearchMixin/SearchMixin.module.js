@@ -66,7 +66,8 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
       },
 
       _applySearch : function(text, force) {
-         var hasStartCharacter = this._options.startCharacter !== null;
+         var hasStartCharacter = this._options.startCharacter !== null,
+             textTrimLength;
 
          /* Если поиск запущен, то надо отменить поиск с задержкой */
          this._clearSearchDelay();
@@ -74,7 +75,8 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
             /* Вырезаем символы < > только если они одиночные, т.е. не в составе какого-то слова,
                т.к. декоратор в гриде при выделении цветом одиночных < > может поломать вёрстку */
             text = text.replace(/^([<|>][\s])|([\s][<|>][\s])|([\s][<|>])$/g, '');
-            if ( (hasStartCharacter && String.trim(text).length >= this._options.startCharacter) || force ) {
+            textTrimLength = String.trim(text).length;
+            if ( (hasStartCharacter && textTrimLength >= this._options.startCharacter) || (force && textTrimLength)) {
                this._notify('onSearch', text);
                this._onResetIsFired = false;
             } else if (hasStartCharacter) {
