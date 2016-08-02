@@ -1695,6 +1695,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._scrollTo(itemContainer);
          }
       },
+      _scrollToLastItem: function() {
+         var scrollContainer = this._scrollWatcher.getScrollContainer();
+         $(scrollContainer).scrollTop(1000000000);
+         //var lastItem = $('.controls-ListView__item:last', $('.controls-ListView__itemsContainer:first'));
+         //if (lastItem.length) {
+         //   lastItem[0].scrollIntoView();
+         //}
+      },
       /**
        * Установить что отображается при отсутствии записей.
        * @param html Содержимое блока.
