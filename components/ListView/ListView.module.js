@@ -1854,7 +1854,6 @@ define('js!SBIS3.CONTROLS.ListView',
                }
                if (this._scrollPager){
                   this._setScrollPagerPosition();
-                  //this._scrollBinder._updateScrollPages(true);
                }
             }
          },
@@ -2019,9 +2018,6 @@ define('js!SBIS3.CONTROLS.ListView',
             var hasScroll = this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer()),
                existFloatArea = this._existFloatArea(),
                isScrollOnBottom = this.isScrollOnBottom();
-
-            //TODO: Возможно тут просто нужно стрелять событием, а это перенести в биндер
-            this._scrollBinder && this._scrollBinder._updateScrollPages();
 
             // Если нет скролла или скролл внизу, значит нужно догружать еще записи (floatArea отжирает скролл, поэтому если она открыта - не грузим)
             if ((!hasScroll || (isScrollOnBottom && this._options.infiniteScroll == 'down')) && !existFloatArea) {
