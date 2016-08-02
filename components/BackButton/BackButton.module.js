@@ -137,6 +137,7 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
        */
       setHref: function(href){
          this._link.setHref(href);
+         this._options.href = href;
       }
    });
 
