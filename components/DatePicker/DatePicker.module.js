@@ -529,6 +529,7 @@ define(
          if (!$ws.helpers.isChildControl(this, event.getTarget())) {
             this._notify('onDateSelect');
             this.unsubscribeFrom($ws.single.EventBusGlobalChannel, 'onFocusIn', this._onFocusInHandler);
+            this._onFocusInHandler = null;
          }
       },
 
