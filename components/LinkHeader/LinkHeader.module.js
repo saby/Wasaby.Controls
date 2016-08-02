@@ -2,6 +2,7 @@ define('js!SBIS3.CONTROLS.LinkHeader',
    [
       'js!SBIS3.CONTROLS.Header',
       'html!SBIS3.CONTROLS.LinkHeader',
+      'js!SBIS3.CONTROLS.Link',
       'css!SBIS3.CONTROLS.LinkHeader'
    ],
    function(Header, dotTplFn){
