@@ -74,17 +74,19 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
        * Эту функцию должен вызвать контрол, реализующий выделение диапазона,
        * когда пользователь кликает по одному из выделяемых элементов.
        * @param item {*} Объект соответствующий элементу.
+       * @param endItem {*} Объект соответствующий последнему выделенному элементу. Если он задан,
+       * то сразу же выделяется несколько первых элементов
        * @private
        */
-      _onRangeItemElementClick: function (item) {
+      _onRangeItemElementClick: function (item, endItem) {
          if (this.isRangeselect()) {
             if (this.isSelectionProcessing()) {
                this._stopRangeSelection(item);
             } else {
-               this._startRangeSelection(item);
+               this._startRangeSelection(item, endItem);
             }
          } else {
-            this.setRange(item, item);
+            this.setRange(item, endItem);
             this.validateRangeSelectionItemsView();
          }
       },
@@ -131,7 +133,14 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
        * @private
        */
       _startRangeSelection: function (start, end, silent) {
-         end = end || start;
+         var range;
+         if (end) {
+            range = this._normalizeRange(start, end);
+            start = range[0];
+            end = range[1];
+         } else {
+            end = start;
+         }
          this._rangeSelection = true;
          this.setRange(start, end, silent);
          this._setSelectionRangeEndItem(this.getEndValue(), silent);
@@ -142,7 +151,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
        * @private
        */
       _stopRangeSelection: function (date) {
-         var range = this._normalizeRange(this.getStartValue(), date);
+         var range = this._getUpdatedRange(this.getStartValue(), this.getEndValue(), date);
          this.setRange(range[0], range[1]);
          this._setSelectionRangeEndItem();
          this.validateRangeSelectionItemsView();
@@ -162,6 +171,12 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
          }
       },
 
+      _getUpdatedRange: function (start, end, newBound) {
+         start = (start > newBound)? newBound: start;
+         end = (end < newBound)? newBound: end;
+         return [start, end]
+      },
+
       _resetSelectionEndTmpItem: function () {
          if (this.isSelectionProcessing()) {
             this._rangeSelectionEnd = null;
@@ -174,12 +189,11 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
        * @private
        */
       _drawCurrentRangeSelection: function() {
-         var start = this.getStartValue(),
-            end;
+         // Если в данный момент контрол находится в состоянии выделения,
+         // то в качестве начала или конца интервала используем _rangeSelectionEnd
+         var range = this._getUpdatedRange(this.getStartValue(), this.getEndValue(), this._getSelectionRangeEndItem());
 
-         // Если в данный момент пользователь выбирает дни, то в качестве конца интервала используем _rangeSelectionEnd
-         end = this._getSelectionRangeEndItem() || this.getEndValue();
-         this._drawRangeSelection(start, end);
+         this._drawRangeSelection(range[0], range[1]);
       },
 
       /**

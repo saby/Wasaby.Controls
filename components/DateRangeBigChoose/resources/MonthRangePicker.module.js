@@ -17,7 +17,6 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
          var adapter = this.getAdapter().forTable(),
             offset = query.getOffset(),
             limit = query.getLimit() || 1,
-            end = offset + limit,
             now = new Date(),
             items = [];
 

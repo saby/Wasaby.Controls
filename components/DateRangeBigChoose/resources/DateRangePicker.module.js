@@ -17,7 +17,6 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
          var adapter = this.getAdapter().forTable(),
             offset = query.getOffset(),
             limit = query.getLimit() || 1,
-            end = offset + limit,
             now = new Date(),
             items = [];
          offset = offset - _startingOffset;
@@ -87,7 +86,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
             now = new Date();
 
          this._onMonthViewRageChanged = this._onMonthViewRageChanged.bind(this);
-         this._onMonthViewSelectionStarted = this._onMonthViewSelectionStarted.bind(this);
+         // this._onMonthViewSelectionStarted = this._onMonthViewSelectionStarted.bind(this);
          this._onMonthViewSelectingRangeEndDateChange = this._onMonthViewSelectingRangeEndDateChange.bind(this);
 
          if (!this._options.month) {
@@ -140,8 +139,6 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
          this.forEachMonthView(function(control) {
             control.unsubscribe('onRangeChange', self._onMonthViewRageChanged);
             control.subscribe('onRangeChange', self._onMonthViewRageChanged);
-            control.unsubscribe('onSelectionStarted', self._onMonthViewSelectionStarted);
-            control.subscribe('onSelectionStarted', self._onMonthViewSelectionStarted);
             control.unsubscribe('onSelectingRangeEndDateChange', self._onMonthViewSelectingRangeEndDateChange);
             control.subscribe('onSelectingRangeEndDateChange', self._onMonthViewSelectingRangeEndDateChange);
          });
@@ -161,36 +158,30 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
          this.setRange(start, end);
       },
 
-      _onMonthViewSelectionStarted: function (e, start, end) {
+      _onMonthViewSelectingRangeEndDateChange: function (e, date, _date, selectionType) {
+         this._selectionType = selectionType;
+         this._selectionRangeEndItem = date;
          this.forEachMonthView(function(control) {
-            control.startSelection(start, end, true);
-         });
-      },
-
-      _onMonthViewSelectingRangeEndDateChange: function (e, date) {
-         this.forEachMonthView(function(control) {
-            control._setSelectionRangeEndItem(date, true);
+            if (e.getTarget() !== control) {
+               control._setSelectionType(selectionType);
+               control._setSelectionRangeEndItem(date, true);
+            }
          });
       },
 
       _onRangeChanged: function (e, start, end) {
          this.forEachMonthView(function(control) {
-            control.setRange(start, end, true);
-         });
-      },
-
-      _onMonthViewMouseenter: function (control) {
-         if (this._lastOverControl && this._lastOverControl.isSelectionProcessing()) {
-            if (this._lastOverControl.getMonth().getTime() > control.getMonth().getTime()) {
-               control._startRangeSelection(this._lastOverControl.getStartValue(), this._lastOverControl._selectingRangeEndDate);
+            if (e.getTarget() !== control) {
+               control.setRange(start, end, true);
             }
-         }
-         this._lastOverControl = control;
+         });
       },
 
       _updateSelectionInInnerComponents: function () {
          this.forEachMonthView(function(control) {
             if (this._isMonthView(control)) {
+               control._setSelectionType(this._selectionType);
+               control._setSelectionRangeEndItem(this._selectionRangeEndItem, true);
                control.setRange(this.getStartValue(), this.getEndValue(), true);
             }
          }.bind(this));

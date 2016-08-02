@@ -1,9 +1,19 @@
 <tbody class="controls-MonthView__tableBody">
    {{~it.weeksArray :week:index}}
-      <tr class="controls-MonthView__tableBodyRow">
+      <tr class="controls-MonthView__tableRow">
          {{~week :value:indexOfDay}}
             {{?value.isCalendar}}
-            <td data-selected-range-id="{{=value.day}}" class="controls-MonthView__tableElement controls-RangeSelectable__item{{?indexOfDay === 5 || indexOfDay === 6}} controls-MonthView__weekend{{?}}{{?value.today}} controls-MonthView__today{{?}}">{{=value.day}}</td>
+            <td data-selected-range-id="{{=value.day}}" class="controls-MonthView__tableElement controls-MonthView__currentMonthDay controls-RangeSelectable__item{{?indexOfDay === 5 || indexOfDay === 6}} controls-MonthView__weekend{{?}}{{?value.today}} controls-MonthView__today{{?}}">
+               {{?value.rangeselect}}
+               <span class="controls-MonthView__dayBorder"></span>
+               {{?}}
+               <span class="controls-MonthView__dayTitle">
+                  {{=value.day}}
+               </span>
+               {{?value.rangeselect}}
+               <span class="controls-MonthView__dayBorder"></span>
+               {{?}}
+            </td>
             {{??}}
             <td class="controls-MonthView__tableElement controls-MonthView__tableElementFog{{?indexOfDay === 5 || indexOfDay === 6}} controls-MonthView__weekend{{?}}"></td>
             {{?}}

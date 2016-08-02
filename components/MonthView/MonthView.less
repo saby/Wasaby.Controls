@@ -29,9 +29,25 @@
       }
 
       .controls-MonthView__tableElement {
+         * {
+            height: 100%;
+            display: block;
+            float: left;
+            padding: 8px 0 8px 0;
+         }
+
+         .controls-MonthView__dayTitle {
+            width: 100%;
+         }
+         .controls-MonthView__dayBorder {
+            width: 26%;
+            + .controls-MonthView__dayTitle {
+               width: 48%;
+            }
+         }
          //width: @calendar-day-cell-width;
          height: @calendar-day-table-cell-height;
-         padding: @calendar-day-table-cell-padding;
+         //padding: @calendar-day-table-cell-padding;
 
          &.controls-RangeSelectable__item {
             cursor: @calendar-day-cell-cursor;

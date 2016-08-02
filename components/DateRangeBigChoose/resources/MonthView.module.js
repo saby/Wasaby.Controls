@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView', [
    var MonthView = MonthView.extend(/** @lends SBIS3.CONTROLS.DateRangeBig.MonthView.prototype */{
       $protected: {
          _options: {
+            rangeselect: false,
             className: 'controls-DateRangeBigChoose-MonthView'
          }
       },
@@ -25,11 +26,11 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView', [
          var self = this,
             container = this.getContainer();
          
-         container.find('.' + this._CSS_CLASSES.CAPTION).click(function () {
+         container.find('.' + this.MONTH_VIEW_CSS_CLASSES.CAPTION).click(function () {
             self._notify('onActivated');
          });
          
-         container.find('.' + this._CSS_CLASSES.DAY_TABLE).click(function () {
+         container.find('.' + this.MONTH_VIEW_CSS_CLASSES.TABLE).click(function () {
             self._notify('onMonthActivated');
          });
       },
@@ -42,7 +43,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView', [
        * Перекрываем базовый функционал. Нам не надо что бы сбрасывалось выделение, когда пользователь убирает мышку с контрола.
        * @private
        */
-      _onMouseLeave: function () {
+      _onRangeControlMouseLeave: function () {
       },
 
       startSelection: function (start, end, silent) {
@@ -52,17 +53,10 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView', [
          this._startRangeSelection(start, end, silent);
       },
 
-      _startRangeSelection: function (start, end, silent) {
-         MonthView.superclass._startRangeSelection.call(this, start, end, silent);
-         if (!silent) {
-            this._notify('onSelectionStarted', start, end);
-         }
-      },
-
       _setSelectionRangeEndItem: function (date, silent) {
          var changed = MonthView.superclass._setSelectionRangeEndItem.call(this, date);
          if (changed && !silent) {
-            this._notify('onSelectingRangeEndDateChange', this._rangeSelectionEnd, date);
+            this._notify('onSelectingRangeEndDateChange', this._rangeSelectionEnd, date, this._getSelectionType());
          }
          return changed
       }

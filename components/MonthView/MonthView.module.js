@@ -29,6 +29,7 @@ define(
        * @demo SBIS3.CONTROLS.Demo.MyMonthView
        *
        */
+      var selectionTypes = {WEEK: 'week', DAY: 'day'};
 
       // TODO: нужно ли наследование от FormWidgetMixin ??
       var MonthView = CompoundControl.extend([RangeSelectableViewMixin, RangeMixin], /** @lends SBIS3.CONTROLS.MonthView.prototype */{
@@ -65,17 +66,25 @@ define(
                showWeekdays: true
             },
 
-             _viewValidateTimer: null,
+            _viewValidateTimer: null,
 
-             _selecting: false,
-             // В режиме выделения последняя дата над которой была мышка
-             _selectingRangeEndDate: null,
+            _selecting: false,
+            // В режиме выделения последняя дата над которой была мышка
+            _selectingRangeEndDate: null,
+            _selectionType: null,
 
-             _CSS_CLASSES: {
-                CAPTION_TEXT: 'controls-MonthView__caption-text',
-                CAPTION: 'controls-MonthView__caption',
-                DAY_TABLE: 'controls-MonthView__dayTable'
-             }
+            MONTH_VIEW_CSS_CLASSES: {
+               CAPTION_TEXT: 'controls-MonthView__caption-text',
+               CAPTION: 'controls-MonthView__caption',
+               TABLE: 'controls-MonthView__dayTable',
+               TABLE_ROW: 'controls-MonthView__tableRow',
+               DAY: 'controls-MonthView__tableElement',
+               DAY_TITLE: 'controls-MonthView__dayTitle',
+               DAY_BORDER: 'controls-MonthView__dayBorder',
+               WEEK_SELECTED: 'controls-MonthView__weekSelected',
+               WEEK_HOVERED: 'controls-MonthView__weekHovered',
+               WEEK_ROW: 'controls-MonthView__tableRow'
+            }
          },
 
          $constructor: function () {
@@ -102,13 +111,140 @@ define(
 
             this._updateCaption();
 
+            this._attachEvents();
+
             //??? это было в js!SBIS3.CONTROLS.Calendar . Нужно ли оно тут?
             // ControlHierarchyManager.addNode(this, this.getParent());
+         },
+
+         _attachEvents: function () {
+            var self = this,
+               itemsContainerCssClass = ['.', this.MONTH_VIEW_CSS_CLASSES.TABLE].join(''),
+               itemsContainers = this.getContainer().find(itemsContainerCssClass),
+               itemCssClass = ['.', this._SELECTABLE_RANGE_CSS_CLASSES.item].join('');
+
+            if (this.isEnabled()) {
+               itemsContainers.on('click', ['.', this.MONTH_VIEW_CSS_CLASSES.DAY_TITLE].join(''), function (e) {
+                  self._onDayTitleMouseClick($(this), e);
+               }).on('click', ['.', this.MONTH_VIEW_CSS_CLASSES.DAY].join(''), function (e) {
+                  self._onDayMouseClick($(this), e);
+               }).on('mouseenter', itemCssClass, function () {
+                  self._onDayMouseEnter($(this));
+               }).on('click', ['.', this.MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
+                  self._onDayBorderMouseClick($(this), e);
+               }).on('mouseenter', ['.', this.MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
+                  self._onDayBorderMouseEnter($(this), self._getItemDate($(this)));
+               }).on('mouseleave', ['.', this.MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
+                  self._onDayBorderMouseLeave($(this), self._getItemDate($(this)), e);
+               }).on('mouseleave', self._onMouseLeave.bind(this));
+            }
+         },
+
+         _setSelectionType: function (value) {
+            this._options.selectionType = value;
+         },
+         _getSelectionType: function () {
+            return this._options.selectionType;
+         },
+
+         _onDayMouseClick: function (element, event) {
+            var date, weekStartDate, weekEndDate;
+            // Начинаем выделение в обработчиках _onDayTitleMouseClick и _onDayBorderMouseClick,
+            // В этом обработчике только завершаем выделение.
+            if (!this.isSelectionProcessing()) {
+               return;
+            }
+
+            event.stopPropagation();
+            date = this._getItemDate(element.closest(['.', this._SELECTABLE_RANGE_CSS_CLASSES.item].join('')));
+            if (this._getSelectionType() === selectionTypes.WEEK) {
+               if (date < this.getStartValue()) {
+                  date = this._getStartOfWeek(date);
+               } else if (date > this.getEndValue()) {
+                  date = this._getEndOfWeek(date);
+               }
+            }
+            this._onRangeItemElementClick(date);
+            this._setSelectionType(null);
+         },
+
+         _onDayTitleMouseClick: function (element, event) {
+            if (!this.isSelectionProcessing()) {
+               this._setSelectionType(selectionTypes.DAY);
+               this._onRangeItemElementClick(this._getItemDate(element.closest(['.', this._SELECTABLE_RANGE_CSS_CLASSES.item].join(''))));
+               event.stopPropagation();
+            }
+         },
+
+         _onDayBorderMouseClick: function (element, event) {
+            var itemSelector = ['.', this._SELECTABLE_RANGE_CSS_CLASSES.item].join(''),
+               itemElement, date, startDate, endDate;
+
+            // Если пользователь уже иницировал выделение, то клики обрабатываем в обработчике клика по ячеке(_onDayMouseClick)
+            if (this.isSelectionProcessing()) {
+               return;
+            }
+
+            date = this._getItemDate(element.closest(itemSelector));
+            startDate = this._getStartOfWeek(date);
+            endDate = this._getEndOfWeek(date);
+
+            this._onRangeItemElementClick(startDate, endDate);
+            this._setSelectionType(selectionTypes.WEEK);
+
+            event.stopPropagation();
+         },
+
+         _onDayMouseEnter: function (element) {
+            var date = this._getItemDate(element);
+            if (this._getSelectionType() === selectionTypes.WEEK) {
+               if (date < this.getStartValue()) {
+                  date = this._getStartOfWeek(date);
+               } else if (date > this.getEndValue()) {
+                  date = this._getEndOfWeek(date);
+               }
+            }
+            this._onRangeItemElementMouseEnter(date);
+         },
+
+         _getStartOfWeek: function (date) {
+            date = new Date(date);
+            var day = date.getDay(),
+               diff = date.getDate() - day + (day === 0 ? -6:1);
+            return new Date(date.setDate(diff));
+         },
+
+         _getEndOfWeek: function (date) {
+            date = new Date(date);
+            var day = date.getDay(),
+               diff = date.getDate() - day + (day === 0 ? 0:7);
+            return new Date(date.setDate(diff));
+         },
+
+         _onDayBorderMouseEnter: function (element, item) {
+            var rowCls;
+            if (!this.isSelectionProcessing()) {
+               rowCls = ['.', this.MONTH_VIEW_CSS_CLASSES.WEEK_ROW].join('');
+               this.getContainer().find(rowCls).removeClass(this.MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED);
+               element.closest(rowCls).addClass(this.MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED);
+            }
+         },
+
+         _onDayBorderMouseLeave: function (element, item, event) {
+            if (!$(event.toElement).hasClass(this.MONTH_VIEW_CSS_CLASSES.DAY)) {
+               element.closest(['.', this.MONTH_VIEW_CSS_CLASSES.WEEK_ROW].join('')).removeClass(this.MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED);
+            }
+         },
+
+         _onMouseLeave: function () {
+            var hoveredCls = ['.', this.MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED].join('');
+            this.getContainer().find(hoveredCls).removeClass(this.MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED);
          },
 
          /**
           * Устанавливает начальную выбранную дату
           * @param date {Date} дата
+          * @param silent
           */
          setStartValue: function (date, silent) {
             var changed = false;
@@ -124,12 +260,13 @@ define(
          /**
           * Устанавливает конечную выбранную дату
           * @param date {Date} дата
+          * @param silent
           */
          setEndValue: function (date, silent) {
             var changed = false;
             date = this._normalizeDate(date);
 
-            changed = MonthView.superclass.setEndValue.call(this, date);
+            changed = MonthView.superclass.setEndValue.call(this, date, silent);
             if (changed) {
                this.validateRangeSelectionItemsView();
             }
@@ -176,7 +313,7 @@ define(
             if (!this._options.captionType) {
                return;
             }
-            this.getContainer().find('.' + this._CSS_CLASSES.CAPTION_TEXT).text(this._options.month.strftime(this.getCaptionFormat()));
+            this.getContainer().find('.' + this.MONTH_VIEW_CSS_CLASSES.CAPTION_TEXT).text(this._options.month.strftime(this.getCaptionFormat()));
          },
 
          _getDaysArray: function () {
@@ -251,18 +388,6 @@ define(
 
             // Вставляем тело таблицы в вёрстку;
             table.append(this._monthViewTableBodyTpl({weeksArray: weeksArray}));
-
-            // Обработка наведения мышки и клика по календарному дню
-            if (this.isEnabled()) {
-               this._getSelectedRangeItemsContainers().click(function () {
-                  workingDate = self._getItemDate($(this));
-                  self._onRangeItemElementClick(workingDate);
-               }).mouseenter(function () {
-                  workingDate = self._getItemDate($(this));
-                  self._onRangeItemElementMouseEnter(workingDate);
-               });
-            }
-
          },
 
          _getItemDate: function (jqObj) {
@@ -328,6 +453,7 @@ define(
             obj.day = day;
             obj.isCalendar = isCalendar;
             obj.today = today;
+            obj.rangeselect = this.isRangeselect();
 
             array.push(obj);
          },
