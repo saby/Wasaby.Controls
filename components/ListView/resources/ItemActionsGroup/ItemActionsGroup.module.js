@@ -163,7 +163,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   }
                }
             });
-            this.setTouchMode(this._options.touchMode);
          },
          /**
           * Показывает меню для операций над записью
