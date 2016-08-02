@@ -117,6 +117,13 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
       setIcon: function(icon){
          this._link.setIcon(icon);
          this._options.icon = icon;
+      },
+      /**
+       * Устанавливает ссылку кнопки
+       * @param href Ссылка для перехода по клику
+       */
+      setHref: function(href){
+         this._link.setHref(href);
       }
    });
 
