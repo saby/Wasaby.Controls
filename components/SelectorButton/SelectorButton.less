@@ -11,6 +11,26 @@
       margin: @controls-SelectorButton-margin;
    }
 
+   .controls-SelectorButton__items {
+      white-space: nowrap;
+      overflow: hidden;
+      height: @controls-SelectorButton-height;
+
+      .controls-SelectorButton__ellipsis-wrapper {
+         float: left;
+      }
+
+      .controls-SelectorButton__copyCross {
+         float: right;
+         display: inline-block;
+         position: relative;
+         top: -(@controls-SelectorButton-height - 1);
+         margin-left: -16px;
+         background-color: @white-color;
+         .box-shadow(@controls-filterLine-copyCross-shadow);
+      }
+   }
+
    &.controls-SelectorButton__asLink {
       .controls-SelectorButton__text {
          color: @link-text-color;
