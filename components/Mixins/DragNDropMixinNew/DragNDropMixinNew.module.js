@@ -188,7 +188,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          /**
           * Начало перетаскивания
           * @param e
-          * @param movable
           */
          _beginDrag: function(e) {
             DragObject.reset();
@@ -247,8 +246,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          //endregion protected
          //region mouseHandler
          /**
-          *
-          * @param e
+          * @param {Event} e
           */
          onMouseupInside: function (e) {
             this._mouseUp(e, true);
@@ -259,10 +257,10 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          },
 
          _mouseUp: function(e, inside){
-            if (DragObject.isDragging() && (
-               DragObject.getTargetsControl() === this ||
-               !DragObject.getTargetsControl() && DragObject.getOwner() === this)
-            ){ //если есть таргет то запускаем _endDrag над таргетом иначе запускаем над тем кто начал
+            var target = DragObject.getTargetsControl();
+            target = target && $ws.helpers.instanceOfMixin('SBIS3.CONTROLS.DragNDropMixinNew', target) ? target : null;
+            if (DragObject.isDragging() && (target === this || !target && DragObject.getOwner() === this)) {
+               //если есть таргет то запускаем _endDrag над таргетом иначе запускаем над тем кто начал
                this._endDrag(e, inside ? this._findDragDropContainer(e, e.target) : false);
             }
             this._moveBeginX = null;
