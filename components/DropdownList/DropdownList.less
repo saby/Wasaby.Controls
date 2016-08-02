@@ -8,6 +8,32 @@
          font-size: @font-basic-size;
       }
    }
+  &.controls-DropdownList__ellipsis {
+    &.controls-DropdownList__withoutArrow.controls-DropdownList__withoutCross {
+      .controls-DropdownList__selectedItem {
+        .controls-DropdownList__textWrapper {
+          max-width: 100%
+        }
+      }
+    }
+    &.controls-DropdownList__withoutArrow, &.controls-DropdownList__withoutCross {
+      .controls-DropdownList__selectedItem {
+        .controls-DropdownList__textWrapper {
+          max-width: calc(~"100% - 18px");
+        }
+      }
+    }
+    .controls-DropdownList__selectedItem {
+      .controls-DropdownList__textWrapper {
+        max-width: calc(~"100% - 36px");
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .controls-DropdownList__beforeCaptionWrapper, .controls-DropdownList__afterCaptionWrapper {
+        overflow: hidden;
+      }
+    }
+  }
    .controls-DropdownList__selectedItem > * {
       display: inline-block;
    }

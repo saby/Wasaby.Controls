@@ -772,7 +772,8 @@ define('js!SBIS3.CONTROLS.ListView',
             this._scrollPager = new Paging({
                element: $('.controls-ListView__scrollPager', this._container),
                visible: false,
-               keyField: 'id'
+               keyField: 'id',
+               parent: this
             });
             this._setScrollPagerPosition();
             this._scrollBinder = new ComponentBinder({
@@ -1239,7 +1240,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //рисуем от ключа
             var selId = id;
             if (!lightVer) {
-               $("> .controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
+               $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
                $('.controls-ListView__item[data-id="' + selId + '"]', this._container).addClass('controls-ListView__item__selected');
             }
          },
@@ -1903,6 +1904,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param  {String} direction в какую сторону грузим
           */
          _loadNextPage: function (direction) {
+            direction = direction || this._options.infiniteScroll;
             var loadAllowed  = this.isInfiniteScroll(),
                more = this.getItems().getMetaData().more,
                isContainerVisible = $ws.helpers.isElementVisible(this.getContainer()),

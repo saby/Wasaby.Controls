@@ -43,6 +43,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * @cssModifier controls-DropdownList__withoutArrow Убрать стрелочку слева от выбранного текста.
        * @cssModifier controls-DropdownList__withoutCross Убрать крестик справа от выбранного текста.
        * @cssModifier controls-DropdownList__linkStyle Отобразить текст в шапке в виде ссылки.
+       * @cssModifier controls-DropdownList__ellipsis Текст в шапке обрезается троеточием, если не умещается в контейнере
        */
       var DropdownList = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
          $protected: {
