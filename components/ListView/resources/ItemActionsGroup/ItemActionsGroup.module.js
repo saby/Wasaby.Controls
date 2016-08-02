@@ -15,8 +15,27 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
       'use strict';
 
-      var VERTICAL_OFFSET = -13;
-      var HORIZONTAL_OFFSET = 4;
+      var TOUCH_ALIGN = {
+         verticalAlign: {
+            side: 'top',
+            offset: 0
+         },
+         horizontalAlign: {
+            side: 'right',
+            offset: 0
+         }
+      };
+
+      var STANDART_ALIGN = {
+         verticalAlign: {
+            side: 'top',
+            offset: -13
+         },
+         horizontalAlign: {
+            side: 'right',
+            offset: 4
+         }
+      };
 
       var ItemActionsGroup = ButtonGroupBaseDS.extend( /** @lends SBIS3.CONTROLS.ItemActionsGroup.prototype */ {
          $protected: {
@@ -106,20 +125,18 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          _createItemActionMenu: function() {
             var self = this,
-                verticalAlign = {
-                  side: 'top',
-                  offset: VERTICAL_OFFSET
-               },
-               horizontalAlign = {
-                  side: 'right',
-                  offset: HORIZONTAL_OFFSET
-               },
-               target = this._itemActionsMenuButton;
+                verticalAlign = {},
+                horizontalAlign = {},
+                target;
 
-            if (this._options.touchMode) {
-               verticalAlign.offset = 0;
-               horizontalAlign.offset = 0;
+            if(this._options.touchMode) {
+               verticalAlign = TOUCH_ALIGN.verticalAlign;
+               horizontalAlign = TOUCH_ALIGN.horizontalAlign;
                target = this._container;
+            } else {
+               verticalAlign = STANDART_ALIGN.verticalAlign;
+               horizontalAlign = STANDART_ALIGN.horizontalAlign;
+               target = this._itemActionsMenuButton;
             }
 
             this._itemActionsMenu = new ContextMenu({
@@ -255,6 +272,26 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
          canAcceptFocus: function() {
             return false;
+         },
+
+         /**
+          * Меняет режим отображения операций над записью
+          * @param {Boolean} mode
+          */
+         setTouchMode: function(mode) {
+            this._options.touchMode = mode;
+            if(this._itemActionsMenu) {
+               this._itemActionsMenu.getContainer().toggleClass('controls-ItemActions__menu-touchMode', Boolean(mode));
+               if(mode) {
+                  this._itemActionsMenu.setTarget(this._container);
+                  this._itemActionsMenu.setVerticalAlign(TOUCH_ALIGN.verticalAlign);
+                  this._itemActionsMenu.setHorizontalAlign(TOUCH_ALIGN.horizontalAlign);
+               } else {
+                  this._itemActionsMenu.setTarget(this._itemActionsMenuButton);
+                  this._itemActionsMenu.setVerticalAlign(STANDART_ALIGN.verticalAlign);
+                  this._itemActionsMenu.setHorizontalAlign(STANDART_ALIGN.horizontalAlign);
+               }
+            }
          },
 
          _getItemTemplate : function(item) {

@@ -3,10 +3,10 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
         'js!SBIS3.CONTROLS.Action.Action',
         'js!SBIS3.CONTROLS.Action.List.ListMixin',
         'js!SBIS3.CONTROLS.Action.DialogMixin',
-        'js!SBIS3.CONTROLS.Data.Source.SbisService',
-        'js!SBIS3.CONTROLS.Data.Record',
-        'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
-        'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
+        'js!WS.Data/Source/SbisService',
+        'js!WS.Data/Entity/Record',
+        'js!WS.Data/Adapter/Sbis',
+        'js!WS.Data/Collection/RecordSet'
     ],
     function (ActionBase, ListMixin, DialogMixin, SbisService, Record, SbisAdapter, RecordSet) {
         'use strict';

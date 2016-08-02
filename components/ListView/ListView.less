@@ -116,7 +116,6 @@
       background: white;
       border-top: 1px solid @default-color;
       z-index: 10;
-      display: none;
       .control-Paging__prev{
          display: none;
       }
@@ -207,4 +206,14 @@
 .controls-DataGridView__results{
   background: #F0F0F0;
   font-weight: bold;
+}
+
+@ie8: \0screen;
+@media @ie8 {
+   .controls-ListView-scrollIndicator{
+      background-image: url('img/ajax-loader-indicator.gif');
+      &.controls-ListView-scrollIndicator__up{
+         background-image: url('img/ajax-loader-indicator.gif');
+      }
+   }
 }
