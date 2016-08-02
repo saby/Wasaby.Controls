@@ -31,6 +31,11 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
    }
 
    var FilterMixin = /**@lends SBIS3.CONTROLS.FilterMixin.prototype  */{
+      /**
+       * @event onResetFilter Возникает при сбросе фильтра (значения структуры value сбрасываются в resetValue)
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Boolean} internal Значения были сброшены только на панели фильтрации
+       */
       $protected: {
          _options: {
             /**
@@ -226,7 +231,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
             }
          }).call(this);
 
-         this._notify('onResetFilter');
+         this._notify('onResetFilter', !!internalOnly);
       },
 
       _getCurrentContext : function(){
