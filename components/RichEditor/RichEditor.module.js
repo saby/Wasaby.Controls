@@ -1256,7 +1256,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   }
                }
                //Замена переносов строк на <br>
-               event.node.innerHTML = event.node.innerHTML.replace(/([^>])\n([^<])/gi, '$1<br />$2');
+               event.node.innerHTML = event.node.innerHTML.replace(/([^>])\n(?!<)/gi, '$1<br />');
                // Замена отступов после переноса строки и в первой строке
                // пробелы заменяются с чередованием '&nbsp;' + ' '
                event.node.innerHTML = this._replaceWhitespaces(event.node.innerHTML);
