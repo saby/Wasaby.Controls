@@ -180,11 +180,11 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
 
             //TODO после метода filter сейчас dataSet возвращает getRawData = null, ошибка выписана, после исправления просто передать рекордсет
             //и перевести на SbisService.call
-            records = this._options.dataSet.toArray();
-            for (i = 0; i < records.length; i++) {
-               var raw = records[i].getRaw();
+            var raw;
+            this._options.dataSet.each(function(item){
+               raw = item.getRawData();
                rawData.d.push(raw.d);
-            }
+            });
             rawData.s = raw.s;
             //--------------------------------
 

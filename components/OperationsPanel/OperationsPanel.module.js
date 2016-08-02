@@ -99,6 +99,12 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
              * @cfg {Boolean} Флаг наличия блока с операциями отметки
              */
             hasMarkBlock: true,
+            /**
+             * @cfg {String} Направление выезжания панели массовых операций
+             * @variant vertical ПМО выезжает сверху вниз
+             * @variant horizontal ПМО выехжает слева направо
+             */
+            panelFloatDirection: 'vertical',
             visible: false
          },
          _blocks: undefined,
@@ -129,8 +135,15 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          if (this.isVisible() !== show) {
             this._isVisible = show;
             show && this._container.removeClass('ws-hidden');
-            var width = this._blocks.wrapper.width();
-            this._blocks.wrapper.animate({'margin-left': show ? 0 : -width + 'px'}, {
+            var animateObj;
+            if (this._options.panelFloatDirection === 'vertical'){
+               animateObj = {'margin-top': show ? 0 : '-30px'};
+            }
+            else if (this._options.panelFloatDirection === 'horizontal'){
+               var width = this._blocks.wrapper.width();
+               animateObj = {'margin-left': show ? 0 : -width + 'px'};
+            }
+            this._blocks.wrapper.animate(animateObj, {
                duration: 150,
                easing: 'linear',
                queue: false,
@@ -162,7 +175,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                 type = self._getItemType(item.get('type'));
             options.className = 'controls-operationsPanel__actionType-' + type;
             return '<component data-component="' + item.get('componentType').substr(3) + '" config="' + $ws.helpers.encodeCfgAttr(options) + '"></component>';
-         }
+         };
       },
       _getItemType: function (type) {
          return type.mark ? 'mark' : type.mass && type.selection ? 'all' : type.mass ? 'mass' : 'selection';
@@ -176,6 +189,24 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                instance.onSelectedItemsChange(idArray);
             }
          });
+      },
+      /**
+       * @cfg {String} Установка направления выезжания панели массовых операций
+       * @variant vertical панель выезжает сверху вниз
+       * @variant horizontal панель выезжает слева направо
+       */
+      setPanelFloatDirection: function(panelFloatDirection){
+         if (panelFloatDirection && this._options.panelFloatDirection !== panelFloatDirection && (panelFloatDirection === 'vertical' || panelFloatDirection === 'horizontal')){
+            this._options.panelFloatDirection = panelFloatDirection;
+            if (!this.isVisible() && this._blocks && this._blocks.wrapper){
+               var width = this._blocks.wrapper.width();
+               this._blocks.wrapper.stop(); // stop animation
+               this._blocks.wrapper.css({
+                  'margin-top': panelFloatDirection === 'vertical' ? '-30px' : '',
+                  'margin-left': panelFloatDirection === 'horizontal' ? -width + 'px' : ''
+               });
+            }
+         }
       },
       destroy: function() {
          this._blocks = null;

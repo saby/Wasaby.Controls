@@ -743,8 +743,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                pageHeight = 0;
             }
          });
-
-         this._options.paging.setPagesCount(this._scrollPages.length + 1);
+         if (this._options.paging.getPagesCount() < this._scrollPages.length + 1){
+            this._options.paging.setPagesCount(this._scrollPages.length + 1);
+         }
          //Если есть страницы - покажем paging
          if (this._scrollPages.length){
             this._options.paging.setVisible(true);
