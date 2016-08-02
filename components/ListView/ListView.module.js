@@ -1239,7 +1239,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //рисуем от ключа
             var selId = id;
             if (!lightVer) {
-               $("> .controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
+               $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
                $('.controls-ListView__item[data-id="' + selId + '"]', this._container).addClass('controls-ListView__item__selected');
             }
          },
