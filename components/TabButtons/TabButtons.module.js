@@ -9,9 +9,10 @@ define(
       'html!SBIS3.CONTROLS.TabButtons/resources/ItemTemplate',
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+      'Core/ParserUtilities',
       'js!SBIS3.CONTROLS.TabButton'
    ],
-   function (RadioGroupBase, TabButtonsTpl, ItemTemplate, MarkupTransformer, TemplateUtil) {
+   function (RadioGroupBase, TabButtonsTpl, ItemTemplate, MarkupTransformer, TemplateUtil, ParserUtilities) {
 
    'use strict';
 
@@ -94,7 +95,33 @@ define(
             opts.tabSpaceTemplate = MarkupTransformer(TemplateUtil.prepareTemplate(opts.tabSpaceTemplate));
          }
          return opts;
-      }
+      },
+
+      _redrawItems : function() {
+
+            var
+               data = this._prepareItemsData(),
+               markupLeft, markupRight;
+
+            data.tplData = this._prepareItemData();
+
+         markupLeft = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate({records : data.records.left, tplData : data.tplData})), this._options);
+         markupRight = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate({records : data.records.right, tplData : data.tplData})), this._options);
+
+         this._destroyInnerComponents(this._leftContainer);
+         this._destroyInnerComponents(this._rightContainer);
+         this._itemsInstances = {};
+         if (markupLeft.length) {
+            this._leftContainer.get(0).innerHTML = markupLeft;
+         }
+         if (markupRight.length) {
+            this._rightContainer.get(0).innerHTML = markupRight;
+         }
+         this._reviveItems();
+         this._container.addClass('controls-ListView__dataLoaded');
+         }
+
+
    });
    return TabButtons;
 });
