@@ -41,7 +41,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
    },
    getRecordsForRedraw = function(projection, cfg) {
       var
-         records = [];
+         records = [],
+         projectionFilter;
       if (cfg.expand) {
          projection.setEventRaising(false);
          expandAllItems(projection);
@@ -59,7 +60,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
           * @private
           */
          var items = [];
-         applyExpandToItemsProjection.call(this, projection, cfg, false);
+         projectionFilter = resetFilterAndStopEventRaising.call(this, projection, false);
+         applyExpandToItemsProjection.call(this, projection, cfg);
+         restoreFilterAndRunEventRaising.call(this, projection, projectionFilter, false);
          projection.each(function(item) {
             items.push(item);
          });
@@ -85,11 +88,19 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
    projectionFilterOnlyFolders = function(item, index, itemProj) {
       return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj, true);
    },
-   applyExpandToItemsProjection = function(projection, cfg, analyze) {
-      var idx, item, projFilter;
+   resetFilterAndStopEventRaising = function(projection, analyze) {
+      var
+         projectionFilter = projection.getFilter();
       projection.setEventRaising(false, analyze);
-      projFilter = projection.getFilter();
-      projection.setFilter(function() { return true });
+      projection.setFilter(function() { return true; });
+      return projectionFilter;
+   },
+   restoreFilterAndRunEventRaising = function(projection, filter, analyze) {
+      projection.setFilter(filter);
+      projection.setEventRaising(true, analyze);
+   },
+   applyExpandToItemsProjection = function(projection, cfg) {
+      var idx, item;
       for (idx in cfg.openedPath) {
          if (cfg.openedPath.hasOwnProperty(idx)) {
             item = projection.getItemBySourceItem(cfg._items.getRecordById(idx));
@@ -98,9 +109,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             }
          }
       }
-      var filterCallBack = projFilter;
-      projection.setFilter(filterCallBack);
-      projection.setEventRaising(true, analyze);
    },
    expandAllItems = function(projection) {
       var
@@ -393,7 +401,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          if (item.isExpanded()) {
             return $ws.proto.Deferred.success();
          } else {
-            this._closeAllExpandedNode(id);
+            if (this._options.singleExpand) {
+               this._collapseNodes(this.getOpenedPath(), id);
+            }
             this._options.openedPath[id] = true;
             this._folderOffsets[id] = 0;
             return this._loadNode(id).addCallback(function() {
@@ -465,18 +475,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          return filter;
       },
       /**
-       * Закрыть все открытые ветки, кроме переданной в параметре
+       * Закрыть ветки, кроме переданной в параметре ignoreKey
        * @param key
        * @private
        */
-      _closeAllExpandedNode: function(key) {
-         if (this._options.singleExpand){
-            $.each(this._options.openedPath, function(openedKey) {
-               if (key != openedKey) {
-                  this.collapseNode(openedKey);
-               }
-            }.bind(this));
-         }
+      _collapseNodes: function(openedPath, ignoreKey) {
+         $ws.helpers.forEach(openedPath, function(value, key) {
+            if (!ignoreKey || key != ignoreKey) {
+               this.collapseNode(key);
+            }
+         }, this);
       },
       /**
        * Получить текущий набор открытых элементов иерархии
@@ -496,9 +504,17 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        * </pre>
        */
       setOpenedPath: function(openedPath) {
-         this._options.openedPath = openedPath;
-         if (this._getItemsProjection()) { // Если имеется проекция - то применяем разворот к итемам, иначе он применится после создания проекции
-            applyExpandToItemsProjection(this._getItemsProjection(), this._options, true);
+         var
+            itemsProjection = this._getItemsProjection(),
+            projectionFilter;
+         if (itemsProjection) { // Если имеется проекция - то применяем разворот к итемам, иначе он применится после создания проекции
+            projectionFilter = resetFilterAndStopEventRaising(itemsProjection, true);
+            this._collapseNodes(this.getOpenedPath());
+            this._options.openedPath = openedPath;
+            applyExpandToItemsProjection(itemsProjection, this._options);
+            restoreFilterAndRunEventRaising(itemsProjection, projectionFilter, true);
+         } else {
+            this._options.openedPath = openedPath;
          }
       },
       around: {
