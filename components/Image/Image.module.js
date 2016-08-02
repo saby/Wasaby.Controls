@@ -288,10 +288,10 @@ define('js!SBIS3.CONTROLS.Image',
                var
                   dataSource = this.getDataSource();
                if (dataSource) {
-                  this._setImage($ws.helpers.prepareGetRPCInvocationURL(dataSource.getEndpoint().contract,
+                  this._loadImage($ws.helpers.prepareGetRPCInvocationURL(dataSource.getEndpoint().contract,
                      dataSource.getBinding().read, this._options.filter, $ws.proto.BLObject.RETURN_TYPE_ASIS));
                } else {
-                  this._setImage(this._options.defaultImage);
+                  this._loadImage(this._options.defaultImage);
                }
             },
             /**
@@ -393,19 +393,22 @@ define('js!SBIS3.CONTROLS.Image',
             },
             _setImage: function(url) {
                if (this._imageUrl !== url) {
-                  var
-                     self = this;
-                  //Из-за проблем, связанных с кэшированием - перезагружаем картинку специальным хелпером
-                  $ws.helpers.reloadImage(this._image, url)
-                     .addCallback(function(){
-                        self._image.hasClass('ws-hidden') && self._image.removeClass('ws-hidden');
-                     })
-                     .addErrback(function(){
-                        self._boundEvents.onErrorLoad();
-                     });
+                  this._loadImage(url);
                   this._imageUrl = url;
                }
             }.debounce(0), //Оборачиваем именно в debounce, т.к. могут последовательно задать filter, dataSource и тогда изображения загрузка произойдет дважды.
+            _loadImage: function(url) {
+               var
+                  self = this;
+               //Из-за проблем, связанных с кэшированием - перезагружаем картинку специальным хелпером
+               $ws.helpers.reloadImage(this._image, url)
+                  .addCallback(function(){
+                     self._image.hasClass('ws-hidden') && self._image.removeClass('ws-hidden');
+                  })
+                  .addErrback(function(){
+                     self._boundEvents.onErrorLoad();
+                  });
+            },
             _showEditDialog: function(imageType) {
                var
                   self = this,

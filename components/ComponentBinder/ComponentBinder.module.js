@@ -265,7 +265,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             /**
              * @cfg {SBIS3.CONROLS.Pagign} объект пэйджинга
              */
-            paging: undefined,
+            paging: undefined
          }
       },
 
@@ -677,19 +677,18 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             }
          }.bind(this));
 
-         var $window = $(window);
+         $(window).bind('resize', this._resizeHandler.bind(this));
+      },
 
-         $window.bind('resize', function(){
-            var windowHeight = $window.height();
-            clearTimeout(this._windowResizeTimeout);
-            if (this._windowHeight != windowHeight){
-               this._windowHeight = windowHeight;
-               this._windowResizeTimeout = setTimeout(function(){
-                  this._updateScrollPages(true);
-               }.bind(this), 200);
-            }
-         }.bind(this))
-
+      _resizeHandler: function(){
+         var windowHeight = $(window).height();
+         clearTimeout(this._windowResizeTimeout);
+         if (this._windowHeight != windowHeight){
+            this._windowHeight = windowHeight;
+            this._windowResizeTimeout = setTimeout(function(){
+               this._updateScrollPages(true);
+            }.bind(this), 200);
+         }
       },
 
       _getScrollPage: function(){
@@ -723,7 +722,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          } else {
             //Запушим первый элемент, если он есть
             var element = listItems.eq(0);
-            if (view.getItems().getCount() && element.length){
+            if (view.getItems() && view.getItems().getCount() && element.length){
                this._scrollPages.push({
                   element: element,
                   offset: self._pageOffset
@@ -744,13 +743,20 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                pageHeight = 0;
             }
          });
-
-         this._options.paging.setPagesCount(this._scrollPages.length + 1);
+         if (this._options.paging.getPagesCount() < this._scrollPages.length + 1){
+            this._options.paging.setPagesCount(this._scrollPages.length + 1);
+         }
          //Если есть страницы - покажем paging
          if (this._scrollPages.length){
             this._options.paging.setVisible(true);
          }
+      },
+
+      destroy: function(){
+         $(window).unbind('resize', this._resizeHandler);
+         ComponentBinder.superclass.destroy.apply(this, arguments);
       }
+
    });
 
    return ComponentBinder;

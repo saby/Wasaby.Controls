@@ -625,7 +625,8 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @cfg {Boolean} Использовать режим частичной навигации
                 * Задаёт какой режим навигации использовать: полный или частичный.
                 */
-               partialPaging: true
+               partialPaging: true,
+               scrollPaging: true //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
             },
             //Флаг обозначает необходимость компенсировать подгрузку по скроллу вверх, ее нельзя делать безусловно, так как при подгрузке вверх могут добавлятся элементы и вниз тоже
             _needSrollTopCompensation: false,
@@ -752,8 +753,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   });
 
                }
-               this._previousInfiniteScroll = this._options.infiniteScroll;
-               if (this._options.infiniteScroll == 'down'){
+               if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                   this._createScrollPager();
                }
                this._scrollWatcher.subscribe('onScroll', this._onScrollHandler.bind(this));
@@ -1239,7 +1239,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //рисуем от ключа
             var selId = id;
             if (!lightVer) {
-               $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
+               $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
                $('.controls-ListView__item[data-id="' + selId + '"]', this._container).addClass('controls-ListView__item__selected');
             }
          },
@@ -1951,6 +1951,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._loadNextPage();
                      }
                   }
+                  this._updateScrolOffset(this._options.infiniteScroll);
 
                }, this)).addErrback(function (error) {
                   //Здесь при .cancel приходит ошибка вида DeferredCanceledError
@@ -1963,7 +1964,6 @@ define('js!SBIS3.CONTROLS.ListView',
             var at = null;
             //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
             if (direction === 'down') {
-               this._scrollOffset.bottom += this._limit;
                //TODO новый миксин не задействует декоратор лесенки в принципе при любых действиях, кроме первичной отрисовки
                //это неправильно, т.к. лесенка умеет рисовать и дорисовывать данные, если они добавляются последовательно
                //здесь мы говорим, чтобы лесенка отработала при отрисовке данных
@@ -1975,18 +1975,12 @@ define('js!SBIS3.CONTROLS.ListView',
                this.getItems().append(dataSet);
                ladder && ladder.setIgnoreEnabled(false);
             } else {
-               if (this._scrollOffset.top >= this._limit){
-                  this._scrollOffset.top -= this._limit;
-               } else {
-                  this._scrollOffset.top = 0;
-               }
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight();
                this._needSrollTopCompensation = true;
-               var items =  dataSet.toArray();
-               //FixMe: Отавляем переворачивание для контактов, по нормальному надо что бы они присылали данные сразу перевернутыми
+               var items = dataSet.toArray();
+               //FixMe: Оcтавляем переворачивание для контактов, по нормальному надо что бы они присылали данные сразу перевернутыми
                // и присылать не первую страницу, а последнюю
                if (this._options.infiniteScroll == 'up'){
-                  this._scrollOffset.bottom += this._limit;
                   items.reverse();
                }
                this.getItems().prepend(items);
@@ -1999,6 +1993,22 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
             this._dataLoadedCallback();
             this._toggleEmptyData();
+         },
+
+         _updateScrolOffset: function(direction){
+            if (direction === 'down') {
+               this._scrollOffset.bottom += this._limit;
+            } else {
+               if (this._scrollOffset.top >= this._limit){
+                  this._scrollOffset.top -= this._limit;
+               } else {
+                  this._scrollOffset.top = 0;
+               }
+               //FixMe: увеличиваем нижний оффсет для контактов - их скролл верх на самом деле скролл вниз + reverse               
+               if (this._options.infiniteScroll == 'up'){
+                  this._scrollOffset.bottom += this._limit;
+               }
+            }
          },
 
          /**
@@ -2014,7 +2024,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._scrollBinder && this._scrollBinder._updateScrollPages();
 
             // Если нет скролла или скролл внизу, значит нужно догружать еще записи (floatArea отжирает скролл, поэтому если она открыта - не грузим)
-            if ((!hasScroll || isScrollOnBottom) && !existFloatArea) {
+            if ((!hasScroll || (isScrollOnBottom && this._options.infiniteScroll == 'down')) && !existFloatArea) {
                this._loadNextPage();
             } else {
                this._moveTopScroll();
@@ -2534,6 +2544,13 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._pager) {
                this._pager.destroy();
                this._pager = undefined;
+            }
+            if (this._scrollBinder){
+               this._scrollBinder.destroy();
+               this._scrollBinder = null;
+            }
+            if (this._scrollPager){
+               this._scrollPager.destroy();
             }
             ListView.superclass.destroy.call(this);
          },

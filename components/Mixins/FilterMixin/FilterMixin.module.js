@@ -31,6 +31,11 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
    }
 
    var FilterMixin = /**@lends SBIS3.CONTROLS.FilterMixin.prototype  */{
+      /**
+       * @event onResetFilter Возникает при сбросе фильтра (значения структуры value сбрасываются в resetValue)
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Boolean} internal Значения были сброшены только на панели фильтрации
+       */
       $protected: {
          _options: {
             /**
@@ -106,6 +111,16 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
       }),
 
       _updateFilterStructure: function(filterStructure, filter, captions, visibility) {
+         var processElementVisibility = function(elem) {
+            if(elem.hasOwnProperty('internalVisibilityField')) {
+               if(elem.hasOwnProperty('value')) {
+                  elem.visibilityValue = !FilterToStringUtil.isEqualValues(elem.value, elem.resetValue);
+               } else {
+                  elem.visibilityValue = elem.hasOwnProperty('resetVisibilityValue') ? elem.resetVisibilityValue : false;
+               }
+            }
+         };
+
          if (filterStructure) {
             this._filterStructure = $ws.helpers.map(filterStructure, function(element) {
                var newEl;
@@ -119,6 +134,8 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
                if (!newEl.internalCaptionField) {
                   newEl.internalCaptionField = newEl.internalValueField;
                }
+
+               processElementVisibility(newEl);
 
                return newEl;
             });
@@ -161,13 +178,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
                   setDescriptionWithReset(undefined, true);
                }
 
-               if(newElement.hasOwnProperty('internalVisibilityField')) {
-                  if(newElement.hasOwnProperty('value')) {
-                     newElement.visibilityValue = !FilterToStringUtil.isEqualValues(newElement.value, newElement.resetValue);
-                  } else {
-                     newElement.visibilityValue = newElement.hasOwnProperty('resetVisibilityValue') ? newElement.resetVisibilityValue : false;
-                  }
-               }
+               processElementVisibility(newElement);
 
                return newElement;
             });
@@ -220,7 +231,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
             }
          }).call(this);
 
-         this._notify('onResetFilter');
+         this._notify('onResetFilter', !!internalOnly);
       },
 
       _getCurrentContext : function(){
