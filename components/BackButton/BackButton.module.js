@@ -70,7 +70,16 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
              * </pre>
              * @see setIcon
              */
-            icon: ''
+            icon: '',
+            /**
+             * @cfg {String} Устанавливает ссылку на кнопке.
+             * @example
+             * <pre class="brush: xml">
+             *    <option name="href">http://inside.tensor.ru</option>
+             * </pre>
+             * @see setHref
+             */
+            href: ''
          }
       },
 
@@ -98,6 +107,10 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
 
       getCaption: function(){
          return this._options.caption;
+      },
+
+      getHref: function(){
+         return this._options.href;
       },
 
       /**
