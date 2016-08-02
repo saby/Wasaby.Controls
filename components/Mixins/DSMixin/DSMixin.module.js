@@ -224,13 +224,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * Аналогичная предыдущему примеру конфигурация будет выглядеть следующим образом:
              * <pre>
              *    <options name="dataSource">
-             *       <option name="module" value="WS.Data/Source/SbisService"></options>
+             *       <option name="module" value="js!WS.Data/Source/SbisService"></options>
              *       <options name="options">
-             *          <options name="binding">
+             *          <options name="endpoint">
              *             <option name="contract" value="Отчеты"></option>
              *             <option name="address" value="myNewService/service/sbis-rpc-service300.dll"></option>
              *          </options>
-             *          <options name="endpoint">
+             *          <options name="binding">
              *             <option name="query" value="Список"></option>
              *          </options>
              *          <option name="idProperty" value="@Идентификатор"></option>
