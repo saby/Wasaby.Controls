@@ -1,0 +1,10 @@
+.controls-Subheader{
+   height: 32px;
+   display: table-cell;
+   vertical-align: middle;
+   padding-left: 8px;
+   padding-right: 12px;
+   font-family: 'TensorFont Bold';
+   font-size: 15px;
+   color: #313E78;
+}
