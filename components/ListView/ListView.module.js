@@ -687,8 +687,11 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _eventProxyHandler: function(e) {
-            var currentTouch = this._touchSupport;
-            this._touchSupport = Boolean(e.type === 'swipe' || e.type === 'tap' || (e.originalEvent.touches && e.originalEvent.touches.length === 1));
+            /* Переменная _clickState.target выставляется в промежуток между touchstart - touchend
+               определяем по ней, нади ли обрабатывать mousemove */
+            if(e.type !== 'mousemove' || (e.type === 'mousemove' && this._clickState.target === null)) {
+               var currentTouch = this._touchSupport;
+               this._touchSupport = Boolean(e.type === 'swipe' || e.type === 'tap' || (e.originalEvent.touches && e.originalEvent.touches.length === 1));
 
             if(currentTouch !== this._touchSupport) {
                this._container.toggleClass('controls-ListView__touchMode', this._touchSupport);
