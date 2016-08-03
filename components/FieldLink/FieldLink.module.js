@@ -606,7 +606,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    list.setDataSource(ds, noLoad);
                 }
              });
-             FieldLink.superclass.setDataSource.apply(this, arguments);
+             FieldLink.superclass.setDataSource.call(this, ds, true);
           },
 
           _loadAndDrawItems: function(amount) {
