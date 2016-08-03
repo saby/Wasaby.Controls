@@ -21,14 +21,15 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
 
       addNode: function (component) {
          var parent = component.getParent() || (component.getOpener instanceof Function ? component.getOpener() : null),
-             id = component.getId(), node;
+             id = component.getId(), parentId, node;
+
+         if (parent && parent.getId instanceof Function){
+            parentId = parent.getId();
+         }
          //если есть парент
-         if (parent  &&  parent.getId instanceof Function) {
+         if (this._index[parentId]) {
             //то ищем узел этого парента по id
-            if (!this._index[parent.getId()]) {
-               this.addNode(parent);
-            }
-            node = this._componentToNode(component, this._index[parent.getId()]);
+            node = this._componentToNode(component, this._index[parentId]);
             node.parent.children.push(node);
             //и индексируем новый узел
             this._index[id] = node;
