@@ -21,7 +21,7 @@
       <tfoot class="controls-DataGridView__tfoot">
       </tfoot>
    </table>
-   <div class="controls-ListView__EmptyData {{?!(it._serverRender && it._records)}}ws-hidden{{?}}">{{=it.emptyHTML}}</div>
+   <div class="controls-ListView__EmptyData {{?!it._serverRender || it._records.length}}ws-hidden{{?}}">{{=it.emptyHTML}}</div>
    {{? it.showPaging}}
       <div class="controls-TreePager-container"></div>
    {{?}}
