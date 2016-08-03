@@ -85,7 +85,9 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
 
          _css_classes: {
             hovered: 'controls-DateRangeBigChoose-MonthRangePicker__hovered'
-         }
+         },
+
+         _innerComponentsValidateTimer: null
       },
       
       $constructor: function () {
@@ -104,7 +106,6 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
          MonthRangePicker.superclass.init.call(this);
 
          this.setDataSource(yearSource, true);
-         this.subscribe('onRangeChange', this._onRangeChanged.bind(this));
          // this._scrollWatcher.subscribe('onScroll', this._onScroll.bind(this));
 
          this._onMonthActivated = this._onMonthActivated.bind(this);
@@ -160,12 +161,25 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
       },
 
       setEndValue: function (end, silent) {
+         var changed;
          // Выделение происходит месяцами а интерфейс должен возвращать выделение днями,
          // поэтому всегда устанавливаем конец периода на последний день месяца
          if (end) {
             end = new Date(end.getFullYear(), end.getMonth() + 1, 0);
          }
-         return MonthRangePicker.superclass.setEndValue.call(this, end, silent);
+         changed = MonthRangePicker.superclass.setEndValue.call(this, end, silent);
+         if (!this.isSelectionProcessing()) {
+            this._updateSelectionInInnerComponents();
+         }
+         return changed;
+      },
+
+      setStartValue: function (end, silent) {
+         var changed = MonthRangePicker.superclass.setStartValue.apply(this, arguments);
+         if (changed) {
+            this._updateSelectionInInnerComponents()
+         }
+         return changed;
       },
 
       // _getItemTemplate : function(item) {
@@ -262,13 +276,15 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
       //    this._onRangeItemElementMouseEnter(Date.fromSQL($(e.currentTarget).attr(this._selectedRangeItemIdAtr)));
       // },
 
-      _onRangeChanged: function (e, start, end) {
-         if (!this.isSelectionProcessing()) {
-            this._updateSelectionInInnerComponents();
+
+      _updateSelectionInInnerComponents: function () {
+         if (!this._innerComponentsValidateTimer) {
+            this._innerComponentsValidateTimer = setTimeout(this._validateInnerComponents.bind(this), 0);
          }
       },
 
-      _updateSelectionInInnerComponents: function () {
+      _validateInnerComponents: function () {
+         this._innerComponentsValidateTimer = null;
          $ws.helpers.forEach(this.getItemsInstances(), function(control) {
             if (this._isMonthView(control)) {
                control.setRange(this.getStartValue(), this.getEndValue(), true);

@@ -172,8 +172,10 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
       },
 
       _getUpdatedRange: function (start, end, newBound) {
-         start = (start > newBound)? newBound: start;
-         end = (end < newBound)? newBound: end;
+         if (newBound) {
+            start = (start > newBound)? newBound: start;
+            end = (end < newBound)? newBound: end;
+         }
          return [start, end]
       },
 

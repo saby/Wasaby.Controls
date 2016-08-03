@@ -110,7 +110,6 @@ define(
             this.getContainer().mouseleave(this._onRangeControlMouseLeave.bind(this));
 
             this._updateCaption();
-
             this._attachEvents();
 
             //??? это было в js!SBIS3.CONTROLS.Calendar . Нужно ли оно тут?
@@ -189,8 +188,8 @@ define(
             startDate = this._getStartOfWeek(date);
             endDate = this._getEndOfWeek(date);
 
-            this._onRangeItemElementClick(startDate, endDate);
             this._setSelectionType(selectionTypes.WEEK);
+            this._onRangeItemElementClick(startDate, endDate);
 
             event.stopPropagation();
          },
