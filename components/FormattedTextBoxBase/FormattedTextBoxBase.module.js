@@ -654,8 +654,6 @@ define(
             //упрощенная модель для вставки в xhtml-шаблон
             modelForMaskTpl: []
          },
-         _pasteProcessing: 0,
-
          /**
           * Модель форматного поля
           */
@@ -688,26 +686,14 @@ define(
          this._inputField.keydown(this._keyDownBind.bind(this));
          this._inputField.bind('paste', function(e) {
             var
-                prevText,
                 //Единственный способ понять, что мы пытаемся вставить это посмотреть в буфере.
                 //Берём из буфера только текст, так-как возможно там присутствует и разметка, которая нас не интересует.
                 pasteValue = e.originalEvent.clipboardData ? e.originalEvent.clipboardData.getData('text') : window.clipboardData.getData('text');
-            //TODO возможно стоит сделать проверку до вставки, чтобы не портить данные и вставлять уже по факту после проверки
-            self._pasteProcessing++;
-            //TODO перенести в TextBoxBase и вместо этого вызвать метод для вставки
-            window.setTimeout(function() {
-               self._pasteProcessing--;
-               if (!self._pasteProcessing) {
-                  prevText = self.formatModel.getText(self._maskReplacer);
-                  if ( !self.formatModel.setText(pasteValue, self._maskReplacer)) {
-                     //Устанавливаемое значение не удовлетворяет маске данного контролла - вернуть предыдущее значение
-                     self.setText(prevText);
-                  } else {
-                     //Текст есть в модели но через метод setText не прошел. Нужно для наследников, например DatePicker
-                     self.setText(self.formatModel.getText(self._maskReplacer));
-                  }
-               }
-            }, 100);
+            //Пропустим вставляемый текст через модель. Если setText модели вернет true - значит
+            //вставляемый текст соответствует маске и мы его можем проставить в значение текстового поля
+            if (self.formatModel.setText(pasteValue, self._maskReplacer)) {
+               self.setText(self.formatModel.getText(self._maskReplacer));
+            }
             e.preventDefault();
          });
       },
