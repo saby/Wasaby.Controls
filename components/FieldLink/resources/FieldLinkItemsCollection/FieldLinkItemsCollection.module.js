@@ -126,23 +126,8 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          setItems: function(list) {
-            var item, result;
-
-            if(list) {
-               result = $ws.helpers.reduce(list.toArray(), function(result, rec) {
-                  /* Для поддержки работы поля связи с несколькими справочниками,
-                   первичный ключ записи (неважно откуда она пришла) запишем в поле,
-                   в котором должны лежать первичные ключи по мнению поля связи */
-                  item = rec.toObject();
-                  item[this._options.keyField] = rec.getId();
-                  result.push(item);
-                  return result
-               }, [], this)
-            } else {
-               result = []
-            }
-
-            FieldLinkItemsCollection.superclass.setItems.call(this, result);
+            list = list ? list.clone() : [];
+            FieldLinkItemsCollection.superclass.setItems.call(this, list);
          },
 
          _appendItemTemplate:function(item, targetContainer, itemInstance) {
