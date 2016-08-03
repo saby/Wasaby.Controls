@@ -44,7 +44,10 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
 
       },
 
-      _itemActivatedHandler : function(key) {
+      _itemActivatedHandler : function(hash) {
+         var projItem, key;
+         projItem = this._getItemsProjection().getByHash(hash);
+         key = projItem.getContents().getId();
          this.toggleItemsSelection([key]);
       },
 
@@ -66,7 +69,10 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
                   controls[i].setChecked(false);
                }
                else {
-                  var key = controls[i].getContainer().data('id');
+                  var hash, item, key;
+                  hash = controls[i].getContainer().data('hash');
+                  item = this._getItemsProjection().getByHash(hash).getContents();
+                  key = item.getId();
                   //TODO проверка на строку и число. Избавиться, когда наконец все ключи будут строками
                   if ((idArray.indexOf(key) >= 0) || (idArray.indexOf(key+'') >= 0)) {
                      controls[i].setChecked(true);
