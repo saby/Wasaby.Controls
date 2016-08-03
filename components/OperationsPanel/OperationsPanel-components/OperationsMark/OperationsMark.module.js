@@ -97,6 +97,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
       setLinkedView: function(linkedView) {
          if (linkedView && $ws.helpers.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.MultiSelectable')) {
             this._options.linkedView = linkedView;
+            this.getItemInstance('selectCurrentPage').toggle(!linkedView._options.infiniteScroll);
             this._bindEvents();
             this._updateMark();
          }
