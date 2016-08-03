@@ -384,11 +384,15 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                }
                return result;
             }).addBoth(function (r) {
-                  self._hideLoadingIndicator();
+               self._hideLoadingIndicator();
                return r;
             });
          }
          else {
+            if (!config.hideErrorDialog) {
+               var error = new Error(errorMessage);
+               this._processError(error);
+            }
             dResult.errback(errorMessage);
             this._saving = false;
          }
