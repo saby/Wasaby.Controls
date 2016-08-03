@@ -738,12 +738,15 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Если мы находися на панельке, то пока она скрыта все данные уже могут загрузиться, но новая пачка не загрузится
                 * потому что контейнер невидимый*/
                if ($ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
-                  topParent.once('onAfterShow', function(){
-                     self._firstScrollTop = true;
-                     if (self.getItems()) {
-                        self._preScrollLoading();
+                  var afterFloatAreaShow = function(){
+                     this._firstScrollTop = true;
+                     if (this.getItems()) {
+                        this._preScrollLoading();
                      }
-                  });
+                     topParent.unsubscribe('onAfterShow', afterFloatAreaShow);
+                  }
+                  //Делаем через subscribeTo, а не once, что бы нормально отписываться при destroy FloatArea
+                  this.subscribeTo(topParent, 'onAfterShow', afterFloatAreaShow.bind(this));
                }
 
                this._scrollWatcher = new ScrollWatcher(scrollWatcherCfg);
