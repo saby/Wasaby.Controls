@@ -246,6 +246,9 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             getEditingRecord: function() {
                return this._editingRecord;
             },
+            getOriginalRecord: function() {
+               return this._record;
+            },
             getTarget: function() {
                return this._target;
             },
