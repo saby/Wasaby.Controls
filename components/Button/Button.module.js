@@ -183,19 +183,27 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
          return !!this._options.primary;
       },
       _unregisterDefaultButton: function() {
-         this._unregisterCommand && this._unregisterCommand();
-         this._unregisterCommand = null;
+         this._unregisterDefaultButtonActionFn && this._unregisterDefaultButtonActionFn();
+         this._unregisterDefaultButtonActionFn = null;
       },
       _registerDefaultButton: function() {
-         var self = this;
-         this._unregisterCommand = this.sendCommand('registerDefaultButtonAction', function(e) {
-            if(self && self.isEnabled()) {
-               self._onClickHandler(e);
-               return false;
-            } else {
-               return true;
+         var self = this,
+            defaultAction = function (e) {
+               if (self && self.isEnabled()) {
+                  self._onClickHandler(e);
+                  return false;
+               } else {
+                  return true;
+               }
+            };
+         this._unregisterDefaultButtonActionFn = this.sendCommand('registerDefaultButtonAction', defaultAction);
+
+         if (!this._unregisterDefaultButtonActionFn) {
+            var parent = this.getParent();
+            if(parent && parent._registerDefaultButtonAction) {
+               this._unregisterDefaultButtonActionFn = parent._registerDefaultButtonAction(defaultAction);
             }
-         });
+         }
       },
        /**
         * @noShow
