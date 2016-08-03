@@ -191,20 +191,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       },
 
       _onAfterShowHandler: function(){
-         //Если мы в новой вкладке браузера, то ничего не делаем
-         if (!($ws.helpers.instanceOfModule(this, 'SBIS3.CORE.FloatArea') || $ws.helpers.instanceOfModule(this, 'SBIS3.CORE.Dialog'))){
-            return;
-         }
          var self = this._getTemplateComponent();
          self._updateIndicatorZIndex();
          self._panelReadyDeferred.callback();
       },
 
       _onBeforeCloseHandler: function(event, result){
-         //Если мы в новой вкладке браузера, то ничего не делаем
-         if (!($ws.helpers.instanceOfModule(this, 'SBIS3.CORE.FloatArea') || $ws.helpers.instanceOfModule(this, 'SBIS3.CORE.Dialog'))){
-            return;
-         }
          var self = this._getTemplateComponent(),
              record = self._options.record;
          //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель

@@ -474,9 +474,6 @@ define(
             if (!DateUtil.isValidDate(this._options.date)) {
                this._options.date = null;
             }
-            if (this._options.notificationMode === 'change') {
-               this._notifyOnTextChange();
-            }
             this._onTextChanged();
          }
       },
