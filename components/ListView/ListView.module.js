@@ -29,7 +29,6 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!WS.Data/Collection/IBind',
       'i18n!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
-      'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
       'browser!tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
       'browser!tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
       'browser!tmpl!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
@@ -41,7 +40,7 @@ define('js!SBIS3.CONTROLS.ListView',
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
-             Link, ScrollWatcher, IBindCollection, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
+             Link, ScrollWatcher, IBindCollection, rk, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder) {
 
       'use strict';
@@ -255,7 +254,6 @@ define('js!SBIS3.CONTROLS.ListView',
                model: null
             },
             _notEndEditClassName: 'controls-ListView__onFocusNotEndEdit',
-            _emptyData: undefined,
             _containerScrollHeight : 0,
             _firstScrollTop : true,
             _addResultsMethod: undefined,
@@ -661,7 +659,6 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing()) {
                this.setGroupBy(this._options.groupBy, false);
             }
-            this._drawEmptyData();
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
             if (!this._options._serverRender) {
@@ -1112,16 +1109,11 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
-            if(this._emptyData && this._emptyData.length) {
-               if(html) {
-                  this._emptyData.empty().html(html)
-               } else {
-                  this._emptyData.remove();
-                  this._emptyData = undefined;
-               }
-            } else if(html) {
-               this._drawEmptyData();
-            }
+            this._getEmptyDataContainer().empty().html(html);
+         },
+
+         _getEmptyDataContainer: function() {
+            return $('.controls-ListView__EmptyData', this._container.get(0));
          },
 
          setMultiselect: function(flag) {
@@ -1130,10 +1122,6 @@ define('js!SBIS3.CONTROLS.ListView',
                                .toggleClass('controls-ListView__multiselect__off', !flag);
          },
 
-         _drawEmptyData: function() {
-            var html = this._options.emptyHTML;
-            this._emptyData = html && $(emptyDataTpl({emptyHTML: html})).appendTo(this._container);
-         },
          /**
           * Устанавливает шаблон отображения элемента коллекции.
           * @param {String|Function} tpl Шаблон отображения каждого элемента коллекции.
@@ -2252,9 +2240,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _toggleEmptyData: function(show) {
-            if(this._emptyData) {
-               this._emptyData.toggleClass('ws-hidden', !show);
-            }
+            this._getEmptyDataContainer().toggleClass('ws-hidden', !show);
          },
          //------------------------Paging---------------------
          _processPaging: function() {
