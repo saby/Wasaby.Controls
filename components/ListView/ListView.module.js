@@ -1110,6 +1110,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
             this._getEmptyDataContainer().empty().html(html);
+            this._toggleEmptyData(!!html);
          },
 
          _getEmptyDataContainer: function() {

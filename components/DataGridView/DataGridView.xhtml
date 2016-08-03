@@ -19,7 +19,7 @@
       <tfoot class="controls-DataGridView__tfoot">
       </tfoot>
    </table>
-   <div class="controls-ListView__EmptyData ws-hidden">{{=it.emptyHTML}}</div>
+   <div class="controls-ListView__EmptyData {{?!(it._serverRender && it._records)}}ws-hidden{{?}}">{{=it.emptyHTML}}</div>
    {{?it.footerTpl}}
       <div class="controls-ListView__footer">{{=it.footerTpl(it)}}</div>
    {{?}}
