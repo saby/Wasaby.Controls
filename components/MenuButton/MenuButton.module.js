@@ -169,10 +169,11 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       },
 
       _setWidth: function(){
-         var self = this;
-         this._picker && this._picker.getContainer().css({
-            'min-width': self._container.outerWidth() - this._border + 20 //ширина выступающей части обводки
-         });
+         this._setPickerSizes();
+         this._setHeaderSizes();
+      },
+
+      _setHeaderSizes: function(){
          if (this._header) {
             $('.controls-MenuButton__headerCenter', this._header).width(this._container.outerWidth() - 26);
             this._header.css({
@@ -180,6 +181,12 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
                height: this._container.outerHeight()
             });
          }
+      },
+
+      _setPickerSizes: function() {
+         this._picker && this._picker.getContainer().css({
+            'min-width': this._container.outerWidth() - this._border + 20 //ширина выступающей части обводки
+         });
       },
 
       _initializePicker: function(){
