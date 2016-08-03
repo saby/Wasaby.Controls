@@ -94,12 +94,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          if (cfg.openedPath.hasOwnProperty(idx)) {
             item = projection.getItemBySourceItem(cfg._items.getRecordById(idx));
             if (item && !item.isExpanded()) {
-               // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
-               if (projection.getCollection().getChildItems(item.getContents().getId(), undefined, projection.getParentProperty()).length) {
-                  item.setExpanded(true);
-               } else {
-                  delete cfg.openedPath[idx];
-               }
+               item.setExpanded(true);
             }
          }
       }
