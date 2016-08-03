@@ -185,30 +185,43 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          });
          //Выписал задачу, чтобы при событии onBeforeClose стрелял метод у floatArea, который мы бы переопределили здесь,
          //чтобы не дергать getTopParent
-         this._panel.subscribe('onBeforeClose', function(event, result){
-            var record = this._options.record;
-            //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
-            if (this._saving || !(record && record.isChanged())){
-               //Дестроим запись, когда выполнены три условия
-               //1. если это было создание
-               //2. если есть ключ (метод создать его вернул)
-               //3. ничего не поменяли в рекорде, но закрывают либо поменяли, но нажали нет
-               if (this._newRecord && record.getId() && (!this._saving && !record.isChanged() || result === false)){
-                  this._destroyModel();
-               }
-               this._saving = false;
-               this._resetTitle();
-               return;
-            }
-            event.setResult(false);
-            this._saveRecord({});
-         }.bind(this));
-         var self = this;
+         this._panel.subscribe('onBeforeClose', this._onBeforeCloseHandler);
          this._panelReadyDeferred = new $ws.proto.Deferred();
-         this._panel.once('onAfterShow', function() {
-            self._updateIndicatorZIndex();
-            self._panelReadyDeferred.callback();
-         });
+         this._panel.subscribe('onAfterShow', this._onAfterShowHandler);
+      },
+
+      _onAfterShowHandler: function(){
+         //Если мы в новой вкладке браузера, то ничего не делаем
+         if (!($ws.helpers.instanceOfModule(this, 'SBIS3.CORE.FloatArea') || $ws.helpers.instanceOfModule(this, 'SBIS3.CORE.Dialog'))){
+            return;
+         }
+         var self = this._getTemplateComponent();
+         self._updateIndicatorZIndex();
+         self._panelReadyDeferred.callback();
+      },
+
+      _onBeforeCloseHandler: function(event, result){
+         //Если мы в новой вкладке браузера, то ничего не делаем
+         if (!($ws.helpers.instanceOfModule(this, 'SBIS3.CORE.FloatArea') || $ws.helpers.instanceOfModule(this, 'SBIS3.CORE.Dialog'))){
+            return;
+         }
+         var self = this._getTemplateComponent(),
+             record = self._options.record;
+         //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
+         if (self._saving || !(record && record.isChanged())){
+            //Дестроим запись, когда выполнены три условия
+            //1. если это было создание
+            //2. если есть ключ (метод создать его вернул)
+            //3. ничего не поменяли в рекорде, но закрывают либо поменяли, но нажали нет
+            if (self._newRecord && record.getId() && (!self._saving && !record.isChanged() || result === false)){
+               self._destroyModel();
+            }
+            self._saving = false;
+            self._resetTitle();
+            return;
+         }
+         event.setResult(false);
+         self._saveRecord({});
       },
 
       _onBeforeNavigate: function(event, activeElement, isIconClick){
@@ -371,11 +384,15 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                }
                return result;
             }).addBoth(function (r) {
-                  self._hideLoadingIndicator();
+               self._hideLoadingIndicator();
                return r;
             });
          }
          else {
+            if (!config.hideErrorDialog) {
+               var error = new Error(errorMessage);
+               this._processError(error);
+            }
             dResult.errback(errorMessage);
             this._saving = false;
          }
@@ -733,6 +750,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          else{
             this.activateFirstControl();
          }
+      },
+
+      destroy: function(){
+         this._panel.unsubscribe('onAfterShow', this._onAfterShowHandler);
+         this._panel.unsubscribe('onBeforeClose', this._onBeforeCloseHandler);
+         FormController.superclass.destroy.apply(this, arguments);
       }
    });
       //todo Костыль, позволяющий с прототипа компонента вычитать запись до инициализации компонента и прокинуть ее в опции. Сделано в рамках ускорения

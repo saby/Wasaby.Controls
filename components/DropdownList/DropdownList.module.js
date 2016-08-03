@@ -43,6 +43,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * @cssModifier controls-DropdownList__withoutArrow Убрать стрелочку слева от выбранного текста.
        * @cssModifier controls-DropdownList__withoutCross Убрать крестик справа от выбранного текста.
        * @cssModifier controls-DropdownList__linkStyle Отобразить текст в шапке в виде ссылки.
+       * @cssModifier controls-DropdownList__ellipsis Текст в шапке обрезается троеточием, если не умещается в контейнере
        */
       var DropdownList = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
          $protected: {
@@ -309,6 +310,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
                      this._changedSelectedKeys.splice(changedSelectionIndex, 1);
                   }
                   this._buttonChoose.getContainer().toggleClass('ws-invisible', !this._changedSelectedKeys.length);
+                  if ($ws._const.browser.isIE8) {
+                     this._buttonChoose.getContainer().addClass('controls-Button__IE8Hack');
+                     setTimeout(function() {
+                        this._buttonChoose.getContainer().removeClass('controls-Button__IE8Hack');
+                     }.bind(this), 1);
+                  }
                   selected =  !row.hasClass('controls-DropdownList__item__selected');
                   row.toggleClass('controls-DropdownList__item__selected', selected);
                   this._currentSelection[row.data('id')] = selected;
@@ -527,6 +534,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return this._pickerListContainer;
          },
          _setPickerConfig: function () {
+            var hasContainerArrow = !this.getContainer().hasClass('controls-DropdownList__withoutArrow');
             return {
                corner: 'tl',
                verticalAlign: {
@@ -535,7 +543,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                },
                horizontalAlign: {
                   side: 'left',
-                  offset: -2
+                  offset: hasContainerArrow ? -2 : -6
                },
                //Если мы не в ховер-моде, нужно отключить эту опцию, чтобы попап после клика сразу не схлапывался
                closeByExternalOver: this._options.mode === 'hover' && !this._options.multiselect,

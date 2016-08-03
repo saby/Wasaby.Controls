@@ -8,7 +8,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
        'js!SBIS3.CONTROLS.ActiveSelectable',
        'js!SBIS3.CONTROLS.SyncSelectionMixin',
        'js!SBIS3.CONTROLS.FieldLinkItemsCollection',
-       'js!WS.Data/Collection/RecordSet',
        'html!SBIS3.CONTROLS.FieldLink/afterFieldWrapper',
        'html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper',
        'js!SBIS3.CONTROLS.Utils.DialogOpener',
@@ -34,7 +33,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
         SyncSelectionMixin,
         FieldLinkItemsCollection,
-        RecordSet,
 
         /* Служебные шаблоны поля связи */
         afterFieldWrapper,
@@ -281,6 +279,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                if(this.getText() && !this._options.alwaysShowTextBox) {
                   this.setText('');
                }
+               this.validate();
             }.bind(this));
 
             if(this._options.oldViews) {
@@ -503,7 +502,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
               if(selectedItems) {
                  selectedItems.each(function(rec) {
-                    displayFields.push($ws.helpers.htmlToText(rec.get(self._options.displayField)));
+                    displayFields.push($ws.helpers.htmlToText(rec.get(self._options.displayField) || ''));
                  });
               }
 

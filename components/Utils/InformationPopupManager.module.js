@@ -35,6 +35,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
          });
 
          popup.show();
+         popup.setActive(true);
       };
 
       return /** @lends SBIS3.CONTROLS.Utils.InformationPopupManager.prototype */{

@@ -34,12 +34,19 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
              * </pre>
              * @see getLinkedPanel
              */
-            linkedPanel: undefined
+            linkedPanel: undefined,
+            /**
+             * @cfg {String} Направление стрелки в кнопки
+             * @variant vertical стрелка раскрытия панели смотрит вниз, стрелка закрытия - вверх
+             * @variant horizontal стрелка раскрытия панели смотрит вправо, стрелка закрытия - влево
+             */
+            panelFloatDirection: 'vertical'
          },
          _internalHandlers: undefined
       },
 
       $constructor: function() {
+         this._publish('onBeforeLinkedPanelToggle');
          this._initHandlers();
          this.setLinkedPanel(this._options.linkedPanel);
       },
@@ -51,6 +58,8 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
       _clickHandler: function() {
          var linkedPanel = this._options.linkedPanel;
          if (linkedPanel) {
+            this._notify('onBeforeLinkedPanelToggle', linkedPanel.isVisible());
+
             //Проверка для совместимости со тарой панелью операций, у которой метод toggle влияет на видимость
             linkedPanel[$ws.helpers.instanceOfModule(linkedPanel, 'SBIS3.CONTROLS.OperationsPanel') ? 'toggle' : 'togglePanel']();
          }
@@ -66,6 +75,14 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
             this._reassignPanel(linkedPanel);
             this.setChecked(linkedPanel.isVisible());
          }
+      },
+      /**
+       * Метод возвращает текущую связанную панель массовых операций {@link linkedPanel}.
+       * @returns (SBIS3.CONTROLS.OperationPanel|SBIS3.CORE.OperationsPanel) linkedPanel
+       * @see linkedPanel
+       */
+      getLinkedPanel: function() {
+         return this._options.linkedPanel;
       },
       _reassignPanel: function(linkedPanel) {
          if (this._options.linkedPanel) {

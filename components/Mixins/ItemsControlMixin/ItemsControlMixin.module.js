@@ -287,13 +287,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * Аналогичная предыдущему примеру конфигурация будет выглядеть следующим образом:
              * <pre>
              *    <options name="dataSource">
-             *       <option name="module" value="WS.Data/Source/SbisService"></options>
+             *       <option name="module" value="js!WS.Data/Source/SbisService"></options>
              *       <options name="options">
-             *          <options name="binding">
+             *          <options name="endpoint">
              *             <option name="contract" value="Отчеты"></option>
              *             <option name="address" value="myNewService/service/sbis-rpc-service300.dll"></option>
              *          </options>
-             *          <options name="endpoint">
+             *          <options name="binding">
              *             <option name="query" value="Список"></option>
              *          </options>
              *          <option name="idProperty" value="@Идентификатор"></option>
@@ -958,6 +958,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return !!this._options.itemTemplate || !!this._options.userItemAttributes || !Object.isEmpty(this._options.groupBy);
       },
 
+      before : {
+         init: function() {
+            if (this._options.pageSize) {
+               this._limit = this._options.pageSize;
+            }
+         }
+      },
+
       /*переписанные методы для однопроходной отрисовки end*/
       after : {
          _modifyOptions: function (opts) {
@@ -972,9 +980,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             else if (this._dataSource) {
                this.reload();
-            }
-            if (this._options.pageSize) {
-               this._limit = this._options.pageSize;
             }
             if (this._options._serverRender) {
                this._notifyOnDrawItems();
@@ -1464,7 +1469,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._oldRedraw();
          }
          else {
-            this._redrawItems();
+            if (this._getItemsProjection()) {
+               this._redrawItems();
+            }
          }
       },
       _redraw: function () {
@@ -1674,10 +1681,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          targetOffset = target.offset();
 
-         if( (targetOffset.top - scrollContainerOffset.top - scrollContainer.scrollTop()) < 0) {
+         if( (targetOffset.top - scrollContainerOffset.top) < 0) {
             target[0].scrollIntoView(true);
             scrollNotify();
-         } else if ( (targetOffset.top + target.height() - scrollContainerOffset.top - scrollContainer.scrollTop()) > scrollContainer[0].clientHeight) {
+         } else if ( (targetOffset.top + target.height() - scrollContainerOffset.top) > scrollContainer[0].clientHeight) {
             target[0].scrollIntoView(false);
             scrollNotify();
          }

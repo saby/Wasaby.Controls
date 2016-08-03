@@ -1346,6 +1346,7 @@
 @list-view-items-toolbar-locked-box-shadow:          -2px -2px 5px @default-itemSelected-color;
 @list-view-items-toolbar-vertical-box-shadow:        -2px  2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-vertical-locked-box-shadow: -2px  2px 5px @default-itemSelected-color;
+@list-view-items-toolbar-vertical-line-height:       24px;
 @list-view-items-toolbar-bg:                         @data-grid-row-hover-bg;
 @list-view-items-toolbar-locked-bg:                  @default-itemSelected-color;
 @list-view-items-toolbar-margin-bottom:              2px;
@@ -1387,6 +1388,9 @@
 @list-view-scroll-width:                        32px;
 
 @list-view-disabled-cursor:                     default;
+
+@listView-empty-data-color:                     @black-color;
+@listView-empty-data-font-size:                 15px;
 
 // --------- //
 //  ToolBar  //
@@ -1437,7 +1441,6 @@
 @tree-view-expand-open-hover-bg:                @tree-view-expand-open-bg;
 
 @tree-view-ellipsis-wrapper-height:             @data-grid-cell-line-height;
-@tree-view-folder-title-margin:                 0;
 @tree-view-ellipsis-copyArrow-shadow:           -10px 2px 8px -5px;
 @tree-view-ellipsis-copyArrow-padding:          0 0 0 3px;
 @tree-view-ellipsis-copyArrow-width:            16px;
@@ -1523,8 +1526,6 @@
 @data-grid-checkbox-margin:                     2px 0 -2px 0;
 @data-grid-folder-font-size: 							15px;
 
-@data-grid-columnValue-padding:                 0;
-
 @data-grid-table-layot: 								fixed;
 // ---------- //
 // PartScroll //
@@ -1572,7 +1573,7 @@
 @controls-OperationsPanel-cursor: pointer;
 
 @controls-OperationsPanel-line-height:              @controls-OperationsPanel-height;
-@controls-OperationsPanel-bg:                       #E5ECF5;
+@controls-OperationsPanel-bg:                       #E6ECF5;
 @controls-OperationsPanel-padding-left:             @controls-OperationsPanel-opened-closed-width;
 
 @controls-OperationsPanel-triangle-height:          @controls-OperationsPanel-height;
@@ -1581,10 +1582,10 @@
 @controls-OperationsPanel-actions-margin:           0 4px;
 
 @controls-OperationsPanel-separator-margin-left:    8px;
-@controls-OperationsPanel-separator-margin-right:   4px;
+@controls-OperationsPanel-separator-margin-right:   0;
 @controls-OperationsPanel-separator-bg:             #CCCCCC;
 @controls-OperationsPanel-separator-width:          1px;
-@controls-OperationsPanel-separator-height:         21px;
+@controls-OperationsPanel-separator-height:         20px;
 @controls-OperationsPanel-separator-line-height:    30px;
 
 @controls-OperationsPanel-actions-padding-left:     0;
@@ -1593,13 +1594,16 @@
 // OperationsPanelButton  //
 // ----------------------- //
 
-@controls-OperationsPanelButton-border-radius:     7px;
-@controls-OperationsPanelButton-height:            24px;
 @controls-OperationsPanelButton-width:             24px;
+@controls-OperationsPanelButton-hor-height:        30px;
+@controls-OperationsPanelButton-vert-height:       24px;
+@controls-OperationsPanelButton-vert-border-radius: 7px;
+@controls-OperationsPanelButton-font:              18px 'TensorFont Regular', 'TensorFont';
 @controls-OperationsPanelButton-cursor:            pointer;
-@controls-OperationsPanelButton-icon-top:          4px;
-@controls-OperationsPanelButton-icon-left:         4px;
-@controls-OperationsPanelButton-hover-bg:          #E6ECF5;
+@controls-OperationsPanelButton-vertical-icon-top: 0;
+@controls-OperationsPanelButton-horizontal-icon-top: 1px;
+@controls-OperationsPanelButton-icon-left:         6px;
+@controls-OperationsPanelButton-active-icon-color: #313E78;
 
 // ----------------------- //
 //      EditInPlace        //
@@ -1739,6 +1743,8 @@
 @controls-filterButton-button-margin:             8px 8px 8px 0;
 @controls-filterButton-height:                    40px;
 
+@controls-filterButton-button-arrow-margin:       -4px;
+
 @controls-filterButton-area-header-padding:       12px 44px 12px 12px;
 @controls-filterButton-area-header-height:        24px;
 @controls-filterButton-area-header-width:         310px;
@@ -1750,7 +1756,7 @@
 @controls-filterButton-title-fontSize:            15px;
 @controls-filterButton-title-text-color:          #313e78;
 
-@controls-filterButton-area-content-margin:       12px;
+@controls-filterButton-area-content-margin:       0 12px 12px 26px;
 @controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
 @controls-filterButton-line-height:               @font-basic-line-height;
 @controls-filterButton-apply-margin-right:        0;
@@ -1808,6 +1814,7 @@
 @controls-filterLine-items-padding:               0;
 @controls-filterLine-arrow-height:                19px;
 @controls-filterLine-link-color:                  #0055bb;
+@controls-filterLine-link-hover-color:            @primary-color;
 
 @controls-filterLine-copyCross-top:               -20px;
 @controls-filterLine-copyCross-margin:            -30px;
@@ -1911,3 +1918,13 @@
 
 @controls-AjaxLoader-indicator-padding-left:       32px;
 @controls-AjaxLoader-indicator-height:             32px;
+
+@controls-Paging-item-width:                       24px;
+@controls-Paging-item-height:                      32px;
+@controls-Paging-marker-height:                    3px;
+@controls-Paging-marker-hover-color:               @gray-ccc-color;
+@controls-Paging-marker-selected-color:            @primary-color;
+@controls-Paging-btn-width:                        16px;
+@controls-Paging-btn-height:                       16px;
+@controls-Paging-btn-margin:                       8px 0;
+@controls-Paging-btn-sprite:                       url('img/PagingArrows.png');

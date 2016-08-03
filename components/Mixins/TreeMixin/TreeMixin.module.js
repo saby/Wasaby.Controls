@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
           * @private
           */
          var items = [];
-         applyExpandToItemsProjection.call(this, projection, cfg);
+         applyExpandToItemsProjection.call(this, projection, cfg, false);
          projection.each(function(item) {
             items.push(item);
          });
@@ -85,11 +85,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
    projectionFilterOnlyFolders = function(item, index, itemProj) {
       return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj, true);
    },
-   applyExpandToItemsProjection = function(projection, cfg) {
+   applyExpandToItemsProjection = function(projection, cfg, analyze) {
       var idx, item, projFilter;
-      projection.setEventRaising(false);
+      projection.setEventRaising(false, analyze);
       projFilter = projection.getFilter();
-      projection.setFilter(retTrue);
+      projection.setFilter(function() { return true });
       for (idx in cfg.openedPath) {
          if (cfg.openedPath.hasOwnProperty(idx)) {
             item = projection.getItemBySourceItem(cfg._items.getRecordById(idx));
@@ -105,7 +105,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       }
       var filterCallBack = projFilter;
       projection.setFilter(filterCallBack);
-      projection.setEventRaising(true);
+      projection.setEventRaising(true, analyze);
    },
    expandAllItems = function(projection) {
       var
@@ -453,51 +453,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          return result;
       },
       /**
-       * todo Переписать, когда будет выполнена указанная ниже задача
-       * Задача в разработку от 28.04.2016 №1172779597
-       * В деревянной проекции необходима возможность определять, какие элементы создаются развернутыми. Т...
-       * https://inside.tensor.ru/opendoc.html?guid=6f1758f0-f45d-496b-a8fe-fde7390c92c7
-       * @private
-       */
-      _applyExpandToItemsProjection: function() {
-         var idx, item;
-         this._itemsProjection.setEventRaising(false);
-         this._itemsProjection.setFilter(retTrue);
-         for (idx in this._options.openedPath) {
-            if (this._options.openedPath.hasOwnProperty(idx)) {
-               item = this._getItemProjectionByItemId(idx);
-               if (item && !item.isExpanded()) {
-                  // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
-                  if (this._itemsProjection.getCollection().getChildItems(item.getContents().getId(), undefined, this._itemsProjection.getParentProperty()).length) {
-                     item.setExpanded(true);
-                  } else {
-                     delete this._options.openedPath[idx];
-                  }
-               }
-            }
-         }
-         this._itemsProjection.setFilter(this._projectionFilter.bind(this));
-         this._itemsProjection.setEventRaising(true);
-      },
-      _getRecordsForRedrawCurFolder: function() {
-         /*Получаем только рекорды с parent = curRoot*/
-         var
-            items = [],
-            itemParent;
-         //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
-         if (this._isSearchMode()) {
-            /*TODO нехорошее место, для поиска возвращаем приватное свойство, потому что надо в независимости от текущего корня
-            * показать все записи, а по другому их не вытащить*/
-            return this._itemsProjection._items;
-         } else {
-            this._applyExpandToItemsProjection();
-            this._itemsProjection.each(function(item) {
-               items.push(item);
-            }.bind(this));
-         }
-         return items;
-      },
-      /**
        * Создаёт фильтр для дерева (берет текущий фильтр и дополняет его)
        * @param key
        * @returns {Object|{}}
@@ -548,7 +503,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       setOpenedPath: function(openedPath) {
          this._options.openedPath = openedPath;
          if (this._getItemsProjection()) { // Если имеется проекция - то применяем разворот к итемам, иначе он применится после создания проекции
-            this._applyExpandToItemsProjection();
+            applyExpandToItemsProjection(this._getItemsProjection(), this._options, true);
          }
       },
       around: {

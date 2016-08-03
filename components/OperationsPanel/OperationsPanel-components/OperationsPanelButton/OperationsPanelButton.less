@@ -1,22 +1,66 @@
 .controls-OperationsPanelButton {
-   border-radius: @controls-OperationsPanelButton-border-radius;
-   width: @controls-OperationsPanelButton-height;
-   height: @controls-OperationsPanelButton-width;
-
    &.ws-enabled {
       cursor: @controls-OperationsPanelButton-cursor;
-      &:hover {
-         background-color: @controls-OperationsPanelButton-hover-bg;
+
+      &.controls-OperationsPanelButton__horizontal:hover .controls-OperationsPanelButton__icon {
+         color: @controls-OperationsPanelButton-active-icon-color;
+      }
+
+      &.controls-OperationsPanelButton__vertical:hover {
+         background-color: @controls-OperationsPanel-bg;
       }
    }
    .controls-OperationsPanelButton__icon {
+      font: @controls-OperationsPanelButton-font;
       position: relative;
-      left: @controls-OperationsPanelButton-icon-top;
-      top: @controls-OperationsPanelButton-icon-left;
+      left: @controls-OperationsPanelButton-icon-left;
+      color: @default-color;
    }
-   &.controls-Checked__checked {
-      .controls-OperationsPanelButton__icon:before {
-         content: "\e67b";
+
+   /* стили для кнопки вверх-вниз */
+   &.controls-OperationsPanelButton__vertical {
+      width: @controls-OperationsPanelButton-width;
+      height: @controls-OperationsPanelButton-vert-height;
+      line-height: @controls-OperationsPanelButton-vert-height;
+      border-radius: @controls-OperationsPanelButton-vert-border-radius;
+
+      &:hover {
+         background-color: @controls-OperationsPanel-bg;
+      }
+
+      &.controls-Checked__checked {
+         .controls-OperationsPanelButton__icon:before {
+            content: "\e012";
+         }
+      }
+      .controls-OperationsPanelButton__icon {
+         top: @controls-OperationsPanelButton-vertical-icon-top;
+         &:before {
+            content: "\e011";
+         }
+      }
+   }
+
+   /* стили для кнопки вправо-влево */
+   &.controls-OperationsPanelButton__horizontal {
+      width: @controls-OperationsPanelButton-width;
+      height: @controls-OperationsPanelButton-hor-height;
+      line-height: @controls-OperationsPanelButton-hor-height;
+
+      &.controls-Checked__checked {
+         background-color: @controls-OperationsPanel-bg;
+         .controls-OperationsPanelButton__icon {
+            color: @controls-OperationsPanelButton-active-icon-color;
+            &:before {
+               content: "\e008";
+            }
+         }
+      }
+      .controls-OperationsPanelButton__icon {
+         top: @controls-OperationsPanelButton-horizontal-icon-top;
+         &:before {
+            content: "\e007";
+         }
       }
    }
 }

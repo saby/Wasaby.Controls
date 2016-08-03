@@ -835,7 +835,6 @@ define(
             //проверяем был ли введен последний символ в последней группе
             lastGroupNum = this.formatModel.model.length - 1;
             lastGroupNum = this.formatModel.model[lastGroupNum].isGroup ? lastGroupNum : lastGroupNum - 1;
-            this._notify('onTextChange', this._options.text);
             //Заново ищем контейнер группы, т.к. после замены символа, снаружи значение текста может быть изменено(например setText)
             //и html будет полность изменён, а в переменной container лежит элемент, которого в DOM уже нет, и курсор не сможет верно спозиционироваться
             _moveCursor(_getContainerByIndex.call(this, keyInsertInfo.groupNum), position);
@@ -875,7 +874,16 @@ define(
        */
       _updateText:function() {
          //TODO неодинаковое поведение получается для разного text. Но нельзя this._options.text не обновлять, т.к. его getText() использует
+         this._updateTextFromModel();
+         this._notifyOnTextChange();
+      },
+
+      _updateTextFromModel: function() {
          this._options.text = (this.formatModel._settedText !== null && typeof this.formatModel._settedText !== "undefined") ? this.formatModel.getText(this._maskReplacer) : this.formatModel._settedText;
+      },
+
+      _notifyOnTextChange: function() {
+         this._notify('onTextChange', this._options.text);
          this._notifyOnPropertyChanged('text');
       },
 
@@ -995,7 +1003,6 @@ define(
        */
       setText: function(text) {
          this._setText(text);
-         this._notify('onTextChange', this._options.text);
       },
       _setText: function(text){
          this.formatModel.setText(text, this._maskReplacer);
