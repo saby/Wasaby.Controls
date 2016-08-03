@@ -205,11 +205,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             keyField : null,
             /**
-             * @noShow
-             * @deprecated На текущий момент отрисовка изменившихся данных осуществляется автматически. Опция будет удалена в 3.7.4.100.
-             */
-            autoRedraw: true,
-            /**
              * @cfg {String} Поле элемента коллекции, из которого отображать данные
              * @example
              * <pre class="brush:xml">
@@ -1175,11 +1170,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    ) {
                       this._options._items.setMetaData(list.getMetaData());
                       this._options._items.assign(list);
-                      if(!self._options.autoRedraw) {
-                         self.redraw();
-                      } else {
-                         self._drawItemsCallback();
-                      }
+                      self._drawItemsCallback();
                    } else {
                       this._unsetItemsEventHandlers();
                       this._options._items = list;
