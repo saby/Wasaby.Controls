@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.FieldLink',
     [
        'js!SBIS3.CONTROLS.SuggestTextBox',
-       'js!SBIS3.CONTROLS.DSMixin',
+       'js!SBIS3.CONTROLS.ItemsControlMixin',
        'js!SBIS3.CONTROLS.MultiSelectable',
        'js!SBIS3.CONTROLS.ActiveMultiSelectable',
        'js!SBIS3.CONTROLS.Selectable',
@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
     ],
     function (
         SuggestTextBox,
-        DSMixin,
+        ItemsControlMixin,
 
         /* Интерфейс для работы с набором выбранных записей */
         MultiSelectable,
@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @mixes SBIS3.CONTROLS.ChooserMixin
         * @mixes SBIS3.CONTROLS.FormWidgetMixin
         * @mixes SBIS3.CONTROLS.SyncSelectionMixin
-        * @mixes SBIS3.CONTROLS.DSMixin
+        * @mixes SBIS3.CONTROLS.ItemsControlMixin
         *
         * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo Пример 1. Поле связи в режиме множественного выбора значений. Выбор можно производить как через справочник, так и через автодополнение.
         * @demo SBIS3.CONTROLS.Demo.FieldLinkSingleSelect Пример 2. Поле связи в режиме единичного выбора значений. Выбор можно производить как через справочник, так и через автодополнение.
@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings footerTpl emptyHTML groupBy
-        * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip setEmptyHTML setGroupBy
+        * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip setEmptyHTML setGroupBy itemTpl
         *
         * ignoreEvents onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
         *
@@ -119,7 +119,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @category Inputs
         */
 
-       var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, DSMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
+       var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ItemsControlMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
           /**
            * @name SBIS3.CONTROLS.FieldLink#textValue
            * @cfg {String} Хранит строку, сформированную из значений поля отображения выбранных элементов коллекции.
@@ -899,7 +899,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           /* Заглушка, само поле связи не занимается отрисовкой */
-          _redraw: $ws.helpers.nop,
+          redraw: $ws.helpers.nop,
 
 
           destroy: function() {
