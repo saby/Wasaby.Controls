@@ -226,7 +226,10 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
       moveInItems: function(moveItems, moveToItem, up) {
          var moveToIndex,
             items = this.getItems(),
-            projection = this._getItemsProjection();
+            projection = this._getItemsProjection(),
+            orderPropery = this.getDataSource().getOrderProperty(),
+            orderValue = this._getOrderValue(moveToItem, up);
+
          $ws.helpers.forEach(moveItems, function(item) {
             var projectionItem =  projection.getItemBySourceItem(item);
             if (this._options.hierField) {
@@ -259,8 +262,31 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
                item,
                moveToIndex < items.getCount() ? moveToIndex : undefined
             );
+            if (orderPropery && orderValue && item.has(orderPropery)) {
+               item.set(orderPropery, orderValue);
+            }
             items.setEventRaising(true, true);
          }.bind(this));
+      },
+
+      _getOrderValue: function(moveToItem, up) {
+         var projection = this._getItemsProjection(),
+            nearbyItem =  projection[up ? 'getPrevious' : 'getNext'](
+               projection.getItemBySourceItem(moveToItem)
+            ).getContents(),
+            orderPropery = this.getDataSource().getOrderProperty();
+
+         if (nearbyItem.has(orderPropery) && moveToItem.has(orderPropery)) {
+            var nearbyVal = nearbyItem.get(orderPropery),
+               moveToVal = moveToItem.get(orderPropery);
+
+            if (nearbyVal && moveToVal) {
+               return Math.floor((moveToVal+nearbyVal)/2);
+            } else if (moveToVal) {
+               return up ? ++moveToVal :  --moveToVal;
+            }
+         }
+         return undefined;
       }
    };
 
