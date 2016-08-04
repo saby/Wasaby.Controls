@@ -90,11 +90,6 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          throw new Error('SelectorButton::setCaption св-во caption работает только на чтение');
       },
 
-      setDataSource: function(source) {
-         /* Установка сосрса в кнопку выбора не должна вызывать списочный метод */
-         SelectorButton.superclass.setDataSource.call(this, source, true);
-      },
-
       _setCaption: function(caption) {
          var btnCaption = caption || this._options.defaultCaption;
          SelectorButton.superclass.setCaption.call(this, btnCaption);
