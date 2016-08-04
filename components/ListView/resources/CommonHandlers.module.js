@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.CommonHandlers',['i18n!SBIS3.CONTROLS.CommonHandlers']
          deleteRecords: function(idArray, message) {
             var self = this;
             idArray = Array.isArray(idArray) ? idArray : [idArray];
-            message = message || (idArray.length !== 1 ? rk("Удалить записи?", "Операции над записями") : rk("Удалить текущую запись?", "Операции над записями"));
+            message = message || (idArray.length !== 1 ? rk("Удалить записи?", "ОперацииНадЗаписями") : rk("Удалить текущую запись?", "ОперацииНадЗаписями"));
             return $ws.helpers.question(message).addCallback(function(res) {
                if (res) {
                   self._toggleIndicator(true);
