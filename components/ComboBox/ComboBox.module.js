@@ -624,6 +624,15 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._isClearing = true;
          }
          ComboBox.superclass.setSelectedKey.apply(this, arguments);
+      },
+
+      _scrollToItem: function(itemId) {
+         var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
+         if (itemContainer.length) {
+            itemContainer
+               .attr('tabindex', -1)
+               .focus();
+         }
       }
    });
 
