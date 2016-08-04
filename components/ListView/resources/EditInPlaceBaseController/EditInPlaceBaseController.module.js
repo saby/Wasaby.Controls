@@ -358,22 +358,22 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   }).addErrback(function(error) {
                      $ws.helpers.alert(error);
                   }).addBoth(function() {
-                     self._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
+                     self._notifyOnAfterEndEdit(eip, withSaving, isAdd);
                   });
                } else {
                   if (isAdd && eipRecord.getId()) {
                      this._options.dataSource.destroy(eipRecord.getId());
                   }
-                  this._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
+                  this._notifyOnAfterEndEdit(eip, withSaving, isAdd);
                }
                this._removePendingOperation();
             },
             //TODO: Нужно переименовать метод
-            _notifyOnAfterEndEdit: function(eip, eipRecord, withSaving, isAdd) {
+            _notifyOnAfterEndEdit: function(eip, withSaving, isAdd) {
                var target = eip.getTarget();
                eip.endEdit();
                isAdd && target.remove();
-               this._notify('onAfterEndEdit', eipRecord, target, withSaving);
+               this._notify('onAfterEndEdit', eip.getOriginalRecord(), target, withSaving);
                if (!this._savingDeferred.isReady()) {
                   this._savingDeferred.callback();
                }
