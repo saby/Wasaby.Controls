@@ -67,7 +67,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          /**
           * @var {WS.Data/Entity/Model} Запись которая пришла на редктирование, из метода прочитать или создать
           */
-         _record: undefined
+         _record: undefined,
+         _showedLoading: false
       },
       /**
        * @typedef {Object} ExecuteMetaConfig
@@ -142,6 +143,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if (meta.controllerSource && ( !config.componentOptions.record || meta.preloadRecord !== false )) {
             //Загружаем компонент, отнаследованный от formController'a, чтобы с его прототипа вычитать запись, которую мы прокинем при инициализации компонента
             //Сделано в рамках ускорения
+            this._showLoadingIndicator();
             require([dialogComponent], this._initTemplateComponentCallback.bind(this, config, meta, mode));
          }
          else {
@@ -157,6 +159,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
             def.addCallback(function (record) {
                self._record = record;
+               self._hideLoadingIndicator();
                config.componentOptions.record = record;
                if (def.isNewRecord)
                   config.componentOptions.isNewRecord = true;
@@ -170,6 +173,20 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          else{
             self._showDialog(config, meta, mode);
          }
+      },
+
+      _showLoadingIndicator: function(){
+         this._showedLoading = true;
+         window.setTimeout(function(){
+            if (this._showedLoading){
+               $ws.single.Indicator.show();
+            }
+         }.bind(this), 750);
+      },
+
+      _hideLoadingIndicator: function(){
+         this._showedLoading = false;
+         $ws.single.Indicator.hide();
       },
 
       _showDialog: function(config, meta, mode){
