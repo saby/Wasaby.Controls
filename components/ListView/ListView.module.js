@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__orangeMarker Показывать маркер активной строки у элементов ListView. Актуально только для ListView.
        * @cssModifier controls-ListView__showCheckBoxes Чекбоксы показываются не по ховеру, а сразу все.
        * @cssModifier controls-ListView__hideCheckBoxes Скрыть все чекбоксы.
-       * @cssModifier controls-ListView__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
+       * @cssModifier controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        * @cssModifier controls-ListView__bottomStyle Оформляет операции строки под строкой
        * @cssModifier controls-ListView__pagerNoSizePicker Скрыть выбор размера страницы в пейджинге.
        * @cssModifier controls-ListView__pagerNoAmount Скрыть отображение количества записей на странице в пейджинге.
@@ -2189,7 +2189,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return !this._isShifted &&
                    this._options.enabled &&
                    !$ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase') &&
-                   !$(e.target).closest('.controls-ListView__notDraggable').length;
+                   !$(e.target).closest('.controls-DragNDropMixin__notDraggable').length;
          },
          _onDragStart: function(e) {
             var
