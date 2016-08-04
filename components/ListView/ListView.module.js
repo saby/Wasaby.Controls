@@ -1524,7 +1524,13 @@ define('js!SBIS3.CONTROLS.ListView',
                            this._showItemsToolbar(this._getElementData(this._editingItem.target));
                            this._getItemsToolbar().lockToolbar();
                         }
-                        this.setSelectedKey(model.getId());
+                        if (model.getState() === Record.RecordState.DETACHED) {
+                           $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
+                           $('.controls-ListView__item[data-id="' + model.getId() + '"]', this._container).addClass('controls-ListView__item__selected');
+                        }
+                        else {
+                           this.setSelectedKey(model.getId());
+                        }
                         event.setResult(this._notify('onAfterBeginEdit', model));
                      }.bind(this),
                      onChangeHeight: function() {
