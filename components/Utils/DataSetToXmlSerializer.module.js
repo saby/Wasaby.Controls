@@ -214,7 +214,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             for(var i = 0, l = fieldValue.length; i < l; i++){
                element.appendChild(elem = document.createElement('Value'));
                //для элементов массива всегда добавляем их значение как текст, ведь там может быть null
-               elem.appendChild(document.createTextNode(fieldValue[i] + ''));
+               elem.appendChild(document.createTextNode($ws.helpers.removeInvalidXMLChars(fieldValue[i] + '')));
             }
          } else if(fieldValue instanceof $ws.proto.RecordSet || fieldValue instanceof $ws.proto.Record){
             this._serializeObject(fieldValue, fieldElement, document);
