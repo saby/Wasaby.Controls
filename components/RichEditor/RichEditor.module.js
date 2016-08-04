@@ -829,6 +829,10 @@ define('js!SBIS3.CONTROLS.RichEditor',
           */
          execCommand: function(command) {
             this._tinyEditor.execCommand(command);
+            //TODO:https://github.com/tinymce/tinymce/issues/3104, восстанавливаю выделение тк оно теряется если после нжатия кнопки назад редактор стал пустым
+            if (command == 'undo' && this._getTinyEditorValue() == '') {
+               this._tinyEditor.selection.select(this._tinyEditor.getBody(), true);
+            }
          },
 
          /**
