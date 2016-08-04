@@ -353,7 +353,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      eip.applyChanges();
                      if (isAdd) {
                         eipRecord.set(eipRecord.getKeyField(), recordId);
-                        self._options.dataSet.push(eip._cloneWithFormat(eipRecord, self._options.dataSet));
+                        self._options.dataSet.push(eip._cloneWithFormat(eipRecord), self._options.dataSet);
                      }
                   }).addErrback(function(error) {
                      $ws.helpers.alert(error);
