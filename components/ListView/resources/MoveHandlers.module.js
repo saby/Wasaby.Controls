@@ -271,13 +271,14 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
 
       _getOrderValue: function(moveToItem, up) {
          var projection = this._getItemsProjection(),
-            nearbyItem =  projection[up ? 'getPrevious' : 'getNext'](
+            nearbyItemprojItem = projection[up ? 'getPrevious' : 'getNext'](
                projection.getItemBySourceItem(moveToItem)
-            ).getContents(),
+            ),
+            nearbyItem =  nearbyItemprojItem ? nearbyItemprojItem.getContents() : undefined,
             orderPropery = this.getDataSource().getOrderProperty();
 
-         if (nearbyItem.has(orderPropery) && moveToItem.has(orderPropery)) {
-            var nearbyVal = nearbyItem.get(orderPropery),
+         if (moveToItem.has(orderPropery)) {
+            var nearbyVal = nearbyItem ? nearbyItem.get(orderPropery) : undefined,
                moveToVal = moveToItem.get(orderPropery);
 
             if (nearbyVal && moveToVal) {
