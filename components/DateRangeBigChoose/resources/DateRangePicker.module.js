@@ -1,9 +1,10 @@
 define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
    'js!SBIS3.CONTROLS.ListView',
+   'html!SBIS3.CONTROLS.DateRangeBigChoose/resources/DateRangePickerItem',
    'js!SBIS3.CONTROLS.RangeMixin',
    'js!WS.Data/Source/Base',
    'js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView'
-], function (ListView, RangeMixin, Base) {
+], function (ListView, ItemTmpl, RangeMixin, Base) {
    'use strict';
 
    var _startingOffset = 1000000;
@@ -61,13 +62,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
             rangeselect: false,
             month: null,
             keyField: 'id',
-            itemTemplate: '<component data-component="SBIS3.CONTROLS.DateRangeBigChoose.MonthView">' +
-                  '<option name="showWeekdays" type="boolean">false</option>' +
-                  '<option name="captionType">text</option>' +
-                  '<option name="captionFormat">%B</option>' +
-                  '<option name="month">{{=it.item.get("date").toSQL()}}</option>' +
-                  '<option name="rangeselect" type="boolean">{{=it.rangeselect}}</option>' +
-               '</component>',
+            itemTpl: ItemTmpl,
             // itemTemplate: '<div>{{=it.item.get("date")}}</div>',
             // infiniteScroll: 'both',
             pageSize: 3,
@@ -98,18 +93,6 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
 
          this.setDataSource(monthSource);
       },
-
-      // _getItemTemplate : function(item) {
-      //    // var caption = item.get(this._options.displayField);
-      //    return '<component data-component="SBIS3.CONTROLS.DateRangeBig.MonthView">' +
-      //             '<option name="showWeekdays" type="boolean">false</option>' +
-      //             '<option name="captionType">text</option>' +
-      //             '<option name="captionFormat">%B</option>' +
-      //             // '<option name="month">{{=it.item.get("date").getFullYear()}}:{{=it.item.get("date").getMonth()}}:01</option>' +
-      //             // FIXME: в ie8 нет метода toISOString
-      //             '<option name="month">{{=it.item.get("date").toISOString()}}</option>' +
-      //          '</component>';
-      // },
 
       setMonth: function (month) {
          if (this._options.month === month ||
@@ -203,7 +186,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
 
       _validateInnerComponents: function () {
          this._innerComponentsValidateTimer = null;
-         $ws.helpers.forEach(this.getItemsInstances(), function(control) {
+         this.forEachMonthView(function(control) {
             if (this._isMonthView(control)) {
                control._setSelectionType(this._selectionType);
                control._setSelectionRangeEndItem(this._selectionRangeEndItem, true);
@@ -218,7 +201,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
 
       forEachMonthView: function (func) {
          var self = this;
-         $ws.helpers.forEach(this.getItemsInstances(), function(control) {
+         $ws.helpers.forEach(this.getChildControls(), function(control) {
             // Почему то в control иногда попадают левые контролы
             if (self._isMonthView(control)) {
                func(control);

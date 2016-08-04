@@ -1,11 +1,12 @@
 define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
    'js!SBIS3.CONTROLS.ListView',
+   'html!SBIS3.CONTROLS.DateRangeBigChoose/resources/MonthRangePickerItem',
    'js!SBIS3.CONTROLS.RangeMixin',
    'js!SBIS3.CONTROLS.RangeSelectableViewMixin',
    'js!WS.Data/Source/Base',
    'js!SBIS3.CONTROLS.DateRangeBigChoose.ScrollWatcher',
    'js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView'
-], function (ListView, RangeMixin, RangeSelectableViewMixin, Base, ScrollWatcher) {
+], function (ListView, ItemTmpl, RangeMixin, RangeSelectableViewMixin, Base, ScrollWatcher) {
    'use strict';
 
    var _startingOffset = 1000000;
@@ -66,13 +67,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
              * @cfg {Number} отображаемый год
              */
             year: null,
-            itemTemplate: '<component data-component="SBIS3.CONTROLS.DateRangeBigChoose.MonthView">' +
-                              '<option name="showWeekdays" type="boolean">false</option>' +
-                              '<option name="captionType">text</option>' +
-                              '<option name="captionFormat">%B</option>' +
-                              '<option name="month">{{=it.item.get("month").toSQL()}}</option>' +
-                              '<option name="enabled" type="boolean">false</option>' +
-                           '</component>',
+            itemTpl: ItemTmpl,
             // infiniteScroll: 'both',
             // infiniteScrollContainer: '.controls-DateRangeBigChoose__months-month',
             pageSize: 12,
@@ -182,25 +177,12 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
          return changed;
       },
 
-      // _getItemTemplate : function(item) {
-      //    // var caption = item.get(this._options.displayField);
-      //    return '<component data-component="SBIS3.CONTROLS.MonthView" class="controls-DateRangeBigChoose__dates-dates">' +
-      //       '<option name="showWeekdays" type="boolean">false</option>' +
-      //       '<option name="captionType">text</option>' +
-      //       '<option name="captionFormat">%B</option>' +
-      //    '</component>';
-      // }
-
       _drawItemsCallback: function () {
          var self = this,
              container;
          MonthRangePicker.superclass._drawItemsCallback.apply(this, arguments);
          this._$items = null;
-         $ws.helpers.forEach(this.getItemsInstances(), function(control) {
-            // Почему то в control иногда попадают левые контролы
-            if (!self._isMonthView(control)) {
-               return;
-            }
+         this.forEachMonthView(function(control) {
             container = control.getContainer();
             container.addClass(self._SELECTABLE_RANGE_CSS_CLASSES.item);
             container.attr(self._selectedRangeItemIdAtr, self._selectedRangeItemToString(control.getMonth()));
@@ -218,7 +200,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
 
       _onItemCaptionMouseEnter: function (e) {
          var $target = $(e.target),
-            target = this._findItemByElement($target);
+            target = $target.closest('.controls-RangeSelectable__item', this._getItemsContainer());
 
          target.addClass(this._css_classes.hovered);
          this._onRangeItemElementMouseEnter(Date.fromSQL(target.attr(this._selectedRangeItemIdAtr)));
@@ -285,7 +267,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
 
       _validateInnerComponents: function () {
          this._innerComponentsValidateTimer = null;
-         $ws.helpers.forEach(this.getItemsInstances(), function(control) {
+         this.forEachMonthView(function(control) {
             if (this._isMonthView(control)) {
                control.setRange(this.getStartValue(), this.getEndValue(), true);
             }
@@ -294,6 +276,16 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
 
       _isMonthView: function (control) {
          return $ws.helpers.instanceOfModule(control, 'SBIS3.CONTROLS.DateRangeBigChoose.MonthView');
+      },
+
+      forEachMonthView: function (func) {
+         var self = this;
+         $ws.helpers.forEach(this.getChildControls(), function(control) {
+            // Почему то в control иногда попадают левые контролы
+            if (self._isMonthView(control)) {
+               func(control);
+            }
+         });
       }
 
    });

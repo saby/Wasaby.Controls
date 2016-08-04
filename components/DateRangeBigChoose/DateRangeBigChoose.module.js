@@ -91,9 +91,12 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
 
          this._toggleChooseYearBtn.subscribe('onActivated', this._toggleChooseYear.bind(this));
          this._currentYearBtn.subscribe('onActivated', this._onCurrentYearBtnClick.bind(this));
-         this.getChildControlByName('ApplyButton', function () {
-            this._notify('onDateRangeChosen', self.getStartValue(), self.getEndValue());
-         });
+         this.getChildControlByName('ApplyButton').subscribe('onActivated', function () {
+            this._notify('onChoose', self.getStartValue(), self.getEndValue());
+         }.bind(this));
+         this.getChildControlByName('CloseButton').subscribe('onActivated', function () {
+            this._notify('onCancel', self.getStartValue(), self.getEndValue());
+         }.bind(this));
 
          this.getChildControlByName('PrevYearButton').subscribe('onActivated', this._onPrevOrNextYearBtnClick.bind(this, -1));
          this.getChildControlByName('NextYearButton').subscribe('onActivated', this._onPrevOrNextYearBtnClick.bind(this, 1));
@@ -551,4 +554,3 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
    });
    return DateRangeBigChoose;
 });
-

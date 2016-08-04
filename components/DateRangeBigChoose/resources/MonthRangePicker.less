@@ -1,23 +1,27 @@
 .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView {
    padding: 8px 0 8px 8px;
 
-   .controls-ItemsToolbar.controls-ListView__ItemsToolbar-container {
-      display: none !important;
-   }
-   .controls-ListView__item.controls-MonthView {
-      &.controls-ListView__hoveredItem {
-         background: transparent;
-      }
-      &.controls-DateRangeBigChoose-MonthRangePicker__hovered {
-         background-color: @date-range-big-choose-month-range-picker-caption-text-hovered-bg;
-      }
-   }
+   //.controls-ItemsToolbar.controls-ListView__ItemsToolbar-container {
+   //   display: none !important;
+   //}
+   //.controls-ListView__item.controls-MonthView {
+   //   &.controls-ListView__hoveredItem {
+   //      background: transparent;
+   //   }
+   //   &.controls-DateRangeBigChoose-MonthRangePicker__hovered {
+   //      background-color: @date-range-big-choose-month-range-picker-caption-text-hovered-bg;
+   //   }
+   //}
 
-   .controls-ListView__item {
+   .controls-DateRangeBigChoose-MonthView.controls-MonthView {
       .box-sizing(border-box);
       margin-right: 8px;
       margin-bottom: 1px;
       border: 1px solid transparent;
+
+      &.controls-DateRangeBigChoose-MonthRangePicker__hovered {
+         background-color: @date-range-big-choose-month-range-picker-caption-text-hovered-bg;
+      }
 
       &.controls-RangeSelectable__item-selected {
          border: 1px solid @blue-color;
@@ -32,84 +36,82 @@
       }
 
       // Стили для календаря
-      &.controls-MonthView {
-         width: 84px;
-         height: 96px;
-         padding: 0;
-         cursor: pointer;
-         display: block;
-         float: left;
-         background: transparent;
+      width: 84px;
+      height: 96px;
+      padding: 0;
+      cursor: pointer;
+      display: block;
+      float: left;
+      background: transparent;
 
-         table {
-            border-collapse: collapse;
+      table {
+         border-collapse: collapse;
+      }
+
+      .controls-MonthView__caption-text {
+         height: 24px;
+         line-height: 24px;
+         vertical-align: middle;
+      }
+
+      .controls-MonthView__dayTable {
+         border: 1px solid transparent;
+         &:hover {
+            border: @date-range-big-choose-month-range-picker-month-hovered-border;
+         }
+         .controls-MonthView__tableBody {
+            font-size: 8px;
+            text-align: @calendar-day-body-text-alignment;
          }
 
-         .controls-MonthView__caption-text {
-            height: 24px;
-            line-height: 24px;
-            vertical-align: middle;
-         }
-
-         .controls-MonthView__dayTable {
-            border: 1px solid transparent;
-            &:hover {
-               border: @date-range-big-choose-month-range-picker-month-hovered-border;
-            }
-            .controls-MonthView__tableBody {
-               font-size: 8px;
-               text-align: @calendar-day-body-text-alignment;
-            }
-
-            .controls-MonthView__tableElement {
-               //width: 12px;
-               height: 12px;
+         .controls-MonthView__tableElement {
+            //width: 12px;
+            height: 12px;
+            padding: 0;
+            text-align: center;
+            background: transparent;
+            * {
                padding: 0;
-               text-align: center;
-               background: transparent;
-               * {
-                  padding: 0;
+            }
+
+            &.controls-RangeSelectable__item {
+               cursor: pointer;
+
+               &.controls-MonthView__weekend {
+                  color: @calendar-day-weekend-color;
                }
 
-               &.controls-RangeSelectable__item {
-                  cursor: pointer;
+               &.controls-MonthView__today {
+                  border: 1px solid #ff7033;
+               }
 
-                  &.controls-MonthView__weekend {
-                     color: @calendar-day-weekend-color;
-                  }
-
-                  &.controls-MonthView__today {
-                     border: 1px solid #ff7033;
-                  }
-
-                  &.controls-RangeSelectable__item-selectedStart, &.controls-RangeSelectable__item-selectedEnd {
-                     &.controls-RangeSelectable__item-selected {
-                        color: @white-color;
-                        background: @date-range-big-choose-month-range-picker-calendar-boundary-selected-bg;
-
-                        &:hover {
-                           color: @white-color;
-                           background: @date-range-big-choose-month-range-picker-calendar-boundary-selected-bg;
-                        }
-
-                        &.controls-MonthView__weekend {
-                           color: @calendar-day-weekend-color;
-                        }
-                     }
-                  }
-
+               &.controls-RangeSelectable__item-selectedStart, &.controls-RangeSelectable__item-selectedEnd {
                   &.controls-RangeSelectable__item-selected {
-                     color: @calendar-day-cell-active-text-color;
-                     background: @date-range-big-choose-month-range-picker-calendar-selected-bg;
+                     color: @white-color;
+                     background: @date-range-big-choose-month-range-picker-calendar-boundary-selected-bg;
 
                      &:hover {
-                        color: @calendar-day-cell-active-hover-text-color;
-                        background: @date-range-big-choose-month-range-picker-calendar-selected-bg;
+                        color: @white-color;
+                        background: @date-range-big-choose-month-range-picker-calendar-boundary-selected-bg;
                      }
 
                      &.controls-MonthView__weekend {
                         color: @calendar-day-weekend-color;
                      }
+                  }
+               }
+
+               &.controls-RangeSelectable__item-selected {
+                  color: @calendar-day-cell-active-text-color;
+                  background: @date-range-big-choose-month-range-picker-calendar-selected-bg;
+
+                  &:hover {
+                     color: @calendar-day-cell-active-hover-text-color;
+                     background: @date-range-big-choose-month-range-picker-calendar-selected-bg;
+                  }
+
+                  &.controls-MonthView__weekend {
+                     color: @calendar-day-weekend-color;
                   }
                }
             }
