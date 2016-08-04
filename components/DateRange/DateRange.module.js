@@ -92,6 +92,8 @@ define('js!SBIS3.CONTROLS.DateRange', [
             // }
          });
 
+         this._options.startValue = this._options.startValue || this._options.startDate;
+         this._options.endValue = this._options.endValue || this._options.endDate;
          // приводим даты к Date-типу и устанавливаем их в DatePicker-ах
          this.setStartValue(this._options.startDate);
          this.setEndValue(this._options.endDate);
