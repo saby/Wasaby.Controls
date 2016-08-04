@@ -205,7 +205,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           setTouchMode: function(mode) {
              this._options.touchMode = mode;
-             if(mode) {
+             if(!mode) {
                 this.getContainer()[0].style.height = 'auto';
              }
              if(this._itemsActions) {

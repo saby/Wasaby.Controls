@@ -633,14 +633,15 @@ define('js!SBIS3.CONTROLS.ListView',
             _scrollOnBottom: true, // TODO: Придрот для скролла вниз при первой подгрузке. Если включена подгрузка вверх то изначально нужно проскроллить контейнер вниз,
             //но после загрузки могут долетать данные (картинки в docviewer например), которые будут скроллить вверх.
             _scrollOnBottomTimer: null, //TODO: см. строчкой выше
-            _componentBinder: null
+            _componentBinder: null,
+            _processMouseMove: true
          },
 
          $constructor: function () {
             var dispatcher = $ws.single.CommandDispatcher;
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange');
-            this._container.on('swipe tap touchmove mousemove mouseleave', this._eventProxyHandler.bind(this));
+            this._container.on('swipe tap touchend touchstart touchmove mousemove mouseleave', this._eventProxyHandler.bind(this));
 
             this.initEditInPlace();
             this.setItemsDragNDrop(this._options.itemsDragNDrop);
@@ -687,11 +688,26 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _eventProxyHandler: function(e) {
-            /* Переменная _clickState.target выставляется в промежуток между touchstart - touchend
-               определяем по ней, нади ли обрабатывать mousemove */
-            if(e.type !== 'mousemove' || (e.type === 'mousemove' && this._clickState.target === null)) {
+            var self = this;
+
+            if(!self._processMouseMove && e.type === 'mousemove') {
+               return;
+            }
+
+            /* После touchend/touchstart временно блокируем обработку события mousemove, т.к.
+               при например при тапе, после touchend стреляет событие mousemove, его обрабатывать не надо */
+            if(e.type === 'touchend' || e.type === 'touchstart') {
+               this._processMouseMove = false;
+               window.setTimeout(function() {
+                  self._processMouseMove = true;
+               }, 500);
+            }
+
+            /* mouseleave - событие, которое может стрелять как при touch действиях,
+               так и при mouse действиях, не обрабатываем на поддержку touch */
+            if(e.type !== 'mouseleave') {
                var currentTouch = this._touchSupport;
-               this._touchSupport = Boolean(e.type === 'swipe' || e.type === 'tap' || (e.originalEvent.touches && e.originalEvent.touches.length === 1));
+               this._touchSupport = Array.indexOf(['swipe', 'tap', 'touchstart', 'touchend', 'touchmove'], e.type) !== -1;
 
             if(currentTouch !== this._touchSupport) {
                this._container.toggleClass('controls-ListView__touchMode', this._touchSupport);
@@ -959,7 +975,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (target.length) {
                /* Проверяем, чем был вызвано событие, мышью или движением пальца,
                   чтобы в зависимости от этого понимать, надо ли показывать операции */
-               if(!e.originalEvent.touches) {
+               if(!this._touchSupport) {
                   this._changeHoveredItem(target);
                }
             } else if (!this._isHoverControl($target)) {
