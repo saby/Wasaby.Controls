@@ -1230,7 +1230,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      if (selectedItems && selectedItems.getCount()) {
                         selectedItems.clear();
                      }
-                     ListView.superclass.setSelectedItemsAll.call(this);
+                      this.setSelectedItemsAll.call(this);
                      if (dataSet.getCount() == 1000 && dataSet.getMetaData().more){
                         InformationPopupManager.showMessageDialog({
                            status: 'default',
@@ -1239,7 +1239,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                   }.bind(this));
             } else {
-               ListView.superclass.setSelectedItemsAll.call(this);
+               this.setSelectedItemsAll.call(this);
             }
          },
          _drawSelectedItems: function (idArray) {

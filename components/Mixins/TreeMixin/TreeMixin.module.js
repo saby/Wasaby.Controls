@@ -641,6 +641,21 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          });
       },
 
+      setSelectedItemsAll: function() {
+         var
+             keys = [],
+             items = this.getItems(),
+             hierField = this.getHierField();
+         if (items && this._isSearchMode && this._isSearchMode()) {
+            items.each(function(rec){
+               if (rec.get(hierField + '@') !== true) {
+                  keys.push(rec.getId())
+               }
+            });
+            this.setSelectedKeys(keys);
+         }
+      },
+
       before: {
          reload : function() {
             this._folderOffsets['null'] = 0;
