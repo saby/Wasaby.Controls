@@ -640,7 +640,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             return error;
          });
       },
-
+      //В режиме поиска в дереве, при выборе всех записей, выбираем только листья, т.к. папки в этом режиме не видны.
       setSelectedItemsAll: function() {
          var
              keys = [],
