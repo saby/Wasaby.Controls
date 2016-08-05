@@ -1513,6 +1513,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         }
                         this.setSelectedKey(model.getId());
                         event.setResult(this._notify('onAfterBeginEdit', model));
+                        this._toggleEmptyData(false);
                      }.bind(this),
                      onChangeHeight: function() {
                         if (this._getItemsToolbar().isToolbarLocking()) {
@@ -1543,6 +1544,7 @@ define('js!SBIS3.CONTROLS.ListView',
                               this._hideItemsToolbar();
                            }
                         }
+                        this._toggleEmptyData(!this.getItems().getCount());
                      }.bind(this)
                   }
                };
