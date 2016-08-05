@@ -169,6 +169,9 @@
       height: @DropdownList-footer-buttonsBlock-height;
       position: @DropdownList-footer-buttonsBlock-position;
 
+      &:hover{
+        background: @DropdownList-picker-menu-item-hover;
+      }
       .controls-DropdownListFooter_hasMore, .controls-DropdownListFooter_select {
          position: @DropdownList-footer-buttons-position;
       }
@@ -214,6 +217,13 @@
          display: inline-block;
          background: @check-box-icon-bg-pathFilter;
          visibility: hidden;
+      }
+
+      &.controls-DropdownList__buttonsBlock{
+        height: 32px;
+        .controls-DropdownListFooter_hasMore{
+          top: 4px;
+        }
       }
    }
    .controls-DropdownList__linkStyle{

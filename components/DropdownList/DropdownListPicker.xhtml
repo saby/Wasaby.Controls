@@ -1,7 +1,7 @@
 <div class="controls-DropdownList__header"></div>
 <div class="controls-DropdownList__body">
    <div class="controls-DropdownList__list"></div>
-      <div class="controls-DropdownList__buttonsBlock {{?it.className}} {{=it.className}}{{?}}">
+      <div class="controls-DropdownList__buttonsBlock {{?it.className}} {{=it.className}}{{?}} {{?it.multiselect}}controls-DropdownList__multiselect{{?}}">
           {{?it.multiselect}}
           <component data-component="SBIS3.CONTROLS.IconButton" class="controls-DropdownListFooter_select controls-IconButton__round-border-24 ws-invisible">
              <opt name="name">DropdownList_buttonChoose</opt>
