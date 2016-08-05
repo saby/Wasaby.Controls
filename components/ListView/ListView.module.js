@@ -57,9 +57,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          getRecordsForRedrawLV = function (projection, cfg){
             var records = cfg._getRecordsForRedrawSt.call(this, projection);
-            if (cfg.infiniteScroll === 'up' && this._isSearchMode && !this._isSearchMode()) {
-               return records.reverse();
-            }
             return records;
          };
       var
@@ -784,7 +781,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onScrollMoveHandler: function(event, scrollTop){
-            if (this._options.infiniteScroll == 'down'){
+            if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                var scrollPage = this._scrollBinder._getScrollPage(scrollTop);
                this._notify('onScrollPageChange', scrollPage);
             }
@@ -1867,7 +1864,6 @@ define('js!SBIS3.CONTROLS.ListView',
                }
                if (this._scrollPager){
                   this._setScrollPagerPosition();
-                  //this._scrollBinder._updateScrollPages(true);
                }
             }
          },
@@ -1992,11 +1988,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight();
                this._needSrollTopCompensation = true;
                var items = dataSet.toArray();
-               //FixMe: Оcтавляем переворачивание для контактов, по нормальному надо что бы они присылали данные сразу перевернутыми
-               // и присылать не первую страницу, а последнюю
-               if (this._options.infiniteScroll == 'up'){
-                  items.reverse();
-               }
                this.getItems().prepend(items);
                at = {at: 0};
             }
@@ -2030,15 +2021,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _preScrollLoading: function(){
-            var hasScroll = this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer()),
-               existFloatArea = this._existFloatArea(),
-               isScrollOnBottom = this.isScrollOnBottom();
-
-            //TODO: Возможно тут просто нужно стрелять событием, а это перенести в биндер
-            //this._scrollBinder && this._scrollBinder._updateScrollPages();
+            var hasScroll = (function() {
+                  return this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer())
+               }).bind(this);
 
             // Если нет скролла или скролл внизу, значит нужно догружать еще записи (floatArea отжирает скролл, поэтому если она открыта - не грузим)
-            if ((!hasScroll || (isScrollOnBottom && this._options.infiniteScroll == 'down')) && !existFloatArea) {
+            if (!this._existFloatArea() && ((this.isScrollOnBottom() && this._options.infiniteScroll == 'down') || !hasScroll())) {
                this._loadNextPage();
             } else {
                this._moveTopScroll();
