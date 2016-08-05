@@ -505,6 +505,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._prepareConfig(this._options.dataSource, this._options.items);
       },
 
+      _getItemProjectionByItemId: function(id) {
+         return this._getItemsProjection() ? this._getItemsProjection().getItemBySourceItem(this.getItems().getRecordById(id)) : null;
+      },
+
       _prepareConfig : function(sourceOpt, itemsOpt) {
          var keyField = this._options.keyField;
 

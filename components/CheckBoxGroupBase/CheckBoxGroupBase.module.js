@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBaseDS', 'js!SBIS3.CONTROLS.MultiSelectable'], function(ButtonGroupBase, MultiSelectable) {
+define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS.MultiSelectable'], function(ButtonGroupBase, MultiSelectable) {
 
    'use strict';
 
@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
     * @public
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @mixes SBIS3.CONTROLS.MultiSelectable
-    * @extends SBIS3.CONTROLS.ButtonGroupBaseDS
+    * @extends SBIS3.CONTROLS.ButtonGroupBase
     * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions contextRestriction independentContext
@@ -44,7 +44,10 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
 
       },
 
-      _itemActivatedHandler : function(key) {
+      _itemActivatedHandler : function(hash) {
+         var projItem, key;
+         projItem = this._getItemsProjection().getByHash(hash);
+         key = projItem.getContents().getId();
          this.toggleItemsSelection([key]);
       },
 
@@ -66,7 +69,10 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
                   controls[i].setChecked(false);
                }
                else {
-                  var key = controls[i].getContainer().data('id');
+                  var hash, item, key;
+                  hash = controls[i].getContainer().data('hash');
+                  item = this._getItemsProjection().getByHash(hash).getContents();
+                  key = item.getId();
                   //TODO проверка на строку и число. Избавиться, когда наконец все ключи будут строками
                   if ((idArray.indexOf(key) >= 0) || (idArray.indexOf(key+'') >= 0)) {
                      controls[i].setChecked(true);
