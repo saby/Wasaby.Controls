@@ -724,10 +724,7 @@ define(
       _chromeCaretBugFix: function() {
          if ($ws._const.browser.chrome) {
             this._inputField.bind('blur', function () {
-               var selection = window.getSelection();
-               if (selection.type === 'Caret') {
-                  selection.removeAllRanges();
-               }
+               window.getSelection().removeAllRanges();
             });
          }
       },
