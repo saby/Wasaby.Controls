@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
       _onRangeItemElementClick: function (item, endItem) {
          if (this.isRangeselect()) {
             if (this.isSelectionProcessing()) {
-               this._stopRangeSelection(item);
+               this._stopRangeSelection(item, endItem);
             } else {
                this._startRangeSelection(item, endItem);
             }
@@ -148,10 +148,11 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
       /**
        * Завершает выделение диапазона
        * @param date
+       * @param endDate
        * @private
        */
-      _stopRangeSelection: function (date) {
-         var range = this._getUpdatedRange(this.getStartValue(), this.getEndValue(), date);
+      _stopRangeSelection: function (date, endDate) {
+         var range = this._getUpdatedRange(this.getStartValue(), this.getEndValue(), date, endDate);
          this.setRange(range[0], range[1]);
          this._setSelectionRangeEndItem();
          this.validateRangeSelectionItemsView();
@@ -171,11 +172,25 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
          }
       },
 
-      _getUpdatedRange: function (start, end, newBound) {
-         if (newBound) {
-            start = (start > newBound)? newBound: start;
-            end = (end < newBound)? newBound: end;
+      /**
+       * Объединяет 2 диапазона
+       * @param start начало первого диапазона
+       * @param end конец первого диапазона
+       * @param newRangeStart начало второго диапазона
+       * @param newRangeEnd конец второго диапазона
+       * @returns {*[]}
+       * @private
+       */
+      _getUpdatedRange: function (start, end, newRangeStart, newRangeEnd) {
+         var dates = [start, end, newRangeStart, newRangeEnd],
+            filteredDates = [];
+         for (var i = 0; i < dates.length; i++) {
+            if (dates[i]) {
+               filteredDates.push(dates[i]);
+            }
          }
+         start =new Date(Math.min.apply(null, filteredDates));
+         end = new Date(Math.max.apply(null, filteredDates));
          return [start, end]
       },
 
@@ -321,6 +336,19 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
       _validateRangeSelectionItemsView: function () {
          this._rangeSelectionViewValidateTimer = null;
          this._drawCurrentRangeSelection();
+      },
+
+      /**
+       * Отменяет начатый пользователем процесс выделения.
+       */
+      cancelSelection: function () {
+         if (this.isSelectionProcessing()) {
+            this._rangeSelection = false;
+            this._rangeSelectionEnd = null;
+            this.validateRangeSelectionItemsView();
+            return true;
+         }
+         return false;
       }
 
    };

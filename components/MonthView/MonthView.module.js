@@ -68,9 +68,6 @@ define(
 
             _viewValidateTimer: null,
 
-            _selecting: false,
-            // В режиме выделения последняя дата над которой была мышка
-            _selectingRangeEndDate: null,
             _selectionType: null,
 
             MONTH_VIEW_CSS_CLASSES: {
@@ -424,6 +421,14 @@ define(
                items.push(i);
             }
             return {items: items, start: startId, end: endId};
+         },
+
+         cancelSelection: function () {
+            var canceled = MonthView.superclass.cancelSelection.call(this)
+            if (canceled) {
+               this._selectionType = null;
+            }
+            return canceled;
          },
 
          /**

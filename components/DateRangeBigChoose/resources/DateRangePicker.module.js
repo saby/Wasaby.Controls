@@ -70,7 +70,9 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
          },
          _lastOverControl: null,
          _offset: MonthSource.defaultOffset,
-         _innerComponentsValidateTimer: null
+         _innerComponentsValidateTimer: null,
+         _selectionRangeEndItem: null,
+         _selectionType: null
       },
       $constructor: function () {
          this._publish('onActivated', 'onMonthActivated');
@@ -202,10 +204,17 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
       forEachMonthView: function (func) {
          var self = this;
          $ws.helpers.forEach(this.getChildControls(), function(control) {
-            // Почему то в control иногда попадают левые контролы
             if (self._isMonthView(control)) {
                func(control);
             }
+         });
+      },
+
+      cancelSelection: function () {
+         this._selectionRangeEndItem = null;
+         this._selectionType = null;
+         this.forEachMonthView(function (control) {
+            control.cancelSelection();
          });
       }
 

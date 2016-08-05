@@ -157,11 +157,6 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
 
       setEndValue: function (end, silent) {
          var changed;
-         // Выделение происходит месяцами а интерфейс должен возвращать выделение днями,
-         // поэтому всегда устанавливаем конец периода на последний день месяца
-         if (end) {
-            end = new Date(end.getFullYear(), end.getMonth() + 1, 0);
-         }
          changed = MonthRangePicker.superclass.setEndValue.call(this, end, silent);
          if (!this.isSelectionProcessing()) {
             this._updateSelectionInInnerComponents();
@@ -169,7 +164,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
          return changed;
       },
 
-      setStartValue: function (end, silent) {
+      setStartValue: function (start, silent) {
          var changed = MonthRangePicker.superclass.setStartValue.apply(this, arguments);
          if (changed) {
             this._updateSelectionInInnerComponents()
@@ -248,7 +243,8 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
       },
 
       _onActivated: function (e) {
-         this._onRangeItemElementClick(e.getTarget().getMonth());
+         var month = e.getTarget().getMonth();
+         this._onRangeItemElementClick(month, new Date(month.getFullYear(), month.getMonth() + 1, 0));
          if (!this.isSelectionProcessing()) {
             this._updateSelectionInInnerComponents();
          }
