@@ -309,13 +309,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   else{
                      this._changedSelectedKeys.splice(changedSelectionIndex, 1);
                   }
-                  this._buttonChoose.getContainer().toggleClass('ws-invisible', !this._changedSelectedKeys.length);
-                  if ($ws._const.browser.isIE8) {
-                     this._buttonChoose.getContainer().addClass('controls-Button__IE8Hack');
-                     setTimeout(function() {
-                        this._buttonChoose.getContainer().removeClass('controls-Button__IE8Hack');
-                     }.bind(this), 1);
-                  }
+                  this._buttonChoose.getContainer().toggleClass('ws-hidden', !this._changedSelectedKeys.length);
                   selected =  !row.hasClass('controls-DropdownList__item__selected');
                   row.toggleClass('controls-DropdownList__item__selected', selected);
                   this._currentSelection[row.data('id')] = selected;
@@ -354,7 +348,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                DropdownList.superclass.showPicker.apply(this, arguments);
                this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', this._pickerListContainer[0].offsetWidth === this._pickerHeadContainer[0].offsetWidth);
                if (this._buttonChoose) {
-                  this._buttonChoose.getContainer().addClass('ws-invisible');
+                  this._buttonChoose.getContainer().addClass('ws-hidden');
                }
             }
          },
