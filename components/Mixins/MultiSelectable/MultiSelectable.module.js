@@ -573,7 +573,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
              selKeys = this._options.selectedKeys,
              selItems = this._options.selectedItems,
              loadKeysArr = [],
-             items = this.getItems(),
              dMultiResult, item, loadKeysAmount, itemsKeysArr;
 
          if(!loadItems) {
@@ -606,7 +605,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
             }
 
             for (var j = 0; loadKeysAmount > j; j++) {
-               item = items && items.getRecordById(loadKeysArr[j]);
+               item = this.getItems() && this.getItems().getRecordById(loadKeysArr[j]);
 
                /* если запись есть в датасете, то ничего не будем вычитывать */
                if(item) {
