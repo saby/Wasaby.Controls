@@ -1738,7 +1738,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var upperRow = $(rows[i - 1]).length ? $('.controls-ladder', rows[i - 1]) : undefined,
                 lowerRow = $(rows[i]).length ? $('.controls-ladder', rows[i]) : undefined,
                needHide;
-            if (lowerRow) {
+            if (lowerRow && $(rows[i - 1]).attr('data-parent-hash') === $(rows[i]).attr('data-parent-hash')) {
                for (var j = 0; j < lowerRow.length; j++) {
                   needHide = upperRow ? (upperRow.eq(j).html() == lowerRow.eq(j).html()) : false;
                   lowerRow.eq(j).toggleClass('ws-invisible', needHide);
