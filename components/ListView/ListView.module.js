@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
-             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
+             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
              Link, ScrollWatcher, IBindCollection, rk, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder) {
@@ -2805,5 +2805,5 @@ define('js!SBIS3.CONTROLS.ListView',
          }
       });
 
-      return ListView.mixin([BreakClickBySelect]);
+      return ListView.mixin([BreakClickBySelectMixin]);
    });

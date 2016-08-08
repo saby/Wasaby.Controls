@@ -7,10 +7,25 @@ define('js!SBIS3.CONTROLS.BreakClickBySelectMixin', [], function() {
      */
 
     var BreakClickBySelectMixin = /**@lends SBIS3.CONTROLS.BreakClickBySelect.prototype  */{
+        $constructor: function () {
+            var self = this;
+            this._container.bind('mousedown', function () {
+                if (self._hasSelectionInContainer()) {
+                    self._getSelection().removeAllRanges();
+                }
+            });
+        },
+        _hasSelectionInContainer: function() {
+            var selection = this._getSelection();
+            return !selection.isCollapsed && !!this._container.find(selection.focusNode).length;
+        },
+        _getSelection: function() {
+            return $ws._const.browser.isIE8 ? window.getSelectionForIE() : window.getSelection();
+        },
         around: {
             _onClickHandler: function(parentFunc, event) {
-                var selection = $ws._const.browser.isIE8 ? window.getSelectionForIE() : window.getSelection();
-                if (selection.type !== "Range") {
+                //Вызываем обработчик клика, только если нет выделения в контейнере контрола
+                if (!this._hasSelectionInContainer()) {
                     parentFunc.call(this, event);
                 }
             }
