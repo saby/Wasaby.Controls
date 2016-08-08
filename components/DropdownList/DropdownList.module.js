@@ -458,8 +458,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
                      textValues.push(rec.get(self._options.displayField));
                   });
 
-                  if(!textValues.length && self._checkEmptySelection() && this.getItems()) {
-                     textValues.push(this.getItems().at(0).get(self._options.displayField));
+                  if(!textValues.length && self._checkEmptySelection() && self.getItems()) {
+                     textValues.push(self.getItems().at(0).get(self._options.displayField));
                   }
 
                   def.callback(textValues);
