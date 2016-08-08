@@ -198,7 +198,9 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
             };
          this._unregisterDefaultButtonActionFn = this.sendCommand('registerDefaultButtonAction', defaultAction);
 
-         if (!this._unregisterDefaultButtonActionFn) {
+         // если обработчик не был найден, или ближайший обработчик был уже занят другим действием, тогда
+         // регистрируем действие по умолчанию на предка компонента
+         if (!this._unregisterDefaultButtonActionFn || this._unregisterDefaultButtonActionFn === true) {
             var parent = this.getParent();
             if(parent && parent._registerDefaultButtonAction) {
                this._unregisterDefaultButtonActionFn = parent._registerDefaultButtonAction(defaultAction);
