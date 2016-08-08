@@ -45,10 +45,9 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
       },
 
       _itemActivatedHandler : function(hash) {
-         var projItem, key;
+         var projItem;
          projItem = this._getItemsProjection().getByHash(hash);
-         key = projItem.getContents().getId();
-         this.toggleItemsSelection([key]);
+         projItem.setSelected(!projItem.isSelected());
       },
 
       _drawItemsCallback : function() {

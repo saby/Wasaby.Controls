@@ -143,12 +143,40 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
          }
       },
 
+      _projSelectedChange: function(projItem) {
+         var item = projItem.getContents();
+         if (item.getId instanceof Function) {
+            var id, value;
+            id = item.getId();
+            value = projItem.isSelected();
+            if (value == true) {
+               this.addItemsSelection([id])
+            }
+            else {
+               this.removeItemsSelection([id]);
+            }
+
+         }
+      },
+
       after : {
          init: function () {
             if(this._options.selectedItems) {
                this._options.selectedKeys = this._convertToKeys(this._options.selectedItems);
             }
             this._drawSelectedItems(this._options.selectedKeys);
+         },
+         _setItemsEventHandlers: function() {
+            if (!this._onCollectionItemChangeSelected) {
+               this._onCollectionItemChangeSelected = onCollectionItemChangeSelected.bind(this);
+            }
+            this.subscribeTo(this._getItemsProjection(), 'onCollectionItemChange', this._onCollectionItemChangeSelected);
+         },
+         _unsetItemsEventHandlers : function() {
+            if (this._getItemsProjection() && this._onCollectionItemChangeSelected) {
+               this.unsubscribeFrom(this._getItemsProjection(), 'onCollectionItemChange', this._onCollectionItemChangeSelected);
+            }
+
          }
       },
       /**
@@ -828,6 +856,12 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
       return true;
    };
 
+   var
+      onCollectionItemChangeSelected = function(eventObject, item, index, property) {
+         if (property == 'selected') {
+            this._projSelectedChange(item);
+         }
+      };
    return MultiSelectable;
 
 });
