@@ -1860,6 +1860,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._loadNextPage();
                }
                if (this._scrollPager){
+                  //TODO: Это возможно очень долго, надо как то убрать. Нужно для случев, когда ListView создается скрытым, а потом показывается
+                  this._scrollBinder && this._scrollBinder._updateScrollPages();
                   this._setScrollPagerPosition();
                }
             }
