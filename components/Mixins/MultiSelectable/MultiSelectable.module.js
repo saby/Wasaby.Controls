@@ -573,6 +573,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
              selKeys = this._options.selectedKeys,
              selItems = this._options.selectedItems,
              loadKeysArr = [],
+             items = this.getItems(),
              dMultiResult, item, loadKeysAmount, itemsKeysArr;
 
          if(!loadItems) {
@@ -605,7 +606,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
             }
 
             for (var j = 0; loadKeysAmount > j; j++) {
-               item = this.getItems() && this.getItems().getRecordById(loadKeysArr[j]);
+               item = items && items.getRecordById(loadKeysArr[j]);
 
                /* если запись есть в датасете, то ничего не будем вычитывать */
                if(item) {
@@ -613,6 +614,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
                   continue;
                }
 
+               if(!this._dataSource) {
+                  $ws.single.ioc.resolve('ILogger').log('MultiSelectable', 'Потенциальная ошибка. У контрола ' + this.getName() + ' не задан dataSource для вычитки записей.');
+                  continue;
+               }
                dMultiResult.push(this._dataSource.read(loadKeysArr[j]).addCallback(function (record) {
                   selItems.add(record);
                }));
@@ -753,7 +758,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
       },
 
       _checkEmptySelection: function() {
-         return !this._options.selectedKeys.length && this._options.allowEmptyMultiSelection == false;
+         return this._isEmptySelection() && this._options.allowEmptyMultiSelection == false;
       },
 
       _setSelectedItems: function() {
