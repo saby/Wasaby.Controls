@@ -12,9 +12,10 @@ define('js!SBIS3.CONTROLS.SelectorButton',
        'js!SBIS3.CONTROLS.ActiveSelectable',
        'js!SBIS3.CONTROLS.SyncSelectionMixin',
        'js!SBIS3.CONTROLS.ChooserMixin',
-       'js!SBIS3.CONTROLS.IconMixin'
+       'js!SBIS3.CONTROLS.IconMixin',
+       'js!SBIS3.CONTROLS.Utils.Sanitize'
     ],
-    function(dotTplFn, ButtonBase, DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin) {
+    function(dotTplFn, ButtonBase, DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin, Sanitize) {
 
    'use strict';
 
@@ -93,7 +94,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       _setCaption: function(caption) {
          var btnCaption = caption || this._options.defaultCaption;
          SelectorButton.superclass.setCaption.call(this, btnCaption);
-         $('.controls-SelectorButton__text', this._container[0]).text(btnCaption);
+         $('.controls-SelectorButton__text', this._container[0]).html(Sanitize(caption));
       },
 
       _clickHandler: function(e) {
