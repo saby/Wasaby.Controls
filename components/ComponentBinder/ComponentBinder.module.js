@@ -198,6 +198,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
          if (hideCheckBoxes) {
             gridView._container.toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isVisible());
+            gridView.removeItemsSelectionAll();
          }
          if (gridView._options.startScrollColumn !== undefined) {
             gridView.updateScrollAndColumns();
