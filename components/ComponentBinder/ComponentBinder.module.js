@@ -635,13 +635,18 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
          if (isTree){
             view.subscribe('onSetRoot', function(){
+               this._options.paging.setPagesCount(0);
+               this._updateScrollPages(true);
+            }.bind(this));
+
+            view.subscribe('onNodeExpand', function(){
                this._updateScrollPages(true);
             }.bind(this));
          }
 
          paging.subscribe('onSelectedItemChange', function(e, pageNumber){
             var scrollToPage = function(page){
-               view._scrollWatcher.scrollTo(page.offset - view.getContainer().position().top);
+               view._scrollWatcher.scrollTo(page.offset);
             }
             if (pageNumber != this._currentScrollPage && this._scrollPages.length){
                var view = this._options.view,
@@ -692,11 +697,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
       },
 
       _getScrollPage: function(){
-         var view = this._options.view,
-            offsetTop = view.getContainer().position().top;
+         var view = this._options.view;
          for (var i = 0; i < this._scrollPages.length; i++){
             var pageStart = this._scrollPages[i];
-            if (pageStart.element.offset().top + pageStart.element.height() >= offsetTop){
+            if (pageStart.element.offset().top + pageStart.element.height() >= this._offsetTop){
                return i;
             }
          }
@@ -708,9 +712,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             pageHeight = 0,
             lastPageStart = 0,
             self = this,
-            listItems = $('> .controls-ListView__item', view._getItemsContainer()),
+            listItems = $('> .controls-ListView__item', view._getItemsContainer());
             // Нужно учитывать отступ от родителя, что бы правильно скроллить к странице
-            offsetTop = self._options.view.getContainer().position().top;
+            if (!this._offsetTop){
+               this._offsetTop = self._options.view._getItemsContainer().get(0).getBoundingClientRect().top; //itemsContainerTop - containerTop + self._options.view.getContainer().get(0).offsetTop;
+            }
          //Сбрасываем все для пересчета
          if (reset){
             this._scrollPages = [];
@@ -729,12 +735,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                })
             }
          }
-         //Считаем оффсеты страниц начиная с последней (если ее нет - сначала) 
+         //Считаем оффсеты страниц начиная с последней (если ее нет - сначала)
          listItems.slice(lastPageStart).each(function(){
             var $this = $(this);
             pageHeight += $this.height();
             // Если набралось записей на выстору viewport'a добавим еще страницу
-            if (pageHeight  > viewportHeight - offsetTop) {
+            if (pageHeight  > viewportHeight - self._offsetTop) {
                self._pageOffset += pageHeight;
                self._scrollPages.push({
                   element: $this,
@@ -743,13 +749,19 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                pageHeight = 0;
             }
          });
-         if (this._options.paging.getPagesCount() < this._scrollPages.length + 1){
-            this._options.paging.setPagesCount(this._scrollPages.length + 1);
+         
+         var pagesCount = this._scrollPages.length;
+
+         if (this._options.paging.getPagesCount() < pagesCount){
+            if (!this._options.view.getItems().getMetaData().more){
+               pagesCount--;
+               if (pagesCount > 0) {
+                  this._options.view.getContainer().css('padding-bottom', '32px');
+               }            }
+            this._options.paging.setPagesCount(pagesCount);
          }
          //Если есть страницы - покажем paging
-         if (this._scrollPages.length){
-            this._options.paging.setVisible(true);
-         }
+         this._options.paging.setVisible(pagesCount > 1);
       },
 
       destroy: function(){

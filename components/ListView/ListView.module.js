@@ -59,9 +59,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          getRecordsForRedrawLV = function (projection, cfg){
             var records = cfg._getRecordsForRedrawSt.call(this, projection);
-            if (cfg.infiniteScroll === 'up' && this._isSearchMode && !this._isSearchMode()) {
-               return records.reverse();
-            }
             return records;
          };
       var
@@ -783,7 +780,8 @@ define('js!SBIS3.CONTROLS.ListView',
             this._scrollPager = new Paging({
                element: $('.controls-ListView__scrollPager', this._container),
                visible: false,
-               keyField: 'id'
+               keyField: 'id',
+               parent: this
             });
             this._setScrollPagerPosition();
             this._scrollBinder = new ComponentBinder({
@@ -794,7 +792,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onScrollMoveHandler: function(event, scrollTop){
-            if (this._options.infiniteScroll == 'down'){
+            if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                var scrollPage = this._scrollBinder._getScrollPage(scrollTop);
                this._notify('onScrollPageChange', scrollPage);
             }
@@ -1023,7 +1021,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _updateHoveredItem: function(target) {
-            this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
+            this._hasHoveredItem() && this.getHoveredItem().container.removeClass('controls-ListView__hoveredItem');
             target.addClass('controls-ListView__hoveredItem');
             this._hoveredItem = this._getElementData(target);
             this._notifyOnChangeHoveredItem();
@@ -1612,21 +1610,33 @@ define('js!SBIS3.CONTROLS.ListView',
                this._changeHoveredItem(target);
                this._onLeftSwipeHandler();
             } else {
-               this._clearHoveredItem();
                this._onRightSwipeHandler();
+               if(this._hasHoveredItem()) {
+                  this._clearHoveredItem();
+                  this._notifyOnChangeHoveredItem();
+               }
             }
             e.stopPropagation();
          },
 
          _onLeftSwipeHandler: function() {
             if (this._isSupportedItemsToolbar()) {
-               if (this._hoveredItem.key) {
+               if (this._hasHoveredItem()) {
                   this._showItemsToolbar(this._hoveredItem);
                   this.setSelectedKey(this._hoveredItem.key);
                } else {
                   this._hideItemsToolbar();
                }
             }
+         },
+
+         /**
+          * Возвращает, есть ли сейчас выделенный элемент в представлении
+          * @returns {boolean}
+          * @private
+          */
+         _hasHoveredItem: function () {
+            return !!this._hoveredItem.container;
          },
 
          _onRightSwipeHandler: function() {
@@ -1865,7 +1875,6 @@ define('js!SBIS3.CONTROLS.ListView',
                }
                if (this._scrollPager){
                   this._setScrollPagerPosition();
-                  //this._scrollBinder._updateScrollPages(true);
                }
             }
          },
@@ -1915,6 +1924,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param  {String} direction в какую сторону грузим
           */
          _loadNextPage: function (direction) {
+            direction = direction || this._options.infiniteScroll;
             var loadAllowed  = this.isInfiniteScroll(),
                more = this.getItems().getMetaData().more,
                isContainerVisible = $ws.helpers.isElementVisible(this.getContainer()),
@@ -1989,11 +1999,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight();
                this._needSrollTopCompensation = true;
                var items = dataSet.toArray();
-               //FixMe: Оcтавляем переворачивание для контактов, по нормальному надо что бы они присылали данные сразу перевернутыми
-               // и присылать не первую страницу, а последнюю
-               if (this._options.infiniteScroll == 'up'){
-                  items.reverse();
-               }
                this.getItems().prepend(items);
                at = {at: 0};
             }
@@ -2027,15 +2032,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _preScrollLoading: function(){
-            var hasScroll = this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer()),
-               existFloatArea = this._existFloatArea(),
-               isScrollOnBottom = this.isScrollOnBottom();
-
-            //TODO: Возможно тут просто нужно стрелять событием, а это перенести в биндер
-            this._scrollBinder && this._scrollBinder._updateScrollPages();
+            var hasScroll = (function() {
+                  return this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer())
+               }).bind(this);
 
             // Если нет скролла или скролл внизу, значит нужно догружать еще записи (floatArea отжирает скролл, поэтому если она открыта - не грузим)
-            if ((!hasScroll || (isScrollOnBottom && this._options.infiniteScroll == 'down')) && !existFloatArea) {
+            if (!this._existFloatArea() && ((this.isScrollOnBottom() && this._options.infiniteScroll == 'down') || !hasScroll())) {
                this._loadNextPage();
             } else {
                this._moveTopScroll();
