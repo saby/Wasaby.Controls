@@ -259,7 +259,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          _mouseUp: function(e, inside){
             var target = DragObject.getTargetsControl();
             target = target && $ws.helpers.instanceOfMixin('SBIS3.CONTROLS.DragNDropMixinNew', target) ? target : null;
-            if (DragObject.isDragging() && (target === this || !target && DragObject.getOwner() === this)) {
+            if (DragObject.isDragging() && ((target === this || !target && DragObject.getOwner() === this) || inside)) {
                //если есть таргет то запускаем _endDrag над таргетом иначе запускаем над тем кто начал
                this._endDrag(e, inside ? this._findDragDropContainer(e, e.target) : false);
             }
