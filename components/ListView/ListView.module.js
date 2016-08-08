@@ -1258,7 +1258,6 @@ define('js!SBIS3.CONTROLS.ListView',
             this._firstScrollTop = true;
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
-            this._destroyEditInPlace();
             return ListView.superclass.reload.apply(this, arguments);
          },
 
@@ -1423,6 +1422,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._options._decorators.update(this);
             }
             ListView.superclass.redraw.apply(this, arguments);
+            this._destroyEditInPlace();
          },
 
          /**
