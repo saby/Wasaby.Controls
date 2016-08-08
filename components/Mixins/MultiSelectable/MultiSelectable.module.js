@@ -761,8 +761,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
              self = this,
              record, index;
 
-         if (dataSet) {
-            this._syncSelectedItems();
+         if (dataSet && this.getSelectedItems(true).isReady()) {
             $ws.helpers.forEach(this.getSelectedKeys(), function (key) {
                record = dataSet.getRecordById(key);
                if (record) {
