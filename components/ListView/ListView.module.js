@@ -687,7 +687,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _setTouchSupport: function(support) {
-            this._touchSupport = support;
+            this._touchSupport = Boolean(support);
 
             var container = this.getContainer(),
                 toggleClass = container.toggleClass.bind(container, 'controls-ListView__touchMode', this._touchSupport);
