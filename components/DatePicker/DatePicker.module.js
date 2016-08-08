@@ -7,12 +7,12 @@ define(
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
-      'js!SBIS3.CONTROLS.Calendar',
+      'js!SBIS3.CONTROLS.DateRangeBigChoose',
       'html!SBIS3.CONTROLS.DatePicker',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
       'i18n!SBIS3.CONTROLS.DatePicker'
    ],
-   function (FormattedTextBoxBase, PickerMixin, DateUtil, Calendar, dotTplFn, FormWidgetMixin) {
+   function (FormattedTextBoxBase, PickerMixin, DateUtil, DateRangeBigChoose, dotTplFn, FormWidgetMixin) {
 
    'use strict';
 
@@ -212,7 +212,19 @@ define(
              * @noShow
              * @deprecated
              */
-            notificationMode: 'change'
+            notificationMode: 'change',
+
+            pickerConfig: {
+               corner: 'tl',
+               horizontalAlign: {
+                  side: 'left',
+                  offset: -182
+               },
+               verticalAlign: {
+                  side: 'top',
+                  offset: -11
+               }
+            }
          },
          _onFocusInHandler: undefined
       },
@@ -284,7 +296,7 @@ define(
 
                   // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
                   if (self._picker.isVisible() && self._options.date){
-                     self._calendarControl._setDate(self._options.date);
+                     self._chooserControl.setStartValue(self._options.date);
                   }
                }
             });
@@ -323,19 +335,30 @@ define(
 
          this._picker.getContainer().empty();
          // Преобразуем контейнер в контролл Calendar и запоминаем
-         self._calendarControl = new Calendar({
-            parent: self._picker,
-            element: element
+         self._chooserControl = new DateRangeBigChoose({
+            parent: this._picker,
+            element: element,
+            rangeselect: false
          });
 
          // Добавляем в пикер
          this._picker.getContainer().append(element);
 
          // Нажатие на календарный день в пикере устанавливает дату
-         this._calendarControl.subscribe('onDateChange', function(eventObject, date) {
-            self.setDate(date);
-            self.hidePicker();
-         });
+         this._chooserControl.subscribe('onChoose', this._onChooserChange.bind(this));
+         this._chooserControl.subscribe('onCancel', this._onChooserClose.bind(this));
+         // this._chooserControl.subscribe('onDateChange', function(eventObject, date) {
+         //    self.setDate(date);
+         //    self.hidePicker();
+         // });
+      },
+
+      _onChooserChange: function(event, date) {
+         this.setDate(date);
+         this.hidePicker();
+      },
+      _onChooserClose: function(event) {
+         this.hidePicker();
       },
 
       /**

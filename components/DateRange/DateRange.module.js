@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
    'js!SBIS3.CONTROLS.DateRangeBigChoose',
    'i18n!SBIS3.CONTROLS.DateRange',
    'js!SBIS3.CONTROLS.DatePicker',
-   'js!SBIS3.CONTROLS.Button'
+   'js!SBIS3.CONTROLS.IconButton'
 ], function (CompoundControl, PickerMixin, dotTplFn, DateUtil, FormWidgetMixin, RangeMixin, DateRangeBigChoose) {
    'use strict';
    /**
@@ -29,11 +29,11 @@ define('js!SBIS3.CONTROLS.DateRange', [
                corner: 'tl',
                horizontalAlign: {
                   side: 'left',
-                  offset: -142
+                  offset: -146
                },
                verticalAlign: {
                   side: 'top',
-                  offset: -8
+                  offset: -11
                }
             },
             /**

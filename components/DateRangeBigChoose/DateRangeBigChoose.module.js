@@ -46,7 +46,6 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
-               
          },
          // _currentYear: null,
          _state: states.year,
@@ -134,10 +133,11 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          this._endDatePicker.subscribe('onDateChange', this._onDatePickerEndDateChanged.bind(this));
 
          this.subscribe('onRangeChange', this._onRangeChange.bind(this));
+
          if (this._options.rangeselect) {
             this.applyYearState();
          } else {
-            this.applyMonthState(new Date());
+            this.applyMonthState(this._options.startValue? this._options.startValue: new Date());
          }
       },
 
@@ -191,6 +191,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             this._monthRangePicker.setRange(startValue, endValue, true);
          } else if (this._state === states.month) {
             this._dateRangePicker.setRange(startValue, endValue, true);
+            this._dateRangePicker.setMonth(startValue);
          }
 
          if (this.getSelectionType() === selectionTypes.years) {
@@ -371,7 +372,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
 
       // Выбор периода по годам, полугодиям, кварталам и месяцам
       _onRangeBtnClick: function (selectionType, e) {
-         var itemId = _getItemIdFromRangeButtonsEvent(e),
+         var itemId = this._getItemIdByItemContainer(e.getTarget().getContainer()),
             item = this._getSelectedRangeItemByItemId(itemId, selectionType);
          if (this._options.rangeselect) {
             if (selectionType === selectionTypes.months && this._dateRangePicker.isSelectionProcessing()) {
@@ -394,18 +395,18 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
       _onRangeBtnEnter: function (selectionType, e) {
          var itemId;
          if (selectionType === this.getSelectionType()) {
-            itemId = this._getItemIdFromRangeButtonsEvent(e);
+            itemId = this._getItemIdByItemContainer($(e.currentTarget));
             this._onRangeItemElementMouseEnter(this._getSelectedRangeItemByItemId(itemId, selectionType));
          }
          if (selectionType === selectionTypes.months) {
-            itemId = this._getItemIdFromRangeButtonsEvent(e);
+            itemId = this._getItemIdByItemContainer($(e.currentTarget));
             this._dateRangePicker.setMonth(this._getSelectedRangeItemByItemId(itemId, selectionType));
          }
       },
 
-      _getItemIdFromRangeButtonsEvent: function (e) {
+      _getItemIdByItemContainer: function (container) {
          var itemContainer, item;
-         itemContainer = $(e.currentTarget).closest('.controls-RangeSelectable__item');
+         itemContainer = container.closest('.controls-RangeSelectable__item');
          item = parseInt(itemContainer.attr(this._selectedRangeItemIdAtr), 10);
          return item;
       },

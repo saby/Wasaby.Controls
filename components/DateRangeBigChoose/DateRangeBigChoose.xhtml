@@ -16,12 +16,11 @@
                <option name="date" bind="endValue"></option>
             </component>
          </div>
-         <component data-component="SBIS3.CONTROLS.IconButton" name="ApplyButton" class="controls-IconButton__round-border">
-            <!--<option name="icon">sprite:icon-16 icon-Yes icon-done</option>-->
-            <option name="icon">sprite:icon-16 icon-Successful icon-done</option>
+         <component data-component="SBIS3.CONTROLS.IconButton" name="ApplyButton" class="controls-DateRangeBigChoose__ApplyButton controls-IconButton__round-border">
+            <option name="icon">sprite:icon-16 icon-Yes icon-done</option>
          </component>
       </div>
-      <component data-component="SBIS3.CORE.CloseButton" name="CloseButton">
+      <component data-component="SBIS3.CORE.CloseButton" name="CloseButton" class="controls-DateRangeBigChoose__closeButton">
       </component>
    </div>
    <div class="controls-DateRangeBigChoose__years">
@@ -44,7 +43,7 @@
             </div>
             <div class="controls-DateRangeBigChoose__years-panel-wrapper {{? !it.rangeselect }}ws-hidden{{?}}">
                <component data-component="SBIS3.CONTROLS.IconButton" name="BackToYearButton" class="controls-DateRangeBigChoose__years-back">
-                  <option name="icon">sprite:icon-24 icon-Calendar icon-primary</option>
+                  <option name="icon">sprite:icon-24 icon-Calendar2 icon-primary</option>
                   <option name="visible" type="boolean">false</option>
                </component>
             </div>

@@ -69,9 +69,10 @@
    .controls-DateRangeBigChoose__header {
       background-color: #f9f9f9;
       border-bottom: 1px solid @borders-color;
-      padding: 8px 0 8px 8px;
+      padding: 7px 0 8px 8px;
 
       .controls-DateRangeBigChoose__homeBtn {
+         margin-top: 1px;
          height: 24px;
          width: 24px;
          font-size: 14px !important;
@@ -81,6 +82,12 @@
       .controls-DateRangeBigChoose__header-date-pickers {
          float: right;
          margin-right: 40px;
+      }
+      .controls-DateRangeBigChoose__ApplyButton {
+         margin-left: 2px;
+      }
+      .controls-DateRangeBigChoose__closeButton {
+         margin-top: 1px;
       }
    }
 
@@ -107,6 +114,10 @@
       padding: 8px 0;
       vertical-align: middle;
       .box-sizing(border-box);
+
+      .controls-DateRangeBigChoose__years-back {
+         font-weight: normal;
+      }
 
       .controls-DateRangeBigChoose__yearsRange {
          .range-button-bar-mixin();
