@@ -220,8 +220,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                self.hidePicker();
             });
             if(this._options.mode === 'hover') {
-               this._pickerHeadContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, true));
-               this._pickerBodyContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, false));
+               pickerContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this));
             }
             else if (this._options.mode === 'click'){
                this._pickerHeadContainer.click(this.hidePicker.bind(this));
@@ -366,8 +365,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             return this._picker.getContainer();
          },
-         _pickerMouseLeaveHandler: function(fromHeader, e) {
-            if(this._hideAllowed && !$(e.toElement || e.relatedTarget).closest('.controls-DropdownList__' + (fromHeader ? 'body' : 'header')).length) {
+         _pickerMouseLeaveHandler: function(e) {
+            if(this._hideAllowed && !$(e.toElement || e.relatedTarget).closest('.controls-DropdownList__picker').length) {
                this.hidePicker();
             }
          },
