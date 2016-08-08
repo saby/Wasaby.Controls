@@ -8,6 +8,11 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
    'js!SBIS3.CONTROLS.MenuLink',
    'js!SBIS3.CORE.DialogSelector'
 ], function(MenuLink, Dialog) {
+   //TODO: ограничение на максимальное количество записей, получаемое на клиент для печати/выгрузки.
+   //Необходимо т.к. на сервере сейчас невозможно произвести xsl преобразование. Выписана задача:
+   //(https://inside.tensor.ru/opendoc.html?guid=f852d5cc-b75e-4957-9635-3401e1832e80&description=)
+   //Когда задача будет сделана, нужно перейти полностью на серверные механизмы выгрузки и печати.
+   var MAX_RECORDS_COUNT = 20000;
    /**
     * Базовый контрол для работы с ListView. Подготовливает данные для печати и выгрузки
     * @class SBIS3.CONTROLS.PrintUnloadBase
@@ -173,7 +178,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
             self = this;
          $ws.helpers.question('Операция займет продолжительное время. Провести операцию?', {}, self).addCallback(function(answer){
             if (answer) {
-               self._getView()._callQuery(self._getView().getFilter(), self._getView().getSorting(),0,  pageSize).addCallback(function (dataSet) {
+               self._getView()._callQuery(self._getView().getFilter(), self._getView().getSorting(),0,  pageSize || MAX_RECORDS_COUNT).addCallback(function (dataSet) {
                   deferred.callback(dataSet)
                });
             } else{
