@@ -751,7 +751,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.input);
 				actions.sendKeys(this.input, 'tensor\nflow');
 				actions.sendKeys(this.input, gemini.SHIFT+gemini.ARROW_LEFT);
-				actions.click(this.smile_menu);
+				actions.mouseMove(this.smile_menu);
 			})
     });
 });
