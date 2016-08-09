@@ -670,7 +670,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          view.subscribe('onScrollPageChange', function(e, page){
             var newKey, curKey,
                paging = this._options.paging;
-            if (page >= 0) {
+            if (page >= 0 && paging.getItems()) {
                newKey = page + 1;
                curKey = parseInt(paging.getSelectedKey(), 10);
                if (curKey != newKey) {
