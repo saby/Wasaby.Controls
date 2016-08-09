@@ -34,10 +34,11 @@ define(
     * @extends SBIS3.CONTROLS.RadioGroupBase
     * @author Крайнов Дмитрий Олегович
     * @public
-    * @cssModifier controls-TabButton__counter success|error
     * @demo SBIS3.CONTROLS.Demo.MyTabButtons
     *
     * @cssModifier controls-TabButtons__simple-view Модификатор для вкладок второго уровня
+    * @cssModifier controls-TabButtons__simple-view-mini Модификатор для неакцентных вкладок второго уровня
+    * @cssModifier controls-TabButton__counter success|error
     */
    var
       buildTplArgs = function(cfg) {
