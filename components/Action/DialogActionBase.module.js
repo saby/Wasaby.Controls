@@ -111,7 +111,13 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          this._linkedModelKey = meta.id;
          //Производим корректировку идентификатора только в случае, когда идентификатор передан
          if (meta.hasOwnProperty('id')) {
-            meta.id = this._getEditKey(meta.item) || meta.id;
+            var newKey = this._getEditKey(meta.item);
+            //Если передали ключ из getEditKey - значит FC будет работать с новой записью,
+            //вычитанной по этому ключу
+            if (newKey && newKey !== meta.id){
+               meta.id = newKey;
+               meta.item = null;
+            }
          }
 
          var self = this,
