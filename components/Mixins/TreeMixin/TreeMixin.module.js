@@ -588,6 +588,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                self._options._items.getTreeIndex(self._options.hierField, true);
                self._updateItemsToolbar();
                self._dataLoadedCallback();
+               self._createFolderFooter(id);
             }
 
          }, self)).addErrback(function (error) {
