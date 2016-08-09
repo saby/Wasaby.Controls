@@ -290,7 +290,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          /* Т.к. у нас в вёрстке две иконки, то позиционируем в зависимости от той, которая показывается,
             в .200 переделаем на маркер */
          if(arrowContainer.length === 2) {
-            if (folderTitle[0].offsetWidth > td[0].offsetWidth) {
+            /* Для стандартного отображения учитываем паддинги и ширину икноки разворота папки */
+            if ((folderTitle[0].offsetWidth + HIER_WRAPPER_WIDTH + ADDITIONAL_LEVEL_OFFSET) > td[0].offsetWidth) {
                arrowContainer = arrowContainer[1];
             } else {
                arrowContainer = arrowContainer[0];
