@@ -3,6 +3,14 @@
    &.controls-IconButton__round-border{
       padding-right: 0;
    }
+   // при открытии меню шрифт TensorBold не успевал подгружаться и происходил сдвиг меню,
+   // т.к. браузер неправильно делал расчет ширины контента
+   &:after {
+      font-family: 'TensorFont Regular', 'TensorFont';
+      font-weight: bold;
+      content: '';
+   }
+
 }
 // Menu
 .controls-MenuIcon__Menu {

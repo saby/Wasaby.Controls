@@ -73,10 +73,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
             iconClass = options._iconClass;
          if (iconClass) {
             options._moreClass = '';
-            if ((iconClass.indexOf('icon-error') < 0) && (iconClass.indexOf('icon-done') < 0)) {
-               options._moreClass += ' action-hover';
-            }
-            else {
+            if (((iconClass.indexOf('icon-error') >= 0) || (iconClass.indexOf('icon-done') >= 0))){
                if (iconClass.indexOf('icon-error') >= 0) {
                   options._moreClass += ' controls-IconButton__errorBorder';
                }
