@@ -1,4 +1,3 @@
-/*
 var gemini = require('gemini');
 
 gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
@@ -75,16 +74,18 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.addLink);
 				actions.waitForElementToShow('input[name="fre_link_href"]', 2000);
 				actions.waitForElementToShow('.ws-window-titlebar-action.close', 2000);
+				actions.sendKeys(this.linkInput, 'http://yandex.ru/');
+				actions.sendKeys(this.linkInput, gemini.SHIFT+gemini.CONTROL+gemini.ARROW_LEFT);
 			})
 
 			.capture('with_link', function (actions) {
-				actions.sendKeys(this.linkInput, 'http://yandex.ru/');
 				actions.click(this.ok);
 				actions.wait(500);
 			})				
 
 			.capture('closed_toolbar', function (actions) {
 				actions.click(this.toolbar);
+				actions.click(this.input2);
 				actions.wait(500);
 			})
 			
@@ -696,4 +697,61 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
                 });	
 			})
     });
-});*/
+	
+	gemini.suite('surounded_editors', function (test) {
+
+        test.setUrl('/IntRichFieldEditor16.html').setCaptureElements('html')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
+				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__EditorFrame');
+				this.input2 = find('[sbisname="FieldRichEditor 2"] .controls-RichEditor__EditorFrame');
+				this.input3 = find('[sbisname="FieldRichEditor 3"] .controls-RichEditor__EditorFrame');
+				actions.wait(500);				
+            })
+
+            .capture('plain')
+			
+			.capture('with_text', function (actions) {
+				actions.click(this.input)
+				actions.sendKeys(this.input, 'tensor\nflow');
+				actions.sendKeys(this.input, gemini.SHIFT+gemini.ARROW_LEFT);
+			})
+			
+			.capture('with_smile', function (actions) {
+				actions.sendKeys(this.input, gemini.ARROW_RIGHT);
+				actions.sendKeys(this.input, gemini.ENTER);
+				actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').insertSmile('Devil');
+                });
+				actions.sendKeys(this.input, gemini.ARROW_UP);
+				actions.sendKeys(this.input, gemini.SHIFT+gemini.ARROW_LEFT);
+			})
+			
+			.capture('disabled', function (actions) {
+				actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').setEnabled(false);
+                });
+			})			
+    });
+
+    gemini.suite('smile_menu', function (test) {
+
+        test.setUrl('/IntRichFieldEditor19.html').setCaptureElements('html')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
+				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__EditorFrame');
+				actions.waitForElementToShow('[sbisname="smile"]', 40000);
+				this.smile_menu = find('[sbisname="smile"]');
+				actions.wait(500);
+            })
+
+			.capture('opened_smile_menu', function (actions) {
+				actions.click(this.input);
+				actions.sendKeys(this.input, 'tensor\nflow');
+				actions.sendKeys(this.input, gemini.SHIFT+gemini.ARROW_LEFT);
+				actions.click(this.smile_menu);
+			})
+    });
+});
