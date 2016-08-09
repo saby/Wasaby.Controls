@@ -447,27 +447,24 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var textValues = [],
                 len = id.length,
                 self = this,
-                record,
                 pickerContainer,
                 def;
 
             if(len) {
                def = new $ws.proto.Deferred();
 
-               if(this._dataSet) {
-                  for(var i = 0; i < len; i++) {
-                     record = this._dataSet.getRecordByKey(id[i]);
-                     if (record){ //После установки новых данных, не все ключи останутся актуальными
-                        textValues.push(record.get(this._options.displayField));
-                     }
+               this.getSelectedItems(true).addCallback(function(list) {
+                  list.each(function(rec) {
+                     textValues.push(rec.get(self._options.displayField));
+                  });
+
+                  if(!textValues.length && self._checkEmptySelection() && self.getItems()) {
+                     textValues.push(self.getItems().at(0).get(self._options.displayField));
                   }
+
                   def.callback(textValues);
-               } else {
-                  //TODO переделать, когда БЛ научится отдавать несколько записей при чтении
-                  this._dataSource.read(id[0]).addCallback(function(record) {
-                     def.callback([record.get(self._options.displayField)]);
-                  })
-               }
+                  return list;
+               });
 
                def.addCallback(function(textValue) {
                   pickerContainer = self._getPickerContainer();

@@ -613,6 +613,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
                   continue;
                }
 
+               if(!this._dataSource) {
+                  $ws.single.ioc.resolve('ILogger').log('MultiSelectable', 'Потенциальная ошибка. У контрола ' + this.getName() + ' не задан dataSource для вычитки записей.');
+                  continue;
+               }
                dMultiResult.push(this._dataSource.read(loadKeysArr[j]).addCallback(function (record) {
                   selItems.add(record);
                }));
@@ -753,7 +757,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
       },
 
       _checkEmptySelection: function() {
-         return !this._options.selectedKeys.length && this._options.allowEmptyMultiSelection == false;
+         return this._isEmptySelection() && this._options.allowEmptyMultiSelection == false;
       },
 
       _setSelectedItems: function() {
