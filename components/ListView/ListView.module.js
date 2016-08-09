@@ -2043,7 +2043,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _moveTopScroll : function(){
             var scrollAmount;
             //сюда попадем только когда уже точно есть скролл
-            if (this.isInfiniteScroll() && this._scrollDirection == 'top' && this._needSrollTopCompensation){
+            if (this.isInfiniteScroll() && this._scrollDirection !== 'down' && (this._needSrollTopCompensation || this._firstScrollTop)){
                scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
                this._needSrollTopCompensation = false;
                //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
