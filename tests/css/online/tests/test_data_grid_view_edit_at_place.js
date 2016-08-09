@@ -541,7 +541,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 
     gemini.suite('items_actions_on_column_template', function (test) {
 
-        test.setUrl('/regression_data_grid_view_edit_at_place_online_12.html').setCaptureElements('html')
+        test.setUrl('/regression_data_grid_view_edit_at_place_online_13.html').setCaptureElements('html')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
