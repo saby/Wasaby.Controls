@@ -911,6 +911,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             else if (this._options.closeByExternalClick) {
                $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentClick', this._clickHandler, this);
             }
+            // Освобождаем оверлей если забирали его
+            if (this._options.isModal){
+               this._setModal(false);
+            }
          },
          hide: function() {
             $ws.helpers.trackElement(this._options.target, false);

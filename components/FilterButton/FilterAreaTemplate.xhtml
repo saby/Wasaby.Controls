@@ -17,7 +17,7 @@
             {{?it.template}}{{=it.template()}}{{?}}
         </div>
     </div>
-    <div class="controls__filterButton__area-footer">
+    <div class="controls__filterButton__area-footer {{? !it.historyController && !it.additionalFilterParamsTemplate}}ws-hidden{{?}}">
         {{? it.additionalFilterParamsTemplate}}
             <component data-component="SBIS3.CONTROLS.AdditionalFilterParams" name="additionalFilterParams">
                 <opt name="template" type="ref">{{@it.additionalFilterParamsTemplate}}</opt>

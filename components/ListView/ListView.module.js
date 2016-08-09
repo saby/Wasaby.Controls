@@ -1258,7 +1258,6 @@ define('js!SBIS3.CONTROLS.ListView',
             this._firstScrollTop = true;
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
-            this._destroyEditInPlace();
             return ListView.superclass.reload.apply(this, arguments);
          },
 
@@ -1423,6 +1422,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._options._decorators.update(this);
             }
             ListView.superclass.redraw.apply(this, arguments);
+            this._destroyEditInPlace();
          },
 
          /**
@@ -1860,6 +1860,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._loadNextPage();
                }
                if (this._scrollPager){
+                  //TODO: Это возможно очень долго, надо как то убрать. Нужно для случев, когда ListView создается скрытым, а потом показывается
+                  this._scrollBinder && this._scrollBinder._updateScrollPages();
                   this._setScrollPagerPosition();
                }
             }
@@ -2218,7 +2220,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   if (self._showedLoading) {
                      scrollContainer = self._getScrollContainer();
                      indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
-                     if(scrollContainer && container[0].scrollHeight > scrollContainer[0].offsetHeight) {
+                     if(indicator.length && scrollContainer && container[0].scrollHeight > scrollContainer[0].offsetHeight) {
                         /* Ищем кординату, которая находится по середине отображаемой области грида */
                         centerCord =
                            (Math.max(scrollContainer[0].getBoundingClientRect().bottom, 0) - Math.max(container[0].getBoundingClientRect().top, 0))/2;

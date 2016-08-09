@@ -58,8 +58,8 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
 
          /* Подготавливаем query */
          query.where(queryFilter)
-              .offset(offset || 0)
-              .limit(limit || 25)
+              .offset(offset !== undefined ? offset : 0)
+              .limit(limit !== undefined ? limit : 25)
               .orderBy(sorting || {});
 
          queryDef = source.query(query);

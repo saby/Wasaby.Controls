@@ -290,7 +290,7 @@ define('js!SBIS3.CONTROLS.Image',
                if (dataSource) {
                   this._loadImage($ws.helpers.prepareGetRPCInvocationURL(dataSource.getEndpoint().contract,
                      dataSource.getBinding().read, this._options.filter, $ws.proto.BLObject.RETURN_TYPE_ASIS));
-               } else {
+               } else if (this._imageUrl != this._options.defaultImage) {
                   this._loadImage(this._options.defaultImage);
                }
             },
