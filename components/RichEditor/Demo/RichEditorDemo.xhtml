@@ -1,9 +1,11 @@
 <div>
-   <component data-component="SBIS3.CONTROLS.RichEditor" name="RichEditorDemo" style="height:298px;">
-      <option name="text" bind="RichEditorDemo">text</option>
-   </component>
-   TextBox с Биндингом на контекст (на поле TextBox):
-   <component data-component="SBIS3.CONTROLS.TextBox" name="TextBox" style="border:1px solid red">
-      <option name="text" bind="TextBox" />
+   <component data-component="SBIS3.CONTROLS.RichEditor" name="RichEditor" style="height:298px;">
+      <option name="text" bind="RichEditor">text</option>
+      <options name="items" type ="array">
+         <options>
+            <option name="name">smile</option>
+            <option name="visible">{{=!$ws._const.browser.isIE8}}</option>
+         </options>
+      </options>
    </component>
 </div>

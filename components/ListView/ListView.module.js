@@ -83,6 +83,8 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__pagerNoAmount Скрыть отображение количества записей на странице в пейджинге.
        * @cssModifier controls-ListView__pagerHideEndButton Скрыть кнопку "Перейти к последней странице"
        * Т.е. текст "1-10" при отображении 10 записей на 1-ой странице
+       *
+       * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
@@ -2612,7 +2614,10 @@ define('js!SBIS3.CONTROLS.ListView',
             //Как временное решение добавлена проверка на SBIS3.CONTROLS.TextBoxBase.
             //Необходимо разобраться можно ли на уровне TextBoxBase или Control для события mousedown
             //сделать stopPropagation, тогда от данной проверки можно будет избавиться.
-            return !this._isShifted && this._options.enabled && !$ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
+            return !this._isShifted &&
+                   this._options.enabled &&
+                   !$ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase') &&
+                   !$(e.target).closest('.controls-DragNDropMixin__notDraggable').length;
          },
          _onDragStart: function(e) {
             var

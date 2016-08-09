@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton', ['js!SBIS3.CONTROLS.
       },
       _modifyOptions: function (options) {
          options = RichEditorMenuButton.superclass._modifyOptions.apply(this, arguments);
-         options.pickerClassName = options.pickerClassName + ' controls-MenuButton__Menu controls-RichEditor__MenuButtonPicker';
+         options.pickerClassName = options.pickerClassName + ' controls-MenuButton__Menu controls-RichEditorToolbar__menuButtonPicker';
          options.pickerClassName = options.withoutHeader ? options.pickerClassName + ' controls-MenuButton__withoutHeader' : options.pickerClassName;
          return options;
       },
@@ -57,14 +57,13 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton', ['js!SBIS3.CONTROLS.
             event.stopPropagation();
          });
       },
-
       _setPickerSizes: function() {
          this._picker && this._picker.getContainer().css({'min-width': this.getContainer().outerWidth() - this._border});
       },
 
       _setHeaderSizes: function() {
          RichEditorMenuButton.superclass._setHeaderSizes.apply(this, arguments);
-         this._header.addClass('controls-RichEditor__MenuButtonHeader');
+         this._header.addClass('controls-RichEditorToolbar__menuButtonHeader');
       },
 
       _clickHandler: function(){
