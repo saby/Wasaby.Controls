@@ -126,7 +126,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          setItems: function(list) {
-            list = list ? list.clone() : [];
+            list = list ? list : [];
             FieldLinkItemsCollection.superclass.setItems.call(this, list);
          },
 
