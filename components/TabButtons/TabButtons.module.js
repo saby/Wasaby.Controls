@@ -34,7 +34,10 @@ define(
     * @extends SBIS3.CONTROLS.RadioGroupBase
     * @author Крайнов Дмитрий Олегович
     * @public
+    * @cssModifier controls-TabButton__counter success|error
     * @demo SBIS3.CONTROLS.Demo.MyTabButtons
+    *
+    * @cssModifier controls-TabButtons__simple-view Модификатор для вкладок второго уровня
     */
    var
       buildTplArgs = function(cfg) {
@@ -94,6 +97,16 @@ define(
          if (opts.tabSpaceTemplate) {
             opts.tabSpaceTemplate = MarkupTransformer(TemplateUtil.prepareTemplate(opts.tabSpaceTemplate));
          }
+         var items = opts.items;
+         if (items){
+            for (var i = 0, l = opts.items.length; i < l; i++){
+               items[i][opts.displayField] = MarkupTransformer(TemplateUtil.prepareTemplate(items[i][opts.displayField])({
+                  item: items[i],
+                  options: opts
+               }));
+            }
+         }
+
          return opts;
       },
 
