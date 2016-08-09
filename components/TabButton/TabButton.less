@@ -21,6 +21,49 @@
       }
    }
 
+   &.controls-TabButton__counter{
+     &.controls-Checked__checked .controls-TabButton__inner *{
+       color: #D94700;
+     }
+     .counter{
+       font-size: 14px;
+       color: #FF7033;
+       display: inline-block;
+     }
+     &.success{
+       &.controls-Checked__checked .controls-TabButton__inner *{
+         color: #569034;
+       }
+       .counter{
+         color: #72BE44;
+       }
+     }
+     &.error{
+       &.controls-Checked__checked .controls-TabButton__inner *{
+         color: #EF463A;
+       }
+       .counter{
+         color: #EF463A;
+       }
+     }
+   }
+
+  &.controls-TabButton__counter-checked{
+    &.controls-Checked__checked .controls-TabButton__inner *{
+      color: #D94700!important; /* здесь нужно перебить цвет иконки, который задан через important */
+    }
+    &.success{
+      &.controls-Checked__checked .controls-TabButton__inner *{
+        color: #569034!important;
+      }
+    }
+    &.error{
+      &.controls-Checked__checked .controls-TabButton__inner *{
+        color: #EF463A!important;
+      }
+    }
+  }
+
    //Для редактирования по месту групп, убираем крайние отступы, т.к. они уже предусмотрены классом controls-TabButton__inner
    .controls-EditAtPlaceGroup.ws-disabled{
       margin-left:-1px;
@@ -153,15 +196,6 @@
       }
    }
 
-   &.controls-TabButton__counter{
-      &.controls-Checked__checked {
-         .controls-TabButton__inner {
-            font-weight: @tab-button-counter-font-weight;
-            font-size: @tab-button-counter-font-size;
-         }
-      }
-   }
-
    &.controls-TabButton__right-align {
       margin-right: @tab-button-right-margin-right;
       .controls-TabButton__inner:before{
@@ -208,5 +242,43 @@
 @-moz-document url-prefix() {
   .controls-TabButton.controls-TabButton__main-item .controls-TabButton__inner{
     line-height: 27px;
+  }
+}
+
+.controls-TabButtons__simple-view{
+  .controls-TabButton {
+    border-color: transparent;
+    .controls-TabButton__inner{
+      border-color: transparent;
+      color: #313E78;
+      &:before{
+        display: block;
+        z-index: 1000;
+      }
+    }
+    .controls-TabButton__bottomLine{
+      height: 3px;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      position: absolute;
+      display: block;
+    }
+    &.controls-Checked__checked {
+      .controls-TabButton__inner{
+        color: #0055BB;
+        background: transparent;
+        padding: 0 6px;
+      }
+      .controls-TabButton__bottomLine{
+        background: #0055BB!important;
+      }
+    }
+    &:hover {
+      background: transparent;
+      .controls-TabButton__bottomLine{
+        background: #E4E4E4;
+      }
+    }
   }
 }
