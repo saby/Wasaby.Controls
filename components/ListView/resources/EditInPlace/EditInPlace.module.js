@@ -285,10 +285,9 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                      'idProperty': record.getIdProperty(),
                      'format': []
                   });
-               if (recordSet && recordSet.getFormat().getCount()) {
+               format = record.getFormat();
+               if (!format.getCount() && recordSet && recordSet.getFormat().getCount()) {
                   format = recordSet.getFormat();
-               } else {
-                  format = record.getFormat();
                }
                format.each(function(field) {
                   fieldName = field.getName();
