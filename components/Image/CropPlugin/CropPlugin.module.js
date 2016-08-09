@@ -128,10 +128,10 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
                return false;
             }
             filter = {
-               left: coords.x,
-               top: coords.y,
-               width: coords.w,
-               height: coords.h,
+               left: parseInt(coords.x,10),
+               top: parseInt(coords.y,10),
+               width: parseInt(coords.w,10),
+               height: parseInt(coords.h,10),
                realWidth: this._imageProperties.realWidth,
                realHeight: this._imageProperties.realHeight,
                coefficient: this._imageProperties.coefficient
