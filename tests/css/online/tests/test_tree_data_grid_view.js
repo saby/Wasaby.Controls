@@ -60,8 +60,19 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
                 actions.mouseMove(this.arrow);
 				actions.wait(500);
             })
+
+			.capture('disabled', function (actions) {
+                actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('TreeDataGridView 1').setEnabled(false);
+                });
+            })
+
+			.capture('disabled_and_hovered_edit_arrow', function (actions) {
+				actions.mouseMove(this.arrow);
+				actions.wait(500);
+            })
     });
-	
+
 	gemini.suite('has_separator', function (test) {
 
         test.setUrl('/regression_tree_data_grid_view_online_9.html').setCaptureElements('.capture')
@@ -371,6 +382,45 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
             .capture('expanded', function (actions) {
 				actions.click(this.input);
+            })
+    });
+
+	gemini.suite('dots_on_ellipsis_column', function (test) {
+
+        test.setUrl('/regression_tree_data_grid_view_online_4.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
+                this.data1 = find('[data-id="1"]');
+				this.data1_box = find('[data-id="1"] .controls-ListView__itemCheckBox');
+				this.data3 = find('[data-id="3"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+				this.input = find('[sbisname="TextBox 1"] input');
+            })
+
+            .capture('with_checkbox_on', function (actions) {
+                actions.mouseMove(this.data1);
+				actions.click(this.data1_box);
+				actions.mouseMove(this.data3);
+            })
+
+			.capture('hovered_row', function (actions) {
+                actions.mouseMove(this.data1);
+            })
+    });
+
+    gemini.suite('with_hidden_row', function (test) {
+
+        test.setUrl('/regression_tree_data_grid_view_online_15.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+				this.input = find('[sbisname="TextBox 1"] input');
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.input);
             })
     });
 });
