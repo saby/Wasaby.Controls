@@ -633,7 +633,8 @@ define('js!SBIS3.CONTROLS.ListView',
             _scrollOnBottom: true, // TODO: Придрот для скролла вниз при первой подгрузке. Если включена подгрузка вверх то изначально нужно проскроллить контейнер вниз,
             //но после загрузки могут долетать данные (картинки в docviewer например), которые будут скроллить вверх.
             _scrollOnBottomTimer: null, //TODO: см. строчкой выше
-            _componentBinder: null
+            _componentBinder: null,
+            _touchSupport: false
          },
 
          $constructor: function () {
