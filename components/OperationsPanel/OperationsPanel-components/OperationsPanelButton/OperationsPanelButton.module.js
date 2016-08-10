@@ -63,11 +63,13 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
             //Проверка для совместимости со тарой панелью операций, у которой метод toggle влияет на видимость
             linkedPanel[$ws.helpers.instanceOfModule(linkedPanel, 'SBIS3.CONTROLS.OperationsPanel') ? 'toggle' : 'togglePanel']();
          }
-
-         // check-аем кнопку сразу при нажатии, через superclass
-         // uncheck-аем по событию от панели (см. метод _onTogglePanel)
-         if (!this.isChecked()){
-            OperationsPanelButton.superclass._clickHandler.apply(this);
+         OperationsPanelButton.superclass._clickHandler.apply(this);
+      },
+      _changeCheckedByClick: function() {
+         // check-аем кнопку сразу при нажатии
+         // uncheck-аем когда панель анимирует своё закрыти, по событию от панели (см. метод _onTogglePanel)
+         if (!this.isChecked()) {
+            this.setChecked(true);
          }
       },
       /**
