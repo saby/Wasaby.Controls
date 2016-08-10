@@ -634,7 +634,8 @@ define('js!SBIS3.CONTROLS.ListView',
             _scrollOnBottom: true, // TODO: Придрот для скролла вниз при первой подгрузке. Если включена подгрузка вверх то изначально нужно проскроллить контейнер вниз,
             //но после загрузки могут долетать данные (картинки в docviewer например), которые будут скроллить вверх.
             _scrollOnBottomTimer: null, //TODO: см. строчкой выше
-            _componentBinder: null
+            _componentBinder: null,
+            _touchSupport: false
          },
 
          $constructor: function () {
@@ -688,6 +689,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _setTouchSupport: function(support) {
+            var currentTouch = this._touchSupport;
             this._touchSupport = Boolean(support);
 
             var container = this.getContainer(),
@@ -698,7 +700,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   toggleClass();
                   this._itemsToolbar.setTouchMode(this._touchSupport);
                }
-            } else {
+            } else if(currentTouch !== this._touchSupport) {
                toggleClass();
             }
          },
@@ -706,8 +708,10 @@ define('js!SBIS3.CONTROLS.ListView',
          _eventProxyHandler: function(e) {
             var originalEvent = e.originalEvent;
             /* Надо проверять mousemove на срабатывание на touch устройствах,
-               т.к. оно стреляет после тапа */
-            this._setTouchSupport(Array.indexOf(['swipe', 'tap'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY));
+               т.к. оно стреляет после тапа. После тапа событие mousemove имеет нулевой сдвиг, поэтому обрабатываем его как touch событие
+                + добавляю проверку, что до этого мы были в touch режиме,
+               это надо например для тестов, в которых эмулирется событие mousemove так же без сдвига, как и на touch устройствах. */
+            this._setTouchSupport(Array.indexOf(['swipe', 'tap'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && this._touchSupport));
 
             switch (e.type) {
                case 'mousemove':
@@ -944,7 +948,7 @@ define('js!SBIS3.CONTROLS.ListView',
                id = this._getItemsProjection().getByHash(target.data('hash')).getContents().getId();
                this._elemClickHandler(id, this.getItems().getRecordByKey(id), e.target);
             }
-            if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox') && this.isEnabled()){
+            if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox')){
                $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
                $target.toggleClass('controls-DataGridView__th__checkBox__checked');
             }
@@ -1208,9 +1212,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._notify('onItemClick', id, data, target);
          },
          _onCheckBoxClick: function(target) {
-            if (this.isEnabled()) {
-               this.toggleItemsSelection([target.closest('.controls-ListView__item').attr('data-id')]);
-            }
+            this.toggleItemsSelection([target.closest('.controls-ListView__item').attr('data-id')]);
          },
 
          _elemClickHandlerInternal: function (data, id, target) {
