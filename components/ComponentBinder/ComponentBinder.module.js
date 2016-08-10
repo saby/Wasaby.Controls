@@ -722,6 +722,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             lastPageStart = 0,
             self = this,
             listItems = $('> .controls-ListView__item', view._getItemsContainer());
+
+            //Если элементов в верстке то нечего и считать
+            if (!listItems.length){
+               return;
+            }
+
             // Нужно учитывать отступ от родителя, что бы правильно скроллить к странице
             if (!this._offsetTop){
                this._offsetTop = self._options.view._getItemsContainer().get(0).getBoundingClientRect().top; //itemsContainerTop - containerTop + self._options.view.getContainer().get(0).offsetTop;
