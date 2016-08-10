@@ -636,8 +636,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
          if (isTree){
             view.subscribe('onSetRoot', function(){
-               this._options.paging.setPagesCount(0);
-               this._updateScrollPages(true);
+               var curRoot = view.getCurrentRoot();
+               if (this._currentRoot !== curRoot){
+                  this._options.paging.setPagesCount(0);
+                  this._updateScrollPages(true);
+                  this._currentRoot = curRoot;
+               }
             }.bind(this));
 
             view.subscribe('onNodeExpand', function(){
