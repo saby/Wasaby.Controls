@@ -2232,7 +2232,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._showedLoading = show;
             if (show) {
                setTimeout(function(){
-                  if (self._showedLoading) {
+                  if (!self.isDestroyed() && self._showedLoading) {
                      scrollContainer = self._getScrollContainer();
                      indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
                      if(indicator.length && scrollContainer && container[0].scrollHeight > scrollContainer[0].offsetHeight) {
