@@ -94,7 +94,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          if (cfg.openedPath.hasOwnProperty(idx)) {
             item = projection.getItemBySourceItem(cfg._items.getRecordById(idx));
             if (item && !item.isExpanded()) {
-               item.setExpanded(true);
+               // Внимание! Даже не пытаться выпилить этот код! Логика заключается в том, что после перезагрузки данных (reload) нужно удалять из списка ветки, для которых
+               // из источника данных не пришли дочерние элементы. Если разработчик желает оставить папки развернутыми - пусть присылает при reload их дочерние элементы.
+               // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
+               if (projection.getCollection().getChildItems(item.getContents().getId(), undefined, projection.getParentProperty()).length) {
+                  item.setExpanded(true);
+               } else {
+                  delete cfg.openedPath[idx];
+               }
             }
          }
       }
@@ -588,6 +595,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                self._options._items.getTreeIndex(self._options.hierField, true);
                self._updateItemsToolbar();
                self._dataLoadedCallback();
+               self._createFolderFooter(id);
             }
 
          }, self)).addErrback(function (error) {

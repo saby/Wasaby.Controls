@@ -178,8 +178,11 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
             self = this;
          $ws.helpers.question('Операция займет продолжительное время. Провести операцию?', {}, self).addCallback(function(answer){
             if (answer) {
+               $ws.helpers.toggleIndicator(true);
                self._getView()._callQuery(self._getView().getFilter(), self._getView().getSorting(),0,  pageSize || MAX_RECORDS_COUNT).addCallback(function (dataSet) {
                   deferred.callback(dataSet)
+               }).addBoth(function() {
+                  $ws.helpers.toggleIndicator(false);
                });
             } else{
                deferred.errback();
