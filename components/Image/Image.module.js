@@ -287,7 +287,7 @@ define('js!SBIS3.CONTROLS.Image',
             reload: function() {
               var
                  url = this._getSourceUrl();
-               if (url !== false) {
+               if (url !== '') {
                   this._loadImage(url);
                }
             },
@@ -317,10 +317,9 @@ define('js!SBIS3.CONTROLS.Image',
                if (dataSource) {
                   return $ws.helpers.prepareGetRPCInvocationURL(dataSource.getEndpoint().contract,
                      dataSource.getBinding().read, this._options.filter, $ws.proto.BLObject.RETURN_TYPE_ASIS);
-               } else if (this._imageUrl != this._options.defaultImage) {
+               } else {
                   return this._options.defaultImage;
                }
-               return false;
             },
             _bindEvens: function() {
                this._boundEvents = {
@@ -357,7 +356,7 @@ define('js!SBIS3.CONTROLS.Image',
                   if (imageInstance._options.edit) {
                      imageInstance._showEditDialog('new');
                   } else {
-                     imageInstance._setImage();
+                     imageInstance._setImage(imageInstance._getSourceUrl());
                      $ws.helpers.toggleLocalIndicator(imageInstance._container, false);
                   }
                }
@@ -400,10 +399,7 @@ define('js!SBIS3.CONTROLS.Image',
                return this.isEnabled();
             },
             _setImage: function(url) {
-               if (!url) {
-                  url =this._getSourceUrl();
-               }
-               if (url !== false) {
+               if (url !== '') {
                   this._loadImage(url);
                   this._imageUrl = url;
                }
@@ -453,7 +449,7 @@ define('js!SBIS3.CONTROLS.Image',
                         onEndSave: function (event, result) {
                            event.setResult(self._notify('onEndSave', result));
                            self._toggleSaveIndicator(false);
-                           self._setImage();
+                           self._setImage(self._getSourceUrl());
                         },
                         onOpenError: function(event){
                            $ws.helpers.toggleLocalIndicator(self._container, false);
@@ -553,7 +549,7 @@ define('js!SBIS3.CONTROLS.Image',
                   //todo Удалить, временная опция для поддержки смены логотипа компании
                   this._getFileLoader().setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
                   if (!noReload) {
-                     this._setImage();
+                     this._setImage(this._getSourceUrl());
                   }
                }
             },
@@ -572,7 +568,7 @@ define('js!SBIS3.CONTROLS.Image',
             setFilter: function(filter, noReload) {
                this._options.filter = filter;
                if (!noReload) {
-                  this._setImage();
+                  this._setImage(this._getSourceUrl());
                }
             },
             /**
