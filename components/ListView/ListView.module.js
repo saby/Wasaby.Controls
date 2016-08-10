@@ -687,6 +687,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _setTouchSupport: function(support) {
+            var currentTouch = this._touchSupport;
             this._touchSupport = Boolean(support);
 
             var container = this.getContainer(),
@@ -697,7 +698,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   toggleClass();
                   this._itemsToolbar.setTouchMode(this._touchSupport);
                }
-            } else {
+            } else if(currentTouch !== this._touchSupport) {
                toggleClass();
             }
          },
@@ -706,7 +707,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var originalEvent = e.originalEvent;
             /* Надо проверять mousemove на срабатывание на touch устройствах,
                т.к. оно стреляет после тапа */
-            this._setTouchSupport(Array.indexOf(['swipe', 'tap'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY));
+            this._setTouchSupport(Array.indexOf(['swipe', 'tap'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && this._touchSupport));
 
             switch (e.type) {
                case 'mousemove':
