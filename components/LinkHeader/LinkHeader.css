@@ -6,43 +6,23 @@
    padding-right: 12px;
 }
 
-.controls-LinkHeader a{
-   text-decoration: none;
+.controls-LinkHeader__caption a:after{
+   content: 'a';
+   width: 8px;
+   font-family: 'TensorFont';
+   font-size: 18px;
+   margin-left: 4px;
+   font-weight: normal;
+   color: #313E78;
 }
 
-.controls-LinkHeader-caption{
-   display: inline;
-   margin-right: 4px;
+.controls-LinkHeader a{
+   text-decoration: none;
    font-family: 'TensorFont Bold';
    font-size: 18px;
    color: #D94700;
 }
 
-.controls-LinkHeader-icon{
-   display: inline;
-}
-
-.controls-LinkHeader-icon:after{
-   content: 'asd';
-   font-family: 'TensorFont';
-   font-size: 18px;
-   color: #313E78;
-}
-
-/*
-.controls-LinkHeader-caption:hover{
+.controls-LinkHeader__caption:hover a, .controls-LinkHeader__caption:hover a:after{
    color: #FF7033;
 }
-
-
-.controls-LinkHeader-icon{
-   width: 8px;
-}
-
-.controls-LinkHeader-icon:after{
-   content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="15"><line x1="0" x2="7" y1="0" y2="6" style="stroke:#313E78;stroke-width:1.8"/><line x1="7" x2="0" y1="6" y2="12" style="stroke:#313E78;stroke-width:1.8"/></svg>');
-}
-.controls-LinkHeader-icon:hover:after{
-   content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="15"><line x1="0" x2="7" y1="0" y2="6" style="stroke:#FF7033;stroke-width:1.8"/><line x1="7" x2="0" y1="6" y2="12" style="stroke:#FF7033;stroke-width:1.8"/></svg>');
-}
-*/

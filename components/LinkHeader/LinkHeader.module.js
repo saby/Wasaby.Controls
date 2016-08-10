@@ -12,10 +12,22 @@ define('js!SBIS3.CONTROLS.LinkHeader',
       var LinkHeader = Header.extend({
          _dotTplFn: dotTplFn,
 
+         hrefTemplate: hrefTemplate,
+
+         _link: null,
+
          $protected: {
             _options: {
-               href: ''
+               href: '',
+
+               separator: false
             }
+         },
+
+         init: function(){
+            LinkHeader.superclass.init.call(this);
+
+            this._link = this.getChildControlByName('LinkHeader-caption');
          },
 
          getHref: function(){
@@ -24,6 +36,16 @@ define('js!SBIS3.CONTROLS.LinkHeader',
 
          setHref: function(link){
             this._options.href = link;
+            this._link.setHref(link);
+         },
+
+         getSeparator: function(){
+            return this._options.separator;
+         },
+
+         setSeparator: function(separator){
+            this._options.separator = separator;
+            this._container.html(this._options.hrefTemplate(this._options));
          }
       });
 
