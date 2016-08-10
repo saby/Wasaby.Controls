@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
       _initHandlers: function() {
          this._internalHandlers = {
             onTogglePanel: this._onTogglePanel.bind(this)
-         }
+         };
       },
       _clickHandler: function() {
          var linkedPanel = this._options.linkedPanel;
@@ -63,7 +63,12 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
             //Проверка для совместимости со тарой панелью операций, у которой метод toggle влияет на видимость
             linkedPanel[$ws.helpers.instanceOfModule(linkedPanel, 'SBIS3.CONTROLS.OperationsPanel') ? 'toggle' : 'togglePanel']();
          }
-         OperationsPanelButton.superclass._clickHandler.apply(this);
+
+         // check-аем кнопку сразу при нажатии, через superclass
+         // uncheck-аем по событию от панели (см. метод _onTogglePanel)
+         if (!this.isChecked()){
+            OperationsPanelButton.superclass._clickHandler.apply(this);
+         }
       },
       /**
        * Метод установки или замены связанной панели массовых операций, установленной в опции {@link linkedPanel}.
