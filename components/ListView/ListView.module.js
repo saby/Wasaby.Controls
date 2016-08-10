@@ -36,7 +36,8 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!js!SBIS3.CONTROLS.Utils.InformationPopupManager',
       'js!SBIS3.CONTROLS.Paging',
       'js!SBIS3.CONTROLS.ComponentBinder',
-      'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
+      'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
+      'js!WS.Data/Adapter/RecordSet'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
@@ -2831,6 +2832,21 @@ define('js!SBIS3.CONTROLS.ListView',
             if (resultRow.length){
                this._destroyControls(resultRow);
                resultRow.remove();
+            }
+         },
+         /**
+          * //todo коcтыль нужно разобраться почему долго работает
+          * Инициализирует опцию selectedItems
+          * @noShow
+          */
+         initializeSelectedItems: function() {
+            if ($ws.helpers.instanceOfModule(this.getItems(), 'WS.Data/Adapter/RecordSet')) {
+               this._options.selectedItems = Di.resolve('collection.recordset', {
+                  ownerShip: false,
+                  adapter: this.getItems().getAdapter()
+               });
+            } else {
+               ListView.superclass.initializeSelectedItems.call(this);
             }
          }
       });
