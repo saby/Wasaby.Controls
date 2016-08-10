@@ -1066,4 +1066,23 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_12);
             })
     });
+	
+	gemini.suite('TreeCompositeViewList SelectionOnItemClick', function (test) {
+
+        test.setUrl('/regression_items_action_online_26.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="TreeDataGridView 1"]', 40000);
+                actions.waitForElementToShow('[data-id="3"]', 1000);
+                this.data3 = find('[data-id="3"]')				
+				this.delete_icon = find('.controls-ItemActions [data-id="delete"]');
+            })
+			
+			.capture('clicked_main_action', function (actions) {
+				actions.mouseMove(this.data3);
+				actions.waitForElementToShow('.controls-ItemActions [data-id="delete"]', 1000);
+				actions.click(this.delete_icon);
+				actions.wait(500);
+            })			
+    });
 });
