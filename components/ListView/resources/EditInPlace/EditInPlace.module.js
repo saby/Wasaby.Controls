@@ -276,19 +276,18 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             //Выписана задача Мальцеву, который должен убрать этот метод отсюда, и предаставить механизм выполняющий необходимую задачу.
             //https://inside.tensor.ru/opendoc.html?guid=85d18197-2094-4797-b823-5406424881e5&description=
             _cloneWithFormat: function(record, recordSet) {
+               recordSet = recordSet || this.getParent()._options.dataSet;
                var
                   fieldName,
                   format,
-                  recordModule = require('js!' + record._moduleName),
-                  clone = new recordModule({
+                  clone = Di.resolve(recordSet.getModel(), {
                      'adapter': record.getAdapter(),
                      'idProperty': record.getIdProperty(),
                      'format': []
                   });
-               if (recordSet && recordSet.getFormat().getCount()) {
+               format = record.getFormat();
+               if (!format.getCount() && recordSet && recordSet.getFormat().getCount()) {
                   format = recordSet.getFormat();
-               } else {
-                  format = record.getFormat();
                }
                format.each(function(field) {
                   fieldName = field.getName();
