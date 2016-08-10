@@ -3,8 +3,9 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
    'html!SBIS3.CONTROLS.DateRangeBigChoose/resources/DateRangePickerItem',
    'js!SBIS3.CONTROLS.RangeMixin',
    'js!WS.Data/Source/Base',
+   'js!SBIS3.CONTROLS.Utils.DateUtil',
    'js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView'
-], function (ListView, ItemTmpl, RangeMixin, Base) {
+], function (ListView, ItemTmpl, RangeMixin, Base, DateUtil) {
    'use strict';
 
    var _startingOffset = 1000000;
@@ -75,7 +76,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
          _selectionType: null
       },
       $constructor: function () {
-         this._publish('onActivated', 'onMonthActivated');
+         this._publish('onMonthActivated');
       },
 
       init: function () {
@@ -86,8 +87,11 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
          this._onMonthViewRageChanged = this._onMonthViewRageChanged.bind(this);
          // this._onMonthViewSelectionStarted = this._onMonthViewSelectionStarted.bind(this);
          this._onMonthViewSelectingRangeEndDateChange = this._onMonthViewSelectingRangeEndDateChange.bind(this);
+         this._onMonthViewCaptionActivated = this._onMonthViewCaptionActivated.bind(this);
 
-         if (!this._options.month) {
+         if (this._options.month) {
+            this._options.month = this._normalizeMonth(this._options.month);
+         } else {
             this._options.month = (new Date(now.getFullYear(), now.getMonth(), 1));
          }
 
@@ -97,8 +101,9 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
       },
 
       setMonth: function (month) {
-         if (this._options.month === month ||
-            (this._options.month && month && this._options.month.getTime() === month.getTime())) {
+         month = this._normalizeMonth(month);
+
+         if (this._isDatesEqual(this._options.month, month)) {
             return;
          }
          this._options.month = month;
@@ -130,6 +135,8 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
             control.subscribe('onRangeChange', self._onMonthViewRageChanged);
             control.unsubscribe('onSelectingRangeEndDateChange', self._onMonthViewSelectingRangeEndDateChange);
             control.subscribe('onSelectingRangeEndDateChange', self._onMonthViewSelectingRangeEndDateChange);
+            control.unsubscribe('onActivated', self._onMonthViewCaptionActivated);
+            control.subscribe('onActivated', self._onMonthViewCaptionActivated);
          });
          this._updateSelectionInInnerComponents();
          this.getContainer().css('top', 40 - $(this._getItemsContainer().children().get(0)).height());
@@ -137,7 +144,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
          $(this._getItemsContainer().children().get(2)).addClass('controls-DateRangeBigChoose__calendar-fogged');
       },
 
-      setStartValue: function (end, silent) {
+      setStartValue: function (start, silent) {
          var changed = Component.superclass.setStartValue.apply(this, arguments);
          if (changed) {
             this._updateSelectionInInnerComponents();
@@ -153,10 +160,32 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
          return changed;
       },
 
+      setRange: function (start, end, silent) {
+         var oldStart, oldEnd, changed;
+
+         if (this._options.rangeselect) {
+            oldStart = this.getStartValue();
+            oldEnd = this.getEndValue();
+            changed = Component.superclass.setRange.apply(this, arguments);
+            start = this.getStartValue();
+            end = this.getEndValue();
+            if (!this._isDatesEqual(start, oldStart) && !this._isDatesEqual(end, oldEnd)) {
+               this.setMonth(start);
+            }
+         } else {
+            changed = Component.superclass.setRange.apply(this, arguments);
+         }
+         return changed;
+      },
+
       _prepareItemData: function () {
          var args = Component.superclass._prepareItemData.apply(this, arguments);
          args.rangeselect = this._options.rangeselect;
          return args;
+      },
+
+      _onMonthViewCaptionActivated: function (e) {
+         this._notify('onActivated', e.getTarget().getMonth());
       },
 
       _onMonthViewRageChanged: function (e, start, end) {
@@ -216,6 +245,25 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
          this.forEachMonthView(function (control) {
             control.cancelSelection();
          });
+      },
+
+      /**
+       * Возвращает месяц в нормальном виде(с датой 1 и обнуленным временем)
+       * @param month {Date}
+       * @returns {Date}
+       * @private
+       */
+      _normalizeMonth: function (month) {
+         // TODO: Вынести в утильные функции
+         month = DateUtil.valueToDate(month);
+         if(!(month instanceof Date)) {
+            return null;
+         }
+         return new Date(month.getFullYear(), month.getMonth(), 1);
+      },
+
+      _isDatesEqual: function (date1, date2) {
+         return date1 === date2 || (date1 && date2 && date1.getTime() === date2.getTime());
       }
 
    });

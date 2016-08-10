@@ -3,23 +3,24 @@
       <component data-component="SBIS3.CONTROLS.IconButton" name="IconButton" class="controls-IconButton__round-border controls-DateRangeBigChoose__homeBtn">
          <option name="icon">sprite:icon-16 icon-Home2 icon-primary</option>
       </component>
-      <div class="controls-DateRangeBigChoose__header-date-pickers">
-         <component data-component="SBIS3.CONTROLS.DatePicker" name="DatePickerStart" class="controls-DateRangeBigChoose__datePickerStart">
-            <option name="isCalendarIconShown" value="false" type="boolean"></option>
-            <option name="date" bind="startValue"></option>
-         </component>
 
-         <div style="display: inline-block" class="{{? !it.rangeselect }}ws-hidden{{?}}">
-            -
+      <div class="controls-DateRangeBigChoose__header-date-pickers">
+         <component data-component="SBIS3.CONTROLS.IconButton" name="ApplyButton" class="controls-DateRangeBigChoose__ApplyButton controls-IconButton__round-border">
+            <option name="icon">sprite:icon-16 icon-Yes icon-done</option>
+         </component>
+         <div style="float: right" class="{{? !it.rangeselect }}ws-hidden{{?}}">
             <component data-component="SBIS3.CONTROLS.DatePicker" name="DatePickerEnd" class="controls-DateRangeBigChoose__datePickerEnd">
                <option name="isCalendarIconShown" value="false" type="boolean"></option>
                <option name="date" bind="endValue"></option>
             </component>
+            <div class="controls-DateRangeBigChoose__header-rangeDash"></div>
          </div>
-         <component data-component="SBIS3.CONTROLS.IconButton" name="ApplyButton" class="controls-DateRangeBigChoose__ApplyButton controls-IconButton__round-border">
-            <option name="icon">sprite:icon-16 icon-Yes icon-done</option>
+         <component style="float: right" data-component="SBIS3.CONTROLS.DatePicker" name="DatePickerStart" class="controls-DateRangeBigChoose__datePickerStart">
+            <option name="isCalendarIconShown" value="false" type="boolean"></option>
+            <option name="date" bind="startValue"></option>
          </component>
       </div>
+
       <component data-component="SBIS3.CORE.CloseButton" name="CloseButton" class="controls-DateRangeBigChoose__closeButton">
       </component>
    </div>
@@ -32,7 +33,7 @@
       <div  class="controls-DateRangeBigChoose__center">
          <div class="controls-DateRangeBigChoose__years-year">
             <div class="controls-DateRangeBigChoose__years-panel-wrapper">
-               <component data-component="SBIS3.CONTROLS.Link" name="ToggleChooseYearButton">
+               <component data-component="SBIS3.CONTROLS.Link" name="ToggleChooseYearButton" class="controls-DateRangeBigChoose__years-toggleChooseYearBtn">
                   <option name="caption">...</option>
                </component>
             </div>
@@ -66,8 +67,8 @@
    <div class="controls-DateRangeBigChoose__months ws-hidden">
       <div class="controls-DateRangeBigChoose__months-quarterRange controls-DateRangeBigChoose__left">
          {{~['I', 'II', 'III', 'IV'] :quarterCaption:quarterIndex}}
-         <div class="controls-DateRangeBigChoose__months-range-btn-wrapper controls-RangeSelectable__item" data-selected-range-id="{{=quarterIndex + 1}}">
-            <component data-component="SBIS3.CONTROLS.Button" name="QuarterRangeBtn{{=quarterIndex}}" class="controls-DateRangeBigChoose__months-quarter-btn controls-DateRangeBigChoose__range-btn{{=quarterIndex}}">
+         <div class="controls-DateRangeBigChoose__months-range-btn-wrapper controls-DateRangeBigChoose__months-range-btn-wrapper{{=quarterIndex}} controls-RangeSelectable__item" data-selected-range-id="{{=quarterIndex + 1}}">
+            <component data-component="SBIS3.CONTROLS.Button" name="QuarterRangeBtn{{=quarterIndex}}" class="controls-DateRangeBigChoose__months-quarter-btn">
                <option name="caption">{{=quarterCaption}}</option>
             </component>
          </div>
@@ -86,6 +87,8 @@
          <component data-component="SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker" name="MonthRangePicker" class="controls-DateRangeBigChoose__months-month-picker">
             <option name="infiniteScrollContainer">controls-DateRangeBigChoose__months-month</option>
          </component>
+         <div class="controls-DateRangeBigChoose__months-hasMore1 ws-hidden"></div>
+         <div class="controls-DateRangeBigChoose__months-hasMore2 ws-hidden"></div>
       </div>
    </div>
 
