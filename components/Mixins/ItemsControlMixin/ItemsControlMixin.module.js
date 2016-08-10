@@ -1208,13 +1208,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    }
 
                    this._dataLoadedCallback();
-
-                   if (self._options.infiniteScroll === 'up'){
-                      var firstItem = self._options._itemsProjection.at(0);
-                      if (firstItem) {
-                         self._scrollToItem(firstItem.getContents().getId());
-                      }
-                   }
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))

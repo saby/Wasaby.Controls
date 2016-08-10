@@ -74,11 +74,11 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          //В зависимости от настроек высоты подписываемся либо на скролл у окна, либо у контейнера
          if (this._inContainer()) {
             this._onContainerScrollHandler =  this._onContainerScroll.bind(this);
-            this._scrollingContainer.bind('scroll.wsScrollWatcher', this._onContainerScrollHandler);
+            this._scrollingContainer.bind('scroll', this._onContainerScrollHandler);
 
          } else if (this._inWindow()) {
             this._onWindowScrollHandler = this._onWindowScroll.bind(this);
-            $(window).bind('scroll.wsScrollWatcher', this._onWindowScrollHandler);
+            $(window).bind('scroll', this._onWindowScrollHandler);
 
          } else {//inFloatArea
             //Если браузер лежит на всплывающей панели и имеет автовысоту, то скролл появляется у контейнера всплывашки (.parent())
@@ -94,7 +94,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          return this._options.opener;
       },
       _getContainer: function(){
-         return this._scrollingContainer || (this._inWindow() ?  $('body') : this.getOpener().getTopParent().getContainer().parent());
+         return this._scrollingContainer || (this._inWindow() ?  $('body') : this.getOpener().getTopParent().getContainer().closest('.ws-scrolling-content'));
       },
       _inFloatArea: function(){
          return this._type === 'floatArea';
@@ -227,7 +227,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
       },
       destroy: function(){
          if (this._inWindow()) {
-            $(window).unbind('scroll.wsScrollWatcher', this._onWindowScrollHandler);
+            $(window).unbind('scroll', this._onWindowScrollHandler);
             this._onWindowScrollHandler = undefined;
          }
          $ws.proto.ScrollWatcher.superclass.destroy.call(this);
