@@ -191,7 +191,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
        * @see startDate
        */
       setStartDate: function(newDate) {
-         if (this._setStartValue(newDate)) {
+         if (this.setStartValue(newDate)) {
             this._notifyOnPropertyChanged('startDate');
             this._notify('onStartDateChange', this._options.startValue);
             this._notify('onDateRangeChange', this._options.startValue, this._options.endValue);
