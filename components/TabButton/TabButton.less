@@ -25,24 +25,24 @@
      &.controls-Checked__checked .controls-TabButton__inner *{
        color: #D94700;
      }
-     .counter{
+     .controls-tabButton__counter-value{
        font-size: 14px;
        color: #FF7033;
        display: inline-block;
      }
-     &.success{
+     &.controls-TabButton__counter-success{
        &.controls-Checked__checked .controls-TabButton__inner *{
          color: #569034;
        }
-       .counter{
+       .controls-tabButton__counter-value{
          color: #72BE44;
        }
      }
-     &.error{
+     &.controls-TabButton__counter-error{
        &.controls-Checked__checked .controls-TabButton__inner *{
          color: #EF463A;
        }
-       .counter{
+       .controls-tabButton__counter-value{
          color: #EF463A;
        }
      }
@@ -52,12 +52,12 @@
     &.controls-Checked__checked .controls-TabButton__inner *{
       color: #D94700!important; /* здесь нужно перебить цвет иконки, который задан через important */
     }
-    &.success{
+    &.controls-TabButton__counter-success{
       &.controls-Checked__checked .controls-TabButton__inner *{
         color: #569034!important;
       }
     }
-    &.error{
+    &.controls-TabButton__counter-error{
       &.controls-Checked__checked .controls-TabButton__inner *{
         color: #EF463A!important;
       }
@@ -101,7 +101,6 @@
          border-left: @tab-button-checked-inner-border-left;
          border-right: @tab-button-checked-inner-border-right;
          background: @tab-button-checked-inner-bg;
-         max-width: @tab-button-large-inner-max-width;
          overflow:  @tab-button-large-inner-overflow;
          &:before{
             display: @tab-button-checked-inner-after-display;
@@ -159,7 +158,8 @@
       line-height: @tab-button-inner-line-height;
       overflow: @tab-button-inner-overflow;
       height: @tab-button-inner-height;
-      &:before {
+      max-width: @tab-button-large-inner-max-width;
+     &:before {
          content: @tab-button-inner-after-content;
          display: @tab-button-inner-after-display;
          width: @tab-button-inner-after-width;
@@ -231,7 +231,7 @@
 }
 
 .controls-TabButtons__simple-view{
-  &.select {
+  &.controls-TabButtons__simple-view-select {
     .controls-TabButton.controls-Checked__checked {
       .controls-TabButton__inner{
         color: #D94700;
