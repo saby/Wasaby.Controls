@@ -450,6 +450,7 @@ define(
           */
          _updateText: function(){
             var text = this.formatModel.getText(this._maskReplacer),
+                oldText = this._options.text,
                 oldDate = this.timeInterval.toString();
 
             this._updateIntervalByText(text);
@@ -458,6 +459,10 @@ define(
             if ((text.split(':')[0].length == this.formatModel.model[0].mask.length) && text.split(':')[0].indexOf(this._maskReplacer) == -1 && this.formatModel.model[0].mask.length < this._options.maxCharsAtLeftGroup) {
                this._options.text = this._maskReplacer + text;
                this._incMask(1);
+            }
+
+            if (oldText !== this.getText()){
+               this._notifyOnTextChange();
             }
 
             // Если дата изменилась -- генерировать событие.
