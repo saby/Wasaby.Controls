@@ -1,23 +1,6 @@
 <div class="controls-TabButtons {{? it.items && it.items.length}}hasItems{{?}} {{? it.keyField}}hasKeyField{{?}}">
 <div class="controls-TabButtons__leftContainer">
-    {{~it.items :item:index}}
-    {{? item.align == 'left'}}
-    <component data-component="SBIS3.CONTROLS.TabButton" data-id="{{=item[it.keyField]}}" class="controls-ListView__item {{? item.visible == false}}ws-hidden{{?}}">
-        <option name="caption">{{=item[it.displayField]}}</option>
-        <option name="id" value="{{=item[it.keyField]}}"></option>
-        <option name="align" value="{{=item.align || 'right'}}"></option>
-        <option name="name" value="{{=item.name}}"></option>
-        <option name="className" value="{{=item.className}}"></option>
-        <option name="icon" value="{{=item.icon}}"></option>
-        <option name="enabled" value="{{=(item.enabled !== false)}}"></option>
-        <option name="visible" value="{{=(item.visible !== false)}}"></option>
-        <option name="allowChangeEnable">{{= !!it.allowChangeEnable}}</option>
-        {{? item[it.keyField] == it.selectedKey}}
-        <option name="checked" value="true" type="boolean"></option>
-        {{?}}
-    </component>
-    {{?}}
-    {{~}}
+   {{?it._serverRender}}{{=it._itemsTemplate({records : it._records['left'], tplData : it._itemData})}}{{?}}
 </div>
 {{?it.tabSpaceTemplate}}
 <div class="controls-TabButtons__tabSpace-template">
@@ -27,23 +10,6 @@
 </div>
 {{?}}
 <div class="controls-TabButtons__rightContainer">
-    {{~it.items :item:index}}
-    {{? item.align !== 'left'}}
-    <component data-component="SBIS3.CONTROLS.TabButton" data-id="{{=item[it.keyField]}}" class="controls-ListView__item {{? item.visible == false}}ws-hidden{{?}}">
-        <option name="caption">{{=item[it.displayField]}}</option>
-        <option name="id" value="{{=item[it.keyField]}}"></option>
-        <option name="align" value="{{=item.align || 'right'}}"></option>
-        <option name="name" value="{{=item.name}}"></option>
-        <option name="className" value="{{=item.className}}"></option>
-        <option name="icon" value="{{=item.icon}}"></option>
-        <option name="enabled" value="{{=(item.enabled !== false)}}"></option>
-        <option name="visible" value="{{=(item.visible !== false)}}"></option>
-        <option name="allowChangeEnable">{{= !!it.allowChangeEnable}}</option>
-        {{? item[it.keyField] == it.selectedKey}}
-        <option name="checked" value="true" type="boolean"></option>
-        {{?}}
-    </component>
-    {{?}}
-    {{~}}
+   {{?it._serverRender}}{{=it._itemsTemplate({records : it._records['right'], tplData : it._itemData})}}{{?}}
 </div>
 </div>

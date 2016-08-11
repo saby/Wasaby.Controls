@@ -11,6 +11,7 @@
          {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
       {{?}}
    </div>
+   <div class="controls-ListView__EmptyData {{?!it._serverRender || it._records.length}}ws-hidden{{?}}">{{=it.emptyHTML}}</div>
    {{?it.footerTpl}}
       <div class="controls-ListView__footer">{{=it.footerTpl(it)}}</div>
    {{?}}
