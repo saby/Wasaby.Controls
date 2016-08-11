@@ -34,11 +34,14 @@ define('js!SBIS3.CONTROLS.Utils.Sanitize', ['Core/markup/ParserUtilitiesNew'], f
 
    function validateAttributes(content) {
       var
-         idx = 0;
+         idx = 0,
+         jsRegExp = new RegExp(/javascript:/gim);
       if (content.attributes.length) {
          while (content.attributes.length && idx < content.attributes.length) {
             if (validAttributes[content.attributes[idx].name]) {
-               content.attributes[idx].value.replace( /javascript:/gim, '');
+               while (jsRegExp.test(content.attributes[idx].value)) {
+                  content.attributes[idx].value = content.attributes[idx].value.replace(jsRegExp, '');
+               }
                idx++;
             } else {
                content.attributes.splice(idx, 1);
