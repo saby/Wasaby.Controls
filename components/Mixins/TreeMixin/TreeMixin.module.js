@@ -138,66 +138,87 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
     * @mixin SBIS3.CONTROLS.TreeMixin
     * @public
     * @author Крайнов Дмитрий Олегович
+    *
+    * @ignoreMethods reload
     */
    var TreeMixin = /** @lends SBIS3.CONTROLS.TreeMixin.prototype */{
+
       /**
-       * @name reload
+       * @name SBIS3.CONTROLS.TreeMixin#reload
        * @function
-       * Метод перезагрузки данных.
-       * Можно задать фильтрацию, сортировку.
-       * @param {String} filter Параметры фильтрации.
-       * @param {String} sorting Параметры сортировки.
-       * @param offset Элемент, с которого перезагружать данные.
-       * @param {Number} limit Ограничение количества перезагружаемых элементов.
-       * @param {Boolean} deepReload Глубокая перезагрузка. Позволяет запрашивать текущие открытые папки при перезагрузке
-       */
-      /**
-       * @event onSearchPathClick При клике по хлебным крошкам в режиме поиска.
-       * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {number} id ключ узла, по которму кликнули
-       * @return Если вернуть false - загрузка узла не произойдет
+       * Перезагружает набор записей представления данных с последующим обновлением отображения.
+       * @param {Object} filter Параметры фильтрации.
+       * @param {String|Array.<Object.<String,Boolean>>} sorting Параметры сортировки.
+       * @param {Number} offset Смещение первого элемента выборки.
+       * @param {Number} limit Максимальное количество элементов выборки.
+       * @param {Boolean} deepReload Признак глубокой перезагрузки: в значении true устанавливает поведение, при котором папки открыте до перезагрузки данных останутся также открытыми и после перезагрузки.
        * @example
        * <pre>
-       *    DataGridView.subscribe('onSearchPathClick', function(event){
+       *    myDataGridView.reload(
+       *       { // Устанавливаем параметры фильтрации: требуются записи, в которых поля принимают следующие значения
+       *          iata: 'SVO',
+       *          direction: 'Arrivals',
+       *          state: 'Landed',
+       *          fromCity: ['New York', 'Los Angeles']
+       *       },
+       *       [ // Устанавливаем параметры сортировки: сначала производится сортировка по полю direction, а потом - по полю state
+       *          {direction: false}, // Поле direction сортируется по возрастанию
+       *          {state: true} // Поле state сортируется по убыванию
+       *       ],
+       *       50, // Устанавливаем смещение: из всех подходящих записей отбор результатов начнём с 50-ой записи
+       *       20, // Требуется вернуть только 20 записей
+       *       true // После перезагрузки оставим узлы открытыми
+       *    );
+       * </pre>
+       */
+      /**
+       * @event onSetRoot Происходит при загрузке данных и перед установкой корня иерархии.
+       * @remark
+       * При каждой загрузке данных, например вызванной методом {@link SBIS3.CONTROLS.ListView#reload}, происходит событие onSetRoot.
+       * В этом есть необходимость, потому что в переданных данных может быть установлен новый path - путь для хлебных крошек (см. {@link SBIS3.CONTROLS.Data.Collection.RecordSet#meta}).
+       * Хлебные крошки не перерисовываются, так как корень не поменялся.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String|Number|Null} curRoot Идентификатор узла, который установлен в качестве текущего корня иерархии.
+       * @param {Array.<Object>} hierarchy Массив объектов, каждый из которых описывает узлы иерархии установленного пути.
+       * Каждый объект содержит следующие свойства:
+       * <ul>
+       *    <li>id - идентификатор текущего узла иерархии;</li>
+       *    <li>parent - идентификатор предыдущего узла иерархии;</li>
+       *    <li>title - значение поля отображения (см. {@link SBIS3.CONTROLS.DSMixin#displayField});</li>
+       *    <li>color - значение поля записи, хранящее данные об отметке цветом (см. {@link SBIS3.CONTROLS.DecorableMixin#colorField});</li>
+       *    <li>data - запись узла иерархии, экземпляр класса {@link SBIS3.CONTROLS.Data.Record}.</li>
+       * </ul>
+       * @see onBeforeSetRoot
+       */
+      /**
+       * @event onBeforeSetRoot Происходит при установке текущего корня иерархии.
+       * @remark
+       * Событие может быть инициировано при использовании метода {@link setCurrentRoot}.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String|Number|Null} key Идентификатор узла иерархии, который будет установлен. Null - это вершина иерархии.
+       * @see onSetRoot
+       */
+      /**
+       * @event onSearchPathClick Происходит при клике по хлебным крошкам, отображающим результаты поиска.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String|Number} id Ключ узла, по которому произвели клик.
+       * @return Если из обработчика события вернуть false, то загрузка узла не произойдет.
+       * @example
+       * <pre>
+       *    DataGridView.subscribe('onSearchPathClick', function(eventObject){
        *      searchForm.clearSearch();
        *    });
        * </pre>
        */
       /**
-       * @event onNodeExpand После разворачивания ветки
+       * @event onNodeExpand Происходит после разворачивания узла.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {String} key ключ разворачиваемой ветки
-       * @example
-       * <pre>
-       *    onNodeExpand: function(event){
-       *       $ws.helpers.question('Продолжить?');
-       *    }
-       * </pre>
+       * @param {String|Number} key Идентификатор разворачиваемого узла.
        */
       /**
-       * @event onNodeCollapse После сворачивания ветки
+       * @event onNodeCollapse Происходит после сворачивания узла.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {String} key ключ разворачиваемой ветки
-       * @example
-       * <pre>
-       *    onNodeCollapse: function(event){
-       *       $ws.helpers.question('Продолжить?');
-       *    }
-       * </pre>
-       */
-      /**
-       * @event onSearchPathClick При клике по хлебным крошкам в режиме поиска.
-       * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {number} id ключ узла, по которму кликнули
-       * @return Если вернуть false - загрузка узла не произойдет
-       * @example
-       * <pre>
-       *    DataGridView.subscribe('onSearchPathClick', function(event){
-       *      searchForm.clearSearch();
-       *    });
-       * </pre>
+       * @param {String|Number} key Идентификатор разворачиваемого узла.
        */
       $protected: {
          _folderOffsets : {},
