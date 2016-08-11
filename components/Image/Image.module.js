@@ -246,6 +246,9 @@ define('js!SBIS3.CONTROLS.Image',
             },
             $constructor: function() {
                this._publish('onBeginLoad', 'onEndLoad', 'onErrorLoad', 'onChangeImage', 'onResetImage', 'onShowEdit', 'onBeginSave', 'onEndSave', 'onDataLoaded');
+               //Debounce перебиваем в конструкторе, чтобы не было debounce на прототипе, тк если несколько инстансов сработает только для одного
+               //Оборачиваем именно в debounce, т.к. могут последовательно задать filter, dataSource и тогда изображения загрузка произойдет дважды.
+               this._setImage = this._setImage.debounce(0);
                $ws.single.CommandDispatcher.declareCommand(this, 'uploadImage', this._uploadImage);
                $ws.single.CommandDispatcher.declareCommand(this, 'editImage', this._editImage);
                $ws.single.CommandDispatcher.declareCommand(this, 'resetImage', this._resetImage);
@@ -396,7 +399,7 @@ define('js!SBIS3.CONTROLS.Image',
                   this._loadImage(url);
                   this._imageUrl = url;
                }
-            }.debounce(0), //Оборачиваем именно в debounce, т.к. могут последовательно задать filter, dataSource и тогда изображения загрузка произойдет дважды.
+            },
             _loadImage: function(url) {
                var
                   self = this;
