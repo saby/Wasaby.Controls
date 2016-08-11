@@ -36,14 +36,15 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!js!SBIS3.CONTROLS.Utils.InformationPopupManager',
       'js!SBIS3.CONTROLS.Paging',
       'js!SBIS3.CONTROLS.ComponentBinder',
+      'js!WS.Data/Di',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
-      'js!WS.Data/Adapter/RecordSet'
+      'js!WS.Data/Collection/RecordSet'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
              Link, ScrollWatcher, IBindCollection, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-             Paging, ComponentBinder) {
+             Paging, ComponentBinder, Di) {
 
       'use strict';
 
@@ -2237,7 +2238,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._showedLoading = show;
             if (show) {
                setTimeout(function(){
-                  if (self._showedLoading) {
+                  if (!self.isDestroyed() && self._showedLoading) {
                      scrollContainer = self._getScrollContainer();
                      indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
                      if(indicator.length && scrollContainer && container[0].scrollHeight > scrollContainer[0].offsetHeight) {
@@ -2840,7 +2841,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @noShow
           */
          initializeSelectedItems: function() {
-            if ($ws.helpers.instanceOfModule(this.getItems(), 'WS.Data/Adapter/RecordSet')) {
+            if ($ws.helpers.instanceOfModule(this.getItems(), 'js!WS.Data/Collection/RecordSet')) {
                this._options.selectedItems = Di.resolve('collection.recordset', {
                   ownerShip: false,
                   adapter: this.getItems().getAdapter()
