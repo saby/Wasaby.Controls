@@ -447,19 +447,23 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var textValues = [],
                 len = id.length,
                 self = this,
-                pickerContainer,
-                def;
+                item, pickerContainer, def;
 
             if(len) {
                def = new $ws.proto.Deferred();
 
                this.getSelectedItems(true).addCallback(function(list) {
-                  list.each(function(rec) {
-                     textValues.push(rec.get(self._options.displayField));
-                  });
+                  if(list) {
+                     list.each(function (rec) {
+                        textValues.push(rec.get(self._options.displayField));
+                     });
+                  }
 
-                  if(!textValues.length && self._checkEmptySelection() && self.getItems()) {
-                     textValues.push(self.getItems().at(0).get(self._options.displayField));
+                  if(!textValues.length && self._checkEmptySelection()) {
+                     item = self.getItems() && self.getItems().at(0);
+                     if(item) {
+                        textValues.push(item.get(self._options.displayField));
+                     }
                   }
 
                   def.callback(textValues);
