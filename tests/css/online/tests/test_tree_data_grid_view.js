@@ -222,7 +222,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 	
 	gemini.suite('ellipsis_column', function (test) {
 
-        test.setUrl('/regression_tree_data_grid_view_online_4.html').setCaptureElements('.capture')
+        test.setUrl('/regression_tree_data_grid_view_online_4.html').skip('chrome').setCaptureElements('.capture')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
@@ -240,7 +240,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 	
 	gemini.suite('ellipsis_column_and_arrow_handler', function (test) {
 
-        test.setUrl('/regression_tree_data_grid_view_online_5.html').setCaptureElements('.capture')
+        test.setUrl('/regression_tree_data_grid_view_online_5.html').skip('chrome').setCaptureElements('.capture')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
@@ -387,7 +387,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
 	gemini.suite('dots_on_ellipsis_column', function (test) {
 
-        test.setUrl('/regression_tree_data_grid_view_online_4.html').setCaptureElements('.capture')
+        test.setUrl('/regression_tree_data_grid_view_online_4.html').skip('chrome').setCaptureElements('.capture')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
