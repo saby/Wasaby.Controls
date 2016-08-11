@@ -4,7 +4,14 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
    'js!WS.Data/Di'
 ], function (DragObject, Di) {
    'use strict';
-
+   /**
+    * Миксин задающий логику перетаскивания
+    * @mixin SBIS3.CONTROLS.DragNDropMixinNew
+    * @public
+    * @author Крайнов Дмитрий Олегович
+    * @see SBIS3.CONTROLS.DragObject
+    * @see SBIS3.CONTROLS.DragEntity.Entity
+    */
    if (typeof window !== 'undefined') {
       var EventBusChannel = $ws.single.EventBus.channel('DragAndDropChannel');
 
@@ -32,6 +39,21 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
       },
       DragAndDropMixin = /**@lends SBIS3.CONTROLS.DragNDropMixinNew.prototype*/{
          $protected: {
+            /**
+             * @event onBeginDrag Срабатывает когда инициализируется dragndrop. Если из события вернуть false то перетаскивание будет отменено
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон объект перемещения.
+             */
+            /**
+             * @event onEndDrag Срабатывает когда элемент бросили
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон объект перемещения.
+             */
+            /**
+             * @event onDragMove Срабатывает когда перетаскивают элемент этого контрола либо когда курсор мыши находится над контролом
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон объект перемещения.
+             */
             _options:{
                dragEntity: undefined
             },
@@ -43,14 +65,14 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          },
          //region public
          $constructor: function () {
-            this._publish('onDragMove', 'onDragBegin', 'onDragEnd');
-            $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMouseup', this.onMouseupOutside, this);
-            $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMousemove', this.onMousemove, this);
+            this._publish('onDragMove', 'onBeginDrag', 'onEndDrag');
+            $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMouseup', this._onMouseupOutside, this);
+            $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMousemove', this._onMousemove, this);
          },
 
          after: {
             init: function () {
-               $(this.getContainer()).bind('mouseup touchend', this.onMouseupInside.bind(this));
+               $(this.getContainer()).bind('mouseup touchend', this._onMouseupInside.bind(this));
             }
          },
 
@@ -63,10 +85,10 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             return $(element).hasClass('genie-dragdrop');
          },
 
-         getDragEntity: function(options) {
-            return  Di.resolve(this._options.dragEntity, options);
-         },
-
+         /**
+          *
+          * @param dragEntityFactory
+          */
          setDragEntity: function(dragEntityFactory) {
             this._options.dragEntity = dragEntityFactory;
             this._dragEntity = undefined;
@@ -167,7 +189,11 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             var avatar = this._createAvatar(DragObject, e);
             DragObject.setAvatar(avatar);
          },
-
+         /**
+          * инициализирует dragendrop
+          * @param clickEvent
+          * @private
+          */
          _initDrag: function(clickEvent) {
             var
                self = this,
@@ -194,7 +220,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             DragObject.onDragHandler(e);
             if (this._beginDragHandler(DragObject, e) !== false) {
                $('body').addClass('dragdropBody ws-unSelectable');
-               if (this._notify('onDragBegin', DragObject, e) !== false) {
+               if (this._notify('onBeginDrag', DragObject, e) !== false) {
                   this._showAvatar(e);
                   DragObject.setOwner(this);
                   DragObject.setDragging(true);
@@ -219,6 +245,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             }
             return true;
          },
+
          /**
           * Конец перетаскивания
           * @param {Event} e js событие
@@ -233,7 +260,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             if (droppable) { //запускаем только если сработало внутри droppable контейнера, иначе таргета нет и нечего обновлять
                this._updateDragTarget(DragObject, e);
             }
-            var res = this._notify('onDragEnd', DragObject, e);
+            var res = this._notify('onEndDrag', DragObject, e);
             if (res !== false) {
                this._endDragHandler(DragObject, droppable, e);
             }
@@ -243,16 +270,30 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             DragObject.setDragging(false);
             $('body').removeClass('dragdropBody cantDragDrop ws-unSelectable');
          },
+
+         /**
+          * Создает сущность перемещения.
+          * @param {Object} options Объект с опциями которые будут переданы в конструктор сущности
+          * @returns {*}
+          */
+         _makeDragEntity: function(options) {
+            return  Di.resolve(this._options.dragEntity, options);
+         },
          //endregion protected
          //region mouseHandler
          /**
+          * Срабывает когда отпустили мышь внутри контрола
           * @param {Event} e
           */
-         onMouseupInside: function (e) {
+         _onMouseupInside: function (e) {
             this._mouseUp(e, true);
          },
-
-         onMouseupOutside: function(buse, e) {
+         /**
+          * Срабывает когда отпустили мышь за пределами контрола
+          * @param buse
+          * @param e
+          */
+         _onMouseupOutside: function(buse, e) {
             this._mouseUp(e, false);
          },
 
@@ -267,12 +308,12 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             this._moveBeginY = null;
          },
          /**
-          * обработчик  соь
+          * Обработчик  на перемещение мыши
           * @param buse
           * @param e
           * @returns {boolean}
           */
-         onMousemove: function (buse, e) {
+         _onMousemove: function (buse, e) {
             // Если нет выделенных компонентов, то уходим
             if (!DragObject.isDragging()) {
                return;
