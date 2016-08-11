@@ -46,10 +46,25 @@ define('js!SBIS3.CONTROLS.EditAtPlaceMixin',
                   this.setInPlaceEditMode(false);
                   this._removeControlPanel();
                }
+               this._deactivateActiveChildControl();
                this._notify('onApply', values);
             }
          },
 
+          //Метод необходим, так как при завершении редактирования(esc или enter), дочерние контролы скрываются, при этом
+          //нативный фокус уходит на body и в событие focusout у контрола приходит event.relatedTarget = null, из-за этого
+          //контрол не понимает куда уходит фокус и не может сделать setActive(false), т.к. при деактивации нужно обязательно
+          //указывать контрол на который ушёл фокус. У некоторых контролов(например DatePicker) есть логика на уход фокуса
+          //и эта логика не выполняется. Поэтому мы сами позовём setActive(false) у активного дочернего контрола.
+         _deactivateActiveChildControl: function() {
+            var
+                activeControl,
+                activeWindow = $ws.single.WindowManager.getActiveWindow(false, true);
+            if (activeWindow) {
+               activeControl = activeWindow.getActiveChildControl();
+               activeControl && activeControl.setActive(false);
+            }
+         },
          /**
           * Открывает диалог подтверждения при отмене радактирования.
           * @returns {$ws.proto.Deferred} deferred на закрытие модального диалога подтверждения.
