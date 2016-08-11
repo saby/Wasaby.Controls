@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.DateRange Online', function () {
 
     gemini.suite('base', function (test) {
 
-        test.setUrl('/regression_date_range_online.html').setCaptureElements('.capture')
+        test.setUrl('/regression_date_range_online.html').setCaptureElements('html')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="DateRange 1"]', 40000);
