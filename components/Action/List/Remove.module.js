@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.List.Remove',
                   var item = items[i];
                   list.remove(item);
                }
-               this._removeSelection(items);
+               self._removeSelection(items);
             });
          },
          _handleError: function (error) {
@@ -123,9 +123,11 @@ define('js!SBIS3.CONTROLS.List.Remove',
          _removeSelection: function(items) {
             var linkedObject = this.getLinkedObject();
             if ($ws.helpers.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.MultiSelectable')) {
+               var ids = [];
                for (var i = 0; i < items.length; i++) {
-                  linkedObject.remove(items[i]);
+                  ids.push(items[i].getId());
                }
+               linkedObject.removeItemsSelection(ids);
             }
          }
       });
