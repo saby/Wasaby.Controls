@@ -314,7 +314,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                      self._container.toggleClass('controls-RichEditorToolbar__hide', !self._options.toolbarVisible);
                   }
                );
-               this._notify('onToolbarChangeVisible',this._options.toolbarVisible);
+               this._notify('onVisibleChange',this._options.toolbarVisible);
             }
          },
 
