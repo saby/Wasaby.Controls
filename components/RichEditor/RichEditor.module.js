@@ -101,17 +101,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
             return !!this._toolbar;
          },
 
-         _bindEvents: function() {
-            RichEditor.superclass._bindEvents.apply(this, arguments);
-            this._tinyEditor.on('init', function(){
-               var
-                  toolbarHeight = this._options.toolbar && this._options.toolbarVisible ? constants.toolbarHeight : 0,
-                  editorHeight =  this._inputControl.height();
-               if (!this._options.autoHeight){
-                  this._inputControl.height(editorHeight - toolbarHeight);
-               }
-            }.bind(this));
-         },
 
          /**
           * Возращает элемент тулбара с указанным именем или false (если он отсутствует)
@@ -121,6 +110,14 @@ define('js!SBIS3.CONTROLS.RichEditor',
           */
          getToolbarItem: function(buttonName){
             return this._toolbar && this._toolbar.getItemInstance(buttonName);
+         },
+
+         _initInputHeight: function(){
+            var
+               toolbarHeight = this._options.toolbar && this._options.toolbarVisible ? constants.toolbarHeight : 0;
+            if (!this._options.autoHeight) {
+               this._inputControl.css('height',  this._container.height() - toolbarHeight);
+            }
          }
       });
 

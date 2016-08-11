@@ -160,44 +160,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this._tinyReady = new $ws.proto.Deferred();
             this._inputControl = this._container.find('.controls-RichEditor__editorFrame');
             this._fakeArea = this._container.find('.controls-RichEditor__fakeArea');
-
-            //Расчёт высоты редактора учитывая открытую панель инструментов
-            editorHeight = this._options.autoHeight ?
-            this._options.maximalHeight || this._options.minimalHeight :
-               this._container.height();
-            //Конфигурирование высоты редактора
-            if (this._options.autoHeight) {
-               //Если задана минимальная высота
-               if (this._options.minimalHeight) {
-                  //Если задана максимальная высота и она меньше, чем минимальная, то задаем её равную минимальной
-                  if (this._options.maximalHeight) {
-                     if (this._options.minimalHeight > this._options.maximalHeight) {
-                        this._options.maximalHeight = this._options.minimalHeight;
-                     }
-                  } else {
-                     //Если не задана максимальная высота, то сбрасываем её в '' (чтобы css применился)
-                     this._options.maximalHeight = '';
-                  }
-               } else { //Иначе (если минимальная высота не задана)
-                  //Сбрасываем минимальную высоту в '' (чтобы css применился)
-                  this._options.minimalHeight = '';
-                  //Если не задана максимальная высота, то сбрасываем её в '' (чтобы css применился)
-                  if (!this._options.maximalHeight) {
-                     this._options.maximalHeight = '';
-                  }
-               }
-               this._container.css('height', 'auto');
-               this._inputControl.css({
-                  'max-height': this._options.maximalHeight,
-                  'min-height': this._options.minimalHeight
-               });
-            } else {
-               this._inputControl.css('height',  editorHeight + 'px');
-            }
+            this._initInputHeight();
             this._options.editorConfig.selector = '#' + this.getId() + ' > .controls-RichEditor__editorFrame';
-            if (!this._options.editorConfig.height) {
-               this._options.editorConfig.height =  editorHeight;
-            }
             this._options.editorConfig.setup = function(editor) {
                self._tinyEditor = editor;
                self._bindEvents();
@@ -1582,6 +1546,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          _focusOutHandler: function(){
             this.saveToHistory(this.getText());
             RichTextArea.superclass._focusOutHandler.apply(this, arguments);
+         },
+
+         _initInputHeight: function(){
+            if (!this._options.autoHeight) {
+               this._inputControl.css('height',  this._container.height());
+            }
          }
       });
 
