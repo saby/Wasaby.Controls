@@ -79,6 +79,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                      'fast'
                   );
                }
+               this.execCommand('');
             }.bind(this));
          },
 
