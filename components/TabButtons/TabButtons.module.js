@@ -19,22 +19,24 @@ define(
    /**
     * Контрол, отображающий корешки закладок
     * Для корректной работы необходимо задание свойсв {@link keyField} и {@link displayField}
-    * Для оформления компонентов внутри вкладки, можно использовать следующие классы:
-    * <ol>
-    *    <li><strong>controls-TabButton__mainText</strong> - параметры текста, как у главной вкладки</li>
-    *    <li><strong>controls-TabButton__additionalText1</strong> - оформление дополнительного текста 1</li>
-    *    <li><strong>controls-TabButton__additionalText2</strong> - оформление дополнительного текста 2</li>
-    * </ol>
     * Также для отдельных вкладок можно использовать модификаторы:
-    * <ol>
-    *    <li><strong>controls-TabButton__counter</strong> - оформления вкладок-счётчиков с иконками</li>
-    *    <li><strong>controls-TabButton__main-item</strong> - оформления главной вкладки</li>
-    * </ol>
     * @class SBIS3.CONTROLS.TabButtons
     * @extends SBIS3.CONTROLS.RadioGroupBase
     * @author Крайнов Дмитрий Олегович
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyTabButtons
+    *
+    * @cssModifier controls-TabButtons__simple-view Модификатор для вкладок второго уровня
+    * @cssModifier controls-TabButtons__simple-view-select Модификатор для вкладок второго уровня с рыжим цветом выделенной вкладки. использовать совместно с controls-TabButtons__simple-view
+    * @cssModifier controls-TabButtons__simple-view-mini Модификатор для неакцентных вкладок второго уровня
+
+    * @css controls-TabButton__counter для вкладок, в которых используется счетчик. сам счетчик обернуть в класс controls-tabButton__counter-value
+    * @css controls-TabButton__counter-success для вкладок, в которых используется счетчик зеленого цвета. использовать совместно с controls-TabButton__counter
+    * @css controls-TabButton__counter-error для вкладок, в которых используется счетчик красного цвета. использовать совместно с controls-TabButton__counter
+    * @css controls-TabButton__mainText параметры текста, как у главной вкладки
+    * @css controls-TabButton__additionalText1 оформление дополнительного текста 1
+    * @css controls-TabButton__additionalText2 оформление дополнительного текста 2
+    * @css controls-TabButton__main-item оформления главной вкладки
     */
    var
       buildTplArgs = function(cfg) {
@@ -94,6 +96,16 @@ define(
          if (opts.tabSpaceTemplate) {
             opts.tabSpaceTemplate = MarkupTransformer(TemplateUtil.prepareTemplate(opts.tabSpaceTemplate));
          }
+         var items = opts.items;
+         if (items){
+            for (var i = 0, l = opts.items.length; i < l; i++){
+               items[i][opts.displayField] = MarkupTransformer(TemplateUtil.prepareTemplate(items[i][opts.displayField])({
+                  item: items[i],
+                  options: opts
+               }));
+            }
+         }
+
          return opts;
       },
 
