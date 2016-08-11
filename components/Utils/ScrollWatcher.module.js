@@ -48,13 +48,15 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          _scrollingContainer: undefined,
          _onWindowScrollHandler : undefined,
          _floatAreaScrollHandler : undefined,
-         _onContainerScrollHandler: undefined
+         _onContainerScrollHandler: undefined,
+         _isScrollTop: false
       },
 
       $constructor: function() {
          var self = this,
-             opener = this.getOpener(),
-             topParent;
+            opener = this.getOpener(),
+            topParent,
+            customScroll;
          this._publish('onScroll', 'onScrollMove');
          this._scrollingContainer = this._options.element;
          this._type = (this._options.element ? 'container' : 'window');
@@ -73,9 +75,17 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
 
          //В зависимости от настроек высоты подписываемся либо на скролл у окна, либо у контейнера
          if (this._inContainer()) {
-            this._onContainerScrollHandler =  this._onContainerScroll.bind(this);
-            this._scrollingContainer.bind('scroll', this._onContainerScrollHandler);
-
+            customScroll = this._scrollingContainer;
+            if(customScroll.hasClass('controls-Scroll__container')){
+               customScroll[0].wsControl.subscribe('onScroll', this._processCustomScrollEvent.bind(this));
+            } else {
+               this._onContainerScrollHandler = this._onContainerScroll.bind(this);
+               this._scrollingContainer.bind('scroll', this._onContainerScrollHandler);
+               //Нужно чтобы вызвать скролл у контейнеров без видимого скролла.
+               $ws.helpers.wheel(this._scrollingContainer, function (event) {
+                  $(self._scrollingContainer).scrollTop($(self._scrollingContainer).scrollTop() - event.wheelDelta / 2);
+               });
+            }
          } else if (this._inWindow()) {
             this._onWindowScrollHandler = this._onWindowScroll.bind(this);
             $(window).bind('scroll', this._onWindowScrollHandler);
@@ -116,28 +126,31 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
       _processScrollEvent: function (isBottom, curScrollTop) {
          this._defineScrollDirection(curScrollTop);
          this._notify('onScrollMove', curScrollTop);
-         if (this._isScrollUp ) {
-            if (this._isOnTop()) {
-               this._notify('onScroll', 'top', curScrollTop);
-            }
+         if (this._isOnTop()) {
+            this._notify('onScroll', 'top', curScrollTop);
          } else if (isBottom) {
             this._notify('onScroll', 'bottom', curScrollTop);
          }
       },
+      _processCustomScrollEvent: function(event, direction, scrollTop){
+         this._notify('onScroll', direction, scrollTop);
+      },
       _defineScrollDirection : function(curScrollTop){
          //Это значит вызываем с тем же значением - перепроверять не надо.
          if (this._lastScrollTop === curScrollTop) {
+            this._isScrollTop = true;
             return;
          }
          this._isScrollUp = this._lastScrollTop > curScrollTop;
          this._lastScrollTop = curScrollTop;
+         this._isScrollTop = false;
       },
       _onWindowScroll: function (event) {
          var docBody = document.body,
-               docElem = document.documentElement,
-               clientHeight = $(window).height(),
-               scrollTop = Math.max(docBody.scrollTop, docElem.scrollTop),
-               scrollHeight = Math.max(docBody.scrollHeight, docElem.scrollHeight);
+            docElem = document.documentElement,
+            clientHeight = $(window).height(),
+            scrollTop = Math.max(docBody.scrollTop, docElem.scrollTop),
+            scrollHeight = Math.max(docBody.scrollHeight, docElem.scrollHeight);
          this._processScrollEvent((clientHeight + scrollTop  >= scrollHeight - this._options.checkOffset), scrollTop);
       },
       _onFAScroll: function(event, scrollOptions) {
@@ -151,7 +164,8 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          this._processScrollEvent(elem.clientHeight + elem.scrollTop >= elem.scrollHeight - this._options.checkOffset, elem.scrollTop);
       },
       _isOnTop : function(){
-         return this._isScrollUp && (this._lastScrollTop <= this._options.checkOffset);
+         var element = this._options.element;
+         return element.hasClass('controls-Scroll__container') ? !this._isScrollTop && this.isScrollOnTop() : this._isScrollUp && (this._lastScrollTop <= this._options.checkOffset);
       },
 
       getScrollableContainer: function() {
@@ -182,7 +196,34 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
             return this.getOpener().getTopParent().getContainer().closest('.ws-scrolling-content')[0];
          }
       },
+      isScrollOnBottom: function(){
+         var scrollableContainer = this.getScrollContainer(),
+            element = this._options.element,
+            isBody = scrollableContainer == document.body,
+            scrollContainer = isBody ? $(window) : element;
 
+         //customScroll
+         if (element.hasClass('controls-Scroll__container'))
+            return element[0].wsControl.isScrollOnBottom();
+         else {
+            // Если scrollContainer это body и есть floatArea со скроллом, то у body скролла нет, а значит он не может быть снизу (его же нет!)
+            // Todo: когда будут классные скроллы (3.7.4.100?) - можно будет выпилить
+            if (scrollableContainer){
+               scrollContainer = $(scrollContainer);
+               return (scrollableContainer.scrollHeight - (scrollableContainer.scrollTop + scrollContainer.height())) == 0;
+            }
+         }
+
+      },
+      isScrollOnTop: function(){
+         var element = this._options.element;
+         if (element.hasClass('controls-Scroll__container')){
+            return element[0].wsControl.isScrollOnTop();
+         }
+         else {
+            return null;
+         }
+      },
       /**
        * Проскроллить в контейнере
        * @param {String|Number} offset куда или насколько скроллить.
@@ -191,7 +232,14 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * @variant {Number} - поскроллить на указанную величину
        */
       scrollTo:function(offset){
-         var scrollable = this._getContainer();
+         var scrollable = this._getContainer(),
+             element = this._options.element;
+
+         if(element.hasClass('controls-Scroll__container')){
+            element[0].wsControl.scrollTo(typeof offset === 'string' ? (offset === 'top' ? 0 : 'bottom') : $ws.helpers.format({offset: offset}, '-=$offset$s$'));
+            this._lastScrollTop = element[0].wsControl.getScrollTop();
+         }
+
          scrollable.scrollTop(typeof offset === 'string' ? (offset === 'top' ? 0 : scrollable[0].scrollHeight) : offset);
       },
       /**
@@ -199,7 +247,8 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * @returns {*}
        */
       getScrollHeight: function(element){
-         return this.getScrollContainer(element).scrollHeight;
+         var scroll = this._options.element;
+         return scroll.hasClass('controls-Scroll__container') ? $('.mCSB_container').height() :this.getScrollContainer(element).scrollHeight;
       },
       /**
        * Получить текущую высоту скроллируемого контейнера
@@ -222,6 +271,12 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * @returns {boolean}
        */
       hasScroll: function(element){
+         //TODO: для customScroll
+         var elementCS = this._options.element;
+         if(elementCS.hasClass('controls-Scroll__container')) {
+            return elementCS[0].wsControl.hasScroll();
+         }
+
          var scrollHeight = this.getScrollHeight(element);
          return scrollHeight > this.getContainerHeight() || scrollHeight > $(window).height();
       },
