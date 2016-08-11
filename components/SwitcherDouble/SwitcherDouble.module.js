@@ -20,9 +20,9 @@ define('js!SBIS3.CONTROLS.SwitcherDouble', ['js!SBIS3.CORE.Control', 'html!SBIS3
     * @mixes SBIS3.CONTROLS.Clickable
     * @mixes SBIS3.CONTROLS.Checkable
     *
-    * @demo SBIS3.CONTROLS.Demo.MySwitcherDoubleOnline
+    * @demo SBIS3.CONTROLS.Demo.MySwitcherDouble
     *
-    * @author Борисов Петр Сергеевич
+    * @author Черемушкин Илья Вячеславович
     *
     * @initial
     * <component data-component='SBIS3.CONTROLS.SwitcherDouble'>

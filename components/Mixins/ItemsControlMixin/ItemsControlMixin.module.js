@@ -1134,8 +1134,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
       /**
        * Перевычитывает модель из источника данных, мержит изменения к текущим данным и перерисовывает запись
-       * @param id Идентификатор модели
-       * @param id Мета информация
+       * @param {Number} id Идентификатор модели
+       * @param {Object|WS.Data/Entity/Model} meta Мета информация
        * @returns {*}
        */
       reloadItem: function(id, meta) {
@@ -1150,14 +1150,30 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             return $ws.proto.deferred.success();
          }
       },
-       /**
-        * Метод перезагрузки данных.
-        * Можно задать фильтрацию, сортировку.
-        * @param {String} filter Параметры фильтрации.
-        * @param {String} sorting Параметры сортировки.
-        * @param offset Элемент, с которого перезагружать данные.
-        * @param {Number} limit Ограничение количества перезагружаемых элементов.
-        */
+      /**
+       * Перезагружает набор записей представления данных с последующим обновлением отображения.
+       * @param {Object} filter Параметры фильтрации.
+       * @param {String|Array.<Object.<String,Boolean>>} sorting Параметры сортировки.
+       * @param {Number} offset Смещение первого элемента выборки.
+       * @param {Number} limit Максимальное количество элементов выборки.
+       * @example
+       * <pre>
+       *    myDataGridView.reload(
+       *       { // Устанавливаем параметры фильтрации: требуются записи, в которых поля принимают следующие значения
+       *          iata: 'SVO',
+       *          direction: 'Arrivals',
+       *          state: 'Landed',
+       *          fromCity: ['New York', 'Los Angeles']
+       *       },
+       *       [ // Устанавливаем параметры сортировки: сначала производится сортировка по полю direction, а потом - по полю state
+       *          {direction: false}, // Поле direction сортируется по возрастанию
+       *          {state: true} // Поле state сортируется по убыванию
+       *       ],
+       *       50, // Устанавливаем смещение: из всех подходящих записей отбор результатов начнём с 50-ой записи
+       *       20 // Требуется вернуть только 20 записей
+       *    );
+       * </pre>
+       */
       reload: propertyUpdateWrapper(function (filter, sorting, offset, limit) {
          var
             def,
@@ -1208,13 +1224,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    }
 
                    this._dataLoadedCallback();
-
-                   if (self._options.infiniteScroll === 'up'){
-                      var firstItem = self._options._itemsProjection.at(0);
-                      if (firstItem) {
-                         self._scrollToItem(firstItem.getContents().getId());
-                      }
-                   }
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
@@ -1222,7 +1231,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    if (!error.canceled) {
                       self._toggleIndicator(false);
                       if (self._notify('onDataLoadError', error) !== true) {
-                         $ws.helpers.message(error.message.toString().replace('Error: ', ''));
+                         $ws.helpers.alert(error.message.toString().replace('Error: ', ''));
                          error.processed = true;
                       }
                    }
@@ -1756,7 +1765,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var upperRow = $(rows[i - 1]).length ? $('.controls-ladder', rows[i - 1]) : undefined,
                 lowerRow = $(rows[i]).length ? $('.controls-ladder', rows[i]) : undefined,
                needHide;
-            if (lowerRow) {
+            if (lowerRow && $(rows[i - 1]).attr('data-parent-hash') === $(rows[i]).attr('data-parent-hash')) {
                for (var j = 0; j < lowerRow.length; j++) {
                   needHide = upperRow ? (upperRow.eq(j).html() == lowerRow.eq(j).html()) : false;
                   lowerRow.eq(j).toggleClass('ws-invisible', needHide);
