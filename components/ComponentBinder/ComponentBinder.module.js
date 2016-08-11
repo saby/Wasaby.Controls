@@ -770,7 +770,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          if (this._options.paging.getPagesCount() < pagesCount){
             if (!this._options.view.getItems().getMetaData().more){
                pagesCount--;
-               if (pagesCount > 0) {
+               if (pagesCount > 1) {
                   this._options.view.getContainer().css('padding-bottom', '32px');
                }            }
             this._options.paging.setPagesCount(pagesCount);
