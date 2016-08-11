@@ -79,6 +79,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @mixes SBIS3.CONTROLS.Selectable
        * @mixes SBIS3.CONTROLS.DecorableMixin
        * @mixes SBIS3.CONTROLS.DataBindMixin
+       * @mixes SBIS3.CONTROLS.DragNDropMixinNew
        * @control
        * @public
        * @cssModifier controls-ListView__orangeMarker Показывать маркер активной строки у элементов ListView. Актуально только для ListView.
@@ -2650,7 +2651,8 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws.helpers.forEach(items, function (id) {
                   var item = this.getItems().getRecordById(id),
                      projItem = this._getItemsProjection().getItemBySourceItem(item);
-                  source.push(this.getDragEntity({
+                  source.push(this._makeDragEntity({
+                     owner: this,
                      model: item,
                      domElement: this._getHtmlItemByProjectionItem(projItem)
                   }));
@@ -2717,7 +2719,8 @@ define('js!SBIS3.CONTROLS.ListView',
                      position = DRAG_META_INSERT.on;
                   }
                }
-               target = this.getDragEntity({
+               target = this._makeDragEntity({
+                  owner: this,
                   domElement: domElement,
                   model: model,
                   position: position
