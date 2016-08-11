@@ -112,7 +112,10 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
             }
          }
          if (this._getItemsProjection()) {
-            this._curHash = this._getItemsProjection().at(this._options.selectedIndex).getHash();
+            var curItem = this._getItemsProjection().at(this._options.selectedIndex);
+            if (curItem) {
+               this._curHash = curItem.getHash();
+            }
          }
 
       },
@@ -345,7 +348,10 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
             }
             var newHash;
             if (this._getItemsProjection()) {
-               newHash = this._getItemsProjection().at(this._options.selectedIndex).getHash();
+               var curItem = this._getItemsProjection().at(this._options.selectedIndex);
+               if (curItem) {
+                  newHash = curItem.getHash();
+               }
             }
 
             if (action !== IBindCollection.ACTION_REPLACE && (newHash !== this._curHash)) {
