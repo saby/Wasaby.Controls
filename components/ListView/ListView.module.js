@@ -1445,8 +1445,8 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options._decorators) {
                this._options._decorators.update(this);
             }
-            ListView.superclass.redraw.apply(this, arguments);
             this._destroyEditInPlace();
+            ListView.superclass.redraw.apply(this, arguments);
          },
 
          /**
