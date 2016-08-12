@@ -99,10 +99,16 @@ define(
          var items = opts.items;
          if (items){
             for (var i = 0, l = opts.items.length; i < l; i++){
-               items[i][opts.displayField] = MarkupTransformer(TemplateUtil.prepareTemplate(items[i][opts.displayField])({
+               var tmpl = MarkupTransformer(TemplateUtil.prepareTemplate(items[i][opts.displayField])({
                   item: items[i],
                   options: opts
                }));
+               //По новым стандартам при длинном тексте обрезается не все, а только "основной текст"
+               //Если в шаблоне вкладки основной текст не задан, текст обрезаем по всему содержимому
+               if (tmpl.indexOf('controls-TabButton__caption-text') < 0){
+                  tmpl = '<div class="controls-TabButton__caption-text">' + tmpl + '</div>';
+               }
+               items[i][opts.displayField] = tmpl;
             }
          }
 
