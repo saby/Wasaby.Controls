@@ -623,8 +623,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
             }
 
             dMultiResult.done().getResult().addCallback(function() {
-               self._onSelectedItemsChangeHandler();
-               self._loadItemsDeferred.callback(selItems);
+               if(!self._loadItemsDeferred.isReady()) {
+                  self._onSelectedItemsChangeHandler();
+                  self._loadItemsDeferred.callback(selItems);
+               }
             });
 
          } else {
