@@ -149,7 +149,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        * @param {Object} cfg - параметры метода methodName
        * @param {number} pageOrientation 1 - потртетная, 2 - альбомная
        */
-      exportList: function(fileName, fileType, cfg, pageOrientation){
+      exportList: function(fileName, fileType, cfg, pageOrientation, methodName){
          cfg = cfg || {};
          if (fileName) {
             cfg.FileName = fileName;
@@ -157,7 +157,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          if (pageOrientation) {
             cfg.PageOrientation = pageOrientation;
          }
-         this.exportFileTransfer(fileType, 'SaveList', cfg);
+         this.exportFileTransfer(fileType, methodName || 'SaveList', cfg);
       },
       /**
        * Выгрузить данные в Excel или PDF по набору данных
@@ -166,7 +166,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        * @param {Object} cfg - параметры метода methodName
        * @param {number} pageOrientation 1 - потртетная, 2 - альбомная
        */
-      exportDataSet: function(fileName, fileType, cfg, pageOrientation){
+      exportDataSet: function(fileName, fileType, cfg, pageOrientation, methodName){
          var
             columns  = $ws.core.clone(this._options.columns),
             records,
@@ -199,7 +199,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             }
          }
 
-         this.exportFileTransfer(fileType, 'SaveRecordSet', cfg);
+         this.exportFileTransfer(fileType, methodName || 'SaveRecordSet', cfg);
       },
       /**
        * Универсальная выгрузка данных через сервис file-transfer
