@@ -13,6 +13,9 @@
   top: 2px;
   cursor: pointer;
 }
+.demo-tab-buttons .demo8_text {
+  display: inline-block;
+}
 .category {
   font-size: 18px;
   color: #313E78;

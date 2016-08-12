@@ -18,6 +18,8 @@ define(
     * @extends SBIS3.CONTROLS.RadioButtonBase
     * @author Крайнов Дмитрий Олегович
     */
+
+   var TAB_BUTTON__MAX_WIDTH = 630;
    var TabButton = RadioButtonBase.extend([IconMixin],/** @lends SBIS3.CONTROLS.TabButton.prototype */ {
       $protected: {
          _options: {
@@ -36,8 +38,21 @@ define(
       _dotTplFn: dotTplFn,
 
       $constructor: function () {
+         this.subscribe('onBeforeShow', this._beforeShowHandler.bind(this));
          if (this._options.icon){
             this.setIcon(this._options.icon);
+         }
+      },
+
+      _beforeShowHandler: function(){
+         var captionText = $('.controls-TabButton__caption-text', this.getContainer()),
+             containerWidth = this.getContainer().width(),
+             dif = containerWidth - TAB_BUTTON__MAX_WIDTH,
+             newWidth;
+         if (dif > 0){
+            newWidth = captionText.width() - dif;
+            captionText.css('max-width', newWidth);
+            captionText.addClass('controls-TabButton__caption-text-overflow');
          }
       },
 

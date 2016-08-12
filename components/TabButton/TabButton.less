@@ -18,6 +18,9 @@
          &:before {
             display: @tab-button-hover-inner-after-display;
          }
+         .controls-TabButton__caption .controls-TabButton__caption-text:after{
+           background: linear-gradient(to left,#f0f5fb,rgba(255,255,255,0));
+         }
       }
    }
 
@@ -76,7 +79,7 @@
    }
 
    .controls-TabButton__bottomLine{
-      display: none;
+      display: @tab-button-bottomLine-start-display;
    }
    //стиль для встраиваемых компонентов, чтобы текст был по стандарту
    .controls-TabButton__mainText {
@@ -93,6 +96,15 @@
       z-index: @tab-button-checked-z-index;
       cursor: @tab-button-checked-cursor;
       font-size: @tab-button-checked-font-size;
+      .controls-TabButton__bottomLine {
+        position: @tab-button-bottomLine-position;
+        bottom: @tab-button-bottomLine-bottom;
+        left: @tab-button-bottomLine-left;
+        right: @tab-button-bottomLine-right;
+        background: @tab-button-bottomLine-background;
+        height: @tab-button-bottomLine-height;
+        display: @tab-button-bottomLine-display;
+      }
       .controls-TabButton__inner {
          height: @tab-button-checked-height + 1;
          font-weight: @tab-button-checked-inner-font-weight;
@@ -104,6 +116,9 @@
          overflow:  @tab-button-large-inner-overflow;
          &:before{
             display: @tab-button-checked-inner-after-display;
+         }
+         .controls-TabButton__caption .controls-TabButton__caption-text:after{
+           background: linear-gradient(to left,#fff,rgba(255,255,255,0));
          }
       }
       .controls-tabButton__overlay{
@@ -120,7 +135,7 @@
       .controls-TabButton__inner{
          font-size: @tab-button-large-inner-font-size;
          font-weight: @tab-button-large-inner-font-weight;
-         line-height: @tab-button-large-inner-line-height;
+         line-height: 27px;
          .controls-MenuLink {
             font-size: @tab-button-large-inner-font-size;
          }
@@ -158,7 +173,6 @@
       line-height: @tab-button-inner-line-height;
       overflow: @tab-button-inner-overflow;
       height: @tab-button-inner-height;
-      max-width: @tab-button-large-inner-max-width;
      &:before {
          content: @tab-button-inner-after-content;
          display: @tab-button-inner-after-display;
@@ -178,6 +192,29 @@
       }
       .controls-TabButton__caption {
          display: inline-block;
+         > div {
+            vertical-align: top;
+         }
+         .controls-TabButton__caption-text{
+           display: inline-block;
+           overflow: hidden;
+           position: relative;
+           &:after {
+             content: '';
+             display: none;
+             width: 15px;
+             height: 28px;
+             background: linear-gradient(to left,#fff,rgba(255,255,255,0));
+             position: absolute;
+             top: 0;
+             right: 0;
+           }
+           &.controls-TabButton__caption-text-overflow{
+             &:after {
+               display: block;
+             }
+           }
+         }
       }
       .controls-EditAtPlace {
          .controls-EditAtPlace__textField{
