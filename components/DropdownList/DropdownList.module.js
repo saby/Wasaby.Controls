@@ -452,6 +452,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if(len) {
                def = new $ws.proto.Deferred();
 
+               if(!this._picker) {
+                  this._initializePicker();
+               }
+
                this.getSelectedItems(true).addCallback(function(list) {
                   if(list) {
                      list.each(function (rec) {
