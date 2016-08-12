@@ -379,7 +379,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _dataLoadedCallback: function() {
             /* Загрузились элементы в датасет, отменяем вычитку записей,
                возможно вычитавать уже не надо */
-            this.getSelectedItems(true).cancel();
+            if(this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
+               this._loadItemsDeferred.cancel();
+            }
             DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
             var item =  this._dataSet.at(0);
             if (item) {
