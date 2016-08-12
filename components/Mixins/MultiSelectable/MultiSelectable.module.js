@@ -605,7 +605,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
             }
 
             /* Если сорс грузит данные, то дожидаемся его */
-            $ws.helpers.callbackWrapper(this._loader, function() {
+            $ws.helpers.callbackWrapper(this._loader, function(res) {
                for (var j = 0; loadKeysAmount > j; j++) {
                   item = self.getItems() && self.getItems().getRecordById(loadKeysArr[j]);
 
@@ -628,6 +628,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
                   self._onSelectedItemsChangeHandler();
                   self._loadItemsDeferred.callback(selItems);
                });
+
+               return res;
             });
 
          } else {
