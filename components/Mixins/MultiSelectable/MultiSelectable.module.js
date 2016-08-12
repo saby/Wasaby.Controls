@@ -766,20 +766,25 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
       },
 
       _setSelectedItems: function() {
-         var dataSet = this.getItems(),
+         var
+             record,
+             isEmpty,
+             index = -1,
              self = this,
-             record, index;
+             dataSet = this.getItems();
 
-         if (dataSet && this.getSelectedItems(true).isReady()) {
+         if (!self._options.selectedItems) {
+            self.initializeSelectedItems();
+         }
+         isEmpty = !this._options.selectedItems.getCount();
+
+         if (dataSet && (!this._loadItemsDeferred || this._loadItemsDeferred.isReady())) {
             $ws.helpers.forEach(this.getSelectedKeys(), function (key) {
                record = dataSet.getRecordById(key);
                if (record) {
-                  if(!self._options.selectedItems) {
-                     self.initializeSelectedItems();
+                  if (!isEmpty) {
+                     index = self._options.selectedItems.getIndexByValue(self._options.keyField, record.getId());
                   }
-
-                  index = self._options.selectedItems.getIndexByValue(self._options.keyField, record.getId());
-
                   /**
                    * Запись в датасете есть - заменим в наборе выбранных записей, т.к. она могла измениться.
                    * Если нету, то просто добавим.
