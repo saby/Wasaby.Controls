@@ -410,7 +410,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                side: 'left'
             },
             closeByExternalClick: true,
-            targetPart: true
+            targetPart: true,
+            activableByClick: false
          };
       },
 
