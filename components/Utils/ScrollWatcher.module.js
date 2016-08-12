@@ -164,7 +164,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          this._processScrollEvent(elem.clientHeight + elem.scrollTop >= elem.scrollHeight - this._options.checkOffset, elem.scrollTop);
       },
       _isOnTop : function(){
-         var element = this._options.element;
+         var element = this._getContainer();
          return element.hasClass('controls-Scroll__container') ? !this._isScrollTop && this.isScrollOnTop() : this._isScrollUp && (this._lastScrollTop <= this._options.checkOffset);
       },
 
@@ -198,7 +198,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
       },
       isScrollOnBottom: function(){
          var scrollableContainer = this.getScrollContainer(),
-            element = this._options.element,
+            element = this._getContainer(),
             isBody = scrollableContainer == document.body,
             scrollContainer = isBody ? $(window) : element;
 
@@ -232,12 +232,12 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * @variant {Number} - поскроллить на указанную величину
        */
       scrollTo:function(offset){
-         var scrollable = this._getContainer(),
-             element = this._options.element;
+         var scrollable = this._getContainer();
 
-         if(element.hasClass('controls-Scroll__container')){
-            element[0].wsControl.scrollTo(typeof offset === 'string' ? (offset === 'top' ? 0 : 'bottom') : $ws.helpers.format({offset: offset}, '-=$offset$s$'));
-            this._lastScrollTop = element[0].wsControl.getScrollTop();
+         if (scrollable.hasClass('controls-Scroll__container')){
+            scrollable[0].wsControl.scrollTo(typeof offset === 'string' ? (offset === 'top' ? 0 : 'bottom') : $ws.helpers.format({offset: offset}, '-=$offset$s$'));
+            this._lastScrollTop = scrollable[0].wsControl.getScrollTop();
+            return;
          }
 
          scrollable.scrollTop(typeof offset === 'string' ? (offset === 'top' ? 0 : scrollable[0].scrollHeight) : offset);
@@ -247,8 +247,8 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * @returns {*}
        */
       getScrollHeight: function(element){
-         var scroll = this._options.element;
-         return scroll.hasClass('controls-Scroll__container') ? $('.mCSB_container').height() :this.getScrollContainer(element).scrollHeight;
+         var element = element || this._getContainer();
+         return element.hasClass('controls-Scroll__container') ? $('.mCSB_container').height() : this.getScrollContainer(element).scrollHeight;
       },
       /**
        * Получить текущую высоту скроллируемого контейнера
@@ -272,9 +272,9 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        */
       hasScroll: function(element){
          //TODO: для customScroll
-         var elementCS = this._options.element;
-         if(elementCS.hasClass('controls-Scroll__container')) {
-            return elementCS[0].wsControl.hasScroll();
+         element = element || this._getContainer();
+         if (element.hasClass('controls-Scroll__container')) {
+            return element[0].wsControl.hasScroll();
          }
 
          var scrollHeight = this.getScrollHeight(element);
