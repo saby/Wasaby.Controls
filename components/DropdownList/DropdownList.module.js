@@ -481,11 +481,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
                      pickerContainer.find('[data-id="' + id[0] + '"]').addClass('controls-DropdownList__item__selected');
                   }
                   self.setText(textValue.join(', '));
-                  if (!self._pickerText.length){ //Если у нас собственный headTpl
-                     var headTpl = MarkupTransformer(TemplateUtil.prepareTemplate(self._options.headTemplate.call(self, self._options)))();
-                     self._pickerHeadContainer.html(headTpl);
-                     self._selectedItemContainer.html(headTpl);
-                  }
+                  self._redrawHead();
+
                   if(id[0] === self._defaultId){
                      self.getContainer().addClass('controls-DropdownList__hideCross');
                      self._getPickerContainer().addClass('controls-DropdownList__hideCross');
@@ -498,6 +495,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
                });
             }
+         },
+         _redrawHead: function(){
+            var pickerHeadTpl = $('.controls-DropdownList__selectedItem', this._getPickerContainer()),
+                headTpl = MarkupTransformer(TemplateUtil.prepareTemplate(this._options.headTemplate.call(this, this._options)))();
+            this._selectedItemContainer.html(headTpl);
+            pickerHeadTpl.html(headTpl);
          },
          /**
           * Получить ключ элемента для выбора "по умолчанию"
