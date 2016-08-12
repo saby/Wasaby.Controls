@@ -107,6 +107,9 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          this.getChildControlByName('NextYearButton').subscribe('onActivated', this._onPrevOrNextYearBtnClick.bind(this, 1));
          this.getChildControlByName('BackToYearButton').subscribe('onActivated', this._onBackToYearBtnClick.bind(this));
 
+         container.find('.controls-DateRangeBigChoose__months-toStart').click(this._toStartMonth.bind(this));
+         container.find('.controls-DateRangeBigChoose__months-toEnd').click(this._toEndMonth.bind(this));
+
          this._initRangeButtonControl(selectionTypes.years, 'YearsRangeBtn', 6);
          this._initRangeButtonControl(selectionTypes.quarters, 'QuarterRangeBtn', 4);
          this._initRangeButtonControl(selectionTypes.halfyears, 'HalfyearRangeBtn', 2);
@@ -146,6 +149,20 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          }
       },
 
+      _toStartMonth: function () {
+         var start = this.getStartValue();
+         if (start) {
+            this._setCurrentYear(start.getFullYear());
+         }
+      },
+
+      _toEndMonth: function () {
+         var end = this.getEndValue();
+         if (end) {
+            this._setCurrentYear(end.getFullYear());
+         }
+      },
+
       _yearBtnMouseEnter: function () {
          if (this._state === states.year) {
             this.getContainer().addClass('controls-DateRangeBigChoose__yearHovered');
@@ -162,7 +179,13 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          if (!date) {
             return;
          }
-         var endDate = this._endDatePicker.getDate();
+
+         var oldStartDate = this.getStartValue(),
+            endDate = this._endDatePicker.getDate();
+
+         if (oldStartDate && oldStartDate.getTime() === date.getTime()) {
+            return;
+         }
          if (endDate && date > endDate) {
             // setRange не вызываем, диапазон установится в обработчике _onDatePickerEndDateChanged
             // TODO: когда будет возможность установить свойство без генерации событий надо будет убрать этот хак.
@@ -204,7 +227,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             start = this.getStartValue();
             end = this.getEndValue();
             if (!this._isDatesEqual(start, oldStart) && !this._isDatesEqual(end, oldEnd)) {
-               this._dateRangePicker.setMonth(start);
+               // this._dateRangePicker.setMonth(start);
                this._setCurrentYear(start.getFullYear(), true);
             }
          } else {
@@ -251,19 +274,20 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             end = this.getEndValue();
 
          if (start && start.getFullYear() < this._getCurrentYear()) {
-            this.getContainer().find('.controls-DateRangeBigChoose__months-hasMore1').removeClass('ws-hidden');
+            this.getContainer().find('.controls-DateRangeBigChoose__months-toStart').removeClass('ws-hidden');
          } else {
-            this.getContainer().find('.controls-DateRangeBigChoose__months-hasMore1').addClass('ws-hidden');
+            this.getContainer().find('.controls-DateRangeBigChoose__months-toStart').addClass('ws-hidden');
          }
          if (end && end.getFullYear() > this._getCurrentYear()) {
-            this.getContainer().find('.controls-DateRangeBigChoose__months-hasMore2').removeClass('ws-hidden');
+            this.getContainer().find('.controls-DateRangeBigChoose__months-toEnd').removeClass('ws-hidden');
          } else {
-            this.getContainer().find('.controls-DateRangeBigChoose__months-hasMore2').addClass('ws-hidden');
+            this.getContainer().find('.controls-DateRangeBigChoose__months-toEnd').addClass('ws-hidden');
          }
       },
 
       _onInnerComponentRangeChange: function (e, startValue, endValue) {
          this._clearAllSelection();
+         this._setYearBarState(YEAR_CHOOSER_STATE_1YEAR);
          this._setSelectionType(null);
          this.setRange(startValue, endValue);
       },
@@ -330,6 +354,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          if (this.getStartValue() && this.getEndValue()) {
             this._drawCurrentRangeSelection();
          }
+         this._updateRangeIndicators();
       },
 
       _onMonthPickerWheel: function (event) {
@@ -363,11 +388,23 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             this.getChildControlByName('MonthRangePicker').setYear(value);
             this.getChildControlByName('MonthDateRangePicker').setMonth(new Date(value, 0, 1));
          }
+         this._updateRangeIndicators();
       },
 
-      _toggleChooseYear: function (e) {
-         var container = this.getContainer();
+      _toggleChooseYear: function () {
          if (this._yearChooserState === YEAR_CHOOSER_STATE_1YEAR) {
+            this._setYearBarState(YEAR_CHOOSER_STATE_YEARS);
+         } else {
+            this._setYearBarState(YEAR_CHOOSER_STATE_1YEAR);
+         }
+      },
+
+      _setYearBarState: function (state) {
+         var container = this.getContainer();
+         if (this._yearChooserState === state) {
+            return;
+         }
+         if (state === YEAR_CHOOSER_STATE_YEARS) {
             this._yearChooserState = YEAR_CHOOSER_STATE_YEARS;
             this.cancelSelection();
             this._updateYearsRange(this._getCurrentYear());
@@ -446,10 +483,17 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          var itemId = this._getItemIdByItemContainer(e.getTarget().getContainer()),
             item = this._getSelectedRangeItemByItemId(itemId, selectionType);
          if (this._options.rangeselect) {
+            if (selectionType !== selectionTypes.years) {
+               this._setYearBarState(YEAR_CHOOSER_STATE_1YEAR);
+            }
             if (selectionType === selectionTypes.months && this._dateRangePicker.isSelectionProcessing()) {
                // Панель дапазона месяцев выбирает отображаемый месяц для MonthDateRangePicker когда
                // в MonthDateRangePicker происходит выделение диапазона.
                this._dateRangePicker.setMonth(item);
+               return;
+            } else if (selectionType === selectionTypes.years && this._state === states.month) {
+               this._setCurrentYear(item.getFullYear());
+               this._toggleChooseYear();
                return;
             }
             this._selectionToggle(item, selectionType);

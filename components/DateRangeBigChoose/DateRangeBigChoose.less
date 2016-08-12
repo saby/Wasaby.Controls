@@ -100,10 +100,10 @@
          float: right;
       }
       .controls-DateRangeBigChoose__header-rangeDash {
-          float: right;
-          width: 2px;
-          border-bottom: 1px solid black;
-          margin: 13px 3px 0 3px;
+         float: right;
+         width: 2px;
+         border-bottom: 1px solid black;
+         margin: 13px 3px 0 3px;
       }
       .controls-DateRangeBigChoose__datePickerEnd {
          float: right;
@@ -113,6 +113,12 @@
       .controls-DateRangeBigChoose__datePickerStart {
          float: right;
          margin-top: 2px;
+      }
+
+      .controls-DatePicker .controls-FormattedTextBox__fieldWrapper {
+         border: 1px solid #e4e4e4;
+         border-radius: 3px;
+         font-size: 14px;
       }
    }
 
@@ -155,7 +161,7 @@
       .controls-DateRangeBigChoose__left,
       .controls-DateRangeBigChoose__center,
       .controls-DateRangeBigChoose__right {
-         padding: 8px 0;
+         padding: 7px 0 9px 0;
          border: 1px solid transparent;
          .box-sizing(border-box);
       }
@@ -185,10 +191,17 @@
          }
       }
 
-      .controls-DateRangeBigChoose__years-currentYearBtn.controls-Link:hover {
-         color: @link-text-color;
-         text-decoration: none;
-         background-color: @default-itemHover-color;
+      .controls-DateRangeBigChoose__years-currentYearBtn.controls-Link {
+         margin: 0 20px;
+         &:hover {
+            color: @link-text-color;
+            text-decoration: none;
+            background-color: @default-itemHover-color;
+         }
+         &:active {
+            color: @white-color;
+            background-color: @blue-color;
+         }
       }
       .controls-DateRangeBigChoose__years-toggleChooseYearBtn.controls-Link {
          .box-sizing(border-box);
@@ -245,12 +258,14 @@
          .box-sizing(border-box);
          &:hover {
             background-color: @default-itemHover-color;
-            border-bottom: 1px solid @borders-color;
             button {
-               border-top-color: transparent;
+               border-top: none;
             }
             + .controls-DateRangeBigChoose__months-range-btn-wrapper button {
-               border-top-color: transparent;
+               border-top: none;
+            }
+            + .controls-DateRangeBigChoose__months-range-btn-wrapper {
+               border-top: 1px solid @borders-color;
             }
          }
          + .controls-DateRangeBigChoose__months-range-btn-wrapper:hover {
@@ -262,6 +277,12 @@
             &:hover {
                font-weight: bold;
             }
+         }
+         &.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
+            border-top: none;
+            //button {
+            //   border-bottom: none;
+            //}
          }
       }
 
@@ -295,7 +316,6 @@
          .controls-DateRangeBigChoose__months-range-btn-wrapper {
             height: 202px;
             button {
-               //height: 202px;
                float: right;
                border-right-color: @white-color;
                &:hover {
@@ -315,8 +335,9 @@
          height: 100%;
          overflow: hidden;
       }
-      .controls-DateRangeBigChoose__months-hasMore1 {
+      .controls-DateRangeBigChoose__months-toStart {
          position: absolute;
+         cursor: pointer;
          top: 0;
          left: 0;
          width: 0;
@@ -324,8 +345,9 @@
          border-top: 8px solid @blue-color;
          border-right: 8px solid transparent;
       }
-      .controls-DateRangeBigChoose__months-hasMore2 {
+      .controls-DateRangeBigChoose__months-toEnd {
          position: absolute;
+         cursor: pointer;
          bottom: 0;
          right: 0;
          width: 0;
@@ -336,7 +358,7 @@
    }
 
    .controls-DateRangeBigChoose__dates {
-      height: 427px;
+      height: 403px;
       position: relative;
 
       .controls-DateRangeBigChoose__dates-months {
@@ -346,15 +368,22 @@
 
          button.controls-Button {
             width: 100%;
-            height: 35px;
+            height: 33px;
             border-top: none;
             border-bottom: none;
             color: @date-range-big-choose-months-color;
             font-size: @date-range-big-choose-months-font-size;
             text-align: left;
             padding-left: 8px;
-
             border-left-color: @white-color;
+
+            &:first-child {
+               height: 36px;
+            }
+            &:last-child {
+               height: 37px;
+            }
+
             &:hover {
                border-left-color: @default-itemHover-color;
             }
@@ -403,7 +432,7 @@
          font-weight: bold;
          font-style: normal;
          display: block;
-         margin: 0 auto;
+         margin: 0 20px;
       }
    }
 

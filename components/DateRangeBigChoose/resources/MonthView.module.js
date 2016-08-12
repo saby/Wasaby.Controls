@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView', [
       $protected: {
          _options: {
             rangeselect: false,
+            activableByClick: false,
             className: 'controls-DateRangeBigChoose-MonthView'
          }
       },
@@ -35,10 +36,6 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView', [
          });
       },
 
-      _moveFocusToSelf: function(dontChangeDomFocus) {
-         // Контрол не должен принимать на себя фокус
-      },
-
       /**
        * Перекрываем базовый функционал. Нам не надо что бы сбрасывалось выделение, когда пользователь убирает мышку с контрола.
        * @private
@@ -59,8 +56,52 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView', [
             this._notify('onSelectingRangeEndDateChange', this._rangeSelectionEnd, date, this._getSelectionType());
          }
          return changed
-      }
+      },
 
+      _drawRangeSelection: function (start, end) {
+         var ret = MonthView.superclass._drawRangeSelection.apply(this, arguments);
+         this._updateBorders();
+         return ret;
+      },
+
+      _updateBorders: function () {
+         var self = this,
+            rows = this.getContainer().find(['.', this.MONTH_VIEW_CSS_CLASSES.TABLE_ROW].join('')),
+            borderTopClass = 'controls-DateRangeBigChoose-MonthView__border-top',
+            borderBottomClass = 'controls-DateRangeBigChoose-MonthView__border-bottom',
+            prevElement;
+         this.getContainer().find(['.', borderTopClass].join('')).removeClass(borderTopClass);
+         this.getContainer().find(['.', borderBottomClass].join('')).removeClass(borderBottomClass);
+
+         if(rows && rows.length) {
+            rows.each(function (trIndex, trElement) {
+               trElement = $(trElement);
+               trElement.children().each(function (tdIndex, tdElement) {
+                  tdElement = $(tdElement);
+                  if (tdElement.hasClass(self._SELECTABLE_RANGE_CSS_CLASSES.selected)) {
+                     if (!prevElement) {
+                        tdElement.addClass(borderTopClass);
+                     } else {
+                        if (!$(prevElement.children()[tdIndex]).hasClass(self._SELECTABLE_RANGE_CSS_CLASSES.selected)) {
+                           tdElement.addClass(borderTopClass);
+                        }
+                     }
+                  } else {
+                     if (prevElement && $(prevElement.children()[tdIndex]).hasClass(self._SELECTABLE_RANGE_CSS_CLASSES.selected)) {
+                        $(prevElement.children()[tdIndex]).addClass(borderBottomClass);
+                     }
+                  }
+               });
+               prevElement = trElement
+            });
+            prevElement.children().each(function (tdIndex, tdElement) {
+               tdElement = $(tdElement);
+               if (tdElement.hasClass(self._SELECTABLE_RANGE_CSS_CLASSES.selected)) {
+                  tdElement.addClass(borderBottomClass);
+               }
+            });
+         }
+      }
 
    });
    return MonthView;

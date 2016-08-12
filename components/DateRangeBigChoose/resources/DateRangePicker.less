@@ -13,14 +13,22 @@
       .box-sizing(border-box);
 
       table {
-         border-collapse: collapse;
+         border-collapse: separate;
+         border-spacing: 0;
       }
       .controls-MonthView__caption-text {
          font-size: 20px;
          height: 40px;
+         width: 95px;
          line-height: 40px;
          text-align: left;
-         padding-left: 60px;
+         padding-left: 10px;
+         margin-left: 50px;
+         cursor: pointer;
+
+         &:hover {
+            background-color: @default-itemHover-color;
+         }
       }
       .controls-MonthView__dayTable {
          .controls-MonthView__weekHovered {
@@ -30,6 +38,7 @@
          }
 
          .controls-MonthView__tableElement {
+            .box-sizing(border-box);
             width: 34px;
             height: 39px;
             padding: 0;
@@ -37,9 +46,41 @@
             background: transparent;
             font-size: 16px;
 
+            border-bottom: 1px solid @date-range-big-choose-date-range-picker-calendar-item-border-color;
+
+            &.controls-MonthView__nextMonth {
+               border-bottom-width: 0;
+            }
+
+            &.controls-MonthView__prevMonth.controls-MonthView__lastDayOfMonth {
+               border-right: 1px solid @date-range-big-choose-date-range-picker-calendar-item-border-color;
+               padding-left: 1px;
+               + .controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
+                  border-left: 1px solid @date-range-big-choose-date-range-picker-calendar-item-border-color;
+               }
+            }
+
             &.controls-RangeSelectable__item {
-               border: @date-range-big-choose-date-range-picker-calendar-item-border;
+
+               border-right: 1px solid @date-range-big-choose-date-range-picker-calendar-item-border-color;
+
                color: @black-color;
+
+               &:first-child {
+                  border-left: 1px solid @date-range-big-choose-date-range-picker-calendar-item-border-color;
+                  padding-left: 1px;
+               }
+
+               &.controls-DateRangeBigChoose-MonthView__border-top {
+                  border-top: 1px solid @date-range-big-choose-date-range-picker-calendar-item-border-color;
+                  & > .controls-MonthView__dayTitle {
+                     padding-top: 7px;
+                  }
+               }
+
+               &.controls-DateRangeBigChoose-MonthView__border-bottom {
+                  border-bottom-width: 2px;
+               }
 
                &.controls-MonthView__weekend {
                   color: @calendar-day-weekend-color;
@@ -53,6 +94,10 @@
                   &.controls-RangeSelectable__item-selected {
                      color: @white-color;
                      background: @date-range-big-choose-month-range-picker-calendar-boundary-item-selected-bg;
+
+                     &.controls-MonthView__weekend {
+                        color: @white-color;
+                     }
                   }
                }
 
@@ -67,10 +112,34 @@
                   &.controls-MonthView__weekend {
                      color: @calendar-day-weekend-color;
                   }
+                  &:first-child {
+                     //box-shadow: inset 1px 0 @date-range-big-choose-date-range-picker-calendar-item-border-color;
+                     border-left-width: 2px;
+                     padding-left: 0;
+                  }
+                  &:last-child {
+                     border-right-width: 2px;
+                     //box-shadow: inset -1px 0 @date-range-big-choose-date-range-picker-calendar-item-border-color;
+                  }
+                  + .controls-MonthView__nextMonth {
+                     border-left: 1px solid @date-range-big-choose-date-range-picker-calendar-item-border-color;
+                  }
                }
             }
             &.controls-MonthView__today {
                border: 2px solid #ff7033;
+            }
+         }
+
+         .controls-MonthView__tableRow:first-child {
+            .controls-RangeSelectable__item {
+               border-top: 1px solid @date-range-big-choose-date-range-picker-calendar-item-border-color;
+               &.controls-RangeSelectable__item-selected {
+                  border-top-width: 2px;
+                  //> * {
+                  //   padding-top: 7px;
+                  //}
+               }
             }
          }
       }
@@ -81,6 +150,14 @@
          }
          .controls-MonthView__dayTable {
             .controls-MonthView__tableElement {
+               border-color: greyscale(lighten(@date-range-big-choose-date-range-picker-calendar-item-border-color, 50%));
+
+               &.controls-MonthView__prevMonth.controls-MonthView__lastDayOfMonth {
+                  border-color: greyscale(lighten(@date-range-big-choose-date-range-picker-calendar-item-border-color, 50%));
+                  + .controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
+                     border-left-color: greyscale(lighten(@date-range-big-choose-date-range-picker-calendar-item-border-color, 50%));
+                  }
+               }
 
                &.controls-RangeSelectable__item {
                   border-color: greyscale(lighten(@date-range-big-choose-date-range-picker-calendar-item-border-color, 50%));
@@ -107,6 +184,10 @@
 
                      &.controls-MonthView__weekend {
                         color: lighten(@calendar-day-weekend-color, 20%);
+                     }
+
+                     + .controls-MonthView__nextMonth {
+                        border-color: greyscale(lighten(@date-range-big-choose-date-range-picker-calendar-item-border-color, 50%));
                      }
                   }
                }

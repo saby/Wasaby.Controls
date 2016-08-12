@@ -3,7 +3,7 @@
       <tr class="controls-MonthView__tableRow">
          {{~week :value:indexOfDay}}
             {{?value.isCalendar}}
-            <td data-selected-range-id="{{=value.day}}" class="controls-MonthView__tableElement controls-MonthView__currentMonthDay controls-RangeSelectable__item{{?indexOfDay === 5 || indexOfDay === 6}} controls-MonthView__weekend{{?}}{{?value.today}} controls-MonthView__today{{?}}">
+            <td data-selected-range-id="{{=value.day}}" class="controls-MonthView__tableElement controls-MonthView__currentMonthDay controls-MonthView__currentMonthDay{{=indexOfDay}} controls-RangeSelectable__item{{?indexOfDay === 5 || indexOfDay === 6}} controls-MonthView__weekend{{?}}{{?value.today}} controls-MonthView__today{{?}}{{?value.firstDayOfMonth}} controls-MonthView__firstDayOfMonth{{?}}{{?value.lastDayOfMonth}} controls-MonthView__lastDayOfMonth{{?}}">
                {{?value.rangeselect}}
                <span class="controls-MonthView__dayBorder"></span>
                {{?}}
@@ -15,7 +15,7 @@
                {{?}}
             </td>
             {{??}}
-            <td class="controls-MonthView__tableElement controls-MonthView__tableElementFog{{?indexOfDay === 5 || indexOfDay === 6}} controls-MonthView__weekend{{?}}"></td>
+            <td class="controls-MonthView__tableElement controls-MonthView__tableElementFog controls-MonthView__{{=value.month}}{{?indexOfDay === 5 || indexOfDay === 6}} controls-MonthView__weekend{{?}}{{?value.firstDayOfMonth}} controls-MonthView__firstDayOfMonth{{?}}{{?value.lastDayOfMonth}} controls-MonthView__lastDayOfMonth{{?}}"></td>
             {{?}}
          {{~}}
       </tr>

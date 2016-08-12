@@ -158,7 +158,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
       setEndValue: function (end, silent) {
          var changed;
          changed = MonthRangePicker.superclass.setEndValue.call(this, end, silent);
-         if (!this.isSelectionProcessing()) {
+         if (changed) {
             this._updateSelectionInInnerComponents();
          }
          return changed;

@@ -3,10 +3,12 @@
 .controls-MonthView {
    display: inline-block;
    text-align: center;
-   font: @calendar-font;
+   //font: @calendar-font;
    width: @calendar-width;
    padding: @calendar-padding;
    background: @calendar-bg;
+
+   font: @font-basic-size @font-basic-name;
 
    .controls-MonthView__monthPicker {
       width: @calendar-month-picker-width;
@@ -30,19 +32,19 @@
 
       .controls-MonthView__tableElement {
          * {
-            height: 100%;
             display: block;
             float: left;
-            padding: 8px 0 8px 0;
          }
 
          .controls-MonthView__dayTitle {
             width: 100%;
+            padding: 8px 0 0 0;
          }
          .controls-MonthView__dayBorder {
-            width: 26%;
+            width: 25%;
+            height: 100%;
             + .controls-MonthView__dayTitle {
-               width: 48%;
+               width: 50%;
             }
          }
          //width: @calendar-day-cell-width;

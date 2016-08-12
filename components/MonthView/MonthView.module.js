@@ -317,14 +317,14 @@ define(
                date = this._options.month,
                today = new Date(),
                isCurrentMonth = today.getFullYear() === date.getFullYear() && today.getMonth() === date.getMonth(),
-               dayOfWeek,
-               days,
                workingDate = new Date(date),
                // Формируем массив массивов, где каждый внутренний массив представляет собой неделю (ровно семь объектов), в котором
                // каждый день представляет собой объект { (number)деньКалендаря, (bool)этоДеньЭтогоМесяца }.
                // Данный массив недель в последствии передадим в шаблон для постройки тела календаря.
                weeksArray = [],
-               week = [];
+               week = [],
+               dayOfWeek,
+               days;
 
             today = today.getDate();
 
@@ -333,7 +333,7 @@ define(
             dayOfWeek = workingDate.getDay() != 0 ? workingDate.getDay() : 7;
             days = this._daysInMonth(new Date(workingDate.setMonth(workingDate.getMonth() - 1)));
             while( dayOfWeek - 1 > 0 ){
-               this._pushDayIntoArray(week, days - dayOfWeek + 2, false, false);
+               this._pushDayIntoArray(week, days - dayOfWeek + 2, false, false, 'prevMonth', false, dayOfWeek === 2);
                dayOfWeek--
             }
             workingDate = new Date(date);
@@ -341,7 +341,7 @@ define(
             // Заполняем календарные дни
             days = this._daysInMonth(date);
             for ( var i = 1; i <= days; i++ ){
-               this._pushDayIntoArray(week, i, true, isCurrentMonth && today === i);
+               this._pushDayIntoArray(week, i, true, isCurrentMonth && today === i, 'currentMonth', i === 1, i === days);
 
                if ( week.length == 7 ) {
                   weeksArray.push(week);
@@ -354,10 +354,12 @@ define(
             // Добиваем календарь пустыми ячейками, если нужно (то есть, если последний день был не воскресеньем)
             if( workingDate.getDay() != 0 ){
                dayOfWeek = workingDate.getDay();
+               days = 0;
 
                while( dayOfWeek != 7 ){
-                  this._pushDayIntoArray(week, dayOfWeek - workingDate.getDay() + 1, false, false);
+                  this._pushDayIntoArray(week, dayOfWeek - workingDate.getDay() + 1, false, false, 'nextMonth', false, days === 0);
                   dayOfWeek++;
+                  days++;
                }
                weeksArray.push(week);
             }
@@ -424,7 +426,7 @@ define(
          },
 
          cancelSelection: function () {
-            var canceled = MonthView.superclass.cancelSelection.call(this)
+            var canceled = MonthView.superclass.cancelSelection.call(this);
             if (canceled) {
                this._selectionType = null;
             }
@@ -452,11 +454,14 @@ define(
           * @param today
           * @private
           */
-         _pushDayIntoArray: function (array, day, isCalendar, today) {
+         _pushDayIntoArray: function (array, day, isCalendar, today, month, firstDayOfMonth, lastDayOfMonth) {
             var obj = {};
             obj.day = day;
             obj.isCalendar = isCalendar;
             obj.today = today;
+            obj.month = month;
+            obj.firstDayOfMonth = firstDayOfMonth;
+            obj.lastDayOfMonth = lastDayOfMonth;
             obj.rangeselect = this.isRangeselect();
 
             array.push(obj);
