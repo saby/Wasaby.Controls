@@ -36,13 +36,15 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!js!SBIS3.CONTROLS.Utils.InformationPopupManager',
       'js!SBIS3.CONTROLS.Paging',
       'js!SBIS3.CONTROLS.ComponentBinder',
-      'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
+      'js!WS.Data/Di',
+      'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
+      'js!WS.Data/Collection/RecordSet'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
              Link, ScrollWatcher, IBindCollection, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-             Paging, ComponentBinder) {
+             Paging, ComponentBinder, Di) {
 
       'use strict';
 
@@ -633,7 +635,8 @@ define('js!SBIS3.CONTROLS.ListView',
             _scrollOnBottom: true, // TODO: Придрот для скролла вниз при первой подгрузке. Если включена подгрузка вверх то изначально нужно проскроллить контейнер вниз,
             //но после загрузки могут долетать данные (картинки в docviewer например), которые будут скроллить вверх.
             _scrollOnBottomTimer: null, //TODO: см. строчкой выше
-            _componentBinder: null
+            _componentBinder: null,
+            _touchSupport: false
          },
 
          $constructor: function () {
@@ -687,6 +690,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _setTouchSupport: function(support) {
+            var currentTouch = this._touchSupport;
             this._touchSupport = Boolean(support);
 
             var container = this.getContainer(),
@@ -697,7 +701,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   toggleClass();
                   this._itemsToolbar.setTouchMode(this._touchSupport);
                }
-            } else {
+            } else if(currentTouch !== this._touchSupport) {
                toggleClass();
             }
          },
@@ -705,8 +709,10 @@ define('js!SBIS3.CONTROLS.ListView',
          _eventProxyHandler: function(e) {
             var originalEvent = e.originalEvent;
             /* Надо проверять mousemove на срабатывание на touch устройствах,
-               т.к. оно стреляет после тапа */
-            this._setTouchSupport(Array.indexOf(['swipe', 'tap'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY));
+               т.к. оно стреляет после тапа. После тапа событие mousemove имеет нулевой сдвиг, поэтому обрабатываем его как touch событие
+                + добавляю проверку, что до этого мы были в touch режиме,
+               это надо например для тестов, в которых эмулирется событие mousemove так же без сдвига, как и на touch устройствах. */
+            this._setTouchSupport(Array.indexOf(['swipe', 'tap'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && this._touchSupport));
 
             switch (e.type) {
                case 'mousemove':
@@ -1440,8 +1446,8 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options._decorators) {
                this._options._decorators.update(this);
             }
-            ListView.superclass.redraw.apply(this, arguments);
             this._destroyEditInPlace();
+            ListView.superclass.redraw.apply(this, arguments);
          },
 
          /**
@@ -2052,9 +2058,10 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _moveTopScroll : function(){
-            var scrollAmount;
+            var scrollAmount,
+               scrollingToTop =  this._scrollDirection !== 'down' && this._options.infiniteScroll == 'up';
             //сюда попадем только когда уже точно есть скролл
-            if (this.isInfiniteScroll() && this._scrollDirection == 'top' && this._needSrollTopCompensation){
+            if (this.isInfiniteScroll() && scrollingToTop && (this._needSrollTopCompensation || this._firstScrollTop)){
                scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
                this._needSrollTopCompensation = false;
                //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
@@ -2231,7 +2238,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._showedLoading = show;
             if (show) {
                setTimeout(function(){
-                  if (self._showedLoading) {
+                  if (!self.isDestroyed() && self._showedLoading) {
                      scrollContainer = self._getScrollContainer();
                      indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
                      if(indicator.length && scrollContainer && container[0].scrollHeight > scrollContainer[0].offsetHeight) {
@@ -2826,6 +2833,21 @@ define('js!SBIS3.CONTROLS.ListView',
             if (resultRow.length){
                this._destroyControls(resultRow);
                resultRow.remove();
+            }
+         },
+         /**
+          * //todo коcтыль нужно разобраться почему долго работает
+          * Инициализирует опцию selectedItems
+          * @noShow
+          */
+         initializeSelectedItems: function() {
+            if ($ws.helpers.instanceOfModule(this.getItems(), 'js!WS.Data/Collection/RecordSet')) {
+               this._options.selectedItems = Di.resolve('collection.recordset', {
+                  ownerShip: false,
+                  adapter: this.getItems().getAdapter()
+               });
+            } else {
+               ListView.superclass.initializeSelectedItems.call(this);
             }
          }
       });

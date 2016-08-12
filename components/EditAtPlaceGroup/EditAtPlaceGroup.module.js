@@ -120,6 +120,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             this._iterateChildEditAtPlaces(function (child) {
                child._setOldText();
             });
+            this._deactivateActiveChildControl();
             this._notify('onCancel');
          },
 

@@ -636,8 +636,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
          if (isTree){
             view.subscribe('onSetRoot', function(){
-               this._options.paging.setPagesCount(0);
-               this._updateScrollPages(true);
+               var curRoot = view.getCurrentRoot();
+               if (this._currentRoot !== curRoot){
+                  this._options.paging.setPagesCount(0);
+                  this._updateScrollPages(true);
+                  this._currentRoot = curRoot;
+               }
             }.bind(this));
 
             view.subscribe('onNodeExpand', function(){
@@ -718,6 +722,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             lastPageStart = 0,
             self = this,
             listItems = $('> .controls-ListView__item', view._getItemsContainer());
+
+            //Если элементов в верстке то нечего и считать
+            if (!listItems.length){
+               return;
+            }
+
             // Нужно учитывать отступ от родителя, что бы правильно скроллить к странице
             if (!this._offsetTop){
                this._offsetTop = self._options.view._getItemsContainer().get(0).getBoundingClientRect().top; //itemsContainerTop - containerTop + self._options.view.getContainer().get(0).offsetTop;
@@ -760,7 +770,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          if (this._options.paging.getPagesCount() < pagesCount){
             if (!this._options.view.getItems().getMetaData().more){
                pagesCount--;
-               if (pagesCount > 0) {
+               if (pagesCount > 1) {
                   this._options.view.getContainer().css('padding-bottom', '32px');
                }            }
             this._options.paging.setPagesCount(pagesCount);

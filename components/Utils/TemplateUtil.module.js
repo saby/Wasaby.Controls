@@ -2,14 +2,6 @@
  * Created by am.gerasimov on 19.01.2016.
  */
 define('js!SBIS3.CONTROLS.Utils.TemplateUtil', [], function() {
-   var _getVarStorage = function() {
-      //см. $ws.proto.Control::_getVarStorage()
-      if (typeof window == 'undefined'){
-         return {storage: []};
-      } else {
-         return ($ws.__vStorage = $ws.__vStorage || {storage: {}});
-      }
-   };
 
    return {
       prepareTemplate: function(tpl) {
@@ -30,8 +22,7 @@ define('js!SBIS3.CONTROLS.Utils.TemplateUtil', [], function() {
             default:
                template = null;
          }
-
-         return template ? template.bind(_getVarStorage()) : template;
+         return template;
       }
    };
 });

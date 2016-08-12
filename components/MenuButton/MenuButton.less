@@ -57,6 +57,7 @@
       }
       .controls-MenuButton__headerCenter{
         vertical-align: top;
+
       }
     }
   }
@@ -74,6 +75,7 @@
     }
     .controls-MenuButton__headerCenter{
       vertical-align: top;
+      height: @menu-button-header-center-height - 1px;
     }
   }
 
@@ -103,6 +105,11 @@
   border-color: @menu-button-menu-border-color;
   background: @menu-button-menu-bg;
   border-top-left-radius: 0;
+
+  &.controls-popup-revert-horizontal {
+    border-top-left-radius: @menu-border-radius;
+    border-top-right-radius: 0;
+  }
 }
 
 //Правка смещения для стрелки в ie8. ! В режиме эмуляции ie8 проблемы не видно, только в настоящем ie8
