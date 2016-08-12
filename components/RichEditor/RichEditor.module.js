@@ -1824,7 +1824,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
          _updateHeight: function() {
             var curHeight;
             if (this.isVisible()) {
-               if ($ws._const.browser.isMobileIOS && this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this.isEnabled() && this._textChanged && this.isActive()) {
+               if ($ws._const.browser.isMobileIOS && this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this.isEnabled() && this._textChanged && (this.getInputContainer()[0] === document.activeElement)) {
                   this._scrollTo($(this._tinyEditor.selection.getNode()));
                }
                curHeight = this._container.height();
