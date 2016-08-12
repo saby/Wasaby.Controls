@@ -377,11 +377,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
          },
          _dataLoadedCallback: function() {
-            /* Загрузились элементы в датасет, отменяем вычитку записей,
-               возможно вычитавать уже не надо */
-            if(this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
-               this._loadItemsDeferred.cancel();
-            }
             DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
             var item =  this._dataSet.at(0);
             if (item) {
@@ -453,12 +448,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 len = id.length,
                 self = this,
                 item, pickerContainer, def;
-
-            /* Данные грузятся, значит и нечего нам отрисовываться
-               отрисовка произойдёт при загрузке */
-            if(this.isLoading()) {
-               return;
-            }
 
             if(len) {
                def = new $ws.proto.Deferred();

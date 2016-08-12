@@ -604,29 +604,32 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
                selItems = this._options.selectedItems;
             }
 
-            for (var j = 0; loadKeysAmount > j; j++) {
-               item = this.getItems() && this.getItems().getRecordById(loadKeysArr[j]);
+            /* Если сорс грузит данные, то дожидаемся его */
+            $ws.helpers.callbackWrapper(this._loader, function() {
+               for (var j = 0; loadKeysAmount > j; j++) {
+                  item = self.getItems() && self.getItems().getRecordById(loadKeysArr[j]);
 
-               /* если запись есть в датасете, то ничего не будем вычитывать */
-               if(item) {
-                  selItems.add(item);
-                  continue;
+                  /* если запись есть в датасете, то ничего не будем вычитывать */
+                  if (item) {
+                     selItems.add(item);
+                     continue;
+                  }
+
+                  if (!this._dataSource) {
+                     $ws.single.ioc.resolve('ILogger').log('MultiSelectable', 'Потенциальная ошибка. У контрола ' + self.getName() + ' не задан dataSource для вычитки записей.');
+                     continue;
+                  }
+                  dMultiResult.push(self._dataSource.read(loadKeysArr[j]).addCallback(function (record) {
+                     selItems.add(record);
+                  }));
                }
 
-               if(!this._dataSource) {
-                  $ws.single.ioc.resolve('ILogger').log('MultiSelectable', 'Потенциальная ошибка. У контрола ' + this.getName() + ' не задан dataSource для вычитки записей.');
-                  continue;
-               }
-               dMultiResult.push(this._dataSource.read(loadKeysArr[j]).addCallback(function (record) {
-                  selItems.add(record);
-               }));
-            }
-
-            dMultiResult.done().getResult().addCallback(function() {
-               if(!self._loadItemsDeferred.isReady()) {
-                  self._onSelectedItemsChangeHandler();
-                  self._loadItemsDeferred.callback(selItems);
-               }
+               dMultiResult.done().getResult().addCallback(function () {
+                  if (!self._loadItemsDeferred.isReady()) {
+                     self._onSelectedItemsChangeHandler();
+                     self._loadItemsDeferred.callback(selItems);
+                  }
+               });
             });
 
          } else {
