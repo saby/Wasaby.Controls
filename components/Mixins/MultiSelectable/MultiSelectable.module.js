@@ -615,7 +615,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
                      continue;
                   }
 
-                  if (!this._dataSource) {
+                  if (!self._dataSource) {
                      $ws.single.ioc.resolve('ILogger').log('MultiSelectable', 'Потенциальная ошибка. У контрола ' + self.getName() + ' не задан dataSource для вычитки записей.');
                      continue;
                   }
