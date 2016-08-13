@@ -776,6 +776,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
          if (!self._options.selectedItems) {
             self.initializeSelectedItems();
          }
+         //Синхронизируем данные чтобы в selectedItems была актуальная информация, например если сняли выделение
+         //со всех элементов то в selectedItems так же должно быть 0 элементов
+         this._syncSelectedItems();
+         //Запомним, если selectedItems пустой, то при добавлении в него записей, нам не нужно проверять,
+         //есть ли эти записи там уже, и можно из просто добавлять, не боясь что там будут 2 одинаковые записи
          isEmpty = !this._options.selectedItems.getCount();
 
          if (dataSet && (!this._loadItemsDeferred || this._loadItemsDeferred.isReady())) {
