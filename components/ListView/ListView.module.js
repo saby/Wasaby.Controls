@@ -1224,9 +1224,14 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          //TODO: Временное решение для выделения "всех" (на самом деле первой тысячи) записей
          setSelectedAll: function() {
+            var selectedItems = this.getSelectedItems();
             if (this._options.infiniteScroll && this.getItems().getCount() < 1000){
                this.reload(this.getFilter(), this.getSorting(), 0, 1000)
                   .addCallback(function(dataSet) {
+                     //Очистим selectedItems чтобы при заполнении новыми элементами, не делать проверку на наличие элементов в коллекции
+                     if (selectedItems && selectedItems.getCount()) {
+                        selectedItems.clear();
+                     }
                      ListView.superclass.setSelectedItemsAll.call(this);
                      if (dataSet.getMetaData().more){
                         InformationPopupManager.showMessageDialog({
