@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
       },
       unmarkRichContentOnCopy: function(target){
          target = target.get(0);
-         if (!$ws._const.browser.isMobileIOS) {
+         if (!$ws._const.browser.isMobileIOS && !$ws._const.browser.firefox) {
             //в webkit в бтре идёт подписка на cut и удаляется лишний символ, поэтому нужно подписываться на capture фазе
             if (target.removeEventListener) {
                target.removeEventListener('copy', this._markingRichContent, true);
