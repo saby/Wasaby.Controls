@@ -54,84 +54,11 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
       _markingRichContent: function(e) {
          var
             event =  e.originalEvent ? e.originalEvent : e,
-            selectionRange, selectionContent, textRange, bodyElement, tempElement, textData,
-            selectionNode = document.createElement('div'),
-            clipboardData = event.clipboardData ? event.clipboardData : window.clipboardData,
-            currentWindow = window,
-            label = document.createComment('content=SBIS.FRE'), // по этой метке будем определять что контент вставляется из FieldRichEditor
-            i = 0,
-            target = $(e.currentTarget),
-            canCut = event.type == 'cut' && target.is('[contenteditable="true"]'),
-            _isDescendant = function(parent, child) {
-               var node = child;
-               while (node != null) {
-                  if (node == parent) {
-                     return true;
-                  }
-                  node = node.parentNode;
-               }
-               return false;
-            };
-         e.preventDefault();
-         //рассчет родительского window элемента
-         //если на странице есть youtube елемент то window.frames[0].document стреляет ошибкой доступа
-         if (!_isDescendant(window.document.body, event.target)) {
-            try {
-               while (window.frames[i]) {
-                  if (_isDescendant(window.frames[i].document.body, event.target)) {
-                     currentWindow = window.frames[i];
-                  }
-                  i++;
-               }
-            } catch (exception) {
-            }
-         }
-         // webkit && ie>9
-         if (currentWindow.getSelection) {
-            //В хроме getSelection().toString() отдаёт переносы в виде \n блокнот их не воспринимает, необходимо переделывать их в \r\n
-            textData = currentWindow.getSelection().toString().replace(/\r\n|\n/gi,'\r\n');
-            //В текстовом формате nbsp имеет 160 код, в FAR (там OEM text формат) вставляется как неведомый символ
-            textData = textData.replace(/\u00A0/gi,'\u0020');
-            selectionRange = currentWindow.getSelection().getRangeAt(0);
-            selectionContent =  selectionRange.cloneContents();
-            //TODO: разобраться как правильно вырезать контент на 'cut' (взять за основу deleteRangeBetweenTextBlocks из tinymce
-            //сейчас вырезание будет происходить в редакторе
-         }
-         // ie8
-         else {
-            selectionRange = currentWindow.document.selection.createRange();
-            selectionContent = selectionRange.duplicate().htmlText;
-            if (canCut) {
-               //вырезать выделенное если событие cut
-               selectionRange.pasteHTML('');
-            }
-            tempElement = currentWindow.document.createElement('div');
-            tempElement.innerHTML = selectionContent;
-            selectionContent = tempElement;
-         }
-         // webkit позволяет оперировать буфером
-         if (event.clipboardData) {
-            selectionNode.appendChild(selectionContent);
-            clipboardData.setData('text/html', '<!--' + label.data + '-->' + selectionNode.innerHTML);
-            //TODO: при выделении через шифты в выделеном есть лишняя пустая строка <p></p>
-            clipboardData.setData('text', textData);
-         }
-         // для ie
-         else {
-            textRange = document.body.createTextRange();
-            bodyElement = document.getElementsByTagName('body')[0];
-            selectionNode.style.position = 'absolute';
-            selectionNode.style.left = '-99999px';
-            bodyElement.appendChild(selectionNode);
-            selectionNode.appendChild(label);
-            selectionNode.appendChild(selectionContent);
-            textRange.moveToElementText(selectionNode);
-            textRange.execCommand('copy');
-            window.setTimeout(function() {
-               bodyElement.removeChild(selectionNode);
-            },0);
-         }
-         target.focus();
+            oldOrphans = event.target.style.orphans;
+         event.target.style.orphans = '31415'; //Pi
+         setTimeout(function() {
+            event.target.style.orphans = oldOrphans;
+         });
       }
    };
 
