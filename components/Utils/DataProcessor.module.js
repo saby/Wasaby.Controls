@@ -100,6 +100,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        * @param fileName - Имя файла
        * @param [cfg] Если задана конфигурация выгрузки, то в метод уйдет только заданная конфигурация (она же фильтр)
        * @param useGET
+       * @deprecated используйте exportList или exportDataSet
        */
       exportData: function (fileType, methodName, fileName, cfg, useGET) {
          var self = this;
