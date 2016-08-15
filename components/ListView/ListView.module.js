@@ -2093,15 +2093,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          isScrollOnBottom: function(){
-            var scrollableContainer = this._scrollWatcher.getScrollContainer(),
-            isBody = scrollableContainer == document.body,
-            scrollContainer = isBody ? $(window) : this._options.infiniteScrollContainer;
-            // Если scrollContainer это body и есть floatArea со скроллом, то у body скролла нет, а значит он не может быть снизу (его же нет!)
-            // Todo: когда будут классные скроллы (3.7.4.100?) - можно будет выпилить
-            if (scrollableContainer){
-               scrollContainer = $(scrollContainer);
-               return (scrollableContainer.scrollHeight - (scrollableContainer.scrollTop + scrollContainer.height())) == 0;
-            }
+            return this._scrollWatcher.isScrollOnBottom();
          },
          //Проверка есть ли открытые stack FloatArea или maximize Window, они могут збирать на себя скролл у body
          _existFloatArea: function(){
