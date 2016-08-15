@@ -46,6 +46,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * @cssModifier controls-DropdownList__ellipsis Текст в шапке обрезается троеточием, если не умещается в контейнере
        */
       var DropdownList = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
+         _dotTplFn: dotTplFn,
          $protected: {
             _options: {
                /**
@@ -163,7 +164,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                showSelectedInList : false,
                allowEmptyMultiSelection: false
             },
-            _dotTplFn: dotTplFn,
             _text: null,
             _pickerText: null,
             _pickerListContainer: null,
@@ -309,13 +309,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   else{
                      this._changedSelectedKeys.splice(changedSelectionIndex, 1);
                   }
-                  this._buttonChoose.getContainer().toggleClass('ws-invisible', !this._changedSelectedKeys.length);
-                  if ($ws._const.browser.isIE8) {
-                     this._buttonChoose.getContainer().addClass('controls-Button__IE8Hack');
-                     setTimeout(function() {
-                        this._buttonChoose.getContainer().removeClass('controls-Button__IE8Hack');
-                     }.bind(this), 1);
-                  }
+                  this._buttonChoose.getContainer().toggleClass('ws-hidden', !this._changedSelectedKeys.length);
                   selected =  !row.hasClass('controls-DropdownList__item__selected');
                   row.toggleClass('controls-DropdownList__item__selected', selected);
                   this._currentSelection[row.data('id')] = selected;
@@ -354,7 +348,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                DropdownList.superclass.showPicker.apply(this, arguments);
                this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', this._pickerListContainer[0].offsetWidth === this._pickerHeadContainer[0].offsetWidth);
                if (this._buttonChoose) {
-                  this._buttonChoose.getContainer().addClass('ws-invisible');
+                  this._buttonChoose.getContainer().addClass('ws-hidden');
                }
             }
          },
@@ -453,27 +447,32 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var textValues = [],
                 len = id.length,
                 self = this,
-                record,
-                pickerContainer,
-                def;
+                item, pickerContainer, def;
 
             if(len) {
                def = new $ws.proto.Deferred();
 
-               if(this._dataSet) {
-                  for(var i = 0; i < len; i++) {
-                     record = this._dataSet.getRecordByKey(id[i]);
-                     if (record){ //После установки новых данных, не все ключи останутся актуальными
-                        textValues.push(record.get(this._options.displayField));
+               if(!this._picker) {
+                  this._initializePicker();
+               }
+
+               this.getSelectedItems(true).addCallback(function(list) {
+                  if(list) {
+                     list.each(function (rec) {
+                        textValues.push(rec.get(self._options.displayField));
+                     });
+                  }
+
+                  if(!textValues.length && self._checkEmptySelection()) {
+                     item = self.getItems() && self.getItems().at(0);
+                     if(item) {
+                        textValues.push(item.get(self._options.displayField));
                      }
                   }
+
                   def.callback(textValues);
-               } else {
-                  //TODO переделать, когда БЛ научится отдавать несколько записей при чтении
-                  this._dataSource.read(id[0]).addCallback(function(record) {
-                     def.callback([record.get(self._options.displayField)]);
-                  })
-               }
+                  return list;
+               });
 
                def.addCallback(function(textValue) {
                   pickerContainer = self._getPickerContainer();

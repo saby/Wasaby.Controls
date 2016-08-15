@@ -525,7 +525,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                eMessage = eResult;
             }
             if(eMessage) {
-               $ws.helpers.message(eMessage).addCallback(function(result){
+               $ws.helpers.alert(eMessage).addCallback(function(result){
                   if (e.httpError == 403){
                      this._closePanel();
                   }

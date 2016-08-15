@@ -197,13 +197,11 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       _setText: function(text){
          this._setNumericValue(text);
          if (text !== '-' && text !== '.' && text !== ''){
+            text = this._formatText(text);
             if (text.indexOf('.') === text.length - 1) {
-               text = this._formatText(text) + '.';
                this._inputField.val(text);
                this._setCaretPosition(this._caretPosition[0] + 1, this._caretPosition[1] + 1);
                return;
-            } else {
-               text = this._formatText(text);
             }
          }
          this._inputField.val(text);
@@ -293,7 +291,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _formatText: function(value){
-         var decimals = this._options.onlyInteger ? 0 : this._options.decimals;
+         var decimals = this._options.onlyInteger ? 0 : this._options.decimals,
+             isDotLast = value.length ? value.indexOf('.') === value.length - 1 : false;
+
          if (value == '-') {
             return value;
          }
@@ -305,7 +305,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             this._options.onlyPositive,
             this._options.maxLength
          );
-
+         if(isDotLast){
+            value = value ? value + '.' : '.';
+         }
          if(!this._checkMaxLength(value)){
             return this._options.text;
          }
@@ -345,7 +347,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          }
          var keyCode = (event.which >= 96 && event.which <= 105) ? event.which - 48 : event.which;
          /*точка*/
-         if ((keyCode == 190 || keyCode == 110 || keyCode == 191 || keyCode == 188) && (event.key == ',' || event.key == '.'|| event.key == 'Decimal' || $ws._const.browser.isMacOSDesktop || $ws._const.browser.isMacOSMobile)) {
+         if ((keyCode == 190 || keyCode == 110 || keyCode == 191 || keyCode == 188) && (!event.key || event.key == ',' || event.key == '.'|| event.key == 'Decimal')) {
             this._dotHandler(event);
             return;
          }

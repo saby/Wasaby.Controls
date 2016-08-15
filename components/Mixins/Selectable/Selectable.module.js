@@ -32,6 +32,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
           /*не различаются события move и remove/add при смене пор номеров, поэтому используем этот флаг, см ниже*/
           _isMove: false,
           _isMoveKey: null,
+          _curHash: undefined,
           _options: {
              /**
               * @cfg {String} Устанавливает выбранным элемент коллекции по переданному индексу (порядковому номеру).
@@ -110,14 +111,23 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
                this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
             }
          }
+         if (this._getItemsProjection()) {
+            var curItem = this._getItemsProjection().at(this._options.selectedIndex);
+            if (curItem) {
+               this._curHash = curItem.getHash();
+            }
+         }
+
       },
 
       before : {
          setDataSource: function() {
             this._options.selectedIndex = -1;
+            this._curHash = undefined;
          },
          setItems: function() {
             this._options.selectedIndex = -1;
+            this._curHash = undefined;
          }
       },
 
@@ -301,8 +311,6 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
          case IBindCollection.ACTION_RESET:
             var indexByKey = this._getItemIndexByKey(this._options.selectedKey),
                 itemsProjection = this._getItemsProjection(),
-                oldIndex = this._options.selectedIndex,
-                oldKey = this._options.selectedKey,
                 count;
 
             //В начале проверим наш хак на перемещение, а потом все остальное
@@ -344,15 +352,17 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
 
                }
             }
-            //TODO защита от логики деревянной проекции: добавил проверку на изменение selectedIndex и selectedKey, т.к. при вызове toggleNode
-            //в узле стреляет либо action_remove, либо action_add листьев и мы всегда попадали сюда. и всегда делали _setSelectedIndex,
-            //что приводило к лишнему событию onSelectedItemChanged, чего быть не должно.
-            //Ошибка остается актуальной для rightNavigationPanel, где мы сначала делаем toggleNode, у нас меняется индекс и нижеописанная проверка проходит(хотя
-            //по факту активный элемент не изменился) => стреляет onSelectedItemChanged, после из listView стреляет setSelectedKey из которого так же стреляет onSelectedItemChanged
-            //выписал на это ошибку в 373.200
+            var newHash;
+            if (this._getItemsProjection()) {
+               var curItem = this._getItemsProjection().at(this._options.selectedIndex);
+               if (curItem) {
+                  newHash = curItem.getHash();
+               }
+            }
 
-            if (action !== IBindCollection.ACTION_REPLACE && (this._options.selectedIndex !== oldIndex || this._options.selectedKey !== oldKey)) {
+            if (action !== IBindCollection.ACTION_REPLACE && (newHash !== this._curHash)) {
                this._setSelectedIndex(this._options.selectedIndex, this._options.selectedKey);
+               this._curHash = newHash;
             }
       }
    };

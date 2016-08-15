@@ -324,4 +324,56 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(3) .controls-BreadCrumbs__hierWrapper:nth-child(2)', 1000);
             })
     });
+
+    gemini.suite('without_table_head', function (test) {
+
+        test.setUrl('/regression_engine_browser_online_4.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="browserView"]', 40000);
+                this.view = find('[sbisname="browserView"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[sbisname="TextBox 1"] input');
+				this.data3 = find('[data-id="3"]');
+				this.data5 = find('[data-id="5"]');
+            })
+
+            .capture('plain', function (actions) {
+				actions.click(this.data3);
+				actions.wait(500);
+            })
+
+            .capture('without_table_head', function (actions) {
+                actions.executeJS(function (window) {
+                    $ws.single.ControlStorage.getByName('browserView')._options.showHead = false
+					$ws.single.ControlStorage.getByName('browserView')._redrawHead();
+                });
+				actions.wait(500);
+            })
+
+			.capture('into_folder', function (actions, find) {
+                actions.click(this.data5);
+				actions.wait(500);
+            })
+    });
+
+    gemini.suite('bread_crumbs_max_lenght', function (test) {
+
+        test.setUrl('/regression_engine_browser_online_4.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="browserView"]', 40000);
+                this.view = find('[sbisname="browserView"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[sbisname="TextBox 1"] input');
+            })
+
+            .capture('into_folder', function (actions) {
+                actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('browserView').setCurrentRoot(11);
+					window.$ws.single.ControlStorage.getByName('browserView').reload();
+                });
+				actions.waitForElementToShow('[sbisname="BackButton-caption"]', 1000);
+            })
+    });
 });

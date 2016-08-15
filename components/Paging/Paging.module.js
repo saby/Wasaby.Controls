@@ -183,7 +183,7 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
             this._prevBtn.setEnabled(true);
             this._beginBtn.setEnabled(true);
          }
-         if (this.getSelectedKey() == this.getItems().getCount()) {
+         if (this.getItems() && (this.getSelectedKey() == this.getItems().getCount())) {
             this._nextBtn.setEnabled(false);
          }
          else {
