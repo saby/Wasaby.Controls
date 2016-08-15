@@ -1233,7 +1233,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         selectedItems.clear();
                      }
                      ListView.superclass.setSelectedItemsAll.call(this);
-                     if (dataSet.getMetaData().more){
+                     if (dataSet.getCount() == 1000 && dataSet.getMetaData().more){
                         InformationPopupManager.showMessageDialog({
                            status: 'default',
                            message: 'Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.'
