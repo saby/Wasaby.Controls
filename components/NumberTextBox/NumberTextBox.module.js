@@ -561,7 +561,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             e,
             l;
          if ($ws._const.browser.isIE && $ws._const.browser.IEVersion < 9) { //IE
-            var range = document.createRangeForIE();
+            var range = obj.createTextRange();
             l = range.text.length;
             range.moveStart('textedit', -1);
             e = range.text.length;
