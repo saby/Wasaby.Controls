@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
          var projItem, key;
          projItem = this._getItemsProjection().getByHash(hash);
          //TODO Пока делаем отдельную ветку для Флагов.
-         //Леха Мальцев должен исправить ошибку, что проекция никак не реагирует на состояние флагов и обратно тоже
+         //Леха Мальцев должен решить задачу https://inside.tensor.ru/opendoc.html?guid=566894c5-8384-4a2a-8ea6-df9dc5bd2137&description=
          if (this.getItems() && $ws.helpers.instanceOfModule(this.getItems(), 'WS.Data/Types/Flags')) {
             this.getItems().set(projItem.getContents(), !projItem.isSelected());
             projItem.setSelected(!projItem.isSelected());
@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
             arrLen = idArray.length;
 
          //TODO Пока делаем отдельную ветку для Флагов.
-         //Леха Мальцев должен исправить ошибку, что проекция никак не реагирует на состояние флагов и обратно тоже
+         //Леха Мальцев должен решить задачу https://inside.tensor.ru/opendoc.html?guid=566894c5-8384-4a2a-8ea6-df9dc5bd2137&description=
          var i, hash;
          if (this.getItems() && $ws.helpers.instanceOfModule(this.getItems(), 'WS.Data/Types/Flags')) {
             for (i in controls) {
