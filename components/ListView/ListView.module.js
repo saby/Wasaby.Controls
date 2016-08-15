@@ -796,6 +796,9 @@ define('js!SBIS3.CONTROLS.ListView',
                paging: this._scrollPager
             });
             this._scrollBinder.bindScrollPaging();
+            $ws.helpers.trackElement(this.getContainer(), true).subscribe('onVisible', function(event, visible){
+               this._scrollPager.setVisible(visible);
+            }.bind(this));
          },
 
          _onScrollMoveHandler: function(event, scrollTop){
