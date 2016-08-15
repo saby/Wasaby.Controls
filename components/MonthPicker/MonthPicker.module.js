@@ -7,14 +7,14 @@
 define(
    'js!SBIS3.CONTROLS.MonthPicker',
    [
-      'js!SBIS3.CORE.Control',
+      'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'html!SBIS3.CONTROLS.MonthPicker/resources/MonthPickerDropdown',
       'html!SBIS3.CONTROLS.MonthPicker',
       'i18n!SBIS3.CONTROLS.MonthPicker'
    ],
-   function(Control, PickerMixin, DateUtil, DropdownTpl, dotTplFn){
+   function(CompoundControl, PickerMixin, DateUtil, DropdownTpl, dotTplFn){
 
    'use strict';
 
@@ -42,7 +42,7 @@ define(
     * @ignoreEvents onTooltipContentRequest onPropertyChanged
     */
 
-   var MonthPicker = Control.Control.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.MonthPicker.prototype */{
+   var MonthPicker = CompoundControl.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.MonthPicker.prototype */{
       _dropdownTpl: DropdownTpl,
       _dotTplFn: dotTplFn,
        /**
