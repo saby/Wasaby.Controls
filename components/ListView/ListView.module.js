@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.DecorableMixin',
       'js!SBIS3.CONTROLS.DragNDropMixin',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
+      'js!SBIS3.CONTROLS.BreakClickBySelectMixin',
       'js!SBIS3.CONTROLS.ItemsToolbar',
       'js!SBIS3.CORE.MarkupTransformer',
       'tmpl!SBIS3.CONTROLS.ListView',
@@ -35,14 +36,15 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!js!SBIS3.CONTROLS.Utils.InformationPopupManager',
       'js!SBIS3.CONTROLS.Paging',
       'js!SBIS3.CONTROLS.ComponentBinder',
+      'js!WS.Data/Di',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
-      'js!WS.Data/Adapter/RecordSet'
+      'js!WS.Data/Collection/RecordSet'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
-             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
+             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
              Link, ScrollWatcher, IBindCollection, rk, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-             Paging, ComponentBinder) {
+             Paging, ComponentBinder, Di) {
 
       'use strict';
 
@@ -1214,9 +1216,14 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          //TODO: Временное решение для выделения "всех" (на самом деле первой тысячи) записей
          setSelectedAll: function() {
+            var selectedItems = this.getSelectedItems();
             if (this._options.infiniteScroll && this.getItems().getCount() < 1000){
                this.reload(this.getFilter(), this.getSorting(), 0, 1000)
                   .addCallback(function(dataSet) {
+                     //Очистим selectedItems чтобы при заполнении новыми элементами, не делать проверку на наличие элементов в коллекции
+                     if (selectedItems && selectedItems.getCount()) {
+                        selectedItems.clear();
+                     }
                      ListView.superclass.setSelectedItemsAll.call(this);
                      if (dataSet.getMetaData().more){
                         InformationPopupManager.showMessageDialog({
@@ -1436,8 +1443,8 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options._decorators) {
                this._options._decorators.update(this);
             }
-            ListView.superclass.redraw.apply(this, arguments);
             this._destroyEditInPlace();
+            ListView.superclass.redraw.apply(this, arguments);
          },
 
          /**
@@ -2830,7 +2837,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @noShow
           */
          initializeSelectedItems: function() {
-            if ($ws.helpers.instanceOfModule(this.getItems(), 'WS.Data/Adapter/RecordSet')) {
+            if ($ws.helpers.instanceOfModule(this.getItems(), 'js!WS.Data/Collection/RecordSet')) {
                this._options.selectedItems = Di.resolve('collection.recordset', {
                   ownerShip: false,
                   adapter: this.getItems().getAdapter()
@@ -2841,5 +2848,5 @@ define('js!SBIS3.CONTROLS.ListView',
          }
       });
 
-      return ListView;
+      return ListView.mixin([BreakClickBySelectMixin]);
    });

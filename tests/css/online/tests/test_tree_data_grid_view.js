@@ -411,7 +411,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
     gemini.suite('with_hidden_row', function (test) {
 
-        test.setUrl('/regression_tree_data_grid_view_online_15.html').setCaptureElements('.capture')
+        test.setUrl('/regression_tree_data_grid_view_online_15.html').skip('chrome').setCaptureElements('.capture')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
