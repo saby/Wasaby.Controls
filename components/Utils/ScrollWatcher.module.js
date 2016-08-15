@@ -222,6 +222,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * @returns {boolean}
        */
       hasScroll: function(element, offset){
+         offset = offset || 0;
          var scrollHeight = this.getScrollHeight(element);
          return scrollHeight > this.getContainerHeight() + offset || scrollHeight > $(window).height() + offset;
       },
