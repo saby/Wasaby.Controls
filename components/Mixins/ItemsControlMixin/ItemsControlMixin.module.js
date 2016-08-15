@@ -28,6 +28,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       if ($ws.helpers.instanceOfModule(items, 'js!WS.Data/Types/Enum')) {
          proj.setCurrentPosition(items.get());
       }
+      if ($ws.helpers.instanceOfModule(items, 'js!WS.Data/Types/Flags')) {
+         proj.each(function(item, i){
+            item.setSelected(items.get(item.getContents()));
+         });
+      }
       if (cfg.itemsSortMethod) {
          proj.setSort(cfg.itemsSortMethod);
       }

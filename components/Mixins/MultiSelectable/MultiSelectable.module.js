@@ -144,19 +144,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
       },
 
       _projSelectedChange: function(projItem) {
-         var item = projItem.getContents();
-         if (item.getId instanceof Function) {
-            var id, value;
-            id = item.getId();
-            value = projItem.isSelected();
-            if (value == true) {
-               this.addItemsSelection([id])
-            }
-            else {
-               this.removeItemsSelection([id]);
-            }
 
-         }
       },
 
       after : {
@@ -876,9 +864,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
 
    var
       onCollectionItemChangeSelected = function(eventObject, item, index, property) {
-         if (property == 'selected') {
-            this._projSelectedChange(item);
-         }
+
       };
    return MultiSelectable;
 
