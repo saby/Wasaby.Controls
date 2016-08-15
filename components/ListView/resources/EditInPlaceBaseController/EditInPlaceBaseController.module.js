@@ -235,7 +235,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      $ws.helpers.toggleIndicator(true);
                   }, 100);
                   return beginEditResult.addCallback(function(readRecord) {
-                     self._editingRecord = readRecord;
+                     self._editingRecord = record;
                      //При перечитывании записи она не является связанной с рекордсетом, и мы в последствии не сможем понять,
                      //происходило ли добавление записи или редактирование. При редактировании выставим значение сами.
                      if (record.getState() !== Record.RecordState.DETACHED) {
@@ -344,13 +344,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   self = this,
                   eipRecord = eip.getEditingRecord(),
                   isAdd = eipRecord.getState() === Record.RecordState.DETACHED;
-               if (this._editingRecord) {
-                  this._editingRecord.merge(eipRecord);
-                  this._editingRecord = undefined;
-               }
                if (withSaving) {
                   this._options.dataSource.update(eipRecord).addCallback(function(recordId) {
                      eip.applyChanges();
+                     if (self._editingRecord) {
+                        self._editingRecord.merge(eipRecord);
+                        self._editingRecord = undefined;
+                     }
                      if (isAdd) {
                         eipRecord.set(eipRecord.getKeyField(), recordId);
                         self._options.dataSet.push(eip._cloneWithFormat(eipRecord), self._options.dataSet);
