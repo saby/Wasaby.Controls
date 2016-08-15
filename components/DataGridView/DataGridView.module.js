@@ -812,7 +812,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
        * Используется для того, чтобы в редактировании по месту не было обрезков при прокрутке
        */
       _animationAtPartScrollDragEnd: function() {
-         if(this._currentScrollPosition === this._stopMovingCords.right) {
+         /* Не надо анимировать если:
+            - нет элементов
+            - скролл у крайней правой координаты */
+         if(this._currentScrollPosition === this._stopMovingCords.right || !this.getItems().getCount()) {
             return;
          }
          //Найдём элемент, который нужно доскроллить
