@@ -94,33 +94,6 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          });
       },
       /**
-       * Выгрузить данные, создав HTML на клиенте через xslt-преобразоование
-       * @param fileType - Имя объекта выгрузки (Например Excel)
-       * @param methodName - Име метода объекта выгрцзки (например Сохранить)
-       * @param fileName - Имя файла
-       * @param [cfg] Если задана конфигурация выгрузки, то в метод уйдет только заданная конфигурация (она же фильтр)
-       * @param useGET
-       */
-      exportData: function (fileType, methodName, fileName, cfg, useGET) {
-         var self = this;
-         //fileName = idReport ? idReport : (isSaveColumns ? 'Выбранные столбцы' : 'Как на экране'), ??
-         if (!cfg) {
-            this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + fileType);
-            this._prepareSerializer().addCallback(function(reportText){
-               self._destroyLoadIndicator();
-               $ws.helpers.saveToFile(fileType, methodName, {
-                  'html': reportText,
-                  'Название': fileName//idReport || Standart
-               }, undefined, useGET, fileType === "Excel");
-            });
-         } else {
-            //TODO: В iOS не работает выгрузка с помощью POST запроса.
-            //Возможно у нас что-то неверно сконфигурировано. Выписал задачу чтобы разобраться в этой ситуации:
-            //https://inside.tensor.ru/opendoc.html?guid=03308a7c-ae3b-47c5-9c57-02a79adaf64b&description=
-            $ws.helpers.saveToFile(fileType, methodName, cfg, undefined, useGET || $ws._const.browser.isMobileIOS, fileType === "Excel");
-         }
-      },
-      /**
        * Выгрузить данные с помощью готовой HTML-верстки
        * @param {String} fileName
        * @param {String} fileType PDF или Excel
@@ -149,7 +122,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        * @param {Object} cfg - параметры метода methodName
        * @param {number} pageOrientation 1 - потртетная, 2 - альбомная
        */
-      exportList: function(fileName, fileType, cfg, pageOrientation){
+      exportList: function(fileName, fileType, cfg, pageOrientation, methodName){
          cfg = cfg || {};
          if (fileName) {
             cfg.FileName = fileName;
@@ -157,7 +130,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          if (pageOrientation) {
             cfg.PageOrientation = pageOrientation;
          }
-         this.exportFileTransfer(fileType, 'SaveList', cfg);
+         this.exportFileTransfer(fileType, methodName || 'SaveList', cfg);
       },
       /**
        * Выгрузить данные в Excel или PDF по набору данных
@@ -166,7 +139,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        * @param {Object} cfg - параметры метода methodName
        * @param {number} pageOrientation 1 - потртетная, 2 - альбомная
        */
-      exportDataSet: function(fileName, fileType, cfg, pageOrientation){
+      exportDataSet: function(fileName, fileType, cfg, pageOrientation, methodName){
          var
             columns  = $ws.core.clone(this._options.columns),
             records,
@@ -199,7 +172,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             }
          }
 
-         this.exportFileTransfer(fileType, 'SaveRecordSet', cfg);
+         this.exportFileTransfer(fileType, methodName || 'SaveRecordSet', cfg);
       },
       /**
        * Универсальная выгрузка данных через сервис file-transfer
