@@ -7,7 +7,7 @@
 }
 
 .controls-LinkHeader__caption a:after{
-   content: 'a';
+   content: '>';
    width: 8px;
    font-family: 'TensorFont';
    font-size: 18px;
@@ -25,4 +25,10 @@
 
 .controls-LinkHeader__caption:hover a, .controls-LinkHeader__caption:hover a:after{
    color: #FF7033;
+}
+
+.controls-LinkHeader__separator{
+   height: 16px;
+   width: 2px;
+   background-color: #000000;
 }
