@@ -24,6 +24,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    }
    var createDefaultProjection = function(items, cfg) {
       var proj = Projection.getDefaultProjection(items);
+      /*TODO придрот, т.к. Леха Мальцев не проставляет current*/
+      if ($ws.helpers.instanceOfModule(items, 'js!WS.Data/Types/Enum')) {
+         proj.setCurrentPosition(items.get());
+      }
+      if ($ws.helpers.instanceOfModule(items, 'js!WS.Data/Types/Flags')) {
+         proj.each(function(item, i){
+            item.setSelected(items.get(item.getContents()));
+         });
+      }
       if (cfg.itemsSortMethod) {
          proj.setSort(cfg.itemsSortMethod);
       }

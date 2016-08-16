@@ -389,7 +389,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                projItem = self._getItemsProjection().getByHash(hash);
                index = self._getItemsProjection().getIndex(projItem);
                if (self._options.autocomplete){
-                  self._itemsProjection.setFilter(null);
+                  self._getItemsProjection().setFilter(null);
                   self.redraw();
                }
                self.setSelectedIndex(index);
