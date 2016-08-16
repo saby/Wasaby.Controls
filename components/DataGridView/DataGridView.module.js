@@ -760,7 +760,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
 
-      _beginDragHandler: function(dragObject, e) {
+      _dragStart: function(e) {
          $ws._const.$body.addClass('ws-unSelectable');
 
          /* Если скролл происходит перетаскиванием заголовков
@@ -776,7 +776,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._thumb.focus();
          }
          this._scrollingNow = true;
-         DataGridView.superclass._beginDragHandler.call(this, dragObject, e);
       },
 
       updateScrollAndColumns: function() {
@@ -794,7 +793,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
         this._thumb.addClass('controls-DataGridView__PartScroll__thumb-clicked');
       },
 
-      _endDragHandler: function(dragObject, droppable, e) {
+      _dragEnd: function() {
          this._animationAtPartScrollDragEnd();
 
          /* Навешиваем класс на body,
@@ -807,7 +806,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._thumb.removeClass('controls-DataGridView__PartScroll__thumb-clicked');
          this._scrollingNow = false;
          this._lastLeftPos = null;
-         DataGridView.superclass._endDragHandler.call(this, dragObject, droppable, e);
       },
 
       /*
