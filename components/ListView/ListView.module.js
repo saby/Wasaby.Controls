@@ -1555,6 +1555,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         if (this._getItemsToolbar().isToolbarLocking()) {
                            this._showItemsToolbar(this._getElementData(this._editingItem.target));
                         }
+                        this._notifyOnSizeChanged(true);
                      }.bind(this),
                      onBeginAdd: function(event, options) {
                         event.setResult(this._notify('onBeginAdd', options));
@@ -1581,6 +1582,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            }
                         }
                         this._toggleEmptyData(!this.getItems().getCount());
+                        this._notifyOnSizeChanged(true);
                      }.bind(this)
                   }
                };
