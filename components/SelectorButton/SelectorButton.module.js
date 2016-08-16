@@ -118,8 +118,6 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          this._checkWidth();
       },
 
-      //if(this._container.)
-
       _clickHandler: function(e) {
          if($(e.target).hasClass('controls-SelectorButton__cross')) {
             this.removeItemsSelectionAll();
