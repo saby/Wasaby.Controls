@@ -1,13 +1,16 @@
 .controls-Header{
    display: inline-block;
-   height: 32px;
-   text-align: center;
-   vertical-align: middle;
    padding-left: 8px;
    padding-right: 12px;
    font-family: 'TensorFont Bold';
    font-size: 18px;
    color: #D94700;
+}
+
+.controls-Header__caption{
+   display: table-cell;
+   height: 32px;
+   vertical-align: middle;
 }
 
 .controls-Header__big{
