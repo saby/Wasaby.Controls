@@ -47,6 +47,7 @@ define('js!SBIS3.CONTROLS.ListView',
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
              Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder, Di) {
+>>>>>>> Temporary merge branch 2
 
       'use strict';
 
