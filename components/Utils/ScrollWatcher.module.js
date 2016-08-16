@@ -221,9 +221,10 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * @param {jQuery} element блок элемента, в котором работает отслеживание скролла (контейнер контрола например)
        * @returns {boolean}
        */
-      hasScroll: function(element){
+      hasScroll: function(element, offset){
+         offset = offset || 0;
          var scrollHeight = this.getScrollHeight(element);
-         return scrollHeight > this.getContainerHeight() || scrollHeight > $(window).height();
+         return scrollHeight > this.getContainerHeight() + offset || scrollHeight > $(window).height() + offset;
       },
       destroy: function(){
          if (this._inWindow()) {
