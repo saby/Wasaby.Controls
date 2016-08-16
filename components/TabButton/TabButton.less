@@ -223,6 +223,14 @@
          }
       }
       .controls-EditAtPlace {
+         .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field{
+            vertical-align: top;
+         }
+
+         .controls-DateRange .controls-DatePicker {
+           vertical-align: bottom;
+         }
+
          .controls-EditAtPlace__textField{
             border-style: none;
          }
@@ -369,6 +377,11 @@
 @-moz-document url-prefix() {
   .controls-TabButton .controls-TabButton__inner{
     line-height: 29px;
+    .controls-EditAtPlace {
+      .controls-DatePicker {
+        vertical-align: top;
+      }
+    }
   }
   .controls-TabButton.controls-TabButton__main-item .controls-TabButton__inner{
     line-height: 26px;
