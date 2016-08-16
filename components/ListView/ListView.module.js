@@ -1255,7 +1255,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _drawSelectedItem: function (id, index, lightVer) {
             //рисуем от ключа
             var selId = id;
-            if (!lightVer) {
+            if (lightVer !== true) {
                $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
                $('.controls-ListView__item[data-id="' + selId + '"]', this._container).addClass('controls-ListView__item__selected');
             }
