@@ -213,6 +213,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {Array} records Список перемещаемых записей.
           * @returns {Object} filter Фильтр который будет помещёт в диалог перемещения.
           */
+         /**
+          * @event onDelete При удаление записей.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Array} idArray Ключи удаляемых записей.
+          * @param {*} result Результат удаления.
+          */
          $protected: {
             _floatCheckBox: null,
             _dotItemTpl: null,
@@ -641,7 +647,7 @@ define('js!SBIS3.CONTROLS.ListView',
          $constructor: function () {
             var dispatcher = $ws.single.CommandDispatcher;
 
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onDelete');
             this._container.on('swipe tap mousemove mouseleave', this._eventProxyHandler.bind(this));
 
             this.initEditInPlace();
@@ -2847,6 +2853,60 @@ define('js!SBIS3.CONTROLS.ListView',
                });
             } else {
                ListView.superclass.initializeSelectedItems.call(this);
+            }
+         },
+         /**
+          * Удаляет записи из источника данных по переданным идентификаторам элементов коллекции.
+          * @remark
+          * При использовании метода для в классе {@link SBIS3.CONTROLS.TreeCompositeView} или его наследниках, есть особенность перезагрузки данных.
+          * Для режима отображения "Таблица" (table), который устанавливают с помощью опции {@link SBIS3.CONTROLS.CompositeViewMixin#viewMode}, производится частичная перезагрузка данных в узлах иерархии.
+          * Это означает, что данные списка будут обновлены быстрее: запрос на обновление будет произведён только для тех узлов, элементы которого удаляются методом.
+          * Для списков любых других классов будет произведена полная перезагрузка списка записей, например как при методе {@link SBIS3.CONTROLS.ListView#reload}.
+          * @param {Array|Number|String} idArray Массив с идентификаторами элементов коллекции.
+          * Если нужно удалить одну запись, то в параметр передаётся простое значение - идентификатор элемента.
+          * @param {String} [message] Текст, который будет использован в диалоговом окне перед началом удаления записей из источника.
+          * Если параметр не передан, то для удаления нескольких записей будет использован текст "Удалить записи?", а для удаления одной записи - "Удалить текущую запись?".
+          * @returns {$ws.proto.Deferred} Возвращает объект deferred. На результат работы метода можно подписаться для решения прикладных задача.
+          */
+         deleteRecords: function(idArray, message) {
+            var self = this;
+            idArray = Array.isArray(idArray) ? idArray : [idArray];
+            message = message || (idArray.length !== 1 ? rk("Удалить записи?", "ОперацииНадЗаписями") : rk("Удалить текущую запись?", "ОперацииНадЗаписями"));
+            return $ws.helpers.question(message).addCallback(function(res) {
+               if (res) {
+                  self._toggleIndicator(true);
+                  return self._deleteRecords(idArray).addCallback(function () {
+                     self.removeItemsSelection(idArray);
+                     //Если записи удалялись из DataSource, то перезагрузим реест, если из items, то реестр уже в актальном состоянии
+                     if (self.getDataSource()) {
+                        if ($ws.helpers.instanceOfModule(self, 'SBIS3.CONTROLS.TreeCompositeView') && self.getViewMode() === 'table') {
+                           self.partialyReload(idArray);
+                        } else {
+                           self.reload();
+                        }
+                     }
+                  }).addErrback(function(result) {
+                     $ws.helpers.alert(result)
+                  }).addBoth(function(result) {
+                     self._toggleIndicator(false);
+                     self._notify('onDelete', idArray, result);
+                  });
+               }
+            });
+         },
+         _deleteRecords: function(idArray) {
+            var
+                items = this.getItems(),
+                source = this.getDataSource();
+            if (source) {
+               return source.destroy(idArray);
+            } else {
+               items.setEventRaising(false, true);
+               for (var i = 0; i < idArray.length; i++) {
+                  items.remove(items.getRecordById(idArray[i]));
+               }
+               items.setEventRaising(true, true);
+               return $ws.proto.Deferred.success(true);
             }
          }
       });
