@@ -38,21 +38,8 @@ define(
       _dotTplFn: dotTplFn,
 
       $constructor: function () {
-         this.subscribe('onBeforeShow', this._beforeShowHandler.bind(this));
          if (this._options.icon){
             this.setIcon(this._options.icon);
-         }
-      },
-
-      _beforeShowHandler: function(){
-         var captionText = $('.controls-TabButton__caption-text', this.getContainer()),
-             containerWidth = this.getContainer().width(),
-             dif = containerWidth - TAB_BUTTON__MAX_WIDTH,
-             newWidth;
-         if (dif > 0){
-            newWidth = captionText.width() - dif;
-            captionText.css('max-width', newWidth);
-            captionText.addClass('controls-TabButton__caption-text-overflow');
          }
       },
 

@@ -18,9 +18,6 @@
          &:before {
             display: @tab-button-hover-inner-after-display;
          }
-         .controls-TabButton__caption .controls-TabButton__caption-text:after{
-           background: linear-gradient(to left,#f0f5fb,rgba(255,255,255,0));
-         }
       }
    }
 
@@ -114,12 +111,10 @@
          border-left: @tab-button-checked-inner-border-left;
          border-right: @tab-button-checked-inner-border-right;
          background: @tab-button-checked-inner-bg;
+         max-width: @tab-button-large-inner-max-width;
          overflow:  @tab-button-large-inner-overflow;
          &:before{
             display: @tab-button-checked-inner-after-display;
-         }
-         .controls-TabButton__caption .controls-TabButton__caption-text:after{
-           background: linear-gradient(to left,#fff,rgba(255,255,255,0));
          }
       }
       .controls-tabButton__overlay{
@@ -201,26 +196,6 @@
          display: inline-block;
          > div {
             vertical-align: top;
-         }
-         .controls-TabButton__caption-text{
-           display: inline-block;
-           overflow: hidden;
-           position: relative;
-           &:after {
-             content: '';
-             display: none;
-             width: 15px;
-             height: 28px;
-             background: linear-gradient(to left,#fff,rgba(255,255,255,0));
-             position: absolute;
-             top: 0;
-             right: 0;
-           }
-           &.controls-TabButton__caption-text-overflow{
-             &:after {
-               display: block;
-             }
-           }
          }
       }
       .controls-EditAtPlace {
