@@ -430,6 +430,7 @@ define('js!SBIS3.CONTROLS.Image',
                    filter = showCropResult;
                }
                new Dialog({
+                  animatedWindows: false,
                   template: 'js!SBIS3.CONTROLS.Image.EditDialog',
                   opener: this,
                   visible: false,
