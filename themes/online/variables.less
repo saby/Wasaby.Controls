@@ -1207,8 +1207,15 @@
 // Data Range //
 // ---------- //
 
+@date-range-font-size:                          14px;
 @date-range-line-height:                        24px;
 @date-range-text-line-height:                   normal;
+@date-range-icon-button-size:                   18px;
+@date-range-icon-button-margin:                 0 0 3px 8px;
+@date-range-icon-button-hover-color:            @blue-dark-color !important;
+@date-range-dash-width:                         2px;
+@date-range-dash-color:                         @black-color;
+@date-range-dash-margin:                        0 3px 4px 3px;
 
 // -------------- //
 // Date Range Big //
@@ -1222,22 +1229,47 @@
 @date-range-big-right-arrow-icon-bg:            url(@date-range-big-spritesheet) 0 -48px no-repeat;
 @date-range-big-right-arrow-icon-hover-bg:      url(@date-range-big-spritesheet) 0 -72px no-repeat;
 
+
+@date-range-big-choose-boundary-selected-color:    @white-color;
+@date-range-big-choose-link-text-color:            @darkcyan-color;
+@date-range-big-choose-border-color:               @gray-light-color;
+@date-range-big-choose-border-hovered-color:       @darkcyan-color;
+@date-range-big-choose-border-selected-color:      @darkcyan-color;
+@date-range-big-choose-bg-hovered-color:           @default-itemHover-color;
+@date-range-big-choose-bg-selected-color:          @default-itemHover-color;
+@date-range-big-choose-bg-boundary-selected-color: @dodgerblue-color;
+
 @date-range-big-choose-months-color:            @darkcyan-color;
 @date-range-big-choose-months-font-size:        16px;
 
-@date-range-big-choose-month-range-picker-caption-text-hovered-bg:         @default-itemHover-color;
-@date-range-big-choose-month-range-picker-calendar-selected-bg:            @default-itemHover-color;
-@date-range-big-choose-month-range-picker-calendar-boundary-selected-bg:   @dodgerblue-color;
-@date-range-big-choose-month-range-picker-month-hovered-border:             1px dotted @gray-ccc-color;
+@date-range-big-choose-go-to-boundary-button-bg-color: @dodgerblue-color;
+
+@date-range-big-choose-month-range-picker-color:                     @black-color;
+@date-range-big-choose-month-range-picker-caption-text-hovered-bg:   @date-range-big-choose-bg-hovered-color;
+@date-range-big-choose-month-range-picker-boundary-selected-color:   @date-range-big-choose-boundary-selected-color;
+@date-range-big-choose-month-range-picker-border-selected-color:     @dodgerblue-color;
+@date-range-big-choose-month-range-picker-bg-selected:               @date-range-big-choose-bg-selected-color;
+@date-range-big-choose-month-range-picker-boundary-selected-bg:      @dodgerblue-color;
+@date-range-big-choose-month-range-picker-month-hovered-border:      1px dotted @gray-ccc-color;
+@date-range-big-choose-month-range-picker-bg-boundary-selected-color: @date-range-big-choose-bg-boundary-selected-color;
+
+@date-range-big-choose-month-range-picker-today-border-color:         #ff7033;
+@date-range-big-choose-month-range-picker-weekend-color:              #EF463A;
 
 
-@date-range-big-choose-date-range-picker-calendar-item-hover-bg:           @default-itemHover-color;
-@date-range-big-choose-date-range-picker-calendar-item-border-color:       @darkcyan-color;
-@date-range-big-choose-date-range-picker-calendar-item-border:             1px solid @date-range-big-choose-date-range-picker-calendar-item-border-color;
-@date-range-big-choose-date-range-picker-calendar-item-selected-bg:        @default-itemHover-color;
-@date-range-big-choose-date-range-picker-calendar-top-bg:                  url(@date-range-big-bg-spritesheet) 0 0 repeat-x;
-@date-range-big-choose-date-range-picker-calendar-bottom-bg:               url(@date-range-big-bg-spritesheet) 0 -40px repeat-x;
-@date-range-big-choose-month-range-picker-calendar-boundary-item-selected-bg:   @dodgerblue-color;
+@date-range-big-choose-date-range-picker-color:                      @black-color;
+@date-range-big-choose-date-range-picker-boundary-selected-color:    @date-range-big-choose-boundary-selected-color;
+@date-range-big-choose-date-range-picker-border-color:               @darkcyan-color;
+@date-range-big-choose-date-range-picker-border:                     1px solid @date-range-big-choose-date-range-picker-border-color;
+@date-range-big-choose-date-range-picker-bg-hovered-color:           @date-range-big-choose-bg-hovered-color;
+@date-range-big-choose-date-range-picker-bg-selected-color:          @date-range-big-choose-bg-selected-color;
+@date-range-big-choose-date-range-picker-bg-boundary-selected-color: @date-range-big-choose-bg-boundary-selected-color;
+
+@date-range-big-choose-date-range-picker-today-border-color:         #ff7033;
+@date-range-big-choose-date-range-picker-weekend-color:              #EF463A;
+@date-range-big-choose-date-range-picker-calendar-top-bg:            url(@date-range-big-bg-spritesheet) 0 0 repeat-x;
+@date-range-big-choose-date-range-picker-calendar-bottom-bg:         url(@date-range-big-bg-spritesheet) 0 -40px repeat-x;
+
 
 // ------------- //
 // Edit at place //

@@ -70,7 +70,7 @@ define(
 
             _selectionType: null,
 
-            MONTH_VIEW_CSS_CLASSES: {
+            _MONTH_VIEW_CSS_CLASSES: {
                CAPTION_TEXT: 'controls-MonthView__caption-text',
                CAPTION: 'controls-MonthView__caption',
                TABLE: 'controls-MonthView__dayTable',
@@ -80,7 +80,8 @@ define(
                DAY_BORDER: 'controls-MonthView__dayBorder',
                WEEK_SELECTED: 'controls-MonthView__weekSelected',
                WEEK_HOVERED: 'controls-MonthView__weekHovered',
-               WEEK_ROW: 'controls-MonthView__tableRow'
+               WEEK_ROW: 'controls-MonthView__tableRow',
+               TODAY: 'controls-MonthView__today'
             }
          },
 
@@ -115,22 +116,22 @@ define(
 
          _attachEvents: function () {
             var self = this,
-               itemsContainerCssClass = ['.', this.MONTH_VIEW_CSS_CLASSES.TABLE].join(''),
+               itemsContainerCssClass = ['.', this._MONTH_VIEW_CSS_CLASSES.TABLE].join(''),
                itemsContainers = this.getContainer().find(itemsContainerCssClass),
                itemCssClass = ['.', this._SELECTABLE_RANGE_CSS_CLASSES.item].join('');
 
             if (this.isEnabled()) {
-               itemsContainers.on('click', ['.', this.MONTH_VIEW_CSS_CLASSES.DAY_TITLE].join(''), function (e) {
+               itemsContainers.on('click', ['.', this._MONTH_VIEW_CSS_CLASSES.DAY_TITLE].join(''), function (e) {
                   self._onDayTitleMouseClick($(this), e);
-               }).on('click', ['.', this.MONTH_VIEW_CSS_CLASSES.DAY].join(''), function (e) {
+               }).on('click', ['.', this._MONTH_VIEW_CSS_CLASSES.DAY].join(''), function (e) {
                   self._onDayMouseClick($(this), e);
                }).on('mouseenter', itemCssClass, function () {
                   self._onDayMouseEnter($(this));
-               }).on('click', ['.', this.MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
+               }).on('click', ['.', this._MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
                   self._onDayBorderMouseClick($(this), e);
-               }).on('mouseenter', ['.', this.MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
+               }).on('mouseenter', ['.', this._MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
                   self._onDayBorderMouseEnter($(this), self._getItemDate($(this)));
-               }).on('mouseleave', ['.', this.MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
+               }).on('mouseleave', ['.', this._MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
                   self._onDayBorderMouseLeave($(this), self._getItemDate($(this)), e);
                }).on('mouseleave', self._onMouseLeave.bind(this));
             }
@@ -220,21 +221,21 @@ define(
          _onDayBorderMouseEnter: function (element, item) {
             var rowCls;
             if (!this.isSelectionProcessing()) {
-               rowCls = ['.', this.MONTH_VIEW_CSS_CLASSES.WEEK_ROW].join('');
-               this.getContainer().find(rowCls).removeClass(this.MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED);
-               element.closest(rowCls).addClass(this.MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED);
+               rowCls = ['.', this._MONTH_VIEW_CSS_CLASSES.WEEK_ROW].join('');
+               this.getContainer().find(rowCls).removeClass(this._MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED);
+               element.closest(rowCls).addClass(this._MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED);
             }
          },
 
          _onDayBorderMouseLeave: function (element, item, event) {
-            if (!$(event.toElement).hasClass(this.MONTH_VIEW_CSS_CLASSES.DAY)) {
-               element.closest(['.', this.MONTH_VIEW_CSS_CLASSES.WEEK_ROW].join('')).removeClass(this.MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED);
+            if (!$(event.toElement).hasClass(this._MONTH_VIEW_CSS_CLASSES.DAY)) {
+               element.closest(['.', this._MONTH_VIEW_CSS_CLASSES.WEEK_ROW].join('')).removeClass(this._MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED);
             }
          },
 
          _onMouseLeave: function () {
-            var hoveredCls = ['.', this.MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED].join('');
-            this.getContainer().find(hoveredCls).removeClass(this.MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED);
+            var hoveredCls = ['.', this._MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED].join('');
+            this.getContainer().find(hoveredCls).removeClass(this._MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED);
          },
 
          /**
@@ -309,7 +310,7 @@ define(
             if (!this._options.captionType) {
                return;
             }
-            this.getContainer().find('.' + this.MONTH_VIEW_CSS_CLASSES.CAPTION_TEXT).text(this._options.month.strftime(this.getCaptionFormat()));
+            this.getContainer().find('.' + this._MONTH_VIEW_CSS_CLASSES.CAPTION_TEXT).text(this._options.month.strftime(this.getCaptionFormat()));
          },
 
          _getDaysArray: function () {

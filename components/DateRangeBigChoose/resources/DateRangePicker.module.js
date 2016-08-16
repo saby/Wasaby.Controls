@@ -139,9 +139,13 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
             control.subscribe('onActivated', self._onMonthViewCaptionActivated);
          });
          this._updateSelectionInInnerComponents();
-         this.getContainer().css('top', 40 - $(this._getItemsContainer().children().get(0)).height());
+         this._updateMonthsPosition();
          $(this._getItemsContainer().children().get(0)).addClass('controls-DateRangeBigChoose__calendar-fogged');
          $(this._getItemsContainer().children().get(2)).addClass('controls-DateRangeBigChoose__calendar-fogged');
+      },
+
+      _updateMonthsPosition: function () {
+         this.getContainer().css('top', 40 - $(this._getItemsContainer().children().get(0)).height());
       },
 
       setStartValue: function (start, silent) {
@@ -205,16 +209,23 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
          });
       },
 
-      _updateInnerComponents: function (start, end) {
-         this.forEachMonthView(function(control) {
-            control.setRange(start, end, true);
-         });
-      },
+      // _updateInnerComponents: function (start, end) {
+      //    this.forEachMonthView(function(control) {
+      //       control.setRange(start, end, true);
+      //    });
+      // },
 
       _updateSelectionInInnerComponents: function () {
          if (!this._innerComponentsValidateTimer) {
             this._innerComponentsValidateTimer = setTimeout(this._validateInnerComponents.bind(this), 0);
          }
+      },
+
+      startSelection: function (start, end) {
+         this._selectionType = 'day';
+         this._selectionRangeEndItem = end;
+         this.setRange(start, start, true);
+         this._updateSelectionInInnerComponents();
       },
 
       _validateInnerComponents: function () {

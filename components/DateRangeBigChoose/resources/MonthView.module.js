@@ -27,11 +27,11 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView', [
          var self = this,
             container = this.getContainer();
          
-         container.find('.' + this.MONTH_VIEW_CSS_CLASSES.CAPTION).click(function () {
+         container.find('.' + this._MONTH_VIEW_CSS_CLASSES.CAPTION).click(function () {
             self._notify('onActivated');
          });
          
-         container.find('.' + this.MONTH_VIEW_CSS_CLASSES.TABLE).click(function () {
+         container.find('.' + this._MONTH_VIEW_CSS_CLASSES.TABLE).click(function () {
             self._notify('onMonthActivated');
          });
       },
@@ -66,9 +66,11 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView', [
 
       _updateBorders: function () {
          var self = this,
-            rows = this.getContainer().find(['.', this.MONTH_VIEW_CSS_CLASSES.TABLE_ROW].join('')),
+            rows = this.getContainer().find(['.', this._MONTH_VIEW_CSS_CLASSES.TABLE_ROW].join('')),
             borderTopClass = 'controls-DateRangeBigChoose-MonthView__border-top',
             borderBottomClass = 'controls-DateRangeBigChoose-MonthView__border-bottom',
+            beforeTodayClass = 'controls-DateRangeBigChoose-MonthView__beforeToday',
+            aboveTodayClass = 'controls-DateRangeBigChoose-MonthView__aboveToday',
             prevElement;
          this.getContainer().find(['.', borderTopClass].join('')).removeClass(borderTopClass);
          this.getContainer().find(['.', borderBottomClass].join('')).removeClass(borderBottomClass);
@@ -89,6 +91,14 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView', [
                   } else {
                      if (prevElement && $(prevElement.children()[tdIndex]).hasClass(self._SELECTABLE_RANGE_CSS_CLASSES.selected)) {
                         $(prevElement.children()[tdIndex]).addClass(borderBottomClass);
+                     }
+                  }
+                  if (tdElement.hasClass(self._MONTH_VIEW_CSS_CLASSES.TODAY)) {
+                     if (tdIndex) {
+                        $(trElement.children()[tdIndex - 1]).addClass(beforeTodayClass);
+                     }
+                     if (prevElement) {
+                        $(prevElement.children()[tdIndex]).addClass(aboveTodayClass);
                      }
                   }
                });
