@@ -17,18 +17,17 @@ define(
    'use strict';
 
    /**
-    * Контрол, отображающий корешки закладок
-    * Для корректной работы необходимо задание свойсв {@link keyField} и {@link displayField}
+    * Контрол, отображающий корешки закладок. Для корректной работы необходимо задание свойств {@link keyField} и {@link displayField}.
     * Для оформления компонентов внутри вкладки, можно использовать следующие классы:
     * <ol>
-    *    <li><strong>controls-TabButton__mainText</strong> - параметры текста, как у главной вкладки</li>
-    *    <li><strong>controls-TabButton__additionalText1</strong> - оформление дополнительного текста 1</li>
-    *    <li><strong>controls-TabButton__additionalText2</strong> - оформление дополнительного текста 2</li>
+    *    <li><strong>controls-TabButton__mainText</strong> - параметры текста, как у главной вкладки;</li>
+    *    <li><strong>controls-TabButton__additionalText1</strong> - оформление дополнительного текста 1;</li>
+    *    <li><strong>controls-TabButton__additionalText2</strong> - оформление дополнительного текста 2.</li>
     * </ol>
     * Также для отдельных вкладок можно использовать модификаторы:
     * <ol>
-    *    <li><strong>controls-TabButton__counter</strong> - оформления вкладок-счётчиков с иконками</li>
-    *    <li><strong>controls-TabButton__main-item</strong> - оформления главной вкладки</li>
+    *    <li><strong>controls-TabButton__counter</strong> - оформления вкладок-счётчиков с иконками;</li>
+    *    <li><strong>controls-TabButton__main-item</strong> - оформления главной вкладки.</li>
     * </ol>
     * @class SBIS3.CONTROLS.TabButtons
     * @extends SBIS3.CONTROLS.RadioGroupBase
