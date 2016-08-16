@@ -680,7 +680,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
          чтобы не было равенства при сравнении и в контекст записалось новое значение */
       _onSelectedItemsChangeHandler: function() {
          this._options.selectedItems = this._options.selectedItems.clone();
-         this._notifyOnPropertyChanged('selectedItems');
       },
 
       _isItemSelected : function(item) {

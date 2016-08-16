@@ -741,39 +741,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
              return needDrawItem
           },
 
-          setSelectedItem: function(item) {
-             var hasRequiredFields,
-                 isModel = item  && $ws.helpers.instanceOfModule(item, 'WS.Data/Entity/Model');
-
-             /* Т.к. ключ может быть как 0, а ключевое поле как '', то надо проверять на null/undefined */
-             function isEmpty(val) {
-                return val === null || val === undefined;
-             }
-
-             if(isModel) {
-                /* Проверяем запись на наличие ключевых полей */
-                hasRequiredFields = !isEmpty(item.get(this._options.displayField)) && !isEmpty(item.get(this._options.keyField));
-
-                if(hasRequiredFields) {
-                   /* Если запись собралась из контекста, в ней может не быть поля с первичным ключем */
-                   if (!item.getIdProperty()) {
-                      item.setIdProperty(this._options.keyField);
-                   }
-                }
-             }
-
-             /* Вызываем родительский метод, если:
-                1) передали запись с обязательными полями
-                2) передали null
-                3) передали запись без ключевых полей, но у нас есть выделенные ключи,
-                   такое может произойти, когда запись сбрасывается через контекст */
-             if( hasRequiredFields ||
-                 item === null  ||
-                (!hasRequiredFields && !this._isEmptySelection() && isModel) ) {
-                FieldLink.superclass.setSelectedItem.apply(this, arguments);
-             }
-          },
-
           setEnabled: function() {
              FieldLink.superclass.setEnabled.apply(this, arguments);
              /* При изменении состояния поля связи, надо скинуть старую запомненую ширину,
