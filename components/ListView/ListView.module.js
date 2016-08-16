@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Paging',
       'js!SBIS3.CONTROLS.ComponentBinder',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
-      'js!SBIS3.CONTROLS.DragEntity.Row'
+      'js!SBIS3.CONTROLS.DragEntity.Row',
       'js!WS.Data/Adapter/RecordSet'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
