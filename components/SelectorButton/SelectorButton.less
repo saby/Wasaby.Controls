@@ -1,36 +1,16 @@
 .controls-SelectorButton {
-   display: inline-block;
-   vertical-align: middle;
+   display: inline-flex;
+   align-items: center;
    cursor: @link-cursor;
    line-height: @controls-SelectorButton-line-height;
    height: @controls-SelectorButton-height;
 
-   .controls-SelectorButton__text,
-   .controls-SelectorButton__icon,
-   .controls-SelectorButton__cross {
-      vertical-align: @controls-SelectorButton-align;
-      margin: @controls-SelectorButton-margin;
-   }
-
-   .controls-SelectorButton__items {
+   .controls-SelectorButton__text {
       white-space: nowrap;
+      text-overflow: ellipsis;
       overflow: hidden;
-      height: @controls-SelectorButton-height;
-
-      .controls-SelectorButton__ellipsis-wrapper {
-         float: left;
-      }
-
-      .controls-SelectorButton__copyCross {
-         float: right;
-         display: inline-block;
-         position: relative;
-         top: -(@controls-SelectorButton-height - 1);
-         margin-left: -16px;
-         background-color: @white-color;
-         .box-shadow(@controls-filterLine-copyCross-shadow);
-      }
    }
+
 
    &.controls-SelectorButton__asLink {
       .controls-SelectorButton__text {
@@ -62,4 +42,22 @@
       }
    }
 
+}
+
+// Костыли для старых ie
+.ws-is-ie8, .ws-is-ie9 {
+   .controls-SelectorButton {
+      display: inline-block;
+      white-space: nowrap;
+
+      .controls-SelectorButton__cross,
+      .controls-SelectorButton__icon {
+         margin-top: 4px;
+         vertical-align: top;
+      }
+
+      .controls-SelectorButton__text {
+         display: inline-block;
+      }
+   }
 }

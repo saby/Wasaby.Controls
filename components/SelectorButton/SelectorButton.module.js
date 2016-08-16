@@ -95,7 +95,30 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          var btnCaption = caption || this._options.defaultCaption;
          SelectorButton.superclass.setCaption.call(this, btnCaption);
          $('.controls-SelectorButton__text', this._container[0]).html(Sanitize(caption));
+         this._checkWidth();
       },
+
+      _checkWidth: function() {
+         // Хак для старых ие
+         if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) {
+            var additionalWidth = this._container.find('.controls-SelectorButton__icon').width() + this._container.find('.controls-SelectorButton__cross').width(),
+                text = this._container.find('.controls-SelectorButton__text'),
+                containerWidth = this._container.width();
+
+            if (containerWidth < (additionalWidth + text.width())) {
+               text.width(containerWidth - additionalWidth);
+            } else {
+               text.width('auto');
+            }
+         }
+      },
+
+      _onResizeHandler: function() {
+         SelectorButton.superclass._onResizeHandler.apply(this, arguments);
+         this._checkWidth();
+      },
+
+      //if(this._container.)
 
       _clickHandler: function(e) {
          if($(e.target).hasClass('controls-SelectorButton__cross')) {
