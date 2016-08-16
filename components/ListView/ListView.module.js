@@ -2081,6 +2081,10 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollWatcher.scrollTo(this._firstScrollTop || (scrollAmount < 0) ? 'bottom' : scrollAmount);
             }
          },
+         /**
+          * Скролит табличное представление к указанному элементу
+          * @param item Элемент, к которому осуществляется скролл
+          */
          scrollToItem: function(item){
             if (item.getId && item.getId instanceof Function){
                this._scrollToItem(item.getId());
