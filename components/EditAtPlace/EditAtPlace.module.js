@@ -255,6 +255,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                this.setInPlaceEditMode(false);
             }
             this._setOldText();
+            this._deactivateActiveChildControl();
             this._notify('onCancel');
          },
 

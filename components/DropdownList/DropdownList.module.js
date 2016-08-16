@@ -220,8 +220,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                self.hidePicker();
             });
             if(this._options.mode === 'hover') {
-               this._pickerHeadContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, true));
-               this._pickerBodyContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, false));
+               pickerContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this));
             }
             else if (this._options.mode === 'click'){
                this._pickerHeadContainer.click(this.hidePicker.bind(this));
@@ -366,8 +365,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             return this._picker.getContainer();
          },
-         _pickerMouseLeaveHandler: function(fromHeader, e) {
-            if(this._hideAllowed && !$(e.toElement || e.relatedTarget).closest('.controls-DropdownList__' + (fromHeader ? 'body' : 'header')).length) {
+         _pickerMouseLeaveHandler: function(e) {
+            if(this._hideAllowed && !$(e.toElement || e.relatedTarget).closest('.controls-DropdownList__picker').length) {
                this.hidePicker();
             }
          },
@@ -447,19 +446,27 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var textValues = [],
                 len = id.length,
                 self = this,
-                pickerContainer,
-                def;
+                item, pickerContainer, def;
 
             if(len) {
                def = new $ws.proto.Deferred();
 
-               this.getSelectedItems(true).addCallback(function(list) {
-                  list.each(function(rec) {
-                     textValues.push(rec.get(self._options.displayField));
-                  });
+               if(!this._picker) {
+                  this._initializePicker();
+               }
 
-                  if(!textValues.length && self._checkEmptySelection() && self.getItems()) {
-                     textValues.push(self.getItems().at(0).get(self._options.displayField));
+               this.getSelectedItems(true).addCallback(function(list) {
+                  if(list) {
+                     list.each(function (rec) {
+                        textValues.push(rec.get(self._options.displayField));
+                     });
+                  }
+
+                  if(!textValues.length && self._checkEmptySelection()) {
+                     item = self.getItems() && self.getItems().at(0);
+                     if(item) {
+                        textValues.push(item.get(self._options.displayField));
+                     }
                   }
 
                   def.callback(textValues);
