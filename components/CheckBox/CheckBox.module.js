@@ -153,7 +153,7 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
          this._notifyOnPropertyChanged('checked');
       },
 
-      _clickHandler: function() {
+      _changeCheckedByClick: function() {
          if (!this._options.threeState) {
             this.setChecked(!(this.isChecked()));
          } else {

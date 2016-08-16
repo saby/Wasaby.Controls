@@ -697,7 +697,10 @@ define('js!SBIS3.CONTROLS.ListView',
                 toggleClass = container.toggleClass.bind(container, 'controls-ListView__touchMode', this._touchSupport);
 
             if(this._itemsToolbar) {
-               if(!this._itemsToolbar.isVisible() && this._itemsToolbar.getProperty('touchMode') !== this._touchSupport) {
+               /* При таче, можно поменять вид операций,
+                  т.к. это не будет вызывать никаких визуальных дефектов,
+                  а просто покажет операции в тач моде */
+               if((!this._itemsToolbar.isVisible() || this._touchSupport) && this._itemsToolbar.getProperty('touchMode') !== this._touchSupport) {
                   toggleClass();
                   this._itemsToolbar.setTouchMode(this._touchSupport);
                }
@@ -750,12 +753,15 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Если мы находися на панельке, то пока она скрыта все данные уже могут загрузиться, но новая пачка не загрузится
                 * потому что контейнер невидимый*/
                if ($ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
-                  topParent.once('onAfterShow', function(){
-                     self._firstScrollTop = true;
-                     if (self.getItems()) {
-                        self._preScrollLoading();
+                  var afterFloatAreaShow = function(){
+                     this._firstScrollTop = true;
+                     if (this.getItems()) {
+                        this._preScrollLoading();
                      }
-                  });
+                     topParent.unsubscribe('onAfterShow', afterFloatAreaShow);
+                  }
+                  //Делаем через subscribeTo, а не once, что бы нормально отписываться при destroy FloatArea
+                  this.subscribeTo(topParent, 'onAfterShow', afterFloatAreaShow.bind(this));
                }
 
                this._scrollWatcher = new ScrollWatcher(scrollWatcherCfg);
@@ -1233,7 +1239,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         selectedItems.clear();
                      }
                      ListView.superclass.setSelectedItemsAll.call(this);
-                     if (dataSet.getMetaData().more){
+                     if (dataSet.getCount() == 1000 && dataSet.getMetaData().more){
                         InformationPopupManager.showMessageDialog({
                            status: 'default',
                            message: 'Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.'
@@ -2089,15 +2095,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          isScrollOnBottom: function(){
-            var scrollableContainer = this._scrollWatcher.getScrollContainer(),
-            isBody = scrollableContainer == document.body,
-            scrollContainer = isBody ? $(window) : this._options.infiniteScrollContainer;
-            // Если scrollContainer это body и есть floatArea со скроллом, то у body скролла нет, а значит он не может быть снизу (его же нет!)
-            // Todo: когда будут классные скроллы (3.7.4.100?) - можно будет выпилить
-            if (scrollableContainer){
-               scrollContainer = $(scrollContainer);
-               return (scrollableContainer.scrollHeight - (scrollableContainer.scrollTop + scrollContainer.height())) == 0;
-            }
+            return this._scrollWatcher.isScrollOnBottom();
          },
          //Проверка есть ли открытые stack FloatArea или maximize Window, они могут збирать на себя скролл у body
          _existFloatArea: function(){

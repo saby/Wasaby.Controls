@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.Utils.Sanitize', ['Core/markup/ParserUtilitiesNew'], f
    var
       validNodes = { // Допустимые типы нод
          html: true, head: true, body: true, // Основные элементы
-         p: true, div: true, span: true, img: true, br: true, a: true, pre: true, label: true, iframe: true, // Основные элементы
+         p: true, div: true, span: true, img: true, br: true, a: true, pre: true, label: true, iframe: false, // Основные элементы
          b: true, strong: true, i: true, em: true, u: true, s: true, strike: true, q: true, blockquote: true, // Стили
          h1: true, h2: true, h3: true, h4: true, h5: true, h6: true, // Заголовки
          dd: true, dir: true, dl: true, dt: true, li: true, menu: true, ol: true, ul: true, // Списки
@@ -34,11 +34,14 @@ define('js!SBIS3.CONTROLS.Utils.Sanitize', ['Core/markup/ParserUtilitiesNew'], f
 
    function validateAttributes(content) {
       var
-         idx = 0;
+         idx = 0,
+         jsRegExp = new RegExp(/javascript:/gim);
       if (content.attributes.length) {
          while (content.attributes.length && idx < content.attributes.length) {
             if (validAttributes[content.attributes[idx].name]) {
-               content.attributes[idx].value.replace( /javascript:/gim, '');
+               while (jsRegExp.test(content.attributes[idx].value)) {
+                  content.attributes[idx].value = content.attributes[idx].value.replace(jsRegExp, '');
+               }
                idx++;
             } else {
                content.attributes.splice(idx, 1);
