@@ -278,21 +278,19 @@
    }
 }
 
-.ws-is-mobile-platform {
-   .controls-DataGridView {
-      .controls-DataGridView__tr {
-         &.controls-ListView__hoveredItem {
-            &:not(.controls-ItemActions__activeItem) {
-               background: @data-grid-row-hover-bg-mobile;
+.controls-DataGridView.controls-ListView__touchMode {
+   .controls-DataGridView__tr {
+      &.controls-ListView__hoveredItem {
+         &:not(.controls-ItemActions__activeItem) {
+            background: @data-grid-row-hover-bg-mobile;
 
-               .controls-DataGridView__th {
-                  color: @data-grid-row-hover-header-cell-text-color;
-                  background-color: @data-grid-row-hover-bg-mobile;
-               }
-               .controls-DataGridView__td {
-                  color: @data-grid-row-hover-cell-text-color;
-                  background-color: @data-grid-row-hover-bg-mobile;
-               }
+            .controls-DataGridView__th {
+               color: @data-grid-row-hover-header-cell-text-color;
+               background-color: @data-grid-row-hover-bg-mobile;
+            }
+            .controls-DataGridView__td {
+               color: @data-grid-row-hover-cell-text-color;
+               background-color: @data-grid-row-hover-bg-mobile;
             }
          }
       }
