@@ -990,10 +990,10 @@ define('js!SBIS3.CONTROLS.RichEditor',
                this._notify('onTextChange', text);
                this._notifyOnPropertyChanged('text');
                this._updateDataReview(text);
-               this._togglePlaceholder(text);
                this._updateHeight();
                this.clearMark();
             }
+            this._togglePlaceholder(text);
          },
 
          _drawAndBindItems: function(){
