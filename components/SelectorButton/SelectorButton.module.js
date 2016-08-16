@@ -112,6 +112,22 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          }
       },
 
+      /**
+       * Установить набор диалогов выбора для поля связи
+       * @param {Array} dictionaries Набор диалогов выбора для поля связи
+       */
+      setDictionaries: function (dictionaries) {
+         this._options.dictionaries = dictionaries;
+      },
+
+      /**
+       * Получить набор диалогов выбора для поля связи
+       * @returns {Array} Набор диалогов выбора для поля связи
+       */
+      getDictionaries: function () {
+         return this._options.dictionaries;
+      },
+
       _chooseCallback: function(result) {
          if(result && result.length) {
             $ws.helpers.instanceOfModule(result[0], 'WS.Data/Entity/Model') ?
