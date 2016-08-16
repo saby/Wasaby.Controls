@@ -556,7 +556,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          },
          /* ToDo. Используется для вызова перерисовки родительских элементов при изменении количества дочерних
           Удалить функцию, когда будет сделана нотификация по заданию: https://inside.tensor.ru/opendoc.html?guid=b53fc873-6355-4f06-b387-04df928a7681&description= */
-         _onCollectionAddMoveRemove: function(parentFn, event, action, newItems, newItemsIndex, oldItems) {
+         _findAndRedrawChangedBranches: function(newItems, oldItems) {
             var
                branches = {},
                fillBranchesForRedraw = function (items) {
@@ -570,7 +570,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                      }
                   }
                }.bind(this);
-            parentFn.call(this, event, action, newItems, newItemsIndex, oldItems);
             fillBranchesForRedraw(newItems);
             fillBranchesForRedraw(oldItems);
             for (idx in branches) {
@@ -578,6 +577,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                   this._redrawItem(branches[idx]);
                }
             }
+         },
+         _removeFromLoadedNodesRemoteNodes: function(remoteNodes) {
+            for (var idx = 0; idx < remoteNodes.length; idx++) {
+               delete this._loadedNodes[remoteNodes[idx].getContents().getId()];
+            }
+         },
+         _onCollectionAddMoveRemove: function(parentFn, event, action, newItems, newItemsIndex, oldItems) {
+            parentFn.call(this, event, action, newItems, newItemsIndex, oldItems);
+            this._findAndRedrawChangedBranches(newItems, oldItems);
+            this._removeFromLoadedNodesRemoteNodes(oldItems);
          }
       },
       _getFilterForReload: function(filter, sorting, offset, limit, deepReload) {
