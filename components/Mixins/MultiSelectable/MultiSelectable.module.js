@@ -151,6 +151,24 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
             this._drawSelectedItems(this._options.selectedKeys);
          }
       },
+
+      before: {
+         setDataSource: function () {
+            /* После изменения сорса может измениться и формат данных,
+               после этого нельзя выделенные элементы держать со старым форматом данных,
+               иначе будут возникать конфликты форматов. Просто пересоздадим selectedItems */
+            this.once('onDataLoad', function(event, list) {
+               var selectedItems = this._options.selectedItems;
+
+               if( selectedItems &&
+                   $ws.helpers.instanceOfMixin(selectedItems, 'WS.Data/Entity/FormattableMixin') &&
+                   !list.getFormat().isEqual(selectedItems.getFormat())
+               ) {
+                  this._options.selectedItems = null;
+               }
+            })
+         }
+      },
       /**
        * По массиву идентификаторов устанавливает массив выбранных элементов коллекции для контрола, который находится в режиме множественного выбора.
        * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
@@ -773,9 +791,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
          if (!self._options.selectedItems) {
             self.initializeSelectedItems();
          }
-         //Синхронизируем данные чтобы в selectedItems была актуальная информация, например если сняли выделение
-         //со всех элементов то в selectedItems так же должно быть 0 элементов
-         this._syncSelectedItems();
 
          if (dataSet && (!this._loadItemsDeferred || this._loadItemsDeferred.isReady())) {
             /* Запомним, если selectedItems пустой, то при добавлении в него записей, нам не нужно проверять,
