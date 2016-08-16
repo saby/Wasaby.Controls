@@ -46,6 +46,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * @cssModifier controls-DropdownList__ellipsis Текст в шапке обрезается троеточием, если не умещается в контейнере
        */
       var DropdownList = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
+         _dotTplFn: dotTplFn,
          $protected: {
             _options: {
                /**
@@ -163,7 +164,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                showSelectedInList : false,
                allowEmptyMultiSelection: false
             },
-            _dotTplFn: dotTplFn,
             _text: null,
             _pickerText: null,
             _pickerListContainer: null,

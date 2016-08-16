@@ -99,7 +99,8 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
          this._container.addClass('controls-IconButton ' + this._options._iconClass);
       },
 
-      setTooltip: function(tooltip) {
+      setTooltip: function(tooltip){
+         this._options.tooltip = tooltip;
          this._container.attr('title', tooltip);
       }
    });
