@@ -991,10 +991,12 @@ define('js!SBIS3.CONTROLS.RichEditor',
                this._notifyOnPropertyChanged('text');
                this._updateDataReview(text);
                this._togglePlaceholder(text);
+               this._updateHeight();
                this.clearMark();
             }
             //При нажатии enter передаётся trimmedText поэтому updateHeight text === this.getText() и updateHeight не зовётся
             this._updateHeight();
+            this._togglePlaceholder(text);
          },
 
          _drawAndBindItems: function(){
