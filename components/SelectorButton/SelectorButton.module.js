@@ -65,7 +65,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
              * Если передать всего один элемент, то дилог выбора откроется при клике на иконку меню.
              */
             dictionaries: []
-         }
+         },
+         _text: null
       },
       _drawSelectedItems: function(keysArr) {
          var self = this,
@@ -92,9 +93,14 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       },
 
       _setCaption: function(caption) {
-         var btnCaption = caption || this._options.defaultCaption;
+         var btnCaption = caption || this._options.defaultCaption,
+             text = this._container.find('.controls-SelectorButton__text'),
+             resultText = Sanitize(caption);
+
          SelectorButton.superclass.setCaption.call(this, btnCaption);
-         $('.controls-SelectorButton__text', this._container[0]).html(Sanitize(caption));
+         text.html(resultText);
+         /* Скрываем, если текст пустой */
+         text.toggleClass('ws-hidden', !resultText);
          this._checkWidth();
       },
 
