@@ -133,6 +133,12 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
                self.applyMonthState(month);
             }
          }.bind(this));
+         this._monthRangePicker.subscribe('onSelectionStarted', function (e) {
+            this.getContainer().addClass(css_classes.selectionProcessing);
+         }.bind(this));
+         this._monthRangePicker.subscribe('onSelectionEnded', function (e) {
+            this.getContainer().removeClass(css_classes.selectionProcessing);
+         }.bind(this));
 
          $ws.helpers.wheel(container.find('.controls-DateRangeBigChoose__months-month-picker'), this._onMonthPickerWheel.bind(this));
          $ws.helpers.wheel(container.find('.controls-DateRangeBigChoose__dates-dates'), this._onDatesPickerWheel.bind(this));
@@ -210,6 +216,14 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          } else {
             this.setStartValue(date);
          }
+         if (!endDate) {
+            this._setCurrentYear(date.getFullYear(), true);
+            if (this._state === states.year) {
+               this._monthRangePicker.setYear(date.getFullYear());
+            } else {
+               this._dateRangePicker.setMonth(date);
+            }
+         }
       },
 
       _onDatePickerEndDateChanged: function(e, date) {
@@ -221,6 +235,12 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             date = startDate
          }
          this.setRange(startDate, date);
+         this._setCurrentYear(date.getFullYear(), true);
+         if (this._state === states.year) {
+            this._monthRangePicker.setYear(date.getFullYear());
+         } else {
+            this._dateRangePicker.setMonth(date);
+         }
       },
 
       setStartValue: function (start, silent) {

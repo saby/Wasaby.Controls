@@ -76,7 +76,7 @@
       </div>
       <div class="controls-DateRangeBigChoose__months-halfyearRange controls-DateRangeBigChoose__right">
          {{~['I', 'II'] :halfyearCaption:halfyearIndex}}
-         <div class="controls-DateRangeBigChoose__months-range-btn-wrapper controls-RangeSelectable__item" data-selected-range-id="{{=halfyearIndex + 1}}">
+         <div class="controls-DateRangeBigChoose__months-range-btn-wrapper controls-DateRangeBigChoose__months-range-btn-wrapper{{=halfyearIndex}} controls-RangeSelectable__item" data-selected-range-id="{{=halfyearIndex + 1}}">
             <component data-component="SBIS3.CONTROLS.Button" name="HalfyearRangeBtn{{=halfyearIndex}}" class="controls-DateRangeBigChoose__months-halfyear-btn">
                <option name="caption">{{=halfyearCaption}}</option>
             </component>

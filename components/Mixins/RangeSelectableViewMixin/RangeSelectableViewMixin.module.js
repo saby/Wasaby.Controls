@@ -36,6 +36,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
          if(!$ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.RangeSelectableViewMixin')) {
             throw new Error('RangeSelectableViewMixin mixin is required');
          }
+         this._publish('onSelectionStarted', 'onSelectionEnded');
       },
 
       /**
@@ -144,6 +145,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
          this._rangeSelection = true;
          this.setRange(start, end, silent);
          this._setSelectionRangeEndItem(this.getEndValue(), silent);
+         this._notify('onSelectionStarted');
       },
       /**
        * Завершает выделение диапазона
@@ -156,6 +158,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
          this.setRange(range[0], range[1]);
          this._setSelectionRangeEndItem();
          this.validateRangeSelectionItemsView();
+         this._notify('onSelectionEnded');
       },
       /**
        * Приводит диапазон к нормальному состоянию. Начальное значение меньше конечного.
