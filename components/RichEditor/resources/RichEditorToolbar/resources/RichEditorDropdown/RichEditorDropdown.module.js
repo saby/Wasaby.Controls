@@ -17,7 +17,8 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown',
                multiselect: false,
                showSelectedInList: true,
                headTemplate: headerTemplate,
-               itemTemplate:itemTemplate
+               itemTemplate: itemTemplate,
+               mode: 'click'
             }
          },
          _modifyOptions: function (options) {
