@@ -20,9 +20,12 @@ define('js!SBIS3.CONTROLS.Subheader',
        * */
       var Subheader = Header.extend({
 
-         _dotTplFn : dotTplFn,
-
-         setBig : function(big) {
+         _dotTplFn: dotTplFn,
+         /**
+          * Устанавливает является ли текс большим
+          * @param big Большой ли заголовок
+          * */
+         setBig: function(big) {
             var container = this.getContainer(),
                 className= 'controls-Subheader__big';
 

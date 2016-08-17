@@ -5,12 +5,7 @@
    font-family: 'TensorFont Bold';
    font-size: 18px;
    color: #D94700;
-}
-
-.controls-Header__caption{
-   display: table-cell;
-   height: 32px;
-   vertical-align: middle;
+   line-height: 32px;
 }
 
 .controls-Header__big{

@@ -1,19 +1,14 @@
 .controls-LinkHeader{
    display: inline-block;
    padding-left: 8px;
-
+   height: 32px;
+   line-height: 32px;
 }
 
 .controls-LinkHeader__caption{
-   display: table-cell;
-   vertical-align: middle;
-   height: 32px;
+   padding-right: 12px;
 }
 
-.controls-LinkHeader__link{
-   display: inline-block;
-   padding-right: 8px;
-}
 
 .controls-LinkHeader__caption a:after{
    content: 'a';
@@ -38,6 +33,7 @@
 
 .controls-LinkHeader__separator{
    display: inline-block;
+   margin: auto 0 auto -4px;
    height: 16px;
    width: 2px;
    background-color: #000000;

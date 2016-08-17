@@ -20,52 +20,58 @@ define('js!SBIS3.CONTROLS.Header',
        * */
       var Header = CompoundControl.extend({
 
-         _dotTplFn : dotTplFn,
+         _dotTplFn: dotTplFn,
 
-         $protected : {
+         $protected: {
 
-            _options : {
+            _options: {
                /**
                 * @cfg {String} Устанавливает текст заголовка.
                 * @example
                 * <pre class="brush: xml">
                 *    <option name="caption">Заголовок</option>
                 * </pre>
+                * @see getCaption
                 * @see setCaption
                 * */
-               caption : '',
+               caption: '',
                /**
                 * @cfg {Boolean} Устанавливает размер заголовка, большой или маленький.
                 * @example
                 * <pre class="brush: xml">
                 *    <option name="big">true</option>
                 * </pre>
+                * @see getBig
                 * @see setBig
                 * */
-               big : false
+               big: false
             }
          },
-
-         getCaption : function() {
+         /**
+          * Возвращает текст заголовка
+          * */
+          getCaption: function() {
             return this._options.caption;
          },
          /**
           * Устанавливает текст заголовка
           * @param caption Текст
           * */
-         setCaption : function(caption) {
+         setCaption: function(caption) {
             this._options.caption = caption;
             this.getContainer().html(caption);
          },
-
-         getBig : function() {
+         /**
+          * Возвращает является ли текст большим
+          * */
+         isBig: function() {
             return this._options.big;
          },
          /**
-          * Устанавливает размер заголовка
+          * Устанавливает является ли текс большим
           * @param big Большой ли заголовок
           * */
-         setBig : function(big) {
+         setBig: function(big) {
             var container = this.getContainer(),
                 className= 'controls-Header__big';
 
