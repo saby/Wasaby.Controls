@@ -802,8 +802,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if(this._isHeaderScrolling) {
             this.getContainer().removeClass('controls-DataGridView__scrollingNow');
          }
-         if (this._thumb)
-            this._thumb.removeClass('controls-DataGridView__PartScroll__thumb-clicked');
+         this._thumb.removeClass('controls-DataGridView__PartScroll__thumb-clicked');
          this._scrollingNow = false;
          this._lastLeftPos = null;
       },
