@@ -100,13 +100,21 @@ define('js!SBIS3.CONTROLS.SelectorButton',
 
       _checkWidth: function() {
          // Хак для старых ие
-         if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) {
-            var additionalWidth = this._container.find('.controls-SelectorButton__icon').width() + this._container.find('.controls-SelectorButton__cross').width(),
+         if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9 || $ws._const.browser.isIE10) {
+            if(!this.isVisibleWithParents()) {
+               return;
+            }
+
+            var additionalWidth = this._container.find('.controls-SelectorButton__icon:visible').width() + this._container.find('.controls-SelectorButton__cross:visible').width(),
                 text = this._container.find('.controls-SelectorButton__text'),
-                containerWidth = this._container.width();
+                containerWidth = this._container.width(),
+                resultWidth;
 
             if (containerWidth < (additionalWidth + text.width())) {
-               text.width(containerWidth - additionalWidth);
+               resultWidth = containerWidth - additionalWidth;
+               if(resultWidth > 0) {
+                  text.width(containerWidth - additionalWidth);
+               }
             } else {
                text.width('auto');
             }

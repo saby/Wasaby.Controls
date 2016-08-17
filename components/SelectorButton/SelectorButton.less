@@ -1,14 +1,12 @@
 .controls-SelectorButton {
-   display: inline-flex;
+   .inline-flexbox();
    align-items: center;
    cursor: @link-cursor;
    line-height: @controls-SelectorButton-line-height;
    height: @controls-SelectorButton-height;
 
    .controls-SelectorButton__text {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
+      .text-overflow();
    }
 
 
@@ -43,12 +41,12 @@
    }
 
 }
-
-// Костыли для старых ie
-.ws-is-ie8, .ws-is-ie9 {
+// Для ie, которые плохо поддерживают flexbox =(
+.ws-is-ie8, .ws-is-ie9, .ws-is-ie10 {
    .controls-SelectorButton {
       display: inline-block;
       white-space: nowrap;
+      vertical-align: middle;
 
       .controls-SelectorButton__cross,
       .controls-SelectorButton__icon {
