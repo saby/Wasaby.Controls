@@ -115,6 +115,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        */
       _processScrollEvent: function (isBottom, curScrollTop) {
          this._defineScrollDirection(curScrollTop);
+         this._notify('onScrollMove', curScrollTop);
          if (this._isScrollUp ) {
             if (this._isOnTop()) {
                this._notify('onScroll', 'top', curScrollTop);
