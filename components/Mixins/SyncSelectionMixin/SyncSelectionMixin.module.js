@@ -86,6 +86,50 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], func
                }
             }
          });
+      },
+
+      around: {
+         setSelectedItem: function (parentFunc, item) {
+            var hasRequiredFields,
+                isModel = item && $ws.helpers.instanceOfModule(item, 'WS.Data/Entity/Model'),
+                currentSelItem = this._options.selectedItem,
+                self = this;
+
+            /* Т.к. ключ может быть как 0, а ключевое поле как '', то надо проверять на null/undefined */
+            function isEmpty(val) {
+               return val === null || val === undefined;
+            }
+
+            function isEmptyItem(item) {
+               return isEmpty(item.get(self._options.displayField)) && isEmpty(item.get(self._options.keyField));
+            }
+
+            if (isModel) {
+               /* Проверяем запись на наличие ключевых полей */
+               hasRequiredFields = !isEmptyItem(item);
+
+               if (hasRequiredFields) {
+                  /* Если запись собралась из контекста, в ней может не быть поля с первичным ключем */
+                  if (!item.getIdProperty()) {
+                     item.setIdProperty(this._options.keyField);
+                  }
+                  /* Если передали пустую запись и текущая запись тоже пустая, то не устанавливаем её */
+               } else if(currentSelItem && isEmptyItem(currentSelItem)) {
+                  return false;
+               }
+            }
+
+            /* Вызываем родительский метод, если:
+             1) передали запись с обязательными полями
+             2) передали null
+             3) передали запись без ключевых полей, но у нас есть выделенные ключи,
+             такое может произойти, когда запись сбрасывается через контекст */
+            if (hasRequiredFields ||
+                item === null ||
+                (!hasRequiredFields && !this._isEmptySelection() && isModel)) {
+               parentFunc.call(this, item);
+            }
+         }
       }
    };
 
