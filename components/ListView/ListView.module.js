@@ -2858,10 +2858,13 @@ define('js!SBIS3.CONTROLS.ListView',
           * @noShow
           */
          initializeSelectedItems: function() {
-            if ($ws.helpers.instanceOfModule(this.getItems(), 'js!WS.Data/Collection/RecordSet')) {
+            var items = this.getItems();
+
+            if ($ws.helpers.instanceOfModule(items, 'js!WS.Data/Collection/RecordSet')) {
                this._options.selectedItems = Di.resolve('collection.recordset', {
                   ownerShip: false,
-                  adapter: this.getItems().getAdapter()
+                  adapter: items.getAdapter(),
+                  idProperty: items.getIdProperty()
                });
             } else {
                ListView.superclass.initializeSelectedItems.call(this);
