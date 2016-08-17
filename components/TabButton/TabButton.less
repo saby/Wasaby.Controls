@@ -147,6 +147,15 @@
          display: inline-block;
       }
       .controls-EditAtPlace {
+         .controls-DateRange{
+           .controls-DateRange__Button {
+             vertical-align: top;
+           }
+           height: 24px;
+           position: relative;
+           top: 1px;
+         }
+
          .controls-EditAtPlace__textField{
             border-style: none;
          }
@@ -207,6 +216,9 @@
 }
 
 @-moz-document url-prefix() {
+  .controls-TabButton .controls-TabButton__inner{
+    line-height: 29px;
+  }
   .controls-TabButton.controls-TabButton__main-item .controls-TabButton__inner{
     line-height: 27px;
   }
