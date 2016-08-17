@@ -619,10 +619,15 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
 
          if (this.isSelectionProcessing()) {
             this.getContainer().addClass(css_classes.selectionProcessing);
-            this._dateRangePicker.startSelection(this.getStartValue(), this.getEndValue());
+            if (selectionType === selectionTypes.months) {
+               this._dateRangePicker.startSelection(this.getStartValue(), this.getEndValue());
+            }
          } else {
             this.getContainer().removeClass(css_classes.selectionProcessing);
             this._cancelRangeBarsSelection();
+            if (selectionType === selectionTypes.months) {
+               this._dateRangePicker.cancelSelection();
+            }
          }
       },
 
