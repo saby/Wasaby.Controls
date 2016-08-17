@@ -1010,6 +1010,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
        },
 
       _oldRedraw: function() {
+         if (!this._thead) {
+            this._bindHead();
+         }
          DataGridView.superclass._oldRedraw.apply(this, arguments);
          this._redrawHead();
       },
