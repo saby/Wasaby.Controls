@@ -1124,7 +1124,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
                if ($ws._const.browser.isMobilePlatform) {
                   this._inputControl.bind('scroll touchstart touchend', this._scrollEventHandler.bind(this));
-                  this._container.bind('touchstart', this._onClickHandler.bind(this));
                }
 
                if (!$ws._const.browser.firefox) { //в firefox работает нативно
