@@ -815,6 +815,11 @@ define('js!SBIS3.CONTROLS.ListView',
                paging: this._scrollPager
             });
             this._scrollBinder.bindScrollPaging();
+            $ws.helpers.trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
+         },
+
+         _onVisibleChange: function(event, visible){
+            this._scrollPager.setVisible(visible);
          },
 
          _onScrollMoveHandler: function(event, scrollTop){
@@ -2596,6 +2601,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollBinder = null;
             }
             if (this._scrollPager){
+               $ws.helpers.trackElement(this.getContainer(), false).unsubscribe('onVisible', this._onVisibleChange);
                this._scrollPager.destroy();
             }
             ListView.superclass.destroy.call(this);
