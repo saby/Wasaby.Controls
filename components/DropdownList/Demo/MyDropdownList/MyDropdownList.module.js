@@ -8,7 +8,6 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
          'html!SBIS3.CONTROLS.Demo.MyDropdownList',
          'html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownListItem',
          'i18n!SBIS3.CONTROLS.Demo.MyDropdownList',
-         'html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownListHead',
          'css!SBIS3.CONTROLS.Demo.MyDropdownList'
       ],
 
