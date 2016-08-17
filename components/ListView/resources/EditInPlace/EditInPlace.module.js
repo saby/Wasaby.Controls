@@ -167,6 +167,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             },
             _beginTrackHeight: function() {
                this._lastHeight = 0;
+               // Данный пересчет обязательно нужен, т.к. он синхронно пересчитывает высоту и в каллбеке beginEdit мы получаем элемент с правильной высотой
+               this.recalculateHeight();
                this._trackerInterval = setInterval(this.recalculateHeight.bind(this), 50);
             },
             recalculateHeight: function() {
