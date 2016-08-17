@@ -826,7 +826,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
 
          if(!selectedItems || !newItems || !$ws.helpers.instanceOfMixin(selectedItems, 'WS.Data/Entity/FormattableMixin') || !$ws.helpers.instanceOfMixin(newItems, 'WS.Data/Entity/FormattableMixin')) {
             return false;
-         } else if(newItems.getFormat().isEqual(selectedItems.getFormat)) {
+         } else if(newItems.getAdapter()._moduleName !== selectedItems.getAdapter()._moduleName || !newItems.getFormat().isEqual(selectedItems.getFormat())) {
             this._options.selectedItems = null;
          }
       },
