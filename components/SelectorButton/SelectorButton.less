@@ -1,36 +1,18 @@
 .controls-SelectorButton {
-   display: inline-block;
-   vertical-align: middle;
+   .inline-flexbox();
+   align-items: center;
    cursor: @link-cursor;
    line-height: @controls-SelectorButton-line-height;
    height: @controls-SelectorButton-height;
 
-   .controls-SelectorButton__text,
-   .controls-SelectorButton__icon,
-   .controls-SelectorButton__cross {
-      vertical-align: @controls-SelectorButton-align;
-      margin: @controls-SelectorButton-margin;
+   .controls-SelectorButton__text {
+      .text-overflow();
    }
 
-   .controls-SelectorButton__items {
-      white-space: nowrap;
-      overflow: hidden;
-      height: @controls-SelectorButton-height;
-
-      .controls-SelectorButton__ellipsis-wrapper {
-         float: left;
-      }
-
-      .controls-SelectorButton__copyCross {
-         float: right;
-         display: inline-block;
-         position: relative;
-         top: -(@controls-SelectorButton-height - 1);
-         margin-left: -16px;
-         background-color: @white-color;
-         .box-shadow(@controls-filterLine-copyCross-shadow);
-      }
+   .controls-SelectorButton__icon + .controls-SelectorButton__text:not(.ws-hidden) {
+      padding-left: 4px;
    }
+
 
    &.controls-SelectorButton__asLink {
       .controls-SelectorButton__text {
@@ -62,4 +44,28 @@
       }
    }
 
+}
+// Для ie, которые плохо поддерживают flexbox =(
+.ws-is-ie8, .ws-is-ie9, .ws-is-ie10 {
+   .controls-SelectorButton {
+      display: inline-block;
+      white-space: nowrap;
+      vertical-align: middle;
+
+      .controls-SelectorButton__cross,
+      .controls-SelectorButton__icon {
+         margin-top: 4px;
+         vertical-align: top;
+      }
+
+      .controls-SelectorButton__text {
+         display: inline-block;
+      }
+   }
+}
+
+.ws-is-firefox {
+   .controls-SelectorButton__text {
+      padding-bottom: 4px;
+   }
 }
