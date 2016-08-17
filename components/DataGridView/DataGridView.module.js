@@ -1007,10 +1007,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
        setColumns : function(columns) {
           this._options.columns = columns;
           checkColumns(this._options);
-          /* Перестроим шапку только после загрузки данных,
-           чтобы таблица не прыгала, из-за того что изменилось количество и ширина колонок */
-          this.once('onDataLoad', this._redrawHead.bind(this));
        },
+
+      _oldRedraw: function() {
+         DataGridView.superclass._oldRedraw.apply(this, arguments);
+         this._redrawHead();
+      },
 
       setMultiselect: function() {
          DataGridView.superclass.setMultiselect.apply(this, arguments);
