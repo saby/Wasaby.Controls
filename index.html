@@ -95,6 +95,9 @@
                   <div id="Buttons"></div>
                </li>
                <li>
+                  <div id="tabButtons"></div>
+               </li>
+               <li>
                   <div id="ButtonsNew"></div>
                </li>
                <li>
@@ -325,6 +328,14 @@
                element: "Buttons",
                caption: 'Buttons',
                href: '/pages/buttonCommonStyles.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "tabButtons",
+               caption: 'TabButtons',
+               href: '/pages/TabButtons.html'
             })
          });
 
