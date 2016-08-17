@@ -1073,16 +1073,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
             }
          },
 
-         _scrollEventHandler: function(event) {
-            if (event.type === 'scroll') {
-               if (this._hideFocusOnScroll) {
-                  this._container.focus();
-               }
-            } else {
-               this._hideFocusOnScroll = event.type === 'touchstart';
-            }
-         },
-
          _bindEvents: function() {
             var
                self = this,
@@ -1120,12 +1110,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
                }
 
                this._inputControl.attr('tabindex', 1);
-               //Хак для хрома и safari на ios( не работало событие 'click' )
-
-               if ($ws._const.browser.isMobilePlatform) {
-                  this._inputControl.bind('scroll touchstart touchend', this._scrollEventHandler.bind(this));
-                  this._container.bind('touchstart', this._onClickHandler.bind(this));
-               }
 
                if (!$ws._const.browser.firefox) { //в firefox работает нативно
                   this._inputControl.bind('mouseup', function (e) { //в ie криво отрабатывает клик
