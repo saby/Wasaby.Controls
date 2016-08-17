@@ -829,6 +829,10 @@ define('js!SBIS3.CONTROLS.RichEditor',
           */
          execCommand: function(command) {
             this._tinyEditor.execCommand(command);
+            //TODO:https://github.com/tinymce/tinymce/issues/3104, восстанавливаю выделение тк оно теряется если после нжатия кнопки назад редактор стал пустым
+            if (($ws._const.browser.firefox || $ws._const.browser.isIE)&& command == 'undo' && this._getTinyEditorValue() == '') {
+               this._tinyEditor.selection.select(this._tinyEditor.getBody(), true);
+            }
          },
 
          /**
@@ -986,10 +990,10 @@ define('js!SBIS3.CONTROLS.RichEditor',
                this._notify('onTextChange', text);
                this._notifyOnPropertyChanged('text');
                this._updateDataReview(text);
-               this._togglePlaceholder(text);
                this._updateHeight();
                this.clearMark();
             }
+            this._togglePlaceholder(text);
          },
 
          _drawAndBindItems: function(){
@@ -1824,7 +1828,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
          _updateHeight: function() {
             var curHeight;
             if (this.isVisible()) {
-               if ($ws._const.browser.isMobileIOS && this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this.isEnabled() && this._textChanged && this.isActive()) {
+               if ($ws._const.browser.isMobileIOS && this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this.isEnabled() && this._textChanged && (this.getInputContainer()[0] === document.activeElement)) {
                   this._scrollTo($(this._tinyEditor.selection.getNode()));
                }
                curHeight = this._container.height();
