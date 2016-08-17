@@ -84,8 +84,13 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView', [
                      if (!prevElement) {
                         tdElement.addClass(borderTopClass);
                      } else {
-                        if (!$(prevElement.children()[tdIndex]).hasClass(self._SELECTABLE_RANGE_CSS_CLASSES.selected)) {
+                        if (!$(prevElement.children()[tdIndex]).hasClass(self._SELECTABLE_RANGE_CSS_CLASSES.selected) ||
+                           $(prevElement.children()[tdIndex]).hasClass(self._SELECTABLE_RANGE_CSS_CLASSES.selectedStart)) {
                            tdElement.addClass(borderTopClass);
+                        }
+                        if (tdElement.hasClass(self._SELECTABLE_RANGE_CSS_CLASSES.selectedEnd) &&
+                           $(prevElement.children()[tdIndex]).hasClass(self._SELECTABLE_RANGE_CSS_CLASSES.selected)) {
+                           $(prevElement.children()[tdIndex]).addClass(borderBottomClass);
                         }
                      }
                   } else {

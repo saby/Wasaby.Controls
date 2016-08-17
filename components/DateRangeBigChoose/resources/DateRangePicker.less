@@ -61,6 +61,9 @@
             &.controls-MonthView__prevMonth.controls-MonthView__lastDayOfMonth {
                border-right: 1px solid @date-range-big-choose-date-range-picker-border-color;
                padding-left: 1px;
+               & +.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
+                  border-left: 1px solid @date-range-big-choose-date-range-picker-border-color;
+               }
             }
 
             + .controls-RangeSelectable__item.controls-RangeSelectable__item-selected.controls-RangeSelectable__item-selectedStart {
@@ -83,7 +86,7 @@
 
                &.controls-DateRangeBigChoose-MonthView__border-top {
                   border-top: 1px solid @date-range-big-choose-date-range-picker-border-color;
-                  & > .controls-MonthView__dayTitle {
+                  & > .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
                      padding-top: 7px;
                   }
                }
@@ -113,6 +116,8 @@
                }
 
                &.controls-RangeSelectable__item-selectedEnd {
+                  border-left: 1px solid @date-range-big-choose-date-range-picker-border-color;
+                  //padding-right: 2px;
                   & +.controls-MonthView__tableElement {
                      border-left: 1px solid @date-range-big-choose-date-range-picker-border-color;
                      padding-right: 2px;
@@ -122,6 +127,12 @@
                         border-left: 1px solid @date-range-big-choose-date-range-picker-today-border-color;
                         padding-right: 2px;
                      }
+                  }
+               }
+               &.controls-RangeSelectable__item-selectedStart {
+                  & +.controls-RangeSelectable__item {
+                     border-left: 1px solid @date-range-big-choose-date-range-picker-border-color;
+                     padding-right: 2px;
                   }
                }
 
@@ -209,6 +220,18 @@
                      }
                   }
 
+                  &.controls-RangeSelectable__item-selectedEnd {
+                     & +.controls-MonthView__tableElement {
+                        border-color: greyscale(lighten(@date-range-big-choose-date-range-picker-border-color, 50%));
+                     }
+                  }
+
+                  &.controls-RangeSelectable__item-selectedStart {
+                     & +.controls-RangeSelectable__item {
+                        border-left-color: greyscale(lighten(@date-range-big-choose-date-range-picker-border-color, 50%));
+                     }
+                  }
+
                   &.controls-RangeSelectable__item-selected {
                      color: grayscale(@calendar-day-cell-active-text-color, 20%);
                      background: @date-range-big-choose-date-range-picker-bg-selected-color;
@@ -220,6 +243,20 @@
                      + .controls-MonthView__nextMonth {
                         border-color: greyscale(lighten(@date-range-big-choose-date-range-picker-border-color, 50%));
                      }
+                  }
+                  &.controls-MonthView__today {
+                     border-color: lighten(@date-range-big-choose-date-range-picker-today-border-color, 20%);
+                     & +.controls-MonthView__tableElement {
+                        border-left-color: lighten(@date-range-big-choose-date-range-picker-today-border-color, 20%);
+                     }
+                  }
+               }
+            }
+            .controls-MonthView__tableRow:first-child {
+               .controls-RangeSelectable__item {
+                  border-top-color: greyscale(lighten(@date-range-big-choose-date-range-picker-border-color, 50%));
+                  &.controls-MonthView__today {
+                     border-color: lighten(@date-range-big-choose-date-range-picker-today-border-color, 20%);
                   }
                }
             }
