@@ -195,7 +195,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * </component>
     * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
     * @cssModifier controls-DataGridView__markerRight Маркер отображается не слева строки, а справа.
-    * @cssModifier controls-DataGridView__hasSeparator Включает линии разделители между строками
+    * @cssModifier controls-DataGridView__hasSeparator Включает отображение линий-разделителей между строками.
+    * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
     * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
     */
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
@@ -812,7 +813,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
        * Используется для того, чтобы в редактировании по месту не было обрезков при прокрутке
        */
       _animationAtPartScrollDragEnd: function() {
-         if(this._currentScrollPosition === this._stopMovingCords.right) {
+         /* Не надо анимировать если:
+            - нет элементов
+            - скролл у крайней правой координаты */
+         if(this._currentScrollPosition === this._stopMovingCords.right || !this.getItems().getCount()) {
             return;
          }
          //Найдём элемент, который нужно доскроллить
@@ -1007,10 +1011,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
        setColumns : function(columns) {
           this._options.columns = columns;
           checkColumns(this._options);
-          /* Перестроим шапку только после загрузки данных,
-           чтобы таблица не прыгала, из-за того что изменилось количество и ширина колонок */
-          this.once('onDataLoad', this._redrawHead.bind(this));
        },
+
+      _oldRedraw: function() {
+         DataGridView.superclass._oldRedraw.apply(this, arguments);
+         this._redrawHead();
+      },
 
       setMultiselect: function() {
          DataGridView.superclass.setMultiselect.apply(this, arguments);

@@ -150,19 +150,19 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                //В контексте текуший DropdownList, у него задавали поле с фильтром
                //Если не нашли, значит искать мне это надо как-то по-другому....
                if (idx >= 0) {
-                  self._filterStructure[idx].value = filterValue;
+                  this.getSelectedItems(true).addCallback(function(list) {
+                     self._filterStructure[idx].value = filterValue;
 
-                  //TODO из-за того, что ТЕПЕРЬ в multiselectable происходит сначала оповещение, а
-                  //только потом перерисовка, то пользоваться здесь getText нельзя, смотрим в dataSet
-                  ds = this.getItems();
-                  for (var i = 0; i < idArray.length; i++) {
-                     text.push(ds.getRecordByKey(idArray[i]).get(this._options.displayField))
-                  }
+                     list.each(function (rec) {
+                        text.push(rec.get(this._options.displayField));
+                     }.bind(this));
 
-                  self._filterStructure[idx].caption = self._filterStructure[idx].value === undefined
-                        ? self._filterStructure[idx].resetCaption
-                        : text.join(', ');
-                  self.applyFilter();
+                     self._filterStructure[idx].caption = self._filterStructure[idx].value === undefined
+                         ? self._filterStructure[idx].resetCaption
+                         : text.join(', ');
+                     self.applyFilter();
+                     return list;
+                  }.bind(this));
                }
             });
          },

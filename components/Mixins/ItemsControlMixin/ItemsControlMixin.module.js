@@ -1191,13 +1191,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    }
 
                    this._dataLoadedCallback();
-
-                   if (self._options.infiniteScroll === 'up'){
-                      var firstItem = self._options._itemsProjection.at(0);
-                      if (firstItem) {
-                         self._scrollToItem(firstItem.getContents().getId());
-                      }
-                   }
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
@@ -1205,7 +1198,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    if (!error.canceled) {
                       self._toggleIndicator(false);
                       if (self._notify('onDataLoadError', error) !== true) {
-                         $ws.helpers.message(error.message.toString().replace('Error: ', ''));
+                         $ws.helpers.alert(error.message.toString().replace('Error: ', ''));
                          error.processed = true;
                       }
                    }
@@ -1738,7 +1731,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var upperRow = $(rows[i - 1]).length ? $('.controls-ladder', rows[i - 1]) : undefined,
                 lowerRow = $(rows[i]).length ? $('.controls-ladder', rows[i]) : undefined,
                needHide;
-            if (lowerRow) {
+            if (lowerRow && $(rows[i - 1]).attr('data-parent-hash') === $(rows[i]).attr('data-parent-hash')) {
                for (var j = 0; j < lowerRow.length; j++) {
                   needHide = upperRow ? (upperRow.eq(j).html() == lowerRow.eq(j).html()) : false;
                   lowerRow.eq(j).toggleClass('ws-invisible', needHide);

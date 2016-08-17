@@ -80,6 +80,17 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
 
          if (this._options.pickerConfig){
             $ws.helpers.forEach(this._options.pickerConfig, function(val, key) {
+               /* Нельзя перебивать обработчики из оригинального конфига, иначе может поломаться логика,
+                  просто добавляем к оригинальным обработчикам пользовательские */
+               if(key === 'handlers' && pickerConfig[key]) {
+                  $ws.helpers.forEach(val, function(handlerVal, handlerKey) {
+                     if(pickerConfig[key][handlerKey]) {
+                        pickerConfig[key][handlerKey] = [pickerConfig[key][handlerKey]];
+                        pickerConfig[key][handlerKey].push(handlerVal);
+                     }
+                  });
+                  return;
+               }
                pickerConfig[key] = val;
             });
          }

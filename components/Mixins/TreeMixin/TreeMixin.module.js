@@ -593,6 +593,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                self._options._items.getTreeIndex(self._options.hierField, true);
                self._updateItemsToolbar();
                self._dataLoadedCallback();
+               self._createFolderFooter(id);
             }
 
          }, self)).addErrback(function (error) {
@@ -880,6 +881,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       },
       /**
        * Устанавливает проваливание в узел и вызывает отрисовку хлебных крошек (если они есть), относительно вершины иерархии (см. {@link root}).
+       * @remark
+       * После применения метода нужно вызвать {@link reload} для перерисовки отображения списка.
        * @param {String|Number} key Идентификатор узла, в который будет установлено проваливание.
        * @see getCurrentRoot
        * @see root

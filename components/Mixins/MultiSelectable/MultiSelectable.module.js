@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], function(List) {
+define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!SBIS3.CONTROLS.ArraySimpleValuesUtil'], function(List, ArraySimpleValuesUtil) {
 
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
@@ -151,6 +151,22 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
             this._drawSelectedItems(this._options.selectedKeys);
          }
       },
+
+      before: {
+         /* После изменения сорса или item'ов может измениться и формат данных,
+            после этого нельзя выделенные элементы держать со старым форматом данных,
+            иначе будут возникать конфликты форматов. Просто пересоздадим selectedItems */
+         setDataSource: function () {
+            this.once('onDataLoad', function(event, list) {
+               this._checkNewItemsFormat(list);
+            })
+         },
+         setItems: function() {
+            this.once('onItemsReady', function() {
+               this._checkNewItemsFormat(this.getItems());
+            })
+         }
+      },
       /**
        * По массиву идентификаторов устанавливает массив выбранных элементов коллекции для контрола, который находится в режиме множественного выбора.
        * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
@@ -212,13 +228,13 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
          /* Найдём удаленные */
          result.removed = $ws.helpers.filter(arrayOne, function(item) {
             currElem = item;
-            return !hasInArray(arrayTwo, currElem);
+            return !ArraySimpleValuesUtil.hasInArray(arrayTwo, currElem);
          });
 
          /* Найдём добавленные */
          result.added = $ws.helpers.filter(arrayTwo, function(item) {
             currElem = item;
-            return !hasInArray(arrayOne, currElem);
+            return !ArraySimpleValuesUtil.hasInArray(arrayOne, currElem);
          });
 
          return result;
@@ -441,6 +457,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
                   addedKeys,
                   removedKeys;
                if (this._options.multiselect) {
+                  if(this._isEmptySelection()) {
+                     this.setSelectedKeys(idArray);
+                     return
+                  }
                   for (var i = 0; i < idArray.length; i++) {
                      if (!this._isItemSelected(idArray[i])) {
                         addedKeys = this._addItemsSelection([idArray[i]]);
@@ -588,7 +608,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
 
          /* Сфоримруем массив ключей записей, которые требуется вычитать с бл или взять из dataSet'a*/
          for(var i = 0, keys = selKeys.length; i < keys; i++) {
-            if(!hasInArray(itemsKeysArr, selKeys[i])) {
+            if(!ArraySimpleValuesUtil.hasInArray(itemsKeysArr, selKeys[i])) {
                loadKeysArr.push(selKeys[i]);
             }
          }
@@ -604,23 +624,32 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
                selItems = this._options.selectedItems;
             }
 
-            for (var j = 0; loadKeysAmount > j; j++) {
-               item = this.getItems() && this.getItems().getRecordById(loadKeysArr[j]);
+            /* Если сорс грузит данные, то дожидаемся его */
+            $ws.helpers.callbackWrapper(this._loader, function(res) {
+               for (var j = 0; loadKeysAmount > j; j++) {
+                  item = self.getItems() && self.getItems().getRecordById(loadKeysArr[j]);
 
-               /* если запись есть в датасете, то ничего не будем вычитывать */
-               if(item) {
-                  selItems.add(item);
-                  continue;
+                  /* если запись есть в датасете, то ничего не будем вычитывать */
+                  if (item) {
+                     selItems.add(item);
+                     continue;
+                  }
+
+                  if (!self._dataSource) {
+                     $ws.single.ioc.resolve('ILogger').log('MultiSelectable', 'Потенциальная ошибка. У контрола ' + self.getName() + ' не задан dataSource для вычитки записей.');
+                     continue;
+                  }
+                  dMultiResult.push(self._dataSource.read(loadKeysArr[j]).addCallback(function (record) {
+                     selItems.add(record);
+                  }));
                }
 
-               dMultiResult.push(this._dataSource.read(loadKeysArr[j]).addCallback(function (record) {
-                  selItems.add(record);
-               }));
-            }
+               dMultiResult.done().getResult().addCallback(function () {
+                  self._onSelectedItemsChangeHandler();
+                  self._loadItemsDeferred.callback(selItems);
+               });
 
-            dMultiResult.done().getResult().addCallback(function() {
-               self._onSelectedItemsChangeHandler();
-               self._loadItemsDeferred.callback(selItems);
+               return res;
             });
 
          } else {
@@ -681,23 +710,16 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
       _getSelectedIndex: function(item) {
          var keys = this._options.selectedKeys,
              selectedItems = this._options.selectedItems,
-             index;
+             index = ArraySimpleValuesUtil.invertTypeIndexOf(keys, item);
 
-         if($ws.helpers.instanceOfModule(item, 'WS.Data/Entity/Model')) {
+         if(index === -1 && $ws.helpers.instanceOfModule(item, 'WS.Data/Entity/Model')) {
             if(selectedItems) {
                index = selectedItems.getIndexByValue(item.getIdProperty(), item.getId());
             } else {
                index = -1;
             }
-         } else {
-            index = Array.indexOf(keys, item);
-            if (index < 0) {
-               index = Array.indexOf(keys, parseInt(item, 10));
-            }
-            if (index < 0) {
-               index = Array.indexOf(keys, String(item));
-            }
          }
+
          return index;
       },
 
@@ -753,25 +775,34 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
       },
 
       _checkEmptySelection: function() {
-         return !this._options.selectedKeys.length && this._options.allowEmptyMultiSelection == false;
+         return this._isEmptySelection() && this._options.allowEmptyMultiSelection == false;
       },
 
       _setSelectedItems: function() {
-         var dataSet = this.getItems(),
+         var record,
+             isEmpty,
+             index = -1,
              self = this,
-             record, index;
+             toAdd = [],
+             dataSet = this.getItems();
 
-         if (dataSet) {
-            this._syncSelectedItems();
+         if (!self._options.selectedItems) {
+            self.initializeSelectedItems();
+         }
+
+         if (dataSet && (!this._loadItemsDeferred || this._loadItemsDeferred.isReady())) {
+            /* Запомним, если selectedItems пустой, то при добавлении в него записей, нам не нужно проверять,
+               есть ли эти записи там уже, и можно из просто добавлять, не боясь что там будут 2 одинаковые записи */
+            isEmpty = !this._options.selectedItems.getCount();
             $ws.helpers.forEach(this.getSelectedKeys(), function (key) {
                record = dataSet.getRecordById(key);
                if (record) {
-                  if(!self._options.selectedItems) {
-                     self.initializeSelectedItems();
+                  if(isEmpty) {
+                     toAdd.push(record);
+                     return;
                   }
 
                   index = self._options.selectedItems.getIndexByValue(self._options.keyField, record.getId());
-
                   /**
                    * Запись в датасете есть - заменим в наборе выбранных записей, т.к. она могла измениться.
                    * Если нету, то просто добавим.
@@ -779,10 +810,24 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
                   if(index !== -1) {
                      self._options.selectedItems.replace(record, index);
                   } else {
-                     self._options.selectedItems.add(record);
+                     toAdd.push(record);
                   }
                }
             });
+
+            if(toAdd.length) {
+               self._options.selectedItems.append(toAdd);
+            }
+         }
+      },
+
+      _checkNewItemsFormat: function(newItems) {
+         var selectedItems = this._options.selectedItems;
+
+         if(!selectedItems || !newItems || !$ws.helpers.instanceOfMixin(selectedItems, 'WS.Data/Entity/FormattableMixin') || !$ws.helpers.instanceOfMixin(newItems, 'WS.Data/Entity/FormattableMixin')) {
+            return false;
+         } else if(newItems.getFormat().isEqual(selectedItems.getFormat)) {
+            this._options.selectedItems = null;
          }
       },
 
@@ -812,21 +857,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List'], func
    };
 
    var EMPTY_SELECTION = [null];
-   var hasInArray = function(array, elem) {
-      var index = Array.indexOf(array, elem);
-
-      if(index < 0) {
-         elem = (typeof elem === 'string') ? Number(elem) : String(elem);
-
-         index = Array.indexOf(array, elem);
-
-         if(index < 0) {
-            return false;
-         }
-      }
-
-      return true;
-   };
 
    return MultiSelectable;
 

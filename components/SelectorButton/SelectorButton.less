@@ -1,5 +1,6 @@
 .controls-SelectorButton {
    display: inline-block;
+   vertical-align: middle;
    cursor: @link-cursor;
    line-height: @controls-SelectorButton-line-height;
    height: @controls-SelectorButton-height;
@@ -60,5 +61,12 @@
          display: none;
       }
    }
+}
 
+@-moz-document url-prefix() {
+   .controls-SelectorButton {
+      .controls-SelectorButton__cross {
+         margin: 5px 0 0 0;
+      }
+   }
 }

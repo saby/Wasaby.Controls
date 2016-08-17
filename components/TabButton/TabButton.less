@@ -51,13 +51,14 @@
       cursor: @tab-button-checked-cursor;
       font-size: @tab-button-checked-font-size;
       .controls-TabButton__bottomLine{
-         position: @tab-button-bottomLine-position;
-         bottom: @tab-button-bottomLine-bottom;
-         left: @tab-button-bottomLine-left;
-         right: @tab-button-bottomLine-right;
-         background: @tab-button-bottomLine-background;
-         height: @tab-button-bottomLine-height;
-         display: @tab-button-bottomLine-display;
+         position: absolute;
+         bottom: -1px;
+         left: 1px;
+         right: 1px;
+         background: #fff;
+         height: 2px;
+         display: block;
+         box-shadow: 0px 1px 1px #fff;
       }
       .controls-TabButton__inner {
          height: @tab-button-checked-height + 1;
@@ -146,6 +147,15 @@
          display: inline-block;
       }
       .controls-EditAtPlace {
+         .controls-DateRange{
+           .controls-DateRange__Button {
+             vertical-align: top;
+           }
+           height: 24px;
+           position: relative;
+           top: -1px;
+         }
+
          .controls-EditAtPlace__textField{
             border-style: none;
          }
@@ -206,6 +216,9 @@
 }
 
 @-moz-document url-prefix() {
+  .controls-TabButton .controls-TabButton__inner{
+    line-height: 29px;
+  }
   .controls-TabButton.controls-TabButton__main-item .controls-TabButton__inner{
     line-height: 27px;
   }

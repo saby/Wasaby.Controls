@@ -220,8 +220,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                self.hidePicker();
             });
             if(this._options.mode === 'hover') {
-               this._pickerHeadContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, true));
-               this._pickerBodyContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, false));
+               pickerContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this));
             }
             else if (this._options.mode === 'click'){
                this._pickerHeadContainer.click(this.hidePicker.bind(this));
@@ -309,13 +308,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   else{
                      this._changedSelectedKeys.splice(changedSelectionIndex, 1);
                   }
-                  this._buttonChoose.getContainer().toggleClass('ws-invisible', !this._changedSelectedKeys.length);
-                  if ($ws._const.browser.isIE8) {
-                     this._buttonChoose.getContainer().addClass('controls-Button__IE8Hack');
-                     setTimeout(function() {
-                        this._buttonChoose.getContainer().removeClass('controls-Button__IE8Hack');
-                     }.bind(this), 1);
-                  }
+                  this._buttonChoose.getContainer().toggleClass('ws-hidden', !this._changedSelectedKeys.length);
                   selected =  !row.hasClass('controls-DropdownList__item__selected');
                   row.toggleClass('controls-DropdownList__item__selected', selected);
                   this._currentSelection[row.data('id')] = selected;
@@ -354,7 +347,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                DropdownList.superclass.showPicker.apply(this, arguments);
                this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', this._pickerListContainer[0].offsetWidth === this._pickerHeadContainer[0].offsetWidth);
                if (this._buttonChoose) {
-                  this._buttonChoose.getContainer().addClass('ws-invisible');
+                  this._buttonChoose.getContainer().addClass('ws-hidden');
                }
             }
          },
@@ -372,8 +365,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             return this._picker.getContainer();
          },
-         _pickerMouseLeaveHandler: function(fromHeader, e) {
-            if(this._hideAllowed && !$(e.toElement || e.relatedTarget).closest('.controls-DropdownList__' + (fromHeader ? 'body' : 'header')).length) {
+         _pickerMouseLeaveHandler: function(e) {
+            if(this._hideAllowed && !$(e.toElement || e.relatedTarget).closest('.controls-DropdownList__picker').length) {
                this.hidePicker();
             }
          },
@@ -453,29 +446,35 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var textValues = [],
                 len = id.length,
                 self = this,
-                record,
-                pickerContainer,
-                def;
+                item, pickerContainer, def;
 
             if(len) {
                def = new $ws.proto.Deferred();
 
-               if(this._dataSet) {
-                  for(var i = 0; i < len; i++) {
-                     record = this._dataSet.getRecordByKey(id[i]);
-                     if (record){ //После установки новых данных, не все ключи останутся актуальными
-                        textValues.push(record.get(this._options.displayField));
-                     }
-                  }
-                  def.callback(textValues);
-               } else {
-                  //TODO переделать, когда БЛ научится отдавать несколько записей при чтении
-                  this._dataSource.read(id[0]).addCallback(function(record) {
-                     def.callback([record.get(self._options.displayField)]);
-                  })
+               if(!this._picker) {
+                  this._initializePicker();
                }
 
+               this.getSelectedItems(true).addCallback(function(list) {
+                  if(list) {
+                     list.each(function (rec) {
+                        textValues.push(rec.get(self._options.displayField));
+                     });
+                  }
+
+                  if(!textValues.length && self._checkEmptySelection()) {
+                     item = self.getItems() && self.getItems().at(0);
+                     if(item) {
+                        textValues.push(item.get(self._options.displayField));
+                     }
+                  }
+
+                  def.callback(textValues);
+                  return list;
+               });
+
                def.addCallback(function(textValue) {
+                  var isDefaultIdSelected = id[0] === self._defaultId;
                   pickerContainer = self._getPickerContainer();
                   if (!self._options.multiselect) {
                      pickerContainer.find('.controls-DropdownList__item__selected').removeClass('controls-DropdownList__item__selected');
@@ -487,16 +486,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
                      self._pickerHeadContainer.html(headTpl);
                      self._selectedItemContainer.html(headTpl);
                   }
-                  if(id[0] === self._defaultId){
-                     self.getContainer().addClass('controls-DropdownList__hideCross');
-                     self._getPickerContainer().addClass('controls-DropdownList__hideCross');
-                     self._setResetButtonVisibility(true);
-                  }else{
-                     self.getContainer().removeClass('controls-DropdownList__hideCross');
-                     self._getPickerContainer().removeClass('controls-DropdownList__hideCross');
-                     self._setResetButtonVisibility(false);
-                  }
-
+                  self.getContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
+                  self._getPickerContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
+                  self._setResetButtonVisibility(isDefaultIdSelected);
                });
             }
          },

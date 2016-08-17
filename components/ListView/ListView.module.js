@@ -36,13 +36,16 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!js!SBIS3.CONTROLS.Utils.InformationPopupManager',
       'js!SBIS3.CONTROLS.Paging',
       'js!SBIS3.CONTROLS.ComponentBinder',
-      'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
+      'js!WS.Data/Di',
+      'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
+      'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
+      'js!WS.Data/Collection/RecordSet'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
              Link, ScrollWatcher, IBindCollection, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-             Paging, ComponentBinder) {
+             Paging, ComponentBinder, Di, ArraySimpleValuesUtil) {
 
       'use strict';
 
@@ -633,14 +636,15 @@ define('js!SBIS3.CONTROLS.ListView',
             _scrollOnBottom: true, // TODO: Придрот для скролла вниз при первой подгрузке. Если включена подгрузка вверх то изначально нужно проскроллить контейнер вниз,
             //но после загрузки могут долетать данные (картинки в docviewer например), которые будут скроллить вверх.
             _scrollOnBottomTimer: null, //TODO: см. строчкой выше
-            _componentBinder: null
+            _componentBinder: null,
+            _touchSupport: false
          },
 
          $constructor: function () {
             var dispatcher = $ws.single.CommandDispatcher;
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange');
-            this._container.on('swipe tap touchmove mousemove mouseleave', this._eventProxyHandler.bind(this));
+            this._container.on('swipe tap mousemove mouseleave', this._eventProxyHandler.bind(this));
 
             this.initEditInPlace();
             this.setItemsDragNDrop(this._options.itemsDragNDrop);
@@ -686,21 +690,36 @@ define('js!SBIS3.CONTROLS.ListView',
             return lvOpts;
          },
 
-         _eventProxyHandler: function(e) {
+         _setTouchSupport: function(support) {
             var currentTouch = this._touchSupport;
-            this._touchSupport = Boolean(e.type === 'swipe' || e.type === 'tap' || (e.originalEvent.touches && e.originalEvent.touches.length === 1));
+            this._touchSupport = Boolean(support);
 
-            if(currentTouch !== this._touchSupport) {
-               this._container.toggleClass('controls-ListView__touchMode', this._touchSupport);
+            var container = this.getContainer(),
+                toggleClass = container.toggleClass.bind(container, 'controls-ListView__touchMode', this._touchSupport);
 
-               if(this._itemsToolbar) {
+            if(this._itemsToolbar) {
+               /* При таче, можно поменять вид операций,
+                  т.к. это не будет вызывать никаких визуальных дефектов,
+                  а просто покажет операции в тач моде */
+               if((!this._itemsToolbar.isVisible() || this._touchSupport) && this._itemsToolbar.getProperty('touchMode') !== this._touchSupport) {
+                  toggleClass();
                   this._itemsToolbar.setTouchMode(this._touchSupport);
                }
+            } else if(currentTouch !== this._touchSupport) {
+               toggleClass();
             }
+         },
+
+         _eventProxyHandler: function(e) {
+            var originalEvent = e.originalEvent;
+            /* Надо проверять mousemove на срабатывание на touch устройствах,
+               т.к. оно стреляет после тапа. После тапа событие mousemove имеет нулевой сдвиг, поэтому обрабатываем его как touch событие
+                + добавляю проверку, что до этого мы были в touch режиме,
+               это надо например для тестов, в которых эмулирется событие mousemove так же без сдвига, как и на touch устройствах. */
+            this._setTouchSupport(Array.indexOf(['swipe', 'tap'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && this._touchSupport));
 
             switch (e.type) {
                case 'mousemove':
-               case 'touchmove':
                   this._mouseMoveHandler(e);
                   break;
                case 'swipe':
@@ -735,12 +754,15 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Если мы находися на панельке, то пока она скрыта все данные уже могут загрузиться, но новая пачка не загрузится
                 * потому что контейнер невидимый*/
                if ($ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
-                  topParent.once('onAfterShow', function(){
-                     self._firstScrollTop = true;
-                     if (self.getItems()) {
-                        self._preScrollLoading();
+                  var afterFloatAreaShow = function(){
+                     this._firstScrollTop = true;
+                     if (this.getItems()) {
+                        this._preScrollLoading();
                      }
-                  });
+                     topParent.unsubscribe('onAfterShow', afterFloatAreaShow);
+                  }
+                  //Делаем через subscribeTo, а не once, что бы нормально отписываться при destroy FloatArea
+                  this.subscribeTo(topParent, 'onAfterShow', afterFloatAreaShow.bind(this));
                }
 
                this._scrollWatcher = new ScrollWatcher(scrollWatcherCfg);
@@ -772,6 +794,9 @@ define('js!SBIS3.CONTROLS.ListView',
                keyField: 'id',
                parent: this
             });
+            if ($ws._const.browser.isMobilePlatform){
+               $('.controls-ListView__scrollPager', this._container).appendTo(this._scrollWatcher.getScrollContainer());
+            }
             this._setScrollPagerPosition();
             this._scrollBinder = new ComponentBinder({
                view: this,
@@ -931,7 +956,7 @@ define('js!SBIS3.CONTROLS.ListView',
                id = this._getItemsProjection().getByHash(target.data('hash')).getContents().getId();
                this._elemClickHandler(id, this.getItems().getRecordByKey(id), e.target);
             }
-            if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox') && this.isEnabled()){
+            if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox')){
                $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
                $target.toggleClass('controls-DataGridView__th__checkBox__checked');
             }
@@ -956,7 +981,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (target.length) {
                /* Проверяем, чем был вызвано событие, мышью или движением пальца,
                   чтобы в зависимости от этого понимать, надо ли показывать операции */
-               if(!e.originalEvent.touches) {
+               if(!this._touchSupport) {
                   this._changeHoveredItem(target);
                }
             } else if (!this._isHoverControl($target)) {
@@ -1195,9 +1220,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._notify('onItemClick', id, data, target);
          },
          _onCheckBoxClick: function(target) {
-            if (this.isEnabled()) {
-               this.toggleItemsSelection([target.closest('.controls-ListView__item').attr('data-id')]);
-            }
+            this.toggleItemsSelection([target.closest('.controls-ListView__item').attr('data-id')]);
          },
 
          _elemClickHandlerInternal: function (data, id, target) {
@@ -1208,11 +1231,16 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          //TODO: Временное решение для выделения "всех" (на самом деле первой тысячи) записей
          setSelectedAll: function() {
+            var selectedItems = this.getSelectedItems();
             if (this._options.infiniteScroll && this.getItems().getCount() < 1000){
                this.reload(this.getFilter(), this.getSorting(), 0, 1000)
                   .addCallback(function(dataSet) {
+                     //Очистим selectedItems чтобы при заполнении новыми элементами, не делать проверку на наличие элементов в коллекции
+                     if (selectedItems && selectedItems.getCount()) {
+                        selectedItems.clear();
+                     }
                      ListView.superclass.setSelectedItemsAll.call(this);
-                     if (dataSet.getMetaData().more){
+                     if (dataSet.getCount() == 1000 && dataSet.getMetaData().more){
                         InformationPopupManager.showMessageDialog({
                            status: 'default',
                            message: 'Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.'
@@ -1224,9 +1252,17 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _drawSelectedItems: function (idArray) {
-            $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__multiSelected');
-            for (var i = 0; i < idArray.length; i++) {
-               $('.controls-ListView__item[data-id="' + idArray[i] + '"]', this._container).addClass('controls-ListView__item__multiSelected');
+            /* Запоминаем элементы, чтобы не делать лишний раз выборку по DOM'у,
+               это дорого */
+            var domItems = this._container.find('.controls-ListView__item');
+
+            /* Удаляем выделение */
+            domItems.removeClass('controls-ListView__item__multiSelected');
+            /* Проставляем выделенные ключи */
+            for(var i = 0; i < domItems.length; i++) {
+               if(ArraySimpleValuesUtil.hasInArray(idArray, domItems[i].getAttribute('data-id'))) {
+                  domItems.eq(i).addClass('controls-ListView__item__multiSelected');
+               }
             }
          },
 
@@ -1236,7 +1272,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _drawSelectedItem: function (id, index, lightVer) {
             //рисуем от ключа
             var selId = id;
-            if (!lightVer) {
+            if (lightVer !== true) {
                $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
                $('.controls-ListView__item[data-id="' + selId + '"]', this._container).addClass('controls-ListView__item__selected');
             }
@@ -1267,7 +1303,6 @@ define('js!SBIS3.CONTROLS.ListView',
             this._firstScrollTop = true;
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
-            this._destroyEditInPlace();
             return ListView.superclass.reload.apply(this, arguments);
          },
 
@@ -1431,6 +1466,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options._decorators) {
                this._options._decorators.update(this);
             }
+            this._destroyEditInPlace();
             ListView.superclass.redraw.apply(this, arguments);
          },
 
@@ -1685,6 +1721,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var self = this;
 
             if (!this._itemsToolbar) {
+               this._setTouchSupport(this._touchSupport);
                this._itemsToolbar = new ItemsToolbar({
                   element: this.getContainer().find('> .controls-ListView__ItemsToolbar-container'),
                   parent: this,
@@ -1863,6 +1900,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._loadNextPage();
                }
                if (this._scrollPager){
+                  //TODO: Это возможно очень долго, надо как то убрать. Нужно для случев, когда ListView создается скрытым, а потом показывается
+                  this._scrollBinder && this._scrollBinder._updateScrollPages();
                   this._setScrollPagerPosition();
                }
             }
@@ -2022,7 +2061,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _preScrollLoading: function(){
             var hasScroll = (function() {
-                  return this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer())
+                  return this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer(), 10)
                }).bind(this);
 
             // Если нет скролла или скролл внизу, значит нужно догружать еще записи (floatArea отжирает скролл, поэтому если она открыта - не грузим)
@@ -2039,9 +2078,10 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _moveTopScroll : function(){
-            var scrollAmount;
+            var scrollAmount,
+               scrollingToTop =  this._scrollDirection !== 'down' && this._options.infiniteScroll == 'up';
             //сюда попадем только когда уже точно есть скролл
-            if (this.isInfiniteScroll() && this._scrollDirection == 'top' && this._needSrollTopCompensation){
+            if (this.isInfiniteScroll() && scrollingToTop && (this._needSrollTopCompensation || this._firstScrollTop)){
                scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
                this._needSrollTopCompensation = false;
                //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
@@ -2064,15 +2104,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          isScrollOnBottom: function(){
-            var scrollableContainer = this._scrollWatcher.getScrollContainer(),
-            isBody = scrollableContainer == document.body,
-            scrollContainer = isBody ? $(window) : this._options.infiniteScrollContainer;
-            // Если scrollContainer это body и есть floatArea со скроллом, то у body скролла нет, а значит он не может быть снизу (его же нет!)
-            // Todo: когда будут классные скроллы (3.7.4.100?) - можно будет выпилить
-            if (scrollableContainer){
-               scrollContainer = $(scrollContainer);
-               return (scrollableContainer.scrollHeight - (scrollableContainer.scrollTop + scrollContainer.height())) == 0;
-            }
+            return this._scrollWatcher.isScrollOnBottom();
          },
          //Проверка есть ли открытые stack FloatArea или maximize Window, они могут збирать на себя скролл у body
          _existFloatArea: function(){
@@ -2218,10 +2250,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this._showedLoading = show;
             if (show) {
                setTimeout(function(){
-                  if (self._showedLoading) {
+                  if (!self.isDestroyed() && self._showedLoading) {
                      scrollContainer = self._getScrollContainer();
                      indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
-                     if(scrollContainer && container[0].scrollHeight > scrollContainer[0].offsetHeight) {
+                     if(indicator.length && scrollContainer && container[0].scrollHeight > scrollContainer[0].offsetHeight) {
                         /* Ищем кординату, которая находится по середине отображаемой области грида */
                         centerCord =
                            (Math.max(scrollContainer[0].getBoundingClientRect().bottom, 0) - Math.max(container[0].getBoundingClientRect().top, 0))/2;
@@ -2813,6 +2845,24 @@ define('js!SBIS3.CONTROLS.ListView',
             if (resultRow.length){
                this._destroyControls(resultRow);
                resultRow.remove();
+            }
+         },
+         /**
+          * //todo коcтыль нужно разобраться почему долго работает
+          * Инициализирует опцию selectedItems
+          * @noShow
+          */
+         initializeSelectedItems: function() {
+            var items = this.getItems();
+
+            if ($ws.helpers.instanceOfModule(items, 'js!WS.Data/Collection/RecordSet')) {
+               this._options.selectedItems = Di.resolve('collection.recordset', {
+                  ownerShip: false,
+                  adapter: items.getAdapter(),
+                  idProperty: items.getIdProperty()
+               });
+            } else {
+               ListView.superclass.initializeSelectedItems.call(this);
             }
          }
       });

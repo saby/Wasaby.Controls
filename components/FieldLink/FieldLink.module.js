@@ -260,7 +260,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           $constructor: function() {
-             var commandDispatcher = $ws.single.CommandDispatcher;
+             var commandDispatcher = $ws.single.CommandDispatcher,
+                 self = this;
 
              this._publish('onItemActivate');
 
@@ -275,12 +276,23 @@ define('js!SBIS3.CONTROLS.FieldLink',
                т.к. это событие гарантирует изменение выбранных элементов
                Это всё актуально для поля связи без включенной опции alwaysShowTextBox,
                если она включена, то логика стирания текста обрабатывается по-другому. */
-            this.subscribe('onSelectedItemsChange', function() {
-               if(this.getText() && !this._options.alwaysShowTextBox) {
-                  this.setText('');
+            this.subscribe('onSelectedItemsChange', function(event, result, changed) {
+               if(self.getText() && !self._options.alwaysShowTextBox) {
+                  self.setText('');
                }
-               this.validate();
-            }.bind(this));
+               /* При добавлении элементов надо запустить валидацию,
+                  если же элементы были удалены,
+                  то валидация будет запущена либо эрией, либо по уходу фокуса из поля связи (По стандарту). */
+               if(changed.added.length && !self._isEmptySelection()) {
+                  /* Надо дожидаться загрузки выбранных записей,
+                     т.к. часто валидируют именно по ним,
+                     или же по значениям в контексте */
+                  self.getSelectedItems(true).addCallback(function(list) {
+                     self.validate();
+                     return list
+                  })
+               }
+            });
 
             if(this._options.oldViews) {
                $ws.single.ioc.resolve('ILogger').log('FieldLink', 'В 3.8.0 будет удалена опция oldViews, а так же поддержка старых представлений данных на диалогах выбора.');

@@ -126,7 +126,15 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          setItems: function(list) {
-            list = list ? list.clone() : [];
+            if(list) {
+               /* RecordSet клонировать нельзя, иначе записи склонируются с ключевым полем
+                  рекордсета, хотя оно могло быть изменено */
+               if(!$ws.helpers.instanceOfModule(list, 'WS.Data/Collection/RecordSet')) {
+                  list = list.clone();
+               }
+            } else {
+               list = [];
+            }
             FieldLinkItemsCollection.superclass.setItems.call(this, list);
          },
 
