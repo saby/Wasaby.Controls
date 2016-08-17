@@ -1267,7 +1267,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _drawSelectedItem: function (id, index, lightVer) {
             //рисуем от ключа
             var selId = id;
-            if (!lightVer) {
+            if (lightVer !== true) {
                $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
                $('.controls-ListView__item[data-id="' + selId + '"]', this._container).addClass('controls-ListView__item__selected');
             }
@@ -2062,7 +2062,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _preScrollLoading: function(){
             var hasScroll = (function() {
-                  return this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer())
+                  return this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer(), 10)
                }).bind(this);
 
             // Если нет скролла или скролл внизу, значит нужно догружать еще записи (floatArea отжирает скролл, поэтому если она открыта - не грузим)
@@ -2620,7 +2620,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
-            this._getItemsContainer()[allowDragNDrop ? DRAG_META_INSERT.on : 'off']('mousedown', '.js-controls-ListView__item', (function(e){
+            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', (function(e){
                if (this._canDragStart(e)) {
                   this._initDrag.call(this, e);
                   //TODO: Сейчас появилась проблема, что если к компьютеру подключен touch-телевизор он не вызывает

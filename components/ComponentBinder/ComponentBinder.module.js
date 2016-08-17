@@ -771,14 +771,14 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
          var pagesCount = this._scrollPages.length;
 
-         if (this._options.paging.getPagesCount() < pagesCount){
-            if (!this._options.view.getItems().getMetaData().more){
-               pagesCount--;
-               if (pagesCount > 1) {
-                  this._options.view.getContainer().css('padding-bottom', '32px');
-               }            }
-            this._options.paging.setPagesCount(pagesCount);
+         if (!this._options.view.getItems().getMetaData().more && pagesCount > 1){
+            this._options.view.getContainer().css('padding-bottom', '32px');
          }
+         if (this._options.paging.getSelectedKey() > pagesCount){
+            this._options.paging._options.selectedKey = pagesCount;   
+         }
+         this._options.paging.setPagesCount(pagesCount);
+         
          //Если есть страницы - покажем paging
          this._options.paging.setVisible(pagesCount > 1);
       },

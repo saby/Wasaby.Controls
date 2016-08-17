@@ -474,6 +474,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                });
 
                def.addCallback(function(textValue) {
+                  var isDefaultIdSelected = id[0] === self._defaultId;
                   pickerContainer = self._getPickerContainer();
                   if (!self._options.multiselect) {
                      pickerContainer.find('.controls-DropdownList__item__selected').removeClass('controls-DropdownList__item__selected');
@@ -485,16 +486,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
                      self._pickerHeadContainer.html(headTpl);
                      self._selectedItemContainer.html(headTpl);
                   }
-                  if(id[0] === self._defaultId){
-                     self.getContainer().addClass('controls-DropdownList__hideCross');
-                     self._getPickerContainer().addClass('controls-DropdownList__hideCross');
-                     self._setResetButtonVisibility(true);
-                  }else{
-                     self.getContainer().removeClass('controls-DropdownList__hideCross');
-                     self._getPickerContainer().removeClass('controls-DropdownList__hideCross');
-                     self._setResetButtonVisibility(false);
-                  }
-
+                  self.getContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
+                  self._getPickerContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
+                  self._setResetButtonVisibility(isDefaultIdSelected);
                });
             }
          },
