@@ -1975,6 +1975,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._loader = null;
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                   var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
+                  
+                  this._updateScrolOffset(this._options.infiniteScroll);
                   //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                   this.getItems().setMetaData(dataSet.getMetaData());
                   this._hideLoadingIndicator();
@@ -2000,7 +2002,6 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._loadNextPage();
                      }
                   }
-                  this._updateScrolOffset(this._options.infiniteScroll);
 
                }, this)).addErrback(function (error) {
                   //Здесь при .cancel приходит ошибка вида DeferredCanceledError
