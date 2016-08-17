@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
    'js!SBIS3.CONTROLS.RangeMixin',
    'js!SBIS3.CONTROLS.RangeSelectableViewMixin',
    'js!WS.Data/Source/Base',
-   'js!SBIS3.CONTROLS.DateRangeBigChoose.ScrollWatcher',
+   // 'js!SBIS3.CONTROLS.DateRangeBigChoose.ScrollWatcher',
    'js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView'
 ], function (ListView, ItemTmpl, RangeMixin, RangeSelectableViewMixin, Base, ScrollWatcher) {
    'use strict';
@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
             // infiniteScrollContainer: '.controls-DateRangeBigChoose__months-month',
             pageSize: 12,
 
-            scrollWatcher: ScrollWatcher,
+            // scrollWatcher: ScrollWatcher,
             className: 'controls-DateRangeBigChoose-MonthRangePicker'
          },
          _lastOverControl: null,
