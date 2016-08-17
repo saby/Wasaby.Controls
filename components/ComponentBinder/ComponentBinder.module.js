@@ -104,23 +104,22 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
       if(data.getCount()) {
          /* Если есть данные, и параметр поиска не транслитизировался,
             то не будем менять текст в строке поиска */
-         if(this._searchTextTranslated) {
+         if(this._searchTextBeforeTranlate) {
             searchForm.setText(newText);
-            this._searchTextTranslated = false;
+            this._searchTextBeforeTranlate = null;
          }
       } else {
          /* Если данных нет, то обработаем два случая:
             1) Была сменена раскладка - просто возвращаем фильтр в исходное состояние,
                текст в строке поиска не меняем
             2) Смены раскладки не было, то транслитизируем текст поиска, и поищем ещё раз   */
-         newText = KbLayoutRevertUtil.process(newText);
-         if(this._searchTextTranslated) {
-            viewFilter[searchParamName] = newText;
+         if(this._searchTextBeforeTranlate) {
+            viewFilter[searchParamName] = this._searchTextBeforeTranlate;
             view.setFilter(viewFilter, true);
-            this._searchTextTranslated = false;
+            this._searchTextBeforeTranlate = null;
          } else {
-            args[0] = newText;
-            this._searchTextTranslated = true;
+            this._searchTextBeforeTranlate = args[0];
+            args[0] = KbLayoutRevertUtil.process(newText);
             mainFunc.apply(this, args);
          }
       }
@@ -239,7 +238,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          _currentRoot: null,
          _pathDSRawData : [],
          _firstSearch: true,
-         _searchTextTranslated: false,
+         _searchTextBeforeTranlate: null,
          _path: [],
          _scrollPages: [], // Набор страниц для скролл-пэйджина
          _pageOffset: 0, // offset последней страницы
