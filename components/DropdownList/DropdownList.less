@@ -38,6 +38,11 @@
       }
     }
   }
+   &.controls-DropdownList__hideCross{
+      .controls-DropdownList__selectedItem .controls-DropdownList__afterCaptionWrapper{
+         display: none;
+      }
+   }
    .controls-DropdownList__selectedItem > * {
       display: inline-block;
    }
@@ -102,6 +107,11 @@
           max-width: calc(~"100% - 16px");
        }
      }
+   }
+   &.controls-DropdownList__hideCross{
+      .controls-DropdownList__selectedItem .controls-DropdownList__afterCaptionWrapper{
+         display: none;
+       }
    }
    cursor: @DropdownList-cursor;
    .controls-DropdownList__equalsWidth {
