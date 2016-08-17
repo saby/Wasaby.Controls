@@ -25,6 +25,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Pager',
       'js!SBIS3.CONTROLS.EditInPlaceHoverController',
       'js!SBIS3.CONTROLS.EditInPlaceClickController',
+      'js!SBIS3.CONTROLS.ImitateEvents',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.ScrollWatcher',
       'js!WS.Data/Collection/IBind',
@@ -38,15 +39,16 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Paging',
       'js!SBIS3.CONTROLS.ComponentBinder',
       'js!WS.Data/Di',
+      'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
       'js!SBIS3.CONTROLS.DragEntity.Row',
       'js!WS.Data/Collection/RecordSet'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
-             TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
+             TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
              Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-             Paging, ComponentBinder, Di) {
+             Paging, ComponentBinder, Di, ArraySimpleValuesUtil) {
 
      'use strict';
 
@@ -727,7 +729,7 @@ define('js!SBIS3.CONTROLS.ListView',
                т.к. оно стреляет после тапа. После тапа событие mousemove имеет нулевой сдвиг, поэтому обрабатываем его как touch событие
                 + добавляю проверку, что до этого мы были в touch режиме,
                это надо например для тестов, в которых эмулирется событие mousemove так же без сдвига, как и на touch устройствах. */
-            this._setTouchSupport(Array.indexOf(['swipe', 'tap'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && this._touchSupport));
+            this._setTouchSupport(Array.indexOf(['swipe', 'tap'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && $ws._const.compatibility.touch));
 
             switch (e.type) {
                case 'mousemove':
@@ -771,7 +773,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._preScrollLoading();
                      }
                      topParent.unsubscribe('onAfterShow', afterFloatAreaShow);
-                  }
+                  };
                   //Делаем через subscribeTo, а не once, что бы нормально отписываться при destroy FloatArea
                   this.subscribeTo(topParent, 'onAfterShow', afterFloatAreaShow.bind(this));
                }
@@ -842,7 +844,7 @@ define('js!SBIS3.CONTROLS.ListView',
                case $ws._const.key.enter:
                   if(selectedKey) {
                      var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
-                     this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem);
+                     this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem, e);
                   }
                   break;
                case $ws._const.key.space:
@@ -965,7 +967,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             if (target.length && this._isViewElement(target)) {
                id = this._getItemsProjection().getByHash(target.data('hash')).getContents().getId();
-               this._elemClickHandler(id, this.getItems().getRecordByKey(id), e.target);
+               this._elemClickHandler(id, this.getItems().getRecordByKey(id), e.target, e);
             }
             if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox')){
                $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
@@ -1186,7 +1188,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          /* +++++++++++++++++++++++++++ */
 
-         _elemClickHandler: function (id, data, target) {
+         _elemClickHandler: function (id, data, target, e) {
             var $target = $(target),
                 self = this,
                 elClickHandler = this._options.elemClickHandler,
@@ -1197,36 +1199,36 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._onCheckBoxClick($target);
                }
                else {
-                  onItemClickResult = this._notifyOnItemClick(id, data, target);
+                  onItemClickResult = this._notifyOnItemClick(id, data, target, e);
                }
             }
             else {
-               onItemClickResult = this._notifyOnItemClick(id, data, target);
+               onItemClickResult = this._notifyOnItemClick(id, data, target, e);
             }
             if (onItemClickResult instanceof $ws.proto.Deferred) {
                onItemClickResult.addCallback(function (result) {
                   if (result !== false) {
                      self.setSelectedKey(id);
-                     self._elemClickHandlerInternal(data, id, target);
-                     elClickHandler && elClickHandler.call(self, id, data, target);
+                     self._elemClickHandlerInternal(data, id, target, e);
+                     elClickHandler && elClickHandler.call(self, id, data, target, e);
                   }
                   return result;
                });
             }
             else if (onItemClickResult !== false) {
                this.setSelectedKey(id);
-               self._elemClickHandlerInternal(data, id, target);
+               self._elemClickHandlerInternal(data, id, target, e);
                elClickHandler && elClickHandler.call(self, id, data, target);
             }
          },
-         _notifyOnItemClick: function(id, data, target) {
-            return this._notify('onItemClick', id, data, target);
+         _notifyOnItemClick: function(id, data, target, e) {
+            return this._notify('onItemClick', id, data, target, e);
          },
          _onCheckBoxClick: function(target) {
             this.toggleItemsSelection([target.closest('.controls-ListView__item').attr('data-id')]);
          },
 
-         _elemClickHandlerInternal: function (data, id, target) {
+         _elemClickHandlerInternal: function (data, id, target, e) {
             /* Клик по чекбоксу не должен вызывать активацию элемента */
             if(!$(target).hasClass('js-controls-ListView__itemCheckBox')) {
                this._activateItem(id);
@@ -1255,9 +1257,17 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _drawSelectedItems: function (idArray) {
-            $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__multiSelected');
-            for (var i = 0; i < idArray.length; i++) {
-               $('.controls-ListView__item[data-id="' + idArray[i] + '"]', this._container).addClass('controls-ListView__item__multiSelected');
+            /* Запоминаем элементы, чтобы не делать лишний раз выборку по DOM'у,
+               это дорого */
+            var domItems = this._container.find('.controls-ListView__item');
+
+            /* Удаляем выделение */
+            domItems.removeClass('controls-ListView__item__multiSelected');
+            /* Проставляем выделенные ключи */
+            for(var i = 0; i < domItems.length; i++) {
+               if(ArraySimpleValuesUtil.hasInArray(idArray, domItems[i].getAttribute('data-id'))) {
+                  domItems.eq(i).addClass('controls-ListView__item__multiSelected');
+               }
             }
          },
 
@@ -1419,8 +1429,8 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.editingTemplate;
          },
 
-         showEip: function(target, model, options) {
-            return this._canShowEip() ? this._getEditInPlace().showEip(target, model, options) : $ws.proto.Deferred.fail();
+         showEip: function(target, model, options, withoutActivateFirstControl) {
+            return this._canShowEip() ? this._getEditInPlace().showEip(target, model, options, withoutActivateFirstControl) : $ws.proto.Deferred.fail();
          },
 
          _canShowEip: function() {
@@ -1433,8 +1443,16 @@ define('js!SBIS3.CONTROLS.ListView',
             this._destroyEditInPlace();
          },
 
-         _onItemClickHandler: function(event, id, record, target) {
-            event.setResult(this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true }));
+         _onItemClickHandler: function(event, id, record, target, originalEvent) {
+            var
+               result = this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true }, false);
+            if (originalEvent.type === 'click') {
+               result.addCallback(function(res) {
+                  ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
+                  return res;
+               });
+            }
+            event.setResult(result);
          },
 
          _onChangeHoveredItemHandler: function(event, hoveredItem) {
@@ -1561,6 +1579,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            this.setSelectedKey(model.getId());
                         }
                         event.setResult(this._notify('onAfterBeginEdit', model));
+                        this._toggleEmptyData(false);
                      }.bind(this),
                      onChangeHeight: function() {
                         if (this._getItemsToolbar().isToolbarLocking()) {
@@ -1591,6 +1610,7 @@ define('js!SBIS3.CONTROLS.ListView',
                               this._hideItemsToolbar();
                            }
                         }
+                        this._toggleEmptyData(!this.getItems().getCount());
                      }.bind(this)
                   }
                };
@@ -2091,6 +2111,10 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollWatcher.scrollTo(this._firstScrollTop || (scrollAmount < 0) ? 'bottom' : scrollAmount);
             }
          },
+         /**
+          * Скролит табличное представление к указанному элементу
+          * @param item Элемент, к которому осуществляется скролл
+          */
          scrollToItem: function(item){
             if (item.getId && item.getId instanceof Function){
                this._scrollToItem(item.getId());
@@ -2882,10 +2906,13 @@ define('js!SBIS3.CONTROLS.ListView',
           * @noShow
           */
          initializeSelectedItems: function() {
-            if ($ws.helpers.instanceOfModule(this.getItems(), 'js!WS.Data/Collection/RecordSet')) {
+            var items = this.getItems();
+
+            if ($ws.helpers.instanceOfModule(items, 'js!WS.Data/Collection/RecordSet')) {
                this._options.selectedItems = Di.resolve('collection.recordset', {
                   ownerShip: false,
-                  adapter: this.getItems().getAdapter()
+                  adapter: items.getAdapter(),
+                  idProperty: items.getIdProperty()
                });
             } else {
                ListView.superclass.initializeSelectedItems.call(this);

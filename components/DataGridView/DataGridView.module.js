@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'html!SBIS3.CONTROLS.DataGridView/resources/ResultsTpl',
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.DragAndDropMixin',
+      'js!SBIS3.CONTROLS.ImitateEvents',
       'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
@@ -16,7 +17,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'browser!html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate',
       'browser!html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate'
    ],
-   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate) {
+   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, LadderDecorator, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate) {
    'use strict';
 
       var ANIMATION_DURATION = 500, //Продолжительность анимации скролла заголовков
@@ -195,7 +196,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * </component>
     * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
     * @cssModifier controls-DataGridView__markerRight Маркер отображается не слева строки, а справа.
-    * @cssModifier controls-DataGridView__hasSeparator Включает линии разделители между строками
+    * @cssModifier controls-DataGridView__hasSeparator Включает отображение линий-разделителей между строками.
+    * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
     * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
     */
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
@@ -608,7 +610,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._redrawHead();
          DataGridView.superclass._redrawItems.apply(this, arguments);
       },
-      _onItemClickHandler: function(event, id, record, target) {
+      _onItemClickHandler: function(event, id, record, target, originalEvent) {
          var
             targetColumn,
             targetColumnIndex;
@@ -620,6 +622,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
          event.setResult(this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true }, targetColumnIndex)
             .addCallback(function(result) {
+               if (originalEvent.type === 'click') {
+                  ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
+               }
                return !result;
             })
             .addErrback(function() {
@@ -812,7 +817,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
        * Используется для того, чтобы в редактировании по месту не было обрезков при прокрутке
        */
       _animationAtPartScrollDragEnd: function() {
-         if(this._currentScrollPosition === this._stopMovingCords.right) {
+         /* Не надо анимировать если:
+            - нет элементов
+            - скролл у крайней правой координаты */
+         if(this._currentScrollPosition === this._stopMovingCords.right || !this.getItems().getCount()) {
             return;
          }
          //Найдём элемент, который нужно доскроллить
@@ -1007,10 +1015,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
        setColumns : function(columns) {
           this._options.columns = columns;
           checkColumns(this._options);
-          /* Перестроим шапку только после загрузки данных,
-           чтобы таблица не прыгала, из-за того что изменилось количество и ширина колонок */
-          this.once('onDataLoad', this._redrawHead.bind(this));
        },
+
+      _oldRedraw: function() {
+         DataGridView.superclass._oldRedraw.apply(this, arguments);
+         this._redrawHead();
+      },
 
       setMultiselect: function() {
          DataGridView.superclass.setMultiselect.apply(this, arguments);

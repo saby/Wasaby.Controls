@@ -24,6 +24,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    }
    var createDefaultProjection = function(items, cfg) {
       var proj = Projection.getDefaultProjection(items);
+      /*TODO придрот, т.к. Леха Мальцев не проставляет current*/
+      if ($ws.helpers.instanceOfModule(items, 'js!WS.Data/Types/Enum')) {
+         proj.setCurrentPosition(items.get());
+      }
+      if ($ws.helpers.instanceOfModule(items, 'js!WS.Data/Types/Flags')) {
+         proj.each(function(item, i){
+            item.setSelected(items.get(item.getContents()));
+         });
+      }
       if (cfg.itemsSortMethod) {
          proj.setSort(cfg.itemsSortMethod);
       }
@@ -216,11 +225,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @see SBIS3.CONTROLS.Selectable#getSelectedKey
              */
             keyField : null,
-            /**
-             * @noShow
-             * @deprecated На текущий момент отрисовка изменившихся данных осуществляется автматически. Опция будет удалена в 3.7.4.100.
-             */
-            autoRedraw: true,
             /**
              * @cfg {String} Поле элемента коллекции, из которого отображать данные
              * @example
@@ -1208,11 +1212,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    ) {
                       this._options._items.setMetaData(list.getMetaData());
                       this._options._items.assign(list);
-                      if(!self._options.autoRedraw) {
-                         self.redraw();
-                      } else {
-                         self._drawItemsCallback();
-                      }
+                      self._drawItemsCallback();
                    } else {
                       this._unsetItemsEventHandlers();
                       this._options._items = list;

@@ -180,7 +180,10 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             if (this._foldersFooters[key]) {
                controls = this._foldersFooters[key].find('.ws-component');
                for (var j = 0; j < controls.length; j++) {
-                  controls[j].wsControl.destroy();
+                  var inst = controls[j].wsControl;
+                  if (inst) {
+                     inst.destroy();
+                  }
                }
                this._foldersFooters[key].remove();
                delete this._foldersFooters[key];
@@ -302,7 +305,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             }
          }
       },
-      _elemClickHandlerInternal: function (data, id, target) {
+      _elemClickHandlerInternal: function (data, id, target, e) {
          var $target = $(target),
              nodeID = $target.closest('.js-controls-ListView__item').data('id'),
              closestExpand = this._findExpandByElement($(target));

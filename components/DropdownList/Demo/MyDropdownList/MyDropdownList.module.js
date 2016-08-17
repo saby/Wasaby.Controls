@@ -11,13 +11,13 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
          'css!SBIS3.CONTROLS.Demo.MyDropdownList'
       ],
 
-      function(CompoundControl, DropdownList, dotTplFn, dotHeadTemplate, rk) {
+      function(CompoundControl, DropdownList, dotTplFn, itemTpl, rk) {
          'use strict';
          var MyDropdownList = CompoundControl.extend([],{
             $protected: {
                _dotTplFn: dotTplFn,
                _options: {
-                  firstTemplate: dotHeadTemplate,
+                  firstTemplate: itemTpl,
                   data: [
                      {
                         key : 0,
