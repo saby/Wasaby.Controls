@@ -2624,7 +2624,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
-            this._getItemsContainer()[allowDragNDrop ? DRAG_META_INSERT.on : 'off']('mousedown', '.js-controls-ListView__item', (function(e){
+            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', (function(e){
                if (this._canDragStart(e)) {
                   this._initDrag.call(this, e);
                   //TODO: Сейчас появилась проблема, что если к компьютеру подключен touch-телевизор он не вызывает
