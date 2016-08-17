@@ -38,6 +38,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Paging',
       'js!SBIS3.CONTROLS.ComponentBinder',
       'js!WS.Data/Di',
+      'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
       'js!WS.Data/Collection/RecordSet',
       'js!SBIS3.CONTROLS.DragEntity.Row'
@@ -46,7 +47,7 @@ define('js!SBIS3.CONTROLS.ListView',
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
              Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-             Paging, ComponentBinder, Di) {
+             Paging, ComponentBinder, Di, ArraySimpleValuesUtil) {
 
       'use strict';
 
@@ -1263,9 +1264,17 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _drawSelectedItems: function (idArray) {
-            $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__multiSelected');
-            for (var i = 0; i < idArray.length; i++) {
-               $('.controls-ListView__item[data-id="' + idArray[i] + '"]', this._container).addClass('controls-ListView__item__multiSelected');
+            /* Запоминаем элементы, чтобы не делать лишний раз выборку по DOM'у,
+               это дорого */
+            var domItems = this._container.find('.controls-ListView__item');
+
+            /* Удаляем выделение */
+            domItems.removeClass('controls-ListView__item__multiSelected');
+            /* Проставляем выделенные ключи */
+            for(var i = 0; i < domItems.length; i++) {
+               if(ArraySimpleValuesUtil.hasInArray(idArray, domItems[i].getAttribute('data-id'))) {
+                  domItems.eq(i).addClass('controls-ListView__item__multiSelected');
+               }
             }
          },
 
@@ -2886,10 +2895,13 @@ define('js!SBIS3.CONTROLS.ListView',
           * @noShow
           */
          initializeSelectedItems: function() {
-            if ($ws.helpers.instanceOfModule(this.getItems(), 'js!WS.Data/Collection/RecordSet')) {
+            var items = this.getItems();
+
+            if ($ws.helpers.instanceOfModule(items, 'js!WS.Data/Collection/RecordSet')) {
                this._options.selectedItems = Di.resolve('collection.recordset', {
                   ownerShip: false,
-                  adapter: this.getItems().getAdapter()
+                  adapter: items.getAdapter(),
+                  idProperty: items.getIdProperty()
                });
             } else {
                ListView.superclass.initializeSelectedItems.call(this);
