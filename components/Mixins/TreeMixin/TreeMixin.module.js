@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
-   'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree'], function (BreadCrumbs, groupByTpl, TreeProjection) {
+   'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree', 'tmpl!SBIS3.CONTROLS.TreeMixin/resources/searchRender'], function (BreadCrumbs, groupByTpl, TreeProjection, searchRender) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -39,17 +39,59 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          return isNodeA ? -1 : 1;
       }
    },
+   searchProcessing = function(projection, cfg) {
+      var resRecords = [], curParentGroup;
+
+      projection.each(function (item) {
+         var curPath = [];
+         if (!item.isNode()) {
+            var curParent = item.getParent();
+            if (curParentGroup !== curParent) {
+               curParentGroup = curParent;
+               while (curParent.getContents() != null) {
+                  var pathElem = {};
+                  pathElem[cfg.keyField] = curParent.getContents().getId();
+                  pathElem[cfg.displayField] = curParent.getContents().get(cfg.displayField);
+                  curPath.unshift(pathElem);
+                  curParent = curParent.getParent();
+               }
+               resRecords.push({
+                  tpl: searchRender,
+                  data: {
+                     path: curPath,
+                     viewCfg : {
+                        keyField: cfg.keyField,
+                        displayField : cfg.displayField,
+                        highlightEnabled : cfg.highlightEnabled,
+                        highlightText : cfg.highlightText,
+                        colorMarkEnabled : cfg.colorMarkEnabled,
+                        colorField : cfg.colorField,
+                        allowEnterToFolder: cfg.allowEnterToFolder
+                     }
+                  }});
+            }
+            resRecords.push(item);
+         }
+      });
+      return resRecords;
+   },
    getRecordsForRedraw = function(projection, cfg) {
       var
          records = [],
          projectionFilter;
-      if (cfg.expand) {
+      if (cfg.expand || cfg.searchRender) {
          projection.setEventRaising(false);
-         expandAllItems(projection);
+         expandAllItems(projection, cfg);
          projection.setEventRaising(true);
-         projection.each(function(item) {
-            records.push(item);
-         });
+
+         if (cfg.searchRender) {
+            records = searchProcessing(projection, cfg);
+         }
+         else {
+            projection.each(function (item) {
+               records.push(item);
+            });
+         }
       }
       else {
          /**
@@ -356,7 +398,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              * @see SBIS3.CONTROLS.ItemsControlMixin#itemsSortMethod
              * @see SBIS3.CONTROLS.ItemsControlMixin#setItemsSortMethod
              */
-            itemsSortMethod: _defaultItemsSortMethod
+            itemsSortMethod: _defaultItemsSortMethod,
+            searchRender: false
          },
          _foldersFooters: {},
          _breadCrumbs : [],
