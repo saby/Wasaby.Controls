@@ -990,9 +990,12 @@ define('js!SBIS3.CONTROLS.RichEditor',
                this._notify('onTextChange', text);
                this._notifyOnPropertyChanged('text');
                this._updateDataReview(text);
+               this._togglePlaceholder(text);
                this._updateHeight();
                this.clearMark();
             }
+            //При нажатии enter передаётся trimmedText поэтому updateHeight text === this.getText() и updateHeight не зовётся
+            this._updateHeight();
             this._togglePlaceholder(text);
          },
 
@@ -1070,16 +1073,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
             }
          },
 
-         _scrollEventHandler: function(event) {
-            if (event.type === 'scroll') {
-               if (this._hideFocusOnScroll) {
-                  this._container.focus();
-               }
-            } else {
-               this._hideFocusOnScroll = event.type === 'touchstart';
-            }
-         },
-
          _bindEvents: function() {
             var
                self = this,
@@ -1117,11 +1110,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
                }
 
                this._inputControl.attr('tabindex', 1);
-               //Хак для хрома и safari на ios( не работало событие 'click' )
-
-               if ($ws._const.browser.isMobilePlatform) {
-                  this._inputControl.bind('scroll touchstart touchend', this._scrollEventHandler.bind(this));
-               }
 
                if (!$ws._const.browser.firefox) { //в firefox работает нативно
                   this._inputControl.bind('mouseup', function (e) { //в ie криво отрабатывает клик
@@ -1193,24 +1181,16 @@ define('js!SBIS3.CONTROLS.RichEditor',
             editor.on('BeforePastePreProcess', function(e) {
                var
                   isYouTubeReady,
-                  isRichContent = e.content.indexOf('content=SBIS.FRE') !== -1,
+                  isRichContent = e.content.indexOf('orphans: 31415;') !== -1,
                   content = e.content;
-               e.content =  content.replace('<!--content=SBIS.FRE-->','');
+               e.content =  content.replace('orphans: 31415;','');
+               //Парсер TinyMCE неправльно распознаёт стили из за - &quot;TensorFont Regular&quot;
+               e.content = e. content.replace(/&quot;TensorFont Regular&quot;/gi,'\'TensorFont Regular\'');
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
                // и послыаем метку форматной вставки, если метка присутствует не надо обрабатывать событие
                // нашим обработчиком, а просто прокинуть его в дальше
                if (e.withStyles) {
                   return e;
-               }
-               if (isRichContent) {
-                  if ($ws._const.browser.isIE8) {
-                     //в IE8 оборачиваем контент в div  надо его вырезать
-                     //потому что в контент летит еще и внешняя дивка с -99999 и absolute
-                     content = content.substring(content.indexOf('<DIV>') + 5, content.length - 11);
-                     if (content.indexOf('&nbsp;') === 0) {
-                        content = content.substring(6);
-                     }
-                  }
                }
                if (!isRichContent) {
                   if (self._options.editorConfig.paste_as_text) {
@@ -1354,10 +1334,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
             });
 
             editor.on( 'cut',function(e){
-               if (self._options.editorConfig.paste_as_text) { // в костроме отключают нашу утилиту
-                  e.stopImmediatePropagation();
-                  editor.execCommand('forwardDelete');
-               }
                setTimeout(function() {
                   self._setTrimmedText(self._getTinyEditorValue());
                }, 1);

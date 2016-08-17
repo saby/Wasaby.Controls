@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
     */
    /*методы для поиска*/
    var startHierSearch = function hierSearch(text, searchParamName, searchCrumbsTpl, searchMode, searchForm) {
-          if (text) {
+          if (needSearch.call(this, text, searchParamName)) {
              var filter = $ws.core.merge(this._options.view.getFilter(), {
                     'Разворот': 'С разворотом',
                     'usePages': 'full'
@@ -74,7 +74,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
           }
        },
        startSearch = function search(text, searchParamName, searchForm){
-          if (text){
+          if (needSearch.call(this, text, searchParamName)){
              var view = this._options.view,
                  filter = $ws.core.merge(view.getFilter(), {
                     'usePages': 'full'
@@ -193,6 +193,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
       }
    }
 
+   function needSearch(text, searchParamName) {
+      return text && this._options.view.getFilter()[searchParamName] !== text;
+   }
+
    function toggleCheckBoxes(operationPanel, gridView, hideCheckBoxes) {
       if (gridView._options.multiselect) {
          gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
@@ -235,7 +239,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          _firstSearch: true,
          _searchTextTranslated: false,
          _path: [],
-         _scrollPages: [], // Набор страниц для скролл-пэйджина 
+         _scrollPages: [], // Набор страниц для скролл-пэйджина
          _pageOffset: 0, // offset последней страницы
          _currentScrollPage: 1,
          _options: {
@@ -767,7 +771,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                pageHeight = 0;
             }
          });
-         
+
          var pagesCount = this._scrollPages.length;
 
          if (!this._options.view.getItems().getMetaData().more && pagesCount > 1){
