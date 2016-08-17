@@ -34,24 +34,31 @@ gemini.suite('SBIS3.CONTROLS.Image Online', function () {
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="Image 1"]', 40000);
                 this.image = find('[name="Image 1"] .controls-image__image');
+				this.edit = find('.controls-image__image-bar .icon-Edit');
             })
 									
             .capture('plain', function (actions) {
-				actions.mouseMove(this.image);
-				actions.wait(2000);				
 				actions.executeJS(function (window) {
-                    window.$('[sbisname="ButtonEdit"]').click();					
-                });				
-				actions.wait(2000);
-				actions.waitForElementToShow('[sbisname="applyButton"]', 5000);
-				actions.waitForElementToShow('.ws-window-title.controls-EditDialog__title', 5000);
-				actions.waitForElementToHide('[sbisname="ButtonEdit"]', 2000);
+                    window.$('[name="Image 1"] .controls-image__image').mouseenter();					
+                });
+				actions.wait(1000);
+				actions.waitForElementToShow('.controls-image__image-bar', 2000);	
+				actions.waitForElementToShow('.controls-image__image-bar .icon-Edit', 1000);
+				
 				actions.executeJS(function (window) {
+                    window.$('.controls-image__image-bar .icon-Edit').click();					
+                });	
+				actions.wait(1000);
+				actions.waitForElementToShow('[sbisname="applyButton"]', 2000);
+				actions.waitForElementToShow('.ws-window-title.controls-EditDialog__title', 2000);
+                actions.executeJS(function (window) {
+                    window.$('.controls-image__image-bar').addClass('ws-hidden');					
+                    window.$('.ws-browser-ajax-loader').addClass('ws-hidden');					
 					window.$('.jcrop-hline').removeClass('jcrop-hline');
 					window.$('.jcrop-vline').removeClass('jcrop-vline');
-                    window.$('.ws-browser-ajax-loader').addClass('ws-hidden');					
-                });				
-				actions.wait(1000);
+                });			
+				actions.waitForElementToHide('.controls-image__image-bar', 2000);	
+				actions.waitForElementToHide('.controls-image__image-bar .icon-Edit', 1000);
 			})
     });
 });
