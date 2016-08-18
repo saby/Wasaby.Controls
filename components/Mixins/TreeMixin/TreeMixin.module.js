@@ -44,10 +44,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          records = [],
          projectionFilter;
       if (cfg.expand) {
+         cfg._previousGroupBy = undefined;
          projection.setEventRaising(false);
          expandAllItems(projection);
          projection.setEventRaising(true);
          projection.each(function(item) {
+            if (cfg.groupBy && cfg.easyGroup) {
+               cfg._groupItemProcessing(records, item, cfg);
+            }
             records.push(item);
          });
       }
@@ -63,7 +67,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          projectionFilter = resetFilterAndStopEventRaising.call(this, projection, false);
          applyExpandToItemsProjection.call(this, projection, cfg);
          restoreFilterAndRunEventRaising.call(this, projection, projectionFilter, false);
+         cfg._previousGroupBy = undefined;
          projection.each(function(item) {
+            if (cfg.groupBy && cfg.easyGroup) {
+               cfg._groupItemProcessing(items, item, cfg);
+            }
             items.push(item);
          });
          return items;
