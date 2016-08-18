@@ -214,10 +214,16 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {Object} filter Фильтр который будет помещёт в диалог перемещения.
           */
          /**
-          * @event onDelete При удаление записей.
+          * @event onEndDelete После удаления записей.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Array} idArray Ключи удаляемых записей.
           * @param {*} result Результат удаления.
+          */
+         /**
+          * @event onBeginDelete Перед удалением записей.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Array} idArray Ключи удаляемых записей.
+          * @returns {*|Boolean} result Если result равен false то отменяется штатная логика удаления.
           */
          $protected: {
             _floatCheckBox: null,
@@ -647,7 +653,7 @@ define('js!SBIS3.CONTROLS.ListView',
          $constructor: function () {
             var dispatcher = $ws.single.CommandDispatcher;
 
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onDelete');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete');
             this._container.on('swipe tap mousemove mouseleave', this._eventProxyHandler.bind(this));
 
             this.initEditInPlace();
@@ -2875,22 +2881,24 @@ define('js!SBIS3.CONTROLS.ListView',
             return $ws.helpers.question(message).addCallback(function(res) {
                if (res) {
                   self._toggleIndicator(true);
-                  return self._deleteRecords(idArray).addCallback(function () {
-                     self.removeItemsSelection(idArray);
-                     //Если записи удалялись из DataSource, то перезагрузим реест, если из items, то реестр уже в актальном состоянии
-                     if (self.getDataSource()) {
-                        if ($ws.helpers.instanceOfModule(self, 'SBIS3.CONTROLS.TreeCompositeView') && self.getViewMode() === 'table') {
-                           self.partialyReload(idArray);
-                        } else {
-                           self.reload();
+                  if (self._notify('onBeginDelete', idArray) !== false) {
+                     return self._deleteRecords(idArray).addCallback(function () {
+                        self.removeItemsSelection(idArray);
+                        //Если записи удалялись из DataSource, то перезагрузим реест, если из items, то реестр уже в актальном состоянии
+                        if (self.getDataSource()) {
+                           if ($ws.helpers.instanceOfModule(self, 'SBIS3.CONTROLS.TreeCompositeView') && self.getViewMode() === 'table') {
+                              self.partialyReload(idArray);
+                           } else {
+                              self.reload();
+                           }
                         }
-                     }
-                  }).addErrback(function(result) {
-                     $ws.helpers.alert(result)
-                  }).addBoth(function(result) {
-                     self._toggleIndicator(false);
-                     self._notify('onDelete', idArray, result);
-                  });
+                     }).addErrback(function (result) {
+                        $ws.helpers.alert(result)
+                     }).addBoth(function (result) {
+                        self._toggleIndicator(false);
+                        self._notify('onEndDelete', idArray, result);
+                     });
+                  }
                }
             });
          },
