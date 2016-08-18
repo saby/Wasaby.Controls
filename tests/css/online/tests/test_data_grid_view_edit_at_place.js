@@ -104,6 +104,9 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 			.capture('open_editor', function (actions) {
 				actions.click(this.item3);
 				actions.waitForElementToShow('[sbisname="TextBoxAddInPlace1"] input', 2000);
+				actions.click(this.editor_input);
+				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
+				actions.sendKeys(this.editor_input, gemini.DELETE);
 				actions.sendKeys(this.editor_input, 'Тест');
 				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
             })			
@@ -429,12 +432,14 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
 				this.cancell = find('[title="Отмена"]');
 				this.save = find('[title="Сохранить"]');
-				this.editor_input = find('[sbisname="Содержимоеbind"] input')
+				this.editor_input = find('[sbisname="Содержимое_bind"] input')
             })
 
             .capture('opened_editor', function (actions) {
                 actions.click(this.item5);
 				actions.wait(2000);
+				actions.click(this.editor_input);
+				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
             })
     });
 	
@@ -508,6 +513,8 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
                     window.$('.controls-DataGridView__tbody tr:first').click();
                 });
 				actions.wait(500);
+				actions.click('[sbisname="Содержимоеbind"] input');
+				actions.sendKeys('[sbisname="Содержимоеbind"] input', gemini.SHIFT+gemini.HOME);
             })
 			
 			.after(function (actions, find) {
@@ -536,6 +543,8 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
             .capture('opened_editor', function (actions) {
                 actions.click(this.item4);
 				actions.wait(500);
+				actions.click('[sbisname="Содержимоеbind"] .js-controls-TextBox__field');
+				actions.sendKeys('[sbisname="Содержимоеbind"] .js-controls-TextBox__field', gemini.SHIFT+gemini.HOME);
             })
     });
 
