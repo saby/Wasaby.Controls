@@ -1252,6 +1252,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options.infiniteScroll && this.getItems().getCount() < 1000){
                this.reload(this.getFilter(), this.getSorting(), 0, 1000)
                   .addCallback(function(dataSet) {
+                     //Ввостановим значение _limit, т.к. после вызова reload _limit стал равен 1000,
+                     //и следующие страницы будут грузиться тоже по 1000 записей
+                     this._limit = this._options.pageSize;
                      //Очистим selectedItems чтобы при заполнении новыми элементами, не делать проверку на наличие элементов в коллекции
                      if (selectedItems && selectedItems.getCount()) {
                         selectedItems.clear();
