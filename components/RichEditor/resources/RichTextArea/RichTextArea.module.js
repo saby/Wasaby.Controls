@@ -1180,11 +1180,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             });
          },
 
-         _blockFocusEvents: function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-         },
-
          _replaceWhitespaces: function(text) {
             var
                out = '',

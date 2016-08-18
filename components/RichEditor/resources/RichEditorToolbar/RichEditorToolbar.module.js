@@ -253,8 +253,13 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
          },
 
          _blockFocusEvents: function(event) {
+            var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
             event.preventDefault();
             event.stopPropagation();
+            //Если случился mousedown то нужно нотифицировать о клике, перебив дефолтное событие перехода фокуса
+            if(event.type === 'mousedown') {
+               eventsChannel.notify('onDocumentClick', event);
+            }
          },
 
          _prepareItems: function (userItems) {
