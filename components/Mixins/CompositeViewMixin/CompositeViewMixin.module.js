@@ -96,9 +96,10 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
        * @see getViewMode
        */
       setViewMode: function(mode) {
-         this._getItemsContainer().unbind('mousedown', this._initDrag);
+         var dragndrop = this.getItemsDragNDrop();
+         this.setItemsDragNDrop(false);
          this._options.viewMode = mode;
-         this._getItemsContainer().bind('mousedown', this._initDrag);
+         this.setItemsDragNDrop(dragndrop);
          this._options.openedPath = {};
          this._drawViewMode(mode);
       },
