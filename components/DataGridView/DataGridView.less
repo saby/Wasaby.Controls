@@ -1,3 +1,13 @@
+.column-ellipsis(){
+   .controls-DataGridView__columnValue {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+   }
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
 .controls-DataGridView {
    .controls-ListView__item {
       &:extend(.controls-ListView .controls-ListView__item all);
@@ -210,14 +220,7 @@
          line-height: @data-grid-cell-line-height;
 
         &.controls-DataGridView-cell-overflow-ellipsis{
-           .controls-DataGridView__columnValue {
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-           }
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+           .column-ellipsis();
         }
 
         &.controls-DataGridView-cell-verticalAlignTop{
@@ -234,14 +237,7 @@
 
    &.controls-DataGridView__overflow-ellipsis{
       .controls-DataGridView__tr{
-         .controls-DataGridView__columnValue {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-         }
-         overflow: hidden;
-         text-overflow: ellipsis;
-         white-space: nowrap;
+         .column-ellipsis();
       }
    }
 
