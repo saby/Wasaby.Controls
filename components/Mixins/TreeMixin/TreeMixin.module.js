@@ -649,6 +649,21 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             return error;
          });
       },
+      //В режиме поиска в дереве, при выборе всех записей, выбираем только листья, т.к. папки в этом режиме не видны.
+      setSelectedItemsAll: function() {
+         var
+             keys = [],
+             items = this.getItems(),
+             hierField = this.getHierField();
+         if (items && this._isSearchMode && this._isSearchMode()) {
+            items.each(function(rec){
+               if (rec.get(hierField + '@') !== true) {
+                  keys.push(rec.getId())
+               }
+            });
+            this.setSelectedKeys(keys);
+         }
+      },
 
       before: {
          reload : function() {
