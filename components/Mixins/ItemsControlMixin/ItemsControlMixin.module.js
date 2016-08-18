@@ -750,9 +750,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             }
             this._toggleEmptyData(!(data.records && data.records.length) && this._options.emptyHTML);
-            this._reviveItems();
-            this._container.addClass('controls-ListView__dataLoaded');
+
          }
+         this._reviveItems();
+         this._container.addClass('controls-ListView__dataLoaded');
       },
 
       _redrawItem: function(item) {
