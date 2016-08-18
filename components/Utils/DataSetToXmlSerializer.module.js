@@ -102,7 +102,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             });
 
          }
-         else if (object && (typeof object.getRaw === 'function') && object.getRaw()){
+         else if (object && (typeof object.getRawData === 'function') && object.getRawData()){
             var key = object.getId();
             if(key === null){
                key = 'null';
@@ -127,8 +127,14 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
          }
          recordElement.appendChild(fieldElement = document.createElement('Field'));
          fieldElement.setAttribute('Name', column.field);
-         var fieldValue = record.get(column.field) === null ? "" : record.get(column.field);
-         column.type = record.getRaw ?  record.getType(column.field) : column.type || 'Text';
+         var fieldValue = record.get(column.field) === null ? "" : record.get(column.field),
+            format;
+         if ($ws.helpers.instanceOfMixin(record, 'WS.Data/Entity/FormattableMixin')) {
+            var recordFormat = record.getFormat(),
+               index = recordFormat.getFieldIndex(column.field);
+            format = index > -1 ? recordFormat.at(index) : undefined;
+         }
+         column.type = format ? format.getType() : column.type || 'Text';
          var typeName =  typeof(column.type) == 'object' ? column.type.n : column.type;
          if(!this._complexFields[typeName] && !column.s && !this._complexFields[column.s]){
             tagName = this._colNameToTag[typeName] || typeName;
