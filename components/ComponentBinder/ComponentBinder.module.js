@@ -655,8 +655,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
          paging.subscribe('onSelectedItemChange', function(e, pageNumber){
             var scrollToPage = function(page){
-               view._scrollWatcher.scrollTo(page.offset);
-            };
+               // Если первая страница - проскролим к самому верху, не считая оффсет
+               var offset = page.offset ? this._offsetTop : 0;
+               view._scrollWatcher.scrollTo(page.offset + offset);
+            }.bind(this);
             if (pageNumber != this._currentScrollPage && this._scrollPages.length){
                var view = this._options.view,
                   page = this._scrollPages[pageNumber - 1];
@@ -709,7 +711,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          var view = this._options.view;
          for (var i = 0; i < this._scrollPages.length; i++){
             var pageStart = this._scrollPages[i];
-            if (pageStart.element.offset().top + pageStart.element.height() >= this._offsetTop){
+            if (pageStart.element.offset().top + pageStart.element.outerHeight(true) >= 0){
                return i;
             }
          }
@@ -757,9 +759,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          //Считаем оффсеты страниц начиная с последней (если ее нет - сначала)
          listItems.slice(lastPageStart).each(function(){
             var $this = $(this);
-            pageHeight += $this.height();
+            pageHeight += $this.outerHeight(true);
             // Если набралось записей на выстору viewport'a добавим еще страницу
-            if (pageHeight  > viewportHeight - self._offsetTop) {
+            var offsetTop = self._scrollPages.length == 1 ? self._offsetTop : 0;
+            if (pageHeight  > viewportHeight - offsetTop) {
                self._pageOffset += pageHeight;
                self._scrollPages.push({
                   element: $this,
