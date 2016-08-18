@@ -898,9 +898,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
                                  return false;
                               }))
                            .append(okButton);
-                        if ($ws._const.browser.isMobileIOS) {
-                           fre.setActive(false);
-                        }
                         new Button({
                            caption: 'ОК',
                            defaultButton: true,
@@ -936,6 +933,12 @@ define('js!SBIS3.CONTROLS.RichEditor',
                            },
                            element: okButton
                         });
+                        if ($ws._const.browser.isMobileIOS) {
+                           //финт ушами, тк фокус с редактора убрать никак нельзя
+                           //тк кнопки на которую нажали у нас в обработчике тоже нет
+                           //ставим фокус на любой блок внутри нового диалогового окна, например на контейнер кнопки
+                           okButton.focus();
+                        }
                      },
                      onAfterClose: function() {
                         if (typeof onAfterCloseHandler === 'function') {
