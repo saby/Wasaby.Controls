@@ -47,11 +47,48 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return Utils.getItemPropertyValue(itemContents, field);
       }
    },
-   getRecordsForRedraw = function(projection) {
+   canApplyGrouping = function(projItem, cfg) {      var
+         itemParent = projItem.getParent && projItem.getParent();
+      return !Object.isEmpty(cfg.groupBy) && (!itemParent || itemParent.isRoot());
+   },
+
+   groupItemProcessing = function(records, item, cfg) {
+      if (cfg._canApplyGrouping(item, cfg)) {
+         var groupBy = cfg.groupBy;
+         var resultGroup = groupBy.method.apply(this, [item.getContents(), undefined, undefined, item, cfg]);
+         var drawGroup = typeof resultGroup === 'boolean' ? resultGroup : (resultGroup instanceof Object && resultGroup.hasOwnProperty('drawGroup') ? !!resultGroup.drawGroup : false);
+         var drawItem = resultGroup instanceof Object && resultGroup.hasOwnProperty('drawItem') ? !!resultGroup.drawItem : true;
+
+         if (drawGroup){
+            var
+               tplOptions = {
+                  columns : $ws.core.clone(cfg.columns || []),
+                  multiselect : cfg.multiselect,
+                  hierField: cfg.hierField + '@'
+               },
+               itemInstance, groupTemplateFnc;
+            tplOptions.item = item.getContents();
+            tplOptions.colspan = tplOptions.columns.length + cfg.multiselect;
+
+            groupTemplateFnc = TemplateUtil.prepareTemplate(groupBy.template);
+
+            records.push({
+               tpl: groupTemplateFnc,
+               data: tplOptions
+            })
+         }
+      }
+   },
+
+   getRecordsForRedraw = function(projection, cfg) {
       var
          records = [];
       if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
+         cfg._previousGroupBy = undefined;
          projection.each(function (item) {
+            if (cfg.groupBy && cfg.easyGroup) {
+               cfg._groupItemProcessing(records, item, cfg);
+            }
             records.push(item);
          });
       }
@@ -200,6 +237,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _dotItemTpl: null,
          _propertyValueGetter: getPropertyValue,
          _options: {
+
             _canServerRender: false,
             _serverRender: false,
             _defaultItemTemplate: '',
@@ -209,6 +247,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _buildTplArgs : buildTplArgs,
             _getRecordsForRedrawSt: getRecordsForRedraw,
             _getRecordsForRedraw: getRecordsForRedraw,
+            /*TODO ременные переменные для группировки*/
+            _groupItemProcessing: groupItemProcessing,
+            _canApplyGrouping: canApplyGrouping,
+            _previousGroupBy: undefined,
             /**
              * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
              * @remark
@@ -492,7 +534,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @see setItemsSortMethod
              * @see WS.Data/Display/Collection#setSort
              */
-            itemsSortMethod: undefined
+            itemsSortMethod: undefined,
+            easyGroup: false
          },
          _loader: null
 
@@ -692,7 +735,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
             ladder && ladder.setIgnoreEnabled(false);
             //TODO это может вызвать тормоза
-            this._destroyInnerComponents($itemsContainer);
+            var comps = this._destroyInnerComponents($itemsContainer, this._options.easyGroup);
             if (markup.length) {
                if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
                   $itemsContainer.append(markup);
@@ -700,11 +743,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   itemsContainer.innerHTML = markup;
                }
             }
-            this._toggleEmptyData(!(data.records && data.records.length) && this._options.emptyHTML);
+            for (i = 0; i < comps.length; i++) {
+               if (comps[i]) {
+                  comps[i].destroy();
+               }
+               this._toggleEmptyData(!(data.records && data.records.length) && this._options.emptyHTML);
+            }
 
+            this._reviveItems();
+            this._container.addClass('controls-ListView__dataLoaded');
          }
-         this._reviveItems();
-         this._container.addClass('controls-ListView__dataLoaded');
       },
 
       _redrawItem: function(item) {
@@ -953,28 +1001,41 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
-      _destroyInnerComponents: function(container) {
-         this._destroyControls(container);
+      /*TODO easy параметр для временной поддержки группировки в быстрой отрисовке*/
+
+      _destroyInnerComponents: function(container, easy) {
+         var compsArray = this._destroyControls(container, easy);
          if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
             container.empty();
          } else {
-            container.get(0).innerHTML = '';
+            if (!easy) {
+               container.get(0).innerHTML = '';
+            }
          }
          if (container.get(0) === this._getItemsContainer().get(0)) {
             this._itemsInstances = {};
          }
+         return compsArray;
       },
 
-      _destroyControls: function(container){
+      /*TODO easy параметр для временной поддержки группировки в быстрой отрисовке*/
+      _destroyControls: function(container, easy){
+         var compsArray = [];
          $('[data-component]', container).each(function (i, item) {
             var inst = item.wsControl;
             if (inst) {
-               inst.destroy();
+               if (!easy) {
+                  inst.destroy();
+               }
+               else {
+                  compsArray.push(inst);
+               }
             }
          });
+         return compsArray;
       },
 
-      //TODO проверка для режима совместимости со старой отрисовкой
+      /*TODO easy параметр для временной поддержки группировки в быстрой отрисовке*/
       _isSlowDrawing: function() {
          return !!this._options.itemTemplate || !!this._options.userItemAttributes || !Object.isEmpty(this._options.groupBy);
       },
@@ -1492,7 +1553,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       redraw: function() {
          this._itemData = null;
-         if (this._isSlowDrawing()) {
+         if (this._isSlowDrawing(this._options.easyGroup)) {
             this._oldRedraw();
          }
          else {
@@ -1562,7 +1623,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                drawGroup,
                drawItem = true;
          if (this._canApplyGrouping(item)) {
-            resultGroup = groupBy.method.apply(this, [item.getContents(), at, last, item]);
+            resultGroup = groupBy.method.apply(this, [item.getContents(), at, last, item, this._options]);
             drawGroup = typeof resultGroup === 'boolean' ? resultGroup : (resultGroup instanceof Object && resultGroup.hasOwnProperty('drawGroup') ? !!resultGroup.drawGroup : false);
             drawItem = resultGroup instanceof Object && resultGroup.hasOwnProperty('drawItem') ? !!resultGroup.drawItem : true;
             if (drawGroup){
@@ -1609,7 +1670,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          // запросим данные из источника
          if (!Object.isEmpty(this._options.groupBy)){
             if (!this._options.groupBy.hasOwnProperty('method')){
-               this._options.groupBy.method = this._oldGroupByDefaultMethod;
+               this._options.groupBy.method = _oldGroupByDefaultMethod;
             }
             if (!this._options.groupBy.hasOwnProperty('template')){
                this._options.groupBy.template = this._getGroupTpl();
