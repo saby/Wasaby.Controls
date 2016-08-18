@@ -1765,13 +1765,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var upperRow = $(rows[i - 1]).length ? $('.controls-ladder', rows[i - 1]) : undefined,
                 lowerRow = $(rows[i]).length ? $('.controls-ladder', rows[i]) : undefined,
                needHide;
-            if (lowerRow && $(rows[i - 1]).attr('data-parent-hash') === $(rows[i]).attr('data-parent-hash')) {
+            if (lowerRow && this._isCommonParent($(rows[i-1]), $(rows[i]))) {
                for (var j = 0; j < lowerRow.length; j++) {
                   needHide = upperRow ? (upperRow.eq(j).html() == lowerRow.eq(j).html()) : false;
                   lowerRow.eq(j).toggleClass('ws-invisible', needHide);
                }
             }
          }
+      },
+      _isCommonParent: function(upperRow, lowerRow){
+         var upperRowParent = upperRow.attr('data-parent-hash'),
+             lowerRowParent = lowerRow.attr('data-parent-hash');
+         return upperRow.length ? (upperRowParent === lowerRowParent) : true;
       },
       _isNeedToRedraw: function(){
          // Проверяем _needToRedraw для поддержки старой медленной отрисовки
