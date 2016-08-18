@@ -51,7 +51,9 @@
       }
    }
    .controls-MenuItem {
-      height: @menu-item-height;
+      min-height: @menu-item-height;
+      max-height: 2 * @menu-item-height;
+      height: auto;
       padding: @menu-item-default-padding;
    }
 }
