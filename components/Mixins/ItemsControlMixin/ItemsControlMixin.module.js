@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'js!WS.Data/Utils',
    'js!WS.Data/Entity/Model',
    'Core/ParserUtilities',
-   'js!SBIS3.CONTROLS.Utils.Sanitize'
+   'Core/Sanitize'
 ], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize) {
 
    function propertyUpdateWrapper(func) {

@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
       'js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown',
       'js!SBIS3.CORE.PluginManager',
       'js!SBIS3.CONTROLS.Utils.ImageUtil',
-      'js!SBIS3.CONTROLS.Utils.Sanitize',
+      'Core/Sanitize',
       'css!SBIS3.CORE.RichContentStyles',
       'i18n!SBIS3.CONTROLS.RichEditor'
    ], function(TextBoxBase, dotTplFn, Button, RichUtil, FileLoader, defaultConfig, ToggleButton, MenuButton, Dropdown,  PluginManager, ImageUtil, Sanitize) {
