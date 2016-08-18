@@ -143,12 +143,28 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
          }
       },
 
+      _projSelectedChange: function(projItem) {
+
+      },
+
       after : {
          init: function () {
             if(this._options.selectedItems) {
                this._options.selectedKeys = this._convertToKeys(this._options.selectedItems);
             }
             this._drawSelectedItems(this._options.selectedKeys);
+         },
+         _setItemsEventHandlers: function() {
+            if (!this._onCollectionItemChangeSelected) {
+               this._onCollectionItemChangeSelected = onCollectionItemChangeSelected.bind(this);
+            }
+            this.subscribeTo(this._getItemsProjection(), 'onCollectionItemChange', this._onCollectionItemChangeSelected);
+         },
+         _unsetItemsEventHandlers : function() {
+            if (this._getItemsProjection() && this._onCollectionItemChangeSelected) {
+               this.unsubscribeFrom(this._getItemsProjection(), 'onCollectionItemChange', this._onCollectionItemChangeSelected);
+            }
+
          }
       },
 
@@ -857,6 +873,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
 
    var EMPTY_SELECTION = [null];
 
+   var
+      onCollectionItemChangeSelected = function(eventObject, item, index, property) {
+
+      };
    return MultiSelectable;
 
 });

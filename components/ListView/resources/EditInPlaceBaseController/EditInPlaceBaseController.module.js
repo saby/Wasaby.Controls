@@ -194,14 +194,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _getCurrentTarget: function() {
                return this._eip.getTarget();
             },
-            showEip: function(target, model, options) {
+            showEip: function(target, model, options, withoutActivateFirstControl) {
                if (options && options.isEdit) {
-                  return this.edit(target, model, options)
+                  return this.edit(target, model, options, withoutActivateFirstControl);
                } else {
                   return this.add(options);
                }
             },
-            edit: function (target, record) {
+            edit: function (target, record, withoutActivateFirstControl) {
                var self = this;
                return this.endEdit(true).addCallback(function() {
                   return self._prepareEdit(record).addCallback(function(preparedRecord) {
@@ -209,7 +209,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         var
                             parentProjItem,
                             itemProjItem = self._options.itemsProjection.getItemBySourceItem(preparedRecord);
-                        self._eip.edit(target, preparedRecord, itemProjItem);
+                        self._eip.edit(target, preparedRecord, itemProjItem, withoutActivateFirstControl);
                         self._notify('onAfterBeginEdit', preparedRecord);
                         //TODO: необходимо разбивать контроллер редактирования по месту, для плоских и иерархических представлений
                         if (self._options.hierField) {
@@ -392,10 +392,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         }
                         target = self._createAddTarget(options).attr('data-id', '' + model.getId());
                         self._eip.edit(target, model);
-                        // Todo разобраться в целесообразности этого пересчёта вообще, почему на десктопе всё работает?
-                        // При начале отслеживания высоты строки, один раз нужно пересчитать высоту синхронно, это нужно для добавления по месту,
-                        //т.к. при добавлении создаётся новая tr у которой изначально нет высоты и опции записи не могут верно спозиционироваться.
-                        self._eip.recalculateHeight();
                         self._notify('onAfterBeginEdit', model);
                         self._addPendingOperation();
                         return model;

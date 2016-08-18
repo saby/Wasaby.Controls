@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'html!SBIS3.CONTROLS.DataGridView/resources/ResultsTpl',
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.DragAndDropMixin',
+      'js!SBIS3.CONTROLS.ImitateEvents',
       'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
@@ -16,7 +17,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'browser!html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate',
       'browser!html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate'
    ],
-   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate) {
+   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, LadderDecorator, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate) {
    'use strict';
 
       var ANIMATION_DURATION = 500, //Продолжительность анимации скролла заголовков
@@ -610,7 +611,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._redrawHead();
          DataGridView.superclass._redrawItems.apply(this, arguments);
       },
-      _onItemClickHandler: function(event, id, record, target) {
+      _onItemClickHandler: function(event, id, record, target, originalEvent) {
          var
             targetColumn,
             targetColumnIndex;
@@ -622,6 +623,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
          event.setResult(this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true }, targetColumnIndex)
             .addCallback(function(result) {
+               if (originalEvent.type === 'click') {
+                  ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
+               }
                return !result;
             })
             .addErrback(function() {
@@ -1034,7 +1038,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _toggleEmptyData: function(show) {
          DataGridView.superclass._toggleEmptyData.apply(this, arguments);
-         if(this._emptyData && this._options.allowToggleHead) {
+         if (this._options.emptyHTML && this._options.allowToggleHead) {
             this._thead.toggleClass('ws-hidden', !!show);
          }
       },

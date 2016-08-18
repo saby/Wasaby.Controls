@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          }
       },
 
-      _elemClickHandlerInternal: function(data, id, target) {
+      _elemClickHandlerInternal: function(data, id, target, e) {
          if (this._options.viewMode == 'table') {
             TreeCompositeView.superclass._elemClickHandlerInternal.apply(this, arguments);
          }
