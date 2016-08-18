@@ -934,6 +934,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          this._options.root = root;
       },
       /**
+       * Возвращает корень выборки
+       */
+      getRoot: function(){
+         return this._options.root;
+      },
+      /**
        * Возвращает идентификатор узла, в который было установлено проваливание.
        * @returns {String|Number}
        * @see setCurrentRoot
