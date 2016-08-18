@@ -2757,7 +2757,7 @@ define('js!SBIS3.CONTROLS.ListView',
                target;
             if (model) {
                var domElement = this._findItemByElement($(e.target)),
-                  position = this._getDirectionOrderChange(e, domElement);
+                  position = this._getDirectionOrderChange(e, domElement) || DRAG_META_INSERT.on;
                if (position !== DRAG_META_INSERT.on && dragObject.getOwner() === this) {
                   var neighborItem = this[position === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](model.getId()),
                      sourceIds = [];
