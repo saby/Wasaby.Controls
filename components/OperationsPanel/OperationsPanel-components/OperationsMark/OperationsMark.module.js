@@ -58,6 +58,10 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
                { name: 'removeSelection', title: rk('Снять') },
                { name: 'invertSelection', title: rk('Инвертировать') }
             ],
+            /**
+             * @cfg {Boolean} Использовать функционал выбора всех записей
+             */
+            useSelectAll: true,
             keyField: 'name'
          },
          _markCheckBox: undefined
@@ -156,13 +160,17 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
        * Выбрать все элементы.
        */
       selectAll: function() {
-         this._options.linkedView.setSelectedAll()
+         if (this._options.useSelectAll) {
+            this._options.linkedView.setSelectedAll();
+         } else {
+            this._options.linkedView.setSelectedItemsAll();
+         }
       },
       /**
        * Выбрать все видимые элементы.
        */
       selectCurrentPage: function() {
-         this._options.linkedView.setSelectedItemsAll()
+         this._options.linkedView.setSelectedItemsAll();
       },
       /**
        * Снять выделение со всех элементов.
