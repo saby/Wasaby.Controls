@@ -30,7 +30,9 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton', ['js!SBIS3.CONTROLS.
             this._header = $('<div>').css('display','none');
             this._container.addClass('controls-MenuButton__withoutHeader');
          }
-         this.getContainer().on('mouseenter',this._mouseEnterHandler.bind(this));
+         if (!$ws._const.browser.isMobilePlatform) {
+            this.getContainer().on('mouseenter', this._mouseEnterHandler.bind(this));
+         }
       },
       _mouseEnterHandler: function(){
          if (this.getItems().getCount() > 0) {
@@ -63,11 +65,13 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton', ['js!SBIS3.CONTROLS.
 
       _setHeaderSizes: function() {
          RichEditorMenuButton.superclass._setHeaderSizes.apply(this, arguments);
-         this._header.addClass('controls-RichEditorToolbar__menuButtonHeader');
+         if (!$ws._const.browser.isMobilePlatform) {
+            this._header.addClass('controls-RichEditor__menuButtonHeader');
+         }
       },
 
       _clickHandler: function(){
-         return false;
+         return $ws._const.browser.isMobilePlatform ? RichEditorMenuButton.superclass._clickHandler.apply(this, arguments) : false;
       },
       _dotTplFn: dotTplFn
    });
