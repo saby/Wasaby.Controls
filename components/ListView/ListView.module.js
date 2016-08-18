@@ -30,7 +30,6 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!WS.Data/Collection/List',
       'i18n!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
-      'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
       'browser!tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
       'browser!tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
       'browser!tmpl!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
@@ -46,7 +45,7 @@ define('js!SBIS3.CONTROLS.ListView',
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
-             Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
+             Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder, Di, ArraySimpleValuesUtil) {
 
       'use strict';
@@ -2757,7 +2756,7 @@ define('js!SBIS3.CONTROLS.ListView',
                target;
             if (model) {
                var domElement = this._findItemByElement($(e.target)),
-                  position = this._getDirectionOrderChange(e, domElement);
+                  position = this._getDirectionOrderChange(e, domElement) || DRAG_META_INSERT.on;
                if (position !== DRAG_META_INSERT.on && dragObject.getOwner() === this) {
                   var neighborItem = this[position === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](model.getId()),
                      sourceIds = [];
