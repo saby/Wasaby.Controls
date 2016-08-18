@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return tplOptions;
          },
          getRecordsForRedrawLV = function (projection, cfg){
-            var records = cfg._getRecordsForRedrawSt.call(this, projection);
+            var records = cfg._getRecordsForRedrawSt.apply(this, arguments);
             return records;
          };
       var
@@ -1841,6 +1841,19 @@ define('js!SBIS3.CONTROLS.ListView',
          _isSearchMode: function() {
             return this._searchParamName && !Object.isEmpty(this._options.groupBy) && this._options.groupBy.field === this._searchParamName;
          },
+
+         //TODO проверка для режима совместимости со старой отрисовкой
+         /*TODO easy параметр для временной поддержки группировки в быстрой отрисовке*/
+         _isSlowDrawing: function(easy) {
+            var result = !!this._options.itemTemplate || !!this._options.userItemAttributes || this._isSearchMode();
+            if (easy) {
+               return result;
+            }
+            else {
+               return result || !Object.isEmpty(this._options.groupBy);
+            }
+         },
+
          _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems) {
             if (action === IBindCollection.ACTION_MOVE && this._isSearchMode()) {
                this.redraw();
@@ -2448,12 +2461,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          //------------------------GroupBy---------------------
-         _oldGroupByDefaultMethod: function (record) {
-            var curField = record.get(this._options.groupBy.field),
-               result = curField !== this._previousGroupBy;
-            this._previousGroupBy = curField;
-            return result;
-         },
          _getGroupTpl: function () {
             return this._options.groupBy.template || groupByTpl;
          },
