@@ -661,7 +661,8 @@ define('js!SBIS3.CONTROLS.ListView',
             //но после загрузки могут долетать данные (картинки в docviewer например), которые будут скроллить вверх.
             _scrollOnBottomTimer: null, //TODO: см. строчкой выше
             _componentBinder: null,
-            _touchSupport: false
+            _touchSupport: false,
+            _dragInitHandler: undefined //метод который инициализирует dragNdrop
          },
 
          $constructor: function () {
@@ -2655,7 +2656,16 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
-            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', (function(e){
+            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._getDragInitHandler());
+         },
+
+         /**
+          * возвращает метод который инициализирует dragndrop
+          * @returns {function}
+          * @private
+          */
+         _getDragInitHandler: function(){
+            return this._dragInitHandler ? this._dragInitHandler : this._dragInitHandler  = (function(e){
                if (this._canDragStart(e)) {
                   this._initDrag.call(this, e);
                   //TODO: Сейчас появилась проблема, что если к компьютеру подключен touch-телевизор он не вызывает
@@ -2667,7 +2677,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   //ошибке. При возникновении ошибок на мобильных устройствах нужно будет добавить проверку !$ws._const.browser.isMobilePlatform.
                   e.preventDefault();
                }
-            }).bind(this));
+            }).bind(this)
          },
          /**
           * Получить текущую конфигурацию перемещения элементов с помощью DragNDrop.
