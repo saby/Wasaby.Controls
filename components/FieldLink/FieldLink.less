@@ -19,7 +19,6 @@
    position: @controls-FieldLink-linkItem-position;
    padding: @controls-FieldLink-linkItem-padding;
    line-height: @controls-FieldLink-linkItem-line-height;
-   .text-overflow();
 
    .controls-FieldLink__linkItem-caption {
       position: relative;
@@ -30,7 +29,9 @@
       position: absolute;
       right: @controls-FieldLink-linkItem-cross-right;
       top: @controls-FieldLink-linkItem-cross-top;
+      padding: @controls-FieldLink-linkItem-cross-padding;
       cursor: @link-cursor;
+      z-index: 1;
    }
    &:after {
       position: absolute;
