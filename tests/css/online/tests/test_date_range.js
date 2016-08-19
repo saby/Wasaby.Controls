@@ -27,7 +27,7 @@ gemini.suite('SBIS3.CONTROLS.DateRange Online', function () {
 				this.calendar = find('[sbisname="BackToYearButton"]');
 				this.apply = find('[sbisname="ApplyButton"]');
 				this.close = find('[sbisname="CloseButton"]');
-				this.icon = find('[sbisname="IconButton"]');
+				this.icon = find('.controls-DateRangeBigChoose__homeBtn');
             })
 
             .capture('plain', function (actions) {
