@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
                corner: 'tl',
                horizontalAlign: {
                   side: 'left',
-                  offset: -136
+                  offset: -133
                },
                verticalAlign: {
                   side: 'top',
