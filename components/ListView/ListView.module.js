@@ -2022,7 +2022,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                   var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
                   
-                  this._updateScrolOffset(this._options.infiniteScroll);
+                  this._updateScrolOffset(direction);
                   //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                   this.getItems().setMetaData(dataSet.getMetaData());
                   this._hideLoadingIndicator();
@@ -2126,7 +2126,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _moveTopScroll : function(){
             var scrollAmount,
-               scrollingToTop =  this._scrollDirection !== 'down' && this._options.infiniteScroll == 'up';
+               scrollingToTop =  this._scrollDirection == 'top';
             //сюда попадем только когда уже точно есть скролл
             if (this.isInfiniteScroll() && scrollingToTop && (this._needSrollTopCompensation || this._firstScrollTop)){
                scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
