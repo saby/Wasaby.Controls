@@ -1013,7 +1013,20 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          }
          return hierarchy;
       },
-
+      /**
+       * Устанавливает режим отображения содержимого узлов (папок) в иерархии при построении контрола
+       * @param expand true - содержимое узлов раскрыто, false - содержимое узлов скрыто.
+       */
+      setExpand: function(expand) {
+         this._options.expand = !!expand;
+      },
+      /**
+       * Возвращает режим отображения содержимого узлов (папок) в иерархии при построении контрола
+       * @returns {Boolean} true - содержимое узлов раскрыто, false - содержимое узлов скрыто.
+       */
+      getExpand: function() {
+         return this._options.expand;
+      },
       getParentKey: function (DataSet, item) {
          var
             itemParent = this._options._itemsProjection.getItemBySourceItem(item).getParent().getContents();
