@@ -723,7 +723,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
                 });
 			})			
     });
-	/*
+
     gemini.suite('smile_menu', function (test) {
 
         test.setUrl('/IntRichFieldEditor19.html').setCaptureElements('html')
@@ -742,5 +742,5 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.SHIFT+gemini.ARROW_LEFT);
 				actions.mouseMove(this.smile_menu);
 			})
-    });*/
+    });
 });
