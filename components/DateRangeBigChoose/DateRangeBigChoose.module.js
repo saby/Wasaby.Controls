@@ -448,14 +448,16 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
       },
 
       _setYearBarState: function (state) {
-         var container = this.getContainer();
+         var container = this.getContainer(),
+            year = (new Date()).getFullYear(),
+            currentYear = this._getCurrentYear();
          if (this._yearChooserState === state) {
             return;
          }
          if (state === YEAR_CHOOSER_STATE_YEARS) {
             this._yearChooserState = YEAR_CHOOSER_STATE_YEARS;
             this.cancelSelection();
-            this._updateYearsRange(this._getCurrentYear());
+            this._updateYearsRange(year > currentYear && year - currentYear <= 5? year: currentYear);
             container.find('.controls-DateRangeBigChoose__years-year').addClass('ws-hidden');
             container.find('.controls-DateRangeBigChoose__yearsRange').removeClass('ws-hidden');
          } else {
