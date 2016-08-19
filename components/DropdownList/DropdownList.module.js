@@ -164,8 +164,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                showSelectedInList : false,
                allowEmptyMultiSelection: false
             },
-            _text: null,
-            _pickerText: null,
             _pickerListContainer: null,
             _pickerHeadContainer: null,
             _pickerFooterContainer: null,
@@ -392,11 +390,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var pickerContainer = this._getPickerContainer(),
                self = this;
 
-            this._text = this._container.find('.controls-DropdownList__text');
             this._selectedItemContainer = this._container.find('.controls-DropdownList__selectedItem');
             this._setHeadVariables();
 
-            this._pickerText  = pickerContainer.find('.controls-DropdownList__text');
             this._pickerListContainer = pickerContainer.find('.controls-DropdownList__list');
             this._pickerBodyContainer = pickerContainer.find('.controls-DropdownList__body');
             this._pickerHeadContainer = pickerContainer.find('.controls-DropdownList__header');
@@ -487,7 +483,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                      pickerContainer.find('.controls-DropdownList__item__selected').removeClass('controls-DropdownList__item__selected');
                      pickerContainer.find('[data-id="' + id[0] + '"]').addClass('controls-DropdownList__item__selected');
                   }
-                  self.setText(textValue.join(', '));
+                  self._setText(textValue.join(', '));
                   self._redrawHead(isDefaultIdSelected);
                });
             }
@@ -513,10 +509,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
           * @param text
           */
          setText: function(text) {
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.DropdownList', 'Метод setText в скором времени будет удален. Значения должны отрисовываться на наборе данных');
+            this._setText(text);
+         },
+         _setText: function(text){
             if(typeof text === 'string') {
                this._options.text = text;
-               this._text.text(text);
-               this._pickerText.text(text);
                this._notifyOnPropertyChanged('text');
             }
          },
