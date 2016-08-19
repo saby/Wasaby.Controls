@@ -9,13 +9,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'js!WS.Data/Collection/IBind',
    'js!WS.Data/Display/Collection',
    'js!WS.Data/Display/Enum',
+   'js!WS.Data/Display/Flags',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'tmpl!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
    'js!WS.Data/Utils',
    'js!WS.Data/Entity/Model',
    'Core/ParserUtilities',
    'js!SBIS3.CONTROLS.Utils.Sanitize'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, CollectionDisplay, EnumDisplay, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize) {
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, CollectionDisplay, EnumDisplay, FlagsDisplay, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -24,12 +25,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    }
    var createDefaultProjection = function(items, cfg) {
       var proj = Projection.getDefaultProjection(items);
-      /*TODO придрот, т.к. Леха Мальцев не проставляет current*/
-      if ($ws.helpers.instanceOfModule(items, 'js!WS.Data/Types/Flags')) {
-         proj.each(function(item, i){
-            item.setSelected(items.get(item.getContents()));
-         });
-      }
       if (cfg.itemsSortMethod) {
          proj.setSort(cfg.itemsSortMethod);
       }
