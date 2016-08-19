@@ -595,6 +595,23 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             parentFn.call(this, event, action, newItems, newItemsIndex, oldItems);
             this._findAndRedrawChangedBranches(newItems, oldItems);
             this._removeFromLoadedNodesRemoteNodes(oldItems);
+         },
+         //В режиме поиска в дереве, при выборе всех записей, выбираем только листья, т.к. папки в этом режиме не видны.
+         setSelectedItemsAll: function(parentFn) {
+            var
+                keys = [],
+                items = this.getItems(),
+                hierField = this.getHierField();
+            if (items && this._isSearchMode && this._isSearchMode()) {
+               items.each(function(rec){
+                  if (rec.get(hierField + '@') !== true) {
+                     keys.push(rec.getId())
+                  }
+               });
+               this.setSelectedKeys(keys);
+            } else {
+               parentFn.call(this);
+            }
          }
       },
       _getFilterForReload: function(filter, sorting, offset, limit, deepReload) {
@@ -656,21 +673,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             //Здесь при .cancel приходит ошибка вида DeferredCanceledError
             return error;
          });
-      },
-      //В режиме поиска в дереве, при выборе всех записей, выбираем только листья, т.к. папки в этом режиме не видны.
-      setSelectedItemsAll: function() {
-         var
-             keys = [],
-             items = this.getItems(),
-             hierField = this.getHierField();
-         if (items && this._isSearchMode && this._isSearchMode()) {
-            items.each(function(rec){
-               if (rec.get(hierField + '@') !== true) {
-                  keys.push(rec.getId())
-               }
-            });
-            this.setSelectedKeys(keys);
-         }
       },
 
       before: {
