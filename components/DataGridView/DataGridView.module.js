@@ -518,6 +518,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._thead = $(headMarkup).insertBefore(body);
 
          this._redrawColgroup();
+         this.reviveComponents();
          this._bindHead();
          this._notify('onDrawHead');
       },
