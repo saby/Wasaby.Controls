@@ -100,6 +100,29 @@ define('js!SBIS3.CONTROLS.ControlsValidators', ['js!SBIS3.CORE.CoreValidators', 
        *    <li>В случае не прохождения валидации возвращает сообщение "Поле обязательно для заполнения".</li>
        * </ol>
        */
-      inn12: checkInn.bind(undefined, 12)
+      inn12: checkInn.bind(undefined, 12),
+      
+      /**
+       * Проверяет корректность введеного e-mail.
+       * @param {String} value Значение которое валидируется.
+       * @returns {Boolean|String}
+       * <ol>
+       *    <li>В случае прохождения валидации возвращает true.</li>
+       *    <li>В случае не прохождения валидации возвращает сообщение "В поле требуется ввести адрес электронной почты".</li>
+       * </ol>
+       */
+      email: function(value) {
+            var
+               isGoodValue,
+               regExps = [
+                  /^$/,
+                  /^[a-z0-9+_][-a-z0-9+_]*(\.[-a-z0-9+_]+)*@([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)+([a-z]{1,10})$/i,
+                  /^(([a-z0-9+_][-a-z0-9+_]*(\.[-a-z0-9+_]+)*)|([-а-яё0-9+_]+(\.[-а-яё0-9+_]+)*))@([а-яё0-9]([-а-яё0-9]{0,61}[а-яё0-9])?\.)+([а-яё]{1,10})$/i
+               ];
+
+            isGoodValue =  $ws.helpers.find(regExps, function(re) {return re.test(value);});
+
+            return isGoodValue ? true : rk('В поле требуется ввести адрес электронной почты');
+         }
    };
 });
