@@ -38,6 +38,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }
       return proj;
    },
+
+   _oldGroupByDefaultMethod = function (record, at, last, item, CFG) {
+      var curField = record.get(CFG.groupBy.field),
+         result = curField !== CFG._previousGroupBy;
+      CFG._previousGroupBy = curField;
+      return result;
+   },
+
    /*TODO метод нужен потому, что Лехина утилита не умеет работать с перечисляемым где contents имеет тип string*/
    getPropertyValue = function(itemContents, field) {
       if (typeof itemContents == 'string') {
@@ -47,6 +55,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return Utils.getItemPropertyValue(itemContents, field);
       }
    },
+      
    canApplyGrouping = function(projItem, cfg) {      var
          itemParent = projItem.getParent && projItem.getParent();
       return !Object.isEmpty(cfg.groupBy) && (!itemParent || itemParent.isRoot());
