@@ -738,6 +738,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
             //Если элементов в верстке то нечего и считать
             if (!listItems.length){
+               this._options.paging.setVisible(false);
                return;
             }
 
