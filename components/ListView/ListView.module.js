@@ -2021,7 +2021,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._loader = null;
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                   var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
-                  
+
                   this._updateScrolOffset(this._options.infiniteScroll);
                   //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                   this.getItems().setMetaData(dataSet.getMetaData());
@@ -2940,7 +2940,8 @@ define('js!SBIS3.CONTROLS.ListView',
                this._options.selectedItems = Di.resolve('collection.recordset', {
                   ownerShip: false,
                   adapter: items.getAdapter(),
-                  idProperty: items.getIdProperty()
+                  idProperty: items.getIdProperty(),
+                  model: items.getModel()
                });
             } else {
                ListView.superclass.initializeSelectedItems.call(this);
