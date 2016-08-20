@@ -1961,9 +1961,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                prev = this._options._itemsProjection.getPrevious(projItem),
                next = this._options._itemsProjection.getNext(projItem);
             if(prev)
-               meth.call(this, prev.getContents(), undefined, undefined, prev);
-            meth.call(this, item, undefined, undefined, projItem);
-            if (next && !meth.call(this, next.getContents(), undefined, undefined, next)) {
+               meth.call(this, prev.getContents(), undefined, undefined, prev, this._options);
+            meth.call(this, item, undefined, undefined, projItem, this._options);
+            if (next && !meth.call(this, next.getContents(), undefined, undefined, next, this._options)) {
                flagAfter = true;
             }
          }
@@ -1979,7 +1979,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else if (currentItemAt && currentItemAt.length) {
             if (prev)
-               meth && meth.call(this, prev.getContents(), undefined, undefined, prev);
+               meth && meth.call(this, prev.getContents(), undefined, undefined, prev, this._options);
             newItemContainer.insertAfter(currentItemAt);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else if(at === 0) {
