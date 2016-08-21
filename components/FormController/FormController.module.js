@@ -214,7 +214,10 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             //2. если есть ключ (метод создать его вернул)
             //3. ничего не поменяли в рекорде, но закрывают либо поменяли, но нажали нет
             if (self._newRecord && record.getId() && (!self._saving && !record.isChanged() || result === false)){
-               self._destroyModel();
+               self._destroyModel().addCallback(function(){
+                  self._closePanel(result);
+               });
+               event.setResult(false);
             }
             self._saving = false;
             self._resetTitle();
@@ -646,8 +649,9 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        */
       _destroyModel: function(){
          var self = this;
-         this._dataSource.destroy(this._options.record.getId()).addCallback(function(){
-            self._notify('onDestroyModel', self._options.record)
+         return this._dataSource.destroy(this._options.record.getId()).addCallback(function(){
+            self._notify('onDestroyModel', self._options.record);
+            self._newRecord = false;
          });
       },
 
