@@ -93,6 +93,7 @@ gemini.suite('SBIS3.CONTROLS.DateRange Online', function () {
 			
 			.capture('selected_third_year', function (actions) {
                 actions.click(this.third);
+				actions.mouseMove(this.nextyear);
             })
 			
 			.capture('hovered_current_year', function (actions) {
