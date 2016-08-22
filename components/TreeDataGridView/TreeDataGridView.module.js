@@ -26,29 +26,36 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
+    *
     * @class SBIS3.CONTROLS.TreeDataGridView
     * @extends SBIS3.CONTROLS.DataGridView
     * @mixes SBIS3.CONTROLS.TreeMixin
+    *
     * @public
+    *
     * @author Крайнов Дмитрий Олегович
+    *
     * @control
+    *
     * @initial
     * <component data-component='SBIS3.CONTROLS.TreeDataGridView'>
     *    <options name="columns" type="array">
     *       <options>
-    *          <option name="title">Поле 1</option>
+    *          <option name="title">№</option>
+    *          <option name="field">@Идентификатор</option>
     *          <option name="width">100</option>
     *       </options>
     *       <options>
-    *          <option name="title">Поле 2</option>
+    *          <option name="title">Наименование</option>
+    *          <option name="title">Наименование</option>
     *       </options>
     *    </options>
     * </component>
     *
-    * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView
-    * @demo SBIS3.CONTROLS.Demo.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
+    * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView Пример 1. Простой иерархический список.
+    * @demo SBIS3.CONTROLS.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
     * Инициировать добавление можно как по нажатию кнопок в футерах, так и по кнопке Enter из режима редактирования последней записи.
-    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
+    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/">Добавление по месту в иерархическом списке</a>.
     */
 
    var TreeDataGridView = DataGridView.extend([TreeMixin, TreeViewMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
