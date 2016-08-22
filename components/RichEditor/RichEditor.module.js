@@ -35,6 +35,16 @@ define('js!SBIS3.CONTROLS.RichEditor',
                subTitle: {inline: 'span', classes: 'subTitleText'},
                selectedMainText: {inline: 'span', classes: 'selectedMainText'},
                additionalText: {inline: 'span', classes: 'additionalText'}
+            },
+            ipadCoefficient: {
+               top: {
+                  vertical: 0.65,
+                  horizontal:0.39
+               },
+               bottom: {
+                  vertical: 0.7,
+                  horizontal:0.44
+               }
             }
          },
 
@@ -457,6 +467,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             if (active && this._needFocusOnActivated() && this.isEnabled()) {
                this._performByReady(function() {
                   this._tinyEditor.focus();
+                  this._scrollTo(this._inputControl, 'top');
                   RichEditor.superclass.setActive.apply(this, args);
                }.bind(this));
             } else {
@@ -1808,8 +1819,8 @@ define('js!SBIS3.CONTROLS.RichEditor',
          _updateHeight: function() {
             var curHeight;
             if (this.isVisible()) {
-               if ($ws._const.browser.isMobileIOS && this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this.isEnabled() && this._textChanged && (this.getInputContainer()[0] === document.activeElement)) {
-                  this._scrollTo($(this._tinyEditor.selection.getNode()));
+               if (this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this._textChanged && (this._inputControl[0] === document.activeElement)) {
+                  this._scrollTo($(this._tinyEditor.selection.getNode()), 'bottom');
                }
                curHeight = this._container.height();
                if (curHeight !== this._lastHeight) {
@@ -1818,13 +1829,19 @@ define('js!SBIS3.CONTROLS.RichEditor',
                }
             }
          },
-         _scrollTo: function(target){
+         _scrollTo: function(target, side){
             var
-               targetOffset = target[0].getBoundingClientRect(),
-               koef = (window.innerHeight > window.innerWidth) ? 0.65 : 0.39; //Для альбома и портрета коэффициенты разные.
-            if (targetOffset.top > window.innerHeight*koef) {
-               target[0].scrollIntoView({block: 'start', behavior: 'smooth'});
-
+               underKeyboard = function(){
+                  var
+                     targetOffset = target[0].getBoundingClientRect(),
+                     сoef = (window.innerHeight > window.innerWidth) ? constants.ipadCoefficient[side].vertical : constants.ipadCoefficient[side].horizontal; //Для альбома и портрета коэффициенты разные.
+                  return $ws._const.browser.isMobileIOS && this.isEnabled() && targetOffset[side] > window.innerHeight*сoef;
+               };
+            if (underKeyboard() && target.prev()[0] && side === 'bottom') { //пытаемся подсколиться к предыдущему если осуществляется ввод
+                  target.prev()[0].scrollIntoView(true);
+            }
+            if (underKeyboard()) {//если таргет всё еще под клавиатурой то делаем доскрол к нему
+               target[0].scrollIntoView(true);
             }
          },
 
