@@ -70,6 +70,26 @@ define('js!SBIS3.CONTROLS.ControlsValidators', ['js!SBIS3.CORE.CoreValidators', 
       },
 
       /**
+       * Проверяет введённое число на соответствие допустимому диапазону значений.
+       * @param {Number|String} min Нижняя граница диапазона.
+       * @param {Number|String} max Верхняя граница диапазона.
+       * @returns {Boolean|String}
+       * <ol>
+       *    <li>В случае прохождения валидации возвращает true.</li>
+       *    <li>В случае не прохождения валидации возвращает сообщение "Значение должно попадать в диапазон ...".</li>
+       * </ol>
+       */
+      inRange: function (min, max, value) {
+         var obj = {
+            getValue: function() {
+               return value;
+            }
+         };
+
+         return CoreValidators.inRange.call(obj, min, max);
+      },
+
+      /**
        * Проверяет ИНН (допустимая длина ИНН - 10 или 12 символов).
        * @param {String} value Значение валидируемой опции.
        * @returns {Boolean|String}
