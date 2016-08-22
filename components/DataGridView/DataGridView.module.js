@@ -196,6 +196,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
     * @cssModifier controls-DataGridView__markerRight Маркер отображается не слева строки, а справа.
     * @cssModifier controls-DataGridView__hasSeparator Включает линии разделители между строками
+    * @cssModifier controls-DataGridView__overflow-ellipsis Включить обрезание троеточием текста во ВСЕХ колонках таблицы
     * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
     */
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
