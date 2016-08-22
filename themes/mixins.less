@@ -121,6 +121,7 @@
   -moz-transform: @string;
   -ms-transform: @string;
   -o-transform: @string;
+  transform: @string;
 }
 
 .scale(@factor) {
@@ -181,6 +182,12 @@
   background-image: url(@image);
   background-position: @position;
   background-repeat: repeat-y;
+}
+
+.inline-flexbox() {
+  display: inline-flex;
+  display: -ms-inline-flexbox;
+  display: -webkit-inline-flex;
 }
 //Решаем проблему лишних отступов между inline-block элементами лежащими друг за другом.
 //ВАЖНО: Если не задано значение @child-font-size то у всех дочерних элементов блока, с данным стилем, должен быть указан собственный font-size.

@@ -416,13 +416,13 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
       },
 
-      _notifyOnItemClick: function(id, data, target) {
+      _notifyOnItemClick: function(id, data, target, e) {
          if(!$(target).hasClass('js-controls-TreeView__expand')) {
             return TreeDataGridView.superclass._notifyOnItemClick.apply(this, arguments);
          }
       },
 
-      _elemClickHandlerInternal: function(data, id, target) {
+      _elemClickHandlerInternal: function(data, id, target, e) {
          var $target =  $(target),
              closestExpand = this._findExpandByElement($target),
              nodeID = this._getItemsProjection().getByHash($target.closest('.controls-ListView__item').data('hash')).getContents().getId();

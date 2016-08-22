@@ -194,23 +194,25 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _getCurrentTarget: function() {
                return this._eip.getTarget();
             },
-            showEip: function(target, model, options) {
+            showEip: function(target, model, options, withoutActivateFirstControl) {
                if (options && options.isEdit) {
-                  return this.edit(target, model, options)
+                  return this.edit(target, model, options, withoutActivateFirstControl);
                } else {
                   return this.add(options);
                }
             },
-            edit: function (target, record) {
+            edit: function (target, record, withoutActivateFirstControl) {
                var self = this;
                return this.endEdit(true).addCallback(function() {
                   return self._prepareEdit(record).addCallback(function(preparedRecord) {
+                     var editingRecord;
                      if (preparedRecord) {
                         var
                             parentProjItem,
                             itemProjItem = self._options.itemsProjection.getItemBySourceItem(preparedRecord);
-                        self._eip.edit(target, preparedRecord, itemProjItem);
-                        self._notify('onAfterBeginEdit', preparedRecord);
+                        self._eip.edit(target, preparedRecord, itemProjItem, withoutActivateFirstControl);
+                        editingRecord = self._eip.getEditingRecord();
+                        self._notify('onAfterBeginEdit', editingRecord);
                         //TODO: необходимо разбивать контроллер редактирования по месту, для плоских и иерархических представлений
                         if (self._options.hierField) {
                            parentProjItem = itemProjItem.getParent();
@@ -218,7 +220,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         }
                         self._addPendingOperation();
                      }
-                     return preparedRecord;
+                     return editingRecord;
                   })
                });
             },

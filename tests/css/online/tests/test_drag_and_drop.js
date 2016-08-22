@@ -20,6 +20,7 @@ gemini.suite('SBIS3.CONTROLS.DragAndDrop Online', function () {
 
             .capture('hovered_folder', function (actions) {
                 actions.mouseMove(this.folder);
+				actions.mouseMove(this.folder);
             })
 			
 			.capture('thin_blue_line', function (actions) {

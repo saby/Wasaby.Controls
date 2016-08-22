@@ -198,7 +198,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._deactivateActiveChildControl();
                this.setActive(false);
             },
-            edit: function(target, record, itemProj) {
+            edit: function(target, record, itemProj, withoutActivateFirstControl) {
                if (!this.isVisible()) {
                   this.show(target, record, itemProj);
                }
@@ -206,7 +206,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._beginTrackHeight();
                this._editing = true;
                target.addClass('controls-editInPlace__editing');
-               if (!this.hasActiveChildControl()) {
+               if (!withoutActivateFirstControl && !this.hasActiveChildControl()) {
                   this.activateFirstControl();
                }
                this._notify('onBeginEdit');
