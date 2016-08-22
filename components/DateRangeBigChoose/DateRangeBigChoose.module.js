@@ -150,6 +150,10 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          this._startDatePicker.subscribe('onDateChange', this._onDatePickerStartDateChanged.bind(this));
          this._endDatePicker.subscribe('onDateChange', this._onDatePickerEndDateChanged.bind(this));
 
+         this._startDatePicker.subscribe('onInputFinished', function() {
+            self._endDatePicker.setActive(true);
+         });
+
          this.subscribe('onRangeChange', this._onRangeChange.bind(this));
 
          if (this._options.rangeselect) {
