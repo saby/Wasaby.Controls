@@ -232,6 +232,19 @@
       }
    }
 
+   &.controls-DataGridView__overflow-ellipsis{
+      .controls-DataGridView__tr{
+         .controls-DataGridView__columnValue {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+         }
+         overflow: hidden;
+         text-overflow: ellipsis;
+         white-space: nowrap;
+      }
+   }
+
    .controls-DataGridView__td__checkBox {
       width: @data-grid-td-checkbox-width;
       padding-right: 0!important;
