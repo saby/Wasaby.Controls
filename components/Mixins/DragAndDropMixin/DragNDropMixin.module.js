@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
       $(document).bind('mousemove touchmove', function(e) {
          EventBusChannel.notify('onMousemove', e);
       });
-      
+
    }
 
    var DragAndDropMixin = {
@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
             e.pageY = e.originalEvent.touches[0].pageY;
          }
       },
-     
+
       onMouseup: function(buse, e) {
          //определяем droppable контейнер
          if (this._isShifted) {
@@ -77,17 +77,17 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
          if (!this._currentComponent) {
             return;
          }
-         var 
+         var
             // определяем droppable контейнер
             movable = this._findDragDropContainer(e, e.target);
 
          if (!this._isShifted) {
             //начало переноса
             this.preparePageXY(e);
-            var 
+            var
                moveX = e.pageX - this._moveBeginX,
                moveY = e.pageY - this._moveBeginY;
-   
+
             //начинаем движение только если сдвинули сильно
             if ((Math.abs(moveX) < this._constShiftLimit) && (Math.abs(moveY) < this._constShiftLimit)) {
                return;
@@ -149,8 +149,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
                y: this._moveBeginY - parseInt(target.css('top'), 10)
             };
          }
-   
-         this.preparePageXY(e);         
+
+         this.preparePageXY(e);
          target.css({
             top: e.pageY - this._containerCoords.y,
             left: e.pageX - this._containerCoords.x

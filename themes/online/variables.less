@@ -880,10 +880,10 @@
 @search-bottom-border-color:                          @search-background;
 @search-form-border-width:                            @text-box-border-width;
 @search-form-border-disabled-width:                   @text-box-disabled-border-width;
-@search-form-disabled-border-bottom:                  @text-box-disabled-border-bottom;
 @search-buttons-wrapper-width:                        22px + 22px;
 @search-form-icon-padding:                            3px;
 @search-form-icon-disabled-display:                   block;
+@search-loop-size:                                    16px;
 
 // --------- //
 // Combo box //
@@ -1029,6 +1029,7 @@
 @suggest-picker-item-font:                      @suggest-field-font;
 @suggest-picker-item-text-color:                @suggest-field-text-color;
 @suggest-picker-item-bg:                        @white-color;
+@suggest-picker-invertVal:                      180deg;
 
 @suggest-list-item-bg:                          @suggest-picker-item-bg;
 @suggest-list-item-border:                      solid #f5f5f5;
@@ -1384,6 +1385,7 @@
 
 @listView-empty-data-color:                     @black-color;
 @listView-empty-data-font-size:                 15px;
+@listView-empty-data-padding-top:               46px;
 
 // --------- //
 //  ToolBar  //
@@ -1434,7 +1436,7 @@
 @tree-view-expand-open-hover-border-color:      @tree-view-expand-open-border-color;
 
 @tree-view-ellipsis-wrapper-height:             @data-grid-cell-line-height;
-@tree-view-ellipsis-copyArrow-shadow:           -10px 2px 8px -5px;
+@tree-view-ellipsis-copyArrow-shadow:           -10px 0 10px 0;
 @tree-view-ellipsis-copyArrow-padding:          0 0 0 3px;
 @tree-view-ellipsis-copyArrow-width:            16px;
 
@@ -1861,12 +1863,6 @@
 @controls-SelectorButton-align:                    top;
 @controls-SelectorButton-margin:                   4px 0 0 0;
 @controls-SelectorButton-error-outline:            1px solid #ff302b;
-
-
-
-// Search button
-@search-loop-size:                                 16px;
-@search-loop-padding:                              3px;
 
 // BackButton
 @back-button-font-size:                            18px;
