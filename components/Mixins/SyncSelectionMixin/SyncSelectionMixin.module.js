@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], func
          /* Почему событие onPropertyChanged: если изменить св-во контрола в событии onPropertyChanged,
             то корректно произойдёт синхронизация с контекстом  */
          this.subscribe('onPropertyChanged', function(e, propName) {
-            var propValue, item;
+            var propValue, item, key;
 
             if (PROPS_TO_SYNC[propName]) {
                propValue = this.getProperty(propName);
@@ -70,18 +70,23 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], func
                      break;
                   case 'selectedItems':
                      item = propValue && propValue.at(0);
-                     if(item) {
-                        this._options.selectedItem = item;
-                        this._options.selectedKey = item.getId();
-                     } else {
-                        this._options.selectedItem = null;
-                        this._options.selectedKey = null;
-                     }
-                     this._notify('onSelectedItemChange', this._options.selectedKey, this._options.selectedIndex);
+                      if(!$ws.helpers.isEqualObject(this._options.selectedItem, item)) {
+                         if (item) {
+                            this._options.selectedItem = item;
+                            this._options.selectedKey = item.getId();
+                         } else {
+                            this._options.selectedItem = null;
+                            this._options.selectedKey = null;
+                         }
+                         this._notify('onSelectedItemChange', this._options.selectedKey, this._options.selectedIndex);
+                      }
                      break;
                   case 'selectedKeys':
-                     this._options.selectedKey = propValue.length ? propValue[0] : null;
-                     this._notify('onSelectedItemChange', this._options.selectedKey, this._options.selectedIndex);
+                     key = propValue.length ? propValue[0] : null;
+                     if( this._options.selectedKey !== key) {
+                        this._options.selectedKey = key;
+                        this._notify('onSelectedItemChange', this._options.selectedKey, this._options.selectedIndex);
+                     }
                      break;
                }
             }
