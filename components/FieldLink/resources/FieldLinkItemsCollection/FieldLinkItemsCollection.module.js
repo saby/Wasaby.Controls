@@ -85,16 +85,31 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
 
          _onClickHandler: function(e) {
             var $target = $(e.target),
+                deleteAction = false,
+                self = this,
                 itemContainer;
+
+            function focusFL() {
+               self._parentFieldLink.setActive(true);
+            }
 
             itemContainer = $target.closest('.controls-ListView__item', this._container[0]);
             if(itemContainer.length) {
-               this._notify($target.hasClass('controls-FieldLink__linkItem-cross') ? 'onCrossClick' : 'onItemActivate', itemContainer.data('id'));
+               deleteAction = $target.hasClass('controls-FieldLink__linkItem-cross');
+               this._notify(deleteAction ? 'onCrossClick' : 'onItemActivate', itemContainer.data('id'));
             }
 
-            /* Переводим фокус на поле связи, надо делать после оповещения события,
-               иначе, если в поле связи единичный выбор, то при удалении фокус потеряется  */
-            this._parentFieldLink.setActive(true);
+            /* При клике по элементам коллекции поля связи, надо, чтобы курсор отображался в поле ввода,
+               поэтому при клике вызываем setActive для поля связи, который переведёт курсор в поле ввода,
+               однако, если кликнули по крестику и в событии удаления фокус перевели,
+               то делать активным поле связи не надо */
+            if(deleteAction) {
+               if(this._parentFieldLink.isActive()) {
+                  focusFL();
+               }
+            } else {
+               focusFL();
+            }
          },
 
          /**
