@@ -151,6 +151,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
    };
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
+    * На DOM-элементы, отображающие развернутые узлы вешается css-класс "controls-TreeView__item-expanded". Для свернутых узлов используется css-класс "controls-TreeView__item-collapsed".
     * @mixin SBIS3.CONTROLS.TreeMixin
     * @public
     * @author Крайнов Дмитрий Олегович
