@@ -286,10 +286,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
 
             if (nearbyVal && moveToVal) {
                return Math.floor((moveToVal+nearbyVal)/2);
-            } else if (moveToVal) {
-               var asc = moveToVal > moveItem.get(orderPropery);//направление сортировки по убыванию или по возрастанию
-               return (up && !asc || !up && !asc)  ? --moveToVal :  ++moveToVal;
             }
+            return moveToVal;
          }
          return undefined;
       }
