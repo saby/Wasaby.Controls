@@ -132,7 +132,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
        * @see togglePicker
        */
       showPicker: function() {
-         if (!this._picker) {
+         if (!this._picker || this._picker.isDestroyed()) {
             this._initializePicker();
          }
          this._container.addClass('controls-Picker__show');
