@@ -143,7 +143,6 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!WS.Data/Entity/Model'], functi
           т.е. она может только проинициализироваться из контекста */
          if(selItem && selItem.getId() && (selKey === null || selKey !== selItem.getId())) {
             this._options.selectedItem = null;
-            this._notifyOnPropertyChanged('selectedItem');
          }
       }
 

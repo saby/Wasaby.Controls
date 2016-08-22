@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Selectable',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.DecorableMixin',
-      'js!SBIS3.CONTROLS.DragNDropMixin',
+      'js!SBIS3.CONTROLS.DragNDropMixinNew',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
       'js!SBIS3.CONTROLS.ItemsToolbar',
       'js!SBIS3.CORE.MarkupTransformer',
@@ -27,6 +27,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.ScrollWatcher',
       'js!WS.Data/Collection/IBind',
+      'js!WS.Data/Collection/List',
       'i18n!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
       'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
@@ -39,12 +40,13 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!WS.Data/Di',
       'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
-      'js!WS.Data/Collection/RecordSet'
+      'js!WS.Data/Collection/RecordSet',
+      'js!SBIS3.CONTROLS.DragEntity.Row'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
-             Link, ScrollWatcher, IBindCollection, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
+             Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder, Di, ArraySimpleValuesUtil) {
 
       'use strict';
@@ -59,12 +61,16 @@ define('js!SBIS3.CONTROLS.ListView',
             return tplOptions;
          },
          getRecordsForRedrawLV = function (projection, cfg){
-            var records = cfg._getRecordsForRedrawSt.call(this, projection);
+            var records = cfg._getRecordsForRedrawSt.apply(this, arguments);
             return records;
          };
       var
-         DRAG_AVATAR_OFFSET = 5,
-         START_NEXT_LOAD_OFFSET = 180;
+         START_NEXT_LOAD_OFFSET = 180,
+         DRAG_META_INSERT = {
+            on: 'on',
+            after: 'after',
+            before: 'before'
+         };
 
       /**
        * Контрол, отображающий внутри себя набор однотипных сущностей.
@@ -77,6 +83,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @mixes SBIS3.CONTROLS.Selectable
        * @mixes SBIS3.CONTROLS.DecorableMixin
        * @mixes SBIS3.CONTROLS.DataBindMixin
+       * @mixes SBIS3.CONTROLS.DragNDropMixinNew
        * @control
        * @public
        * @cssModifier controls-ListView__orangeMarker Показывать маркер активной строки у элементов ListView. Актуально только для ListView.
@@ -214,6 +221,18 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Array} records Список перемещаемых записей.
           * @returns {Object} filter Фильтр который будет помещёт в диалог перемещения.
+          */
+         /**
+          * @event onEndDelete После удаления записей.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Array} idArray Ключи удаляемых записей.
+          * @param {*} result Результат удаления.
+          */
+         /**
+          * @event onBeginDelete Перед удалением записей.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Array} idArray Ключи удаляемых записей.
+          * @returns {*|Boolean} result Если result равен false то отменяется штатная логика удаления.
           */
          $protected: {
             _floatCheckBox: null,
@@ -626,7 +645,12 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Задаёт какой режим навигации использовать: полный или частичный.
                 */
                partialPaging: true,
-               scrollPaging: true //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
+               scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
+               /**
+                * @cfg Конструктор перемещяемой сущности должен вернуть элемент наследник класса SBIS3.CONTROLS.DragEntity.Row
+                * @see SBIS3.CONTROLS.DragEntity.Row
+                */
+               dragEntity: 'dragentity.row'
             },
             //Флаг обозначает необходимость компенсировать подгрузку по скроллу вверх, ее нельзя делать безусловно, так как при подгрузке вверх могут добавлятся элементы и вниз тоже
             _needSrollTopCompensation: false,
@@ -637,13 +661,14 @@ define('js!SBIS3.CONTROLS.ListView',
             //но после загрузки могут долетать данные (картинки в docviewer например), которые будут скроллить вверх.
             _scrollOnBottomTimer: null, //TODO: см. строчкой выше
             _componentBinder: null,
-            _touchSupport: false
+            _touchSupport: false,
+            _dragInitHandler: undefined //метод который инициализирует dragNdrop
          },
 
          $constructor: function () {
             var dispatcher = $ws.single.CommandDispatcher;
 
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete');
             this._container.on('swipe tap mousemove mouseleave', this._eventProxyHandler.bind(this));
 
             this.initEditInPlace();
@@ -716,7 +741,7 @@ define('js!SBIS3.CONTROLS.ListView',
                т.к. оно стреляет после тапа. После тапа событие mousemove имеет нулевой сдвиг, поэтому обрабатываем его как touch событие
                 + добавляю проверку, что до этого мы были в touch режиме,
                это надо например для тестов, в которых эмулирется событие mousemove так же без сдвига, как и на touch устройствах. */
-            this._setTouchSupport(Array.indexOf(['swipe', 'tap'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && this._touchSupport));
+            this._setTouchSupport(Array.indexOf(['swipe', 'tap'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && $ws._const.compatibility.touch));
 
             switch (e.type) {
                case 'mousemove':
@@ -760,7 +785,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._preScrollLoading();
                      }
                      topParent.unsubscribe('onAfterShow', afterFloatAreaShow);
-                  }
+                  };
                   //Делаем через subscribeTo, а не once, что бы нормально отписываться при destroy FloatArea
                   this.subscribeTo(topParent, 'onAfterShow', afterFloatAreaShow.bind(this));
                }
@@ -803,6 +828,11 @@ define('js!SBIS3.CONTROLS.ListView',
                paging: this._scrollPager
             });
             this._scrollBinder.bindScrollPaging();
+            $ws.helpers.trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
+         },
+
+         _onVisibleChange: function(event, visible){
+            this._scrollPager.setVisible(visible);
          },
 
          _onScrollMoveHandler: function(event, scrollTop){
@@ -1235,6 +1265,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options.infiniteScroll && this.getItems().getCount() < 1000){
                this.reload(this.getFilter(), this.getSorting(), 0, 1000)
                   .addCallback(function(dataSet) {
+                     //Ввостановим значение _limit, т.к. после вызова reload _limit стал равен 1000,
+                     //и следующие страницы будут грузиться тоже по 1000 записей
+                     this._limit = this._options.pageSize;
                      //Очистим selectedItems чтобы при заполнении новыми элементами, не делать проверку на наличие элементов в коллекции
                      if (selectedItems && selectedItems.getCount()) {
                         selectedItems.clear();
@@ -1820,6 +1853,19 @@ define('js!SBIS3.CONTROLS.ListView',
          _isSearchMode: function() {
             return this._searchParamName && !Object.isEmpty(this._options.groupBy) && this._options.groupBy.field === this._searchParamName;
          },
+
+         //TODO проверка для режима совместимости со старой отрисовкой
+         /*TODO easy параметр для временной поддержки группировки в быстрой отрисовке*/
+         _isSlowDrawing: function(easy) {
+            var result = !!this._options.itemTemplate || !!this._options.userItemAttributes || this._isSearchMode();
+            if (easy) {
+               return result;
+            }
+            else {
+               return result || !Object.isEmpty(this._options.groupBy);
+            }
+         },
+
          _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems) {
             if (action === IBindCollection.ACTION_MOVE && this._isSearchMode()) {
                this.redraw();
@@ -1975,6 +2021,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._loader = null;
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                   var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
+
+                  this._updateScrolOffset(direction);
                   //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                   this.getItems().setMetaData(dataSet.getMetaData());
                   this._hideLoadingIndicator();
@@ -2000,7 +2048,6 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._loadNextPage();
                      }
                   }
-                  this._updateScrolOffset(this._options.infiniteScroll);
 
                }, this)).addErrback(function (error) {
                   //Здесь при .cancel приходит ошибка вида DeferredCanceledError
@@ -2079,7 +2126,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _moveTopScroll : function(){
             var scrollAmount,
-               scrollingToTop =  this._scrollDirection !== 'down' && this._options.infiniteScroll == 'up';
+               scrollingToTop =  this._scrollDirection == 'top';
             //сюда попадем только когда уже точно есть скролл
             if (this.isInfiniteScroll() && scrollingToTop && (this._needSrollTopCompensation || this._firstScrollTop)){
                scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
@@ -2426,12 +2473,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          //------------------------GroupBy---------------------
-         _oldGroupByDefaultMethod: function (record) {
-            var curField = record.get(this._options.groupBy.field),
-               result = curField !== this._previousGroupBy;
-            this._previousGroupBy = curField;
-            return result;
-         },
          _getGroupTpl: function () {
             return this._options.groupBy.template || groupByTpl;
          },
@@ -2584,6 +2625,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollBinder = null;
             }
             if (this._scrollPager){
+               $ws.helpers.trackElement(this.getContainer(), false).unsubscribe('onVisible', this._onVisibleChange);
                this._scrollPager.destroy();
             }
             ListView.superclass.destroy.call(this);
@@ -2621,10 +2663,28 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
-            if (!this._dragStartHandler) {
-               this._dragStartHandler = this._onDragStart.bind(this);
-            }
-            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._dragStartHandler);
+            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._getDragInitHandler());
+         },
+
+         /**
+          * возвращает метод который инициализирует dragndrop
+          * @returns {function}
+          * @private
+          */
+         _getDragInitHandler: function(){
+            return this._dragInitHandler ? this._dragInitHandler : this._dragInitHandler  = (function(e){
+               if (this._canDragStart(e)) {
+                  this._initDrag.call(this, e);
+                  //TODO: Сейчас появилась проблема, что если к компьютеру подключен touch-телевизор он не вызывает
+                  //preventDefault и при таскании элементов мышкой происходит выделение текста.
+                  //Раньше тут была проверка !$ws._const.compatibility.touch и preventDefault не вызывался для touch устройств
+                  //данная проверка была добавлена, потому что когда в строке были отрендерены кнопки, при нажатии на них
+                  //и выполнении preventDefault впоследствии не вызывался click. Написал демку https://jsfiddle.net/9uwphct4/
+                  //с воспроизведением сценария, на iPad и Android click отрабатывает. Возможно причина была ещё в какой-то
+                  //ошибке. При возникновении ошибок на мобильных устройствах нужно будет добавить проверку !$ws._const.browser.isMobilePlatform.
+                  e.preventDefault();
+               }
+            }).bind(this)
          },
          /**
           * Получить текущую конфигурацию перемещения элементов с помощью DragNDrop.
@@ -2649,134 +2709,155 @@ define('js!SBIS3.CONTROLS.ListView',
             //Как временное решение добавлена проверка на SBIS3.CONTROLS.TextBoxBase.
             //Необходимо разобраться можно ли на уровне TextBoxBase или Control для события mousedown
             //сделать stopPropagation, тогда от данной проверки можно будет избавиться.
-            return !this._isShifted && this._options.enabled && !$ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
+            return this._options.enabled && !$ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
          },
-         _onDragStart: function(e) {
+
+         _beginDragHandler: function(dragObject, e) {
             var
                 id,
                 target;
-            if (this._canDragStart(e)) {
-               target = this._findItemByElement($(e.target));
-               //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
-               //она есть в _items(например при добавлении или фейковый корень). Метод _findItemByElement в данном случае вернёт
-               //пустой массив. В .150 править этот метод опасно, потому что он много где используется. В .200 переписать метод
-               //_findItemByElement, без завязки на _items.
-               if (target.length) {
-                  id = target.data('id');
-                  this.setCurrentElement(e, {
-                     keys: this._getDragItems(id),
-                     targetId: id,
-                     target: target,
-                     insertAfter: undefined
-                  });
-               }
-               //TODO: Сейчас появилась проблема, что если к компьютеру подключен touch-телевизор он не вызывает
-               //preventDefault и при таскании элементов мышкой происходит выделение текста.
-               //Раньше тут была проверка !$ws._const.compatibility.touch и preventDefault не вызывался для touch устройств
-               //данная проверка была добавлена, потому что когда в строке были отрендерены кнопки, при нажатии на них
-               //и выполнении preventDefault впоследствии не вызывался click. Написал демку https://jsfiddle.net/9uwphct4/
-               //с воспроизведением сценария, на iPad и Android click отрабатывает. Возможно причина была ещё в какой-то
-               //ошибке. При возникновении ошибок на мобильных устройствах нужно будет добавить проверку !$ws._const.browser.isMobilePlatform.
-               e.preventDefault();
-            }
-         },
-         _callMoveOutHandler: function() {
-         },
-         _callMoveHandler: function(e) {
-            this._updateDragTarget(e);
-            this._setAvatarPosition(e);
-         },
-         _updateDragTarget: function(e) {
-            var
-                insertAfter,
-                neighborItem,
-                currentElement = this.getCurrentElement(),
-                target = this._findItemByElement($(e.target));
+            target = this._findItemByElement($(e.target));
+            //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
+            //она есть в _items(например при добавлении или фейковый корень). Метод _findItemByElement в данном случае вернёт
+            //пустой массив. В .150 править этот метод опасно, потому что он много где используется. В .200 переписать метод
+            //_findItemByElement, без завязки на _items.
+            if (target.length) {
+               id = target.data('id');
+               this.setSelectedKey(id);
+               var items = this._getDragItems(id),
+                  source = [];
+               $ws.helpers.forEach(items, function (id) {
+                  var item = this.getItems().getRecordById(id),
+                     projItem = this._getItemsProjection().getItemBySourceItem(item);
+                  source.push(this._makeDragEntity({
+                     owner: this,
+                     model: item,
+                     domElement: this._getHtmlItemByProjectionItem(projItem)
+                  }));
+               }.bind(this));
 
-            this._clearDragHighlight();
-            if (target.length && target.data('id') != currentElement.targetId) {
-               insertAfter = this._getDirectionOrderChange(e, target);
-               if (insertAfter !== undefined) {
-                  neighborItem = this[insertAfter ? 'getNextItemById' : 'getPrevItemById'](target.data('id'));
-                  if (neighborItem && neighborItem.data('id') == currentElement.targetId) {
-                     insertAfter = undefined;
+               dragObject.setSource(new List({
+                  items: source
+               }));
+               this._hideItemsToolbar();
+               return true;
+            }
+            return false;
+         },
+
+         _onDragHandler: function(dragObject, e) {
+            if (this._canDragMove(dragObject)) {
+               var
+                  target = dragObject.getTarget(),
+                  targetsModel = target.getModel(),
+                  source = dragObject.getSource(),
+                  sourceModels = [];
+               this._clearDragHighlight(dragObject);
+               if (targetsModel) {
+                  source.each(function (item) {
+                     sourceModels.push(item.getModel());
+                  });
+                  if (dragObject.getOwner() !== this || sourceModels.indexOf(targetsModel) < 0) {
+                     this._drawDragHighlight(target);
                   }
                }
-               if (this._notifyOnDragMove(target, insertAfter)) {
-                  currentElement.insertAfter = insertAfter;
-                  currentElement.target = target;
-                  this._drawDragHighlight(target, insertAfter);
-               } else {
-                  currentElement.insertAfter = currentElement.target = null;
+            }
+         },
+
+         _canDragMove: function(dragObject) {
+            return dragObject.getTarget() &&
+               dragObject.getTargetsControl() === this &&
+               $ws.helpers.instanceOfModule(dragObject.getSource().at(0), 'js!SBIS3.CONTROLS.DragEntity.Row');
+         },
+
+         _getDragTarget: function(e) {
+            var target = this._findItemByElement($(e.target)),
+               item;
+
+            if (target.length > 0) {
+               item = this._getItemsProjection().getByHash(target.data('hash'));
+            }
+
+            return item ? item.getContents() : undefined;
+         },
+
+         _updateDragTarget: function(dragObject, e) {
+            var model = this._getDragTarget(e),
+               target;
+            if (model) {
+               var domElement = this._findItemByElement($(e.target)),
+                  position = this._getDirectionOrderChange(e, domElement) || DRAG_META_INSERT.on;
+               if (position !== DRAG_META_INSERT.on && dragObject.getOwner() === this) {
+                  var neighborItem = this[position === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](model.getId()),
+                     sourceIds = [];
+                  dragObject.getSource().each(function (item) {
+                     sourceIds.push(item.getModel().getId());
+                  });
+                  if (neighborItem && sourceIds.indexOf(neighborItem.data('id')) > -1) {
+                     position = DRAG_META_INSERT.on;
+                  }
                }
-            } else {
-               currentElement.insertAfter = currentElement.target = null;
+               target = this._makeDragEntity({
+                  owner: this,
+                  domElement: domElement,
+                  model: model,
+                  position: position
+               });
             }
+            dragObject.setTarget(target);
          },
-         _notifyOnDragMove: function(target, insertAfter) {
-            if (typeof insertAfter === 'boolean') {
-               return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter) !== false;
-            }
+
+         _clearDragHighlight: function(dragObject) {
+            this.getContainer()
+               .find('.controls-DragNDrop__insertBefore, .controls-DragNDrop__insertAfter')
+               .removeClass('controls-DragNDrop__insertBefore controls-DragNDrop__insertAfter');
          },
-         _clearDragHighlight: function() {
-            var target = this.getCurrentElement().target;
-            if (target) {
-               target.removeClass('controls-DragNDrop__insertBefore controls-DragNDrop__insertAfter');
-            }
-         },
-         _drawDragHighlight: function(target, insertAfter) {
-            target.toggleClass('controls-DragNDrop__insertAfter', insertAfter === true);
-            target.toggleClass('controls-DragNDrop__insertBefore', insertAfter === false);
+         _drawDragHighlight: function(target) {
+            var domelement = target.getDomElement();
+            domelement.toggleClass('controls-DragNDrop__insertAfter', target.getPosition() === DRAG_META_INSERT.after);
+            domelement.toggleClass('controls-DragNDrop__insertBefore', target.getPosition() === DRAG_META_INSERT.before);
          },
          _getDirectionOrderChange: function(e, target) {
-            return this._getOrderPosition(e.pageY - target.offset().top, target.height());
+            return this._getOrderPosition(e.pageY - (target.offset() ? target.offset().top : 0), target.height());
          },
          _getOrderPosition: function(offset, metric) {
-            return offset < 10 ? false : offset > metric - 10 ? true : undefined;
+            return offset < 10 ? DRAG_META_INSERT.before : offset > metric - 10 ? DRAG_META_INSERT.after : DRAG_META_INSERT.on;
          },
-         _createAvatar: function(e){
-            var count = this.getCurrentElement().keys.length;
-            this._avatar = $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>')
-                .css('z-index', $ws.single.WindowManager.acquireZIndex(false)).appendTo($('body'));
-            this._setAvatarPosition(e);
+
+         _createAvatar: function(dragObject) {
+            var count = dragObject.getSource().getCount();
+            return $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>');
          },
-         _setAvatarPosition: function(e) {
-            this._avatar.css({
-               'left': e.pageX + DRAG_AVATAR_OFFSET,
-               'top': e.pageY + DRAG_AVATAR_OFFSET
-            });
-         },
-         _callDropHandler: function(e) {
-            var
-                clickHandler,
-                currentElement = this.getCurrentElement(),
-                currentTarget = this._findItemByElement($(e.target));
-            //После опускания мыши, ещё раз позовём обработку перемещения, т.к. в момент перед отпусканием мог произойти
-            //переход границы между сменой порядкового номера и перемещением в папку, а обработчик перемещения не вызваться,
-            //т.к. он срабатывают так часто, насколько это позволяет внутренняя система взаимодействия с мышью браузера.
-            this._updateDragTarget(e);
-            //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
-            if (currentTarget.length && currentTarget.data('id') == this.getSelectedKey()) {
-               clickHandler = this._elemClickHandler;
-               this._elemClickHandler = function () {
-                  this._elemClickHandler = clickHandler;
+
+         _endDragHandler: function(dragObject, droppable, e) {
+            if (droppable) {
+               var
+                  clickHandler,
+                  target = dragObject.getTarget();
+
+               //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
+               if (target) {
+                  if (target.getModel().getId() == this.getSelectedKey()) {
+                     clickHandler = this._elemClickHandler;
+                     this._elemClickHandler = function () {
+                        this._elemClickHandler = clickHandler;
+                     };
+                  }
+
+                  if (dragObject.getOwner() === this) {
+                     var models = [];
+                     dragObject.getSource().each(function(item){
+                        models.push(item.getModel());
+                     });
+                     var position = target.getPosition();
+                     this._move(models, target.getModel(),
+                        position === DRAG_META_INSERT.on ? undefined : position === DRAG_META_INSERT.after
+                     );
+                  }
                }
             }
-            if (currentElement.target) {
-               this._move(currentElement.keys, currentElement.target.data('id'), currentElement.insertAfter);
-            }
-         },
-         _beginDropDown: function(e) {
-            this.setSelectedKey(this.getCurrentElement().targetId);
-            this._isShifted = true;
-            this._createAvatar(e);
-            this._hideItemsToolbar();
-         },
-         _endDropDown: function() {
-            $ws.single.WindowManager.releaseZIndex(this._avatar.css('z-index'));
-            this._clearDragHighlight();
-            this._avatar.remove();
-            this._isShifted = false;
+
+            this._clearDragHighlight(dragObject);
             this._updateItemsToolbar();
          },
          /*DRAG_AND_DROP END*/
@@ -2859,10 +2940,69 @@ define('js!SBIS3.CONTROLS.ListView',
                this._options.selectedItems = Di.resolve('collection.recordset', {
                   ownerShip: false,
                   adapter: items.getAdapter(),
-                  idProperty: items.getIdProperty()
+                  idProperty: items.getIdProperty(),
+                  model: items.getModel()
                });
             } else {
                ListView.superclass.initializeSelectedItems.call(this);
+            }
+         },
+         /**
+          * Удаляет записи из источника данных по переданным идентификаторам элементов коллекции.
+          * @remark
+          * При использовании метода для в классе {@link SBIS3.CONTROLS.TreeCompositeView} или его наследниках, есть особенность перезагрузки данных.
+          * Для режима отображения "Таблица" (table), который устанавливают с помощью опции {@link SBIS3.CONTROLS.CompositeViewMixin#viewMode}, производится частичная перезагрузка данных в узлах иерархии.
+          * Это означает, что данные списка будут обновлены быстрее: запрос на обновление будет произведён только для тех узлов, элементы которого удаляются методом.
+          * Для списков любых других классов будет произведена полная перезагрузка списка записей, например как при методе {@link SBIS3.CONTROLS.ListView#reload}.
+          * @param {Array|Number|String} idArray Массив с идентификаторами элементов коллекции.
+          * Если нужно удалить одну запись, то в параметр передаётся простое значение - идентификатор элемента.
+          * @param {String} [message] Текст, который будет использован в диалоговом окне перед началом удаления записей из источника.
+          * Если параметр не передан, то для удаления нескольких записей будет использован текст "Удалить записи?", а для удаления одной записи - "Удалить текущую запись?".
+          * @returns {$ws.proto.Deferred} Возвращает объект deferred. На результат работы метода можно подписаться для решения прикладных задача.
+          */
+         deleteRecords: function(idArray, message) {
+            var self = this;
+            //Клонируем массив, т.к. он может являться ссылкой на selectedKeys, а после удаления мы сами вызываем removeItemsSelection.
+            //В таком случае и наш idArray изменится по ссылке, и в событие onEndDelete уйдут некорректные данные
+            idArray = Array.isArray(idArray) ? $ws.core.clone(idArray) : [idArray];
+            message = message || (idArray.length !== 1 ? rk("Удалить записи?", "ОперацииНадЗаписями") : rk("Удалить текущую запись?", "ОперацииНадЗаписями"));
+            return $ws.helpers.question(message).addCallback(function(res) {
+               if (res) {
+                  self._toggleIndicator(true);
+                  if (self._notify('onBeginDelete', idArray) !== false) {
+                     return self._deleteRecords(idArray).addCallback(function () {
+                        self.removeItemsSelection(idArray);
+                        //Если записи удалялись из DataSource, то перезагрузим реест, если из items, то реестр уже в актальном состоянии
+                        if (self.getDataSource()) {
+                           if ($ws.helpers.instanceOfModule(self, 'SBIS3.CONTROLS.TreeCompositeView') && self.getViewMode() === 'table') {
+                              self.partialyReload(idArray);
+                           } else {
+                              self.reload();
+                           }
+                        }
+                     }).addErrback(function (result) {
+                        $ws.helpers.alert(result)
+                     }).addBoth(function (result) {
+                        self._toggleIndicator(false);
+                        self._notify('onEndDelete', idArray, result);
+                     });
+                  }
+               }
+            });
+         },
+         _deleteRecords: function(idArray) {
+            var
+                items = this.getItems(),
+                source = this.getDataSource();
+            if (source) {
+               return source.destroy(idArray);
+            } else {
+               items.setEventRaising(false, true);
+               for (var i = 0; i < idArray.length; i++) {
+                  items.remove(items.getRecordById(idArray[i]));
+               }
+               items.setEventRaising(true, true);
+               return $ws.proto.Deferred.success(true);
             }
          }
       });
