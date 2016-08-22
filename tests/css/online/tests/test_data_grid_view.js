@@ -292,4 +292,24 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 				actions.wait(500);
             })
     });
+
+     gemini.suite('empty_data_and_load_indicator', function (test) {
+
+        test.setUrl('/regression_data_grid_view_online_12.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="DataGridView 1"]', 40000);
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+				this.input = find('[sbisname="TextBox 1"] input');
+            })
+
+            .capture('plain', function (actions) {
+                actions.executeJS(function (window) {
+                    window.$('.controls-AjaxLoader').removeClass('ws-hidden');
+                    window.$('.controls-AjaxLoader__LoadingIndicator').css('background', 'black')
+                });
+                actions.wait(150);
+                actions.click(this.input);
+            })
+    });
 });
