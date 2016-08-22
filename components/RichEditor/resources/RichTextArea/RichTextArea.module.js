@@ -1274,6 +1274,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                require(['css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/skin.min',
                   'css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/content.inline.min',
                   'js!SBIS3.CONTROLS.RichTextArea/resources/tinymce/tinymce'],function(){
+                  tinyMCE.baseURL = $ws.helpers.resolveComponentPath('SBIS3.CONTROLS.RichTextArea') + 'resources/tinymce';
                   tinyMCE.init(self._options.editorConfig);
                });
             }
