@@ -207,6 +207,9 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          }
          var self = this._getTemplateComponent(),
              record = self._options.record;
+         if (record.getState() === Record.RecordState.DELETED){
+            return;
+         }
          //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
          if (self._saving || !(record && record.isChanged())){
             //Дестроим запись, когда выполнены три условия
@@ -648,9 +651,11 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see dataSource
        */
       _destroyModel: function(){
-         var self = this;
-         return this._dataSource.destroy(this._options.record.getId()).addCallback(function(){
-            self._notify('onDestroyModel', self._options.record);
+         var self = this,
+             record = this._options.record;
+         return this._dataSource.destroy(record.getId()).addCallback(function(){
+            self._notify('onDestroyModel', record);
+            record.setState(Record.RecordState.DELETED);
             self._newRecord = false;
          });
       },
