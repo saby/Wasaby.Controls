@@ -2022,7 +2022,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                   var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
 
-                  this._updateScrolOffset(this._options.infiniteScroll);
+                  this._updateScrolOffset(direction);
                   //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                   this.getItems().setMetaData(dataSet.getMetaData());
                   this._hideLoadingIndicator();
@@ -2112,7 +2112,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }).bind(this);
 
             // Если нет скролла или скролл внизу, значит нужно догружать еще записи (floatArea отжирает скролл, поэтому если она открыта - не грузим)
-            if (!this._existFloatArea() && ((this.isScrollOnBottom() && this._options.infiniteScroll == 'down') || !hasScroll())) {
+            if ((this.isScrollOnBottom() && this._options.infiniteScroll == 'down') || !hasScroll()) {
                this._loadNextPage();
             } else {
                this._moveTopScroll();
@@ -2126,7 +2126,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _moveTopScroll : function(){
             var scrollAmount,
-               scrollingToTop =  this._scrollDirection !== 'down' && this._options.infiniteScroll == 'up';
+               scrollingToTop =  this._scrollDirection == 'top';
             //сюда попадем только когда уже точно есть скролл
             if (this.isInfiniteScroll() && scrollingToTop && (this._needSrollTopCompensation || this._firstScrollTop)){
                scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
@@ -2152,24 +2152,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          isScrollOnBottom: function(){
             return this._scrollWatcher.isScrollOnBottom();
-         },
-         //Проверка есть ли открытые stack FloatArea или maximize Window, они могут збирать на себя скролл у body
-         _existFloatArea: function(){
-            var areas = $ws.single.FloatAreaManager._areas;
-            var windows = $ws.single.WindowManager.getStack();
-            for (var area in areas){
-               if (areas.hasOwnProperty(area)){
-                  if (areas[area].isVisible() && areas[area]._options.isStack){
-                     return true;
-                  }
-               }
-            }
-            for (var i = 0; i < windows.length; i++){
-               if (windows[i].window._options.maximize){
-                  return true;
-               }
-            }
-            return false;
          },
          isScrollOnTop: function(){
             if (this._options.infiniteScrollContainer && this._options.infiniteScrollContainer.length){
@@ -2962,7 +2944,9 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          deleteRecords: function(idArray, message) {
             var self = this;
-            idArray = Array.isArray(idArray) ? idArray : [idArray];
+            //Клонируем массив, т.к. он может являться ссылкой на selectedKeys, а после удаления мы сами вызываем removeItemsSelection.
+            //В таком случае и наш idArray изменится по ссылке, и в событие onEndDelete уйдут некорректные данные
+            idArray = Array.isArray(idArray) ? $ws.core.clone(idArray) : [idArray];
             message = message || (idArray.length !== 1 ? rk("Удалить записи?", "ОперацииНадЗаписями") : rk("Удалить текущую запись?", "ОперацииНадЗаписями"));
             return $ws.helpers.question(message).addCallback(function(res) {
                if (res) {
