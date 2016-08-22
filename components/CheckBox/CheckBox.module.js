@@ -49,8 +49,8 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
     */
 
    var CheckBox = ButtonBase.extend([Checkable, ITextValue], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
+      _dotTplFn : dotTplFn,
       $protected: {
-         _dotTplFn : dotTplFn,
          _checkBoxCaption: null,
          _keysWeHandle: [$ws._const.key.space],
          _options: {

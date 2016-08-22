@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], func
                      item.setIdProperty(this._options.keyField);
                   }
                   /* Если передали пустую запись и текущая запись тоже пустая, то не устанавливаем её */
-               } else if(currentSelItem && isEmptyItem(currentSelItem)) {
+               } else if(currentSelItem && isEmptyItem(currentSelItem) && this._isEmptySelection()) {
                   return false;
                }
             }

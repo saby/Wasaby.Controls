@@ -655,9 +655,12 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
                      $ws.single.ioc.resolve('ILogger').log('MultiSelectable', 'Потенциальная ошибка. У контрола ' + self.getName() + ' не задан dataSource для вычитки записей.');
                      continue;
                   }
-                  dMultiResult.push(self._dataSource.read(loadKeysArr[j]).addCallback(function (record) {
-                     selItems.add(record);
-                  }));
+
+                  if(loadKeysArr[j] !== null) {
+                     dMultiResult.push(self._dataSource.read(loadKeysArr[j]).addCallback(function (record) {
+                        selItems.add(record);
+                     }));
+                  }
                }
 
                dMultiResult.done().getResult().addCallback(function () {
@@ -846,10 +849,15 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
          }
       },
 
-      /* Для правильной работы биндингов, предполагаем, что масив [null] тоже является пустым выделением */
+      /* Для правильной работы биндингов, предполагаем, что масив [null] тоже является пустым выделением,
+         если такой записи нет в items */
       _isEmptySelection: function() {
-         var selectedKeys = this._options.selectedKeys;
-         return !selectedKeys.length || $ws.helpers.isEqualObject(selectedKeys, EMPTY_SELECTION);
+         var selectedKeys = this._options.selectedKeys,
+             items = this.getItems();
+
+         /* Если selectedKeys - пустой или равен [null],
+            но этой записи нет в items, то считаем, что у нас ничего не выбрано */
+         return !selectedKeys.length || ($ws.helpers.isEqualObject(selectedKeys, EMPTY_SELECTION) && (!items || !items.getRecordById(null)));
       },
 
       /**

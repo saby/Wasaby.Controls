@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return tplOptions;
          },
          getRecordsForRedrawLV = function (projection, cfg){
-            var records = cfg._getRecordsForRedrawSt.call(this, projection);
+            var records = cfg._getRecordsForRedrawSt.apply(this, arguments);
             return records;
          };
       var
@@ -663,7 +663,8 @@ define('js!SBIS3.CONTROLS.ListView',
             //но после загрузки могут долетать данные (картинки в docviewer например), которые будут скроллить вверх.
             _scrollOnBottomTimer: null, //TODO: см. строчкой выше
             _componentBinder: null,
-            _touchSupport: false
+            _touchSupport: false,
+            _dragInitHandler: undefined //метод который инициализирует dragNdrop
          },
 
          $constructor: function () {
@@ -1861,6 +1862,19 @@ define('js!SBIS3.CONTROLS.ListView',
          _isSearchMode: function() {
             return this._searchParamName && !Object.isEmpty(this._options.groupBy) && this._options.groupBy.field === this._searchParamName;
          },
+
+         //TODO проверка для режима совместимости со старой отрисовкой
+         /*TODO easy параметр для временной поддержки группировки в быстрой отрисовке*/
+         _isSlowDrawing: function(easy) {
+            var result = !!this._options.itemTemplate || !!this._options.userItemAttributes || this._isSearchMode();
+            if (easy) {
+               return result;
+            }
+            else {
+               return result || !Object.isEmpty(this._options.groupBy);
+            }
+         },
+
          _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems) {
             if (action === IBindCollection.ACTION_MOVE && this._isSearchMode()) {
                this.redraw();
@@ -2016,7 +2030,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._loader = null;
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                   var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
-                  
+
                   this._updateScrolOffset(this._options.infiniteScroll);
                   //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                   this.getItems().setMetaData(dataSet.getMetaData());
@@ -2470,12 +2484,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          //------------------------GroupBy---------------------
-         _oldGroupByDefaultMethod: function (record) {
-            var curField = record.get(this._options.groupBy.field),
-               result = curField !== this._previousGroupBy;
-            this._previousGroupBy = curField;
-            return result;
-         },
          _getGroupTpl: function () {
             return this._options.groupBy.template || groupByTpl;
          },
@@ -2666,7 +2674,16 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
-            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', (function(e){
+            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._getDragInitHandler());
+         },
+
+         /**
+          * возвращает метод который инициализирует dragndrop
+          * @returns {function}
+          * @private
+          */
+         _getDragInitHandler: function(){
+            return this._dragInitHandler ? this._dragInitHandler : this._dragInitHandler  = (function(e){
                if (this._canDragStart(e)) {
                   this._initDrag.call(this, e);
                   //TODO: Сейчас появилась проблема, что если к компьютеру подключен touch-телевизор он не вызывает
@@ -2678,7 +2695,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   //ошибке. При возникновении ошибок на мобильных устройствах нужно будет добавить проверку !$ws._const.browser.isMobilePlatform.
                   e.preventDefault();
                }
-            }).bind(this));
+            }).bind(this)
          },
          /**
           * Получить текущую конфигурацию перемещения элементов с помощью DragNDrop.
@@ -2934,7 +2951,8 @@ define('js!SBIS3.CONTROLS.ListView',
                this._options.selectedItems = Di.resolve('collection.recordset', {
                   ownerShip: false,
                   adapter: items.getAdapter(),
-                  idProperty: items.getIdProperty()
+                  idProperty: items.getIdProperty(),
+                  model: items.getModel()
                });
             } else {
                ListView.superclass.initializeSelectedItems.call(this);
@@ -2955,7 +2973,9 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          deleteRecords: function(idArray, message) {
             var self = this;
-            idArray = Array.isArray(idArray) ? idArray : [idArray];
+            //Клонируем массив, т.к. он может являться ссылкой на selectedKeys, а после удаления мы сами вызываем removeItemsSelection.
+            //В таком случае и наш idArray изменится по ссылке, и в событие onEndDelete уйдут некорректные данные
+            idArray = Array.isArray(idArray) ? $ws.core.clone(idArray) : [idArray];
             message = message || (idArray.length !== 1 ? rk("Удалить записи?", "ОперацииНадЗаписями") : rk("Удалить текущую запись?", "ОперацииНадЗаписями"));
             return $ws.helpers.question(message).addCallback(function(res) {
                if (res) {
