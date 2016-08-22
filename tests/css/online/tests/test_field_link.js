@@ -32,10 +32,10 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
             .capture('hovered_text', function (actions) {
                 actions.mouseMove('.controls-FieldLink__linkItem-caption');
             })
-
+			/*
             .capture('hovered_close_icon', function (actions) {
                 actions.mouseMove('.controls-FieldLink__linkItem-cross');
-            })
+            })*/
 			
 			.capture('disabled', function (actions) {
                 actions.executeJS(function (window) {
@@ -123,10 +123,10 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
             .capture('hovered_text', function (actions) {
                 actions.mouseMove('.controls-FieldLink__linkItem-caption');
             })
-
+/*
             .capture('hovered_close_icon', function (actions) {
                 actions.mouseMove('.controls-FieldLink__linkItem-cross');
-            })
+            })*/
     });
 	
 	gemini.suite('bold_item', function (test) {
@@ -159,10 +159,10 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
             .capture('hovered_text', function (actions) {
                 actions.mouseMove('.controls-FieldLink__linkItem-caption');
             })
-
+/*
             .capture('hovered_close_icon', function (actions) {
                 actions.mouseMove('.controls-FieldLink__linkItem-cross');
-            })
+            })*/
     });
 	
 	gemini.suite('three_dict', function (test) {
