@@ -731,6 +731,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    /* Если в поле связи не отрисовано ни одного элемента, то уменьшаем ширину добавляемого,
                       т.к. хотя бы один элемент должен быть отрисован (стандарт) */
                    if(!linkCollection.getContainer().find('.controls-FieldLink__linkItem').length) {
+                      item.addClass('ws-ellipsis');
                       item[0].style.width = inputWidth - inputMinWidth + 'px';
                       needDrawItem = true;
                    }
