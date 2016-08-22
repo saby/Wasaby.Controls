@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.DecorableMixin',
       'js!SBIS3.CONTROLS.DragNDropMixinNew',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
+      'js!SBIS3.CONTROLS.BreakClickBySelectMixin',
       'js!SBIS3.CONTROLS.ItemsToolbar',
       'js!SBIS3.CORE.MarkupTransformer',
       'tmpl!SBIS3.CONTROLS.ListView',
@@ -24,13 +25,13 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Pager',
       'js!SBIS3.CONTROLS.EditInPlaceHoverController',
       'js!SBIS3.CONTROLS.EditInPlaceClickController',
+      'js!SBIS3.CONTROLS.ImitateEvents',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.ScrollWatcher',
       'js!WS.Data/Collection/IBind',
       'js!WS.Data/Collection/List',
       'i18n!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
-      'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
       'browser!tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
       'browser!tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
       'browser!tmpl!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
@@ -40,16 +41,16 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!WS.Data/Di',
       'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
-      'js!WS.Data/Collection/RecordSet',
-      'js!SBIS3.CONTROLS.DragEntity.Row'
+      'js!SBIS3.CONTROLS.DragEntity.Row',
+      'js!WS.Data/Collection/RecordSet'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
-             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
-             TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
-             Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
+             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
+             TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
+             Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder, Di, ArraySimpleValuesUtil) {
 
-      'use strict';
+     'use strict';
 
       var
          buildTplArgsLV = function(cfg) {
@@ -94,6 +95,8 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__pagerNoAmount Скрыть отображение количества записей на странице в пейджинге.
        * @cssModifier controls-ListView__pagerHideEndButton Скрыть кнопку "Перейти к последней странице"
        * Т.е. текст "1-10" при отображении 10 записей на 1-ой странице
+       *
+       * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
@@ -274,7 +277,6 @@ define('js!SBIS3.CONTROLS.ListView',
                model: null
             },
             _notEndEditClassName: 'controls-ListView__onFocusNotEndEdit',
-            _emptyData: undefined,
             _containerScrollHeight : 0,
             _firstScrollTop : true,
             _addResultsMethod: undefined,
@@ -687,7 +689,6 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing()) {
                this.setGroupBy(this._options.groupBy, false);
             }
-            this._drawEmptyData();
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
             if (!this._options._serverRender) {
@@ -861,7 +862,7 @@ define('js!SBIS3.CONTROLS.ListView',
                case $ws._const.key.enter:
                   if(selectedKey) {
                      var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
-                     this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem);
+                     this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem, e);
                   }
                   break;
                case $ws._const.key.space:
@@ -984,7 +985,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             if (target.length && this._isViewElement(target)) {
                id = this._getItemsProjection().getByHash(target.data('hash')).getContents().getId();
-               this._elemClickHandler(id, this.getItems().getRecordByKey(id), e.target);
+               this._elemClickHandler(id, this.getItems().getRecordByKey(id), e.target, e);
             }
             if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox')){
                $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
@@ -1164,16 +1165,12 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
-            if(this._emptyData && this._emptyData.length) {
-               if(html) {
-                  this._emptyData.empty().html(html)
-               } else {
-                  this._emptyData.remove();
-                  this._emptyData = undefined;
-               }
-            } else if(html) {
-               this._drawEmptyData();
-            }
+            this._getEmptyDataContainer().empty().html(html);
+            this._toggleEmptyData(!!html);
+         },
+
+         _getEmptyDataContainer: function() {
+            return $('.controls-ListView__EmptyData', this._container.get(0));
          },
 
          setMultiselect: function(flag) {
@@ -1182,10 +1179,6 @@ define('js!SBIS3.CONTROLS.ListView',
                                .toggleClass('controls-ListView__multiselect__off', !flag);
          },
 
-         _drawEmptyData: function() {
-            var html = this._options.emptyHTML;
-            this._emptyData = html && $(emptyDataTpl({emptyHTML: html})).appendTo(this._container);
-         },
          /**
           * Устанавливает шаблон отображения элемента коллекции.
           * @param {String|Function} tpl Шаблон отображения каждого элемента коллекции.
@@ -1213,7 +1206,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          /* +++++++++++++++++++++++++++ */
 
-         _elemClickHandler: function (id, data, target) {
+         _elemClickHandler: function (id, data, target, e) {
             var $target = $(target),
                 self = this,
                 elClickHandler = this._options.elemClickHandler,
@@ -1224,36 +1217,36 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._onCheckBoxClick($target);
                }
                else {
-                  onItemClickResult = this._notifyOnItemClick(id, data, target);
+                  onItemClickResult = this._notifyOnItemClick(id, data, target, e);
                }
             }
             else {
-               onItemClickResult = this._notifyOnItemClick(id, data, target);
+               onItemClickResult = this._notifyOnItemClick(id, data, target, e);
             }
             if (onItemClickResult instanceof $ws.proto.Deferred) {
                onItemClickResult.addCallback(function (result) {
                   if (result !== false) {
                      self.setSelectedKey(id);
-                     self._elemClickHandlerInternal(data, id, target);
-                     elClickHandler && elClickHandler.call(self, id, data, target);
+                     self._elemClickHandlerInternal(data, id, target, e);
+                     elClickHandler && elClickHandler.call(self, id, data, target, e);
                   }
                   return result;
                });
             }
             else if (onItemClickResult !== false) {
                this.setSelectedKey(id);
-               self._elemClickHandlerInternal(data, id, target);
+               self._elemClickHandlerInternal(data, id, target, e);
                elClickHandler && elClickHandler.call(self, id, data, target);
             }
          },
-         _notifyOnItemClick: function(id, data, target) {
-            return this._notify('onItemClick', id, data, target);
+         _notifyOnItemClick: function(id, data, target, e) {
+            return this._notify('onItemClick', id, data, target, e);
          },
          _onCheckBoxClick: function(target) {
             this.toggleItemsSelection([target.closest('.controls-ListView__item').attr('data-id')]);
          },
 
-         _elemClickHandlerInternal: function (data, id, target) {
+         _elemClickHandlerInternal: function (data, id, target, e) {
             /* Клик по чекбоксу не должен вызывать активацию элемента */
             if(!$(target).hasClass('js-controls-ListView__itemCheckBox')) {
                this._activateItem(id);
@@ -1272,7 +1265,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      if (selectedItems && selectedItems.getCount()) {
                         selectedItems.clear();
                      }
-                     ListView.superclass.setSelectedItemsAll.call(this);
+                      this.setSelectedItemsAll.call(this);
                      if (dataSet.getCount() == 1000 && dataSet.getMetaData().more){
                         InformationPopupManager.showMessageDialog({
                            status: 'default',
@@ -1281,7 +1274,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                   }.bind(this));
             } else {
-               ListView.superclass.setSelectedItemsAll.call(this);
+               this.setSelectedItemsAll.call(this);
             }
          },
          _drawSelectedItems: function (idArray) {
@@ -1457,8 +1450,8 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.editingTemplate;
          },
 
-         showEip: function(target, model, options) {
-            return this._canShowEip() ? this._getEditInPlace().showEip(target, model, options) : $ws.proto.Deferred.fail();
+         showEip: function(target, model, options, withoutActivateFirstControl) {
+            return this._canShowEip() ? this._getEditInPlace().showEip(target, model, options, withoutActivateFirstControl) : $ws.proto.Deferred.fail();
          },
 
          _canShowEip: function() {
@@ -1471,8 +1464,16 @@ define('js!SBIS3.CONTROLS.ListView',
             this._destroyEditInPlace();
          },
 
-         _onItemClickHandler: function(event, id, record, target) {
-            event.setResult(this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true }));
+         _onItemClickHandler: function(event, id, record, target, originalEvent) {
+            var
+               result = this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true }, false);
+            if (originalEvent.type === 'click') {
+               result.addCallback(function(res) {
+                  ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
+                  return res;
+               });
+            }
+            event.setResult(result);
          },
 
          _onChangeHoveredItemHandler: function(event, hoveredItem) {
@@ -1591,8 +1592,15 @@ define('js!SBIS3.CONTROLS.ListView',
                            this._showItemsToolbar(this._getElementData(this._editingItem.target));
                            this._getItemsToolbar().lockToolbar();
                         }
-                        this.setSelectedKey(model.getId());
+                        if (model.getState() === Record.RecordState.DETACHED) {
+                           $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
+                           $('.controls-ListView__item[data-id="' + model.getId() + '"]', this._container).addClass('controls-ListView__item__selected');
+                        }
+                        else {
+                           this.setSelectedKey(model.getId());
+                        }
                         event.setResult(this._notify('onAfterBeginEdit', model));
+                        this._toggleEmptyData(false);
                      }.bind(this),
                      onChangeHeight: function() {
                         if (this._getItemsToolbar().isToolbarLocking()) {
@@ -1623,6 +1631,7 @@ define('js!SBIS3.CONTROLS.ListView',
                               this._hideItemsToolbar();
                            }
                         }
+                        this._toggleEmptyData(!this.getItems().getCount());
                      }.bind(this)
                   }
                };
@@ -2137,6 +2146,10 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollWatcher.scrollTo(this._firstScrollTop || (scrollAmount < 0) ? 'bottom' : scrollAmount);
             }
          },
+         /**
+          * Скролит табличное представление к указанному элементу
+          * @param item Элемент, к которому осуществляется скролл
+          */
          scrollToItem: function(item){
             if (item.getId && item.getId instanceof Function){
                this._scrollToItem(item.getId());
@@ -2319,9 +2332,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _toggleEmptyData: function(show) {
-            if(this._emptyData) {
-               this._emptyData.toggleClass('ws-hidden', !show);
-            }
+            this._getEmptyDataContainer().toggleClass('ws-hidden', !show);
          },
          //------------------------Paging---------------------
          _processPaging: function() {
@@ -3005,5 +3016,5 @@ define('js!SBIS3.CONTROLS.ListView',
          }
       });
 
-      return ListView;
+      return ListView.mixin([BreakClickBySelectMixin]);
    });

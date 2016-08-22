@@ -8,13 +8,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'js!WS.Data/Display/Display',
    'js!WS.Data/Collection/IBind',
    'js!WS.Data/Display/Collection',
+   'js!WS.Data/Display/Enum',
+   'js!WS.Data/Display/Flags',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'tmpl!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
    'js!WS.Data/Utils',
    'js!WS.Data/Entity/Model',
    'Core/ParserUtilities',
    'js!SBIS3.CONTROLS.Utils.Sanitize'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize) {
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, CollectionDisplay, EnumDisplay, FlagsDisplay, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -36,8 +38,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       return result;
    },
 
-   canApplyGrouping = function(projItem, cfg) {
-      var
+   /*TODO метод нужен потому, что Лехина утилита не умеет работать с перечисляемым где contents имеет тип string*/
+   getPropertyValue = function(itemContents, field) {
+      if (typeof itemContents == 'string') {
+         return itemContents;
+      }
+      else {
+         return Utils.getItemPropertyValue(itemContents, field);
+      }
+   },
+      
+   canApplyGrouping = function(projItem, cfg) {      var
          itemParent = projItem.getParent && projItem.getParent();
       return !Object.isEmpty(cfg.groupBy) && (!itemParent || itemParent.isRoot());
    },
@@ -90,6 +101,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       tplOptions.Sanitize = Sanitize;
       tplOptions.displayField = cfg.displayField;
       tplOptions.templateBinding = cfg.templateBinding;
+      tplOptions.getPropertyValue = getPropertyValue;
 
       if (cfg.itemContentTpl) {
          itemContentTpl = cfg.itemContentTpl;
@@ -224,6 +236,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _dataSource: undefined,
          _dataSet: null,
          _dotItemTpl: null,
+         _propertyValueGetter: getPropertyValue,
          _options: {
 
             _canServerRender: false,
@@ -255,11 +268,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @see SBIS3.CONTROLS.Selectable#getSelectedKey
              */
             keyField : null,
-            /**
-             * @noShow
-             * @deprecated На текущий момент отрисовка изменившихся данных осуществляется автматически. Опция будет удалена в 3.7.4.100.
-             */
-            autoRedraw: true,
             /**
              * @cfg {String} Поле элемента коллекции, из которого отображать данные
              * @example
@@ -649,7 +657,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * Метод получения проекции по ID итема
        */
       _getItemProjectionByItemId: function(id) {
-         return this._getItemsProjection() ? this._getItemsProjection().getItemBySourceItem(this._options._items.getRecordById(id)) : null;
+         return this._getItemsProjection() ? this._getItemsProjection().getItemBySourceItem(this.getItems().getRecordById(id)) : null;
       },
 
       /**
@@ -711,34 +719,40 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _redrawItems : function() {
          this._groupHash = {};
          var
-            $itemsContainer = this._getItemsContainer(),
-            itemsContainer = $itemsContainer.get(0),
-            data = this._prepareItemsData(),
-            markup;
+            $itemsContainer = this._getItemsContainer();
+         //в контролах типа комбобокса этого контейнера может не быть, пока пикер не создан
+         if ($itemsContainer) {
+            var
+               itemsContainer = $itemsContainer.get(0),
+               data = this._prepareItemsData(),
+               markup;
 
-         data.tplData = this._prepareItemData();
-         //TODO опять же, перед полной перерисовкой данные лесенки достаточно сбросить, чтобы она правильно отработала
-         //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
-         var ladder = this._options._decorators && this._options._decorators.getByName('ladder');
-         ladder && ladder.setIgnoreEnabled(true);
-         ladder && ladder.reset();
-         markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
-         ladder && ladder.setIgnoreEnabled(false);
-         //TODO это может вызвать тормоза
-         var comps = this._destroyInnerComponents($itemsContainer, this._options.easyGroup);
-         if (markup.length) {
-            if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
-               $itemsContainer.append(markup);
-            } else {
-               itemsContainer.innerHTML = markup;
+            data.tplData = this._prepareItemData();
+            //TODO опять же, перед полной перерисовкой данные лесенки достаточно сбросить, чтобы она правильно отработала
+            //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
+            var ladder = this._options._decorators && this._options._decorators.getByName('ladder');
+            ladder && ladder.setIgnoreEnabled(true);
+            ladder && ladder.reset();
+            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
+            ladder && ladder.setIgnoreEnabled(false);
+            //TODO это может вызвать тормоза
+            var comps = this._destroyInnerComponents($itemsContainer, this._options.easyGroup);
+            if (markup.length) {
+               if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
+                  $itemsContainer.append(markup);
+               } else {
+                  itemsContainer.innerHTML = markup;
+               }
             }
-         }
-         for (i = 0; i < comps.length; i++) {
-            if (comps[i]) {
-               comps[i].destroy();
+            for (i = 0; i < comps.length; i++) {
+               if (comps[i]) {
+                  comps[i].destroy();
+               }
+
             }
+            this._toggleEmptyData(!(data.records && data.records.length) && this._options.emptyHTML);
+
          }
-         this._toggleEmptyData(!(data.records && data.records.length) && this._options.emptyHTML);
          this._reviveItems();
          this._container.addClass('controls-ListView__dataLoaded');
       },
@@ -1187,8 +1201,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
       /**
        * Перевычитывает модель из источника данных, мержит изменения к текущим данным и перерисовывает запись
-       * @param id Идентификатор модели
-       * @param id Мета информация
+       * @param {Number} id Идентификатор модели
+       * @param {Object|WS.Data/Entity/Model} meta Мета информация
        * @returns {*}
        */
       reloadItem: function(id, meta) {
@@ -1203,14 +1217,30 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             return $ws.proto.deferred.success();
          }
       },
-       /**
-        * Метод перезагрузки данных.
-        * Можно задать фильтрацию, сортировку.
-        * @param {String} filter Параметры фильтрации.
-        * @param {String} sorting Параметры сортировки.
-        * @param offset Элемент, с которого перезагружать данные.
-        * @param {Number} limit Ограничение количества перезагружаемых элементов.
-        */
+      /**
+       * Перезагружает набор записей представления данных с последующим обновлением отображения.
+       * @param {Object} filter Параметры фильтрации.
+       * @param {String|Array.<Object.<String,Boolean>>} sorting Параметры сортировки.
+       * @param {Number} offset Смещение первого элемента выборки.
+       * @param {Number} limit Максимальное количество элементов выборки.
+       * @example
+       * <pre>
+       *    myDataGridView.reload(
+       *       { // Устанавливаем параметры фильтрации: требуются записи, в которых поля принимают следующие значения
+       *          iata: 'SVO',
+       *          direction: 'Arrivals',
+       *          state: 'Landed',
+       *          fromCity: ['New York', 'Los Angeles']
+       *       },
+       *       [ // Устанавливаем параметры сортировки: сначала производится сортировка по полю direction, а потом - по полю state
+       *          {direction: false}, // Поле direction сортируется по возрастанию
+       *          {state: true} // Поле state сортируется по убыванию
+       *       ],
+       *       50, // Устанавливаем смещение: из всех подходящих записей отбор результатов начнём с 50-ой записи
+       *       20 // Требуется вернуть только 20 записей
+       *    );
+       * </pre>
+       */
       reload: propertyUpdateWrapper(function (filter, sorting, offset, limit) {
          var
             def,
@@ -1245,11 +1275,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    ) {
                       this._options._items.setMetaData(list.getMetaData());
                       this._options._items.assign(list);
-                      if(!self._options.autoRedraw) {
-                         self.redraw();
-                      } else {
-                         self._drawItemsCallback();
-                      }
+                      self._drawItemsCallback();
                    } else {
                       this._unsetItemsEventHandlers();
                       this._options._items = list;
@@ -1678,8 +1704,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var childControls = this.getChildControls();
          for (var i = 0; i < childControls.length; i++) {
             if (childControls[i].getContainer().hasClass('controls-ListView__item')) {
-               var id = childControls[i].getContainer().attr('data-id');
-               this._itemsInstances[id] = childControls[i];
+               var hash = childControls[i].getContainer().attr('data-hash');
+               this._itemsInstances[hash] = childControls[i];
             }
          }
 
@@ -1720,8 +1746,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see getItemInstances
         */
       getItemInstance: function (id) {
+         var projItem = this._getItemProjectionByItemId(id);
          var instances = this.getItemsInstances();
-         return instances[id];
+         return instances[projItem.getHash()];
       },
       //TODO Сделать публичным? И перенести в другое место
       _hasNextPage: function (hasMore, offset) {
@@ -2054,7 +2081,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
       _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems) {
          this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);
-         var ladderDecorator = this._options._decorators.getByName('ladder');
+         var ladderDecorator = this._options._decorators && this._options._decorators.getByName('ladder');
          //todo опять неверно вызывается ladderCompare, используем костыль, чтобы этого не было
 //         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
 //            ladderDecorator.setIgnoreEnabled(true);
