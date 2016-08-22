@@ -1,36 +1,48 @@
-.controls-NavigatioLeft{
+.controls-LeftNavigation {
    display: inline-block;
+   height: 24px;
+   line-height: 24px;
 }
 
-.controls-NavigatioLeft__icon:after{
-   content: 'выкл';
-   font-family: 'TensorFont';
-   font-size: 18px;
-   color: #D94700;
-}
-
-.controls-NavigatioLeft__icon:after{
-   content: 'вкл';
-   font-family: 'TensorFont';
-   font-size: 18px;
-   color: #D94700;
-}
-
-.controls-NavigatioLeft__count{
-   font-family: 'TensorFont';
-   font-size: 15px;
-   color: #D94700;
-}
-
-.controls-NavigatioLeft__caption{
+.controls-LeftNavigation__caption {
+   display: inline-block;
+   float: left;
+   margin-left: 4px;
    font-family: 'TensorFont Bold';
    font-size: 15px;
    color: #313E78;
 }
 
-.controls-NavigatioLeft:hover .controls-NavigatioLeft__icon:after,
-.controls-NavigatioLeft:hover .controls-NavigatioLeft__count,
-.controls-NavigatioLeft:hover .controls-NavigatioLeft__caption{
-   cursor: pointer;
+.controls-LeftNavigation__count {
+   display: inline-block;
+   float: left;
+   font-family: 'TensorFont';
+   font-size: 15px;
+   color: #D94700;
+}
+
+.controls-LeftNavigation__icon {
+   display: inline-block;
+   float: left;
+   text-align: center;
+   width: 24px;
+}
+
+.icon-16{
+   font-family: 'TensorFont';
+   font-size: 18px;
+   color: #D94700;
+}
+
+.controls-Checked__checked .controls-LeftNavigation__icon {
+   font-family: 'TensorFont';
+   font-size: 18px;
+   color: #D94700;
+}
+
+.controls-LeftNavigation:hover .controls-LeftNavigation__icon:after,
+.controls-LeftNavigation:hover .controls-LeftNavigation__count,
+.controls-LeftNavigation:hover .controls-LeftNavigation__caption {
    color: #FF7033;
+   cursor: pointer;
 }

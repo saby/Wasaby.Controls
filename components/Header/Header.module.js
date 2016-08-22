@@ -2,9 +2,10 @@ define('js!SBIS3.CONTROLS.Header',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
       'html!SBIS3.CONTROLS.Header',
+      'js!WS.Data/Entity/Record',
       'css!SBIS3.CONTROLS.Header'
    ],
-   function(CompoundControl, dotTplFn){
+   function(CompoundControl, dotTplFn, Record){
 
       'use strict';
       /**
@@ -16,14 +17,16 @@ define('js!SBIS3.CONTROLS.Header',
        *    <option name="caption">Заголовок</option>
        *    <option name="big">true</option>
        * </component>
-       * @author Журавлев Максим Сергеевич
+       * @author Крайнов Дмитрий Олегович
+       * cssModifier controls-Header__bigHeader Отображает текст как большой заголовок
+       * cssModifier controls-Header__subheader Отображает текст как подзаголовок
+       * cssModifier controls-Header__bigSubheader Отображает текст как большой подзаголовок
        * */
       var Header = CompoundControl.extend({
 
          _dotTplFn: dotTplFn,
 
          $protected: {
-
             _options: {
                /**
                 * @cfg {String} Устанавливает текст заголовка.
@@ -34,18 +37,20 @@ define('js!SBIS3.CONTROLS.Header',
                 * @see getCaption
                 * @see setCaption
                 * */
-               caption: '',
-               /**
-                * @cfg {Boolean} Устанавливает размер заголовка, большой или маленький.
-                * @example
-                * <pre class="brush: xml">
-                *    <option name="big">true</option>
-                * </pre>
-                * @see getBig
-                * @see setBig
-                * */
-               big: false
+               caption: ''
             }
+         },
+
+         init: function() {
+            Header.superclass.init.call(this);
+
+            this._options.context = new Record({
+               rawData: {
+                  caption: this.getCaption()
+               }
+            });
+
+            this.getLinkedContext().setValue('context', this._options.context);
          },
          /**
           * Возвращает текст заголовка
@@ -59,24 +64,7 @@ define('js!SBIS3.CONTROLS.Header',
           * */
          setCaption: function(caption) {
             this._options.caption = caption;
-            this.getContainer().html(caption);
-         },
-         /**
-          * Возвращает является ли текст большим
-          * */
-         isBig: function() {
-            return this._options.big;
-         },
-         /**
-          * Устанавливает является ли текс большим
-          * @param big Большой ли заголовок
-          * */
-         setBig: function(big) {
-            var container = this.getContainer(),
-                className= 'controls-Header__big';
-
-            this._options.big = big;
-            big ? container.addClass(className) : container.removeClass(className);
+            this._options.context.set('caption', caption);
          }
       });
 

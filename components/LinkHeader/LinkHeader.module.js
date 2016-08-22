@@ -13,13 +13,14 @@ define('js!SBIS3.CONTROLS.LinkHeader',
        * Контролл для отображения заголовков с функцией перехода по ссылке
        * @class SBIS3.CONTROLS.LinkHeader
        * @extends SBIS3.CONTROLS.Header
+       * @mixes SBIS3.CONTROLS.Clickable
        * @initial
        * <component data-component="SBIS3.CONTROLS.LinkHeader">
        *    <option name="caption">Заголовок</option>
-       *    <option name="big">true</option>
        *    <option name="href">https://inside.tensor.ru</option>
        * </component>
-       * @author Журавлев Максим Сергеевич
+       * cssModifier controls-LinkHeader__separator После текста появляется разделитель |
+       * @author Крайнов Дмитрий Олегович
        * */
       var LinkHeader = Header.extend([Clickable], {
          _dotTplFn: dotTplFn,
@@ -37,24 +38,8 @@ define('js!SBIS3.CONTROLS.LinkHeader',
                 * @see getHref
                 * @see setHref
                 * */
-               href: '',
-               /**
-                * @cfg {Boolean} Устанавливает нужен ли разделитель.
-                * @example
-                * <pre class="brush: xml">
-                *    <option name="separator">true</option>
-                * </pre>
-                * @see getSeparator
-                * @see setSeparator
-                * */
-               separator: false
+               href: ''
             }
-         },
-
-         init: function() {
-            LinkHeader.superclass.init.call(this);
-
-            this._link = this.getChildControlByName('LinkHeader-caption');
          },
          /**
           * Возвращает ссылку
@@ -64,28 +49,11 @@ define('js!SBIS3.CONTROLS.LinkHeader',
          },
          /**
           * Устанавливает ссылку
-          * @param link ссылка
+          * @param href ссылка
           * */
-         setHref: function(link) {
-            this._options.href = link;
-            this._link.setHref(link);
-         },
-         /**
-          * Возвращает есть ли разделитель
-          * */
-         isSeparator: function() {
-            return this._options.separator;
-         },
-         /**
-          * Устанавливает наличие разделителя
-          * @param separator есть ли разделитель
-          * */
-         setSeparator: function(separator) {
-            var container = $('controls-LinkHeader__separator'),
-                className = 'ws-hidden';
-
-            this._options.separator = separator;
-            separator ? container.removeClass(className) : container.addClass(className);
+         setHref: function(href) {
+            this._options.href = href;
+            this.getContainer().find('a').attr('href', href);
          }
       });
 

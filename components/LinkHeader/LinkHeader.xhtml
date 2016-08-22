@@ -1,7 +1,4 @@
 <div class="controls-LinkHeader">
-    <component data-component="SBIS3.CONTROLS.Link" class="controls-LinkHeader__caption" name="LinkHeader-caption">
-        <option name="caption">{{=it.caption}}</option>
-        <option name="href">{{=it.href}}</option>
-    </component>
-    <div class="controls-LinkHeader__separator {{?!it.separator}}ws-hidden{{?}}"></div>
+    <a href="{{=it.href}}" data-bind="html: context/caption"></a>
+    <div class="Separator"></div>
 </div>
