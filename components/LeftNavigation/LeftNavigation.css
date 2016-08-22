@@ -28,13 +28,15 @@
    width: 24px;
 }
 
-.icon-16{
+.controls-LeftNavigation__icon:after{
+   content: '\E013';
    font-family: 'TensorFont';
    font-size: 18px;
    color: #D94700;
 }
 
-.controls-Checked__checked .controls-LeftNavigation__icon {
+.controls-Checked__checked .controls-LeftNavigation__icon:after {
+   content: '\E000';
    font-family: 'TensorFont';
    font-size: 18px;
    color: #D94700;
