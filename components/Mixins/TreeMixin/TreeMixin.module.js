@@ -40,20 +40,32 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       }
    },
    searchProcessing = function(projection, cfg) {
-      var resRecords = [], curParentGroup;
+      var resRecords = [], curGroupParent, parentsCash = {}, curParentId;
 
       projection.each(function (item) {
          var curPath = [];
          if (!item.isNode()) {
-            var curParent = item.getParent();
-            if (curParentGroup !== curParent) {
-               curParentGroup = curParent;
-               while (curParent.getContents() != null) {
-                  var pathElem = {};
-                  pathElem[cfg.keyField] = curParent.getContents().getId();
-                  pathElem[cfg.displayField] = curParent.getContents().get(cfg.displayField);
+            var curParent = item.getParent(), curParentContents;
+            if (curGroupParent !== curParent) {
+               curGroupParent = curParent;
+               curParentContents = curParent.getContents();
+               while (curParentContents != null) {
+                  var
+                     pathElem = {};
+                  curParentId = curParentContents.getId();
+                  pathElem[cfg.keyField] = curParentId;
+                  pathElem[cfg.displayField] = curParentContents.get(cfg.displayField);
                   curPath.unshift(pathElem);
+
+                  if (!parentsCash[curParentId] || parentsCash[curParentId]['flag'] == 0) {
+                     parentsCash[curParentId] = {
+                        item : curParent,
+                        flag: 1
+                     };
+                  }
+
                   curParent = curParent.getParent();
+                  curParentContents = curParent.getContents();
                }
                resRecords.push({
                   tpl: searchRender,
@@ -72,7 +84,18 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             }
             resRecords.push(item);
          }
+         else {
+            curParentId = item.getContents().getId();
+            if (!parentsCash[curParentId]) {
+               parentsCash[curParentId] = {
+                  item : item,
+                  flag: 0
+               };
+            }
+         }
+
       });
+
       return resRecords;
    },
    getRecordsForRedraw = function(projection, cfg) {
