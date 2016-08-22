@@ -507,6 +507,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
             headData,
             headMarkup;
 
+         if (!this._thead) {
+            this._bindHead();
+         }
          headData = prepareHeadData(this._options);
          headMarkup = MarkupTransformer(headTpl(headData));
          var body = $('.controls-DataGridView__tbody', this._container);
@@ -518,6 +521,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._thead = $(headMarkup).insertBefore(body);
 
          this._redrawColgroup();
+         this.reviveComponents();
          this._bindHead();
          this._notify('onDrawHead');
       },
@@ -1014,9 +1018,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
        },
 
       _oldRedraw: function() {
-         if (!this._thead) {
-            this._bindHead();
-         }
          DataGridView.superclass._oldRedraw.apply(this, arguments);
          this._redrawHead();
       },

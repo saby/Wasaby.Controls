@@ -81,10 +81,6 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
             } else {
                this._onContainerScrollHandler = this._onContainerScroll.bind(this);
                this._scrollingContainer.bind('scroll', this._onContainerScrollHandler);
-               //Нужно чтобы вызвать скролл у контейнеров без видимого скролла.
-               $ws.helpers.wheel(this._scrollingContainer, function (event) {
-                  $(self._scrollingContainer).scrollTop($(self._scrollingContainer).scrollTop() - event.wheelDelta / 2);
-               });
             }
          } else if (this._inWindow()) {
             this._onWindowScrollHandler = this._onWindowScroll.bind(this);
