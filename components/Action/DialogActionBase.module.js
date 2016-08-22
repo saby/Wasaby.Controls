@@ -67,7 +67,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          /**
           * @var {WS.Data/Entity/Model} Запись которая пришла на редктирование, из метода прочитать или создать
           */
-         _record: undefined
+         _record: undefined,
+         _showedLoading: false
       },
       /**
        * @typedef {Object} ExecuteMetaConfig
@@ -108,17 +109,46 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       },
 
       _opendEditComponent: function(meta, dialogComponent, mode){
+         if (this._isNeedToRedrawDialog()){
+            this._saveRecord(meta, dialogComponent, mode)
+         }
+         else{
+            this._setConfig(meta, dialogComponent, mode);
+         }
+      },
+
+      _saveRecord: function(meta, dialogComponent, mode){
+         var args = arguments,
+             self = this,
+             templateComponent,
+             currentRecord;
+
+         templateComponent = this._dialog._getTemplateComponent();
+         currentRecord = templateComponent.getRecord ? templateComponent.getRecord() : null; //Ярик говорит, что dialogActionBase используется не только для formController'a
+         if (currentRecord && currentRecord.isChanged()){
+            $ws.helpers.question(rk('Сохранить изменения?'), {opener: templateComponent}).addCallback(function(result){
+               if (result === true){
+                  templateComponent.update({hideQuestion: true}).addCallback(function(){
+                     self._setConfig.apply(self, args);
+                  });
+               }
+               else {
+                  self._setConfig.apply(self, args);
+               }
+            });
+         }
+         else{
+            self._setConfig.apply(self, args);
+         }
+      },
+
+      _setConfig: function(meta, dialogComponent, mode){
          this._linkedModelKey = meta.id;
          //Производим корректировку идентификатора только в случае, когда идентификатор передан
          if (meta.hasOwnProperty('id')) {
-            var newKey = this._getEditKey(meta.item);
             //Если передали ключ из getEditKey - значит FC будет работать с новой записью,
             //вычитанной по этому ключу
-            //Выписал задачу в 374.120 для настройки типовых стратегий поведения
-            //https://inside.tensor.ru/opendoc.html?guid=aaecfb86-59b9-4302-89be-09ba67d89cc7&description=
-            if (newKey && newKey !== meta.id){
-               meta.id = newKey;
-            }
+            meta.id = this._getEditKey(meta.item) || meta.id;
          }
 
          var self = this,
@@ -149,6 +179,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if (meta.controllerSource && ( !config.componentOptions.record || meta.preloadRecord !== false )) {
             //Загружаем компонент, отнаследованный от formController'a, чтобы с его прототипа вычитать запись, которую мы прокинем при инициализации компонента
             //Сделано в рамках ускорения
+            this._showLoadingIndicator();
             require([dialogComponent], this._initTemplateComponentCallback.bind(this, config, meta, mode));
          }
          else {
@@ -164,6 +195,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
             def.addCallback(function (record) {
                self._record = record;
+               self._hideLoadingIndicator();
                config.componentOptions.record = record;
                if (def.isNewRecord)
                   config.componentOptions.isNewRecord = true;
@@ -179,11 +211,22 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          }
       },
 
+      _showLoadingIndicator: function(){
+         this._showedLoading = true;
+         window.setTimeout(function(){
+            if (this._showedLoading){
+               $ws.single.Indicator.show();
+            }
+         }.bind(this), 750);
+      },
+
+      _hideLoadingIndicator: function(){
+         this._showedLoading = false;
+         $ws.single.Indicator.hide();
+      },
+
       _showDialog: function(config, meta, mode){
-         var self = this,
-            templateComponent,
-            currentRecord,
-            floatAreaCfg,
+         var floatAreaCfg,
             Component;
          mode = mode || this._options.mode;
          if (mode == 'floatArea'){
@@ -194,28 +237,15 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             Component = Dialog;
          }
 
-         if (this._dialog && !this._dialog.isAutoHide()){
-            templateComponent = this._dialog._getTemplateComponent();
-            currentRecord = templateComponent.getRecord ? templateComponent.getRecord() : null; //Ярик говорит, что dialogActionBase используется не только для formController'a
-            if (currentRecord && currentRecord.isChanged()){
-               $ws.helpers.question(rk('Сохранить изменения?'), {opener: templateComponent}).addCallback(function(result){
-                  if (result){
-                     templateComponent.update({hideQuestion: true}).addCallback(function(){
-                        self._setNewDialogConfig(config);
-                     });
-                  }
-                  else {
-                     self._setNewDialogConfig(config);
-                  }
-               });
-            }
-            else{
-               this._setNewDialogConfig(config);
-            }
+         if (this._isNeedToRedrawDialog()){
+            this._setNewDialogConfig(config);
          }
          else{
             this._dialog = new Component(config);
          }
+      },
+      _isNeedToRedrawDialog: function(){
+        return this._dialog && !this._dialog.isAutoHide();
       },
       _setNewDialogConfig: function(config){
          $ws.core.merge(this._dialog._options, config);

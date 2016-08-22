@@ -80,6 +80,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          records = [],
          projectionFilter;
       if (cfg.expand || cfg.searchRender) {
+         cfg._previousGroupBy = undefined;
          projection.setEventRaising(false);
          expandAllItems(projection, cfg);
          projection.setEventRaising(true);
@@ -88,7 +89,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             records = searchProcessing(projection, cfg);
          }
          else {
-            projection.each(function (item) {
+            projection.each(function(item) {
+               if (cfg.groupBy && cfg.easyGroup) {
+                  cfg._groupItemProcessing(records, item, cfg);
+               }
                records.push(item);
             });
          }
@@ -105,7 +109,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          projectionFilter = resetFilterAndStopEventRaising.call(this, projection, false);
          applyExpandToItemsProjection.call(this, projection, cfg);
          restoreFilterAndRunEventRaising.call(this, projection, projectionFilter, false);
+         cfg._previousGroupBy = undefined;
          projection.each(function(item) {
+            if (cfg.groupBy && cfg.easyGroup) {
+               cfg._groupItemProcessing(items, item, cfg);
+            }
             items.push(item);
          });
          return items;
@@ -630,6 +638,23 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             parentFn.call(this, event, action, newItems, newItemsIndex, oldItems);
             this._findAndRedrawChangedBranches(newItems, oldItems);
             this._removeFromLoadedNodesRemoteNodes(oldItems);
+         },
+         //В режиме поиска в дереве, при выборе всех записей, выбираем только листья, т.к. папки в этом режиме не видны.
+         setSelectedItemsAll: function(parentFn) {
+            var
+                keys = [],
+                items = this.getItems(),
+                hierField = this.getHierField();
+            if (items && this._isSearchMode && this._isSearchMode()) {
+               items.each(function(rec){
+                  if (rec.get(hierField + '@') !== true) {
+                     keys.push(rec.getId())
+                  }
+               });
+               this.setSelectedKeys(keys);
+            } else {
+               parentFn.call(this);
+            }
          }
       },
       _getFilterForReload: function(filter, sorting, offset, limit, deepReload) {
@@ -960,6 +985,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        */
       setRoot: function(root){
          this._options.root = root;
+      },
+      /**
+       * Возвращает корень выборки
+       */
+      getRoot: function(){
+         return this._options.root;
       },
       /**
        * Возвращает идентификатор узла, в который было установлено проваливание.

@@ -232,11 +232,11 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="DropdownList 1"]', 40000);
-                this.list = find('[name="DropdownList 1"]');
-				this.title = find('[name="DropdownList 1"] .controls-DropdownList__text');
-				this.item4 = find('.controls-DropdownList__item[data-id="4"]');
+                this.list = '[name="DropdownList 1"]';
+				this.title = '[name="DropdownList 1"] .controls-DropdownList__text';
+				this.item4 = '.controls-DropdownList__item[data-id="4"]';
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
+                this.input = '[sbisname="TextBox 1"] input';
             })
 
             .capture('plain', function (actions) {
@@ -282,11 +282,11 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="DropdownList 1"]', 40000);
-                this.list = find('[name="DropdownList 1"]');
-				this.title = find('[name="DropdownList 1"] .controls-DropdownList__text');
-				this.item4 = find('.controls-DropdownList__item[data-id="4"]');
+                this.list = '[name="DropdownList 1"]';
+				this.title = '[name="DropdownList 1"] .controls-DropdownList__text';
+				this.item4 = '.controls-DropdownList__item[data-id="4"]';
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
+                this.input = '[sbisname="TextBox 1"] input';
             })
 
             .capture('plain', function (actions) {
@@ -332,11 +332,11 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="DropdownList 1"]', 40000);
-                this.list = find('[name="DropdownList 1"]');
-				this.title = find('[name="DropdownList 1"] .controls-DropdownList__text');
-				this.item4 = find('.controls-DropdownList__item[data-id="4"]');
+                this.list = '[name="DropdownList 1"]';
+				this.title = '[name="DropdownList 1"] .controls-DropdownList__text';
+				this.item4 = '.controls-DropdownList__item[data-id="4"]';
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
+                this.input = '[sbisname="TextBox 1"] input';
             })
 
             .capture('plain', function (actions) {
@@ -382,11 +382,11 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="DropdownList 1"]', 40000);
-                this.list = find('[name="DropdownList 1"]');
-				this.title = find('[name="DropdownList 1"] .controls-DropdownList__text');
-				this.item4 = find('.controls-DropdownList__item[data-id="4"]');
+                this.list = '[name="DropdownList 1"]';
+				this.title = '[name="DropdownList 1"] .controls-DropdownList__text';
+				this.item4 = '.controls-DropdownList__item[data-id="4"]';
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
+                this.input = '[sbisname="TextBox 1"] input';
             })
 
             .capture('plain', function (actions) {
@@ -432,11 +432,11 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="DropdownList 1"]', 40000);
-                this.list = find('[name="DropdownList 1"]');
-				this.title = find('[name="DropdownList 1"] .controls-DropdownList__text');
-				this.item4 = find('.controls-DropdownList__item[data-id="4"]');
+                this.list = '[name="DropdownList 1"]';
+				this.title = '[name="DropdownList 1"] .controls-DropdownList__text';
+				this.item4 = '.controls-DropdownList__item[data-id="4"]';
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
+                this.input = '[sbisname="TextBox 1"] input';
             })
 
             .capture('plain', function (actions) {
@@ -482,13 +482,13 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="DropdownList 1"]', 40000);
-                this.list = find('[name="DropdownList 1"]');
-				this.title = find('[name="DropdownList 1"] .controls-DropdownList__text');
-				this.item2 = find('.controls-DropdownList__item[data-id="2"]');
-				this.item4 = find('.controls-DropdownList__item[data-id="4"]');
-				this.apply = find('[sbisname="DropdownList_buttonChoose"]');
+                this.list = '[name="DropdownList 1"]';
+				this.title = '[name="DropdownList 1"] .controls-DropdownList__text';
+				this.item2 = '.controls-DropdownList__item[data-id="2"]';
+				this.item4 = '.controls-DropdownList__item[data-id="4"]';
+				this.apply = '[sbisname="DropdownList_buttonChoose"]';
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
+                this.input = '[sbisname="TextBox 1"] input';
             })
 
             .capture('plain', function (actions) {
@@ -542,11 +542,11 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="DropdownList 1"]', 40000);
-                this.list = find('[name="DropdownList 1"]');
-				this.title = find('[name="DropdownList 1"] .controls-DropdownList__text');
-				this.item4 = find('.controls-DropdownList__item[data-id="4"]');
+                this.list = '[name="DropdownList 1"]';
+				this.title = '[name="DropdownList 1"] .controls-DropdownList__text';
+				this.item4 = '.controls-DropdownList__item[data-id="4"]';
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
+                this.input = '[sbisname="TextBox 1"] input';
             })
 
             .capture('plain', function (actions) {
@@ -585,11 +585,11 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="DropdownList 1"]', 40000);
-                this.list = find('[name="DropdownList 1"]');
-				this.title = find('[name="DropdownList 1"] .controls-DropdownList__text');
-				this.item4 = find('.controls-DropdownList__item[data-id="4"]');
+                this.list = '[name="DropdownList 1"]';
+				this.title = '[name="DropdownList 1"] .controls-DropdownList__text';
+				this.item4 = '.controls-DropdownList__item[data-id="4"]';
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
+                this.input = '[sbisname="TextBox 1"] input';
 				actions.executeJS(function (window) {
                     window.$('.capture').width(225);
                 });

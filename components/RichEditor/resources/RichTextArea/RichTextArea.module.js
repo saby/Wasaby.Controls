@@ -688,9 +688,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                                  return false;
                               }))
                            .append(okButton);
-                        if ($ws._const.browser.isMobileIOS) {
-                           fre.setActive(false);
-                        }
                         new Button({
                            caption: 'ОК',
                            defaultButton: true,
@@ -726,6 +723,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            },
                            element: okButton
                         });
+                        if ($ws._const.browser.isMobileIOS) {
+                           //финт ушами, тк фокус с редактора убрать никак нельзя
+                           //тк кнопки на которую нажали у нас в обработчике тоже нет
+                           //ставим фокус на любой блок внутри нового диалогового окна, например на контейнер кнопки
+                           okButton.focus();
+                        }
                      },
                      onAfterClose: function() {
                         if (typeof onAfterCloseHandler === 'function') {
@@ -878,16 +881,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             return link.match(p) ? RegExp.$1 : false;
          },
 
-         _scrollEventHandler: function(event) {
-            if (event.type === 'scroll') {
-               if (this._hideFocusOnScroll) {
-                  this._container.focus();
-               }
-            } else {
-               this._hideFocusOnScroll = event.type === 'touchstart';
-            }
-         },
-
          _bindEvents: function() {
             var
                self = this,
@@ -910,12 +903,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
 
                this._inputControl.attr('tabindex', 1);
-               //Хак для хрома и safari на ios( не работало событие 'click' )
-
-               if ($ws._const.browser.isMobilePlatform) {
-                  this._inputControl.bind('scroll touchstart touchend', this._scrollEventHandler.bind(this));
-                  this._container.bind('touchstart', this._onClickHandler.bind(this));
-               }
 
                if (!$ws._const.browser.firefox) { //в firefox работает нативно
                   this._inputControl.bind('mouseup', function (e) { //в ie криво отрабатывает клик
@@ -986,19 +973,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             editor.on('BeforePastePreProcess', function(e) {
                var
                   isYouTubeReady,
-                  isRichContent = e.content.indexOf('content=SBIS.FRE') !== -1,
+                  isRichContent = e.content.indexOf('orphans: 31415;') !== -1,
                   content = e.content;
-               if (isRichContent) {
-                  if ($ws._const.browser.isIE8) {
-                     //в IE8 оборачиваем контент в div  надо его вырезать
-                     //потому что в контент летит еще и внешняя дивка с -99999 и absolute
-                     content = content.substring(content.indexOf('<DIV>') + 5, content.length - 11);
-                     if (content.indexOf('&nbsp;') === 0) {
-                        content = content.substring(6);
-                     }
-                  }
-                  e.content =  content.replace('<!--content=SBIS.FRE-->','');
-               }
+               e.content =  content.replace('orphans: 31415;','');
+               //Парсер TinyMCE неправльно распознаёт стили из за - &quot;TensorFont Regular&quot;
+               e.content = e. content.replace(/&quot;TensorFont Regular&quot;/gi,'\'TensorFont Regular\'');
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
                // и послыаем метку форматной вставки, если метка присутствует не надо обрабатывать событие
                // нашим обработчиком, а просто прокинуть его в дальше
@@ -1145,10 +1124,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             });
 
             editor.on( 'cut',function(e){
-               if (self._options.editorConfig.paste_as_text) { // в костроме отключают нашу утилиту
-                  e.stopImmediatePropagation();
-                  editor.execCommand('forwardDelete');
-               }
                setTimeout(function() {
                   self._setTrimmedText(self._getTinyEditorValue());
                }, 1);
@@ -1206,11 +1181,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             editor.on('NodeChange', function(e) {
                self._notify('onNodeChange', e)
             });
-         },
-
-         _blockFocusEvents: function(event) {
-            event.preventDefault();
-            event.stopPropagation();
          },
 
          _replaceWhitespaces: function(text) {
