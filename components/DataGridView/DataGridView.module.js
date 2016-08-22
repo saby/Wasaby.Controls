@@ -237,7 +237,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             _buildTplArgsDG: buildTplArgsDG,
             /**
              * @typedef {Object} Columns
-             * @property {String} title Заголовок колонки. Отображение заголовков можно изменять с помощью опции {@link showHead}.
+             * @property {String} title Заголовок колонки. Отображение заголовков можно изменять с помощью опции {@link showHead}. Также с помощью опции {@link allowToggleHead} можно скрывать заголовки при отсутствии в списке данных.
+             * Если данных в списке много и применяется скролл, то для "прилипания" заголовков применяется опция {@link stickyHeader}. Преобразование заголовков списка производится с помощью опции {@link transformHead}.
              * @property {String} field Название поля (из формата записи), значения которого будут отображены в данной колонке.
              * @property {String} width Ширина колонки. Значение необходимо устанавливать для колонок с фиксированной шириной.
              * Значение можно установить как в px (суффикс устанавливать не требуется), так и в %.
@@ -293,7 +294,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @translatable title
              */
             /**
-             * @cfg {Columns[]} Набор колонок
+             * @cfg {Columns[]} Устанавливает набор колонок списка.
+             * @see showHead
+             * @see allowToggleHead
+             * @see stickyHeader
+             * @see transformHead
              * @see setColumns
              * @see getColumns
              */
