@@ -2962,7 +2962,9 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          deleteRecords: function(idArray, message) {
             var self = this;
-            idArray = Array.isArray(idArray) ? idArray : [idArray];
+            //Клонируем массив, т.к. он может являться ссылкой на selectedKeys, а после удаления мы сами вызываем removeItemsSelection.
+            //В таком случае и наш idArray изменится по ссылке, и в событие onEndDelete уйдут некорректные данные
+            idArray = Array.isArray(idArray) ? $ws.core.clone(idArray) : [idArray];
             message = message || (idArray.length !== 1 ? rk("Удалить записи?", "ОперацииНадЗаписями") : rk("Удалить текущую запись?", "ОперацииНадЗаписями"));
             return $ws.helpers.question(message).addCallback(function(res) {
                if (res) {
