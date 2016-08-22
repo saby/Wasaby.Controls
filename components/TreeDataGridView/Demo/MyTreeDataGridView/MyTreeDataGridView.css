@@ -1,7 +1,7 @@
-.MyTreeDataGridView .MyBreadCrumbs{
+demo-MyTreeDataGridView__MyBreadCrumbs{
    height: 27px;
 }
 
-.MyTreeDataGridView .MyBackButton{
+demo-MyTreeDataGridView__MyBackButton{
    height: 32px;
 }
