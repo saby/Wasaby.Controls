@@ -18,6 +18,8 @@ define(
     * @extends SBIS3.CONTROLS.RadioButtonBase
     * @author Крайнов Дмитрий Олегович
     */
+
+   var TAB_BUTTON__MAX_WIDTH = 630;
    var TabButton = RadioButtonBase.extend([IconMixin],/** @lends SBIS3.CONTROLS.TabButton.prototype */ {
       $protected: {
          _options: {

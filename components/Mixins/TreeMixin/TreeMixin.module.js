@@ -41,7 +41,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
    },
    getRecordsForRedraw = function(projection, cfg) {
       var
-         records = [];
+         records = [],
+         projectionFilter;
       if (cfg.expand) {
          cfg._previousGroupBy = undefined;
          projection.setEventRaising(false);
@@ -63,7 +64,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
           * @private
           */
          var items = [];
-         applyExpandToItemsProjection.call(this, projection, cfg, false);
+         projectionFilter = resetFilterAndStopEventRaising.call(this, projection, false);
+         applyExpandToItemsProjection.call(this, projection, cfg);
+         restoreFilterAndRunEventRaising.call(this, projection, projectionFilter, false);
          cfg._previousGroupBy = undefined;
          projection.each(function(item) {
             if (cfg.groupBy && cfg.easyGroup) {
@@ -93,15 +96,25 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
    projectionFilterOnlyFolders = function(item, index, itemProj) {
       return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj, true);
    },
-   applyExpandToItemsProjection = function(projection, cfg, analyze) {
-      var idx, item, projFilter;
+   resetFilterAndStopEventRaising = function(projection, analyze) {
+      var
+         projectionFilter = projection.getFilter();
       projection.setEventRaising(false, analyze);
-      projFilter = projection.getFilter();
-      projection.setFilter(function() { return true });
+      projection.setFilter(function() { return true; });
+      return projectionFilter;
+   },
+   restoreFilterAndRunEventRaising = function(projection, filter, analyze) {
+      projection.setFilter(filter);
+      projection.setEventRaising(true, analyze);
+   },
+   applyExpandToItemsProjection = function(projection, cfg) {
+      var idx, item;
       for (idx in cfg.openedPath) {
          if (cfg.openedPath.hasOwnProperty(idx)) {
             item = projection.getItemBySourceItem(cfg._items.getRecordById(idx));
             if (item && !item.isExpanded()) {
+               // Внимание! Даже не пытаться выпилить этот код! Логика заключается в том, что после перезагрузки данных (reload) нужно удалять из списка ветки, для которых
+               // из источника данных не пришли дочерние элементы. Если разработчик желает оставить папки развернутыми - пусть присылает при reload их дочерние элементы.
                // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
                if (projection.getCollection().getChildItems(item.getContents().getId(), undefined, projection.getParentProperty()).length) {
                   item.setExpanded(true);
@@ -111,9 +124,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             }
          }
       }
-      var filterCallBack = projFilter;
-      projection.setFilter(filterCallBack);
-      projection.setEventRaising(true, analyze);
    },
    expandAllItems = function(projection) {
       var
@@ -144,66 +154,87 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
     * @mixin SBIS3.CONTROLS.TreeMixin
     * @public
     * @author Крайнов Дмитрий Олегович
+    *
+    * @ignoreMethods reload
     */
    var TreeMixin = /** @lends SBIS3.CONTROLS.TreeMixin.prototype */{
+
       /**
-       * @name reload
+       * @name SBIS3.CONTROLS.TreeMixin#reload
        * @function
-       * Метод перезагрузки данных.
-       * Можно задать фильтрацию, сортировку.
-       * @param {String} filter Параметры фильтрации.
-       * @param {String} sorting Параметры сортировки.
-       * @param offset Элемент, с которого перезагружать данные.
-       * @param {Number} limit Ограничение количества перезагружаемых элементов.
-       * @param {Boolean} deepReload Глубокая перезагрузка. Позволяет запрашивать текущие открытые папки при перезагрузке
-       */
-      /**
-       * @event onSearchPathClick При клике по хлебным крошкам в режиме поиска.
-       * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {number} id ключ узла, по которму кликнули
-       * @return Если вернуть false - загрузка узла не произойдет
+       * Перезагружает набор записей представления данных с последующим обновлением отображения.
+       * @param {Object} filter Параметры фильтрации.
+       * @param {String|Array.<Object.<String,Boolean>>} sorting Параметры сортировки.
+       * @param {Number} offset Смещение первого элемента выборки.
+       * @param {Number} limit Максимальное количество элементов выборки.
+       * @param {Boolean} deepReload Признак глубокой перезагрузки: в значении true устанавливает поведение, при котором папки открыте до перезагрузки данных останутся также открытыми и после перезагрузки.
        * @example
        * <pre>
-       *    DataGridView.subscribe('onSearchPathClick', function(event){
+       *    myDataGridView.reload(
+       *       { // Устанавливаем параметры фильтрации: требуются записи, в которых поля принимают следующие значения
+       *          iata: 'SVO',
+       *          direction: 'Arrivals',
+       *          state: 'Landed',
+       *          fromCity: ['New York', 'Los Angeles']
+       *       },
+       *       [ // Устанавливаем параметры сортировки: сначала производится сортировка по полю direction, а потом - по полю state
+       *          {direction: false}, // Поле direction сортируется по возрастанию
+       *          {state: true} // Поле state сортируется по убыванию
+       *       ],
+       *       50, // Устанавливаем смещение: из всех подходящих записей отбор результатов начнём с 50-ой записи
+       *       20, // Требуется вернуть только 20 записей
+       *       true // После перезагрузки оставим узлы открытыми
+       *    );
+       * </pre>
+       */
+      /**
+       * @event onSetRoot Происходит при загрузке данных и перед установкой корня иерархии.
+       * @remark
+       * При каждой загрузке данных, например вызванной методом {@link SBIS3.CONTROLS.ListView#reload}, происходит событие onSetRoot.
+       * В этом есть необходимость, потому что в переданных данных может быть установлен новый path - путь для хлебных крошек (см. {@link SBIS3.CONTROLS.Data.Collection.RecordSet#meta}).
+       * Хлебные крошки не перерисовываются, так как корень не поменялся.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String|Number|Null} curRoot Идентификатор узла, который установлен в качестве текущего корня иерархии.
+       * @param {Array.<Object>} hierarchy Массив объектов, каждый из которых описывает узлы иерархии установленного пути.
+       * Каждый объект содержит следующие свойства:
+       * <ul>
+       *    <li>id - идентификатор текущего узла иерархии;</li>
+       *    <li>parent - идентификатор предыдущего узла иерархии;</li>
+       *    <li>title - значение поля отображения (см. {@link SBIS3.CONTROLS.DSMixin#displayField});</li>
+       *    <li>color - значение поля записи, хранящее данные об отметке цветом (см. {@link SBIS3.CONTROLS.DecorableMixin#colorField});</li>
+       *    <li>data - запись узла иерархии, экземпляр класса {@link SBIS3.CONTROLS.Data.Record}.</li>
+       * </ul>
+       * @see onBeforeSetRoot
+       */
+      /**
+       * @event onBeforeSetRoot Происходит при установке текущего корня иерархии.
+       * @remark
+       * Событие может быть инициировано при использовании метода {@link setCurrentRoot}.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String|Number|Null} key Идентификатор узла иерархии, который будет установлен. Null - это вершина иерархии.
+       * @see onSetRoot
+       */
+      /**
+       * @event onSearchPathClick Происходит при клике по хлебным крошкам, отображающим результаты поиска.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String|Number} id Ключ узла, по которому произвели клик.
+       * @return Если из обработчика события вернуть false, то загрузка узла не произойдет.
+       * @example
+       * <pre>
+       *    DataGridView.subscribe('onSearchPathClick', function(eventObject){
        *      searchForm.clearSearch();
        *    });
        * </pre>
        */
       /**
-       * @event onNodeExpand После разворачивания ветки
+       * @event onNodeExpand Происходит после разворачивания узла.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {String} key ключ разворачиваемой ветки
-       * @example
-       * <pre>
-       *    onNodeExpand: function(event){
-       *       $ws.helpers.question('Продолжить?');
-       *    }
-       * </pre>
+       * @param {String|Number} key Идентификатор разворачиваемого узла.
        */
       /**
-       * @event onNodeCollapse После сворачивания ветки
+       * @event onNodeCollapse Происходит после сворачивания узла.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {String} key ключ разворачиваемой ветки
-       * @example
-       * <pre>
-       *    onNodeCollapse: function(event){
-       *       $ws.helpers.question('Продолжить?');
-       *    }
-       * </pre>
-       */
-      /**
-       * @event onSearchPathClick При клике по хлебным крошкам в режиме поиска.
-       * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {number} id ключ узла, по которму кликнули
-       * @return Если вернуть false - загрузка узла не произойдет
-       * @example
-       * <pre>
-       *    DataGridView.subscribe('onSearchPathClick', function(event){
-       *      searchForm.clearSearch();
-       *    });
-       * </pre>
+       * @param {String|Number} key Идентификатор разворачиваемого узла.
        */
       $protected: {
          _folderOffsets : {},
@@ -406,7 +437,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          if (item.isExpanded()) {
             return $ws.proto.Deferred.success();
          } else {
-            this._closeAllExpandedNode(id);
+            if (this._options.singleExpand) {
+               this._collapseNodes(this.getOpenedPath(), id);
+            }
             this._options.openedPath[id] = true;
             this._folderOffsets[id] = 0;
             return this._loadNode(id).addCallback(function() {
@@ -478,18 +511,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          return filter;
       },
       /**
-       * Закрыть все открытые ветки, кроме переданной в параметре
+       * Закрыть ветки, кроме переданной в параметре ignoreKey
        * @param key
        * @private
        */
-      _closeAllExpandedNode: function(key) {
-         if (this._options.singleExpand){
-            $.each(this._options.openedPath, function(openedKey) {
-               if (key != openedKey) {
-                  this.collapseNode(openedKey);
-               }
-            }.bind(this));
-         }
+      _collapseNodes: function(openedPath, ignoreKey) {
+         $ws.helpers.forEach(openedPath, function(value, key) {
+            if (!ignoreKey || key != ignoreKey) {
+               this.collapseNode(key);
+            }
+         }, this);
       },
       /**
        * Получить текущий набор открытых элементов иерархии
@@ -509,9 +540,17 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        * </pre>
        */
       setOpenedPath: function(openedPath) {
-         this._options.openedPath = openedPath;
-         if (this._getItemsProjection()) { // Если имеется проекция - то применяем разворот к итемам, иначе он применится после создания проекции
-            applyExpandToItemsProjection(this._getItemsProjection(), this._options, true);
+         var
+            itemsProjection = this._getItemsProjection(),
+            projectionFilter;
+         if (itemsProjection) { // Если имеется проекция - то применяем разворот к итемам, иначе он применится после создания проекции
+            projectionFilter = resetFilterAndStopEventRaising(itemsProjection, true);
+            this._collapseNodes(this.getOpenedPath());
+            this._options.openedPath = openedPath;
+            applyExpandToItemsProjection(itemsProjection, this._options);
+            restoreFilterAndRunEventRaising(itemsProjection, projectionFilter, true);
+         } else {
+            this._options.openedPath = openedPath;
          }
       },
       around: {
@@ -525,7 +564,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          },
          /* ToDo. Используется для вызова перерисовки родительских элементов при изменении количества дочерних
           Удалить функцию, когда будет сделана нотификация по заданию: https://inside.tensor.ru/opendoc.html?guid=b53fc873-6355-4f06-b387-04df928a7681&description= */
-         _onCollectionAddMoveRemove: function(parentFn, event, action, newItems, newItemsIndex, oldItems) {
+         _findAndRedrawChangedBranches: function(newItems, oldItems) {
             var
                branches = {},
                fillBranchesForRedraw = function (items) {
@@ -539,13 +578,39 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                      }
                   }
                }.bind(this);
-            parentFn.call(this, event, action, newItems, newItemsIndex, oldItems);
             fillBranchesForRedraw(newItems);
             fillBranchesForRedraw(oldItems);
             for (idx in branches) {
                if (branches.hasOwnProperty(idx)) {
                   this._redrawItem(branches[idx]);
                }
+            }
+         },
+         _removeFromLoadedNodesRemoteNodes: function(remoteNodes) {
+            for (var idx = 0; idx < remoteNodes.length; idx++) {
+               delete this._loadedNodes[remoteNodes[idx].getContents().getId()];
+            }
+         },
+         _onCollectionAddMoveRemove: function(parentFn, event, action, newItems, newItemsIndex, oldItems) {
+            parentFn.call(this, event, action, newItems, newItemsIndex, oldItems);
+            this._findAndRedrawChangedBranches(newItems, oldItems);
+            this._removeFromLoadedNodesRemoteNodes(oldItems);
+         },
+         //В режиме поиска в дереве, при выборе всех записей, выбираем только листья, т.к. папки в этом режиме не видны.
+         setSelectedItemsAll: function(parentFn) {
+            var
+                keys = [],
+                items = this.getItems(),
+                hierField = this.getHierField();
+            if (items && this._isSearchMode && this._isSearchMode()) {
+               items.each(function(rec){
+                  if (rec.get(hierField + '@') !== true) {
+                     keys.push(rec.getId())
+                  }
+               });
+               this.setSelectedKeys(keys);
+            } else {
+               parentFn.call(this);
             }
          }
       },
@@ -877,6 +942,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        */
       setRoot: function(root){
          this._options.root = root;
+      },
+      /**
+       * Возвращает корень выборки
+       */
+      getRoot: function(){
+         return this._options.root;
       },
       /**
        * Возвращает идентификатор узла, в который было установлено проваливание.
