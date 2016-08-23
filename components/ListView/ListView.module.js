@@ -2053,7 +2053,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }).bind(this);
 
             // Если нет скролла или скролл внизу, значит нужно догружать еще записи (floatArea отжирает скролл, поэтому если она открыта - не грузим)
-            if (!this._existFloatArea() && ((this.isScrollOnBottom() && this._options.infiniteScroll == 'down') || !hasScroll())) {
+            if ((this.isScrollOnBottom() && this._options.infiniteScroll == 'down') || !hasScroll()) {
                this._loadNextPage();
             } else {
                this._moveTopScroll();
@@ -2093,24 +2093,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          isScrollOnBottom: function(){
             return this._scrollWatcher.isScrollOnBottom();
-         },
-         //Проверка есть ли открытые stack FloatArea или maximize Window, они могут збирать на себя скролл у body
-         _existFloatArea: function(){
-            var areas = $ws.single.FloatAreaManager._areas;
-            var windows = $ws.single.WindowManager.getStack();
-            for (var area in areas){
-               if (areas.hasOwnProperty(area)){
-                  if (areas[area].isVisible() && areas[area]._options.isStack){
-                     return true;
-                  }
-               }
-            }
-            for (var i = 0; i < windows.length; i++){
-               if (windows[i].window._options.maximize){
-                  return true;
-               }
-            }
-            return false;
          },
          isScrollOnTop: function(){
             return this._scrollWatcher.isScrollOnTop();

@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
       'js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown',
       'js!SBIS3.CORE.PluginManager',
       'js!SBIS3.CONTROLS.Utils.ImageUtil',
-      'js!SBIS3.CONTROLS.Utils.Sanitize',
+      'Core/Sanitize',
       'css!SBIS3.CORE.RichContentStyles',
       'i18n!SBIS3.CONTROLS.RichEditor'
    ], function(TextBoxBase, dotTplFn, Button, RichUtil, FileLoader, defaultConfig, ToggleButton, MenuButton, Dropdown,  PluginManager, ImageUtil, Sanitize) {
@@ -1508,6 +1508,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                require(['css!SBIS3.CONTROLS.RichEditor/resources/tinymce/skins/lightgray/skin.min',
                   'css!SBIS3.CONTROLS.RichEditor/resources/tinymce/skins/lightgray/content.inline.min',
                   'js!SBIS3.CONTROLS.RichEditor/resources/tinymce/tinymce'],function(){
+                  tinyMCE.baseURL = $ws.helpers.resolveComponentPath('SBIS3.CONTROLS.RichEditor') + 'resources/tinymce';
                   tinyMCE.init(self._options.editorConfig);
                });
             }
