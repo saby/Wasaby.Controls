@@ -33,6 +33,14 @@ define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS
          }
       },
 
+      _modifyOptions: function(options) {
+         options = FloatArea.superclass._modifyOptions.apply(this, arguments);
+         if (options.template && options.template.indexOf('js!') === 0) {
+            require([options.template], function(){});
+         }
+         return options;
+      },
+
       $constructor: function() {
          this._container.removeClass('ws-area');
       },
