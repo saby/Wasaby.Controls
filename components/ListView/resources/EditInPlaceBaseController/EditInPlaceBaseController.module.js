@@ -194,23 +194,25 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _getCurrentTarget: function() {
                return this._eip.getTarget();
             },
-            showEip: function(target, model, options) {
+            showEip: function(target, model, options, withoutActivateFirstControl) {
                if (options && options.isEdit) {
-                  return this.edit(target, model, options)
+                  return this.edit(target, model, options, withoutActivateFirstControl);
                } else {
                   return this.add(options);
                }
             },
-            edit: function (target, record) {
+            edit: function (target, record, withoutActivateFirstControl) {
                var self = this;
                return this.endEdit(true).addCallback(function() {
                   return self._prepareEdit(record).addCallback(function(preparedRecord) {
+                     var editingRecord;
                      if (preparedRecord) {
                         var
                             parentProjItem,
                             itemProjItem = self._options.itemsProjection.getItemBySourceItem(preparedRecord);
-                        self._eip.edit(target, preparedRecord, itemProjItem);
-                        self._notify('onAfterBeginEdit', preparedRecord);
+                        self._eip.edit(target, preparedRecord, itemProjItem, withoutActivateFirstControl);
+                        editingRecord = self._eip.getEditingRecord();
+                        self._notify('onAfterBeginEdit', editingRecord);
                         //TODO: необходимо разбивать контроллер редактирования по месту, для плоских и иерархических представлений
                         if (self._options.hierField) {
                            parentProjItem = itemProjItem.getParent();
@@ -218,7 +220,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         }
                         self._addPendingOperation();
                      }
-                     return preparedRecord;
+                     return editingRecord;
                   })
                });
             },
@@ -235,7 +237,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      $ws.helpers.toggleIndicator(true);
                   }, 100);
                   return beginEditResult.addCallback(function(readRecord) {
-                     self._editingRecord = readRecord;
+                     self._editingRecord = record;
                      //При перечитывании записи она не является связанной с рекордсетом, и мы в последствии не сможем понять,
                      //происходило ли добавление записи или редактирование. При редактировании выставим значение сами.
                      if (record.getState() !== Record.RecordState.DETACHED) {
@@ -344,13 +346,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   self = this,
                   eipRecord = eip.getEditingRecord(),
                   isAdd = eipRecord.getState() === Record.RecordState.DETACHED;
-               if (this._editingRecord) {
-                  this._editingRecord.merge(eipRecord);
-                  this._editingRecord = undefined;
-               }
                if (withSaving) {
                   this._options.dataSource.update(eipRecord).addCallback(function(recordId) {
                      eip.applyChanges();
+                     if (self._editingRecord) {
+                        self._editingRecord.merge(eipRecord);
+                        self._editingRecord = undefined;
+                     }
                      if (isAdd) {
                         eipRecord.set(eipRecord.getKeyField(), recordId);
                         self._options.dataSet.push(eip._cloneWithFormat(eipRecord), self._options.dataSet);
@@ -392,10 +394,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         }
                         target = self._createAddTarget(options).attr('data-id', '' + model.getId());
                         self._eip.edit(target, model);
-                        // Todo разобраться в целесообразности этого пересчёта вообще, почему на десктопе всё работает?
-                        // При начале отслеживания высоты строки, один раз нужно пересчитать высоту синхронно, это нужно для добавления по месту,
-                        //т.к. при добавлении создаётся новая tr у которой изначально нет высоты и опции записи не могут верно спозиционироваться.
-                        self._eip.recalculateHeight();
                         self._notify('onAfterBeginEdit', model);
                         self._addPendingOperation();
                         return model;

@@ -47,8 +47,15 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
       _itemActivatedHandler : function(hash) {
          var projItem, key;
          projItem = this._getItemsProjection().getByHash(hash);
-         key = projItem.getContents().getId();
-         this.toggleItemsSelection([key]);
+         //TODO Пока делаем отдельную ветку для Флагов.
+         //Леха Мальцев должен решить задачу https://inside.tensor.ru/opendoc.html?guid=566894c5-8384-4a2a-8ea6-df9dc5bd2137&description=
+         if (this.getItems() && $ws.helpers.instanceOfModule(this.getItems(), 'WS.Data/Types/Flags')) {
+            projItem.setSelected(!projItem.isSelected());
+         }
+         else {
+            key = projItem.getContents().getId();
+            this.toggleItemsSelection([key]);
+         }
       },
 
       _drawItemsCallback : function() {
@@ -63,22 +70,35 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
             controls = this.getItemsInstances(),
             arrLen = idArray.length;
 
-         for (var i in controls) {
-            if (controls.hasOwnProperty(i)) {
-               if (!arrLen) {
-                  controls[i].setChecked(false);
-               }
-               else {
-                  var hash, item, key;
+         //TODO Пока делаем отдельную ветку для Флагов.
+         //Леха Мальцев должен решить задачу https://inside.tensor.ru/opendoc.html?guid=566894c5-8384-4a2a-8ea6-df9dc5bd2137&description=
+         var i, hash;
+         if (this.getItems() && $ws.helpers.instanceOfModule(this.getItems(), 'WS.Data/Types/Flags')) {
+            for (i in controls) {
+               if (controls.hasOwnProperty(i)) {
                   hash = controls[i].getContainer().data('hash');
-                  item = this._getItemsProjection().getByHash(hash).getContents();
-                  key = item.getId();
-                  //TODO проверка на строку и число. Избавиться, когда наконец все ключи будут строками
-                  if ((idArray.indexOf(key) >= 0) || (idArray.indexOf(key+'') >= 0)) {
-                     controls[i].setChecked(true);
+                  controls[i].setChecked(!!this._getItemsProjection().getByHash(hash).isSelected());
+               }
+            }
+         }
+         else {
+            for (i in controls) {
+               if (controls.hasOwnProperty(i)) {
+                  if (!arrLen) {
+                     controls[i].setChecked(false);
                   }
                   else {
-                     controls[i].setChecked(false);
+                     var item, key;
+                     hash = controls[i].getContainer().data('hash');
+                     item = this._getItemsProjection().getByHash(hash).getContents();
+                     key = item.getId();
+                     //TODO проверка на строку и число. Избавиться, когда наконец все ключи будут строками
+                     if ((idArray.indexOf(key) >= 0) || (idArray.indexOf(key + '') >= 0)) {
+                        controls[i].setChecked(true);
+                     }
+                     else {
+                        controls[i].setChecked(false);
+                     }
                   }
                }
             }

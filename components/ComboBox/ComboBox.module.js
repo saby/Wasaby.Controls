@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          //если он true, то при условии ключа null текст будет оцищаться
          //нельзя всегда очищать текст, потому что при ручном вводе текста, даже при пустом ключе текст стирать не надо
          _isClearing: false,
-         _keysWeHandle: [$ws._const.key.up, $ws._const.key.down, $ws._const.key.enter],
+         _keysWeHandle: [$ws._const.key.up, $ws._const.key.down, $ws._const.key.enter, $ws._const.key.esc],
          _options: {
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
@@ -223,6 +223,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             selectedKey = this.getSelectedKey(),
             selectedItem, newSelectedItem, newSelectedItemId;
          if (this._picker) {
+            if(!this._picker.isVisible() && e.which === $ws._const.key.esc ){
+               return true;
+            }
+
             var
                items = $('.controls-ListView__item', this._picker.getContainer().get(0));
 
@@ -279,11 +283,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
          }
 
-
-         if (e.which === $ws._const.key.enter) {
+         if (e.which === $ws._const.key.enter || e.which === $ws._const.key.esc) {
             this.hidePicker()
          }
-
 
          return false;
       },
@@ -389,7 +391,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                projItem = self._getItemsProjection().getByHash(hash);
                index = self._getItemsProjection().getIndex(projItem);
                if (self._options.autocomplete){
-                  self._itemsProjection.setFilter(null);
+                  self._getItemsProjection().setFilter(null);
                   self.redraw();
                }
                self.setSelectedIndex(index);

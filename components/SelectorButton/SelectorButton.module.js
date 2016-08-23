@@ -65,7 +65,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
              * Если передать всего один элемент, то дилог выбора откроется при клике на иконку меню.
              */
             dictionaries: []
-         }
+         },
+         _text: null
       },
       _drawSelectedItems: function(keysArr) {
          var self = this,
@@ -92,9 +93,43 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       },
 
       _setCaption: function(caption) {
-         var btnCaption = caption || this._options.defaultCaption;
+         var btnCaption = caption || this._options.defaultCaption,
+             text = this._container.find('.controls-SelectorButton__text'),
+             resultText = Sanitize(caption);
+
          SelectorButton.superclass.setCaption.call(this, btnCaption);
-         $('.controls-SelectorButton__text', this._container[0]).html(Sanitize(caption));
+         text.html(resultText);
+         /* Скрываем, если текст пустой */
+         text.toggleClass('ws-hidden', !resultText);
+         this._checkWidth();
+      },
+
+      _checkWidth: function() {
+         // Хак для старых ие
+         if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9 || $ws._const.browser.isIE10) {
+            if(!this.isVisibleWithParents()) {
+               return;
+            }
+
+            var additionalWidth = this._container.find('.controls-SelectorButton__icon:visible').width() + this._container.find('.controls-SelectorButton__cross:visible').width(),
+                text = this._container.find('.controls-SelectorButton__text'),
+                containerWidth = this._container.width(),
+                resultWidth;
+
+            if (containerWidth < (additionalWidth + text.width())) {
+               resultWidth = containerWidth - additionalWidth;
+               if(resultWidth > 0) {
+                  text.width(containerWidth - additionalWidth);
+               }
+            } else {
+               text.width('auto');
+            }
+         }
+      },
+
+      _onResizeHandler: function() {
+         SelectorButton.superclass._onResizeHandler.apply(this, arguments);
+         this._checkWidth();
       },
 
       _clickHandler: function(e) {
@@ -110,6 +145,22 @@ define('js!SBIS3.CONTROLS.SelectorButton',
                 dic && dic.componentOptions
             )
          }
+      },
+
+      /**
+       * Установить набор диалогов выбора для поля связи
+       * @param {Array} dictionaries Набор диалогов выбора для поля связи
+       */
+      setDictionaries: function (dictionaries) {
+         this._options.dictionaries = dictionaries;
+      },
+
+      /**
+       * Получить набор диалогов выбора для поля связи
+       * @returns {Array} Набор диалогов выбора для поля связи
+       */
+      getDictionaries: function () {
+         return this._options.dictionaries;
       },
 
       _chooseCallback: function(result) {

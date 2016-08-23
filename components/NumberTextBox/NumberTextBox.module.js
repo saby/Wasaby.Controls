@@ -31,14 +31,13 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol textTransform
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
     *
-    * @ignoreMethods applyEmptyState applyState findParent getAlignment getEventHandlers getEvents getExtendedTooltip
+    * @ignoreMethods applyEmptyState applyState findParent getAlignment getEventHandlers getEvents
     * @ignoreMethods getId getLinkedContext getMinHeight getMinSize getMinWidth getOwner getOwnerId getParentByClass
     * @ignoreMethods getParentByName getParentByWindow getStateKey getTopParent getUserData hasEvent hasEventHandlers
     * @ignoreMethods isDestroyed isSubControl makeOwnerName once sendCommand setOwner setStateKey setUserData setValue
     * @ignoreMethods subscribe unbind unsubscribe
     *
-    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
-    * @ignoreEvents onReady
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onChange onReady
     *
     * @cssModifier controls-NumberTextBox__text-align-right Выравнивает содержимое поля ввода по правому краю.
     */
@@ -426,31 +425,35 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             dotPosition = currentVal.indexOf('.'),
             newCaretPosition = e, step;
          (currentVal[b] == ' ') ? step = 2 : step = 1;
-         if ((b <= dotPosition && e <= dotPosition) || dotPosition == -1) { //до точки
-            if (b == e) {
-               if (b == dotPosition){
-                  newCaretPosition++;
+         if(b === 0 && e === currentVal.length){
+            currentVal = '';
+            newCaretPosition = b;
+         } else {
+            if ((b <= dotPosition && e <= dotPosition) || dotPosition == -1) { //до точки
+               if (b == e) {
+                  if (b == dotPosition) {
+                     newCaretPosition++;
+                  }
+                  if (!(this._options.decimals > 0) || (this._options.decimals && b != dotPosition)) {
+                     currentVal = currentVal.substr(0, b) + currentVal.substr(e + step);
+                  }
+               } else {
+                  currentVal = currentVal.substr(0, b) + currentVal.substr(e);
                }
-               if (!(this._options.decimals > 0) || (this._options.decimals && b != dotPosition)) {
-                  currentVal = currentVal.substr(0, b) + currentVal.substr(e + step);
+               if (this._options.delimiters && this._getIntegersCount(currentVal) % 3 == 0) {
+                  newCaretPosition--;
                }
-            } else {
-               currentVal = currentVal.substr(0, b) + currentVal.substr(e);
+            } else if (b > dotPosition && e > dotPosition) { // после точки
+               if (b == e) {
+                  currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? '0' : '') + currentVal.substr(e + 1);
+                  (this._options.decimals > 0) ? newCaretPosition++ : newCaretPosition;
+               } else {
+                  currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? this._getZeroString(e - b) : '') + currentVal.substr(e);
+               }
+            } else { // точка в выделении
+               currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? '.' + this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
+               newCaretPosition = (currentVal.indexOf('.') != -1) ? currentVal.indexOf('.') - 1 : currentVal.length;
             }
-            if (this._options.delimiters && this._getIntegersCount(currentVal) % 3 == 0){
-               newCaretPosition--;
-            }
-         } else
-         if (b > dotPosition && e > dotPosition){ // после точки
-            if (b == e){
-               currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? '0' : '') + currentVal.substr(e + 1);
-               (this._options.decimals > 0) ? newCaretPosition++ : newCaretPosition;
-            } else {
-               currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? this._getZeroString(e - b) : '') + currentVal.substr(e);
-            }
-         } else { // точка в выделении
-            currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ?  '.' + this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
-            newCaretPosition = (currentVal.indexOf('.') != -1) ? currentVal.indexOf('.') - 1 : currentVal.length;
          }
          currentVal = currentVal.replace(/\s/g, '');
          this._setText(currentVal);
@@ -467,26 +470,29 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             dotPosition = currentVal.indexOf('.'),
             newCaretPosition = b, step;
          (currentVal[b - 1] == ' ') ? step = 2 : step = 1;
-         if ((b <= dotPosition && e <= dotPosition) || dotPosition == -1) { //до точки
-            if (b == e) {
-               currentVal = currentVal.substr(0, b - step) + currentVal.substr(e);
-            } else {
-               currentVal = currentVal.substr(0, b) + currentVal.substr(e);
-            }
-            (this._options.delimiters && this._getIntegersCount(currentVal) % 3 == 0) ? newCaretPosition-=2 : newCaretPosition--;
-         } else
-         if (b > dotPosition && e > dotPosition){ // после точки
-            if (b == e){
-               if (!(b == dotPosition + 1 && this._options.decimals > 0)) {
-                  currentVal = currentVal.substr(0, b - 1) + (this._options.decimals > 0 ? '0' : '') + currentVal.substr(e);
+         if(b === 0 && e === currentVal.length){
+            currentVal = '';
+         } else {
+            if ((b <= dotPosition && e <= dotPosition) || dotPosition == -1) { //до точки
+               if (b == e) {
+                  currentVal = currentVal.substr(0, b - step) + currentVal.substr(e);
+               } else {
+                  currentVal = currentVal.substr(0, b) + currentVal.substr(e);
                }
-               newCaretPosition--;
-            } else {
-               currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? this._getZeroString(e - b) : '') + currentVal.substr(e);
+               (this._options.delimiters && this._getIntegersCount(currentVal) % 3 == 0) ? newCaretPosition -= 2 : newCaretPosition--;
+            } else if (b > dotPosition && e > dotPosition) { // после точки
+               if (b == e) {
+                  if (!(b == dotPosition + 1 && this._options.decimals > 0)) {
+                     currentVal = currentVal.substr(0, b - 1) + (this._options.decimals > 0 ? '0' : '') + currentVal.substr(e);
+                  }
+                  newCaretPosition--;
+               } else {
+                  currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? this._getZeroString(e - b) : '') + currentVal.substr(e);
+               }
+            } else { // точка в выделении
+               currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? '.' + this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
+               newCaretPosition = (currentVal.indexOf('.') != -1) ? currentVal.indexOf('.') - 1 : currentVal.length;
             }
-         } else { // точка в выделении
-            currentVal = currentVal.substr(0, b) +  (this._options.decimals > 0 ? '.' + this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
-            newCaretPosition = (currentVal.indexOf('.') != -1) ? currentVal.indexOf('.') - 1 : currentVal.length;
          }
          currentVal = currentVal.replace(/\s/g, '');
          this._setText(currentVal);
@@ -561,7 +567,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             e,
             l;
          if ($ws._const.browser.isIE && $ws._const.browser.IEVersion < 9) { //IE
-            var range = document.createRangeForIE();
+            var range = obj.createTextRange();
             l = range.text.length;
             range.moveStart('textedit', -1);
             e = range.text.length;

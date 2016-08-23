@@ -30,24 +30,6 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton', ['js!SBIS3.CONTROLS.
             this._header = $('<div>').css('display','none');
             this._container.addClass('controls-MenuButton__withoutHeader');
          }
-         this.getContainer().on('mouseenter',this._mouseEnterHandler.bind(this));
-      },
-      _mouseEnterHandler: function(){
-         if (this.getItems().getCount() > 0) {
-            this.getContainer().addClass('controls-Checked__checked');
-            this.showPicker();
-            this._picker.getContainer().on('mouseleave', this._mouseLeaveHandler.bind(this));
-            this.getContainer().on('mouseleave', this._mouseLeaveHandler.bind(this));
-            this._header.on('mouseleave', this._mouseLeaveHandler.bind(this));
-         }
-      },
-      _mouseLeaveHandler: function(e) {
-         var
-            $target = $(e.relatedTarget);
-         if (!$target.closest(this._picker.getContainer()).length && !$target.closest(this.getContainer()).length && !$target.closest(this._header).length) {
-            this.hidePicker();
-            this._header.addClass('ws-hidden');
-         }
       },
       _initializePicker: function() {
          RichEditorMenuButton.superclass._initializePicker.apply(this, arguments);
@@ -63,11 +45,9 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton', ['js!SBIS3.CONTROLS.
 
       _setHeaderSizes: function() {
          RichEditorMenuButton.superclass._setHeaderSizes.apply(this, arguments);
-         this._header.addClass('controls-RichEditorToolbar__menuButtonHeader');
-      },
-
-      _clickHandler: function(){
-         return false;
+         if (this._header) {
+            this._header.addClass('controls-RichEditorToolbar__menuButtonHeader');
+         }
       },
       _dotTplFn: dotTplFn
    });

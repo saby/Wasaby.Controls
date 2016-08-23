@@ -155,6 +155,12 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
             }
          },
          _itemsReadyCallback: function() {
+            if (this._isEmptyIndex(this._options.selectedIndex)){
+               var projPos = this._getItemsProjection().getCurrentPosition();
+               if (!this._isEmptyIndex(projPos)) {
+                  this._options.selectedIndex = projPos;
+               }
+            }
             this._prepareSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
          }
       },

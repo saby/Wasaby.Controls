@@ -25,7 +25,15 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
              filter[searchParamName] = text;
              view.setHighlightText(text, false);
              view.setHighlightEnabled(true);
+
+             if (self._isInfiniteScroll == undefined) {
+                self._isInfiniteScroll = view.isInfiniteScroll();
+             }
              view.setInfiniteScroll(true, true);
+
+             if (self._lastGroup == undefined) {
+                self._lastGroup = view._options.groupBy;
+             }
              view.setGroupBy(groupBy);
              if (this._firstSearch) {
                 this._lastRoot = view.getCurrentRoot();
@@ -102,23 +110,22 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
       if(data.getCount()) {
          /* Если есть данные, и параметр поиска не транслитизировался,
             то не будем менять текст в строке поиска */
-         if(this._searchTextTranslated) {
+         if(this._searchTextBeforeTranlate) {
             searchForm.setText(newText);
-            this._searchTextTranslated = false;
+            this._searchTextBeforeTranlate = null;
          }
       } else {
          /* Если данных нет, то обработаем два случая:
             1) Была сменена раскладка - просто возвращаем фильтр в исходное состояние,
                текст в строке поиска не меняем
             2) Смены раскладки не было, то транслитизируем текст поиска, и поищем ещё раз   */
-         newText = KbLayoutRevertUtil.process(newText);
-         if(this._searchTextTranslated) {
-            viewFilter[searchParamName] = newText;
+         if(this._searchTextBeforeTranlate) {
+            viewFilter[searchParamName] = this._searchTextBeforeTranlate;
             view.setFilter(viewFilter, true);
-            this._searchTextTranslated = false;
+            this._searchTextBeforeTranlate = null;
          } else {
-            args[0] = newText;
-            this._searchTextTranslated = true;
+            this._searchTextBeforeTranlate = args[0];
+            args[0] = KbLayoutRevertUtil.process(newText);
             mainFunc.apply(this, args);
          }
       }
@@ -155,7 +162,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          return;
       }
       view.setInfiniteScroll(this._isInfiniteScroll, true);
+      this._isInfiniteScroll = undefined;
       view.setGroupBy(this._lastGroup);
+      this._lastGroup = undefined;
       view.setHighlightText('', false);
       view.setHighlightEnabled(false);
       this._firstSearch = true;
@@ -237,7 +246,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          _currentRoot: null,
          _pathDSRawData : [],
          _firstSearch: true,
-         _searchTextTranslated: false,
+         _searchTextBeforeTranlate: null,
          _path: [],
          _scrollPages: [], // Набор страниц для скролл-пэйджина
          _pageOffset: 0, // offset последней страницы
@@ -348,8 +357,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             });
          }
 
-         this._lastGroup = view._options.groupBy;
-         this._isInfiniteScroll = view.isInfiniteScroll();
          function subscribeOnSearchFormEvents() {
             searchForm.subscribe('onReset', function (event, text) {
                if (isTree) {
@@ -655,8 +662,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
          paging.subscribe('onSelectedItemChange', function(e, pageNumber){
             var scrollToPage = function(page){
-               view._scrollWatcher.scrollTo(page.offset);
-            };
+               // Если первая страница - проскролим к самому верху, не считая оффсет
+               var offset = page.offset ? this._offsetTop : 0;
+               view._scrollWatcher.scrollTo(page.offset + offset);
+            }.bind(this);
             if (pageNumber != this._currentScrollPage && this._scrollPages.length){
                var view = this._options.view,
                   page = this._scrollPages[pageNumber - 1];
@@ -709,7 +718,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          var view = this._options.view;
          for (var i = 0; i < this._scrollPages.length; i++){
             var pageStart = this._scrollPages[i];
-            if (pageStart.element.offset().top + pageStart.element.height() >= this._offsetTop){
+            if (pageStart.element.offset().top + pageStart.element.outerHeight(true) >= 0){
                return i;
             }
          }
@@ -729,6 +738,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
             //Если элементов в верстке то нечего и считать
             if (!listItems.length){
+               this._options.paging.setVisible(false);
                return;
             }
 
@@ -757,9 +767,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          //Считаем оффсеты страниц начиная с последней (если ее нет - сначала)
          listItems.slice(lastPageStart).each(function(){
             var $this = $(this);
-            pageHeight += $this.height();
+            pageHeight += $this.outerHeight(true);
             // Если набралось записей на выстору viewport'a добавим еще страницу
-            if (pageHeight  > viewportHeight - self._offsetTop) {
+            var offsetTop = self._scrollPages.length == 1 ? self._offsetTop : 0;
+            if (pageHeight  > viewportHeight - offsetTop) {
                self._pageOffset += pageHeight;
                self._scrollPages.push({
                   element: $this,
@@ -771,14 +782,14 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
          var pagesCount = this._scrollPages.length;
 
-         if (this._options.paging.getPagesCount() < pagesCount){
-            if (!this._options.view.getItems().getMetaData().more){
-               pagesCount--;
-               if (pagesCount > 1) {
-                  this._options.view.getContainer().css('padding-bottom', '32px');
-               }            }
-            this._options.paging.setPagesCount(pagesCount);
+         if (!this._options.view.getItems().getMetaData().more && pagesCount > 1){
+            this._options.view.getContainer().css('padding-bottom', '32px');
          }
+         if (this._options.paging.getSelectedKey() > pagesCount){
+            this._options.paging._options.selectedKey = pagesCount;
+         }
+         this._options.paging.setPagesCount(pagesCount);
+
          //Если есть страницы - покажем paging
          this._options.paging.setVisible(pagesCount > 1);
       },

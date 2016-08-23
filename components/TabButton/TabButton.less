@@ -21,6 +21,49 @@
       }
    }
 
+   &.controls-TabButton__counter{
+     &.controls-Checked__checked .controls-TabButton__inner *{
+       color: #D94700;
+     }
+     .controls-tabButton__counter-value{
+       font-size: 14px;
+       color: #FF7033;
+       display: inline-block;
+     }
+     &.controls-TabButton__counter-success{
+       &.controls-Checked__checked .controls-TabButton__inner *{
+         color: #569034;
+       }
+       .controls-tabButton__counter-value{
+         color: #72BE44;
+       }
+     }
+     &.controls-TabButton__counter-error{
+       &.controls-Checked__checked .controls-TabButton__inner *{
+         color: #EF463A;
+       }
+       .controls-tabButton__counter-value{
+         color: #EF463A;
+       }
+     }
+   }
+
+  &.controls-TabButton__counter-checked{
+    &.controls-Checked__checked .controls-TabButton__inner *{
+      color: #D94700!important; /* здесь нужно перебить цвет иконки, который задан через important */
+    }
+    &.controls-TabButton__counter-success{
+      &.controls-Checked__checked .controls-TabButton__inner *{
+        color: #569034!important;
+      }
+    }
+    &.controls-TabButton__counter-error{
+      &.controls-Checked__checked .controls-TabButton__inner *{
+        color: #EF463A!important;
+      }
+    }
+  }
+
    //Для редактирования по месту групп, убираем крайние отступы, т.к. они уже предусмотрены классом controls-TabButton__inner
    .controls-EditAtPlaceGroup.ws-disabled{
       margin-left:-1px;
@@ -42,6 +85,10 @@
       font-size: @tab-button-large-inner-font-size;
       font-weight: @tab-button-large-inner-font-weight;
       text-overflow: @tab-button-large-inner-text-overflow;
+      .controls-TextBox .controls-TextBox__field{
+        padding-top: 0;
+        padding-bottom: 1px;
+      }
    }
    &.controls-Checked__checked {
       border-top: @tab-button-checked-border-top;
@@ -51,13 +98,14 @@
       cursor: @tab-button-checked-cursor;
       font-size: @tab-button-checked-font-size;
       .controls-TabButton__bottomLine{
-         position: @tab-button-bottomLine-position;
-         bottom: @tab-button-bottomLine-bottom;
-         left: @tab-button-bottomLine-left;
-         right: @tab-button-bottomLine-right;
-         background: @tab-button-bottomLine-background;
-         height: @tab-button-bottomLine-height;
-         display: @tab-button-bottomLine-display;
+         position: absolute;
+         bottom: -1px;
+         left: 1px;
+         right: 1px;
+         background: #fff;
+         height: 2px;
+         display: block;
+         box-shadow: 0px 1px 1px #fff;
       }
       .controls-TabButton__inner {
          height: @tab-button-checked-height + 1;
@@ -67,7 +115,6 @@
          border-left: @tab-button-checked-inner-border-left;
          border-right: @tab-button-checked-inner-border-right;
          background: @tab-button-checked-inner-bg;
-         max-width: @tab-button-large-inner-max-width;
          overflow:  @tab-button-large-inner-overflow;
          &:before{
             display: @tab-button-checked-inner-after-display;
@@ -87,7 +134,7 @@
       .controls-TabButton__inner{
          font-size: @tab-button-large-inner-font-size;
          font-weight: @tab-button-large-inner-font-weight;
-         line-height: @tab-button-large-inner-line-height;
+         line-height: 27px;
          .controls-MenuLink {
             font-size: @tab-button-large-inner-font-size;
          }
@@ -106,6 +153,9 @@
          .controls-EditAtPlace__fieldWrapper{
             padding: 0;
          }
+         .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field{
+           padding-top: 4px;
+         }
       }
       .controls-TabButton__additionalText2, .controls-TabButton__additionalText2 > * {
          color: @tab-button-large-secondAddText-color;
@@ -118,6 +168,9 @@
             color: @black-color;
             font-size: @font-basic-size;
          }
+         .controls-TextBox .controls-TextBox__fieldWrapper{
+           padding-top: 1px;
+         }
       }
    }
    .controls-TabButton__inner {
@@ -125,6 +178,7 @@
       line-height: @tab-button-inner-line-height;
       overflow: @tab-button-inner-overflow;
       height: @tab-button-inner-height;
+      max-width: @tab-button-large-inner-max-width;
       &:before {
          content: @tab-button-inner-after-content;
          display: @tab-button-inner-after-display;
@@ -144,21 +198,24 @@
       }
       .controls-TabButton__caption {
          display: inline-block;
+         > div {
+            vertical-align: top;
+         }
       }
       .controls-EditAtPlace {
+         .controls-DateRange{
+           .controls-DateRange__Button {
+             vertical-align: top;
+           }
+           height: 24px;
+           position: relative;
+           top: 1px;
+         }
+
          .controls-EditAtPlace__textField{
             border-style: none;
          }
          background-color: transparent;
-      }
-   }
-
-   &.controls-TabButton__counter{
-      &.controls-Checked__checked {
-         .controls-TabButton__inner {
-            font-weight: @tab-button-counter-font-weight;
-            font-size: @tab-button-counter-font-size;
-         }
       }
    }
 
@@ -205,8 +262,107 @@
    }
 }
 
+.controls-TabButtons__simple-view{
+  &.controls-TabButtons__simple-view-select {
+    .controls-TabButton.controls-Checked__checked {
+      .controls-TabButton__inner{
+        color: #D94700;
+      }
+    }
+  }
+  .controls-TabButton {
+    border-color: transparent;
+    .controls-TabButton__inner{
+      border-color: transparent;
+      color: #313E78;
+      &:before{
+        display: block;
+        z-index: 1000;
+      }
+    }
+    .controls-TabButton__bottomLine{
+      height: 3px;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      position: absolute;
+      display: block;
+    }
+    &.controls-Checked__checked {
+      .controls-TabButton__inner{
+        color: #0055BB;
+        background: transparent;
+        padding: 0 6px;
+      }
+      .controls-TabButton__bottomLine{
+        background: #0055BB!important;
+      }
+    }
+    &:hover {
+      background: transparent;
+      .controls-TabButton__bottomLine{
+        background: #E4E4E4;
+      }
+    }
+  }
+}
+
+.controls-TabButtons__simple-view-mini{
+  .controls-TabButton {
+    height: 25px;
+    .controls-TabButton__inner{
+      height: 26px;
+      color: #CCCCCC;
+      font-size: 14px;
+      padding: 0 12px;
+      line-height: 25px;
+      border-color: #E4E4E4;
+      &:before {
+        display: none;
+      }
+    }
+    .controls-TabButton__bottomLine{
+      display: none;
+    }
+    &.controls-Checked__checked {
+      border-color: #E4E4E4;
+      .controls-TabButton__inner, .controls-TabButton__inner:hover{
+        color: #8991A9;
+        font-size: 14px;
+        font-weight: normal;
+        background: transparent;
+      }
+      &:hover{
+        border-color: #E4E4E4;
+      }
+      .controls-TabButton__bottomLine{
+        position: absolute;
+        bottom: -1px;
+        left: 1px;
+        right: 1px;
+        background: #fff;
+        height: 1px;
+        display: block;
+      }
+    }
+    &:hover{
+      background: transparent;
+      border-color: transparent;
+      .controls-TabButton__inner{
+        color: #313E78;
+      }
+    }
+  }
+}
+
 @-moz-document url-prefix() {
+  .controls-TabButton .controls-TabButton__inner{
+    line-height: 29px;
+  }
   .controls-TabButton.controls-TabButton__main-item .controls-TabButton__inner{
-    line-height: 27px;
+    line-height: 26px;
+  }
+  .controls-TabButtons__simple-view-mini .controls-TabButton .controls-TabButton__inner {
+    line-height: 23px;
   }
 }

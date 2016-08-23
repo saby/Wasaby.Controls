@@ -427,6 +427,7 @@ define('js!SBIS3.CONTROLS.Image',
                    filter = showCropResult;
                }
                new Dialog({
+                  animatedWindows: false,
                   template: 'js!SBIS3.CONTROLS.Image.EditDialog',
                   opener: this,
                   visible: false,
@@ -509,6 +510,9 @@ define('js!SBIS3.CONTROLS.Image',
                         .call(dataSource.getBinding().destroy, sendFilter, $ws.proto.BLObject.RETURN_TYPE_ASIS)
                         .addBoth(function() {
                            self._setImage(self._options.defaultImage);
+                           if (self._options.defaultImage === '') {
+                              self.reload();
+                           }
                         });
                   };
                if (imageResetResult !== false) {

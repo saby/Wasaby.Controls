@@ -95,6 +95,9 @@
                   <div id="Buttons"></div>
                </li>
                <li>
+                  <div id="tabButtons"></div>
+               </li>
+               <li>
                   <div id="ButtonsNew"></div>
                </li>
                <li>
@@ -123,6 +126,9 @@
                 </li>
                <li>
                   <div id="Enum"></div>
+               </li>
+               <li>
+                  <div id="Flags"></div>
                </li>
                 <li>
                     <div id="ViewsScroll"></div>
@@ -327,6 +333,14 @@
 
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
+               element: "tabButtons",
+               caption: 'TabButtons',
+               href: '/pages/TabButtons.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
                element: "ButtonsNew",
                caption: 'Buttons new',
                href: '/pages/buttonCommonStylesNew.html'
@@ -399,6 +413,13 @@
                element: "Enum",
                caption: 'Enum',
                href: '/pages/Enum.html'
+            })
+         });
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "Flags",
+               caption: 'Flags',
+               href: '/pages/Flags.html'
             })
          });
           require(["js!SBIS3.CONTROLS.Link"], function (r) {

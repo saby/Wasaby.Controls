@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
              */
             /**
              * @typedef {Object} Items
-             * @property {String} Путь к файлу, отвечающий за xslt-преобразование.
+             * @property {String} path Путь к файлу, отвечающего за xslt-преобразование.
              * @property {Binding} binding Имена методов БЛ, которые будут использованы при сохранении.
              * @property {Boolean} serverSideExport Использовать серверную выгрузку.
              */
@@ -236,7 +236,6 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                exporter.exportDataSet(this._getUnloadFileName(), this._currentItem, undefined, pageOrient);
             }
          }
-         //p.exportData(this._controlsId[this._currentItem].objectName, this._controlsId[this._currentItem].method, this._getUnloadFileName() );
       },
       _getSaveMethodName: function(isList) {
          var binding = this._getCurrentItem().get('binding');
