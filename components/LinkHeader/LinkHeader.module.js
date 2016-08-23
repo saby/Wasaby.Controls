@@ -41,6 +41,12 @@ define('js!SBIS3.CONTROLS.LinkHeader',
                href: ''
             }
          },
+
+         init: function() {
+            LinkHeader.superclass.init.call(this);
+
+            this.getLinkedContext().setValue('href', this.getHref());
+         },
          /**
           * Возвращает ссылку
           * */
@@ -53,7 +59,7 @@ define('js!SBIS3.CONTROLS.LinkHeader',
           * */
          setHref: function(href) {
             this._options.href = href;
-            this.getContainer().find('a').attr('href', href);
+            this.getLinkedContext().setValue('href', href);
          }
       });
 

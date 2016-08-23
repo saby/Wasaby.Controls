@@ -2,7 +2,6 @@ define('js!SBIS3.CONTROLS.Header',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
       'html!SBIS3.CONTROLS.Header',
-      'js!WS.Data/Entity/Record',
       'css!SBIS3.CONTROLS.Header'
    ],
    function(CompoundControl, dotTplFn, Record){
@@ -44,13 +43,7 @@ define('js!SBIS3.CONTROLS.Header',
          init: function() {
             Header.superclass.init.call(this);
 
-            this._options.context = new Record({
-               rawData: {
-                  caption: this.getCaption()
-               }
-            });
-
-            this.getLinkedContext().setValue('context', this._options.context);
+            this.getLinkedContext().setValue('caption', this.getCaption());
          },
          /**
           * Возвращает текст заголовка
@@ -64,7 +57,7 @@ define('js!SBIS3.CONTROLS.Header',
           * */
          setCaption: function(caption) {
             this._options.caption = caption;
-            this._options.context.set('caption', caption);
+            this.getLinkedContext().setValue('caption', caption);
          }
       });
 

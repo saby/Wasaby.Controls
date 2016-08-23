@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.LeftNavigation',
          init: function() {
             LeftNavigation.superclass.init.call(this);
 
-            this.setCount(this.getCount());
+            this.getLinkedContext().setValue('count', this.getCount());
          },
 
          getCount: function() {
@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.LeftNavigation',
             if(count < 1) {
                count = 0;
             }
-               this._options.context.set('count', count);
+            this.getLinkedContext().setValue('count', count);
          }
       });
 
