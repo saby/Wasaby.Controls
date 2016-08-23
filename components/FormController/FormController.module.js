@@ -191,14 +191,34 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       },
 
       _onAfterShowHandler: function(){
+         //Если мы в новой вкладке браузера, то ничего не делаем
+         if (!($ws.helpers.instanceOfModule(this, 'SBIS3.CORE.FloatArea') || $ws.helpers.instanceOfModule(this, 'SBIS3.CORE.Dialog'))){
+            return;
+         }
          var self = this._getTemplateComponent();
          self._updateIndicatorZIndex();
          self._panelReadyDeferred.callback();
       },
 
       _onBeforeCloseHandler: function(event, result){
+         //Обработчик _onBeforeCloseHandler универсален: при фактической операции закрытия панели мы можем попасть сюда несколько раз, т.к.
+         //при определенных условиях прерываем логику закрытия панели и/или сами вызываем команду на закрытие.
+         //Есть 2 типовых операции, когда мы попадаем сюда несколько раз, прежде чем закрыться:
+         //1: Открыли существующую запись, изменили в ней поля, пытаемся закрыться по крестику. Сначала мы прервем логику закрытия, чтобы показать диалог о сохранении.
+         //Когда пользователь даст ответ сохранять или нет - сами вызовем метод закрытия и вернемся сюда.
+         //2: Открыли новую запись, далее так же как и в п.1. после вопроса о сохранении приходим сюда, если выполняются условия для дестроя - прерываем логику закрытия,
+         //ждем когда задестроится запись и после этого сами вызываем закрытие панели.
+         //TODO: Сейчас нет механизма, позволяющего работать с панелью не через события и влиять на ее работу. хорошо бы такой иметь
+
+         //Если мы в новой вкладке браузера, то ничего не делаем
+         if (!($ws.helpers.instanceOfModule(this, 'SBIS3.CORE.FloatArea') || $ws.helpers.instanceOfModule(this, 'SBIS3.CORE.Dialog'))){
+            return;
+         }
          var self = this._getTemplateComponent(),
              record = self._options.record;
+         if (record.getState() === Record.RecordState.DELETED){
+            return;
+         }
          //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
          if (self._saving || !(record && record.isChanged())){
             //Дестроим запись, когда выполнены три условия
@@ -640,9 +660,11 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see dataSource
        */
       _destroyModel: function(){
-         var self = this;
-         return this._dataSource.destroy(this._options.record.getId()).addCallback(function(){
-            self._notify('onDestroyModel', self._options.record);
+         var self = this,
+             record = this._options.record;
+         return this._dataSource.destroy(record.getId()).addCallback(function(){
+            self._notify('onDestroyModel', record);
+            record.setState(Record.RecordState.DELETED);
             self._newRecord = false;
          });
       },
