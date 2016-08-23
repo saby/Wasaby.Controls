@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
                corner: 'tl',
                horizontalAlign: {
                   side: 'left',
-                  offset: -136
+                  offset: -133
                },
                verticalAlign: {
                   side: 'top',
@@ -67,6 +67,9 @@ define('js!SBIS3.CONTROLS.DateRange', [
          this._datePickerStart.subscribe('onDateChange', function(e, date) {
             self.setStartValue(date);
          });
+         this._datePickerStart.subscribe('onInputFinished', function() {
+            self._datePickerEnd.setActive(true);
+         });
          this._datePickerEnd = this.getChildControlByName('DateRange__DatePickerEnd');
          this._datePickerEnd.subscribe('onDateChange', function(e, date) {
             self.setEndValue(date);
@@ -95,8 +98,8 @@ define('js!SBIS3.CONTROLS.DateRange', [
          this._options.startValue = this._options.startValue || this._options.startDate;
          this._options.endValue = this._options.endValue || this._options.endDate;
          // приводим даты к Date-типу и устанавливаем их в DatePicker-ах
-         this.setStartValue(this._options.startDate);
-         this.setEndValue(this._options.endDate);
+         this.setStartValue(this._options.startValue, false);
+         this.setEndValue(this._options.endValue, false);
 
          this._addDefaultValidator();
       },
@@ -105,7 +108,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
          //Добавляем к прикладным валидаторам стандартный, который проверяет что дата начала периода меньше даты конца.
          this._options.validators.push({
             validator: function() {
-               return !(this._options.startDate && this._options.endDate && this._options.endDate < this._options.startDate);
+               return !(this._options.startValue && this._options.endValue && this._options.endValue < this._options.startValue);
             }.bind(this),
             errorMessage: rk('Дата начала периода не может быть больше даты окончания')
          });
