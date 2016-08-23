@@ -1509,7 +1509,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @return {[type]} [description]
           */
          scrollLoadMore: function(){
-            if (this._options.infiniteScroll && this._scrollWatcher && !this._scrollWatcher.hasScroll(this.getContainer())) {
+            if (this._options.infiniteScroll && this._scrollWatcher && !this._scrollWatcher.hasScroll()) {
                this._loadNextPage();
             }
          },
@@ -1951,7 +1951,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   self._scrollWatcher && self._scrollWatcher.scrollTo('bottom');
                }
                //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
-               if (this._scrollWatcher && !this._scrollWatcher.hasScroll(this.getContainer())){
+               if (this._scrollWatcher && !this._scrollWatcher.hasScroll()){
                   this._loadNextPage();
                }
                if (this._scrollPager){
@@ -2011,7 +2011,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var loadAllowed  = this.isInfiniteScroll(),
                more = this.getItems().getMetaData().more,
                isContainerVisible = $ws.helpers.isElementVisible(this.getContainer()),
-               hasScroll = this._scrollWatcher.hasScroll(this.getContainer()),
+               hasScroll = this._scrollWatcher.hasScroll(),
                hasNextPage = (direction == 'up' && this._options.infiniteScroll == 'down') ? this._scrollOffset.top > 0 : this._hasNextPage(more, this._scrollOffset.bottom),
                offset = (direction == 'up' && this._options.infiniteScroll == 'down') ? this._scrollOffset.top - this._limit : this._scrollOffset.bottom + this._limit;
 
@@ -2117,7 +2117,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _preScrollLoading: function(){
             var hasScroll = (function() {
-                  return this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer(), 10)
+                  return this._scrollWatcher && this._scrollWatcher.hasScroll(10)
                }).bind(this);
 
             // Если нет скролла или скролл внизу, значит нужно догружать еще записи (floatArea отжирает скролл, поэтому если она открыта - не грузим)
