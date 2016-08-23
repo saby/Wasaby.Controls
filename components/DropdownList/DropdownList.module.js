@@ -295,7 +295,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
                //Если множественный выбор, то после клика скрыть менюшку можно только по кнопке отобрать
                this._hideAllowed = !this._options.multiselect;
-               if (this._options.multiselect && !$(e.target).hasClass('controls-ListView__defaultItem') /* && $(e.target).hasClass('js-controls-DropdownList__itemCheckBox')*/) {
+               if (this._options.multiselect && !$(e.target).closest('.controls-ListView__defaultItem').length /* && $(e.target).hasClass('js-controls-DropdownList__itemCheckBox')*/) {
                   var changedSelectionIndex = Array.indexOf(this._changedSelectedKeys, row.data('id'));
                   if (changedSelectionIndex < 0){
                      this._changedSelectedKeys.push(row.data('id'));
