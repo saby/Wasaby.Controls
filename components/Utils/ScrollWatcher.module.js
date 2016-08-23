@@ -40,13 +40,13 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
              * @cfg {Number} Определитель нижней границы. Если передать число > 0 то событие с типом "Достигли дна(до скроллили до низа\верха страницы)"
              * будет срабатывать на checkOffset px раньше
              */
-            checkOffset : 0
+            totalScrollOffset : 0
          }
       },
 
       $constructor: function() {
          var topParent;
-         this._publish('onScroll', 'onScrollMove');
+         this._publish('onTotalScroll', 'onScroll');
          // Ищем в порядке - пользовательский контейнер -> FloatArea -> Window
          if (!this._options.element) {
             var topParent = this._options.opener.getTopParent();
@@ -83,16 +83,16 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * @private
        */
       _processScrollEvent: function (curScrollTop) {
-         this._notify('onScrollMove', curScrollTop);
+         this._notify('onScroll', curScrollTop);
          if (this.isScrollOnTop()) {
-            this._notify('onScroll', 'top', curScrollTop);
+            this._notify('onTotalScroll', 'top', curScrollTop);
          } else if (this.isScrollOnBottom()) {
-            this._notify('onScroll', 'bottom', curScrollTop);
+            this._notify('onTotalScroll', 'bottom', curScrollTop);
          }
       },
 
       _processCustomScrollEvent: function(event, direction, scrollTop){
-         this._notify('onScroll', direction, scrollTop);
+         this._notify('onTotalScroll', direction, scrollTop);
       },
 
       _onContainerScroll: function (event) {
