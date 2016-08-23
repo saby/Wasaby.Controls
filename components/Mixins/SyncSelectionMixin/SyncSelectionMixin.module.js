@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], func
                      break;
                   case 'selectedItems':
                      item = propValue && propValue.at(0);
-                      if(!$ws.helpers.isEqualObject(this._options.selectedItem, item)) {
+                     if(!this._options.selectedItem.isEqual(item)) {
                          if (item) {
                             this._options.selectedItem = item;
                             this._options.selectedKey = item.getId();
@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], func
                             this._options.selectedKey = null;
                          }
                          this._notify('onSelectedItemChange', this._options.selectedKey, this._options.selectedIndex);
-                      }
+                     }
                      break;
                   case 'selectedKeys':
                      key = propValue.length ? propValue[0] : null;
