@@ -239,27 +239,30 @@ define('js!SBIS3.CONTROLS.DataGridView',
             _buildTplArgsDG: buildTplArgsDG,
             /**
              * @typedef {Object} Columns
-             * @property {String} title Заголовок колонки
-             * @property {String} field Имя поля
-             * @property {String} width Ширина колонки
-             * Значение необходимо задавать для колонок с фиксированной шириной.
-             * @property {Boolean} [highlight=true] Подсвечивать фразу при поиске
-             * @property {String} resultTemplate Шаблон отображения колонки в строке результатов
-             * @property {String} className Имя класса, который будет применён к каждой ячейке столбца
+             * @property {String} title Заголовок колонки. Отображение заголовков можно изменять с помощью опции {@link showHead}. Также с помощью опции {@link allowToggleHead} можно скрывать заголовки при отсутствии в списке данных.
+             * Если данных в списке много и применяется скролл, то для "прилипания" заголовков применяется опция {@link stickyHeader}. Преобразование заголовков списка производится с помощью опции {@link transformHead}.
+             * @property {String} field Название поля (из формата записи), значения которого будут отображены в данной колонке.
+             * @property {String} width Ширина колонки. Значение необходимо устанавливать для колонок с фиксированной шириной.
+             * Значение можно установить как в px (суффикс устанавливать не требуется), так и в %.
+             * @property {Boolean} [highlight=true] Признак подсвечивания фразы при поиске. Если установить значение в false, то при поиске данных по таблице не будет производиться подсветка совпадений.
+             * @property {String} [resultTemplate] Шаблон отображения колонки в строке итогов. Подробнее о создании такого шиблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/">Строка итогов</a>.
+             * @property {String} [className] Имя класса, который будет применён к каждой ячейке колонки.
              * Стилевые классы:
-             *    controls-DataGridView-cell-overflow-ellipsis - текст внутри ячейки будет обрезаться троеточием (актуально для однострочных ячеек)
-             *    controls-DataGridView__td__textAlignRight Стиль задается колонке, выравнивает текст во всех ячейках этой колонки по правой стороне
-             *    controls-DataGridView-cell-verticalAlignTop - содержимое ячейки будет выравниваться по верхнему краю
-             *    controls-DataGridView-cell-verticalAlignMiddle - содержимое ячейки будет выравниваться по середине
-             *    controls-DataGridView-cell-verticalAlignBottom - содержимое ячейки будет выравниваться по нижнему краю
-             * @property {String} headTemplate Шаблон отображения шапки колонки
-             * @property {String} headTooltip Всплывающая подсказка шапки колонки
-             * @property {String} editor Устанавливает редактор колонки для режима редактирования по месту.
+             * <ul>
+             *    <li><b>controls-DataGridView-cell-overflow-ellipsis</b> - текст внутри ячейки будет обрезаться троеточием (актуально для однострочных ячеек);</li>
+             *    <li><b>controls-DataGridView__td__textAlignRight</b> - текст внутри ячейки будет выровнен по правой стороне;</li>
+             *    <li><b>controls-DataGridView-cell-verticalAlignTop</b> - содержимое ячейки будет выравниваться по верхнему краю;</li>
+             *    <li><b>controls-DataGridView-cell-verticalAlignMiddle</b> - содержимое ячейки будет выравниваться по середине;</li>
+             *    <li><b>controls-DataGridView-cell-verticalAlignBottom</b> - содержимое ячейки будет выравниваться по нижнему краю.</li>
+             * </ul>
+             * @property {String} [headTemplate] Шаблон отображения шапки колонки. Подробнее о создании такого шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/columns/head-template/">Шаблон отображения заголовка</a>.
+             * @property {String} [headTooltip] Всплывающая подсказка, отображаемая при наведении курсора на шапку колонки.
+             * @property {String} [editor] Устанавливает редактор колонки для режима редактирования по месту.
              * Редактор отрисовывается поверх редактируемой строки с прозрачным фоном. Это поведение считается нормальным в целях решения прикладных задач.
              * Чтобы отображать только редактор строки без прозрачного фона, нужно установить для него свойство background-color.
              * Пример использования опции вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/simple-edit-in-place/">Редактирование записи по клику</a>.
-             * @property {Boolean} allowChangeEnable Доступность установки сотояния активности редактирования колонки в зависимости от состояния табличного представления
-             * @property {String} cellTemplate Шаблон отображения ячейки
+             * @property {Boolean} [allowChangeEnable] Доступность установки сотояния активности редактирования колонки в зависимости от состояния табличного представления
+             * @property {String} [cellTemplate] Шаблон отображения ячейки. Подробнее о создании такого шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/templates/cell-template/">Шаблон отображения ячейки</a>.
              * Данные, которые передаются в cellTemplate:
              * <ol>
              *    <li>item - отрисовываемая запись {@link WS.Data/Entity/Record}</li>
@@ -280,18 +283,24 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @remark
              * Если в настройке колонки имя поля соответствует шаблону ['Name1.Name2'] то при подготовке полей для рендеринга
              * строки считаем, что в .get('Name1') находится рекорд и значение получаем уже у этого рекорда через .get('Name2')
-             * @property {Object.<String,String>} templateBinding соответствие опций шаблона полям в рекорде
-             * @property {Object.<String,String>} includedTemplates подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне ячейки
+             * @property {Object.<String,String>} [templateBinding] Соответствие опций шаблона полям в рекорде.
+             * @property {Object.<String,String>} [includedTemplates] Подключаемые внешние шаблоны, ключу соответствует поле it.included.<...>, которое будет функцией в шаблоне ячейки.
+             *
              * @editor headTemplate CloudFileChooser
-             * @editorConfig headTemplate extFilter xhtml
-             * @editor resultTemplate CloudFileChooser
-             * @editorConfig resultTemplate extFilter xhtml
              * @editor cellTemplate CloudFileChooser
+             * @editor resultTemplate CloudFileChooser
+             * @editorConfig headTemplate extFilter xhtml
+             * @editorConfig resultTemplate extFilter xhtml
              * @editorConfig cellTemplate extFilter xhtml
+             *
              * @translatable title
              */
             /**
-             * @cfg {Columns[]} Набор колонок
+             * @cfg {Columns[]} Устанавливает набор колонок списка.
+             * @see showHead
+             * @see allowToggleHead
+             * @see stickyHeader
+             * @see transformHead
              * @see setColumns
              * @see getColumns
              */

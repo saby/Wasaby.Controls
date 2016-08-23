@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       'js!SBIS3.CONTROLS.RichTextArea/resources/smiles',
       'js!SBIS3.CORE.PluginManager',
       'js!SBIS3.CONTROLS.Utils.ImageUtil',
-      'js!SBIS3.CONTROLS.Utils.Sanitize',
+      'Core/Sanitize',
       'css!SBIS3.CORE.RichContentStyles',
       'i18n!SBIS3.CONTROLS.RichEditor'
    ], function(TextBoxBase, dotTplFn, RichUtil, FileLoader, smiles, PluginManager, ImageUtil, Sanitize) {
