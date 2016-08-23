@@ -1525,6 +1525,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                require(['css!SBIS3.CONTROLS.RichEditor/resources/tinymce/skins/lightgray/skin.min',
                   'css!SBIS3.CONTROLS.RichEditor/resources/tinymce/skins/lightgray/content.inline.min',
                   'js!SBIS3.CONTROLS.RichEditor/resources/tinymce/tinymce'],function(){
+                  tinyMCE.baseURL = $ws.helpers.resolveComponentPath('SBIS3.CONTROLS.RichEditor') + 'resources/tinymce';
                   tinyMCE.init(self._options.editorConfig);
                });
             }
