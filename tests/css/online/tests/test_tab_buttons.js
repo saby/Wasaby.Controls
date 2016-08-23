@@ -195,5 +195,28 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
             .capture('hovered_add_text_2', function (actions) {
                 actions.mouseMove(this.add2);
             })
+
+            .capture('not_active_main_and_hovered_at1', function (actions) {
+                actions.click(this.tab3);
+                actions.mouseMove(this.add1);
+            })
+
+            .capture('not_active_main_and_hovered_at2', function (actions) {
+                actions.mouseMove(this.tab3);
+                actions.mouseMove(this.add2);
+            })
+
+            .capture('disabled_and_hovered_at1', function (actions) {
+                actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('TabButton 1').setEnabled(true);
+                });
+                actions.mouseMove(this.tab3);
+                actions.mouseMove(this.add1);
+            })
+
+            .capture('disabled_and_hovered_at2', function (actions) {
+                actions.mouseMove(this.tab3);
+                actions.mouseMove(this.add2);
+            })
 	});
 });
