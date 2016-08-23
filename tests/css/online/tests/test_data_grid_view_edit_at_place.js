@@ -526,8 +526,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 				actions.wait(350);
             })
     });
-
-    /*
+/*
 	gemini.suite('editor_with_combobox', function (test) {
 
         test.setUrl('/regression_data_grid_view_edit_at_place_online_11.html').setCaptureElements('.capture')
