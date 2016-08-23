@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          if (this._customScroll) {
             element[0].wsControl.subscribe('onScroll', this._processCustomScrollEvent.bind(this));
          } else {
-            element.bind('scroll', this._onContainerScroll.bind(this));
+            element.bind('scroll.wsScrollWatcher', this._onContainerScroll.bind(this));
             // Нужно чтобы вызвать скролл у контейнеров без видимого скролла. 
             // TODO: Не работает на touch устройствах - нужно выпилить
             $ws.helpers.wheel(element, function (event) {
@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
       },
 
       destroy: function(){
-         this._options.element.unbind('scroll', this._onWindowScrollHandler);
+         this._options.element.unbind('scroll.wsScrollWatcher');
          ScrollWatcher.superclass.destroy.call(this);
       }
 
