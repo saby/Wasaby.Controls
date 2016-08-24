@@ -70,7 +70,9 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], func
                      break;
                   case 'selectedItems':
                      item = propValue && propValue.at(0);
-                     if(!this._options.selectedItem.isEqual(item)) {
+                     var itemKey = item ? item.getId() : null,
+                        selectedItemKey = this._options.selectedItem ? this._options.selectedItem.getId() : null;
+                     if(itemKey !== selectedItemKey) {
                          if (item) {
                             this._options.selectedItem = item;
                             this._options.selectedKey = item.getId();
