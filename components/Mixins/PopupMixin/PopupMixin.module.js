@@ -2,7 +2,11 @@
  * Created by iv.cheremushkin on 12.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManager', 'js!SBIS3.CORE.ModalOverlay'], function (ControlHierarchyManager, ModalOverlay) {
+define('js!SBIS3.CONTROLS.PopupMixin', [
+      'js!SBIS3.CONTROLS.ControlHierarchyManager',
+      'js!SBIS3.CORE.ModalOverlay',
+      'Core/helpers/helpers'
+   ], function (ControlHierarchyManager, ModalOverlay, coreHelpers) {
    'use strict';
    if (typeof window !== 'undefined') {
       var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
@@ -44,6 +48,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                                 // и соответсвенно провести правильные рассчеты, поэтому пропустим первое его срабатывание.
          _zIndex: null,
          _currentAlignment: {},
+         _parentFloatArea: null,
          _options: {
             visible: false,
             /**
@@ -154,6 +159,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
          this._saveDefault();
          this._resetToDefault();
+
+         var topParent = this.getTopParent();
+         if (topParent && coreHelpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
+            // на iPad при появлении всплывахи над FloatArea при проведении пальцем над всплывахой - скроллится FloatArea (бажное поведение iPad с инетным скроллом)
+            // приходится отключать инертный скролл в момент показа всплывахи и включать обратно при скрытии
+            this._parentFloatArea = topParent;
+         }
       },
 
       //Подписка на изменение состояния таргета
@@ -860,6 +872,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             this.moveToTop();//пересчитываем, чтобы z-index был выше других панелей
 
             this._notify('onShow');
+
+            if (this._parentFloatArea){
+               this._parentFloatArea.setHasPopupInside(true);
+            }
          },
 
          hide: function () {
@@ -867,6 +883,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             this._unsubscribeTargetMove();
             if (this._options.isModal) {
                this._setModal(false);
+            }
+
+            if (this._parentFloatArea){
+               this._parentFloatArea.setHasPopupInside(false);
             }
          },
 
