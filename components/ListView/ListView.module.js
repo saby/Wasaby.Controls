@@ -653,8 +653,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                dragEntity: 'dragentity.row'
             },
-            //Флаг обозначает необходимость компенсировать подгрузку по скроллу вверх, ее нельзя делать безусловно, так как при подгрузке вверх могут добавлятся элементы и вниз тоже
-            _needSrollTopCompensation: false,
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
             _searchParamName: undefined, //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
@@ -798,7 +796,6 @@ define('js!SBIS3.CONTROLS.ListView',
             var scrollOnEdge = (this._options.infiniteScroll === 'up' && type === 'top') || // скролл вверх и доскролили до верхнего края
                                (this._options.infiniteScroll === 'down'); //скролл в обе стороны и доскролили до любого края
             if (scrollOnEdge) {
-               this._scrollDirection = type;
                this._loadChecked(type == 'top' ? 'up' : 'down');
             }
          },
@@ -2014,14 +2011,19 @@ define('js!SBIS3.CONTROLS.ListView',
                ladder && ladder.setIgnoreEnabled(false);
             } else {
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight();
-               this._needSrollTopCompensation = true;
                var items = dataSet.toArray();
                this.getItems().prepend(items);
+               if (!this._isSlowDrawing()){
+                  this._moveTopScroll();
+               }
                at = {at: 0};
             }
 
             if (this._isSlowDrawing()) {
                this._drawItems(dataSet.toArray(), at);
+               if (direction == 'up'){
+                  this._moveTopScroll();
+               }
             }
             //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
             this._dataLoadedCallback();
@@ -2057,7 +2059,6 @@ define('js!SBIS3.CONTROLS.ListView',
             if ((this.isScrollOnBottom() && this._options.infiniteScroll == 'down') || !hasScroll()) {
                this._loadNextPage();
             } else {
-               this._moveTopScroll();
                this._firstScrollTop = false;
             }
          },
@@ -2066,13 +2067,10 @@ define('js!SBIS3.CONTROLS.ListView',
           * При подгрузке данных вверх необходимо подскролливать элементы, чтобы
           * @private
           */
-         _moveTopScroll : function(){
-            var scrollAmount,
-               scrollingToTop =  this._scrollDirection == 'top';
+         _moveTopScroll: function(){
             //сюда попадем только когда уже точно есть скролл
-            if (this.isInfiniteScroll() && scrollingToTop && (this._needSrollTopCompensation || this._firstScrollTop)){
-               scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
-               this._needSrollTopCompensation = false;
+            if (this.isInfiniteScroll()){
+               var scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
                //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
                //разницы величины скролла (т.е. на сколько добавилось высоты, на столько и опустили). Получается плавно
                //Так же цчитываем то, что индикатор появляется только на время загрузки и добавляет свою высоту

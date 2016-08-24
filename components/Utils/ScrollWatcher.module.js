@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
             opener: undefined,
             /**
              * @cfg {Number} Определитель нижней границы. Если передать число > 0 то событие с типом "Достигли дна(до скроллили до низа\верха страницы)"
-             * будет срабатывать на checkOffset px раньше
+             * будет срабатывать на totalScrollOffset px раньше
              */
             totalScrollOffset : 0
          }
@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          var topParent;
          this._publish('onTotalScroll', 'onScroll');
          // Ищем в порядке - пользовательский контейнер -> FloatArea -> Window
-         if (!this._options.element) {
+         if (!this._options.element || !this._options.element.length) {
             var topParent = this._options.opener.getTopParent();
             if ($ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')) {
                this._options.element = topParent.getContainer().closest('.ws-scrolling-content');
@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          if (this._customScroll)
             return element.wsControl.isScrollOnBottom();
          else {
-            return element.scrollTop + element.offsetHeight > element.scrollHeight - this._options.checkOffset;
+            return element.scrollTop + element.offsetHeight > element.scrollHeight - this._options.totalScrollOffset;
          }
       },
 
