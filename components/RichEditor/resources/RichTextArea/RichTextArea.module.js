@@ -820,7 +820,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          _setText: function(text) {
             if (text !== this.getText()) {
                this._textChanged = true;
-               this._options.text = text;
+               if (!this._isEmptyValue(text) && !this._isEmptyValue(this._options.text)) {
+                  this._options.text = text;
+               }
                this._notify('onTextChange', text);
                this._notifyOnPropertyChanged('text');
                this._updateDataReview(text);
@@ -1069,7 +1071,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             editor.on('keyup', function(e) {
                self._typeInProcess = false;
-               self._setTrimmedText(self._getTinyEditorValue());
+               if (!(e.keyCode === $ws._const.key.enter && e.ctrlKey)) { // Не нужно обрабатывать ctrl+enter, т.к. это сочетание для дефолтной кнопки
+                  self._setTrimmedText(self._getTinyEditorValue());
+               }
             });
 
             editor.on('keydown', function(e) {
@@ -1091,10 +1095,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   e.preventDefault();
                   return false;
                } else if (e.which === $ws._const.key.enter && e.ctrlKey) {
-                  self._container.trigger(e);
-                  e.stopImmediatePropagation();
-                  e.preventDefault();
-                  return false;
+                  e.preventDefault();//по ctrl+enter не делаем дефолтного действия чтобы не менялось значение в редакторе
+                  self._typeInProcess = false; // тк по ctrl+enter Отработает дефолтная кнопка до keyup не дойдёт, и если в этот момент поставят текст то он не проставится
                }
                self._updateHeight();
             });
