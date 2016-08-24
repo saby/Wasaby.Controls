@@ -258,6 +258,7 @@ define('js!SBIS3.CONTROLS.ListView',
             },
             _pageChangeDeferred : undefined,
             _pager : undefined,
+            _pagerContainer: undefined,
             _previousGroupBy : undefined,
             _checkClickByTap: true,
             _keysWeHandle: [
@@ -1283,7 +1284,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var domItems = this._container.find('.controls-ListView__item');
 
             /* Удаляем выделение */
-            domItems.removeClass('controls-ListView__item__multiSelected');
+            domItems.filter('.controls-ListView__item__multiSelected').removeClass('controls-ListView__item__multiSelected');
             /* Проставляем выделенные ключи */
             for(var i = 0; i < domItems.length; i++) {
                if(ArraySimpleValuesUtil.hasInArray(idArray, domItems[i].getAttribute('data-id'))) {
@@ -1509,7 +1510,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @return {[type]} [description]
           */
          scrollLoadMore: function(){
-            if (this._options.infiniteScroll && this._scrollWatcher && !this._scrollWatcher.hasScroll(this.getContainer())) {
+            if (this._options.infiniteScroll && this._scrollWatcher && !this._scrollWatcher.hasScroll()) {
                this._loadNextPage();
             }
          },
@@ -1951,7 +1952,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   self._scrollWatcher && self._scrollWatcher.scrollTo('bottom');
                }
                //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
-               if (this._scrollWatcher && !this._scrollWatcher.hasScroll(this.getContainer())){
+               if (this._scrollWatcher && !this._scrollWatcher.hasScroll()){
                   this._loadNextPage();
                }
                if (this._scrollPager){
@@ -2011,7 +2012,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var loadAllowed  = this.isInfiniteScroll(),
                more = this.getItems().getMetaData().more,
                isContainerVisible = $ws.helpers.isElementVisible(this.getContainer()),
-               hasScroll = this._scrollWatcher.hasScroll(this.getContainer()),
+               hasScroll = this._scrollWatcher.hasScroll(),
                hasNextPage = (direction == 'up' && this._options.infiniteScroll == 'down') ? this._scrollOffset.top > 0 : this._hasNextPage(more, this._scrollOffset.bottom),
                offset = (direction == 'up' && this._options.infiniteScroll == 'down') ? this._scrollOffset.top - this._limit : this._scrollOffset.bottom + this._limit;
 
@@ -2117,7 +2118,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _preScrollLoading: function(){
             var hasScroll = (function() {
-                  return this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer(), 10)
+                  return this._scrollWatcher && this._scrollWatcher.hasScroll(10)
                }).bind(this);
 
             // Если нет скролла или скролл внизу, значит нужно догружать еще записи (floatArea отжирает скролл, поэтому если она открыта - не грузим)
@@ -2315,6 +2316,9 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _toggleEmptyData: function(show) {
             this._getEmptyDataContainer().toggleClass('ws-hidden', !show);
+            if(this._pagerContainer) {
+               this._pagerContainer.toggleClass('ws-hidden', show);
+            }
          },
          //------------------------Paging---------------------
          _processPaging: function() {
@@ -2360,6 +2364,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                   }
                });
+               self._pagerContainer = self.getContainer().find('.controls-Pager-container');
             }
             this._updatePaging();
          },
@@ -2476,6 +2481,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._pager) {
                this._pager.destroy();
                this._pager = undefined;
+               this._pagerContainer = undefined;
             }
             this._destroyEditInPlace();
             ListView.superclass.setDataSource.apply(this, arguments);
@@ -2612,6 +2618,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._pager) {
                this._pager.destroy();
                this._pager = undefined;
+               this._pagerContainer = undefined;
             }
             if (this._scrollBinder){
                this._scrollBinder.destroy();
@@ -2704,7 +2711,6 @@ define('js!SBIS3.CONTROLS.ListView',
             //сделать stopPropagation, тогда от данной проверки можно будет избавиться.
             return this._options.enabled && !$ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
          },
-
          _beginDragHandler: function(dragObject, e) {
             var
                 id,

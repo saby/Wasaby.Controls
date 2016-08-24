@@ -242,8 +242,8 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * Получить текущую высоту скролла отслеживаемого элемента
        * @returns {*}
        */
-      getScrollHeight: function(element){
-         var element = element || this._getContainer();
+      getScrollHeight: function(){
+         var element = this._getContainer();
          return element.hasClass('controls-Scroll__container') ? $('.mCSB_container').height() : this.getScrollContainer(element).scrollHeight;
       },
       /**
@@ -266,10 +266,10 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * @param {jQuery} element блок элемента, в котором работает отслеживание скролла (контейнер контрола например)
        * @returns {boolean}
        */
-      hasScroll: function(element, offset){
+      hasScroll: function(offset){
          offset = offset || 0;
          //TODO: для customScroll
-         element = element || this._getContainer();
+         var element = this._getContainer();
          if (element.hasClass('controls-Scroll__container')) {
             return element[0].wsControl.hasScroll();
          }

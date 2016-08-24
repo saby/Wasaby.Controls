@@ -35,6 +35,12 @@ gemini.suite('SBIS3.CONTROLS.SelectorButton Online', function () {
             .capture('hovered_close_icon', function (actions) {
                 actions.mouseMove('.controls-SelectorButton__cross');
             })
+			
+			.capture('validation_error', function (actions) {
+                actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('SelectorButton 1').markControl();
+                });
+            })
     });
 
 	gemini.suite('multiselect', function (test) {

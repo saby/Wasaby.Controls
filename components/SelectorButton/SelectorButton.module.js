@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
        'js!SBIS3.CONTROLS.SyncSelectionMixin',
        'js!SBIS3.CONTROLS.ChooserMixin',
        'js!SBIS3.CONTROLS.IconMixin',
-       'js!SBIS3.CONTROLS.Utils.Sanitize'
+       'Core/Sanitize'
     ],
     function(dotTplFn, ButtonBase, DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin, Sanitize) {
 
