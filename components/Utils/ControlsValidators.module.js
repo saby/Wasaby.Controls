@@ -104,6 +104,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', ['js!SBIS3.CORE.CoreValidators', 
       
       /**
        * Проверяет корректность введеного e-mail.
+       * @remark Предпочтительно использовать с флагом noFailOnError, т.к. есть исключительный ситуации.
        * @param {String} value Значение которое валидируется.
        * @returns {Boolean|String}
        * <ol>
@@ -113,15 +114,15 @@ define('js!SBIS3.CONTROLS.ControlsValidators', ['js!SBIS3.CORE.CoreValidators', 
        */
       email: function(value) {
             var
-               isGoodValue,
-               regExps = [
-                  /^$/,
-                  /^[a-z0-9+_][-a-z0-9+_]*(\.[-a-z0-9+_]+)*@([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)+([a-z]{1,10})$/i,
-                  /^(([a-z0-9+_][-a-z0-9+_]*(\.[-a-z0-9+_]+)*)|([-а-яё0-9+_]+(\.[-а-яё0-9+_]+)*))@([а-яё0-9]([-а-яё0-9]{0,61}[а-яё0-9])?\.)+([а-яё]{1,10})$/i
-               ];
+               login = '(([a-z0-9+_][-a-z0-9+_]*(\\.[-a-z0-9+_]+)*)|([-а-яё0-9+_]+(\\.[-а-яё0-9+_]+)*))',
+               domain = '(([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\\.)|([а-яё0-9]([-а-яё0-9]{0,61}[а-яё0-9])?\\.))',
+               topDomain = '(([а-яё]{1,10})|([a-z]{1,10}))',
+               regExp = new RegExp(login + '@' + domain + '+' + topDomain, 'i'),
+               isGoodValue = true;
 
-            isGoodValue =  $ws.helpers.find(regExps, function(re) {return re.test(value);});
-
+            if (value) {
+               isGoodValue = regExp.test(value);
+            }
             return isGoodValue ? true : rk('В поле требуется ввести адрес электронной почты');
          }
    };
