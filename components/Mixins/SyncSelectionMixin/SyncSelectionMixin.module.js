@@ -70,25 +70,24 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], func
                      break;
                   case 'selectedItems':
                      item = propValue && propValue.at(0);
-                     var itemKey = item ? item.getId() : null,
-                        selectedItemKey = this._options.selectedItem ? this._options.selectedItem.getId() : null;
+                     key = this.getSelectedKey();
 
-                     // в глубоком сравнении рекордов нет необходимости (потому что каждый рекорд имеет свой уникальный ключ),
-                     // и даже опасно, потому что рекорд может быть зацикленным, и глубокое сравнение может зациклиться
-                     if(itemKey !== selectedItemKey) {
-                         if (item) {
-                            this._options.selectedItem = item;
-                            this._options.selectedKey = item.getId();
-                         } else {
-                            this._options.selectedItem = null;
-                            this._options.selectedKey = null;
-                         }
-                         this._notify('onSelectedItemChange', this._options.selectedKey, this._options.selectedIndex);
+                     if (item) {
+                        this._options.selectedItem = item;
+                        this._options.selectedKey = item.getId();
+                     } else {
+                        this._options.selectedItem = null;
+                        this._options.selectedKey = null;
+                     }
+
+                     if(key !== this._options.selectedKey) {
+                        this._notify('onSelectedItemChange', this._options.selectedKey, this._options.selectedIndex);
                      }
                      break;
                   case 'selectedKeys':
                      key = propValue.length ? propValue[0] : null;
-                     if( this._options.selectedKey !== key) {
+
+                     if(this._options.selectedKey !== key) {
                         this._options.selectedKey = key;
                         this._notify('onSelectedItemChange', this._options.selectedKey, this._options.selectedIndex);
                      }
