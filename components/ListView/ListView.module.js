@@ -255,6 +255,7 @@ define('js!SBIS3.CONTROLS.ListView',
             },
             _pageChangeDeferred : undefined,
             _pager : undefined,
+            _pagerContainer: undefined,
             _previousGroupBy : undefined,
             _checkClickByTap: true,
             _keysWeHandle: [
@@ -2303,6 +2304,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _toggleEmptyData: function(show) {
             if(this._emptyData) {
                this._emptyData.toggleClass('ws-hidden', !show);
+               if(this._pagerContainer) {
+                  this._pagerContainer.toggleClass('ws-hidden', show);
+               }
             }
          },
          //------------------------Paging---------------------
@@ -2349,6 +2353,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                   }
                });
+               self._pagerContainer = self.getContainer().find('.controls-Pager-container');
             }
             this._updatePaging();
          },
@@ -2465,6 +2470,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._pager) {
                this._pager.destroy();
                this._pager = undefined;
+               this._pagerContainer = undefined;
             }
             this._destroyEditInPlace();
             ListView.superclass.setDataSource.apply(this, arguments);
@@ -2601,6 +2607,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._pager) {
                this._pager.destroy();
                this._pager = undefined;
+               this._pagerContainer = undefined;
             }
             if (this._scrollBinder){
                this._scrollBinder.destroy();
@@ -2693,7 +2700,6 @@ define('js!SBIS3.CONTROLS.ListView',
             //сделать stopPropagation, тогда от данной проверки можно будет избавиться.
             return this._options.enabled && !$ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
          },
-
          _beginDragHandler: function(dragObject, e) {
             var
                 id,
