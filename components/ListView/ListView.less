@@ -18,6 +18,13 @@
       min-height: @controls-Pager-minHeight;
    }
 
+   &.controls-small-ListView {
+     .controls-ListView__EmptyData{
+       padding-bottom: @listView-empty-data-padding-top;
+       color: @gray-ccc-color;
+     }
+   }
+
    .controls-ListView__EmptyData{
       color: @listView-empty-data-color;
       .box-sizing(border-box);
