@@ -1304,10 +1304,8 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   e.preventDefault();
                   return false;
                } else if (e.which === $ws._const.key.enter && e.ctrlKey) {
-                  self._container.trigger(e);
-                  e.stopImmediatePropagation();
-                  e.preventDefault();
-                  return false;
+                  e.preventDefault();//по ctrl+enter не делаем дефолтного действия чтобы не менялось значение в редакторе
+                  self._typeInProcess = false; // тк по ctrl+enter Отработает дефолтная кнопка до keyup не дойдёт, и если в этот момент поставят текст то он не проставится
                }
                self._updateHeight();
             });
