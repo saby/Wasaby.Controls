@@ -109,7 +109,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   statusbar: false,
                   toolbar: false,
                   menubar: false,
-                  browser_spellcheck: true
+                  browser_spellcheck: true,
+                  smart_paste: false
                },
                /**
                 * @cfg {String} Значение Placeholder`а
