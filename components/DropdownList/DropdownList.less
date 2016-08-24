@@ -2,7 +2,6 @@
    display: inline-block;
    min-height: @DropdownList-min-height;
    box-sizing: @DropdownList-box-sizing;
-   max-width: 100%;
    .controls-DropdownList__selectedItem {
       font-size: 0;
       * {
@@ -10,6 +9,7 @@
       }
    }
   &.controls-DropdownList__ellipsis {
+    max-width: 100%;
     &.controls-DropdownList__withoutArrow.controls-DropdownList__withoutCross {
       .controls-DropdownList__selectedItem {
         .controls-DropdownList__textWrapper {

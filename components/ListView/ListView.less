@@ -18,6 +18,13 @@
       min-height: @controls-Pager-minHeight;
    }
 
+   &.controls-small-ListView {
+     .controls-ListView__EmptyData{
+       padding-bottom: @listView-empty-data-padding-top;
+       color: @gray-ccc-color;
+     }
+   }
+
    .controls-ListView__EmptyData{
       color: @listView-empty-data-color;
       .box-sizing(border-box);
@@ -65,14 +72,12 @@
       z-index: 1;
       right: 0;
       width: 100%;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-image: url('img/ajax-loader-indicator.gif');
-      background-image: url('img/ajax-loader-indicator.gif'), linear-gradient(to top, rgba(255,255,255,1) 0%,rgba(255,255,255,0.7) 50%,rgba(255,255,255,0.69) 51%,rgba(255,255,255,0) 100%);
+      background: url('img/ajax-loader-indicator.gif') no-repeat center;
+      background: url('img/ajax-loader-indicator.gif') no-repeat center, linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
       &.controls-ListView-scrollIndicator__up{
          top: 0;
-         background-image: url('img/ajax-loader-indicator.gif');
-         background-image: url('img/ajax-loader-indicator.gif'), linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0.7) 50%,rgba(255,255,255,0.69) 51%,rgba(255,255,255,0) 100%);
+         background: url('img/ajax-loader-indicator.gif') no-repeat center;
+         background: url('img/ajax-loader-indicator.gif') no-repeat center, linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
       }
    }
    &.controls-ListView__outside-scroll-loader{

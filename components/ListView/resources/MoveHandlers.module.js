@@ -87,8 +87,10 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
 
             if (isNodeTo && !isChangeOrder) {
                deferred = this.getMoveStrategy().hierarhyMove(records, recordTo);
-            } else {
+            } else if(isChangeOrder) {
                deferred = this.getMoveStrategy().move(records, recordTo, insertAfter);
+            } else {
+               return;
             }
             deferred = deferred === true ? new $ws.proto.Deferred().callback(true) : deferred;
             if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
@@ -228,7 +230,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
             items = this.getItems(),
             projection = this._getItemsProjection(),
             orderPropery = this.getDataSource().getOrderProperty(),
-            orderValue = this._getOrderValue(moveToItem, up);
+            orderValue = this._getOrderValue(moveToItem, moveItems[0], up);
 
          $ws.helpers.forEach(moveItems, function(item) {
             var projectionItem =  projection.getItemBySourceItem(item);
@@ -268,8 +270,11 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
             items.setEventRaising(true, true);
          }.bind(this));
       },
-
-      _getOrderValue: function(moveToItem, up) {
+      /**
+       * вычисляет значение порномера, нужно если есть сортировка по порномеру на проекции
+       * @private
+       */
+      _getOrderValue: function(moveToItem, moveItem, up) {
          var projection = this._getItemsProjection(),
             nearbyItemprojItem = projection[up ? 'getPrevious' : 'getNext'](
                projection.getItemBySourceItem(moveToItem)
@@ -283,9 +288,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
 
             if (nearbyVal && moveToVal) {
                return Math.floor((moveToVal+nearbyVal)/2);
-            } else if (moveToVal) {
-               return up ? --moveToVal :  ++moveToVal;
             }
+            return moveToVal;
          }
          return undefined;
       }
