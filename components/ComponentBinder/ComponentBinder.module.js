@@ -700,7 +700,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             }
          }.bind(this));
 
-         $(window).bind('resize', this._resizeHandler.bind(this));
+         $(window).on('resize.wsScrollPaging', this._resizeHandler.bind(this));
       },
 
       _resizeHandler: function(){
@@ -726,10 +726,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
       _updateScrollPages: function(reset){
          var view = this._options.view;
-         // FixMe: Не срабатывает unbind('resize', this._resizeHandler) в destroy
-         if (view.isDestroyed()){
-            return;
-         }
          var viewportHeight = $(view._scrollWatcher.getScrollContainer()).height(),
             pageHeight = 0,
             lastPageStart = 0,
@@ -795,7 +791,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
       },
 
       destroy: function(){
-         $(window).unbind('resize', this._resizeHandler);
+         $(window).off('resize.wsScrollPaging');
          ComponentBinder.superclass.destroy.apply(this, arguments);
       }
 
