@@ -1451,7 +1451,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          scrollLoadMore: function(){
             if (this._options.infiniteScroll && this._scrollWatcher && !this._scrollWatcher.hasScroll()) {
-               this._loadNextPage();
+               this._scrollLoadNextPage();
             }
          },
          /**
@@ -1882,7 +1882,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this.getItems()){
                //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
                if (!this._scrollWatcher.hasScroll()){
-                  this._loadNextPage();
+                  this._scrollLoadNextPage();
                }
                if (this._scrollPager){
                   //TODO: Это возможно очень долго, надо как то убрать. Нужно для случев, когда ListView создается скрытым, а потом показывается
@@ -1922,7 +1922,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _loadChecked: function (direction) {
             //Важно, чтобы датасет уже был готов к моменту, когда мы попытаемся грузить данные
             if (this.getItems()) {
-               this._loadNextPage(direction);
+               this._scrollLoadNextPage(direction);
             }
          },
          _cancelLoading: function(){
@@ -1936,63 +1936,66 @@ define('js!SBIS3.CONTROLS.ListView',
           * Подгрузить еще данные вверх или вниз
           * @param  {String} direction в какую сторону грузим
           */
-         _loadNextPage: function (direction) {
+         _scrollLoadNextPage: function (direction) {
             direction = direction || this._options.infiniteScroll;
             var loadAllowed  = this.isInfiniteScroll(),
                more = this.getItems().getMetaData().more,
                isContainerVisible = $ws.helpers.isElementVisible(this.getContainer()),
                hasScroll = this._scrollWatcher.hasScroll(),
-               hasNextPage = (direction == 'up' && this._options.infiniteScroll == 'down') ? this._scrollOffset.top > 0 : this._hasNextPage(more, this._scrollOffset.bottom),
-               offset = (direction == 'up' && this._options.infiniteScroll == 'down') ? this._scrollOffset.top - this._limit : this._scrollOffset.bottom + this._limit;
+               hasNextPage = (direction == 'up' && this._options.infiniteScroll == 'down') ? this._scrollOffset.top > 0 : this._hasNextPage(more, this._scrollOffset.bottom);
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
             this._container.toggleClass('controls-ListView__outside-scroll-loader', !hasScroll);
 
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && isContainerVisible && hasNextPage && !this.isLoading()) {
-
-               this._showLoadingIndicator();
-               this._toggleEmptyData(false);
-               this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
-               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
-                  //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
-                  //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
-                  this._loader = null;
-                  //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
-                  var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
-
-                  this._updateScrolOffset(direction);
-                  //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
-                  this.getItems().setMetaData(dataSet.getMetaData());
-                  this._hideLoadingIndicator();
-                  if (!hasNextPage) {
-                     this._toggleEmptyData(!this.getItems().getCount());
-                  }
-                  this._notify('onDataMerge', dataSet);
-                  //Если данные пришли, нарисуем
-                  if (dataSet.getCount()) {
-                     //TODO: вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
-                     //Возвращаем самостоятельную отрисовку данных, пришедших в загрузке по скроллу
-                     if (this._isSlowDrawing()) {
-                        this._needToRedraw = false;
-                     }
-                     this._drawPage(dataSet, direction);
-                     //И выключаем после отрисовки
-                     if (this._isSlowDrawing()) {
-                        this._needToRedraw = true;
-                     }
-                  } else {
-                     // Если пришла пустая страница, но есть еще данные - догрузим их
-                     if (hasNextPage){
-                        this._loadNextPage();
-                     }
-                  }
-
-               }, this)).addErrback(function (error) {
-                  //Здесь при .cancel приходит ошибка вида DeferredCanceledError
-                  return error;
-               });
+               this._loadNextPage(direction);
             }
+         },
+
+         _loadNextPage: function(direction) {
+            direction = direction || this._options.infiniteScroll;
+            var offset = (direction == 'up' && this._options.infiniteScroll == 'down') ? this._scrollOffset.top - this._limit : this._scrollOffset.bottom + this._limit;
+            this._showLoadingIndicator();
+            this._toggleEmptyData(false);
+            this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
+            this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
+               //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
+               //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
+               this._loader = null;
+               //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
+               var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
+
+               this._updateScrolOffset(direction);
+               //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
+               this.getItems().setMetaData(dataSet.getMetaData());
+               this._hideLoadingIndicator();
+               if (!hasNextPage) {
+                  this._toggleEmptyData(!this.getItems().getCount());
+               }
+               this._notify('onDataMerge', dataSet);
+               //Если данные пришли, нарисуем
+               if (dataSet.getCount()) {
+                  //TODO: вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
+                  //Возвращаем самостоятельную отрисовку данных, пришедших в загрузке по скроллу
+                  if (this._isSlowDrawing()) {
+                     this._needToRedraw = false;
+                  }
+                  this._drawPage(dataSet, direction);
+                  //И выключаем после отрисовки
+                  if (this._isSlowDrawing()) {
+                     this._needToRedraw = true;
+                  }
+               } else {
+                  // Если пришла пустая страница, но есть еще данные - догрузим их
+                  if (hasNextPage){
+                     this._scrollLoadNextPage();
+                  }
+               }
+            }, this)).addErrback(function (error) {
+               //Здесь при .cancel приходит ошибка вида DeferredCanceledError
+               return error;
+            });
          },
 
          _drawPage: function(dataSet, direction){
@@ -2057,7 +2060,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             // Если нет скролла или скролл внизу, значит нужно догружать еще записи (floatArea отжирает скролл, поэтому если она открыта - не грузим)
             if ((this.isScrollOnBottom() && this._options.infiniteScroll == 'down') || !hasScroll()) {
-               this._loadNextPage();
+               this._scrollLoadNextPage();
             } else {
                this._firstScrollTop = false;
             }
@@ -2136,7 +2139,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._allowInfiniteScroll = true;
             }
             if (type && !noLoad) {
-               this._loadNextPage();
+               this._scrollLoadNextPage();
                return;
             }
             //НА саом деле если во время infiniteScroll произошла ошибка загрузки, я о ней не смогу узнать, но при выключении нужно убрать индикатор
