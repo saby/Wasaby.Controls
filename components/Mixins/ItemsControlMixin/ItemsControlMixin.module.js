@@ -733,6 +733,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                itemsContainer.innerHTML = markup;
             }
          }
+         else {
+            //TODO это временное решение для группировки в контактах до 200й версии
+            if (this._options.easyGroup) {
+               if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
+                  $itemsContainer.empty();
+               } else {
+                  itemsContainer.innerHTML = '';
+               }
+            }
+         }
          for (i = 0; i < comps.length; i++) {
             if (comps[i]) {
                comps[i].destroy();
