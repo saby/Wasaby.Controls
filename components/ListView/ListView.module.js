@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
       'js!SBIS3.CONTROLS.ItemsToolbar',
       'js!SBIS3.CORE.MarkupTransformer',
-      'tmpl!SBIS3.CONTROLS.ListView',
+      'html!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'js!SBIS3.CONTROLS.CommonHandlers',
       'js!SBIS3.CONTROLS.MoveHandlers',
@@ -31,9 +31,9 @@ define('js!SBIS3.CONTROLS.ListView',
       'i18n!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
       'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
-      'browser!tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
-      'browser!tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
-      'browser!tmpl!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
+      'browser!html!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
+      'browser!html!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
+      'browser!html!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
       'browser!js!SBIS3.CONTROLS.Utils.InformationPopupManager',
       'js!SBIS3.CONTROLS.Paging',
       'js!SBIS3.CONTROLS.ComponentBinder',
@@ -255,6 +255,7 @@ define('js!SBIS3.CONTROLS.ListView',
             },
             _pageChangeDeferred : undefined,
             _pager : undefined,
+            _pagerContainer: undefined,
             _previousGroupBy : undefined,
             _checkClickByTap: true,
             _keysWeHandle: [
@@ -1247,7 +1248,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var domItems = this._container.find('.controls-ListView__item');
 
             /* Удаляем выделение */
-            domItems.removeClass('controls-ListView__item__multiSelected');
+            domItems.filter('.controls-ListView__item__multiSelected').removeClass('controls-ListView__item__multiSelected');
             /* Проставляем выделенные ключи */
             for(var i = 0; i < domItems.length; i++) {
                if(ArraySimpleValuesUtil.hasInArray(idArray, domItems[i].getAttribute('data-id'))) {
@@ -2242,6 +2243,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _toggleEmptyData: function(show) {
             if(this._emptyData) {
                this._emptyData.toggleClass('ws-hidden', !show);
+               if(this._pagerContainer) {
+                  this._pagerContainer.toggleClass('ws-hidden', show);
+               }
             }
          },
          //------------------------Paging---------------------
@@ -2288,6 +2292,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                   }
                });
+               self._pagerContainer = self.getContainer().find('.controls-Pager-container');
             }
             this._updatePaging();
          },
@@ -2404,6 +2409,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._pager) {
                this._pager.destroy();
                this._pager = undefined;
+               this._pagerContainer = undefined;
             }
             this._destroyEditInPlace();
             ListView.superclass.setDataSource.apply(this, arguments);
@@ -2541,6 +2547,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._pager) {
                this._pager.destroy();
                this._pager = undefined;
+               this._pagerContainer = undefined;
             }
             if (this._scrollBinder){
                this._scrollBinder.destroy();
@@ -2633,7 +2640,6 @@ define('js!SBIS3.CONTROLS.ListView',
             //сделать stopPropagation, тогда от данной проверки можно будет избавиться.
             return this._options.enabled && !$ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
          },
-
          _beginDragHandler: function(dragObject, e) {
             var
                 id,
