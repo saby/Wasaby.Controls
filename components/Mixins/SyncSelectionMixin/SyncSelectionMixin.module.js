@@ -72,6 +72,9 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], func
                      item = propValue && propValue.at(0);
                      var itemKey = item ? item.getId() : null,
                         selectedItemKey = this._options.selectedItem ? this._options.selectedItem.getId() : null;
+
+                     // в глубоком сравнении рекордов нет необходимости (потому что каждый рекорд имеет свой уникальный ключ),
+                     // и даже опасно, потому что рекорд может быть зацикленным, и глубокое сравнение может зациклиться
                      if(itemKey !== selectedItemKey) {
                          if (item) {
                             this._options.selectedItem = item;
