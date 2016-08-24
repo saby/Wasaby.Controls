@@ -1585,7 +1585,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         //При разрушении редактирования скрывает toolbar. Иначе это ни кто не сделает. А разрушение могло
                         //произойти например из-за setEnabled(false) у ListView
                         this._hideToolbar();
-                     }
+                     }.bind(this)
                   }
                };
             return config;
