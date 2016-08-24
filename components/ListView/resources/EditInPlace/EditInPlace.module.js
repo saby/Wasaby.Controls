@@ -294,7 +294,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   clone.addField(field, undefined, record.get(fieldName));
                });
                if (!record.isChanged()) {
-                  clone.applyChanges();
+                  clone.acceptChanges();
                }
                clone.setState(record.getState());
                return clone;
