@@ -1,14 +1,16 @@
 /*global define*/
 define('js!SBIS3.CONTROLS.DateRange', [
    'js!SBIS3.CORE.CompoundControl',
+   'js!SBIS3.CONTROLS.PickerMixin',
    'html!SBIS3.CONTROLS.DateRange',
    'js!SBIS3.CONTROLS.Utils.DateUtil',
    'js!SBIS3.CONTROLS.FormWidgetMixin',
+   'js!SBIS3.CONTROLS.RangeMixin',
+   'js!SBIS3.CONTROLS.DateRangeBigChoose',
    'i18n!SBIS3.CONTROLS.DateRange',
    'js!SBIS3.CONTROLS.DatePicker',
-   'js!SBIS3.CONTROLS.Button',
-   'js!SBIS3.CORE.DateRangeChoose'
-], function (CompoundControl, dotTplFn, DateUtil, FormWidgetMixin) {
+   'js!SBIS3.CONTROLS.IconButton'
+], function (CompoundControl, PickerMixin, dotTplFn, DateUtil, FormWidgetMixin, RangeMixin, DateRangeBigChoose) {
    'use strict';
    /**
     * SBIS3.CONTROLS.DateRange
@@ -19,10 +21,21 @@ define('js!SBIS3.CONTROLS.DateRange', [
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyDateRange
     */
-   var DateRange = CompoundControl.extend([FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateRange.prototype */{
+   var DateRange = CompoundControl.extend([RangeMixin, PickerMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateRange.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
+            pickerConfig: {
+               corner: 'tl',
+               horizontalAlign: {
+                  side: 'left',
+                  offset: -133
+               },
+               verticalAlign: {
+                  side: 'top',
+                  offset: -11
+               }
+            },
             /**
              * @cfg {Date|String} Начальная дата диапазона
              * При задании задается вместе с endDate, либо обе даты остаются не заданными
@@ -38,7 +51,8 @@ define('js!SBIS3.CONTROLS.DateRange', [
          _datePickerEnd: null,
          _dateRangeButton: null,
          _dateRangeChoose: null,
-         _calendarIsShow: false
+         _calendarIsShow: false,
+         _chooseControlClass: DateRangeBigChoose
       },
       $constructor: function () {
          this._publish('onDateRangeChange', 'onStartDateChange', 'onEndDateChange');
@@ -49,48 +63,43 @@ define('js!SBIS3.CONTROLS.DateRange', [
 
          var self = this;
 
-         this._dateRangeButton = this.getChildControlByName('DateRange__Button');
          this._datePickerStart = this.getChildControlByName('DateRange__DatePickerStart');
-         this._datePickerEnd = this.getChildControlByName('DateRange__DatePickerEnd');
          this._datePickerStart.subscribe('onDateChange', function(e, date) {
-            self.clearMark();
-            //передаем false, чтобы не зацикливать событие
-            self._setStartDate(date, false);
-            self._notifyOnPropertyChanged('startDate');
-            self._notify('onStartDateChange', self._options.startDate);
-            self._notify('onDateRangeChange', self._options.startDate, self._options.endDate);
+            self.setStartValue(date);
          });
          this._datePickerStart.subscribe('onInputFinished', function() {
             self._datePickerEnd.setActive(true);
          });
+         this._datePickerEnd = this.getChildControlByName('DateRange__DatePickerEnd');
          this._datePickerEnd.subscribe('onDateChange', function(e, date) {
-            self.clearMark();
-            self._setEndDate(date, false);
-            self._notifyOnPropertyChanged('endDate');
-            self._notify('onEndDateChange',   self._options.endDate);
-            self._notify('onDateRangeChange', self._options.startDate, self._options.endDate);
+            self.setEndValue(date);
          });
 
+         this._dateRangeButton = this.getChildControlByName('DateRange__Button');
          this._dateRangeButton.subscribe('onActivated', this._onDateRangeButtonActivated.bind(this));
 
-         this._dateRangeChoose = this.getChildControlByName('DateRange__DateRangeChoose');
-         this._dateRangeChoose.subscribe('onMenuHide', this._onMenuHide.bind(this));
-         this._dateRangeChoose.subscribe('onChange', this._onRangeChooseChange.bind(this));
-         this._dateRangeChoose.setVisible(false);
+         this.subscribe('onStartValueChange', function (event, value) {
+            self._updateDatePicker(self._datePickerStart, value);
+            self._notify('onStartDateChange', value);
+         });
 
-         //TODO заплатка для 3.7.3.20 Нужно переделать контрол на PickerMixin
-         var floatArea = this._getFloatArea();
-         if (floatArea) {
-            floatArea.subscribe('onClose', function() {
-               self._dateRangeChoose._hideMenu();
-            });
-         }
+         this.subscribe('onEndValueChange', function (event, value) {
+            self._updateDatePicker(self._datePickerEnd, value);
+            self._notify('onEndDateChange', value);
+         });
 
-         //приводим даты к Date-типу
-         this._options.startDate = DateUtil.valueToDate(this._options.startDate);
-         this._options.endDate   = DateUtil.valueToDate(this._options.endDate);
-         this._setStartDate(this._options.startDate);
-         this._setEndDate(this._options.endDate);
+         this.subscribe('onRangeChange', function (event, startValue, endValue) {
+            self._notify('onDateRangeChange', startValue, endValue);
+            // if (self._dateRangeChooseControl) {
+            //    self._dateRangeChooseControl.setRange(startValue, endValue);
+            // }
+         });
+
+         this._options.startValue = this._options.startValue || this._options.startDate;
+         this._options.endValue = this._options.endValue || this._options.endDate;
+         // приводим даты к Date-типу и устанавливаем их в DatePicker-ах
+         this.setStartValue(this._options.startValue, false);
+         this.setEndValue(this._options.endValue, false);
 
          this._addDefaultValidator();
       },
@@ -99,57 +108,84 @@ define('js!SBIS3.CONTROLS.DateRange', [
          //Добавляем к прикладным валидаторам стандартный, который проверяет что дата начала периода меньше даты конца.
          this._options.validators.push({
             validator: function() {
-               return !(this._options.startDate && this._options.endDate && this._options.endDate < this._options.startDate);
+               return !(this._options.startValue && this._options.endValue && this._options.endValue < this._options.startValue);
             }.bind(this),
             errorMessage: rk('Дата начала периода не может быть больше даты окончания')
          });
       },
 
-      _setDate: function(newDate, datePicker, currentDate, type, useSetDate) {
-         var date = DateUtil.valueToDate(newDate);
-         var changed = false;
-         if ( ! date) {
-            if (type === 'start') {
-               this._options.startDate = null;
-            } else {
-               this._options.endDate = null;
-            }
-            changed = true;
+      setStartValue: function(value, silent) {
+         value = this._normalizeDate(value);
+         return DateRange.superclass.setStartValue.call(this, value, silent);
+      },
+
+      setEndValue: function(value, silent) {
+         value = this._normalizeDate(value);
+         return DateRange.superclass.setEndValue.call(this, value, silent);
+      },
+
+      _normalizeDate: function(date) {
+         date = DateUtil.valueToDate(date);
+         if (!date) {
+            date = null;
          }
-         //дата изменилась
-         if ( ! changed && ((DateUtil.isValidDate(currentDate) && date.getTime() !== currentDate.getTime()) || ( ! currentDate))) {
-            if (type === 'start') {
-               this._options.startDate = date;
-            } else {
-               this._options.endDate = date;
-            }
-            changed = true;
-         }
-         this._dateRangeChoose.setRange(this._options.startDate, this._options.endDate);
-         //useSetDate чтобы не зацикливать событие от setDate и setText
-         if ( ! useSetDate) {
-            return changed;
-         }
-         if (date) {
-            datePicker.setDate(date);
+         return date;
+      },
+
+      _updateDatePicker: function(datePicker, value) {
+         if (value) {
+            datePicker.setDate(value);
          } else {
             datePicker.setText('');
          }
-         return changed;
+      },
+
+      showPicker: function () {
+         if (this._dateRangeChooseControl) {
+            this._dateRangeChooseControl.cancelSelection();
+            this._dateRangeChooseControl.setRange(this.getStartValue(), this.getEndValue());
+         }
+         DateRange.superclass.showPicker.call(this);
       },
 
       /**
-       * Установить начальную дату.
-       * @param {Date|String} newDate
-       * @param {Boolean} useSetDate true - будет вызывать setDate у DatePicker-a
+       * Определение контента пикера. Переопределённый метод
        * @private
-       * @return {Boolean} true - если дата изменилась
        */
-      _setStartDate: function(newDate, useSetDate) {
-         if (useSetDate === undefined) {
-            useSetDate = true;
-         }
-         return this._setDate(newDate, this._datePickerStart, this._options.startDate, 'start', useSetDate);
+      _setPickerContent: function() {
+         this._createChooseControl();
+
+         this._picker.getContainer().empty();
+         // Добавляем в пикер
+         this._picker.getContainer().append(this._dateRangeChooseControl.getContainer());
+         // Нажатие на календарный день в пикере устанавливает дату
+         this._dateRangeChooseControl.subscribe('onChoose', this._onRangeChooseChange.bind(this));
+         this._dateRangeChooseControl.subscribe('onCancel', this._onRangeChooseClose.bind(this));
+      },
+
+      _createChooseControl: function () {
+         var
+            // Создаем пустой контейнер
+            element = $('<div name= "DateRangeChoose" class="DateRange__choose"></div>');
+         // Преобразуем контейнер в контролл DateRangeBigChoose и запоминаем
+         this._dateRangeChooseControl = new this._chooseControlClass({
+            parent: this._picker,
+            element: element,
+            startValue: this._datePickerStart.getDate(),
+            endValue: this._datePickerEnd.getDate()
+         });
+      },
+
+      _onDateRangeButtonActivated: function() {
+         this.togglePicker();
+      },
+
+      _onRangeChooseChange: function(event, start, end) {
+         this.setRange(start, end);
+         this.hidePicker();
+      },
+      _onRangeChooseClose: function(event) {
+         this.hidePicker();
       },
 
       /**
@@ -158,10 +194,10 @@ define('js!SBIS3.CONTROLS.DateRange', [
        * @see startDate
        */
       setStartDate: function(newDate) {
-         if (this._setStartDate(newDate)) {
+         if (this.setStartValue(newDate)) {
             this._notifyOnPropertyChanged('startDate');
-            this._notify('onStartDateChange', this._options.startDate);
-            this._notify('onDateRangeChange', this._options.startDate, this._options.endDate);
+            this._notify('onStartDateChange', this._options.startValue);
+            this._notify('onDateRangeChange', this._options.startValue, this._options.endValue);
          }
       },
 
@@ -171,7 +207,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
        * @see startDate
        */
       getStartDate: function() {
-         return this._options.startDate;
+         return this._options.startValue;
       },
 
       /**
@@ -180,18 +216,11 @@ define('js!SBIS3.CONTROLS.DateRange', [
        * @see endDate
        */
       setEndDate: function(newDate) {
-         if (this._setEndDate(newDate)) {
-            this._notifyOnPropertyChanged('endDate');
-            this._notify('onEndDateChange', this._options.endDate);
-            this._notify('onDateRangeChange', this._options.startDate, this._options.endDate);
+         if (this.setEndValue(newDate)) {
+            this._notifyOnPropertyChanged('endValue');
+            this._notify('onEndDateChange', this._options.endValue);
+            this._notify('onDateRangeChange', this._options.startValue, this._options.endValue);
          }
-      },
-
-      _setEndDate: function(newDate, useSetDate) {
-         if (useSetDate === undefined) {
-            useSetDate = true;
-         }
-         return this._setDate(newDate, this._datePickerEnd, this._options.endDate, 'end', useSetDate);
       },
 
       /**
@@ -200,38 +229,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
        * @see endDate
        */
       getEndDate: function() {
-         return this._options.endDate;
-      },
-
-      _onDateRangeButtonActivated: function() {
-         this._calendarIsShow = !this._calendarIsShow;
-         if (this._calendarIsShow) {
-            //TODO Если DateRangeChoose не отобразить, то позиция окна считается не верно. Нужно на что-то заменить
-            this._dateRangeChoose.setVisible(true);
-            this._dateRangeChoose._showMenu();
-            this._dateRangeChoose.setVisible(false);
-         } else {
-            this._dateRangeChoose._hideMenu();
-         }
-      },
-
-      //TODO заплатка для 3.7.3.20 Нужно переделать контрол на PickerMixin
-      //ищем родительскую FloatArea
-      _getFloatArea: function() {
-         var par = this.getParent();
-         while (par && !$ws.helpers.instanceOfMixin(par, 'SBIS3.CONTROLS.PopupMixin')) {
-            par = par.getParent();
-         }
-         return (par && $ws.helpers.instanceOfMixin(par, 'SBIS3.CONTROLS.PopupMixin')) ? par : null;
-      },
-
-      _onMenuHide: function() {
-         this._calendarIsShow = false;
-      },
-
-      _onRangeChooseChange: function(event, start, end) {
-         this._datePickerStart.setDate(start);
-         this._datePickerEnd.setDate(end);
+         return this._options.endValue;
       }
    });
    return DateRange;

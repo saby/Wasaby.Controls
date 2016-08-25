@@ -1,16 +1,15 @@
 <div class="controls-DateRange">
     <component data-component="SBIS3.CONTROLS.DatePicker" name="DateRange__DatePickerStart" class="controls-DateRange__DatePickerStart">
         <option name="isCalendarIconShown" value="false" type="boolean"></option>
-    </component>
-    <component data-component="SBIS3.CONTROLS.Button" name="DateRange__Button" class="controls-DateRange__Button">
-        <option name="caption">&#8211;</option>
-        <option name="tabindex" value="0"></option>
-    </component>
-    <component data-component="SBIS3.CORE.DateRangeChoose" name="DateRange__DateRangeChoose" class="controls-DateRange__DateRangeChoose">
-        <option name="showCustomPeriod" value="false" type="boolean"></option>
-    </component>
-    <component data-component="SBIS3.CONTROLS.DatePicker" name="DateRange__DatePickerEnd" class="controls-DateRange__DatePickerEnd">
+    </component><!--
+    --><div class="controls-DateRange__dash"></div><!--
+    --><component data-component="SBIS3.CONTROLS.DatePicker" name="DateRange__DatePickerEnd" class="controls-DateRange__DatePickerEnd">
         <option name="isCalendarIconShown" value="false" type="boolean"></option>
         <option name="focusOnActivatedOnMobiles" value="true" type="boolean"></option>
+    </component><!--
+    --><component data-component="SBIS3.CONTROLS.IconButton" name="DateRange__Button" class="controls-DateRange__Button">
+        <option name="caption">&#8211;</option>
+        <option name="tabindex" value="0"></option>
+        <option name="icon">sprite:icon-16 icon-Calendar2 icon-primary</option>
     </component>
 </div>
