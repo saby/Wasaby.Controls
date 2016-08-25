@@ -785,7 +785,7 @@ define(
 
       _keyDownBindAndroid: function(event){
          var textDiff = this._getTextDiff(),
-             character = textDiff.char,
+             character = textDiff['char'],
              position = textDiff.position,
              groupNum = _getCursor.call(this, true)[0];
          this._setText(this._options.text);
@@ -802,7 +802,7 @@ define(
                for (var j = 0; j < newText[i].length; j++){
                   if (oldText[i][j] !== newText[i][j]){
                      return {
-                        char: newText[i][j],
+                        'char': newText[i][j],
                         position: j
                      }
                   }

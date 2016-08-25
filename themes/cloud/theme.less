@@ -1,6 +1,28 @@
 @import "../online/theme";
 
 
+.controls-AjaxLoader {
+    background: none repeat scroll 0 0 rgba(74, 77, 91, 0.7);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    overflow: hidden;
+    min-height: 32px;
+}
+
+.ws-float-area-show-complete {
+ position: static;
+
+}
+.ws-float-area-stack-scroll-wrapper {
+ right: 0 !important;
+}
+
 .controls-DropdownList {
    .controls-DropdownList__linkStyle {
     color: #6ed4d0;
@@ -70,5 +92,7 @@ body { height: 100%; background: #424851; }
 .controls-Menu__Popup {
     background-color: #4e5560;
     box-shadow: 0px 3px 14px 0px rgba(50, 50, 50, 0.75) !important;
-
+}
+.controls-ListView .controls-ListView__item.controls-ListView__hoveredItem, .controls-DataGridView .controls-ListView__item.controls-ListView__hoveredItem {
+     background-color: #454c56;
 }

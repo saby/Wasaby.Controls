@@ -526,8 +526,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 				actions.wait(350);
             })
     });
-
-
+/*
 	gemini.suite('editor_with_combobox', function (test) {
 
         test.setUrl('/regression_data_grid_view_edit_at_place_online_11.html').setCaptureElements('.capture')
@@ -547,7 +546,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 				actions.sendKeys('[sbisname="Содержимоеbind"] .js-controls-TextBox__field', gemini.SHIFT+gemini.HOME);
             })
     });
-
+*/
     gemini.suite('items_actions_on_column_template', function (test) {
 
         test.setUrl('/regression_data_grid_view_edit_at_place_online_13.html').setCaptureElements('html')
@@ -567,6 +566,31 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
                 actions.click(this.item3);
 				actions.waitForElementToShow('[title="Отмена"]', 2000);
 				actions.waitForElementToShow('[title="Сохранить"]', 2000);
+				actions.sendKeys(this.editor_input, gemini.ARROW_RIGHT);
+				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
+            })
+    });
+
+    gemini.suite('items_actions_on_column_template_2', function (test) {
+
+        test.setUrl('/regression_data_grid_view_edit_at_place_online_14.html').setCaptureElements('html')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
+                this.item3 = find('[sbisname="ТипНоменклатуры"] [data-id="3"]');
+				this.item7 = find('[sbisname="ТипНоменклатуры"] [data-id="7"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[name="TextBox 1"] .controls-TextBox__field');
+				this.cancell = find('[title="Отмена"]');
+				this.save = find('[title="Сохранить"]');
+				this.editor_input = find('[sbisname="Содержимоеbind"] input')
+            })
+
+            .capture('opened_editor', function (actions) {
+                actions.click(this.item3);
+				actions.waitForElementToShow('[title="Отмена"]', 2000);
+				actions.waitForElementToShow('[title="Сохранить"]', 2000);
+				actions.click(this.editor_input);
 				actions.sendKeys(this.editor_input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
             })

@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       'js!SBIS3.CONTROLS.RichTextArea/resources/smiles',
       'js!SBIS3.CORE.PluginManager',
       'js!SBIS3.CONTROLS.Utils.ImageUtil',
-      'js!SBIS3.CONTROLS.Utils.Sanitize',
+      'Core/Sanitize',
       'css!SBIS3.CORE.RichContentStyles',
       'i18n!SBIS3.CONTROLS.RichEditor'
    ], function(TextBoxBase, dotTplFn, RichUtil, FileLoader, smiles, PluginManager, ImageUtil, Sanitize) {
@@ -109,7 +109,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   statusbar: false,
                   toolbar: false,
                   menubar: false,
-                  browser_spellcheck: true
+                  browser_spellcheck: true,
+                  smart_paste: false
                },
                /**
                 * @cfg {String} Значение Placeholder`а
@@ -1274,6 +1275,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                require(['css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/skin.min',
                   'css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/content.inline.min',
                   'js!SBIS3.CONTROLS.RichTextArea/resources/tinymce/tinymce'],function(){
+                  tinyMCE.baseURL = $ws.helpers.resolveComponentPath('SBIS3.CONTROLS.RichTextArea') + 'resources/tinymce';
                   tinyMCE.init(self._options.editorConfig);
                });
             }

@@ -2,6 +2,12 @@
   .controls-CompositeView__itemsContainer{
      overflow: hidden;
   }
+
+   &.controls-CompositeView-tile {
+      .controls-ItemsToolbar {
+         margin-right: @list-view-items-toolbar-margin-right-tile;
+      }
+   }
    /* Стили для режима 'Список' */
   .controls-CompositeView__listItem {
     height: @data-grid-cell-height;
