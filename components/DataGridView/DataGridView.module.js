@@ -561,6 +561,28 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
 
+      /**
+       * Метод возвращает текущий thead табличного представления (он может быть в таблице, или вынесен в фиксированную шапку)
+       * @returns {jQuery} - текущий thead табличного представления
+       * @noShow
+       */
+      getTHead: function(){
+         return this._thead;
+      },
+
+      /**
+       * Изменяет значение опции, фиксирующей заголовки табличного представления в шапке.
+       * Возимеет эффект только если фиксация ещё не прошла (на этапе инициилизации).
+       * @param isSticky
+       * @noShow
+       */
+      setStickyHeader: function(isSticky){
+         if (this._options.stickyHeader !== isSticky){
+            this._options.stickyHeader = isSticky;
+            this.getContainer().find('.controls-DataGridView__table').toggleClass('ws-sticky-header__table', isSticky);
+         }
+      },
+
       _redrawColgroup : function() {
          var markup, data, body;
          data = prepareColGroupData(this._options);
