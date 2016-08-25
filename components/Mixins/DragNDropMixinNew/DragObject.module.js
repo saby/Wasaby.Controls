@@ -150,12 +150,6 @@ define('js!SBIS3.CONTROLS.DragObject', [
          this._target = target;
       },
 
-      _preparePageXY: function (e) {
-         if (e.type === "touchstart" || e.type === "touchmove") {
-            e.pageX = e.originalEvent.touches[0].pageX;
-            e.pageY = e.originalEvent.touches[0].pageY;
-         }
-      },
       /**
        * устанавливает позицию аватара
        * @param  {Event} e
@@ -163,7 +157,6 @@ define('js!SBIS3.CONTROLS.DragObject', [
       _setAvatarPosition: function (e) {
          //смещение нужно чтобы событие onmouseup сработало над контролом, а не над аватаром
          if (this.getAvatar()) {
-            this._preparePageXY(e);
             this.getAvatar().css({
                'left': e.pageX + DRAG_AVATAR_OFFSET,
                'top': e.pageY + DRAG_AVATAR_OFFSET
