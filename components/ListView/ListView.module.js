@@ -1927,6 +1927,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
 
+            //FixMe: Из за этого при каждой подгрузке по скроллу пэйджинг пересчитывается полностью
             if (this._scrollBinder){
                this._scrollBinder._updateScrollPages(true);
             }
