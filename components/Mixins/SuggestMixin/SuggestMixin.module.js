@@ -502,6 +502,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          var self = this;
 
          this.subscribeTo(this._list, 'onDataLoad', this._onListDataLoad.bind(this))
+             .subscribeTo(this._list, 'onItemsReady', this._onListDataLoad.bind(this))
              .subscribeTo(this._list, 'onDataLoadError', this._hideLoadingIndicator.bind(this))
              .subscribeTo(this._list, 'onDrawItems', this._onListDrawItems.bind(this))
              .subscribeTo(this._list, 'onItemActivate', (function (eventObject, itemObj) {
@@ -574,7 +575,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /* Изменяем видимость кнопки в зависимости от, того, есть ли ещё записи */
             this._showAllButton.getContainer()
-                .toggleClass('ws-hidden', !list._hasNextPage(dataSet.getMetaData().more));
+                .toggleClass('ws-hidden', !list._hasNextPage((dataSet || list.getItems()).getMetaData().more));
          }
       },
 
