@@ -29,6 +29,33 @@ gemini.suite('SBIS3.CONTROLS.CompositeViewTile Online', function () {
             })
     });
 	
+	gemini.suite('without_marker', function (test) {
+
+        test.setUrl('/regression_composite_view_tile_online_4.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="CompositeView 1"]', 40000);
+                this.item4 = find('[data-id="4"]');
+				this.item6 = find('[data-id="6"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+				this.input = find('[sbisname="TextBox 1"] input');				
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.input);
+            })
+
+            .capture('hovered_item', function (actions) {
+                actions.mouseMove(this.item4);
+				actions.wait(500);
+            })
+
+            .capture('selected_item', function (actions) {
+                actions.click(this.item6);
+				actions.wait(500);
+            })
+    });
+	
 	gemini.suite('empty_data', function (test) {
 
         test.setUrl('/regression_composite_view_tile_online_2.html').setCaptureElements('.capture')

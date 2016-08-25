@@ -140,8 +140,9 @@ define('js!SBIS3.CONTROLS.Toolbar', [
       },
 
       //обработчик для кнопок в тулбаре
-      _itemActivatedHandler: function(id, event) {
-         this._notifyItemActivate(id, 'toolbar');
+      _itemActivatedHandler: function(hash, event) {
+         var projItem = this._getItemsProjection().getByHash(hash);
+         this._notifyItemActivate(projItem.getContents().getId(), 'toolbar');
       },
 
       _notifyItemActivate: function(id, type) {

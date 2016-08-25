@@ -38,6 +38,11 @@
       }
     }
   }
+   &.controls-DropdownList__hideCross{
+      .controls-DropdownList__selectedItem .controls-DropdownList__afterCaptionWrapper{
+         display: none;
+      }
+   }
    .controls-DropdownList__selectedItem > * {
       display: inline-block;
    }
@@ -49,17 +54,17 @@
       .controls-DropdownList__arrowIcon {
          display: inline-block;
          &:hover{
-            &::before {content: "\e673";}
+            &:before {content: "\e673";}
          }
       }
    }
    .controls-DropdownList__afterCaptionWrapper {
       display: inline-block;
       position: relative;
-      top: 2px;
 
       .controls-DropdownList__crossIcon {
          display: inline-block;
+         vertical-align: bottom;
       }
    }
 
@@ -103,6 +108,11 @@
        }
      }
    }
+   &.controls-DropdownList__hideCross{
+      .controls-DropdownList__selectedItem .controls-DropdownList__afterCaptionWrapper{
+         display: none;
+       }
+   }
    cursor: @DropdownList-cursor;
    .controls-DropdownList__equalsWidth {
       .controls-DropdownList__body {
@@ -130,7 +140,7 @@
         position: relative!important;
         padding: 0px!important;
       }
-      .controls-DropdownList__arrowIcon::before {
+      .controls-DropdownList__arrowIcon:before {
          content: "\e673";
          color: #ff7033;
       }
