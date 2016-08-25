@@ -667,4 +667,35 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
 				actions.mouseMove(this.input);
             })
     });
+
+    gemini.suite('ellipsis', function (test) {
+
+        test.setUrl('/regression_dropdown_list_online_15.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="DropdownList 1"]', 40000);
+                this.list = '[name="DropdownList 1"]';
+				this.title = '[name="DropdownList 1"] .controls-DropdownList__text';
+				this.item4 = '.controls-DropdownList__item[data-id="4"]';
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = '[sbisname="TextBox 1"] input';
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.input);
+            })
+
+            .capture('opened', function (actions) {
+                actions.click(this.title);
+				actions.waitForElementToShow('.controls-DropdownList__item[data-id="4"]', 1000);
+				actions.mouseMove(this.input);
+            })
+
+			.capture('disabled', function (actions) {
+				actions.click(this.input);
+                actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('DropdownList 1').setEnabled(false);
+                });
+            })
+    });
 });
