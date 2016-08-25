@@ -198,11 +198,13 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             var
                self = this,
                dragStrarter = function(bus, moveEvent){
+                  self._preparePageXY(moveEvent);
                   if (self._isDrag(moveEvent)) {
                      self._beginDrag(clickEvent);
                      $ws.single.EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
                   }
                };
+            this._preparePageXY(clickEvent);
             this._moveBeginX = clickEvent.pageX;
             this._moveBeginY = clickEvent.pageY;
             $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMousemove', dragStrarter);
@@ -228,7 +230,17 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             }
 
          },
-
+         /**
+          * вытаскивает координаты нажатия для tuch событий так же как для событий мыши
+          * @param e
+          * @private
+          */
+         _preparePageXY: function(e) {
+            if (e.type == "touchstart" || e.type == "touchmove") {
+               e.pageX = e.originalEvent.touches[0].pageX;
+               e.pageY = e.originalEvent.touches[0].pageY;
+            }
+         },
          /**
           * Метод определяет был ли сдвиг или просто кликнули по элементу
           * @param e
@@ -253,6 +265,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           * @private
           */
          _endDrag: function (e, droppable) {
+            this._preparePageXY(e);
             DragObject.onDragHandler(e);
             //После опускания мыши, ещё раз позовём обработку перемещения, т.к. в момент перед отпусканием мог произойти
             //переход границы между сменой порядкового номера и перемещением в папку, а обработчик перемещения не вызваться,
@@ -298,6 +311,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          },
 
          _mouseUp: function(e, inside){
+            this._preparePageXY(e);
             var target = DragObject.getTargetsControl();
             target = target && $ws.helpers.instanceOfMixin('SBIS3.CONTROLS.DragNDropMixinNew', target) ? target : null;
             if (DragObject.isDragging() && ((target === this || !target && DragObject.getOwner() === this) || inside)) {
@@ -318,6 +332,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             if (!DragObject.isDragging()) {
                return;
             }
+            this._preparePageXY(e);
             DragObject.onDragHandler(e);
 
             //если этот контрол начал перемещение или тащат над ним тогда стреяем событием _onDrag
