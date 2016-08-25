@@ -6,8 +6,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.IconButton',
    'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate',
    'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate',
-   'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate'
-], function(DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate) {
+   'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate',
+   'browser!tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender'
+], function(DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
+
 
    var HIER_WRAPPER_WIDTH = 16,
        //Число 17 это сумма padding'ов, margin'ов элементов которые составляют отступ у первого поля, по которому строится лесенка отступов в дереве
@@ -20,6 +22,18 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          tplOptions.arrowActivatedHandler = cfg.arrowActivatedHandler;
          tplOptions.editArrow = cfg.editArrow;
          return tplOptions;
+      },
+      getSearchCfg = function(cfg) {
+         return {
+            keyField: cfg.keyField,
+            displayField: cfg.displayField,
+            highlightEnabled: cfg.highlightEnabled,
+            highlightText: cfg.highlightText,
+            colorMarkEnabled: cfg.colorMarkEnabled,
+            colorField: cfg.colorField,
+            allowEnterToFolder: cfg.allowEnterToFolder,
+            colspan: cfg.columns.length + (cfg.multiselect ? 1 : 0)
+         }
       };
 
    'use strict';
@@ -90,6 +104,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             _canServerRender: true,
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
+            _defaultSearchRender: searchRender,
+            _getSearchCfg: getSearchCfg,
             /**
              * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике по кнопке справа от названия узла (папки) или скрытого узла.
              * @remark

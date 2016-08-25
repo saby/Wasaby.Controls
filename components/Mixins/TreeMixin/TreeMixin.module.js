@@ -39,61 +39,51 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          return isNodeA ? -1 : 1;
       }
    },
+   getSearchCfg = function(cfg) {
+      return {
+         keyField: cfg.keyField,
+         displayField: cfg.displayField,
+         highlightEnabled: cfg.highlightEnabled,
+         highlightText: cfg.highlightText,
+         colorMarkEnabled: cfg.colorMarkEnabled,
+         colorField: cfg.colorField,
+         allowEnterToFolder: cfg.allowEnterToFolder
+      }
+   },
    searchProcessing = function(projection, cfg) {
-      var resRecords = [], curGroupParent, parentsCash = {}, curParentId;
+      var resRecords = [], lastNode, curPath = [];
+
+      function pushPath(records, path, cfg) {
+         if (path.length) {
+            records.push({
+               tpl: cfg._defaultSearchRender,
+               data: {
+                  path: path,
+                  viewCfg: cfg._getSearchCfg(cfg)
+               }
+            });
+         }
+      }
 
       projection.each(function (item) {
-         var curPath = [];
-         if (!item.isNode()) {
-            var curParent = item.getParent(), curParentContents;
-            if (curGroupParent !== curParent) {
-               curGroupParent = curParent;
-               curParentContents = curParent.getContents();
-               while (curParentContents != null) {
-                  var
-                     pathElem = {};
-                  curParentId = curParentContents.getId();
-                  pathElem[cfg.keyField] = curParentId;
-                  pathElem[cfg.displayField] = curParentContents.get(cfg.displayField);
-                  curPath.unshift(pathElem);
-
-                  if (!parentsCash[curParentId] || parentsCash[curParentId]['flag'] == 0) {
-                     parentsCash[curParentId] = {
-                        item : curParent,
-                        flag: 1
-                     };
-                  }
-
-                  curParent = curParent.getParent();
-                  curParentContents = curParent.getContents();
-               }
-               resRecords.push({
-                  tpl: searchRender,
-                  data: {
-                     path: curPath,
-                     viewCfg : {
-                        keyField: cfg.keyField,
-                        displayField : cfg.displayField,
-                        highlightEnabled : cfg.highlightEnabled,
-                        highlightText : cfg.highlightText,
-                        colorMarkEnabled : cfg.colorMarkEnabled,
-                        colorField : cfg.colorField,
-                        allowEnterToFolder: cfg.allowEnterToFolder
-                     }
-                  }});
+         if (item.isNode()) {
+            if (!lastNode || item.getParent() != lastNode) {
+               pushPath(resRecords, curPath, cfg);
+               curPath = [];
             }
-            resRecords.push(item);
+            var
+               curParentContents = item.getContents(),
+               pathElem = {};
+            pathElem[cfg.keyField] = curParentContents.getId();
+            pathElem[cfg.displayField] = curParentContents.get(cfg.displayField);
+            curPath.push(pathElem);
+            lastNode = item;
          }
          else {
-            curParentId = item.getContents().getId();
-            if (!parentsCash[curParentId]) {
-               parentsCash[curParentId] = {
-                  item : item,
-                  flag: 0
-               };
-            }
+            pushPath(resRecords, curPath, cfg);
+            curPath = [];
+            resRecords.push(item);
          }
-
       });
 
       return resRecords;
@@ -310,6 +300,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          _options: {
             _buildTplArgs: buildTplArgsTV,
             _buildTplArgsTV: buildTplArgsTV,
+            _defaultSearchRender: searchRender,
+            _getSearchCfgTv: getSearchCfg,
+            _getSearchCfg: getSearchCfg,
             _paddingSize: 16,
             _originallPadding: 6,
             _getRecordsForRedraw: getRecordsForRedraw,
