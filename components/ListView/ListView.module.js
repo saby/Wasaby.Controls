@@ -32,6 +32,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!WS.Data/Collection/List',
       'i18n!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
+      'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
       'browser!tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
       'browser!tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
       'browser!tmpl!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
@@ -47,7 +48,7 @@ define('js!SBIS3.CONTROLS.ListView',
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
-             Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
+             Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, emptyData, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder, Di, ArraySimpleValuesUtil) {
 
      'use strict';
