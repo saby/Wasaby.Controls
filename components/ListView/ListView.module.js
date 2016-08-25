@@ -1574,24 +1574,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onBeginEdit', model));
                      }.bind(this),
                      onAfterBeginEdit: function(event, model) {
-                        var itemsInstances;
-                        if (this._options.editMode.indexOf('toolbar') !== -1) {
-                           this._getItemsToolbar().unlockToolbar();
-                           //Отображаем кнопки редактирования
-                           this._getItemsToolbar().showEditActions();
-                           if (model.getState() === Record.RecordState.DETACHED) {
-                              if (this.getItemsActions()) {
-                                 itemsInstances = this.getItemsActions().getItemsInstances();
-                                 if (itemsInstances['delete']) {
-                                    this._lastDeleteActionState = itemsInstances['delete'].isVisible();
-                                    itemsInstances['delete'].hide();
-                                 }
-                              }
-                           }
-                           //Отображаем itemsToolbar для редактируемого элемента и фиксируем его
-                           this._showItemsToolbar(this._getElementData(this._editingItem.target));
-                           this._getItemsToolbar().lockToolbar();
-                        }
+                        this._showToolbar(model);
                         this.setSelectedKey(model.getId());
                         event.setResult(this._notify('onAfterBeginEdit', model));
                      }.bind(this),
@@ -1609,25 +1592,53 @@ define('js!SBIS3.CONTROLS.ListView',
                      onAfterEndEdit: function(event, model, target, withSaving) {
                         this.setSelectedKey(model.getId());
                         event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
-                        if (this._options.editMode.indexOf('toolbar') !== -1) {
-                           //Скрываем кнопки редактирования
-                           this._getItemsToolbar().unlockToolbar();
-                           this._getItemsToolbar().hideEditActions();
-                           if (this._lastDeleteActionState !== undefined) {
-                              this.getItemsActions().getItemsInstances()['delete'].toggle(this._lastDeleteActionState);
-                              this._lastDeleteActionState = undefined;
-                           }
-                           // Если после редактирования более hoveredItem остался - то нотифицируем об его изменении, в остальных случаях просто скрываем тулбар
-                           if (this.getHoveredItem().container) {
-                              this._notifyOnChangeHoveredItem();
-                           } else {
-                              this._hideItemsToolbar();
-                           }
-                        }
+                        this._hideToolbar();
+                     }.bind(this),
+                     onDestroy: function() {
+                        //При разрушении редактирования скрывает toolbar. Иначе это ни кто не сделает. А разрушение могло
+                        //произойти например из-за setEnabled(false) у ListView
+                        this._hideToolbar();
                      }.bind(this)
                   }
                };
             return config;
+         },
+         _showToolbar: function(model) {
+            var itemsInstances;
+            if (this._options.editMode.indexOf('toolbar') !== -1) {
+               this._getItemsToolbar().unlockToolbar();
+               //Отображаем кнопки редактирования
+               this._getItemsToolbar().showEditActions();
+               if (model.getState() === Record.RecordState.DETACHED) {
+                  if (this.getItemsActions()) {
+                     itemsInstances = this.getItemsActions().getItemsInstances();
+                     if (itemsInstances['delete']) {
+                        this._lastDeleteActionState = itemsInstances['delete'].isVisible();
+                        itemsInstances['delete'].hide();
+                     }
+                  }
+               }
+               //Отображаем itemsToolbar для редактируемого элемента и фиксируем его
+               this._showItemsToolbar(this._getElementData(this._editingItem.target));
+               this._getItemsToolbar().lockToolbar();
+            }
+         },
+         _hideToolbar: function() {
+            if (this._options.editMode.indexOf('toolbar') !== -1) {
+               //Скрываем кнопки редактирования
+               this._getItemsToolbar().unlockToolbar();
+               this._getItemsToolbar().hideEditActions();
+               if (this._lastDeleteActionState !== undefined) {
+                  this.getItemsActions().getItemsInstances()['delete'].toggle(this._lastDeleteActionState);
+                  this._lastDeleteActionState = undefined;
+               }
+               // Если после редактирования более hoveredItem остался - то нотифицируем об его изменении, в остальных случаях просто скрываем тулбар
+               if (this.getHoveredItem().container) {
+                  this._notifyOnChangeHoveredItem();
+               } else {
+                  this._hideItemsToolbar();
+               }
+            }
          },
 
          _getElementByModel: function(item) {
