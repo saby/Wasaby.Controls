@@ -1862,13 +1862,13 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _isSearchMode: function() {
-            return this._searchParamName && !Object.isEmpty(this._options.groupBy) && this._options.groupBy.field === this._searchParamName;
+            return this._options.searchRender;
          },
 
          //TODO проверка для режима совместимости со старой отрисовкой
          /*TODO easy параметр для временной поддержки группировки в быстрой отрисовке*/
          _isSlowDrawing: function(easy) {
-            var result = !!this._options.itemTemplate || !!this._options.userItemAttributes || this._isSearchMode();
+            var result = !!this._options.itemTemplate || !!this._options.userItemAttributes;
             if (easy) {
                return result;
             }

@@ -284,7 +284,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                this._lastParent = this._options._curRoot;
                this._lastDrawn = undefined;
                this._lastPath = [];
-               this._destroySearchBreadCrumbs();
+
                $ws.helpers.forEach(this._foldersFooters, function(val, key) {
                   self._destroyItemsFolderFooter([key]);
                });

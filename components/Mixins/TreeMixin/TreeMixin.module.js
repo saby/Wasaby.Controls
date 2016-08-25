@@ -86,6 +86,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          }
       });
 
+      if (curPath.length) {
+         pushPath(resRecords, curPath, cfg);
+      }
+
       return resRecords;
    },
    getRecordsForRedraw = function(projection, cfg) {
@@ -201,7 +205,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       tplOptions.hierField = cfg.hierField;
       tplOptions.paddingSize = cfg._paddingSize;
       tplOptions.originallPadding = cfg._originallPadding;
-      tplOptions.isSearch = (!Object.isEmpty(cfg.groupBy) && cfg.groupBy.field === this._searchParamName);
+      tplOptions.isSearch = cfg.searchRender;
       return tplOptions;
    };
    /**
@@ -451,6 +455,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          }
          this._previousRoot = this._options._curRoot;
          this.setFilter(filter, true);
+         $ws.single.CommandDispatcher.declareCommand(this, 'BreadCrumbsItemClick', this._breadCrumbsItemClick);
       },
       /**
        * Задать поле иерархии
@@ -537,6 +542,25 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        * Получить список записей для отрисовки
        * @private
        */
+      _breadCrumbsItemClick : function(id) {
+         //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onBreadCrumbClick'), а вотом выполняется setCurrentRoot
+         if (this.isEnabled() && this._notify('onSearchPathClick', id) !== false ) {
+
+
+            var filter = $ws.core.merge(self.getFilter(), {
+               'Разворот' : 'Без разворота'
+            });
+            /*TODO решить с этим параметром*/
+            filter[this._searchParamName] = undefined;
+            //Если бесконечный скролл был установлен в опции - вернем его
+            this.setInfiniteScroll(this._options.infiniteScroll, true);
+            this.setGroupBy({});
+            this.setHighlightText('', false);
+            this.setFilter(filter, true);
+            this.setCurrentRoot(id);
+            this.reload();
+         }
+      },
       _isVisibleItem: function(item, onlyFolders) {
          if (onlyFolders && (item.isNode() !== true)) {
             return false;
@@ -798,16 +822,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             }
          }
       },
-      /*----------------HierarchySearchGroupBy-----------------*/
-      getSearchGroupBy: function(field){
-         return {
-            field: field,
-            template : groupByTpl,
-            method : this._searchMethod.bind(this),
-            render : this._searchRender.bind(this)
-         }
-      },
-
       /**
        * Метод разврачивает узлы дерева до нужной записи
        * @param {String} key ключ записи
@@ -838,163 +852,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          for (var i = nodes.length - 1, l = 0; i >= l; i--){
             this.expandNode(nodes[i]);
          }
-      },
-      //----------------- defaultSearch group
-      /**
-       * Метод поиска по умолчанию
-       * @param record
-       * @param at
-       * @returns {{drawItem: boolean, drawGroup: boolean}}
-       */
-      _searchMethod: function(record, at, last, projItem){
-         //TODO lastParent - curRoot - правильно?. 2. Данные всегда приходят в правильном порядке?
-         var key,
-            curRecRoot,
-            drawItem = false,
-            kInd = -1;
-         if (this._lastParent === undefined) {
-            this._lastParent = this._options._curRoot;
-         }
-         key = record.getId();
-         curRecRoot = record.get(this._options.hierField);
-         //TODO для SBISServiceSource в ключе находится массив, а теперь он еще и к строке приводится...
-         curRecRoot = curRecRoot instanceof Array ? curRecRoot[0] : curRecRoot;
-         if (curRecRoot == this._lastParent){
-            //Лист
-            if (record.get(this._options.hierField + '@') !== true){
-               //Нарисуем путь до листа, если пришли из папки
-               if (this._lastDrawn !== 'leaf' && this._lastPath.length) {
-                  this._drawGroup(projItem.getContents(), at, undefined, projItem);
-               }
-               this._lastDrawn = 'leaf';
-               drawItem = true;
-            } else { //папка
-               this._lastDrawn = undefined;
-               this._lastPath.push(record);
-               this._lastParent = key;
-               //Если мы уже в последней записи в иерархии, то нужно отрисовать крошки и сбросить сохраненный путь
-               if (last) {
-                  this._drawGroup(projItem.getContents(), at, undefined, projItem);
-                  this._lastPath = [];
-                  this._lastParent = this._options._curRoot;
-               }
-            }
-         } else {//другой кусок иерархии
-            //Если текущий раздел у записи есть в lastPath, то возьмем все элементы до этого ключа
-            kInd = -1;
-            for (var k = 0; k < this._lastPath.length; k++) {
-               if (this._lastPath[k].getId() == curRecRoot){
-                  kInd = k;
-                  break;
-               }
-            }
-            //Если текущий раздел есть в this._lastPath его надо нарисовать
-            if (  this._lastDrawn !== 'leaf' && this._lastPath.length) {
-               this._drawGroup(projItem.getContents(), at, undefined, projItem);
-            }
-            this._lastDrawn = undefined;
-            this._lastPath = kInd >= 0 ? this._lastPath.slice(0, kInd + 1) : [];
-            //Лист
-            if (record.get(this._options.hierField + '@') !== true){
-               if ( this._lastPath.length) {
-                  this._drawGroup(projItem.getContents(), at, undefined, projItem);
-               }
-               drawItem = true;
-               this._lastDrawn = 'leaf';
-               this._lastParent = curRecRoot;
-            } else {//папка
-               this._lastDrawn = undefined;
-               this._lastPath.push(record);
-               this._lastParent = key;
-               //Если мы уже в последней записи в иерархии, то нужно отрисовать крошки и сбросить сохраненный путь
-               if (last) {
-                  this._drawGroup(projItem.getContents(), at, undefined, projItem);
-                  this._lastPath = [];
-                  this._lastParent = this._options._curRoot;
-               }
-            }
-         }
-         return {
-            drawItem : drawItem,
-            drawGroup: false
-         };
-      },
-      _searchRender: function(item, container){
-         this._drawBreadCrumbs(this._lastPath, item, container);
-         return container;
-      },
-      _drawBreadCrumbs:function(path, record, container){
-         if (path.length) {
-            var self = this,
-               elem,
-               groupBy = this._options.groupBy,
-               cfg,
-               td = container.find('td');
-            td.append(elem = $('<div style="width:'+ td.width() +'px"></div>'));
-            cfg = {
-               element : elem,
-               items: this._createPathItemsDS(path),
-               parent: this,
-               highlightEnabled: this._options.highlightEnabled,
-               highlightText: this._options.highlightText,
-               colorMarkEnabled: this._options.colorMarkEnabled,
-               colorField: this._options.colorField,
-               className : 'controls-BreadCrumbs__smallItems',
-               enable: this._options.allowEnterToFolder
-            };
-            if (groupBy.hasOwnProperty('breadCrumbsTpl')){
-               cfg.itemTemplate = groupBy.breadCrumbsTpl
-            }
-            var ps = new BreadCrumbs(cfg);
-            ps.once('onItemClick', function(event, id){
-               //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onBreadCrumbClick'), а вотом выполняется setCurrentRoot
-               event.setResult(false);
-               //TODO Выпилить в .100 проверку на задизабленность, ибо событие вообще не должно стрелять и мы сюда не попадем, если крошки задизаблены
-               if (this.isEnabled() && self._notify('onSearchPathClick', id) !== false ) {
-                  //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
-                  /*TODO для Алены. Временный фикс, потому что так удалось починить*/
-                  var filter = $ws.core.merge(self.getFilter(), {
-                     'Разворот' : 'Без разворота'
-                  });
-                  if (self._options.groupBy.field) {
-                     filter[self._options.groupBy.field] = undefined;
-                  }
-                  //Если бесконечный скролл был установлен в опции - вернем его
-                  self.setInfiniteScroll(self._options.infiniteScroll, true);
-                  self.setGroupBy({});
-                  self.setHighlightText('', false);
-                  self.setFilter(filter, true);
-                  self.setCurrentRoot(id);
-                  self.reload();
-               }
-            });
-            this._breadCrumbs.push(ps);
-         } else{
-            //если пути нет, то группировку надо бы убить...
-            container.remove();
-         }
-
-      },
-      _createPathItemsDS: function(pathRecords){
-         var dsItems = [],
-            parentID;
-         for (var i = 0; i < pathRecords.length; i++){
-            //TODO для SBISServiceSource в ключе находится массив
-            parentID = pathRecords[i].get(this._options.hierField);
-            dsItems.push({
-               id: pathRecords[i].getId(),
-               title: pathRecords[i].get(this._options.displayField),
-               parentId: parentID instanceof Array ? parentID[0] : parentID,
-               data: pathRecords[i]
-            });
-         }
-         return dsItems;
-      },
-      _destroySearchBreadCrumbs: function(){
-         for (var i =0; i < this._breadCrumbs.length; i++){
-            this._breadCrumbs[i].destroy();
-         }
-         this._breadCrumbs = [];
       },
       /**
        * Установить корень выборки
