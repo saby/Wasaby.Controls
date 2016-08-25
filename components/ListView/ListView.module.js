@@ -658,9 +658,6 @@ define('js!SBIS3.CONTROLS.ListView',
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
             _searchParamName: undefined, //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
-            _scrollOnBottom: true, // TODO: Придрот для скролла вниз при первой подгрузке. Если включена подгрузка вверх то изначально нужно проскроллить контейнер вниз,
-            //но после загрузки могут долетать данные (картинки в docviewer например), которые будут скроллить вверх.
-            _scrollOnBottomTimer: null, //TODO: см. строчкой выше
             _componentBinder: null,
             _touchSupport: false,
             _dragInitHandler: undefined //метод который инициализирует dragNdrop
@@ -792,12 +789,6 @@ define('js!SBIS3.CONTROLS.ListView',
                }
 
                this._scrollWatcher = new ScrollWatcher(scrollWatcherCfg);
-               if (this._options.infiniteScrollContainer){
-                  this._options.infiniteScrollContainer.on('touchmove wheel', function(){
-                     self._scrollOnBottom = false;
-                  });
-
-               }
                if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                   this._createScrollPager();
                }
@@ -1338,19 +1329,6 @@ define('js!SBIS3.CONTROLS.ListView',
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
             return ListView.superclass.reload.apply(this, arguments);
-         },
-
-         setFilter: function(filter, noLoad){
-            if (!noLoad) {
-               this._resetScrollMark();
-            }
-            ListView.superclass.setFilter.apply(this, arguments);
-         },
-
-         _resetScrollMark: function(){
-            if (this._options.infiniteScroll == 'up'){
-               this._scrollOnBottom = true;
-            }
          },
 
          _reloadInfiniteScrollParams : function(){
@@ -1950,9 +1928,6 @@ define('js!SBIS3.CONTROLS.ListView',
          _onResizeHandler: function(){
             var self = this;
             if (this.getItems()){
-               if (this._options.infiniteScroll == 'up' && this._scrollOnBottom){
-                  self._scrollWatcher && self._scrollWatcher.scrollTo('bottom');
-               }
                //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
                if (this._scrollWatcher && !this._scrollWatcher.hasScroll()){
                   this._loadNextPage();
