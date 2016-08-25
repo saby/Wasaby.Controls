@@ -65,7 +65,7 @@
 @button-font:                             @font-basic-size @font-basic-name;
 @button-text-alignment:                   center;
 @button-min-width:                        24px;
-@button-height:                           58px;
+@button-height:                           40px;
 @button-line-height:                      normal;
 @button-padding:                          0 8px;
 @button-margin:                           auto;
@@ -126,7 +126,7 @@
 @button-big-font:                         (@font-basic-size * 1.285714285714286) @font-basic-name;
 @button-big-text-alignment:               @button-text-alignment;
 @button-big-min-width:                    @button-min-width;
-@button-big-height:                       @button-height;
+@button-big-height:                       58px;
 @button-big-line-height:                  @button-line-height;
 @button-big-padding:                      @button-padding;
 @button-big-margin:                       @button-margin;
@@ -1742,12 +1742,12 @@
 @controls-Pager-minHeight:                        35px;
 
 //FilterButton
-@controls-filterButton-picker-bg:                 #F9F9F9;
+@controls-filterButton-picker-bg:                 #38495B;
 @controls-filterButton-picker-height:             auto !important; //Приходится использовать important, т.к. попап считает высоту и выставляет её в inline-styles
-@controls-filterButton-picker-border-width:       1px 3px 3px 3px;
+@controls-filterButton-picker-border-width:       0;
 @controls-filterButton-picker-border-style:       solid;
 @controls-filterButton-picker-border-color:       @gray-light-color;
-@controls-filterButton-picker-border-radius:      0 0 4px 4px;
+@controls-filterButton-picker-border-radius:      0;
 @controls-Popup-closeButton-top:                  12px;
 @controls-Popup-closeButton-right:                0;
 
@@ -1761,20 +1761,21 @@
 
 @controls-filterButton-button-arrow-margin:       -4px;;
 
-@controls-filterButton-area-header-padding:       12px 44px 12px 12px;
-@controls-filterButton-area-header-height:        24px;
+@controls-filterButton-area-header-padding:       16px 44px 16px 12px;
+@controls-filterButton-area-header-height:        40px;
 @controls-filterButton-area-header-width:         310px;
 
-@controls-filterButton-area-text-size:            18px;
+@controls-filterButton-area-text-size:            24px;
 @controls-filterButton-area-text-weight:          bold;
+@controls-filterButton-area-text-color:           @primary-color;
 @controls-filterButton-area-text-margin:          0 12px 0 0;
 
 @controls-filterButton-title-fontSize:            15px;
 @controls-filterButton-title-text-color:          #313e78;
 
-@controls-filterButton-area-content-margin:       0 12px 12px 26px;
+@controls-filterButton-area-content-margin:       0 16px 12px 16px;
 @controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
-@controls-filterButton-line-height:               @font-basic-line-height;
+@controls-filterButton-line-height:               41px;
 @controls-filterButton-apply-margin-right:        0;
 
 //FilterButtonHistory
