@@ -183,6 +183,15 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       onSelectedItemsChange: function(idArray) {
          this._blocks.wrapper.toggleClass('controls-operationsPanel__massMode', !idArray.length)
                              .toggleClass('controls-operationsPanel__selectionMode', !!idArray.length);
+         if (this._itemsDrawn) {
+            this._onSelectedItemsChange(idArray);
+         } else {
+            this.once('onDrawItems', function() {
+               this._onSelectedItemsChange(idArray);
+            }.bind(this));
+         }
+      },
+      _onSelectedItemsChange: function(idArray) {
          //Прокидываем сигнал onSelectedItemsChange из браузера в кнопки
          $ws.helpers.forEach(this.getItemsInstances(), function(instance) {
             if (typeof instance.onSelectedItemsChange === 'function') {
