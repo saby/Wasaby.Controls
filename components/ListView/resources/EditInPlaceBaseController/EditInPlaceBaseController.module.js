@@ -344,7 +344,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   self = this,
                   eipRecord = eip.getEditingRecord(),
                   isAdd = eipRecord.getState() === Record.RecordState.DETACHED;
-               if (withSaving && eipRecord.isChanged()) {
+               if (withSaving && (eipRecord.isChanged() || isAdd)) {
                   this._options.dataSource.update(eipRecord).addCallback(function(recordId) {
                      eip.applyChanges();
                      if (self._editingRecord) {
