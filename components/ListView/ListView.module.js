@@ -2016,17 +2016,11 @@ define('js!SBIS3.CONTROLS.ListView',
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight();
                var items = dataSet.toArray();
                this.getItems().prepend(items);
-               if (!this._isSlowDrawing()){
-                  this._moveTopScroll();
-               }
                at = {at: 0};
             }
 
             if (this._isSlowDrawing()) {
                this._drawItems(dataSet.toArray(), at);
-               if (direction == 'up'){
-                  this._moveTopScroll();
-               }
             }
             //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
             this._dataLoadedCallback();
@@ -2057,26 +2051,28 @@ define('js!SBIS3.CONTROLS.ListView',
             var hasScroll = (function() {
                   return this._scrollWatcher.hasScroll(10);
                }).bind(this);
-
-            // Если нет скролла или скролл внизу, значит нужно догружать еще записи (floatArea отжирает скролл, поэтому если она открыта - не грузим)
+            // Если нет скролла или скролл внизу (при загрузке вниз), значит нужно догружать еще записи
             if ((this.isScrollOnBottom() && this._options.infiniteScroll == 'down') || !hasScroll()) {
                this._scrollLoadNextPage();
             } else {
-               this._firstScrollTop = false;
+               if (!this.isScrollOnBottom() || this._firstScrollTop) {
+                  this._moveTopScroll();
+                  this._firstScrollTop = false;
+               }
             }
          },
          /**
-          * Управляет доскролливанием в режиме подгрузки вверх
-          * При подгрузке данных вверх необходимо подскролливать элементы, чтобы
+          * Если скролл находится в самом верху и добавляются записи вверх - не скролл останнется на месте,
+          * а будет все так же вверху. Поэтому после отрисовки записей вверх, подвинем скролл на прежнее место -
+          * конец предпоследней страницы 
           * @private
           */
          _moveTopScroll: function(){
             //сюда попадем только когда уже точно есть скролл
-            if (this.isInfiniteScroll()){
+            if (this.isInfiniteScroll() && this._options.infiniteScroll == 'up'){
                var scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
                //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
                //разницы величины скролла (т.е. на сколько добавилось высоты, на столько и опустили). Получается плавно
-               //Так же цчитываем то, что индикатор появляется только на время загрузки и добавляет свою высоту
                this._scrollWatcher.scrollTo(this._firstScrollTop || (scrollAmount < 0) ? 'bottom' : scrollAmount);
             }
          },
