@@ -72,7 +72,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
 
          after: {
             init: function () {
-               $(this.getContainer()).bind('mouseup touchend', this._onMouseupInside.bind(this));
+               //touchend всегда срабатывает над тем контейнером с которого начали тащить, поэтому его тут нет
+               $(this.getContainer()).bind('mouseup', this._onMouseupInside.bind(this));
             }
          },
 
@@ -239,6 +240,9 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             if (e.type == "touchstart" || e.type == "touchmove") {
                e.pageX = e.originalEvent.touches[0].pageX;
                e.pageY = e.originalEvent.touches[0].pageY;
+            } else if(e.type == "touchend") {
+               e.pageX = e.originalEvent.changedTouches[0].pageX;
+               e.pageY = e.originalEvent.changedTouches[0].pageY;
             }
          },
          /**
@@ -265,8 +269,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           * @private
           */
          _endDrag: function (e, droppable) {
-            this._preparePageXY(e);
-            DragObject.onDragHandler(e);
             //После опускания мыши, ещё раз позовём обработку перемещения, т.к. в момент перед отпусканием мог произойти
             //переход границы между сменой порядкового номера и перемещением в папку, а обработчик перемещения не вызваться,
             //т.к. он срабатывают так часто, насколько это позволяет внутренняя система взаимодействия с мышью браузера.
@@ -312,11 +314,12 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
 
          _mouseUp: function(e, inside){
             this._preparePageXY(e);
+            DragObject.onDragHandler(e);
             var target = DragObject.getTargetsControl();
-            target = target && $ws.helpers.instanceOfMixin('SBIS3.CONTROLS.DragNDropMixinNew', target) ? target : null;
+            target = target && $ws.helpers.instanceOfMixin(target, 'SBIS3.CONTROLS.DragNDropMixinNew') ? target : null;
             if (DragObject.isDragging() && ((target === this || !target && DragObject.getOwner() === this) || inside)) {
                //если есть таргет то запускаем _endDrag над таргетом иначе запускаем над тем кто начал
-               this._endDrag(e, inside ? this._findDragDropContainer(e, e.target) : false);
+               this._endDrag(e, inside ? this._findDragDropContainer(e, DragObject.getTargetsDomElemet()) : false);
             }
             this._moveBeginX = null;
             this._moveBeginY = null;
@@ -339,7 +342,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             if (DragObject.getOwner() === this || DragObject.getTargetsControl() === this ) {
                var
                   //определяем droppable контейнер
-                  movable = this._findDragDropContainer(e, e.target);
+                  movable = this._findDragDropContainer(e, DragObject.getTargetsDomElemet());
                //двигаем компонент
                this._onDrag(e, movable);
                return false;

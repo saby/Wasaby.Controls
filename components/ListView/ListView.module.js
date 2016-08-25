@@ -2691,7 +2691,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                 id,
                 target;
-            target = this._findItemByElement($(e.target));
+            target = this._findItemByElement(dragObject.getTargetsDomElemet());
             //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
             //она есть в _items(например при добавлении или фейковый корень). Метод _findItemByElement в данном случае вернёт
             //пустой массив. В .150 править этот метод опасно, потому что он много где используется. В .200 переписать метод
@@ -2745,8 +2745,8 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws.helpers.instanceOfModule(dragObject.getSource().at(0), 'js!SBIS3.CONTROLS.DragEntity.Row');
          },
 
-         _getDragTarget: function(e) {
-            var target = this._findItemByElement($(e.target)),
+         _getDragTarget: function(dragObject) {
+            var target = this._findItemByElement(dragObject.getTargetsDomElemet()),
                item;
 
             if (target.length > 0) {
@@ -2757,10 +2757,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _updateDragTarget: function(dragObject, e) {
-            var model = this._getDragTarget(e),
+            var model = this._getDragTarget(dragObject),
                target;
             if (model) {
-               var domElement = this._findItemByElement($(e.target)),
+               var domElement = this._findItemByElement($(dragObject.getTargetsDomElemet())),
                   position = this._getDirectionOrderChange(e, domElement) || DRAG_META_INSERT.on;
                if (position !== DRAG_META_INSERT.on && dragObject.getOwner() === this) {
                   var neighborItem = this[position === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](model.getId()),

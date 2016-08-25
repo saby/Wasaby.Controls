@@ -124,6 +124,20 @@ define('js!SBIS3.CONTROLS.DragObject', [
       getTargetsControl: function () {
          return this._targetsControl;
       },
+      /**
+       * Возвращает html элемент над которым сейчас находится курсор
+       * @returns {*}
+       */
+      getTargetsDomElemet: function(){
+         if (this._jsEvent) {
+            if (this._jsEvent.type in {"touchmove":true, "touchend":true}) {
+               //для touch событий в таргете всегда лежит элемент над которым началось перетаскивание
+               return $(document.elementFromPoint(this._jsEvent.pageX, this._jsEvent.pageY));
+            } else {
+               return $(this._jsEvent.target);
+            }
+         }
+      },
       //region protected
       /**
        * @protected
@@ -167,7 +181,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
       onDragHandler: function (e) {
          if (this._jsEvent !== e) {
             this._jsEvent = e;
-            this._targetsControl = $(e.target).wsControl();
+            this._targetsControl = $(this.getTargetsDomElemet()).wsControl();
             this._setAvatarPosition(e);
          }
       }
