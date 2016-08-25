@@ -47,20 +47,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
       $constructor: function() {
          var topParent;
          this._publish('onTotalScroll', 'onScroll');
-         // Ищем в порядке - пользовательский контейнер -> FloatArea -> Window
-         if (!this._options.element || !this._options.element.length) {
-            var topParent = this._options.opener.getTopParent();
-            if ($ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')) {
-               this._options.element = topParent.getContainer().closest('.ws-scrolling-content');
-            } else {
-               var scrollingContent = $('.ws-body-scrolling-content');
-               if (scrollingContent && scrollingContent.length){
-                  this._options.element = scrollingContent;
-               }
-            }
-         }
-
-         var element = this._options.element || $('body');
+         var element = this._findScrollElement() || $('body');
          this._customScroll = element.hasClass('controls-Scroll__container');
 
          // Подписываемся либо на событие скролла у CustomScroll, либо на скролл у контейнера
@@ -68,6 +55,25 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
             element[0].wsControl.subscribe('onScroll', this._processCustomScrollEvent.bind(this));
          } else {
             element.bind('scroll.wsScrollWatcher', this._onContainerScroll.bind(this));
+         }
+      },
+
+      // Ищем в порядке - пользовательский контейнер -> FloatArea -> Window
+      _findScrollElement: function() {
+         if (!this._options.element.length) {
+            var scrollingContent = this._options.opener.getContainer().closest('.ws-scrolling-content').not('.ws-body-scrolling-content'),
+               element;
+            if (scrollingContent.length) {
+               element = scrollingContent;
+            } else {
+               scrollingContent = $('.ws-body-scrolling-content');
+               if (scrollingContent.length){
+                  element = scrollingContent;
+               }
+            }
+            return element;
+         } else {
+            return this._options.element;
          }
       },
 
@@ -96,11 +102,14 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
       },
 
       getScrollContainer: function(){
-         return this._options.element[0];
+         if (!this._options.element.length){
+            this._options.element = this._findScrollElement();
+         }
+         return this._options.element[0] || $('body');
       },
 
       isScrollOnBottom: function(){
-         var element = this._options.element[0];
+         var element = this.getScrollContainer();
          //customScroll
          if (this._customScroll)
             return element.wsControl.isScrollOnBottom();
@@ -110,7 +119,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
       },
 
       isScrollOnTop: function(){
-         var element = this._options.element[0];
+         var element = this.getScrollContainer();
          if (this._customScroll){
             return element.wsControl.isScrollOnTop();
          }
@@ -127,13 +136,13 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * @variant {Number} - поскроллить на указанную величину
        */
       scrollTo:function(offset){
-         var element = this._options.element;
+         var element = this.getScrollContainer();
          if (this._customScroll){
-            element[0].wsControl.scrollTo(typeof offset === 'string' ? (offset === 'top' ? 0 : 'bottom') : $ws.helpers.format({offset: offset}, '-=$offset$s$'));
-            this._lastScrollTop = element[0].wsControl.getScrollTop();
+            element.wsControl.scrollTo(typeof offset === 'string' ? (offset === 'top' ? 0 : 'bottom') : $ws.helpers.format({offset: offset}, '-=$offset$s$'));
+            this._lastScrollTop = element.wsControl.getScrollTop();
             return;
          }
-         element.scrollTop(typeof offset === 'string' ? (offset === 'top' ? 0 : element[0].scrollHeight) : offset);
+         element.scrollTop = typeof offset === 'string' ? (offset === 'top' ? 0 : element.scrollHeight) : offset;
       },
 
       /**
@@ -141,7 +150,6 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * @returns {*}
        */
       getScrollHeight: function(){
-         var element = this._options.element;
          return this._customScroll ? $('.mCSB_container').height() : this.getScrollContainer().scrollHeight;
       },
 
@@ -159,9 +167,9 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        */
       hasScroll: function(offset){
          offset = offset || 0;
-         var element = this._options.element;
+         var element = this.getScrollContainer();
          if (this._customScroll) {
-            return element[0].wsControl.hasScroll();
+            return element.wsControl.hasScroll();
          }
          var scrollHeight = this.getScrollHeight();
          return scrollHeight > this.getContainerHeight() + offset || scrollHeight > $(window).height() + offset;
