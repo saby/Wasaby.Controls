@@ -7,12 +7,28 @@
       outline-color: @formatted-text-box-error-border-color;
    }
 
+   .controls-DateRange__DatePickerStart,
+   .controls-DateRange__DatePickerEnd {
+      font-size: @date-range-font-size;
+   }
+
    .controls-DateRange__Button {
+      font-size: @date-range-icon-button-size !important;
+      line-height: @date-range-icon-button-size !important;
+      height: @date-range-icon-button-size;
+      width: @date-range-icon-button-size;
+      margin: @date-range-icon-button-margin;
       position: relative;
-      border-radius: 0;
-      .controls-Button__text {
-         margin: 0 8px;
-         line-height: @date-range-text-line-height;
+
+      &.icon-primary.controls-IconButton.action-hover:hover {
+         color: @date-range-icon-button-hover-color;
       }
+   }
+
+   .controls-DateRange__dash {
+      display: inline-block;
+      width: @date-range-dash-width;
+      margin: @date-range-dash-margin;
+      border-top: 1px solid @date-range-dash-color;
    }
 }
