@@ -754,12 +754,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             }
          }
          //Считаем оффсеты страниц начиная с последней (если ее нет - сначала)
-         listItems.slice(lastPageStart).each(function(){
-            var $this = $(this);
+         listItems.slice(lastPageStart ? lastPageStart + 1 : 0).each(function(){
+            var $this = $(this),
+               nextHeight = $this.next('.controls-ListView__item').outerHeight(true);
             pageHeight += $this.outerHeight(true);
             // Если набралось записей на выстору viewport'a добавим еще страницу
             var offsetTop = self._scrollPages.length == 1 ? self._offsetTop : 0;
-            if (pageHeight  > viewportHeight - offsetTop) {
+            if (pageHeight + nextHeight > viewportHeight - offsetTop) {
                self._pageOffset += pageHeight;
                self._scrollPages.push({
                   element: $this,
