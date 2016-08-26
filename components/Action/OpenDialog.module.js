@@ -14,8 +14,8 @@ define('js!SBIS3.CONTROLS.Action.OpenDialog', [
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var OpenEditDialog = Action.extend([DialogMixin],/** @lends SBIS3.CONTROLS.Action.OpenDialog.prototype */{
+   var OpenDialog = Action.extend([DialogMixin],/** @lends SBIS3.CONTROLS.Action.OpenDialog.prototype */{
 
    });
-   return OpenEditDialog;
+   return OpenDialog;
 });
