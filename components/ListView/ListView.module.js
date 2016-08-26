@@ -758,9 +758,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _prepareInfiniteScroll: function(){
             var topParent = this.getTopParent();
             
-            this._createScrollWatcher();
             if (this.isInfiniteScroll()) {
                this._createLoadingIndicator();
+               this._createScrollWatcher();
                /**TODO Это специфическое решение из-за того, что нам нужно догружать данные пока не появится скролл
                 * Если мы находися на панельке, то пока она скрыта все данные уже могут загрузиться, но новая пачка не загрузится
                 * потому что контейнер невидимый*/
@@ -1004,7 +1004,37 @@ define('js!SBIS3.CONTROLS.ListView',
                this._mouseLeaveHandler();
             }
          },
+         
+         _getScrollContainer: function() {
+            var scrollWatcher = this._scrollWatcher,
+                scrollContainer;
 
+            function findScrollContainer(node) {
+               if (node === null) {
+                  return null;
+               }
+
+               if (node.scrollHeight > node.clientHeight) {
+                  return node;
+               } else {
+                  findScrollContainer(node.parentNode);
+               }
+            }
+
+            if(scrollWatcher) {
+               scrollContainer = scrollWatcher.getScrollContainer();
+            } else {
+               /* т.к. скролл может находиться у произвольного контейнера, то попытаемся его найти */
+               scrollContainer = $(findScrollContainer(this._container[0]));
+
+               /* если всё же не удалось найти, то просто будем считать body */
+               if(!scrollContainer.length) {
+                  scrollContainer = $ws._const.$body;
+               }
+            }
+
+            return $(scrollContainer);
+         },
          /**
           * Метод, меняющий текущий выделеный по ховеру элемент
           * @param {jQuery} target Новый выделеный по ховеру элемент
@@ -1893,7 +1923,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var self = this;
             if (this.getItems()){
                //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
-               if (!this._scrollWatcher.hasScroll()){
+               if (this._scrollWatcher && !this._scrollWatcher.hasScroll()){
                   this._scrollLoadNextPage();
                }
                if (this._scrollPager){
@@ -2097,7 +2127,7 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass._scrollToItem.call(this, itemId);
             var itemContainer = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
             //TODO: будет работать только если есть infiniteScrollContainer, нужно сделать просто scrollContainer так как подгрузки может и не быть
-            if (itemContainer.length){
+            if (this._scrollWatcher && itemContainer.length){
                this._scrollWatcher.scrollTo(itemContainer[0].offsetTop);
             }
          },
