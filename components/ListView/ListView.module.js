@@ -2125,9 +2125,9 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollWatcher.scrollTo(this._firstScrollTop || (scrollAmount < 0) ? 'bottom' : scrollAmount);
             }
          },
-         scrollToItem: function(item){
+         scrollToItem: function(item, withoutScrollTop){
             if (item.getId && item.getId instanceof Function){
-               this._scrollToItem(item.getId());
+               this._scrollToItem(item.getId(), withoutScrollTop);
             }
          },
          _scrollToItem: function(itemId, withoutScrollTop) {
