@@ -675,7 +675,7 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="DropdownList 1"]', 40000);
                 this.list = '[name="DropdownList 1"]';
-				this.title = '[name="DropdownList 1"] .controls-DropdownList__text';
+				this.title = '.capture .controls-DropdownList__arrowIcon';
 				this.item4 = '.controls-DropdownList__item[data-id="4"]';
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = '[sbisname="TextBox 1"] input';
@@ -687,7 +687,6 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
 
             .capture('opened', function (actions) {
                 actions.click(this.title);
-				actions.waitForElementToShow('.controls-DropdownList__item[data-id="4"]', 1000);
 				actions.mouseMove(this.input);
             })
 
