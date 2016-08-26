@@ -48,3 +48,16 @@
     height: @search-loop-size;
   }
 }
+
+// хак для edge win10 выравнивает input и placeholder
+@supports (-ms-ime-align:auto) {
+  .controls-SearchForm {
+    &.controls-TextBox {
+      .controls-TextBox__fieldWrapper {
+        .controls-TextBox__field {
+          line-height: 0 !important;
+        }
+      }
+    }
+  }
+}
