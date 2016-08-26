@@ -467,7 +467,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             if (active && this._needFocusOnActivated() && this.isEnabled()) {
                this._performByReady(function() {
                   this._tinyEditor.focus();
-                  this._scrollTo(this._inputControl, 'top');
+                  this._scrollTo(this._inputControl[0], 'top');
                   RichEditor.superclass.setActive.apply(this, args);
                }.bind(this));
             } else {
@@ -1820,7 +1820,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             var curHeight;
             if (this.isVisible()) {
                if (this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this._textChanged && (this._inputControl[0] === document.activeElement)) {
-                  this._scrollTo($(this._tinyEditor.selection.getNode()), 'bottom');
+                  this._scrollToPrev(this._tinyEditor.selection.getNode());
                }
                curHeight = this._container.height();
                if (curHeight !== this._lastHeight) {
@@ -1831,20 +1831,19 @@ define('js!SBIS3.CONTROLS.RichEditor',
          },
          _scrollTo: function(target, side){
             var
-               isUnderKeyboard = function(){
-                  var
-                     targetOffset = target[0].getBoundingClientRect(),
-                     keyboardCoef = (window.innerHeight > window.innerWidth) ? constants.ipadCoefficient[side].vertical : constants.ipadCoefficient[side].horizontal; //Для альбома и портрета коэффициенты разные.
-                  return $ws._const.browser.isMobileIOS && this.isEnabled() && targetOffset[side] > window.innerHeight*keyboardCoef;
-               };
-            if (isUnderKeyboard() && target.prev()[0] && side === 'bottom') { //пытаемся подскролиться к предыдущему если осуществляется ввод
-                  target.prev()[0].scrollIntoView(true);
-            }
-            if (isUnderKeyboard()) {//если таргет всё еще под клавиатурой то делаем доскрол к нему
-               target[0].scrollIntoView(true);
+               targetOffset = target.getBoundingClientRect(),
+               keyboardCoef = (window.innerHeight > window.innerWidth) ? constants.ipadCoefficient[side].vertical : constants.ipadCoefficient[side].horizontal; //Для альбома и портрета коэффициенты разные.
+
+            if ( $ws._const.browser.isMobileIOS && this.isEnabled() && targetOffset[side] > window.innerHeight * keyboardCoef) { //
+               target.scrollIntoView(true);
             }
          },
-
+         _scrollToPrev: function(target){
+            if (target.previousSibling) {
+               this._scrollTo(target.previousSibling, 'bottom');
+            }
+            this._scrollTo(target,'bottom');
+         },
          _updateDataReview: function(value) {
             if (this._dataReview) {
                this._dataReview.html(this._prepareReviewContent(value));
