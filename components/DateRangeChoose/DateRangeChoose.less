@@ -1,0 +1,260 @@
+.controls-DateRangeChoose__container () {
+   position: relative;
+   height:auto;
+}
+
+.controls-DateRangeChoose__container-caption () {
+   .box-sizing(border-box);
+   cursor: pointer;
+   height: 100%;
+   line-height: 24px;
+   padding: 0 10px 0 10px;
+   position: absolute;
+   top: 0;
+   width: @date-range-choose-container-caption-width;
+}
+
+.controls-DateRangeChoose {
+   .box-sizing(border-box);
+   .user-select();
+   background-color: @date-range-choose-bg-color;
+   border: @date-range-choose-border-width solid @date-range-choose-border-color;
+   border-radius: @date-range-choose-border-radius;
+   color: @date-range-choose-color;
+   font-family: @date-range-choose-font-family;
+   font-size: @date-range-choose-font-size;
+   width: @date-range-choose-year-state-width;
+
+   .controls-DateRangeChoose__currentValue {
+      font-size:  @date-range-choose-current-value-font-size;
+      font-weight: @date-range-choose-current-value-font-weight;
+      text-align: center;
+      height: @date-range-choose-current-value-height;
+      line-height: @date-range-choose-current-value-height;
+      border-bottom: 1px solid @date-range-choose-border-color;
+      margin-bottom: 4px;
+      cursor: pointer;
+      &:hover {
+         background-color: @date-range-choose-bg-hover-color;
+      }
+   }
+
+   .controls-DateRangeChoose__yearWrapper {
+      margin-bottom: 4px;
+      .controls-DateRangeChoose__year {
+         cursor: pointer;
+         display: inline-block;
+         font-size: @date-range-choose-year-font-size;
+         font-weight: @date-range-choose-year-font-weight;
+         text-align: center;
+         height: @date-range-choose-year-height;
+         line-height: @date-range-choose-year-height;
+         margin: 0 15px;
+         width: @date-range-choose-width - 6 - @date-range-choose-year-prev-next-btns-width*2 - 15*2;//54px;
+         vertical-align: middle;
+         &:hover {
+            background-color: @date-range-choose-bg-hover-color;
+         }
+      }
+
+      .controls-DateRangeChoose__year-prev,
+      .controls-DateRangeChoose__year-next {
+         cursor: pointer;
+         display: inline-block;
+         font-size: @date-range-choose-year-prev-next-btns-font-size;
+         font-weight: bold;
+         text-align: center;
+         vertical-align: middle;
+         height: @date-range-choose-year-height;
+         width: @date-range-choose-year-prev-next-btns-width;
+         &:hover {
+            color: @date-range-choose-hover-color;
+         }
+      }
+   }
+
+   .controls-DateRangeChoose__month-checkMark-hidden {
+      .ontrols-DateRangeChoose__month-checkMark {
+         display: none;
+      }
+   }
+
+   .controls-DateRangeChoose__halfYear {
+      .controls-DateRangeChoose__container();
+
+      &.controls-DateRangeChoose__selected {
+         background-color: @date-range-choose-bg-hover-color;
+         .controls-DateRangeChoose__halfYear-caption {
+            color: @date-range-choose-hover-color2;
+         }
+      }
+
+      .controls-DateRangeChoose__halfYear-caption {
+         .controls-DateRangeChoose__container-caption();
+         display: none;
+         right: 0;
+         text-align: right;
+      }
+
+      .controls-DateRangeChoose__quarter {
+         .controls-DateRangeChoose__container();
+
+         &.controls-DateRangeChoose__selected {
+            background-color: @date-range-choose-bg-hover-color;
+            .controls-DateRangeChoose__quarter-caption {
+               color: @date-range-choose-hover-color2;
+            }
+         }
+
+         .controls-DateRangeChoose__quarter-caption {
+            .controls-DateRangeChoose__container-caption();
+            display: none;
+            position: inherit;
+            text-align: center;
+            left: 0;
+            width: auto;
+            &:hover {
+               color: @date-range-choose-color;
+            }
+         }
+
+         .controls-DateRangeChoose__month {
+            cursor: pointer;
+            display: none;
+            text-align: center;
+            height: @date-range-choose-month-height;
+            line-height: @date-range-choose-month-height;
+            position: relative;
+            padding: 0 10px;
+            &:hover {
+               background-color: @default-itemHover-color;
+            }
+            &:active {
+               background-color: @date-range-choose-bg-active-color;
+            }
+         }
+      }
+   }
+
+   .controls-DateRangeChoose__checkBox {
+      display: block;
+      position: absolute;
+      right: 4px;
+      top: 4px;
+   }
+   &.controls-DateRangeChoose__showMonths {
+      .controls-DateRangeChoose__halfYear {
+         .controls-DateRangeChoose__quarter {
+            .controls-DateRangeChoose__quarter-caption {
+               text-align: left;
+               &:hover {
+                  color: @date-range-choose-hover-color2;
+               }
+            }
+         }
+      }
+   }
+
+   &.controls-DateRangeChoose__showCheckboxes {
+      .controls-DateRangeChoose__halfYear {
+         .controls-DateRangeChoose__quarter {
+            .controls-DateRangeChoose__month {
+               text-align: left;
+            }
+         }
+      }
+      &.controls-DateRangeChoose__showHalfYears,
+      &.controls-DateRangeChoose__showQuarters {
+         .controls-DateRangeChoose__halfYear {
+            .controls-DateRangeChoose__quarter {
+               .controls-DateRangeChoose__month {
+                  text-align: center;
+               }
+            }
+         }
+      }
+   }
+
+   &.controls-DateRangeChoose__showHalfYears,
+   &.controls-DateRangeChoose__showQuarters,
+   &.controls-DateRangeChoose__showMonths {
+      width: @date-range-choose-width;
+   }
+
+   &.controls-DateRangeChoose__showHalfYears {
+      .controls-DateRangeChoose__halfYear {
+         .controls-DateRangeChoose__halfYear-caption {
+            display: block;
+         }
+      }
+   }
+   &.controls-DateRangeChoose__showQuarters {
+      .controls-DateRangeChoose__halfYear {
+         .controls-DateRangeChoose__quarter {
+            .controls-DateRangeChoose__quarter-caption {
+               display: block;
+            }
+         }
+      }
+   }
+
+   &.controls-DateRangeChoose__showMonths {
+      .controls-DateRangeChoose__halfYear {
+         .controls-DateRangeChoose__quarter {
+            .controls-DateRangeChoose__month {
+               display: block;
+            }
+            .controls-DateRangeChoose__quarter-caption {
+               .controls-DateRangeChoose__container-caption()
+            }
+            .controls-DateRangeChoose__quarter-caption-text {
+               display: none;
+            }
+         }
+      }
+   }
+
+   &.controls-DateRangeChoose__showCheckboxes {
+      .controls-DateRangeChoose__halfYear .controls-DateRangeChoose__quarter .controls-DateRangeChoose__quarter-caption {
+         text-align: left;
+      }
+   }
+   .controls-DateRangeChoose__home {
+      margin: 4px auto;
+      display: block;
+   }
+
+   .controls-DateRangeChoose__yearsMode-wrapper>* {
+      cursor: pointer;
+      text-align: center;
+      height: @date-range-choose-year-height;
+      line-height: @date-range-choose-year-height;
+      &:hover {
+         background-color: @date-range-choose-bg-hover-color;
+      }
+   }
+   .controls-DateRangeChoose__yearsMode-bold {
+      font-weight: bold;
+   }
+
+   .controls-DateRangeChoose__yearsMode-prev,
+   .controls-DateRangeChoose__yearsMode-next {
+      cursor: pointer;
+      text-align: center;
+      height: @date-range-choose-year-height;
+      line-height: @date-range-choose-year-height;
+      font-size: @date-range-choose-year-prev-next-btns-font-size;
+      font-weight: @date-range-choose-year-prev-next-btns-font-weight;
+      &:hover {
+         color: @date-range-choose-hover-color;
+      }
+   }
+
+   .controls-DateRangeChoose__home {
+      height: 24px;
+      width: 24px;
+      font-size: 14px !important;
+      line-height: 22px !important;
+   }
+
+}
