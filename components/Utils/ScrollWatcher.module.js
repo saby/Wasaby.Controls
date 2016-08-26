@@ -103,9 +103,12 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
 
       getScrollContainer: function(){
          if (!this._options.element.length){
-            this._options.element = this._findScrollElement();
+            var element = this._findScrollElement();
+            if (element){
+               this._options.element = element;
+            }
          }
-         return this._options.element[0] || $('body');
+         return this._options.element.length ? this._options.element[0] : $('body')[0];
       },
 
       isScrollOnBottom: function(){
