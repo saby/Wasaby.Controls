@@ -124,6 +124,20 @@ define('js!SBIS3.CONTROLS.DragObject', [
       getTargetsControl: function () {
          return this._targetsControl;
       },
+      /**
+       * Возвращает html элемент над которым сейчас находится курсор
+       * @returns {*}
+       */
+      getTargetsDomElemet: function(){
+         if (this._jsEvent) {
+            if (this._jsEvent.type in {"touchmove":true, "touchend":true}) {
+               //для touch событий в таргете всегда лежит элемент над которым началось перетаскивание
+               return $(document.elementFromPoint(this._jsEvent.pageX, this._jsEvent.pageY));
+            } else {
+               return $(this._jsEvent.target);
+            }
+         }
+      },
       //region protected
       /**
        * @protected
@@ -150,12 +164,6 @@ define('js!SBIS3.CONTROLS.DragObject', [
          this._target = target;
       },
 
-      _preparePageXY: function (e) {
-         if (e.type === "touchstart" || e.type === "touchmove") {
-            e.pageX = e.originalEvent.touches[0].pageX;
-            e.pageY = e.originalEvent.touches[0].pageY;
-         }
-      },
       /**
        * устанавливает позицию аватара
        * @param  {Event} e
@@ -163,7 +171,6 @@ define('js!SBIS3.CONTROLS.DragObject', [
       _setAvatarPosition: function (e) {
          //смещение нужно чтобы событие onmouseup сработало над контролом, а не над аватаром
          if (this.getAvatar()) {
-            this._preparePageXY(e);
             this.getAvatar().css({
                'left': e.pageX + DRAG_AVATAR_OFFSET,
                'top': e.pageY + DRAG_AVATAR_OFFSET
@@ -174,7 +181,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
       onDragHandler: function (e) {
          if (this._jsEvent !== e) {
             this._jsEvent = e;
-            this._targetsControl = $(e.target).wsControl();
+            this._targetsControl = $(this.getTargetsDomElemet()).wsControl();
             this._setAvatarPosition(e);
          }
       }
