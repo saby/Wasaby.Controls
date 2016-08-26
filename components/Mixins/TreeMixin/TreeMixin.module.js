@@ -554,7 +554,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             filter[this._searchParamName] = undefined;
             //Если бесконечный скролл был установлен в опции - вернем его
             this.setInfiniteScroll(this._options.infiniteScroll, true);
-            this.setGroupBy({});
             this.setHighlightText('', false);
             this.setFilter(filter, true);
             this.setCurrentRoot(id);

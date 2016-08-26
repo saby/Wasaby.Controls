@@ -1894,7 +1894,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var
             itemInstance;
          //Запускаем группировку если она есть. Иногда результат попадает в группровку и тогда отрисовывать item не надо
-         if (this._group(item, at, last) !== false) {
+         if (!Object.isEmpty(this._options.groupBy) && this._group(item, at, last) !== false) {
             itemInstance = this._createItemInstance(item);
             this._addItemAttributes(itemInstance, item);
          }
