@@ -80,7 +80,7 @@ gemini.suite('SBIS3.CONTROLS.SelectorButton Online', function () {
 
     gemini.suite('with_max_width', function (test) {
 
-        test.setUrl('/regression_selector_button_online_3.html').setCaptureElements('.capture')
+        test.setUrl('/regression_selector_button_online_3.html').skip('chrome').setCaptureElements('.capture')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="SelectorButton 1"]', 40000);
