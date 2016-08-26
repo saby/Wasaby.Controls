@@ -357,6 +357,31 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
             })
     });
 
+    gemini.suite('have_titles_24_and_more', function (test) {
+
+        test.setUrl('/regression_engine_browser_online_4.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="browserView"]', 40000);
+                this.view = find('[sbisname="browserView"]');
+                this.data2 = find('[data-id="2"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[sbisname="TextBox 1"] input');
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.input);
+            })
+
+            .capture('into_folder', function (actions) {
+                actions.click(this.data2);
+				actions.wait(500);
+				actions.executeJS(function (window) {
+                    window.$('[sbisname="browserView"] .controls-DataGridView__thead tr:nth-child(1) th:nth-child(3) .controls-DataGridView__th-content').html('Ara')
+                });
+            })
+    });
+
     gemini.suite('bread_crumbs_max_lenght', function (test) {
 
         test.setUrl('/regression_engine_browser_online_4.html').setCaptureElements('.capture')
