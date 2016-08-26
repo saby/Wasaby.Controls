@@ -2577,12 +2577,14 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          destroy: function () {
             this._destroyEditInPlace();
-            this._scrollWatcher.unsubscribe('onTotalScroll', this._onTotalScrollHandler);
-            if (this._options.scrollPaging){
-               this._scrollWatcher.unsubscribe('onScroll', this._onScrollHandler);
+            if (this._scrollWatcher) {
+               this._scrollWatcher.unsubscribe('onTotalScroll', this._onTotalScrollHandler);
+               this._scrollWatcher.destroy();
+               this._scrollWatcher = undefined;
+               if (this._options.scrollPaging){
+                  this._scrollWatcher.unsubscribe('onScroll', this._onScrollHandler);
+               }
             }
-            this._scrollWatcher.destroy();
-            this._scrollWatcher = undefined;
             if (this._pager) {
                this._pager.destroy();
                this._pager = undefined;
