@@ -99,7 +99,7 @@ define(
          var items = opts.items;
          if (items){
             for (var i = 0, l = opts.items.length; i < l; i++){
-               var tmpl = MarkupTransformer(TemplateUtil.prepareTemplate(items[i][opts.displayField])({
+               var tmpl = MarkupTransformer(TemplateUtil.prepareTemplate(items[i][opts.displayField] || '')({
                   item: items[i],
                   options: opts
                }));
