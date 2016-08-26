@@ -1095,8 +1095,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   e.preventDefault();
                   return false;
                } else if (e.which === $ws._const.key.enter && e.ctrlKey) {
-                  e.preventDefault();//по ctrl+enter не делаем дефолтного действия чтобы не менялось значение в редакторе
-                  self._typeInProcess = false; // тк по ctrl+enter Отработает дефолтная кнопка до keyup не дойдёт, и если в этот момент поставят текст то он не проставится
+                  e.preventDefault();//по ctrl+enter отменяем дефолтное(чтобы не было перевода строки лишнего), разрешаем всплытие
+                  self._typeInProcess = false; // не доходит до keyup
                }
                self._updateHeight();
             });
