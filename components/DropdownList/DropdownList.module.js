@@ -371,8 +371,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _drawItemsCallback: function() {
-            //Надо вызвать просто для того, чтобы отрисовалось выбранное значение/значения
-            this._drawSelectedItems(this._options.selectedKeys)
+            this._setSelectedItems(); //Обновим selectedItems, если пришел другой набор данных
+            this._drawSelectedItems(this._options.selectedKeys); //Надо вызвать просто для того, чтобы отрисовалось выбранное значение/значения
+            this._needToRedraw = true;
 
          },
          _dataLoadedCallback: function() {
