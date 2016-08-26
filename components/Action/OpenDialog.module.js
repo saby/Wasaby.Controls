@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.Action.OpenDialog', [
    'use strict';
 
    /**
-    * Действие открытия окна с заданным шаблоном
+    * Действие открытия диалога с заданным шаблоном
     * @class SBIS3.CONTROLS.Action.OpenDialog
     * @mixes SBIS3.CONTROLS.Action.DialogMixin
     * @public
