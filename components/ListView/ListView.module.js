@@ -2888,16 +2888,16 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._getResultsRecord();
          },
          _getResultsRecord: function(){
-            return this.getItems().getMetaData().results;
+            return this.getItems() && this.getItems().getMetaData().results;
          },
          _appendResultsContainer: function(container, resultRow){
             var position = this._addResultsMethod || (this._options.resultsPosition == 'top' ? 'prepend' : 'append');
-            this._removeDrawnResults();
+            this._removeDrawnResults(container);
             $(container)[position](resultRow);
-            this.reviveComponents();
+            this.reviveComponents(container);
          },
-         _removeDrawnResults: function(){
-            var resultRow = $('.controls-DataGridView__results', this.getContainer());
+         _removeDrawnResults: function(container){
+            var resultRow = $('.controls-DataGridView__results', container);
             if (resultRow.length){
                this._destroyControls(resultRow);
                resultRow.remove();
