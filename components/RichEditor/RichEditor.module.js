@@ -1831,16 +1831,16 @@ define('js!SBIS3.CONTROLS.RichEditor',
          },
          _scrollTo: function(target, side){
             var
-               underKeyboard = function(){
+               isUnderKeyboard = function(){
                   var
                      targetOffset = target[0].getBoundingClientRect(),
                      сoef = (window.innerHeight > window.innerWidth) ? constants.ipadCoefficient[side].vertical : constants.ipadCoefficient[side].horizontal; //Для альбома и портрета коэффициенты разные.
                   return $ws._const.browser.isMobileIOS && this.isEnabled() && targetOffset[side] > window.innerHeight*сoef;
                };
-            if (underKeyboard() && target.prev()[0] && side === 'bottom') { //пытаемся подсколиться к предыдущему если осуществляется ввод
+            if (isUnderKeyboard() && target.prev()[0] && side === 'bottom') { //пытаемся подсколиться к предыдущему если осуществляется ввод
                   target.prev()[0].scrollIntoView(true);
             }
-            if (underKeyboard()) {//если таргет всё еще под клавиатурой то делаем доскрол к нему
+            if (isUnderKeyboard()) {//если таргет всё еще под клавиатурой то делаем доскрол к нему
                target[0].scrollIntoView(true);
             }
          },
