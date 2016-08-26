@@ -1820,7 +1820,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             var curHeight;
             if (this.isVisible()) {
                if (this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this._textChanged && (this._inputControl[0] === document.activeElement)) {
-                  this._scrollToPrev(this._tinyEditor.selection.getNode());
+                  this._scrollToPrev($(this._tinyEditor.selection.getNode()).closest('p')[0]);//необходимо передавать абзац
                }
                curHeight = this._container.height();
                if (curHeight !== this._lastHeight) {
