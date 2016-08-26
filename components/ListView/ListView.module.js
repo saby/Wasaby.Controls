@@ -2130,12 +2130,14 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollToItem(item.getId());
             }
          },
-         _scrollToItem: function(itemId) {
+         _scrollToItem: function(itemId, changeScrollTop) {
             ListView.superclass._scrollToItem.call(this, itemId);
-            var itemContainer = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
-            //TODO: будет работать только если есть infiniteScrollContainer, нужно сделать просто scrollContainer так как подгрузки может и не быть
-            if (this._options.infiniteScrollContainer && this._options.infiniteScrollContainer.length && itemContainer.length){
-               this._options.infiniteScrollContainer[0].scrollTop = itemContainer[0].offsetTop;
+            if (changeScrollTop) {
+               var itemContainer = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
+               //TODO: будет работать только если есть infiniteScrollContainer, нужно сделать просто scrollContainer так как подгрузки может и не быть
+               if (this._options.infiniteScrollContainer && this._options.infiniteScrollContainer.length && itemContainer.length) {
+                  this._options.infiniteScrollContainer[0].scrollTop = itemContainer[0].offsetTop;
+               }
             }
          },
          isScrollOnBottom: function(){
