@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.Utils.DialogOpener',[
 ], function (DialogRecord) {
    'use strict';
    var convertRecord = function(record) {
-      var rec, raw = record.getRaw();
+      var rec, raw = record.getRawData();
       if (raw.s && raw.d) {
          //TODO очень нужный метод
          var

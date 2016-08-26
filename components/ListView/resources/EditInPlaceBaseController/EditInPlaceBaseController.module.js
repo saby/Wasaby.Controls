@@ -354,8 +354,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         self._editingRecord = undefined;
                      }
                      if (isAdd) {
-                        eipRecord.set(eipRecord.getKeyField(), recordId);
-                        self._options.dataSet.push(eip._cloneWithFormat(eipRecord), self._options.dataSet);
+                        eipRecord.set(eipRecord.getIdProperty(), recordId);
+                        self._options.dataSet.add(eip._cloneWithFormat(eipRecord), self._options.dataSet);
                      }
                   }).addErrback(function(error) {
                      $ws.helpers.alert(error);

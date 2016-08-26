@@ -559,7 +559,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _createDefaultProjection: function(items) {
-         this._itemsProjection = Projection.getDefaultProjection(items);
+         this._itemsProjection = Projection.getDefaultDisplay(items);
       },
 
       _convertItems: function (items) {

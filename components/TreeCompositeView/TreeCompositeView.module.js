@@ -224,7 +224,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                   currentDataSet.getRecordByKey(row.key).merge(record);
                   self.redrawItem(record);
                } else { //Иначе - удаляем запись
-                  indexForRemove = currentDataSet.getIndexById(row.key);
+                  indexForRemove = currentDataSet.getIndexByValue(currentDataSet.getIdProperty(), row.key);
                   if (indexForRemove >= 0) {
                      currentDataSet.removeAt(indexForRemove);
                   }
@@ -233,7 +233,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                   row.$row.remove();
                   //Если количество записей в текущем DataSet меньше, чем в обновленном, то добавляем в него недостающую запись
                   if (needRedraw && currentDataSet.getCount() < dataSet.getCount()) {
-                     record = dataSet.getRecordByKey(dataSet.getRecordKeyByIndex(dataSet.getCount() - recordOffset));
+                     record = dataSet.at(dataSet.getCount() - recordOffset);
                      currentDataSet.addRecord(record);
                      self._drawItems([record]);
                   }
