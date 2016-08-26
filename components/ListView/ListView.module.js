@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.ListView',
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
-             Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
+             Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, emptyData, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder, Di, ArraySimpleValuesUtil) {
 
      'use strict';
@@ -1518,6 +1518,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }.bind(this),
                      onAfterBeginEdit: function(event, model) {
                         this._showToolbar(model);
+                        this.setSelectedKey(model.getId());
                         if (model.getState() === Record.RecordState.DETACHED) {
                            $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
                            $('.controls-ListView__item[data-id="' + model.getId() + '"]', this._container).addClass('controls-ListView__item__selected');
