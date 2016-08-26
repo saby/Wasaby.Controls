@@ -50,8 +50,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
              view.once('onDataLoad', function(event, data){
                 var root;
                 //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
-                if (this._options.backButton) {
-                   this._options.backButton.getContainer().css({'display': 'none'});
+                if (self._options.backButton) {
+                   self._options.backButton.getContainer().css({'display': 'none'});
                 }
                 afterSearchProcess.call(self, hierSearch, args, data, view, searchForm, searchParamName);
 
