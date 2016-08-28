@@ -2274,7 +2274,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (show) {
                setTimeout(function(){
                   if (!self.isDestroyed() && self._showedLoading) {
-                     scrollContainer = self._scrollWatcher.getScrollContainer();
+                     scrollContainer = self._getScrollContainer();
                      indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
                      if(indicator.length && scrollContainer && container[0].scrollHeight > scrollContainer.offsetHeight) {
                         /* Ищем кординату, которая находится по середине отображаемой области грида */
