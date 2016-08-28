@@ -527,10 +527,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          if (this._thead) {
             this._clearItems(this._thead);
-            this._thead.remove()
+            this._thead.remove();
          }
          this._thead = $(headMarkup).insertBefore(body);
 
+         this._drawResults();
          this._redrawColgroup();
          this.reviveComponents();
          this._bindHead();
