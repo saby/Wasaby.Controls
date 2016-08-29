@@ -42,10 +42,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
              if (this._options.breadCrumbs) {
                 this._options.breadCrumbs.setItems([]);
              }
-             //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
-             if (this._options.backButton) {
-                this._options.backButton.getContainer().css({'display': 'none'});
-             }
 
              if (searchMode == 'root'){
                 filter[view.getHierField()] = undefined;
@@ -53,7 +49,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
              view.once('onDataLoad', function(event, data){
                 var root;
-
+                //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
+                if (self._options.backButton) {
+                   self._options.backButton.getContainer().css({'display': 'none'});
+                }
                 afterSearchProcess.call(self, hierSearch, args, data, view, searchForm, searchParamName);
 
                 if (mode === 'root') {
