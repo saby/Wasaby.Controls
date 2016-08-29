@@ -442,6 +442,33 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
             })
     });
+
+    gemini.suite('items_actions_on_column_template_3', function (test) {
+
+        test.setUrl('/regression_data_grid_view_edit_at_place_online_19.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
+                this.item4 = find('[sbisname="ТипНоменклатуры"] [data-id="4"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[name="TextBox 1"] .controls-TextBox__field');
+				this.cancel = find('[title="Отмена"]');
+				this.save = find('[title="Сохранить"]');
+				this.editor_input = find('[sbisname="withoutNDS_bind"] input')
+            })
+
+            .capture('hovered_row', function (actions) {
+                actions.mouseMove(this.item4);
+            })
+
+            .capture('opened_editor', function (actions) {
+                actions.click(this.item4);
+				actions.wait(2000);
+				actions.mouseMove(this.input);
+				actions.click(this.editor_input);
+				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
+            })
+    });
 	
 	gemini.suite('add_new_data_in_folder_top', function (test) {
 

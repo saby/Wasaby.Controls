@@ -50,10 +50,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
              if (this._options.breadCrumbs) {
                 this._options.breadCrumbs.setItems([]);
              }
-             //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
-             if (this._options.backButton) {
-                this._options.backButton.getContainer().css({'display': 'none'});
-             }
 
              if (searchMode == 'root'){
                 filter[view.getHierField()] = undefined;
@@ -61,7 +57,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
              view.once('onDataLoad', function(event, data){
                 var root;
-
+                //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
+                if (self._options.backButton) {
+                   self._options.backButton.getContainer().css({'display': 'none'});
+                }
                 afterSearchProcess.call(self, hierSearch, args, data, view, searchForm, searchParamName);
 
                 if (mode === 'root') {
@@ -678,7 +677,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                         page = this._scrollPages[pageNumber - 1];
                         scrollToPage(page);
                      }.bind(this));
-                     view._loadNextPage();
+                     view._scrollLoadNextPage();
                   }
                this._currentScrollPage = pageNumber;
             }
@@ -761,12 +760,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             }
          }
          //Считаем оффсеты страниц начиная с последней (если ее нет - сначала)
-         listItems.slice(lastPageStart).each(function(){
-            var $this = $(this);
+         listItems.slice(lastPageStart ? lastPageStart + 1 : 0).each(function(){
+            var $this = $(this),
+               nextHeight = $this.next('.controls-ListView__item').outerHeight(true);
             pageHeight += $this.outerHeight(true);
             // Если набралось записей на выстору viewport'a добавим еще страницу
             var offsetTop = self._scrollPages.length == 1 ? self._offsetTop : 0;
-            if (pageHeight  > viewportHeight - offsetTop) {
+            if (pageHeight + nextHeight > viewportHeight - offsetTop) {
                self._pageOffset += pageHeight;
                self._scrollPages.push({
                   element: $this,
