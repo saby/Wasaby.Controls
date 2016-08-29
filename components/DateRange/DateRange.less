@@ -20,6 +20,7 @@
       margin: @date-range-icon-button-margin;
       position: relative;
 
+      // TODO: Когда сделают все кнопки синими при наведении убрать
       &.icon-primary.controls-IconButton.action-hover:hover {
          color: @date-range-icon-button-hover-color;
       }
@@ -31,4 +32,8 @@
       margin: @date-range-dash-margin;
       border-top: 1px solid @date-range-dash-color;
    }
+}
+// TODO: Когда сделают все кнопки синими при наведении убрать
+.controls-DateRange.ws-disabled .controls-DateRange__Button.icon-primary.controls-IconButton.action-hover.ws-disabled {
+   color: @gray-ccc-color !important;
 }

@@ -59,6 +59,27 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
             })
     });
 
+    gemini.suite('rich_editor_in_editor', function (test) {
+
+        test.setUrl('/regression_data_grid_view_edit_at_place_online_15.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
+                this.item3 = find('[sbisname="ТипНоменклатуры"] [data-id="3"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[name="TextBox 1"] .controls-TextBox__field');
+				this.editor_input = find('[sbisname="Содержимоеbind"] .controls-RichEditor__editorFrame')
+            })
+
+            .capture('opened_editor', function (actions) {
+                actions.click(this.item3);
+				actions.waitForElementToShow('[sbisname="Содержимоеbind"] .controls-RichEditor__editorFrame', 2000);
+				actions.click(this.editor_input);
+				actions.sendKeys(this.editor_input, gemini.ARROW_RIGHT);
+				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
+            })
+    });
+
 	gemini.suite('add_new_data_in_folder', function (test) {
 
         test.setUrl('/regression_data_grid_view_edit_at_place_online_5.html').setCaptureElements('.capture')
