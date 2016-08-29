@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
 
       projection.each(function (item) {
          if (item.isNode()) {
-            if (!lastNode || item.getParent() != lastNode) {
+            if (!lastNode || (item.getParent() != lastNode)) {
                pushPath(resRecords, curPath, cfg);
                curPath = [];
             }
