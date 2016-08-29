@@ -48,9 +48,9 @@
          font-weight: @date-range-choose-year-font-weight;
          text-align: center;
          height: @date-range-choose-year-height;
-         line-height: @date-range-choose-year-height;
+         line-height: @date-range-choose-year-height + 1;
          margin: 0 15px;
-         width: @date-range-choose-width - 6 - @date-range-choose-year-prev-next-btns-width*2 - 15*2;//54px;
+         width: @date-range-choose-width - 6 - @date-range-choose-year-prev-next-btns-width*2 - 15*2;
          vertical-align: middle;
          &:hover {
             background-color: @date-range-choose-bg-hover-color;
@@ -62,11 +62,12 @@
          cursor: pointer;
          display: inline-block;
          font-size: @date-range-choose-year-prev-next-btns-font-size;
-         font-weight: bold;
+         font-weight: @date-range-choose-year-prev-next-btns-font-weight;
          text-align: center;
          vertical-align: middle;
          height: @date-range-choose-year-height;
          width: @date-range-choose-year-prev-next-btns-width;
+         line-height: @date-range-choose-year-height;
          &:hover {
             color: @date-range-choose-hover-color;
          }
@@ -84,9 +85,6 @@
 
       &.controls-DateRangeChoose__selected {
          background-color: @date-range-choose-bg-hover-color;
-         .controls-DateRangeChoose__halfYear-caption {
-            color: @date-range-choose-hover-color2;
-         }
       }
 
       .controls-DateRangeChoose__halfYear-caption {
@@ -101,9 +99,6 @@
 
          &.controls-DateRangeChoose__selected {
             background-color: @date-range-choose-bg-hover-color;
-            .controls-DateRangeChoose__quarter-caption {
-               color: @date-range-choose-hover-color2;
-            }
          }
 
          .controls-DateRangeChoose__quarter-caption {
@@ -147,9 +142,6 @@
          .controls-DateRangeChoose__quarter {
             .controls-DateRangeChoose__quarter-caption {
                text-align: left;
-               &:hover {
-                  color: @date-range-choose-hover-color2;
-               }
             }
          }
       }

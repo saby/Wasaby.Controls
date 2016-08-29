@@ -119,8 +119,9 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
 
          container.find('.controls-DateRangeChoose__year-prev').click(this._onPrevYearBtnClick.bind(this));
          container.find('.controls-DateRangeChoose__year-next').click(this._onNextYearBtnClick.bind(this));
-         container.find('.controls-DateRangeChoose__yearsMode-prev').click(this._onPrevYearBtnClick.bind(this));
-         container.find('.controls-DateRangeChoose__yearsMode-next').click(this._onNextYearBtnClick.bind(this));
+         container.find('.controls-DateRangeChoose__yearsMode-prev').click(this._onNextYearBtnClick.bind(this));
+         container.find('.controls-DateRangeChoose__yearsMode-next').click(this._onPrevYearBtnClick.bind(this));
+         $ws.helpers.wheel(container.find(['.', this._cssDateRangeChoose.yearsModeWrapper].join('')), this._onMouseWheel.bind(this));
 
          container.find(['.', this._cssDateRangeChoose.halfYearCaption].join('')).click(this._onHalfYearClick.bind(this));
          container.find(['.', this._cssDateRangeChoose.quarterCaption].join('')).click(this._onQuarterClick.bind(this));
@@ -155,6 +156,14 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
 
       _updateYearView: function () {
          this.getContainer().find(['.', this._cssDateRangeChoose.yearButton].join('')).text(this.getYear());
+      },
+
+      _onMouseWheel: function (event) {
+         if (event.wheelDelta > 0) {
+            this._onNextYearBtnClick();
+         } else {
+            this._onPrevYearBtnClick();
+         }
       },
 
       _onHomeClick: function () {
@@ -255,7 +264,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
             checkedMonthEnd = this._options.checkedMonthEnd,
             year = this.getYear(),
             startIndex, endIndex,
-            containers;
+            containers, container;
 
          if (!checkedMonthStart && !checkedMonthEnd) {
             return;
@@ -263,21 +272,24 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
 
          checkedMonthStart = checkedMonthStart? checkedMonthStart.getMonth(): 0;
          checkedMonthEnd = checkedMonthEnd? checkedMonthEnd.getMonth(): 11;
-         if (!this._options.showMonths) {
-            containers = this.getContainer().find(['.', this._cssDateRangeChoose.quarter].join(''));
-            startIndex = Math.floor(checkedMonthStart/4);
-            endIndex = Math.floor(checkedMonthEnd/4);
-         } else {
+         if (this._options.showMonths) {
             containers = this.getContainer().find(['.', this._cssDateRangeChoose.month].join(''));
             startIndex = checkedMonthStart;
             endIndex = checkedMonthEnd;
+         } else {
+            containers = this.getContainer().find(['.', this._cssDateRangeChoose.quarter].join(''));
+            startIndex = Math.floor(checkedMonthStart/4);
+            endIndex = Math.floor(checkedMonthEnd/4);
          }
 
          containers.each(function (index) {
+            container = $(this).find(['>.', self._cssDateRangeChoose.checkbox].join(''));
             if (index >= startIndex && index <= endIndex) {
-               $(this).find(['>.', self._cssDateRangeChoose.checkbox].join('')).removeClass('icon-disabled').addClass('icon-done');
+               container.removeClass('icon-disabled').addClass('icon-done');
+               container.prop('title', rk('Период отчетности закрыт'));
             } else {
-               $(this).find(['>.', self._cssDateRangeChoose.checkbox].join('')).removeClass('icon-done').addClass('icon-disabled');
+               container.removeClass('icon-done').addClass('icon-disabled');
+               container.prop('title', rk('Период отчетности не закрыт'));
             }
          });
       },
@@ -285,8 +297,8 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
       // Режим года
       _onYearsModeWrapperClick: function (e) {
          var year = this.getYear(),
-            start = new Date(year + parseInt($(e.target).attr('data-range-id'), 10), 0, 1),
-            end = new Date(year + parseInt($(e.target).attr('data-range-id'), 10), 11, 31);
+            start = new Date(year - parseInt($(e.target).attr('data-range-id'), 10), 0, 1),
+            end = new Date(year - parseInt($(e.target).attr('data-range-id'), 10), 11, 31);
          this.setRange(start, end);
          this._notify('onChoose', start, end);
       },
@@ -301,7 +313,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          containers = this.getContainer().find(['.', this._cssDateRangeChoose.yearsModeWrapper, '>*'].join(''));
          containers.removeClass('controls-DateRangeChoose__yearsMode-bold');
          containers.each(function (index) {
-            year = self.getYear() + index;
+            year = self.getYear() - index;
             if (currentYear === year) {
                $(this).addClass('controls-DateRangeChoose__yearsMode-bold');
             }
