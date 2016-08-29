@@ -2,8 +2,13 @@
    display: inline-block;
    min-height: @DropdownList-min-height;
    box-sizing: @DropdownList-box-sizing;
+   max-width: 100%;
    .controls-DropdownList__selectedItem {
+      display: inline-flex;
+      width: 100%;
+      white-space: nowrap;
       font-size: 0;
+      vertical-align: middle;
       * {
          font-size: @font-basic-size;
       }
@@ -39,25 +44,32 @@
     }
   }
    .controls-DropdownList__selectedItem {
-      &> * {
-         display: inline-block;
-      }
-
-      &:hover {
-         .controls-DropdownList__arrowIcon {
-            color: @DropdownList-linkStyleHoverColor;
-         }
-      }
+     > * {
+       display: inline-block;
+     }
+     .controls-DropdownList__textWrapper{
+       flex-shrink: 1;
+       overflow: hidden;
+     }
    }
    .controls-DropdownList__beforeCaptionWrapper {
       display: inline-block;
       position: relative;
-      top: 2px;
+      top: 1px;
+      flex-shrink: 0;
+
+      .controls-DropdownList__arrowIcon {
+         display: inline-block;
+         &:hover{
+            &::before {content: "\e673";}
+         }
+      }
    }
    .controls-DropdownList__afterCaptionWrapper {
       display: inline-block;
       position: relative;
       top: 2px;
+      flex-shrink: 0;
 
       .controls-DropdownList__crossIcon {
          display: inline-block;
@@ -67,9 +79,6 @@
    &.controls-DropdownList__withoutArrow{
       & .controls-DropdownList__beforeCaptionWrapper{
          display: none;
-      }
-      .controls-DropdownList__textWrapper {
-         line-height: 24px;
       }
    }
    &.controls-DropdownList__withoutCross, &.ws-disabled{

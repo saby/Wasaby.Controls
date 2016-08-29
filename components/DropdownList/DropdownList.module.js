@@ -501,10 +501,17 @@ define('js!SBIS3.CONTROLS.DropdownList',
                      self._pickerHeadContainer.html(headTpl);
                      self._selectedItemContainer.html(headTpl);
                   }
+                  self._resizeFastDataFilter();
                   self.getContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
                   self._getPickerContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
                   self._setResetButtonVisibility(isDefaultIdSelected);
                });
+            }
+         },
+         _resizeFastDataFilter: function(){
+            var parent = this.getParent();
+            if ($ws.helpers.instanceOfModule(this.getParent(), 'SBIS3.CONTROLS.FastDataFilter')){
+               parent._recalcDropdownWidth();
             }
          },
          /**
