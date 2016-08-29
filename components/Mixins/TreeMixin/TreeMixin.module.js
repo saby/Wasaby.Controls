@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       }
    },
    searchProcessing = function(projection, cfg) {
-      var resRecords = [], lastNode, lastPushedNode, curPath = [];
+      var resRecords = [], lastNode, lastPushedNode, curPath = [], pathElem, curParentContents;
 
       function pushPath(records, path, cfg) {
          if (path.length) {
@@ -66,14 +66,23 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       }
 
       projection.each(function (item) {
-         if (item.isNode()) {
-            if (!lastNode || (item.getParent() != lastNode)) {
+         if ((item.getParent() != lastNode) && curPath.length) {
+            if (lastNode != lastPushedNode) {
                pushPath(resRecords, curPath, cfg);
-               curPath = [];
+               lastPushedNode = lastNode;
             }
-            var
-               curParentContents = item.getContents(),
-               pathElem = {};
+            while (curPath.length > 0) {
+               lastNode = curPath[curPath.length - 1]['projItem'];
+               if (item.getParent() == lastNode) {
+                  break;
+               }
+               curPath.pop();
+            }
+         }
+
+         if (item.isNode()) {
+            curParentContents = item.getContents();
+            pathElem = {};
             pathElem[cfg.keyField] = curParentContents.getId();
             pathElem[cfg.displayField] = curParentContents.get(cfg.displayField);
             pathElem['projItem'] = item;
@@ -81,29 +90,17 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             lastNode = item;
          }
          else {
-            if (item.getParent() == lastPushedNode)  {
-               resRecords.push(item);
+            if (lastNode != lastPushedNode) {
+               pushPath(resRecords, curPath, cfg);
+               lastPushedNode = lastNode;
             }
-            else {
-               lastNode = curPath.pop()['projItem'];
-               while (curPath.length > 0) {
-                  if (item.getParent() == lastNode) {
-                     pushPath(resRecords, curPath, cfg);
-                     lastPushedNode = lastNode;
-                     resRecords.push(item);
-                     break;
-                  }
-                  lastNode = curPath.pop()['projItem'];
-               }
-               if (resRecords.length == 0) {
-                  resRecords.push(item);
-               }
-            }
+            resRecords.push(item);
          }
       });
 
-      if (curPath.length) {
+      if ((curPath.length) && (lastNode != lastPushedNode)){
          pushPath(resRecords, curPath, cfg);
+         lastPushedNode = lastNode;
       }
 
       return resRecords;
