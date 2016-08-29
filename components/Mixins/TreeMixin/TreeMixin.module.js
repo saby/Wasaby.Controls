@@ -51,14 +51,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       }
    },
    searchProcessing = function(projection, cfg) {
-      var resRecords = [], lastNode, curPath = [];
+      var resRecords = [], lastNode, lastPushedNode, curPath = [];
 
       function pushPath(records, path, cfg) {
          if (path.length) {
             records.push({
                tpl: cfg._defaultSearchRender,
                data: {
-                  path: path,
+                  path: $ws.core.clone(path),
                   viewCfg: cfg._getSearchCfg(cfg)
                }
             });
@@ -76,13 +76,29 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                pathElem = {};
             pathElem[cfg.keyField] = curParentContents.getId();
             pathElem[cfg.displayField] = curParentContents.get(cfg.displayField);
+            pathElem['projItem'] = item;
             curPath.push(pathElem);
             lastNode = item;
          }
          else {
-            pushPath(resRecords, curPath, cfg);
-            curPath = [];
-            resRecords.push(item);
+            if (item.getParent() == lastPushedNode)  {
+               resRecords.push(item);
+            }
+            else {
+               lastNode = curPath.pop()['projItem'];
+               while (curPath.length > 0) {
+                  if (item.getParent() == lastNode) {
+                     pushPath(resRecords, curPath, cfg);
+                     lastPushedNode = lastNode;
+                     resRecords.push(item);
+                     break;
+                  }
+                  lastNode = curPath.pop()['projItem'];
+               }
+               if (resRecords.length == 0) {
+                  resRecords.push(item);
+               }
+            }
          }
       });
 
@@ -547,7 +563,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          if (this.isEnabled() && this._notify('onSearchPathClick', id) !== false ) {
 
 
-            var filter = $ws.core.merge(self.getFilter(), {
+            var filter = $ws.core.merge(this.getFilter(), {
                'Разворот' : 'Без разворота'
             });
             /*TODO решить с этим параметром*/
