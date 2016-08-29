@@ -4,11 +4,11 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
         'js!SBIS3.CONTROLS.Action.List.ListMixin',
         'js!SBIS3.CONTROLS.Action.DialogMixin',
         'js!WS.Data/Source/SbisService',
-        'js!WS.Data/Entity/Record',
+        'js!WS.Data/Entity/Model',
         'js!WS.Data/Adapter/Sbis',
         'js!WS.Data/Collection/RecordSet'
     ],
-    function (ActionBase, ListMixin, DialogMixin, SbisService, Record, SbisAdapter, RecordSet) {
+    function (ActionBase, ListMixin, DialogMixin, SbisService, Model, SbisAdapter, RecordSet) {
         'use strict';
         /**
          * Класс суммирования полей в списке
@@ -103,7 +103,6 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
             },
             _sum: function() {
                 var
-                    filter,
                     selectedRecordSet,
                     object = this.getLinkedObject(),
                     source = this.getDataSource(),
@@ -123,13 +122,7 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
                     args['Записи'] = selectedRecordSet;
                 } else {
                     args['ИмяМетода'] = source.getEndpoint().contract + '.' + source.getBinding().query;
-                    filter = object.getFilter();
-                    args['Фильтр'] = new Record({
-                        adapter: 'adapter.sbis',
-                        rawData: filter,
-                        //Если фильтр пустой, то нам нужно укзать пустой формат, чтобы при отпраке на бл пустой рекорд преобразовался в объект с полями d и s.
-                        format: Object.isEmpty(filter) ? [] : null
-                    });
+                    args['Фильтр'] = Model.fromObject(object.getFilter(), 'adapter.sbis');
                 }
 
                 return sumSource.call(isSelected ? 'ПоВыборке' : 'ПоМетоду', args);
