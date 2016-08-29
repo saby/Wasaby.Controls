@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          else {
             var nodeID;
             nodeID = $(target).closest('.controls-ListView__item').data('id');
-            if (this.getItems().getRecordByKey(nodeID).get(this._options.hierField + '@')) {
+            if (this.getItems().getRecordById(nodeID).get(this._options.hierField + '@')) {
                this.setCurrentRoot(nodeID);
                this.reload();
             }
@@ -216,12 +216,12 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             removeOrRedraw = function(dataSet, row, recordOffset) {
                var
                   indexForRemove,
-                  record = needRedraw ? dataSet.getRecordByKey(row.key) : false,
+                  record = needRedraw ? dataSet.getRecordById(row.key) : false,
                   environment = [row.$row.prev(), row.$row.next()];
 
                //Если запись найдена в обновленном DataSet, то перерисовываем её
                if (record) {
-                  currentDataSet.getRecordByKey(row.key).merge(record);
+                  currentDataSet.getRecordById(row.key).merge(record);
                   self.redrawItem(record);
                } else { //Иначе - удаляем запись
                   indexForRemove = currentDataSet.getIndexByValue(currentDataSet.getIdProperty(), row.key);
@@ -308,9 +308,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                   getBranch(branchId)
                      .addCallback(function(branchDataSet) {
                         $ws.helpers.forEach(branch, function(record, idx) {
-                           currentRecord = currentDataSet.getRecordByKey(record);
+                           currentRecord = currentDataSet.getRecordById(record);
                            dependentRecords = findDependentRecords(record, branchId);
-                           needRedraw = !!branchDataSet.getRecordByKey(record);
+                           needRedraw = !!branchDataSet.getRecordById(record);
                            //Удаляем то, что надо удалить и перерисовываем то, что надо перерисовать
                            removeAndRedraw(dependentRecords, branch.length - idx);
                         })

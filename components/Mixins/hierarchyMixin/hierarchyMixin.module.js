@@ -117,7 +117,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             var
                childKeys = indexTree[root] || [];
             for (var i = 0; i < childKeys.length; i++) {
-               var record = self._items.getRecordByKey(childKeys[i]);
+               var record = self._items.getRecordById(childKeys[i]);
                iterateCallback.call(this, record, root, curLvl);
                if (indexTree[childKeys[i]]) {
                   curLvl++;
@@ -285,7 +285,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       //Переопределяем метод, чтоб передать тип записи
       _activateItem : function(id) {
          var
-            item = this._items.getRecordByKey(id),
+            item = this._items.getRecordById(id),
             meta = {
                id: id,
                item: item,
