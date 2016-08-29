@@ -41,7 +41,8 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
             value: 'controls-DateRangeSlider__value',
             pickerContainer: 'controls-DateRangeSlider__pickerContainer',
             yearState: 'controls-DateRangeSlider__yearState'
-         }
+         },
+         _chooserControlClass: DateRangeChoose
       },
 
       $constructor: function () {
@@ -161,7 +162,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
 
          this._picker.getContainer().empty();
          // Преобразуем контейнер в контролл DateRangeChoose и запоминаем
-         self._chooserControl = new DateRangeChoose({
+         self._chooserControl = new this._chooserControlClass({
             parent: this._picker,
             element: element,
             startValue: this.getStartValue(),
