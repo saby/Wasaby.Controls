@@ -678,7 +678,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                         page = this._scrollPages[pageNumber - 1];
                         scrollToPage(page);
                      }.bind(this));
-                     view._loadNextPage();
+                     view._scrollLoadNextPage();
                   }
                this._currentScrollPage = pageNumber;
             }
