@@ -90,6 +90,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
                   parentProperty: this._options.parentProperty,
                   nodeProperty: this._options.nodeProperty,
                   childrenProperty: this._options.childrenProperty,
+                  unique: true,
                   root: this._options.root
                });
             }

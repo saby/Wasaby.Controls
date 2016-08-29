@@ -21,6 +21,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          parentProperty: cfg.hierField,
          nodeProperty: cfg.hierField + '@',
          loadedProperty: cfg.hierField + '$',
+         unique: true,
          root: root
       });
       var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
