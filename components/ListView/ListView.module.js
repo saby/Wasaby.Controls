@@ -729,7 +729,7 @@ define('js!SBIS3.CONTROLS.ListView',
                т.к. оно стреляет после тапа. После тапа событие mousemove имеет нулевой сдвиг, поэтому обрабатываем его как touch событие
                 + добавляю проверку, что до этого мы были в touch режиме,
                это надо например для тестов, в которых эмулирется событие mousemove так же без сдвига, как и на touch устройствах. */
-            this._setTouchSupport(Array.indexOf(['swipe', 'tap'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && $ws._const.compatibility.touch));
+            this._setTouchSupport(Array.indexOf(['swipe', 'tap'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && ($ws._const.compatibility.touch && e.originalEvent.touches)));
 
             switch (e.type) {
                case 'mousemove':
