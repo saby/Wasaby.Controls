@@ -142,6 +142,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                   this._subscribeItemToHandlers(instances[i])
                }
             }
+            this._recalcDropdownWidth();
          },
          _getCurrentContext : function(){
             return this.getLinkedContext();
@@ -179,6 +180,15 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                   }.bind(this));
                }
             });
+         },
+         _recalcDropdownWidth: function(){
+            var dropdownLists = $('.controls-DropdownList', this.getContainer());
+            dropdownLists.sort(function(el1, el2){
+               return $(el1).width() > $(el2).width();
+            });
+            for (var i = 0, l = dropdownLists.length; i < l; i++){
+               $(dropdownLists[i]).css('flex-shrink', i + 1);
+            }
          },
          _recalcInternalContext: function() {
             var
