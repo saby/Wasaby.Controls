@@ -1633,7 +1633,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                resultGroup,
                drawGroup,
                drawItem = true;
-         if (this._canApplyGrouping(item)) {
+         if (!Object.isEmpty(groupBy) && this._canApplyGrouping(item)) {
             resultGroup = groupBy.method.apply(this, [item.getContents(), at, last, item, this._options]);
             drawGroup = typeof resultGroup === 'boolean' ? resultGroup : (resultGroup instanceof Object && resultGroup.hasOwnProperty('drawGroup') ? !!resultGroup.drawGroup : false);
             drawItem = resultGroup instanceof Object && resultGroup.hasOwnProperty('drawItem') ? !!resultGroup.drawItem : true;
@@ -1894,7 +1894,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var
             itemInstance;
          //Запускаем группировку если она есть. Иногда результат попадает в группровку и тогда отрисовывать item не надо
-         if (!Object.isEmpty(this._options.groupBy) && this._group(item, at, last) !== false) {
+         if (this._group(item, at, last) !== false) {
             itemInstance = this._createItemInstance(item);
             this._addItemAttributes(itemInstance, item);
          }
