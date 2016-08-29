@@ -661,9 +661,6 @@ define('js!SBIS3.CONTROLS.ListView',
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
             _searchParamName: undefined, //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
-            _scrollOnBottom: true, // TODO: Придрот для скролла вниз при первой подгрузке. Если включена подгрузка вверх то изначально нужно проскроллить контейнер вниз,
-            //но после загрузки могут долетать данные (картинки в docviewer например), которые будут скроллить вверх.
-            _scrollOnBottomTimer: null, //TODO: см. строчкой выше
             _componentBinder: null,
             _touchSupport: false,
             _dragInitHandler: undefined //метод который инициализирует dragNdrop
@@ -794,12 +791,6 @@ define('js!SBIS3.CONTROLS.ListView',
                }
 
                this._scrollWatcher = new ScrollWatcher(scrollWatcherCfg);
-               if (this._options.infiniteScrollContainer){
-                  this._options.infiniteScrollContainer.on('touchmove wheel', function(){
-                     self._scrollOnBottom = false;
-                  });
-
-               }
                if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                   this._createScrollPager();
                }
@@ -1334,19 +1325,6 @@ define('js!SBIS3.CONTROLS.ListView',
             return ListView.superclass.reload.apply(this, arguments);
          },
 
-         setFilter: function(filter, noLoad){
-            if (!noLoad) {
-               this._resetScrollMark();
-            }
-            ListView.superclass.setFilter.apply(this, arguments);
-         },
-
-         _resetScrollMark: function(){
-            if (this._options.infiniteScroll == 'up'){
-               this._scrollOnBottom = true;
-            }
-         },
-
          _reloadInfiniteScrollParams : function(){
             if (this.isInfiniteScroll()) {
                this._scrollOffset.top = this._offset;
@@ -1576,24 +1554,8 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onBeginEdit', model));
                      }.bind(this),
                      onAfterBeginEdit: function(event, model) {
-                        var itemsInstances;
-                        if (this._options.editMode.indexOf('toolbar') !== -1) {
-                           this._getItemsToolbar().unlockToolbar();
-                           //Отображаем кнопки редактирования
-                           this._getItemsToolbar().showEditActions();
-                           if (model.getState() === Record.RecordState.DETACHED) {
-                              if (this.getItemsActions()) {
-                                 itemsInstances = this.getItemsActions().getItemsInstances();
-                                 if (itemsInstances['delete']) {
-                                    this._lastDeleteActionState = itemsInstances['delete'].isVisible();
-                                    itemsInstances['delete'].hide();
-                                 }
-                              }
-                           }
-                           //Отображаем itemsToolbar для редактируемого элемента и фиксируем его
-                           this._showItemsToolbar(this._getElementData(this._editingItem.target));
-                           this._getItemsToolbar().lockToolbar();
-                        }
+                        this._showToolbar(model);
+                        this.setSelectedKey(model.getId());
                         if (model.getState() === Record.RecordState.DETACHED) {
                            $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
                            $('.controls-ListView__item[data-id="' + model.getId() + '"]', this._container).addClass('controls-ListView__item__selected');
@@ -1618,26 +1580,54 @@ define('js!SBIS3.CONTROLS.ListView',
                      onAfterEndEdit: function(event, model, target, withSaving) {
                         this.setSelectedKey(model.getId());
                         event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
-                        if (this._options.editMode.indexOf('toolbar') !== -1) {
-                           //Скрываем кнопки редактирования
-                           this._getItemsToolbar().unlockToolbar();
-                           this._getItemsToolbar().hideEditActions();
-                           if (this._lastDeleteActionState !== undefined) {
-                              this.getItemsActions().getItemsInstances()['delete'].toggle(this._lastDeleteActionState);
-                              this._lastDeleteActionState = undefined;
-                           }
-                           // Если после редактирования более hoveredItem остался - то нотифицируем об его изменении, в остальных случаях просто скрываем тулбар
-                           if (this.getHoveredItem().container) {
-                              this._notifyOnChangeHoveredItem();
-                           } else {
-                              this._hideItemsToolbar();
-                           }
-                        }
+                        this._hideToolbar();
+                     }.bind(this),
+                     onDestroy: function() {
+                        //При разрушении редактирования скрывает toolbar. Иначе это ни кто не сделает. А разрушение могло
+                        //произойти например из-за setEnabled(false) у ListView
+                        this._hideToolbar();
                         this._toggleEmptyData(!this.getItems().getCount());
                      }.bind(this)
                   }
                };
             return config;
+         },
+         _showToolbar: function(model) {
+            var itemsInstances;
+            if (this._options.editMode.indexOf('toolbar') !== -1) {
+               this._getItemsToolbar().unlockToolbar();
+               //Отображаем кнопки редактирования
+               this._getItemsToolbar().showEditActions();
+               if (model.getState() === Record.RecordState.DETACHED) {
+                  if (this.getItemsActions()) {
+                     itemsInstances = this.getItemsActions().getItemsInstances();
+                     if (itemsInstances['delete']) {
+                        this._lastDeleteActionState = itemsInstances['delete'].isVisible();
+                        itemsInstances['delete'].hide();
+                     }
+                  }
+               }
+               //Отображаем itemsToolbar для редактируемого элемента и фиксируем его
+               this._showItemsToolbar(this._getElementData(this._editingItem.target));
+               this._getItemsToolbar().lockToolbar();
+            }
+         },
+         _hideToolbar: function() {
+            if (this._options.editMode.indexOf('toolbar') !== -1) {
+               //Скрываем кнопки редактирования
+               this._getItemsToolbar().unlockToolbar();
+               this._getItemsToolbar().hideEditActions();
+               if (this._lastDeleteActionState !== undefined) {
+                  this.getItemsActions().getItemsInstances()['delete'].toggle(this._lastDeleteActionState);
+                  this._lastDeleteActionState = undefined;
+               }
+               // Если после редактирования более hoveredItem остался - то нотифицируем об его изменении, в остальных случаях просто скрываем тулбар
+               if (this.getHoveredItem().container) {
+                  this._notifyOnChangeHoveredItem();
+               } else {
+                  this._hideItemsToolbar();
+               }
+            }
          },
 
          _getElementByModel: function(item) {
@@ -1937,6 +1927,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
 
+            //FixMe: Из за этого при каждой подгрузке по скроллу пэйджинг пересчитывается полностью
             if (this._scrollBinder){
                this._scrollBinder._updateScrollPages(true);
             }
@@ -1949,9 +1940,6 @@ define('js!SBIS3.CONTROLS.ListView',
          _onResizeHandler: function(){
             var self = this;
             if (this.getItems()){
-               if (this._options.infiniteScroll == 'up' && this._scrollOnBottom){
-                  self._scrollWatcher && self._scrollWatcher.scrollTo('bottom');
-               }
                //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
                if (this._scrollWatcher && !this._scrollWatcher.hasScroll()){
                   this._loadNextPage();
@@ -2716,7 +2704,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                 id,
                 target;
-            target = this._findItemByElement($(e.target));
+            target = this._findItemByElement(dragObject.getTargetsDomElemet());
             //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
             //она есть в _items(например при добавлении или фейковый корень). Метод _findItemByElement в данном случае вернёт
             //пустой массив. В .150 править этот метод опасно, потому что он много где используется. В .200 переписать метод
@@ -2770,8 +2758,8 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws.helpers.instanceOfModule(dragObject.getSource().at(0), 'js!SBIS3.CONTROLS.DragEntity.Row');
          },
 
-         _getDragTarget: function(e) {
-            var target = this._findItemByElement($(e.target)),
+         _getDragTarget: function(dragObject) {
+            var target = this._findItemByElement(dragObject.getTargetsDomElemet()),
                item;
 
             if (target.length > 0) {
@@ -2782,10 +2770,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _updateDragTarget: function(dragObject, e) {
-            var model = this._getDragTarget(e),
+            var model = this._getDragTarget(dragObject),
                target;
             if (model) {
-               var domElement = this._findItemByElement($(e.target)),
+               var domElement = this._findItemByElement($(dragObject.getTargetsDomElemet())),
                   position = this._getDirectionOrderChange(e, domElement) || DRAG_META_INSERT.on;
                if (position !== DRAG_META_INSERT.on && dragObject.getOwner() === this) {
                   var neighborItem = this[position === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](model.getId()),
@@ -2913,16 +2901,17 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._getResultsRecord();
          },
          _getResultsRecord: function(){
-            return this.getItems().getMetaData().results;
+            return this.getItems() && this.getItems().getMetaData().results;
          },
          _appendResultsContainer: function(container, resultRow){
             var position = this._addResultsMethod || (this._options.resultsPosition == 'top' ? 'prepend' : 'append');
-            this._removeDrawnResults();
+            this._removeDrawnResults(container);
             $(container)[position](resultRow);
-            this.reviveComponents();
+            this.reviveComponents(container);
          },
-         _removeDrawnResults: function(){
-            var resultRow = $('.controls-DataGridView__results', this.getContainer());
+         _removeDrawnResults: function(container){
+            var resContainer = container || this._getResultsContainer();
+            var resultRow = $('.controls-DataGridView__results', resContainer);
             if (resultRow.length){
                this._destroyControls(resultRow);
                resultRow.remove();
