@@ -355,7 +355,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      }
                      if (isAdd) {
                         eipRecord.set(eipRecord.getIdProperty(), recordId);
-                        self._options.dataSet.add(eip._cloneWithFormat(eipRecord), self._options.dataSet);
+                        self._options.dataSet.add(eip._cloneWithFormat(eipRecord, self._options.dataSet));
                      }
                   }).addErrback(function(error) {
                      $ws.helpers.alert(error);
