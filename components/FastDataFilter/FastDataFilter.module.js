@@ -92,24 +92,39 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          init: function () {
             FastDataFilter.superclass.init.apply(this, arguments);
             this._container.removeClass('ws-area');
-            //Непонятно, сейчас приходится делать setItems из прикладного кода
-            //this.reload();
          },
          _getItemTemplate: function(item) {
-            var  cfg = {
-               items: item.get('values'),
-               keyField: item.get('keyField'),
-               mode: this._options.mode,
-               multiselect : !!item.get('multiselect'),
-               showSelectedInList : !!item.get('showSelectedInList'),
-               displayField: item.get('displayField'),
-               className: item.get('className') || 'controls-DropdownList__linkStyle',
-               pickerClassName: (item.get('pickerClassName') + ' controls-DropdownList__picker') || 'controls-DropdownList__picker',
-               dataSource: item.get('dataSource'),
-               filter: item.get('filter'),
-               allowDblClick: !!item.get('allowDblClick'),
-               name: item.get('name')
-            };
+            var self = this,
+                cfg = {
+                   items: item.get('values'),
+                   keyField: item.get('keyField'),
+                   mode: this._options.mode,
+                   multiselect : !!item.get('multiselect'),
+                   showSelectedInList : !!item.get('showSelectedInList'),
+                   displayField: item.get('displayField'),
+                   className: item.get('className') || 'controls-DropdownList__linkStyle',
+                   pickerClassName: (item.get('pickerClassName') + ' controls-DropdownList__picker') || 'controls-DropdownList__picker',
+                   dataSource: item.get('dataSource'),
+                   filter: item.get('filter'),
+                   allowDblClick: !!item.get('allowDblClick'),
+                   name: item.get('name')
+                   pickerConfig: {
+                      handlers: {
+                         onShow: function () {
+                            /* По стандарту: в быстрых фильтрах может одновременно отображаться лишь одна выпадашка,
+                               особенно актуально это для выпадашек с множественным выбором, т.к. они не скрываются
+                               при уведении мыши, если там отметить запись чекбоксом */
+                            var hasVisibleDDList = $ws.helpers.find(self.getItemsInstances(), function (instance) {
+                               return instance !== this.getParent() && instance.isPickerVisible()
+                            }.bind(this));
+
+                            if(hasVisibleDDList) {
+                               this.hide();
+                            }
+                         }
+                      }
+                   }
+                };
             if(item.has('headTemplate')){
                cfg.headTemplate = item.get('headTemplate');
             }
@@ -119,10 +134,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             if(item.has('includedTemplates')){
                cfg.includedTemplates = item.get('includedTemplates');
             }
-            return '<component data-component="SBIS3.CONTROLS.DropdownList" config="' + $ws.helpers.encodeCfgAttr(cfg) + '">' +
-                        //'<opts name="selectedKeys" type="array" bind="' + cfg.filterName +'" ></opts>' + //direction="fromProperty" oneWay="true"
-                        //'<opt name="caption" type="array" bind="'+ cfg.displayField +'" direction="fromProperty" oneWay="true"></opt>' +
-                   '</component>';
+            return '<component data-component="SBIS3.CONTROLS.DropdownList" config="' + $ws.helpers.encodeCfgAttr(cfg) + '"></component>';
          },
          _drawItemsCallback: function(){
             var instances = this.getItemsInstances();
@@ -137,12 +149,14 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          },
          _subscribeItemToHandlers : function(item){
             var self = this;
-            item.subscribe('onClickMore', function(){
+
+            this.subscribeTo(item, 'onClickMore', function(){
                self._notify('onClickMore', item);
             });
-            item.subscribe('onSelectedItemsChange', function(event, idArray){
+
+            this.subscribeTo(item, 'onSelectedItemsChange', function(event, idArray){
                var idx = self._getFilterSctructureItemIndex(this.getContainer().data('id')),
-                  text = [], ds,
+                   text = [], ds,
                //Если выбрали дефолтное значение, то нужно взять из resetValue
                //TODO может быть всегда отдавать массивом?
                    filterValue =  idArray.length === 1 && (idArray[0] === this.getDefaultId()) && self._filterStructure[idx] ? self._filterStructure[idx].resetValue :
