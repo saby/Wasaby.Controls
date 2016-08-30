@@ -401,7 +401,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             }
             //Если данные пришли, нарисуем
             if (dataSet.getCount()) {
-               var records = dataSet._getRecords();
+               var records = dataSet.toArray();
                self._items.merge(dataSet, {remove: false});
                self._items.getTreeIndex(self._options.hierField, true);
                self._drawItemsFolderLoad(records, id);
