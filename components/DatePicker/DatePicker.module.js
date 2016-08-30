@@ -276,7 +276,9 @@ define(
       */
       setText: function (text) {
          this._dateBox.setText(text);
-         // this._options.date = text == '' ? null : this._getDateByText(text, this._options.date);
+      },
+      getText: function() {
+        return this._dateBox.getText();
       },
 
       /**
