@@ -4,13 +4,13 @@
       visible = it.item.get('visible'),
       cssClass = it.item.get('cssClass'),
       allowChangeEnable = it.item.get('allowChangeEnable'),
-      showMode = it.item.get('showMode'); }}
+      viewMode = it.item.get('toolbarViewMode'); }}
 
 <component data-component="SBIS3.CONTROLS.Link" class="controls-ItemActions__item {{? cssClass !== undefined }}{{= cssClass }}{{?}}">
     {{? allowChangeEnable !== undefined }}<option name="allowChangeEnable" type="boolean">{{= allowChangeEnable }}</option>{{?}}
     {{? visible !== undefined }}<option name="visible" type="boolean">{{= visible }}</option>{{?}}
-    {{? icon && showMode !== 'link'}}<option name="icon">{{= icon }}</option>{{?}}
-    {{? (caption && !icon) || (caption && showMode === 'iconLink')}}<option name="caption">{{= caption }}</option>{{?}}
+    {{? icon && viewMode !== 'caption'}}<option name="icon">{{= icon }}</option>{{?}}
+    {{? (caption && !icon) || (caption && viewMode === 'caption')}}<option name="caption">{{= caption }}</option>{{?}}
     {{? it.item.get('tooltip') }}<option name="tooltip">{{= it.item.get('tooltip')}}</option>{{?}}
 </component>
 WS-EXPERT-->
