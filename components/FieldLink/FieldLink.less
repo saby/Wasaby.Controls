@@ -151,7 +151,7 @@
 /* т.к. на Ipad'e автодополнение отображается по умолчанию вверх,
    то это надо учитывать при инвертировании списка */
 .ws-is-mobile-safari {
-   .controls-FieldLink__picker.controls-Suggest__picker.controls-popup-revert-vertical {
+   .controls-FieldLink__picker.controls-Suggest__picker.controls-Suggest__picker-delayedRevert-vertical {
       .controls-ListView {
          .controls-ListView__itemsContainer, .controls-DataGridView__tbody {
             .transform(rotate(0));
@@ -163,7 +163,7 @@
          }
       }
    }
-   .controls-FieldLink__picker.controls-Suggest__picker:not(.controls-popup-revert-vertical) {
+   .controls-FieldLink__picker.controls-Suggest__picker:not(.controls-Suggest__picker-delayedRevert-vertical) {
       .controls-ListView {
          .controls-ListView__itemsContainer, .controls-DataGridView__tbody {
             .transform(rotate(@suggest-picker-invertVal));
