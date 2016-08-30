@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   self = this,
                   nextTarget = this._getNextTarget(currentTarget, editNextRow);
                if (nextTarget.length && !this._options.modeSingleEdit) {
-                  this.edit(nextTarget, this._options.dataSet.getRecordByKey(nextTarget.attr('data-id'))).addCallback(function(result) {
+                  this.edit(nextTarget, this._options.dataSet.getRecordById(nextTarget.attr('data-id'))).addCallback(function(result) {
                      if (!result) {
                         self._editNextTarget(nextTarget, editNextRow);
                      }
@@ -354,8 +354,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         self._editingRecord = undefined;
                      }
                      if (isAdd) {
-                        eipRecord.set(eipRecord.getKeyField(), recordId);
-                        self._options.dataSet.push(eip._cloneWithFormat(eipRecord), self._options.dataSet);
+                        eipRecord.set(eipRecord.getIdProperty(), recordId);
+                        self._options.dataSet.add(eip._cloneWithFormat(eipRecord, self._options.dataSet));
                      }
                   }).addErrback(function(error) {
                      $ws.helpers.alert(error);

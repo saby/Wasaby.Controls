@@ -176,7 +176,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _getFolderFooterOptions: function(key) {
          return {
             key: key,
-            item: this.getItems().getRecordByKey(key),
+            item: this.getItems().getRecordById(key),
             level: this._getItemProjectionByItemId(key).getLevel(),
             footerTpl: this._options.folderFooterTpl,
             multiselect: this._options.multiselect,
