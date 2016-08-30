@@ -9,17 +9,17 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
    'i18n!SBIS3.CONTROLS.Utils.DataProcessor'
 ], function(Source, Serializer, LoadingIndicator, SbisService) {
    /**
-    * Обработчик данных для печати и выгрузки(экспорта) в Excel, PDF.
-    * Печать осуществляется по готову xsl шаблону через xslt-преобразование
+    * Обработчик данных для печати и выгрузки(экспорта) в Excel, PDF. Печать осуществляется по готову XSL-шаблону через XSLT-преобразование.
     * Экспорт в Excel и PDF можно выполнить несколькими способами:
-    * 1) подготовить данные на клиенте и через xslt преобразовать в HTML, а дальше отправить на сервер
-    * 2) Подготовить либо данные, либо просто фильтр для списочного метода и отправить на сервер, где будет происходить
-    * обработка данных и их преобразование в Excel или PDF. В данном случае будет использован сервис file-transfer
+    * <ul>
+    *    <li>подготовить данные на клиенте и через xslt преобразовать в HTML, а дальше отправить на сервер.</li>
+    *    <li>Подготовить либо данные, либо просто фильтр для списочного метода и отправить на сервер, где будет происходить обработка данных и их преобразование в Excel или PDF. В данном случае будет использован сервис file-transfer.</li>
+    * </ul>
     * @class SBIS3.CONTROLS.Utils.DataProcessor
     * @author Крайнов Дмитрий Олегович
     * @public
     */
-   return $ws.core.extend(/** @lends SBIS3.CONTROLS.Utils.DataProcessor.prototype */{}, {
+   return $ws.core.extend({},/** @lends SBIS3.CONTROLS.Utils.DataProcessor.prototype */ {
 
       $protected: {
          _options: {
@@ -40,7 +40,8 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
              */
             columns: [],
             /**
-             * @cfg {String} Поле иерархии для обработки иерархических списков
+             * @cfg {String} Поле иерархии для обработки иерархических списков.
+             * @see root
              */
             hierField: undefined,
             /**
@@ -49,6 +50,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             openedPath : {},
             /**
              * @cfg {String} Корень иерархии
+             * @see hierField
              */
             root : undefined,
             /**

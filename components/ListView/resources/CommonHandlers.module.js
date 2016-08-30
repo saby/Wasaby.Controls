@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.CommonHandlers',['i18n!SBIS3.CONTROLS.CommonHandlers']
        */
       var CommonHandlers = /** @lends SBIS3.CONTROLS.CommonHandlers.prototype */{
          /**
-          * Удаляет записи из источника данных по переданным идентификаторам элементов коллекции.
+          * Удаляет записи из источника данных по переданным идентификаторам элементов коллекции. Может быть использована в качестве функции для {@link itemsActions}.
           * @remark
           * При использовании метода для в классе {@link SBIS3.CONTROLS.TreeCompositeView} или его наследниках, есть особенность перезагрузки данных.
           * Для режима отображения "Таблица" (table), который устанавливают с помощью опции {@link SBIS3.CONTROLS.CompositeViewMixin#viewMode}, производится частичная перезагрузка данных в узлах иерархии.
