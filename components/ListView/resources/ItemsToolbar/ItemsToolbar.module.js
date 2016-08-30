@@ -15,7 +15,12 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
     function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, MarkupTransformer) {
 
        'use strict';
-
+       /**
+        * @class SBIS3.CONTROLS.ItemsToolbar
+        * @extends SBIS3.CONTROLS.CompoundControl
+        * @author Авраменко Алексей Сергеевич
+        * @public
+        */
        var ItemsToolbar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.ItemsToolbar.prototype */ {
           $protected: {
              _dotTplFn: dotTplFn,
