@@ -1556,6 +1556,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         else {
                            this.setSelectedKey(model.getId());
                         }
+                        this.scrollToItem(model);
                         event.setResult(this._notify('onAfterBeginEdit', model));
                         this._toggleEmptyData(false);
                      }.bind(this),
@@ -2133,19 +2134,9 @@ define('js!SBIS3.CONTROLS.ListView',
           * Скролит табличное представление к указанному элементу
           * @param item Элемент, к которому осуществляется скролл
           */
-         scrollToItem: function(item, withoutScrollTop){
+         scrollToItem: function(item){
             if (item.getId && item.getId instanceof Function){
-               this._scrollToItem(item.getId(), withoutScrollTop);
-            }
-         },
-         _scrollToItem: function(itemId, withoutScrollTop) {
-            ListView.superclass._scrollToItem.call(this, itemId);
-            if (withoutScrollTop !== true) {
-               var itemContainer = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
-               //TODO: будет работать только если есть infiniteScrollContainer, нужно сделать просто scrollContainer так как подгрузки может и не быть
-               if (this._options.infiniteScrollContainer && this._options.infiniteScrollContainer.length && itemContainer.length) {
-                  this._options.infiniteScrollContainer[0].scrollTop = itemContainer[0].offsetTop;
-               }
+               this._scrollToItem(item.getId());
             }
          },
          isScrollOnBottom: function(){
