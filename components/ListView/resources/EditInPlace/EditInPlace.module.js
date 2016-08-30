@@ -98,8 +98,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                      }
                   }, this);
                } else {
-                  raw1 = this._editingRecord.getRaw();
-                  raw2 = this._previousRecordState.getRaw();
+                  raw1 = this._editingRecord.getRawData();
+                  raw2 = this._previousRecordState.getRawData();
                   for (var field in raw1) {
                      if (raw1.hasOwnProperty(field)) {
                         if (raw1[field] != raw2[field]) {

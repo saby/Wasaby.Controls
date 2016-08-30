@@ -762,7 +762,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             record;
 
          while(!hasItemInProjection && recordKey){
-            record = items.getRecordByKey(recordKey);
+            record = items.getRecordById(recordKey);
             hasItemInProjection = projection.getItemBySourceItem(record);
             //если hasItemInProjection = true - это значит что мы нашли запись, которая находится в раскрытом узле
             if (!hasItemInProjection){
