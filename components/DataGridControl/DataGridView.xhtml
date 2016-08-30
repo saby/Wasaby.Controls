@@ -48,4 +48,9 @@
    {{?it.footerTpl}}
       <div class="controls-ListView__footer">{{=it.footerTpl(it)}}</div>
    {{?}}
+   {{?it.infiniteScroll == 'demand'}}
+      <component data-component="SBIS3.CONTROLS.Link" name="loadMoreButton" class="controls-ListView__loadMoreButton">
+         <option name="caption">Еще...</option>
+      </component>
+   {{?}}
 </div>

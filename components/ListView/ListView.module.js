@@ -501,6 +501,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Может использоваться для загрузки истории сообщений, например.
                 * @variant down Подгружать данные при достижении дна контейнера (подгрузка "вниз").
                 * @variant up Подгружать данные при достижении верха контейнера (подгрузка "вверх").
+                * @variant demand Подгружать данные при нажатии на кнопку "Еще...".
                 * @variant null Не загружать данные по скроллу.
                 *
                 * @example
@@ -686,8 +687,8 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing()) {
                this.setGroupBy(this._options.groupBy, false);
             }
-            this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
+            this._prepareInfiniteScroll();
             if (!this._options._serverRender) {
                if (this.getItems()) {
                   this.redraw()
@@ -782,7 +783,14 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._createScrollPager();
                }
                this._scrollWatcher.subscribe('onTotalScroll', this._onTotalScrollHandler.bind(this));
+            } else if (this._options.infiniteScroll == 'demand'){
+               var loadMoreButton = this.getChildControlByName('loadMoreButton');
+               this.subscribeTo(loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
             }
+         },
+
+         _onLoadMoreButtonActivated: function(event){
+            this._loadNextPage('down');
          },
 
          _createScrollWatcher: function(){
@@ -1967,7 +1975,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see setInfiniteScroll
           */
          isInfiniteScroll: function () {
-            return this._allowInfiniteScroll && !!this._options.infiniteScroll;
+            var scrollLoad = this._options.infiniteScroll == 'down' || this._options.infiniteScroll == 'up';
+            return this._allowInfiniteScroll && scrollLoad;
          },
          /**
           *  Общая проверка и загрузка данных для всех событий по скроллу
