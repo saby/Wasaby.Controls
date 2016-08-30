@@ -327,7 +327,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
       //Переопределяем метод, чтоб передать тип записи
       _activateItem : function(id) {
          var
-            item = this._options._items.getRecordByKey(id),
+            item = this._options._items.getRecordById(id),
             meta = {
                id: id,
                item: item,

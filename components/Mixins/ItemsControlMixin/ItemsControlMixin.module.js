@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       };
    }
    var createDefaultProjection = function(items, cfg) {
-      var proj = Projection.getDefaultProjection(items);
+      var proj = Projection.getDefaultDisplay(items);
       if (cfg.itemsSortMethod) {
          proj.setSort(cfg.itemsSortMethod);
       }
