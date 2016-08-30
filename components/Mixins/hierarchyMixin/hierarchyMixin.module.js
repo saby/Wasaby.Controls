@@ -117,7 +117,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             var
                childKeys = indexTree[root] || [];
             for (var i = 0; i < childKeys.length; i++) {
-               var record = self._items.getRecordByKey(childKeys[i]);
+               var record = self._items.getRecordById(childKeys[i]);
                iterateCallback.call(this, record, root, curLvl);
                if (indexTree[childKeys[i]]) {
                   curLvl++;
@@ -141,7 +141,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             self = this;
          //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
          if (!Object.isEmpty(this._options.groupBy) && this._options.groupBy.field === this._searchParamName) {
-            return this._items._getRecords();
+            return this._items.toArray();
          }
          var path = this._options.openedPath;
          this.hierIterate(this._items , function(record) {
@@ -285,7 +285,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       //Переопределяем метод, чтоб передать тип записи
       _activateItem : function(id) {
          var
-            item = this._items.getRecordByKey(id),
+            item = this._items.getRecordById(id),
             meta = {
                id: id,
                item: item,

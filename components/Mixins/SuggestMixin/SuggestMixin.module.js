@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
     *
     * @mixin SBIS3.CONTROLS.SuggestMixin
     * @public
-    * @author Алексей Мальцев
+    * @author Крайнов Дмитрий Олегович
     */
 
    var SuggestMixin = /** @lends SBIS3.CONTROLS.SuggestMixin.prototype */{
