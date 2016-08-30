@@ -359,7 +359,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 *  - Если указан icon и caption будет отображаться как иконка.
                 * <ul>
                 *    <li>link - Операция отображается как ссылка (требуется обязательно указать caption).</li>
-                *    <li>iconLink - Операция отображается как иконка + сслыка (требуется обязательно указать icon и caption).</li>
                 * </ul>
                 * @property {String} caption Подпись на кнопке.
                 * <ul>
