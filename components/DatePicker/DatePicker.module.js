@@ -208,9 +208,8 @@ define(
        */
       _calendarInit: function() {
          var self = this;
-         this._calendarIcon = $('.js-controls-DatePicker__calendarIcon', this.getContainer().get(0));
          // Клик по иконке календарика
-         this._calendarIcon.click(function() {
+         this.getChildControlByName('CalendarButton').subscribe('onActivated', function() {
             if (self.isEnabled()) {
                self.togglePicker();
 
@@ -224,9 +223,6 @@ define(
 
       _setEnabled : function(enabled) {
          DatePicker.superclass._setEnabled.call(this, enabled);
-         if (this._options.isCalendarIconShown) {
-            this._calendarIcon.toggleClass('calendar-disabled', !enabled);
-         }
          if (this._picker && this._picker.isVisible()){
             this.hidePicker();
          }

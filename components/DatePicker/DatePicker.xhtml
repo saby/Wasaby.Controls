@@ -1,7 +1,12 @@
 <div class="controls-DatePicker">
     <div class="controls-DatePicker__calendarWrapper">
-        <a class="js-controls-DatePicker__calendarIcon controls-DatePicker__calendarIcon {{? !it.enabled }}calendar-disabled{{?}}">&nbsp;</a>
+        <component data-component="SBIS3.CONTROLS.IconButton" name="CalendarButton" class="controls-DatePicker__button">
+            <option name="caption">&#8211;</option>
+            <option name="tabindex" value="0"></option>
+            <option name="icon">sprite:icon-16 icon-Calendar2 icon-primary</option>
+        </component>
     </div>
+
     <component data-component="SBIS3.CONTROLS.DateBox" class="controls-DatePicker__dateBox">
         <option name="name">dateBox</option>
         <option name="mask">{{=it.mask}}</option>
