@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             if(key === null){
                key = 'null';
             }
-            pkColumnName = object._keyField;//TODO record.getKeyField()
+            pkColumnName = object._keyField;//TODO record.getIdProperty()
             parentElement.appendChild(recordElement = document.createElement('Record'));
 
             recordElement.setAttribute('RecordKey', key);

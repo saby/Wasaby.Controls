@@ -43,20 +43,21 @@
          display: none;
       }
    }
-   .controls-DropdownList__selectedItem > * {
-      display: inline-block;
+   .controls-DropdownList__selectedItem {
+      &> * {
+         display: inline-block;
+      }
+
+      &:hover {
+         .controls-DropdownList__arrowIcon {
+            color: @DropdownList-linkStyleHoverColor;
+         }
+      }
    }
    .controls-DropdownList__beforeCaptionWrapper {
       display: inline-block;
       position: relative;
       top: 2px;
-
-      .controls-DropdownList__arrowIcon {
-         display: inline-block;
-         &:hover{
-            &:before {content: "\e673";}
-         }
-      }
    }
    .controls-DropdownList__afterCaptionWrapper {
       display: inline-block;

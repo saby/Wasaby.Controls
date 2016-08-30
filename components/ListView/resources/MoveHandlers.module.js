@@ -150,14 +150,14 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
             toMap = path ? $.map(path.getChildItems(), function(elem) {
                return '' + elem;
             }) : [];
-         var record = dataSet.getRecordByKey(parentKey);
+         var record = dataSet.getRecordById(parentKey);
          while (record) {
             parentKey = '' + record.getId();
             if ($.inArray(parentKey, toMap) === -1) {
                toMap.push(parentKey);
             }
             parentKey = dataSet.getParentKey(record, hierField);
-            record = dataSet.getRecordByKey(parentKey);
+            record = dataSet.getRecordById(parentKey);
          }
          return toMap;
       },

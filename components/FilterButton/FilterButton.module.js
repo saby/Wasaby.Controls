@@ -70,6 +70,10 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 template: '',
                 /**
                  * @сfg {String} additionalFilterTemplate Шаблон для блока "Можно отобрать" на всплывающей панели.
+                 * @remark
+                 * Для блока дополнительных параметров рекомендуется использовать компоненты:
+                 * {@link SBIS3.CONTROLS.FilterLink} - ссылка, умеющая скрываться при клике.
+                 * {@link SBIS3.CONTROLS.FilterText} - текст с крестиком, скрытвается при клике на крестик.
                  * @example
                  * <pre>
                  *   <option name="additionalFilterTemplate" value="SBIS3.EDO.additionalFilters"/>

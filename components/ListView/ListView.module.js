@@ -957,7 +957,7 @@ define('js!SBIS3.CONTROLS.ListView',
                siblingItem = items.eq(index);
             }
             if (siblingItem)
-               return this.getItems().getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItemByDOM(siblingItem.data('id'), isNext);
+               return this.getItems().getRecordById(siblingItem.data('id')) ? siblingItem : this._getHtmlItemByDOM(siblingItem.data('id'), isNext);
             else
                return undefined;
          },
@@ -972,7 +972,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             if (target.length && this._isViewElement(target)) {
                id = this._getItemsProjection().getByHash(target.data('hash')).getContents().getId();
-               this._elemClickHandler(id, this.getItems().getRecordByKey(id), e.target, e);
+               this._elemClickHandler(id, this.getItems().getRecordById(id), e.target);
             }
             if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox')){
                $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
@@ -1556,6 +1556,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         else {
                            this.setSelectedKey(model.getId());
                         }
+                        this.scrollToItem(model);
                         event.setResult(this._notify('onAfterBeginEdit', model));
                         this._toggleEmptyData(false);
                      }.bind(this),
@@ -2133,19 +2134,9 @@ define('js!SBIS3.CONTROLS.ListView',
           * Скролит табличное представление к указанному элементу
           * @param item Элемент, к которому осуществляется скролл
           */
-         scrollToItem: function(item, withoutScrollTop){
+         scrollToItem: function(item){
             if (item.getId && item.getId instanceof Function){
-               this._scrollToItem(item.getId(), withoutScrollTop);
-            }
-         },
-         _scrollToItem: function(itemId, withoutScrollTop) {
-            ListView.superclass._scrollToItem.call(this, itemId);
-            if (withoutScrollTop !== true) {
-               var itemContainer = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
-               //TODO: будет работать только если есть infiniteScrollContainer, нужно сделать просто scrollContainer так как подгрузки может и не быть
-               if (this._options.infiniteScrollContainer && this._options.infiniteScrollContainer.length && itemContainer.length) {
-                  this._options.infiniteScrollContainer[0].scrollTop = itemContainer[0].offsetTop;
-               }
+               this._scrollToItem(item.getId());
             }
          },
          isScrollOnBottom: function(){
@@ -2486,7 +2477,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see commitEdit
           */
          _activateItem : function(id) {
-            var item = this.getItems().getRecordByKey(id);
+            var item = this.getItems().getRecordById(id);
             this._notify('onItemActivate', {id: id, item: item});
          },
          /**
@@ -2593,12 +2584,12 @@ define('js!SBIS3.CONTROLS.ListView',
          destroy: function () {
             this._destroyEditInPlace();
             if (this._scrollWatcher) {
-               this._scrollWatcher.unsubscribe('onTotalScroll', this._onTotalScrollHandler);
-               this._scrollWatcher.destroy();
-               this._scrollWatcher = undefined;
                if (this._options.scrollPaging){
                   this._scrollWatcher.unsubscribe('onScroll', this._onScrollHandler);
                }
+               this._scrollWatcher.unsubscribe('onTotalScroll', this._onTotalScrollHandler);
+               this._scrollWatcher.destroy();
+               this._scrollWatcher = undefined;
             }
             if (this._pager) {
                this._pager.destroy();
