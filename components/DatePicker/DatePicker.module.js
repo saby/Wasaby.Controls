@@ -139,6 +139,21 @@ define(
              */
             date: null,
             /**
+             * @cfg {Boolean} Показана ли иконка календарика.
+             * @remark
+             * Если {@link mask маска} представляет собой только время, то автоматически иконка календарика прячется, т.е. значение
+             * опции самостоятельно сменится на false.
+             * @example
+             * <pre>
+             *     <option name="isCalendarIconShown">false</option>
+             * </pre>
+             * @see date
+             * @see mask
+             * @see setDate
+             * @deprecated
+             */
+            isCalendarIconShown: true,
+            /**
              * @cfg {String} Режим уведомления о смене даты.
              * @variant 'complete' событие onDateChange стреляет только при окончании работы с полем даты(уход фокуса, выбор даты из календаря или нажатие клавиши insert).
              * @variant 'change' событие onDateChange стреляет при каждом изменении значения даты.
@@ -172,6 +187,9 @@ define(
 
          this._dateBox = this.getChildControlByName('dateBox');
 
+         // Проверить тип маски -- дата, время или и дата, и время. В случае времени -- сделать isCalendarIconShown = false
+         this._checkTypeOfMask(this._options);
+
          // Первоначальная установка даты, если передана опция
          if ( this._options.date ) {
             this._dateBox._setDate( this._options.date );
@@ -192,6 +210,11 @@ define(
          this._container.removeClass('ws-area');
       },
 
+      _modifyOptions : function(options) {
+         this._checkTypeOfMask(options);
+         return DatePicker.superclass._modifyOptions.apply(this, arguments);
+      },
+
       _addDefaultValidator: function() {
          var self = this;
          //Добавляем к прикладным валидаторам стандартный, который проверяет что дата заполнена корректно.
@@ -207,18 +230,23 @@ define(
        * Инициализация календарика
        */
       _calendarInit: function() {
-         var self = this;
-         // Клик по иконке календарика
-         this.getChildControlByName('CalendarButton').subscribe('onActivated', function() {
-            if (self.isEnabled()) {
-               self.togglePicker();
+         var self = this,
+            button = this.getChildControlByName('CalendarButton');
+         if (self._options.isCalendarIconShown) {
+            // Клик по иконке календарика
+            button.subscribe('onActivated', function () {
+               if (self.isEnabled()) {
+                  self.togglePicker();
 
-               // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
-               if (self._picker.isVisible() && self._dateBox.getDate()){
-                  self._chooserControl.setStartValue(self._dateBox.getDate());
+                  // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
+                  if (self._picker.isVisible() && self._dateBox.getDate()) {
+                     self._chooserControl.setStartValue(self._dateBox.getDate());
+                  }
                }
-            }
-         });
+            });
+         } else {
+            button.getContainer().parent().addClass('ws-hidden');
+         }
       },
 
       _setEnabled : function(enabled) {
@@ -263,6 +291,16 @@ define(
       },
       _onChooserClose: function(event) {
          this.hidePicker();
+      },
+
+      /**
+       * Проверить тип даты. Скрыть иконку календаря, если отсутствуют день, месяц и год (т.е. присутствует только время)
+       * @private
+       */
+      _checkTypeOfMask: function (options) {
+         if (options.mask  &&  !/[DMY]/.test(options.mask) ) {
+            options.isCalendarIconShown = false;
+         }
       },
 
      /**
