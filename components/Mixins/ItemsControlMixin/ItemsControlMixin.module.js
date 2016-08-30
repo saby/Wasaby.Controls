@@ -583,6 +583,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       $constructor: function () {
          this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady', 'onPageSizeChange');
+         this._drawItemsCallbackDebounce = this._drawItemsCallback.debounce(0);
          if (typeof this._options.pageSize === 'string') {
             this._options.pageSize = this._options.pageSize * 1;
          }
@@ -979,7 +980,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _notifyOnDrawItems: function(lightVer) {
          this._notify('onDrawItems');
-         this._drawItemsCallback(lightVer);
+         this._drawItemsCallbackDebounce(lightVer);
       },
 
       _clearItems: function (container) {
@@ -1284,7 +1285,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    ) {
                       this._options._items.setMetaData(list.getMetaData());
                       this._options._items.assign(list);
-                      self._drawItemsCallback();
+                      self._drawItemsCallbackDebounce();
                    } else {
                       this._unsetItemsEventHandlers();
                       this._options._items = list;
@@ -2104,7 +2105,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._toggleEmptyData(!this._options._itemsProjection.getCount());
          //this._view.checkEmpty(); toggleEmtyData
          this.reviveComponents(); //надо?
-         this._drawItemsCallback();
+         this._drawItemsCallbackDebounce();
       },
       /**
        * Устанавливает метод сортировки элементов на клиенте.
@@ -2170,7 +2171,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 	            case IBindCollection.ACTION_REPLACE:
 	               this._onCollectionReplace(newItems);
 	               this.reviveComponents();
-                  this._drawItemsCallback();
+                  this._drawItemsCallbackDebounce();
 	               break;
 
 	            case IBindCollection.ACTION_RESET:
