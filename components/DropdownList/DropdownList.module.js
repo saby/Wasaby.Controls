@@ -221,7 +221,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             });
             if(this._options.mode === 'hover') {
                this._pickerHeadContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, true));
-               pickerContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, false));
+               this._pickerBodyContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, false));
+               pickerContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, null));
             }
             else if (this._options.mode === 'click'){
                this._pickerHeadContainer.click(this.hidePicker.bind(this));
@@ -368,9 +369,18 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _pickerMouseLeaveHandler: function(fromHeader, e) {
             var pickerContainer = this._picker.getContainer(),
-                toElement = $(e.toElement || e.relatedTarget);
+                toElement = $(e.toElement || e.relatedTarget),
+                containerToCheck;
 
-            if(this._hideAllowed && !toElement.closest(fromHeader ? this._pickerBodyContainer : pickerContainer, pickerContainer).length) {
+            if(fromHeader) {
+               containerToCheck = this._pickerBodyContainer;
+            } else if(fromHeader === null) {
+               containerToCheck = pickerContainer;
+            } else {
+               containerToCheck = $ws.helpers.hasScrollbar(pickerContainer) ? pickerContainer : this._pickerHeadContainer;
+            }
+
+            if(this._hideAllowed && !toElement.closest(containerToCheck, pickerContainer).length) {
                this.hidePicker();
             }
          },
