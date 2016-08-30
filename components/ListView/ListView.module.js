@@ -808,6 +808,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._scrollPager = new Paging({
                element: $('.controls-ListView__scrollPager', this._container),
                visible: false,
+               showPages: false,
                keyField: 'id',
                parent: this
             });
