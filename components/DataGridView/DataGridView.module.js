@@ -634,7 +634,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                targetColumnIndex = targetColumn.index();
             }
          }
-         event.setResult(this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true }, targetColumnIndex)
+         event.setResult(this.showEip(record, { isEdit: true }, targetColumnIndex)
             .addCallback(function(result) {
                return !result;
             })
@@ -642,8 +642,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
                return true;
             }));
       },
-      showEip: function(target, model, options, targetColumnIndex) {
-         return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().showEip(target, model, options) : $ws.proto.Deferred.fail();
+      showEip: function(model, options, targetColumnIndex) {
+         return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().showEip(model, options) : $ws.proto.Deferred.fail();
       },
       _canShowEip: function(targetColumnIndex) {
          var
