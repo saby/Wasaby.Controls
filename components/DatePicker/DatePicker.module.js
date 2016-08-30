@@ -200,7 +200,7 @@ define(
          }
 
          this._calendarInit();
-         this._addDefaultValidator();
+         // this._addDefaultValidator();
 
          this._dateBox.subscribe('onDateChange', this._notifyOnDateChanged.bind(this));
 
