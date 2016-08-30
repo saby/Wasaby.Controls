@@ -267,6 +267,21 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             if (this._list) {
                this._list.destroy();
             }
+         },
+
+         _initializePicker: function() {
+            /* Баг мобильной версии сафари на IOS, который неправильно рендерит элементы с translate при некоторых условиях,
+             решается таймаутом
+             https://bugs.webkit.org/show_bug.cgi?id=138162
+             */
+            if($ws._const.browser.isMobileIOS) {
+               this.subscribeTo(this._picker, 'onAlignmentChange', function () {
+                  var container = this.getContainer();
+                  setTimeout(function () {
+                     container.toggleClass('controls-Suggest__picker-delayedRevert-vertical', container.hasClass('controls-popup-revert-vertical'));
+                  }, 0);
+               });
+            }
          }
       },
 
