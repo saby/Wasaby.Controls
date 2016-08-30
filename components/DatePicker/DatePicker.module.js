@@ -9,11 +9,10 @@ define(
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'js!SBIS3.CONTROLS.DateRangeBigChoose',
       'html!SBIS3.CONTROLS.DatePicker',
-      'js!SBIS3.CONTROLS.FormWidgetMixin',
       'i18n!SBIS3.CONTROLS.DatePicker',
       'js!SBIS3.CONTROLS.DateBox'
    ],
-   function (CompoundControl, PickerMixin, DateUtil, DateRangeBigChoose, dotTplFn, FormWidgetMixin) {
+   function (CompoundControl, PickerMixin, DateUtil, DateRangeBigChoose, dotTplFn) {
 
    'use strict';
 
@@ -36,7 +35,7 @@ define(
     * @demo SBIS3.CONTROLS.Demo.MyDatePicker
     */
 
-   var DatePicker = CompoundControl.extend([PickerMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
+   var DatePicker = CompoundControl.extend([PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
        /**
         * @event onDateChange Происходит при изменении даты.
         * @remark
@@ -124,6 +123,7 @@ define(
              * @see isCalendarIconShow
              */
             mask: 'DD.MM.YY',
+            text: null,
             /**
              * @cfg {Date|String} Начальное значение даты, с которой откроется контрол.
              * @remark
@@ -161,6 +161,8 @@ define(
              * @deprecated
              */
             notificationMode: 'change',
+
+            validators: [],
 
             pickerConfig: {
                corner: 'tl',
@@ -202,12 +204,15 @@ define(
          this._calendarInit();
          // this._addDefaultValidator();
 
-         this._dateBox.subscribe('onDateChange', this._notifyOnDateChanged.bind(this));
+         this._dateBox.subscribe('onDateChange', this._onDateBoxDateChanged.bind(this));
+         this._dateBox.subscribe('onTextChange', this._onDateBoxTextChanged.bind(this));
 
          this._dateBox.subscribe('onDateSelect', function (e, date) {
             this._notify('onDateSelect', date);
          }.bind(this));
+
          this._container.removeClass('ws-area');
+         this._initValidators();
       },
 
       _modifyOptions : function(options) {
@@ -215,14 +220,11 @@ define(
          return DatePicker.superclass._modifyOptions.apply(this, arguments);
       },
 
-      _addDefaultValidator: function() {
+      _initValidators: function() {
          var self = this;
-         //Добавляем к прикладным валидаторам стандартный, который проверяет что дата заполнена корректно.
-         this._options.validators.push({
-            validator: function() {
-               return self.formatModel.isEmpty(this._maskReplacer) ? true : self._options.date instanceof Date;
-            },
-            errorMessage: rk('Дата заполнена некорректно')
+         $ws.helpers.forEach(this._options.validators, function (validator) {
+            // Хак, исправить позже
+            self._dateBox._options.validators.push(validator);
          });
       },
 
@@ -315,6 +317,10 @@ define(
         return this._dateBox.getText();
       },
 
+      setValue: function (value) {
+         this._dateBox.setValue(value);
+      },
+
       /**
        * Метод установки/замены даты.
        * @param {Date} date Новая дата.
@@ -333,10 +339,6 @@ define(
          this._dateBox.setDate(date);
       },
 
-      setValue: function (value) {
-         this._dateBox.setValue(value);
-      },
-
       /**
        * Метод получения текущего значения даты.
        * @returns {Date|String} Начальное значение даты, с которой откроется контрол.
@@ -353,10 +355,33 @@ define(
         return this._dateBox.getDate();
       },
 
-      _notifyOnDateChanged: function() {
-         var date = this._dateBox.getDate()
+      _onDateBoxDateChanged: function () {
+         var date = this._dateBox.getDate();
+         this._options.date = date;
          this._notifyOnPropertyChanged('date', date);
          this._notify('onDateChange', date);
+      },
+      _onDateBoxTextChanged: function () {
+         var text = this._dateBox.getText();
+         this._options.date = text;
+         this._notifyOnPropertyChanged('text', text);
+         this._notify('onTextChange', text);
+      },
+      markControl: function (s, showInfoBox) {
+         this._dateBox.markControl(s, showInfoBox);
+      },
+
+      clearMark: function () {
+         this._dateBox.clearMark();
+      },
+      isMarked: function () {
+         return this._dateBox.isMarked();
+      },
+      setValidators: function (validators) {
+         this._dateBox.setValidators(validators);
+      },
+      validate: function () {
+         this._dateBox.validate();
       }
    });
 
