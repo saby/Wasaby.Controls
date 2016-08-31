@@ -768,6 +768,25 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 },
                 horizontalAlign: {
                    side: 'left'
+                },
+                handlers: {
+                   onShow: function() {
+                      var revertedVertical = this._picker.getContainer().hasClass('controls-popup-revert-vertical');
+
+                      if($ws._const.browser.isMobileIOS) {
+                         revertedVertical = !revertedVertical;
+                      }
+
+                      if(revertedVertical) {
+                         if(!this._listReverse) {
+                            this._reverseList();
+                         }
+                      } else {
+                         if(this._listReverse) {
+                            this._reverseList();
+                         }
+                      }
+                   }.bind(this)
                 }
              };
              // Придрот для айпада. Выезжающая клавиатура может скрывать выпадашку, так как та влезает под нее. Поэтому на айпаде всегда открываем автодополнение вверх

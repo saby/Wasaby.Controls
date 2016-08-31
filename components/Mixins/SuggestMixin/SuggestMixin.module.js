@@ -241,7 +241,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          _list: undefined,                      /* {SBIS3.CONTROLS.DSMixin}{SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable} Контрол списка сущностей */
          _listContainer: undefined,             /* {jQuery} Контейнер для контрола списка сущностей */
          _loadDeferred: null,                   /* {$ws.proto.Deferred|null} Деферред загрузки данных для контрола списка сущностей */
-         _showAllButton: undefined              /* {$ws.proto.Control} Кнопка открытия всех записей */
+         _showAllButton: undefined,              /* {$ws.proto.Control} Кнопка открытия всех записей */
+         _listReverse: false
       },
 
       $constructor: function () {
@@ -344,8 +345,11 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          this._clearDelayTimer();
          this._delayTimer = setTimeout(function() {
             self._showLoadingIndicator();
+            self.hidePicker();
             self._loadDeferred = self.getList().reload(self._options.listFilter).addCallback(function () {
-               self._checkPickerState(false) ? self.showPicker() : self.hidePicker();
+               if(self._checkPickerState(false)) {
+                  self.showPicker();
+               }
             });
          }, this._options.delay);
       },
@@ -569,6 +573,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _onListDataLoad: function(e, dataSet) {
          this._hideLoadingIndicator();
+         this._listReverse = false;
 
          if(this._showAllButton) {
             var list = this.getList();
@@ -683,6 +688,20 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       showPicker: function () {
          if (this._options.usePicker) {
             PickerMixin.showPicker.apply(this, arguments);
+         }
+      },
+
+      _reverseList: function() {
+         var items = this._getListItems(),
+             itemsArray = [];
+
+         if(items) {
+            items.each(function (rec) {
+               itemsArray.push(rec);
+            });
+
+            this._listReverse = !this._listReverse;
+            items.assign(itemsArray.reverse());
          }
       }
    };
