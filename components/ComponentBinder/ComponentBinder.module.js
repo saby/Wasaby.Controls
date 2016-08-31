@@ -26,6 +26,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
              view.setHighlightText(text, false);
              view.setHighlightEnabled(true);
              view.setInfiniteScroll(true, true);
+
+             if (self._lastGroup == undefined) {
+                self._lastGroup = view._options.groupBy;
+             }
              view.setGroupBy(groupBy);
              if (this._firstSearch) {
                 this._lastRoot = view.getCurrentRoot();
@@ -154,7 +158,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          return;
       }
       view.setInfiniteScroll(this._isInfiniteScroll, true);
+      this._isInfiniteScroll = undefined;
       view.setGroupBy(this._lastGroup);
+      this._lastGroup = undefined;
       view.setHighlightText('', false);
       view.setHighlightEnabled(false);
       this._firstSearch = true;
@@ -350,8 +356,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             });
          }
 
-         this._lastGroup = view._options.groupBy;
-         this._isInfiniteScroll = view.isInfiniteScroll();
          function subscribeOnSearchFormEvents() {
             searchForm.subscribe('onReset', function (event, text) {
                if (isTree) {
