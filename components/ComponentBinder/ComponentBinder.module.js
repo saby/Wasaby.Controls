@@ -448,7 +448,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                   self._currentRoot = hier[0];
                   self._path = hier.reverse();
                } else {
-                  if (id === view._options.root){
+                  /* Если root не установлен, и переданный id === null, то считаем, что мы в корне */
+                  if ( (id === view._options.root) || (!view._options.root && id === null) ){
                       self._currentRoot = null;
                       self._path = [];
                   }
@@ -775,10 +776,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             this._options.view.getContainer().css('padding-bottom', '32px');
          }
          if (this._options.paging.getSelectedKey() > pagesCount){
-            this._options.paging._options.selectedKey = pagesCount;   
+            this._options.paging._options.selectedKey = pagesCount;
          }
          this._options.paging.setPagesCount(pagesCount);
-         
+
          //Если есть страницы - покажем paging
          this._options.paging.setVisible(pagesCount > 1);
       },
