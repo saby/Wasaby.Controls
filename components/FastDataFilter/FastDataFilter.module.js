@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                    dataSource: item.get('dataSource'),
                    filter: item.get('filter'),
                    allowDblClick: !!item.get('allowDblClick'),
-                   name: item.get('name')
+                   name: item.get('name'),
                    pickerConfig: {
                       handlers: {
                          onShow: function () {
