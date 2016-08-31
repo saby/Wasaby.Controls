@@ -69,16 +69,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', ['js!SBIS3.CONTROLS.Utils.KbLayo
                case $ws._const.key.up:
                case $ws._const.key.enter:
                   if(this.isPickerVisible()) {
-                     if(this._list) {
-                        /* Т.к. в саггесте при перевороте записи инвертируются с помощью css,
-                           то они меняют свой порядок лишь визуально, а не в DOM'e. Из-за этого
-                           перемещение по записям с помощью клавиатуры работает некоректно.
-                           Приходится подправлять event'ы. */
-                        if(this._picker.getContainer().hasClass('controls-popup-revert-vertical')) {
-                           e.which = e.which === $ws._const.key.down ? $ws._const.key.up : $ws._const.key.down;
-                        }
-                        this._list._keyboardHover(e);
-                     }
+                     this._list && this._list._keyboardHover(e);
                      stopEvent(e);
                   }
                   break;
