@@ -2742,7 +2742,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _canDragMove: function(dragObject) {
             return dragObject.getTarget() &&
                dragObject.getTargetsControl() === this &&
-               $ws.helpers.instanceOfModule(dragObject.getSource().at(0), 'js!SBIS3.CONTROLS.DragEntity.Row');
+               $ws.helpers.instanceOfModule(dragObject.getSource().at(0), 'SBIS3.CONTROLS.DragEntity.Row');
          },
 
          _getDragTarget: function(dragObject) {
