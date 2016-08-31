@@ -226,6 +226,13 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                self._destroyLoadIndicator();
             });
          }
+         else {
+            exportDeferred.addCallback(function(){
+               require(['js!SBIS3.Engine.LongOperationsInformer'], function(LongOperationsInformer){
+                  LongOperationsInformer.animation();
+               });
+            });
+         }
          return exportDeferred;
       },
       /**
