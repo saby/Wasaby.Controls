@@ -131,6 +131,9 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             var editor = $('.js-controls-EditAtPlace__editor', this._container.get(0)),
                editorComponent = this.getChildControls(undefined, false)[0], //Получим дочерний компонент на первом уровне вложенности
                self = this;
+            //Начальный текст может быть и не пустой строкой
+            this._saveOldText();
+
             editorComponent.subscribe('onFocusIn', function(){
                self._oldEditorText = this.getText();
             });
@@ -273,7 +276,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
           */
          setText: function (text) {
             var oldText = this._options.text;
-            this._options.text = text || '';
+            this._options.text = text;
             if (oldText !== this._options.text) {
                this._notify('onTextChange', this._options.text);
                this._notifyOnPropertyChanged('text');
