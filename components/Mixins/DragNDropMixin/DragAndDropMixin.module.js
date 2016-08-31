@@ -87,12 +87,6 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [], function() {
          this._setStartPosition(e, e.target);
          this._bindDragEvents();
       },
-      _preparePageXY: function(e) {
-         if (e.type == "touchstart" || e.type == "touchmove") {
-            e.pageX = e.originalEvent.touches[0].pageX;
-            e.pageY = e.originalEvent.touches[0].pageY;
-         }
-      },
 
       /**
        * Сообщает координаты мыши в метод dragMove
