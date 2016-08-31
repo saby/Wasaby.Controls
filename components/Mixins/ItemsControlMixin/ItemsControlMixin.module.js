@@ -575,7 +575,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       $constructor: function () {
          this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady', 'onPageSizeChange');
-         this._drawItemsCallbackDebounce = this._drawItemsCallback.debounce(0);
+         this._drawItemsCallbackDebounce = this._drawItemsCallback.debounce(0, true);
          if (typeof this._options.pageSize === 'string') {
             this._options.pageSize = this._options.pageSize * 1;
          }
