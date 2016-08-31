@@ -25,6 +25,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
              filter[searchParamName] = text;
              view.setHighlightText(text, false);
              view.setHighlightEnabled(true);
+
+             if (self._isInfiniteScroll == undefined) {
+                self._isInfiniteScroll = view.isInfiniteScroll();
+             }
              view.setInfiniteScroll(true, true);
 
              if (self._lastGroup == undefined) {
