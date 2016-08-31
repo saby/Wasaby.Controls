@@ -168,15 +168,18 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          view.reload(filter, view.getSorting(), 0);
          // TODO: Нужно оставить одно поле хранящее путь, сейчас в одно запоминается состояние хлебных крошек
          // перед тем как их сбросить, а в другом весь путь вместе с кнопкой назад
-         this._path = this._pathDSRawData || [];
+
          //Если сбросили поиск (по крестику) вернем путь в хлебные крошки и покажем кнопку назад
-         if (this._options.breadCrumbs){
-            this._options.breadCrumbs.getItems().setRawData(this._pathDSRawData);
-            this._options.breadCrumbs._redraw();
-         }
-         if (this._options.backButton) {
-            this._options.backButton.getContainer().css({'display': ''});
-         }
+         view.once('onDataLoad', function() {
+            self._path = self._pathDSRawData || [];
+            if (self._options.breadCrumbs) {
+               self._options.breadCrumbs.getItems().setRawData(self._pathDSRawData);
+               self._options.breadCrumbs._redraw();
+            }
+            if (self._options.backButton) {
+               self._options.backButton.getContainer().css({'display': ''});
+            }
+         })
       } else {
          //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
          view.setFilter(filter, true);
