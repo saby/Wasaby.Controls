@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
          dot2 = false,
          count = projection.getCount(),
          records = [];
-      if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
+      if (cfg.showPages && projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
          selId = parseInt(cfg.selectedKey, 10) || 1;  //TODO || 1 - не очень хорошо, это должно уже из Selectable приходить
          firstElem = selId - 1;
          lastElem = selId + 1;
@@ -105,7 +105,8 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
             _getRecordsForRedraw : getRecordForRedraw,
             allowEmptySelection: false,
             mode: 'part',
-            pagesCount: null
+            pagesCount: null,
+            showPages: true
          }
       },
       $constructor: function(){

@@ -145,7 +145,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             Array.remove(keys, keys.indexOf(withoutKey));
             if (onlyAvailable) {
                 for (var i = keys.length - 1; i >= 0; i--) {
-                    if (!this._treeView.getDataSet().getRecordByKey(keys[i]).get(AVAILABLE_FIELD_NAME)) {
+                    if (!this._treeView.getDataSet().getRecordById(keys[i]).get(AVAILABLE_FIELD_NAME)) {
                         Array.remove(keys, i);
                     }
                 }
@@ -165,7 +165,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 'merged': this._getMergedKeys(key)
             }).addCallback(function (data) {
                 data.getAll().each(function(rec) {
-                    record = dataSet.getRecordByKey(rec.getId());
+                    record = dataSet.getRecordById(rec.getId());
                     //Для текущей выбранной записи выставим isAvailable = false, потому что с бл может придти true, а для всех остальных
                     //записей false, тогда мы подумаем что есть записи, которые возможно слить и покажем кнопку подтверждения объединения
                     isAvailable = rec.getId() != key ? rec.get(AVAILABLE_FIELD_NAME) : false;

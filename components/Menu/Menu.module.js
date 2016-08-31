@@ -186,7 +186,7 @@ define('js!SBIS3.CONTROLS.Menu', [
                   icon = '',
                   childs = tree[i];
                for (var j = 0; j < childs.length; j++) {
-                  icon = this._items.getRecordByKey(childs[j]).get('icon');
+                  icon = this._items.getRecordById(childs[j]).get('icon');
                   if (icon) {
                      if (icon.indexOf('icon-16') !== -1) { icon = 'sprite:icon-16'; } else { icon = 'sprite:icon-24'; }
                      hasIcon = true;
@@ -195,8 +195,8 @@ define('js!SBIS3.CONTROLS.Menu', [
                }
                if (hasIcon) {
                   for (var j = 0; j < childs.length; j++) {
-                     if (!this._items.getRecordByKey(childs[j]).get('icon')) {
-                        this._items.getRecordByKey(childs[j]).set('icon', icon);
+                     if (!this._items.getRecordById(childs[j]).get('icon')) {
+                        this._items.getRecordById(childs[j]).set('icon', icon);
                      }
                   }
                }
@@ -227,7 +227,7 @@ define('js!SBIS3.CONTROLS.Menu', [
                   var
                      isFirstLevel = false,
                      id = $(this).attr('data-id'),
-                     item = self._items.getRecordByKey(id),
+                     item = self._items.getRecordById(id),
                      parId = null,
                      parent;
                   if (self._options.hierField) {

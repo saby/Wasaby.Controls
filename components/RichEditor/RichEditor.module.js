@@ -109,7 +109,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   toolbar: false,
                   menubar: false,
                   browser_spellcheck: true,
-                  smart_paste: false
+                  smart_paste: true
                },
                /**
                 * @cfg {String} Значение Placeholder`а

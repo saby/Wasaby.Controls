@@ -4,7 +4,9 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.EditAtPlaceMixin',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators.DateFormatDecorator',
-      'html!SBIS3.CONTROLS.EditAtPlace'],
+      'html!SBIS3.CONTROLS.EditAtPlace',
+      'i18n!SBIS3.CONTROLS.EditAtPlace'
+   ],
    function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, DateFormatDecorator, dotTplFn) {
       'use strict';
 
@@ -19,7 +21,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
          }.bind(this);
 
          var getTextByDateRange = function(range){
-            return 'c ' + getTextFromDate(range.startDate) + ' по ' + getTextFromDate(range.endDate);
+            return [rk('с'), getTextFromDate(range.startDate), rk('по'), getTextFromDate(range.endDate)].join(' ');
          }.bind(this);
 
          //TODO: Декоратор даты, временно применяется здесь до лучших времен (ждем virtualDOM'a)

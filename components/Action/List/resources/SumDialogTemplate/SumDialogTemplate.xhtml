@@ -1,13 +1,14 @@
 <div class="controls-SumDialogTemplate">
     <div class="controls-SumDialogTemplate__modelView">
-        {{var title, value, model = it.item, enumerator = model.getEnumerator();}}
+        {{var title, value, index, model = it.item, format = model.getFormat(), enumerator = model.getEnumerator();}}
         {{while (field = enumerator.getNext()) {}}
             <div class="controls-SumDialogTemplate__row">
                 {{title = it.fields[field] || field;}}
+                {{index = format.getFieldIndex(field);}}
                 {{value = model.get(field);}}
-                {{?model.getType(field) === "Деньги"}}
+                {{?format.at(index).getType() === "Money"}}
                     {{value = $ws.render.defaultColumn.money(model.get(field));}}
-                {{??model.getType(field) === "Число целое"}}
+                {{??format.at(index).getType() === "Integer"}}
                     {{value = $ws.render.defaultColumn.integer(model.get(field));}}
                 {{?}}
                 <div class="controls-SumDialogTemplate__row-title" title="{{=title}}">{{=title}}</div>

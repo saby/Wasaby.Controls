@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.Suggest', [
     * @mixes SBIS3.CONTROLS.DataBindMixin
     * @mixes SBIS3.CONTROLS.SuggestMixin
     * @control
-    * @author Алексей Мальцев
+    * @author Крайнов Дмитрий Олегович
     */
 
    var Suggest = Control.Control.extend([PickerMixin, DataBindMixin, SuggestMixin], /** @lends SBIS3.CONTROLS.Suggest.prototype */{
