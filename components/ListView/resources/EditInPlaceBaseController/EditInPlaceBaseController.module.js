@@ -433,7 +433,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   }
                   addTarget.insertAfter(lastTarget || currentTarget);
                } else {
-                  addTarget[options.addPosition === 'top' ? 'prependTo ': 'appendTo'](this._options.itemsContainer);
+                  addTarget[options.addPosition === 'top' ? 'prependTo': 'appendTo'](this._options.itemsContainer);
                }
                return addTarget;
             },
