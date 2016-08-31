@@ -1,15 +1,27 @@
 /**
  * Created by am.gerasimov on 05.07.2016.
  */
-define('js!SBIS3.CONTROLS.FilterLink',
-    [
-       'js!SBIS3.CONTROLS.Link'
-    ], function(Link) {
+define('js!SBIS3.CONTROLS.FilterLink', ['js!SBIS3.CONTROLS.Link'], function(Link) {
        'use strict';
+
+       /**
+        * Компонент, отображающий ссылку. Умеет скрваться/отобрадаться в зависимости от опции {@link invertedVisible}
+        * Используется на панели {@link SBIS3.CONTROLS.FilterButton}:
+        * @class SBIS3.CONTROLS.FilterLink
+        * @extends SBIS3.CONTROLS.ButtonBase
+        * @control
+        * @public
+        */
 
        var FilterLink = Link.extend({
           $protected: {
              _options: {
+                /**
+                 * @cfg {boolean} Инвертированное значение опции visible.
+                 * Если значение false - компонент отображается, если значение true - компонент скрыт.
+                 * @see setInvertedVisible
+                 * @see getInvertedVisible
+                 */
                 invertedVisible: false
              }
           },

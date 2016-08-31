@@ -216,11 +216,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          }
          var self = this._getTemplateComponent(),
              record = self._options.record;
-         if (record.getState() === Record.RecordState.DELETED){
+         //Если нет записи или она была удалена, то закрываем панель
+         if (!record || (record.getState() === Record.RecordState.DELETED)){
             return;
          }
          //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
-         if (self._saving || !(record && record.isChanged())){
+         if (self._saving || !record.isChanged()){
             //Дестроим запись, когда выполнены три условия
             //1. если это было создание
             //2. если есть ключ (метод создать его вернул)
