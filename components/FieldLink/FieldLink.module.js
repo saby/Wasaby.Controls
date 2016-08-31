@@ -778,11 +778,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       }
 
                       if(revertedVertical) {
-                         if(!this._listReverse) {
+                         if(!this._listReversed) {
                             this._reverseList();
                          }
                       } else {
-                         if(this._listReverse) {
+                         if(this._listReversed) {
                             this._reverseList();
                          }
                       }

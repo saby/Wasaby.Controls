@@ -242,7 +242,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          _listContainer: undefined,             /* {jQuery} Контейнер для контрола списка сущностей */
          _loadDeferred: null,                   /* {$ws.proto.Deferred|null} Деферред загрузки данных для контрола списка сущностей */
          _showAllButton: undefined,              /* {$ws.proto.Control} Кнопка открытия всех записей */
-         _listReverse: false
+         _listReversed: false
       },
 
       $constructor: function () {
@@ -573,7 +573,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _onListDataLoad: function(e, dataSet) {
          this._hideLoadingIndicator();
-         this._listReverse = false;
+         this._listReversed = false;
 
          if(this._showAllButton) {
             var list = this.getList();
@@ -700,7 +700,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                itemsArray.push(rec);
             });
 
-            this._listReverse = !this._listReverse;
+            this._listReversed = !this._listReversed;
             items.assign(itemsArray.reverse());
          }
       }
