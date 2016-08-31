@@ -381,7 +381,7 @@ define(
          this._dateBox.setValidators(validators);
       },
       validate: function () {
-         this._dateBox.validate();
+         return this._dateBox.validate();
       }
    });
 
