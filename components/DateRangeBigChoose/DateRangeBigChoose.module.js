@@ -250,7 +250,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
       setStartValue: function (start, silent) {
          var changed = DateRangeBigChoose.superclass.setStartValue.apply(this, arguments);
          if (changed) {
-            if (!this._options.rangeselect) {
+            if (!this._options.rangeselect && start) {
                this._dateRangePicker.setMonth(start);
                this._setCurrentYear(start.getFullYear(), true);
                this._updateYearsRange(start.getFullYear());
@@ -268,7 +268,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             changed = DateRangeBigChoose.superclass.setRange.apply(this, arguments);
             start = this.getStartValue();
             end = this.getEndValue();
-            if (!this._isDatesEqual(start, oldStart) && !this._isDatesEqual(end, oldEnd)) {
+            if (start && !this._isDatesEqual(start, oldStart) && !this._isDatesEqual(end, oldEnd)) {
                // this._dateRangePicker.setMonth(start);
                this._setCurrentYear(start.getFullYear(), true);
                // this._updateYearsRange(parseInt(start.getFullYear(), 10));
