@@ -583,7 +583,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       $constructor: function () {
          this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady', 'onPageSizeChange');
-         this._drawItemsCallbackDebounce = this._drawItemsCallback.debounce(0, true);
+
+         var debouncedDrawItemsCallback = this._drawItemsCallback.bind(this).debounce(0);
+         // FIXME сделано для правильной работы медленной отрисовки
+         this._drawItemsCallbackDebounce = function() {
+            debouncedDrawItemsCallback();
+            this._needToRedraw = true;
+         }.bind(this);
+
          if (typeof this._options.pageSize === 'string') {
             this._options.pageSize = this._options.pageSize * 1;
          }
@@ -1272,8 +1279,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
           if (this._dataSource) {
              this._toggleIndicator(true);
-             this._notify('onBeforeDataLoad');
-             def = this._callQuery(this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit)
+             var filterForReload = this._getFilterForReload.apply(this, arguments);
+             this._notify('onBeforeDataLoad', filterForReload, this.getSorting(), this._offset, this._limit);
+             def = this._callQuery(filterForReload, this.getSorting(), this._offset, this._limit)
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
                    self._notify('onDataLoad', list);
