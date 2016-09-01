@@ -124,7 +124,6 @@ define('js!SBIS3.CONTROLS.Utils.DateUtil',[], function () {
          }
          return date;
       }
-
    };
 
    return DateUtil;
