@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
    'js!SBIS3.CONTROLS.Button',
    'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS.Link',
-   'js!SBIS3.CONTROLS.DatePicker',
+   'js!SBIS3.CONTROLS.DateBox',
    'js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker',
    'js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker',
    'js!SBIS3.CORE.CloseButton'
