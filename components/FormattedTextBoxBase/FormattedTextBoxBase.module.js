@@ -140,7 +140,7 @@ define(
        * @protected
        */
       _getCursor = function(position) {
-         var selection = $ws._const.browser.isIE8 ? window.getSelectionForIE() : window.getSelection();
+         var selection = $ws._const.browser.isIE8 || $ws._const.browser.isIE9 || $ws._const.browser.isIE10 ? window.getSelectionForIE() : window.getSelection();
          if (selection.type !== 'None') {
             selection = selection.getRangeAt(0);
             this._lastSelection = selection;
