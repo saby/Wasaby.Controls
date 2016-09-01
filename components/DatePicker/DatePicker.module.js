@@ -338,7 +338,9 @@ define(
          self._chooserControl = new DateRangeBigChoose({
             parent: this._picker,
             element: element,
-            rangeselect: false
+            rangeselect: false,
+            startValue: this.getDate(),
+            endValue: this.getDate()
          });
 
          // Добавляем в пикер
