@@ -228,9 +228,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          }
          else {
             exportDeferred.addCallback(function(){
-               require(['js!SBIS3.Engine.LongOperationsInformer'], function(LongOperationsInformer){
-                  LongOperationsInformer.animation();
-               });
+               $ws.single.EventBus.channel('LongOperations').notify('onOperationStarted');
             });
          }
          return exportDeferred;
