@@ -722,7 +722,12 @@ define('js!SBIS3.CONTROLS.ListView',
                /* При таче, можно поменять вид операций,
                   т.к. это не будет вызывать никаких визуальных дефектов,
                   а просто покажет операции в тач моде */
-               if((!this._itemsToolbar.isVisible() || this._touchSupport) && this._itemsToolbar.getProperty('touchMode') !== this._touchSupport) {
+               if(
+                   (!this._itemsToolbar.isVisible() || this._touchSupport) &&
+                   this._itemsToolbar.getProperty('touchMode') !== this._touchSupport &&
+                   /* Когда тулбар зафиксирован, не меняем вид операций */
+                   !this._itemsToolbar.isToolbarLocking()
+               ) {
                   toggleClass();
                   this._itemsToolbar.setTouchMode(this._touchSupport);
                }
