@@ -97,7 +97,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                   if (hoveredEip && (hoveredEip.getOriginalRecord().getId() === model.getId())) {
                      if (this._notify('onBeginEdit', model) !== false) {
                         this._hoveredEip = null;
-                        hoveredEip.edit(target, model);
+                        hoveredEip.edit(model);
                         this._notify('onAfterBeginEdit', model);
                         this._addPendingOperation();
                         return model;
