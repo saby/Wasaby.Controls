@@ -4,7 +4,6 @@
    font-family: @date-range-slider-font-family;
    font-size: @date-range-slider-font-size;
    font-weight: @date-range-slider-font-weight;
-   width: @date-range-slider-width;
 
    color: @date-range-slider-color;
 
@@ -12,6 +11,7 @@
       width: @date-range-slider-year-state-width;
       .controls-DateRangeSlider__value {
          width: @date-range-slider-year-state-width - @date-range-slider-prev-next-buttons-width*2;
+         min-width: 0;
       }
    }
 
@@ -26,7 +26,7 @@
       text-align: center;
       line-height: @date-range-slider-height;
       padding-top: 1px;
-      width: @date-range-slider-width - @date-range-slider-prev-next-buttons-width*2;
+      min-width: @date-range-slider-value-min-width;
       &:hover {
          color: @date-range-slider-hover-color;
          text-decoration: @date-range-slider-hover-text-decoration;
