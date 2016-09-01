@@ -5,6 +5,7 @@
 @closeFilterButtonImageHover:             url('img/areaBigCloseButton.png') 0 -40px;
 @carry-big-height:                        60px;
 @text-box-height-carryFont:               42px;
+@float-area-top-offset:                   10px;
 
 .icon-size {
    font-size: @icon-size !important;
@@ -141,9 +142,17 @@
    &.radius {
       border-radius: 0 !important;
    }
-   .ws-window-titlebar {
-      color:   @blue-dark-color;
-      background: #F4F4F4;
+}
+
+.ws-window-titlebar, .ws-float-area-title {
+   font-size: 32px !important;
+   color:   @blue-dark-color !important;;
+   background: #F4F4F4 !important;;
+}
+.ws-window-titlebar {
+   .ws-float-area-title {
+      top: @float-area-top-offset !important;
+      font-size: 32px !important;
    }
 }
 
@@ -182,7 +191,7 @@
 .ws-window-title  {
    margin-left: 8px !important;
    font-size: 32px !important;
-   padding: 10px 0 !important;
+   padding: @float-area-top-offset 0 !important;
 }
 .ws-window-titlebar-custom {
    font-size: 32px !important;
@@ -193,8 +202,8 @@
 .ws-window-titlebar, .ws-date-range-choose-menu-dates {
    height: 60px !important;
    line-height: 60px !important;
-   .ws-float-area-title, .ws-window-titlebar-action {
-      top: 10px !important;
+   .ws-window-titlebar-action {
+      top: @float-area-top-offset !important;
       font-weight: normal !important;
    }
    &.active {
@@ -214,6 +223,18 @@
    }
 }
 
+.ws-field-button {
+   &.ws-button-classic {
+      &.sbisname-window-title-close{
+         &.ws-enabled {
+            &.ws-button-classic {
+               top: @float-area-top-offset !important;
+            }
+         }
+      }
+   }
+}
+
 .controls-FloatArea {
    &.controls__filterButton__picker {
       .controls-PopupMixin__closeButton {
@@ -224,7 +245,7 @@
 
 .ws-date-range-choose-menu-block {
    .ws-window-titlebar-action.close {
-      top: 10px !important;
+      top: @float-area-top-offset !important;
    }
 }
 
