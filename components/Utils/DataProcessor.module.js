@@ -228,6 +228,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          }
          else {
             exportDeferred.addCallback(function(){
+               //TODO Не совсем хорошо, что контролы знают о LongOperations. Но пока не понятно, как сделать иначе.
                $ws.single.EventBus.channel('LongOperations').notify('onOperationStarted');
             });
          }
