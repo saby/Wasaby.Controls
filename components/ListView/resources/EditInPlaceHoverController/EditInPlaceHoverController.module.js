@@ -35,7 +35,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             _createEip: function() {
                EditInPlaceHoverController.superclass._createEip.apply(this);
                this._secondEip = new EditInPlace(this._getEditInPlaceConfig());
-               this._secondEip.getContainer().bind('keyup', this._eipHandlers.onKeyDown);
             },
 
             _getEditInPlaceConfig: function() {
@@ -55,9 +54,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             _getCurrentTarget: function() {
                return this._getEditingEip().getTarget();
             },
-            showEip: function(target, record, options) {
+            showEip: function(model, options) {
                if (options && options.isEdit === false) {
-                  this.show(target, record, this._options.itemsProjection.getItemBySourceItem(record))
+                  this.show(model, this._options.itemsProjection.getItemBySourceItem(model))
                } else {
                   EditInPlaceHoverController.superclass.showEip.apply(this, arguments)
                }
@@ -67,12 +66,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
              * @param {Object} target Элемент, для которого отобразить область по ховеру
              * @private
              */
-            show: function(target, record, itemProj) {
-               if (this._notify('onBeginEdit', record) !== false) {
+            show: function(model, itemProj) {
+               if (this._notify('onBeginEdit', model) !== false) {
                   if (!this._hoveredEip) {
                      this._hoveredEip = this._eip.isEdit() ? this._secondEip : this._eip;
                   }
-                  this._hoveredEip.show(target, record, itemProj);
+                  this._hoveredEip.show(model, itemProj);
                } else {
                   if (this._hoveredEip) {
                      this._hoveredEip.hide();
@@ -92,24 +91,24 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             _onChildControlFocusIn: function(event, control) {
                this._options.editFieldFocusHandler && this._options.editFieldFocusHandler(control);
             },
-            edit: function (target, record) {
+            edit: function (model) {
                var hoveredEip = this._hoveredEip;
                return this.endEdit(true).addCallback(function() {
-                  if (hoveredEip && (hoveredEip.getTarget().get(0) === target.get(0))) {
-                     if (this._notify('onBeginEdit', record) !== false) {
+                  if (hoveredEip && (hoveredEip.getOriginalRecord().getId() === model.getId())) {
+                     if (this._notify('onBeginEdit', model) !== false) {
                         this._hoveredEip = null;
-                        hoveredEip.edit(target, record);
-                        this._notify('onAfterBeginEdit', record);
+                        hoveredEip.edit(target, model);
+                        this._notify('onAfterBeginEdit', model);
                         this._addPendingOperation();
-                        return record;
+                        return model;
                      }
                   } else {
-                     return EditInPlaceHoverController.superclass.edit.apply(this, [target, record])
+                     return EditInPlaceHoverController.superclass.edit.apply(this, [model])
                   }
                }.bind(this));
             },
             _getEditingEip: function() {
-               return this._eip.isEdit() ? this._eip : this._secondEip.isEdit() ? this._secondEip : null;
+               return this._secondEip.isEdit() ? this._secondEip : EditInPlaceHoverController.superclass._getEditingEip.call(this);
             },
             /**
              * Обработчик события по приходу фокуса на контрол в области редактирования по месту
@@ -122,19 +121,17 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                   target = control.getContainer().closest('.controls-editInPlace'),
                   editingEip = this._getEditingEip();
                if (!editingEip || editingEip.getContainer().get(0) !== target.get(0)) {
-                  this.edit(this._hoveredEip.getTarget(), this._hoveredEip.getEditingRecord());
+                  this.edit(this._hoveredEip.getEditingRecord());
                }
             },
             _destroyEip: function() {
                EditInPlaceHoverController.superclass._destroyEip.apply(this);
                if (this._secondEip) {
-                  this._secondEip.getContainer().unbind('keyup', this._eipHandlers.onKeyDown);
                   this._secondEip.destroy();
                   this._secondEip = null;
                }
             },
             destroy: function() {
-               this._secondEip.getContainer().unbind('keyup', this._eipHandlers.onKeyDown);
                EditInPlaceHoverController.superclass.destroy.apply(this, arguments);
             }
          });

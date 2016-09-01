@@ -1,0 +1,52 @@
+<div class="controls-DateRangeChoose">
+   <ws:if data="{{showMonths || showQuarters || showHalfyears}}">
+      <div class="controls-DateRangeChoose__currentValue"></div>
+      <div class="controls-DateRangeChoose__yearWrapper">
+         <span class="controls-DateRangeChoose__year-prev"></span>
+         <span class="controls-DateRangeChoose__year"></span>
+         <span class="controls-DateRangeChoose__year-next"></span>
+      </div>
+      <div class="controls-DateRangeChoose__bodyWrapper controls-DateRangeChoose__month-checkMark-hidden">
+         <ws:for data="halfYearIndex as halfYear in _months">
+            <div class="controls-DateRangeChoose__halfYear" data-range-id="{{ halfYearIndex }}">
+               <ws:for data="quarterIndex as quarter in halfYear.quarters">
+                  <div class="controls-DateRangeChoose__quarter" data-range-id="{{ halfYearIndex*2 + quarterIndex }}">
+                     <ws:if data="{{ !showMonths && (checkedMonthStart || checkedMonthEnd) }}">
+                        <div class="controls-DateRangeChoose__checkBox controls-DateRangeChoose__quarter-checkBox icon-16 icon-Yes"></div>
+                     </ws:if>
+                     <ws:for data="monthIndex as month in quarter.months">
+                        <div class="controls-DateRangeChoose__month" data-range-id="{{ halfYearIndex*6 + quarterIndex*3 + monthIndex}}">
+                           <ws:if data="{{ checkedMonthStart || checkedMonthEnd }}">
+                              <div class="controls-DateRangeChoose__checkBox controls-DateRangeChoose__month-checkBox icon-16 icon-Yes"></div>
+                           </ws:if>
+                           <div class="controls-DateRangeChoose__month-caption">
+                              {{ month }}
+                           </div>
+                        </div>
+                     </ws:for>
+                     <div class="controls-DateRangeChoose__quarter-caption">
+                        {{ quarter.name }} <span class="controls-DateRangeChoose__quarter-caption-text">квартал</span>
+                     </div>
+                  </div>
+               </ws:for>
+               <div class="controls-DateRangeChoose__halfYear-caption">
+                  {{ halfYear.name }}
+               </div>
+            </div>
+         </ws:for>
+      </div>
+   </ws:if>
+   <ws:if data="{{!showMonths && !showQuarters && !showHalfyears}}">
+      <div class="controls-DateRangeChoose__yearsMode-prev"></div>
+      <div class="controls-DateRangeChoose__yearsMode-wrapper">
+         <ws:for data="value as key in [0, 1, 2, 3, 4]">
+            <div data-range-id="{{ value}}"></div>
+         </ws:for>
+      </div>
+      <div class="controls-DateRangeChoose__yearsMode-next"></div>
+   </ws:if>
+   <component data-component="SBIS3.CONTROLS.IconButton" name="HomeButton" class="controls-DateRangeChoose__home controls-IconButton__round-border controls-DateRangeBigChoose__homeBtn">
+      <option name="icon">sprite:icon-16 icon-Home2 icon-primary</option>
+      <option name="tabindex">0</option>
+   </component>
+</div>
