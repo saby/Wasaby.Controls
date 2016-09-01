@@ -711,6 +711,10 @@ define('js!SBIS3.CONTROLS.ListView',
             return lvOpts;
          },
 
+         _getElementToFocus: function() {
+            return $('.controls-ListView__fakeFocusElement', this._container);
+         },
+
          _setTouchSupport: function(support) {
             var currentTouch = this._touchSupport;
             this._touchSupport = Boolean(support);
@@ -804,6 +808,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._scrollPager = new Paging({
                element: $('.controls-ListView__scrollPager', this._container),
                visible: false,
+               showPages: false,
                keyField: 'id',
                parent: this
             });
