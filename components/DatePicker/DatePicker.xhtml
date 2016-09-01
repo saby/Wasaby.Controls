@@ -1,8 +1,14 @@
-<div class="controls-DatePicker controls-FormattedTextBox">
-    <div class="controls-TextBox__afterFieldWrapper{{?!it.isCalendarIconShown }} ws-hidden{{?}}">
-         <a class="js-controls-DatePicker__calendarIcon controls-DatePicker__calendarIcon {{? !it.enabled }}calendar-disabled{{?}}">&nbsp;</a>
+<div class="controls-DatePicker">
+    <div class="controls-DatePicker__calendarWrapper{{?!it.isCalendarIconShown }} ws-hidden{{?}}">
+        <component data-component="SBIS3.CONTROLS.IconButton" name="CalendarButton" class="controls-DatePicker__button">
+            <option name="caption">&#8211;</option>
+            <option name="tabindex" value="0"></option>
+            <option name="icon">sprite:icon-16 icon-Calendar2 icon-primary</option>
+        </component>
     </div>
-    <div class="controls-DatePicker__fieldWrapper controls-FormattedTextBox__fieldWrapper{{?!it.isCalendarIconShown}} controls-DatePicker__fieldWrapper__calendar-false{{?}}">
-        <div contenteditable="{{=it.enabled}}"  class="controls-FormattedTextBox__field js-controls-FormattedTextBox__field">{{=it.maskTemplateFn(it.modelForMaskTpl)}}</div>
-    </div>
+
+    <component data-component="SBIS3.CONTROLS.DateBox" class="controls-DatePicker__dateBox">
+        <option name="name">dateBox</option>
+        <option name="mask">{{=it.mask}}</option>
+    </component>
 </div>
