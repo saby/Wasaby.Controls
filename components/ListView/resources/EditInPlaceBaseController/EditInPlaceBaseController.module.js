@@ -399,10 +399,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         }
                         self._createAddTarget(model, options);
                         self._getEip().edit(model);
-                        // Todo разобраться в целесообразности этого пересчёта вообще, почему на десктопе всё работает?
-                        // При начале отслеживания высоты строки, один раз нужно пересчитать высоту синхронно, это нужно для добавления по месту,
-                        //т.к. при добавлении создаётся новая tr у которой изначально нет высоты и опции записи не могут верно спозиционироваться.
-                        self._getEip().recalculateHeight();
                         self._notify('onAfterBeginEdit', model);
                         self._addPendingOperation();
                         return model;
