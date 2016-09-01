@@ -1817,10 +1817,16 @@ define('js!SBIS3.CONTROLS.RichEditor',
          },
 
          _updateHeight: function() {
-            var curHeight;
+            var
+               curHeight,
+               closestParagraph;
             if (this.isVisible()) {
                if (this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this._textChanged && (this._inputControl[0] === document.activeElement)) {
-                  this._scrollToPrev($(this._tinyEditor.selection.getNode()).closest('p')[0]);//необходимо передавать абзац
+                  closestParagraph = $(this._tinyEditor.selection.getNode()).closest('p')[0];
+                  if (closestParagraph) {
+                     this._scrollToPrev(closestParagraph);//необходимо передавать абзац
+                  }
+
                }
                curHeight = this._container.height();
                if (curHeight !== this._lastHeight) {
@@ -1842,7 +1848,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             if (target.previousSibling) {
                this._scrollTo(target.previousSibling, 'bottom');
             }
-            this._scrollTo(target,'bottom');
+            this._scrollTo(target, 'bottom');
          },
          _updateDataReview: function(value) {
             if (this._dataReview) {
