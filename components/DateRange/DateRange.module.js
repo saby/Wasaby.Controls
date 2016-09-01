@@ -61,7 +61,8 @@ define('js!SBIS3.CONTROLS.DateRange', [
       init: function () {
          DateRange.superclass.init.call(this);
 
-         var self = this;
+         var self = this,
+            start, end;
 
          this._datePickerStart = this.getChildControlByName('DateRange__DatePickerStart');
          this._datePickerStart.subscribe('onDateChange', function(e, date) {
@@ -95,11 +96,11 @@ define('js!SBIS3.CONTROLS.DateRange', [
             // }
          });
 
-         this._options.startValue = this._options.startValue || this._options.startDate;
-         this._options.endValue = this._options.endValue || this._options.endDate;
          // приводим даты к Date-типу и устанавливаем их в DatePicker-ах
-         this.setStartValue(this._options.startValue, false);
-         this.setEndValue(this._options.endValue, false);
+         this.setStartValue(this._options.startValue || this._options.startDate, true);
+         this.setEndValue(this._options.endValue || this._options.endDate, true);
+         this._updateDatePicker(self._datePickerStart, this.getStartValue());
+         this._updateDatePicker(self._datePickerEnd, this.getEndValue());
 
          this._addDefaultValidator();
       },
