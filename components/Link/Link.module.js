@@ -86,6 +86,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
          } else {
             this._container.html(caption);
          }
+         this.setTooltip(caption);
       },
 
       _setEnabled: function(enabled){
