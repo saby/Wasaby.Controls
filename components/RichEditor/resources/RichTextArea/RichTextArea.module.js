@@ -832,7 +832,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          _setText: function(text) {
             if (text !== this.getText()) {
                this._textChanged = true;
-               this._options.text = text;
+               if (!this._isEmptyValue(text) && !this._isEmptyValue(this._options.text)) {
+                  this._options.text = text;
+               }
                this._notify('onTextChange', text);
                this._notifyOnPropertyChanged('text');
                this._updateDataReview(text);
@@ -1081,7 +1083,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             editor.on('keyup', function(e) {
                self._typeInProcess = false;
-               self._setTrimmedText(self._getTinyEditorValue());
+               if (!(e.keyCode === $ws._const.key.enter && e.ctrlKey)) { // Не нужно обрабатывать ctrl+enter, т.к. это сочетание для дефолтной кнопки
+                  self._setTrimmedText(self._getTinyEditorValue());
+               }
             });
 
             editor.on('keydown', function(e) {
@@ -1103,10 +1107,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   e.preventDefault();
                   return false;
                } else if (e.which === $ws._const.key.enter && e.ctrlKey) {
-                  self._container.trigger(e);
-                  e.stopImmediatePropagation();
-                  e.preventDefault();
-                  return false;
+                  e.preventDefault();//по ctrl+enter отменяем дефолтное(чтобы не было перевода строки лишнего), разрешаем всплытие
+                  //по ctrl+enter может произойти перехват события( например главная кнопка) и keyup может не сработать
+                  //необходимо сбрасывать флаг зажатой кнопки, чтобы шло обновление опции text (сейчас обновление опции text не идёт при зажатаой клавише, чтобы не тормозило)
+                  self._typeInProcess = false;
                }
                self._updateHeight();
             });
