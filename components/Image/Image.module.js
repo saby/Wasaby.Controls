@@ -246,6 +246,9 @@ define('js!SBIS3.CONTROLS.Image',
             },
             $constructor: function() {
                this._publish('onBeginLoad', 'onEndLoad', 'onErrorLoad', 'onChangeImage', 'onResetImage', 'onShowEdit', 'onBeginSave', 'onEndSave', 'onDataLoaded');
+               //Debounce перебиваем в конструкторе, чтобы не было debounce на прототипе, тк если несколько инстансов сработает только для одного
+               //Оборачиваем именно в debounce, т.к. могут последовательно задать filter, dataSource и тогда изображения загрузка произойдет дважды.
+               this._setImage = this._setImage.debounce(0);
                $ws.single.CommandDispatcher.declareCommand(this, 'uploadImage', this._uploadImage);
                $ws.single.CommandDispatcher.declareCommand(this, 'editImage', this._editImage);
                $ws.single.CommandDispatcher.declareCommand(this, 'resetImage', this._resetImage);
@@ -259,7 +262,6 @@ define('js!SBIS3.CONTROLS.Image',
                   dataSource = this.getDataSource(),
                   width = this._container.width();
                Image.superclass.init.call(this);
-               this._bindEvens();
                //Находим компоненты, необходимые для работы (если нужно)
                if (this._options.imageBar) {
                   this._buttonEdit = this.getChildControlByName('ButtonEdit');
@@ -321,17 +323,11 @@ define('js!SBIS3.CONTROLS.Image',
                   return this._options.defaultImage;
                }
             },
-            _bindEvens: function() {
-               this._boundEvents = {
-                  onChangeImage: this._onChangeImage.bind(this),
-                  onErrorLoad: this._onErrorLoad.bind(this)
-               };
-               this._image.load(this._boundEvents.onChangeImage);
-               this._image.error(this._boundEvents.onErrorLoad);
-            },
             _bindToolbarEvents: function(){
-               this._boundEvents.onImageMouseEnter = this._onImageMouseEnter.bind(this);
-               this._boundEvents.onImageMouseLeave = this._onImageMouseLeave.bind(this);
+               this._boundEvents = {
+                  onImageMouseEnter: this._onImageMouseEnter.bind(this),
+                  onImageMouseLeave: this._onImageMouseLeave.bind(this)
+               };
                this._container.mouseenter(this._boundEvents.onImageMouseEnter);
                this._container.mouseleave(this._boundEvents.onImageMouseLeave);
             },
@@ -349,7 +345,7 @@ define('js!SBIS3.CONTROLS.Image',
                   imageInstance = this.getParent();
                if (response.hasOwnProperty('error')) {
                   $ws.helpers.toggleLocalIndicator(imageInstance._container, false);
-                  imageInstance._boundEvents.onErrorLoad(response.error, true);
+                  imageInstance._onErrorLoad(response.error, true);
                   $ws.helpers.alert('При загрузке изображения возникла ошибка: ' + response.error.message);
                } else {
                   imageInstance._notify('onEndLoad', response);
@@ -403,7 +399,7 @@ define('js!SBIS3.CONTROLS.Image',
                   this._loadImage(url);
                   this._imageUrl = url;
                }
-            }.debounce(0), //Оборачиваем именно в debounce, т.к. могут последовательно задать filter, dataSource и тогда изображения загрузка произойдет дважды.
+            },
             _loadImage: function(url) {
                var
                   self = this;
@@ -411,9 +407,10 @@ define('js!SBIS3.CONTROLS.Image',
                $ws.helpers.reloadImage(this._image, url)
                   .addCallback(function(){
                      self._image.hasClass('ws-hidden') && self._image.removeClass('ws-hidden');
+                     self._onChangeImage();
                   })
                   .addErrback(function(){
-                     self._boundEvents.onErrorLoad();
+                     self._onErrorLoad();
                   });
             },
             _showEditDialog: function(imageType) {
@@ -454,7 +451,7 @@ define('js!SBIS3.CONTROLS.Image',
                         },
                         onOpenError: function(event){
                            $ws.helpers.toggleLocalIndicator(self._container, false);
-                           self._boundEvents.onErrorLoad(event, true);
+                           self._onErrorLoad(event, true);
                         }
                      }
                   }, this._options.editConfig),

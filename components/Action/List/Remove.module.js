@@ -107,8 +107,10 @@ define('js!SBIS3.CONTROLS.List.Remove',
             return this.getDataSource().destroy(keys).addCallback(function() {
                var list = self._getItems();
                for (var i = 0; i < items.length; i++) {
-                  list.remove(items[i]);
+                  var item = items[i];
+                  list.remove(item);
                }
+               self._removeSelection(items);
             });
          },
          _handleError: function (error) {
@@ -116,6 +118,17 @@ define('js!SBIS3.CONTROLS.List.Remove',
          },
          _getDefaultConfirmText: function(items) {
             return items.length > 1 ? 'Удалить записи?' : 'Удалить текущую запись?';
+         },
+
+         _removeSelection: function(items) {
+            var linkedObject = this.getLinkedObject();
+            if ($ws.helpers.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.MultiSelectable')) {
+               var ids = [];
+               for (var i = 0; i < items.length; i++) {
+                  ids.push(items[i].getId());
+               }
+               linkedObject.removeItemsSelection(ids);
+            }
          }
       });
       return Remove;

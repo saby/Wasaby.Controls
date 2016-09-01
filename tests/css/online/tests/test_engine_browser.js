@@ -156,4 +156,36 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
                 });
             })			
     });
+	
+	gemini.suite('back_button_editing', function (test) {
+
+        test.setUrl('/regression_engine_browser_online_8.html').setCaptureElements('html')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="browserView"]', 40000);
+                this.view = find('[name="browserView"]');
+				actions.waitForElementToShow('[name="browserSearch"]', 40000);
+                this.search_input = find('[name="browserSearch"] input');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[sbisname="TextBox 1"] input');
+				actions.waitForElementToShow('[name="OperationsPanelButton1"]', 40000);
+                this.open_panel = find('[name="OperationsPanelButton1"]');
+				actions.waitForElementToShow('[name="browserFastDataFilter"]', 40000);
+                this.fast_filter = find('[name="browserFastDataFilter"] .controls-DropdownList__textWrapper .controls-DropdownList__text');
+				actions.waitForElementToShow('[name="filterLine"]', 40000);
+                this.filter = find('[name="filterLine"] .controls__filterButton__filterLine-items span');
+				this.data2 = find('[data-id="2"]');
+				this.data4 = find('[data-id="31"]');
+            })
+
+            .capture('first_level', function (actions, find) {
+                actions.click(this.data2);
+				actions.mouseMove('.controls-BackButton__caption');
+            })
+
+            .capture('second_level', function (actions) {
+                actions.click(this.data4);
+				actions.mouseMove('.controls-BackButton__caption');
+            })
+    });
 });

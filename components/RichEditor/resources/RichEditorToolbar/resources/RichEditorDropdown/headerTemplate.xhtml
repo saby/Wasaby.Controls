@@ -1,0 +1,9 @@
+<div class="controls-RichEditorDropdown__head">
+   {{? !it.icon}}
+   <div class="controls-RichEditorDropdown__headText controls-RichEditorDropdown__headText__{{=it.key}}">{{=it.title}}</div>
+   {{?}}
+   {{? it.icon}}
+   <i class="controls-RichEditorDropdown__headIcon {{=it.icon}}"></i>
+   {{?}}
+   <div class="controls-RichEditorDropdown__headArrow"></div>
+</div>

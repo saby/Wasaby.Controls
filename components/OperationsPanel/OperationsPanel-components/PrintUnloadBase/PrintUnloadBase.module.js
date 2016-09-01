@@ -6,8 +6,10 @@
 //Нужно сделать общую точку входа, и ветвление только непосредственно перед вызовом тех или иннных функций бл.
 define('js!SBIS3.CONTROLS.PrintUnloadBase', [
    'js!SBIS3.CONTROLS.MenuLink',
-   'js!SBIS3.CORE.DialogSelector'
-], function(MenuLink, Dialog) {
+   'js!SBIS3.CORE.DialogSelector',
+   'js!WS.Data/Adapter/Sbis',
+   'js!WS.Data/Collection/RecordSet'
+], function(MenuLink, Dialog, SbisAdapter, RecordSet) {
    //TODO: ограничение на максимальное количество записей, получаемое на клиент для печати/выгрузки.
    //Необходимо т.к. на сервере сейчас невозможно произвести xsl преобразование. Выписана задача:
    //(https://inside.tensor.ru/opendoc.html?guid=f852d5cc-b75e-4957-9635-3401e1832e80&description=)
@@ -70,19 +72,17 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
       },
 
       _prepareOperation: function(title){
-         var selectedItems = this._getView().getSelectedKeys(),
-               selectedItemsObj = {},
-               ds;
-         if (!selectedItems.length) {
+         var
+             selectedRecordSet,
+             selectedItems = this._getView().getSelectedItems();
+         if (!selectedItems || selectedItems.getCount() === 0) {
             this._processMassOperations(title);
          } else {
-            for (var i = 0, len = selectedItems.length; i < len; i++){
-               selectedItemsObj[selectedItems[i]] = true;
-            }
-            ds = this._getView().getItems().filter(function(item){
-               return selectedItemsObj[item.getId()];
+            selectedRecordSet = new RecordSet({
+               adapter: 'adapter.sbis'
             });
-            this._applyOperation(ds);
+            selectedRecordSet.assign(selectedItems);
+            this._applyOperation(selectedRecordSet);
          }
       },
       _getView: function(){

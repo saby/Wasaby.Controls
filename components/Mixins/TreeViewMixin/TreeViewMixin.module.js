@@ -305,7 +305,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             }
          }
       },
-      _elemClickHandlerInternal: function (data, id, target) {
+      _elemClickHandlerInternal: function (data, id, target, e) {
          var $target = $(target),
              nodeID = $target.closest('.js-controls-ListView__item').data('id'),
              closestExpand = this._findExpandByElement($(target));

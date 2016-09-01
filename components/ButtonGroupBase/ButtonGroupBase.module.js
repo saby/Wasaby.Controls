@@ -2,7 +2,11 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.ItemsControlMixin'], function(CompoundControl, ItemsControlMixin) {
+define('js!SBIS3.CONTROLS.ButtonGroupBase', [
+   'js!SBIS3.CORE.CompoundControl',
+   'js!SBIS3.CONTROLS.ItemsControlMixin',
+   'browser!html!SBIS3.CONTROLS.ButtonGroupBase/resources/ItemTemplate'
+], function(CompoundControl, ItemsControlMixin, ItemTemplate) {
 
    'use strict';
 
@@ -19,6 +23,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'j
    var ButtonGroupBase = CompoundControl.extend([ItemsControlMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBaseDS.prototype */ {
       $protected: {
          _options: {
+            _defaultItemTemplate: ItemTemplate
          },
          /**
           * Элементы были заданы в верстке
@@ -48,8 +53,8 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'j
          for (var i in controls) {
             if (controls.hasOwnProperty(i)) {
                controls[i].subscribe('onActivated', function (busEvent, event) {
-                  var id = this.getContainer().data('id');
-                  self._itemActivatedHandler(id, event);
+                  var hash = this.getContainer().data('hash');
+                  self._itemActivatedHandler(hash, event);
                });
             }
          }

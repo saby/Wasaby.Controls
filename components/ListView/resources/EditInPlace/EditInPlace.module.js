@@ -154,6 +154,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             },
             _beginTrackHeight: function() {
                this._lastHeight = 0;
+               // Данный пересчет обязательно нужен, т.к. он синхронно пересчитывает высоту и в каллбеке beginEdit мы получаем элемент с правильной высотой
+               this.recalculateHeight();
                this._trackerInterval = setInterval(this.recalculateHeight.bind(this), 50);
             },
             recalculateHeight: function() {
@@ -183,14 +185,14 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._deactivateActiveChildControl();
                this.setActive(false);
             },
-            edit: function(model, itemProj) {
+            edit: function(model, itemProj, withoutActivateFirstControl) {
                if (!this.isVisible()) {
                   this.show(model, itemProj);
                }
                this._beginTrackHeight();
                this._editing = true;
                this.getTarget().addClass('controls-editInPlace__editing');
-               if (!this.hasActiveChildControl()) {
+               if (!withoutActivateFirstControl && !this.hasActiveChildControl()) {
                   this.activateFirstControl();
                }
                this._notify('onBeginEdit');
