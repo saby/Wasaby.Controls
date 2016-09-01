@@ -1350,10 +1350,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             if (this._options.keyField && this._options.keyField !== dataSet.getIdProperty()) {
                dataSet.setIdProperty(this._options.keyField);
             }
-            var recordSet = dataSet.getAll();
-            // Задаем meta, помержив текущие meta-данные с meta-данными в формате SBIS
-            recordSet.setMetaData($ws.core.merge(recordSet.getMetaData(), this._prepareMetaData(dataSet)));
-            return recordSet;
+            return dataSet.getAll();
          }).bind(this));
       },
 
@@ -1364,27 +1361,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             .limit(limit)
             .orderBy(sorting);
          return query;
-      },
-
-      _prepareMetaData: function(dataSet) {
-         /*  надо создавать дефолтную модель, а не внедренную, т.к. в модели recordSet'a
-             могут быть расчитываемые поля, которые ожидают что в модели будут гарантированно какие-то данные */
-         var meta = dataSet.hasProperty('m') ?
-             (new Model({
-                rawData: dataSet.getProperty('m'),
-                adapter: dataSet.getAdapter()
-             })).toObject() :
-             {};
-
-         if (dataSet.hasProperty('r')) {
-            meta.results = dataSet.getProperty('r');
-         }
-         meta.more = dataSet.getTotal();
-         if (dataSet.hasProperty('p')) {
-            meta.path = dataSet.getProperty('p');
-         }
-
-         return meta;
       },
 
       _toggleIndicator:function(){
