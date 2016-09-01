@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
    'js!SBIS3.CONTROLS.Button',
    'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS.Link',
-   'js!SBIS3.CONTROLS.DatePicker',
+   'js!SBIS3.CONTROLS.DateBox',
    'js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker',
    'js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker',
    'js!SBIS3.CORE.CloseButton'
@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             this._options.endValue = DateUtil.valueToDate(this._options.endValue);
          }
          
-         this._setCurrentYear(this._options.startValue ? this._options.startValue.getFullYear() : (new Date()).getFullYear());
+         this._setCurrentYear(this._options.startValue ? this._options.startValue.getFullYear() : (new Date()).getFullYear(), true);
          
          this._toggleChooseYearBtn = this.getChildControlByName('ToggleChooseYearButton');
          this._currentYearBtn = this.getChildControlByName('CurrentYearButton');
@@ -358,7 +358,8 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          container.find('.controls-DateRangeBigChoose__dates').addClass('ws-hidden');
          container.find('.controls-DateRangeBigChoose__months').removeClass('ws-hidden');
          this.getChildControlByName('BackToYearButton').hide();
-         this._monthRangePicker.setRange(this.getStartValue(), this.getEndValue())
+         this._monthRangePicker.setRange(this.getStartValue(), this.getEndValue());
+         this.getChildControlByName('MonthRangePicker').setYear(this._getCurrentYear());
       },
 
       _initRangeButtonControl: function (selectionType, baseButtonName, buttonsCount) {

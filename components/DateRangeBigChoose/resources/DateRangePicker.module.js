@@ -97,7 +97,10 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
 
          Component.superclass.init.call(this);
 
+         this.subscribe('onDrawItems', this._onDateRangePickerDrawItems.bind(this));
+
          this.setDataSource(monthSource);
+         setTimeout(this._updateMonthsPosition.bind(this), 0);
       },
 
       setMonth: function (month) {
@@ -125,7 +128,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
          return _startingOffset + (month.getFullYear() - now.getFullYear()) * 12 + month.getMonth() - 1;
       },
 
-      _drawItemsCallback: function () {
+      _onDateRangePickerDrawItems: function () {
          var self = this,
             // controls = this.getItemsInstances(),
             control;

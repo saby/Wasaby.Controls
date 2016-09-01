@@ -168,9 +168,8 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
 
             var trg = $ws.helpers.trackElement(this._container, true);
 
-            this._inputField.autosize({
-               callback: self._textAreaResize.bind(self)
-            });
+            this._autosizeTextArea();
+
             trg.subscribe('onVisible', function (event, visible) {
                if (visible) {
                   var w = self._inputField.width();
@@ -178,7 +177,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
                   if (w != self._cachedW || h != self._cachedH) {
                      self._cachedW = w;
                      self._cachedH = h;
-                     self._inputField.resize();
+                     self._autosizeTextArea();
                   }
                }
             });
@@ -190,6 +189,12 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          }
       },
 
+      _autosizeTextArea: function(){
+         var self = this;
+         this._inputField.autosize({
+            callback: self._notifyOnSizeChanged(self, self)
+         });
+      },
 
       _getElementToFocus: function() {
          return this._inputField;
@@ -310,10 +315,6 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
       setMaxLength: function(num) {
          TextArea.superclass.setMaxLength.call(this, num);
          this._inputField.attr('maxlength',num);
-      },
-
-      _textAreaResize : function() {
-         this._notifyOnSizeChanged(this, this);
       },
 
       destroy: function() {
