@@ -575,7 +575,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       $constructor: function () {
          this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady', 'onPageSizeChange');
-         this._drawItemsCallbackDebounce = this._drawItemsCallback.debounce(0, true);
+
+         var debouncedDrawItemsCallback = this._drawItemsCallback.bind(this).debounce(0);
+         // FIXME сделано для правильной работы медленной отрисовки
+         this._drawItemsCallbackDebounce = function() {
+            debouncedDrawItemsCallback();
+            this._needToRedraw = true;
+         }.bind(this);
+
          if (typeof this._options.pageSize === 'string') {
             this._options.pageSize = this._options.pageSize * 1;
          }
