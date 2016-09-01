@@ -722,7 +722,12 @@ define('js!SBIS3.CONTROLS.ListView',
                /* При таче, можно поменять вид операций,
                   т.к. это не будет вызывать никаких визуальных дефектов,
                   а просто покажет операции в тач моде */
-               if((!this._itemsToolbar.isVisible() || this._touchSupport) && this._itemsToolbar.getProperty('touchMode') !== this._touchSupport) {
+               if(
+                   (!this._itemsToolbar.isVisible() || this._touchSupport) &&
+                   this._itemsToolbar.getProperty('touchMode') !== this._touchSupport &&
+                   /* Когда тулбар зафиксирован, не меняем вид операций */
+                   !this._itemsToolbar.isToolbarLocking()
+               ) {
                   toggleClass();
                   this._itemsToolbar.setTouchMode(this._touchSupport);
                }
@@ -757,7 +762,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _prepareInfiniteScroll: function(){
             var topParent = this.getTopParent();
-            
+
             if (this.isInfiniteScroll()) {
                this._createLoadingIndicator();
                this._createScrollWatcher();
@@ -788,7 +793,7 @@ define('js!SBIS3.CONTROLS.ListView',
                totalScrollOffset: START_NEXT_LOAD_OFFSET,
                opener: this,
                element: this.getContainer().closest(this._options.infiniteScrollContainer)
-            }
+            };
             this._scrollWatcher = new ScrollWatcher(scrollWatcherConfig);
          },
 
@@ -1005,7 +1010,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._mouseLeaveHandler();
             }
          },
-         
+
          _getScrollContainer: function() {
             var scrollWatcher = this._scrollWatcher,
                 scrollContainer;
@@ -2108,7 +2113,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Если скролл находится в самом верху и добавляются записи вверх - не скролл останнется на месте,
           * а будет все так же вверху. Поэтому после отрисовки записей вверх, подвинем скролл на прежнее место -
-          * конец предпоследней страницы 
+          * конец предпоследней страницы
           * @private
           */
          _moveTopScroll: function(){
