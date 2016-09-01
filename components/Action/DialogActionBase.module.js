@@ -213,6 +213,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
 
       _showLoadingIndicator: function(){
          this._showedLoading = true;
+         $ws.single.Indicator.setMessage('Загрузка...');
          window.setTimeout(function(){
             if (this._showedLoading){
                $ws.single.Indicator.show();
