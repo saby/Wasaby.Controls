@@ -761,7 +761,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _prepareInfiniteScroll: function(){
             var topParent = this.getTopParent();
-            
+
             if (this.isInfiniteScroll()) {
                this._createLoadingIndicator();
                this._createScrollWatcher();
@@ -792,7 +792,7 @@ define('js!SBIS3.CONTROLS.ListView',
                totalScrollOffset: START_NEXT_LOAD_OFFSET,
                opener: this,
                element: this.getContainer().closest(this._options.infiniteScrollContainer)
-            }
+            };
             this._scrollWatcher = new ScrollWatcher(scrollWatcherConfig);
          },
 
@@ -1009,7 +1009,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._mouseLeaveHandler();
             }
          },
-         
+
          _getScrollContainer: function() {
             var scrollWatcher = this._scrollWatcher,
                 scrollContainer;
@@ -1922,7 +1922,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
             this._notifyOnSizeChanged(true);
             this._drawResults();
-            this._needToRedraw = true;
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
@@ -2112,7 +2111,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Если скролл находится в самом верху и добавляются записи вверх - не скролл останнется на месте,
           * а будет все так же вверху. Поэтому после отрисовки записей вверх, подвинем скролл на прежнее место -
-          * конец предпоследней страницы 
+          * конец предпоследней страницы
           * @private
           */
          _moveTopScroll: function(){
