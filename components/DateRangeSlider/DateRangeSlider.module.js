@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
             pickerConfig: {
                corner: 'tl',
                horizontalAlign: {
-                  side: 'left',
+                  side: 'left'
                   // offset: -3
                },
                verticalAlign: {

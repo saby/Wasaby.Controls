@@ -38,13 +38,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
             'items', 'total'
          );
          return $ws.proto.Deferred.success(items);
-      },
-      //region Public methods
-      //endregion Public methods
-
-      //region Protected methods
-
-      //endregion Protected methods
+      }
    });
 
    /**
