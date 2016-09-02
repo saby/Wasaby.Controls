@@ -1564,6 +1564,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         if (this._getItemsToolbar().isToolbarLocking()) {
                            this._showItemsToolbar(this._getElementData(this._getElementByModel(model)));
                         }
+                        this._notifyOnSizeChanged(true);
                      }.bind(this),
                      onBeginAdd: function(event, options) {
                         event.setResult(this._notify('onBeginAdd', options));
@@ -1581,6 +1582,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         //произойти например из-за setEnabled(false) у ListView
                         this._hideToolbar();
                         this._toggleEmptyData(!this.getItems().getCount());
+                        this._notifyOnSizeChanged(true);
                      }.bind(this)
                   }
                };
