@@ -4,12 +4,8 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
    'js!SBIS3.CONTROLS.RangeMixin',
    'js!SBIS3.CONTROLS.DateRangeMixin',
    'js!SBIS3.CONTROLS.PickerMixin',
-   'js!SBIS3.CONTROLS.DateRangeChoose',
-   'js!SBIS3.CONTROLS.Utils.DateUtil',
-   'js!SBIS3.CONTROLS.Button',
-   'js!SBIS3.CONTROLS.IconButton',
-   'js!SBIS3.CONTROLS.Link'
-], function (CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, PickerMixin, DateRangeChoose, DateUtil) {
+   'js!SBIS3.CONTROLS.DateRangeChoose'
+], function (CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, PickerMixin, DateRangeChoose) {
    'use strict';
 
    var DateRangeSlider = CompoundControl.extend([DateRangeMixin, RangeMixin, PickerMixin], {
@@ -28,7 +24,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
             pickerConfig: {
                corner: 'tl',
                horizontalAlign: {
-                  side: 'left',
+                  side: 'left'
                   // offset: -3
                },
                verticalAlign: {

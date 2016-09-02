@@ -119,10 +119,18 @@
          float: right;
       }
 
-      .controls-DatePicker .controls-FormattedTextBox__fieldWrapper {
-         border: 1px solid #e4e4e4;
-         border-radius: 3px;
-         font-size: 14px;
+      .controls-DateBox {
+         .controls-FormattedTextBox__fieldWrapper {
+            border: 1px solid @date-range-big-choose-header-date-box-border-color;
+            border-radius: 3px;
+            font-size: 14px;
+         }
+         &:hover,
+         &.ws-has-focus {
+            .controls-FormattedTextBox__fieldWrapper {
+               border-color: @date-range-big-choose-header-date-box-border-selected-color;
+            }
+         }
       }
    }
 

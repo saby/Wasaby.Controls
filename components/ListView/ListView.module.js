@@ -725,7 +725,12 @@ define('js!SBIS3.CONTROLS.ListView',
                /* При таче, можно поменять вид операций,
                   т.к. это не будет вызывать никаких визуальных дефектов,
                   а просто покажет операции в тач моде */
-               if((!this._itemsToolbar.isVisible() || this._touchSupport) && this._itemsToolbar.getProperty('touchMode') !== this._touchSupport) {
+               if(
+                   (!this._itemsToolbar.isVisible() || this._touchSupport) &&
+                   this._itemsToolbar.getProperty('touchMode') !== this._touchSupport &&
+                   /* Когда тулбар зафиксирован, не меняем вид операций */
+                   !this._itemsToolbar.isToolbarLocking()
+               ) {
                   toggleClass();
                   this._itemsToolbar.setTouchMode(this._touchSupport);
                }
@@ -1583,6 +1588,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         if (this._getItemsToolbar().isToolbarLocking()) {
                            this._showItemsToolbar(this._getElementData(this._getElementByModel(model)));
                         }
+                        this._notifyOnSizeChanged(true);
                      }.bind(this),
                      onBeginAdd: function(event, options) {
                         event.setResult(this._notify('onBeginAdd', options));
@@ -1600,6 +1606,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         //произойти например из-за setEnabled(false) у ListView
                         this._hideToolbar();
                         this._toggleEmptyData(!this.getItems().getCount());
+                        this._notifyOnSizeChanged(true);
                      }.bind(this)
                   }
                };
