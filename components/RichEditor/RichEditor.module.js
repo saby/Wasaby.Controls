@@ -35,6 +35,16 @@ define('js!SBIS3.CONTROLS.RichEditor',
                subTitle: {inline: 'span', classes: 'subTitleText'},
                selectedMainText: {inline: 'span', classes: 'selectedMainText'},
                additionalText: {inline: 'span', classes: 'additionalText'}
+            },
+            ipadCoefficient: {
+               top: {
+                  vertical: 0.65,
+                  horizontal:0.39
+               },
+               bottom: {
+                  vertical: 0.7,
+                  horizontal:0.44
+               }
             }
          },
 
@@ -109,7 +119,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   toolbar: false,
                   menubar: false,
                   browser_spellcheck: true,
-                  smart_paste: false
+                  smart_paste: true
                },
                /**
                 * @cfg {String} Значение Placeholder`а
@@ -457,6 +467,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             if (active && this._needFocusOnActivated() && this.isEnabled()) {
                this._performByReady(function() {
                   this._tinyEditor.focus();
+                  this._scrollTo(this._inputControl[0], 'top');
                   RichEditor.superclass.setActive.apply(this, args);
                }.bind(this));
             } else {
@@ -1305,10 +1316,10 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   e.preventDefault();
                   return false;
                } else if (e.which === $ws._const.key.enter && e.ctrlKey) {
-                  self._container.trigger(e);
-                  e.stopImmediatePropagation();
-                  e.preventDefault();
-                  return false;
+                  e.preventDefault();//по ctrl+enter отменяем дефолтное(чтобы не было перевода строки лишнего), разрешаем всплытие
+                  //по ctrl+enter может произойти перехват события( например главная кнопка) и keyup может не сработать
+                  //необходимо сбрасывать флаг зажатой кнопки, чтобы шло обновление опции text (сейчас обновление опции text не идёт при зажатаой клавише, чтобы не тормозило)
+                  self._typeInProcess = false;
                }
                self._updateHeight();
             });
@@ -1806,10 +1817,16 @@ define('js!SBIS3.CONTROLS.RichEditor',
          },
 
          _updateHeight: function() {
-            var curHeight;
+            var
+               curHeight,
+               closestParagraph;
             if (this.isVisible()) {
-               if ($ws._const.browser.isMobileIOS && this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this.isEnabled() && this._textChanged && (this.getInputContainer()[0] === document.activeElement)) {
-                  this._scrollTo($(this._tinyEditor.selection.getNode()));
+               if (this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this._textChanged && (this._inputControl[0] === document.activeElement)) {
+                  closestParagraph = $(this._tinyEditor.selection.getNode()).closest('p')[0];
+                  if (closestParagraph) {
+                     this._scrollToPrev(closestParagraph);//необходимо передавать абзац
+                  }
+
                }
                curHeight = this._container.height();
                if (curHeight !== this._lastHeight) {
@@ -1818,16 +1835,21 @@ define('js!SBIS3.CONTROLS.RichEditor',
                }
             }
          },
-         _scrollTo: function(target){
+         _scrollTo: function(target, side){
             var
-               targetOffset = target[0].getBoundingClientRect(),
-               koef = (window.innerHeight > window.innerWidth) ? 0.65 : 0.39; //Для альбома и портрета коэффициенты разные.
-            if (targetOffset.top > window.innerHeight*koef) {
-               target[0].scrollIntoView({block: 'start', behavior: 'smooth'});
+               targetOffset = target.getBoundingClientRect(),
+               keyboardCoef = (window.innerHeight > window.innerWidth) ? constants.ipadCoefficient[side].vertical : constants.ipadCoefficient[side].horizontal; //Для альбома и портрета коэффициенты разные.
 
+            if ( $ws._const.browser.isMobileIOS && this.isEnabled() && targetOffset[side] > window.innerHeight * keyboardCoef) { //
+               target.scrollIntoView(true);
             }
          },
-
+         _scrollToPrev: function(target){
+            if (target.previousSibling) {
+               this._scrollTo(target.previousSibling, 'bottom');
+            }
+            this._scrollTo(target, 'bottom');
+         },
          _updateDataReview: function(value) {
             if (this._dataReview) {
                this._dataReview.html(this._prepareReviewContent(value));

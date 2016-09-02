@@ -32,33 +32,30 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   applyOnFieldChange: true,
                   itemsContainer: undefined,
                   visible: false,
-                  editingItem: undefined,
                   getEditorOffset: undefined
                },
-               _record: undefined,
-               _target: null,
+               _model: undefined,
                _editing: false,
                _editors: [],
                _trackerInterval: undefined,
                _lastHeight: 0,
-               _editingRecord: undefined,
-               _previousRecordState: undefined,
+               _editingModel: undefined,
                _editingDeferred: undefined
             },
             init: function() {
-               this._publish('onItemValueChanged', 'onChangeHeight', 'onBeginEdit', 'onEndEdit');
+               this._publish('onItemValueChanged', 'onChangeHeight', 'onBeginEdit', 'onEndEdit', 'onKeyPress');
                EditInPlace.superclass.init.apply(this, arguments);
-               this._container.bind('keypress keydown', this._onKeyDown);
+               this._container.bind('keypress keydown', this._onKeyDown)
+                              .bind('keyup', this._onKeyUp.bind(this));
                this.subscribe('onChildControlFocusOut', this._onChildControlFocusOut);
                this._editors = this.getContainer().find('.controls-editInPlace__editor');
-               this._onRecordChangeHandler = this._onRecordChange.bind(this);
             },
 
             _onChildControlFocusOut: function() {
                var
-                  result,
-                  difference,
-                  loadingIndicator;
+                   result,
+                   difference,
+                   loadingIndicator;
                // Будем стрелять событие только если запущено редактирование по месту. Это обусловлено тем, что при
                // клике вне области редактирования стрельнет событие onChildFocusOut в контроллере и редактирование начнет
                // завершаться. Завершение редактирования приведет к вызову метода EditInPlace.hide, в котором происходит
@@ -66,7 +63,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                if (this.isEdit()) {
                   difference = this._getRecordsDifference(); // Получаем разницу
                   if (difference.length) { //Если есть разница, то нотифицируем об этом в событии
-                     result = this._notify('onItemValueChanged', difference, this._editingRecord);
+                     result = this._notify('onItemValueChanged', difference, this._editingModel);
                      //Результат может быть деферредом (потребуется обработка на бизнес логике)
                      if (result instanceof $ws.proto.Deferred) {
                         loadingIndicator = setTimeout(function () { //Если обработка изменения значения поля длится более 100мс, то показываем индикатор
@@ -74,11 +71,11 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                         }, 100);
                         this._editingDeferred = result.addBoth(function () {
                            clearTimeout(loadingIndicator);
-                           this._previousRecordState = this._cloneWithFormat(this._editingRecord);
+                           this._previousModelState = this._cloneWithFormat(this._editingModel);
                            $ws.helpers.toggleIndicator(false);
                         }.bind(this));
                      } else {
-                        this._previousRecordState = this._cloneWithFormat(this._editingRecord);
+                        this._previousModelState = this._cloneWithFormat(this._editingModel);
                      }
                   }
                }
@@ -89,17 +86,17 @@ define('js!SBIS3.CONTROLS.EditInPlace',
              */
             _getRecordsDifference: function() {
                var
-                  raw1, raw2,
-                  result = [];
-               if ($ws.helpers.instanceOfModule(this._editingRecord, 'WS.Data/Entity/Model')) {
-                  this._editingRecord.each(function(field, value) {
-                     if (value != this._previousRecordState.get(field)) {
+                   raw1, raw2,
+                   result = [];
+               if ($ws.helpers.instanceOfModule(this._editingModel, 'WS.Data/Entity/Model')) {
+                  this._editingModel.each(function(field, value) {
+                     if (value != this._previousModelState.get(field)) {
                         result.push(field);
                      }
                   }, this);
                } else {
-                  raw1 = this._editingRecord.getRaw();
-                  raw2 = this._previousRecordState.getRaw();
+                  raw1 = this._editingModel.getRawData();
+                  raw2 = this._previousModelState.getRawData();
                   for (var field in raw1) {
                      if (raw1.hasOwnProperty(field)) {
                         if (raw1[field] != raw2[field]) {
@@ -116,25 +113,18 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             _onKeyDown: function(e) {
                e.stopPropagation();
             },
+            _onKeyUp: function(e) {
+               this._notify('onKeyPress', e);
+            },
             /**
              * Заполняем значениями отображаемую editInPlace область
-             * @param record Record, из которого будут браться значения полей
+             * @param model Model, из которого будут браться значения полей
              */
-            updateFields: function(record) {
-               this._record = record;
-               this._previousRecordState = this._cloneWithFormat(record);
-               this._editingRecord = this._cloneWithFormat(record);
-               this.getContext().setValue(CONTEXT_RECORD_FIELD, this._editingRecord);
-            },
-            _onRecordChange: function(event, fields) { //todo Удалить этот метод вообще в 3.7.4.100
-               for (var fld in fields) {
-                  if (fields.hasOwnProperty(fld)) {
-                     this._editingRecord.set(fld, fields[fld]);
-                  }
-               }
-            },
-            _toggleOnRecordChangeHandler: function(toggle) {
-               this._record[toggle ? 'subscribe' : 'unsubscribe']('onPropertyChange', this._onRecordChangeHandler);
+            setModel: function(model) {
+               this._model = model;
+               this._previousModelState = this._cloneWithFormat(model);
+               this._editingModel = this._cloneWithFormat(model);
+               this.getContext().setValue(CONTEXT_RECORD_FIELD, this._editingModel);
             },
             canAcceptFocus: function () {
                return false;
@@ -142,23 +132,20 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             /**
              * Сохранить значения полей области редактирования по месту
              */
-            applyChanges: function() {
+            acceptChanges: function() {
                this._deactivateActiveChildControl();
-               this._toggleOnRecordChangeHandler(false);
                return (this._editingDeferred || $ws.proto.Deferred.success()).addCallback(function() {
-                  this._record.merge(this._editingRecord);
+                  this._model.merge(this._editingModel);
                }.bind(this))
             },
-            show: function(target, record, itemProj) {
-               this.updateFields(record);
-               this._toggleOnRecordChangeHandler(true);
-               this.getContainer().attr('data-id', record.getId());
+            show: function(model, itemProj) {
+               this.setModel(model);
+               this.getContainer().attr('data-id', model.getId());
                if (itemProj) {
                   this.getContainer().attr('data-hash', itemProj.getHash());
                }
-               this.setOffset(record);
-
-               this.setTarget(target);
+               this.setOffset(model);
+               this.updatePosition();
                //Строка с редакторами всегда должна быть первой в таблице, иначе если перед ней вставятся другие строки,
                //редакторы будут неверно позиционироваться, т.к. у строки с редакторами position absolute и top у неё
                //всегда равен 0, даже если она не первая. Просто перед показом, пододвинем строчку с редакторами на первое место.
@@ -167,6 +154,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             },
             _beginTrackHeight: function() {
                this._lastHeight = 0;
+               // Данный пересчет обязательно нужен, т.к. он синхронно пересчитывает высоту и в каллбеке beginEdit мы получаем элемент с правильной высотой
+               this.recalculateHeight();
                this._trackerInterval = setInterval(this.recalculateHeight.bind(this), 50);
             },
             recalculateHeight: function() {
@@ -181,14 +170,14 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }.bind(this));
                if (this._lastHeight !== newHeight) {
                   this._lastHeight = newHeight;
-                  this.getEditingItem().target.height(newHeight);
-                  this._notify('onChangeHeight');
+                  this.getTarget().height(newHeight);
+                  this._notify('onChangeHeight', this._model);
                }
             },
             _endTrackHeight: function() {
                clearInterval(this._trackerInterval);
                //Сбросим установленное ранее значение высоты строки
-               this.getEditingItem().target.height('');
+               this.getTarget().height('');
             },
             hide: function() {
                EditInPlace.superclass.hide.apply(this, arguments);
@@ -196,14 +185,13 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._deactivateActiveChildControl();
                this.setActive(false);
             },
-            edit: function(target, record, itemProj) {
+            edit: function(model, itemProj) {
                if (!this.isVisible()) {
-                  this.show(target, record, itemProj);
+                  this.show(model, itemProj);
                }
-               this.setEditingItem(target, record);
                this._beginTrackHeight();
                this._editing = true;
-               target.addClass('controls-editInPlace__editing');
+               this.getTarget().addClass('controls-editInPlace__editing');
                if (!this.hasActiveChildControl()) {
                   this.activateFirstControl();
                }
@@ -215,7 +203,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             endEdit: function() {
                this.getContainer().removeAttr('data-id');
                this._endTrackHeight();
-               this.getEditingItem().target.removeClass('controls-editInPlace__editing');
+               this.getTarget().removeClass('controls-editInPlace__editing');
                this._editing = false;
                this.hide();
                //Возможен такой сценарий: начали добавление по месту, не заполнив данные, подтверждают добавление
@@ -234,30 +222,23 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   $(container).find('.controls-editInPlace__editor').css('padding-left', this._options.getEditorOffset(model));
                }
             },
-            setTarget: function(target) {
+            updatePosition: function() {
                var editorTop;
-               this._target = target;
                //позиционируем редакторы
-               editorTop = this._target.position().top - this._options.itemsContainer.position().top;
+               editorTop = this.getTarget().position().top - this._options.itemsContainer.position().top;
                $.each(this._editors, function(id, editor) {
                   $(editor).css('top', editorTop);
                });
             },
             getEditingRecord: function() {
-               return this._editingRecord;
+               return this._editingModel;
             },
             getOriginalRecord: function() {
-               return this._record;
+               return this._model;
             },
             getTarget: function() {
-               return this._target;
-            },
-            setEditingItem: function(target, model) {
-               this._options.editingItem.target = target;
-               this._options.editingItem.model = model;
-            },
-            getEditingItem: function() {
-               return this._options.editingItem;
+               var id = this._model.getId();
+               return this._options.itemsContainer.find('.js-controls-ListView__item[data-id="' + (id === undefined ? '' : id) + '"]:not(".controls-editInPlace")');
             },
             _deactivateActiveChildControl: function() {
                var activeChild = this.getActiveChildControl();
@@ -269,14 +250,14 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }
             },
             destroy: function() {
-               this._container.unbind('keypress keydown');
+               this._container.unbind('keypress keydown keyup');
                EditInPlace.superclass.destroy.call(this);
             },
             //TODO: метод нужен для того, чтобы подогнать формат рекорда под формат рекордсета.
             //Выписана задача Мальцеву, который должен убрать этот метод отсюда, и предаставить механизм выполняющий необходимую задачу.
             //https://inside.tensor.ru/opendoc.html?guid=85d18197-2094-4797-b823-5406424881e5&description=
             _cloneWithFormat: function(record, recordSet) {
-               recordSet = recordSet || this.getParent()._options.dataSet;
+               recordSet = recordSet || this.getParent()._options.items;
                var
                   fieldName,
                   format,

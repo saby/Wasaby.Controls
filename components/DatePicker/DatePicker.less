@@ -1,92 +1,47 @@
 .controls-DatePicker {
    border: none !important;
    background: transparent !important;
+   position: relative;
+   display: inline-block;
 
    .box-sizing(border-box);
 
-   .controls-TextBox__afterFieldWrapper {
-      &:extend(.controls-TextBox .controls-TextBox__afterFieldWrapper);
-
-      & + .controls-DatePicker__fieldWrapper {
-         &:extend(.controls-TextBox .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper);
-      }
-
-   }
-
-   .controls-FormattedTextBox__fieldWrapper {
-      .border-radius(@date-picker-wrapper-border-radius);
-      border-width: @date-picker-wrapper-border-width;
-      border-style: @date-picker-wrapper-border-style;
-      border-color: @date-picker-wrapper-border-color;
-      background: @date-picker-wrapper-bg;
-      &.controls-DatePicker__fieldWrapper__calendar-false {
-         margin: 0;
-      }
-   }
-
-   &.ws-has-focus {
-      .controls-FormattedTextBox__fieldWrapper {
-         border-width: @date-picker-wrapper-focus-border-width;
-         border-style: @date-picker-wrapper-focus-border-style;
-         border-color: @date-picker-wrapper-focus-border-color;
-         background: @date-picker-wrapper-focus-bg;
-      }
-   }
-
-   &.ws-validation-error {
-      border: none !important;
-      background: transparent !important;
-
-      & > .controls-DatePicker__fieldWrapper {
-         border-width: @date-picker-wrapper-error-border-width;
-         border-style: @date-picker-wrapper-error-border-style;
-         border-color: @date-picker-wrapper-error-border-color;
-         background: @date-picker-wrapper-error-bg;
-      }
+   .controls-DatePicker__dateBox {
+      margin-right: 22px;
+      display: block;
    }
 
    &:hover {
       .controls-FormattedTextBox__fieldWrapper {
-         border-width: @date-picker-wrapper-hover-border-width;
-         border-style: @date-picker-wrapper-hover-border-style;
-         border-color: @date-picker-wrapper-hover-border-color;
-         background: @date-picker-wrapper-hover-bg;
+         border-width: @date-box-wrapper-hover-border-width;
+         border-style: @date-box-wrapper-hover-border-style;
+         border-color: @date-box-wrapper-hover-border-color;
+         background: @date-box-wrapper-hover-bg;
       }
    }
 
-   &.ws-disabled {
-      .controls-FormattedTextBox__fieldWrapper {
-         border-width: @date-picker-wrapper-disabled-border-width;
-         border-style: @date-picker-wrapper-disabled-border-style;
-         border-color: @date-picker-wrapper-disabled-border-color;
-         background: @date-picker-wrapper-disabled-bg;
-      }
-
-      .controls-DatePicker__calendarIcon {
-         cursor: @date-picker-wrapper-disabled-cursor;
-      }
+   .controls-DatePicker__calendarWrapper {
+      position: relative;
+      float: right;
+      width: 16px;
+      min-height: 19px;
+      margin: 0;
+      height: 100%;
    }
 
-   .controls-DatePicker__calendarIcon {
+   .controls-DatePicker__button {
       position: absolute;
-      text-decoration: none;
-      cursor: @date-picker-calendar-icon-cursor;
-      width: @date-picker-calendar-icon-width;
-      height: @date-picker-calendar-icon-height;
       top: @date-picker-calendar-icon-top-offset;
       left: @date-picker-calendar-icon-left-offset;
-      background: @date-picker-calendar-icon-bg;
 
-      &:hover {
-         background: @date-picker-calendar-icon-hover-bg;
-      }
-
-      &.calendar-disabled {
-         background: @date-picker-calendar-icon-disabled-bg;
+      // TODO: Когда сделают все кнопки синими при наведении убрать
+      &.icon-primary.controls-IconButton.action-hover:hover {
+         color: @blue-dark-color !important;
       }
    }
+}
 
-   &__calendar {
-      .box-shadow(@date-picker-calendar-shadow);
-   }
+// TODO: Когда сделают все кнопки синими при наведении убрать
+.controls-DateRange.ws-disabled .controls-DateRange__button.icon-primary.controls-IconButton.action-hover.ws-disabled {
+   color: @gray-ccc-color !important;
 }
