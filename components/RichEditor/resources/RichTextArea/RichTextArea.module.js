@@ -831,10 +831,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          _setText: function(text) {
             if (text !== this.getText()) {
-               this._textChanged = true;
                if (!this._isEmptyValue(text) && !this._isEmptyValue(this._options.text)) {
-                  this._options.text = text;
+                  this._textChanged = true;
                }
+               this._options.text = text;
                this._notify('onTextChange', text);
                this._notifyOnPropertyChanged('text');
                this._updateDataReview(text);
