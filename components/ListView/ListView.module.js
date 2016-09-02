@@ -784,8 +784,24 @@ define('js!SBIS3.CONTROLS.ListView',
                }
                this._scrollWatcher.subscribe('onTotalScroll', this._onTotalScrollHandler.bind(this));
             } else if (this._options.infiniteScroll == 'demand'){
-               var loadMoreButton = this.getChildControlByName('loadMoreButton');
+               this._loadMoreButton = this.getChildControlByName('loadMoreButton');
+               if (this.getItems()){
+                  this._setLoadMoreCaption(this.getItems());
+               }
                this.subscribeTo(loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
+            }
+         },
+
+         _setLoadMoreCaption: function(dataSet){
+            var more = dataSet.getMetaData().more
+            if (typeof more == 'number'){
+               this._loadMoreButton.setCaption('Еще ' + more);
+            } else {
+               if (more === false){
+                  this._loadMoreButton.setVisible(false);
+               } else {
+                  this._loadMoreButton.setCaption('Еще...' + more);
+               }
             }
          },
 
@@ -2050,6 +2066,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      this._scrollLoadNextPage();
                   }
                }
+               this._setLoadMoreCaption(dataSet);
             }, this)).addErrback(function (error) {
                //Здесь при .cancel приходит ошибка вида DeferredCanceledError
                return error;
