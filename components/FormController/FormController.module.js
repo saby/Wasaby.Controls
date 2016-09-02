@@ -245,7 +245,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             return;
          }
          //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
-         if (self._saving || !record.isChanged()){
+         if (self._saving || !record.isChanged() && !self._panel.getChildPendingOperations().length){
             //Дестроим запись, когда выполнены три условия
             //1. если это было создание
             //2. если есть ключ (метод создать его вернул)
@@ -403,6 +403,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       _closePanel: function(result){
          //Если задача открыта в новом окне, то FormController лежит не во floatArea => нет панели, которую нужно закрывать
          if (this._panel.close){
+            this._panel._withoutOnBeforeClose = true;
+            this._panel._saving = this._saving;
             this._panel.close(result);
          }
       },
