@@ -714,16 +714,12 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          switch(this.getSelectionType()) {
             case selectionTypes.years:
                return item.getFullYear().toString();
-               break;
             case selectionTypes.halfyears:
                return this._getHalfyearByDate(item).toString();
-               break;
             case selectionTypes.quarters:
                return this._getQuarterByDate(item).toString();
-               break;
             case selectionTypes.months:
                return item.getMonth().toString();
-               break;
          }
       },
 
