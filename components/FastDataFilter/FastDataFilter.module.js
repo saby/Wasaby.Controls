@@ -214,7 +214,6 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          _resizeDropdownContainersForIE: function(dropdownText, containerWidth){
             var fastDataFilter = this.getContainer(),
                 maxDdl;
-            console.log(fastDataFilter.width());
             while (fastDataFilter.width() > containerWidth){
                maxDdl = this._getDropdownMaxWidth(dropdownText);
                maxDdl.css('max-width', (maxDdl.width() * 0.9)); //Уменьшаем ширину самого большого ddl на 10%
