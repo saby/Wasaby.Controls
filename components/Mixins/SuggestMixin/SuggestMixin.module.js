@@ -508,6 +508,27 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             return this._list;
          }
       },
+      /**
+       * @param {Boolean} autoShow Устанавливает режим работы автодополнения: отображать ли список всех возможных значений при переходе фокуса на контрол.
+       * @see list
+       * @see listFilter
+       * @see startChar
+       */
+      setAutoShow: function(autoShow) {
+         this._options.autoShow = Boolean(autoShow);
+         this._notifyOnPropertyChanged('autoShow');
+      },
+
+      /**
+       * Возвращает режим работы автодополнения: отображать ли список всех возможных значений при переходе фокуса на контрол.
+       * @returns {Boolean}
+       * @see list
+       * @see listFilter
+       * @see startChar
+       */
+      getAutoShow: function() {
+         return this._options.autoShow;
+      },
 
       /**
        * Инициализирует контрол списка сущностей
