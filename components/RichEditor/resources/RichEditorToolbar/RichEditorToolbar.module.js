@@ -388,9 +388,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             this._unbindEditor();
             this._toggleToolbarButton.unbind('click');
             this._handlersInstances = null;
-            this._itemsContainer = null;
             this._toggleToolbarButton = null;
             RichEditorToolbar.superclass.destroy.apply(this, arguments);
+            this._itemsContainer = null;
          }
 
       });
