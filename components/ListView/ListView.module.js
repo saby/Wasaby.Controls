@@ -800,7 +800,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if (more === false){
                   this._loadMoreButton.setVisible(false);
                } else {
-                  this._loadMoreButton.setCaption('Еще...' + more);
+                  this._loadMoreButton.setCaption('Еще...');
                }
             }
          },
@@ -2066,7 +2066,9 @@ define('js!SBIS3.CONTROLS.ListView',
                      this._scrollLoadNextPage();
                   }
                }
-               this._setLoadMoreCaption(dataSet);
+               if (this._options.infiniteScroll == 'demand'){
+                  this._setLoadMoreCaption(dataSet);
+               }
             }, this)).addErrback(function (error) {
                //Здесь при .cancel приходит ошибка вида DeferredCanceledError
                return error;
