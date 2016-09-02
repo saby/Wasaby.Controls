@@ -212,11 +212,12 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          },
 
          _resizeDropdownContainersForIE: function(dropdownText, containerWidth){
-            var fastDataFilter = this.getContainer(),
+            var ddlWidth = this._getDropdownListsWidth(),
                 maxDdl;
-            while (fastDataFilter.width() > containerWidth){
+            while (ddlWidth > containerWidth){
                maxDdl = this._getDropdownMaxWidth(dropdownText);
                maxDdl.css('max-width', (maxDdl.width() * 0.9)); //Уменьшаем ширину самого большого ddl на 10%
+               ddlWidth = this._getDropdownListsWidth();
             }
          },
          _getDropdownMaxWidth: function(dropdownText){
@@ -227,6 +228,27 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                }
             }
             return maxElem;
+         },
+
+         _getDropdownListsWidth: function(){
+           var sumWidth = 0;
+           var dropdownContainer = $('.controls-DropdownList', this.getContainer());
+
+           for (var i = 0, l = dropdownContainer.length; i < l; i++){
+              sumWidth += $(dropdownContainer[i]).width();
+           }
+
+           return sumWidth;
+         },
+
+         _onResizeHandler: function(){
+            clearTimeout(this._resizeTimeout);
+            var self = this;
+            this._resizeTimeout = setTimeout(function () {
+               if ($ws._const.browser.isIE && $ws._const.browser.IEVersion <= 10) {
+                  self._recalcDropdownWidth();
+               }
+            }, 100);
          },
 
          _recalcInternalContext: function() {
