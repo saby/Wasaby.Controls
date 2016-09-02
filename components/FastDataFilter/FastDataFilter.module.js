@@ -182,14 +182,54 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             });
          },
          _recalcDropdownWidth: function(){
-            var dropdownLists = $('.controls-DropdownList', this.getContainer());
-            dropdownLists.sort(function(el1, el2){
-               return $(el1).width() > $(el2).width();
-            });
-            for (var i = 0, l = dropdownLists.length; i < l; i++){
-               $(dropdownLists[i]).css('flex-shrink', i + 1);
+            this._resetMaxWidth();
+            if ($ws._const.browser.isIE && $ws._const.browser.IEVersion <= 10){
+               var ddlText = $('.controls-DropdownList__textWrapper', this.getContainer()),
+                   containerWidth = this.getContainer().width();
+               this._resizeDropdownContainersForIE(ddlText, containerWidth);
+            }
+            else{
+               var dropdownLists = $('.controls-DropdownList', this.getContainer());
+               dropdownLists.sort(function(el1, el2){
+                  return $(el1).width() > $(el2).width();
+               });
+               for (var i = 0, l = dropdownLists.length; i < l; i++){
+                  $(dropdownLists[i]).css('flex-shrink', i + 1);
+               }
             }
          },
+
+         _resetMaxWidth: function(){
+            var dropdownContainer = $('.controls-DropdownList', this.getContainer()),
+                dropdownLimitProperty = 'flex-shrink';
+            if ($ws._const.browser.isIE && $ws._const.browser.IEVersion <= 10){
+               dropdownContainer = $('.controls-DropdownList__textWrapper', this.getContainer());
+               dropdownLimitProperty = 'max-width';
+            }
+            $ws.helpers.forEach(dropdownContainer, function(elem){
+               $(elem).css(dropdownLimitProperty, '');
+            });
+         },
+
+         _resizeDropdownContainersForIE: function(dropdownText, containerWidth){
+            var fastDataFilter = this.getContainer(),
+                maxDdl;
+            console.log(fastDataFilter.width());
+            while (fastDataFilter.width() > containerWidth){
+               maxDdl = this._getDropdownMaxWidth(dropdownText);
+               maxDdl.css('max-width', (maxDdl.width() * 0.9)); //Уменьшаем ширину самого большого ddl на 10%
+            }
+         },
+         _getDropdownMaxWidth: function(dropdownText){
+            var maxElem = $(dropdownText[0]);
+            for (var i = 1, l = dropdownText.length; i < l; i++){
+               if ($(dropdownText[i]).width() > maxElem.width()){
+                  maxElem = $(dropdownText[i]);
+               }
+            }
+            return maxElem;
+         },
+
          _recalcInternalContext: function() {
             var
                   changed = $ws.helpers.reduce(this._filterStructure, function(result, element) {
