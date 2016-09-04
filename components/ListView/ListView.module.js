@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return records;
          };
       var
-         START_NEXT_LOAD_OFFSET = 180,
+         START_NEXT_LOAD_OFFSET = 800,
          DRAG_META_INSERT = {
             on: 'on',
             after: 'after',
