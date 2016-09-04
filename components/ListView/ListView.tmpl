@@ -1,4 +1,5 @@
 <div class="controls-ListView{{ multiselect !== false ? ' controls-ListView__multiselect' : ' controls-ListView__multiselect__off'}}">
+    <div class="controls-ListView__fakeFocusElement" tabindex="-1"></div>
     <div class="controls-AjaxLoader ws-hidden">
         <div class="controls-AjaxLoader__outer">
             <div class="controls-AjaxLoader__block">
@@ -19,6 +20,7 @@
     <ws:if data="{{ showPaging }}">
         <div class="controls-Pager-container"></div>
     </ws:if>
+    <div class="controls-ListView__EmptyData {{(!it._serverRender || it._records.length) ? 'ws-hidden'}}">{{emptyHTML}}</div>
     <div class="controls-ListView-scrollIndicator ws-hidden{{ infiniteScroll === 'up' ? ' controls-ListView-scrollIndicator__up'}}"></div>
     <div class="controls-ListView__ItemsToolbar-container ws-hidden"></div>
     <div class="controls-ListView__scrollPager{{ !infiniteScroll ? ' ws-hidden'}}"></div>

@@ -473,7 +473,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
             this._items = this._convertItems(this._itemsProjection.getCollection());
          } else  {
             this._items = this._convertItems(items);
-            this._itemsProjection = Projection.getDefaultProjection(this._items);
+            this._itemsProjection = Projection.getDefaultDisplay(this._items);
          }
 
          this._setItemsEventHandlers();

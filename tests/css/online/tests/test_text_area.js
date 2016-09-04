@@ -31,6 +31,35 @@ gemini.suite('SBIS3.CONTROLS.TextArea Online', function () {
             })
     });
 
+    gemini.suite('set_min_lines_count', function (test) {
+
+        test.setUrl('/regression_text_area_online_4.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="TextArea 1"]', 40000);
+                this.input = find('.controls-TextArea__inputField');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.focus_input = find('[sbisname="TextBox 1"] input');
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.focus_input);
+            })
+
+            .capture('set_min_lines', function (actions) {
+                actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('TextArea 1').setMinLinesCount(2);
+                });
+				actions.click(this.focus_input);
+            })
+
+			.capture('with_text', function (actions) {
+                actions.click(this.input);
+				actions.sendKeys(this.input, 'какой-то текст и быть может что-то больше');
+                actions.sendKeys(this.input, gemini.SHIFT+gemini.HOME);
+            })
+    });
+
     gemini.suite('disabled_base', function (test) {
 
         test.setUrl('/regression_text_area_online.html').setCaptureElements('.capture')

@@ -2,8 +2,13 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.RadioGroup', ['js!SBIS3.CONTROLS.RadioGroupBase','html!SBIS3.CONTROLS.RadioGroup', 'js!SBIS3.CONTROLS.RadioButton'],
-function(RadioGroupBase, dotTpl) {
+define('js!SBIS3.CONTROLS.RadioGroup', ['' +
+      'js!SBIS3.CONTROLS.RadioGroupBase',
+      'html!SBIS3.CONTROLS.RadioGroup',
+      'html!SBIS3.CONTROLS.RadioGroup/resources/ItemTemplate',
+      'js!SBIS3.CONTROLS.RadioButton'
+      ],
+function(RadioGroupBase, dotTpl, ItemTemplate) {
 
    'use strict';
 
@@ -77,18 +82,9 @@ function(RadioGroupBase, dotTpl) {
 
       $protected: {
          _options: {
-
+            _canServerRender: true,
+            _defaultItemTemplate: ItemTemplate
          }
-      },
-
-      _getItemTemplate : function(item) {
-         var
-            caption = item.get(this._options.displayField),
-            className = this._container.hasClass('controls-Radio__primary') ? ' class="controls-Radio__primary"' : '';
-
-         return '<component data-component="SBIS3.CONTROLS.RadioButton"'+className+'>' +
-               '<option name="caption">'+caption+'</option>'+
-            '</component>';
       }
    });
 

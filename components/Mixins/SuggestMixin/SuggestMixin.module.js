@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
     *
     * @mixin SBIS3.CONTROLS.SuggestMixin
     * @public
-    * @author Алексей Мальцев
+    * @author Крайнов Дмитрий Олегович
     */
 
    var SuggestMixin = /** @lends SBIS3.CONTROLS.SuggestMixin.prototype */{
@@ -267,6 +267,21 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             if (this._list) {
                this._list.destroy();
             }
+         },
+
+         _initializePicker: function() {
+            /* Баг мобильной версии сафари на IOS, который неправильно рендерит элементы с translate при некоторых условиях,
+             решается таймаутом
+             https://bugs.webkit.org/show_bug.cgi?id=138162
+             */
+            if($ws._const.browser.isMobileIOS) {
+               this.subscribeTo(this._picker, 'onAlignmentChange', function () {
+                  var container = this.getContainer();
+                  setTimeout(function () {
+                     container.toggleClass('controls-Suggest__picker-delayedRevert-vertical', container.hasClass('controls-popup-revert-vertical'));
+                  }, 0);
+               });
+            }
          }
       },
 
@@ -345,7 +360,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          this._delayTimer = setTimeout(function() {
             self._showLoadingIndicator();
             self._loadDeferred = self.getList().reload(self._options.listFilter).addCallback(function () {
-               self._checkPickerState() ? self.showPicker() : self.hidePicker();
+               self._checkPickerState(false) ? self.showPicker() : self.hidePicker();
             });
          }, this._options.delay);
       },
@@ -394,7 +409,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _observableControlFocusHandler: function() {
          if(this._options.autoShow) {
-            this._checkPickerState() ? this.showPicker() : this._startListSearch();
+            this._checkPickerState(true) ? this.showPicker() : this._startListSearch();
          }
       },
 
@@ -663,11 +678,13 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * Проверяет необходимость изменения состояния пикера
        * @private
        */
-      _checkPickerState: function () {
-         var items = this._getListItems();
+      _checkPickerState: function (checkItemsCount) {
+         var items = this._getListItems(),
+             hasItems = checkItemsCount ? items && items.getCount() : true;
+
          return Boolean(
              this._options.usePicker &&
-             items && items.getCount() &&
+             hasItems &&
              this._isObservableControlFocused()
          );
       },

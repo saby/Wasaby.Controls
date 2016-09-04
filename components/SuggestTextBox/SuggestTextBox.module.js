@@ -18,7 +18,23 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
     * @public
     * @category Inputs
     * @demo SBIS3.CONTROLS.Demo.MySuggestTextBox Поле ввода с автодополнением
-    * @author Алексей Мальцев
+    * @author Крайнов Дмитрий Олегович
     */
-   return TextBox.extend([PickerMixin, SuggestMixin, ChooserMixin, SuggestTextBoxMixin],{});
+   var SuggestTextBox = TextBox.extend([PickerMixin, SuggestMixin, ChooserMixin, SuggestTextBoxMixin],{
+
+      showPicker: function() {
+         SuggestTextBox.superclass.showPicker.apply(this, arguments);
+         this._setEqualPickerWidth();
+      },
+
+      _setEqualPickerWidth: function() {
+         var textBoxWidth = this.getContainer()[0].clientWidth,
+             pickerContainer = this._picker.getContainer()[0];
+
+         if (this._picker && textBoxWidth !== pickerContainer.clientWidth) {
+            pickerContainer.style.width = textBoxWidth + 'px';
+         }
+      }
+   });
+   return SuggestTextBox;
 });

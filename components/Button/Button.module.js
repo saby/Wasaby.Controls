@@ -183,14 +183,19 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
          return !!this._options.primary;
       },
       _unregisterDefaultButton: function() {
-         var parent = this.getParent();
-         if(parent && parent.unregisterDefaultButton)
-            parent.unregisterDefaultButton(this);
+         this.sendCommand('unregisterDefaultButtonAction');
       },
       _registerDefaultButton: function() {
-         var parent = this.getParent();
-         if(parent && parent.registerDefaultButton)
-            parent.registerDefaultButton(this);
+         function defaultAction(e) {
+            if (self && self.isEnabled()) {
+               self._onClickHandler(e);
+               return false;
+            } else {
+               return true;
+            }
+         }
+         var self = this;
+         this.sendCommand('registerDefaultButtonAction', defaultAction);
       },
        /**
         * @noShow
@@ -209,6 +214,11 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
           }
 
           this.setPrimary(isDefault);
+      },
+
+      destroy: function(){
+         this._unregisterDefaultButton();
+         Button.superclass.destroy.apply(this, arguments);
       }
       /*TODO конец*/
    });

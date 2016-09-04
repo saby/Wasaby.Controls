@@ -1,4 +1,5 @@
 <div class="controls-ListView{{?it.multiselect !== false}} controls-ListView__multiselect {{??}} controls-ListView__multiselect__off {{?}}">
+   <div class="controls-ListView__fakeFocusElement" tabindex="-1"></div>
    <div class="controls-AjaxLoader ws-hidden">
       <div class="controls-AjaxLoader__outer">
          <div class="controls-AjaxLoader__block">
@@ -11,6 +12,7 @@
          {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
       {{?}}
    </div>
+   <div class="controls-ListView__EmptyData {{?!it._serverRender || it._records.length}}ws-hidden{{?}}">{{=it.emptyHTML}}</div>
    {{?it.footerTpl}}
       <div class="controls-ListView__footer">{{=it.footerTpl(it)}}</div>
    {{?}}

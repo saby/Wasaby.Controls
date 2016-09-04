@@ -10,8 +10,9 @@
 // data grid
 @data-grid-cell-height:                         44px;;
 @data-grid-cell-padding:                        4px 6px;
-@data-grid-header-cell-font-size:               16px;
+@data-grid-header-cell-font-size:               18px;
 @data-grid-header-cell-height:                  22px;
+@data-grid-header-cell-padding:                 @data-grid-cell-padding;
 @data-grid-cell-line-height:                    34px;
 @data-grid-checkbox-margin:                     4px 0 -4px 10px;
 @data-grid-td-checkbox-width:                   30px;
@@ -24,6 +25,8 @@
 @tree-view-expand-margin:                       0 6px 8px 2px;
 @tree-view-editArrow-top:                       10px;
 @tree-view-expand-height:                       25px;
+
+@tree-view-value-left-margin:                   24px;
 
 // back-button
 @menu-item-icon-top-offset:                     14px;
@@ -66,6 +69,9 @@
 @listView-empty-data-color:                     #999999;
 @listView-empty-data-font-size:                 24px;
 @listView-empty-data-padding-top:               60px;
+
+@list-view-actions-item-height:                 32px;
+@list-view-actions-margin:                      0 8px;
 
 // ------ //
 // Button //
@@ -289,9 +295,9 @@
 
 @check-box-icon-third-state-bg:                 url(@check-box-icon-spritesheet) -4px 51px;
 
-@check-box-icon-disabled-bg:                    url(@check-box-icon-spritesheet) 30px -2px;
-@check-box-icon-disabled-checked-bg:            url(@check-box-icon-spritesheet) 30px 76px;
-@check-box-icon-disabled-third-state-bg:        url(@check-box-icon-spritesheet) 30px 76px;
+@check-box-icon-disabled-bg:                    url(@check-box-icon-spritesheet) 28px -2px;
+@check-box-icon-disabled-checked-bg:            url(@check-box-icon-spritesheet) 28px 74px;
+@check-box-icon-disabled-third-state-bg:        url(@check-box-icon-spritesheet) 28px 74px;
 
 // -------- //
 // Switcher //
@@ -385,6 +391,7 @@
 // ----------------------- //
 @controls-editInPlace-editor-margin-top:        2px;
 @controls-editInPlace-editor-margin-bottom:     2px;
+@controls-editInPlace-editor-padding:           2px;
 
 //FieldLink
 

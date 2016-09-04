@@ -91,26 +91,25 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
              * @cfg {String} Устанавливает первичный ключ записи, редактируемой на диалоге.
              * @remark
              * По данному ключу будет подгружена запись из источника данных, установленного опцией {@link dataSource}.
-             * Если ключ не передан (null), то этот сценарий означает создание новой записи.
-             * Ключ устанавливается при вызове диалога редактирования через {@link SBIS3.CONTROLS.DialogActionBase}.
-             * Подробнее об этом вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component-control/">Управление диалогом редактирования списка</a>.
+             * Если ключ не передан (null), то этот сценарий означает создание новой записи. Для новой записи можно предустановить значения в опции {@link initValues}.
              * </pre>
              * @see record
              * @see dataSource
              */
             key: null,
             /**
-             * @cfg {WS.Data/Entity/Record} Устанавливает запись, редактируемую на диалоге.
+             * @cfg {WS.Data/Entity/Record} Устанавливает в контекст диалога редактируемую на диалоге запись.
              * @remark
              * Опция используется в том случае, когда не установлен источник данных диалога в опции {@link dataSource}.
-             * Чтобы установить запись, используют метод {@link setRecord}.
+             * Чтобы установить запись, используют метод {@link setRecord}, а чтобы получить - метод {@link getRecord}.
              * @see setRecord
-             * @see key
+             * @see getRecord
              * @see dataSource
+             * @see key
              */
             record: null,
             /**
-             * @cfg {Boolean} Сохранять только измененные поля
+             * @cfg {Boolean} Устанавливает сохранение только изменённых полей.
              */
             diffOnly: false,
             /**
@@ -216,11 +215,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          }
          var self = this._getTemplateComponent(),
              record = self._options.record;
-         if (record.getState() === Record.RecordState.DELETED){
+         //Если нет записи или она была удалена, то закрываем панель
+         if (!record || (record.getState() === Record.RecordState.DELETED)){
             return;
          }
          //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
-         if (self._saving || !(record && record.isChanged())){
+         if (self._saving || !record.isChanged()){
             //Дестроим запись, когда выполнены три условия
             //1. если это было создание
             //2. если есть ключ (метод создать его вернул)
@@ -270,7 +270,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       },
 
       /**
-       * Используйте команду update
+       * Используйте команду update.
        * @command
        * @see update
        * @deprecated
@@ -458,7 +458,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * Источник данных для диалога редактирования устанавливают с помощью опции {@link dataSource}.
        * @param {String} key Первичный ключ записи, которую нужно прочитать из источника данных.
        * @returns {$ws.proto.Deferred} Объект deferred, который возвращает результат чтения записи из источника.
-       * @command
+       * @command read
        * @see update
        * @see destroy
        * @see create
@@ -626,6 +626,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @param {Boolean} [updateKey=false] Признак, по которому устанавливают необходимость обновления значения опции {@link key}.
        * @see record
        * @see key
+       * @see getRecord
        */
       setRecord: function(record, updateKey){
          var newKey;
@@ -641,7 +642,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             self._actionNotify('onAfterFormLoad');
          });
       },
-
+      /**
+       * Возвращает запись, установленную в контекст диалога редактирования.
+       * @see record
+       * @see key
+       * @see setRecord
+       */
       getRecord: function(){
         return this._options.record;
       },
@@ -651,7 +657,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * При удалении происходит событие {@link onDestroyModel}.
        * <br/>
        * Источник данных для диалога редактирования устанавливают с помощью опции {@link dataSource}.
-       * @command
+       * @command destroy
        * @see update
        * @see read
        * @see create
@@ -692,7 +698,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * <br/>
        * Источник данных для диалога редактирования устанавливают с помощью опции {@link dataSource}.
        * @returns {WS.Data/Entity/Record|$ws.proto.Deferred} Созданная запись либо результат выполнения команды.
-       * @command
+       * @command create
        * @see read
        * @see update
        * @see destroy
@@ -730,7 +736,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * Команда применяется для того, чтобы логика обработки события производилась на стороне {@link SBIS3.CONTROLS.DialogActionBase}.
        * @param {String} eventName Имя события, о котором нужно оповестить {@link SBIS3.CONTROLS.DialogActionBase}.
        * @param {*} additionalData Данные, которые должны быть проброшены в событие {@link SBIS3.CONTROLS.DialogActionBase}.
-       * @command
+       * @command notify
        * @see read
        * @see create
        * @see update
@@ -752,7 +758,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        *       textBox.getContainer().focus();
        *    });
        * </pre>
-       * @command
+       * @command activateChildControl
        */
       _createChildControlActivatedDeferred: function(){
          this._activateChildControlDeferred = (new $ws.proto.Deferred()).addCallback(function(){

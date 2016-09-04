@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 12.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.PopupMixin', 'html!SBIS3.CONTROLS.FloatArea', 'css!SBIS3.CONTROLS.FloatArea'], function(CompoundControl, PopupMixin, dotTpl) {
+define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.PopupMixin', 'js!SBIS3.CORE.LikeWindowMixin', 'html!SBIS3.CONTROLS.FloatArea', 'css!SBIS3.CONTROLS.FloatArea'], function(CompoundControl, PopupMixin, LikeWindowMixin, dotTpl) {
 
    'use strict';
 
@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS
     * @author Крайнов Дмитрий Олегович
     */
 
-   var FloatArea = CompoundControl.extend([PopupMixin], /** @lends SBIS3.CONTROLS.FloatArea.prototype*/ {
+   var FloatArea = CompoundControl.extend([PopupMixin, LikeWindowMixin], /** @lends SBIS3.CONTROLS.FloatArea.prototype*/ {
       _dotTplFn : dotTpl,
       $protected: {
          _options: {

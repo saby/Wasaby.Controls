@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
              */
             /**
              * @typedef {Object} Items
-             * @property {String} Путь к файлу, отвечающий за xslt-преобразование.
+             * @property {String} path Путь к файлу, отвечающего за xslt-преобразование.
              * @property {Binding} binding Имена методов БЛ, которые будут использованы при сохранении.
              * @property {Boolean} serverSideExport Использовать серверную выгрузку.
              */

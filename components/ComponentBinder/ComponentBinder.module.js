@@ -25,7 +25,15 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
              filter[searchParamName] = text;
              view.setHighlightText(text, false);
              view.setHighlightEnabled(true);
+
+             if (self._isInfiniteScroll == undefined) {
+                self._isInfiniteScroll = view.isInfiniteScroll();
+             }
              view.setInfiniteScroll(true, true);
+
+             if (self._lastGroup == undefined) {
+                self._lastGroup = view._options.groupBy;
+             }
              view.setGroupBy(groupBy);
              if (this._firstSearch) {
                 this._lastRoot = view.getCurrentRoot();
@@ -101,23 +109,22 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
       if(data.getCount()) {
          /* Если есть данные, и параметр поиска не транслитизировался,
             то не будем менять текст в строке поиска */
-         if(this._searchTextTranslated) {
+         if(this._searchTextBeforeTranlate) {
             searchForm.setText(newText);
-            this._searchTextTranslated = false;
+            this._searchTextBeforeTranlate = null;
          }
       } else {
          /* Если данных нет, то обработаем два случая:
             1) Была сменена раскладка - просто возвращаем фильтр в исходное состояние,
                текст в строке поиска не меняем
             2) Смены раскладки не было, то транслитизируем текст поиска, и поищем ещё раз   */
-         newText = KbLayoutRevertUtil.process(newText);
-         if(this._searchTextTranslated) {
-            viewFilter[searchParamName] = newText;
+         if(this._searchTextBeforeTranlate) {
+            viewFilter[searchParamName] = this._searchTextBeforeTranlate;
             view.setFilter(viewFilter, true);
-            this._searchTextTranslated = false;
+            this._searchTextBeforeTranlate = null;
          } else {
-            args[0] = newText;
-            this._searchTextTranslated = true;
+            this._searchTextBeforeTranlate = args[0];
+            args[0] = KbLayoutRevertUtil.process(newText);
             mainFunc.apply(this, args);
          }
       }
@@ -154,7 +161,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          return;
       }
       view.setInfiniteScroll(this._isInfiniteScroll, true);
+      this._isInfiniteScroll = undefined;
       view.setGroupBy(this._lastGroup);
+      this._lastGroup = undefined;
       view.setHighlightText('', false);
       view.setHighlightEnabled(false);
       this._firstSearch = true;
@@ -168,15 +177,18 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          view.reload(filter, view.getSorting(), 0);
          // TODO: Нужно оставить одно поле хранящее путь, сейчас в одно запоминается состояние хлебных крошек
          // перед тем как их сбросить, а в другом весь путь вместе с кнопкой назад
-         this._path = this._pathDSRawData || [];
+
          //Если сбросили поиск (по крестику) вернем путь в хлебные крошки и покажем кнопку назад
-         if (this._options.breadCrumbs){
-            this._options.breadCrumbs.getItems().setRawData(this._pathDSRawData);
-            this._options.breadCrumbs._redraw();
-         }
-         if (this._options.backButton) {
-            this._options.backButton.getContainer().css({'display': ''});
-         }
+         view.once('onDataLoad', function() {
+            self._path = self._pathDSRawData || [];
+            if (self._options.breadCrumbs) {
+               self._options.breadCrumbs.getItems().setRawData(self._pathDSRawData);
+               self._options.breadCrumbs._redraw();
+            }
+            if (self._options.backButton) {
+               self._options.backButton.getContainer().css({'display': ''});
+            }
+         })
       } else {
          //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
          view.setFilter(filter, true);
@@ -236,7 +248,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          _currentRoot: null,
          _pathDSRawData : [],
          _firstSearch: true,
-         _searchTextTranslated: false,
+         _searchTextBeforeTranlate: null,
          _path: [],
          _scrollPages: [], // Набор страниц для скролл-пэйджина
          _pageOffset: 0, // offset последней страницы
@@ -347,8 +359,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             });
          }
 
-         this._lastGroup = view._options.groupBy;
-         this._isInfiniteScroll = view.isInfiniteScroll();
          function subscribeOnSearchFormEvents() {
             searchForm.subscribe('onReset', function (event, text) {
                if (isTree) {
@@ -448,7 +458,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                   self._currentRoot = hier[0];
                   self._path = hier.reverse();
                } else {
-                  if (id === view._options.root){
+                  /* Если root не установлен, и переданный id === null, то считаем, что мы в корне */
+                  if ( (id === view._options.root) || (!view._options.root && id === null) ){
                       self._currentRoot = null;
                       self._path = [];
                   }
@@ -486,7 +497,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          });
 
          breadCrumbs.subscribe('onItemClick', function(event, id){
-            self._currentRoot = this._dataSet.getRecordByKey(id);
+            self._currentRoot = this._dataSet.getRecordById(id);
             self._currentRoot = self._currentRoot ? self._currentRoot.getRawData() : null;
             if (id === null){
                self._path = [];
@@ -775,10 +786,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             this._options.view.getContainer().css('padding-bottom', '32px');
          }
          if (this._options.paging.getSelectedKey() > pagesCount){
-            this._options.paging._options.selectedKey = pagesCount;   
+            this._options.paging._options.selectedKey = pagesCount;
          }
          this._options.paging.setPagesCount(pagesCount);
-         
+
          //Если есть страницы - покажем paging
          this._options.paging.setVisible(pagesCount > 1);
       },
