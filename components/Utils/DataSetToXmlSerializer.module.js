@@ -145,11 +145,11 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             }
             element = document.createElement(tagName);
             if(fieldValue instanceof Date){
-               if(typeName == "Дата и время")
+               if(typeName === "Дата и время" || typeName === 'DateTime')
                   fieldValue = fieldValue.toSQL() + "T" + fieldValue.toTimeString().replace(" GMT", "").replace(/\s[\w\W]*/, "");
-               if(typeName == "Дата")
+               if(typeName === 'Дата' || typeName === 'Date')
                   fieldValue = fieldValue.toSQL();
-               if(typeName == "Время")
+               if(typeName === 'Время' || typeName === 'Time')
                   fieldValue = fieldValue.toTimeString().replace(" GMT", "").replace(/\s[\w\W]*/, "");
             }
             fieldValue = $ws.helpers.removeInvalidXMLChars(fieldValue + "");
