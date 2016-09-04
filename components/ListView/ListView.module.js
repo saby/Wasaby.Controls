@@ -273,6 +273,9 @@ define('js!SBIS3.CONTROLS.ListView',
             _notEndEditClassName: 'controls-ListView__onFocusNotEndEdit',
             _emptyData: undefined,
             _containerScrollHeight : 0,
+            // указывает на необходимость компенсации скрола при подгрузке данных вверх
+            // необходим, так как компенсацию можно произвести только после отрисовки - в drawItemsCallback
+            // безусловно это делать нельзя, так как drawItemsCallback срабатывает и при перерисовке одной записи
             _needScrollCompensation : null,
             _addResultsMethod: undefined,
             _options: {
@@ -2098,7 +2101,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          /**
-          * Если скролл находится в самом верху и добавляются записи вверх - не скролл останнется на месте,
+          * Если скролл находится в самом верху и добавляются записи вверх - скролл не останнется на месте,
           * а будет все так же вверху. Поэтому после отрисовки записей вверх, подвинем скролл на прежнее место -
           * конец предпоследней страницы
           * @private
