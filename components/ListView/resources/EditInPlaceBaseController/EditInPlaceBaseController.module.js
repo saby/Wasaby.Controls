@@ -244,11 +244,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   }, 100);
                   return beginEditResult.addCallback(function(readRecord) {
                      self._editingRecord = record;
-                     //При перечитывании записи она не является связанной с рекордсетом, и мы в последствии не сможем понять,
-                     //происходило ли добавление записи или редактирование. При редактировании выставим значение сами.
-                     if (record.getState() !== Record.RecordState.DETACHED) {
-                        readRecord.setState(Record.RecordState.UNCHANGED);
-                     }
                      return readRecord;
                   }).addBoth(function (result) {
                      clearTimeout(loadingIndicator);
@@ -351,7 +346,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                var
                   self = this,
                   eipRecord = eip.getEditingRecord(),
-                  isAdd = eipRecord.getState() === Record.RecordState.DETACHED;
+                  isAdd = !this._options.items.getRecordById(eipRecord.getId());
                if (withSaving) {
                   this._options.dataSource.update(eipRecord).addCallback(function() {
                      eip.acceptChanges();
@@ -495,13 +490,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             destroy: function() {
                this._destroyEip();
-               //destroy может позваться из reload у ListView, а если в данный момент происходит сохранение, то
-               //возможно после сохранения начнётся редактирование следующей строки(если сохранение запущенно по enter),
-               //а редакторы уже уничтожены. В такой ситуации тем кто ждёт сохранение, скажем что его не нужно ждать.
-               //Сохранение при этом продолжит работать в обычном режиме.
-               if (!this._savingDeferred.isReady()) {
-                  this._savingDeferred.errback();
-               }
                EditInPlaceBaseController.superclass.destroy.apply(this, arguments);
             }
          });

@@ -1461,7 +1461,9 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _setEnabled : function(enabled) {
             ListView.superclass._setEnabled.call(this, enabled);
-            this._destroyEditInPlace();
+            if (!enabled) {
+               this._destroyEditInPlace();
+            }
          },
 
          _onItemClickHandler: function(event, id, model) {
@@ -1483,7 +1485,6 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options._decorators) {
                this._options._decorators.update(this);
             }
-            this._destroyEditInPlace();
             ListView.superclass.redraw.apply(this, arguments);
          },
 
