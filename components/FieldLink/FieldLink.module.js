@@ -384,6 +384,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           },
 
+          setActive: function(active) {
+             FieldLink.superclass.setActive.apply(this, arguments);
+
+             if (active && this._needFocusOnActivated() && this.isEnabled() && $ws._const.browser.isMobilePlatform) {
+                this._getElementToFocus().focus();
+             }
+          },
+
           _getAdditionalChooserConfig: function () {
              var oldRecArray = [],
                 selectedKeys = this._isEmptySelection() ? [] : this.getSelectedKeys(),
