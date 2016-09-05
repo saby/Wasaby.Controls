@@ -122,7 +122,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             viewFilter[searchParamName] = this._searchTextBeforeTranlate;
             view.setFilter(viewFilter, true);
             this._searchTextBeforeTranlate = null;
-         } else {
+            /* Надо проверить, изменился ли текст, после смены раскладки,
+               т.к. он может не меняться, если введены одни цифры */
+         } else if(viewFilter[searchParamName] !== newText) {
             this._searchTextBeforeTranlate = args[0];
             args[0] = KbLayoutRevertUtil.process(newText);
             mainFunc.apply(this, args);
