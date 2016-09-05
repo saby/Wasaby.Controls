@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
 
          this.subscribe('onDrawItems', this._onDateRangePickerDrawItems.bind(this));
 
-         this.setDataSource(monthSource);
+         this.setDataSource(monthSource, true);
          setTimeout(this._updateMonthsPosition.bind(this), 0);
       },
 
