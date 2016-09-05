@@ -340,7 +340,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
             },
             _getEditingEip: function() {
-               return this._eip.isEdit() ? this._eip : null;
+               return this._eip && this._eip.isEdit() ? this._eip : null;
             },
             _updateModel: function(eip, withSaving) {
                var

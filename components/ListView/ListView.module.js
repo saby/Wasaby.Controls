@@ -1485,6 +1485,10 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options._decorators) {
                this._options._decorators.update(this);
             }
+            //TODO: При перерисовке разрушаем редактор, иначе ItemsControlMixin задестроит все контролы внутри,
+            //но не проставит все необходимые состояния. В .200 начнём пересоздавать редакторы для каждого редактирования
+            //и данный код не понадобится.
+            this._getEditInPlace()._destroyEip();
             ListView.superclass.redraw.apply(this, arguments);
          },
 
