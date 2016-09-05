@@ -613,9 +613,8 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
       },
 
       _selectionToggle: function (item, selectionType) {
-         var containerCssClass;
+         var containerCssClass, start, end;
 
-         // Преобразуем item из числового идентификатора в дату
          switch(selectionType) {
             case selectionTypes.years:
                containerCssClass = css_classes.range_containers.years;
@@ -643,17 +642,21 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          }
 
          this._onRangeItemElementClick(item);
-
+         start = this.getStartValue();
+         end = this.getEndValue();
          if (this.isSelectionProcessing()) {
             this.getContainer().addClass(css_classes.selectionProcessing);
             if (selectionType === selectionTypes.months) {
-               this._dateRangePicker.startSelection(this.getStartValue(), this.getEndValue());
+               this._dateRangePicker.startSelection(start, end);
             }
          } else {
             this.getContainer().removeClass(css_classes.selectionProcessing);
             this._cancelRangeBarsSelection();
             if (selectionType === selectionTypes.months) {
                this._dateRangePicker.cancelSelection();
+               if (this._isMonthEqual(start, end)) {
+                  this._dateRangePicker.setEndValue(end);
+               }
             }
          }
       },
@@ -761,6 +764,9 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
 
       _isDatesEqual: function (date1, date2) {
          return date1 === date2 || (date1 && date2 && date1.getTime() === date2.getTime());
+      },
+      _isMonthEqual: function (date1, date2) {
+         return date1 === date2 || (date1 && date2 && date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth());
       }
    });
    return DateRangeBigChoose;
