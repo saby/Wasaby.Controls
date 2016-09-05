@@ -537,15 +537,20 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @private
           */
          setFontStyle: function(style) {
-            if (style !== 'mainText') {
-               this._applyFormat(style, true);
+            //TODO: перейти на fontSize с форматов, когда придёт в голову идея как отлавливать изменение этого fontSize
+            if ($ws._const.browser.firefox &&  $(this._tinyEditor.selection.getNode()).find('br').attr('data-mce-bogus') == '1') {
+               console.log('wtf');
+               $(this._tinyEditor.selection.getNode()).find('br').remove();
             }
             for (var stl in constants.styles) {
                if (style !== stl) {
                   this._removeFormat(stl);
                }
             }
-            this._tinyEditor.focus();
+            if (style !== 'mainText') {
+               this._applyFormat(style, true);
+            }
+            this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._setTrimmedText(this._getTinyEditorValue());
          },
