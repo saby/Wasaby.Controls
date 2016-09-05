@@ -199,10 +199,6 @@ define(
          this._dateBox.subscribe('onDateChange', this._onDateBoxDateChanged.bind(this));
          this._dateBox.subscribe('onTextChange', this._onDateBoxTextChanged.bind(this));
 
-         this._dateBox.subscribe('onDateSelect', function (e, date) {
-            this._notify('onDateSelect', date);
-         }.bind(this));
-
          this._container.removeClass('ws-area');
          this._initValidators();
       },
@@ -298,6 +294,29 @@ define(
             options.isCalendarIconShown = false;
          }
       },
+
+      setActive: function(active) {
+         if (active) {
+            this._initFocusInHandler();
+         }
+         DatePicker.superclass.setActive.apply(this, arguments);
+      },
+
+      _initFocusInHandler: function() {
+         if (!this._onFocusInHandler) {
+            this._onFocusInHandler = this._onFocusIn.bind(this);
+            this.subscribeTo($ws.single.EventBusGlobalChannel, 'onFocusIn', this._onFocusInHandler);
+         }
+      },
+
+      _onFocusIn: function(event) {
+         if (!$ws.helpers.isChildControl(this, event.getTarget())) {
+            this._notify('onDateSelect');
+            this.unsubscribeFrom($ws.single.EventBusGlobalChannel, 'onFocusIn', this._onFocusInHandler);
+            this._onFocusInHandler = null;
+         }
+      },
+
 
      /**
       * В добавление к проверкам и обновлению опции text, необходимо обновить поле _date
