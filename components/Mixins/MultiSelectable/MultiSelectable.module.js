@@ -397,17 +397,18 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
       },
 
       _removeItemsSelection : function(idArray) {
-         var removedKeys = [];
+         var removedKeys = [],
+             selectedKeys = Array.clone(this._options.selectedKeys);
 
          if (Array.isArray(idArray)) {
             for (var i = idArray.length - 1; i >= 0; i--) {
                if (this._isItemSelected(idArray[i])) {
-                  Array.remove(this._options.selectedKeys, this._getSelectedIndex(idArray[i]));
+                  Array.remove(selectedKeys, this._getSelectedIndex(idArray[i], selectedKeys));
                   removedKeys.push(idArray[i]);
                }
             }
             /* Копируем, чтобы порвать ссылку на значение в контексте */
-            this._options.selectedKeys = Array.clone(this._options.selectedKeys);
+            this._options.selectedKeys = selectedKeys;
             return removedKeys;
          }
          else {
@@ -731,8 +732,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
          return this._getSelectedIndex(item) !== -1;
       },
 
-      _getSelectedIndex: function(item) {
-         var keys = this._options.selectedKeys,
+      _getSelectedIndex: function(item, array) {
+         var keys = array || this._options.selectedKeys,
              selectedItems = this._options.selectedItems,
              index = ArraySimpleValuesUtil.invertTypeIndexOf(keys, item);
 
