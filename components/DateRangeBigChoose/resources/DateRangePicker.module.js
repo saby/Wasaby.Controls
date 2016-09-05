@@ -83,11 +83,13 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
          this._onMonthViewSelectingRangeEndDateChange = this._onMonthViewSelectingRangeEndDateChange.bind(this);
          this._onMonthViewCaptionActivated = this._onMonthViewCaptionActivated.bind(this);
 
-         if (this._options.month) {
-            this._options.month = this._normalizeMonth(this._options.month);
-         } else {
-            this._options.month = (new Date(now.getFullYear(), now.getMonth(), 1));
-         }
+         // Представление обновляется только в setMonth и в любом случае будет использоваться месяц установленный в  setMonth
+         // TODO: Сделать, что бы компонент рендерился при построении если чузер открыт в режиме месяца. Тоже самое для режима года и для MonthPicker
+         // if (this._options.month) {
+         //    this._options.month = this._normalizeMonth(this._options.month);
+         // } else {
+         //    this._options.month = (new Date(now.getFullYear(), now.getMonth(), 1));
+         // }
 
          Component.superclass.init.call(this);
 
