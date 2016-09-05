@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Pager',
       'js!SBIS3.CONTROLS.EditInPlaceHoverController',
       'js!SBIS3.CONTROLS.EditInPlaceClickController',
+      'js!SBIS3.CONTROLS.ImitateEvents',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.ScrollWatcher',
       'js!WS.Data/Collection/IBind',
@@ -45,7 +46,7 @@ define('js!SBIS3.CONTROLS.ListView',
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
-             TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
+             TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
              Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder, Di, ArraySimpleValuesUtil) {
 
@@ -853,7 +854,7 @@ define('js!SBIS3.CONTROLS.ListView',
                case $ws._const.key.enter:
                   if(selectedKey) {
                      var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
-                     this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem);
+                     this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem, e);
                   }
                   break;
                case $ws._const.key.space:
@@ -976,7 +977,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             if (target.length && this._isViewElement(target)) {
                id = this._getItemsProjection().getByHash(target.data('hash')).getContents().getId();
-               this._elemClickHandler(id, this.getItems().getRecordById(id), e.target);
+               this._elemClickHandler(id, this.getItems().getRecordById(id), e.target, e);
             }
             if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox')){
                $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
@@ -1204,7 +1205,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          /* +++++++++++++++++++++++++++ */
 
-         _elemClickHandler: function (id, data, target) {
+         _elemClickHandler: function (id, data, target, e) {
             var $target = $(target),
                 self = this,
                 elClickHandler = this._options.elemClickHandler,
@@ -1215,36 +1216,36 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._onCheckBoxClick($target);
                }
                else {
-                  onItemClickResult = this._notifyOnItemClick(id, data, target);
+                  onItemClickResult = this._notifyOnItemClick(id, data, target, e);
                }
             }
             else {
-               onItemClickResult = this._notifyOnItemClick(id, data, target);
+               onItemClickResult = this._notifyOnItemClick(id, data, target, e);
             }
             if (onItemClickResult instanceof $ws.proto.Deferred) {
                onItemClickResult.addCallback(function (result) {
                   if (result !== false) {
                      self.setSelectedKey(id);
-                     self._elemClickHandlerInternal(data, id, target);
-                     elClickHandler && elClickHandler.call(self, id, data, target);
+                     self._elemClickHandlerInternal(data, id, target, e);
+                     elClickHandler && elClickHandler.call(self, id, data, target, e);
                   }
                   return result;
                });
             }
             else if (onItemClickResult !== false) {
                this.setSelectedKey(id);
-               self._elemClickHandlerInternal(data, id, target);
+               self._elemClickHandlerInternal(data, id, target, e);
                elClickHandler && elClickHandler.call(self, id, data, target);
             }
          },
-         _notifyOnItemClick: function(id, data, target) {
-            return this._notify('onItemClick', id, data, target);
+         _notifyOnItemClick: function(id, data, target, e) {
+            return this._notify('onItemClick', id, data, target, e);
          },
          _onCheckBoxClick: function(target) {
             this.toggleItemsSelection([target.closest('.controls-ListView__item').attr('data-id')]);
          },
 
-         _elemClickHandlerInternal: function (data, id, target) {
+         _elemClickHandlerInternal: function (data, id, target, e) {
             /* Клик по чекбоксу не должен вызывать активацию элемента */
             if(!$(target).hasClass('js-controls-ListView__itemCheckBox')) {
                this._activateItem(id);
@@ -1450,8 +1451,8 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.editingTemplate;
          },
 
-         showEip: function(model, options) {
-            return this._canShowEip() ? this._getEditInPlace().showEip(model, options) : $ws.proto.Deferred.fail();
+         showEip: function(model, options, withoutActivateFirstControl) {
+            return this._canShowEip() ? this._getEditInPlace().showEip(model, options, withoutActivateFirstControl) : $ws.proto.Deferred.fail();
          },
 
          _canShowEip: function() {
@@ -1464,8 +1465,16 @@ define('js!SBIS3.CONTROLS.ListView',
             this._destroyEditInPlace();
          },
 
-         _onItemClickHandler: function(event, id, model) {
-            event.setResult(this.showEip(model, { isEdit: true }));
+         _onItemClickHandler: function(event, id, model, originalEvent) {
+            var
+               result = this.showEip(model, { isEdit: true }, false);
+            if (originalEvent.type === 'click') {
+               result.addCallback(function(res) {
+                  ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
+                  return res;
+               });
+            }
+            event.setResult(result);
          },
 
          _onChangeHoveredItemHandler: function(event, hoveredItem) {
