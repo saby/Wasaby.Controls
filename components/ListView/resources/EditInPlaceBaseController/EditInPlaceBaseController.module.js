@@ -200,14 +200,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _getCurrentTarget: function() {
                return this._eip.getTarget();
             },
-            showEip: function(model, options) {
+            showEip: function(model, options, withoutActivateFirstControl) {
                if (options && options.isEdit) {
-                  return this.edit(model, options)
+                  return this.edit(model, options, withoutActivateFirstControl);
                } else {
                   return this.add(options);
                }
             },
-            edit: function (model) {
+            edit: function (model, withoutActivateFirstControl) {
                var self = this;
                return this.endEdit(true).addCallback(function() {
                   return self._prepareEdit(model).addCallback(function(preparedRecord) {
@@ -216,7 +216,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         var
                             parentProjItem,
                             itemProjItem = self._options.itemsProjection.getItemBySourceItem(preparedRecord);
-                        self._getEip().edit(preparedRecord, itemProjItem);
+                        self._getEip().edit(preparedRecord, itemProjItem, withoutActivateFirstControl);
                         editingRecord = self._getEip().getEditingRecord();
                         self._notify('onAfterBeginEdit', editingRecord);
                         //TODO: необходимо разбивать контроллер редактирования по месту, для плоских и иерархических представлений
