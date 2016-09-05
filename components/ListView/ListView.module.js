@@ -276,7 +276,10 @@ define('js!SBIS3.CONTROLS.ListView',
             _itemsToolbar: null,
             _notEndEditClassName: 'controls-ListView__onFocusNotEndEdit',
             _containerScrollHeight : 0,
-            _firstScrollTop : true,
+            // указывает на необходимость компенсации скрола при подгрузке данных вверх
+            // необходим, так как компенсацию можно произвести только после отрисовки - в drawItemsCallback
+            // безусловно это делать нельзя, так как drawItemsCallback срабатывает и при перерисовке одной записи
+            _needScrollCompensation : null,
             _addResultsMethod: undefined,
             _options: {
                _canServerRender: true,
@@ -773,7 +776,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * потому что контейнер невидимый*/
                if ($ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
                   var afterFloatAreaShow = function(){
-                     this._firstScrollTop = true;
+                     this._needScrollCompensation = true;
                      if (this.getItems()) {
                         this._preScrollLoading();
                      }
@@ -802,8 +805,10 @@ define('js!SBIS3.CONTROLS.ListView',
          _onTotalScrollHandler: function(event, type){
             var scrollOnEdge = (this._options.infiniteScroll === 'up' && type === 'top') || // скролл вверх и доскролили до верхнего края
                                (this._options.infiniteScroll === 'down'); //скролл в обе стороны и доскролили до любого края
-            if (scrollOnEdge) {
-               this._loadChecked(type == 'top' ? 'up' : 'down');
+            if (scrollOnEdge && this.getItems()) {
+               var isTop = type == 'top';
+               this._needScrollCompensation = isTop;
+               this._scrollLoadNextPage(isTop ? 'up' : 'down');
             }
          },
          _createScrollPager: function(){
@@ -1318,7 +1323,7 @@ define('js!SBIS3.CONTROLS.ListView',
          reload: function () {
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
-            this._firstScrollTop = true;
+            this._needScrollCompensation = this._options.isInfiniteScroll == 'up';
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
             return ListView.superclass.reload.apply(this, arguments);
@@ -1972,15 +1977,6 @@ define('js!SBIS3.CONTROLS.ListView',
          isInfiniteScroll: function () {
             return this._allowInfiniteScroll && !!this._options.infiniteScroll;
          },
-         /**
-          *  Общая проверка и загрузка данных для всех событий по скроллу
-          */
-         _loadChecked: function (direction) {
-            //Важно, чтобы датасет уже был готов к моменту, когда мы попытаемся грузить данные
-            if (this.getItems()) {
-               this._scrollLoadNextPage(direction);
-            }
-         },
          _cancelLoading: function(){
             ListView.superclass._cancelLoading.apply(this, arguments);
             if (this.isInfiniteScroll()){
@@ -2110,27 +2106,24 @@ define('js!SBIS3.CONTROLS.ListView',
             // Если нет скролла или скролл внизу (при загрузке вниз), значит нужно догружать еще записи
             if ((this.isScrollOnBottom() && this._options.infiniteScroll == 'down') || !hasScroll()) {
                this._scrollLoadNextPage();
-            } else {
-               if (!this.isScrollOnBottom() || this._firstScrollTop) {
+            } else  {
+               if (this._needScrollCompensation) {
                   this._moveTopScroll();
-                  this._firstScrollTop = false;
+                  this._needScrollCompensation = false;
                }
             }
          },
          /**
-          * Если скролл находится в самом верху и добавляются записи вверх - не скролл останнется на месте,
+          * Если скролл находится в самом верху и добавляются записи вверх - скролл не останнется на месте,
           * а будет все так же вверху. Поэтому после отрисовки записей вверх, подвинем скролл на прежнее место -
           * конец предпоследней страницы
           * @private
           */
          _moveTopScroll: function(){
-            //сюда попадем только когда уже точно есть скролл
-            if (this.isInfiniteScroll() && this._options.infiniteScroll == 'up'){
-               var scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
-               //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
-               //разницы величины скролла (т.е. на сколько добавилось высоты, на столько и опустили). Получается плавно
-               this._scrollWatcher.scrollTo(this._firstScrollTop || (scrollAmount < 0) ? 'bottom' : scrollAmount);
-            }
+            var scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
+            //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
+            //разницы величины скролла (т.е. на сколько добавилось высоты, на столько и опустили). Получается плавно
+            this._scrollWatcher.scrollTo(scrollAmount);
          },
          /**
           * Скролит табличное представление к указанному элементу
