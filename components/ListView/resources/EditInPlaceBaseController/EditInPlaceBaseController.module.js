@@ -346,6 +346,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                var
                   self = this,
                   eipRecord = eip.getEditingRecord(),
+                  //Проверять происход ли добавлеие, надёжнее всего проверяя есть ли запись с указанным Id в рекордсете.
+                  //Смотреть на state ненадёжно т.к. запись могли перечитать с бл, или могли позвать reload после начала редактирования.
+                  //Эти действия сделают запись не связанной с рекордсетом, и мы не сможем понять, происходит ли добавление или редактирование.
                   isAdd = !this._options.items.getRecordById(eipRecord.getId());
                if (withSaving) {
                   this._options.dataSource.update(eipRecord).addCallback(function() {
