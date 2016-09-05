@@ -62,20 +62,23 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           },
 
           _changeHistoryHandler: function(e, id, newHistory, activeFilter, saveDeferred) {
+             /* При изменении истории с другим id - ничего не делаем */
+             if(this._options.historyId !== id) {
+                return;
+             }
+
              var isHistoryEqual = $ws.helpers.isEqualObject(this._listHistory.toArray(), newHistory.toArray()),
-                 fb = this._options.filterButton,
+                 filterButton = this._options.filterButton,
                  currentActiveFilter = this.getActiveFilter();
 
-             /* Если изменения произошло в истории с другим ID или история не изменилась,
-                то надо дополнительно проверить фильтр, возможно он был выставлен из контекста,
-                иначе ничего делать не будем */
-             if (this._options.historyId !== id || isHistoryEqual || (currentActiveFilter && activeFilter && $ws.helpers.isEqualObject(currentActiveFilter, activeFilter))) {
-
+             /* Если при изменении активные фильтры или вся история одинаковы,
+                то не надо запускать механизм синхронизации истории */
+             if (isHistoryEqual || (currentActiveFilter && activeFilter && $ws.helpers.isEqualObject(currentActiveFilter, activeFilter))) {
                 /* Для случая, когда фильтр был синхронизирован из внешнего контекста (т.е. его в истории нет),
                    при сбросе фильтра, мы должны синхронизировать и другие фильтры, которые подписаны на канал изменения с одинаковым id,
                    т.е. вызвать у них сброс фильтра */
                 if(!isHistoryEqual && activeFilter === false && currentActiveFilter === false) {
-                   fb.sendCommand('reset-filter');
+                   filterButton.sendCommand('reset-filter');
                 }
 
                 return;
@@ -87,9 +90,9 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              this._saveParamsDeferred = saveDeferred;
 
              if(activeFilter) {
-                fb.setFilterStructure(this._prepareStructureElemForApply(activeFilter.filter));
+                filterButton.setFilterStructure(this._prepareStructureElemForApply(activeFilter.filter));
              } else {
-                fb.sendCommand('reset-filter');
+                filterButton.sendCommand('reset-filter');
              }
 
              this._updateFilterButtonHistoryView();
