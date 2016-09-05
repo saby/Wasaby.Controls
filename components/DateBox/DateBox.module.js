@@ -54,13 +54,6 @@ define(
         *    dateBox.subscribe('onDateChange', dateChangeFn);
         * </pre>
         */
-      /**
-       * @event onDateSelect Происходит при окончании выбора даты.
-       * @remark
-       * Окончанием выбора даты является уход фокуса из поля ввода, на не дочерние контролы.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {Date} date Дата, которую установили.
-       */
       $protected: {
          _dotTplFn: dotTplFn,
          /**
@@ -193,12 +186,11 @@ define(
              * @deprecated
              */
             notificationMode: 'change'
-         },
-         _onFocusInHandler: undefined
+         }
       },
 
       $constructor: function () {
-         this._publish('onDateChange', 'onDateSelect');
+         this._publish('onDateChange');
 
          // Проверить тип маски -- дата, время или и дата, и время. В случае времени -- сделать isCalendarIconShown = false
          this._checkTypeOfMask(this._options);
@@ -443,25 +435,8 @@ define(
                this._notifyOnDateChanged();
                this._notifyOnTextChange();
             }
-         } else {
-            this._initFocusInHandler()
          }
          DateBox.superclass.setActive.apply(this, arguments);
-      },
-
-      _initFocusInHandler: function() {
-         if (!this._onFocusInHandler) {
-            this._onFocusInHandler = this._onFocusIn.bind(this);
-            this.subscribeTo($ws.single.EventBusGlobalChannel, 'onFocusIn', this._onFocusInHandler);
-         }
-      },
-
-      _onFocusIn: function(event) {
-         if (!$ws.helpers.isChildControl(this, event.getTarget())) {
-            this._notify('onDateSelect');
-            this.unsubscribeFrom($ws.single.EventBusGlobalChannel, 'onFocusIn', this._onFocusInHandler);
-            this._onFocusInHandler = null;
-         }
       },
 
       /**
