@@ -457,7 +457,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                var
                   eip,
                   withSaving,
-                  endEdit = this._allowEndEdit(control) && (this._isAnotherTarget(control, this) || this._isCurrentTarget(control));
+                  // Если фокус ушел на кнопку закрытия диалога, то редактирование по месту не должно реагировать на это, т.к.
+                  // его и так завершат через finishChildPendingOperation (и туда попадет правильный аргумент - с сохранением
+                  // или без завершать редактирование по месту)
+                  endEdit = !$ws.helpers.instanceOfModule(control, 'SBIS3.CORE.CloseButton') && this._allowEndEdit(control) && (this._isAnotherTarget(control, this) || this._isCurrentTarget(control));
                if (endEdit) {
                   eip = this._getEditingEip();
                   withSaving = eip.getEditingRecord().isChanged();
