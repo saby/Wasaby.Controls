@@ -173,9 +173,14 @@
       .controls-DateRangeBigChoose__left,
       .controls-DateRangeBigChoose__center,
       .controls-DateRangeBigChoose__right {
-         padding: 7px 0 9px 0;
-         border: 1px solid transparent;
+         padding: 8px 0 8px 0;
          .box-sizing(border-box);
+      }
+      .controls-DateRangeBigChoose__left {
+         border-right: 1px solid transparent;
+      }
+      .controls-DateRangeBigChoose__right {
+         border-left: 1px solid transparent;
       }
 
       .controls-DateRangeBigChoose__yearsRange {
@@ -383,7 +388,7 @@
 
       .controls-DateRangeBigChoose__dates-months {
          position: absolute;
-         width: 86px;
+         width: 82px;
          .range-vertical-button-bar-mixin();
 
          button.controls-Button {
@@ -417,7 +422,7 @@
       .controls-DateRangeBigChoose__dates-dates-wrapper {
       //.controls-DateRangeBigChoose__dates-dates {
          position: absolute;
-         left: 94px;
+         left: 90px;
          right: 8px;
          top: 0;
          bottom: 0;
