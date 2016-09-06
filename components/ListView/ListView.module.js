@@ -1888,9 +1888,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 containsHoveredItem;
 
             ListView.superclass._drawItemsCallback.apply(this, arguments);
-            if (this.isInfiniteScroll()) {
-               this._preScrollLoading();
-            }
             this._drawSelectedItems(this._options.selectedKeys);
 
             hoveredItem = this.getHoveredItem();
@@ -1937,6 +1934,12 @@ define('js!SBIS3.CONTROLS.ListView',
 
             this._notifyOnSizeChanged(true);
             this._drawResults();
+         },
+         _drawItemsCallbackSync: function(){
+            ListView.superclass._drawItemsCallbackSync.call(this);
+            if (this.isInfiniteScroll()) {
+               this._preScrollLoading();
+            }
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
