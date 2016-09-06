@@ -165,6 +165,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
                this.unsubscribeFrom(this._getItemsProjection(), 'onCollectionItemChange', this._onCollectionItemChangeSelected);
             }
 
+         },
+         destroy: function() {
+            if(this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
+               this._loadItemsDeferred.cancel();
+            }
          }
       },
 
