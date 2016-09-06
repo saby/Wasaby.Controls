@@ -183,19 +183,10 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             });
          },
          _recalcDropdownWidth: function(){
-            var dropdownLists = $('.controls-DropdownList', this.getContainer());
-            dropdownLists.sort(function(el1, el2){
-               return $(el1).width() > $(el2).width();
-            });
-            for (var i = 0, l = dropdownLists.length; i < l; i++){
-               $(dropdownLists[i]).css('flex-shrink', i + 1);
-            }
-         },
-         _recalcDropdownWidth: function(){
             this._resetMaxWidth();
             if ($ws._const.browser.isIE && $ws._const.browser.IEVersion <= 10){
                var ddlText = $('.controls-DropdownList__textWrapper', this.getContainer()),
-                   containerWidth = this.getContainer().width();
+                  containerWidth = this.getContainer().width();
                this._resizeDropdownContainersForIE(ddlText, containerWidth);
             }
             else{
@@ -211,7 +202,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
 
          _resetMaxWidth: function(){
             var dropdownContainer = $('.controls-DropdownList', this.getContainer()),
-                dropdownLimitProperty = 'flex-shrink';
+               dropdownLimitProperty = 'flex-shrink';
             if ($ws._const.browser.isIE && $ws._const.browser.IEVersion <= 10){
                dropdownContainer = $('.controls-DropdownList__textWrapper', this.getContainer());
                dropdownLimitProperty = 'max-width';
@@ -223,7 +214,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
 
          _resizeDropdownContainersForIE: function(dropdownText, containerWidth){
             var ddlWidth = this._getDropdownListsWidth(),
-                maxDdl;
+               maxDdl;
             while (ddlWidth > containerWidth){
                maxDdl = this._getDropdownMaxWidth(dropdownText);
                maxDdl.css('max-width', (maxDdl.width() * 0.9)); //Уменьшаем ширину самого большого ddl на 10%
@@ -241,14 +232,14 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          },
 
          _getDropdownListsWidth: function(){
-           var sumWidth = 0;
-           var dropdownContainer = $('.controls-DropdownList', this.getContainer());
+            var sumWidth = 0;
+            var dropdownContainer = $('.controls-DropdownList', this.getContainer());
 
-           for (var i = 0, l = dropdownContainer.length; i < l; i++){
-              sumWidth += $(dropdownContainer[i]).width();
-           }
+            for (var i = 0, l = dropdownContainer.length; i < l; i++){
+               sumWidth += $(dropdownContainer[i]).width();
+            }
 
-           return sumWidth;
+            return sumWidth;
          },
 
          _onResizeHandler: function(){
