@@ -1930,7 +1930,9 @@ define('js!SBIS3.CONTROLS.ListView',
                      this._updateHoveredItem(hoveredItemContainer);
                   }
                } else {
-                  this._updateItemsToolbar();
+                  /* Даже если контейнер выбранной записи не изменился,
+                     надо обновить выделнный элемент, т.к. могло измениться его положение */
+                  this._updateHoveredItem(hoveredItemContainer);
                }
             }
 
