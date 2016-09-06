@@ -137,7 +137,12 @@ define('js!SBIS3.CONTROLS.DateRange', [
          if (value) {
             datePicker.setDate(value);
          } else {
-            datePicker.setText('');
+            //TODO: Непонятно зачем нужен этот код. Он выполняется при смене даты руками, получается мы поменяли дату,
+            //стрелнуло событие и вызвался данный обработчик, который ещё раз выставляет дату. И в случае если дата невалидна
+            //сюда приходит value = null и дата просто затирается. Зачем?
+            //Выписал задачу https://inside.tensor.ru/opendoc.html?guid=57892aa4-7039-403b-b579-40b6cc7411cf&description=
+            //Ошибка в разработку 05.09.2016 SBIS3.CONTROLS.DateRange //TODO: Непонятно зачем нужен этот код. Он выполняется при смене даты ...
+            //datePicker.setText('');
          }
       },
 
