@@ -12,7 +12,7 @@ browsers:
   firefox:
     desiredCapabilities:
       browserName: firefox
-	
+
 system:
   diffColor: '#018def'
   referenceImageAbsence: 'error'
