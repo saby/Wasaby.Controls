@@ -175,20 +175,22 @@ define(
 
          _onDayBorderMouseClick: function (element, event) {
             var itemSelector = ['.', this._SELECTABLE_RANGE_CSS_CLASSES.item].join(''),
-               itemElement, date, startDate, endDate;
-
+               date, startDate, endDate;
             // Если пользователь уже иницировал выделение, то клики обрабатываем в обработчике клика по ячеке(_onDayMouseClick)
             if (this.isSelectionProcessing()) {
                return;
             }
-
             date = this._getItemDate(element.closest(itemSelector));
-            startDate = this._getStartOfWeek(date);
-            endDate = this._getEndOfWeek(date);
-
-            this._setSelectionType(selectionTypes.WEEK);
-            this._onRangeItemElementClick(startDate, endDate);
-
+            //TODO:продумать как правильно выбирать неделю на Ipad
+            if (!$ws._const.browser.isMobileIOS) {
+               startDate = this._getStartOfWeek(date);
+               endDate = this._getEndOfWeek(date);
+               this._setSelectionType(selectionTypes.WEEK);
+               this._onRangeItemElementClick(startDate, endDate);
+            } else {
+               this._setSelectionType(selectionTypes.DAY);
+               this._onRangeItemElementClick(date);
+            }
             event.stopPropagation();
          },
 
