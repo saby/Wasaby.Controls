@@ -803,7 +803,8 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _onTotalScrollHandler: function(event, type){
             var scrollOnEdge = (this._options.infiniteScroll === 'up' && type === 'top') || // скролл вверх и доскролили до верхнего края
-                               (this._options.infiniteScroll === 'down'); //скролл в обе стороны и доскролили до любого края
+                               (this._options.infiniteScroll === 'down' && type === 'bottom') || // скролл вниз и доскролили до нижнего края
+                               (this._options.infiniteScroll === 'both') //скролл в обе стороны и доскролили до любого края
             if (scrollOnEdge && this.getItems()) {
                var isTop = type == 'top';
                this._needScrollCompensation = isTop;
@@ -1990,7 +1991,7 @@ define('js!SBIS3.CONTROLS.ListView',
                more = this.getItems().getMetaData().more,
                isContainerVisible = $ws.helpers.isElementVisible(this.getContainer()),
                hasScroll = this._scrollWatcher.hasScroll(),
-               hasNextPage = (direction == 'up' && this._options.infiniteScroll == 'down') ? this._scrollOffset.top > 0 : this._hasNextPage(more, this._scrollOffset.bottom);
+               hasNextPage = (direction == 'up' && this._options.infiniteScroll == 'both') ? this._scrollOffset.top > 0 : this._hasNextPage(more, this._scrollOffset.bottom);
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
             this._container.toggleClass('controls-ListView__outside-scroll-loader', !hasScroll);
@@ -2003,7 +2004,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _loadNextPage: function(direction) {
             direction = direction || this._options.infiniteScroll;
-            var offset = (direction == 'up' && this._options.infiniteScroll == 'down') ? this._scrollOffset.top - this._limit : this._scrollOffset.bottom + this._limit;
+            var offset = (direction == 'up' && this._options.infiniteScroll == 'both') ? this._scrollOffset.top - this._limit : this._scrollOffset.bottom + this._limit;
             this._showLoadingIndicator();
             this._toggleEmptyData(false);
             this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
@@ -2098,9 +2099,10 @@ define('js!SBIS3.CONTROLS.ListView',
          _preScrollLoading: function(){
             var hasScroll = (function() {
                   return this._scrollWatcher.hasScroll(10);
-               }).bind(this);
+               }).bind(this),
+               scrollDown = this._options.infiniteScroll == 'down' || this._options.infiniteScroll == 'both'
             // Если нет скролла или скролл внизу (при загрузке вниз), значит нужно догружать еще записи
-            if ((this.isScrollOnBottom() && this._options.infiniteScroll == 'down') || !hasScroll()) {
+            if ((this.isScrollOnBottom() && scrollDown) || !hasScroll()) {
                this._scrollLoadNextPage();
             } else  {
                if (this._needScrollCompensation) {
