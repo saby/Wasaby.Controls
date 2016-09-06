@@ -718,7 +718,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getElementToFocus: function() {
-            return $('.controls-ListView__fakeFocusElement', this._container);
+            return $('.controls-ListView__fakeFocusElement', this._container).first();
          },
 
          _setTouchSupport: function(support) {
