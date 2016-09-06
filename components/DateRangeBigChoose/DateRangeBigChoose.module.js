@@ -341,11 +341,12 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          var container = this.getContainer();
          this.cancelSelection();
          this._state = states.month;
-         container.find('.controls-DateRangeBigChoose__dates').removeClass('ws-hidden');
-         container.find('.controls-DateRangeBigChoose__months').addClass('ws-hidden');
          this.getChildControlByName('BackToYearButton').show();
+         this._dateRangePicker.cancelSelection();
          this._dateRangePicker.setRange(this.getStartValue(), this.getEndValue(), true);
          this._dateRangePicker.setMonth(month);
+         container.find('.controls-DateRangeBigChoose__dates').removeClass('ws-hidden');
+         container.find('.controls-DateRangeBigChoose__months').addClass('ws-hidden');
          this._dateRangePicker._updateMonthsPosition();
          this._setCurrentYear(month.getFullYear(), true);
          this._updateYearsRange(month.getFullYear());
