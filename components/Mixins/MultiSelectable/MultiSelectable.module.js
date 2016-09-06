@@ -149,6 +149,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
                this._options.selectedKeys = this._convertToKeys(this._options.selectedItems);
             }
             this._drawSelectedItems(this._options.selectedKeys);
+         },
+         destroy: function() {
+            if(this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
+               this._loadItemsDeferred.cancel();
+            }
          }
       },
 
