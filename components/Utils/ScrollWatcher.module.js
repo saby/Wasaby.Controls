@@ -115,7 +115,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          var element = this.getScrollContainer();
          //customScroll
          if (this._customScroll)
-            return element.wsControl.isScrollOnBottom();
+            return element[0].wsControl.isScrollOnBottom();
          else {
             return element.scrollTop() + element.outerHeight() > this.getScrollHeight(element[0]) - this._options.totalScrollOffset;
          }
