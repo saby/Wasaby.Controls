@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       template: 'js!SBIS3.CONTROLS.SuggestShowAll',
       componentOptions: {}
    };
+   var EMPTY_LIST_TEXT = 'Не найдено'
 
    /**
     * Миксин автодополнения. Позволяет добавить функционал автодополнения любому контролу или набору контролов.
@@ -471,6 +472,10 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                 но надо оставить возможность это отключить, т.к. не всем это надо */
                if(options.allowEmptySelection === undefined) {
                   options.allowEmptySelection = false;
+               }
+
+               if(!options.hasOwnProperty('emptyHTML')) {
+                  options.emptyHTML = EMPTY_LIST_TEXT;
                }
 
                /* Сорс могут устанавливать не через сеттер, а через опцию */
