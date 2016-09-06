@@ -389,7 +389,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             add: function(options) {
                var
                    self = this,
-                   modelOptions = options.model || this._notify('onBeginAdd');
+                   modelOptions = options.model || this._notify('onBeginAdd'),
+                   editingRecord;
                this._lastTargetAdding = options.target;
                return this.endEdit(true).addCallback(function() {
                   return self._createModel(modelOptions).addCallback(function (createdModel) {
@@ -399,9 +400,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         }
                         self._createAddTarget(model, options);
                         self._getEip().edit(model);
-                        self._notify('onAfterBeginEdit', model);
+                        editingRecord = self._getEip().getEditingRecord();
+                        self._notify('onAfterBeginEdit', editingRecord);
                         self._addPendingOperation();
-                        return model;
+                        return editingRecord;
                      });
                   });
                });
