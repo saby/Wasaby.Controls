@@ -500,7 +500,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   }
                   self._setText(textValue.join(', '));
                   self._redrawHead(isDefaultIdSelected);
+                  self._resizeFastDataFilter();
                });
+            }
+         },
+         _resizeFastDataFilter: function(){
+            var parent = this.getParent();
+            if ($ws.helpers.instanceOfModule(parent, 'SBIS3.CONTROLS.FastDataFilter')){
+               parent._recalcDropdownWidth();
             }
          },
          _redrawHead: function(hideCross){
