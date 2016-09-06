@@ -183,6 +183,15 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             });
          },
          _recalcDropdownWidth: function(){
+            var dropdownLists = $('.controls-DropdownList', this.getContainer());
+            dropdownLists.sort(function(el1, el2){
+               return $(el1).width() > $(el2).width();
+            });
+            for (var i = 0, l = dropdownLists.length; i < l; i++){
+               $(dropdownLists[i]).css('flex-shrink', i + 1);
+            }
+         },
+         _recalcDropdownWidth: function(){
             this._resetMaxWidth();
             if ($ws._const.browser.isIE && $ws._const.browser.IEVersion <= 10){
                var ddlText = $('.controls-DropdownList__textWrapper', this.getContainer()),
