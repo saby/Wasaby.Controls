@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil', 'js!SBIS3.CONTROLS.HistoryController'], function (KbLayoutRevertUtil, HistoryController) {
+define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil', 'js!SBIS3.CONTROLS.HistoryController', 'js!SBIS3.StickyHeaderManager'], function (KbLayoutRevertUtil, HistoryController, StickyHeaderManager) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
@@ -673,7 +673,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             if (pageNumber != this._currentScrollPage && this._scrollPages.length){
                var view = this._options.view,
                   page = this._scrollPages[pageNumber - 1];
-
                   if (page){
                      scrollToPage(page)
                   } else {
@@ -734,7 +733,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             pageHeight = 0,
             lastPageStart = 0,
             self = this,
-            listItems = $('> .controls-ListView__item', view._getItemsContainer());
+            listItems = $('> .controls-ListView__item', view._getItemsContainer()),
+            stickyHeaderHeight = StickyHeaderManager.getStickyHeaderHeight(view.getContainer()) || 0;
 
             //Если элементов в верстке то нечего и считать
             if (!listItems.length){
@@ -770,12 +770,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                nextHeight = $this.next('.controls-ListView__item').outerHeight(true);
             pageHeight += $this.outerHeight(true);
             // Если набралось записей на выстору viewport'a добавим еще страницу
-            var offsetTop = self._scrollPages.length == 1 ? self._offsetTop : 0;
+            // При этом нужно учесть отступ сверху от view и фиксированую шапку
+            var offsetTop = self._scrollPages.length == 1 ? self._offsetTop : stickyHeaderHeight;
             if (pageHeight + nextHeight > viewportHeight - offsetTop) {
                self._pageOffset += pageHeight;
                self._scrollPages.push({
                   element: $this,
-                  offset: self._pageOffset
+                  offset: self._pageOffset - stickyHeaderHeight
                });
                pageHeight = 0;
             }
