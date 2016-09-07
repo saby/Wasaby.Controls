@@ -93,10 +93,11 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
          var self = this,
             container = this.getContainer(),
             year;
-
-         if (!this._options.year) {
-            this._options.year = (new Date()).getFullYear();
-         }
+         // Представление обновляется только в setYear и в любом случае будет использоваться год установленный в setYear
+         // TODO: Сделать, что бы компонент рендерился при построении если чузер открыт в режиме года.
+         // if (!this._options.year) {
+         //    this._options.year = (new Date()).getFullYear();
+         // }
 
          MonthRangePicker.superclass.init.call(this);
 
@@ -121,6 +122,9 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
       },
 
       setYear: function (year) {
+         if (this._options.year === year) {
+            return;
+         }
          // var delta = year - this._options.year,
          //    i;
          // if (!delta) {
@@ -133,6 +137,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
          //       this.showPrevYear();
          //    }
          // }
+         this._options.year = year;
          // TODO: временный хак. Базовый класс не релоудит данные если не установлен showPaging
          this.setOffset(this._getOffsetByYear(year));
          // this.setPage(pageNumber);
