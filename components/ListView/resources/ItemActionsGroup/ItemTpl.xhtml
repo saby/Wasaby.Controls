@@ -6,7 +6,7 @@
       allowChangeEnable = it.item.get('allowChangeEnable'),
       viewMode = it.item.get('toolbarViewMode'); }}
 
-<component data-component="SBIS3.CONTROLS.Link" class="controls-ItemActions__item {{? cssClass !== undefined }}{{= cssClass }}{{?}}">
+<component data-component="{{? icon && !viewMode }}SBIS3.CONTROLS.IconButton{{??}}SBIS3.CONTROLS.Link{{?}}" class="controls-ItemActions__item {{? cssClass !== undefined }}{{= cssClass }}{{?}}">
     {{? allowChangeEnable !== undefined }}<option name="allowChangeEnable" type="boolean">{{= allowChangeEnable }}</option>{{?}}
     {{? visible !== undefined }}<option name="visible" type="boolean">{{= visible }}</option>{{?}}
     {{? icon && viewMode !== 'caption'}}<option name="icon">{{= icon }}</option>{{?}}
