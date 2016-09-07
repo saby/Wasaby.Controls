@@ -1473,9 +1473,10 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _setEnabled : function(enabled) {
             ListView.superclass._setEnabled.call(this, enabled);
-            if (!enabled) {
-               this._destroyEditInPlace();
-            }
+            //разрушать редактирование нужно как при enabled = false так и при enabled = true. У нас предусмотрено
+            //редактирование задизабленного браузера, и настройки редакторов для задизабленного режима, может отличаться
+            //от раздизабленного.
+            this._destroyEditInPlace();
          },
 
          _onItemClickHandler: function(event, id, model, originalEvent) {
