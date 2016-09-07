@@ -17,8 +17,8 @@
          border-spacing: 0;
       }
       .controls-MonthView__caption-text {
-         font-size: 20px;
-         height: 40px;
+         font-size: @date-range-big-choose-date-range-picker-caption-font-size;
+         height: @date-range-big-choose-date-range-picker-caption-height;
          //width: 95px;
          line-height: 40px;
          text-align: left;
@@ -39,24 +39,29 @@
          }
          .controls-MonthView__tableRow:first-child {
             .controls-MonthView__tableElement {
-               height: 40px;
+               height: @date-range-big-choose-date-range-picker-table-element-height;
             }
          }
 
          .controls-MonthView__tableElement {
             .box-sizing(border-box);
             width: 34px;
-            height: 39px;
+            height: @date-range-big-choose-date-range-picker-table-element-height - 1px;
             padding: 0;
             text-align: center;
             background: transparent;
-            font-size: 16px;
+            font-size: @date-range-big-choose-date-range-picker-table-element-font-size;
 
             border-bottom: 1px solid @date-range-big-choose-date-range-picker-border-color;
+
+            .controls-MonthView__dayTitle {
+               padding-top: @date-range-big-choose-date-range-picker-table-element-title-padding-top;
+            }
 
             .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
                left: 8px;
                right: 8px;
+               padding-top: @date-range-big-choose-date-range-picker-table-element-title-padding-top;
             }
 
             &.controls-MonthView__nextMonth {
@@ -92,7 +97,7 @@
                &.controls-DateRangeBigChoose-MonthView__border-top {
                   border-top: 1px solid @date-range-big-choose-date-range-picker-border-color;
                   & > .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
-                     padding-top: 7px;
+                     padding-top: @date-range-big-choose-date-range-picker-table-element-title-padding-top - 1;
                   }
                }
 
