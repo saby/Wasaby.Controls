@@ -839,13 +839,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             if (this._options.keyField && this._options.keyField !== dataSet.getIdProperty()) {
                dataSet.setIdProperty(this._options.keyField);
             }
-            var recordSet = dataSet.getAll();
-            recordSet.setMetaData({
-               results: dataSet.getProperty('r'),
-               more: dataSet.getTotal(),
-               path: dataSet.getProperty('p')
-            });
-            return recordSet;
+            return dataSet.getAll();
          }).bind(this));
       },
 

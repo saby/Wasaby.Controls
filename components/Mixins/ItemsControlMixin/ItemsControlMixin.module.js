@@ -230,6 +230,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _groupHash: {},
          _itemsProjection: null,
          _items : null,
+         _isOwnItems : false,
          _itemsInstances: {},
          _offset: 0,
          _limit: undefined,
@@ -584,11 +585,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       $constructor: function () {
          this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady', 'onPageSizeChange');
 
-         var debouncedDrawItemsCallback = this._drawItemsCallback.bind(this).debounce(0);
+         var debouncedDrawItemsCallback = $ws.helpers.forAliveOnly(this._drawItemsCallback, this).debounce(0);
          // FIXME сделано для правильной работы медленной отрисовки
          this._drawItemsCallbackDebounce = function() {
             debouncedDrawItemsCallback();
-            this._needToRedraw = true;
+            this._drawItemsCallbackSync();
          }.bind(this);
 
          if (typeof this._options.pageSize === 'string') {
@@ -650,6 +651,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   this._options.keyField = findKeyField(itemsOpt);
                }
                this._options._items = JSONToRecordset(itemsOpt, this._options.keyField);
+               this._isOwnItems = true;
             }
             else {
                this._options._items = itemsOpt;
@@ -1088,6 +1090,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          },
          destroy : function() {
             this._unsetItemsEventHandlers();
+            if (this._options._items && this._isOwnItems) {
+               this._options._items.destroy();
+               this._options._items = null;
+            }
             if (this._options._itemsProjection) {
                this._options._itemsProjection.destroy();
                this._options._itemsProjection = null;
@@ -1279,9 +1285,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
           if (this._dataSource) {
              this._toggleIndicator(true);
-             var filterForReload = this._getFilterForReload.apply(this, arguments);
-             this._notify('onBeforeDataLoad', filterForReload, this.getSorting(), this._offset, this._limit);
-             def = this._callQuery(filterForReload, this.getSorting(), this._offset, this._limit)
+             this._notify('onBeforeDataLoad', this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit);
+             def = this._callQuery(this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit)
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
                    self._notify('onDataLoad', list);
@@ -1297,6 +1302,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    } else {
                       this._unsetItemsEventHandlers();
                       this._options._items = list;
+                      this._isOwnItems = false;
                       this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
                       this._setItemsEventHandlers();
                       this._notify('onItemsReady');
@@ -1350,10 +1356,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             if (this._options.keyField && this._options.keyField !== dataSet.getIdProperty()) {
                dataSet.setIdProperty(this._options.keyField);
             }
-            var recordSet = dataSet.getAll();
-            // Задаем meta, помержив текущие meta-данные с meta-данными в формате SBIS
-            recordSet.setMetaData($ws.core.merge(recordSet.getMetaData(), this._prepareMetaData(dataSet)));
-            return recordSet;
+            return dataSet.getAll();
          }).bind(this));
       },
 
@@ -1364,27 +1367,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             .limit(limit)
             .orderBy(sorting);
          return query;
-      },
-
-      _prepareMetaData: function(dataSet) {
-         /*  надо создавать дефолтную модель, а не внедренную, т.к. в модели recordSet'a
-             могут быть расчитываемые поля, которые ожидают что в модели будут гарантированно какие-то данные */
-         var meta = dataSet.hasProperty('m') ?
-             (new Model({
-                rawData: dataSet.getProperty('m'),
-                adapter: dataSet.getAdapter()
-             })).toObject() :
-             {};
-
-         if (dataSet.hasProperty('r')) {
-            meta.results = dataSet.getProperty('r');
-         }
-         meta.more = dataSet.getTotal();
-         if (dataSet.hasProperty('p')) {
-            meta.path = dataSet.getProperty('p');
-         }
-
-         return meta;
       },
 
       _toggleIndicator:function(){
@@ -1546,6 +1528,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
           this._options.items = items;
           this._unsetItemsEventHandlers();
           this._options._items = null;
+          this._isOwnItems = false;
           this._prepareConfig(undefined, items);
 
           this._dataLoadedCallback(); //TODO на это завязаны хлебные крошки, нужно будет спилить
@@ -1563,6 +1546,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              });
           }
           this.redraw();
+      },
+
+      _drawItemsCallbackSync: function(){
+         this._needToRedraw = true;
       },
 
       _drawItemsCallback: function () {

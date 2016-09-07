@@ -384,6 +384,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           },
 
+          setActive: function(active) {
+             FieldLink.superclass.setActive.apply(this, arguments);
+
+             if (active && this._needFocusOnActivated() && this.isEnabled() && $ws._const.browser.isMobilePlatform) {
+                this._getElementToFocus().focus();
+             }
+          },
+
           _getAdditionalChooserConfig: function () {
              var oldRecArray = [],
                 selectedKeys = this._isEmptySelection() ? [] : this.getSelectedKeys(),
@@ -768,6 +776,23 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 },
                 horizontalAlign: {
                    side: 'left'
+                },
+                handlers: {
+                   onShow: function() {
+                      if($ws._const.browser.isMobileIOS) {
+                         var revertedVertical = !this._picker.getContainer().hasClass('controls-popup-revert-vertical');
+
+                         if (revertedVertical) {
+                            if (!this._listReversed) {
+                               this._reverseList();
+                            }
+                         } else {
+                            if (this._listReversed) {
+                               this._reverseList();
+                            }
+                         }
+                      }
+                   }.bind(this)
                 }
              };
              // Придрот для айпада. Выезжающая клавиатура может скрывать выпадашку, так как та влезает под нее. Поэтому на айпаде всегда открываем автодополнение вверх

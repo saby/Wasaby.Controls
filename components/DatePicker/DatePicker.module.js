@@ -173,7 +173,7 @@ define(
       },
 
       $constructor: function () {
-         this._publish('onDateChange', 'onDateSelect');
+         this._publish('onDateChange', 'onDateSelect', 'onFocusOut');
       },
 
       init: function () {
@@ -198,9 +198,11 @@ define(
 
          this._dateBox.subscribe('onDateChange', this._onDateBoxDateChanged.bind(this));
          this._dateBox.subscribe('onTextChange', this._onDateBoxTextChanged.bind(this));
-
-         this._dateBox.subscribe('onDateSelect', function (e, date) {
-            this._notify('onDateSelect', date);
+         //TODO: Костыль. Т.к. DatePicker теперь является 'честной' AreaAbstract(без SBIS3.CORE.CompoundActiveFixMixin) и у
+         //него нет необходимого поведенияконтрола. В .120 просто прокинем событие onFocusOut, в .200 необходимо будет
+         //подмешать SBIS3.CORE.CompoundActiveFixMixin. Выписал задачу: https://inside.tensor.ru/opendoc.html?guid=09cf3a2b-43ab-45cd-a4fa-251db5eff6a8&description=
+         this._dateBox.subscribe('onFocusOut', function() {
+            this._notify('onFocusOut');
          }.bind(this));
 
          this._container.removeClass('ws-area');
@@ -298,6 +300,29 @@ define(
             options.isCalendarIconShown = false;
          }
       },
+
+      setActive: function(active) {
+         if (active) {
+            this._initFocusInHandler();
+         }
+         DatePicker.superclass.setActive.apply(this, arguments);
+      },
+
+      _initFocusInHandler: function() {
+         if (!this._onFocusInHandler) {
+            this._onFocusInHandler = this._onFocusIn.bind(this);
+            this.subscribeTo($ws.single.EventBusGlobalChannel, 'onFocusIn', this._onFocusInHandler);
+         }
+      },
+
+      _onFocusIn: function(event) {
+         if (!$ws.helpers.isChildControl(this, event.getTarget())) {
+            this._notify('onDateSelect');
+            this.unsubscribeFrom($ws.single.EventBusGlobalChannel, 'onFocusIn', this._onFocusInHandler);
+            this._onFocusInHandler = null;
+         }
+      },
+
 
      /**
       * В добавление к проверкам и обновлению опции text, необходимо обновить поле _date

@@ -12,7 +12,10 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
 
    var MonthSource = Base.extend(/** @lends SBIS3.CONTROLS.DateRangeBig.DateRangePicker.MonthSource.prototype */{
       _moduleName: 'SBIS3.CONTROLS.DateRangeBigChoose.MonthSource',
-
+      $protected: {
+         _dataSetItemsProperty: 'items',
+         _dataSetTotalProperty: 'total'
+      },
 
       query: function (query) {
          // throw new Error('Method must be implemented');
@@ -34,8 +37,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
             }
          );
          items = this._prepareQueryResult(
-            {items: adapter.getData(), total: 1000000000000},
-            'items', 'total'
+            {items: adapter.getData(), total: 1000000000000}
          );
          return $ws.proto.Deferred.success(items);
       }
@@ -83,17 +85,19 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
          this._onMonthViewSelectingRangeEndDateChange = this._onMonthViewSelectingRangeEndDateChange.bind(this);
          this._onMonthViewCaptionActivated = this._onMonthViewCaptionActivated.bind(this);
 
-         if (this._options.month) {
-            this._options.month = this._normalizeMonth(this._options.month);
-         } else {
-            this._options.month = (new Date(now.getFullYear(), now.getMonth(), 1));
-         }
+         // Представление обновляется только в setMonth и в любом случае будет использоваться месяц установленный в  setMonth
+         // TODO: Сделать, что бы компонент рендерился при построении если чузер открыт в режиме месяца. Тоже самое для режима года и для MonthPicker
+         // if (this._options.month) {
+         //    this._options.month = this._normalizeMonth(this._options.month);
+         // } else {
+         //    this._options.month = (new Date(now.getFullYear(), now.getMonth(), 1));
+         // }
 
          Component.superclass.init.call(this);
 
          this.subscribe('onDrawItems', this._onDateRangePickerDrawItems.bind(this));
 
-         this.setDataSource(monthSource);
+         this.setDataSource(monthSource, true);
          setTimeout(this._updateMonthsPosition.bind(this), 0);
       },
 

@@ -36,17 +36,27 @@
       },
 
       handleSwipe: function(start, stop, self, target) {
-         if (stop.time - start.time < $.event.special.swipe.durTreshold &&
-            Math.abs(start.coords[0] - stop.coords[0]) > $.event.special.swipe.xTreshold &&
-            Math.abs(start.coords[1] - stop.coords[1]) < $.event.special.swipe.yTreshold) {
-            var direction = start.coords[0] > stop.coords[0] ? 'left' : 'right';
-            $.event.trigger($.Event('swipe', {
+         if (stop.time - start.time < $.event.special.swipe.durTreshold){
+            var
+               direction,
+               eventType;
+            if (Math.abs(start.coords[0] - stop.coords[0]) > $.event.special.swipe.xTreshold &&
+               Math.abs(start.coords[1] - stop.coords[1]) < $.event.special.swipe.yTreshold) {
+               direction = start.coords[0] > stop.coords[0] ? 'left' : 'right';
+               eventType = 'swipe';
+            }
+            if (Math.abs(start.coords[1] - stop.coords[1]) > $.event.special.swipe.xTreshold &&
+               Math.abs(start.coords[0] - stop.coords[0]) < $.event.special.swipe.yTreshold) {
+               direction = start.coords[1] > stop.coords[1] ? 'top' : 'bottom';
+               eventType = 'swipeVertical';
+            }
+
+            $.event.trigger($.Event(eventType, {
                target: target,
                swipestart: start,
                swipestop: stop,
                direction: direction
             }), undefined, self);
-
             return true;
          }
          return false;
@@ -85,7 +95,6 @@
                      $.event.special.swipe.eventInProgress = false;
                   }
                }
-
             };
 
             context.stop = function() {

@@ -1101,9 +1101,9 @@
 @suggest-list-item-selected-text-color:         @suggest-picker-item-text-color;
 
 @suggest-list-empty-bg:                         @suggest-list-item-bg;
-@suggest-list-empty-color:                      @gray-dark-color;
+@suggest-list-empty-color:                      @gray-ccc-color;
 @suggest-list-empty-font:                       @suggest-list-item-font;
-@suggest-list-empty-padding:                    @suggest-list-item-padding;
+@suggest-list-empty-padding:                    16px 0 16px 0;
 
 
 
@@ -1162,7 +1162,44 @@
 @calendar-day-fog-cell-hover-text-color:        @calendar-day-fog-cell-text-color;
 @calendar-day-fog-cell-hover-bg:                @calendar-day-fog-cell-bg;
 
+// --------- //
+// MonthView //
+// --------- //
 
+@month-view-font:                                 inherit;
+@month-view-width:                                215px;
+@month-view-padding:                              8px 0 0;
+@month-view-bg:                                   @white-color;
+
+@month-view-month-picker-width:                   148px;
+
+@month-view-day-border-spacing:                   1px;
+
+@month-view-day-header-font:                      11px @font-basic-name;
+@month-view-day-header-text-alignment:            center;
+
+@month-view-day-body-font:                        @month-view-font;
+@month-view-day-body-text-alignment:              left;
+
+@month-view-day-cell-width:                       56px;
+@month-view-day-table-cell-height:                24px;
+@month-view-day-table-cell-padding:               0 0 0 8px;
+
+@month-view-day-cell-cursor:                      pointer;
+@month-view-day-cell-text-color:                  inherit;
+@month-view-day-cell-bg:                          #f2f2f2;
+@month-view-day-cell-hover-text-color:            @month-view-day-cell-text-color;
+@month-view-day-cell-hover-bg:                    #e5ecf4;
+@month-view-day-cell-active-text-color:           @month-view-day-cell-text-color;
+@month-view-day-cell-active-bg:                   #ffc37e;
+@month-view-day-cell-active-hover-text-color:     @month-view-day-cell-active-text-color;
+@month-view-day-cell-active-hover-bg:             @month-view-day-cell-active-bg;
+
+@month-view-day-fog-cell-cursor:                  default;
+@month-view-day-fog-cell-text-color:              @gray-color;
+@month-view-day-fog-cell-bg:                      transparent;
+@month-view-day-fog-cell-hover-text-color:        @month-view-day-fog-cell-text-color;
+@month-view-day-fog-cell-hover-bg:                @month-view-day-fog-cell-bg;
 
 // ------------ //
 // Month picker //
@@ -1233,7 +1270,7 @@
 // Data Range //
 // ---------- //
 
-@date-range-font-size:                          14px;
+@date-range-font-size:                          inherit;
 @date-range-line-height:                        24px;
 @date-range-text-line-height:                   normal;
 @date-range-icon-button-size:                   18px;
@@ -1255,7 +1292,7 @@
 @date-range-big-right-arrow-icon-bg:            url(@date-range-big-spritesheet) 0 -48px no-repeat;
 @date-range-big-right-arrow-icon-hover-bg:      url(@date-range-big-spritesheet) 0 -72px no-repeat;
 
-
+@date-range-big-choose-width:                      527px;
 @date-range-big-choose-boundary-selected-color:    @white-color;
 @date-range-big-choose-link-text-color:            @darkcyan-color;
 @date-range-big-choose-border-color:               @gray-light-color;
@@ -1265,28 +1302,83 @@
 @date-range-big-choose-bg-selected-color:          @default-itemHover-color;
 @date-range-big-choose-bg-boundary-selected-color: @dodgerblue-color;
 
-
+@date-range-big-choose-header-padding:                         9px 0 9px 15px;
+@date-range-big-choose-header-home-button-margin:              1px 0;
+@date-range-big-choose-header-home-button-size:                40px;
+@date-range-big-choose-header-home-button-font-size:           24px;
+@date-range-big-choose-header-home-button-line-height:         38px;
 @date-range-big-choose-header-date-box-border-color:           @gray-light-color;
 @date-range-big-choose-header-date-box-border-selected-color:  @gray-ccc-color;
+@date-range-big-choose-header-date-box-font-size:              inherit;
+@date-range-big-choose-header-date-pickers-margin-right:       75px;
+@date-range-big-choose-header-date-picker-margin-top:          2px;
+@date-range-big-choose-header-date-picker-height:              35px;
+@date-range-big-choose-header-apply-button-size:               40px;
+@date-range-big-choose-header-apply-button-font-size:          24px;
+@date-range-big-choose-header-apply-button-line-height:        38px;
+@date-range-big-choose-header-apply-button-margin-left:        8px;
+@date-range-big-choose-header-range-dash-width:                6px;
+@date-range-big-choose-header-range-dash-margin:               21px 8px 0 8px;
 
-@date-range-big-choose-months-color:            @darkcyan-color;
-@date-range-big-choose-months-font-size:        16px;
+@date-range-big-choose-left-right-width:                       40px;
+@date-range-big-choose-years-height:                           40px;
 
-@date-range-big-choose-go-to-boundary-button-bg-color: @dodgerblue-color;
+@date-range-big-choose-years-panel-top-padding:                9px;
+@date-range-big-choose-years-panel-bottom-padding:             8px;
+@date-range-big-choose-years-panel-wrapper-font-size:          24px;
+@date-range-big-choose-years-panel-toggle-choose-year-button-font-size:       @date-range-big-choose-years-panel-wrapper-font-size;
+@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:     30px;
+@date-range-big-choose-years-panel-toggle-choose-year-button-margin:          0 60px;
+@date-range-big-choose-years-panel-current-year-button-font-size:             @date-range-big-choose-years-panel-wrapper-font-size;
+@date-range-big-choose-years-panel-current-year-button-line-height:           30px;
+@date-range-big-choose-years-panel-back-button-font-size:                     24px;
+@date-range-big-choose-years-panel-back-button-line-height:                   26px;
 
+@date-range-big-choose-body-height:                                  545px;
+@date-range-big-choose-months-color:                                 @darkcyan-color;
+@date-range-big-choose-months-font-size:           24px;
+@date-range-big-choose-months-margin:              16px;
+@date-range-big-choose-months-range-btn-height:    128px;
+@date-range-big-choose-months-range-width:         124px;
+@date-range-big-choose-months-button-height:       45px;
+@date-range-big-choose-months-button-first-padding-top:     2px;
+@date-range-big-choose-months-button-first-height:          @date-range-big-choose-months-button-height + @date-range-big-choose-months-button-first-padding-top;
+@date-range-big-choose-months-button-last-padding-bottom:   3px;
+@date-range-big-choose-months-button-last-height:           @date-range-big-choose-months-button-height + @date-range-big-choose-months-button-last-padding-bottom;
+
+@date-range-big-choose-go-to-boundary-button-bg-color:               @dodgerblue-color;
+
+@date-range-big-choose-quarters-half-years-font-size:                16px;
+@date-range-big-choose-month-range-padding:                          16px;
+@date-range-big-choose-month-range-picker-month-width:               127px;
+@date-range-big-choose-month-range-picker-month-height:              127px;
+@date-range-big-choose-month-range-picker-caption-height:            30px;
+@date-range-big-choose-month-range-picker-caption-font-size:         16px;
+@date-range-big-choose-month-range-picker-table-element-height:      15px;
+@date-range-big-choose-month-range-picker-table-element-font-size:   12px;
+
+@date-range-big-choose-quarters-half-years-font-size:                inherit;
+@date-range-big-choose-month-range-padding:                          8px;
+@date-range-big-choose-month-range-picker-month-width:               84px;
+@date-range-big-choose-month-range-picker-month-height:              96px;
 @date-range-big-choose-month-range-picker-color:                     @black-color;
 @date-range-big-choose-month-range-picker-caption-text-hovered-bg:   @date-range-big-choose-bg-hovered-color;
+@date-range-big-choose-month-range-picker-caption-height:            24px;
+@date-range-big-choose-month-range-picker-caption-font-size:         14px;
 @date-range-big-choose-month-range-picker-boundary-selected-color:   @date-range-big-choose-boundary-selected-color;
 @date-range-big-choose-month-range-picker-border-selected-color:     @dodgerblue-color;
 @date-range-big-choose-month-range-picker-bg-selected:               @date-range-big-choose-bg-selected-color;
 @date-range-big-choose-month-range-picker-boundary-selected-bg:      @dodgerblue-color;
 @date-range-big-choose-month-range-picker-month-hovered-border:      1px dotted @gray-ccc-color;
 @date-range-big-choose-month-range-picker-bg-boundary-selected-color: @date-range-big-choose-bg-boundary-selected-color;
+@date-range-big-choose-month-range-picker-table-element-height:      11px;
+@date-range-big-choose-month-range-picker-table-element-font-size:   8px;
 
 @date-range-big-choose-month-range-picker-today-border-color:         #ff7033;
 @date-range-big-choose-month-range-picker-weekend-color:              #EF463A;
 
-
+@date-range-big-choose-date-range-picker-left:                       @date-range-big-choose-months-range-width + 16px;
+@date-range-big-choose-date-range-picker-right:                      16px;
 @date-range-big-choose-date-range-picker-color:                      @black-color;
 @date-range-big-choose-date-range-picker-boundary-selected-color:    @date-range-big-choose-boundary-selected-color;
 @date-range-big-choose-date-range-picker-border-color:               @darkcyan-color;
@@ -1294,6 +1386,11 @@
 @date-range-big-choose-date-range-picker-bg-hovered-color:           @date-range-big-choose-bg-hovered-color;
 @date-range-big-choose-date-range-picker-bg-selected-color:          @date-range-big-choose-bg-selected-color;
 @date-range-big-choose-date-range-picker-bg-boundary-selected-color: @date-range-big-choose-bg-boundary-selected-color;
+@date-range-big-choose-date-range-picker-caption-font-size:          32px;
+@date-range-big-choose-date-range-picker-caption-height:             55px;
+@date-range-big-choose-date-range-picker-table-element-height:       60px;
+@date-range-big-choose-date-range-picker-table-element-font-size:    24px;
+@date-range-big-choose-date-range-picker-table-element-title-padding-top:    12px;
 
 @date-range-big-choose-date-range-picker-today-border-color:         #ff7033;
 @date-range-big-choose-date-range-picker-weekend-color:              #EF463A;

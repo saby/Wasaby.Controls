@@ -17,22 +17,14 @@
   width: @suggest-picker-standard-width;
   border: @suggest-picker-border;
   margin: @suggest-picker-margin;
-}
 
-.ws-is-mobile-safari .controls-Suggest__picker.controls-Suggest__picker-delayedRevert-vertical,
-body:not(.ws-is-mobile-safari) .controls-Suggest__picker.controls-popup-revert-vertical {
   .controls-ListView {
-    .controls-ListView__itemsContainer, .controls-DataGridView__tbody {
-      .transform(rotate(@suggest-picker-invertVal));
-
-      /* Надо перевернуть именно элементы в listView, а не все подрят, поэтому селектор только по дочерним */
-      > .controls-ListView__item {
-        .transform(rotate(@suggest-picker-invertVal));
-      }
+    .controls-ListView__EmptyData {
+      padding: @suggest-list-empty-padding;
+      color: @suggest-list-empty-color;
     }
   }
 }
-
 
 .controls-suggestShowAll {
   overflow: auto;

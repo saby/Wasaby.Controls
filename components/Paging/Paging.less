@@ -42,7 +42,6 @@
       height: @controls-Paging-btn-height;
       float: left;
       margin: @controls-Paging-btn-margin;
-      background-image: @controls-Paging-btn-sprite;
    }
    .control-Paging__next, .control-Paging__begin, .control-Paging__end, .control-Paging__prev{
       width: @controls-Paging-item-width;
@@ -51,50 +50,16 @@
    }
    .control-Paging__prev {
       float: left;
-      .control-Paging__btn{
-         background-position: 0 0;
-         &:hover {
-            background-position: -@controls-Paging-btn-width 0;
-         }
-         &.ws-disabled {
-            background-position: -@controls-Paging-btn-width*2 0;
-         }
-      }
    }
    .control-Paging__next {
       float: right;
-      .control-Paging__btn {
-         background-position: 0 -@controls-Paging-btn-height;
-         &:hover {
-            background-position: -@controls-Paging-btn-width -@controls-Paging-btn-height;
-         }
-         &.ws-disabled {
-            background-position: -@controls-Paging-btn-width*2 -@controls-Paging-btn-height;
-         }
-      }
+
    }
    .control-Paging__begin {
       float: left;
-      .control-Paging__btn{
-         background-position: 0 -@controls-Paging-btn-height*2;
-         &:hover {
-            background-position: -@controls-Paging-btn-width -@controls-Paging-btn-height*2;
-         }
-         &.ws-disabled {
-            background-position: -@controls-Paging-btn-width*2 -@controls-Paging-btn-height*2;
-         }
-      }
    }
    .control-Paging__end {
       float: right;
-      .control-Paging__btn {
-         background-position: 0 -@controls-Paging-btn-height*3;
-         &:hover {
-            background-position: -@controls-Paging-btn-width -@controls-Paging-btn-height*3;
-         }
-         &.ws-disabled {
-            background-position: -@controls-Paging-btn-width*2 -@controls-Paging-btn-height*3;
-         }
-      }
+
    }
 }

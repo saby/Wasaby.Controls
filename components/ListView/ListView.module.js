@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.ListView',
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
-             Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, emptyData, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
+             Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder, Di, ArraySimpleValuesUtil) {
 
      'use strict';
@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return records;
          };
       var
-         START_NEXT_LOAD_OFFSET = 180,
+         START_NEXT_LOAD_OFFSET = 800,
          DRAG_META_INSERT = {
             on: 'on',
             after: 'after',
@@ -276,7 +276,10 @@ define('js!SBIS3.CONTROLS.ListView',
             _itemsToolbar: null,
             _notEndEditClassName: 'controls-ListView__onFocusNotEndEdit',
             _containerScrollHeight : 0,
-            _firstScrollTop : true,
+            // указывает на необходимость компенсации скрола при подгрузке данных вверх
+            // необходим, так как компенсацию можно произвести только после отрисовки - в drawItemsCallback
+            // безусловно это делать нельзя, так как drawItemsCallback срабатывает и при перерисовке одной записи
+            _needScrollCompensation : null,
             _addResultsMethod: undefined,
             _options: {
                _canServerRender: true,
@@ -346,6 +349,10 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                itemTemplate: '',
                /**
+                * @typedef {String} toolbarViewModeVariant
+                * @variant icon Будет отображаться как иконка(требуется обязательно указать опцию icon у операции).
+                * @variant caption Будет отображаться как ссылка(требуется обязательно указать опцию caption у операции).
+                *
                 * @typedef {Array} ItemsActions
                 * @property {String} name Уникальное имя кнопки. Обязательная для конфигурации подопция. Её значение, в том числе, может быть использовано в пользовательских обработчиках для отображения или скрытия набора операций.
                 * @property {String} icon Иконка на кнопке. Необязательная подопция. В качестве значения в опцию передаётся строка, описывающая класс иконки.
@@ -354,13 +361,14 @@ define('js!SBIS3.CONTROLS.ListView',
                 *    <li>Если кнопка отображается не в выпадающем меню (см. подопцию isMainAction) и установлена подопция icon, то использование подопции caption необязательно.</li>
                 *    <li>Если кнопка отображается в выпадающем меню (см. подопцию isMainAction), то производят конфигурацию подопций icon и caption.</li>
                 * </ul>
+                * @property {toolbarViewModeVariant} toolbarViewMode Вид отображения операции в тулбаре.
                 * @property {String} caption Подпись на кнопке.
                 * <ul>
                 *    <li>Если кнопка отображается не в выпадающем меню (см. подопцию isMainAction) и установлена подопция icon, то использование подопции caption необязательно.</li>
                 *    <li>Если кнопка отображается в выпадающем меню (см. подопцию isMainAction), то производят конфигурацию подопций icon и caption.</li>
                 * </ul>
                 * @property {String} tooltip Текст всплывающей подсказки.
-                * @property {Boolean} isMainAction Признак, по которому устанавливается отображение кнопки в подменю.
+                * @property {Boolean} isMainAction Признак, по которому устанавливается отображение кнопки в тулбаре.
                 * @property {Function} onActivated Функция, которая будет выполнена при клике по кнопке. Внутри функции указатель this возвращает экземпляр класса представления данных. Аргументы функции:
                 * <ul>
                 *    <li>contaner - контейнер визуального отображения записи.</li>
@@ -710,7 +718,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getElementToFocus: function() {
-            return $('.controls-ListView__fakeFocusElement', this._container);
+            return $('.controls-ListView__fakeFocusElement', this._container).first();
          },
 
          _setTouchSupport: function(support) {
@@ -773,8 +781,8 @@ define('js!SBIS3.CONTROLS.ListView',
                 * потому что контейнер невидимый*/
                if ($ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
                   var afterFloatAreaShow = function(){
-                     this._firstScrollTop = true;
                      if (this.getItems()) {
+                     this._needScrollCompensation = this._options.infiniteScroll == 'up';
                         this._preScrollLoading();
                      }
                      topParent.unsubscribe('onAfterShow', afterFloatAreaShow);
@@ -801,9 +809,12 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _onTotalScrollHandler: function(event, type){
             var scrollOnEdge = (this._options.infiniteScroll === 'up' && type === 'top') || // скролл вверх и доскролили до верхнего края
-                               (this._options.infiniteScroll === 'down'); //скролл в обе стороны и доскролили до любого края
-            if (scrollOnEdge) {
-               this._loadChecked(type == 'top' ? 'up' : 'down');
+                               (this._options.infiniteScroll === 'down' && type === 'bottom') || // скролл вниз и доскролили до нижнего края
+                               (this._options.infiniteScroll === 'both') //скролл в обе стороны и доскролили до любого края
+            if (scrollOnEdge && this.getItems()) {
+               var isTop = type == 'top';
+               this._needScrollCompensation = isTop;
+               this._scrollLoadNextPage(isTop ? 'up' : 'down');
             }
          },
          _createScrollPager: function(){
@@ -1318,7 +1329,7 @@ define('js!SBIS3.CONTROLS.ListView',
          reload: function () {
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
-            this._firstScrollTop = true;
+            this._needScrollCompensation = this._options.infiniteScroll == 'up';
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
             return ListView.superclass.reload.apply(this, arguments);
@@ -1455,10 +1466,12 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _setEnabled : function(enabled) {
             ListView.superclass._setEnabled.call(this, enabled);
-            this._destroyEditInPlace();
+            if (!enabled) {
+               this._destroyEditInPlace();
+            }
          },
 
-         _onItemClickHandler: function(event, id, model, target, originalEvent) {
+         _onItemClickHandler: function(event, id, model, originalEvent) {
             var
                result = this.showEip(model, { isEdit: true }, false);
             if (originalEvent.type === 'click') {
@@ -1485,7 +1498,10 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options._decorators) {
                this._options._decorators.update(this);
             }
-            this._destroyEditInPlace();
+            //TODO: При перерисовке разрушаем редактор, иначе ItemsControlMixin задестроит все контролы внутри,
+            //но не проставит все необходимые состояния. В .200 начнём пересоздавать редакторы для каждого редактирования
+            //и данный код не понадобится.
+            this._getEditInPlace()._destroyEip();
             ListView.superclass.redraw.apply(this, arguments);
          },
 
@@ -1564,6 +1580,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         if (this._getItemsToolbar().isToolbarLocking()) {
                            this._showItemsToolbar(this._getElementData(this._getElementByModel(model)));
                         }
+                        this._notifyOnSizeChanged(true);
                      }.bind(this),
                      onBeginAdd: function(event, options) {
                         event.setResult(this._notify('onBeginAdd', options));
@@ -1581,6 +1598,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         //произойти например из-за setEnabled(false) у ListView
                         this._hideToolbar();
                         this._toggleEmptyData(!this.getItems().getCount());
+                        this._notifyOnSizeChanged(true);
                      }.bind(this)
                   }
                };
@@ -1592,7 +1610,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._getItemsToolbar().unlockToolbar();
                //Отображаем кнопки редактирования
                this._getItemsToolbar().showEditActions();
-               if (model.getState() === Record.RecordState.DETACHED) {
+               if (!this.getItems().getRecordById(model.getId())) {
                   if (this.getItemsActions()) {
                      itemsInstances = this.getItemsActions().getItemsInstances();
                      if (itemsInstances['delete']) {
@@ -1880,9 +1898,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 containsHoveredItem;
 
             ListView.superclass._drawItemsCallback.apply(this, arguments);
-            if (this.isInfiniteScroll()) {
-               this._preScrollLoading();
-            }
             this._drawSelectedItems(this._options.selectedKeys);
 
             hoveredItem = this.getHoveredItem();
@@ -1918,7 +1933,9 @@ define('js!SBIS3.CONTROLS.ListView',
                      this._updateHoveredItem(hoveredItemContainer);
                   }
                } else {
-                  this._updateItemsToolbar();
+                  /* Даже если контейнер выбранной записи не изменился,
+                     надо обновить выделнный элемент, т.к. могло измениться его положение */
+                  this._updateHoveredItem(hoveredItemContainer);
                }
             }
 
@@ -1929,6 +1946,12 @@ define('js!SBIS3.CONTROLS.ListView',
 
             this._notifyOnSizeChanged(true);
             this._drawResults();
+         },
+         _drawItemsCallbackSync: function(){
+            ListView.superclass._drawItemsCallbackSync.call(this);
+            if (this.isInfiniteScroll()) {
+               this._preScrollLoading();
+            }
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
@@ -1970,15 +1993,6 @@ define('js!SBIS3.CONTROLS.ListView',
          isInfiniteScroll: function () {
             return this._allowInfiniteScroll && !!this._options.infiniteScroll;
          },
-         /**
-          *  Общая проверка и загрузка данных для всех событий по скроллу
-          */
-         _loadChecked: function (direction) {
-            //Важно, чтобы датасет уже был готов к моменту, когда мы попытаемся грузить данные
-            if (this.getItems()) {
-               this._scrollLoadNextPage(direction);
-            }
-         },
          _cancelLoading: function(){
             ListView.superclass._cancelLoading.apply(this, arguments);
             if (this.isInfiniteScroll()){
@@ -1996,7 +2010,7 @@ define('js!SBIS3.CONTROLS.ListView',
                more = this.getItems().getMetaData().more,
                isContainerVisible = $ws.helpers.isElementVisible(this.getContainer()),
                hasScroll = this._scrollWatcher.hasScroll(),
-               hasNextPage = (direction == 'up' && this._options.infiniteScroll == 'down') ? this._scrollOffset.top > 0 : this._hasNextPage(more, this._scrollOffset.bottom);
+               hasNextPage = (direction == 'up' && this._options.infiniteScroll == 'both') ? this._scrollOffset.top > 0 : this._hasNextPage(more, this._scrollOffset.bottom);
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
             this._container.toggleClass('controls-ListView__outside-scroll-loader', !hasScroll);
@@ -2009,7 +2023,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _loadNextPage: function(direction) {
             direction = direction || this._options.infiniteScroll;
-            var offset = (direction == 'up' && this._options.infiniteScroll == 'down') ? this._scrollOffset.top - this._limit : this._scrollOffset.bottom + this._limit;
+            var offset = (direction == 'up' && this._options.infiniteScroll == 'both') ? this._scrollOffset.top - this._limit : this._scrollOffset.bottom + this._limit;
             this._showLoadingIndicator();
             this._toggleEmptyData(false);
             this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
@@ -2104,31 +2118,29 @@ define('js!SBIS3.CONTROLS.ListView',
          _preScrollLoading: function(){
             var hasScroll = (function() {
                   return this._scrollWatcher.hasScroll(10);
-               }).bind(this);
+               }).bind(this),
+               scrollDown = this._options.infiniteScroll == 'down' || this._options.infiniteScroll == 'both'
             // Если нет скролла или скролл внизу (при загрузке вниз), значит нужно догружать еще записи
-            if ((this.isScrollOnBottom() && this._options.infiniteScroll == 'down') || !hasScroll()) {
+            if ((this.isScrollOnBottom() && scrollDown) || !hasScroll()) {
                this._scrollLoadNextPage();
-            } else {
-               if (!this.isScrollOnBottom() || this._firstScrollTop) {
+            } else  {
+               if (this._needScrollCompensation) {
                   this._moveTopScroll();
-                  this._firstScrollTop = false;
+                  this._needScrollCompensation = false;
                }
             }
          },
          /**
-          * Если скролл находится в самом верху и добавляются записи вверх - не скролл останнется на месте,
+          * Если скролл находится в самом верху и добавляются записи вверх - скролл не останнется на месте,
           * а будет все так же вверху. Поэтому после отрисовки записей вверх, подвинем скролл на прежнее место -
           * конец предпоследней страницы
           * @private
           */
          _moveTopScroll: function(){
-            //сюда попадем только когда уже точно есть скролл
-            if (this.isInfiniteScroll() && this._options.infiniteScroll == 'up'){
-               var scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
-               //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
-               //разницы величины скролла (т.е. на сколько добавилось высоты, на столько и опустили). Получается плавно
-               this._scrollWatcher.scrollTo(this._firstScrollTop || (scrollAmount < 0) ? 'bottom' : scrollAmount);
-            }
+            var scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
+            //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
+            //разницы величины скролла (т.е. на сколько добавилось высоты, на столько и опустили). Получается плавно
+            this._scrollWatcher.scrollTo(scrollAmount);
          },
          /**
           * Скролит табличное представление к указанному элементу
@@ -2269,7 +2281,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   if (!self.isDestroyed() && self._showedLoading) {
                      scrollContainer = self._getScrollContainer();
                      indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
-                     if(indicator.length && scrollContainer && container[0].scrollHeight > scrollContainer.offsetHeight) {
+                     if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].scrollHeight > scrollContainer.offsetHeight) {
                         /* Ищем кординату, которая находится по середине отображаемой области грида */
                         centerCord =
                            (Math.max(scrollContainer.getBoundingClientRect().bottom, 0) - Math.max(container[0].getBoundingClientRect().top, 0))/2;
