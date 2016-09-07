@@ -1466,7 +1466,9 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _setEnabled : function(enabled) {
             ListView.superclass._setEnabled.call(this, enabled);
-            this._destroyEditInPlace();
+            if (!enabled) {
+               this._destroyEditInPlace();
+            }
          },
 
          _onItemClickHandler: function(event, id, model, originalEvent) {
@@ -1496,7 +1498,10 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options._decorators) {
                this._options._decorators.update(this);
             }
-            this._destroyEditInPlace();
+            //TODO: При перерисовке разрушаем редактор, иначе ItemsControlMixin задестроит все контролы внутри,
+            //но не проставит все необходимые состояния. В .200 начнём пересоздавать редакторы для каждого редактирования
+            //и данный код не понадобится.
+            this._getEditInPlace()._destroyEip();
             ListView.superclass.redraw.apply(this, arguments);
          },
 
@@ -1605,7 +1610,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._getItemsToolbar().unlockToolbar();
                //Отображаем кнопки редактирования
                this._getItemsToolbar().showEditActions();
-               if (model.getState() === Record.RecordState.DETACHED) {
+               if (!this.getItems().getRecordById(model.getId())) {
                   if (this.getItemsActions()) {
                      itemsInstances = this.getItemsActions().getItemsInstances();
                      if (itemsInstances['delete']) {
