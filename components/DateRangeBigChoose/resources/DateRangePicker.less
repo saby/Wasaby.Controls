@@ -1,5 +1,5 @@
 .controls-DateRangeBigChoose-DateRangePicker {
-   width: 246px;
+   width: 100%;
 
    table.controls-MonthView__dayTable {
       table-layout: fixed;
@@ -7,7 +7,7 @@
 
    // Стили для календаря
    .controls-MonthView {
-      width: 248px;
+      width: 100%;
       padding: 0;
       //margin-bottom: 4px;
       .box-sizing(border-box);
@@ -22,8 +22,8 @@
          //width: 95px;
          line-height: 40px;
          text-align: left;
-         padding: 0 10px;
-         margin-left: 47px;
+         padding: 0 8px;
+         margin-left: 55px;
          cursor: pointer;
          float: left;
 
@@ -53,6 +53,11 @@
             font-size: 16px;
 
             border-bottom: 1px solid @date-range-big-choose-date-range-picker-border-color;
+
+            .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
+               left: 8px;
+               right: 8px;
+            }
 
             &.controls-MonthView__nextMonth {
                border-bottom-width: 0;
@@ -146,9 +151,15 @@
                   &:first-child {
                      border-left-width: 2px;
                      padding-left: 0;
+                     .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
+                        left: 7px;
+                     }
                   }
                   &:last-child {
                      border-right-width: 2px;
+                     .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
+                        right: 7px;
+                     }
                   }
                   + .controls-MonthView__nextMonth {
                      border-left: 1px solid @date-range-big-choose-date-range-picker-border-color;
@@ -178,6 +189,9 @@
                   border-color: @date-range-big-choose-date-range-picker-today-border-color;
                   border-top-width: 2px;
                   border-left-width: 2px;
+                  .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
+                      right: 7px;
+                  }
                }
                &.controls-RangeSelectable__item-selected {
                   border-top-width: 2px;
