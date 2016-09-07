@@ -510,6 +510,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _resizeFastDataFilter: function(){
             var parent = this.getParent();
+            this._notifyOnSizeChanged();
             if ($ws.helpers.instanceOfModule(parent, 'SBIS3.CONTROLS.FastDataFilter')){
                parent._recalcDropdownWidth();
             }
