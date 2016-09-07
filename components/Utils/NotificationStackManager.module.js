@@ -192,6 +192,8 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
                   'z-index': this._zIndex
                });
 
+               this._items[i]._zIndex = this._zIndex;
+
                bottom += controlContainer.height() + BLOCK_MARGIN;
             }
          },
