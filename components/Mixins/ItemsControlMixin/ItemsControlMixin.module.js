@@ -588,7 +588,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          // FIXME сделано для правильной работы медленной отрисовки
          this._drawItemsCallbackDebounce = function() {
             debouncedDrawItemsCallback();
-            this._needToRedraw = true;
+            this._drawItemsCallbackSync();
          }.bind(this);
 
          if (typeof this._options.pageSize === 'string') {
@@ -1538,6 +1538,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              });
           }
           this.redraw();
+      },
+
+      _drawItemsCallbackSync: function(){
+         this._needToRedraw = true;
       },
 
       _drawItemsCallback: function () {
