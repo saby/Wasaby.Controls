@@ -244,11 +244,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   }, 100);
                   return beginEditResult.addCallback(function(readRecord) {
                      self._editingRecord = record;
-                     //При перечитывании записи она не является связанной с рекордсетом, и мы в последствии не сможем понять,
-                     //происходило ли добавление записи или редактирование. При редактировании выставим значение сами.
-                     if (record.getState() !== Record.RecordState.DETACHED) {
-                        readRecord.setState(Record.RecordState.UNCHANGED);
-                     }
                      return readRecord;
                   }).addBoth(function (result) {
                      clearTimeout(loadingIndicator);
@@ -345,13 +340,16 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
             },
             _getEditingEip: function() {
-               return this._eip.isEdit() ? this._eip : null;
+               return this._eip && this._eip.isEdit() ? this._eip : null;
             },
             _updateModel: function(eip, withSaving) {
                var
                   self = this,
                   eipRecord = eip.getEditingRecord(),
-                  isAdd = eipRecord.getState() === Record.RecordState.DETACHED;
+                  //Узнать происходит ли добавление, надёжнее всего проверяя есть ли запись с указанным Id в рекордсете.
+                  //Смотреть на state ненадёжно т.к. запись могли перечитать с бл, или могли позвать reload после начала редактирования.
+                  //Эти действия сделают запись не связанной с рекордсетом, и мы не сможем понять, происходит ли добавление или редактирование.
+                  isAdd = !this._options.items.getRecordById(eipRecord.getId());
                if (withSaving) {
                   this._options.dataSource.update(eipRecord).addCallback(function() {
                      eip.acceptChanges();
@@ -389,7 +387,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             add: function(options) {
                var
                    self = this,
-                   modelOptions = options.model || this._notify('onBeginAdd');
+                   modelOptions = options.model || this._notify('onBeginAdd'),
+                   editingRecord;
                this._lastTargetAdding = options.target;
                return this.endEdit(true).addCallback(function() {
                   return self._createModel(modelOptions).addCallback(function (createdModel) {
@@ -399,9 +398,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         }
                         self._createAddTarget(model, options);
                         self._getEip().edit(model);
-                        self._notify('onAfterBeginEdit', model);
+                        editingRecord = self._getEip().getEditingRecord();
+                        self._notify('onAfterBeginEdit', editingRecord);
                         self._addPendingOperation();
-                        return model;
+                        return editingRecord;
                      });
                   });
                });
@@ -498,13 +498,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             destroy: function() {
                this._destroyEip();
-               //destroy может позваться из reload у ListView, а если в данный момент происходит сохранение, то
-               //возможно после сохранения начнётся редактирование следующей строки(если сохранение запущенно по enter),
-               //а редакторы уже уничтожены. В такой ситуации тем кто ждёт сохранение, скажем что его не нужно ждать.
-               //Сохранение при этом продолжит работать в обычном режиме.
-               if (!this._savingDeferred.isReady()) {
-                  this._savingDeferred.errback();
-               }
                EditInPlaceBaseController.superclass.destroy.apply(this, arguments);
             }
          });

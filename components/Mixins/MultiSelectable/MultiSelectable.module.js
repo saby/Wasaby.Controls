@@ -149,6 +149,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
                this._options.selectedKeys = this._convertToKeys(this._options.selectedItems);
             }
             this._drawSelectedItems(this._options.selectedKeys);
+         },
+         destroy: function() {
+            if(this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
+               this._loadItemsDeferred.cancel();
+            }
          }
       },
 
@@ -738,11 +743,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
 		   if (this._checkEmptySelection()) {
 			   this._setFirstItemAsSelected();
 		   }
-		   this._notifySelectedItems(this._options.selectedKeys, {
+         this._notifySelectedItems(this._options.selectedKeys, {
             added : addedKeys,
             removed : removedKeys
          });
-		   this._drawSelectedItems(this._options.selectedKeys);
+         this._drawSelectedItems(this._options.selectedKeys);
 	   },
 
       _notifySelectedItems : function(idArray, changed) {

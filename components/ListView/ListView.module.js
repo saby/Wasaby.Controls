@@ -717,7 +717,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getElementToFocus: function() {
-            return $('.controls-ListView__fakeFocusElement', this._container);
+            return $('.controls-ListView__fakeFocusElement', this._container).first();
          },
 
          _setTouchSupport: function(support) {
@@ -780,8 +780,8 @@ define('js!SBIS3.CONTROLS.ListView',
                 * потому что контейнер невидимый*/
                if ($ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
                   var afterFloatAreaShow = function(){
-                     this._needScrollCompensation = true;
                      if (this.getItems()) {
+                     this._needScrollCompensation = this._options.infiniteScroll == 'up';
                         this._preScrollLoading();
                      }
                      topParent.unsubscribe('onAfterShow', afterFloatAreaShow);
@@ -808,7 +808,8 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _onTotalScrollHandler: function(event, type){
             var scrollOnEdge = (this._options.infiniteScroll === 'up' && type === 'top') || // скролл вверх и доскролили до верхнего края
-                               (this._options.infiniteScroll === 'down'); //скролл в обе стороны и доскролили до любого края
+                               (this._options.infiniteScroll === 'down' && type === 'bottom') || // скролл вниз и доскролили до нижнего края
+                               (this._options.infiniteScroll === 'both') //скролл в обе стороны и доскролили до любого края
             if (scrollOnEdge && this.getItems()) {
                var isTop = type == 'top';
                this._needScrollCompensation = isTop;
@@ -1335,7 +1336,7 @@ define('js!SBIS3.CONTROLS.ListView',
          reload: function () {
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
-            this._needScrollCompensation = this._options.isInfiniteScroll == 'up';
+            this._needScrollCompensation = this._options.infiniteScroll == 'up';
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
             return ListView.superclass.reload.apply(this, arguments);
@@ -1472,7 +1473,9 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _setEnabled : function(enabled) {
             ListView.superclass._setEnabled.call(this, enabled);
-            this._destroyEditInPlace();
+            if (!enabled) {
+               this._destroyEditInPlace();
+            }
          },
 
          _onItemClickHandler: function(event, id, model, originalEvent) {
@@ -1502,7 +1505,10 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options._decorators) {
                this._options._decorators.update(this);
             }
-            this._destroyEditInPlace();
+            //TODO: При перерисовке разрушаем редактор, иначе ItemsControlMixin задестроит все контролы внутри,
+            //но не проставит все необходимые состояния. В .200 начнём пересоздавать редакторы для каждого редактирования
+            //и данный код не понадобится.
+            this._getEditInPlace()._destroyEip();
             ListView.superclass.redraw.apply(this, arguments);
          },
 
@@ -1600,7 +1606,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._getItemsToolbar().unlockToolbar();
                //Отображаем кнопки редактирования
                this._getItemsToolbar().showEditActions();
-               if (model.getState() === Record.RecordState.DETACHED) {
+               if (!this.getItems().getRecordById(model.getId())) {
                   if (this.getItemsActions()) {
                      itemsInstances = this.getItemsActions().getItemsInstances();
                      if (itemsInstances['delete']) {
@@ -1888,9 +1894,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 containsHoveredItem;
 
             ListView.superclass._drawItemsCallback.apply(this, arguments);
-            if (this.isInfiniteScroll()) {
-               this._preScrollLoading();
-            }
             this._drawSelectedItems(this._options.selectedKeys);
 
             hoveredItem = this.getHoveredItem();
@@ -1926,7 +1929,9 @@ define('js!SBIS3.CONTROLS.ListView',
                      this._updateHoveredItem(hoveredItemContainer);
                   }
                } else {
-                  this._updateItemsToolbar();
+                  /* Даже если контейнер выбранной записи не изменился,
+                     надо обновить выделнный элемент, т.к. могло измениться его положение */
+                  this._updateHoveredItem(hoveredItemContainer);
                }
             }
 
@@ -1937,6 +1942,12 @@ define('js!SBIS3.CONTROLS.ListView',
 
             this._notifyOnSizeChanged(true);
             this._drawResults();
+         },
+         _drawItemsCallbackSync: function(){
+            ListView.superclass._drawItemsCallbackSync.call(this);
+            if (this.isInfiniteScroll()) {
+               this._preScrollLoading();
+            }
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
@@ -1995,7 +2006,7 @@ define('js!SBIS3.CONTROLS.ListView',
                more = this.getItems().getMetaData().more,
                isContainerVisible = $ws.helpers.isElementVisible(this.getContainer()),
                hasScroll = this._scrollWatcher.hasScroll(),
-               hasNextPage = (direction == 'up' && this._options.infiniteScroll == 'down') ? this._scrollOffset.top > 0 : this._hasNextPage(more, this._scrollOffset.bottom);
+               hasNextPage = (direction == 'up' && this._options.infiniteScroll == 'both') ? this._scrollOffset.top > 0 : this._hasNextPage(more, this._scrollOffset.bottom);
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
             this._container.toggleClass('controls-ListView__outside-scroll-loader', !hasScroll);
@@ -2008,7 +2019,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _loadNextPage: function(direction) {
             direction = direction || this._options.infiniteScroll;
-            var offset = (direction == 'up' && this._options.infiniteScroll == 'down') ? this._scrollOffset.top - this._limit : this._scrollOffset.bottom + this._limit;
+            var offset = (direction == 'up' && this._options.infiniteScroll == 'both') ? this._scrollOffset.top - this._limit : this._scrollOffset.bottom + this._limit;
             this._showLoadingIndicator();
             this._toggleEmptyData(false);
             this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
@@ -2103,9 +2114,10 @@ define('js!SBIS3.CONTROLS.ListView',
          _preScrollLoading: function(){
             var hasScroll = (function() {
                   return this._scrollWatcher.hasScroll(10);
-               }).bind(this);
+               }).bind(this),
+               scrollDown = this._options.infiniteScroll == 'down' || this._options.infiniteScroll == 'both'
             // Если нет скролла или скролл внизу (при загрузке вниз), значит нужно догружать еще записи
-            if ((this.isScrollOnBottom() && this._options.infiniteScroll == 'down') || !hasScroll()) {
+            if ((this.isScrollOnBottom() && scrollDown) || !hasScroll()) {
                this._scrollLoadNextPage();
             } else  {
                if (this._needScrollCompensation) {

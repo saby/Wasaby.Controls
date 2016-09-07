@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             show: function(model, itemProj) {
                if (this._notify('onBeginEdit', model) !== false) {
                   if (!this._hoveredEip) {
-                     this._hoveredEip = this._eip.isEdit() ? this._secondEip : this._eip;
+                     this._hoveredEip = this._getEip().isEdit() ? this._secondEip : this._eip;
                   }
                   this._hoveredEip.show(model, itemProj);
                } else {
@@ -108,7 +108,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                }.bind(this));
             },
             _getEditingEip: function() {
-               return this._secondEip.isEdit() ? this._secondEip : EditInPlaceHoverController.superclass._getEditingEip.call(this);
+               return this._secondEip && this._secondEip.isEdit() ? this._secondEip : EditInPlaceHoverController.superclass._getEditingEip.call(this);
             },
             /**
              * Обработчик события по приходу фокуса на контрол в области редактирования по месту
