@@ -10,9 +10,6 @@
                <span class="controls-MonthView__dayTitle">
                   {{=value.day}}
                </span>
-               {{?value.rangeselect}}
-               <span class="controls-MonthView__dayBorder"></span>
-               {{?}}
             </td>
             {{??}}
             <td class="controls-MonthView__tableElement controls-MonthView__tableElementFog controls-MonthView__{{=value.month}}{{?indexOfDay === 5 || indexOfDay === 6}} controls-MonthView__weekend{{?}}{{?value.firstDayOfMonth}} controls-MonthView__firstDayOfMonth{{?}}{{?value.lastDayOfMonth}} controls-MonthView__lastDayOfMonth{{?}}"></td>

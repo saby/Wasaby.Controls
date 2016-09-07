@@ -31,21 +31,24 @@
       }
 
       .controls-MonthView__tableElement {
+         position: relative;
+
          * {
             display: block;
-            float: left;
          }
 
+         .controls-MonthView__dayBorder,
          .controls-MonthView__dayTitle {
-            width: 100%;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
          }
-         .controls-MonthView__dayBorder {
-            width: 25%;
-            height: 100%;
-            + .controls-MonthView__dayTitle {
-               width: 50%;
+         .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
+               left: 7px;
+               right: 7px;
                padding: 8px 0 0 0;
-            }
          }
          //width: @calendar-day-cell-width;
          height: @calendar-day-table-cell-height;
