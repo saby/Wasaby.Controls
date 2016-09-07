@@ -454,6 +454,8 @@ define('js!SBIS3.CONTROLS.Image',
                         },
                         onOpenError: function(event){
                            $ws.helpers.toggleLocalIndicator(self._container, false);
+                           $ws.single.Indicator.hide();
+                           $ws.helpers.alert('При открытии изображения возникла ошибка');
                            self._boundEvents.onErrorLoad(event, true);
                         }
                      }
