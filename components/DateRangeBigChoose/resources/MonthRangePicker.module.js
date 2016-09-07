@@ -4,15 +4,20 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
    'js!SBIS3.CONTROLS.RangeMixin',
    'js!SBIS3.CONTROLS.RangeSelectableViewMixin',
    'js!WS.Data/Source/Base',
+   'js!WS.Data/Source/DataSet',
    // 'js!SBIS3.CONTROLS.DateRangeBigChoose.ScrollWatcher',
    'js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView'
-], function (ListView, ItemTmpl, RangeMixin, RangeSelectableViewMixin, Base, ScrollWatcher) {
+], function (ListView, ItemTmpl, RangeMixin, RangeSelectableViewMixin, Base, DataSet, ScrollWatcher) {
    'use strict';
 
    var _startingOffset = 1000000;
 
    var YearSource = Base.extend(/** @lends SBIS3.CONTROLS.DateRangeBig.DateRangePicker.MonthsStartCurrentYearSource.prototype */{
       _moduleName: 'SBIS3.CONTROLS.DateRangeBigChoose.YearSource',
+      $protected: {
+         _dataSetItemsProperty: 'items',
+         _dataSetTotalProperty: 'total'
+      },
 
       query: function (query) {
          var adapter = this.getAdapter().forTable(),
@@ -34,8 +39,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
             }
          );
          items = this._prepareQueryResult(
-            {items: adapter.getData(), total: 1000000000000},
-            'items', 'total'
+            {items: adapter.getData(), total: 1000000000000}
          );
          return $ws.proto.Deferred.success(items);
       }
