@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
       }
 
       return new Model({
-         data: rec.toJSON(),
+         rawData: rec.toJSON(),
          adapter: new SbisAdapter(),
          idProperty: idProp ? idProp : rec.getKeyField()
       })
