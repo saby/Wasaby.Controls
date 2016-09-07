@@ -4,7 +4,8 @@
    box-sizing: @DropdownList-box-sizing;
    max-width: 100%;
    .controls-DropdownList__selectedItem {
-      display: inline-flex;
+      display: block; /* ie8/9 */
+      display: flex;
       width: 100%;
       white-space: nowrap;
       font-size: 0;
