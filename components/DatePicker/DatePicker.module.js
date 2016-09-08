@@ -167,8 +167,8 @@ define(
             pickerConfig: {
                corner: 'tl',
                horizontalAlign: {
-                  side: 'left',
-                  offset: -182
+                  side: 'right',
+                  offset: 145
                },
                verticalAlign: {
                   side: 'top',
