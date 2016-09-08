@@ -2882,7 +2882,8 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.resultsPosition !== 'none' && this._getResultsRecord() && this._options.resultsTpl;
          },
          _getResultsContainer: function(){
-            return this._getItemsContainer();
+            var resultsSelector = '.controls-ListView__results-' + this._options.resultsPosition;
+            return $(resultsSelector, this.getContainer());
          },
          _makeResultsTemplate: function(resultsData){
             if (!resultsData){
