@@ -8,14 +8,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
     * @class SBIS3.CONTROLS.Link
 	 * @demo SBIS3.CONTROLS.Demo.MyLink
     * @extends SBIS3.CONTROLS.ButtonBase
-    * @control
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.Link'>
-    *    <option name='caption' value='Ссылка'></option>
-    * </component>
-    * @public
     * @author Крайнов Дмитрий Олегович
-    * @category Buttons
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
@@ -41,6 +34,14 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
     * !Важно: при добавлении этого класса сломается "Базовая линия".
     *
     * @css controls-Link__icon Класс для изменения отображения иконки кнопки.
+    *
+    * @control
+    * @public
+    * @category Buttons
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.Link'>
+    *    <option name='caption' value='Ссылка'></option>
+    * </component>
     */
 
    var Link = ButtonBase.extend( /** @lends SBIS3.CONTROLS.Link.prototype */ {

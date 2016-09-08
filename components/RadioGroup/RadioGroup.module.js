@@ -17,10 +17,23 @@ function(RadioGroupBase, dotTpl, ItemTemplate) {
     * @class SBIS3.CONTROLS.RadioGroup
     * @extends SBIS3.CONTROLS.RadioGroupBase
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
-    * @control
     * @author Крайнов Дмитрий Олегович
-    * @public
     * @demo SBIS3.CONTROLS.Demo.MyRadioGroup
+    *
+    * @cssModifier controls-ButtonGroup__vertical Для вертикального расположения элементов в группе.
+    * @cssModifier controls-Radio__primary акцентные кнопки
+    *
+    * @ignoreOptions className extendedTooltip handlers linkedContext
+    *
+    * @ignoreMethods applyState applyEmptyState getClassName findParent getEventHandlers  getEvents getExtendedTooltip
+    * @ignoreMethods getOwner getOwnerId getTopParent getUserData makeOwnerName hasEvent hasEventHandlers once setOwner
+    * @ignoreMethods sendCommand setClassName setExtendedTooltip setStateKey setUserData subscribe unsubscribe
+    *
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onTooltipContentRequest
+    *
+    * @control
+    * @public
+    * @category Inputs
     * @initial
     * <component data-component='SBIS3.CONTROLS.RadioGroup'>
     *    <option name="displayField">title</option>
@@ -36,17 +49,6 @@ function(RadioGroupBase, dotTpl, ItemTemplate) {
     *       </options>
     *    </options>
     * </component>
-    *
-    * @cssModifier controls-ButtonGroup__vertical Для вертикального расположения элементов в группе.
-    * @cssModifier controls-Radio__primary акцентные кнопки
-    *
-    * @ignoreOptions className extendedTooltip handlers linkedContext
-    *
-    * @ignoreMethods applyState applyEmptyState getClassName findParent getEventHandlers  getEvents getExtendedTooltip
-    * @ignoreMethods getOwner getOwnerId getTopParent getUserData makeOwnerName hasEvent hasEventHandlers once setOwner
-    * @ignoreMethods sendCommand setClassName setExtendedTooltip setStateKey setUserData subscribe unsubscribe
-    *
-    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onTooltipContentRequest
     */
 
    var RadioGroup = RadioGroupBase.extend( /** @lends SBIS3.CONTROLS.RadioGroup.prototype */ {

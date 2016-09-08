@@ -30,13 +30,19 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * @class SBIS3.CONTROLS.TreeDataGridView
     * @extends SBIS3.CONTROLS.DataGridView
     * @mixes SBIS3.CONTROLS.TreeMixin
+    * @author Крайнов Дмитрий Олегович
+    *
+    * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView
+    * @demo SBIS3.CONTROLS.Demo.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
+    * Инициировать добавление можно как по нажатию кнопок в футерах, так и по кнопке Enter из режима редактирования последней записи.
+    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
     *
     * @public
     *
     * @author Крайнов Дмитрий Олегович
     *
     * @control
-    *
+    * @category Lists
     * @initial
     * <component data-component='SBIS3.CONTROLS.TreeDataGridView'>
     *    <options name="columns" type="array">
@@ -51,11 +57,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     *       </options>
     *    </options>
     * </component>
-    *
-    * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView Пример 1. Простой иерархический список.
-    * @demo SBIS3.CONTROLS.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
-    * Инициировать добавление можно как по нажатию кнопок в футерах, так и по кнопке Enter из режима редактирования последней записи.
-    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/">Добавление по месту в иерархическом списке</a>.
     */
 
    var TreeDataGridView = DataGridView.extend([TreeMixin, TreeViewMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {

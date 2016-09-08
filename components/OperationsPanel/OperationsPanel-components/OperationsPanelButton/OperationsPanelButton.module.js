@@ -14,9 +14,11 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
     * SBIS3.CONTROLS.OperationsPanelButton
     * @class SBIS3.CONTROLS.OperationsPanelButton
     * @extends $ws.proto.Control
+    * @author Сухоручкин Андрей Сергеевич
+    *
     * @control
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @category Actions
     * @initial
     * <component data-component='SBIS3.CONTROLS.OperationsPanelButton'>
     *
