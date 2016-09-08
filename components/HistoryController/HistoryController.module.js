@@ -21,14 +21,27 @@ define('js!SBIS3.CONTROLS.HistoryController', [], function() {
              * Специальный id по которому будет загружаться/сохраняться история
              * @cfg {String}
              */
-            historyId: undefined
+            historyId: undefined,
+            /**
+             * Функция для сериализации и десериализации
+             * По-умолчанию используется serializeURLData/deserializeURLData
+             * @cfg {Function}
+             * @example
+             * Сделаем сериализатор для даты
+             * <pre>
+             *    serialize: function( serialize, value ){
+             *       return serialize ? value.toSQL() : Date.fromSQL( value );
+             *    }
+             * </pre>
+             */
+            serialize: serializeFnc
          },
          _saveParamsDeferred: undefined,     /* Деферед сохранения истории */
          _history: undefined                 /* История */
       },
 
       $constructor: function() {
-         this._history = serializeFnc(false, $ws.single.SessionStorage.get(this._options.historyId));
+         this._history = this._options.serialize(false, $ws.single.SessionStorage.get(this._options.historyId));
       },
 
       /**
@@ -62,7 +75,7 @@ define('js!SBIS3.CONTROLS.HistoryController', [], function() {
          if(!this.isNowSaving()) {
             this._saveParamsDeferred = new $ws.proto.Deferred();
 
-            $ws.single.UserConfig.setParam(this._options.historyId, serializeFnc(true, this._history), true).addCallback($ws.helpers.forAliveOnly(function() {
+            $ws.single.UserConfig.setParam(this._options.historyId, this._options.serialize(true, this._history), true).addCallback($ws.helpers.forAliveOnly(function() {
                self._saveParamsDeferred.callback();
             }, self));
          }
