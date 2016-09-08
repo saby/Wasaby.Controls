@@ -301,25 +301,38 @@
       cursor: pointer;
       vertical-align: middle;
       position: relative;
+      top: -1px;
    }
 }
 
 // ФИКС ДЛЯ ФФ
-@-moz-document url-prefix() {
-   .controls__filterButton .controls__filterButton__filterLine{
-      margin: 8px 32px 8px 0;
-   }
-   /* Из-за того, что в FF внезапно изменилось позиционирование с помощью float'a, то добавляю хаки для FF
-      чтобы корректно позиционировался крестик очистки и текст */
-   .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-table {
-      display: inline-block;
-      float: none;
-   }
-   .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-table-row {
-      height: 22px;
-   }
+.ws-is-firefox {
+   .controls__filterButton {
+      .controls__filterButton__filterLine {
+         margin: 8px 32px 8px 0;
+         white-space: normal;
 
-   .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-copyCross {
-      top: -23px;
+         .controls__filterButton__filterLine-table {
+            display: inline-block;
+            float: none;
+
+            .controls__filterButton__filterLine-table-row {
+               height: 22px;
+
+               .controls__filterButton__filterLine-arrow {
+                  vertical-align: baseline;
+                  position: relative;
+                  top: 2px;
+               }
+            }
+
+         }
+         .controls__filterButton__filterLine-copyCross {
+            top: -25px;
+         }
+         .controls__filterButton__filterLine-cross {
+            top: 1px;
+         }
+      }
    }
 }
