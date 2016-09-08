@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'js!WS.Data/Collection/IBind',
    'js!WS.Data/Display/Collection',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'tmpl!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
+   'html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
    'js!WS.Data/Utils',
    'js!WS.Data/Entity/Model',
    'Core/ParserUtilities',
