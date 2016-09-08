@@ -57,7 +57,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   dataSource: undefined,
                   items: undefined,
                   itemsContainer: undefined,
-                  resultsPosition: undefined,
                   getEditorOffset: undefined,
                   hierField: undefined
                },
@@ -440,17 +439,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   }
                   addTarget.insertAfter(lastTarget || currentTarget);
                } else {
-                  var resultsRow = $('.controls-DataGridView__results', this._options.itemsContainer);
-
-                  if (resultsRow.length && this._options.resultsPosition == 'top' && options.addPosition == 'top') {
-                     addTarget.insertAfter(resultsRow);
-                  }
-                  else if (resultsRow.length && this._options.resultsPosition == 'bottom' && options.addPosition != 'top') {
-                     addTarget.insertBefore(resultsRow);
-                  }
-                  else {
-                     addTarget[options.addPosition === 'top' ? 'prependTo' : 'appendTo'](this._options.itemsContainer);
-                  }
+                  addTarget[options.addPosition === 'top' ? 'prependTo': 'appendTo'](this._options.itemsContainer);
                }
                this._addTarget = addTarget;
             },
