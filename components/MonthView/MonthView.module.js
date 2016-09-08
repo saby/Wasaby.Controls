@@ -121,14 +121,12 @@ define(
                itemCssClass = ['.', this._SELECTABLE_RANGE_CSS_CLASSES.item].join('');
 
             if (this.isEnabled()) {
-               itemsContainers.on('click', ['.', this._MONTH_VIEW_CSS_CLASSES.DAY_TITLE].join(''), function (e) {
-                  self._onDayTitleMouseClick($(this), e);
-               }).on('click', ['.', this._MONTH_VIEW_CSS_CLASSES.DAY].join(''), function (e) {
-                  self._onDayMouseClick($(this), e);
-               }).on('mouseenter', itemCssClass, function () {
+               itemsContainers.click(
+                  'click', this._onDayMouseClick.bind(this)
+               )
+
+               itemsContainers.on('mouseenter', itemCssClass, function () {
                   self._onDayMouseEnter($(this));
-               }).on('click', ['.', this._MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
-                  self._onDayBorderMouseClick($(this), e);
                }).on('mouseenter', ['.', this._MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
                   self._onDayBorderMouseEnter($(this), self._getItemDate($(this)));
                }).on('mouseleave', ['.', this._MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
@@ -144,43 +142,45 @@ define(
             return this._options.selectionType;
          },
 
-         _onDayMouseClick: function (element, event) {
-            var date, weekStartDate, weekEndDate;
-            // Начинаем выделение в обработчиках _onDayTitleMouseClick и _onDayBorderMouseClick,
-            // В этом обработчике только завершаем выделение.
-            if (!this.isSelectionProcessing()) {
-               return;
-            }
-
-            event.stopPropagation();
-            date = this._getItemDate(element.closest(['.', this._SELECTABLE_RANGE_CSS_CLASSES.item].join('')));
-            if (this._getSelectionType() === selectionTypes.WEEK) {
-               if (date < this.getStartValue()) {
-                  date = this._getStartOfWeek(date);
-               } else if (date > this.getEndValue()) {
-                  date = this._getEndOfWeek(date);
+         _onDayMouseClick: function (event) {
+            var t = $(event.target),
+               date;
+            // Начинаем выделение по дням или по месяцам в зависимости от того на какую область дня нажал пользователь,
+            // завершаем выделение независимо от того в какую область дня нажал пользователь.
+            if (this.isSelectionProcessing()) {
+               date = this._getItemDate(t);
+               if (this._getSelectionType() === selectionTypes.WEEK) {
+                  if (date < this.getStartValue()) {
+                     date = this._getStartOfWeek(date);
+                  } else if (date > this.getEndValue()) {
+                     date = this._getEndOfWeek(date);
+                  }
+               }
+               this._onRangeItemElementClick(date);
+               this._setSelectionType(null);
+            } else {
+               if (t.hasClass(this._MONTH_VIEW_CSS_CLASSES.DAY_TITLE)) {
+                  this._onDayTitleMouseClick(t, event);
+               } else if (this._MONTH_VIEW_CSS_CLASSES.DAY_BORDER) {
+                  this._onDayBorderMouseClick(t, event);
                }
             }
-            this._onRangeItemElementClick(date);
-            this._setSelectionType(null);
          },
 
          _onDayTitleMouseClick: function (element, event) {
             if (!this.isSelectionProcessing()) {
                this._setSelectionType(selectionTypes.DAY);
-               this._onRangeItemElementClick(this._getItemDate(element.closest(['.', this._SELECTABLE_RANGE_CSS_CLASSES.item].join(''))));
-               event.stopPropagation();
+               this._onRangeItemElementClick(this._getItemDate(element));
             }
          },
 
          _onDayBorderMouseClick: function (element, event) {
-            var itemSelector = ['.', this._SELECTABLE_RANGE_CSS_CLASSES.item].join(''),
-               date, startDate, endDate;
+            var date, startDate, endDate;
             // Если пользователь уже иницировал выделение, то клики обрабатываем в обработчике клика по ячеке(_onDayMouseClick)
             if (this.isSelectionProcessing()) {
                return;
             }
-            date = this._getItemDate(element.closest(itemSelector));
+            date = this._getItemDate(element);
             //TODO:продумать как правильно выбирать неделю на Ipad
             if (!$ws._const.browser.isMobileIOS) {
                startDate = this._getStartOfWeek(date);
@@ -191,7 +191,6 @@ define(
                this._setSelectionType(selectionTypes.DAY);
                this._onRangeItemElementClick(date);
             }
-            event.stopPropagation();
          },
 
          _onDayMouseEnter: function (element) {
@@ -392,6 +391,9 @@ define(
          },
 
          _getItemDate: function (jqObj) {
+            if (!jqObj.hasClass(this._SELECTABLE_RANGE_CSS_CLASSES.item)) {
+               jqObj = jqObj.closest(['.', this._SELECTABLE_RANGE_CSS_CLASSES.item].join(''));
+            }
             return new Date( this._options.month.getFullYear(), this._options.month.getMonth(), jqObj.attr(this._selectedRangeItemIdAtr), 0, 0, 0, 0 );
          },
 
