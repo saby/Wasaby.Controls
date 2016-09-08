@@ -1030,6 +1030,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
        setColumns : function(columns) {
           this._options.columns = columns;
           checkColumns(this._options);
+          this._destroyEditInPlace();
        },
 
       _oldRedraw: function() {
