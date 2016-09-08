@@ -178,9 +178,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @class SBIS3.CONTROLS.DataGridView
     * @extends SBIS3.CONTROLS.ListView
     * @author Крайнов Дмитрий Олегович
+    * @demo SBIS3.CONTROLS.Demo.MyDataGridView
+    *
+    * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
+    * @cssModifier controls-DataGridView__markerRight Маркер отображается не слева строки, а справа.
+    * @cssModifier controls-DataGridView__hasSeparator Включает линии разделители между строками
+    * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
+    *
     * @control
     * @public
-    * @demo SBIS3.CONTROLS.Demo.MyDataGridView
+    * @category Lists
     * @designTime plugin /design/DesignPlugin
     * @initial
     * <component data-component='SBIS3.CONTROLS.DataGridView'>

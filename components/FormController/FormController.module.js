@@ -6,7 +6,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
     *
     * @class SBIS3.CONTROLS.FormController
     * @extends $ws.proto.CompoundControl
-    * @control
     * @public
     * @author Красильников Андрей Сергеевич
     */

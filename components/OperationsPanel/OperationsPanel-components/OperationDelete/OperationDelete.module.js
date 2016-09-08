@@ -10,13 +10,8 @@ define('js!SBIS3.CONTROLS.OperationDelete', [
     * SBIS3.CONTROLS.OperationDelete
     * @class SBIS3.CONTROLS.OperationDelete
     * @extends SBIS3.CONTROLS.Link
-    * @control
+    * @author Сухоручкин Андрей Сергеевич
     * @public
-    * @author Крайнов Дмитрий Олегович
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.OperationDelete'>
-    *
-    * </component>
     */
    var OperationDelete = Link.extend(/** @lends SBIS3.CONTROLS.OperationDelete.prototype */{
 

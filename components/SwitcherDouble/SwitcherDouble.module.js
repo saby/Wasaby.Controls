@@ -13,8 +13,6 @@ define('js!SBIS3.CONTROLS.SwitcherDouble', ['js!SBIS3.CORE.Control', 'html!SBIS3
     *
     * @class SBIS3.CONTROLS.SwitcherDouble
     * @extends $ws.proto.Control
-    * @control
-    * @public
     *
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.Clickable
@@ -24,11 +22,6 @@ define('js!SBIS3.CONTROLS.SwitcherDouble', ['js!SBIS3.CORE.Control', 'html!SBIS3
     *
     * @author Черемушкин Илья Вячеславович
     *
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.SwitcherDouble'>
-    *    <option name="stateOff" value="Выкл"></option>
-    *    <option name="stateOn" value="Вкл"></option>
-    * </component>
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner stateKey
@@ -42,6 +35,15 @@ define('js!SBIS3.CONTROLS.SwitcherDouble', ['js!SBIS3.CORE.Control', 'html!SBIS3
     *
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady
+    *
+    * @control
+    * @public
+    * @category Buttons
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.SwitcherDouble'>
+    *    <option name="stateOff" value="Выкл"></option>
+    *    <option name="stateOn" value="Вкл"></option>
+    * </component>
     */
    var SwitcherDouble = Control.Control.extend( [Clickable, FormWidgetMixin, Checkable], /** @lends SBIS3.CONTROLS.SwitcherDouble.prototype */ {
       _dotTplFn: dotTplFn,

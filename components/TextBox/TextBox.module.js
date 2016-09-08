@@ -25,11 +25,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
     * </ol>
     * @class SBIS3.CONTROLS.TextBox
     * @extends SBIS3.CONTROLS.TextBoxBase
-    * @control
-    * @public
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyTextBox
-    * @category Inputs
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip className
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
@@ -43,6 +40,10 @@ define('js!SBIS3.CONTROLS.TextBox', [
     *
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
     * @ignoreEvents onReady
+    *
+    * @control
+    * @public
+    * @category Inputs
     */
 
    var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.TextBox.prototype */ {

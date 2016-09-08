@@ -95,6 +95,10 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__pagerNoAmount Скрыть отображение количества записей на странице в пейджинге.
        * @cssModifier controls-ListView__pagerHideEndButton Скрыть кнопку "Перейти к последней странице"
        * Т.е. текст "1-10" при отображении 10 записей на 1-ой странице
+       *
+       * @control
+       * @public
+       * @category Lists
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/

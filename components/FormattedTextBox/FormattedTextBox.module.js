@@ -8,13 +8,7 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBo
     * и останется ввести только недостающие символы.
     * @class SBIS3.CONTROLS.FormattedTextBox
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
-    * @control
     * @demo SBIS3.CONTROLS.Demo.MyFormattedTextBox
-    * @public
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.FormattedTextBox' style="width:150px;">
-    * </component>
-    * @category Inputs
     * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip
@@ -29,6 +23,13 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBo
     *
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
     * @ignoreEvents onReady
+    *
+    * @public
+    * @category Inputs
+    * @control
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.FormattedTextBox' style="width:150px;">
+    * </component>
     */
 
    var FormattedTextBox = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS.FormattedTextBox.prototype */{

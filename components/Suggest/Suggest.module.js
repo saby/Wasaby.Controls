@@ -14,7 +14,6 @@ define('js!SBIS3.CONTROLS.Suggest', [
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.DataBindMixin
     * @mixes SBIS3.CONTROLS.SuggestMixin
-    * @control
     * @author Крайнов Дмитрий Олегович
     */
 

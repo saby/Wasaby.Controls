@@ -29,10 +29,12 @@ define(
     * Можно вводить только значения особого формата даты.
     * @class SBIS3.CONTROLS.DatePicker
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
-    * @control
-    * @author Крайнов Дмитрий Олегович
-    * @public
     * @demo SBIS3.CONTROLS.Demo.MyDatePicker
+    * @author Крайнов Дмитрий Олегович
+    *
+    * @control
+    * @public
+    * @category Date/Time
     */
 
    var DatePicker = CompoundControl.extend([PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
