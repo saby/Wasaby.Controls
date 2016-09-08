@@ -6,34 +6,29 @@ define('js!SBIS3.CONTROLS.RichTextArea/resources/smiles', ['i18n!SBIS3.CONTROLS.
    'use strict';
 
    /*СПИСОК СМАЙЛОВ*/
-   var
-      blankImgPath = 'https://cdn.sbis.ru/richeditor/26-01-2015/blank.png',
-      renderSmile = function(key, name){
-         return '<img class="ws-fre__smile smile' + key + '" data-mce-resize="false" src="'+blankImgPath+'" title="' + name + '" >';
-      };
 
    return [
-      { key: 'Smile', value: rk('улыбка'), title: renderSmile('Smile',rk('улыбка')) , alt: ':)'},
-      { key: 'Nerd', value: rk('умник'), title: renderSmile('Nerd',rk('умник')), alt: '(nerd)' },
-      { key: 'Angry', value: rk('злой'), title: renderSmile('Angry',rk('злой')) , alt: '(angry)'},
-      { key: 'Annoyed', value: rk('раздраженный'), title: renderSmile('Annoyed',rk('раздраженный')), alt: '(annoyed)' },
-      { key: 'Blind', value: rk('слепой'), title: renderSmile('Blind',rk('слепой')), alt: '(blind)' },
-      { key: 'Cool', value: rk('крутой'), title: renderSmile('Cool',rk('крутой')) , alt: '(cool)'},
-      { key: 'Cry', value: rk('плачет'), title: renderSmile('Cry',rk('плачет')) , alt: ';('},
-      { key: 'Devil', value: rk('дьявол'), title: renderSmile('Devil',rk('дьявол')),alt: '(devil)' },
-      { key: 'Dumb', value: rk('тупица'), title: renderSmile('Dumb',rk('тупица')) ,alt: '(dumb)'},
-      { key: 'Inlove', value: rk('влюблен'), title: renderSmile('Inlove',rk('влюблен')) , alt: '(inlove)'},
-      { key: 'Kiss', value: rk('поцелуй') , title: renderSmile('Kiss',rk('поцелуй')), alt: '(kiss)'},
-      { key: 'Laugh', value: rk('смеётся'), title: renderSmile('Laugh',rk('смеётся')), alt: ':D'},
-      { key: 'Money', value: rk('алчный'), title: renderSmile('Money',rk('алчный')) , alt: '(money)'},
-      { key: 'Neutral', value: rk('нейтральный'), title: renderSmile('Neutral',rk('нейтральный')) , alt: ':|'},
-      { key: 'Puzzled', value: rk('недоумевает'), title: renderSmile('Puzzled',rk('недоумевает')) , alt: '(puzzled)'},
-      { key: 'Rofl', value: rk('подстолом'), title: renderSmile('Rofl',rk('улыбка')) , alt: '(rofl'},
-      { key: 'Sad', value: rk('расстроен'), title: renderSmile('Sad',rk('расстроен')) , alt: ':('},
-      { key: 'Shocked', value: rk('шокирован'), title: renderSmile('Shocked',rk('шокирован')) , alt: '(shocked)'},
-      { key: 'Snooze', value: rk('дремлет'), title: renderSmile('Snooze',rk('дремлет')) , alt: '(snooze)'},
-      { key: 'Tongue', value: rk('дразнит'), title: renderSmile('Tongue',rk('дразнит')), alt: '(tongue)' },
-      { key: 'Wink', value: rk('подмигивает'), title: renderSmile('Wink',rk('подмигивает')), alt: ';)' },
-      { key: 'Yawn', value: rk('зевает'), title: renderSmile('Yawn',rk('зевает')), alt: '(yawn)' }
+      { key: 'Smile', value: rk('улыбка'), icon: 'icon-24 icon-EmoiconSmile icon-primary', title: '', alt: ':)'},
+      { key: 'Nerd', value: rk('умник'), icon: 'icon-24 icon-EmoiconNerd icon-primary', title: '', alt: '(nerd)' },
+      { key: 'Angry', value: rk('злой'), icon: 'icon-24 icon-EmoiconAngry icon-primary', title: '', alt: '(angry)'},
+      { key: 'Annoyed', value: rk('раздраженный'), icon: 'icon-24 icon-EmoiconAnnoyed icon-primary', title: '', alt: '(annoyed)' },
+      { key: 'Blind', value: rk('слепой'), icon: 'icon-24 icon-EmoiconBlind icon-primary', title: '', alt: '(blind)' },
+      { key: 'Cool', value: rk('крутой'), icon: 'icon-24 icon-EmoiconCool icon-primary', title: '', alt: '(cool)'},
+      { key: 'Cry', value: rk('плачет'), icon: 'icon-24 icon-EmoiconCry icon-primary', title: '', alt: ';('},
+      { key: 'Devil', value: rk('дьявол'), icon: 'icon-24 icon-EmoiconDevil icon-primary', title: '', alt: '(devil)' },
+      { key: 'Dumb', value: rk('тупица'), icon: 'icon-24 icon-EmoiconDumb icon-primary', title: '', alt: '(dumb)'},
+      { key: 'Inlove', value: rk('влюблен'), icon: 'icon-24 icon-EmoiconInlove icon-primary', title: '', alt: '(inlove)'},
+      { key: 'Kiss', value: rk('поцелуй') , icon: 'icon-24 icon-EmoiconKiss icon-primary', title: '', alt: '(kiss)'},
+      { key: 'Laugh', value: rk('смеётся'), icon: 'icon-24 icon-EmoiconLaugh icon-primary', title: '', alt: ':D'},
+      { key: 'Money', value: rk('алчный'), icon: 'icon-24 icon-EmoiconMoney icon-primary', title: '', alt: '(money)'},
+      { key: 'Neutral', value: rk('нейтральный'), icon: 'icon-24 icon-EmoiconNeutral icon-primary', title: '', alt: ':|'},
+      { key: 'Puzzled', value: rk('недоумевает'), icon: 'icon-24 icon-EmoiconPuzzled icon-primary', title: '', alt: '(puzzled)'},
+      { key: 'Rofl', value: rk('подстолом'), icon: 'icon-24 icon-EmoiconRofl icon-primary', title: '', alt: '(rofl'},
+      { key: 'Sad', value: rk('расстроен'), icon: 'icon-24 icon-EmoiconSad icon-primary', title: '', alt: ':('},
+      { key: 'Shocked', value: rk('шокирован'), icon: 'icon-24 icon-EmoiconShocked icon-primary', title: '', alt: '(shocked)'},
+      { key: 'Snooze', value: rk('дремлет'), icon: 'icon-24 icon-EmoiconSnooze icon-primary', title: '', alt: '(snooze)'},
+      { key: 'Tongue', value: rk('дразнит'), icon: 'icon-24 icon-EmoiconTongue icon-primary', title: '', alt: '(tongue)' },
+      { key: 'Wink', value: rk('подмигивает'), icon: 'icon-24 icon-EmoiconWink icon-primary', title: '', alt: ';)' },
+      { key: 'Yawn', value: rk('зевает'),icon: 'icon-24 icon-EmoiconYawn icon-primary', title: '', alt: '(yawn)' }
    ];
 });

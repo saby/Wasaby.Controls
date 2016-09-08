@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
    var
       onButtonClick = function() {
-         this.getParent().execCommand(this._options.name);
+         this.getParent()._execCommand(this._options.name);
       };
 
    return [
@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          className: 'fre-style',
          handlers: {
             onSelectedItemsChange: function(e, key) {
-               this.getParent().setFontStyle(key[0]);
+               this.getParent()._setFontStyle(key[0]);
             }
          }
       },
@@ -109,7 +109,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          className: 'fre-align',
          handlers: {
             onSelectedItemsChange: function(event, key) {
-               this.getParent().setTextAlign(key[0]);
+               this.getParent()._setTextAlign(key[0]);
             }
          }
       },
@@ -132,7 +132,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          ],
          handlers: {
             onMenuItemActivate: function(event, key) {
-               this.getParent().setFontColor(key);
+               this.getParent()._setFontColor(key);
             }
          }
       },
@@ -150,7 +150,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          ],
          handlers: {
             onMenuItemActivate: function(event, key) {
-               this.getParent().execCommand(key);
+               this.getParent()._execCommand(key);
             }
          }
       },
@@ -163,7 +163,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          handlers:{
             onActivated: function(){
                this.setChecked(true);
-               this.getParent().insertLink(function(){
+               this.getParent()._insertLink(function(){
                   this.setChecked(false);
                }.bind(this), this._container);
             }
@@ -188,7 +188,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          icon: 'sprite:icon-16 icon-Picture icon-primary',
          handlers: {
             onActivated: function(event, originalEvent) {
-               this.getParent().selectFile(originalEvent);
+               this.getParent()._selectFile(originalEvent);
             }
          }
       },
@@ -202,7 +202,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          items: smiles,
          handlers: {
             onMenuItemActivate: function(event, key) {
-               this.getParent().insertSmile(key);
+               this.getParent()._insertSmile(key);
             }
          },
          visible: false
@@ -217,7 +217,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             onActivated: function() {
                var self = this;
                this.setChecked(true);
-               this.getParent().pasteFromBufferWithStyles(function() {
+               this.getParent()._pasteFromBufferWithStyles(function() {
                   self.setChecked(false);
                }, this._container);
             }
@@ -232,7 +232,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          icon: 'sprite:icon-16 icon-Html icon-primary',
          handlers: {
             onActivated: function() {
-               this.getParent().toggleContentSource();
+               this.getParent()._toggleContentSource();
             }
          }
       }

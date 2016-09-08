@@ -561,6 +561,17 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             //при установке стиля(через форматтер) не стреляет change
             this._setTrimmedText(this._getTinyEditorValue());
          },
+         /**
+          * Установить размер для выделенного текста
+          * @param {Object} size Объект, содержащий устанавливаемый размер текста
+          * @private
+          */
+         setFontSize: function(size) {
+            this._tinyEditor.execCommand('FontSize',false,  size + 'px');
+            this._tinyEditor.execCommand('');
+            //при установке стиля(через форматтер) не стреляет change
+            this._setTrimmedText(this._getTinyEditorValue());
+         },
 
          /**
           * Получить экземпляр редактора tinyMCE
