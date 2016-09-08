@@ -2880,7 +2880,13 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.resultsPosition !== 'none' && this._getResultsRecord() && this._options.resultsTpl;
          },
          _getResultsContainer: function(){
-            return this._getItemsContainer();
+            var resultsContainer = $('.controls-ListView__results', this.getContainer()),
+                insertMethod = this._options.resultsPosition == 'top' ? 'insertBefore' : 'insertAfter';
+            if (!resultsContainer.length){
+               resultsContainer = $('<div class="controls-ListView__results"></div>');
+               resultsContainer[insertMethod](this._getItemsContainer());
+            }
+            return resultsContainer;
          },
          _makeResultsTemplate: function(resultsData){
             if (!resultsData){
