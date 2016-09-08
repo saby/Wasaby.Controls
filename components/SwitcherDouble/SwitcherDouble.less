@@ -51,14 +51,16 @@
       cursor: @switcher-do-text-cursor;
       color: @switcher-do-text-color;
       text-decoration: @switcher-do-decoration;
+      font-weight: @swithcer-do-font-weight;
 
       &.controls-SwitcherDouble__unselected {
          cursor: @switcher-do-unselected-text-cursor;
          color: @switcher-do-unselected-text-color;
          text-decoration: @switcher-do-unselected-text-decoration;
+         font-weight: @swithcer-do-unselected-font-weight;
 
          &:hover {
-            color: @switcher-do-horizontal-btn-color;
+            color: @switcher-do-horizontal-text-hover-color;
             text-decoration: @switcher-do-unselected-text-decoration-hover;
          }
       }
@@ -117,10 +119,11 @@
    &.ws-disabled {
       .controls-SwitcherDouble__toggle {
          cursor: @switcher-do-disabled-toggle-cursor;
+         border-color:  @switcher-do-disabled-toggle-border-color;
 
       }
       .controls-SwitcherDouble__line {
-         background: @gray-light-color;
+         background: @switcher-do-disabled-line-color;
       }
 
       .controls-SwitcherDouble__text {
@@ -129,6 +132,7 @@
          text-decoration: @switcher-do-disabled-text-decoration;
          &:hover {
             color: @switcher-do-disabled-text-color;
+            text-decoration: @switcher-do-disabled-text-decoration;
          }
       }
       .controls-SwitcherDouble__btn {
