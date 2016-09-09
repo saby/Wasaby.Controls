@@ -2,13 +2,13 @@
    display: inline-block;
    min-height: @DropdownList-min-height;
    box-sizing: @DropdownList-box-sizing;
-   max-width: 100%;
    .controls-DropdownList__selectedItem {
-      display: inline-flex;
+      display: block; /* ie8/9 */
+      display: flex;
       width: 100%;
       white-space: nowrap;
       font-size: 0;
-      vertical-align: middle;
+      align-items: center;
       * {
          font-size: @font-basic-size;
       }
@@ -269,13 +269,20 @@
    }
 }
 
-.ws-is-ie8, .ws-is-ie9 {
+/* Все ie без поддержки flexBox'a */
+.ws-is-ie8, .ws-is-ie9, .ws-is-ie10 {
   .controls-DropdownList .controls-DropdownList__selectedItem{
     .controls-DropdownList__beforeCaptionWrapper{
-      top: -2px;
+       vertical-align: top;
     }
     .controls-DropdownList__afterCaptionWrapper{
-      top: -4px;
+       vertical-align: top;
     }
   }
+}
+
+.ws-is-firefox {
+   .controls-DropdownList__afterCaptionWrapper {
+      top: 3px;
+   }
 }

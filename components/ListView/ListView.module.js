@@ -2471,7 +2471,12 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pager = undefined;
                this._pagerContainer = undefined;
             }
-            this._destroyEditInPlace();
+            //TODO: При задании нового сорса разрушаем редактор, иначе ItemsControlMixin задестроит все контролы внутри,
+            //но не проставит все необходимые состояния. В .200 начнём пересоздавать редакторы для каждого редактирования
+            //и данный код не понадобится.
+            if (this._hasEditInPlace()) {
+               this._getEditInPlace()._destroyEip();
+            }
             ListView.superclass.setDataSource.apply(this, arguments);
          },
          /**
@@ -2882,7 +2887,8 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.resultsPosition !== 'none' && this._getResultsRecord() && this._options.resultsTpl;
          },
          _getResultsContainer: function(){
-            return this._getItemsContainer();
+            var resultsSelector = '.controls-ListView__results-' + this._options.resultsPosition;
+            return $(resultsSelector, this.getContainer());
          },
          _makeResultsTemplate: function(resultsData){
             if (!resultsData){
