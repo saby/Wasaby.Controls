@@ -1466,9 +1466,10 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _setEnabled : function(enabled) {
             ListView.superclass._setEnabled.call(this, enabled);
-            if (!enabled) {
-               this._destroyEditInPlace();
-            }
+            //разрушать редактирование нужно как при enabled = false так и при enabled = true. У нас предусмотрено
+            //редактирование задизабленного браузера, и настройки редакторов для задизабленного режима, может отличаться
+            //от раздизабленного.
+            this._destroyEditInPlace();
          },
 
          _onItemClickHandler: function(event, id, model, originalEvent) {
@@ -1501,7 +1502,9 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO: При перерисовке разрушаем редактор, иначе ItemsControlMixin задестроит все контролы внутри,
             //но не проставит все необходимые состояния. В .200 начнём пересоздавать редакторы для каждого редактирования
             //и данный код не понадобится.
-            this._getEditInPlace()._destroyEip();
+            if (this._hasEditInPlace()) {
+               this._getEditInPlace()._destroyEip();
+            }
             ListView.superclass.redraw.apply(this, arguments);
          },
 
@@ -2468,7 +2471,12 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pager = undefined;
                this._pagerContainer = undefined;
             }
-            this._destroyEditInPlace();
+            //TODO: При задании нового сорса разрушаем редактор, иначе ItemsControlMixin задестроит все контролы внутри,
+            //но не проставит все необходимые состояния. В .200 начнём пересоздавать редакторы для каждого редактирования
+            //и данный код не понадобится.
+            if (this._hasEditInPlace()) {
+               this._getEditInPlace()._destroyEip();
+            }
             ListView.superclass.setDataSource.apply(this, arguments);
          },
          /**
@@ -2879,7 +2887,8 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.resultsPosition !== 'none' && this._getResultsRecord() && this._options.resultsTpl;
          },
          _getResultsContainer: function(){
-            return this._getItemsContainer();
+            var resultsSelector = '.controls-ListView__results-' + this._options.resultsPosition;
+            return $(resultsSelector, this.getContainer());
          },
          _makeResultsTemplate: function(resultsData){
             if (!resultsData){

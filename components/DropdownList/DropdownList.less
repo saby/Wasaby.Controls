@@ -2,13 +2,13 @@
    display: inline-block;
    min-height: @DropdownList-min-height;
    box-sizing: @DropdownList-box-sizing;
-   max-width: 100%;
    .controls-DropdownList__selectedItem {
-      display: inline-flex;
+      display: block; /* ie8/9 */
+      display: flex;
       width: 100%;
       white-space: nowrap;
       font-size: 0;
-      vertical-align: middle;
+      align-items: center;
       * {
          font-size: @font-basic-size;
       }
@@ -278,4 +278,10 @@
       top: -4px;
     }
   }
+}
+
+.ws-is-firefox {
+   .controls-DropdownList__afterCaptionWrapper {
+      top: 3px;
+   }
 }

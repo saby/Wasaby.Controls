@@ -701,7 +701,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           showPicker: function() {
              /* Если открыт пикер, который показывает все выбранные записи, то не показываем автодополнение */
-             if(this._getLinkCollection().isPickerVisible()) {
+             /* Для Ipad'a надо проверять, отображается ли сейчас пикер,
+                иначе список может перестроиться по событию onShow, и клика не пройдёт */
+             if(this._getLinkCollection().isPickerVisible() || ($ws._const.browser.isMobileIOS && this.isPickerVisible())) {
                 return;
              }
              FieldLink.superclass.showPicker.apply(this, arguments);

@@ -22,6 +22,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
        * @mixes SBIS3.CONTROLS.FilterMixin
        * @demo SBIS3.CONTROLS.Demo.MyFastDataFilter Работа с статическими данными
        * @demo SBIS3.CONTROLS.Demo.MyFastDataFilterDataSource Работа с DataSource данными
+       * @cssModifier controls-FastDataFilter__resize Позволяет управлять шириной выпадающих списков, вписывая их по размеру в контейнер.
        * @control
        * @public
        */
@@ -246,9 +247,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             clearTimeout(this._resizeTimeout);
             var self = this;
             this._resizeTimeout = setTimeout(function () {
-               if ($ws._const.browser.isIE && $ws._const.browser.IEVersion <= 10) {
                   self._recalcDropdownWidth();
-               }
             }, 100);
          },
 

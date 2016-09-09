@@ -62,15 +62,15 @@ define('js!SBIS3.CONTROLS.RichEditor',
                this._toolbar = new Toolbar({
                   element: div,
                   name: 'RichEditorToolbar',
-                  toolbarVisible: this._options.toolbarVisible,
+                  expanded: this._options.toolbarVisible,
                   items: this._options.items
                });
             }
             this._toolbar.setLinkedEditor(this);
-            this._toolbar.subscribe('onVisibleChange', function(event, toolbarVisible) {
+            this._toolbar.subscribe('onExpandedChange', function(event, expanded) {
                var
                   newHeight = this._inputControl.outerHeight();
-               newHeight += toolbarVisible ? -constants.toolbarHeight : constants.toolbarHeight;
+               newHeight += expanded ? -constants.toolbarHeight : constants.toolbarHeight;
                if (!this._options.autoHeight) {
                   this._inputControl.animate(
                      {

@@ -3,14 +3,14 @@
  */
 
 define('js!SBIS3.CONTROLS.RichEditorToolbar', [
-   'js!SBIS3.CONTROLS.ButtonGroupBase',
+   'js!SBIS3.CONTROLS.RichEditorToolbarBase',
    'html!SBIS3.CONTROLS.RichEditorToolbar',
    'js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
    'js!SBIS3.CONTROLS.Button',
    'js!SBIS3.CONTROLS.ToggleButton',
    'js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton',
    'js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown'
-   ], function(ButtonGroupBase, dotTplFn, defaultConfig) {
+   ], function(RichEditorToolbarBase, dotTplFn, defaultConfig) {
 
    'use strict';
 
@@ -20,12 +20,12 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
       },
       /**
        * @class SBIS3.CONTROLS.RichEditorToolbar
-       * @extends SBIS3.CONTROLS.ButtonGroupBase
+       * @extends SBIS3.CONTROLS.RichEditorToolbarBase
        * @author Борисов П.С.
        * @public
        * @control
        */
-      RichEditorToolbar = ButtonGroupBase.extend(/** @lends SBIS3.CONTROLS.RichEditorToolbar.prototype */{
+      RichEditorToolbar = RichEditorToolbarBase.extend(/** @lends SBIS3.CONTROLS.RichEditorToolbar.prototype */{
          _dotTplFn: dotTplFn,
          $protected : {
             _options : {
@@ -46,7 +46,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                 *    <li>list - Вставить/Удалить список;</li>
                 *    <li>link - Вставить/редактировать ссылку;</li>
                 *    <li>unlink - Убрать ссылку;</li>
-                *    <li>table - Добавить таблицу - ведутся работы, не использовать!!!;</li>
                 *    <li>image - Вставить картинку;</li>
                 *    <li>smile - Смайлики;</li>
                 *    <li>source - html-разметка;</li>
@@ -68,11 +67,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                 *</options>
                 */
                items: undefined,
-               _canServerRender: true,
-               toolbarVisible: true,
-               activableByClick: false,
-               linkedEditor: undefined,
-               keyField: 'name' //по данному полю getItemInstance(keyField) обращаться к элементу тулбара
+               defaultConfig: defaultConfig
             },
             _toggleToolbarButton: undefined,
             _itemsContainer:  undefined,
@@ -88,67 +83,33 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                alignright: false,
                aligncenter: false,
                alignjustify: false
-            },
-            _handlersInstances: {
-               undoRedo: undefined,
-               node: undefined,
-               format: undefined,
-               source: undefined
             }
-         },
-
-         _modifyOptions: function(options) {
-            options.items = this._prepareItems(options.items);
-            options = RichEditorToolbar.superclass._modifyOptions.apply(this, arguments);
-            return options;
          },
 
          $constructor: function() {
-            this._publish('onVisibleChange');
-            this._itemsContainer = this._container.find('.controls-RichEditorToolbar__itemsContainer');
-            this._toggleToolbarButton = this._container.find('.controls-RichEditorToolbar__toggleButton').bind('click', this._onClickToggleButton.bind(this));
-            this._container.on('mousedown focus', this._blockFocusEvents);
-            this._itemsContainer.on('mousedown focus', this._blockFocusEvents);
+            this._toggleToolbarButton = this._container.find('.controls-RichEditorToolbar__toggleButton').bind('click', this.toggleToolbar.bind(this));
             this._toggleToolbarButton.on('mousedown focus', this._blockFocusEvents);
          },
-         //в buttonGroupBase проставляет активность всем дочерним контролам, избавляемся от этого
-         setEnabled: function(enabled){
-            ButtonGroupBase.superclass.setEnabled.call(this, enabled);
-         },
-         setLinkedEditor: function(editor) {
-            this._unbindEditor();
-            this._options.linkedEditor = editor;
-            this._bindEditor();
-         },
 
-         getLinkedEditor: function() {
-            return  this._options.linkedEditor;
-         },
-
-         _unbindEditor: function() {
+         setExpanded: function(expanded) {
             var
-               editor = this._options.linkedEditor;
-            if (editor) {
-               editor.unsubscribe('onUndoRedoChange', this._handlersInstances.undoRedo);
-               editor.unsubscribe('onNodeChange', this._handlersInstances.node);
-               editor.unsubscribe('onFormatChange', this._handlersInstances.format);
-               editor.unsubscribe('onToggleContentSource', this._handlersInstances.source);
+               self = this;
+
+            if (!this._doAnimate)
+            {
+               this._doAnimate = true;
+               this._itemsContainer.animate(
+               {
+                  height: expanded ? constants.toolbarHeight : 0
+               },
+               'fast',
+               function () {
+                  self._doAnimate = false;
+                  self._container.toggleClass('controls-RichEditorToolbar__hide', !expanded);
+               }
+               );
+               RichEditorToolbar.superclass.setExpanded.apply(this, arguments);
             }
-         },
-
-         _bindEditor: function() {
-            var
-               editor = this._options.linkedEditor;
-            this._handlersInstances = {
-               undoRedo: this._undoRedoChangeHandler.bind(this),
-               node: this._nodeChangeHandler.bind(this),
-               format: this._formatChangeHandler.bind(this),
-               source: this._toggleContentSourceHandler.bind(this)
-            };
-            editor.subscribe('onUndoRedoChange', this._handlersInstances.undoRedo);
-            editor.subscribe('onNodeChange', this._handlersInstances.node);
-            editor.subscribe('onFormatChange', this._handlersInstances.format);
-            editor.subscribe('onToggleContentSource', this._handlersInstances.source);
          },
 
          _undoRedoChangeHandler : function(event, hasUndoRedo) {
@@ -252,47 +213,15 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             }
          },
 
-         _blockFocusEvents: function(event) {
-            var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
-            event.preventDefault();
-            event.stopPropagation();
-            //Если случился mousedown то нужно нотифицировать о клике, перебив дефолтное событие перехода фокуса
-            if(event.type === 'mousedown') {
-               eventsChannel.notify('onDocumentClick', event);
-            }
-         },
-
-         _prepareItems: function (userItems) {
+         _prepareItems: function(){
             var
-               items;
-            items = $ws.core.clone(defaultConfig);
-            //мерж массивов
-            for (var i in userItems){
-               if (userItems.hasOwnProperty(i)) {
-                  var
-                     inDefault = false;
-                  for (var j in defaultConfig) { //бегаем по default чтобы не бегать по только что добавленным
-                     if (items.hasOwnProperty(j)) {
-                        if (items[j].name == userItems[i].name) {
-                           $ws.core.merge(items[j], userItems[i]);
-                           inDefault = true;
-                           break;
-                        }
-                     }
-                  }
-                  if (!inDefault) {
-                     items.push(userItems[i]);
-                  }
-               }
-            }
-            //Добавление стандартных свойств для элементов тулбара
+               items = RichEditorToolbar.superclass._prepareItems.apply(this, arguments);
             for (var i in items) {
                if (items.hasOwnProperty(i)) {
                   items[i] = $ws.core.merge({
                      cssClassName: 'controls-RichEditorToolbar__item mce-',
                      tabindex: -1,
                      caption: '',
-                     activableByClick: false,
                      keyField: 'key',
                      displayField: 'title'
                   }, items[i]);
@@ -301,88 +230,61 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             return items;
          },
 
-         _onClickToggleButton: function() {
-            var
-               self = this;
-            //Обрабатываем клик только в том случае, если не выполняется анимация и контрол активен
-            if (!this._doAnimate) {
-               this._doAnimate = true;
-
-               this._options.toolbarVisible = !this._options.toolbarVisible;
-               this._itemsContainer.animate(
-                  {
-                     height: this._options.toolbarVisible ? constants.toolbarHeight : 0
-                  },
-                  'fast',
-                  function() {
-                     self._doAnimate = false;
-                     self._container.toggleClass('controls-RichEditorToolbar__hide', !self._options.toolbarVisible);
-                  }
-               );
-               this._notify('onVisibleChange',this._options.toolbarVisible);
-            }
-         },
-
-         /* Переопределяем получение контейнера для элементов */
-         _getItemsContainer: function() {
-            return this._itemsContainer;
-         },
-
-         /*БЛОК ФУНКЦИЙ ОБЁРТОК ДЛЯ ОТАРВУИ КОМАНД РЕДАКТОРУ*/
-         execCommand : function(name) {
+         /*БЛОК ФУНКЦИЙ ОБЁРТОК ДЛЯ ОТПРАВКИ КОМАНД РЕДАКТОРУ*/
+         _execCommand : function(name) {
             if (this._options.linkedEditor) {
                this._options.linkedEditor.execCommand(name);
             }
          },
 
-         setFontStyle: function(style) {
+         _setFontStyle: function(style) {
             if (this._options.linkedEditor) {
                this._options.linkedEditor.setFontStyle(style);
             }
          },
 
-         setTextAlign: function(align) {
+         _setTextAlign: function(align) {
             if (this._options.linkedEditor) {
                this._options.linkedEditor.setTextAlign(align);
             }
          },
 
-         setFontColor: function(color) {
+         _setFontColor: function(color) {
             if (this._options.linkedEditor) {
                this._options.linkedEditor.setFontColor(color);
             }
          },
 
-         insertLink: function(onAfterCloseHandler, target) {
+         _insertLink: function(onAfterCloseHandler, target) {
             if (this._options.linkedEditor) {
                this._options.linkedEditor.insertLink(onAfterCloseHandler, target);
             }
          },
 
-         selectFile: function(originalEvent) {
+         _selectFile: function(originalEvent) {
             if (this._options.linkedEditor) {
                this._options.linkedEditor._getFileLoader().selectFile(originalEvent);
             }
          },
 
-         insertSmile: function(smile) {
+         _insertSmile: function(smile) {
             if (this._options.linkedEditor) {
                this._options.linkedEditor.insertSmile(smile);
             }
          },
 
-         pasteFromBufferWithStyles: function(onAfterCloseHandler, target) {
+         _pasteFromBufferWithStyles: function(onAfterCloseHandler, target) {
             if (this._options.linkedEditor) {
                this._options.linkedEditor.pasteFromBufferWithStyles(onAfterCloseHandler, target);
             }
          },
 
-         toggleContentSource: function() {
+         _toggleContentSource: function() {
             if (this._options.linkedEditor) {
                this._options.linkedEditor.toggleContentSource();
             }
          },
-         /*БЛОК ФУНКЦИЙ ОБЁРТОК ДЛЯ ОТАРВУИ КОМАНД РЕДАКТОРУ*/
+         /*БЛОК ФУНКЦИЙ ОБЁРТОК ДЛЯ ОТПРАВКИ КОМАНД РЕДАКТОРУ*/
 
          destroy: function() {
             this._unbindEditor();
