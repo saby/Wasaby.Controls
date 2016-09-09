@@ -956,16 +956,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                RichUtil.markRichContentOnCopy(this._inputControl);
                self._tinyReady.callback();
 
-               //Правки Клепикова при необходимости сжечь
-               this._inputControl.bind('focus', function() {
-                  if ($(this).attr('contenteditable') !== 'false') {
-                     $ws.single.EventBus.globalChannel().notify('MobileInputFocus');
-                  }
-               });
-               this._inputControl.bind('blur', function () {
-                  $ws.single.EventBus.globalChannel().notify('MobileInputFocusOut');
-               });
-
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ ФОРМАТ ПОД КУРСОРОМ*/
                //formatter есть только после инита поэтому подписка осуществляется здесь
                editor.formatter.formatChanged('bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,selectedMainText,additionalText', function(state, obj) {
