@@ -1560,7 +1560,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   notEndEditClassName: this._notEndEditClassName,
                   editingTemplate: this._options.editingTemplate,
                   itemsContainer: this._getItemsContainer(),
-                  resultsPosition: this._options.resultsPosition,
                   element: $('<div>'),
                   opener: this,
                   endEditByFocusOut: this._options.editMode.indexOf('toolbar') === -1,
@@ -2470,12 +2469,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pager = undefined;
                this._pagerContainer = undefined;
             }
-            //TODO: При задании нового сорса разрушаем редактор, иначе ItemsControlMixin задестроит все контролы внутри,
-            //но не проставит все необходимые состояния. В .200 начнём пересоздавать редакторы для каждого редактирования
-            //и данный код не понадобится.
-            if (this._hasEditInPlace()) {
-               this._getEditInPlace()._destroyEip();
-            }
+            this._destroyEditInPlace();
             ListView.superclass.setDataSource.apply(this, arguments);
          },
          /**
