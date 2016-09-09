@@ -2120,7 +2120,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _preScrollLoading: function(){
             var hasScroll = (function() {
-                  return this._scrollWatcher.hasScroll(10);
+                  return this._scrollWatcher.hasScroll();
                }).bind(this),
                scrollDown = this._options.infiniteScroll == 'down' || this._options.infiniteScroll == 'both'
             // Если нет скролла или скролл внизу (при загрузке вниз), значит нужно догружать еще записи
