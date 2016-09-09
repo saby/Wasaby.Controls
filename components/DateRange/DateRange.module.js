@@ -61,8 +61,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
       init: function () {
          DateRange.superclass.init.call(this);
 
-         var self = this,
-            start, end;
+         var self = this;
 
          this._datePickerStart = this.getChildControlByName('DateRange__DatePickerStart');
          this._datePickerStart.subscribe('onDateChange', function(e, date) {
@@ -85,6 +84,8 @@ define('js!SBIS3.CONTROLS.DateRange', [
          });
 
          this.subscribe('onEndValueChange', function (event, value) {
+            // Временно делаем, что бы возвращаемая конечная дата содержала время 23:59:59.999
+            value = value? new Date(value.getFullYear(), value.getMonth(), value.getDate(), 23, 59, 59, 999): null;
             self._updateDatePicker(self._datePickerEnd, value);
             self._notify('onEndDateChange', value);
          });
@@ -235,7 +236,9 @@ define('js!SBIS3.CONTROLS.DateRange', [
        * @see endDate
        */
       getEndDate: function() {
-         return this._options.endValue;
+         // Временно делаем, что бы возвращаемая конечная дата содержала время 23:59:59.999
+         var d = this._options.endValue;
+         return this._options.endValue? new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999): null;
       }
    });
    return DateRange;
