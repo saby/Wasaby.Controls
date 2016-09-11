@@ -1059,6 +1059,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             });
 
             editor.on('dragstart', function(event) {
+               //Youtube iframe не отдаёт mouseup => окошко с видеороликом таскается за курсором
+               //запрещаем D&D iframe элементов
                if (event.target && $(event.target).hasClass('mce-object-iframe')) {
                   event.preventDefault();
                }
