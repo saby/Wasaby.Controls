@@ -35,11 +35,16 @@ define('js!SBIS3.CONTROLS.LeftNavigation',
 
             this.getLinkedContext().setValue('count', this.getCount());
          },
-
+         /**
+          * Возвращает число записей
+          * */
          getCount: function() {
             return this._options.count;
          },
-
+         /**
+          * Устанавливает чисо записей
+          * @param count число записей
+          */
          setCount: function(count) {
             count = Number(count);
             this._options.count = count;
