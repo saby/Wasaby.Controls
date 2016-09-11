@@ -678,7 +678,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                var view = this._options.view,
                   page = this._scrollPages[pageNumber - 1];
                   if (page){
-                     scrollToPage(page)
+                     scrollToPage(page);
                   } else {
                      view.once('onDrawItems', function(){
                         this._updateScrollPages();
@@ -710,6 +710,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          $(window).on('resize.wsScrollPaging', this._resizeHandler.bind(this));
       },
 
+      _isPageStartVisisble: function(page){
+         return page.element.offset().top + page.element.outerHeight(true) >= 0
+      },
+
       _resizeHandler: function(){
          var windowHeight = $(window).height();
          clearTimeout(this._windowResizeTimeout);
@@ -723,9 +727,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
       _getScrollPage: function(){
          var view = this._options.view;
+         if (this._options.view.isScrollOnBottom(false)){
+            return this._scrollPages.length - 1;
+         }
          for (var i = 0; i < this._scrollPages.length; i++){
-            var pageStart = this._scrollPages[i];
-            if (pageStart.element.offset().top + pageStart.element.outerHeight(true) >= 0){
+            var page = this._scrollPages[i];
+            if (this._isPageStartVisisble(page)){
                return i;
             }
          }
