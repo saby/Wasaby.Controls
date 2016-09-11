@@ -2150,8 +2150,8 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollToItem(item.getId());
             }
          },
-         isScrollOnBottom: function(){
-            return this._scrollWatcher.isScrollOnBottom();
+         isScrollOnBottom: function(isOffsetCount){
+            return this._scrollWatcher.isScrollOnBottom(isOffsetCount);
          },
          isScrollOnTop: function(){
             return this._scrollWatcher.isScrollOnTop();
