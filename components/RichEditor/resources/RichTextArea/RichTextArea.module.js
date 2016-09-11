@@ -538,8 +538,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           */
          setFontStyle: function(style) {
             //TODO: перейти на fontSize с форматов, когда придёт в голову идея как отлавливать изменение этого fontSize
+            //в FF при переключении инлайновых стилей с классом остаётся символ каретки (br) из-за чего происходит переход на новую строку
             if ($ws._const.browser.firefox &&  $(this._tinyEditor.selection.getNode()).find('br').attr('data-mce-bogus') == '1') {
-               console.log('wtf');
                $(this._tinyEditor.selection.getNode()).find('br').remove();
             }
             for (var stl in constants.styles) {
