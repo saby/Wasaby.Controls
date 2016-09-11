@@ -551,6 +551,26 @@ define(
             }
          }
          return text;
+      },
+      /**
+       * Получить значение группы по маске
+       * @param groupMask - маска группы, для которой необходимо получить значение
+       * @param clearChar - символ заменяющий не заданные символы, например '_'
+       * @returns {string} текст группы с введенными символами
+       */
+      getGroupValueByMask: function(groupMask, clearChar) {
+         var
+             group,
+             value = '';
+         for (var i = 0; i < this.model.length; i++) {
+            group = this.model[i];
+            if (group.mask === groupMask) {
+               for (var j = 0; j < group.mask.length; j++) {
+                  value += (typeof group.value[j] === 'undefined') ? clearChar : group.value[j];
+               }
+               return value;
+            }
+         }
       }
    });
 
