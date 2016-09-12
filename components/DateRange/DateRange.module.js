@@ -149,7 +149,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
 
       showPicker: function () {
          if (this._dateRangeChooseControl) {
-            this._dateRangeChooseControl.cancelSelection();
+            this._dateRangeChooseControl.applyYearState();
             this._dateRangeChooseControl.setRange(this.getStartValue(), this.getEndValue());
          }
          DateRange.superclass.showPicker.call(this);
