@@ -136,8 +136,9 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
                         resultFields[fields[i]] += model.get(fields[i]);
                     }
                 }, this);
+                resultRecord.addField({name: rk('Число записей'), type: 'integer'}, 0, items.getCount());
                 for (i = 0; i < fields.length; i++) {
-                    resultRecord.addField(format.at(format.getFieldIndex(fields[i])), i, resultFields[fields[i]]);
+                    resultRecord.addField(format.at(format.getFieldIndex(fields[i])), i + 1, resultFields[fields[i]]);
                 }
                 return $ws.proto.Deferred.success(resultRecord);
             },
