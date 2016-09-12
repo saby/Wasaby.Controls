@@ -10,27 +10,10 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     * !Важно: Если в меню задан только один пункт, то меню НЕ будет показано, а при нажатии на кнопку будет выполнено действие, соответствующее этому пункту.
     * Кнопка с меню - это кнопка с выбором варината действия, и если возможно только одно действие, то оно и будет выполнено по нажатию.
     * @demo SBIS3.CONTROLS.Demo.MyMenuButton Пример кнопки с выпадающим меню
-    * @control
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.MenuButton'>
-    *    <option name='caption' value='Кнопка с меню'></option>
-    *    <options name="items" type="array">
-    *        <options>
-    *            <option name="id">1</option>
-    *            <option name="title">Пункт1</option>
-    *        </options>
-    *        <options>
-    *            <option name="id">2</option>
-    *            <option name="title">Пункт2</option>
-    *        </options>
-    *    </options>
-    * </component>
-    * @public
-    * @author Крайнов Дмитрий Олегович
-    * @category Buttons
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.MenuButtonMixin
+    * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
@@ -46,6 +29,24 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
     * @ignoreEvents onBeforeShow onAfterShow onBeforeLoad onAfterLoad onBeforeControlsLoad onKeyPressed onResize
     * @ignoreEvents onFocusIn onFocusOut onReady onDragIn onDragStart onDragStop onDragMove onDragOut
+    *
+    * @control
+    * @public
+    * @initial
+    * @category Buttons
+    * <component data-component='SBIS3.CONTROLS.MenuButton'>
+    *    <option name='caption' value='Кнопка с меню'></option>
+    *    <options name="items" type="array">
+    *        <options>
+    *            <option name="id">1</option>
+    *            <option name="title">Пункт1</option>
+    *        </options>
+    *        <options>
+    *            <option name="id">2</option>
+    *            <option name="title">Пункт2</option>
+    *        </options>
+    *    </options>
+    * </component>
     */
 
    var MenuButton = Button.extend( [PickerMixin, DSMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {

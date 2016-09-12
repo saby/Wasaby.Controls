@@ -23,15 +23,8 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
     * @class SBIS3.CONTROLS.CheckBox
     * @extends SBIS3.CONTROLS.ButtonBase
     * @mixes SBIS3.CONTROLS.Checkable
-    * @control
     * @demo SBIS3.CONTROLS.Demo.MyCheckbox
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.CheckBox'>
-    *     <option name="caption">CheckBox</option>
-    * </component>
-    * @public
     * @author Крайнов Дмитрий Олегович
-    * @category Inputs
     *
     * @ignoreOptions icon extendedTooltip independentContext contextRestriction isContainerInsideParent stateKey subcontrol
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment owner
@@ -46,6 +39,14 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
     * @ignoreEvents onBeforeShow onAfterShow onBeforeLoad onAfterLoad onBeforeControlsLoad onKeyPressed onResize
     * @ignoreEvents onFocusIn onFocusOut onReady
+    *
+    * @control
+    * @public
+    * @category Inputs
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.CheckBox'>
+    *     <option name="caption">CheckBox</option>
+    * </component>
     */
 
    var CheckBox = ButtonBase.extend([Checkable, ITextValue], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {

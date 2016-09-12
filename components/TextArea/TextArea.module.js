@@ -13,8 +13,6 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
     * </ul>
     * @class SBIS3.CONTROLS.TextArea
     * @extends SBIS3.CONTROLS.TextBoxBase
-    * @control
-    * @public
     * @author Крайнов Дмитрий Олегович
     * @css controls-TextArea Класс для изменения отображения текста в многострочном поле ввода.
     *
@@ -30,6 +28,10 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
     * @ignoreEvents onReady
     *
     * @demo SBIS3.CONTROLS.Demo.MyTextArea
+    *
+    * @control
+    * @public
+    * @category Inputs
     */
 
    var TextArea = TextBoxBase.extend( /** @lends SBIS3.CONTROLS.TextArea.prototype */ {

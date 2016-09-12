@@ -24,8 +24,6 @@ define(
     * @class SBIS3.CONTROLS.MonthPicker
     * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS.PickerMixin
-    * @control
-    * @public
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyMonthPicker
     *
@@ -40,6 +38,10 @@ define(
     *
     * @ignoreEvents onChange onClick onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onStateChange
     * @ignoreEvents onTooltipContentRequest onPropertyChanged
+    *
+    * @control
+    * @public
+    * @category Date/Time
     */
 
    var MonthPicker = CompoundControl.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.MonthPicker.prototype */{

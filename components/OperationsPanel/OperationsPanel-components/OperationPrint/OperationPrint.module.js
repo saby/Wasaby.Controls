@@ -11,8 +11,7 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
     * Контрол для печати подготовленных данных
     * @class SBIS3.CONTROLS.OperationPrint
     * @extends SBIS3.CONTROLS.PrintUnloadBase
-    * @author Крайнов Дмитрий Олегович
-    * @control
+    * @author Сухоручкин Андрей Сергеевич
     * @public
     */
    var OperationPrint = PrintUnloadBase.extend(/** @lends SBIS3.CONTROLS.OperationPrint.prototype */{

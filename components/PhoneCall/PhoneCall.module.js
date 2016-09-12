@@ -7,15 +7,7 @@ define('js!SBIS3.CONTROLS.PhoneCall', ['js!SBIS3.CONTROLS.Link'], function(Link)
     * Сторонние пользователи скорее предпочтут использовать просто <a></a>
     * @class SBIS3.CONTROLS.PhoneCall
     * @extends SBIS3.CONTROLS.Link
-    * @control
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.PhoneCall'>
-    *    <option name='caption' value='Позвонить Гене'></option>
-    *    <option name='number' value='8(800)200-600'></option>
-    * </component>
-    * @public
     * @author Крайнов Дмитрий Олегович
-    * @category Buttons
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
@@ -41,6 +33,15 @@ define('js!SBIS3.CONTROLS.PhoneCall', ['js!SBIS3.CONTROLS.Link'], function(Link)
     * !Важно: при добавлении этого класса сломается "Базовая линия".
     *
     * @css controls-Link__icon Класс для изменения отображения иконки кнопки.
+    *
+    * @public
+    * @control
+    * @category Buttons
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.PhoneCall'>
+    *    <option name='caption' value='Позвонить Гене'></option>
+    *    <option name='number' value='8(800)200-600'></option>
+    * </component>
     */
    var clearNumber = function(number) {
       var digits = number.replace(/[^0-9]/g, '');

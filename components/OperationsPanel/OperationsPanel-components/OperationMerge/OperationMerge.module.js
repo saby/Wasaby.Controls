@@ -10,13 +10,8 @@ define('js!SBIS3.CONTROLS.OperationMerge', [
      * Пример использования операции вы можете найти в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/panel/basic-operations/merge/ Операция объединения записей реестра}.
      * @class SBIS3.CONTROLS.OperationMerge
      * @extends SBIS3.CONTROLS.Link
-     * @control
-     * @public
      * @author Сухоручкин Андрей Сергеевич
-     * @initial
-     * <component data-component='SBIS3.CONTROLS.OperationMerge'>
-     *
-     * </component>
+     * @public
      */
     var OperationMerge = Link.extend(/** @lends SBIS3.CONTROLS.OperationMerge.prototype */{
 

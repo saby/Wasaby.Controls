@@ -21,8 +21,6 @@ define(
        * Предназначен для задания даты путём выбора.
        * @class SBIS3.CONTROLS.Calendar
        * @extends $ws.proto.CompoundControl
-       * @control
-       * @public
        * @author Крайнов Дмитрий Олегович
        * @demo SBIS3.CONTROLS.Demo.MyCalendar
        *
@@ -44,6 +42,10 @@ define(
        * @ignoreEvents onChange onClick onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onStateChange
        * @ignoreEvents onTooltipContentRequest onPropertyChanged onActivate onBeforeControlsLoad onResize onAfterLoad
        * @ignoreOptions onAfterShow onBeforeLoad onBeforeShow onReady onStateChanged
+       *
+       * @control
+       * @public
+       * @category Date/Time
        */
 
       var Calendar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Calendar.prototype */{

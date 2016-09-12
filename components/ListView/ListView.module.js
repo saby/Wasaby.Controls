@@ -98,6 +98,10 @@ define('js!SBIS3.CONTROLS.ListView',
        * Т.е. текст "1-10" при отображении 10 записей на 1-ой странице
        *
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
+       *
+       * @control
+       * @public
+       * @category Lists
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/

@@ -29,8 +29,10 @@ define('js!SBIS3.CONTROLS.FilterButton',
         * @mixes SBIS3.CONTROLS.FilterMixin
         * @mixes SBIS3.CONTROLS.PickerMixin
         * @demo SBIS3.CONTROLS.Demo.FilterButtonMain Полный функционал кнопки фильтров
+        *
         * @control
         * @public
+        * @category Filtering
         */
 
    function isFieldResetValue(element, fieldName, filter) {

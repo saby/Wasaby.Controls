@@ -11,9 +11,12 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
     * @class SBIS3.CONTROLS.TreeCompositeView
     * @extends SBIS3.CONTROLS.TreeDataGridView
     * @mixes SBIS3.CONTROLS.CompositeViewMixin
-    * @public
     * @author Крайнов Дмитрий Олегович
+    * @demo SBIS3.CONTROLS.Demo.MyTreeCompositeView
+    *
+    * @public
     * @control
+    * @category Lists
     * @initial
     * <component data-component='SBIS3.CONTROLS.TreeCompositeView'>
     *    <options name="columns" type="array">
@@ -26,8 +29,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
     *       </options>
     *    </options>
     * </component>
-    *
-    * @demo SBIS3.CONTROLS.Demo.MyTreeCompositeView
     */
 
    var TreeCompositeView = TreeDataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.TreeCompositeView.prototype*/ {
