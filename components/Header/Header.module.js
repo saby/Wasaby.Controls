@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.Header',
       'html!SBIS3.CONTROLS.Header',
       'css!SBIS3.CONTROLS.Header'
    ],
-   function(CompoundControl, dotTplFn, Record){
+   function(CompoundControl, dotTplFn){
 
       'use strict';
       /**
