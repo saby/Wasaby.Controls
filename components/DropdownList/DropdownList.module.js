@@ -511,12 +511,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                parent._recalcDropdownWidth();
             }
          },
-         _resizeFastDataFilter: function(){
-            var parent = this.getParent();
-            if ($ws.helpers.instanceOfModule(parent, 'SBIS3.CONTROLS.FastDataFilter')){
-               parent._recalcDropdownWidth();
-            }
-         },
          _redrawHead: function(hideCross){
             var pickerHeadTpl = $('.controls-DropdownList__selectedItem', this._getPickerContainer()),
                 headTpl = MarkupTransformer(TemplateUtil.prepareTemplate(this._options.headTemplate.call(this, this._options)))();
