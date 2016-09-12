@@ -537,8 +537,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @private
           */
          setFontStyle: function(style) {
-            //TODO: перейти на fontSize с форматов, когда придёт в голову идея как отлавливать изменение этого fontSize
-            //в FF при переключении инлайновых стилей с классом остаётся символ каретки (br) из-за чего происходит переход на новую строку
+            //TinyMCE использует для определения положения каретки <br data-mce-bogus="1">.
+            //При смене формата содаётся новый <span class='classFormat'>.
+            //В FF в некторых случаях символ каретки не удаляется из предыдущего <span> блока при смене формата
+            //из за-чего происход разрыв строки.
             if ($ws._const.browser.firefox &&  $(this._tinyEditor.selection.getNode()).find('br').attr('data-mce-bogus') == '1') {
                $(this._tinyEditor.selection.getNode()).find('br').remove();
             }
