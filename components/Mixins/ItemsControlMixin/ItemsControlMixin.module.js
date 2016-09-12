@@ -31,6 +31,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       return proj;
    },
 
+   applyGroupingToProjection = function(projection, cfg) {
+      if (cfg.groupBy && cfg.easyGroup) {
+         if (!cfg.groupBy.method) {
+            var field = cfg.groupBy.field;
+            projection.setGroup(function(item, index, projItem){
+               return item.get(field);
+            });
+         }
+      }
+      return projection;
+   },
+
    _oldGroupByDefaultMethod = function (record, at, last, item, CFG) {
       var curField = record.get(CFG.groupBy.field),
          result = curField !== CFG._previousGroupBy;
@@ -249,6 +261,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _buildTplArgs : buildTplArgs,
             _getRecordsForRedrawSt: getRecordsForRedraw,
             _getRecordsForRedraw: getRecordsForRedraw,
+            _applyGroupingToProjection: applyGroupingToProjection,
             /*TODO ременные переменные для группировки*/
             _groupItemProcessing: groupItemProcessing,
             _canApplyGrouping: canApplyGrouping,
@@ -537,7 +550,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @see WS.Data/Display/Collection#setSort
              */
             itemsSortMethod: undefined,
-            easyGroup: false
+            easyGroup: true
          },
          _loader: null
 
@@ -567,6 +580,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      parsedCfg._items = newCfg.items;
                   }
                   proj = newCfg._createDefaultProjection(newCfg._items, newCfg);
+                  proj = newCfg._applyGroupingToProjection(proj, newCfg);
                   newCfg._itemsProjection = proj;
                   parsedCfg._itemsProjection = proj;
                }
@@ -657,6 +671,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._options._items = itemsOpt;
             }
             this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
+            this._options._itemsProjection = this._options._applyGroupingToProjection(this._options._itemsProjection, this._options);
             this._setItemsEventHandlers();
             this._notify('onItemsReady');
             this._itemsReadyCallback();
