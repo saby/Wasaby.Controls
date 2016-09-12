@@ -17,9 +17,11 @@ define('js!SBIS3.CONTROLS.DateRange', [
     * @class SBIS3.CONTROLS.DateRange
     * @extends $ws.proto.CompoundControl
     * @author Крайнов Дмитрий Олегович
+    * @demo SBIS3.CONTROLS.Demo.MyDateRange
+    *
     * @control
     * @public
-    * @demo SBIS3.CONTROLS.Demo.MyDateRange
+    * @category Date/Time
     */
    var DateRange = CompoundControl.extend([RangeMixin, PickerMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateRange.prototype */{
       _dotTplFn: dotTplFn,

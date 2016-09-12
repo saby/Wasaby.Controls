@@ -89,10 +89,12 @@ define('js!SBIS3.CONTROLS.Toolbar', [
     * Контрол, отображающий панель с иконками.
     * @class SBIS3.CONTROLS.Toolbar
     * @extends SBIS3.CONTROLS.ButtonGroupBase
-    * @control
-    * @public
     * @demo SBIS3.CONTROLS.Demo.MyToolbar
     * @author Крайнов Дмитрий Олегович
+    *
+    * @control
+    * @public
+    * @category Buttons
     */
 
    var Toolbar = ButtonGroupBase.extend(/** @lends SBIS3.CONTROLS.Toolbar.prototype */ {

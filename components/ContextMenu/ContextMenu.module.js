@@ -9,11 +9,13 @@ define('js!SBIS3.CONTROLS.ContextMenu', ['js!SBIS3.CONTROLS.Menu', 'js!SBIS3.CON
    /**
     * Контрол, отображающий горизонтальное меню.
     * @class SBIS3.CONTROLS.ContextMenu
-    * @control
-    * @public
     * @author Крайнов Дмитрий Олегович
     * @extends SBIS3.CONTROLS.Menu
     * @mixes SBIS3.CONTROLS.PopupMixin
+    *
+    * @control
+    * @public
+    * @category Buttons
     */
 
    var ContextMenu = Menu.extend([PopupMixin], /** @lends SBIS3.CONTROLS.ContextMenu.prototype */ {

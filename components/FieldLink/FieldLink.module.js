@@ -83,10 +83,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *
         * @class SBIS3.CONTROLS.FieldLink
         * @extends SBIS3.CONTROLS.SuggestTextBox
-        * @control
-        * @public
-        *
-        * @category Inputs
         *
         * @author Герасимов Александр Максимович
         *
@@ -117,6 +113,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip setEmptyHTML setGroupBy
         *
         * ignoreEvents onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
+        *
+        * @control
+        * @public
+        * @category Inputs
         */
 
        var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, DSMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{

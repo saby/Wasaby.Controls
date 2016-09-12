@@ -16,14 +16,8 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
     * </ol>
     * @class SBIS3.CONTROLS.Button
     * @extends SBIS3.CONTROLS.ButtonBase
-    * @control
 	 * @demo SBIS3.CONTROLS.Demo.MyButton
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.Button'>
-    *    <option name='caption' value='Кнопка'></option>
-    * </component>
-    * @public
-    * @category Buttons
+    *
     * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
@@ -54,6 +48,14 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
     *
     * @css controls-Button__icon Класс для изменения отображения иконки кнопки.
     * @css controls-Button__text Класс для изменения отображения текста на кнопке.
+    *
+    * @control
+    * @category Buttons
+    * @public
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.Button'>
+    *    <option name='caption' value='Кнопка'></option>
+    * </component>
     */
 
    var Button = ButtonBase.extend( /** @lends SBIS3.CONTROLS.Button.prototype */ {
