@@ -386,12 +386,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             add: function(options) {
                var
-                   self = this,
-                   modelOptions = options.model || this._notify('onBeginAdd'),
-                   editingRecord;
+                  self = this,
+                  modelOptions = options.model || this._notify('onBeginAdd'),
+                  preparedModel = options.preparedModel,
+                  editingRecord;
                this._lastTargetAdding = options.target;
                return this.endEdit(true).addCallback(function() {
-                  return self._createModel(modelOptions).addCallback(function (createdModel) {
+                  return self._createModel(modelOptions, preparedModel).addCallback(function (createdModel) {
                      return self._prepareEdit(createdModel).addCallback(function(model) {
                         if (self._options.hierField) {
                            model.set(self._options.hierField, options.target ? options.target.getContents().getId() : options.target);
@@ -406,10 +407,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   });
                });
             },
-            _createModel: function(modelOptions) {
+            _createModel: function(modelOptions, preparedModel) {
                var self = this;
                if (this._addLock) {
                   return $ws.proto.Deferred.fail();
+               } else if (preparedModel instanceof Model) {
+                  return $ws.proto.Deferred.success(preparedModel);
                } else {
                   this._addLock = true;
                   return this._options.dataSource.create(modelOptions).addBoth(function(model) {
