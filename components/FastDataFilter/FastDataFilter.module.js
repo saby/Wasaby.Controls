@@ -25,6 +25,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
        * @cssModifier controls-FastDataFilter__resize Позволяет управлять шириной выпадающих списков, вписывая их по размеру в контейнер.
        * @control
        * @public
+       * @category Filtering
        */
       var FastDataFilter = CompoundControl.extend([FilterMixin, DSMixin],/** @lends SBIS3.CONTROLS.FastDataFilter.prototype */{
          $protected: {

@@ -38,12 +38,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * @demo SBIS3.CONTROLS.Demo.MyDropdownListFilter Выпадающий список с фильтрацией
        * @ignoreOptions emptyHTML
        * @ignoreMethods setEmptyHTML
-       * @control
-       * @public
        * @cssModifier controls-DropdownList__withoutArrow Убрать стрелочку слева от выбранного текста.
        * @cssModifier controls-DropdownList__withoutCross Убрать крестик справа от выбранного текста.
        * @cssModifier controls-DropdownList__linkStyle Отобразить текст в шапке в виде ссылки.
        * @cssModifier controls-DropdownList__ellipsis Текст в шапке обрезается троеточием, если не умещается в контейнере
+       *
+       * @control
+       * @public
+       * @category Inputs
        */
       var DropdownList = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
          _dotTplFn: dotTplFn,
@@ -507,12 +509,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _resizeFastDataFilter: function(){
             var parent = this.getParent();
             this._notifyOnSizeChanged();
-            if ($ws.helpers.instanceOfModule(parent, 'SBIS3.CONTROLS.FastDataFilter')){
-               parent._recalcDropdownWidth();
-            }
-         },
-         _resizeFastDataFilter: function(){
-            var parent = this.getParent();
             if ($ws.helpers.instanceOfModule(parent, 'SBIS3.CONTROLS.FastDataFilter')){
                parent._recalcDropdownWidth();
             }

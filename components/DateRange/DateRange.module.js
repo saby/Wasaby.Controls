@@ -17,9 +17,11 @@ define('js!SBIS3.CONTROLS.DateRange', [
     * @class SBIS3.CONTROLS.DateRange
     * @extends $ws.proto.CompoundControl
     * @author Крайнов Дмитрий Олегович
+    * @demo SBIS3.CONTROLS.Demo.MyDateRange
+    *
     * @control
     * @public
-    * @demo SBIS3.CONTROLS.Demo.MyDateRange
+    * @category Date/Time
     */
    var DateRange = CompoundControl.extend([RangeMixin, PickerMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateRange.prototype */{
       _dotTplFn: dotTplFn,
@@ -61,8 +63,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
       init: function () {
          DateRange.superclass.init.call(this);
 
-         var self = this,
-            start, end;
+         var self = this;
 
          this._datePickerStart = this.getChildControlByName('DateRange__DatePickerStart');
          this._datePickerStart.subscribe('onDateChange', function(e, date) {
@@ -85,6 +86,8 @@ define('js!SBIS3.CONTROLS.DateRange', [
          });
 
          this.subscribe('onEndValueChange', function (event, value) {
+            // Временно делаем, что бы возвращаемая конечная дата содержала время 23:59:59.999
+            value = value? new Date(value.getFullYear(), value.getMonth(), value.getDate(), 23, 59, 59, 999): null;
             self._updateDatePicker(self._datePickerEnd, value);
             self._notify('onEndDateChange', value);
          });
@@ -148,7 +151,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
 
       showPicker: function () {
          if (this._dateRangeChooseControl) {
-            this._dateRangeChooseControl.cancelSelection();
+            this._dateRangeChooseControl.applyYearState();
             this._dateRangeChooseControl.setRange(this.getStartValue(), this.getEndValue());
          }
          DateRange.superclass.showPicker.call(this);
@@ -235,7 +238,9 @@ define('js!SBIS3.CONTROLS.DateRange', [
        * @see endDate
        */
       getEndDate: function() {
-         return this._options.endValue;
+         // Временно делаем, что бы возвращаемая конечная дата содержала время 23:59:59.999
+         var d = this._options.endValue;
+         return this._options.endValue? new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999): null;
       }
    });
    return DateRange;

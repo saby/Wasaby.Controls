@@ -180,7 +180,9 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * @returns {boolean}
        */
       hasScroll: function(offset){
-         offset = offset || 0;
+         // FixMe: Считем, что если есть скролл в 10 пикселей, то его нет
+         // вынужденная мера для айпада, из за хака с height: calc(100% + 1px) 
+         offset = offset || 10;
          var element = this.getScrollContainer();
          if (this._customScroll) {
             return element[0].wsControl.hasScroll();

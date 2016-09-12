@@ -29,8 +29,10 @@ define('js!SBIS3.CONTROLS.FilterButton',
         * @mixes SBIS3.CONTROLS.FilterMixin
         * @mixes SBIS3.CONTROLS.PickerMixin
         * @demo SBIS3.CONTROLS.Demo.FilterButtonMain Полный функционал кнопки фильтров
+        *
         * @control
         * @public
+        * @category Filtering
         */
 
    function isFieldResetValue(element, fieldName, filter) {
@@ -304,6 +306,13 @@ define('js!SBIS3.CONTROLS.FilterButton',
                       self._forEachFieldLinks(function(fieldLink) {
                          fieldLink.getSuggest()._hideMenu();
                       });
+                      /* Разрушаем панель при закрытии,
+                         надо для: сбрасывания валидации, удаления ненужных значений из контролов
+                       */
+                      if(self._picker) {
+                         self._picker.destroy();
+                         self._picker = null;
+                      }
                    },
 
                    onShow: function() {

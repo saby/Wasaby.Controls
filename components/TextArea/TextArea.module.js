@@ -13,8 +13,6 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
     * </ul>
     * @class SBIS3.CONTROLS.TextArea
     * @extends SBIS3.CONTROLS.TextBoxBase
-    * @control
-    * @public
     * @author Крайнов Дмитрий Олегович
     * @css controls-TextArea Класс для изменения отображения текста в многострочном поле ввода.
     *
@@ -30,6 +28,10 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
     * @ignoreEvents onReady
     *
     * @demo SBIS3.CONTROLS.Demo.MyTextArea
+    *
+    * @control
+    * @public
+    * @category Inputs
     */
 
    var TextArea = TextBoxBase.extend( /** @lends SBIS3.CONTROLS.TextArea.prototype */ {
@@ -104,9 +106,6 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          var self = this;
          this._inputField = $('.controls-TextArea__inputField', this._container);
          this._disabledWrapper = $('.controls-TextArea__disabled-wrapper', this._container);
-         this._inputField.bind('focus', function() {
-            $ws.single.EventBus.globalChannel().notify('MobileInputFocus');
-         });
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
          this._inputField.bind('focusout', function () {
@@ -118,7 +117,6 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
             if (text !== self._options.text && !(self._isEmptyValue(self._options.text) && !text.length)){
                self.setText(text);
             }
-            $ws.single.EventBus.globalChannel().notify('MobileInputFocusOut');
          });
 
          this._container.bind('keyup',function(e){

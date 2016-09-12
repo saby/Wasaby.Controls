@@ -12,14 +12,16 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
     * @class SBIS3.CONTROLS.BreadCrumbs
     * @extends $ws.proto.CompoundControl
     * @author Крайнов Дмитрий Олегович
-    * @control
-    * @public
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.BreadCrumbs'>
-    * </component>
     * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.DecorableMixin
+    *
+    * @control
+    * @public
+    * @category Navigation
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.BreadCrumbs'>
+    * </component>
     */
    'use strict';
    //TODO: Переписать все к чертям 

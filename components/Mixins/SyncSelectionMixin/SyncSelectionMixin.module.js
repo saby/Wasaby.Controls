@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], func
             }
 
             function isEmptyItem(item) {
-               return isEmpty(item.get(self._options.displayField)) && isEmpty(item.get(self._options.keyField));
+               return isEmpty(item.get(self._options.displayField)) || isEmpty(item.get(self._options.keyField));
             }
 
             if (isModel) {

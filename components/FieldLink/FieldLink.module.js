@@ -83,10 +83,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *
         * @class SBIS3.CONTROLS.FieldLink
         * @extends SBIS3.CONTROLS.SuggestTextBox
-        * @control
-        * @public
-        *
-        * @category Inputs
         *
         * @author Герасимов Александр Максимович
         *
@@ -117,6 +113,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip setEmptyHTML setGroupBy
         *
         * ignoreEvents onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
+        *
+        * @control
+        * @public
+        * @category Inputs
         */
 
        var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, DSMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
@@ -701,9 +701,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           showPicker: function() {
              /* Если открыт пикер, который показывает все выбранные записи, то не показываем автодополнение */
-             /* Для Ipad'a надо проверять, отображается ли сейчас пикер,
-                иначе список может перестроиться по событию onShow, и клика не пройдёт */
-             if(this._getLinkCollection().isPickerVisible() || ($ws._const.browser.isMobileIOS && this.isPickerVisible())) {
+             if(this._getLinkCollection().isPickerVisible()) {
                 return;
              }
              FieldLink.superclass.showPicker.apply(this, arguments);

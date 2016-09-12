@@ -38,14 +38,15 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * Также допустимо создание новых действий, для которых настраивается иконка и поведение при клике.
     * @class SBIS3.CONTROLS.OperationsPanel
     * @extends $ws.proto.CompoundControl
-    * @control
-    * @public
     * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel
     * @author Крайнов Дмитрий Олегович
     * @ignoreOptions contextRestriction independentContext
+    *
+    * @control
+    * @public
+    * @category Actions
     * @initial
     * <component data-component='SBIS3.CONTROLS.OperationsPanel' style="height: 30px;">
-    *
     * </component>
     */
    var OperationsPanel = Control.extend([DSMixin],/** @lends SBIS3.CONTROLS.OperationsPanel.prototype */{

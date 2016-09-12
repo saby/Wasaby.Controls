@@ -9,14 +9,8 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CORE.Control', 'html!SBIS3.CONTR
     * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS.Checkable
     * @mixes SBIS3.CONTROLS.Clickable
-    * @control
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MySwitcher
-    * @public
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.Switcher'>
-    *     <option name='checked' type="boolean">true</option>
-    * </component>
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner stateKey
@@ -30,6 +24,14 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CORE.Control', 'html!SBIS3.CONTR
     *
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady
+    *
+    * @control
+    * @public
+    * @category Buttons
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.Switcher'>
+    *     <option name='checked' type="boolean">true</option>
+    * </component>
     */
 
    var Switcher = Control.Control.extend([Checkable, Clickable], /** @lends SBIS3.CONTROLS.Switcher.prototype */ {
