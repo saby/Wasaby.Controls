@@ -12,13 +12,8 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
     * SBIS3.CONTROLS.OperationsMark
     * @class SBIS3.CONTROLS.OperationsMark
     * @extends SBIS3.CONTROLS.MenuLink
-    * @control
+    * @author Сухоручкин Андрей Сергеевич
     * @public
-    * @author Крайнов Дмитрий Олегович
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.OperationsMark'>
-    *
-    * </component>
     */
    /*TODO Пока что динамическое создание CheckBox, пока не слиты Control и CompaundControl!!!*/
    var OperationsMark = MenuLink.extend(/** @lends SBIS3.CONTROLS.OperationsMark.prototype */{

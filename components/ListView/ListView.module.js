@@ -98,6 +98,10 @@ define('js!SBIS3.CONTROLS.ListView',
        * Т.е. текст "1-10" при отображении 10 записей на 1-ой странице
        *
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
+       *
+       * @control
+       * @public
+       * @category Lists
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
@@ -2120,7 +2124,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _preScrollLoading: function(){
             var hasScroll = (function() {
-                  return this._scrollWatcher.hasScroll(10);
+                  return this._scrollWatcher.hasScroll();
                }).bind(this),
                scrollDown = this._options.infiniteScroll == 'down' || this._options.infiniteScroll == 'both'
             // Если нет скролла или скролл внизу (при загрузке вниз), значит нужно догружать еще записи
@@ -2471,12 +2475,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pager = undefined;
                this._pagerContainer = undefined;
             }
-            //TODO: При задании нового сорса разрушаем редактор, иначе ItemsControlMixin задестроит все контролы внутри,
-            //но не проставит все необходимые состояния. В .200 начнём пересоздавать редакторы для каждого редактирования
-            //и данный код не понадобится.
-            if (this._hasEditInPlace()) {
-               this._getEditInPlace()._destroyEip();
-            }
+            this._destroyEditInPlace();
             ListView.superclass.setDataSource.apply(this, arguments);
          },
          /**

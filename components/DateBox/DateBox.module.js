@@ -514,6 +514,9 @@ define(
                   if (Array.indexOf(filled, "MM") !== -1 && (Array.indexOf(notFilled, "YY") !== -1 || Array.indexOf(notFilled, "YYYY") !== -1)) {
                      return new Date(now.getFullYear(), mm, dd, hh, ii, ss, uuu);
                   }
+               } else if (Array.indexOf(filled, "HH") !== -1 && Array.indexOf(notFilled, "II") !== -1) {
+                  ii = this.formatModel.getGroupValueByMask("II", '0');
+                  return new Date(yyyy, mm, dd, hh, ii, ss, uuu);
                }
             }
          }

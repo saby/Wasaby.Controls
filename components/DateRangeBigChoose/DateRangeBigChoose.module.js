@@ -99,12 +99,8 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
 
          this.getChildControlByName('HomeButton').subscribe('onActivated', this._onHomeButtonClick.bind(this));
 
-         this.getChildControlByName('ApplyButton').subscribe('onActivated', function () {
-            this._notify('onChoose', self.getStartValue(), self.getEndValue());
-         }.bind(this));
-         this.getChildControlByName('CloseButton').subscribe('onActivated', function () {
-            this._notify('onCancel', self.getStartValue(), self.getEndValue());
-         }.bind(this));
+         this.getChildControlByName('ApplyButton').subscribe('onActivated', this._onApplyButtonClick.bind(this));
+         this.getChildControlByName('CloseButton').subscribe('onActivated', this._onCloseButtonClick.bind(this));
 
          this.getChildControlByName('PrevYearButton').subscribe('onActivated', this._onPrevOrNextYearBtnClick.bind(this, -1));
          this.getChildControlByName('NextYearButton').subscribe('onActivated', this._onPrevOrNextYearBtnClick.bind(this, 1));
@@ -176,6 +172,17 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          this._monthRangePicker.setYear(now.getFullYear());
          this._dateRangePicker.setMonth(now);
          this._updateYearsRange(now.getFullYear());
+      },
+
+      _onApplyButtonClick: function () {
+         this.cancelSelection();
+         this._dateRangePicker.cancelSelection();
+         this._notify('onChoose', this.getStartValue(), this.getEndValue());
+      },
+      _onCloseButtonClick: function () {
+         this.cancelSelection();
+         this._dateRangePicker.cancelSelection();
+         this._notify('onCancel', this.getStartValue(), this.getEndValue());
       },
 
       _toStartMonth: function () {
@@ -793,6 +800,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             }
          }
          this._$items = items;
+         this.getContainer().removeClass(css_classes.selectionProcessing);
       },
 
       _isDatesEqual: function (date1, date2) {
