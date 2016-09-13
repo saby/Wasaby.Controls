@@ -91,6 +91,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', ['js!SBIS3.CORE.CoreValidators', 
 
       /**
        * Проверяет ИНН (допустимая длина ИНН - 10 или 12 символов).
+       * @function
        * @param {String} value Значение валидируемой опции.
        * @returns {Boolean|String}
        * <ol>
@@ -102,6 +103,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', ['js!SBIS3.CORE.CoreValidators', 
 
       /**
        * Проверяет ИНН (допустимая длина ИНН - 10 символов).
+       * @function
        * @param {String} value Значение валидируемой опции.
        * @returns {Boolean|String}
        * <ol>
@@ -113,6 +115,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', ['js!SBIS3.CORE.CoreValidators', 
 
       /**
        * Проверяет ИНН (допустимая длина ИНН - 12 символов).
+       * @function
        * @param {String} value Значение валидируемой опции.
        * @returns {Boolean|String}
        * <ol>

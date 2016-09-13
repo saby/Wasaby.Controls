@@ -86,16 +86,14 @@ define('js!SBIS3.CONTROLS.ListView',
        * @mixes SBIS3.CONTROLS.DecorableMixin
        * @mixes SBIS3.CONTROLS.DataBindMixin
        * @mixes SBIS3.CONTROLS.DragNDropMixinNew
-       * @control
-       * @public
-       * @cssModifier controls-ListView__orangeMarker Показывать маркер активной строки у элементов ListView. Актуально только для ListView.
-       * @cssModifier controls-ListView__showCheckBoxes Чекбоксы показываются не по ховеру, а сразу все.
-       * @cssModifier controls-ListView__hideCheckBoxes Скрыть все чекбоксы.
-       * @cssModifier controls-ListView__bottomStyle Оформляет операции строки под строкой
-       * @cssModifier controls-ListView__pagerNoSizePicker Скрыть выбор размера страницы в пейджинге.
-       * @cssModifier controls-ListView__pagerNoAmount Скрыть отображение количества записей на странице в пейджинге.
-       * @cssModifier controls-ListView__pagerHideEndButton Скрыть кнопку "Перейти к последней странице"
-       * Т.е. текст "1-10" при отображении 10 записей на 1-ой странице
+       *
+       * @cssModifier controls-ListView__orangeMarker Устанавливает отображение маркера активной строки у элементов списка. Модификатор актуален только для класса SBIS3.CONTROLS.ListView.
+       * @cssModifier controls-ListView__showCheckBoxes Устанавливает постоянное отображение чекбоксов для записей списка. Модификатор применяется для режима множественного выбора записей (см. {@link multiselect}).
+       * @cssModifier controls-ListView__hideCheckBoxes Скрывает отображение чекбоксов для записей списка, для которого установлен режим множественного выбора записей (см. {@link multiselect}).
+       * @cssModifier controls-ListView__bottomStyle Изменяет положение "быстрых операций над записью", при котором они будут отображение в специальном блоке под записью. Подробнее о таких операциях вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/index/">этом разделе</a>.
+       * @cssModifier controls-ListView__pagerNoSizePicker Скрывает отображение выпадающего списка, в котором производят выбор размера страницы для режима постраничной навигации (см. {@link showPaging}).
+       * @cssModifier controls-ListView__pagerNoAmount Скрывает отображение количества записей на странице для режима постраничной навигации (см. {@link showPaging}).
+       * @cssModifier controls-ListView__pagerHideEndButton Скрывает отображение кнопки "Перейти к последней странице". Используется для режима постраничной навигации (см. {@link showPaging}).
        *
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        *
@@ -509,6 +507,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Может использоваться для загрузки истории сообщений, например.
                 * @variant down Подгружать данные при достижении дна контейнера (подгрузка "вниз").
                 * @variant up Подгружать данные при достижении верха контейнера (подгрузка "вверх").
+                * @variant demand Подгружать данные при нажатии на кнопку "Еще...".
                 * @variant null Не загружать данные по скроллу.
                 *
                 * @example
@@ -694,8 +693,8 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing()) {
                this.setGroupBy(this._options.groupBy, false);
             }
-            this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
+            this._prepareInfiniteScroll();
             if (!this._options._serverRender) {
                if (this.getItems()) {
                   this.redraw()
@@ -799,7 +798,30 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._createScrollPager();
                }
                this._scrollWatcher.subscribe('onTotalScroll', this._onTotalScrollHandler.bind(this));
+            } else if (this._options.infiniteScroll == 'demand'){
+               this._loadMoreButton = this.getChildControlByName('loadMoreButton');
+               if (this.getItems()){
+                  this._setLoadMoreCaption(this.getItems());
+               }
+               this.subscribeTo(loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
             }
+         },
+
+         _setLoadMoreCaption: function(dataSet){
+            var more = dataSet.getMetaData().more
+            if (typeof more == 'number'){
+               this._loadMoreButton.setCaption('Еще ' + more);
+            } else {
+               if (more === false){
+                  this._loadMoreButton.setVisible(false);
+               } else {
+                  this._loadMoreButton.setCaption('Еще...');
+               }
+            }
+         },
+
+         _onLoadMoreButtonActivated: function(event){
+            this._loadNextPage('down');
          },
 
          _createScrollWatcher: function(){
@@ -1173,7 +1195,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
             this._getEmptyDataContainer().empty().html(html);
-            this._toggleEmptyData(!!html);
+            this._toggleEmptyData(!(this._getItemsProjection() && this._getItemsProjection().getCount()) && !!html);
          },
 
          _getEmptyDataContainer: function() {
@@ -2002,7 +2024,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see setInfiniteScroll
           */
          isInfiniteScroll: function () {
-            return this._allowInfiniteScroll && !!this._options.infiniteScroll;
+            var scrollLoad = this._options.infiniteScroll == 'down' || this._options.infiniteScroll == 'up';
+            return this._allowInfiniteScroll && scrollLoad;
          },
          _cancelLoading: function(){
             ListView.superclass._cancelLoading.apply(this, arguments);
@@ -2070,6 +2093,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   if (hasNextPage){
                      this._scrollLoadNextPage();
                   }
+               }
+               if (this._options.infiniteScroll == 'demand'){
+                  this._setLoadMoreCaption(dataSet);
                }
             }, this)).addErrback(function (error) {
                //Здесь при .cancel приходит ошибка вида DeferredCanceledError
