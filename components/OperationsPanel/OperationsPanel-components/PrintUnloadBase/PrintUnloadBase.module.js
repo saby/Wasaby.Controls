@@ -7,7 +7,7 @@
 define('js!SBIS3.CONTROLS.PrintUnloadBase', [
    'js!SBIS3.CONTROLS.MenuLink',
    'js!SBIS3.CORE.DialogSelector',
-   'js!WS.Data/Adapter/Sbis',
+   'js!WS.Data/Adapter/Json',
    'js!WS.Data/Collection/RecordSet'
 ], function(MenuLink, Dialog, SbisAdapter, RecordSet) {
    //TODO: ограничение на максимальное количество записей, получаемое на клиент для печати/выгрузки.
@@ -74,12 +74,14 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
       _prepareOperation: function(title){
          var
              selectedRecordSet,
-             selectedItems = this._getView().getSelectedItems();
+             view = this._getView(),
+             items = view.getItems(),
+             selectedItems = view.getSelectedItems();
          if (!selectedItems || selectedItems.getCount() === 0) {
             this._processMassOperations(title);
          } else {
             selectedRecordSet = new RecordSet({
-               adapter: 'adapter.sbis'
+               adapter: items ? items.getAdapter() : 'adapter.json'
             });
             selectedRecordSet.assign(selectedItems);
             this._applyOperation(selectedRecordSet);

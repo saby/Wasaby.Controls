@@ -49947,7 +49947,8 @@ tinymce.PluginManager.add('lists', function(editor) {
       };
 
       var insertImage = function (editor, html, pasteHtml) {
-         return isImageUrl(html) ? createImage(editor, html, pasteHtml) : false;
+         //Чтобы по ctrl+v не вставлялась картинка
+         return false;
       };
 
       var pasteHtml = function (editor, html) {

@@ -814,7 +814,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _onTotalScrollHandler: function(event, type){
             var scrollOnEdge = (this._options.infiniteScroll === 'up' && type === 'top') || // скролл вверх и доскролили до верхнего края
                                (this._options.infiniteScroll === 'down' && type === 'bottom') || // скролл вниз и доскролили до нижнего края
-                               (this._options.infiniteScroll === 'both') //скролл в обе стороны и доскролили до любого края
+                               (this._options.infiniteScroll === 'both'); //скролл в обе стороны и доскролили до любого края
             if (scrollOnEdge && this.getItems()) {
                var isTop = type == 'top';
                this._needScrollCompensation = isTop;
@@ -1612,11 +1612,15 @@ define('js!SBIS3.CONTROLS.ListView',
             return config;
          },
          _showToolbar: function(model) {
-            var itemsInstances;
+            var itemsInstances, itemsToolbar;
             if (this._options.editMode.indexOf('toolbar') !== -1) {
-               this._getItemsToolbar().unlockToolbar();
+               itemsToolbar = this._getItemsToolbar();
+
+               itemsToolbar.unlockToolbar();
+               /* Меняем выделенный элемент на редактируемую/добавляемую запись */
+               this._changeHoveredItem(this._getElementByModel(model));
                //Отображаем кнопки редактирования
-               this._getItemsToolbar().showEditActions();
+               itemsToolbar.showEditActions();
                if (!this.getItems().getRecordById(model.getId())) {
                   if (this.getItemsActions()) {
                      itemsInstances = this.getItemsActions().getItemsInstances();
@@ -1627,8 +1631,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                }
                //Отображаем itemsToolbar для редактируемого элемента и фиксируем его
-               this._showItemsToolbar(this._getElementData(this._getElementByModel(model)));
-               this._getItemsToolbar().lockToolbar();
+               this._showItemsToolbar(this.getHoveredItem());
+               itemsToolbar.lockToolbar();
             }
          },
          _hideToolbar: function() {
@@ -2126,7 +2130,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var hasScroll = (function() {
                   return this._scrollWatcher.hasScroll();
                }).bind(this),
-               scrollDown = this._options.infiniteScroll == 'down' || this._options.infiniteScroll == 'both'
+               scrollDown = this._options.infiniteScroll == 'down' || this._options.infiniteScroll == 'both';
             // Если нет скролла или скролл внизу (при загрузке вниз), значит нужно догружать еще записи
             if ((this.isScrollOnBottom() && scrollDown) || !hasScroll()) {
                this._scrollLoadNextPage();
