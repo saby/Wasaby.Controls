@@ -1087,9 +1087,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             if (value == undefined){
                value = index == 0 ? self._options.resultsText : '';
             }
-            else{
-               value = $ws.render.defaultColumn.integer(value);
-            }
             return self._getColumnResultTemplate(col, index, value, resultsRecord);
          });
          return data;
