@@ -242,6 +242,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._itemActionsButtons ={};
             this._itemActionsMenu && this._itemActionsMenu.setItems(items);
             ItemActionsGroup.superclass.setItems.apply(this, arguments);
+            this.applyItemActions();
          },
          /**
           * Возвращает признак того, открыто ли сейчас меню операций над записью
