@@ -1850,9 +1850,11 @@ define('js!SBIS3.CONTROLS.RichEditor',
          },
 
          _scrollToPrev: function(target){
+            //Необходимо осуществлять подскролл к предыдущему узлу если текущий под клавиатурой
             if (target.previousSibling && this._elementIsUnderKeyboard(target, 'bottom')) {
                target.previousSibling.scrollIntoView(true);
             }
+            //Если после подскрола к предыдущему узлу текущий узел всё еще под клавиатурой, то осуществляется подскролл к текущему
             this._scrollTo(target, 'bottom');
          },
 
