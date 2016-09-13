@@ -156,8 +156,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
     * @mixin SBIS3.CONTROLS.TreeMixin
     * @public
     * @author Крайнов Дмитрий Олегович
-    *
-    * @ignoreMethods reload
     */
    var TreeMixin = /** @lends SBIS3.CONTROLS.TreeMixin.prototype */{
 
