@@ -536,15 +536,22 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @private
           */
          setFontStyle: function(style) {
-            if (style !== 'mainText') {
-               this._applyFormat(style, true);
+            //TinyMCE использует для определения положения каретки <br data-mce-bogus="1">.
+            //При смене формата содаётся новый <span class='classFormat'>.
+            //В FF в некторых случаях символ каретки не удаляется из предыдущего <span> блока при смене формата
+            //из за-чего происход разрыв строки.
+            if ($ws._const.browser.firefox &&  $(this._tinyEditor.selection.getNode()).find('br').attr('data-mce-bogus') == '1') {
+               $(this._tinyEditor.selection.getNode()).find('br').remove();
             }
             for (var stl in constants.styles) {
                if (style !== stl) {
                   this._removeFormat(stl);
                }
             }
-            this._tinyEditor.focus();
+            if (style !== 'mainText') {
+               this._applyFormat(style, true);
+            }
+            this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._setTrimmedText(this._getTinyEditorValue());
          },
