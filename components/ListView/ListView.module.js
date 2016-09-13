@@ -86,16 +86,14 @@ define('js!SBIS3.CONTROLS.ListView',
        * @mixes SBIS3.CONTROLS.DecorableMixin
        * @mixes SBIS3.CONTROLS.DataBindMixin
        * @mixes SBIS3.CONTROLS.DragNDropMixinNew
-       * @control
-       * @public
-       * @cssModifier controls-ListView__orangeMarker Показывать маркер активной строки у элементов ListView. Актуально только для ListView.
-       * @cssModifier controls-ListView__showCheckBoxes Чекбоксы показываются не по ховеру, а сразу все.
-       * @cssModifier controls-ListView__hideCheckBoxes Скрыть все чекбоксы.
-       * @cssModifier controls-ListView__bottomStyle Оформляет операции строки под строкой
-       * @cssModifier controls-ListView__pagerNoSizePicker Скрыть выбор размера страницы в пейджинге.
-       * @cssModifier controls-ListView__pagerNoAmount Скрыть отображение количества записей на странице в пейджинге.
-       * @cssModifier controls-ListView__pagerHideEndButton Скрыть кнопку "Перейти к последней странице"
-       * Т.е. текст "1-10" при отображении 10 записей на 1-ой странице
+       *
+       * @cssModifier controls-ListView__orangeMarker Устанавливает отображение маркера активной строки у элементов списка. Модификатор актуален только для класса SBIS3.CONTROLS.ListView.
+       * @cssModifier controls-ListView__showCheckBoxes Устанавливает постоянное отображение чекбоксов для записей списка. Модификатор применяется для режима множественного выбора записей (см. {@link multiselect}).
+       * @cssModifier controls-ListView__hideCheckBoxes Скрывает отображение чекбоксов для записей списка, для которого установлен режим множественного выбора записей (см. {@link multiselect}).
+       * @cssModifier controls-ListView__bottomStyle Изменяет положение "быстрых операций над записью", при котором они будут отображение в специальном блоке под записью. Подробнее о таких операциях вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/index/">этом разделе</a>.
+       * @cssModifier controls-ListView__pagerNoSizePicker Скрывает отображение выпадающего списка, в котором производят выбор размера страницы для режима постраничной навигации (см. {@link showPaging}).
+       * @cssModifier controls-ListView__pagerNoAmount Скрывает отображение количества записей на странице для режима постраничной навигации (см. {@link showPaging}).
+       * @cssModifier controls-ListView__pagerHideEndButton Скрывает отображение кнопки "Перейти к последней странице". Используется для режима постраничной навигации (см. {@link showPaging}).
        *
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        *
