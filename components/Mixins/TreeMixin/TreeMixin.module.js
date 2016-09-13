@@ -156,8 +156,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
     * @mixin SBIS3.CONTROLS.TreeMixin
     * @public
     * @author Крайнов Дмитрий Олегович
-    *
-    * @ignoreMethods reload
     */
    var TreeMixin = /** @lends SBIS3.CONTROLS.TreeMixin.prototype */{
 
@@ -169,7 +167,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        * @param {String|Array.<Object.<String,Boolean>>} sorting Параметры сортировки.
        * @param {Number} offset Смещение первого элемента выборки.
        * @param {Number} limit Максимальное количество элементов выборки.
-       * @param {Boolean} deepReload Признак глубокой перезагрузки: в значении true устанавливает поведение, при котором папки открыте до перезагрузки данных останутся также открытыми и после перезагрузки.
+       * @param {Boolean} deepReload Признак глубокой перезагрузки: в значении true устанавливает поведение, при котором папки открытые до перезагрузки данных останутся также открытыми и после перезагрузки.
        * @example
        * <pre>
        *    myDataGridView.reload(
