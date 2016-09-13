@@ -195,7 +195,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
             },
             _getNextTarget: function(currentTarget, editNextRow) {
-               return currentTarget[editNextRow ? 'next' : 'prev']('.js-controls-ListView__item:not(".controls-editInPlace")');
+               //Ищем с помощью nextAll и prevAll т.к. между строками таблицы могут находиться блоки группировки, футеры папок и т.д. и
+               //при помощи next и prev при указанном селекторе мы бы ни чего не нашли, хотя нужные строки могли быть.
+               return currentTarget[editNextRow ? 'nextAll' : 'prevAll']('.js-controls-ListView__item:not(".controls-editInPlace")').eq(0);
             },
             _getCurrentTarget: function() {
                return this._eip.getTarget();
