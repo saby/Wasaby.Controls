@@ -1048,6 +1048,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                self._clipboardText = false;
             });
 
+            editor.on('dragstart', function(event) {
+               //Youtube iframe не отдаёт mouseup => окошко с видеороликом таскается за курсором
+               //запрещаем D&D iframe элементов
+               if (event.target && $(event.target).hasClass('mce-object-iframe')) {
+                  event.preventDefault();
+               }
+             });
+
             //БИНДЫ НА СОБЫТИЯ КЛАВИАТУРЫ (ВВОД)
             if ($ws._const.browser.isMobileIOS || $ws._const.browser.isMobileAndroid) {
                //TODO: https://github.com/tinymce/tinymce/issues/2533
