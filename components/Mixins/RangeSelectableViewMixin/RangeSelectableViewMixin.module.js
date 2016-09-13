@@ -21,7 +21,8 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
             item: 'controls-RangeSelectable__item',
             selected: 'controls-RangeSelectable__item-selected',
             selectedStart: 'controls-RangeSelectable__item-selectedStart',
-            selectedEnd: 'controls-RangeSelectable__item-selectedEnd'
+            selectedEnd: 'controls-RangeSelectable__item-selectedEnd',
+            selecting: 'controls-RangeSelectable__selecting'
          },
 
          _selectedRangeItemIdAtr: 'data-selected-range-id',
@@ -113,7 +114,8 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
             return false;
          }
          this._rangeSelectionEnd = item;
-         this._rangeSelection = item ? true : false;
+         this._rangeSelection = !!item;
+         this._updateContainerSelectionClass();
          this.validateRangeSelectionItemsView();
          return true;
       },
@@ -124,6 +126,14 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
        */
       _getSelectionRangeEndItem: function () {
          return this._rangeSelectionEnd;
+      },
+
+      _updateContainerSelectionClass: function () {
+         if (this._rangeSelection) {
+            this.getContainer().addClass(this._SELECTABLE_RANGE_CSS_CLASSES.selecting);
+         } else {
+            this.getContainer().removeClass(this._SELECTABLE_RANGE_CSS_CLASSES.selecting);
+         }
       },
 
       /**
@@ -145,6 +155,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
          this._rangeSelection = true;
          this.setRange(start, end, silent);
          this._setSelectionRangeEndItem(this.getEndValue(), silent);
+         this._updateContainerSelectionClass();
          this._notify('onSelectionStarted');
       },
       /**
@@ -158,6 +169,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
          this.setRange(range[0], range[1]);
          this._setSelectionRangeEndItem();
          this.validateRangeSelectionItemsView();
+         this._updateContainerSelectionClass();
          this._notify('onSelectionEnded');
       },
       /**
