@@ -175,7 +175,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
             month = this.getMonth();
             // if (!this._isDatesEqual(start, oldStart) && !this._isDatesEqual(end, oldEnd)) {
             if (month && start && end && (start > new Date(month.getFullYear(), month.getMonth() + 1, 0) || end < month)) {
-               this.setMonth(start);
+               setTimeout(function () {this.setMonth(start)}.bind(this), 0);
             }
          } else {
             changed = Component.superclass.setRange.apply(this, arguments);
