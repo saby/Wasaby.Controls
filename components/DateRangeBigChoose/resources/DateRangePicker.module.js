@@ -12,7 +12,10 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
 
    var MonthSource = Base.extend(/** @lends SBIS3.CONTROLS.DateRangeBig.DateRangePicker.MonthSource.prototype */{
       _moduleName: 'SBIS3.CONTROLS.DateRangeBigChoose.MonthSource',
-
+      $protected: {
+         _dataSetItemsProperty: 'items',
+         _dataSetTotalProperty: 'total'
+      },
 
       query: function (query) {
          // throw new Error('Method must be implemented');
@@ -34,8 +37,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
             }
          );
          items = this._prepareQueryResult(
-            {items: adapter.getData(), total: 1000000000000},
-            'items', 'total'
+            {items: adapter.getData(), total: 1000000000000}
          );
          return $ws.proto.Deferred.success(items);
       }

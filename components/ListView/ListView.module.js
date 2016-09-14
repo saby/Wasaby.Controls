@@ -15,9 +15,10 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.DecorableMixin',
       'js!SBIS3.CONTROLS.DragNDropMixinNew',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
+      'js!SBIS3.CONTROLS.BreakClickBySelectMixin',
       'js!SBIS3.CONTROLS.ItemsToolbar',
       'js!SBIS3.CORE.MarkupTransformer',
-      'tmpl!SBIS3.CONTROLS.ListView',
+      'html!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'js!SBIS3.CONTROLS.CommonHandlers',
       'js!SBIS3.CONTROLS.MoveHandlers',
@@ -41,16 +42,16 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!WS.Data/Di',
       'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
-      'js!WS.Data/Collection/RecordSet',
-      'js!SBIS3.CONTROLS.DragEntity.Row'
+      'js!SBIS3.CONTROLS.DragEntity.Row',
+      'js!WS.Data/Collection/RecordSet'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
-             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
+             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
              Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder, Di, ArraySimpleValuesUtil) {
 
-      'use strict';
+     'use strict';
 
       var
          buildTplArgsLV = function(cfg) {
@@ -85,16 +86,16 @@ define('js!SBIS3.CONTROLS.ListView',
        * @mixes SBIS3.CONTROLS.DecorableMixin
        * @mixes SBIS3.CONTROLS.DataBindMixin
        * @mixes SBIS3.CONTROLS.DragNDropMixinNew
-       * @control
-       * @public
-       * @cssModifier controls-ListView__orangeMarker Показывать маркер активной строки у элементов ListView. Актуально только для ListView.
-       * @cssModifier controls-ListView__showCheckBoxes Чекбоксы показываются не по ховеру, а сразу все.
-       * @cssModifier controls-ListView__hideCheckBoxes Скрыть все чекбоксы.
-       * @cssModifier controls-ListView__bottomStyle Оформляет операции строки под строкой
-       * @cssModifier controls-ListView__pagerNoSizePicker Скрыть выбор размера страницы в пейджинге.
-       * @cssModifier controls-ListView__pagerNoAmount Скрыть отображение количества записей на странице в пейджинге.
-       * @cssModifier controls-ListView__pagerHideEndButton Скрыть кнопку "Перейти к последней странице"
-       * Т.е. текст "1-10" при отображении 10 записей на 1-ой странице
+       *
+       * @cssModifier controls-ListView__orangeMarker Устанавливает отображение маркера активной строки у элементов списка. Модификатор актуален только для класса SBIS3.CONTROLS.ListView.
+       * @cssModifier controls-ListView__showCheckBoxes Устанавливает постоянное отображение чекбоксов для записей списка. Модификатор применяется для режима множественного выбора записей (см. {@link multiselect}).
+       * @cssModifier controls-ListView__hideCheckBoxes Скрывает отображение чекбоксов для записей списка, для которого установлен режим множественного выбора записей (см. {@link multiselect}).
+       * @cssModifier controls-ListView__bottomStyle Изменяет положение "быстрых операций над записью", при котором они будут отображение в специальном блоке под записью. Подробнее о таких операциях вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/index/">этом разделе</a>.
+       * @cssModifier controls-ListView__pagerNoSizePicker Скрывает отображение выпадающего списка, в котором производят выбор размера страницы для режима постраничной навигации (см. {@link showPaging}).
+       * @cssModifier controls-ListView__pagerNoAmount Скрывает отображение количества записей на странице для режима постраничной навигации (см. {@link showPaging}).
+       * @cssModifier controls-ListView__pagerHideEndButton Скрывает отображение кнопки "Перейти к последней странице". Используется для режима постраничной навигации (см. {@link showPaging}).
+       *
+       * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        *
        * @control
        * @public
@@ -276,7 +277,6 @@ define('js!SBIS3.CONTROLS.ListView',
             ],
             _itemsToolbar: null,
             _notEndEditClassName: 'controls-ListView__onFocusNotEndEdit',
-            _emptyData: undefined,
             _containerScrollHeight : 0,
             // указывает на необходимость компенсации скрола при подгрузке данных вверх
             // необходим, так как компенсацию можно произвести только после отрисовки - в drawItemsCallback
@@ -507,6 +507,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Может использоваться для загрузки истории сообщений, например.
                 * @variant down Подгружать данные при достижении дна контейнера (подгрузка "вниз").
                 * @variant up Подгружать данные при достижении верха контейнера (подгрузка "вверх").
+                * @variant demand Подгружать данные при нажатии на кнопку "Еще...".
                 * @variant null Не загружать данные по скроллу.
                 *
                 * @example
@@ -692,9 +693,8 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing()) {
                this.setGroupBy(this._options.groupBy, false);
             }
-            this._drawEmptyData();
-            this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
+            this._prepareInfiniteScroll();
             if (!this._options._serverRender) {
                if (this.getItems()) {
                   this.redraw()
@@ -798,7 +798,30 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._createScrollPager();
                }
                this._scrollWatcher.subscribe('onTotalScroll', this._onTotalScrollHandler.bind(this));
+            } else if (this._options.infiniteScroll == 'demand'){
+               this._loadMoreButton = this.getChildControlByName('loadMoreButton');
+               if (this.getItems()){
+                  this._setLoadMoreCaption(this.getItems());
+               }
+               this.subscribeTo(loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
             }
+         },
+
+         _setLoadMoreCaption: function(dataSet){
+            var more = dataSet.getMetaData().more
+            if (typeof more == 'number'){
+               this._loadMoreButton.setCaption('Еще ' + more);
+            } else {
+               if (more === false){
+                  this._loadMoreButton.setVisible(false);
+               } else {
+                  this._loadMoreButton.setCaption('Еще...');
+               }
+            }
+         },
+
+         _onLoadMoreButtonActivated: function(event){
+            this._loadNextPage('down');
          },
 
          _createScrollWatcher: function(){
@@ -1171,16 +1194,12 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
-            if(this._emptyData && this._emptyData.length) {
-               if(html) {
-                  this._emptyData.empty().html(html)
-               } else {
-                  this._emptyData.remove();
-                  this._emptyData = undefined;
-               }
-            } else if(html) {
-               this._drawEmptyData();
-            }
+            this._getEmptyDataContainer().empty().html(html);
+            this._toggleEmptyData(!(this._getItemsProjection() && this._getItemsProjection().getCount()) && !!html);
+         },
+
+         _getEmptyDataContainer: function() {
+            return $('.controls-ListView__EmptyData', this._container.get(0));
          },
 
          setMultiselect: function(flag) {
@@ -1189,10 +1208,6 @@ define('js!SBIS3.CONTROLS.ListView',
                                .toggleClass('controls-ListView__multiselect__off', !flag);
          },
 
-         _drawEmptyData: function() {
-            var html = this._options.emptyHTML;
-            this._emptyData = html && $(emptyDataTpl({emptyHTML: html})).appendTo(this._container);
-         },
          /**
           * Устанавливает шаблон отображения элемента коллекции.
           * @param {String|Function} tpl Шаблон отображения каждого элемента коллекции.
@@ -1279,7 +1294,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      if (selectedItems && selectedItems.getCount()) {
                         selectedItems.clear();
                      }
-                     ListView.superclass.setSelectedItemsAll.call(this);
+                      this.setSelectedItemsAll.call(this);
                      if (dataSet.getCount() == 1000 && dataSet.getMetaData().more){
                         InformationPopupManager.showMessageDialog({
                            status: 'default',
@@ -1288,7 +1303,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                   }.bind(this));
             } else {
-               ListView.superclass.setSelectedItemsAll.call(this);
+               this.setSelectedItemsAll.call(this);
             }
          },
          _drawSelectedItems: function (idArray) {
@@ -1579,13 +1594,22 @@ define('js!SBIS3.CONTROLS.ListView',
                      onAfterBeginEdit: function(event, model) {
                         this._showToolbar(model);
                         this.setSelectedKey(model.getId());
+                        if (model.getState() === Record.RecordState.DETACHED) {
+                           $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
+                           $('.controls-ListView__item[data-id="' + model.getId() + '"]', this._container).addClass('controls-ListView__item__selected');
+                        }
+                        else {
+                           this.setSelectedKey(model.getId());
+                        }
                         this.scrollToItem(model);
                         event.setResult(this._notify('onAfterBeginEdit', model));
+                        this._toggleEmptyData(false);
                      }.bind(this),
                      onChangeHeight: function(event, model) {
                         if (this._getItemsToolbar().isToolbarLocking()) {
                            this._showItemsToolbar(this._getElementData(this._getElementByModel(model)));
                         }
+                        this._notifyOnSizeChanged(true);
                      }.bind(this),
                      onBeginAdd: function(event, options) {
                         event.setResult(this._notify('onBeginAdd', options));
@@ -1602,6 +1626,8 @@ define('js!SBIS3.CONTROLS.ListView',
                         //При разрушении редактирования скрывает toolbar. Иначе это ни кто не сделает. А разрушение могло
                         //произойти например из-за setEnabled(false) у ListView
                         this._hideToolbar();
+                        this._toggleEmptyData(!this.getItems().getCount());
+                        this._notifyOnSizeChanged(true);
                      }.bind(this)
                   }
                };
@@ -1998,7 +2024,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see setInfiniteScroll
           */
          isInfiniteScroll: function () {
-            return this._allowInfiniteScroll && !!this._options.infiniteScroll;
+            var scrollLoad = this._options.infiniteScroll == 'down' || this._options.infiniteScroll == 'up';
+            return this._allowInfiniteScroll && scrollLoad;
          },
          _cancelLoading: function(){
             ListView.superclass._cancelLoading.apply(this, arguments);
@@ -2066,6 +2093,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   if (hasNextPage){
                      this._scrollLoadNextPage();
                   }
+               }
+               if (this._options.infiniteScroll == 'demand'){
+                  this._setLoadMoreCaption(dataSet);
                }
             }, this)).addErrback(function (error) {
                //Здесь при .cancel приходит ошибка вида DeferredCanceledError
@@ -2307,11 +2337,9 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _toggleEmptyData: function(show) {
-            if(this._emptyData) {
-               this._emptyData.toggleClass('ws-hidden', !show);
-               if(this._pagerContainer) {
-                  this._pagerContainer.toggleClass('ws-hidden', show);
-               }
+            this._getEmptyDataContainer().toggleClass('ws-hidden', !show);
+            if(this._pagerContainer) {
+               this._pagerContainer.toggleClass('ws-hidden', show);
             }
          },
          //------------------------Paging---------------------
@@ -3004,5 +3032,5 @@ define('js!SBIS3.CONTROLS.ListView',
          }
       });
 
-      return ListView;
+      return ListView.mixin([BreakClickBySelectMixin]);
    });
