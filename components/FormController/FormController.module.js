@@ -75,7 +75,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see onFail
        */
       $protected: {
-         _record: null,
          _saving: false,
          _loadingIndicator: undefined,
          _panel: undefined,
@@ -196,7 +195,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          }
          var self = this._getTemplateComponent();
          self._updateIndicatorZIndex();
-         self._panelReadyDeferred.callback();
+         if (self.getRecord()){
+            self._actionNotify('onAfterFormLoad');
+         }
+         else{
+            self._panelReadyDeferred.callback();
+         }
       },
 
       _onBeforeCloseHandler: function(event, result){
@@ -629,7 +633,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        */
       setRecord: function(record, updateKey){
          var newKey;
-         this._options.record = this._panel._record = record;
+         this._options.record = record;
          if (updateKey){
             newKey = record.getId();
             this._options.key = newKey;
