@@ -231,7 +231,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             //2. если есть ключ (метод создать его вернул)
             //3. ничего не поменяли в рекорде, но закрывают либо поменяли, но нажали нет
             if (self._newRecord && record.getId() && (!self._saving && !record.isChanged() || result === false)){
-               self._destroyModel().addCallback(function(){
+               self._destroyModel().addBoth(function(){
                   self._closePanel(result);
                });
                event.setResult(false);
@@ -668,7 +668,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          var self = this,
              record = this._options.record;
          this._addHidePending();
-         return this._dataSource.destroy(record.getId()).addCallback(function(){
+         return this._dataSource.destroy(record.getId()).addBoth(function(){
             self._removeHidePending();
             self._notify('onDestroyModel', record);
             record.setState(Record.RecordState.DELETED);
