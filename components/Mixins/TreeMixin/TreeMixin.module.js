@@ -116,20 +116,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          expandAllItems(projection, cfg);
          projection.setEventRaising(true);
 
-         if (cfg.searchRender) {
-            records = searchProcessing(projection, cfg);
-         }
-         else {
-            projection.each(function(item, index, group) {
-               if (cfg.groupBy && cfg.easyGroup) {
-                  if (prevGroupId != group) {
-                     cfg._groupItemProcessing(group, records, item, cfg);
-                     prevGroupId = group;
-                  }
-               }
-               records.push(item);
-            });
-         }
+
       }
       else {
          /**
@@ -139,21 +126,24 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
           * https://inside.tensor.ru/opendoc.html?guid=6f1758f0-f45d-496b-a8fe-fde7390c92c7
           * @private
           */
-         var items = [];
          projectionFilter = resetFilterAndStopEventRaising.call(this, projection, false);
          applyExpandToItemsProjection.call(this, projection, cfg);
          restoreFilterAndRunEventRaising.call(this, projection, projectionFilter, false);
+      }
+
+      if (cfg.searchRender) {
+         records = searchProcessing(projection, cfg);
+      }
+      else {
          projection.each(function(item, index, group) {
             if (cfg.groupBy && cfg.easyGroup) {
                if (prevGroupId != group) {
-                  cfg._groupItemProcessing(group, items, item, cfg);
+                  cfg._groupItemProcessing(group, records, item, cfg);
                   prevGroupId = group;
                }
             }
-            items.push(item);
+            records.push(item);
          });
-         return items;
-
       }
       return records;
    },
