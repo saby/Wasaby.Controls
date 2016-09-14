@@ -51,6 +51,7 @@
                eventType = 'swipeVertical';
             }
             if (eventType) {
+               //Нужно тригерить событие только если определен его тип - eventType
                $.event.trigger($.Event(eventType, {
                   target: target,
                   swipestart: start,
