@@ -290,6 +290,7 @@ define('js!SBIS3.CONTROLS.ListView',
                _buildTplArgsLV: buildTplArgsLV,
                _defaultItemTemplate: ItemTemplate,
                _defaultItemContentTemplate: ItemContentTemplate,
+               _groupTemplate: GroupTemplate,
                /**
                 * @faq Почему нет чекбоксов в режиме множественного выбора значений (активация режима
                 производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
@@ -690,7 +691,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (typeof this._options.pageSize === 'string') {
                this._options.pageSize = this._options.pageSize * 1;
             }
-            if (this._isSlowDrawing()) {
+            if (this._isSlowDrawing(this._options.easyGroup)) {
                this.setGroupBy(this._options.groupBy, false);
             }
             ListView.superclass.init.call(this);

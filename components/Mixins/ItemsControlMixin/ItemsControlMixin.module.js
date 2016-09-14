@@ -43,10 +43,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       return projection;
    },
 
-   _oldGroupByDefaultMethod = function (record, at, last, item, CFG) {
-      var curField = record.get(CFG.groupBy.field),
-         result = curField !== CFG._previousGroupBy;
-      CFG._previousGroupBy = curField;
+   _oldGroupByDefaultMethod = function (record, at, last, item) {
+      var curField = record.get(this._options.groupBy.field),
+         result = curField !== this._previousGroupBy;
+      this._previousGroupBy = curField;
       return result;
    },
 
@@ -65,25 +65,25 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       return !Object.isEmpty(cfg.groupBy) && (!itemParent || itemParent.isRoot());
    },
 
-   groupItemProcessing = function(records, item, cfg) {
+   groupItemProcessing = function(groupId, records, item, cfg) {
       if (cfg._canApplyGrouping(item, cfg)) {
          var groupBy = cfg.groupBy;
-         var resultGroup = groupBy.method.apply(this, [item.getContents(), undefined, undefined, item, cfg]);
-         var drawGroup = typeof resultGroup === 'boolean' ? resultGroup : (resultGroup instanceof Object && resultGroup.hasOwnProperty('drawGroup') ? !!resultGroup.drawGroup : false);
-         var drawItem = resultGroup instanceof Object && resultGroup.hasOwnProperty('drawItem') ? !!resultGroup.drawItem : true;
 
-         if (drawGroup){
+         if (cfg._groupTemplate) {
             var
                tplOptions = {
                   columns : $ws.core.clone(cfg.columns || []),
                   multiselect : cfg.multiselect,
-                  hierField: cfg.hierField + '@'
+                  hierField: cfg.hierField + '@',
+                  item: item.getContents(),
+                  groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.template),
+                  groupId: groupId
                },
-               itemInstance, groupTemplateFnc;
-            tplOptions.item = item.getContents();
+               groupTemplateFnc;
             tplOptions.colspan = tplOptions.columns.length + cfg.multiselect;
 
-            groupTemplateFnc = TemplateUtil.prepareTemplate(groupBy.template);
+
+            groupTemplateFnc = TemplateUtil.prepareTemplate(cfg._groupTemplate);
 
             records.push({
                tpl: groupTemplateFnc,
@@ -97,10 +97,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       var
          records = [];
       if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
-         cfg._previousGroupBy = undefined;
-         projection.each(function (item) {
+         var prevGroupId = undefined;
+         projection.each(function (item, index, group) {
             if (cfg.groupBy && cfg.easyGroup) {
-               cfg._groupItemProcessing(records, item, cfg);
+               if (prevGroupId != group) {
+                  cfg._groupItemProcessing(group, records, item,  cfg);
+                  prevGroupId = group;
+               }
             }
             records.push(item);
          });
@@ -262,10 +265,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _getRecordsForRedrawSt: getRecordsForRedraw,
             _getRecordsForRedraw: getRecordsForRedraw,
             _applyGroupingToProjection: applyGroupingToProjection,
-            /*TODO ременные переменные для группировки*/
+
             _groupItemProcessing: groupItemProcessing,
+            /*TODO ременные переменные для группировки*/
             _canApplyGrouping: canApplyGrouping,
-            _previousGroupBy: undefined,
+
             /**
              * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
              * @remark
@@ -550,7 +554,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @see WS.Data/Display/Collection#setSort
              */
             itemsSortMethod: undefined,
-            easyGroup: true
+            easyGroup: false
          },
          _loader: null
 
@@ -585,10 +589,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   parsedCfg._itemsProjection = proj;
                }
 
-               if (cfg._canServerRender && !cfg.userItemAttributes && !cfg.itemTemplate && Object.isEmpty(cfg.groupBy)) {
-                  newCfg._serverRender = true;
-                  newCfg._itemData = cfg._buildTplArgs(cfg);
-                  newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection, cfg);
+               if (cfg._canServerRender && !cfg.userItemAttributes && !cfg.itemTemplate) {
+                  if (Object.isEmpty(cfg.groupBy) || (cfg.easyGroup)) {
+                     newCfg._serverRender = true;
+                     newCfg._itemData = cfg._buildTplArgs(cfg);
+                     newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection, cfg);
+                  }
                }
             }
 

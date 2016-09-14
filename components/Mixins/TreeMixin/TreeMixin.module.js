@@ -109,9 +109,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
    getRecordsForRedraw = function(projection, cfg) {
       var
          records = [],
-         projectionFilter;
+         projectionFilter,
+         prevGroupId = undefined;
       if (cfg.expand || cfg.searchRender) {
-         cfg._previousGroupBy = undefined;
          projection.setEventRaising(false);
          expandAllItems(projection, cfg);
          projection.setEventRaising(true);
@@ -120,9 +120,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             records = searchProcessing(projection, cfg);
          }
          else {
-            projection.each(function(item) {
+            projection.each(function(item, index, group) {
                if (cfg.groupBy && cfg.easyGroup) {
-                  cfg._groupItemProcessing(records, item, cfg);
+                  if (prevGroupId != group) {
+                     cfg._groupItemProcessing(group, records, item, cfg);
+                     prevGroupId = group;
+                  }
                }
                records.push(item);
             });
@@ -140,10 +143,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          projectionFilter = resetFilterAndStopEventRaising.call(this, projection, false);
          applyExpandToItemsProjection.call(this, projection, cfg);
          restoreFilterAndRunEventRaising.call(this, projection, projectionFilter, false);
-         cfg._previousGroupBy = undefined;
-         projection.each(function(item) {
+         projection.each(function(item, index, group) {
             if (cfg.groupBy && cfg.easyGroup) {
-               cfg._groupItemProcessing(items, item, cfg);
+               if (prevGroupId != group) {
+                  cfg._groupItemProcessing(group, items, item, cfg);
+                  prevGroupId = group;
+               }
             }
             items.push(item);
          });
