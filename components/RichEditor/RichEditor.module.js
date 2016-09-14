@@ -225,7 +225,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
             _instances: {},
             _toolbarContainer: undefined,
             _toggleToolbarButton: undefined,
-            _needPasteImage: false,
             _buttonsState: undefined,
             _clipboardText: undefined,
             _mouseIsPressed: false //Флаг того что мышь была зажата в редакторе
@@ -1171,20 +1170,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
                });
             }.bind(this));
 
-            //БИНДЫ НА ВСТАВКУ КОНТЕНТА И ДРОП
-            editor.on('onBeforePaste', function(e) {
-               var image;
-               if (e.content.indexOf('<img') === 0) {
-                  image = $('<div>' + e.content + '</div>').find('img:first');
-                  if (image.length && !!image.attr('src').indexOf('data:image') && (!image.attr('class') || !!image.attr('class').indexOf('ws-fre__smile'))) {
-                     self._needPasteImage = image.get(0).outerHTML;
-                     return false;
-                  }
-               } else {
-                  self._needPasteImage = false;
-               }
-            });
-
             editor.on('Paste', function(e) {
                self._clipboardText = e.clipboardData ?
                   $ws._const.browser.isMobileIOS ? e.clipboardData.getData('text/plain') : e.clipboardData.getData('text') :
@@ -1211,10 +1196,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   if (self._options.editorConfig.paste_as_text) {
                      //если данные не из БТР и не из word`a, то вставляем как текст
                      //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
-                     if (self._needPasteImage) {
-                        self.insertHtml(self._needPasteImage);
-                        e.content = '';
-                     } else if (self._clipboardText !== false) {
+                     if (self._clipboardText !== false) {
                         //взял строку из метода pasteText, благодаря ей вставка сохраняет спецсимволы
                         e.content = $ws.helpers.escapeHtml(editor.dom.encode(self._clipboardText).replace(/\r\n/g, '\n'));
                      }
@@ -1262,8 +1244,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             }.bind(this));
 
             editor.on('drop', function() {
-               //при дропе тоже заходит в BeforePastePreProcess надо обнулять  _needPasteImage и  _clipboardTex
-               self._needPasteImage = false;
+               //при дропе тоже заходит в BeforePastePreProcess надо обнулять _clipboardTex
                self._clipboardText = false;
             });
 
@@ -1823,7 +1804,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             if (this.isVisible()) {
                if (this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this._textChanged && (this._inputControl[0] === document.activeElement)) {
                   closestParagraph = $(this._tinyEditor.selection.getNode()).closest('p')[0];
-                  if (closestParagraph) {
+                  if (closestParagraph && $ws._const.browser.isMobileIOS) {
                      this._scrollToPrev(closestParagraph);//необходимо передавать абзац
                   }
 
@@ -1835,26 +1816,35 @@ define('js!SBIS3.CONTROLS.RichEditor',
                }
             }
          },
-         _scrollTo: function(target, side){
+
+         _elementIsUnderKeyboard: function(target, side){
             var
                targetOffset = target.getBoundingClientRect(),
                keyboardCoef = (window.innerHeight > window.innerWidth) ? constants.ipadCoefficient[side].vertical : constants.ipadCoefficient[side].horizontal; //Для альбома и портрета коэффициенты разные.
+            return $ws._const.browser.isMobileIOS && this.isEnabled() && targetOffset[side] > window.innerHeight * keyboardCoef;
+         },
 
-            if ( $ws._const.browser.isMobileIOS && this.isEnabled() && targetOffset[side] > window.innerHeight * keyboardCoef) { //
+         _scrollTo: function(target, side){
+            if (this._elementIsUnderKeyboard(target, side)) {
                target.scrollIntoView(true);
             }
          },
+
          _scrollToPrev: function(target){
-            if (target.previousSibling) {
-               this._scrollTo(target.previousSibling, 'bottom');
+            //Необходимо осуществлять подскролл к предыдущему узлу если текущий под клавиатурой
+            if (target.previousSibling && this._elementIsUnderKeyboard(target, 'bottom')) {
+               target.previousSibling.scrollIntoView(true);
             }
+            //Если после подскрола к предыдущему узлу текущий узел всё еще под клавиатурой, то осуществляется подскролл к текущему
             this._scrollTo(target, 'bottom');
          },
+
          _updateDataReview: function(value) {
             if (this._dataReview) {
                this._dataReview.html(this._prepareReviewContent(value));
             }
          },
+
          _prepareReviewContent: function(value, it) {
             if (value && value[0] !== '<') {
                value = '<p>' + value.replace(/\n/gi, '<br/>') + '</p>';

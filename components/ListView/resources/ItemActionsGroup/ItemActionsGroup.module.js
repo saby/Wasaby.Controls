@@ -204,7 +204,9 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
          hasVisibleActions: function() {
             return $ws.helpers.find(this.getItemsInstances(), function(instance) {
-               return instance.isVisible();
+               /* Вызвать этот метод могут раньше, чем скроются выключенные операции,
+                  и он вернёт неверный результат, поэтому проверяем и на isEnabled */
+               return instance.isVisible() && instance.isEnabled();
             });
          },
          /**
@@ -242,6 +244,9 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._itemActionsButtons ={};
             this._itemActionsMenu && this._itemActionsMenu.setItems(items);
             ItemActionsGroup.superclass.setItems.apply(this, arguments);
+            if(this.isVisible()) {
+               this.applyItemActions();
+            }
          },
          /**
           * Возвращает признак того, открыто ли сейчас меню операций над записью
