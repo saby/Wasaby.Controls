@@ -2,9 +2,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
       'html!SBIS3.CONTROLS.ScrollContainer',
-      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar.min',
+      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar',
       'is!browser?css!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar.min',
-      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mousewheel-3.0.6.min'
+      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mousewheel-3.0.6'
    ],
    function(CompoundControl, dotTplFn) {
 
@@ -124,7 +124,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
           * @returns {boolean|*}
           */
          hasScroll: function() {
+            var
+               scroll = this._scroll,
+               heightContainer = this._container.height(),
+               heightChildContainer = this._container.children().height();
             this.updateScroll();
+            if (!scroll) {
+               this._hasScroll = heightChildContainer > heightContainer;
+            }
             return this._hasScroll;
          },
 
