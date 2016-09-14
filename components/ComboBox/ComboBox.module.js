@@ -599,8 +599,17 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _initializePicker: function(){
-         ComboBox.superclass._initializePicker.call(this);
-         this._setWidth();
+         var self = this;
+         ComboBox.superclass._initializePicker.call(self);
+
+         // пробрасываем события пикера в метод комбобокса, т.к. если значение выбрано, то при открытии пикера фокус
+         // перейдет на него и комбобокс перестанет реагировать на нажатие клавиш, потому что он наследуется от AreaAbstract
+         // TODO чтобы избежать этого нужно переписать Combobox на ItemsControlMixin, тогда метод _scrollToItem не будет переводить фокус на пикер
+         self._picker.subscribe('onKeyPressed', function (eventObject, event) {
+            self._keyboardHover(event);
+         });
+
+         self._setWidth();
       },
 
       _setWidth: function(){

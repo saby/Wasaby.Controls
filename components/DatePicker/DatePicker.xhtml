@@ -7,9 +7,9 @@
         </component>
     </div>
 
-    <component data-component="SBIS3.CONTROLS.DateBox" class="controls-DatePicker__dateBox">
-        <option name="name">dateBox</option>
-        <option name="mask">{{=it.mask}}</option>
-        <option name="notificationMode">{{=it.notificationMode}}</option>
-    </component>
+    <div class="controls-DateBox controls-FormattedTextBox controls-DatePicker__dateBox">
+        <div class="controls-DateBox__fieldWrapper controls-FormattedTextBox__fieldWrapper">
+            <div contenteditable="{{=it.enabled}}"  class="controls-FormattedTextBox__field js-controls-FormattedTextBox__field">{{=it.maskTemplateFn(it.modelForMaskTpl)}}</div>
+        </div>
+    </div>
 </div>

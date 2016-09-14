@@ -15,6 +15,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          eventsChannel.notify('onDocumentClick', e);
       });
 
+      $(window).blur(function(e) {
+         if(document.activeElement.tagName == "IFRAME"){
+            eventsChannel.notify('onDocumentClick', e);
+         }
+      });
+
       $(document).bind('mouseover', function (e) {
          eventsChannel.notify('onDocumentMouseOver', e);
       });
