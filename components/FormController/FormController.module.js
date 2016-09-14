@@ -83,6 +83,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          _previousDocumentTitle: undefined,
          _dataSource: null,
          _isConfirmDialogShowed: false,
+         _hidePending: undefined,
          _panelReadyDeferred: undefined,
          _options: {
             /**
@@ -666,7 +667,9 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       _destroyModel: function(){
          var self = this,
              record = this._options.record;
+         this._addHidePending();
          return this._dataSource.destroy(record.getId()).addCallback(function(){
+            self._removeHidePending();
             self._notify('onDestroyModel', record);
             record.setState(Record.RecordState.DELETED);
             self._newRecord = false;
@@ -712,6 +715,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          if (!config.hideIndicator){
             this._showLoadingIndicator(rk('Загрузка'));
          }
+         this._addHidePending();
          def = this._dataSource.create(this._options.initValues).addCallback(function(record){
             self._notify('onCreateModel', record);
             self.setRecord(record, true);
@@ -722,11 +726,22 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             if (!config.hideErrorDialog && (r instanceof Error)){
                self._processError(r);
             }
+            self._removeHidePending();
             self._hideLoadingIndicator();
             self._activateChildControlAfterLoad();
             return r;
          });
          return def;
+      },
+      _addHidePending: function(){
+         this._removeHidePending();
+         this._hidePending = new $ws.proto.Deferred();
+         this._panel.addPendingOperation(this._hidePending);
+      },
+      _removeHidePending: function(){
+         if (this._hidePending && !this._hidePending.isReady()){
+            this._hidePending.callback();
+         }
       },
       /**
        * Инициировать событие без выполнения базовой логики диалога редактирования.
