@@ -147,7 +147,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             _tinyIsInit: false,//TODO: избьавиться от этого флага через  _tinyReady
             _enabled: undefined, //TODO: подумать как избавиться от этого
             _typeInProcess: false,
-            _needPasteImage: false,
             _clipboardText: undefined,
             _mouseIsPressed: false //Флаг того что мышь была зажата в редакторе
          },
@@ -537,15 +536,22 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @private
           */
          setFontStyle: function(style) {
-            if (style !== 'mainText') {
-               this._applyFormat(style, true);
+            //TinyMCE использует для определения положения каретки <br data-mce-bogus="1">.
+            //При смене формата содаётся новый <span class='classFormat'>.
+            //В FF в некторых случаях символ каретки не удаляется из предыдущего <span> блока при смене формата
+            //из за-чего происход разрыв строки.
+            if ($ws._const.browser.firefox &&  $(this._tinyEditor.selection.getNode()).find('br').attr('data-mce-bogus') == '1') {
+               $(this._tinyEditor.selection.getNode()).find('br').remove();
             }
             for (var stl in constants.styles) {
                if (style !== stl) {
                   this._removeFormat(stl);
                }
             }
-            this._tinyEditor.focus();
+            if (style !== 'mainText') {
+               this._applyFormat(style, true);
+            }
+            this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._setTrimmedText(this._getTinyEditorValue());
          },
@@ -964,19 +970,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }.bind(this));
 
             //БИНДЫ НА ВСТАВКУ КОНТЕНТА И ДРОП
-            editor.on('onBeforePaste', function(e) {
-               var image;
-               if (e.content.indexOf('<img') === 0) {
-                  image = $('<div>' + e.content + '</div>').find('img:first');
-                  if (image.length && !!image.attr('src').indexOf('data:image') && (!image.attr('class') || !!image.attr('class').indexOf('ws-fre__smile'))) {
-                     self._needPasteImage = image.get(0).outerHTML;
-                     return false;
-                  }
-               } else {
-                  self._needPasteImage = false;
-               }
-            });
-
             editor.on('Paste', function(e) {
                self._clipboardText = e.clipboardData ?
                   $ws._const.browser.isMobileIOS ? e.clipboardData.getData('text/plain') : e.clipboardData.getData('text') :
@@ -1003,10 +996,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   if (self._options.editorConfig.paste_as_text) {
                      //если данные не из БТР и не из word`a, то вставляем как текст
                      //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
-                     if (self._needPasteImage) {
-                        self.insertHtml(self._needPasteImage);
-                        e.content = '';
-                     } else if (self._clipboardText !== false) {
+                     if (self._clipboardText !== false) {
                         //взял строку из метода pasteText, благодаря ей вставка сохраняет спецсимволы
                         e.content = $ws.helpers.escapeHtml(editor.dom.encode(self._clipboardText).replace(/\r\n/g, '\n'));
                      }
@@ -1054,10 +1044,17 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }.bind(this));
 
             editor.on('drop', function() {
-               //при дропе тоже заходит в BeforePastePreProcess надо обнулять  _needPasteImage и  _clipboardTex
-               self._needPasteImage = false;
+               //при дропе тоже заходит в BeforePastePreProcess надо обнулять _clipboardTex
                self._clipboardText = false;
             });
+
+            editor.on('dragstart', function(event) {
+               //Youtube iframe не отдаёт mouseup => окошко с видеороликом таскается за курсором
+               //запрещаем D&D iframe элементов
+               if (event.target && $(event.target).hasClass('mce-object-iframe')) {
+                  event.preventDefault();
+               }
+             });
 
             //БИНДЫ НА СОБЫТИЯ КЛАВИАТУРЫ (ВВОД)
             if ($ws._const.browser.isMobileIOS || $ws._const.browser.isMobileAndroid) {

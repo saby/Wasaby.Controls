@@ -192,19 +192,10 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._beginTrackHeight();
                this._editing = true;
                this.getTarget().addClass('controls-editInPlace__editing');
-               if (!withoutActivateFirstControl && !this._hasActiveChildControl()) {
+               if (!withoutActivateFirstControl && !this.hasActiveChildControl()) {
                   this.activateFirstControl();
                }
                this._notify('onBeginEdit');
-            },
-            //TODO: метод hasActiveChildControl у AreaAbstract возвращает true, даже если активных дочерних контролов нет.
-            //Так что сами посмотрим на контрол, который AreaAbstract считает активным, и проверим isActive.
-            //Выписал задачу, на то, чтобы разобраться с данной ситуацией.
-            //https://inside.tensor.ru/opendoc.html?guid=e9a6150e-e310-47b2-80e7-b932d67ffc8e&description=
-            //Ошибка в разработку 06.09.2016 Метод hasActiveChildControl у AreaAbstract возвращает true, даже если активных контролов нет. При...
-            _hasActiveChildControl: function() {
-               var activeChildControl = this.getActiveChildControl();
-               return activeChildControl && activeChildControl.isActive();
             },
             isEdit: function() {
                return this._editing;
@@ -250,7 +241,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                return this._options.itemsContainer.find('.js-controls-ListView__item[data-id="' + (id === undefined ? '' : id) + '"]:not(".controls-editInPlace")');
             },
             _deactivateActiveChildControl: function() {
-               var activeChild = this.getActiveChildControl();
+               var activeChild = this.getActiveChildControl(undefined, true);
                activeChild && activeChild.setActive(false);
             },
             focusCatch: function(event) {

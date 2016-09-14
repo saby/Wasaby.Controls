@@ -228,8 +228,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
     * @mixin SBIS3.CONTROLS.TreeMixin
     * @public
     * @author Крайнов Дмитрий Олегович
-    *
-    * @ignoreMethods reload
     */
    var TreeMixin = /** @lends SBIS3.CONTROLS.TreeMixin.prototype */{
 
@@ -241,7 +239,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        * @param {String|Array.<Object.<String,Boolean>>} sorting Параметры сортировки.
        * @param {Number} offset Смещение первого элемента выборки.
        * @param {Number} limit Максимальное количество элементов выборки.
-       * @param {Boolean} deepReload Признак глубокой перезагрузки: в значении true устанавливает поведение, при котором папки открыте до перезагрузки данных останутся также открытыми и после перезагрузки.
+       * @param {Boolean} deepReload Признак глубокой перезагрузки: в значении true устанавливает поведение, при котором папки открытые до перезагрузки данных останутся также открытыми и после перезагрузки.
        * @example
        * <pre>
        *    myDataGridView.reload(
@@ -733,8 +731,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       _folderLoad: function(id) {
          var
             self = this,
-            filter = id ? this._createTreeFilter(id) : this.getFilter();
-         this._notify('onBeforeDataLoad', filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit);
+            filter;
+         this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit);
+         filter = id ? this._createTreeFilter(id) : this.getFilter();
          this._loader = this._callQuery(filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!

@@ -180,9 +180,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyDataGridView
     *
-    * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
-    * @cssModifier controls-DataGridView__markerRight Маркер отображается не слева строки, а справа.
-    * @cssModifier controls-DataGridView__hasSeparator Включает линии разделители между строками
+    * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
+    * @cssModifier controls-DataGridView__markerRight Устанавливает отображение маркера активной строки справа от записи. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
+    * @cssModifier controls-DataGridView__hasSeparator Устанавливает отображение линий-разделителей между строками.
+    * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
+    * @cssModifier controls-DataGridView__overflow-ellipsis Устанавливает обрезание троеточием текста во всех колонках таблицы.
+    *
     * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
     *
     * @control
@@ -201,12 +204,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
     *       </options>
     *    </options>
     * </component>
-    * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
-    * @cssModifier controls-DataGridView__markerRight Маркер отображается не слева строки, а справа.
-    * @cssModifier controls-DataGridView__hasSeparator Включает отображение линий-разделителей между строками.
-    * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
-    * @cssModifier controls-DataGridView__overflow-ellipsis Включить обрезание троеточием текста во ВСЕХ колонках таблицы
-    * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
     */
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
       _dotTplFn : dotTplFn,
@@ -1086,9 +1083,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             value = resultsRecord.get(col.field);
             if (value == undefined){
                value = index == 0 ? self._options.resultsText : '';
-            }
-            else{
-               value = $ws.render.defaultColumn.integer(value);
             }
             return self._getColumnResultTemplate(col, index, value, resultsRecord);
          });
