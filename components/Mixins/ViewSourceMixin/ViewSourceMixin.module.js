@@ -85,11 +85,6 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
                }
 
                recordSet = dataSet.getAll();
-               recordSet.setMetaData({
-                  results: dataSet.getProperty('r'),
-                  more: dataSet.getTotal(),
-                  path: dataSet.getProperty('p')
-               });
 
                if (!view.isDestroyed()) { //Пока выполнялся запрос - view уже мог успеть уничтожиться. В таком случае не трогаем view
                   view._toggleIndicator(false);

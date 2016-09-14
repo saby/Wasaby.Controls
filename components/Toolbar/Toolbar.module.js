@@ -142,12 +142,13 @@ define('js!SBIS3.CONTROLS.Toolbar', [
       },
 
       //обработчик для кнопок в тулбаре
-      _itemActivatedHandler: function(id, event) {
-         var items = this.getItems();
+      _itemActivatedHandler: function(hash, event) {
+         var projItem = this._getItemsProjection().getByHash(hash),
+             item = projItem.getContents();
          //Нотифицируем о нажатие на кнопку, только если она лежит в toolbar(не в меню), т.к. за нотификацию
          //элементов меню отвечает обработчик _onMenuItemActivate.
-         if (items.getRecordById(id).get('showType') !== 0) {
-            this._notifyItemActivate(id, 'toolbar');
+         if (item.get('showType') !== 0) {
+            this._notifyItemActivate(item.getId(), 'toolbar');
          }
       },
 

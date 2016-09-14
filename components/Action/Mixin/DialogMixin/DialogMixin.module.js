@@ -167,8 +167,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          return floatAreaCfg;
       },
 
-      _buildComponentConfig: function() {
-         return {};
+      _buildComponentConfig: function(meta) {
+         return meta && meta.componentOptions ? meta.componentOptions : {};
       },
 
       setDialogComponent: function(val) {

@@ -367,12 +367,6 @@ define(
             if (!DateUtil.isValidDate(this._options.date)) {
                this._options.date = null;
             }
-            if (oldDate !== this._options.date && this._options.notificationMode === 'change') {
-               this._notifyOnDateChanged();
-            }
-            if (this._options.notificationMode === 'change') {
-               this._notifyOnTextChange();
-            }
             this._onTextChanged();
          }
       },
@@ -397,10 +391,8 @@ define(
                   this.setDate(date);
                }
             }
-            if (this._options.notificationMode === 'complete') {
-               this._notifyOnDateChanged();
-               this._notifyOnTextChange();
-            }
+            this._notifyOnDateChanged();
+            this._notifyOnTextChange();
          }
          DateBox.superclass.setActive.apply(this, arguments);
       },

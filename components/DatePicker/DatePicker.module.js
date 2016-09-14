@@ -89,14 +89,6 @@ define(
              * @deprecated
              */
             isCalendarIconShown: true,
-            /**
-             * @cfg {String} Режим уведомления о смене даты.
-             * @variant 'complete' событие onDateChange стреляет только при окончании работы с полем даты(уход фокуса, выбор даты из календаря или нажатие клавиши insert).
-             * @variant 'change' событие onDateChange стреляет при каждом изменении значения даты.
-             * @noShow
-             * @deprecated
-             */
-            notificationMode: 'change',
 
             pickerConfig: {
                corner: 'tl',
