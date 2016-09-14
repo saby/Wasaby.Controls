@@ -50,13 +50,14 @@
                direction = start.coords[1] > stop.coords[1] ? 'top' : 'bottom';
                eventType = 'swipeVertical';
             }
-
-            $.event.trigger($.Event(eventType, {
-               target: target,
-               swipestart: start,
-               swipestop: stop,
-               direction: direction
-            }), undefined, self);
+            if (eventType) {
+               $.event.trigger($.Event(eventType, {
+                  target: target,
+                  swipestart: start,
+                  swipestop: stop,
+                  direction: direction
+               }), undefined, self);
+            }
             return true;
          }
          return false;
