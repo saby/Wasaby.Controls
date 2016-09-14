@@ -536,15 +536,22 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @private
           */
          setFontStyle: function(style) {
-            if (style !== 'mainText') {
-               this._applyFormat(style, true);
+            //TinyMCE использует для определения положения каретки <br data-mce-bogus="1">.
+            //При смене формата содаётся новый <span class='classFormat'>.
+            //В FF в некторых случаях символ каретки не удаляется из предыдущего <span> блока при смене формата
+            //из за-чего происход разрыв строки.
+            if ($ws._const.browser.firefox &&  $(this._tinyEditor.selection.getNode()).find('br').attr('data-mce-bogus') == '1') {
+               $(this._tinyEditor.selection.getNode()).find('br').remove();
             }
             for (var stl in constants.styles) {
                if (style !== stl) {
                   this._removeFormat(stl);
                }
             }
-            this._tinyEditor.focus();
+            if (style !== 'mainText') {
+               this._applyFormat(style, true);
+            }
+            this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._setTrimmedText(this._getTinyEditorValue());
          },
@@ -1041,6 +1048,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                self._clipboardText = false;
             });
 
+            editor.on('dragstart', function(event) {
+               //Youtube iframe не отдаёт mouseup => окошко с видеороликом таскается за курсором
+               //запрещаем D&D iframe элементов
+               if (event.target && $(event.target).hasClass('mce-object-iframe')) {
+                  event.preventDefault();
+               }
+             });
+
             //БИНДЫ НА СОБЫТИЯ КЛАВИАТУРЫ (ВВОД)
             if ($ws._const.browser.isMobileIOS || $ws._const.browser.isMobileAndroid) {
                //TODO: https://github.com/tinymce/tinymce/issues/2533
@@ -1431,7 +1446,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (this.isVisible()) {
                if (this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this._textChanged && (this._inputControl[0] === document.activeElement)) {
                   closestParagraph = $(this._tinyEditor.selection.getNode()).closest('p')[0];
-                  if (closestParagraph) {
+                  if (closestParagraph  && $ws._const.browser.isMobileIOS) {
                      this._scrollToPrev(closestParagraph);//необходимо передавать абзац
                   }
                }
@@ -1443,21 +1458,27 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
          },
 
-         _scrollTo: function(target, side){
-            var
-               targetOffset = target.getBoundingClientRect(),
-               keyboardCoef = (window.innerHeight > window.innerWidth) ? constants.ipadCoefficient[side].vertical : constants.ipadCoefficient[side].horizontal; //Для альбома и портрета коэффициенты разные.
+            _elementIsUnderKeyboard: function(target, side){
+               var
+                  targetOffset = target.getBoundingClientRect(),
+                  keyboardCoef = (window.innerHeight > window.innerWidth) ? constants.ipadCoefficient[side].vertical : constants.ipadCoefficient[side].horizontal; //Для альбома и портрета коэффициенты разные.
+               return $ws._const.browser.isMobileIOS && this.isEnabled() && targetOffset[side] > window.innerHeight * keyboardCoef;
+            },
 
-            if ( $ws._const.browser.isMobileIOS && this.isEnabled() && targetOffset[side] > window.innerHeight * keyboardCoef) { //
-               target.scrollIntoView(true);
-            }
-         },
-         _scrollToPrev: function(target){
-            if (target.previousSibling) {
-               this._scrollTo(target.previousSibling, 'bottom');
-            }
-            this._scrollTo(target, 'bottom');
-         },
+            _scrollTo: function(target, side){
+               if (this._elementIsUnderKeyboard(target, side)) {
+                  target.scrollIntoView(true);
+               }
+            },
+
+            _scrollToPrev: function(target){
+               //Необходимо осуществлять подскролл к предыдущему узлу если текущий под клавиатурой
+               if (target.previousSibling && this._elementIsUnderKeyboard(target, 'bottom')) {
+                  target.previousSibling.scrollIntoView(true);
+               }
+               //Если после подскрола к предыдущему узлу текущий узел всё еще под клавиатурой, то осуществляется подскролл к текущему
+               this._scrollTo(target, 'bottom');
+            },
 
          _updateDataReview: function(value) {
             if (this._dataReview) {
