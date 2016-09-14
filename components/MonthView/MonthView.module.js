@@ -123,15 +123,19 @@ define(
             if (this.isEnabled()) {
                itemsContainers.click(
                   'click', this._onDayMouseClick.bind(this)
-               )
+               );
 
                itemsContainers.on('mouseenter', itemCssClass, function () {
                   self._onDayMouseEnter($(this));
-               }).on('mouseenter', ['.', this._MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
-                  self._onDayBorderMouseEnter($(this), self._getItemDate($(this)));
-               }).on('mouseleave', ['.', this._MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
-                  self._onDayBorderMouseLeave($(this), self._getItemDate($(this)), e);
-               }).on('mouseleave', self._onMouseLeave.bind(this));
+               });
+               //TODO:продумать как правильно выбирать неделю на Ipad
+               if (!$ws._const.browser.isMobileIOS) {
+                  itemsContainers.on('mouseenter', ['.', this._MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
+                     self._onDayBorderMouseEnter($(this), self._getItemDate($(this)));
+                  }).on('mouseleave', ['.', this._MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
+                     self._onDayBorderMouseLeave($(this), self._getItemDate($(this)), e);
+                  }).on('mouseleave', self._onMouseLeave.bind(this));
+               }
             }
          },
 
