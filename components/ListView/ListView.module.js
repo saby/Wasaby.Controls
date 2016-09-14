@@ -277,7 +277,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _itemsToolbar: null,
             _notEndEditClassName: 'controls-ListView__onFocusNotEndEdit',
             _emptyData: undefined,
-            _containerScrollHeight: undefined,
+            _containerScrollHeight : 0,
             // указывает на необходимость компенсации скрола при подгрузке данных вверх
             // необходим, так как компенсацию можно произвести только после отрисовки - в drawItemsCallback
             // безусловно это делать нельзя, так как drawItemsCallback срабатывает и при перерисовке одной записи
@@ -1341,7 +1341,6 @@ define('js!SBIS3.CONTROLS.ListView',
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             this._needScrollCompensation = this._options.infiniteScroll == 'up';
-            this._containerScrollHeight = undefined;
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
             return ListView.superclass.reload.apply(this, arguments);
@@ -2041,6 +2040,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._loader = null;
                //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
+
                this._updateScrolOffset(direction);
                //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                this.getItems().setMetaData(dataSet.getMetaData());
@@ -2088,7 +2088,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this.getItems().append(dataSet);
                ladder && ladder.setIgnoreEnabled(false);
             } else {
-               this._needScrollCompensation = true;
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight();
                var items = dataSet.toArray();
                this.getItems().prepend(items);
@@ -2145,7 +2144,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _moveTopScroll: function(){
-            var scrollAmount = this._containerScrollHeight ? this._scrollWatcher.getScrollHeight() - this._containerScrollHeight: 'bottom'
+            var scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
             //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
             //разницы величины скролла (т.е. на сколько добавилось высоты, на столько и опустили). Получается плавно
             this._scrollWatcher.scrollTo(scrollAmount);
