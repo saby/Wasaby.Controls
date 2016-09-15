@@ -233,9 +233,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
             };
          },
          setItems: function () {
-            DropdownList.superclass.setItems.apply(this, arguments);
-            /* После установки нового набора элементов, надо сбросить ранее выбранные */
+            /* Сброс выделения надо делать до установки итемов, т.к. вызов родительского setItems по стеку генерирует
+             * onDrawItems, подписвашись на которое люди устанавливают ключ, а сброс после родительского
+             * этот ключ затирает*/
             this.removeItemsSelectionAll();
+            DropdownList.superclass.setItems.apply(this, arguments)
          },
          setSelectedKeys : function(idArray){
             //Если у нас есть выбранные элементы, нцжно убрать DefaultId из набора
