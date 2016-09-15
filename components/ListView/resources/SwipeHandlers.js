@@ -58,8 +58,8 @@
                   swipestop: stop,
                   direction: direction
                }), undefined, self);
+               return true;
             }
-            return true;
          }
          return false;
       },
