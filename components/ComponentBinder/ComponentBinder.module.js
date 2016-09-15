@@ -321,7 +321,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
        *     myBinder.bindSearchGrid('СтрокаПоиска');
        * </pre>
        */
-      bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, searchMode) {
+      bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, searchMode, doNotRespondOnReset) {
          var self = this,
             view = this._options.view,
             isTree = this._isTreeView(view);
@@ -361,13 +361,15 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          }
 
          function subscribeOnSearchFormEvents() {
-            searchForm.subscribe('onReset', function (event, text) {
-               if (isTree) {
-                  resetGroup.call(self, searchParamName);
-               } else {
-                  resetSearch.call(self, searchParamName);
-               }
-            });
+            if(!doNotRespondOnReset) {
+               searchForm.subscribe('onReset', function (event, text) {
+                  if (isTree) {
+                     resetGroup.call(self, searchParamName);
+                  } else {
+                     resetSearch.call(self, searchParamName);
+                  }
+               });
+            }
 
             searchForm.subscribe('onSearch', function (event, text) {
                if (isTree) {
@@ -388,15 +390,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             });
          }
 
-         if(view._getItemsProjection()){
-            subscribeOnSearchFormEvents();
-         }else{
-            view.once('onItemsReady', function(){
-               subscribeOnSearchFormEvents();
-               searchForm.applySearch(false);
-            });
-
-         }
+         subscribeOnSearchFormEvents();
       },
       bindSearchComposite: function(searchParamName, searchCrumbsTpl, searchForm) {
          this.bindSearchGrid.apply(this, arguments);
