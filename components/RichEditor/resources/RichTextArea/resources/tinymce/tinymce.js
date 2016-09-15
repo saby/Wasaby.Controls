@@ -49936,7 +49936,15 @@ tinymce.PluginManager.add('lists', function(editor) {
          editor.undoManager.extra(function () {
             pasteHtml(editor, url);
          }, function () {
-            editor.execCommand('mceInsertLink', false, url);
+            var
+               linkAttr = {
+                  target: '_blank',
+                  rel: null,
+                  'class': null,
+                  title: null,
+                  href: url
+               }
+            editor.execCommand('mceInsertLink', false, linkAttr);
          });
 
          return true;
