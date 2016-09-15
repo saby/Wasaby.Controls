@@ -13,8 +13,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'js!WS.Data/Utils',
    'js!WS.Data/Entity/Model',
    'Core/ParserUtilities',
-   'Core/Sanitize'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize) {
+   'Core/Sanitize',
+   'js!SBIS3.CORE.LayoutManager'
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize, LayoutManager) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -1760,28 +1761,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          //Если offset отрицательный, значит запрашивали последнюю страницу
          return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
       },
-      _scrollTo: function scrollTo(target, container) {
-         var scrollContainer = container || this._getScrollContainer(),
-             scrollContainerOffset = scrollContainer.offset() || {top: 0, left: 0},
-             channel = $ws.single.EventBus.globalChannel(),
-         //FIXME решение для 3.7.3.200, чтобы правильно работал скролл при scrollIntoView
-             /* Оповестим аккордион, о том что контент проскролен, иначе он не заметит и не сместит свой скролл */
-             scrollNotify = channel.notify.bind(channel, 'ContentScrolling', null),
-             targetOffset;
-
+      _scrollTo: function scrollTo(target) {
          if (typeof target === 'string') {
             target = $(target);
          }
 
-         targetOffset = target.offset();
-
-         if( (targetOffset.top - scrollContainerOffset.top) < 0) {
-            target[0].scrollIntoView(true);
-            scrollNotify();
-         } else if ( (targetOffset.top + target.height() - scrollContainerOffset.top) > scrollContainer.outerHeight()) {
-            target[0].scrollIntoView(false);
-            scrollNotify();
-         }
+         LayoutManager.scrollToElement(target);
       },
       _scrollToItem: function(itemId) {
          var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
