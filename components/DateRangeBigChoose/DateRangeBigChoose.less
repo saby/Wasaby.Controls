@@ -491,24 +491,26 @@ body:not(.ws-is-mobile-platform) {
    .controls-DateRangeBigChoose {
       .controls-DateRangeBigChoose__months {
 
-         .controls-DateRangeBigChoose__months-range-btn-wrapper:not(.controls-RangeSelectable__item-selected) {
-            &:hover {
-               background-color: @date-range-big-choose-bg-hovered-color;
-               > button {
-                  border-top: none;
-               }
-               + .controls-DateRangeBigChoose__months-range-btn-wrapper > button {
-                  border-top: none;
-               }
-               + .controls-DateRangeBigChoose__months-range-btn-wrapper {
-                  border-top: 1px solid @date-range-big-choose-border-color;
-               }
-            }
-            + .controls-DateRangeBigChoose__months-range-btn-wrapper:hover {
-               border-top: 1px solid @date-range-big-choose-border-color;
-            }
+         .controls-DateRangeBigChoose__months-range-btn-wrapper {
             > button:hover {
                font-weight: bold;
+            }
+            &:not(.controls-RangeSelectable__item-selected) {
+               &:hover {
+                  background-color: @date-range-big-choose-bg-hovered-color;
+                  > button {
+                     border-top: none;
+                  }
+                  + .controls-DateRangeBigChoose__months-range-btn-wrapper > button {
+                     border-top: none;
+                  }
+                  + .controls-DateRangeBigChoose__months-range-btn-wrapper {
+                     border-top: 1px solid @date-range-big-choose-border-color;
+                  }
+               }
+               + .controls-DateRangeBigChoose__months-range-btn-wrapper:hover {
+                  border-top: 1px solid @date-range-big-choose-border-color;
+               }
             }
          }
 
