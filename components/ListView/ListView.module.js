@@ -95,6 +95,10 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__pagerNoAmount Скрыть отображение количества записей на странице в пейджинге.
        * @cssModifier controls-ListView__pagerHideEndButton Скрыть кнопку "Перейти к последней странице"
        * Т.е. текст "1-10" при отображении 10 записей на 1-ой странице
+       *
+       * @control
+       * @public
+       * @category Lists
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
@@ -273,7 +277,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _itemsToolbar: null,
             _notEndEditClassName: 'controls-ListView__onFocusNotEndEdit',
             _emptyData: undefined,
-            _containerScrollHeight : 0,
+            _containerScrollHeight: undefined,
             // указывает на необходимость компенсации скрола при подгрузке данных вверх
             // необходим, так как компенсацию можно произвести только после отрисовки - в drawItemsCallback
             // безусловно это делать нельзя, так как drawItemsCallback срабатывает и при перерисовке одной записи
@@ -809,7 +813,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _onTotalScrollHandler: function(event, type){
             var scrollOnEdge = (this._options.infiniteScroll === 'up' && type === 'top') || // скролл вверх и доскролили до верхнего края
                                (this._options.infiniteScroll === 'down' && type === 'bottom') || // скролл вниз и доскролили до нижнего края
-                               (this._options.infiniteScroll === 'both') //скролл в обе стороны и доскролили до любого края
+                               (this._options.infiniteScroll === 'both'); //скролл в обе стороны и доскролили до любого края
             if (scrollOnEdge && this.getItems()) {
                var isTop = type == 'top';
                this._needScrollCompensation = isTop;
@@ -1337,6 +1341,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             this._needScrollCompensation = this._options.infiniteScroll == 'up';
+            this._containerScrollHeight = undefined;
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
             return ListView.superclass.reload.apply(this, arguments);
@@ -1604,11 +1609,15 @@ define('js!SBIS3.CONTROLS.ListView',
             return config;
          },
          _showToolbar: function(model) {
-            var itemsInstances;
+            var itemsInstances, itemsToolbar;
             if (this._options.editMode.indexOf('toolbar') !== -1) {
-               this._getItemsToolbar().unlockToolbar();
+               itemsToolbar = this._getItemsToolbar();
+
+               itemsToolbar.unlockToolbar();
+               /* Меняем выделенный элемент на редактируемую/добавляемую запись */
+               this._changeHoveredItem(this._getElementByModel(model));
                //Отображаем кнопки редактирования
-               this._getItemsToolbar().showEditActions();
+               itemsToolbar.showEditActions();
                if (!this.getItems().getRecordById(model.getId())) {
                   if (this.getItemsActions()) {
                      itemsInstances = this.getItemsActions().getItemsInstances();
@@ -1619,8 +1628,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                }
                //Отображаем itemsToolbar для редактируемого элемента и фиксируем его
-               this._showItemsToolbar(this._getElementData(this._getElementByModel(model)));
-               this._getItemsToolbar().lockToolbar();
+               this._showItemsToolbar(this.getHoveredItem());
+               itemsToolbar.lockToolbar();
             }
          },
          _hideToolbar: function() {
@@ -2032,7 +2041,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._loader = null;
                //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
-
                this._updateScrolOffset(direction);
                //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                this.getItems().setMetaData(dataSet.getMetaData());
@@ -2080,6 +2088,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this.getItems().append(dataSet);
                ladder && ladder.setIgnoreEnabled(false);
             } else {
+               this._needScrollCompensation = true;
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight();
                var items = dataSet.toArray();
                this.getItems().prepend(items);
@@ -2118,7 +2127,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var hasScroll = (function() {
                   return this._scrollWatcher.hasScroll();
                }).bind(this),
-               scrollDown = this._options.infiniteScroll == 'down' || this._options.infiniteScroll == 'both'
+               scrollDown = this._options.infiniteScroll == 'down' || this._options.infiniteScroll == 'both';
             // Если нет скролла или скролл внизу (при загрузке вниз), значит нужно догружать еще записи
             if ((this.isScrollOnBottom() && scrollDown) || !hasScroll()) {
                this._scrollLoadNextPage();
@@ -2136,7 +2145,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _moveTopScroll: function(){
-            var scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
+            var scrollAmount = this._containerScrollHeight ? this._scrollWatcher.getScrollHeight() - this._containerScrollHeight: 'bottom'
             //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
             //разницы величины скролла (т.е. на сколько добавилось высоты, на столько и опустили). Получается плавно
             this._scrollWatcher.scrollTo(scrollAmount);

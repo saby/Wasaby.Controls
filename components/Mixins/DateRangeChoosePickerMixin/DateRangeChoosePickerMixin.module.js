@@ -1,0 +1,109 @@
+define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
+   'js!SBIS3.CONTROLS.DateRangeChoose',
+   'js!SBIS3.CONTROLS.Utils.DateUtil'
+], function (DateRangeChoose, DateUtil) {
+   /**
+    * Миксин, умеющий отображать выпадающий вниз блок содержащий контрол SBIS3.CONTROLS.DateRangeChoose.
+    * Используется только совместно с SBIS3.CONTROLS.DateRangeMixin(SBIS3.CONTROLS.RangeMixin) и SBIS3.CONTROLS.PickerMixin.
+    * Связывает данные текущего контрола и открываемого в выпадающем блоке.
+    * @mixin SBIS3.CONTROLS.DateRangeChoosePickerMixin
+    * @public
+    * @author Миронов Александр Юрьевич
+    */
+
+   var DateRangeChoosePickerMixin = /**@lends SBIS3.CONTROLS.DateRangeChoosePickerMixin.prototype  */{
+      $protected: {
+         _options: {
+            /**
+             * @cfg {Boolean} Отобразить возможность выбора по месяцам. По умолчанию true.
+             */
+            showMonths: true,
+            /**
+             * @cfg {Boolean} Отобразить возможность выбора по кварталам. По умолчанию true.
+             */
+            showQuarters: true,
+            /**
+             * @cfg {Boolean} Отобразить возможность выбора по годам. По умолчанию true.
+             */
+            showHalfyears: true,
+
+            checkedMonthStart: null,
+            checkedMonthEnd: null,
+
+            pickerConfig: {
+               corner: 'tl',
+               horizontalAlign: {
+                  side: 'left'
+               },
+               verticalAlign: {
+                  side: 'top'
+               }
+            }
+         },
+
+         _chooserControl: null
+      },
+
+      $constructor: function() {
+         if (!($ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.RangeMixin' ||
+               $ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.DateRangeMixin')))) {
+            throw new Error('RangeMixin or DateRangeMixin mixin is required');
+         }
+         if (!$ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.PickerMixin')) {
+            throw new Error('PickerMixin mixin is required');
+         }
+         if (!this._options.startValue) {
+            throw new Error('Failed to create the control. startValue option is not specified.');
+         }
+         if (!this._options.endValue) {
+            throw new Error('Failed to create the control. endValue option is not specified.');
+         }
+      },
+
+      before: {
+         showPicker: function () {
+            if (this._chooserControl) {
+               this._chooserControl.setRange(this.getStartValue(), this.getEndValue());
+            }
+         }
+      },
+
+      instead: {
+         /**
+          * Определение контента пикера. Переопределённый метод
+          * @private
+          */
+         _setPickerContent: function () {
+            var self = this,
+               // Создаем пустой контейнер
+               element = $(['<div class="', this._cssRangeSlider.pickerContainer, '"></div>'].join(' '));
+
+            this._picker.getContainer().empty();
+            // Преобразуем контейнер в контролл DateRangeChoose и запоминаем
+            self._chooserControl = new DateRangeChoose({
+               parent: this._picker,
+               element: element,
+               startValue: this.getStartValue(),
+               endValue: this.getEndValue(),
+               showMonths: this._options.showMonths,
+               showQuarters: this._options.showQuarters,
+               showHalfyears: this._options.showHalfyears,
+               checkedMonthStart: this._options.checkedMonthStart,
+               checkedMonthEnd: this._options.checkedMonthEnd
+            });
+
+            // Добавляем в пикер
+            this._picker.getContainer().append(element);
+
+            this._chooserControl.subscribe('onChoose', this._onChooserRangeChange.bind(this));
+         }
+      },
+
+      _onChooserRangeChange: function (e, start, end) {
+         this.setRange(start, end);
+         this.hidePicker();
+      }
+   };
+
+   return DateRangeChoosePickerMixin;
+});

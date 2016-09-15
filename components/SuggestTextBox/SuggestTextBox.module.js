@@ -14,11 +14,12 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.SuggestMixin
     * @mixes SBIS3.CONTROLS.ChooserMixin
+    * @demo SBIS3.CONTROLS.Demo.MySuggestTextBox Поле ввода с автодополнением
+    * @author Крайнов Дмитрий Олегович
+    *
     * @control
     * @public
     * @category Inputs
-    * @demo SBIS3.CONTROLS.Demo.MySuggestTextBox Поле ввода с автодополнением
-    * @author Крайнов Дмитрий Олегович
     */
    return TextBox.extend([PickerMixin, SuggestMixin, ChooserMixin, SuggestTextBoxMixin],{});
 });

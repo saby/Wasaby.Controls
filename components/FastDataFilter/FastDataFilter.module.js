@@ -25,6 +25,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
        * @cssModifier controls-FastDataFilter__resize Позволяет управлять шириной выпадающих списков, вписывая их по размеру в контейнер.
        * @control
        * @public
+       * @category Filtering
        */
       var FastDataFilter = CompoundControl.extend([FilterMixin, DSMixin],/** @lends SBIS3.CONTROLS.FastDataFilter.prototype */{
          $protected: {
@@ -186,7 +187,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             this._resetMaxWidth();
             if ($ws._const.browser.isIE && $ws._const.browser.IEVersion <= 10){
                var ddlText = $('.controls-DropdownList__textWrapper', this.getContainer()),
-                  containerWidth = this.getContainer().width();
+                   ieWidth = 2, //Отступ, чтобы ie правильно уместил содержимое в контейнер,
+                   containerWidth = this.getContainer().width() + ieWidth;
                this._resizeDropdownContainersForIE(ddlText, containerWidth);
             }
             else{

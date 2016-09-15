@@ -11,15 +11,8 @@ define('js!SBIS3.CONTROLS.ToggleButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.
     * Контрол, отображающий кнопку с залипанием.
     * @class SBIS3.CONTROLS.ToggleButton
     * @extends SBIS3.CONTROLS.Button
-    * @control
     * @demo SBIS3.CONTROLS.Demo.MyToggleButton
-    * @public
     * @author Крайнов Дмитрий Олегович
-    * @category Buttons
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.ToggleButton'>
-    *    <option name='caption' value='Кнопка с залипанием'></option>
-    * </component>
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     *
@@ -37,6 +30,14 @@ define('js!SBIS3.CONTROLS.ToggleButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.
     *
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
+    *
+    * @public
+    * @control
+    * @category Buttons
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.ToggleButton'>
+    *    <option name='caption' value='Кнопка с залипанием'></option>
+    * </component>
     */
 
    var ToggleButton = Button.extend([Checkable], /** @lends SBIS3.CONTROLS.ToggleButton.prototype */ {
