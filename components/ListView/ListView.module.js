@@ -1239,7 +1239,14 @@ define('js!SBIS3.CONTROLS.ListView',
             var $target = $(target),
                 self = this,
                 elClickHandler = this._options.elemClickHandler,
-                onItemClickResult;
+                onItemClickResult,
+                afterHandleClickResult = $ws.helpers.forAliveOnly(function(result) {
+                   if (result !== false) {
+                      self.setSelectedKey(id);
+                      self._elemClickHandlerInternal(data, id, target, e);
+                      elClickHandler && elClickHandler.call(self, id, data, target, e);
+                   }
+                }, this);
 
             if (this._options.multiselect) {
                if ($target.hasClass('js-controls-ListView__itemCheckBox')) {
@@ -1254,18 +1261,11 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             if (onItemClickResult instanceof $ws.proto.Deferred) {
                onItemClickResult.addCallback(function (result) {
-                  if (result !== false) {
-                     self.setSelectedKey(id);
-                     self._elemClickHandlerInternal(data, id, target, e);
-                     elClickHandler && elClickHandler.call(self, id, data, target, e);
-                  }
+                  afterHandleClickResult(result);
                   return result;
                });
-            }
-            else if (onItemClickResult !== false) {
-               this.setSelectedKey(id);
-               self._elemClickHandlerInternal(data, id, target, e);
-               elClickHandler && elClickHandler.call(self, id, data, target);
+            } else {
+               afterHandleClickResult(onItemClickResult);
             }
          },
          _notifyOnItemClick: function(id, data, target, e) {
