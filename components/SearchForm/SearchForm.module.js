@@ -15,10 +15,12 @@ define('js!SBIS3.CONTROLS.SearchForm', [
     * @class SBIS3.CONTROLS.SearchForm
     * @extends SBIS3.CONTROLS.TextBox
     * @mixes SBIS3.CONTROLS.SearchMixin
-    * @public
-    * @control
     * @demo SBIS3.CONTROLS.Demo.MySearchForm
     * @author Крайнов Дмитрий Олегович
+    *
+    * @public
+    * @control
+    * @category Search
     */
 
    var SearchForm = TextBox.extend([SearchMixin, PickerMixin, SuggestMixin, SuggestTextBoxMixin],/** @lends SBIS3.CONTROLS.SearchForm.prototype */ {

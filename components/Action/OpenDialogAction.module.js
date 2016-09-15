@@ -5,7 +5,6 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBas
     * Класс, описывающий действие открытия окна с заданным шаблоном. Применяется для работы с диалогами редактирования списков.
     * Подробнее об использовании класса вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component-control/">Управление диалогом редактирования списка.</a>.
     * @class SBIS3.CONTROLS.OpenDialogAction
-    * @public
     * @extends SBIS3.CONTROLS.DialogActionBase
     * @author Крайнов Дмитрий Олегович
     *
@@ -28,6 +27,13 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBas
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop
+    *
+    * @control
+    * @public
+    * @category Actions
+    * @initial
+    * <component data-component="SBIS3.CONTROLS.OpenDialogAction">
+    * </component>
     */
    var OpenDialogAction = DialogActionBase.extend(/** @lends SBIS3.CONTROLS.OpenDialogAction.prototype */{
       _buildComponentConfig: function(meta) {

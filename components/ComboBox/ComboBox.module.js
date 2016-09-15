@@ -18,10 +18,20 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * Контрол по умолчанию позволяет {@link editable вручную вводить значение}.
     * @class SBIS3.CONTROLS.ComboBox
     * @extends SBIS3.CONTROLS.TextBox
-    * @control
     * @author Крайнов Дмитрий Олегович
+    * @demo SBIS3.CONTROLS.Demo.MyComboBox
+    * @demo SBIS3.CONTROLS.Demo.MyComboBoxDS Выпадающий список с dataSource
+    * @mixes SBIS3.CONTROLS.PickerMixin
+    * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    * @mixes SBIS3.CONTROLS.DSMixin
+    * @mixes SBIS3.CONTROLS.Selectable
+    *
+    * @cssModifier controls-ComboBox__ellipsis При нехватке ширины текст в поле ввода оборвётся многоточием.
+    * !Важно: при добавлении этого класса сломается "Базовая линия".
+    *
     * @public
     * @control
+    * @category Inputs
     * @initial
     * <component data-component='SBIS3.CONTROLS.ComboBox'>
     *     <options name="items" type="array">
@@ -36,16 +46,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     *      </options>
     *      <option name="keyField">key</option>
     * </component>
-    * @category Inputs
-    * @demo SBIS3.CONTROLS.Demo.MyComboBox
-    * @demo SBIS3.CONTROLS.Demo.MyComboBoxDS Выпадающий список с dataSource
-    * @mixes SBIS3.CONTROLS.PickerMixin
-    * @mixes SBIS3.CONTROLS.FormWidgetMixin
-    * @mixes SBIS3.CONTROLS.DSMixin
-    * @mixes SBIS3.CONTROLS.Selectable
-    *
-    * @cssModifier controls-ComboBox__ellipsis При нехватке ширины текст в поле ввода оборвётся многоточием.
-    * !Важно: при добавлении этого класса сломается "Базовая линия".
     */
 
    var ComboBox = TextBox.extend([PickerMixin, DSMixin, Selectable, DataBindMixin, SearchMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
@@ -595,8 +595,17 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _initializePicker: function(){
-         ComboBox.superclass._initializePicker.call(this);
-         this._setWidth();
+         var self = this;
+         ComboBox.superclass._initializePicker.call(self);
+
+         // пробрасываем события пикера в метод комбобокса, т.к. если значение выбрано, то при открытии пикера фокус
+         // перейдет на него и комбобокс перестанет реагировать на нажатие клавиш, потому что он наследуется от AreaAbstract
+         // TODO чтобы избежать этого нужно переписать Combobox на ItemsControlMixin, тогда метод _scrollToItem не будет переводить фокус на пикер
+         self._picker.subscribe('onKeyPressed', function (eventObject, event) {
+            self._keyboardHover(event);
+         });
+
+         self._setWidth();
       },
 
       _setWidth: function(){

@@ -245,7 +245,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          _searchMode: false,
          _searchForm : undefined,
          _lastRoot : undefined,
-         _lastGroup: {},
+         _lastGroup: undefined,
          _currentRoot: null,
          _pathDSRawData : [],
          _firstSearch: true,

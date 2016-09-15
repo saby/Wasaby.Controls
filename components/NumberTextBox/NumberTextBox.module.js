@@ -19,14 +19,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     * </ol>
     * @class SBIS3.CONTROLS.NumberTextBox
     * @extends SBIS3.CONTROLS.TextBox
-    * @control
-    * @public
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyNumberTextBox
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.NumberTextBox'>
-    *     <option name="text">0</option>
-    * </component>
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol textTransform
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
@@ -41,6 +35,14 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     * @ignoreEvents onReady
     *
     * @cssModifier controls-NumberTextBox__text-align-right Выравнивает содержимое поля ввода по правому краю.
+    *
+    * @control
+    * @public
+    * @category Inputs
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.NumberTextBox'>
+    *     <option name="text">0</option>
+    * </component>
     */
 
    var NumberTextBox;
@@ -303,8 +305,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             this._options.delimiters,
             decimals,
             this._options.onlyPositive,
-            this._options.maxLength,
-            true
+            this._options.maxLength
          );
          if(isDotLast){
             value = value ? value + '.' : '.';

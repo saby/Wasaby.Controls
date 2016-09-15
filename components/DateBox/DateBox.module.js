@@ -192,9 +192,6 @@ define(
       $constructor: function () {
          this._publish('onDateChange');
 
-         // Проверить тип маски -- дата, время или и дата, и время. В случае времени -- сделать isCalendarIconShown = false
-         this._checkTypeOfMask(this._options);
-
          // Первоначальная установка даты, если передана опция
          if ( this._options.date ) {
             this._setDate( this._options.date );
@@ -204,7 +201,6 @@ define(
             this.setText(this._options.text);
          }
 
-         this._calendarInit();
          this._addDefaultValidator();
       },
 
@@ -226,11 +222,6 @@ define(
          event.preventDefault();
       },
 
-      _modifyOptions : function(options) {
-         this._checkTypeOfMask(options);
-         return DateBox.superclass._modifyOptions.apply(this, arguments);
-      },
-
       _addDefaultValidator: function() {
          var self = this;
          //Добавляем к прикладным валидаторам стандартный, который проверяет что дата заполнена корректно.
@@ -240,31 +231,6 @@ define(
             },
             errorMessage: rk('Дата заполнена некорректно')
          });
-      },
-
-      /**
-       * Инициализация календарика
-       */
-      _calendarInit: function() {
-         var self = this;
-         // Потеря фокуса. Работает так же при клике по иконке календарика.
-         // Если пользователь ввел слишком большие данные ( напр., 45.23.7234 ), то значение установится корректно,
-         // ввиду особенностей работы setMonth(), setDate() и т.д., но нужно обновить поле
-         $('.js-controls-FormattedTextBox__field', this.getContainer().get(0)).blur(function(){
-            if (self._options.date) {
-               self._drawDate();
-            }
-         });
-      },
-
-      /**
-       * Проверить тип даты. Скрыть иконку календаря, если отсутствуют день, месяц и год (т.е. присутствует только время)
-       * @private
-       */
-      _checkTypeOfMask: function (options) {
-         if (options.mask  &&  !/[DMY]/.test(options.mask) ) {
-            options.isCalendarIconShown = false;
-         }
       },
 
      /**
@@ -522,6 +488,9 @@ define(
                   if (Array.indexOf(filled, "MM") !== -1 && (Array.indexOf(notFilled, "YY") !== -1 || Array.indexOf(notFilled, "YYYY") !== -1)) {
                      return new Date(now.getFullYear(), mm, dd, hh, ii, ss, uuu);
                   }
+               } else if (Array.indexOf(filled, "HH") !== -1 && Array.indexOf(notFilled, "II") !== -1) {
+                  ii = this.formatModel.getGroupValueByMask("II", '0');
+                  return new Date(yyyy, mm, dd, hh, ii, ss, uuu);
                }
             }
          }
