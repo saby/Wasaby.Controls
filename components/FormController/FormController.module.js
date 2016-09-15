@@ -56,6 +56,17 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see onFail
        */
       /**
+       * @event onBeforeUpdateModel Происходит перед сохранением записи в источнике данных диалога редактирования.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {WS.Data/Entity/Record} record Сохраняемая запись.
+       * @see submit
+       * @see update
+       * @see onCreateModel
+       * @see onDestroyModel
+       * @see onReadModel
+       * @see onFail
+       */
+      /**
        * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога редактирования.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Сохраняемая запись.
@@ -170,7 +181,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
 
       $constructor: function(cfg) {
          this._newRecord = cfg.isNewRecord || false;
-         this._publish('onFail', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel', 'onAfterFormLoad');
+         this._publish('onFail', 'onReadModel', 'onBeforeUpdateModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel', 'onAfterFormLoad');
          this._declareCommands();
          this.subscribeTo($ws.single.EventBus.channel('navigation'), 'onBeforeNavigate', $ws.helpers.forAliveOnly(this._onBeforeNavigate, this));
 
@@ -644,6 +655,11 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see dataSource
        */
       update: function(config){
+         var self = this,
+            updateDeferred = new $ws.proto.Deferred(),
+            errorMessage = 'updateModel canceled from onBeforeUpdateModel event',
+            onBeforeUpdateResult;
+         
          if (typeof(config) !== 'object'){
             config = {
                closePanelAfterSubmit: config
@@ -651,7 +667,23 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             $ws.single.ioc.resolve('ILogger').log('FormController', 'команда update в качестве аргумента принимает объект');
          }
          config.hideQuestion = true;
-         return this._saveRecord(config);
+
+         onBeforeUpdateResult = this._notify('onBeforeUpdateModel', this.getRecord());
+         if (onBeforeUpdateResult instanceof $ws.proto.Deferred){
+            onBeforeUpdateResult.addCallback(function(result){
+               if (result !== false){
+                  updateDeferred.dependOn(self._saveRecord(config));
+               }
+               else{
+                  updateDeferred.errback(errorMessage);
+               }
+            });
+            return updateDeferred;
+         }
+         else if (onBeforeUpdateResult !== false) {
+            return this._saveRecord(config);
+         }
+         return updateDeferred.errback(errorMessage);
       },
 
       _saveRecord: function(config){
