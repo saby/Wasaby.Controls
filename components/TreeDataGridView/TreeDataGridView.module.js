@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'use strict';
 
    /**
-    * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
+    * Контрол, отображающий набор данных с иерархической структурой в виде в таблицы с несколькими колонками. Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
     *
     * @class SBIS3.CONTROLS.TreeDataGridView
     * @extends SBIS3.CONTROLS.DataGridView
