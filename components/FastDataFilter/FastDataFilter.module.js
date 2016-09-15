@@ -187,7 +187,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             this._resetMaxWidth();
             if ($ws._const.browser.isIE && $ws._const.browser.IEVersion <= 10){
                var ddlText = $('.controls-DropdownList__textWrapper', this.getContainer()),
-                  containerWidth = this.getContainer().width();
+                   ieWidth = 2, //Отступ, чтобы ie правильно уместил содержимое в контейнер,
+                   containerWidth = this.getContainer().width() + ieWidth;
                this._resizeDropdownContainersForIE(ddlText, containerWidth);
             }
             else{
