@@ -240,6 +240,19 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {Array} idArray Ключи удаляемых записей.
           * @returns {*|Boolean} result Если result равен false то отменяется штатная логика удаления.
           */
+         /**
+          * @typedef {String} DragPosition Показывает куда вставлять перетаскиваемые элементы
+          * @variant on Внутрь текущей записи
+          * @variant after После текущей записи
+          * @variant before Перед текущей записью
+          */
+         /**
+          * @typedef {Object} DragEntityOptions Набор опций который передается в
+          * @property {SBIS3.CONTROLS.Control} owner Контрол которому принадлежит запись,
+          * @property {jQuery} domElement jquery элемент записи,
+          * @property {WS.Data/Entity/Model} model Модель соответсвующая записи,
+          * @property {DragPosition|undefined} position  Показывает куда вставлять элементы, определяется только у целевого элменета, это тот который находится под курсором мыши.
+          */
          $protected: {
             _floatCheckBox: null,
             _dotItemTpl: null,
@@ -659,6 +672,8 @@ define('js!SBIS3.CONTROLS.ListView',
                scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
                /**
                 * @cfg Конструктор перемещяемой сущности должен вернуть элемент наследник класса SBIS3.CONTROLS.DragEntity.Row
+                * @remark В этот метод передается объект DragEntityOptions
+                * @see DragEntityOptions
                 * @see SBIS3.CONTROLS.DragEntity.Row
                 */
                dragEntity: 'dragentity.row'
