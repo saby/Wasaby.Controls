@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             var
                rowData = {},
                columns = $ws.core.clone(cfg.columns),
-               supportUnion = $ws.core.clone(columns[0]),
+               supportUnion,
                supportDouble,
                curCol,
                nextCol,
