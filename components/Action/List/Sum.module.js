@@ -110,6 +110,10 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
                     selectedItems = object.getSelectedItems(),
                     isSelected = selectedItems && selectedItems.getCount();
                 if (isSelected) {
+                    //При суммировании выбранных элементов, не вызываем платформенный метод бизнес логики 'Сумма.ПоВыборке',
+                    //из-за того, что могут выделить 1000 записей и нам эти 1000 записей придётся отправить на бл.
+                    //1000 записей весят примерно 8 мегабайт. Получается не рационально перегонять 8 мб ради лёгкой операции,ъ
+                    //которая на клиенте выполняется меньше секунды.
                     return this._sumField(selectedItems, object.getItems().getFormat());
                 } else {
                     source = this.getDataSource();
