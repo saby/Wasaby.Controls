@@ -111,9 +111,14 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          return this._options.element.length ? this._options.element : $(window);
       },
 
-      isScrollOnBottom: function(isOffsetCount){
+      /**
+       * Находится ли скролл внизу
+       * @param  {Boolean} noOffset Учитывать опцию totalScrollOffset или только реальное положение скролла
+       * @return {Boolean} Находится ли скролл внизу
+       */
+      isScrollOnBottom: function(noOffset){
          var element = this.getScrollContainer(),
-         offset = isOffsetCount ? this._options.totalScrollOffset : 0;
+         offset = noOffset ? 0 : this._options.totalScrollOffset;
          //customScroll
          if (this._customScroll)
             return element[0].wsControl.isScrollOnBottom();

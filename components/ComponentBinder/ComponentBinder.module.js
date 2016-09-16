@@ -727,7 +727,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
 
       _getScrollPage: function(){
          var view = this._options.view;
-         if (this._options.view.isScrollOnBottom(false)){
+         if (this._options.view.isScrollOnBottom(true)){
             return this._scrollPages.length - 1;
          }
          for (var i = 0; i < this._scrollPages.length; i++){
