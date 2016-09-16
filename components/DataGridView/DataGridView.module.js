@@ -533,10 +533,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          headMarkup = MarkupTransformer(headTpl(headData));
          var body = $('.controls-DataGridView__tbody', this._container);
 
-         if (this._thead) {
-            this._clearItems(this._thead);
-            this._thead.remove();
-         }
+         this._removeHead();
          this._thead = $(headMarkup).insertBefore(body);
 
          this._drawResults();
@@ -544,6 +541,21 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this.reviveComponents();
          this._bindHead();
          this._notify('onDrawHead');
+      },
+
+      _removeHead: function(){
+         var stickyThead;
+         if (this._thead) {
+            this._clearItems(this._thead);
+            this._thead.remove();
+         }
+         //ws-sticky-header__thead-copy удаляется в stikyManager после отрисовки шапки на событие onDrawHead
+         //получается что после выполнения метода redrawHead в теле таблицы 2 тега thead ( наш и sticky-header'a)
+         //в этом случае ipad криво рендерит верстку
+         if (this._options.stickyHeader){
+            stickyThead = $('.ws-sticky-header__thead-copy', this.getContainer());
+            stickyThead.remove();
+         }
       },
 
       _bindHead: function() {
