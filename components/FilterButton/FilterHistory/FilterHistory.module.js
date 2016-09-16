@@ -6,11 +6,12 @@ define('js!SBIS3.CONTROLS.FilterHistory',
        'js!SBIS3.CORE.CompoundControl',
        'html!SBIS3.CONTROLS.FilterHistory',
        'html!SBIS3.CONTROLS.FilterHistory/historyItemTpl',
+       'html!SBIS3.CONTROLS.FilterHistory/historyItemContentTpl',
        'js!SBIS3.CONTROLS.ToggleButton',
        'js!SBIS3.CONTROLS.ListView',
        'i18n!SBIS3.CONTROLS.FilterButton'
     ],
-    function(CompoundControl, dotTpl, dotTplForItem) {
+    function(CompoundControl, dotTpl) {
 
    'use strict';
 
@@ -36,8 +37,6 @@ define('js!SBIS3.CONTROLS.FilterHistory',
          this._container.removeClass('ws-area');
          $ws.single.CommandDispatcher.declareCommand(this, 'toggleHistory', this.toggleHistoryBlock);
       },
-
-      _historyItemTpl: dotTplForItem,
 
       init: function() {
          FilterHistory.superclass.init.apply(this, arguments);
