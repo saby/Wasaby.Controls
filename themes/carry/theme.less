@@ -166,6 +166,29 @@
       }
    }
 }
+.controls-Link {
+   &.controls-MenuLink {
+      &.controls-MenuLink__big {
+         line-height: @carry-big-height;
+      }
+   }
+}
+
+
+.controls-Menu.controls-MenuLink__Menu {
+   &.controls-MenuLink__big {
+      margin: -10px 0 0 -8px;
+      .controls-Menu__header {
+         height: @carry-big-height;
+         padding: 14px 8px;
+      }
+      .controls-MenuItem {
+         min-height: @carry-big-height;
+         max-height: 2 * @carry-big-height;
+         line-height: @carry-big-height;
+      }
+   }
+}
 
 .controls-MenuButton__Menu {
    &.controls-Menu__big {
