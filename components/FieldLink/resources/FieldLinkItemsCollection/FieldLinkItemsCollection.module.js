@@ -173,6 +173,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             this._clearItems();
             FieldLinkItemsCollection.superclass.showPicker.apply(this, arguments);
             this.redraw();
+            this._picker.recalcPosition(true);
          },
 
          hidePicker: function() {
