@@ -371,6 +371,14 @@
 @tab-button-disabled-bg:                        transparent;
 @tab-button-disabled-inner-color:               #CCCCCC;
 @tab-button-disabled-inner-after-display:       none;
+
+// -----------  //
+// Tab control //
+// -----------  //
+@tab-control-background-color:                  #fff;
+@tab-control-padding-top:                       30px;
+@tab-control-box-sizing:                        border-box;
+
 // ------------ //
 // Radio button //
 // ------------ //
@@ -701,6 +709,8 @@
 @menu-link-menu-margin:                   -6px 0 0 -10px;
 @menu-link-menu-padding:                  0 0 4px 0;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
+@menu-link-header-bg-color:               @menu-button-menu-bg;
+@menu-link-menu-border-width:             @menu-border-width;
 @menu-link-icon-24-top:                   -4px;
 
 
@@ -1272,8 +1282,9 @@
 @date-range-slider-hover-color:                 @blue-dark-color;
 @date-range-slider-hover-text-decoration:       underline;
 @date-range-slider-font-size:                   15px;
-@date-range-slider-font-weight:                 bold;
+@date-range-slider-value-font-weight:           bold;
 @date-range-slider-value-min-width:             102px;
+@date-range-slider-value-padding:               1px;
 @date-range-slider-year-state-width:            80px;
 @date-range-slider-height:                      24px;
 @date-range-slider-prev-next-buttons-width:     24px;
@@ -1300,10 +1311,15 @@
 @date-range-choose-current-value-font-size:     15px;
 @date-range-choose-current-value-font-weight:   bold;
 @date-range-choose-current-value-height:        32px;
+@date-range-choose-current-value-bg-color:      @date-range-choose-bg-color;
+@date-range-choose-current-value-bg-hover-color:   @date-range-choose-bg-hover-color;
+@date-range-choose-current-value-border-bottom: 1px solid @date-range-choose-border-color;
+@date-range-choose-current-value-margin-bottom: 4px;
 
 @date-range-choose-year-font-size:              15px;
 @date-range-choose-year-font-weight:            bold;
 @date-range-choose-year-height:                 24px;
+@date-range-choose-year-margin-bottom:          4px;
 
 @date-range-choose-year-prev-next-btns-width:         24px;
 @date-range-choose-year-prev-next-btns-font-size:     16px;
@@ -1312,6 +1328,12 @@
 
 @date-range-choose-month-height:                24px;
 @date-range-choose-container-caption-width:     32px;
+
+@date-range-choose-home-button-size:            24px;
+@date-range-choose-home-button-font-size:       14px;
+@date-range-choose-home-button-line-height:     22px;
+@date-range-choose-home-button-border-color:    inherit;
+@date-range-choose-home-color:                  @date-range-choose-color;
 
 
 // -------------- //
@@ -1560,6 +1582,8 @@
 @tree-view-expand-margin:                       0 4px 0 -2px;
 
 @tree-view-value-left-margin:                   @tree-view-expand-width;
+
+@tree-view-first-td-padding-left:               6px;
 
 @tree-view-editArrow-position:                  relative;
 @tree-view-editArrow-top:                       2px;
@@ -1891,7 +1915,7 @@
 
 @controls-filterButton-button-arrow-margin:       -4px;
 
-@controls-filterButton-area-header-padding:       12px 44px 12px 12px;
+@controls-filterButton-area-header-padding:       12px 48px 12px 12px;
 @controls-filterButton-area-header-height:        24px;
 @controls-filterButton-area-header-width:         310px;
 
@@ -1905,7 +1929,7 @@
 
 @controls-filterButton-area-content-margin:       0 12px 12px 26px;
 @controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
-@controls-filterButton-line-height:               @font-basic-line-height;
+@controls-filterButton-line-height:               @link-line-height;
 @controls-filterButton-apply-margin-right:        0;
 
 //FilterButtonHistory
@@ -2092,13 +2116,14 @@
 @controls-AjaxLoader-indicator-padding-left:       32px;
 @controls-AjaxLoader-indicator-height:             32px;
 
-@controls-Paging-item-width:                       32px;
+@controls-Paging-padding:                          0 6px;
+@controls-Paging-item-width:                       36px;
 @controls-Paging-item-height:                      32px;
 @controls-Paging-marker-height:                    3px;
 @controls-Paging-marker-hover-color:               @gray-ccc-color;
 @controls-Paging-marker-selected-color:            @primary-color;
-@controls-Paging-btn-width:                        16px;
-@controls-Paging-btn-height:                       16px;
-@controls-Paging-btn-margin:                       8px 0;
-@controls-Paging-btn-padding:                      0 8px;
+@controls-Paging-btn-width:                        36px;
+@controls-Paging-btn-height:                       32px;
+@controls-Paging-btn-margin:                       0;
+@controls-Paging-btn-padding:                      8px 10px;
 @controls-Paging-btn-sprite:                       url('img/PagingArrows.png');

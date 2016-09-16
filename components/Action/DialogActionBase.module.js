@@ -67,7 +67,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          /**
           * @var {WS.Data/Entity/Model} Запись которая пришла на редктирование, из метода прочитать или создать
           */
-         _record: undefined,
          _showedLoading: false
       },
       /**
@@ -167,11 +166,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
 
          config.handlers = {
             onAfterClose: function (e, meta) {
+               //В качестве шаблона могут использовать не FormController, проверяем на наличие метода getRecord
+               var record = this._getTemplateComponent().getRecord && this._getTemplateComponent().getRecord();
                self._dialog = undefined;
-               // В виду того, что сейчас доступны две технологии работы с источником и сейчас не все перешли на новую - поддерживаем старую, забирая record из FloatArea
-               // Выпилить по задаче: https://inside.tensor.ru/opendoc.html?guid=21a3feb5-6431-42f0-9136-edad2206ca83&description=
-               self._notifyOnExecuted(meta, this._record || self._record);
-               self._record = undefined;
+               self._notifyOnExecuted(meta, record);
             }
          };
 
@@ -194,7 +192,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if (getRecordProtoMethod){
             def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
             def.addCallback(function (record) {
-               self._record = record;
                self._hideLoadingIndicator();
                config.componentOptions.record = record;
                if (def.isNewRecord)
