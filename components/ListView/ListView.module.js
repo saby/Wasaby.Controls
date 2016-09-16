@@ -75,8 +75,9 @@ define('js!SBIS3.CONTROLS.ListView',
          };
 
       /**
-       * Контрол, отображающий внутри себя набор однотипных сущностей.
-       * Умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать.
+       * Контрол, отображающий набор однотипных сущностей. Позволяет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать.
+       * Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
+       *
        * @class SBIS3.CONTROLS.ListView
        * @extends $ws.proto.CompoundControl
        * @author Крайнов Дмитрий Олегович
@@ -277,7 +278,7 @@ define('js!SBIS3.CONTROLS.ListView',
             ],
             _itemsToolbar: null,
             _notEndEditClassName: 'controls-ListView__onFocusNotEndEdit',
-            _containerScrollHeight : 0,
+            _containerScrollHeight: undefined,
             // указывает на необходимость компенсации скрола при подгрузке данных вверх
             // необходим, так как компенсацию можно произвести только после отрисовки - в drawItemsCallback
             // безусловно это делать нельзя, так как drawItemsCallback срабатывает и при перерисовке одной записи
@@ -291,12 +292,9 @@ define('js!SBIS3.CONTROLS.ListView',
                _defaultItemTemplate: ItemTemplate,
                _defaultItemContentTemplate: ItemContentTemplate,
                /**
-                * @faq Почему нет чекбоксов в режиме множественного выбора значений (активация режима
-                производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
-                * Для отрисовки чекбоксов необходимо в шаблоне отображения элемента коллекции обозначить их
-                место.
-                * Это делают с помощью CSS-классов "controls-ListView__itemCheckBox js-controls-
-                ListView__itemCheckBox".
+                * @faq Почему нет чекбоксов в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
+                * Для отрисовки чекбоксов необходимо в шаблоне отображения элемента коллекции обозначить их место.
+                * Это делают с помощью CSS-классов "controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox".
                 * В следующем примере место отображения чекбоксом обозначено тегом span:
                 * <pre>
                 *     <div class="listViewItem" style="height: 30px;">
@@ -313,9 +311,10 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Шаблон - это пользовательская вёрстка элемента коллекции.
                 * Для доступа к полям элемента коллекции в шаблоне подразумевается использование конструкций шаблонизатора.
                 * Подробнее о шаблонизаторе вы можете прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/ Шаблонизация вёрстки компонента}.
-                *
+                * <br/>
                 * Шаблон может быть создан в отдельном XHTML-файле, когда вёрстка большая или требуется использовать его в разных компонентах.
                 * Шаблон создают в директории компонента в подпапке resources согласно правилам, описанным в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/file-structure/ Файловая структура компонента}.
+                * <br/>
                 * Чтобы такой шаблон можно было использовать, нужно:
                 * 1. Подключить шаблон в массив зависимостей компонента и импортировать его в переменную:
                 *       <pre>
@@ -386,6 +385,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @remark
                 * Если для контрола установлено значение false в опции {@link $ws.proto.Control#enabled}, то операции не будут отображаться при наведении курсора мыши.
                 * Однако с помощью подопции allowChangeEnable можно изменить это поведение.
+                * Подробнее о настройке таких действий вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">Быстрый доступ к операциям по наведению курсора</a>.
                 * @example
                 * <b>Пример 1.</b> Конфигурация операций через вёрстку компонента.
                 * <pre>
@@ -452,7 +452,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @variant "" Запрещено перемещение.
                 * @variant allow Разрешено перемещение.
                 * @variant false Запрещено перемещение.
-                * @variant true Разрешено перемещение.
                 * @example
                 * Подробнее о способах передачи значения в опцию вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/">Вёрстка компонента</a>.
                 * <b>Пример 1.</b> Ограничим возможность перемещения записей с помощью курсора мыши.
@@ -488,14 +487,9 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                elemClickHandler: null,
                /**
-                * @cfg {Boolean} Разрешить выбор нескольких строк
-                * @remark
-                * Позволяет выбрать несколько строк для одновременного взаимодействия с ними.
-                * @example
-                * <pre>
-                *    <option name="multiselect">false</option>
-                * </pre>
-                * @see itemTemplate
+                * @cfg {Boolean} Устанавливает режим множественного выбора элементов коллекции.
+                * * true Режим множественного выбора элементов коллекции установлен.
+                * * false Режим множественного выбора элементов коллекции отменен.
                 */
                multiselect: false,
                /**
@@ -549,6 +543,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see setPage
                 * @see getPage
                 * @see infiniteScroll
+                * @see partialPaging
                 * @see SBIS3.CONTROLS.DSMixin#pageSize
                 * @see SBIS3.CONTROLS.CompositeViewMixin#viewMode
                 * @see SBIS3.CONTROLS.TreeCompositeView
@@ -556,8 +551,16 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                showPaging: false,
                /**
-                * @cfg {String} Устанавливает режим редактирования по месту.<br>"" Редактирование по месту отключено.<br>click Режим редактирования по клику.<br>autoadd Режим автоматического добавления новых элементов коллекции; этот режим позволяет при завершении редактирования последнего элемента автоматически создавать новый.<br>toolbar Отображение панели инструментов при входе в режим редактирования записи.<br>single Режим редактирования единичной записи. После завершения редактирования текущей записи не происходит автоматического перехода к редактированию следующей записи.
+                * @cfg {String} Устанавливает режим редактирования по месту.
                 * @remark
+                * Варианты значений:
+                * <ul>
+                *    <li>"" (пустая строка) - Редактирование по месту отключено;</li>
+                *    <li>click - Режим редактирования по клику;</li>
+                *    <li>autoadd - Режим автоматического добавления новых элементов коллекции; этот режим позволяет при завершении редактирования последнего элемента автоматически создавать новый.</li>
+                *    <li>toolbar - Отображение панели инструментов при входе в режим редактирования записи.</li>
+                *    <li>single - Режим редактирования единичной записи. После завершения редактирования текущей записи не происходит автоматического перехода к редактированию следующей записи.</li>
+                * </ul>
                 * Режимы редактирования можно группировать и получать совмещенное поведение.
                 * Например, задать редактирование по клику и отобразить панель инструментов при входе в режим редактирования записи можно такой конфигурацией:
                 * <pre>
@@ -576,6 +579,7 @@ define('js!SBIS3.CONTROLS.ListView',
                editMode: '',
                /**
                 * @cfg {String} Устанавливает шаблон строки редактирования по месту.
+                * @remark
                 * Шаблон строки редактирования по месту используется для удобного представления редактируемой записи.
                 * Такой шаблон отрисовывается поверх редактируемой строки с прозрачным фоном.
                 * Это поведение считается нормальным в целях решения прикладных задач.
@@ -652,8 +656,14 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                resultsTpl: undefined,
                /**
-                * @cfg {Boolean} Использовать режим частичной навигации
-                * Задаёт какой режим навигации использовать: полный или частичный.
+                * @cfg {Boolean} Устанавливает тип постраничной навигации.
+                * @remark
+                * Постраничная навигация списка может работать в двух состояниях:
+                * <ol>
+                *    <li>Полная. Пользователь видит номера первых страниц, затем многоточие и номер последней страницы.</li>
+                *    <li>Частичная. Пользователь видит только номера текущей страницы, следующей и предыдущей. Общее количество страниц неизвестно.</li>
+                * </ol>
+                * @see showPaging
                 */
                partialPaging: true,
                scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
@@ -2443,7 +2453,7 @@ define('js!SBIS3.CONTROLS.ListView',
             pageNumber = parseInt(pageNumber, 10);
             var offset = this._offset;
             if (this._isPageLoaded(pageNumber)){
-               if (this._getItemsProjection()){
+               if (this._getItemsProjection() && this._getItemsProjection().getCount()){
                   var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
                      itemId = this._getItemsProjection().getItemBySourceIndex(itemIndex).getContents().getId(),
                      item = this.getItems().getRecordById(itemId);
@@ -2788,9 +2798,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _canDragMove: function(dragObject) {
+            var source = dragObject.getSource();
             return dragObject.getTarget() &&
+               source &&
+               source.getCount() > 0 &&
                dragObject.getTargetsControl() === this &&
-               $ws.helpers.instanceOfModule(dragObject.getSource().at(0), 'SBIS3.CONTROLS.DragEntity.Row');
+               $ws.helpers.instanceOfModule(source.at(0), 'SBIS3.CONTROLS.DragEntity.Row');
          },
 
          _getDragTarget: function(dragObject) {

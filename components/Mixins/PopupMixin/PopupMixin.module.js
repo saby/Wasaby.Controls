@@ -120,8 +120,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              * @cfg {Boolean} модальный или нет
              */
             isModal: false,
-            //Ограничить размеры только высотой экрана, в противном случае они ограничены границами экрана и расположением тагрета
-            fullHeight: false
+            /**
+             * Разрешить всплывающему окну перекрывать target 
+             * Например нужно для меню, которое может перекрывать target без потери функцианальности, 
+             * но не подходит для поля связи, так как может перекрывать вводимый текст 
+             * @type {Boolean}
+             */
+            allowOverlapTarget: false
          }
       },
 
@@ -725,24 +730,26 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if (offset.top < 0 && this._options.verticalAlign.side !== 'top') {
                this._overflowedV = true;
                this._container.css('overflow-y', 'auto');
+               var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
                if (spaces.top < spaces.bottom) {
-                  if (this._options.fullHeight){
-                     var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
+                  if (this._options.allowOverlapTarget){
                      this._container.css('height', height);
                      offset.top = this._windowSizes.height - this._container.get(0).scrollHeight - this._containerSizes.border * 2;
                   } else {
                      this._isMovedV = !this._isMovedV;
                      oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
                      spaces = this._getSpaces(this._options.corner);
-                     this._container.css('height', spaces.bottom - vOffset - this._margins.top + this._margins.bottom);
+                     height = spaces.bottom - vOffset - this._margins.top + this._margins.bottom;
                      offset.top = this._targetSizes.offset.top + oppositeOffset.top;
                   }
                } else {
                   offset.top = 0;
                   //Если места снизу меньше чем сверху покажемся во весь размер (возможно поверх таргета), или в высоту окна если в него не влезаем
-                  var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
-                  this._container.css('height', height);
+                  if (!this._options.allowOverlapTarget){
+                     height = spaces.top - vOffset - this._margins.top + this._margins.bottom;
+                  }
                }
+               this._container.css('height', height);
             }
             if (this._containerSizes.originHeight + vOffset + this._margins.top - this._margins.bottom < spaces.bottom && this._overflowedV) {
                this._container.css('overflow-y', 'visible');
