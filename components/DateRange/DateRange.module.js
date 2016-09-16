@@ -128,17 +128,9 @@ define('js!SBIS3.CONTROLS.DateRange', [
       setEndValue: function(value, silent, _dontUpdatePicker) {
          var changed = DateRange.superclass.setEndValue.call(this, value, silent);
          if (!_dontUpdatePicker) {
-            this._updateDatePicker(this._datePickerStart, this.getStartValue());
+            this._updateDatePicker(this._datePickerEnd, this.getEndValue());
          }
          return changed;
-      },
-
-      _normalizeDate: function(date) {
-         date = DateUtil.valueToDate(date);
-         if (!date) {
-            date = null;
-         }
-         return date;
       },
 
       _updateDatePicker: function(datePicker, value) {
