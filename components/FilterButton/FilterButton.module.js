@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
         * фильтрами осуществляется только через контекст.
         * Если текст рядом с кнопкой фильтов может иметь большую ширину,
         * то ширину кнопки фильтров надо ограничить, навесив max-width.
+        * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/">Панель фильтров</a>.
         * @class SBIS3.CONTROLS.FilterButton
         * @extends $ws.proto.CompoundControl
         * @author Крайнов Дмитрий Олегович
