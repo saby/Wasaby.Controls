@@ -421,6 +421,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
        * </pre>
        * @see validators
        * @see getValidators
+       * @see addValidators
        * @see validate
        * @see validators
        * @see onValidate
@@ -428,6 +429,52 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
       setValidators: function (validators) {
          if (validators && Object.prototype.toString.apply(validators) == '[object Array]') {
             this._options.validators = validators;
+         }
+      },
+
+      /**
+       * Добавляет валидаторы контрола.
+       * @param {Array} validators Массив объектов, описывающих функции валидации.
+       * @param {Object} [validators.object] Объект с конфигурацией валидатора.
+       * @param {Function} [validators.object.validator] Функция валидации.
+       * @param {String} [validators.object.option] Название опции контрола, значение которой требуется проверить валидатором.
+       * @param {String} [validators.object.errorMessage] Текст сообщения об ошибке валидации. Если свойство не определено, то в качестве текста будет использовано значение, возвращаемое функцией валидации.
+       * @param {Boolean} [validators.object.noFailOnError] Нежесткая валидация. В случае не прохождения валидации контрол будет только отмечен как непрошедший проверку, но валидация будет считаться пройденной.
+       * @example
+       * При готовности поля ввода (fieldString) установить валидаторы, если их не существует.
+       * <pre>
+       *    //описываем два валидатора
+       *    var validators = [{
+       *       validator: function() {
+       *          var value = this.getValue();
+       *          return value !== null && value !== '';
+       *       },
+       *       errorMessage: 'Поле не может быть пустым. Введите значение!'
+       *    },{
+       *       //otherFieldName - имя любого другого поля ввода, с которым производим сравнение
+       *       validator: function(otherFieldName) {
+       *          //controlParent - родительский контрол для двух полей
+       *          return this.getValue() !== controlParent.getChildControlByName(otherFieldName).getValue();
+       *       },
+       *       params: [otherFieldName],
+       *       errorMessage: 'Значения полей не могут совпадать!',
+       *       noFailOnError: true
+       *    }];
+       *    fieldString.subscribe('onReady', function() {
+       *       if (this.getValidators().length == 0)
+       *          this.addValidators(validators);
+       *    });
+       * </pre>
+       * @see validators
+       * @see setValidators
+       * @see getValidators
+       * @see validate
+       * @see validators
+       * @see onValidate
+       */
+      addValidators: function (validators) {
+         if (validators && Object.prototype.toString.apply(validators) == '[object Array]') {
+            Array.prototype.push.apply(this._options.validators, validators);
          }
       }
    };
