@@ -5,8 +5,9 @@
 define('js!SBIS3.CONTROLS.PopupMixin', [
       'js!SBIS3.CONTROLS.ControlHierarchyManager',
       'js!SBIS3.CORE.ModalOverlay',
+      'js!SBIS3.CONTROLS.TouchKeyboardHelper',
       'Core/helpers/helpers'
-   ], function (ControlHierarchyManager, ModalOverlay, coreHelpers) {
+   ], function (ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers) {
    'use strict';
    if (typeof window !== 'undefined') {
       var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
@@ -524,7 +525,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
       _initWindowSizes: function () {
          this._windowSizes = {
-            height: $(window).height(),
+            height: $(window).height() - TouchKeyboardHelper.getKeyboardHeight(),
             width: $(window).width()
          };
       },
@@ -790,8 +791,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          var offset = this._targetSizes.offset,
             width = this._targetSizes.width,
             height = this._targetSizes.height,
-            windowHeight = $(window).height(),
-            windowWidth = $(window).width(),
+            windowHeight = this._windowSizes.height,
+            windowWidth = this._windowSizes.width,
             spaces = {
                top: 0,
                left: 0,
