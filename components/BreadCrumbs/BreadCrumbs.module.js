@@ -262,7 +262,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          crumbs = $('.controls-BreadCrumbs__crumb', targetContainer).not('.ws-hidden').not('.controls-BreadCrumbs__dots');
 
          //Минимум остается первая и последняя хлебная крошка
-         if (targetContainer.width() + this._homeIconWidth >= containerWidth) {
+         if (targetContainer.outerWidth(true) + this._homeIconWidth >= containerWidth) {
             //ширина декоротивных элементов -  блок с домиком, троеточие, стрелки 
             var dotsWidth = $('.controls-BreadCrumbs__dots', this._container).outerWidth(true) || 0,
                width = this._homeIconWidth + dotsWidth + this._arrowWidth * 2,
