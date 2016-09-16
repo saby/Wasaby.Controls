@@ -6,11 +6,12 @@ define('js!SBIS3.CONTROLS.DateRange', [
    'js!SBIS3.CONTROLS.Utils.DateUtil',
    'js!SBIS3.CONTROLS.FormWidgetMixin',
    'js!SBIS3.CONTROLS.RangeMixin',
+   'js!SBIS3.CONTROLS.DateRangeMixin',
    'js!SBIS3.CONTROLS.DateRangeBigChoose',
    'i18n!SBIS3.CONTROLS.DateRange',
    'js!SBIS3.CONTROLS.DateBox',
    'js!SBIS3.CONTROLS.IconButton'
-], function (CompoundControl, PickerMixin, dotTplFn, DateUtil, FormWidgetMixin, RangeMixin, DateRangeBigChoose) {
+], function (CompoundControl, PickerMixin, dotTplFn, DateUtil, FormWidgetMixin, RangeMixin, DateRangeMixin, DateRangeBigChoose) {
    'use strict';
    /**
     * SBIS3.CONTROLS.DateRange
@@ -23,7 +24,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
     * @public
     * @category Date/Time
     */
-   var DateRange = CompoundControl.extend([RangeMixin, PickerMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateRange.prototype */{
+   var DateRange = CompoundControl.extend([RangeMixin, DateRangeMixin, PickerMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateRange.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
@@ -67,28 +68,26 @@ define('js!SBIS3.CONTROLS.DateRange', [
 
          this._datePickerStart = this.getChildControlByName('DateRange__DatePickerStart');
          this._datePickerStart.subscribe('onDateChange', function(e, date) {
-            self.setStartValue(date);
+            self.setStartValue(date, false, true);
          });
          this._datePickerStart.subscribe('onInputFinished', function() {
             self._datePickerEnd.setActive(true);
          });
          this._datePickerEnd = this.getChildControlByName('DateRange__DatePickerEnd');
          this._datePickerEnd.subscribe('onDateChange', function(e, date) {
-            self.setEndValue(date);
+            self.setEndValue(date, false, true);
          });
 
          this._dateRangeButton = this.getChildControlByName('DateRange__Button');
          this._dateRangeButton.subscribe('onActivated', this._onDateRangeButtonActivated.bind(this));
 
          this.subscribe('onStartValueChange', function (event, value) {
-            self._updateDatePicker(self._datePickerStart, value);
             self._notify('onStartDateChange', value);
          });
 
          this.subscribe('onEndValueChange', function (event, value) {
             // Временно делаем, что бы возвращаемая конечная дата содержала время 23:59:59.999
             value = value? new Date(value.getFullYear(), value.getMonth(), value.getDate(), 23, 59, 59, 999): null;
-            self._updateDatePicker(self._datePickerEnd, value);
             self._notify('onEndDateChange', value);
          });
 
@@ -118,35 +117,24 @@ define('js!SBIS3.CONTROLS.DateRange', [
          });
       },
 
-      setStartValue: function(value, silent) {
-         value = this._normalizeDate(value);
-         return DateRange.superclass.setStartValue.call(this, value, silent);
-      },
-
-      setEndValue: function(value, silent) {
-         value = this._normalizeDate(value);
-         return DateRange.superclass.setEndValue.call(this, value, silent);
-      },
-
-      _normalizeDate: function(date) {
-         date = DateUtil.valueToDate(date);
-         if (!date) {
-            date = null;
+      setStartValue: function(value, silent, _dontUpdatePicker) {
+         var changed = DateRange.superclass.setStartValue.call(this, value, silent);
+         if (!_dontUpdatePicker) {
+            this._updateDatePicker(this._datePickerStart, this.getStartValue());
          }
-         return date;
+         return changed;
+      },
+
+      setEndValue: function(value, silent, _dontUpdatePicker) {
+         var changed = DateRange.superclass.setEndValue.call(this, value, silent);
+         if (!_dontUpdatePicker) {
+            this._updateDatePicker(this._datePickerEnd, this.getEndValue());
+         }
+         return changed;
       },
 
       _updateDatePicker: function(datePicker, value) {
-         if (value) {
-            datePicker.setDate(value);
-         } else {
-            //TODO: Непонятно зачем нужен этот код. Он выполняется при смене даты руками, получается мы поменяли дату,
-            //стрелнуло событие и вызвался данный обработчик, который ещё раз выставляет дату. И в случае если дата невалидна
-            //сюда приходит value = null и дата просто затирается. Зачем?
-            //Выписал задачу https://inside.tensor.ru/opendoc.html?guid=57892aa4-7039-403b-b579-40b6cc7411cf&description=
-            //Ошибка в разработку 05.09.2016 SBIS3.CONTROLS.DateRange //TODO: Непонятно зачем нужен этот код. Он выполняется при смене даты ...
-            //datePicker.setText('');
-         }
+         datePicker.setDate(value);
       },
 
       showPicker: function () {

@@ -12,8 +12,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
 
    var HIER_WRAPPER_WIDTH = 16,
-       //Число 21 это сумма padding'ов, margin'ов элементов которые составляют отступ у первого поля, по которому строится лесенка отступов в дереве
-       ADDITIONAL_LEVEL_OFFSET = 21,
+       //Число 19 это сумма padding'ов, margin'ов элементов которые составляют отступ у первого поля, по которому строится лесенка отступов в дереве
+       ADDITIONAL_LEVEL_OFFSET = 19,
       buildTplArgsTDG = function(cfg) {
          var tplOptions, tvOptions;
          tplOptions = cfg._buildTplArgsDG.call(this, cfg);
@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'use strict';
 
    /**
-    * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
+    * Контрол, отображающий набор данных с иерархической структурой в виде в таблицы с несколькими колонками. Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
     *
     * @class SBIS3.CONTROLS.TreeDataGridView
     * @extends SBIS3.CONTROLS.DataGridView

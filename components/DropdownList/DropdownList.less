@@ -8,6 +8,7 @@
       width: 100%;
       white-space: nowrap;
       font-size: 0;
+      box-sizing: border-box;
       align-items: center;
       * {
          font-size: @font-basic-size;
@@ -285,4 +286,10 @@
    .controls-DropdownList__afterCaptionWrapper {
       top: 3px;
    }
+}
+
+.ws-is-ie, .ws-is-firefox {
+  .controls-DropdownList .controls-DropdownList__selectedItem{
+    display: inline-flex;
+  }
 }
