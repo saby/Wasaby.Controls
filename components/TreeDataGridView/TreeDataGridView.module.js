@@ -4,9 +4,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.TreeMixin',
    'js!SBIS3.CONTROLS.TreeViewMixin',
    'js!SBIS3.CONTROLS.IconButton',
-   'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate',
-   'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate',
-   'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate'
+   'html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate',
+   'html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate',
+   'html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate'
 ], function(DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate) {
 
    var HIER_WRAPPER_WIDTH = 16,
