@@ -5,8 +5,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
 ], function (DragObject, Di) {
    'use strict';
    /**
-    * Миксин задающий логику перетаскивания.
-    * @remark Для того что бы можно было перетаскивать элементы нужно повесить метод _initDrag на mouseDown, touchStart html элементов которые надо перетаскивать
+    * Миксин, задающий логику перетаскивания.
+    * @remark Чтобы можно было перетаскивать элементы, нужно вызвать метод _initDrag в обработчиках событий mouseDown и touchStart html элементов, которые надо перетаскивать. Подробнее {@link _initDrag}
     * @mixin SBIS3.CONTROLS.DragNDropMixinNew
     * @public
     * @author Крайнов Дмитрий Олегович
@@ -41,33 +41,33 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
       DragAndDropMixin = /**@lends SBIS3.CONTROLS.DragNDropMixinNew.prototype*/{
          $protected: {
             /**
-             * @event onBeginDrag Срабатывает когда начинают тащить элемент. Если из события вернуть false то перетаскивание будет отменено
+             * @event onBeginDrag Когда начинают перетаскивать элемент. Если из события вернуть false, то перетаскивание будет отменено.
              * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-             * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон объект dragndrop.
+             * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
              * @see SBIS3.CONTROLS.DragObject
              */
             /**
-             * @event onDragMove Срабатывает когда тащат элемент контрола, на каждое перемещение.
+             * @event onDragMove В процессе перетаскивания элемента, на каждое перемещение. Если из события вернуть false, то стандартное действие будет отменено.
              * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-             * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон объект dragndrop.
+             * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
              * @see SBIS3.CONTROLS.DragObject
              */
             /**
-             * @event onDragOver Срабатывает когда элемент тащат над контролом, элемент может принадлежать другому контролу.
+             * @event onDragOver В процессе перетаскивания элемента над контролом, на каждое перемещение. Элемент при этом может принадлежать другому контролу.
              * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-             * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон объект dragndrop.
+             * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
              * @see SBIS3.CONTROLS.DragObject
              */
              /**
-             * @event onEndDrag Срабатывает когда перестали тащить элемент
+             * @event onEndDrag Когда закончили перетаскивать элемент. Если из события вернуть false, то стандартное действие будет отменено.
              * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-             * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон объект dragndrop.
+             * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
              * @see SBIS3.CONTROLS.DragObject
              */
 
             _options:{
                /**
-                * @cfg {string|SBIS3.CONTROLS.DragEntity.Entity}  Конструктор сущности перемещения
+                * @cfg {String|Function(): SBIS3.CONTROLS.DragEntity.Entity}  Конструктор перемещаемой сущности
                 * @example
                 * Зададим конструктор через di в xhtml
                 * <pre>
@@ -91,10 +91,10 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
                 * </pre>
                 * @see setDragEntity
                 */
-               dragEntity: ''
+               dragEntity: undefined
             },
             /**
-             * @var {integer} Константа показывающая на сколько надо сдвинуть мышь, чтобы началось перемещение
+             * @member {Number} Константа, показывающая, на сколько надо сдвинуть мышь, чтобы началось перемещение
              */
             _constShiftLimit: 3
          },
@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          },
 
          /**
-          * Устанавливает конструктор сущностей перемещения
+          * Устанавливает конструктор перемещаемой сущности
           * @param {SBIS3.CONTROLS.DragEntity.Entity} dragEntityFactory
           * @see SBIS3.CONTROLS.DragEntity.Entity
           */
@@ -124,20 +124,23 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
 
          //region handlers
          /**
-          * Метод срабатывает на окончание перетаскивания, должен быть определен в контроле который реализует миксин
-          * @param {SBIS3.CONTROLS.DragObject} dragObject
+          * Срабатывает на окончание перетаскивания.
+          * Определяется в модуле, который подмешивает миксин.
+          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
           * @param {Boolean} droppable сработал внутри droppable контейнера см _findDragDropContainer
-          * @param {Event} e объект события браузера
+          * @param {Event} e Браузерное событие
           * @see SBIS3.CONTROLS.DragObject
           * @see _findDragDropContainer
           * @example
+          * Добавим в рекордсет списочного контрола записи из перетаскиваемой сущности:
           * <pre>
           *    ...
           *    _endDragHandler: function(dragObject, droppable, e){
           *       if (droppable) {
+          *          var items = this.getItems();
           *          dragObject.getSource().each(function(item){
           *             if ($ws.helpers.instanseOfModule(item, 'SBIS3.CONTROLS.DragEntity.Row')){
-          *                this.add(item.getModel());
+          *                items.add(item.getModel());
           *             }
           *          },this)
           *       }
@@ -149,19 +152,22 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
 
          },
          /**
-          * Метод срабатывает при перетаскивании, на каждое перемещение, должен быть определен в контроле который реализует миксин
-          * @param {SBIS3.CONTROLS.DragObject} dragObject
-          * @param {Event} e объект события браузера
+          * Срабатывает при перетаскивании (на каждое перемещение).
+          * Определяется в модуле, который подмешивает миксин.
+          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
+          * @param {Event} e Браузерное событие
           * @see SBIS3.CONTROLS.DragObject
           */
          _onDragHandler: function(dragObject, e) {
 
          },
          /**
-          * Метод срабатывает на начало перетаскивания, должен быть определен в контроле который реализует миксин.
-          * Он должен определить что перетаскивают и положить в dragObject, см метод setSource. Либо вернуть false.
-          * @param {SBIS3.CONTROLS.DragObject} dragObject
-          * @param {Event} e объект события браузера
+          * Срабатывает при начале перетаскивания.
+          * С его помощью можно определить перетаскиваемую сущность и установить в dragObject (см метод {@link SBIS3.CONTROLS.DragObject#setSource}).
+          * Если вернуть false, перетаскивание не начнется.
+          * Определяется в модуле, который подмешивает миксин.
+          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
+          * @param {Event} e Браузерное событие
           * @see SBIS3.CONTROLS.DragObject
           * @returns {Boolean} если вернуть false перетаскивание не начнется
           */
@@ -169,7 +175,9 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
 
          },
          /**
-          * Метод должен вернуть html строку содержащую аватар, иконка которая отображается около курсора мыши при перетаскивании
+          *
+          * Возвращает HTML-строку, содержащую аватар. Иконка аватара будет отображаться около курсора мыши при перетаскивании.
+          * Определяется в модуле, который подмешивает миксин.
           * @example
           * <pre>
           *   ...
@@ -178,8 +186,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           *   }
           *   ...
           * </pre>
-          * @param {SBIS3.CONTROLS.DragObject} dragObject
-          * @param {Event} e объект события браузера
+          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
+          * @param {Event} e Браузерное событие
           * @returns {String}
           * @see SBIS3.CONTROLS.DragObject
           */
@@ -187,8 +195,10 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
 
          },
          /**
-          * Метод должен обновлять target в dragObject, срабатывает раньше пользовательских событий onEndDrag, onDragMove
-          * нужен для того чтобы у пользователя был актуальный target, когда стреляют события.
+          * Обновляет target в dragObject {@link SBIS3.CONTROLS.DragObject#getTarget}.
+          * Срабатывает раньше пользовательских обработчиков событий onEndDrag, onDragMove.
+          * Это позволяет обеспечить в них актуальный target.
+          * Определяется в модуле, который подмешивает миксин.
           * <pre>
           *    <div>
           *       <div class="item" data-id="1">Первый</div>
@@ -211,16 +221,16 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           *    }
           *    ...
           * </pre>
-          * @param {SBIS3.CONTROLS.DragObject} dragObject
-          * @param {Event} e Объект события браузера
+          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
+          * @param {Event} e Браузерное событие
           * @see SBIS3.CONTROLS.DragObject
           */
          _updateDragTarget: function(dragObject, e) {
 
          },
          /**
-          * Возвращает контейнер в котором лежат элементы.
-          * Если элемент бросили за пределами этого контейнера то таргет (DragObject.getDragTarget()) будет пустой
+          * Возвращает контейнер, в котором лежат элементы. Если элемент бросили за пределами этого контейнера, то target (DragObject.getDragTarget()) будет пустой.
+          * Определяется в модуле, который подмешивает миксин.
           * @example
           * Пусть у нашего контрола такая верcтка
           * <pre>
@@ -238,7 +248,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           *       return this.getContainer().find('ul');
           *    }
           * </pre>
-          * @param {Event} e объект события браузера
+          * @param {Event} e Браузерное событие
           * @param {html} target html объект в котором надо искать dragndrop контейнер
           * @returns {html}
           * @private
@@ -252,7 +262,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
 
          /**
           * Показывает аватар
-          * @param  {Event} e Объект события браузера
+          * @param  {Event} e Браузерное событие
           * @private
           */
          _showAvatar: function(e) {
@@ -260,7 +270,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             DragObject.setAvatar(avatar);
          },
          /**
-          * Метод который начинет перетаскивание, его на повесить на onMouseDown, touchStart тем элементам которые можно перетаскивать
+          * Инициализирует перетаскивание. Должен быть вызван в пользовательских обработчиках событий onMouseDown и touchStart для тех элементов, которые можно перетаскивать.
           * @example
           * Допустим у нашего контрола такая верстка
           * <pre>
@@ -281,7 +291,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           *    }
           *    ...
           * </pre>
-          * @param {Event} clickEvent объект события браузера
+          * @param {Event} clickEvent Браузерное событие
           */
          _initDrag: function(clickEvent) {
             var
@@ -302,7 +312,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          },
          /**
           * Начало перетаскивания
-          * @param {Event} e объект события браузера
+          * @param {Event} e Браузерное событие
           */
          _beginDrag: function(e) {
             DragObject.reset();
@@ -319,7 +329,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          },
          /**
           * вытаскивает координаты нажатия для tuch событий так же как для событий мыши
-          * @param {Event} e объект события браузера
+          * @param {Event} e Браузерное событие
           * @private
           */
          _preparePageXY: function(e) {
@@ -333,8 +343,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          },
          /**
           * Метод определяет был ли сдвиг или просто кликнули по элементу
-          * @param {Event} moveEvent объект события браузера
-          * @param {Event} clickEvent объект события браузера
+          * @param {Event} moveEvent Браузерное событие
+          * @param {Event} clickEvent Браузерное событие
           * @returns {boolean} если true то было смещение
           * @private
           */
@@ -351,7 +361,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
 
          /**
           * Конец перетаскивания
-          * @param {Event} e объект события браузера
+          * @param {Event} e Браузерное событие
           * @param {Boolean} droppable Закончили над droppable контейнером
           * @private
           */
@@ -387,7 +397,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          //region mouseHandler
          /**
           * Обработчик на Mousemove
-          * @param {Event} e объект события браузера
+          * @param {Event} e Браузерное событие
           * @private
           */
          _onDrag: function (e) {
@@ -405,7 +415,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          },
          /**
           * Срабывает когда отпустили мышь внутри контрола
-          * @param {Event} e объект события браузера
+          * @param {Event} e Браузерное событие
           */
          _onMouseupInside: function (e) {
             this._mouseUp(e, true);
@@ -413,14 +423,14 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          /**
           * Срабывает когда отпустили мышь за пределами контрола
           * @param {$ws.proto.EventObject} buse
-          * @param {Event} e объект события браузера
+          * @param {Event} e Браузерное событие
           */
          _onMouseupOutside: function(buse, e) {
             this._mouseUp(e, false);
          },
          /**
           * Обработчик на onMouseUp
-          * @param {Event} e объект события браузера
+          * @param {Event} e Браузерное событие
           * @param {Boolean} inside
           */
          _mouseUp: function(e, inside){
@@ -438,7 +448,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          /**
           * Обработчик  на перемещение мыши
           * @param {$ws.proto.EventObject} buse
-          * @param {Event} e объект события браузера
+          * @param {Event} e Браузерное событие
           */
          _onMousemove: function (buse, e) {
             // Если нет выделенных компонентов, то уходим

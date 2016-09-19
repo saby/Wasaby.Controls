@@ -241,17 +241,17 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {*|Boolean} result Если result равен false то отменяется штатная логика удаления.
           */
          /**
-          * @typedef {String} DragPosition Показывает куда вставлять перетаскиваемые элементы
-          * @variant on Внутрь текущей записи
-          * @variant after После текущей записи
-          * @variant before Перед текущей записью
+          * @typedef {String} DragPosition
+          * @variant on Вставить перетаскиваемые элементы внутрь текущей записи
+          * @variant after Вставить перетаскиваемые элементы после текущей записи
+          * @variant before Вставить перетаскиваемые элементы перед текущей записью
           */
          /**
-          * @typedef {Object} DragEntityOptions Набор опций который передается в
-          * @property {SBIS3.CONTROLS.Control} owner Контрол которому принадлежит запись,
-          * @property {jQuery} domElement jquery элемент записи,
-          * @property {WS.Data/Entity/Model} model Модель соответсвующая записи,
-          * @property {DragPosition|undefined} position  Показывает куда вставлять элементы, определяется только у целевого элменета, это тот который находится под курсором мыши.
+          * @typedef {Object} DragEntityOptions
+          * @property {SBIS3.CONTROLS.Control} owner Контрол, которому принадлежит запись
+          * @property {jQuery} domElement DOM элемент, отображающий запись
+          * @property {WS.Data/Entity/Model} model Модель, соответствующая записи.
+          * @property {DragPosition|undefined} position Куда вставить элементы (определяется только у целевого элемента - того, который находится под курсором мыши)
           */
          $protected: {
             _floatCheckBox: null,
@@ -671,8 +671,7 @@ define('js!SBIS3.CONTROLS.ListView',
                partialPaging: true,
                scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
                /**
-                * @cfg Конструктор перемещяемой сущности должен вернуть элемент наследник класса SBIS3.CONTROLS.DragEntity.Row
-                * @remark В этот метод передается объект DragEntityOptions
+                * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS.DragEntity.Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса SBIS3.CONTROLS.DragEntity.Row
                 * @see DragEntityOptions
                 * @see SBIS3.CONTROLS.DragEntity.Row
                 */

@@ -3,15 +3,15 @@ define('js!SBIS3.CONTROLS.DragObject', [
 ], function () {
    'use strict';
    /**
-    * Глобальный объект в котором содержится информация о текущем состоянии dragndrop
+    * Синглтон объект, в котором содержится информация о текущем состоянии Drag'n'drop:
     * <ul>
-    *    <li>Элементы которые перетаскивают</li>
-    *    <li>Элемент над которым сейчас находится курсор мыши</li>
-    *    <li>Контрол с которого тащат элементы</li>
-    *    <li>Контрол над которым сейчас находится курсор мыши</li>
+    *    <li>Элементы, которые перетаскивают</li>
+    *    <li>Элемент, над которым сейчас находится курсор мыши</li>
+    *    <li>Контрол, с которого тащат элементы</li>
+    *    <li>Контрол, над которым сейчас находится курсор мыши</li>
     *    <li>Аватар - иконка которая отображается около курсора мыши</li>
     * </ul>
-    * DragObject прередается во все события DragNDropMixin, так же его можно получить в любом месте через require.
+    * DragObject передается во все события DragNDropMixin. Также его можно получить в любом месте через RequireJS.
     * @class SBIS3.CONTROLS.DragTarget
     * @singleton
     * @public
@@ -27,56 +27,55 @@ define('js!SBIS3.CONTROLS.DragObject', [
    var DragObject = $ws.proto.Abstract.extend(/**@lends SBIS3.CONTROLS.DragObject.prototype*/{
       $protected: {
          /**
-          * @var {SBIS3.CONTROLS.Control} Контрол который начал dragndrop
+          * @member {SBIS3.CONTROLS.Control} Контрол, который начал dragndrop.
           */
          _owner: undefined,
          /**
-          * @var {WS.Data/Collection/IList} Набор элементов которые сейчас перетаскивают
+          * @member {WS.Data/Collection/IList} Набор элементов, которые сейчас перетаскивают.
           */
          _source: undefined,
          /**
-          * @var {SBIS3.CONTROLS.DragEntity.Entity} Элемент над которым находится курсор мыши
+          * @member {SBIS3.CONTROLS.DragEntity.Entity} Элемент, над которым находится курсор мыши.
           */
          _target: undefined,
          /**
-          * @var {jQuery} Аватар, иконка которая отображается около курсора мыши
+          * @member {jQuery} Аватар - иконка которая отображается около курсора мыши.
           */
          _avatar: undefined,
          /**
-          * @var {Boolean} Признак тащат ли ейчас элемент
+          * @member {Boolean} Признак - перетаскивают ли ейчас элемент.
           */
          _dragging: undefined,
          /**
-          * @var {Object} Дополнительная информация
+          * @member {Object} Дополнительная информация.
           */
          _meta: undefined,
          /**
-         * @var {Event} Актульное, текущему моменту перетаскивания, событие брауера (onMouseMove, onMouseDown ...)
+         * @member {Event} Актульное, текущему моменту перетаскивания, событие брауера (onMouseMove, onMouseDown ...)
          */
          _jsEvent: undefined,
          /**
-          * @var {SBIS3.CONTROLS.Control} Контрол над которым находится курсор мыши
+          * @member {SBIS3.CONTROLS.Control} Контрол, над которым находится курсор мыши.
           */
          _targetsControl: undefined
       },
       /**
-       * Возвращает набор элементов которые сейчас тащат. Элементы должны быть наследниками класса SBIS3.CONTROLS.DragEntity.Entity
-       * их устанвливает контрол, который начинает dragndrop.
+       * Возвращает набор перетаскиваемых элементов. Элементы должны быть наследниками класса SBIS3.CONTROLS.DragEntity.Entity.
+       * Их устанавливает контрол, который инициализирует Drag'n'drop.
        * @returns {WS.Data/Collection/IList|undefined}
        */
       getSource: function () {
          return this._source;
       },
       /**
-       * Устанавливает элементы которые будут перетаскивать. Метод вызыввется из контрола который начинает dragndrop
+       * Устанавливает набор перетаскиваемых элементов. Метод вызывается из контрола, который инициализирует Drag'n'drop.
        * @param {WS.Data/Collection/IList} source
        */
       setSource: function (source) {
          this._source = source;
       },
       /**
-       * Возвращает элемент над которым находится курсор. Элемент должен быть наследником класса SBIS3.CONTROLS.DragEntity.Entity,
-       * его устанавливает контрол, над которым находится курсор мыши.
+       * Возвращает элемент, над которым находится курсор. Элемент должен быть наследником класса SBIS3.CONTROLS.DragEntity.Entity. Его устанавливает контрол, находящийся сейчас под курсором.
        * @returns {SBIS3.CONTROLS.DragEntity.Entity|undefined}
        */
       getTarget: function () {
@@ -84,14 +83,14 @@ define('js!SBIS3.CONTROLS.DragObject', [
       },
       /**
        * Устанавливает элемент над которым находится курсор. Метод вызывается из контрола над которым сейчас находится курсор мыши
-       * @param {SBIS3.CONTROLS.DragEntity.Entity} target
+       * @param {SBIS3.CONTROLS.DragEntity.Entity|undefined} target
        */
       setTarget: function (target) {
          this._target = target;
       },
 
       /**
-       * Возвращает контрол который начал dragndrop
+       * Возвращает контрол, который инициализировал Drag'n'drop.
        * @returns {SBIS3.CONTROLS.Control}
        */
       getOwner: function () {
@@ -119,7 +118,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
       },
       /**
        * Возвращает метаданные объекта
-       * @remark лучше дополнительный данные складывать в объекты target или source создавая свои уникальные реализации сущностей dragndrop SBIS3.CONTROLS.DragEntity.Entity
+       * @remark Дополнительные данные рекомендуется складывать в объекты target или source, создавая свои уникальные реализации сущностей Drag'n'drop, унаследованные от SBIS3.CONTROLS.DragEntity.Entity.
        * returns {Object}
        */
       getMeta: function () {
@@ -127,14 +126,14 @@ define('js!SBIS3.CONTROLS.DragObject', [
       },
       /**
        * Устанавливает метаданные объекта
-       * @remark лучше дополнительный данные складывать в объекты target или source создавая свои уникальные реализации сущностей dragndrop SBIS3.CONTROLS.DragEntity.Entity
+       * @remark Дополнительные данные рекомендуется складывать в объекты target или source, создавая свои уникальные реализации сущностей Drag'n'drop, унаследованные от SBIS3.CONTROLS.DragEntity.Entity.
        * returns {Object}
        */
       setMeta: function (meta) {
          this._meta = meta;
       },
       /**
-       * Устанавливает аватар
+       * Устанавливает аватар, иконка которого отображается около курсора мыши.
        * @param {String} avatar строка содержащая верстку аватара
        * @see getAvatar
        * @see removeAvatar
@@ -151,7 +150,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
          }
       },
       /**
-       * Удаляет аватар, иконка около курсора мыши
+       * Удаляет аватар, иконка которого отображается около курсора мыши.
        */
       removeAvatar: function () {
          if (this._avatar) {

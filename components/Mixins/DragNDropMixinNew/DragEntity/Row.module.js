@@ -5,15 +5,14 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
 ], function (Entity, Di) {
    'use strict';
    /**
-    * Объект dragndrop списочного контрола. Объекты этого класса либо его наследники создаются  listview когда начинают
-    * перетаскивать элемент.
+    * Drag'n'drop объект списочного контрола. Объекты этого класса (либо его наследники) создаются ListView, когда пользователь начинает перетаскивать элемент.
     *
     * @class SBIS3.CONTROLS.DragEntity.Row
     * @control
     * @public
     * @author Крайнов Дмитрий Олегович
     * @example
-    * Рассмотрим пример как создать свою сущность
+    * Рассмотрим пример, как создать свою Drag'n'drop-сущность:
     * <pre>
     *    defined('js!SBIS3.Demo.DragEntity.Task', ['js!SBIS3.CONTROLS.DragEntity.Row', 'js!WS.Data/Di'], function(Row){
     *       var Task = Row.extend({
@@ -26,12 +25,12 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
     *             return this._options.user
     *          }
     *       });
-    *       //если не нужно прокидывать долнительные опции то регистрируем вот так
+    *       //Если не нужно прокидывать долнительные опции, то регистрируем вот так
     *       Di.register('demo.task', Task);
     *
     *    })
     *
-    *    //где то в другом модуле регистрируем фабрику.
+    *    //Где-то в другом модуле регистрируем фабрику.
     *    ...
     *    var context = this.getLinkedContext();
     *    Di.register('demo.taskfactory', function(options){
@@ -40,7 +39,7 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
     *    });
     *    ...
     * </pre>
-    * внедряем фабрику в ListView через xhtml
+    * Внедряем фабрику в ListView через xhtml:
     * <pre>
     *    ...
     *    <component data-component="SBIS3.CONTROLS.ListView" name="listView">
@@ -57,10 +56,10 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
    var Row = Entity.extend(/**@lends SBIS3.CONTROLS.DragEntity.Row.prototype*/{
       _moduleName: 'SBIS3.CONTROLS.DragEntity.Row',
       /**
-       * @typedef {String} DragPosition Показывает куда вставлять перетаскиваемые элементы
-       * @variant on Внутрь текущей записи
-       * @variant after После текущей записи
-       * @variant before Перед текущей записью
+       * @typedef {String} DragPosition
+       * @variant on Вставить перетаскиваемые элементы внутрь текущей записи
+       * @variant after Вставить перетаскиваемые элементы после текущей записи
+       * @variant before Вставить перетаскиваемые элементы перед текущей записью
        */
       $protected: {
          _options: {
@@ -69,7 +68,7 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
              */
             model: undefined,
             /**
-             * @cfg {DragPosition} Позиция куда добавлять элемент
+             * @cfg {DragPosition} Как разместить перетаскиваемые элементы
              */
             position: undefined,
             /**
