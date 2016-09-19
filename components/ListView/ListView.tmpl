@@ -14,6 +14,7 @@
         </ws:if>
     </div>
     <div class="controls-ListView__results-bottom"></div>
+    <div class="controls-ListView__EmptyData {{(!_serverRender || _records.length) ? 'ws-hidden'}}">{{emptyHTML}}</div>
     <ws:if data="{{ footerTpl }}">
         <div class="controls-ListView__footer">
             <ws:partial template="{{footerTpl}}" scope="{{...}}" />
@@ -22,7 +23,6 @@
     <ws:if data="{{ showPaging }}">
         <div class="controls-Pager-container"></div>
     </ws:if>
-    <div class="controls-ListView__EmptyData {{(!it._serverRender || it._records.length) ? 'ws-hidden'}}">{{emptyHTML}}</div>
     <ws:if data="{{ infiniteScroll == 'demand'}}">
       <component data-component="SBIS3.CONTROLS.Link" name="loadMoreButton" class="controls-ListView__loadMoreButton">
          <option name="caption">Еще...</option>
