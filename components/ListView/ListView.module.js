@@ -818,7 +818,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _setLoadMoreCaption: function(dataSet){
-            var more = dataSet.getMetaData().more
+            var more = dataSet.getMetaData().more;
             if (typeof more == 'number'){
                this._loadMoreButton.setCaption('Еще ' + more);
             } else {
@@ -2326,7 +2326,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (show) {
                setTimeout(function(){
                   if (!self.isDestroyed() && self._showedLoading) {
-                     scrollContainer = self._getScrollContainer();
+                     scrollContainer = self._getScrollContainer()[0];
                      indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
                      if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].scrollHeight > scrollContainer.offsetHeight) {
                         /* Ищем кординату, которая находится по середине отображаемой области грида */
