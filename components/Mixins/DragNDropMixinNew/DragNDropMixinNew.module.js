@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
    'use strict';
    /**
     * Миксин задающий логику перетаскивания.
-    * @remark Для того что бы можно было перетаскивать элементы нужно повесить метод _initDrag на mouseDown, touchStart  
+    * @remark Для того что бы можно было перетаскивать элементы нужно повесить метод _initDrag на mouseDown, touchStart html элементов которые надо перетаскивать
     * @mixin SBIS3.CONTROLS.DragNDropMixinNew
     * @public
     * @author Крайнов Дмитрий Олегович
@@ -47,7 +47,13 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
              * @see SBIS3.CONTROLS.DragObject
              */
             /**
-             * @event onDragMove Срабатывает когда элемент тащат, на каждое перемещение
+             * @event onDragMove Срабатывает когда тащат элемент контрола, на каждое перемещение.
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон объект dragndrop.
+             * @see SBIS3.CONTROLS.DragObject
+             */
+            /**
+             * @event onDragOver Срабатывает когда элемент тащат над контролом, элемент может принадлежать другому контролу.
              * @param {$ws.proto.EventObject} eventObject Дескриптор события.
              * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон объект dragndrop.
              * @see SBIS3.CONTROLS.DragObject
@@ -58,15 +64,24 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
              * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон объект dragndrop.
              * @see SBIS3.CONTROLS.DragObject
              */
+
             _options:{
                /**
-                * @cfg {string|SBIS3.CONTROLS.DragEntity.Entity}  конструктор сущности перемещения
+                * @cfg {string|SBIS3.CONTROLS.DragEntity.Entity}  Конструктор сущности перемещения
                 * @example
+                * Зададим конструктор через di в xhtml
+                * <pre>
+                *    <component data-component="SBIS3.CONTROLS.ListView" name="listView">
+                *       <option name="dragEntity">dragentity.row</option>
+                *    </component>
+                * </pre>
+                * Зададим конструктор через di в js
                 * <pre>
                 *    new ListView({
                 *       dragEntity: 'dragentity.row'
                 *    })
                 * </pre>
+                * или так
                 * <pre>
                 *    require('SBIS3.CONTROLS.DragEntity.Row', function(Row){
                 *       new ListView({
@@ -81,10 +96,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             /**
              * @var {integer} Константа показывающая на сколько надо сдвинуть мышь, чтобы началось перемещение
              */
-            _constShiftLimit: 3,
-            //координаты старта
-            _moveBeginX: null,
-            _moveBeginY: null
+            _constShiftLimit: 3
          },
          //region public
          $constructor: function () {
@@ -111,21 +123,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          //endregion public
 
          //region handlers
-         _dropCache: function () {
-         },
-         /**
-          * Обработчик на Mousemove
-          * @param {Event} e объект события браузера
-          * @private
-          */
-         _onDrag: function (e) {
-            this._updateDragTarget(DragObject, e);
-            var res = this._notify('onDragMove', DragObject, e);
-            if (res !== false) {
-              this._onDragHandler(DragObject, e);
-            }
-         },
-
          /**
           * Метод срабатывает на окончание перетаскивания, должен быть определен в контроле который реализует миксин
           * @param {SBIS3.CONTROLS.DragObject} dragObject
@@ -263,7 +260,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             DragObject.setAvatar(avatar);
          },
          /**
-          * Метод который начинет перетаскивание, его на повесить на onMouseDown тем элементам которые можно перетаскивать
+          * Метод который начинет перетаскивание, его на повесить на onMouseDown, touchStart тем элементам которые можно перетаскивать
           * @example
           * Допустим у нашего контрола такая верстка
           * <pre>
@@ -291,14 +288,12 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
                self = this,
                dragStrarter = function(bus, moveEvent){
                   self._preparePageXY(moveEvent);
-                  if (self._isDrag(moveEvent)) {
+                  if (self._isDrag(moveEvent, clickEvent)) {
                      self._beginDrag(clickEvent);
                      $ws.single.EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
                   }
                };
             this._preparePageXY(clickEvent);
-            this._moveBeginX = clickEvent.pageX;
-            this._moveBeginY = clickEvent.pageY;
             $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMousemove', dragStrarter);
             $ws.single.EventBus.channel('DragAndDropChannel').once('onMouseup', function(){
                $ws.single.EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
@@ -338,14 +333,15 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          },
          /**
           * Метод определяет был ли сдвиг или просто кликнули по элементу
-          * @param {Event} e объект события браузера
+          * @param {Event} moveEvent объект события браузера
+          * @param {Event} clickEvent объект события браузера
           * @returns {boolean} если true то было смещение
           * @private
           */
-         _isDrag: function(e) {
+         _isDrag: function(moveEvent, clickEvent) {
             var
-               moveX = e.pageX - this._moveBeginX,
-               moveY = e.pageY - this._moveBeginY;
+               moveX = e.pageX - clickEvent._moveBeginX,
+               moveY = e.pageY - clickEvent._moveBeginY;
 
             if ((Math.abs(moveX) < this._constShiftLimit) && (Math.abs(moveY) < this._constShiftLimit)) {
                return false;
@@ -389,6 +385,19 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          },
          //endregion protected
          //region mouseHandler
+         /**
+          * Обработчик на Mousemove
+          * @param {Event} e объект события браузера
+          * @private
+          */
+         _onDrag: function (e) {
+            this._updateDragTarget(DragObject, e);
+            var eventName = DragObject.getOwner() === this ? 'onDragMove' : 'onDragOver';
+            var res = this._notify(eventName, DragObject, e);
+            if (res !== false) {
+               this._onDragHandler(DragObject, e);
+            }
+         },
          /**
           * Срабывает когда отпустили мышь внутри контрола
           * @param {Event} e объект события браузера
