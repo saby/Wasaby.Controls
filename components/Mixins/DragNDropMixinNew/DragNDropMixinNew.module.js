@@ -392,8 +392,13 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           */
          _onDrag: function (e) {
             this._updateDragTarget(DragObject, e);
-            var eventName = DragObject.getOwner() === this ? 'onDragMove' : 'onDragOver';
-            var res = this._notify(eventName, DragObject, e);
+            var res;
+            if (DragObject.getOwner() === this) {
+               res = this._notify('onDragMove', DragObject, e);
+            }
+            if (DragObject.getTargetsControl() === this) {
+               this._notify('onDragOver', DragObject, e);
+            }
             if (res !== false) {
                this._onDragHandler(DragObject, e);
             }
