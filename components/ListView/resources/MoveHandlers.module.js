@@ -98,9 +98,6 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
                   if (isChangeOrder) {
                      self.moveInItems(records, recordTo, !insertAfter);
                   } else {
-                     //TODO: пока дерево не перевели на проекции, нужно пересчитывать дерево индексов, т.к. после set
-                     //в поле иерархии он сам этого не сделает
-                     self._options._items._reindexTree(self._options.hierField);
                      self.removeItemsSelectionAll();
                   }
                }).addBoth(function() {
