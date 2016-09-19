@@ -416,6 +416,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
          checkColumns(newCfg);
          newCfg._colgroupData = prepareColGroupData(newCfg);
          newCfg._headData = prepareHeadData(newCfg);
+
+         /* Отключаем прилипание заголовков при включённом частичном скроле,
+            в противном случае это ломает вёрстку, т.к. для корректной работы частичного скрола
+            требуется вешать на контейнер компонента overflow-x: hidden, а элементы c overflow-x: hidden
+            некорректно ведут себя в абсолютно позиционированных элементах (каким является stickyHeader). */
+         if(newCfg.stickyHeader && newCfg.startScrollColumn !== undefined) {
+            newCfg.stickyHeader = false;
+         }
+
          return newCfg;
       },
 
