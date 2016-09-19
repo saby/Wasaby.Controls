@@ -253,6 +253,9 @@ define('js!SBIS3.CONTROLS.Image',
                   this._imageBar = this._container.find('.controls-image__image-bar');
                }
                this._image = this._container.find('.controls-image__image');
+               if (this._options.dataSource) {
+                  this._options.dataSource = this._prepareSource(this._options.dataSource);
+               }
             },
             init: function() {
                var
@@ -311,6 +314,24 @@ define('js!SBIS3.CONTROLS.Image',
             /* ------------------------------------------------------------
                Блок приватных методов
                ------------------------------------------------------------ */
+            _prepareSource: function(sourceOpt) {
+               var result;
+               switch (typeof sourceOpt) {
+                  case 'function':
+                     result = sourceOpt.call(this);
+                     break;
+                  case 'object':
+                     if ($ws.helpers.instanceOfMixin(sourceOpt, 'WS.Data/Source/ISource')) {
+                        result = sourceOpt;
+                     }
+                     if ('module' in sourceOpt) {
+                        var DataSourceConstructor = require(sourceOpt.module);
+                        result = new DataSourceConstructor(sourceOpt.options || {});
+                     }
+                     break;
+               }
+               return result;
+            },
             _getSourceUrl: function() {
                var
                   dataSource = this.getDataSource();
