@@ -15,8 +15,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'js!WS.Data/Utils',
    'js!WS.Data/Entity/Model',
    'Core/ParserUtilities',
-   'Core/Sanitize'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, CollectionDisplay, EnumDisplay, FlagsDisplay, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize) {
+   'Core/Sanitize',
+   'js!SBIS3.CORE.LayoutManager'
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, CollectionDisplay, EnumDisplay, FlagsDisplay, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize, LayoutManager) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -1762,22 +1763,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          //Если offset отрицательный, значит запрашивали последнюю страницу
          return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
       },
-      _scrollTo: function scrollTo(target, container) {
-         var scrollContainer = container || this._getScrollContainer(),
-             scrollContainerOffset = scrollContainer.offset() || {top: 0, left: 0},
-             targetOffset;
-
+      _scrollTo: function scrollTo(target) {
          if (typeof target === 'string') {
             target = $(target);
          }
 
-         targetOffset = target.offset();
-
-         if( (targetOffset.top - scrollContainerOffset.top) < 0) {
-            target[0].scrollIntoView(true);
-         } else if ( (targetOffset.top + target.height() - scrollContainerOffset.top) > scrollContainer.outerHeight()) {
-            target[0].scrollIntoView(false);
-         }
+         LayoutManager.scrollToElement(target);
       },
       _scrollToItem: function(itemId) {
          var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
