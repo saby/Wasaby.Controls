@@ -6,12 +6,7 @@ define('js!SBIS3.CONTROLS.TouchKeyboardHelper', [], function() {
    var ipadCoefficient = {
       portrait: 0.7,
       landscape: 0.44
-   }
-
-   if ($ws._const.compatibility.touch){
-      $ws.single.EventBus.globalChannel().subscribe('MobileInputFocus', TouchKeyboardHelper._keyboardShowHandler);
-      $ws.single.EventBus.globalChannel().subscribe('MobileInputFocusOut', TouchKeyboardHelper._keyboardHideHandler);
-   }
+   };
 
    var TouchKeyboardHelper = {
       _keyboardVisible: false,
@@ -42,6 +37,11 @@ define('js!SBIS3.CONTROLS.TouchKeyboardHelper', [], function() {
          return this._keyboardVisible;
       }
    };
+
+   if ($ws._const.compatibility.touch){
+      $ws.single.EventBus.globalChannel().subscribe('MobileInputFocus', TouchKeyboardHelper._keyboardShowHandler);
+      $ws.single.EventBus.globalChannel().subscribe('MobileInputFocusOut', TouchKeyboardHelper._keyboardHideHandler);
+   }
 
    return TouchKeyboardHelper;
 });
