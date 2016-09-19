@@ -30,11 +30,11 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.ScrollWatcher',
       'js!WS.Data/Collection/IBind',
       'js!WS.Data/Collection/List',
-      'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
-      'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
-      'browser!tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
-      'browser!tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
-      'browser!tmpl!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
+      'html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
+      'html!SBIS3.CONTROLS.ListView/resources/emptyData',
+      'tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
+      'tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
+      'tmpl!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
       'browser!js!SBIS3.CONTROLS.Utils.InformationPopupManager',
       'js!SBIS3.CONTROLS.Paging',
       'js!SBIS3.CONTROLS.ComponentBinder',
@@ -2198,8 +2198,8 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollToItem(item.getId());
             }
          },
-         isScrollOnBottom: function(){
-            return this._scrollWatcher.isScrollOnBottom();
+         isScrollOnBottom: function(noOffset){
+            return this._scrollWatcher.isScrollOnBottom(noOffset);
          },
          isScrollOnTop: function(){
             return this._scrollWatcher.isScrollOnTop();
@@ -2541,10 +2541,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          /**
           * @typedef {Object} BeginEditOptions
-          * @property {String} [parentId] Идентификатор узла, в котором будет происходить добавление.
+          * @property {String} [parentId] Идентификатор узла иерархического списка, в котором будет происходить добавление.
           * @property {String} [addPosition = bottom] Расположение строки с добавлением по месту.
           * Опция может принимать значение 'top' или 'bottom'.
-          * @property {WS.Data/Entity/Model|Object} [model] Модель элемента коллекции, значения полей которой будут использованы при создании нового элемента.
+          * @property {WS.Data/Entity/Model|Object} [preparedModel] Модель элемента коллекции, значения полей которой будут использованы при создании нового элемента.
           * В упрощенном варианте можно передать объект, свойствами которого будут поля создаваемого элемента коллекции. Например, установим создание нового элемента с предопределенным значением поля 'Наименование':
           * <pre>
           * {
@@ -2557,13 +2557,25 @@ define('js!SBIS3.CONTROLS.ListView',
           * @remark
           * Команда применяется для создания нового элемента коллекции без использования диалога редактирования.
           * Схожим функционалом обладает автоматическое добавление по месту представлений данных (см. опцию {@link editMode}).
-          * @param {BeginEditOptions} [options]
+          * <br/>
+          * Полный пример использования команды для создания новых элементов коллекции в иерархическом списке вы можете найти {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ здесь}.
+          * <br/>
+          * Команда поддерживает инициацию добавления по месту для заранее подготовленной записи (см. примеры).
+          * @param {BeginEditOptions} [options] Параметры вызова команды.
           * @example
-          * Частный случай вызова команды для создания нового узла иерархии внутри другого узла:
+          * <u>Пример 1.</u> Частный случай вызова команды для создания нового узла иерархии внутри другого узла:
           * <pre>
           * this.sendCommand('beginAdd', {parentId: 'parentBranchId'});
           * </pre>
-          * Полный пример использования команды для создания новых элементов коллекции в иерархическом списке вы можете найти {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ здесь}.
+          * <u>Пример 2.</u> Добавления по месту для заранее подготовленной записи. Таким образом добавление по месту запускается синхронно и без единого запроса к бизнес-логике.
+          * <i>Вариант 1.</i>
+          * <pre>
+          * ListView.getDataSource().create().addCallback(function(preparedModel){...};
+          * </pre>
+          * <i>Вариант 2.</i>
+          * <pre>
+          * ListView.beginAdd({ preparedModel: preparedModel });
+          * </pre>
           * @returns {*|$ws.proto.Deferred} В случае ошибки, вернёт Deferred с текстом ошибки.
           * @private
           * @command beginAdd

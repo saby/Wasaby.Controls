@@ -4,11 +4,13 @@
             <option name="caption">По умолчанию</option>
             <option name="command">reset-filter-internal</option>
             <option name="enabled" bind="sbis3-controls-filter-button/filterChanged">false</option>
+            <option name="tabindex">0</option>
         </component>
         <component data-component="SBIS3.CONTROLS.Button" class="controls__filter-button__apply-filter">
             <option name="caption">Отобрать</option>
             <option name="primary" type="boolean">true</option>
             <option name="command">apply-filter</option>
+            <option name="tabindex">0</option>
         </component>
     </div>
     <div class="controls__filterButton__area-content">
@@ -23,7 +25,9 @@
             </component>
         {{?}}
         {{? it.historyController}}
-            <component data-component="SBIS3.CONTROLS.FilterHistory" name="filterHistory"></component>
+            <component data-component="SBIS3.CONTROLS.FilterHistory" name="filterHistory">
+                <option name="tabindex">0</option>
+            </component>
         {{?}}
     </div>
 </div>

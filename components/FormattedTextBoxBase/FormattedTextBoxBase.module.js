@@ -750,7 +750,6 @@ define(
 
       init: function(){
          FormattedTextBoxBase.superclass.init.apply(this, arguments);
-         this._updateText();
       },
 
       //Тут обрабатываются управляющие команды
@@ -1046,6 +1045,23 @@ define(
          }
          this.formatModel._options.newContainer = _getContainerByIndex.call(this, this.formatModel._options.cursorPosition.group);
          this.formatModel._options.newPosition = this.formatModel._options.cursorPosition.position;
+      },
+
+      /**
+       * Получает текстовое значение поля ввода.
+       * @returns {String} Текст - значение поля ввода.
+       * @example
+       * <pre>
+       *     if (control.getText() == "Введите ФИО") {
+       *        control.setText("");
+       *     }
+       * </pre>
+       * @see text
+       * @see setText
+       */
+      getText: function() {
+         this._updateText();
+         return FormattedTextBoxBase.superclass.getText.apply(this, arguments);
       },
       /**
        * Установить значение в поле.

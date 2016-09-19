@@ -1,6 +1,6 @@
 <tr class="controls-DataGridView__results">
     {{?it.multiselect}}
-        <td class="controls-DataGridView__td"></td>
+        <td class="controls-DataGridView__td {{?it.startScrollColumn === 0}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}"></td>
     {{?}}
     {{~it.columns :column:index}}
         <td class="controls-DataGridView__td {{=column.className}}{{?it.startScrollColumn!== undefined}} {{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}} ">{{=it.results[index]}}</td>

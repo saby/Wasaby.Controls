@@ -178,6 +178,16 @@ define(
             this.subscribe('onFocusOut', self._updateTextByTimeInterval);
             this.subscribe('onInputFinished',self._updateTextByTimeInterval);
          },
+
+         init: function() {
+            TimeInterval.superclass.init.apply(this, arguments);
+            this._updateText();
+         },
+
+         getText: function() {
+            return this._options.text;
+         },
+
          /**
           * Устанавливаем количество дней.
           * @param days Дни в интервале.
