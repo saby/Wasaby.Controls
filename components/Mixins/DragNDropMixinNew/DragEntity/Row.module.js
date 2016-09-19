@@ -56,6 +56,12 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
     */
    var Row = Entity.extend(/**@lends SBIS3.CONTROLS.DragEntity.Row.prototype*/{
       _moduleName: 'SBIS3.CONTROLS.DragEntity.Row',
+      /**
+       * @typedef {String} DragPosition Показывает куда вставлять перетаскиваемые элементы
+       * @variant on Внутрь текущей записи
+       * @variant after После текущей записи
+       * @variant before Перед текущей записью
+       */
       $protected: {
          _options: {
             /**
@@ -63,10 +69,7 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
              */
             model: undefined,
             /**
-             * @cfg {String} Позиция куда добавлять элемент
-             * @varian before Выше
-             * @varian after Ниже
-             * @varian on Внутрь
+             * @cfg {DragPosition} Позиция куда добавлять элемент
              */
             position: undefined,
             /**
@@ -91,7 +94,7 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
       },
       /**
        * Возвращает позицию элемента
-       * @returns {String}
+       * @returns {DragPosition}
        * @see position
        */
       getPosition: function () {
@@ -99,7 +102,7 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
       },
       /**
        * Устанавливает позицию элемента
-       * @param {String} position
+       * @param {DragPosition} position
        * @see position
        */
       setPosition: function (position) {

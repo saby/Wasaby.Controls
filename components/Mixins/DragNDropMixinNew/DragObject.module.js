@@ -3,46 +3,59 @@ define('js!SBIS3.CONTROLS.DragObject', [
 ], function () {
    'use strict';
    /**
-    * Синглтон который обеспечивает работу с элементом который сейчас перетаскивают
-    *
+    * Глобальный объект в котором содержится информация о текущем состоянии dragndrop
+    * <ul>
+    *    <li>Элементы которые перетаскивают</li>
+    *    <li>Элемент над которым сейчас находится курсор мыши</li>
+    *    <li>Контрол с которого тащат элементы</li>
+    *    <li>Контрол над которым сейчас находится курсор мыши</li>
+    *    <li>Аватар - иконка которая отображается около курсора мыши</li>
+    * </ul>
+    * DragObject прередается во все события DragNDropMixin, так же его можно получить в любом месте через require.
     * @class SBIS3.CONTROLS.DragTarget
-    * @control
+    * @singleton
     * @public
     * @author Крайнов Дмитрий Олегович
+    * @see SBIS3.CONTROLS.DragNDropMixinNew
+    * @example
+    * Получим DragObject через require
+    * <pre>
+    *    var dragObject = require('js!SBIS3.CONTROLS.DragObject');
+    * </pre>
     */
    var DRAG_AVATAR_OFFSET = 5;
    var DragObject = $ws.proto.Abstract.extend(/**@lends SBIS3.CONTROLS.DragObject.prototype*/{
       $protected: {
          /**
-          * @var {SBIS3.CONTROLS.Control} контрол который начал dragndrop
+          * @var {SBIS3.CONTROLS.Control} Контрол который начал dragndrop
           */
          _owner: undefined,
          /**
-          * @var {WS.Data/Collection/IList} набор элементов которые сейчас перетаскивают
+          * @var {WS.Data/Collection/IList} Набор элементов которые сейчас перетаскивают
           */
          _source: undefined,
          /**
-          * @var {WS.Data/Collection/IList} элемент над которым находится курсор мыши
+          * @var {SBIS3.CONTROLS.DragEntity.Entity} Элемент над которым находится курсор мыши
           */
          _target: undefined,
          /**
-          * @var {jQuery} аватар, иконка которая отображается около курсора мыши
+          * @var {jQuery} Аватар, иконка которая отображается около курсора мыши
           */
          _avatar: undefined,
          /**
-          * @var {Boolean} признак тащат ли ейчас элемент
+          * @var {Boolean} Признак тащат ли ейчас элемент
           */
          _dragging: undefined,
          /**
-          * @var {Object} дополнительная информация
+          * @var {Object} Дополнительная информация
           */
          _meta: undefined,
          /**
-         * @var {Event} актульное, текущему моменту перетаскивания, событие брауера (onMouseMove, onMouseDown ...)
+         * @var {Event} Актульное, текущему моменту перетаскивания, событие брауера (onMouseMove, onMouseDown ...)
          */
          _jsEvent: undefined,
          /**
-          * @var {SBIS3.CONTROLS.Control} контрол над которым находится курсор мыши
+          * @var {SBIS3.CONTROLS.Control} Контрол над которым находится курсор мыши
           */
          _targetsControl: undefined
       },
@@ -138,7 +151,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
          }
       },
       /**
-       * удаляет аватар, иконка около курсора мыши
+       * Удаляет аватар, иконка около курсора мыши
        */
       removeAvatar: function () {
          if (this._avatar) {
