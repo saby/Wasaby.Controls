@@ -125,6 +125,13 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             ItemActionsGroup.superclass.setEnabled.apply(this, arguments);
             this.applyItemActions();
          },
+
+         /**
+          * Возвращает элемент для которого отображаются Операции над записью
+          */
+         getTarget: function () {
+            return this._activeItem;
+         },
          /**
           * Создаёт меню для операций над записью
           * @private
@@ -252,6 +259,9 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             ItemActionsGroup.superclass.setItems.apply(this, arguments);
             if(this.isVisible()) {
                this.applyItemActions();
+            }
+            if(this.isItemActionsMenuVisible()){
+               this._onBeforeMenuShowHandler();
             }
          },
          /**

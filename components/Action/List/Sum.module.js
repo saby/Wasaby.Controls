@@ -5,10 +5,9 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
         'js!SBIS3.CONTROLS.Action.DialogMixin',
         'js!WS.Data/Source/SbisService',
         'js!WS.Data/Entity/Model',
-        'js!WS.Data/Adapter/Sbis',
-        'js!WS.Data/Collection/RecordSet'
+        'js!WS.Data/Adapter/Sbis'
     ],
-    function (ActionBase, ListMixin, DialogMixin, SbisService, Model, SbisAdapter, RecordSet) {
+    function (ActionBase, ListMixin, DialogMixin, SbisService, Model) {
         'use strict';
         /**
          * Класс суммирования полей в списке
@@ -74,8 +73,11 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
             _doExecute: function () {
                 var self = this;
                 return this._sum().addCallback(function(item) {
+                    if ($ws.helpers.instanceOfModule(item, 'WS.Data/Source/DataSet')) {
+                        item = item.getRow();
+                    }
                     return self._opendEditComponent({
-                        item: item.getRow()
+                        item: item
                     }, self._options.template);
                 });
             },
@@ -103,30 +105,53 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
             },
             _sum: function() {
                 var
-                    selectedRecordSet,
+                    source,
                     object = this.getLinkedObject(),
-                    source = this.getDataSource(),
                     selectedItems = object.getSelectedItems(),
-                    isSelected = selectedItems && selectedItems.getCount(),
-                    args = {
-                        'Поля': Object.keys(this._options.fields)
-                    },
-                    sumSource = new SbisService({
-                        endpoint: "Сумма"
-                    });
+                    isSelected = selectedItems && selectedItems.getCount();
                 if (isSelected) {
-                    selectedRecordSet = new RecordSet({
+                    //При суммировании выбранных элементов, не вызываем платформенный метод бизнес логики 'Сумма.ПоВыборке',
+                    //из-за того, что могут выделить 1000 записей и нам эти 1000 записей придётся отправить на бл.
+                    //1000 записей весят примерно 8 мегабайт. Получается не рационально перегонять 8 мб ради лёгкой операции,ъ
+                    //которая на клиенте выполняется меньше секунды.
+                    return this._sumField(selectedItems, object.getItems().getFormat());
+                } else {
+                    source = this.getDataSource();
+                    return this._getSumSource().call('ПоМетоду', {
+                        'Поля': Object.keys(this._options.fields),
+                        'ИмяМетода': source.getEndpoint().contract + '.' + source.getBinding().query,
+                        'Фильтр': Model.fromObject(object.getFilter(), 'adapter.sbis')
+                    });
+                }
+            },
+
+            _sumField: function(items, format) {
+                var
+                    i, resultFields = {},
+                    fields = Object.keys(this._options.fields),
+                    resultRecord = new Model({
                         adapter: 'adapter.sbis'
                     });
-                    selectedRecordSet.assign(selectedItems);
-                    args['Записи'] = selectedRecordSet;
-                } else {
-                    args['ИмяМетода'] = source.getEndpoint().contract + '.' + source.getBinding().query;
-                    args['Фильтр'] = Model.fromObject(object.getFilter(), 'adapter.sbis');
+                for (i = 0; i < fields.length; i++) {
+                    resultFields[fields[i]] = 0;
                 }
+                items.each(function(model) {
+                    for (var i = 0; i < fields.length; i++) {
+                        resultFields[fields[i]] += model.get(fields[i]);
+                    }
+                }, this);
+                resultRecord.addField({name: rk('Число записей'), type: 'integer'}, 0, items.getCount());
+                for (i = 0; i < fields.length; i++) {
+                    resultRecord.addField(format.at(format.getFieldIndex(fields[i])), i + 1, resultFields[fields[i]]);
+                }
+                return $ws.proto.Deferred.success(resultRecord);
+            },
 
-                return sumSource.call(isSelected ? 'ПоВыборке' : 'ПоМетоду', args);
-            }
+            _getSumSource: $ws.helpers.memoize(function() {
+                return new SbisService({
+                    endpoint: "Сумма"
+                });
+            })
         });
         return Sum;
     });

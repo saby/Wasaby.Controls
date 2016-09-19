@@ -204,7 +204,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             showEip: function(model, options, withoutActivateFirstControl) {
                if (options && options.isEdit) {
-                  return this.edit(model, options, withoutActivateFirstControl);
+                  return this.edit(model, withoutActivateFirstControl);
                } else {
                   return this.add(options);
                }

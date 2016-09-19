@@ -9,13 +9,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.DragAndDropMixin',
       'js!SBIS3.CONTROLS.ImitateEvents',
-      'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
+      'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-      'browser!html!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate',
-      'browser!html!SBIS3.CONTROLS.DataGridView/resources/ItemContentTemplate',
-      'browser!html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate',
-      'browser!html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate'
+      'html!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate',
+      'html!SBIS3.CONTROLS.DataGridView/resources/ItemContentTemplate',
+      'html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate',
+      'html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate'
    ],
    function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, LadderDecorator, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate) {
    'use strict';
@@ -418,6 +418,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
          checkColumns(newCfg);
          newCfg._colgroupData = prepareColGroupData(newCfg);
          newCfg._headData = prepareHeadData(newCfg);
+
+         /* Отключаем прилипание заголовков при включённом частичном скроле,
+            в противном случае это ломает вёрстку, т.к. для корректной работы частичного скрола
+            требуется вешать на контейнер компонента overflow-x: hidden, а элементы c overflow-x: hidden
+            некорректно ведут себя в абсолютно позиционированных элементах (каким является stickyHeader). */
+         if(newCfg.stickyHeader && newCfg.startScrollColumn !== undefined) {
+            newCfg.stickyHeader = false;
+         }
+
          return newCfg;
       },
 

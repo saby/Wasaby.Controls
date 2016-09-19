@@ -15,8 +15,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'js!WS.Data/Utils',
    'js!WS.Data/Entity/Model',
    'Core/ParserUtilities',
-   'Core/Sanitize'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, CollectionDisplay, EnumDisplay, FlagsDisplay, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize) {
+   'Core/Sanitize',
+   'js!SBIS3.CORE.LayoutManager'
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, CollectionDisplay, EnumDisplay, FlagsDisplay, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize, LayoutManager) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -245,7 +246,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _groupHash: {},
          _itemsProjection: null,
          _items : null,
-         _isOwnItems : false,
          _itemsInstances: {},
          _offset: 0,
          _limit: undefined,
@@ -671,7 +671,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   this._options.keyField = findKeyField(itemsOpt);
                }
                this._options._items = JSONToRecordset(itemsOpt, this._options.keyField);
-               this._isOwnItems = true;
             }
             else {
                this._options._items = itemsOpt;
@@ -1111,8 +1110,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          },
          destroy : function() {
             this._unsetItemsEventHandlers();
-            if (this._options._items && this._isOwnItems) {
-               this._options._items.destroy();
+            if (this._options._items) {
                this._options._items = null;
             }
             if (this._options._itemsProjection) {
@@ -1323,7 +1321,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    } else {
                       this._unsetItemsEventHandlers();
                       this._options._items = list;
-                      this._isOwnItems = false;
                       this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
                       this._setItemsEventHandlers();
                       this._notify('onItemsReady');
@@ -1549,7 +1546,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
           this._options.items = items;
           this._unsetItemsEventHandlers();
           this._options._items = null;
-          this._isOwnItems = false;
           this._prepareConfig(undefined, items);
 
           this._dataLoadedCallback(); //TODO на это завязаны хлебные крошки, нужно будет спилить
@@ -1783,22 +1779,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          //Если offset отрицательный, значит запрашивали последнюю страницу
          return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
       },
-      _scrollTo: function scrollTo(target, container) {
-         var scrollContainer = container || this._getScrollContainer(),
-             scrollContainerOffset = scrollContainer.offset() || {top: 0, left: 0},
-             targetOffset;
-
+      _scrollTo: function scrollTo(target) {
          if (typeof target === 'string') {
             target = $(target);
          }
 
-         targetOffset = target.offset();
-
-         if( (targetOffset.top - scrollContainerOffset.top) < 0) {
-            target[0].scrollIntoView(true);
-         } else if ( (targetOffset.top + target.height() - scrollContainerOffset.top) > scrollContainer.outerHeight()) {
-            target[0].scrollIntoView(false);
-         }
+         LayoutManager.scrollToElement(target);
       },
       _scrollToItem: function(itemId) {
          var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());

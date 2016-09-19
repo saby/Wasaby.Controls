@@ -4,10 +4,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.TreeMixin',
    'js!SBIS3.CONTROLS.TreeViewMixin',
    'js!SBIS3.CONTROLS.IconButton',
-   'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate',
-   'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate',
-   'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate',
-   'browser!tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender'
+   'html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate',
+   'html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate',
+   'html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate',
+   'tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender'
 ], function(DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
 
 
@@ -272,19 +272,17 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                allowChangeEnable: false,
                handlers: {
                   onActivated: function () {
-                     if(self.isEnabled()){
-                        var hoveredItem = self.getHoveredItem();
+                     var hoveredItem = self.getHoveredItem();
 
-                        // TODO для обратной совместимости - удалить позже
-                        if(self._options.arrowActivatedHandler) {
-                           self._options.arrowActivatedHandler.call(this,
-                               hoveredItem.record,
-                               hoveredItem.key,
-                               hoveredItem.container
-                           );
-                        } else {
-                           self._activateItem(hoveredItem.key);
-                        }
+                     // TODO для обратной совместимости - удалить позже
+                     if(self._options.arrowActivatedHandler) {
+                        self._options.arrowActivatedHandler.call(this,
+                            hoveredItem.record,
+                            hoveredItem.key,
+                            hoveredItem.container
+                        );
+                     } else {
+                        self._activateItem(hoveredItem.key);
                      }
                   }
                }
