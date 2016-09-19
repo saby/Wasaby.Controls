@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
    'js!SBIS3.CONTROLS.BreadCrumbs',
-   'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree'], function (Control, BreadCrumbs, groupByTpl, TreeProjection) {
+   'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree', 'js!WS.Data/Relation/Hierarchy'], function (Control, BreadCrumbs, groupByTpl, TreeProjection, Hierarchy) {
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeMixinDS
@@ -196,12 +196,19 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
 
       //Рекурсивно удаляем из индекса открытых узлов все дочерние узлы закрываемого узла
       _collapseChilds: function(key){
-         var tree = this._items._indexTree;
-         if (tree[key]){
-            for (var i = 0; i < tree[key].length; i++){
-               this._collapseChilds(tree[key][i]);
-               delete(this._options.openedPath[tree[key][i]]);
-            }
+         var idProperty =  this._options.keyField || (this._dataSource ? this._dataSource.getIdProperty() : ''),
+            hierarchy = new Hierarchy({
+               idProperty: idProperty,
+               parentProperty: this._options.hierField,
+               nodeProperty: this._options.hierField + '@'
+            }),
+            children = hierarchy.getChildren(key, this._items),
+            childId;
+
+         for (var i = 0; i < children.length; i++){
+            childId = children[i].get(idProperty);
+            this._collapseChilds(childId);
+            delete(this._options.openedPath[childId]);
          }
       },
 
