@@ -249,7 +249,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           *    }
           * </pre>
           * @param {Event} e Браузерное событие
-          * @param {html} target html объект в котором надо искать dragndrop контейнер
+          * @param {html} target DOM объект в котором надо искать Drag'n'drop контейнер
           * @returns {html}
           * @private
           */

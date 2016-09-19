@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
    var DragObject = $ws.proto.Abstract.extend(/**@lends SBIS3.CONTROLS.DragObject.prototype*/{
       $protected: {
          /**
-          * @member {SBIS3.CONTROLS.Control} Контрол, который начал dragndrop.
+          * @member {SBIS3.CONTROLS.Control} Контрол, который инициализировал Drag'n'drop.
           */
          _owner: undefined,
          /**
@@ -211,8 +211,8 @@ define('js!SBIS3.CONTROLS.DragObject', [
          }
       },
       /**
-       * Устанавливает контрол который начал dragndrop. Метод должен вызываться из SBIS3.CONTROLS.DragNDropMixin
-       * @param {SBIS3.CONTROLS.Control} owner контрол, который начал dragndrop
+       * Устанавливает контрол который инициализировал Drag'n'drop. Метод должен вызываться из SBIS3.CONTROLS.DragNDropMixin
+       * @param {SBIS3.CONTROLS.Control} owner контрол, который инициализировал Drag'n'drop
        * @protected
        */
       setOwner: function (owner) {
