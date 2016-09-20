@@ -774,17 +774,21 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * Установить курсор в конец контента.
           */
          setCursorToTheEnd: function() {
+
             var
+               editor, nodeForSelect, root;
+            if (this._tinyEditor) {
                editor = this._tinyEditor,
                nodeForSelect = editor.getBody(),
                root = editor.dom.getRoot();
-            // But firefox places the selection outside of that tag, so we need to go one level deeper:
-            if (editor.isGecko) {
-               nodeForSelect = root.childNodes[root.childNodes.length-1];
-               nodeForSelect = nodeForSelect.childNodes[nodeForSelect.childNodes.length-1];
+               // But firefox places the selection outside of that tag, so we need to go one level deeper:
+               if (editor.isGecko) {
+                  nodeForSelect = root.childNodes[root.childNodes.length - 1];
+                  nodeForSelect = nodeForSelect.childNodes[nodeForSelect.childNodes.length - 1];
+               }
+               editor.selection.select(nodeForSelect, true);
+               editor.selection.collapse(false);
             }
-            editor.selection.select(nodeForSelect, true);
-            editor.selection.collapse(false);
          },
 
          /**
