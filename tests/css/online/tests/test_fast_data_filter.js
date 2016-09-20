@@ -101,12 +101,13 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Online', function () {
 
             .capture('opened_one', function (actions) {
                 actions.mouseMove(this.first_title)
-				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 40000);
+				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 4000);
             })
 
             .capture('opened_two', function (actions) {
-                actions.mouseMove(this.second_title)
-				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 40000);
+                actions.click(this.box);
+				actions.mouseMove(this.second_title)
+				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 4000);
             })
     });
 });
