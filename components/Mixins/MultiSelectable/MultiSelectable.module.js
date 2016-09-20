@@ -613,20 +613,19 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
 
          var self = this,
              selKeys = this._options.selectedKeys,
-             selItems = this._options.selectedItems,
              loadKeysArr = [],
              dMultiResult, item, loadKeysAmount, itemsKeysArr;
 
          if(!loadItems) {
-            return selItems;
+            return this._options.selectedItems;
          } else if (this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
             return this._loadItemsDeferred;
          } else if(this._isEmptySelection()) {
-            return new $ws.proto.Deferred().callback(selItems);
+            return new $ws.proto.Deferred().callback(this._options.selectedItems);
          }
 
          this._loadItemsDeferred = new $ws.proto.Deferred();
-         itemsKeysArr = this._convertToKeys(selItems);
+         itemsKeysArr = this._convertToKeys(this._options.selectedItems);
 
          /* Сфоримруем массив ключей записей, которые требуется вычитать с бл или взять из dataSet'a*/
          for(var i = 0, keys = selKeys.length; i < keys; i++) {
@@ -641,9 +640,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
             loadKeysAmount = count < loadKeysAmount ? count : loadKeysAmount;
             dMultiResult = new $ws.proto.ParallelDeferred({stopOnFirstError: false});
 
-            if(!selItems) {
+            if(!this._options.selectedItems) {
                this.initializeSelectedItems();
-               selItems = this._options.selectedItems;
             }
 
             /* Если сорс грузит данные, то дожидаемся его */
@@ -653,7 +651,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
 
                   /* если запись есть в датасете, то ничего не будем вычитывать */
                   if (item) {
-                     selItems.add(item);
+                     self._options.selectedItems.add(item);
                      continue;
                   }
 
@@ -664,21 +662,21 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
 
                   if(loadKeysArr[j] !== null) {
                      dMultiResult.push(self._dataSource.read(loadKeysArr[j]).addCallback(function (record) {
-                        selItems.add(record);
+                        self._options.selectedItems.add(record);
                      }));
                   }
                }
 
                dMultiResult.done().getResult().addCallback(function () {
                   self._onSelectedItemsChangeHandler();
-                  self._loadItemsDeferred.callback(selItems);
+                  self._loadItemsDeferred.callback(self._options.selectedItems);
                });
 
                return res;
             }, self));
 
          } else {
-            self._loadItemsDeferred.callback(selItems);
+            self._loadItemsDeferred.callback(this._options.selectedItems);
          }
          return this._loadItemsDeferred;
       },
@@ -724,7 +722,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
       /* Для правильной работы контекста надо рвать ссылку, на текущее св-во,
          чтобы не было равенства при сравнении и в контекст записалось новое значение */
       _onSelectedItemsChangeHandler: function() {
-         this._options.selectedItems = this._options.selectedItems.clone();
+         this._options.selectedItems = this._options.selectedItems.clone(true);
          this._notifyOnPropertyChanged('selectedItems');
       },
 
