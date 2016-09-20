@@ -537,6 +537,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                   //withStyles: true нужно чтобы в нашем обработчике BeforePastePreProcess мы не обрабатывали а прокинули результат в обработчик тини
                   eventResult = self.getTinyEditor().fire('BeforePastePreProcess', {content: content, withStyles: true});
                   self.insertHtml(eventResult.content);
+                  self._setTrimmedText(self._getTinyEditorValue());
                },
                onPaste = function(event) {
                   var content = event.clipboardData.getData ? event.clipboardData.getData('text/html') : '';
