@@ -40,9 +40,9 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
          _options: {
             /**
              * @typedef {Array} filterStructure
-             * @property {String} internalValueField Название поля, которое хранит значение элемента. По-умолчанию null.
-             * @property {String} internalCaptionField Название поля, которое хранит текстовое отображение значения. По-умолчанию null.
-             * @property {String} internalVisibilityField Название поля, которое хранит отображение элемента в зависимости от значения. По-умолчанию null.
+             * @property {String} internalValueField Название поля, которое хранит значение элемента. По умолчанию null.
+             * @property {String} internalCaptionField Название поля, которое хранит текстовое отображение значения. По умолчанию null.
+             * @property {String} internalVisibilityField Название поля, которое хранит отображение элемента в зависимости от значения. По умолчанию null.
              * @property {String} caption Текущее текстовое отображение значения. Может быть не определено.
              * @property {Object} visibilityValue ТТекущее состояние отображения элемента. Может быть не определено.
              * @property {null|Object|String|Boolean|Number} value Текущее значение элемента. Может быть не определено.
