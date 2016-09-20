@@ -164,7 +164,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this._publish('onInitEditor', 'onUndoRedoChange','onNodeChange', 'onFormatChange', 'onToggleContentSource');
             this._sourceContainer = this._container.find('.controls-RichEditor__sourceContainer');
             this._sourceArea = this._sourceContainer.find('.controls-RichEditor__sourceArea').bind('input', this._onChangeAreaValue.bind(this));
-            this._readyContolDeffered = new $ws.proto.Deferred();
+            this._readyContolDeffered = new $ws.proto.Deferred().addCallback(function(){
+               this._notify('onReady');
+            }.bind(this));
             this._dChildReady.push(this._readyContolDeffered);
             this._dataReview = this._container.find('.controls-RichEditor__dataReview');
             this._tinyReady = new $ws.proto.Deferred();
@@ -185,7 +187,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                RichUtil.markRichContentOnCopy(this._dataReview);
                if (!this.isEnabled()) {
                   this._readyContolDeffered.callback();
-                  this._notify('onReady');
                }
                this._updateDataReview(this.getText());
             }.bind(this));
@@ -949,11 +950,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
                if (!self._readyContolDeffered.isReady()) {
                   self._tinyReady.addCallback(function() {
-                     //Стреляем готовность ws-контрола только в том случае, если раньше не стреляли
-                     self._readyContolDeffered.addCallback(function () {
-                        self._notify('onReady');
-                        self._notify('onInitEditor');
-                     });
                      self._readyContolDeffered.callback();
                   });
                }
@@ -961,7 +957,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this._inputControl = $(editor.getBody());
                RichUtil.markRichContentOnCopy(this._inputControl);
                self._tinyReady.callback();
-
+               self._notify('onInitEditor');
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ ФОРМАТ ПОД КУРСОРОМ*/
                //formatter есть только после инита поэтому подписка осуществляется здесь
                editor.formatter.formatChanged('bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,selectedMainText,additionalText', function(state, obj) {
