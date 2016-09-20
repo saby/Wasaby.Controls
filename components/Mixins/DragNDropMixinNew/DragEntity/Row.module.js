@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
 ], function (Entity, Di) {
    'use strict';
    /**
-    * Drag'n'drop объект списочного контрола. Объекты этого класса (либо его наследники) создаются ListView, когда пользователь начинает перетаскивать элемент.
+    * Drag'n'drop объект списочного контрола. Объекты этого класса (либо его наследники) создаются ListView, когда пользователь начинает перемещать элемент.
     *
     * @class SBIS3.CONTROLS.DragEntity.Row
     * @control
@@ -14,20 +14,19 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
     * @example
     * Рассмотрим пример, как создать свою Drag'n'drop-сущность:
     * <pre>
-    *    defined('js!SBIS3.Demo.DragEntity.Task', ['js!SBIS3.CONTROLS.DragEntity.Row', 'js!WS.Data/Di'], function(Row){
+    *    defined('js!SBIS3.Demo.DragEntity.Task', ['js!SBIS3.CONTROLS.DragEntity.Row', 'js!WS.Data/Di'], function (Row, Di) {
     *       var Task = Row.extend({
     *          $protected: {
     *             _options: {
     *                user: undefined
     *             }
-    *          }
+    *          },
     *          getUser: function(){
     *             return this._options.user
     *          }
     *       });
     *       //Если не нужно прокидывать долнительные опции, то регистрируем вот так
     *       Di.register('demo.task', Task);
-    *
     *    })
     *
     *    //Где-то в другом модуле регистрируем фабрику.
@@ -57,42 +56,42 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
       _moduleName: 'SBIS3.CONTROLS.DragEntity.Row',
       /**
        * @typedef {String} DragPosition
-       * @variant on Вставить перетаскиваемые элементы внутрь текущей записи
-       * @variant after Вставить перетаскиваемые элементы после текущей записи
-       * @variant before Вставить перетаскиваемые элементы перед текущей записью
+       * @variant on Вставить перемещаемые элементы внутрь текущей записи.
+       * @variant after Вставить перемещаемые элементы после текущей записи.
+       * @variant before Вставить перемещаемые элементы перед текущей записью.
        */
       $protected: {
          _options: {
             /**
-             * @cfg {WS.Data/Entity/Model} Модель по которой строится строка
+             * @cfg {WS.Data/Entity/Model} Модель по которой строится строка.
              */
             model: undefined,
             /**
-             * @cfg {DragPosition} Как разместить перетаскиваемые элементы
+             * @cfg {DragPosition} Позиция элемента после перемещения.
              */
             position: undefined,
             /**
-             * @cfg {JQuery} строка
+             * @cfg {JQuery} DOM элемент, отображающий запись.
              */
             domElement: undefined
          }
       },
       /**
-       * Возвращает модель строки
+       * Возвращает модель строки.
        * @returns {WS.Data/Entity/Model}
        */
       getModel: function () {
          return this._options.model;
       },
       /**
-       * Устанавливает модель строки
+       * Устанавливает модель строки.
        * @param {WS.Data/Entity/Mode} model
        */
       setModel: function (model) {
          this._options.model = model;
       },
       /**
-       * Возвращает позицию элемента
+       * Возвращает позицию элемента.
        * @returns {DragPosition}
        * @see position
        */
@@ -100,7 +99,7 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
          return this._options.position;
       },
       /**
-       * Устанавливает позицию элемента
+       * Устанавливает позицию элемента.
        * @param {DragPosition} position
        * @see position
        */
@@ -108,14 +107,14 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
          this._options.position = position;
       },
       /**
-       * Возвращает JQuery элемент сроки
+       * Возвращает JQuery элемент сроки.
        * @returns {JQuery}
        */
       getDomElement: function () {
          return this._options.domElement;
       },
       /**
-       * Устанавливает JQuery элемент сроки
+       * Устанавливает JQuery элемент сроки.
        * @param {JQuery} element
        */
       setDomElement: function (element) {

@@ -15,7 +15,6 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.DecorableMixin',
       'js!SBIS3.CONTROLS.DragNDropMixinNew',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
-      'js!SBIS3.CONTROLS.BreakClickBySelectMixin',
       'js!SBIS3.CONTROLS.ItemsToolbar',
       'js!SBIS3.CORE.MarkupTransformer',
       'html!SBIS3.CONTROLS.ListView',
@@ -46,7 +45,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!WS.Data/Collection/RecordSet'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
-             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
+             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin,  ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
              Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder, Di, ArraySimpleValuesUtil) {
@@ -242,16 +241,16 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          /**
           * @typedef {String} DragPosition
-          * @variant on Вставить перетаскиваемые элементы внутрь текущей записи
-          * @variant after Вставить перетаскиваемые элементы после текущей записи
-          * @variant before Вставить перетаскиваемые элементы перед текущей записью
+          * @variant on Вставить перемещаемые элементы внутрь текущей записи.
+          * @variant after Вставить перемещаемые элементы после текущей записи.
+          * @variant before Вставить перемещаемые элементы перед текущей записью.
           */
          /**
           * @typedef {Object} DragEntityOptions
-          * @property {SBIS3.CONTROLS.Control} owner Контрол, которому принадлежит запись
-          * @property {jQuery} domElement DOM элемент, отображающий запись
+          * @property {SBIS3.CONTROLS.Control} owner Контрол, которому принадлежит запись.
+          * @property {jQuery} domElement DOM элемент, отображающий запись.
           * @property {WS.Data/Entity/Model} model Модель, соответствующая записи.
-          * @property {DragPosition|undefined} position Куда вставить элементы (определяется только у целевого элемента - того, который находится под курсором мыши)
+          * @property {DragPosition|undefined} position Позиция элемента после перемещения (определяется только у целевого элемента - того, который находится под курсором мыши).
           */
          $protected: {
             _floatCheckBox: null,
@@ -2701,7 +2700,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
-            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._getDragInitHandler());
+            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown tochstart', '.js-controls-ListView__item', this._getDragInitHandler());
          },
 
          /**
@@ -3046,5 +3045,5 @@ define('js!SBIS3.CONTROLS.ListView',
          }
       });
 
-      return ListView.mixin([BreakClickBySelectMixin]);
+      return ListView;
    });
