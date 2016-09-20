@@ -241,6 +241,19 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {Array} idArray Ключи удаляемых записей.
           * @returns {*|Boolean} result Если result равен false то отменяется штатная логика удаления.
           */
+         /**
+          * @typedef {String} DragPosition
+          * @variant on Вставить перемещаемые элементы внутрь текущей записи.
+          * @variant after Вставить перемещаемые элементы после текущей записи.
+          * @variant before Вставить перемещаемые элементы перед текущей записью.
+          */
+         /**
+          * @typedef {Object} DragEntityOptions
+          * @property {SBIS3.CONTROLS.Control} owner Контрол, которому принадлежит запись.
+          * @property {jQuery} domElement DOM элемент, отображающий запись.
+          * @property {WS.Data/Entity/Model} model Модель, соответствующая записи.
+          * @property {DragPosition|undefined} position Позиция элемента после перемещения (определяется только у целевого элемента - того, который находится под курсором мыши).
+          */
          $protected: {
             _floatCheckBox: null,
             _dotItemTpl: null,
@@ -668,7 +681,8 @@ define('js!SBIS3.CONTROLS.ListView',
                partialPaging: true,
                scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
                /**
-                * @cfg Конструктор перемещяемой сущности должен вернуть элемент наследник класса SBIS3.CONTROLS.DragEntity.Row
+                * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS.DragEntity.Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS.DragEntity.Row}
+                * @see DragEntityOptions
                 * @see SBIS3.CONTROLS.DragEntity.Row
                 */
                dragEntity: 'dragentity.row'
@@ -703,8 +717,8 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing()) {
                this.setGroupBy(this._options.groupBy, false);
             }
-            ListView.superclass.init.call(this);
             this._prepareInfiniteScroll();
+            ListView.superclass.init.call(this);
             if (!this._options._serverRender) {
                if (this.getItems()) {
                   this.redraw()
@@ -818,7 +832,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _setLoadMoreCaption: function(dataSet){
-            var more = dataSet.getMetaData().more
+            var more = dataSet.getMetaData().more;
             if (typeof more == 'number'){
                this._loadMoreButton.setCaption('Еще ' + more);
             } else {
@@ -2326,7 +2340,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (show) {
                setTimeout(function(){
                   if (!self.isDestroyed() && self._showedLoading) {
-                     scrollContainer = self._getScrollContainer();
+                     scrollContainer = self._getScrollContainer()[0];
                      indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
                      if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].scrollHeight > scrollContainer.offsetHeight) {
                         /* Ищем кординату, которая находится по середине отображаемой области грида */

@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       template: 'js!SBIS3.CONTROLS.SuggestShowAll',
       componentOptions: {}
    };
-   var EMPTY_LIST_TEXT = 'Не найдено'
+   var EMPTY_LIST_TEXT = 'Не найдено';
 
    /**
     * Миксин автодополнения. Позволяет добавить функционал автодополнения любому контролу или набору контролов.
@@ -234,7 +234,13 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              *    </options>
              * </pre>
              */
-            showAllConfig: {}
+            showAllConfig: {},
+            /**
+             * @cfg {Boolean} Показывать ли выпадающий блок, при пустом списке
+             * @variant true Показывать выпадающий блок при пустом списке.
+             * @variant false Не показывать выпадающий блок при пустом списке.
+             */
+            showEmptyList: true
          },
          _resultBindings: {},                   /* {Object} Соответствие полей для подстановки в контекст */
          _delayTimer: null,                     /* {Object|null} Таймер задержки загрузки picker-а */
@@ -348,7 +354,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             self._showLoadingIndicator();
             self.hidePicker();
             self._loadDeferred = self.getList().reload(self._options.listFilter).addCallback(function () {
-               if(self._checkPickerState(false)) {
+               if(self._checkPickerState(!self._options.showEmptyList)) {
                   self.showPicker();
                }
             });

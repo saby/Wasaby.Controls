@@ -677,7 +677,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             fillBranchesForRedraw(oldItems);
             for (idx in branches) {
                if (branches.hasOwnProperty(idx)) {
-                  this._redrawItem(branches[idx]);
+                  if (this._isSlowDrawing()) {
+                     this.redrawItem(branches[idx].getContents(), branches[idx]);
+                  }
+                  else {
+                     this._redrawItem(branches[idx]);
+                  }
                }
             }
          },
