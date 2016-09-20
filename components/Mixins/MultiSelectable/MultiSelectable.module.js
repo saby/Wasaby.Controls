@@ -630,7 +630,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
             }
 
             /* Если сорс грузит данные, то дожидаемся его */
-            $ws.helpers.callbackWrapper(this._loader, function(res) {
+            $ws.helpers.callbackWrapper(this._loader, $ws.helpers.forAliveOnly(function(res) {
                for (var j = 0; loadKeysAmount > j; j++) {
                   item = self.getItems() && self.getItems().getRecordById(loadKeysArr[j]);
 
@@ -658,7 +658,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
                });
 
                return res;
-            });
+            }, self));
 
          } else {
             self._loadItemsDeferred.callback(selItems);
@@ -691,7 +691,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
 
          /* Соберём элементы для удаления, т.к. в методе each не отслеживаются изменения IList'а */
          selItems.each(function(rec) {
-            if(!self._isItemSelected(rec.getId())) {
+            if(!self._isItemSelected(rec.get(self._options.keyField))) {
                delItems.push(rec);
             }
          });
@@ -722,7 +722,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
 
          if(index === -1 && $ws.helpers.instanceOfModule(item, 'WS.Data/Entity/Model')) {
             if(selectedItems) {
-               index = selectedItems.getIndexByValue(item.getIdProperty(), item.getId());
+               index = selectedItems.getIndexByValue(item.getIdProperty(), item.get(this._options.keyField));
             } else {
                index = -1;
             }
@@ -861,8 +861,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
 
          if(list) {
             list.each(function (rec) {
-               keys.push(rec.getId());
-            });
+               keys.push(rec.get(this._options.keyField));
+            }.bind(this));
          }
 
          return keys;

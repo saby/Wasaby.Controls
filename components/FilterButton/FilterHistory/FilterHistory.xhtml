@@ -2,7 +2,8 @@
     <span class="controls-filterButton__secondary-title">Ранее отбирались</span>
     <div class="controls-filterButton__footerAreas-wrapper controls-filterButton__footerAreas-maxHeight">
         <component data-component="SBIS3.CONTROLS.ListView" name="historyView" class="controls-ListView__withoutMarker controls-filterButton__historyView">
-            <option name="itemTemplate" type="function">js!SBIS3.CONTROLS.FilterHistory:prototype._historyItemTpl</option>
+            <option name="itemContentTpl">html!SBIS3.CONTROLS.FilterHistory/historyItemContentTpl</option>
+            <option name="itemTpl">html!SBIS3.CONTROLS.FilterHistory/historyItemTpl</option>
             <options name="itemsActions" type="Array"></options>
             <option name="keyField" value="id"></option>
             <option name="itemsDragNDrop" value=""></option>

@@ -10,8 +10,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 ], function(DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate) {
 
    var HIER_WRAPPER_WIDTH = 16,
-       //Число 21 это сумма padding'ов, margin'ов элементов которые составляют отступ у первого поля, по которому строится лесенка отступов в дереве
-       ADDITIONAL_LEVEL_OFFSET = 21,
+       //Число 19 это сумма padding'ов, margin'ов элементов которые составляют отступ у первого поля, по которому строится лесенка отступов в дереве
+       ADDITIONAL_LEVEL_OFFSET = 19,
       buildTplArgsTDG = function(cfg) {
          var tplOptions, tvOptions;
          tplOptions = cfg._buildTplArgsDG.call(this, cfg);
@@ -257,19 +257,17 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                allowChangeEnable: false,
                handlers: {
                   onActivated: function () {
-                     if(self.isEnabled()){
-                        var hoveredItem = self.getHoveredItem();
+                     var hoveredItem = self.getHoveredItem();
 
-                        // TODO для обратной совместимости - удалить позже
-                        if(self._options.arrowActivatedHandler) {
-                           self._options.arrowActivatedHandler.call(this,
-                               hoveredItem.record,
-                               hoveredItem.key,
-                               hoveredItem.container
-                           );
-                        } else {
-                           self._activateItem(hoveredItem.key);
-                        }
+                     // TODO для обратной совместимости - удалить позже
+                     if(self._options.arrowActivatedHandler) {
+                        self._options.arrowActivatedHandler.call(this,
+                            hoveredItem.record,
+                            hoveredItem.key,
+                            hoveredItem.container
+                        );
+                     } else {
+                        self._activateItem(hoveredItem.key);
                      }
                   }
                }
