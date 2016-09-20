@@ -774,7 +774,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * Установить курсор в конец контента.
           */
          setCursorToTheEnd: function() {
-
             var
                editor, nodeForSelect, root;
             if (this._tinyEditor) {
