@@ -703,8 +703,8 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing()) {
                this.setGroupBy(this._options.groupBy, false);
             }
-            ListView.superclass.init.call(this);
             this._prepareInfiniteScroll();
+            ListView.superclass.init.call(this);
             if (!this._options._serverRender) {
                if (this.getItems()) {
                   this.redraw()
