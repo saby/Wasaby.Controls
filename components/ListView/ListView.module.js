@@ -1224,7 +1224,14 @@ define('js!SBIS3.CONTROLS.ListView',
             var $target = $(target),
                 self = this,
                 elClickHandler = this._options.elemClickHandler,
-                onItemClickResult;
+                onItemClickResult,
+                afterHandleClickResult = $ws.helpers.forAliveOnly(function(result) {
+                   if (result !== false) {
+                      self.setSelectedKey(id);
+                      self._elemClickHandlerInternal(data, id, target, e);
+                      elClickHandler && elClickHandler.call(self, id, data, target, e);
+                   }
+                }, this);
 
             if (this._options.multiselect) {
                if ($target.hasClass('js-controls-ListView__itemCheckBox')) {
@@ -1239,18 +1246,11 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             if (onItemClickResult instanceof $ws.proto.Deferred) {
                onItemClickResult.addCallback(function (result) {
-                  if (result !== false) {
-                     self.setSelectedKey(id);
-                     self._elemClickHandlerInternal(data, id, target, e);
-                     elClickHandler && elClickHandler.call(self, id, data, target, e);
-                  }
+                  afterHandleClickResult(result);
                   return result;
                });
-            }
-            else if (onItemClickResult !== false) {
-               this.setSelectedKey(id);
-               self._elemClickHandlerInternal(data, id, target, e);
-               elClickHandler && elClickHandler.call(self, id, data, target);
+            } else {
+               afterHandleClickResult(onItemClickResult);
             }
          },
          _notifyOnItemClick: function(id, data, target, e) {
@@ -2158,8 +2158,8 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollToItem(item.getId());
             }
          },
-         isScrollOnBottom: function(){
-            return this._scrollWatcher.isScrollOnBottom();
+         isScrollOnBottom: function(noOffset){
+            return this._scrollWatcher.isScrollOnBottom(noOffset);
          },
          isScrollOnTop: function(){
             return this._scrollWatcher.isScrollOnTop();
@@ -2415,7 +2415,7 @@ define('js!SBIS3.CONTROLS.ListView',
             pageNumber = parseInt(pageNumber, 10);
             var offset = this._offset;
             if (this._isPageLoaded(pageNumber)){
-               if (this._getItemsProjection()){
+               if (this._getItemsProjection() && this._getItemsProjection().getCount()){
                   var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
                      itemId = this._getItemsProjection().getItemBySourceIndex(itemIndex).getContents().getId(),
                      item = this.getItems().getRecordById(itemId);
@@ -2760,9 +2760,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _canDragMove: function(dragObject) {
+            var source = dragObject.getSource();
             return dragObject.getTarget() &&
+               source &&
+               source.getCount() > 0 &&
                dragObject.getTargetsControl() === this &&
-               $ws.helpers.instanceOfModule(dragObject.getSource().at(0), 'SBIS3.CONTROLS.DragEntity.Row');
+               $ws.helpers.instanceOfModule(source.at(0), 'SBIS3.CONTROLS.DragEntity.Row');
          },
 
          _getDragTarget: function(dragObject) {

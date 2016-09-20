@@ -2,12 +2,14 @@
    display: inline-block;
    min-height: @DropdownList-min-height;
    box-sizing: @DropdownList-box-sizing;
+   line-height: 24px;
    .controls-DropdownList__selectedItem {
       display: block; /* ie8/9 */
       display: flex;
       width: 100%;
       white-space: nowrap;
       font-size: 0;
+      box-sizing: border-box;
       align-items: center;
       * {
          font-size: @font-basic-size;
@@ -272,7 +274,16 @@
 }
 
 .ws-is-firefox {
+   .controls-DropdownList__picker .controls-DropdownList__header .controls-DropdownList{
+     line-height: 25px;
+   }
    .controls-DropdownList__afterCaptionWrapper {
       top: 3px;
    }
+}
+
+.ws-is-ie, .ws-is-firefox {
+  .controls-DropdownList .controls-DropdownList__selectedItem{
+    display: inline-flex;
+  }
 }
