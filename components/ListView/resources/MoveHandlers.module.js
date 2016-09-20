@@ -144,16 +144,20 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
                3. это не исключает ситуации, когда БЛ не возвращает иерархию до корня, либо пользователь самостоятельно пытается что-то переместить с помощью интерфейса IDataSource.move. В таком случае мы считаем, что БЛ вне зависимости от возможности проверки на клиенте, всегда должна проверять входные значения при перемещении. В противном случае это приводит к зависанию запроса.
             */
             path = dataSet.getMetaData().path,
-            toMap = path ? $.map(path.getChildItems(), function(elem) {
-               return '' + elem;
-            }) : [];
+            toMap = [];
+
+         if (path) {
+            path.each(function(item) {
+               toMap.push('' + item.getId());
+            });
+         }
          var record = dataSet.getRecordById(parentKey);
          while (record) {
             parentKey = '' + record.getId();
             if ($.inArray(parentKey, toMap) === -1) {
                toMap.push(parentKey);
             }
-            parentKey = dataSet.getParentKey(record, hierField);
+            parentKey = record.get(hierField);
             record = dataSet.getRecordById(parentKey);
          }
          return toMap;

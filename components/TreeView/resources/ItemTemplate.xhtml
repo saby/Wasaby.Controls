@@ -1,6 +1,16 @@
 {{ var
+      HierarchyRelation = require('js!WS.Data/Relation/Hierarchy'),
       hierField = it.item.get(it.hierField + '@'),
-      hasLoadedChild = !!it.projItem.getOwner().getCollection().getChildItems(it.projItem.getContents().getId(), undefined, it.projItem.getOwner().getParentProperty()).length,
+      projection = it.projItem.getOwner(),
+      hierarchy = new HierarchyRelation({
+         idProperty: projection.getCollection().getIdProperty(),
+         parentProperty: projection.getParentProperty()
+      }),
+      children = hierarchy.getChildren(
+         it.projItem.getContents(),
+         projection.getCollection()
+      ),
+      hasLoadedChild = children.length > 0,
       loadedWithoutChilds = it.projItem.isLoaded() && !hasLoadedChild && hierField != null,
       padding = it.paddingSize * (it.projItem.getLevel() - 1) + it.originallPadding,
       drawExpandIcon = !!hierField;

@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
-   'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree'], function (BreadCrumbs, groupByTpl, TreeProjection) {
+   'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree', 'js!WS.Data/Relation/Hierarchy'], function (BreadCrumbs, groupByTpl, TreeProjection, HierarchyRelation) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -117,7 +117,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                // Внимание! Даже не пытаться выпилить этот код! Логика заключается в том, что после перезагрузки данных (reload) нужно удалять из списка ветки, для которых
                // из источника данных не пришли дочерние элементы. Если разработчик желает оставить папки развернутыми - пусть присылает при reload их дочерние элементы.
                // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
-               if (projection.getCollection().getChildItems(item.getContents().getId(), undefined, projection.getParentProperty()).length) {
+               var items = projection.getCollection(),
+                  hierarchy = new HierarchyRelation({
+                     idProperty: items.getIdProperty(),
+                     parentProperty: projection.getParentProperty()
+                  }),
+                  children = hierarchy.getChildren(
+                     item.getContents().getId(),
+                     projection.getCollection()
+                  );
+               if (children.length) {
                   item.setExpanded(true);
                } else {
                   delete cfg.openedPath[idx];
@@ -133,11 +142,23 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          item;
       while (doNext && (item = enumerator.getNext())) {
          // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
-         if (item.isNode() && !item.isExpanded() && projection.getCollection().getChildItems(item.getContents().getId(), undefined, projection.getParentProperty()).length) {
-            item.setExpanded(true);
-            item.setLoaded(true);
-            doNext = false;
-            expandAllItems(projection);
+         if (item.isNode() && !item.isExpanded()) {
+            var items = projection.getCollection(),
+               hierarchy = new HierarchyRelation({
+                  idProperty: items.getIdProperty(),
+                  parentProperty: projection.getParentProperty()
+               }),
+               children = hierarchy.getChildren(
+                  item.getContents().getId(),
+                  projection.getCollection()
+               );
+
+            if (children.length) {
+               item.setExpanded(true);
+               item.setLoaded(true);
+               doNext = false;
+               expandAllItems(projection);
+            }
          }
       }
    },
@@ -463,9 +484,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                this._loadedNodes[id] = true;
                this._options._items.merge(list, {remove: false});
                this._notify('onDataMerge', list); // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
-               if (this._isSlowDrawing()) {
-                  this._options._items.getTreeIndex(this._options.hierField, true);
-               }
                this._toggleIndicator(false);
                this._getItemProjectionByItemId(id).setLoaded(true);
             }.bind(this));
@@ -664,7 +682,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             //Если данные пришли, нарисуем
             if (dataSet.getCount()) {
                self._options._items.merge(dataSet, {remove: false});
-               self._options._items.getTreeIndex(self._options.hierField, true);
                self._updateItemsToolbar();
                self._dataLoadedCallback();
                self._createFolderFooter(id);
@@ -673,6 +690,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          }, self)).addErrback(function (error) {
             //Здесь при .cancel приходит ошибка вида DeferredCanceledError
             return error;
+         });
+      },
+
+      _getHierarchyRelation: function(idProperty) {
+         return new HierarchyRelation({
+            idProperty: idProperty || (this._items ? this._items.getIdProperty() : ''),
+            parentProperty: this._options.hierField,
+            nodeProperty: this._options.hierField + '@'
          });
       },
 
@@ -687,12 +712,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          _dataLoadedCallback: function () {
             //this._options.openedPath = {};
             if (this._options.expand) {
-               var tree = this._options._items.getTreeIndex(this._options.hierField);
-               for (var i in tree) {
-                  if (tree.hasOwnProperty(i) && i != 'null' && i != this._options._curRoot) {
-                     this._options.openedPath[i] = true;
+               var hierarchy = this._getHierarchyRelation(),
+                  items = this._options._items,
+                  openedPath = this._options.openedPath;
+               items.each(function(item) {
+                  var id = item.getId(),
+                     children = hierarchy.getChildren(item, items);
+                  if (children.length && id != 'null' && id != this._curRoot) {
+                     openedPath[id] = true;
                   }
-               }
+               });
             }
             var path = this._options._items.getMetaData().path,
                hierarchy = $ws.core.clone(this._hier),
@@ -1001,7 +1030,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          if (dataSet){
             do {
                record = dataSet.getRecordById(key);
-               parentKey = record ? dataSet.getParentKey(record, this._options.hierField) : null;
+               parentKey = record ? record.get(this._options.hierField) : null;
                if (record) {
                   hierarchy.push({
                      'id': key || null,

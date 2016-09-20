@@ -394,13 +394,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          container.addClass('controls-ListView__item-type-' + itemType);
          var
             key = item.getId(),
-            parentKey = this._options._items.getParentKey(item, this._options.hierField),
+            parentKey = item.get(this._options.hierField),
          	parentContainer = $('.controls-ListView__item[data-id="' + parentKey + '"]', this._getItemsContainer().get(0)).get(0);
          container.attr('data-parent', parentKey);
 
          if (this._options.openedPath[key]) {
-            var tree = this._options._items.getTreeIndex(this._options.hierField);
-            if (tree[key]) {
+            var hierarchy = this._getHierarchyRelation(),
+               children = hierarchy.getChildren(key, this._options._items);
+
+            if (children.length) {
                $('.js-controls-TreeView__expand', container).addClass('controls-TreeView__expand__open');
             } else {
                /*TODO:
