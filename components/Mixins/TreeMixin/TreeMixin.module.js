@@ -526,12 +526,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             var root;
             if (isPlainObject(this._options.root)) {
                root = this._getItemsProjection().getRoot();
-               if (String(root.getContent().getId()) === String(id)) {
+               if (String(root.getContents().getId()) === String(id)) {
                   return root;
                }
-            } else {
-               return parentFn.apply(this, [id]);
             }
+            return parentFn.apply(this, [id]);
          },
          _canApplyGrouping: function(parentFn, projItem) {
             if (this._isSearchMode()) {
