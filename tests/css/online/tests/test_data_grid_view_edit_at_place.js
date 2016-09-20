@@ -574,7 +574,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 				actions.wait(350);
             })
     });
-/*
+
 	gemini.suite('editor_with_combobox', function (test) {
 
         test.setUrl('/regression_data_grid_view_edit_at_place_online_11.html').setCaptureElements('.capture')
@@ -594,7 +594,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 				actions.sendKeys('[sbisname="Содержимоеbind"] .js-controls-TextBox__field', gemini.SHIFT+gemini.HOME);
             })
     });
-*/
+
     gemini.suite('items_actions_on_column_template', function (test) {
 
         test.setUrl('/regression_data_grid_view_edit_at_place_online_13.html').setCaptureElements('html')
