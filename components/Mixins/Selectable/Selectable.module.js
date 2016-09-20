@@ -254,6 +254,22 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
          return this._options.selectedIndex;
       },
 
+      /**
+       * Возвращает выбранный элемент коллекции.
+       * @returns {WS.Data|Entity|Model}
+       * @example
+       * <pre>
+       *     var myItem = this.getChildControlByName('MyControl').getSelectedItem();
+       * </pre>
+       */
+      getSelectedItem : function() {
+         var
+             selKey = this.getSelectedKey(),
+             items = this.getItems();
+
+         return selKey && items ? items.getRecordById(selKey) : null;
+      },
+
       _drawSelectedItem : function() {
          /*Method must be implemented*/
       },
