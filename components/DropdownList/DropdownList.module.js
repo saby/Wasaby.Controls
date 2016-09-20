@@ -241,7 +241,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             /* Сброс выделения надо делать до установки итемов, т.к. вызов родительского setItems по стеку генерирует
              * onDrawItems, подписвашись на которое люди устанавливают ключ, а сброс после родительского
              * этот ключ затирает*/
-            this.removeItemsSelectionAll();
+            this._options.selectedKeys = [];
             DropdownList.superclass.setItems.apply(this, arguments)
          },
          setSelectedKeys : function(idArray){
