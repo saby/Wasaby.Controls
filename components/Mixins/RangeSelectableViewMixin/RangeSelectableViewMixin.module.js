@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
          if(!$ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.RangeSelectableViewMixin')) {
             throw new Error('RangeSelectableViewMixin mixin is required');
          }
-         this._publish('onSelectionStarted', 'onSelectionEnded');
+         this._publish('onBeforeSelectionStarted', 'onSelectionStarted', 'onBeforeSelectionEnded', 'onSelectionEnded');
       },
 
       /**
@@ -152,6 +152,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
          } else {
             end = start;
          }
+         this._notify('onBeforeSelectionStarted', start, end);
          this._rangeSelection = true;
          this.setRange(start, end, silent);
          this._setSelectionRangeEndItem(this.getEndValue(), silent);
@@ -166,6 +167,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
        */
       _stopRangeSelection: function (date, endDate) {
          var range = this._getUpdatedRange(this.getStartValue(), this.getEndValue(), date, endDate);
+         this._notify('onBeforeSelectionEnded', range[0], range[1]);
          this.setRange(range[0], range[1]);
          this._setSelectionRangeEndItem();
          this.validateRangeSelectionItemsView();
