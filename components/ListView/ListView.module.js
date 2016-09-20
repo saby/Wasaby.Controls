@@ -671,7 +671,7 @@ define('js!SBIS3.CONTROLS.ListView',
                partialPaging: true,
                scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
                /**
-                * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS.DragEntity.Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса SBIS3.CONTROLS.DragEntity.Row
+                * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS.DragEntity.Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS.DragEntity.Row}
                 * @see DragEntityOptions
                 * @see SBIS3.CONTROLS.DragEntity.Row
                 */

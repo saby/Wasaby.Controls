@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
       DragAndDropMixin = /**@lends SBIS3.CONTROLS.DragNDropMixinNew.prototype*/{
          $protected: {
             /**
-             * @event onBeginDrag При начале перемещения элемента. Если из события вернуть false, то перемещение будет отменено..
+             * @event onBeginDrag При начале перемещения элемента. Если из события вернуть false, то перемещение будет отменено.
              * @param {$ws.proto.EventObject} eventObject Дескриптор события.
              * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
              * @see SBIS3.CONTROLS.DragObject
@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           * @remark Определяется в модуле, который подмешивает миксин.
           * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
           * @param {Boolean} droppable Cработал внутри droppable контейнера см {@link _findDragDropContainer}
-          * @param {Event} e Браузерное событие
+          * @param {Event} e Браузерное событие.
           * @see SBIS3.CONTROLS.DragObject
           * @see _findDragDropContainer
           * @example
@@ -157,7 +157,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           * Срабатывает при перемещении (на каждое перемещение).
           * @remark Определяется в модуле, который подмешивает миксин.
           * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
-          * @param {Event} e Браузерное событие
+          * @param {Event} e Браузерное событие.
           * @see SBIS3.CONTROLS.DragObject
           */
          _onDragHandler: function(dragObject, e) {
@@ -168,7 +168,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           * @remark Определяется в модуле, который подмешивает миксин. Если контрол взамодействует с другими контролами через Drag'n'drop
           * то этот метод должен определить, что перемещает пользователь и установить в dragObject (см метод {@link SBIS3.CONTROLS.DragObject#setSource}).
           * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
-          * @param {Event} e Браузерное событие
+          * @param {Event} e Браузерное событие.
           * @see SBIS3.CONTROLS.DragObject
           * @returns {Boolean} если вернуть false перемещение не начнется
           */
@@ -188,7 +188,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           *   ...
           * </pre>
           * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
-          * @param {Event} e Браузерное событие
+          * @param {Event} e Браузерное событие.
           * @returns {String}
           * @see SBIS3.CONTROLS.DragObject
           */
@@ -197,9 +197,9 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          },
          /**
           * Обновляет target в dragObject {@link SBIS3.CONTROLS.DragObject#getTarget}.
-          * Срабатывает раньше пользовательских обработчиков событий onEndDrag, onDragMove.
-          * Это позволяет обеспечить в них актуальный target.
-          * Определяется в модуле, который подмешивает миксин.
+          * @remark Срабатывает раньше пользовательских обработчиков событий onEndDrag, onDragMove. Это позволяет обеспечить в них актуальный target. Определяется в модуле, который подмешивает миксин.
+          * @example
+          * Например у контрола такая верстка:
           * <pre>
           *    <div>
           *       <div class="item" data-id="1">Первый</div>
@@ -207,12 +207,13 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           *       <div class="item" data-id="3">Третий</div>
           *    </div>
           * </pre>
+          * перемещаются элементы с классом item.
           * <pre>
           *    ...
           *    _updateDragTarget: function(dragObject) {
           *       var row = dragObject.getTargetsDomElement(),
           *          target = null;
-          *       if (row.hasClass('item')){
+          *       if (row.hasClass('item')) {//Проверим что курсор находится над элементом с классом item
           *          target = this._makeDragEntity({
           *             owner: this,
           *             id: row.data('id')
@@ -230,8 +231,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
 
          },
          /**
-          * Возвращает контейнер, в котором лежат элементы. Если элемент бросили за пределами этого контейнера, то target (DragObject.getDragTarget()) будет пустой.
-          * Определяется в модуле, который подмешивает миксин.
+          * Возвращает контейнер, в котором лежат элементы.
+          * @remark Если элемент бросили за пределами этого контейнера, то target (DragObject.getDragTarget()) будет пустой. Определяется в модуле, который подмешивает миксин.
           * @example
           * Пусть у нашего контрола такая верcтка:
           * <pre>
