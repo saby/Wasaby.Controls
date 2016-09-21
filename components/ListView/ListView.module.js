@@ -2918,12 +2918,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         position === DRAG_META_INSERT.on ? undefined : position === DRAG_META_INSERT.after
                      );
                   } else {
-                     var dragOwnerSource  = dragOwner.getSource(),
-                        dragOwnerIsRemote = $ws.helpers.instanceOfModule(dragOwnerSource, 'WS.Data/Source/Remote'),
-                        isRemote = $ws.helpers.instanceOfModule(this.getSource, 'WS.Data/Source/Remote');
-                     if (dragOwnerIsRemote && isRemote && dragOwnerSource.getBinding().contract == this.getSource().getBinding().contract) {
-
-                     }
+                     this._moveFromOut(dragObject);
                   }
                }
             }

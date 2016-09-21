@@ -292,6 +292,47 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
             return moveToVal;
          }
          return undefined;
+      },
+      /**
+       * перемещает элементы из внешнего контрола, через drag'n'drop
+       * @param {SBIS3.CONTROLS.DragObject} dragObject
+       * @private
+       */
+      _moveFromOut: function(dragObject) {
+         var dragOwnerSource = dragObject.getOwner().getSource(),
+            dragOwnerIsRemote = $ws.helpers.instanceOfModule(dragOwnerSource, 'WS.Data/Source/Remote'),
+            isRemote = $ws.helpers.instanceOfModule(this.getSource, 'WS.Data/Source/Remote'),
+            target = dragObject.getTarget();
+         var def;
+         if (dragOwnerIsRemote && isRemote && dragOwnerSource.getBinding().contract == this.getSource().getBinding().contract) {
+            var models = [];
+            dragObject.getSource().each(function(item) {
+               models.push(item.getModel());
+            });
+            if (target.getPosition() === 'on') {
+               def = this.getMoveStrategy().hierarhyMove(models, dragObject.getTarget().getModel());
+            } else {
+               def = this.getMoveStrategy().move(models, dragObject.getTarget().getModel(), target.getPosition() === 'after');
+            }
+         }
+         def = (def instanceof $ws.proto.Deferred) ? def : new $ws.proto.Deferred().callback();
+         var position = this.getItems().getIndex(target.getModel()),
+            ownerItems = dragObject.getOwner().getItems(),
+            format = this.getItems().getFormat();
+         def.addCallback(function() {
+            dragObject.getSource().each(function(item) {
+               var operation = item.getOperation(),
+                  model = item.getModel();
+               if (operation === 'add' || operation === 'move') {
+                  if (model.getFormat().isEqual(format)) {
+                     this.getItems().add(model.clone(), position);
+                  }
+               }
+               if (operation === 'delete' || operation === 'move') {
+                  ownerItems.remove(model);
+               }
+            });
+         });
       }
    };
 
