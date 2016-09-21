@@ -370,6 +370,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          }
 
          subscribeOnSearchFormEvents();
+         searchForm.applySearch(false);
       },
       bindSearchComposite: function(searchParamName, searchCrumbsTpl, searchForm) {
          this.bindSearchGrid.apply(this, arguments);
