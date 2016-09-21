@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
 ], function (CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, DateUtil) {
    'use strict';
 
-   var DateRangeChoose = CompoundControl.extend([DateRangeMixin, RangeMixin], {
+   var DateRangeChoose = CompoundControl.extend([RangeMixin, DateRangeMixin], {
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
