@@ -176,6 +176,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       tplOptions.paddingSize = cfg._paddingSize;
       tplOptions.originallPadding = cfg._originallPadding;
       tplOptions.isSearch = (!Object.isEmpty(cfg.groupBy) && cfg.groupBy.field === this._searchParamName);
+      tplOptions.hierarchy = new HierarchyRelation({
+         idProperty: cfg.keyField,
+         parentProperty: cfg.hierField
+      });
+
       return tplOptions;
    };
    /**

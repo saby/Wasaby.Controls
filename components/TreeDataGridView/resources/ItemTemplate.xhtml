@@ -1,15 +1,10 @@
 <!--WS-EXPERT
 {{ var
-      HierarchyRelation = require('js!WS.Data/Relation/Hierarchy'),
       hierField = it.item.get(it.hierField + '@'),
       hierField$ = it.projItem.getContents().get(it.hierField + '$'),
       projection = it.projItem.getOwner(),
-      hierarchy = new HierarchyRelation({
-         idProperty: projection.getCollection().getIdProperty(),
-         parentProperty: projection.getParentProperty()
-      }),
-      children = hierarchy.getChildren(
-         it.projItem.getContents(),
+      children = it.hierarchy.getChildren(
+         it.item,
          projection.getCollection()
       ),
       hasLoadedChild = children.length > 0,
