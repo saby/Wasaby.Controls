@@ -356,6 +356,7 @@ define('js!SBIS3.CONTROLS.Image',
                var
                   imageInstance = this.getParent(),
                   result = imageInstance._notify('onBeginLoad', this);
+               this._showIndicator();
                event.setResult(result);
                if (result !== false) {
                   $ws.helpers.toggleLocalIndicator(imageInstance._container, true);
@@ -366,6 +367,7 @@ define('js!SBIS3.CONTROLS.Image',
                   imageInstance = this.getParent();
                if (response.hasOwnProperty('error')) {
                   $ws.helpers.toggleLocalIndicator(imageInstance._container, false);
+                  this._hideIndicator();
                   imageInstance._onErrorLoad(response.error, true);
                   $ws.helpers.alert('При загрузке изображения возникла ошибка: ' + response.error.message);
                } else {
@@ -375,6 +377,7 @@ define('js!SBIS3.CONTROLS.Image',
                   } else {
                      imageInstance._setImage(imageInstance._getSourceUrl());
                      $ws.helpers.toggleLocalIndicator(imageInstance._container, false);
+                     this._hideIndicator();
                   }
                }
             },
@@ -484,7 +487,6 @@ define('js!SBIS3.CONTROLS.Image',
                      },
                      onBeforeControlsLoad: function() {
                         $ws.single.Indicator.setMessage('Открытие диалога редактирования...');
-                        $ws.single.Indicator.show();
                      },
                      onAfterShow: function() {
                         $ws.single.Indicator.hide();
@@ -624,6 +626,7 @@ define('js!SBIS3.CONTROLS.Image',
                   element: cont,
                   name: 'FileLoader',
                   parent: self,
+                  showIndicator: false,
                   handlers: {
                      onLoadStarted: self._onBeginLoad,
                      onLoaded: self._onEndLoad
