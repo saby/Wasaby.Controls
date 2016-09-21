@@ -465,11 +465,12 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
                this._preparePageXY(e);
                DragObject.onDragHandler(e);
 
-            //если этот контрол начал перемещение или тащат над ним тогда стреяем событием _onDrag
-            if (DragObject.getOwner() === this || DragObject.getTargetsControl() === this ) {
-               //двигаем компонент
-               this._onDrag(e);
-               return false;
+               //если этот контрол начал перемещение или тащат над ним тогда стреяем событием _onDrag
+               if (DragObject.getOwner() === this || DragObject.getTargetsControl() === this) {
+                  //двигаем компонент
+                  this._onDrag(e);
+                  return false;
+               }
             }
          }
 
