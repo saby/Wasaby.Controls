@@ -202,7 +202,9 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
          var $target = $(e.target),
             target = $target.closest('.controls-RangeSelectable__item', this._getItemsContainer());
 
-         target.addClass(this._css_classes.hovered);
+         if (!$ws._const.browser.isMobileIOS) {
+            target.addClass(this._css_classes.hovered);
+         }
          this._onRangeItemElementMouseEnter(Date.fromSQL(target.attr(this._selectedRangeItemIdAtr)));
       },
 
