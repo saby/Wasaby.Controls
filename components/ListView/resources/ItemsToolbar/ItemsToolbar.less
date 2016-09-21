@@ -115,71 +115,61 @@
       .controls-ItemsToolbar .controls-ItemsToolbar__container {
          margin: 3px 0 0 0;
          height: @bottomStyle-items-toolbar-height - 1;
-
       }
       &.controls-DataGridView .controls-ItemActions .controls-ItemActions__itemsContainer {
          background-color: transparent;
       }
+
    }
+
 }
 
 .controls-ListView.controls-ListView__touchMode {
-   .controls-ItemsToolbar {
-      overflow: hidden;
-      margin: 0;
-      box-shadow: none;
-      background-color: transparent;
-
-      .controls-ItemsToolbar__container {
-         position: relative;
-         background-color: #E7EFF8;
-         border-left: 1px solid #D0D8E0;
-         overflow: hidden;
-         height: 100%;
-
-         .controls-ItemActions {
-            height: 100%;
-
-            .controls-ItemActions__itemsContainer {
-               height: 100%;
-            }
-         }
-
-         .controls-ItemsToolbar__editActions {
-            height: 100%;
-
-            .controls-IconButton {
-               position: relative;
-               top: 50%;
-               margin-top: -24px;
-            }
-         }
-      }
-
-      &.controls-ItemsToolbar__vertical {
-
-         .controls-ItemActions {
-            width: auto;
-            margin: 0;
-         }
+   &.controls-ListView__bottomStyle {
+      .controls-ItemsToolbar {
+         height: @bottomStyle-items-toolbar-height - 1 !important;
       }
    }
 
-   &.controls-ListView__bottomStyle {
+   &:not(.controls-ListView__bottomStyle) {
       .controls-ItemsToolbar {
-         border-bottom: none;
+         overflow: hidden;
+         margin: 0;
+         box-shadow: none;
          background-color: transparent;
-         margin-bottom: @bottomStyle-items-toolbar-margin-bottom;
-
-         &:before {
-            content: none;
-         }
-         &:after {
-            content: none;
-         }
 
          .controls-ItemsToolbar__container {
-            margin: 0;
+            position: relative;
+            background-color: #E7EFF8;
+            border-left: 1px solid #D0D8E0;
+            overflow: hidden;
+            height: 100%;
+
+            .controls-ItemActions {
+               height: 100%;
+
+               .controls-ItemActions__itemsContainer {
+                  height: 100%;
+               }
+            }
+
+            .controls-ItemsToolbar__editActions {
+               height: 100%;
+
+               .controls-IconButton {
+                  position: relative;
+                  top: 50%;
+                  margin-top: -24px;
+               }
+            }
+         }
+
+         &.controls-ItemsToolbar__vertical {
+
+            .controls-ItemActions {
+               width: auto;
+               margin: 0;
+            }
          }
       }
    }
