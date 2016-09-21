@@ -352,8 +352,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           */
          _isDrag: function(moveEvent, clickEvent) {
             var
-               moveX = e.pageX - clickEvent._moveBeginX,
-               moveY = e.pageY - clickEvent._moveBeginY;
+               moveX = moveEvent.pageX - clickEvent.pageX,
+               moveY = moveEvent.pageY - clickEvent.pageY;
 
             if ((Math.abs(moveX) < this._constShiftLimit) && (Math.abs(moveY) < this._constShiftLimit)) {
                return false;
