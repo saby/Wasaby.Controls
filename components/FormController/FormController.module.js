@@ -100,6 +100,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          _isConfirmDialogShowed: false,
          _syncOperationCallback: undefined,
          _panelReadyDeferred: undefined,
+         _overlay: undefined,
          _options: {
             /**
              * @cfg {String} Устанавливает первичный ключ записи, редактируемой на диалоге.
@@ -171,14 +172,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       $constructor: function(cfg) {
          this._newRecord = cfg.isNewRecord || false;
          this._publish('onFail', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel', 'onAfterFormLoad');
-         $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
-         $ws.single.CommandDispatcher.declareCommand(this, 'read', this._read);
-         $ws.single.CommandDispatcher.declareCommand(this, 'update', this.update);
-         $ws.single.CommandDispatcher.declareCommand(this, 'destroy', this._destroyModel);
-         $ws.single.CommandDispatcher.declareCommand(this, 'create', this._create);
-         $ws.single.CommandDispatcher.declareCommand(this, 'notify', this._actionNotify);
-         $ws.single.CommandDispatcher.declareCommand(this, 'activateChildControl', this._createChildControlActivatedDeferred);
-
+         this._declareCommands();
          this.subscribeTo($ws.single.EventBus.channel('navigation'), 'onBeforeNavigate', $ws.helpers.forAliveOnly(this._onBeforeNavigate, this));
 
          this._updateDocumentTitle();
@@ -193,15 +187,19 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                this._getRecordFromSource({});
             }
          }
-         var loadingTime = new Date();
-         this.subscribe('onAfterShow', function(){
-            $ws.single.ioc.resolve('ILogger').log('FormController', 'Время загрузки ' + (new Date() - loadingTime) + 'мс');
-         });
-         //Выписал задачу, чтобы при событии onBeforeClose стрелял метод у floatArea, который мы бы переопределили здесь,
-         //чтобы не дергать getTopParent
          this._panel.subscribe('onBeforeClose', this._onBeforeCloseHandler);
          this._panelReadyDeferred = new $ws.proto.Deferred();
          this._panel.subscribe('onAfterShow', this._onAfterShowHandler);
+      },
+
+      _declareCommands: function(){
+         $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
+         $ws.single.CommandDispatcher.declareCommand(this, 'read', this._read);
+         $ws.single.CommandDispatcher.declareCommand(this, 'update', this.update);
+         $ws.single.CommandDispatcher.declareCommand(this, 'destroy', this._destroyModel);
+         $ws.single.CommandDispatcher.declareCommand(this, 'create', this._create);
+         $ws.single.CommandDispatcher.declareCommand(this, 'notify', this._actionNotify);
+         $ws.single.CommandDispatcher.declareCommand(this, 'activateChildControl', this._createChildControlActivatedDeferred);
       },
 
       _onAfterShowHandler: function(){
@@ -740,6 +738,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          if (!config.hideIndicator){
             this._showLoadingIndicator(config.indicatorText);
          }
+         this._toggleOverlay(true);
          this._addSyncOperationPending();
          operation.addCallback(function(record){
             if (config.needSetRecord){
@@ -758,12 +757,20 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          }).addBoth(function(result){
                self._removeSyncOperationPending();
                self._hideLoadingIndicator();
+               self._toggleOverlay(false);
                if (config.activateChildControlAfterLoad){
                   self._activateChildControlAfterLoad();
                }
                return result;
          });
          return operation;
+      },
+
+      _toggleOverlay: function(show){
+         if (!this._overlay){
+            this._overlay = $('<div class="controls-FormController-overlay ws-hidden"></div>').appendTo(this.getContainer());
+         }
+         this._overlay.toggleClass('ws-hidden', !show);
       },
 
       _addSyncOperationPending: function(){
