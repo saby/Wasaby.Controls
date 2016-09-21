@@ -1,10 +1,12 @@
+//TODO: посмотреть можно ли что нибудь сделать через deferred
+//TODO: написать про установку высоты
 define('js!SBIS3.CONTROLS.ScrollContainer',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
       'html!SBIS3.CONTROLS.ScrollContainer',
-      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar.min',
+      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar',
       'is!browser?css!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar.min',
-      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mousewheel-3.0.6.min'
+      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mousewheel-3.0.6'
    ],
    function(CompoundControl, dotTplFn) {
 
@@ -14,8 +16,16 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
        * Контрол представляющий из себя контейнер для контента с кастомным скроллом
        * Работает с плагином http://manos.malihu.gr/jquery-custom-content-scroller/
        * @class SBIS3.CONTROLS.ScrollContainer
+       * @demo SBIS3.CONTROLS.Demo.MyScrollContainer
        * @extends SBIS3.CONTROLS.CompoundControl
+       * @control
        * @public
+       * @initial
+       * <component data-component="SBIS3.CONTROLS.ScrollContainer">
+       *    <option name="content">
+       *          Контент - верстка которая будет помещена в контейнер с кастомным скроллом
+       *    </option>
+       * </component>
        */
       var Scroll = CompoundControl.extend({
 
@@ -41,8 +51,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
                content: ''
             },
 
-            _scroll: null,
+            /**
+             * Кастомный скролл
+             */
+            _scroll: undefined,
 
+            /**
+             * Должен ли быть скролл на контейнере
+             */
             _hasScroll: false
          },
 
@@ -52,8 +68,33 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
 
          init: function() {
             Scroll.superclass.init.call(this);
+
+            /**
+             * Так как мы сделали binding опции content, то нам нужно
+             * вызвать функцию которая отрисует наш content на странице
+             */
+            this.setContent(this.getContent());
+
             //Подписка на события при которых нужно инициализировать скролл
-            this._container.bind('mousemove touchstart', this._create.bind(this));
+            this.getContainer().bind('mousemove touchstart', this._create.bind(this));
+         },
+
+         /**
+          * Возвращает контент находящийся в контейнере
+          */
+         getContent: function() {
+            return this._options.content;
+         },
+
+         /**
+          * Устанавка нового контента
+          * @param content контент
+          */
+         setContent: function(content) {
+            this._options.content = content;
+            //this.getContainer().html(this._dotTplFn(this._options));
+            this.getLinkedContext().setValue('content', content);
+            this.reviveComponents();
          },
 
          /**
@@ -62,6 +103,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
           */
          _create: function() {
             var self = this;
+
             //Инициализируем кастомный скролл
             this.getContainer().mCustomScrollbar({
                theme: 'minimal-dark',
@@ -87,12 +129,13 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
                   }
                }
             });
+
             //Отписываемся от событий инициализации
             this._container.unbind('mousemove touchstart');
          },
 
          /**
-          * Возвращает дотиг ли скролл верха контента
+          * Дотиг ли скролл верха контента
           * @returns {*|boolean}
           */
          isScrollOnTop: function() {
@@ -100,7 +143,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
          },
 
          /**
-          * Возвращает дотиг ли скролл низа контента
+          * Дотиг ли скролл низа контента
           * @returns {*|boolean}
           */
          isScrollOnBottom: function() {
@@ -112,7 +155,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
          },
 
          /**
-          * Сдвигает скролл на указанную величину
+          * Сдвиг скролла на указанную величину
           * @param option величина сдвига скролла
           */
          scrollTo: function(option) {
@@ -120,23 +163,39 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
          },
 
          /**
-          * Возвращает видимость скролла на странице
+          * Должен ли быть скролл на контенте
           * @returns {boolean|*}
           */
          hasScroll: function() {
             var
                scroll = this._scroll,
                heightContainer = this._container.height(),
+            //TODO: заменить на контекст
                heightChildContainer = this._container.children().height();
+
             this.updateScroll();
+
+            /**
+             * Из-за ленивой инициализации подгружаются все данные, так как скролла нет,
+             * поэтому нужно смотреть на размер контейнера и контента
+             * и если контейнер переполнен, то сказать что скролл есть,
+             * а если в контейнере есть место, то сказать что скролла нет,
+             * а уже потом при наведении на контрол скролл инициализируется.
+             */
             if (!scroll) {
                this._hasScroll = heightChildContainer > heightContainer;
             }
+            /**
+             * Если контейнер переполнился нужно повесить класс который скроет
+             * часть контента который не влезает в контейнер
+             */
+            this._hasScroll ? this.getContainer().addClass('controls-ScrollContainer__overflow-hidden') : undefined;
+
             return this._hasScroll;
          },
 
          /**
-          * Возвращает положение контролла относительно контейнера с контентом
+          * Положение скролла относительно контейнера с контентом
           * @returns {.mcs.draggerTop|*}
           */
          getScrollTop: function() {
@@ -158,7 +217,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
          destroy: function() {
             this.getContainer().mCustomScrollbar('destroy');
             this._scroll = undefined;
-            this.superclass.destroy.call(this);
+            Scroll.superclass.destroy.call(this);
          }
       });
 
