@@ -314,16 +314,21 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          },
 
          _mouseUp: function(e, inside){
-            this._preparePageXY(e);
-            DragObject.onDragHandler(e);
-            var target = DragObject.getTargetsControl();
-            target = target && $ws.helpers.instanceOfMixin(target, 'SBIS3.CONTROLS.DragNDropMixinNew') ? target : null;
-            if (DragObject.isDragging() && ((target === this || !target && DragObject.getOwner() === this) || inside)) {
-               //если есть таргет то запускаем _endDrag над таргетом иначе запускаем над тем кто начал
-               this._endDrag(e, inside ? this._findDragDropContainer(e, DragObject.getTargetsDomElemet()) : false);
+            //todo разобраться с опцией выключения dragndrop
+            //https://inside.tensor.ru/opendoc.html?guid=55df5f10-14b3-465d-b53e-3783fc9085a0&description=
+            //Задача в разработку 22.03.2016 /** * @cfg {String} Разрешено или нет перемещение элементов 'Drag-and-Drop' ...
+            if (this._options.itemsDragNDrop !== false) {
+               this._preparePageXY(e);
+               DragObject.onDragHandler(e);
+               var target = DragObject.getTargetsControl();
+               target = target && $ws.helpers.instanceOfMixin(target, 'SBIS3.CONTROLS.DragNDropMixinNew') ? target : null;
+               if (DragObject.isDragging() && ((target === this || !target && DragObject.getOwner() === this) || inside)) {
+                  //если есть таргет то запускаем _endDrag над таргетом иначе запускаем над тем кто начал
+                  this._endDrag(e, inside ? this._findDragDropContainer(e, DragObject.getTargetsDomElemet()) : false);
+               }
+               this._moveBeginX = null;
+               this._moveBeginY = null;
             }
-            this._moveBeginX = null;
-            this._moveBeginY = null;
          },
          /**
           * Обработчик  на перемещение мыши
@@ -332,21 +337,22 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           * @returns {boolean}
           */
          _onMousemove: function (buse, e) {
-            // Если нет выделенных компонентов, то уходим
-            if (!DragObject.isDragging()) {
-               return;
-            }
-            this._preparePageXY(e);
-            DragObject.onDragHandler(e);
+            if (this._options.itemsDragNDrop !== false) {
+               if (!DragObject.isDragging()) {
+                  return;
+               }
+               this._preparePageXY(e);
+               DragObject.onDragHandler(e);
 
-            //если этот контрол начал перемещение или тащат над ним тогда стреяем событием _onDrag
-            if (DragObject.getOwner() === this || DragObject.getTargetsControl() === this ) {
-               var
+               //если этот контрол начал перемещение или тащат над ним тогда стреяем событием _onDrag
+               if (DragObject.getOwner() === this || DragObject.getTargetsControl() === this) {
+                  var
                   //определяем droppable контейнер
-                  movable = this._findDragDropContainer(e, DragObject.getTargetsDomElemet());
-               //двигаем компонент
-               this._onDrag(e, movable);
-               return false;
+                     movable = this._findDragDropContainer(e, DragObject.getTargetsDomElemet());
+                  //двигаем компонент
+                  this._onDrag(e, movable);
+                  return false;
+               }
             }
          }
 
