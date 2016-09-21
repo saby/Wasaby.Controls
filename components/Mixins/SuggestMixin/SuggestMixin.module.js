@@ -354,18 +354,22 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
       // TODO использовать searchMixin 3.7.3.100
       _startListSearch: function() {
-         var self = this;
+         var self = this,
+             list = this.getList();
 
          this._clearDelayTimer();
-         this._delayTimer = setTimeout(function() {
-            self._showLoadingIndicator();
-            self.hidePicker();
-            self._loadDeferred = self.getList().reload(self._options.listFilter).addCallback(function () {
-               if(self._checkPickerState(!self._options.showEmptyList)) {
-                  self.showPicker();
-               }
-            });
-         }, this._options.delay);
+
+         if(list.getDataSource()) {
+            this._delayTimer = setTimeout(function () {
+               self._showLoadingIndicator();
+               self.hidePicker();
+               self._loadDeferred = list.reload(self._options.listFilter).addCallback(function () {
+                  if (self._checkPickerState(!self._options.showEmptyList)) {
+                     self.showPicker();
+                  }
+               });
+            }, this._options.delay);
+         }
       },
 
       _resetSearch: function() {
