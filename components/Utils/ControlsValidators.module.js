@@ -136,6 +136,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', ['js!SBIS3.CORE.CoreValidators', 
        * </ol>
        */
       email: function(value) {
+         //Регулярное выражение для проверки email отсюда http://stackoverflow.com/a/46181/6729520
          var
             regExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             isGoodValue = value ? regExp.test(value) : true;
