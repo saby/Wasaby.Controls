@@ -1010,10 +1010,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          this._offset = 0;
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
          this._notify('onBeforeSetRoot', key);
-         this._options._curRoot = key || this._options.root;
+         this._options._curRoot = key !== undefined && key !== null ? key : this._options.root;
          if (this._options._itemsProjection) {
             this._options._itemsProjection.setEventRaising(false);
-            this._options._itemsProjection.setRoot(this._options._curRoot || null);
+            this._options._itemsProjection.setRoot(this._options._curRoot !== undefined ? this._options._curRoot : null);
             this._options._itemsProjection.setEventRaising(true);
          }
       },
