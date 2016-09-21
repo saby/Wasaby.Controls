@@ -1,9 +1,9 @@
 define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
-   'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree'], function (BreadCrumbs, groupByTpl, TreeProjection) {
+   'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree', 'js!WS.Data/Entity/Model', 'js!WS.Data/Adapter/Sbis'], function (BreadCrumbs, groupByTpl, TreeProjection, Model) {
 
    var createDefaultProjection = function(items, cfg) {
       var
-         root, projection;
+         root, projection, rootAsNode;
       if (typeof cfg._curRoot != 'undefined') {
          root = cfg._curRoot;
       }
@@ -15,13 +15,20 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             root = null;
          }
       }
+      rootAsNode = isPlainObject(root);
+      if (rootAsNode) {
+         root = Model.fromObject(root, 'adapter.sbis');
+         root.setIdProperty(cfg.keyField);
+      }
+
       projection = new TreeProjection({
          collection: items,
          idProperty: cfg.keyField || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
          parentProperty: cfg.hierField,
          nodeProperty: cfg.hierField + '@',
          loadedProperty: cfg.hierField + '$',
-         root: root
+         root: root,
+         rootEnumerable: rootAsNode
       });
       var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
       projection.setFilter(filterCallBack);
@@ -515,6 +522,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          }
       },
       around: {
+         _getItemProjectionByItemId: function(parentFn, id) {
+            var root;
+            if (isPlainObject(this._options.root)) {
+               root = this._getItemsProjection().getRoot();
+               if (String(root.getContents().getId()) === String(id)) {
+                  return root;
+               }
+            }
+            return parentFn.apply(this, [id]);
+         },
          _canApplyGrouping: function(parentFn, projItem) {
             if (this._isSearchMode()) {
                return true;
