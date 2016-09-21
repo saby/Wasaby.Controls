@@ -3,8 +3,10 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.SuggestMixin',
    'js!SBIS3.CONTROLS.ChooserMixin',
-   'js!SBIS3.CONTROLS.SuggestTextBoxMixin'
-], function (TextBox, PickerMixin, SuggestMixin, ChooserMixin, SuggestTextBoxMixin) {
+   'js!SBIS3.CONTROLS.SuggestTextBoxMixin',
+   'js!SBIS3.CONTROLS.SearchMixin',
+   'js!SBIS3.CONTROLS.ComponentBinder'
+], function (TextBox, PickerMixin, SuggestMixin, ChooserMixin, SuggestTextBoxMixin, SearchMixin, ComponentBinder) {
    'use strict';
 
    /**
@@ -21,7 +23,53 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
     * @public
     * @category Inputs
     */
-   var SuggestTextBox = TextBox.extend([PickerMixin, SuggestMixin, ChooserMixin, SuggestTextBoxMixin],{
+   var SuggestTextBox = TextBox.extend([PickerMixin, SuggestMixin, ChooserMixin, SuggestTextBoxMixin, SearchMixin], {
+      $protected: {
+         _options: {
+            /**
+             * @cfg {String} Имя параметр фильтрации для поиска
+             */
+            searchParam : ''
+         }
+      },
+      $constructor: function() {
+         /* Если передали параметр поиска, то поиск производим через ComponentBinder */
+         if(this._options.searchParam) {
+            this.once('onSearch', function () {
+               var componentBinder = new ComponentBinder({
+                      view: this.getList(),
+                      searchForm: this
+                   }),
+                   undefinedArg;
+
+               /* Биндим suggestTextBox и список с помощью биндера,
+                  передаём параметр, чтобы биндер не реагировал на сброс,
+                  т.к. список просто скрывается по сбросу, и лишний запрос делать не надо */
+               componentBinder.bindSearchGrid(this._options.searchParam, undefinedArg, undefinedArg, undefinedArg, true);
+
+               /* Поднимем событие onSearch ещё раз,
+                  чтобы componentBinder начал поиск в гриде */
+               this._applySearch(this.getText(), true);
+            });
+
+            this.subscribe('onSearch', function() {
+               this._showLoadingIndicator();
+               this.hidePicker();
+            });
+
+            this.subscribe('onReset', this._resetSearch.bind(this));
+         }
+      },
+
+      _onListDataLoad: function() {
+         SuggestTextBox.superclass._onListDataLoad.apply(this, arguments);
+
+         if(this._options.searchParam) {
+            if(this._checkPickerState(false)) {
+               this.showPicker();
+            }
+         }
+      },
 
       showPicker: function() {
          SuggestTextBox.superclass.showPicker.apply(this, arguments);
@@ -37,5 +85,6 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          }
       }
    });
+
    return SuggestTextBox;
 });
