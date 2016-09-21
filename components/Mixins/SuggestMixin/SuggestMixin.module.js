@@ -376,7 +376,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          }
          /* Т.к. list может быть компонентом, который не наследован от DSmixin'a и метода _cancelLoading там может не быть,
           надо это проверить, но в любом случае, надо деферед отменить, чтобы не сработал показ пикера */
-         if(this._list._cancelLoading) {
+         if(this._list && this._list._cancelLoading) {
             this._list._cancelLoading();
          }
          this._hideLoadingIndicator();
