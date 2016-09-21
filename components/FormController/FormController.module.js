@@ -11,6 +11,11 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
     */
    'use strict';
 
+   //Открыли FormController в новой вкладке
+   function isOpenedFromNewTab(){
+      return !$ws.helpers.instanceOfModule(this, 'SBIS3.CORE.FloatArea') && !$ws.helpers.instanceOfModule(this, 'SBIS3.CORE.Dialog');
+   }
+
    var FormController = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.FormController.prototype */ {
       /**
        * @typedef {Object} dataSource
@@ -33,6 +38,16 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @event onReadModel Происходит при чтении записи из источника данных диалога редактирования.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Запись, прочитанная из источника данных (см. {@link dataSource}).
+       * @see read
+       * @see dataSource
+       * @see onCreateModel
+       * @see onUpdateModel
+       * @see onDestroyModel
+       * @see onFail
+       */
+      /**
+       * @event onAfterFormLoad Происходит при показе панели с построеной версткой по установленной записи
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @see read
        * @see dataSource
        * @see onCreateModel
@@ -191,16 +206,23 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
 
       _onAfterShowHandler: function(){
          //Если мы в новой вкладке браузера, то ничего не делаем
-         if (!($ws.helpers.instanceOfModule(this, 'SBIS3.CORE.FloatArea') || $ws.helpers.instanceOfModule(this, 'SBIS3.CORE.Dialog'))){
+         if (isOpenedFromNewTab.call(this)){
+            this._notifyOnAfterFormLoadEvent(); //Если открылись в новой вкладке, событие onAfterShow стреляет непосредственно для FC
             return;
          }
          var self = this._getTemplateComponent();
          self._updateIndicatorZIndex();
-         if (self.getRecord()){
-            self._actionNotify('onAfterFormLoad');
+         self._notifyOnAfterFormLoadEvent();
+      },
+
+      _notifyOnAfterFormLoadEvent: function(){
+         //Если у нас показалась панель и есть рекорд, то в этом случае верстка по установленной записи уже построена и мы просто кидаем событие
+         //Если же записи нет, дожидаемся, когда получим ее с БЛ.
+         if (this.getRecord()){
+            this._actionNotify('onAfterFormLoad');
          }
          else{
-            self._panelReadyDeferred.callback();
+            this._panelReadyDeferred.callback();
          }
       },
 
@@ -215,7 +237,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          //TODO: Сейчас нет механизма, позволяющего работать с панелью не через события и влиять на ее работу. хорошо бы такой иметь
 
          //Если мы в новой вкладке браузера, то ничего не делаем
-         if (!($ws.helpers.instanceOfModule(this, 'SBIS3.CORE.FloatArea') || $ws.helpers.instanceOfModule(this, 'SBIS3.CORE.Dialog'))){
+         if (isOpenedFromNewTab.call(this)){
             return;
          }
          var self = this._getTemplateComponent(),
