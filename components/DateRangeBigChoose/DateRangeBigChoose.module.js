@@ -244,10 +244,12 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
       },
 
       _onDatePickerEndDateChanged: function(e, date) {
-         if (!date) {
+         var startDate = this._startDatePicker.getDate(),
+            oldEndDate = this.getEndValue();
+
+         if (!date || (oldEndDate && date.getTime() === oldEndDate.getTime())) {
             return;
          }
-         var startDate = this._startDatePicker.getDate();
          if (startDate && date < startDate) {
             date = startDate
          }
@@ -559,7 +561,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
       },
 
       _onDateRangePickerActivated: function (e, month) {
-         this._selectionToggle(month, selectionTypes.months);
+         this.setRange(new Date(month.getFullYear(), month.getMonth(), 1), new Date(month.getFullYear(), month.getMonth() + 1, 0))
       },
 
       // Логика связанная с панелями выбора диапазонов
