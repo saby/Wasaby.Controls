@@ -48,6 +48,11 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
       $protected: {
          _options: {
          },
+          _keysWeHandle: [
+             $ws._const.key.tab,
+             $ws._const.key.enter,
+             $ws._const.key.esc
+          ],
          // _currentYear: null,
          _state: states.year,
          _selectionType: null,
@@ -165,6 +170,18 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          }
       },
 
+      _keyboardHover: function (e) {
+         switch (e.which) {
+            case $ws._const.key.enter:
+               this._onApplyButtonClick();
+               return false;
+            case $ws._const.key.esc:
+               this._onCloseButtonClick();
+               return false;
+         }
+         return DateRangeBigChoose.superclass._keyboardHover.apply(this, arguments);
+      },
+
       _onHomeButtonClick: function () {
          var now = new Date();
          now.setDate(1);
@@ -175,9 +192,11 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
       },
 
       _onApplyButtonClick: function () {
-         this.cancelSelection();
-         this._dateRangePicker.cancelSelection();
-         this._notify('onChoose', this.getStartValue(), this.getEndValue());
+         if (this._startDatePicker.validate() && this._endDatePicker.validate()) {
+            this.cancelSelection();
+            this._dateRangePicker.cancelSelection();
+            this._notify('onChoose', this.getStartValue(), this.getEndValue());
+         }
       },
       _onCloseButtonClick: function () {
          this.cancelSelection();
@@ -231,7 +250,12 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             // TODO: когда будет возможность установить свойство без генерации событий надо будет убрать этот хак.
             this._endDatePicker.setDate(date);
          } else {
-            this.setStartValue(date);
+            if (this._options.rangeselect) {
+               this.setStartValue(date);
+            } else {
+               this.setRange(date, date);
+            }
+
          }
          if (!endDate) {
             this._setCurrentYear(date.getFullYear(), true);
@@ -490,6 +514,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          } else {
             this._setYearBarState(YEAR_CHOOSER_STATE_1YEAR);
          }
+         this.setActive(true);
       },
 
       _setYearBarState: function (state) {
@@ -516,6 +541,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          if (this.isRangeselect()) {
             this.setRange(new Date(this._getCurrentYear(), 0, 1), new Date(this._getCurrentYear() + 1, 0, 0));
          }
+         this.setActive(true);
       },
 
       _updateYearsRange: function (lastYear) {
@@ -606,6 +632,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
                this._toggleChooseYear();
             }
          }
+         this.setActive(true);
       },
 
       _onRangeBtnEnter: function (selectionType, e) {
