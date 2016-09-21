@@ -1,9 +1,9 @@
 define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
-   'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree', 'js!WS.Data/Relation/Hierarchy'], function (BreadCrumbs, groupByTpl, TreeProjection, HierarchyRelation) {
+   'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree', 'js!WS.Data/Entity/Model', 'js!WS.Data/Adapter/Sbis', 'js!WS.Data/Relation/Hierarchy'], function (BreadCrumbs, groupByTpl, TreeProjection, Model, SbisAdapter, HierarchyRelation) {
 
    var createDefaultProjection = function(items, cfg) {
       var
-         root, projection;
+         root, projection, rootAsNode;
       if (typeof cfg._curRoot != 'undefined') {
          root = cfg._curRoot;
       }
@@ -15,6 +15,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             root = null;
          }
       }
+      rootAsNode = isPlainObject(root);
+      if (rootAsNode) {
+         root = Model.fromObject(root, 'adapter.sbis');
+         root.setIdProperty(cfg.keyField);
+      }
+
       projection = new TreeProjection({
          collection: items,
          idProperty: cfg.keyField || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
@@ -22,7 +28,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          nodeProperty: cfg.hierField + '@',
          loadedProperty: cfg.hierField + '$',
          unique: true,
-         root: root
+         root: root,
+         rootEnumerable: rootAsNode
       });
       var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
       projection.setFilter(filterCallBack);
@@ -572,6 +579,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          }
       },
       around: {
+         _getItemProjectionByItemId: function(parentFn, id) {
+            var root;
+            if (isPlainObject(this._options.root)) {
+               root = this._getItemsProjection().getRoot();
+               if (String(root.getContents().getId()) === String(id)) {
+                  return root;
+               }
+            }
+            return parentFn.apply(this, [id]);
+         },
          _canApplyGrouping: function(parentFn, projItem) {
             if (this._isSearchMode()) {
                return true;
@@ -1022,10 +1039,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          this._offset = 0;
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
          this._notify('onBeforeSetRoot', key);
-         this._options._curRoot = key || this._options.root;
+         this._options._curRoot = key !== undefined && key !== null ? key : this._options.root;
          if (this._options._itemsProjection) {
             this._options._itemsProjection.setEventRaising(false);
-            this._options._itemsProjection.setRoot(this._options._curRoot || null);
+            this._options._itemsProjection.setRoot(this._options._curRoot !== undefined ? this._options._curRoot : null);
             this._options._itemsProjection.setEventRaising(true);
          }
       },
