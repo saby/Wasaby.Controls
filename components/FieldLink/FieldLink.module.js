@@ -779,17 +779,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 },
                 handlers: {
                    onShow: function() {
-                      if($ws._const.browser.isMobileIOS) {
-                         var revertedVertical = !this._picker.getContainer().hasClass('controls-popup-revert-vertical');
+                      var revertedVertical = this._picker.getContainer().hasClass('controls-popup-revert-vertical');
 
-                         if (revertedVertical) {
-                            if (!this._listReversed) {
-                               this._reverseList();
-                            }
-                         } else {
-                            if (this._listReversed) {
-                               this._reverseList();
-                            }
+                      if($ws._const.browser.isMobileIOS) {
+                         revertedVertical = !revertedVertical;
+                      }
+
+                      if (revertedVertical) {
+                         if (!this._listReversed) {
+                            this._reverseList();
+                         }
+                      } else {
+                         if (this._listReversed) {
+                            this._reverseList();
                          }
                       }
                    }.bind(this)

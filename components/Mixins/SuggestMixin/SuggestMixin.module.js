@@ -9,7 +9,15 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       template: 'js!SBIS3.CONTROLS.SuggestShowAll',
       componentOptions: {}
    };
-   var EMPTY_LIST_TEXT = 'Не найдено';
+
+   var DEFAULT_LIST_CONFIG = {
+      allowEmptySelection: false,
+      itemsDragNDrop: false,
+      emptyHTML: 'Не найдено',
+      element: function() { return this._getListContainer(); },
+      filter: function() { return this.getProperty('listFilter'); },
+      parent: function() { return this._picker; }
+   };
 
    /**
     * Миксин автодополнения. Позволяет добавить функционал автодополнения любому контролу или набору контролов.
@@ -342,7 +350,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          }
          /* Если введено меньше символов чем указано в startChar, то скроем автодополнение */
          this._resetSearch();
-         this.hidePicker();
       },
 
       // TODO использовать searchMixin 3.7.3.100
@@ -363,18 +370,18 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
       _resetSearch: function() {
          if(this._loadDeferred) {
-
-            /* Т.к. list может быть компонентом, который не наследован от DSmixin'a и метода _cancelLoading там может не быть,
-             надо это проверить, но в любом случае, надо деферед отменить, чтобы не сработал показ пикера */
-            if(this._list._cancelLoading) {
-               this._list._cancelLoading();
-            }
-
             this._loadDeferred.cancel();
             this._loadDeferred = null;
-            this._hideLoadingIndicator();
+
          }
+         /* Т.к. list может быть компонентом, который не наследован от DSmixin'a и метода _cancelLoading там может не быть,
+          надо это проверить, но в любом случае, надо деферед отменить, чтобы не сработал показ пикера */
+         if(this._list._cancelLoading) {
+            this._list._cancelLoading();
+         }
+         this._hideLoadingIndicator();
          this._clearDelayTimer();
+         this.hidePicker();
       },
 
       /**
@@ -466,23 +473,11 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                options = $ws.core.clone(this._options.list.options);
                component = require(this._options.list.component);
 
-               if (!options.element) {
-                  options.element = this._getListContainer();
-               }
-
-               if(options.itemsDragNDrop === undefined) {
-                  options.itemsDragNDrop = false;
-               }
-
-               /* По стандарту маркер в списке должен ставиться,
-                но надо оставить возможность это отключить, т.к. не всем это надо */
-               if(options.allowEmptySelection === undefined) {
-                  options.allowEmptySelection = false;
-               }
-
-               if(!options.hasOwnProperty('emptyHTML')) {
-                  options.emptyHTML = EMPTY_LIST_TEXT;
-               }
+               $ws.helpers.forEach(DEFAULT_LIST_CONFIG, function(value, key) {
+                  if(!options.hasOwnProperty(key)) {
+                     options[key] = typeof value === 'function' ? value.call(this) : value;
+                  }
+               }, this);
 
                /* Сорс могут устанавливать не через сеттер, а через опцию */
                if(options.dataSource !== undefined) {
@@ -492,7 +487,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                   dataSource = this._options.dataSource
                }
 
-               options.parent = this._picker;
                this._list = new component(options);
 
                /* Устанавливаем сорс после инициализации компонента (если есть опция), иначе будет лишний запрос */
