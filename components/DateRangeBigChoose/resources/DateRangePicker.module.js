@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
             now = new Date();
 
          this._onMonthViewRageChanged = this._onMonthViewRageChanged.bind(this);
-         // this._onMonthViewSelectionStarted = this._onMonthViewSelectionStarted.bind(this);
+         this._onMonthViewBeforeSelectionStarted = this._onMonthViewBeforeSelectionStarted.bind(this);
          this._onMonthViewSelectingRangeEndDateChange = this._onMonthViewSelectingRangeEndDateChange.bind(this);
          this._onMonthViewCaptionActivated = this._onMonthViewCaptionActivated.bind(this);
 
@@ -134,6 +134,8 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
          this.forEachMonthView(function(control) {
             control.unsubscribe('onRangeChange', self._onMonthViewRageChanged);
             control.subscribe('onRangeChange', self._onMonthViewRageChanged);
+            control.unsubscribe('onBeforeSelectionStarted', self._onMonthViewBeforeSelectionStarted);
+            control.subscribe('onBeforeSelectionStarted', self._onMonthViewBeforeSelectionStarted);
             control.unsubscribe('onSelectingRangeEndDateChange', self._onMonthViewSelectingRangeEndDateChange);
             control.subscribe('onSelectingRangeEndDateChange', self._onMonthViewSelectingRangeEndDateChange);
             control.unsubscribe('onActivated', self._onMonthViewCaptionActivated);
@@ -174,10 +176,12 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
             changed = Component.superclass.setRange.apply(this, arguments);
             // start = this.getStartValue();
             // end = this.getEndValue();
-            month = this.getMonth();
-            // if (!this._isDatesEqual(start, oldStart) && !this._isDatesEqual(end, oldEnd)) {
-            if (month && start && end && (start > new Date(month.getFullYear(), month.getMonth() + 1, 0) || end < month)) {
-               this.setMonth(start);
+            if (changed) {
+               month = this.getMonth();
+               // if (!this._isDatesEqual(start, oldStart) && !this._isDatesEqual(end, oldEnd)) {
+               if (month && start && end && (start > new Date(month.getFullYear(), month.getMonth() + 1, 0) || end < month)) {
+                  this.setMonth(start);
+               }
             }
          } else {
             changed = Component.superclass.setRange.apply(this, arguments);
@@ -208,6 +212,14 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
                control._setSelectionRangeEndItem(date, true);
             }
          });
+      },
+
+      _onMonthViewBeforeSelectionStarted: function (e, start, end) {
+         // Сохраняем состояние календаря, в котором начилось выделение, непосредственно перед началом выделения
+         // потому что во время выделения, он может быть удален если инициируется смена месяца.
+         // В этом случае обрабочик _onMonthViewSelectingRangeEndDateChange не будет выполнен.
+         this._selectionType = e.getTarget()._getSelectionType();
+         this._selectionRangeEndItem = end;
       },
 
       // _updateInnerComponents: function (start, end) {
