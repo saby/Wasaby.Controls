@@ -24,6 +24,15 @@
       }
    }
 
+   &.ws-disabled {
+      .controls-FormattedTextBox__fieldWrapper {
+         border-width: @date-box-wrapper-disabled-border-width;
+         border-style: @date-box-wrapper-disabled-border-style;
+         border-color: @date-box-wrapper-disabled-border-color;
+         background: @date-box-wrapper-disabled-bg;
+      }
+   }
+
    .controls-DatePicker__calendarWrapper {
       position: relative;
       float: right;
@@ -46,6 +55,6 @@
 }
 
 // TODO: Когда сделают все кнопки синими при наведении убрать
-.controls-DateRange.ws-disabled .controls-DateRange__button.icon-primary.controls-IconButton.action-hover.ws-disabled {
+.controls-DatePicker.ws-disabled .controls-DatePicker__button.icon-primary.controls-IconButton.action-hover.ws-disabled {
    color: @gray-ccc-color !important;
 }
