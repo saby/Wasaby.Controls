@@ -141,6 +141,7 @@ define(
                if (self.isEnabled()) {
                   self.togglePicker();
 
+                  self._initFocusInHandler();
                   // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
                   if (self._picker.isVisible() && self.getDate()) {
                      self._chooserControl.setStartValue(self.getDate());
