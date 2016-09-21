@@ -73,7 +73,15 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
             /**
              * @cfg {JQuery} DOM элемент, отображающий запись.
              */
-            domElement: undefined
+            domElement: undefined,
+            /**
+             * @cfg {*} action
+             */
+            action: undefined,
+            /**
+             * @cfg {String} operation
+             */
+            operation:  undefined
          }
       },
       /**
@@ -118,7 +126,19 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
        * @param {JQuery} element
        */
       setDomElement: function (element) {
-         this._options.domElement = element;
+         this._options.position = position;
+      },
+      getOperation: function() {
+         return this._options.operation;
+      },
+      setOperation: function(operation) {
+         this._options.operation = operation;
+      },
+      getAction: function() {
+         return this._options.action;
+      },
+      setAction: function(action) {
+         this._options.action = action;
       }
    });
    Di.register('dragentity.row', Row);

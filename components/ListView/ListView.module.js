@@ -2897,16 +2897,18 @@ define('js!SBIS3.CONTROLS.ListView',
                   clickHandler,
                   target = dragObject.getTarget();
 
-               //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
+
                if (target) {
                   if (target.getModel().getId() == this.getSelectedKey()) {
+                     //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
                      clickHandler = this._elemClickHandler;
                      this._elemClickHandler = function () {
                         this._elemClickHandler = clickHandler;
                      };
                   }
+                  var dragOwner = dragObject.getOwner();
 
-                  if (dragObject.getOwner() === this) {
+                  if (dragOwner === this) {
                      var models = [];
                      dragObject.getSource().each(function(item){
                         models.push(item.getModel());
@@ -2915,6 +2917,13 @@ define('js!SBIS3.CONTROLS.ListView',
                      this._move(models, target.getModel(),
                         position === DRAG_META_INSERT.on ? undefined : position === DRAG_META_INSERT.after
                      );
+                  } else {
+                     var dragOwnerSource  = dragOwner.getSource(),
+                        dragOwnerIsRemote = $ws.helpers.instanceOfModule(dragOwnerSource, 'WS.Data/Source/Remote'),
+                        isRemote = $ws.helpers.instanceOfModule(this.getSource, 'WS.Data/Source/Remote');
+                     if (dragOwnerIsRemote && isRemote && dragOwnerSource.getBinding().contract == this.getSource().getBinding().contract) {
+
+                     }
                   }
                }
             }
