@@ -1,11 +1,11 @@
 define('js!SBIS3.CONTROLS.Demo.MyScrollContainer',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
-      'html!SBIS3.CONTROLS.MyScrollContainer',
+      'html!SBIS3.CONTROLS.Demo.MyScrollContainer',
       'js!SBIS3.CONTROLS.ScrollContainer',
       'js!SBIS3.CONTROLS.ListView',
       'js!WS.Data/Source/Memory',
-      'css!SBIS3.CONTROLS.MyScrollContainer'
+      'css!SBIS3.CONTROLS.Demo.MyScrollContainer'
    ],
    function(CompoundControl, dotTplFn) {
 
