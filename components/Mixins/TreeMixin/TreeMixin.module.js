@@ -435,8 +435,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(function (list) {
                this._folderHasMore[id] = list.getMetaData().more;
                this._loadedNodes[id] = true;
+               if (this._options.notifyBeforeMerge) {
+                  this._notify('onDataMerge', list);
+               }
                this._options._items.merge(list, {remove: false});
-               this._notify('onDataMerge', list); // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
+               if (!this._options.notifyBeforeMerge) {
+                  this._notify('onDataMerge', list); // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
+               }
                if (this._isSlowDrawing()) {
                   this._options._items.getTreeIndex(this._options.hierField, true);
                }
