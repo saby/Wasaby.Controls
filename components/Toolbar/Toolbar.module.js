@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.Toolbar', [
    'js!SBIS3.CONTROLS.ButtonGroupBase',
    'html!SBIS3.CONTROLS.Toolbar',
-   'browser!html!SBIS3.CONTROLS.Toolbar/resources/ItemTemplate',
+   'html!SBIS3.CONTROLS.Toolbar/resources/ItemTemplate',
 
    'js!SBIS3.CONTROLS.CommandsButton'
 ], function(ButtonGroupBase, dotTplFn, ItemTemplate) {
