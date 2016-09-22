@@ -1,4 +1,10 @@
-define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil', 'js!SBIS3.CONTROLS.HistoryController', 'js!SBIS3.StickyHeaderManager'], function (KbLayoutRevertUtil, HistoryController, StickyHeaderManager) {
+define('js!SBIS3.CONTROLS.ComponentBinder',
+    [
+       'js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
+       'js!SBIS3.CONTROLS.HistoryController',
+       'js!SBIS3.StickyHeaderManager'
+    ],
+    function (KbLayoutRevertObserver, HistoryController, StickyHeaderManager) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
@@ -56,7 +62,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
                 if (self._options.backButton) {
                    self._options.backButton.getContainer().css({'display': 'none'});
                 }
-                afterSearchProcess.call(self, hierSearch, args, data, view, searchForm, searchParamName);
 
                 if (mode === 'root') {
                    root = view._options.root !== undefined ? view._options.root : null;
@@ -87,48 +92,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
              view.setHighlightText(text, false);
              view.setHighlightEnabled(true);
              view.setInfiniteScroll(true, true);
-
-             view.once('onDataLoad', function(event, data) {
-                afterSearchProcess.call(this, search, args, data, view, searchForm, searchParamName);
-             }.bind(this));
-
              view.reload(filter, view.getSorting(), 0);
           }
        };
-
-   function afterSearchProcess(mainFunc, mainFuncArgs, data, view, searchForm, searchParamName) {
-      var args = Array.prototype.slice.call(mainFuncArgs, 0),
-          viewFilter = view.getFilter(),
-          newText = args[0];
-
-      if(data.getCount()) {
-         /* Если есть данные, и параметр поиска не транслитизировался,
-            то не будем менять текст в строке поиска */
-         if(this._searchTextBeforeTranslate) {
-            searchForm.setText(newText);
-            this._searchTextBeforeTranslate = null;
-         }
-      } else {
-         /* Если данных нет, то обработаем два случая:
-            1) Была сменена раскладка - просто возвращаем фильтр в исходное состояние,
-               текст в строке поиска не меняем
-            2) Смены раскладки не было, то транслитизируем текст поиска, и поищем ещё раз   */
-         if(this._searchTextBeforeTranslate) {
-            viewFilter[searchParamName] = this._searchTextBeforeTranslate;
-            view.setFilter(viewFilter, true);
-            this._searchTextBeforeTranslate = null;
-            /* Надо проверить, изменился ли текст, после смены раскладки,
-               т.к. он может не меняться, если введены одни цифры */
-         } else {
-            newText = KbLayoutRevertUtil.process(newText);
-            if(viewFilter[searchParamName] !== newText) {
-               this._searchTextBeforeTranslate = args[0];
-               args[0] = newText;
-               mainFunc.apply(this, args);
-            }
-         }
-      }
-   }
 
    function resetSearch(searchParamName){
       var view = this._options.view,
@@ -247,7 +213,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          _currentRoot: null,
          _pathDSRawData : [],
          _firstSearch: true,
-         _searchTextBeforeTranslate: null,
+         _kbLayoutRevertObserver: null,
          _path: [],
          _scrollPages: [], // Набор страниц для скролл-пэйджина
          _pageOffset: 0, // offset последней страницы
@@ -319,12 +285,19 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
        *     myBinder.bindSearchGrid('СтрокаПоиска');
        * </pre>
        */
-      bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, searchMode) {
+      bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, searchMode, doNotRespondOnReset) {
          var self = this,
             view = this._options.view,
             isTree = this._isTreeView(view);
          searchForm = searchForm || this._options.searchForm;
          //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
+         if(!this._kbLayoutRevertObserver) {
+            this._kbLayoutRevertObserver = new KbLayoutRevertObserver({
+               textBox: searchForm,
+               view: view,
+               param: searchParamName
+            })
+         }
          view._searchParamName = searchParamName;
          if (isTree){
             this._lastRoot = view.getCurrentRoot();
@@ -359,15 +332,19 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
          }
 
          function subscribeOnSearchFormEvents() {
-            searchForm.subscribe('onReset', function (event, text) {
-               if (isTree) {
-                  resetGroup.call(self, searchParamName);
-               } else {
-                  resetSearch.call(self, searchParamName);
-               }
-            });
+            if(!doNotRespondOnReset) {
+               searchForm.subscribe('onReset', function (event, text) {
+                  self._kbLayoutRevertObserver.stopObserve();
+                  if (isTree) {
+                     resetGroup.call(self, searchParamName);
+                  } else {
+                     resetSearch.call(self, searchParamName);
+                  }
+               });
+            }
 
             searchForm.subscribe('onSearch', function (event, text) {
+               self._kbLayoutRevertObserver.startObserve();
                if (isTree) {
                   startHierSearch.call(self, text, searchParamName, undefined, searchMode, searchForm);
                } else {
@@ -386,15 +363,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', ['js!SBIS3.CONTROLS.Utils.KbLayoutRe
             });
          }
 
-         if(view._getItemsProjection()){
-            subscribeOnSearchFormEvents();
-         }else{
-            view.once('onItemsReady', function(){
-               subscribeOnSearchFormEvents();
-               searchForm.applySearch(false);
-            });
-
-         }
+         subscribeOnSearchFormEvents();
+         searchForm.applySearch(false);
       },
       bindSearchComposite: function(searchParamName, searchCrumbsTpl, searchForm) {
          this.bindSearchGrid.apply(this, arguments);

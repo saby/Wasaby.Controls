@@ -798,7 +798,8 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _prepareInfiniteScroll: function(){
-            var topParent = this.getTopParent();
+            var topParent = this.getTopParent(),
+                self = this;
 
             if (this.isInfiniteScroll()) {
                this._createLoadingIndicator();
@@ -808,14 +809,14 @@ define('js!SBIS3.CONTROLS.ListView',
                 * потому что контейнер невидимый*/
                if ($ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
                   var afterFloatAreaShow = function(){
-                     if (this.getItems()) {
-                     this._needScrollCompensation = this._options.infiniteScroll == 'up';
-                        this._preScrollLoading();
+                     if (self.getItems()) {
+                        self._needScrollCompensation = self._options.infiniteScroll == 'up';
+                        self._preScrollLoading();
                      }
                      topParent.unsubscribe('onAfterShow', afterFloatAreaShow);
                   };
                   //Делаем через subscribeTo, а не once, что бы нормально отписываться при destroy FloatArea
-                  this.subscribeTo(topParent, 'onAfterShow', afterFloatAreaShow.bind(this));
+                  this.subscribeTo(topParent, 'onAfterShow', afterFloatAreaShow);
                }
 
                if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
@@ -1379,6 +1380,7 @@ define('js!SBIS3.CONTROLS.ListView',
          reload: function () {
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
+            this._containerScrollHeight = 0;
             this._needScrollCompensation = this._options.infiniteScroll == 'up';
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
@@ -2142,6 +2144,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this.getItems().append(dataSet);
                ladder && ladder.setIgnoreEnabled(false);
             } else {
+               this._needScrollCompensation = true;
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight();
                var items = dataSet.toArray();
                this.getItems().prepend(items);
@@ -2201,7 +2204,9 @@ define('js!SBIS3.CONTROLS.ListView',
             var scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
             //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
             //разницы величины скролла (т.е. на сколько добавилось высоты, на столько и опустили). Получается плавно
-            this._scrollWatcher.scrollTo(scrollAmount);
+            if(scrollAmount) {
+               this._scrollWatcher.scrollTo(scrollAmount);
+            }
          },
          /**
           * Скролит табличное представление к указанному элементу

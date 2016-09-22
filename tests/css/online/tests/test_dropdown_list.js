@@ -697,4 +697,59 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
                 });
             })
     });
+	
+	gemini.suite('single_with_more_link', function (test) {
+
+        test.setUrl('/regression_dropdown_list_online_16.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="DropdownList 1"]', 40000);
+                this.list = '[name="DropdownList 1"]';
+				this.title = '[name="DropdownList 1"] .controls-DropdownList__text';
+				this.more = '.controls-DropdownListFooter_hasMore';
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = '[sbisname="TextBox 1"] input';
+            })
+
+            .capture('opened', function (actions) {
+                actions.click(this.title);
+				actions.waitForElementToShow('.controls-DropdownList__item[data-id="1"]', 1000);
+				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 1000);
+				actions.waitForElementToShow('.controls-DropdownListFooter_hasMore', 1000);
+				actions.mouseMove(this.input);
+            })
+			
+			.capture('hovered_more', function (actions) {
+                actions.mouseMove(this.more);
+            })
+    });
+	
+	gemini.suite('multiselect_with_more_link', function (test) {
+
+        test.setUrl('/regression_dropdown_list_online_17.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="DropdownList 1"]', 40000);
+                this.list = '[name="DropdownList 1"]';
+				this.title = '[name="DropdownList 1"] .controls-DropdownList__text';
+				this.item1 = '.controls-DropdownList__item[data-id="1"]';
+				this.item2 = '.controls-DropdownList__item[data-id="2"]';				
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = '[sbisname="TextBox 1"] input';
+            })
+
+            .capture('opened', function (actions) {
+                actions.click(this.title);
+				actions.waitForElementToShow('.controls-DropdownList__item[data-id="1"]', 1000);
+				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 1000);
+				actions.waitForElementToShow('.controls-DropdownListFooter_hasMore', 1000);
+				actions.mouseMove(this.input);
+            })
+			
+			.capture('selected_items', function (actions) {
+                actions.click(this.item1);
+				actions.click(this.item2);
+				actions.mouseMove(this.input);
+            })
+    });
 });

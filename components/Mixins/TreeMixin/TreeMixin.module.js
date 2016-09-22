@@ -1,9 +1,9 @@
 define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
-   'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree', 'tmpl!SBIS3.CONTROLS.TreeMixin/resources/searchRender'], function (BreadCrumbs, groupByTpl, TreeProjection, searchRender) {
+   'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree', 'tmpl!SBIS3.CONTROLS.TreeMixin/resources/searchRender', 'js!WS.Data/Entity/Model', 'js!WS.Data/Adapter/Sbis'], function (BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model) {
 
    var createDefaultProjection = function(items, cfg) {
       var
-         root, projection;
+         root, projection, rootAsNode;
       if (typeof cfg._curRoot != 'undefined') {
          root = cfg._curRoot;
       }
@@ -15,6 +15,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             root = null;
          }
       }
+      rootAsNode = isPlainObject(root);
+      if (rootAsNode) {
+         root = Model.fromObject(root, 'adapter.sbis');
+         root.setIdProperty(cfg.keyField);
+      }
+
       projection = new TreeProjection({
          collection: items,
          idProperty: cfg.keyField || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
@@ -22,7 +28,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          nodeProperty: cfg.hierField + '@',
          loadedProperty: cfg.hierField + '$',
          unique: true,
-         root: root
+         root: root,
+         rootEnumerable: rootAsNode
       });
       var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
       projection.setFilter(filterCallBack);
@@ -538,8 +545,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(function (list) {
                this._folderHasMore[id] = list.getMetaData().more;
                this._loadedNodes[id] = true;
+               this._notify('onDataMerge', list); // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
                this._options._items.merge(list, {remove: false});
-               this._notify('onDataMerge', list); // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
                if (this._isSlowDrawing()) {
                   this._options._items.getTreeIndex(this._options.hierField, true);
                }
@@ -649,6 +656,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          }
       },
       around: {
+         _getItemProjectionByItemId: function(parentFn, id) {
+            var root;
+            if (isPlainObject(this._options.root)) {
+               root = this._getItemsProjection().getRoot();
+               if (String(root.getContents().getId()) === String(id)) {
+                  return root;
+               }
+            }
+            return parentFn.apply(this, [id]);
+         },
          _canApplyGrouping: function(parentFn, projItem) {
             if (this._isSearchMode()) {
                return true;
@@ -921,10 +938,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          this._offset = 0;
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
          this._notify('onBeforeSetRoot', key);
-         this._options._curRoot = key || this._options.root;
+         this._options._curRoot = key !== undefined && key !== null ? key : this._options.root;
          if (this._options._itemsProjection) {
             this._options._itemsProjection.setEventRaising(false);
-            this._options._itemsProjection.setRoot(this._options._curRoot || null);
+            this._options._itemsProjection.setRoot(this._options._curRoot !== undefined ? this._options._curRoot : null);
             this._options._itemsProjection.setEventRaising(true);
          }
       },
