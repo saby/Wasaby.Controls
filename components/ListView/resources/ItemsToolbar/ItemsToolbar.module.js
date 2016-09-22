@@ -229,7 +229,16 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              var parentContainer = this.getParent().getContainer()[0],
                  targetContainer = this._currentTarget.container[0],
                  parentCords = parentContainer.getBoundingClientRect(),
-                 targetCords = targetContainer.getBoundingClientRect();
+                 targetCords;
+
+             /* Событие onMove из трэкера стреляет и при удалении элемента из DOM'a,
+                надо проверить на наличине элемента, а то получим неверные расчёты, а в худшем случае(ie) браузер падает */
+             if(!$ws.helpers.contains(parentContainer, targetContainer)) {
+                this._untrackingTarget();
+                return;
+             }
+
+             targetCords = targetContainer.getBoundingClientRect();
              this._currentTarget.position =  {
                 top: targetCords.top - parentCords.top + parentContainer.scrollTop,
                 left: targetCords.left - parentCords.left
