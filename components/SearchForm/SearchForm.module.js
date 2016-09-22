@@ -109,24 +109,6 @@ define('js!SBIS3.CONTROLS.SearchForm', [
             e.stopPropagation();
             e.preventDefault();
          }
-      },
-
-      /**
-       * Сбросить поиск
-       * @see applySearch
-       */
-      resetSearch: function(){
-         this.setText('');
-         this.applySearch(true);
-      },
-
-      /**
-       * Запустить поиск
-       * @param {boolean} force Принудительный запуск поиска, даже если кол-во символов меньше чем {@link startCharacter}.
-       * @see resetSearch
-       */
-      applySearch: function(force) {
-         this._applySearch(this.getText(), force);
       }
    });
 
