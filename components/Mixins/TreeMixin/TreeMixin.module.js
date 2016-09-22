@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
-   'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree', 'js!WS.Data/Entity/Model', 'js!WS.Data/Adapter/Sbis'], function (BreadCrumbs, groupByTpl, TreeProjection, Model) {
+   'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree', 'js!WS.Data/Entity/Model', 'js!WS.Data/Adapter/Sbis'], function (BreadCrumbs, groupByTpl, TreeProjection, Model) {
 
    var createDefaultProjection = function(items, cfg) {
       var
