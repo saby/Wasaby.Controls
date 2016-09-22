@@ -93,7 +93,11 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
                 * </pre>
                 * @see setDragEntity
                 */
-               dragEntity: undefined
+               dragEntity: undefined,
+               /**
+                * @cfg {String|Function(): WS.Data/Collection/List}  Конструктор списка перемещаемых сущностей по умолчанию {@link WS.Data/Collection/List}
+                */
+               dragEntityList: 'collection.list'
             },
             /**
              * @member {Number} Константа, показывающая на сколько пикселей надо сдвинуть мышь, чтобы началось перемещение.

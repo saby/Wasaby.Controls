@@ -130,18 +130,6 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
        */
       setDomElement: function (element) {
          this._options.position = position;
-      },
-      getOperation: function() {
-         return this._options.operation;
-      },
-      setOperation: function(operation) {
-         this._options.operation = operation;
-      },
-      getAction: function() {
-         return this._options.action;
-      },
-      setAction: function(action) {
-         this._options.action = action;
       }
    });
    Di.register('dragentity.row', Row);

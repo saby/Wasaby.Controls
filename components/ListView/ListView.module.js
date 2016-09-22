@@ -42,7 +42,8 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
       'js!SBIS3.CONTROLS.DragEntity.Row',
       'js!WS.Data/Collection/RecordSet',
-      'i18n!SBIS3.CONTROLS.ListView'
+      'i18n!SBIS3.CONTROLS.ListView',
+      'js!SBIS3.CONTROLS.DragEntity.ListRows'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin,  ItemsToolbar, MarkupTransformer, dotTplFn,
@@ -684,7 +685,13 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see DragEntityOptions
                 * @see SBIS3.CONTROLS.DragEntity.Row
                 */
-               dragEntity: 'dragentity.row'
+               dragEntity: 'dragentity.row',
+               /**
+                * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS.DragEntity.Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS.DragEntity.Row}
+                * @see DragEntityOptions
+                * @see SBIS3.CONTROLS.DragEntity.Row
+                */
+               dragEntityList: 'dragentity.listrows'
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
