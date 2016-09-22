@@ -389,7 +389,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             add: function(options) {
                var
                   self = this,
-                  modelOptions = options.model || this._notify('onBeginAdd'),
+                  beginAddResult = this._notify('onBeginAdd'),
+                  modelOptions = options.model || beginAddResult,
                   preparedModel = options.preparedModel,
                   editingRecord;
                this._lastTargetAdding = options.target;
