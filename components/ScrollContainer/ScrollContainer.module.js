@@ -1,4 +1,3 @@
-//TODO: посмотреть можно ли что нибудь сделать через deferred
 //TODO: написать про установку высоты
 define('js!SBIS3.CONTROLS.ScrollContainer',
    [
@@ -23,9 +22,17 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
        * @initial
        * <component data-component="SBIS3.CONTROLS.ScrollContainer">
        *    <option name="content">
-       *          Контент - верстка которая будет помещена в контейнер с кастомным скроллом
+       *       <component data-component="SBIS3.CONTROLS.ListView">
+       *          <option name="displayField">title</option>
+       *          <option name="keyField">id</option>
+       *          <option name="infiniteScroll">down</option>
+       *          <option name="infiniteScrollContainer">.controls-Scroll__container</option>
+       *          <option name="pageSize">7</option>
+       *       </component>
        *    </option>
+       *    <option name="height">400px</option>
        * </component>
+       * @author Крайнов Дмитрий Олегович
        */
       var Scroll = CompoundControl.extend({
 
@@ -59,7 +66,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
             /**
              * Должен ли быть скролл на контейнере
              */
-            _hasScroll: false
+            _hasScroll: false,
+
+            _contentContainer: undefined
          },
 
          $constructor: function() {
@@ -68,12 +77,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
 
          init: function() {
             Scroll.superclass.init.call(this);
-
-            /**
-             * Так как мы сделали binding опции content, то нам нужно
-             * вызвать функцию которая отрисует наш content на странице
-             */
-            this.setContent(this.getContent());
 
             //Подписка на события при которых нужно инициализировать скролл
             this.getContainer().bind('mousemove touchstart', this._create.bind(this));
@@ -92,13 +95,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
           */
          setContent: function(content) {
             this._options.content = content;
-            //this.getContainer().html(this._dotTplFn(this._options));
-            this.getLinkedContext().setValue('content', content);
+            this.getContainer().html(this._dotTplFn(this._options));
             this.reviveComponents();
          },
 
          /**
-          * Инциализация кастомного скролла
+          * Инициализация кастомного скролла
           * @private
           */
          _create: function() {
@@ -170,8 +172,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
             var
                scroll = this._scroll,
                heightContainer = this._container.height(),
-            //TODO: заменить на контекст
-               heightChildContainer = this._container.children().height();
+               heightContent = this._container.find('.controls-ScrollContainer__content').height();
 
             this.updateScroll();
 
@@ -183,7 +184,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
              * а уже потом при наведении на контрол скролл инициализируется.
              */
             if (!scroll) {
-               this._hasScroll = heightChildContainer > heightContainer;
+               this._hasScroll = heightContent > heightContainer;
             }
             /**
              * Если контейнер переполнился нужно повесить класс который скроет
@@ -205,7 +206,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
          },
 
          /**
-          * Обновление скролла
+          * Обновление скролла, нужно для того что бы была возможность получить реальные данные о
+          * положении скролла,
           */
          updateScroll: function() {
             this.getContainer().mCustomScrollbar('update');
