@@ -60,6 +60,13 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
        * @variant after Вставить перемещаемые элементы после текущей записи.
        * @variant before Вставить перемещаемые элементы перед текущей записью.
        */
+      /**
+       * @typedef {String} Operation
+       * @variant move Перемещает запись: в новый список добавляет из старого удаляет.
+       * @variant add Добавляет запись в новый список.
+       * @variant delete Удаляет запись из старого списка.
+       * @variant undefined ничего не делать
+       */
       $protected: {
          _options: {
             /**
@@ -75,7 +82,7 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
              */
             domElement: undefined,
             /**
-             * @cfg {String} operation
+             * @cfg {Operation} operation Показывает как отобразить перемещение записи.
              */
             operation:  'move'
          }
