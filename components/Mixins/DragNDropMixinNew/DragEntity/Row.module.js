@@ -75,13 +75,9 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
              */
             domElement: undefined,
             /**
-             * @cfg {*} action
-             */
-            action: undefined,
-            /**
              * @cfg {String} operation
              */
-            operation:  undefined
+            operation:  'move'
          }
       },
       /**
