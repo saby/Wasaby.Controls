@@ -278,7 +278,7 @@ define('js!SBIS3.CONTROLS.Menu', [
             horizontalAlign : {
                side : 'left'
             },
-            fullHeight: true,
+            allowOverlapTarget: true,
             handlers: {
                'onShow': function(){
                   this._notify('onNodeExpand', this._options.item.getId());

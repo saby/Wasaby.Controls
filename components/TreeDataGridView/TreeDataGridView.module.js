@@ -25,23 +25,22 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'use strict';
 
    /**
-    * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
+    * Контрол, отображающий набор данных с иерархической структурой в виде в таблицы с несколькими колонками. Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
     *
     * @class SBIS3.CONTROLS.TreeDataGridView
     * @extends SBIS3.CONTROLS.DataGridView
     * @mixes SBIS3.CONTROLS.TreeMixin
     * @author Крайнов Дмитрий Олегович
     *
-    * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView
-    * @demo SBIS3.CONTROLS.Demo.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
+    * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView Пример 1. Простое иерархическое представление данных в режиме множественного выбора записей.
+    * @demo SBIS3.CONTROLS.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
     * Инициировать добавление можно как по нажатию кнопок в футерах, так и по кнопке Enter из режима редактирования последней записи.
-    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
-    *
-    * @public
+    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/"> Добавление по месту в иерархическом списке</a>.
     *
     * @author Крайнов Дмитрий Олегович
     *
     * @control
+    * @public
     * @category Lists
     * @initial
     * <component data-component='SBIS3.CONTROLS.TreeDataGridView'>
@@ -296,8 +295,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          /* Т.к. у нас в вёрстке две иконки, то позиционируем в зависимости от той, которая показывается,
             в .200 переделаем на маркер */
          if(arrowContainer.length === 2) {
-            /* Для стандартного отображения учитываем паддинги и ширину икноки разворота папки */
-            if ((folderTitle[0].offsetWidth + HIER_WRAPPER_WIDTH + ADDITIONAL_LEVEL_OFFSET) > td[0].offsetWidth) {
+            if (folderTitle[0].offsetWidth > td[0].offsetWidth) {
                arrowContainer = arrowContainer[1];
             } else {
                arrowContainer = arrowContainer[0];
@@ -420,12 +418,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (typeof parentKey != 'undefined' && parentKey !== null && parentContainer) {
             var parentMargin = parseInt($('.controls-TreeView__expand', parentContainer).parent().css('padding-left'));
             $('.controls-TreeView__expand', container).parent().css('padding-left', parentMargin + this._options.paddingSize);
-         }
-      },
-
-      _notifyOnItemClick: function(id, data, target, e) {
-         if(!$(target).hasClass('js-controls-TreeView__expand')) {
-            return TreeDataGridView.superclass._notifyOnItemClick.apply(this, arguments);
          }
       },
 

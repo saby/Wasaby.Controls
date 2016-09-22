@@ -10,8 +10,9 @@
 // data grid
 @data-grid-cell-height:                         44px;;
 @data-grid-cell-padding:                        4px 6px;
-@data-grid-header-cell-font-size:               16px;
+@data-grid-header-cell-font-size:               18px;
 @data-grid-header-cell-height:                  22px;
+@data-grid-header-cell-padding:                 @data-grid-cell-padding;
 @data-grid-cell-line-height:                    34px;
 @data-grid-checkbox-margin:                     4px 0 -4px 10px;
 @data-grid-td-checkbox-width:                   30px;
@@ -24,6 +25,8 @@
 @tree-view-expand-margin:                       0 6px 8px 2px;
 @tree-view-editArrow-top:                       10px;
 @tree-view-expand-height:                       25px;
+
+@tree-view-value-left-margin:                   24px;
 
 // back-button
 @menu-item-icon-top-offset:                     14px;
@@ -59,16 +62,13 @@
 // ----------------- //
 // Data Range Slider //
 // ----------------- //
-@date-range-slider-hover-text-decoration:       underline;
 @date-range-slider-font-size:                   @globalDefaultFontSize;
-@date-range-slider-value-font-weight:           bold;
 @date-range-slider-value-min-width:             124px;
 @date-range-slider-value-padding:               0;
 @date-range-slider-year-state-width:            136px;
 @date-range-slider-height:                      40px;
 @date-range-slider-prev-next-buttons-width:     40px;
 @date-range-slider-prev-next-buttons-font-size: @date-range-slider-font-size;
-@date-range-slider-prev-next-buttons-font-weight: normal;
 
 
 // ----------------- //
@@ -76,20 +76,15 @@
 // ----------------- //
 @date-range-choose-bg-color:                    #e1ecf6;
 @date-range-choose-bg-hover-color:              #f0f5fb;
-@date-range-choose-bg-active-color:             #e1ecf6;
-//@date-range-choose-border-color:                @gray-light-color;
 @date-range-choose-border-width:                0;
 @date-range-choose-border-radius:               0;
-@date-range-choose-font-family:                 @font-basic-name;
 @date-range-choose-font-size:                   @globalDefaultFontSize;
 @date-range-choose-color:                       #313e78;
-@date-range-choose-hover-color:                 @blue-dark-color;
 @date-range-choose-width:                       204px;
 @date-range-choose-year-state-width:            136px;
 
 
 @date-range-choose-current-value-font-size:     @globalDefaultFontSize;
-@date-range-choose-current-value-font-weight:   bold;
 @date-range-choose-current-value-height:        60px;
 @date-range-choose-current-value-bg-color:      #c1d7f0;
 @date-range-choose-current-value-bg-hover-color:   @date-range-choose-current-value-bg-color;
@@ -97,13 +92,11 @@
 @date-range-choose-current-value-margin-bottom: 0;
 
 @date-range-choose-year-font-size:              @globalDefaultFontSize;
-@date-range-choose-year-font-weight:            bold;
 @date-range-choose-year-height:                 40px;
 @date-range-choose-year-margin-bottom:          0;
 
 @date-range-choose-year-prev-next-btns-width:         40px;
 @date-range-choose-year-prev-next-btns-font-size:     @globalDefaultFontSize;
-@date-range-choose-year-prev-next-btns-font-weight:   normal;
 
 
 @date-range-choose-month-height:                40px;
@@ -113,19 +106,10 @@
 @date-range-choose-home-button-font-size:       32px;
 @date-range-choose-home-button-line-height:     40px;
 @date-range-choose-home-button-border-color:    transparent;
-@date-range-choose-home-color:                  @date-range-choose-color;
 
 // -------------- //
 // Date Range Big //
 // -------------- //
-
-@date-range-big-spritesheet:                   'img/DateRangeBig-images.png';
-@date-range-big-bg-spritesheet:                'img/DateRangeBig-images2.png';
-
-@date-range-big-left-arrow-icon-bg:             url(@date-range-big-spritesheet) 0 0 no-repeat;
-@date-range-big-left-arrow-icon-hover-bg:       url(@date-range-big-spritesheet) 0 -24px no-repeat;
-@date-range-big-right-arrow-icon-bg:            url(@date-range-big-spritesheet) 0 -48px no-repeat;
-@date-range-big-right-arrow-icon-hover-bg:      url(@date-range-big-spritesheet) 0 -72px no-repeat;
 
 @date-range-big-choose-width:                                  527px;
 
@@ -136,12 +120,10 @@
 @date-range-big-choose-header-home-button-line-height:         38px;
 @date-range-big-choose-header-date-box-font-size:              inherit;
 @date-range-big-choose-header-date-pickers-margin-right:       75px;
-@date-range-big-choose-header-date-picker-margin-top:          2px;
 @date-range-big-choose-header-date-picker-height:              35px;
 @date-range-big-choose-header-apply-button-size:               40px;
 @date-range-big-choose-header-apply-button-font-size:          24px;
 @date-range-big-choose-header-apply-button-line-height:        38px;
-@date-range-big-choose-header-apply-button-margin-left:        8px;
 @date-range-big-choose-header-range-dash-width:                6px;
 @date-range-big-choose-header-range-dash-margin:               21px 8px 0 8px;
 
@@ -150,12 +132,9 @@
 @date-range-big-choose-years-height:                           50px;
 
 @date-range-big-choose-years-panel-top-padding:                9px;
-@date-range-big-choose-years-panel-bottom-padding:             8px;
 @date-range-big-choose-years-panel-wrapper-font-size:          24px;
-@date-range-big-choose-years-panel-toggle-choose-year-button-font-size:       @date-range-big-choose-years-panel-wrapper-font-size;
 @date-range-big-choose-years-panel-toggle-choose-year-button-line-height:     30px;
 @date-range-big-choose-years-panel-toggle-choose-year-button-margin:          0 60px;
-@date-range-big-choose-years-panel-current-year-button-font-size:             @date-range-big-choose-years-panel-wrapper-font-size;
 @date-range-big-choose-years-panel-current-year-button-line-height:           30px;
 @date-range-big-choose-years-panel-back-button-font-size:                     24px;
 @date-range-big-choose-years-panel-back-button-line-height:                   26px;
@@ -246,7 +225,6 @@
 // Big button
 
 @button-big-border-radius:                      0;
-@button-big-primary-active-border:              @button-big-primary-border;
 @button-big-font:                               @globalDefaultFontSize @font-basic-name;
 @button-big-min-width:                          60px;
 @button-big-height:                             60px;
@@ -265,7 +243,6 @@
 @button-big-icon-32-left-offset:                14px;
 
 // Big disabled button
-@button-big-disabled-border:                    @button-disabled-border;
 
 // ------------- //
 // Toggle button //
@@ -281,11 +258,9 @@
 // Normal primary button
 @button-primary-checked-border:                 @button-checked-border;
 // Big default button
-@button-big-checked-border:                     @button-checked-border;
 @button-big-checked-text-margin-left:           @button-big-text-margin-left;
 @button-big-checked-text-margin-right:          @button-big-text-margin-right;
 // Big primary button
-@button-big-primary-checked-border:             @button-primary-checked-border;
 
 // ----------- //
 // Menu button //
@@ -293,10 +268,6 @@
 
 // Menu
 @menu-button-menu-top-margin:                           0;
-@menu-button-menu-left-margin:                          0;
-@menu-button-menu-padding:                              4px 0;
-@menu-button-menu-border-width:                         2px;
-@menu-button-menu-border-style:                         @menu-border-style;
 @menu-button-menu-border-color:                         transparent;
 @menu-button-menu-bg:                                   #E1ECF6;
 
@@ -305,7 +276,6 @@
 
 @menu-button-header-left-width:                         0;
 @menu-button-header-left-height:                        0;
-@menu-button-header-left-margin:                        0;
 @menu-button-header-left-bg:                            transparent;
 @menu-button-header-left-bg-revert-horizontal:          transparent;
 @menu-button-header-right-bg-revert-vertical:           transparent;
@@ -313,7 +283,6 @@
 
 @menu-button-header-center-width:                       0;
 @menu-button-header-center-height:                      0;
-@menu-button-header-center-margin:                      0;
 @menu-button-header-center-bg:                          transparent;
 
 @menu-button-header-right-width:                        0;
@@ -328,8 +297,6 @@
 // Menu //
 // ---- //
 
-@menu-border-width:                             2px;
-@menu-border-style:                             solid;
 @menu-border-color:                             transparent;
 @menu-border-radius:                            0;
 @menu-header-padding:                           4px 8px;
@@ -340,7 +307,6 @@
 // --------- //
 @menu-item-height:                              40px;
 @menu-header-height:                            @menu-item-height;
-@menu-item-line-height:                         @menu-item-height;
 @menu-item-bg:                                  @menu-button-menu-bg;
 @menu-item-hover-bg:                            #F0F5FB;
 @menu-item-hover-icon-color:                    @blue-dark-color!important;
@@ -393,12 +359,9 @@
 @search-background:                             #FFFFFF;
 @search-disabled-background:                    none;
 @search-focus-background:                       @text-box-focus-bg;
-@search-height:                                 @text-box-height;
-@search-padding:                                0 24px 0 16px;
 @search-left-margin:                            8px;
 @search-border-radius:                          0;
 @search-border-color:                           @text-box-border-color;
-@search-form-border-width:                      @text-box-border-width;
 @search-form-border-disabled-width:             0;
 @search-buttons-wrapper-width:                  32px + 40px;
 @search-hover-border-color:                     @text-box-bottom-border-color;
@@ -450,7 +413,6 @@
 @switcher-btn-color-disabled:                   @switcher-do-disabled-line-color;
 
 @swithcer-do-font-weight:                       bold;
-@swithcer-do-unselected-font-weight:            normal;
 @switcher-do-vertical-toggle-width:             40px;
 @switcher-do-vertical-toggle-height:            80px;
 @switcher-do-vertical-line-width:               60px;
@@ -478,8 +440,6 @@
 
 @closeButtonWidth:                              60px;
 @closeButtonHeight:                             40px;
-@closeButtonImage:                              @closeFilterButtonImage;
-@closeButtonImageHover:                         @closeFilterButtonImageHover;
 
 // EditDialog
 @editdialog-applybutton-width:                  130px;

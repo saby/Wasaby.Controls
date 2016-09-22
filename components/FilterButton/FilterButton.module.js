@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
         * фильтрами осуществляется только через контекст.
         * Если текст рядом с кнопкой фильтов может иметь большую ширину,
         * то ширину кнопки фильтров надо ограничить, навесив max-width.
+        * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/">Панель фильтров</a>.
         * @class SBIS3.CONTROLS.FilterButton
         * @extends $ws.proto.CompoundControl
         * @author Крайнов Дмитрий Олегович
@@ -178,9 +179,11 @@ define('js!SBIS3.CONTROLS.FilterButton',
           },
 
           applyFilter: function() {
-             if(this._picker.validate()) {
-                this.hidePicker();
-                FilterButton.superclass.applyFilter.call(this);
+             if(this._picker) {
+                if (this._picker.validate()) {
+                   this.hidePicker();
+                   FilterButton.superclass.applyFilter.call(this);
+                }
              }
           },
 
@@ -306,6 +309,13 @@ define('js!SBIS3.CONTROLS.FilterButton',
                       self._forEachFieldLinks(function(fieldLink) {
                          fieldLink.getSuggest()._hideMenu();
                       });
+                      /* Разрушаем панель при закрытии,
+                         надо для: сбрасывания валидации, удаления ненужных значений из контролов
+                       */
+                      if(self._picker) {
+                         self._picker.destroy();
+                         self._picker = null;
+                      }
                    },
 
                    onShow: function() {

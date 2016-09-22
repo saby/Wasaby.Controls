@@ -360,7 +360,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         self._editingRecord = undefined;
                      }
                      if (isAdd) {
-                        self._options.items.push(eip._cloneWithFormat(eipRecord, self._options.items));
+                        self._options.items.add(eip._cloneWithFormat(eipRecord, self._options.items));
                      }
                   }).addErrback(function(error) {
                      $ws.helpers.alert(error);
@@ -389,7 +389,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             add: function(options) {
                var
                   self = this,
-                  modelOptions = options.model || this._notify('onBeginAdd'),
+                  beginAddResult = this._notify('onBeginAdd'),
+                  modelOptions = options.model || beginAddResult,
                   preparedModel = options.preparedModel,
                   editingRecord;
                this._lastTargetAdding = options.target;

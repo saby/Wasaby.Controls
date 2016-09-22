@@ -36,7 +36,13 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             offset: 4
          }
       };
-
+      /**
+       * Класс для работы с операциями над записями, которые появляются при наведении курсора мыши.
+       * @class SBIS3.CONTROLS.ItemActionsGroup
+       * @extends SBIS3.CONTROLS.ButtonGroupBaseDS
+       * @author Герасимов Александр Максимович
+       * @public
+       */
       var ItemActionsGroup = ButtonGroupBaseDS.extend( /** @lends SBIS3.CONTROLS.ItemActionsGroup.prototype */ {
          $protected: {
             _dotTplFn: dotTplFn,

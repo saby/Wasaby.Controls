@@ -1,0 +1,45 @@
+.controls-RichEditorRoundToolbar {
+   display: inline-block;
+   &__stylesPanel {
+      border-radius: 5px;
+      border-color: rgb(228, 228, 228);
+      border-width: 2px;
+      border-style: solid;
+      .controls-PopupMixin__closeButton {
+         top: 8px;
+      }
+   }
+   &__itemsContainer {
+      display: inline-block;
+   }
+   .controls-ListView__item{
+      margin: 0 2px;
+   }
+}
+.controls-RichEditorRoundToolbar__historyPicker {
+   .controls-Menu__header{
+      display: none;
+   }
+   .controls-Menu__itemsContainer {
+      .controls-ListView__item {
+         p {
+            margin: 0;
+         }
+      }
+   }
+}
+.controls-RichEditorRoundToolbar__smilesPicker {
+   .controls-Menu__header{
+      display: none;
+   }
+   .controls-Menu__itemsContainer {
+      width: 165px;
+      padding: 1px 0;
+      .controls-ListView__item {
+         display: block;
+         float:left;
+         height: 32px;
+         width: 32px;
+      }
+   }
+}
