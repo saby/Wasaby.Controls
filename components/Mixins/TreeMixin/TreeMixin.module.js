@@ -117,13 +117,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       var
          records = [],
          projectionFilter;
-      if (cfg.expand || cfg.searchRender) {
+      if (cfg.expand || cfg.hierarchyViewMode) {
          cfg._previousGroupBy = undefined;
          projection.setEventRaising(false);
          expandAllItems(projection, cfg);
          projection.setEventRaising(true);
 
-         if (cfg.searchRender) {
+         if (cfg.hierarchyViewMode) {
             records = searchProcessing(projection, cfg);
          }
          else {
@@ -226,7 +226,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       tplOptions.hierField = cfg.hierField;
       tplOptions.paddingSize = cfg._paddingSize;
       tplOptions.originallPadding = cfg._originallPadding;
-      tplOptions.isSearch = cfg.searchRender;
+      tplOptions.isSearch = cfg.hierarchyViewMode;
       return tplOptions;
    };
    /**
@@ -447,7 +447,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              * @see SBIS3.CONTROLS.ItemsControlMixin#setItemsSortMethod
              */
             itemsSortMethod: _defaultItemsSortMethod,
-            searchRender: false
+            hierarchyViewMode: false
          },
          _foldersFooters: {},
          _breadCrumbs : [],
@@ -575,6 +575,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             this.setInfiniteScroll(this._options.infiniteScroll, true);
             this.setHighlightText('', false);
             this.setFilter(filter, true);
+            this._options.hierarchyViewMode = false;
             this.setCurrentRoot(id);
             this.reload();
          }

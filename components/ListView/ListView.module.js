@@ -1924,7 +1924,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _isSearchMode: function() {
-            return this._options.searchRender;
+            return this._options.hierarchyViewMode;
          },
 
          //TODO проверка для режима совместимости со старой отрисовкой

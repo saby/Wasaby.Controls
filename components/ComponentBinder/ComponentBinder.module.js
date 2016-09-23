@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                  mode = searchMode;
 
              filter[searchParamName] = text;
-             view._options.searchRender = true;
+             view._options.hierarchyViewMode = true;
              view.setHighlightText(text, false);
              view.setHighlightEnabled(true);
 
@@ -122,7 +122,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          view._getItemsProjection().setRoot(self._lastRoot || null);
       });
       this._searchMode = false;
-      view._options.searchRender = false;
+      view._options.hierarchyViewMode = false;
       //Если мы ничего не искали, то и сбрасывать нечего
       if (this._firstSearch) {
          return;
