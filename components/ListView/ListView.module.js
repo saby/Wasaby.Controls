@@ -28,7 +28,6 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.ScrollWatcher',
       'js!WS.Data/Collection/IBind',
-      'js!WS.Data/Collection/List',
       'html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
       'html!SBIS3.CONTROLS.ListView/resources/emptyData',
       'tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
@@ -48,7 +47,7 @@ define('js!SBIS3.CONTROLS.ListView',
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin,  ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
-             Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
+             Link, ScrollWatcher, IBindCollection, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder, Di, ArraySimpleValuesUtil) {
 
      'use strict';
@@ -2806,9 +2805,11 @@ define('js!SBIS3.CONTROLS.ListView',
                   }));
                }.bind(this));
 
-               dragObject.setSource(new List({
-                  items: source
-               }));
+               dragObject.setSource(
+                  this._makeDragEntityList({
+                     items: source
+                  })
+               );
                this._hideItemsToolbar();
                return true;
             }

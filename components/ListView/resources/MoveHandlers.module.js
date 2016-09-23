@@ -294,34 +294,39 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
          return undefined;
       },
       /**
-       * перемещает элементы из внешнего контрола, через drag'n'drop
+       * Перемещает элементы из внешнего контрола, через drag'n'drop
        * @param {SBIS3.CONTROLS.DragObject} dragObject
        * @private
        */
       _moveFromOut: function(dragObject) {
-         var dragOwnerSource = dragObject.getOwner().getDataSource(),
-            dataSource = this.getDataSource(),
-            target = dragObject.getTarget();
-         var def;
-         if (dataSource === dragOwnerSource || dragOwnerSource.getEndpoint().contract ==  dataSource.getEndpoint().contract) {
-            var models = [];
-            dragObject.getSource().each(function(item) {
-               models.push(item.getModel());
-            });
-            if (target.getPosition() === 'on') {
-               def = this.getMoveStrategy().hierarhyMove(models, dragObject.getTarget().getModel());
-            } else {
-               def = this.getMoveStrategy().move(models, dragObject.getTarget().getModel(), target.getPosition() === 'after');
+         var target = dragObject.getTarget();
+         if(dragObject.getSource().getAction()) {
+            def = dragObject.getSource().getAction().execute();
+         } else {
+            var dragOwnerSource = dragObject.getOwner().getDataSource(),
+               dataSource = this.getDataSource();
+            var def;
+            if (dataSource === dragOwnerSource || dragOwnerSource.getEndpoint().contract == dataSource.getEndpoint().contract) {
+               var models = [];
+               dragObject.getSource().each(function (item) {
+                  models.push(item.getModel());
+               });
+               if (target.getPosition() === 'on') {
+                  def = this.getMoveStrategy().hierarhyMove(models, dragObject.getTarget().getModel());
+               } else {
+                  def = this.getMoveStrategy().move(models, dragObject.getTarget().getModel(), target.getPosition() === 'after');
+               }
             }
          }
          def = (def instanceof $ws.proto.Deferred) ? def : new $ws.proto.Deferred().callback();
          var position = this.getItems().getIndex(target.getModel()),
             ownerItems = dragObject.getOwner().getItems(),
-            self = this;
+            self = this,
+            newItems = dragObject.getSource(),
+            operation = newItems.getOperation();
          def.addCallback(function() {
-            dragObject.getSource().each(function(item) {
-               var operation = item.getOperation(),
-                  model = item.getModel();
+            newItems.each(function(item) {
+               var model = item.getModel();
                if (operation === 'add' || operation === 'move') {
                   self.getItems().add(model.clone(), position);
                }

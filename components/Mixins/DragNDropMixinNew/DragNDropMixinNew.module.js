@@ -1,7 +1,8 @@
 /*global $ws, define, $ */
 define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
    'js!SBIS3.CONTROLS.DragObject',
-   'js!WS.Data/Di'
+   'js!WS.Data/Di',
+   ''
 ], function (DragObject, Di) {
    'use strict';
    /**
@@ -398,6 +399,15 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           */
          _makeDragEntity: function(options) {
             return  Di.resolve(this._options.dragEntity, options);
+         },
+         /**
+          *
+          * @param options
+          * @returns {*|Object|Array}
+          * @private
+          */
+         _makeDragEntityList: function(options) {
+            return Di.resolve(this._options.dragEntityList, options)
          },
          //endregion protected
          //region mouseHandler

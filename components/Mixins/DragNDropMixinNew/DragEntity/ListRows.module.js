@@ -1,9 +1,11 @@
 /*global define, $ws, $*/
 define('js!SBIS3.CONTROLS.DragEntity.ListRows', [
+   'js!WS.Data/Di',
    'js!WS.Data/Collection/List'
-], function (List) {
+], function (Di, List) {
    'use strict';
    /**
+    * Список строк
     * @class SBIS3.CONTROLS.DragEntity.ListRows
     */
    var ListRows = List.extend(/**@lends SBIS3.CONTROLS.DragEntity.ListRows.prototype*/{
@@ -15,29 +17,26 @@ define('js!SBIS3.CONTROLS.DragEntity.ListRows', [
        * @variant delete Удаляет запись из старого списка.
        * @variant undefined ничего не делать
        */
-      $protected: {
-         _options: {
-            /**
-             * @cfg {SBIS3.CONTROLS.Action.Action} Экшен который обработает перемещение
-             */
-            action: undefined,
-            /**
-             * @cfg {Operation} operation Показывает как отобразить перемещение записей.
-             */
-            operation:  'move'
-         }
-      },
+      /**
+       * @cfg {SBIS3.CONTROLS.Action.Action} Экшен который обработает перемещение
+       */
+      _$action: undefined,
+      /**
+       * @cfg {Operation} operation Показывает как отобразить перемещение записей.
+       */
+      _$operation:  'move',
+
       getOperation: function() {
-         return this._options.operation;
+         return this._$operation;
       },
       setOperation: function(operation) {
-         this._options.operation = operation;
+         this._$operation = operation;
       },
       getAction: function() {
-         return this._options.action;
+         return this._$action;
       },
       setAction: function(action) {
-         this._options.action = action;
+         this._$action = action;
       }
    });
    Di.register('dragentity.listrows', ListRows);
