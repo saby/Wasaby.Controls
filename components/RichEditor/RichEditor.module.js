@@ -675,17 +675,15 @@ define('js!SBIS3.CONTROLS.RichEditor',
           * @private
           */
          setFontStyle: function(style) {
-            if (style !== 'mainText') {
-               this._applyFormat(style, true);
-               this._textFormats[style] = true;
-            }
             for (var stl in constants.styles) {
                if (style !== stl) {
                   this._removeFormat(stl);
-                  this._textFormats[stl] = false;
                }
             }
-            this._tinyEditor.focus();
+            if (style !== 'mainText') {
+               this._applyFormat(style, true);
+            }
+            this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._setTrimmedText(this._getTinyEditorValue());
          },
