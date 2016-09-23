@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
-   'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree', 'js!WS.Data/Entity/Model', 'js!WS.Data/Adapter/Sbis', 'js!WS.Data/Relation/Hierarchy'], function (BreadCrumbs, groupByTpl, TreeProjection, Model, SbisAdapter, HierarchyRelation) {
+   'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree', 'js!WS.Data/Entity/Model', 'js!WS.Data/Relation/Hierarchy', 'js!WS.Data/Adapter/Sbis'], function (BreadCrumbs, groupByTpl, TreeProjection, Model, HierarchyRelation) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -494,8 +494,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(function (list) {
                this._folderHasMore[id] = list.getMetaData().more;
                this._loadedNodes[id] = true;
+               this._notify('onDataMerge', list); // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
                this._options._items.merge(list, {remove: false});
-               this._notify('onDataMerge', list); // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
                this._toggleIndicator(false);
                this._getItemProjectionByItemId(id).setLoaded(true);
             }.bind(this));

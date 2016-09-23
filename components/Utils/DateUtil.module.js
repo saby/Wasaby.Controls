@@ -8,7 +8,12 @@ define('js!SBIS3.CONTROLS.Utils.DateUtil',[], function () {
     */
    var DateUtil = {
       dateFromIsoString: function (isoDate) {
-         if ($ws._const.browser.isIE8) {
+         if ($ws._const.browser.isIE8
+            // не поддерживает даты с часовым пояслм вида '2016-07-31 22:10:01+03'
+            || $ws._const.browser.firefox
+            // не поддерживает даты с часовым поясом и разделитель в виде пробела '2016-07-31T22:10:01+03'
+            || $ws._const.browser.isMobileSafari
+         ) {
             return this._isoStringToDate(isoDate); //IE8 only
          } else {
             return new Date(isoDate);              //don't work in IE8
@@ -67,7 +72,7 @@ define('js!SBIS3.CONTROLS.Utils.DateUtil',[], function () {
        */
       _isoStringToDate: function (isoDate) {
          //              1 YYYY     2 MM       3 DD           4 HH    5 mm       6 ss        7 msec        8 Z 9 ±    10 tzHH    11 tzmm
-         var dateRE = /^(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?(?:T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{3}))?)?(?:(Z)|([+\-])(\d{2})(?::(\d{2}))?)?)?$/,
+         var dateRE = /^(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?(?:[T ](\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{3}))?)?(?:(Z)|([+\-])(\d{2})(?::(\d{2}))?)?)?$/,
             nums = isoDate.match(dateRE),
             minutesOffset = 0,
             numericKeys = [1, 4, 5, 6, 7, 10, 11];
