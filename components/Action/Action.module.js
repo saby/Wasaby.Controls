@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.Action.Action',
          },
 
          $constructor: function () {
-            this._publish(['onChangeCanExecute', 'onExecuted', 'onExecute', 'onError']);
+            this._publish('onChangeCanExecute', 'onExecuted', 'onExecute', 'onError');
          },
          /**
           * Метод запускающий выполнение Action'а
