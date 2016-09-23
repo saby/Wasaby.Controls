@@ -353,6 +353,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this._notifyOnPropertyChanged('dictionaries');
           },
 
+
+          /**
+           * Для поля связи требуется своя реализация метода setSelectedKey, т.к.
+           * Selectable расчитывает на наличие проекции и items, которых в поле связи нет.
+           * + полю связи не требуется единичная отрисовка item'a, т.к. при синхронизации selectedKey и selectedKeys,
+           * всегда будет вызываться метод drawSelectedItems
+           * @param key
+           */
+          setSelectedKey: function(key) {
+             this._options.selectedKey = key;
+             this._notifySelectedItem(this._options.selectedKey);
+          },
+
           /**
            * Открывает справочник для поля связи.
            * @remark
