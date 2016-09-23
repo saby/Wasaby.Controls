@@ -432,4 +432,53 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
                 actions.click(this.input);
             })
     });
+	
+	gemini.suite('ellipsis_and_long_text_with_arrow', function (test) {
+
+        test.setUrl('/regression_tree_data_grid_view_online_19.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
+                this.data1 = find('[data-id="1"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+				this.input = find('[sbisname="TextBox 1"] input');
+            })
+
+            .capture('plain', function (actions) {
+                actions.mouseMove(this.data1);
+				actions.wait(500);
+            })
+    });
+	
+	gemini.suite('load_more', function (test) {
+
+        test.setUrl('/regression_tree_data_grid_view_online_18.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="ТипНоменклатуры"]', 40000);
+                this.data1 = find('[data-id="1"]');
+				this.data1_expand = find('[data-id="0"] .controls-TreeView__expand');
+				this.more = '.controls-TreePager-container';
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+				this.input = find('[sbisname="TextBox 1"] input');
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.data1_expand);
+				actions.waitForElementToShow('[data-id="4"]', 5000);
+				actions.waitForElementToShow('.controls-TreePager-container', 5000);
+            })
+			
+			.capture('load_more', function (actions) {
+                actions.click(this.more);
+				actions.waitForElementToShow('[data-id="7"]', 5000);
+				actions.waitForElementToShow('.controls-TreePager-container', 5000);
+            })
+			
+			.capture('no_more', function (actions) {
+                actions.click(this.more);
+				actions.waitForElementToShow('[data-id="9"]', 5000);
+				actions.waitForElementToHide('.controls-TreePager-container', 5000);
+            })
+    });
 });
