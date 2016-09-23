@@ -793,7 +793,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                dot = data.defaultItemTpl;
             }
 
-               var ladder = this._options._decorators.getByName('ladder');
+               var ladder = this._options._decorators && this._options._decorators.getByName('ladder');
                ladder && ladder.setMarkLadderColumn(true);
 
             markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this._options);
@@ -1590,7 +1590,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       redrawItem: function(item, projItem) {
          projItem = projItem || this._getItemProjectionByItemId(item.getId());
-         var ladder = this._options._decorators.getByName('ladder');
+         var ladder = this._options._decorators && this._options._decorators.getByName('ladder');
          ladder && ladder.setMarkLadderColumn(true);
          var
             targetElement = this._getElementByModel(item),
@@ -1961,7 +1961,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _addItem: function (projItem, at, withoutNotify) {
          var
             item = projItem.getContents(),
-            ladderDecorator = this._options._decorators.getByName('ladder'),
+            ladderDecorator = this._options._decorators && this._options._decorators.getByName('ladder'),
             canApplyGrouping = this._canApplyGrouping(projItem),
             previousGroupBy = this._previousGroupBy;//После добавления записи восстанавливаем это значение, чтобы не сломалась группировка
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
