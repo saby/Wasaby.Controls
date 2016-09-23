@@ -81,10 +81,6 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
              * @cfg {JQuery} DOM элемент, отображающий запись.
              */
             domElement: undefined,
-            /**
-             * @cfg {Operation} operation Показывает как отобразить перемещение записи.
-             */
-            operation:  'move'
          }
       },
       /**
@@ -129,7 +125,7 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
        * @param {JQuery} element
        */
       setDomElement: function (element) {
-         this._options.position = position;
+         this._options.domElement = element;
       }
    });
    Di.register('dragentity.row', Row);

@@ -1,8 +1,7 @@
 /*global $ws, define, $ */
 define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
    'js!SBIS3.CONTROLS.DragObject',
-   'js!WS.Data/Di',
-   ''
+   'js!WS.Data/Di'
 ], function (DragObject, Di) {
    'use strict';
    /**
