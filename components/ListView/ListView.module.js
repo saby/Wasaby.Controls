@@ -1760,7 +1760,9 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _showItemsToolbar: function(target) {
-            this._getItemsToolbar().show(target, this._touchSupport);
+            var toolbar = this._getItemsToolbar();
+            toolbar.show(target, this._touchSupport);
+            toolbar.getContainer().toggleClass('controls-ItemsToolbar__edit', target.container.is('.controls-editInPlace, .controls-editInPlace__editing'));
          },
          _unlockItemsToolbar: function() {
             if (this._itemsToolbar) {
