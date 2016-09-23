@@ -1149,10 +1149,20 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
+            var itemsActions;
+
             if (this._isSupportedItemsToolbar()) {
                if (target.container){
                   if (!this._touchSupport) {
                      this._showItemsToolbar(target);
+                  }
+                  // setItemsActions стреляет событием onChangeHoveredItem, чтобы прикладники могли скрыть/показать нужные опции для строки
+                  // поэтому после события нужно обновить видимость элементов
+                  itemsActions = this.getItemsActions();
+                  if(itemsActions) {
+                     if (itemsActions.isVisible()) {
+                        itemsActions.applyItemActions();
+                     }
                   }
                } else {
                   this._hideItemsToolbar();
