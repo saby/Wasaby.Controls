@@ -1,11 +1,10 @@
-//TODO: написать про установку высоты
 define('js!SBIS3.CONTROLS.ScrollContainer',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
       'html!SBIS3.CONTROLS.ScrollContainer',
-      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar',
+      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar.min',
       'is!browser?css!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar.min',
-      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mousewheel-3.0.6'
+      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mousewheel-3.0.6.min'
    ],
    function(CompoundControl, dotTplFn) {
 
@@ -26,11 +25,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
        *          <option name="displayField">title</option>
        *          <option name="keyField">id</option>
        *          <option name="infiniteScroll">down</option>
-       *          <option name="infiniteScrollContainer">.controls-Scroll__container</option>
+       *          <option name="infiniteScrollContainer">#Scroll</option>
        *          <option name="pageSize">7</option>
        *       </component>
        *    </option>
-       *    <option name="height">400px</option>
        * </component>
        * @author Крайнов Дмитрий Олегович
        */
@@ -59,15 +57,18 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
             },
 
             /**
-             * Кастомный скролл
+             * {jQuery} Кастомный скролл
              */
             _scroll: undefined,
 
             /**
-             * Должен ли быть скролл на контейнере
+             * {Boolean} Должен ли быть скролл на контейнере
              */
             _hasScroll: false,
 
+            /**
+             * {jQuery} Контейнер с контент
+             */
             _contentContainer: undefined
          },
 
@@ -77,6 +78,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
 
          init: function() {
             Scroll.superclass.init.call(this);
+
+            this._contentContainer = this._container.find('.controls-ScrollContainer__content');
 
             //Подписка на события при которых нужно инициализировать скролл
             this.getContainer().bind('mousemove touchstart', this._create.bind(this));
@@ -95,8 +98,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
           */
          setContent: function(content) {
             this._options.content = content;
-            this.getContainer().html(this._dotTplFn(this._options));
+            this._contentContainer.html(content);
             this.reviveComponents();
+            this.updateScroll();
          },
 
          /**
@@ -153,6 +157,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
                container = this.getContainer(),
                scroll_cotainer = container.find('.mCSB_draggerContainer'),
                scroll = container.find('#mCSB_1_dragger_vertical');
+
             return this.hasScroll() && scroll_cotainer.height() === (scroll.height() + this.getScrollTop());
          },
 
@@ -172,7 +177,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
             var
                scroll = this._scroll,
                heightContainer = this._container.height(),
-               heightContent = this._container.find('.controls-ScrollContainer__content').height();
+               heightContent = this._contentContainer.height();
 
             this.updateScroll();
 
@@ -196,7 +201,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
          },
 
          /**
-          * Положение скролла относительно контейнера с контентом
+          * Верхнее положение скролла в пискселях
           * @returns {.mcs.draggerTop|*}
           */
          getScrollTop: function() {
