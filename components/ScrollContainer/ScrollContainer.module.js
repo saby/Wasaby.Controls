@@ -195,7 +195,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
              * Если контейнер переполнился нужно повесить класс который скроет
              * часть контента который не влезает в контейнер
              */
-            this._hasScroll ? this.getContainer().addClass('controls-ScrollContainer__overflow-hidden') : undefined;
+            if (this._hasScroll) {
+               this.getContainer().addClass('controls-ScrollContainer__overflow-hidden')
+            }
 
             return this._hasScroll;
          },
@@ -211,8 +213,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
          },
 
          /**
-          * Обновление скролла, нужно для того что бы была возможность получить реальные данные о
-          * положении скролла,
+          * Обновление скролла
           */
          updateScroll: function() {
             this.getContainer().mCustomScrollbar('update');
