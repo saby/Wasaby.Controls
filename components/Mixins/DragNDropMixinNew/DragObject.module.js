@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
     *    <li>Аватар - иконка, которая отображается около курсора мыши.</li>
     * </ul>
     * DragObject передается во все события DragNDropMixin. Также его можно получить в любом месте через RequireJS.
-    * @class SBIS3.CONTROLS.DragTarget
+    * @class SBIS3.CONTROLS.DragObject
     * @singleton
     * @public
     * @author Крайнов Дмитрий Олегович
