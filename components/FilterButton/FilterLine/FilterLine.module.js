@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
                   } else {
                      linkText = context.getValue('filterResetLinkText');
                   }
-
+                  collectionHelpers.forEach()
                   context.setValueSelf({
                      linkText: linkText,
                      titleText: $ws.helpers.escapeTagsFromStr(linkText, '')
