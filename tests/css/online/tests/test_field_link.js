@@ -32,10 +32,10 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
             .capture('hovered_text', function (actions) {
                 actions.mouseMove('.controls-FieldLink__linkItem-caption');
             })
-			/*
+
             .capture('hovered_close_icon', function (actions) {
                 actions.mouseMove('.controls-FieldLink__linkItem-cross');
-            })*/
+            })
 			
 			.capture('disabled', function (actions) {
                 actions.executeJS(function (window) {
@@ -123,10 +123,10 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
             .capture('hovered_text', function (actions) {
                 actions.mouseMove('.controls-FieldLink__linkItem-caption');
             })
-/*
+
             .capture('hovered_close_icon', function (actions) {
                 actions.mouseMove('.controls-FieldLink__linkItem-cross');
-            })*/
+            })
     });
 	
 	gemini.suite('bold_item', function (test) {
@@ -159,10 +159,10 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
             .capture('hovered_text', function (actions) {
                 actions.mouseMove('.controls-FieldLink__linkItem-caption');
             })
-/*
+
             .capture('hovered_close_icon', function (actions) {
                 actions.mouseMove('.controls-FieldLink__linkItem-cross');
-            })*/
+            })
     });
 	
 	gemini.suite('three_dict', function (test) {
@@ -287,6 +287,42 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
 				actions.click('.controls-FieldLink__showAllLinks');
 				actions.wait(500);
 				actions.mouseMove(this.box);
+            })
+    });
+	
+	gemini.suite('autocomlete', function (test) {
+
+        test.setUrl('/regression_field_link_online_8.html').setCaptureElements('html')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="FieldLink 1"]', 40000);
+                this.input = find('[sbisname="FieldLink 1"] .controls-TextBox__field');
+            })
+
+            .capture('with_autocomplete', function (actions) {
+                actions.sendKeys(this.input, 'ене');
+				actions.sendKeys(this.input, gemini.END);
+				actions.sendKeys(this.input, gemini.SHIFT+gemini.CONTROL+gemini.HOME);
+				actions.wait(500);
+            })
+			
+			.capture('with_max_width', function (actions) {
+                actions.executeJS(function (window) {
+                    window.$('.controls-FieldLink__picker').attr('style', $('.controls-FieldLink__picker').attr('style') + " max-width: 300px;");
+                });
+				actions.sendKeys(this.input, gemini.END);
+				actions.sendKeys(this.input, 'р');
+				actions.sendKeys(this.input, gemini.END);
+				actions.sendKeys(this.input, gemini.SHIFT+gemini.CONTROL+gemini.HOME);
+				actions.wait(500);
+            })
+			
+			.capture('not_found', function (actions) {
+				actions.sendKeys(this.input, gemini.END);
+				actions.sendKeys(this.input, 'lsd');
+				actions.sendKeys(this.input, gemini.END);
+				actions.sendKeys(this.input, gemini.SHIFT+gemini.CONTROL+gemini.HOME);
+				actions.wait(500);
             })
     });
 });

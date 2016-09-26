@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase', 'html!SBIS3.CONTROLS.CheckBoxGroup', 'js!SBIS3.CONTROLS.CheckBox'], function(CheckBoxGroupBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase', 'html!SBIS3.CONTROLS.CheckBoxGroup', 'html!SBIS3.CONTROLS.CheckBoxGroup/resources/ItemTemplate', 'js!SBIS3.CONTROLS.CheckBox'], function(CheckBoxGroupBase, dotTplFn, ItemTemplate) {
 
    'use strict';
 
@@ -11,10 +11,13 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
     * @class SBIS3.CONTROLS.CheckBoxGroup
     * @extends SBIS3.CONTROLS.CheckBoxGroupBase
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
-    * @control
     * @demo SBIS3.CONTROLS.Demo.MyCheckBoxGroup
-    * @public
     * @author Крайнов Дмитрий Олегович
+    * @cssModifier controls-ButtonGroup__vertical Задаёт вертикальное расположение элементов в группе.
+    *
+    * @control
+    * @public
+    * @category Inputs
     * @initial
     * <component data-component='SBIS3.CONTROLS.CheckBoxGroup'>
     *    <options name="items" type="array">
@@ -30,7 +33,6 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
     *    <option name="keyField">id</option>
     *    <option name="displayField">caption</option>
     * </component>
-    * @cssModifier controls-ButtonGroup__vertical Задаёт вертикальное расположение элементов в группе.
     */
 
    var CheckBoxGroup = CheckBoxGroupBase.extend( /** @lends SBIS3.CONTROLS.CheckBoxGroup.prototype */ {
@@ -65,19 +67,9 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
 
       $protected: {
          _options: {
-
+            _canServerRender: true,
+            _defaultItemTemplate: ItemTemplate
          }
-      },
-
-      $constructor: function() {
-
-      },
-
-      _getItemTemplate : function(item) {
-         var caption = item.get(this._options.displayField);
-         return '<component data-component="SBIS3.CONTROLS.CheckBox">' +
-                  '<option name="caption">'+caption+'</option>'+
-                '</component>';
       }
    });
 

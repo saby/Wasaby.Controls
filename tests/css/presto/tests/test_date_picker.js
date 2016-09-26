@@ -4,12 +4,12 @@ gemini.suite('SBIS3.CONTROLS.DatePicker Online', function () {
 
     gemini.suite('base', function (test) {
 
-        test.setUrl('/regression_date_picker_online.html').setCaptureElements('.capture')
+        test.setUrl('/regression_date_picker_online.html').setCaptureElements('html')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="DatePicker 1"]', 40000);
                 this.picker = find('[name="DatePicker 1"]');
-                this.icon = find('.controls-DatePicker__calendarIcon')
+                this.icon = find('[name="DatePicker 1"] [sbisname="CalendarButton"].icon-Calendar2')
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
 				this.input = find('[sbisname="TextBox 1"] input')
 				actions.executeJS(function (window) {
@@ -31,8 +31,6 @@ gemini.suite('SBIS3.CONTROLS.DatePicker Online', function () {
 
             .capture('opened_icon', function (actions) {
                 actions.click(this.icon);
-				actions.waitForElementToShow('.controls-MonthPicker__arrowLeft', 1000);
-				actions.waitForElementToShow('.controls-MonthPicker__arrowRight', 1000);
 				actions.mouseMove(this.input);
             })
     });
@@ -57,7 +55,7 @@ gemini.suite('SBIS3.CONTROLS.DatePicker Online', function () {
 
     gemini.suite('disabled_base', function (test) {
 
-        test.setUrl('/regression_date_picker_online.html').setCaptureElements('.capture')
+        test.setUrl('/regression_date_picker_online.html').setCaptureElements('html')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="DatePicker 1"]', 40000);
@@ -75,7 +73,7 @@ gemini.suite('SBIS3.CONTROLS.DatePicker Online', function () {
 
     gemini.suite('validation_error', function (test) {
 
-        test.setUrl('/regression_date_picker_online.html').setCaptureElements('.capture')
+        test.setUrl('/regression_date_picker_online.html').setCaptureElements('html')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="DatePicker 1"]', 40000);

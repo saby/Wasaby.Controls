@@ -1,5 +1,6 @@
 .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView {
-   padding: 8px 0 8px 8px;
+   padding: @date-range-big-choose-month-range-padding 0 @date-range-big-choose-month-range-padding @date-range-big-choose-month-range-padding;
+   .box-sizing(border-box);
 
    //.controls-ItemsToolbar.controls-ListView__ItemsToolbar-container {
    //   display: none !important;
@@ -15,9 +16,16 @@
 
    .controls-DateRangeBigChoose-MonthView.controls-MonthView {
       .box-sizing(border-box);
-      margin-right: 8px;
+      width: @date-range-big-choose-month-range-picker-month-width;
+      height: @date-range-big-choose-month-range-picker-month-height;
+      margin-right: @date-range-big-choose-month-range-padding;
       margin-bottom: 1px;
+      padding: 0;
       border: 1px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      display: block;
+      float: left;
 
       &.controls-DateRangeBigChoose-MonthRangePicker__hovered {
          background-color: @date-range-big-choose-month-range-picker-caption-text-hovered-bg;
@@ -43,22 +51,15 @@
       }
 
       // Стили для календаря
-      width: 84px;
-      height: 96px;
-      padding: 0;
-      cursor: pointer;
-      display: block;
-      float: left;
-      background: transparent;
-
       table {
          border-collapse: collapse;
       }
 
       .controls-MonthView__caption-text {
-         height: 24px; // 20?
-         line-height: 24px; //20?
+         height: @date-range-big-choose-month-range-picker-caption-height; // 20?
+         line-height: @date-range-big-choose-month-range-picker-caption-height; //20?
          vertical-align: middle;
+         font-size: @date-range-big-choose-month-range-picker-caption-font-size;
       }
 
       .controls-MonthView__dayTable {
@@ -67,12 +68,12 @@
             border: @date-range-big-choose-month-range-picker-month-hovered-border;
          }
          .controls-MonthView__tableBody {
-            font-size: 8px;
+            font-size: @date-range-big-choose-month-range-picker-table-element-font-size;
          }
 
          .controls-MonthView__tableElement {
             //width: 12px;
-            height: 11px;
+            height: @date-range-big-choose-month-range-picker-table-element-height;
             padding: 0;
             text-align: center;
             background: transparent;

@@ -16,10 +16,12 @@ define(
        * Можно вводить только значения особого формата даты ISO_8601 с точностью от дней до минут.
        * @class SBIS3.CONTROLS.TimeInterval
        * @extends SBIS3.CONTROLS.FormattedTextBoxBase
-       * @control
        * @demo SBIS3.CONTROLS.Demo.MyTimeInterval
-       * @public
        * @author Крайнов Дмитрий Олегович
+       *
+       * @control
+       * @public
+       * @category Date/Time
        */
 
       var TimeInterval = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS.TimeInterval.prototype */{
@@ -176,6 +178,16 @@ define(
             this.subscribe('onFocusOut', self._updateTextByTimeInterval);
             this.subscribe('onInputFinished',self._updateTextByTimeInterval);
          },
+
+         init: function() {
+            TimeInterval.superclass.init.apply(this, arguments);
+            this._updateText();
+         },
+
+         getText: function() {
+            return this._options.text;
+         },
+
          /**
           * Устанавливаем количество дней.
           * @param days Дни в интервале.

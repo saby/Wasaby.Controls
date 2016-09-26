@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
    'js!SBIS3.CONTROLS.BreadCrumbs',
-   'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree'], function (Control, BreadCrumbs, groupByTpl, TreeProjection) {
+   'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree'], function (Control, BreadCrumbs, groupByTpl, TreeProjection) {
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeMixinDS
@@ -141,6 +141,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             idProperty: this._options.keyField || (this._dataSource ? this._dataSource.getIdProperty() : ''),
             parentProperty: this._options.hierField,
             nodeProperty: this._options.hierField + '@',
+            unique: true,
             root: root
          });
       },
@@ -401,7 +402,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             }
             //Если данные пришли, нарисуем
             if (dataSet.getCount()) {
-               var records = dataSet._getRecords();
+               var records = dataSet.toArray();
                self._items.merge(dataSet, {remove: false});
                self._items.getTreeIndex(self._options.hierField, true);
                self._drawItemsFolderLoad(records, id);

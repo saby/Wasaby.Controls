@@ -140,7 +140,7 @@ define(
        * @protected
        */
       _getCursor = function(position) {
-         var selection = $ws._const.browser.isIE8 ? window.getSelectionForIE() : window.getSelection();
+         var selection = $ws._const.browser.isIE8 || $ws._const.browser.isIE9 || $ws._const.browser.isIE10 ? window.getSelectionForIE() : window.getSelection();
          if (selection.type !== 'None') {
             selection = selection.getRangeAt(0);
             this._lastSelection = selection;
@@ -551,6 +551,26 @@ define(
             }
          }
          return text;
+      },
+      /**
+       * Получить значение группы по маске
+       * @param groupMask - маска группы, для которой необходимо получить значение
+       * @param clearChar - символ заменяющий не заданные символы, например '_'
+       * @returns {string} текст группы с введенными символами
+       */
+      getGroupValueByMask: function(groupMask, clearChar) {
+         var
+             group,
+             value = '';
+         for (var i = 0; i < this.model.length; i++) {
+            group = this.model[i];
+            if (group.mask === groupMask) {
+               for (var j = 0; j < group.mask.length; j++) {
+                  value += (typeof group.value[j] === 'undefined') ? clearChar : group.value[j];
+               }
+               return value;
+            }
+         }
       }
    });
 
@@ -654,8 +674,6 @@ define(
             //упрощенная модель для вставки в xhtml-шаблон
             modelForMaskTpl: []
          },
-         _pasteProcessing: 0,
-
          /**
           * Модель форматного поля
           */
@@ -679,35 +697,36 @@ define(
             e.preventDefault();
          });
          //keypress учитывает расскладку, keydown - нет
-         this._inputField.keypress(function(event) {
+         this._inputField.keypress(function (event) {
             if (!self._isFirefoxKeypressBug(event)) {
                self._keyPressBind(event);
             }
          });
          //keydown ловит управляющие символы, keypress - нет
-         this._inputField.keydown(this._keyDownBind.bind(this));
+         this._inputField.keydown(function(event){
+            /*У некоторых android'ов спецефичная логика обработки клавишь:
+             1) Не стреляет событие keypress
+             2) Событие keydown стреляет послое вставки символа
+             3) Из события не возможно понять какая клавиша была нажата, т.к. возвращается keyCode = 229 || 0
+             Для таких андроидов обрабатываем ввод символа отдельно
+             */
+            if ($ws._const.browser.isMobileAndroid && (event.keyCode === 229 || event.keyCode === 0)){
+               setTimeout(self._keyDownBindAndroid.bind(self, event), 0);
+            }
+            else{
+               self._keyDownBind(event);
+            }
+         });
          this._inputField.bind('paste', function(e) {
             var
-                prevText,
                 //Единственный способ понять, что мы пытаемся вставить это посмотреть в буфере.
                 //Берём из буфера только текст, так-как возможно там присутствует и разметка, которая нас не интересует.
                 pasteValue = e.originalEvent.clipboardData ? e.originalEvent.clipboardData.getData('text') : window.clipboardData.getData('text');
-            //TODO возможно стоит сделать проверку до вставки, чтобы не портить данные и вставлять уже по факту после проверки
-            self._pasteProcessing++;
-            //TODO перенести в TextBoxBase и вместо этого вызвать метод для вставки
-            window.setTimeout(function() {
-               self._pasteProcessing--;
-               if (!self._pasteProcessing) {
-                  prevText = self.formatModel.getText(self._maskReplacer);
-                  if ( !self.formatModel.setText(pasteValue, self._maskReplacer)) {
-                     //Устанавливаемое значение не удовлетворяет маске данного контролла - вернуть предыдущее значение
-                     self.setText(prevText);
-                  } else {
-                     //Текст есть в модели но через метод setText не прошел. Нужно для наследников, например DatePicker
-                     self.setText(self.formatModel.getText(self._maskReplacer));
-                  }
-               }
-            }, 100);
+            //Пропустим вставляемый текст через модель. Если setText модели вернет true - значит
+            //вставляемый текст соответствует маске и мы его можем проставить в значение текстового поля
+            if (self.formatModel.setText(pasteValue, self._maskReplacer)) {
+               self.setText(self.formatModel.getText(self._maskReplacer));
+            }
             e.preventDefault();
          });
          this._chromeCaretBugFix();
@@ -731,7 +750,6 @@ define(
 
       init: function(){
          FormattedTextBoxBase.superclass.init.apply(this, arguments);
-         this._updateText();
       },
 
       //Тут обрабатываются управляющие команды
@@ -762,13 +780,17 @@ define(
       },
        //Тут обрабатываются текстовые символы
       _keyPressBind: function(event) {
-         var
-             keyInsertInfo,
-             key = event.which || event.keyCode,
+         var key = event.which || event.keyCode,
              character = String.fromCharCode(key),
              positionIndexes = _getCursor.call(this, true),
              position = positionIndexes[1],
              groupNum = positionIndexes[0];
+
+         this._keyPressBindHandler(event, character, position, groupNum);
+      },
+
+      _keyPressBindHandler: function(event, character, position, groupNum){
+         var keyInsertInfo;
 
          //TODO сбрасываем, чтобы после setText(null) _updateText после ввода символов обновлял опцию text
          this.formatModel._settedText = '';
@@ -778,6 +800,35 @@ define(
          this._afterCharacterInsertHandler(keyInsertInfo);
 
          event.preventDefault();
+      },
+
+      _keyDownBindAndroid: function(event){
+         var textDiff = this._getTextDiff(),
+             character = textDiff['char'],
+             position = textDiff.position,
+             groupNum = _getCursor.call(this, true)[0];
+         this._setText(this._options.text);
+
+         this._keyPressBindHandler(event, character, position, groupNum);
+         event.preventDefault();
+      },
+
+      _getTextDiff: function(){
+         var oldText = this._options.text.split(':'),
+             newText = this._inputField.text().split(':');
+         for (var i = 0, l = newText.length; i < l; i++) {
+            if (oldText[i].length !== newText[i].length){
+               for (var j = 0; j < newText[i].length; j++){
+                  if (oldText[i][j] !== newText[i][j]){
+                     return {
+                        'char': newText[i][j],
+                        position: j
+                     }
+                  }
+               }
+            }
+         }
+         return false;
       },
 
       _clearCommandHandler: function(type) {
@@ -994,6 +1045,23 @@ define(
          }
          this.formatModel._options.newContainer = _getContainerByIndex.call(this, this.formatModel._options.cursorPosition.group);
          this.formatModel._options.newPosition = this.formatModel._options.cursorPosition.position;
+      },
+
+      /**
+       * Получает текстовое значение поля ввода.
+       * @returns {String} Текст - значение поля ввода.
+       * @example
+       * <pre>
+       *     if (control.getText() == "Введите ФИО") {
+       *        control.setText("");
+       *     }
+       * </pre>
+       * @see text
+       * @see setText
+       */
+      getText: function() {
+         this._updateText();
+         return FormattedTextBoxBase.superclass.getText.apply(this, arguments);
       },
       /**
        * Установить значение в поле.

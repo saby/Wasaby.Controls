@@ -19,28 +19,29 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     * </ol>
     * @class SBIS3.CONTROLS.NumberTextBox
     * @extends SBIS3.CONTROLS.TextBox
-    * @control
-    * @public
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyNumberTextBox
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.NumberTextBox'>
-    *     <option name="text">0</option>
-    * </component>
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol textTransform
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
     *
-    * @ignoreMethods applyEmptyState applyState findParent getAlignment getEventHandlers getEvents getExtendedTooltip
+    * @ignoreMethods applyEmptyState applyState findParent getAlignment getEventHandlers getEvents
     * @ignoreMethods getId getLinkedContext getMinHeight getMinSize getMinWidth getOwner getOwnerId getParentByClass
     * @ignoreMethods getParentByName getParentByWindow getStateKey getTopParent getUserData hasEvent hasEventHandlers
     * @ignoreMethods isDestroyed isSubControl makeOwnerName once sendCommand setOwner setStateKey setUserData setValue
     * @ignoreMethods subscribe unbind unsubscribe
     *
-    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
-    * @ignoreEvents onReady
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onChange onReady
     *
     * @cssModifier controls-NumberTextBox__text-align-right Выравнивает содержимое поля ввода по правому краю.
+    *
+    * @control
+    * @public
+    * @category Inputs
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.NumberTextBox'>
+    *     <option name="text">0</option>
+    * </component>
     */
 
    var NumberTextBox;
@@ -303,8 +304,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             this._options.delimiters,
             decimals,
             this._options.onlyPositive,
-            this._options.maxLength,
-            true
+            this._options.maxLength
          );
          if(isDotLast){
             value = value ? value + '.' : '.';
@@ -569,7 +569,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             e,
             l;
          if ($ws._const.browser.isIE && $ws._const.browser.IEVersion < 9) { //IE
-            var range = obj.createTextRange();
+            var range = document.selection.createRange();
             l = range.text.length;
             range.moveStart('textedit', -1);
             e = range.text.length;

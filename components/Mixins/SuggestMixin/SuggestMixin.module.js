@@ -10,6 +10,15 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       componentOptions: {}
    };
 
+   var DEFAULT_LIST_CONFIG = {
+      allowEmptySelection: false,
+      itemsDragNDrop: false,
+      emptyHTML: 'Не найдено',
+      element: function() { return this._getListContainer(); },
+      filter: function() { return this.getProperty('listFilter'); },
+      parent: function() { return this._picker; }
+   };
+
    /**
     * Миксин автодополнения. Позволяет добавить функционал автодополнения любому контролу или набору контролов.
     * Управляет {@link list} контролом, который будет использоваться для отображения элементов коллекции.
@@ -35,7 +44,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
     *
     * @mixin SBIS3.CONTROLS.SuggestMixin
     * @public
-    * @author Алексей Мальцев
+    * @author Крайнов Дмитрий Олегович
     */
 
    var SuggestMixin = /** @lends SBIS3.CONTROLS.SuggestMixin.prototype */{
@@ -233,7 +242,13 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              *    </options>
              * </pre>
              */
-            showAllConfig: {}
+            showAllConfig: {},
+            /**
+             * @cfg {Boolean} Показывать ли выпадающий блок, при пустом списке
+             * @variant true Показывать выпадающий блок при пустом списке.
+             * @variant false Не показывать выпадающий блок при пустом списке.
+             */
+            showEmptyList: true
          },
          _resultBindings: {},                   /* {Object} Соответствие полей для подстановки в контекст */
          _delayTimer: null,                     /* {Object|null} Таймер задержки загрузки picker-а */
@@ -241,7 +256,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          _list: undefined,                      /* {SBIS3.CONTROLS.DSMixin}{SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable} Контрол списка сущностей */
          _listContainer: undefined,             /* {jQuery} Контейнер для контрола списка сущностей */
          _loadDeferred: null,                   /* {$ws.proto.Deferred|null} Деферред загрузки данных для контрола списка сущностей */
-         _showAllButton: undefined              /* {$ws.proto.Control} Кнопка открытия всех записей */
+         _showAllButton: undefined,              /* {$ws.proto.Control} Кнопка открытия всех записей */
+         _listReversed: false
       },
 
       $constructor: function () {
@@ -334,36 +350,42 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          }
          /* Если введено меньше символов чем указано в startChar, то скроем автодополнение */
          this._resetSearch();
-         this.hidePicker();
       },
 
       // TODO использовать searchMixin 3.7.3.100
       _startListSearch: function() {
-         var self = this;
+         var self = this,
+             list = this.getList();
 
          this._clearDelayTimer();
-         this._delayTimer = setTimeout(function() {
-            self._showLoadingIndicator();
-            self._loadDeferred = self.getList().reload(self._options.listFilter).addCallback(function () {
-               self._checkPickerState() ? self.showPicker() : self.hidePicker();
-            });
-         }, this._options.delay);
+
+         if(list.getDataSource()) {
+            this._delayTimer = setTimeout(function () {
+               self._showLoadingIndicator();
+               self.hidePicker();
+               self._loadDeferred = list.reload(self._options.listFilter).addCallback(function () {
+                  if (self._checkPickerState(!self._options.showEmptyList)) {
+                     self.showPicker();
+                  }
+               });
+            }, this._options.delay);
+         }
       },
 
       _resetSearch: function() {
          if(this._loadDeferred) {
-
-            /* Т.к. list может быть компонентом, который не наследован от DSmixin'a и метода _cancelLoading там может не быть,
-             надо это проверить, но в любом случае, надо деферед отменить, чтобы не сработал показ пикера */
-            if(this._list._cancelLoading) {
-               this._list._cancelLoading();
-            }
-
             this._loadDeferred.cancel();
             this._loadDeferred = null;
-            this._hideLoadingIndicator();
+
          }
+         /* Т.к. list может быть компонентом, который не наследован от DSmixin'a и метода _cancelLoading там может не быть,
+          надо это проверить, но в любом случае, надо деферед отменить, чтобы не сработал показ пикера */
+         if(this._list && this._list._cancelLoading) {
+            this._list._cancelLoading();
+         }
+         this._hideLoadingIndicator();
          this._clearDelayTimer();
+         this.hidePicker();
       },
 
       /**
@@ -394,7 +416,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _observableControlFocusHandler: function() {
          if(this._options.autoShow) {
-            this._checkPickerState() ? this.showPicker() : this._startListSearch();
+            this._checkPickerState(true) ? this.showPicker() : this._startListSearch();
          }
       },
 
@@ -455,19 +477,11 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                options = $ws.core.clone(this._options.list.options);
                component = require(this._options.list.component);
 
-               if (!options.element) {
-                  options.element = this._getListContainer();
-               }
-
-               if(options.itemsDragNDrop === undefined) {
-                  options.itemsDragNDrop = false;
-               }
-
-               /* По стандарту маркер в списке должен ставиться,
-                но надо оставить возможность это отключить, т.к. не всем это надо */
-               if(options.allowEmptySelection === undefined) {
-                  options.allowEmptySelection = false;
-               }
+               $ws.helpers.forEach(DEFAULT_LIST_CONFIG, function(value, key) {
+                  if(!options.hasOwnProperty(key)) {
+                     options[key] = typeof value === 'function' ? value.call(this) : value;
+                  }
+               }, this);
 
                /* Сорс могут устанавливать не через сеттер, а через опцию */
                if(options.dataSource !== undefined) {
@@ -477,7 +491,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                   dataSource = this._options.dataSource
                }
 
-               options.parent = this._picker;
                this._list = new component(options);
 
                /* Устанавливаем сорс после инициализации компонента (если есть опция), иначе будет лишний запрос */
@@ -492,6 +505,27 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          } else {
             return this._list;
          }
+      },
+      /**
+       * @param {Boolean} autoShow Устанавливает режим работы автодополнения: отображать ли список всех возможных значений при переходе фокуса на контрол.
+       * @see list
+       * @see listFilter
+       * @see startChar
+       */
+      setAutoShow: function(autoShow) {
+         this._options.autoShow = Boolean(autoShow);
+         this._notifyOnPropertyChanged('autoShow');
+      },
+
+      /**
+       * Возвращает режим работы автодополнения: отображать ли список всех возможных значений при переходе фокуса на контрол.
+       * @returns {Boolean}
+       * @see list
+       * @see listFilter
+       * @see startChar
+       */
+      getAutoShow: function() {
+         return this._options.autoShow;
       },
 
       /**
@@ -569,6 +603,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _onListDataLoad: function(e, dataSet) {
          this._hideLoadingIndicator();
+         this._listReversed = false;
 
          if(this._showAllButton) {
             var list = this.getList();
@@ -663,11 +698,13 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * Проверяет необходимость изменения состояния пикера
        * @private
        */
-      _checkPickerState: function () {
-         var items = this._getListItems();
+      _checkPickerState: function (checkItemsCount) {
+         var items = this._getListItems(),
+             hasItems = checkItemsCount ? items && items.getCount() : true;
+
          return Boolean(
              this._options.usePicker &&
-             items && items.getCount() &&
+             hasItems &&
              this._isObservableControlFocused()
          );
       },
@@ -679,8 +716,25 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       },
 
       showPicker: function () {
-         if (this._options.usePicker) {
+         /* Проверяем, что пикер не отображается,
+            т.к. такой проверки на отображение в попапе нет (скорее всего по причине перерасчёта z-index'ов),
+            а если позвать show при открытом пикере, то там произойдёт перерасчёт скрола, и становится невозможно выбрать запись. */
+         if (this._options.usePicker && !this.isPickerVisible()) {
             PickerMixin.showPicker.apply(this, arguments);
+         }
+      },
+
+      _reverseList: function() {
+         var items = this._getListItems(),
+             itemsArray = [];
+
+         if(items) {
+            items.each(function (rec) {
+               itemsArray.push(rec);
+            });
+
+            this._listReversed = !this._listReversed;
+            items.assign(itemsArray.reverse());
          }
       }
    };

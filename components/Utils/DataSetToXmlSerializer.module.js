@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             if(key === null){
                key = 'null';
             }
-            pkColumnName = object._keyField;//TODO record.getKeyField()
+            pkColumnName = object._keyField;//TODO record.getIdProperty()
             parentElement.appendChild(recordElement = document.createElement('Record'));
 
             recordElement.setAttribute('RecordKey', key);
@@ -145,11 +145,11 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             }
             element = document.createElement(tagName);
             if(fieldValue instanceof Date){
-               if(typeName == "Дата и время")
+               if(typeName === "Дата и время" || typeName === 'DateTime')
                   fieldValue = fieldValue.toSQL() + "T" + fieldValue.toTimeString().replace(" GMT", "").replace(/\s[\w\W]*/, "");
-               if(typeName == "Дата")
+               if(typeName === 'Дата' || typeName === 'Date')
                   fieldValue = fieldValue.toSQL();
-               if(typeName == "Время")
+               if(typeName === 'Время' || typeName === 'Time')
                   fieldValue = fieldValue.toTimeString().replace(" GMT", "").replace(/\s[\w\W]*/, "");
             }
             fieldValue = $ws.helpers.removeInvalidXMLChars(fieldValue + "");
@@ -227,7 +227,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             doc = document.implementation.createDocument("", "", null);
          // IE
          if($ws.helpers.axo) {
-            doc = $ws.helpers.axo('Microsoft.XmlDom');
+            doc = $ws.helpers.axo($ws._const.IE_ACTIVEOBJECT_XML_PRINT_TYPE);
          }
          return doc;
       }

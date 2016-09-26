@@ -6,22 +6,25 @@ define('js!SBIS3.CONTROLS.DateRange', [
    'js!SBIS3.CONTROLS.Utils.DateUtil',
    'js!SBIS3.CONTROLS.FormWidgetMixin',
    'js!SBIS3.CONTROLS.RangeMixin',
+   'js!SBIS3.CONTROLS.DateRangeMixin',
    'js!SBIS3.CONTROLS.DateRangeBigChoose',
    'i18n!SBIS3.CONTROLS.DateRange',
-   'js!SBIS3.CONTROLS.DatePicker',
+   'js!SBIS3.CONTROLS.DateBox',
    'js!SBIS3.CONTROLS.IconButton'
-], function (CompoundControl, PickerMixin, dotTplFn, DateUtil, FormWidgetMixin, RangeMixin, DateRangeBigChoose) {
+], function (CompoundControl, PickerMixin, dotTplFn, DateUtil, FormWidgetMixin, RangeMixin, DateRangeMixin, DateRangeBigChoose) {
    'use strict';
    /**
     * SBIS3.CONTROLS.DateRange
     * @class SBIS3.CONTROLS.DateRange
     * @extends $ws.proto.CompoundControl
     * @author Крайнов Дмитрий Олегович
+    * @demo SBIS3.CONTROLS.Demo.MyDateRange
+    *
     * @control
     * @public
-    * @demo SBIS3.CONTROLS.Demo.MyDateRange
+    * @category Date/Time
     */
-   var DateRange = CompoundControl.extend([RangeMixin, PickerMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateRange.prototype */{
+   var DateRange = CompoundControl.extend([RangeMixin, DateRangeMixin, PickerMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateRange.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
@@ -65,26 +68,26 @@ define('js!SBIS3.CONTROLS.DateRange', [
 
          this._datePickerStart = this.getChildControlByName('DateRange__DatePickerStart');
          this._datePickerStart.subscribe('onDateChange', function(e, date) {
-            self.setStartValue(date);
+            self.setStartValue(date, false, true);
          });
          this._datePickerStart.subscribe('onInputFinished', function() {
             self._datePickerEnd.setActive(true);
          });
          this._datePickerEnd = this.getChildControlByName('DateRange__DatePickerEnd');
          this._datePickerEnd.subscribe('onDateChange', function(e, date) {
-            self.setEndValue(date);
+            self.setEndValue(date, false, true);
          });
 
          this._dateRangeButton = this.getChildControlByName('DateRange__Button');
          this._dateRangeButton.subscribe('onActivated', this._onDateRangeButtonActivated.bind(this));
 
          this.subscribe('onStartValueChange', function (event, value) {
-            self._updateDatePicker(self._datePickerStart, value);
             self._notify('onStartDateChange', value);
          });
 
          this.subscribe('onEndValueChange', function (event, value) {
-            self._updateDatePicker(self._datePickerEnd, value);
+            // Временно делаем, что бы возвращаемая конечная дата содержала время 23:59:59.999
+            value = value? new Date(value.getFullYear(), value.getMonth(), value.getDate(), 23, 59, 59, 999): null;
             self._notify('onEndDateChange', value);
          });
 
@@ -95,11 +98,11 @@ define('js!SBIS3.CONTROLS.DateRange', [
             // }
          });
 
-         this._options.startValue = this._options.startValue || this._options.startDate;
-         this._options.endValue = this._options.endValue || this._options.endDate;
          // приводим даты к Date-типу и устанавливаем их в DatePicker-ах
-         this.setStartValue(this._options.startValue, false);
-         this.setEndValue(this._options.endValue, false);
+         this.setStartValue(this._options.startValue || this._options.startDate, true);
+         this.setEndValue(this._options.endValue || this._options.endDate, true);
+         this._updateDatePicker(self._datePickerStart, this.getStartValue());
+         this._updateDatePicker(self._datePickerEnd, this.getEndValue());
 
          this._addDefaultValidator();
       },
@@ -114,35 +117,29 @@ define('js!SBIS3.CONTROLS.DateRange', [
          });
       },
 
-      setStartValue: function(value, silent) {
-         value = this._normalizeDate(value);
-         return DateRange.superclass.setStartValue.call(this, value, silent);
-      },
-
-      setEndValue: function(value, silent) {
-         value = this._normalizeDate(value);
-         return DateRange.superclass.setEndValue.call(this, value, silent);
-      },
-
-      _normalizeDate: function(date) {
-         date = DateUtil.valueToDate(date);
-         if (!date) {
-            date = null;
+      setStartValue: function(value, silent, _dontUpdatePicker) {
+         var changed = DateRange.superclass.setStartValue.call(this, value, silent);
+         if (!_dontUpdatePicker) {
+            this._updateDatePicker(this._datePickerStart, this.getStartValue());
          }
-         return date;
+         return changed;
+      },
+
+      setEndValue: function(value, silent, _dontUpdatePicker) {
+         var changed = DateRange.superclass.setEndValue.call(this, value, silent);
+         if (!_dontUpdatePicker) {
+            this._updateDatePicker(this._datePickerEnd, this.getEndValue());
+         }
+         return changed;
       },
 
       _updateDatePicker: function(datePicker, value) {
-         if (value) {
-            datePicker.setDate(value);
-         } else {
-            datePicker.setText('');
-         }
+         datePicker.setDate(value);
       },
 
       showPicker: function () {
          if (this._dateRangeChooseControl) {
-            this._dateRangeChooseControl.cancelSelection();
+            this._dateRangeChooseControl.applyYearState();
             this._dateRangeChooseControl.setRange(this.getStartValue(), this.getEndValue());
          }
          DateRange.superclass.showPicker.call(this);
@@ -229,7 +226,9 @@ define('js!SBIS3.CONTROLS.DateRange', [
        * @see endDate
        */
       getEndDate: function() {
-         return this._options.endValue;
+         // Временно делаем, что бы возвращаемая конечная дата содержала время 23:59:59.999
+         var d = this._options.endValue;
+         return this._options.endValue? new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999): null;
       }
    });
    return DateRange;

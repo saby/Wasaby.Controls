@@ -5,6 +5,7 @@
   border-width: @search-form-border-width;
   background: @search-background;
   height: @search-height;
+  font-size: @text-box-field-font-size;
 
   &.controls-TextBox {
     &:hover {
@@ -46,5 +47,18 @@
     padding: @search-form-icon-padding;
     width: @search-loop-size;
     height: @search-loop-size;
+  }
+}
+
+// хак для edge win10 выравнивает input и placeholder
+@supports (-ms-ime-align:auto) {
+  .controls-SearchForm {
+    &.controls-TextBox {
+      .controls-TextBox__fieldWrapper {
+        .controls-TextBox__field {
+          line-height: 0 !important;
+        }
+      }
+    }
   }
 }

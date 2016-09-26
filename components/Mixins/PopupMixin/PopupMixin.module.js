@@ -5,14 +5,21 @@
 define('js!SBIS3.CONTROLS.PopupMixin', [
       'js!SBIS3.CONTROLS.ControlHierarchyManager',
       'js!SBIS3.CORE.ModalOverlay',
+      'js!SBIS3.CONTROLS.TouchKeyboardHelper',
       'Core/helpers/helpers'
-   ], function (ControlHierarchyManager, ModalOverlay, coreHelpers) {
+   ], function (ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers) {
    'use strict';
    if (typeof window !== 'undefined') {
       var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
 
       $(document).bind('mousedown touchstart', function (e) {
          eventsChannel.notify('onDocumentClick', e);
+      });
+
+      $(window).blur(function(e) {
+         if(document.activeElement.tagName == "IFRAME"){
+            eventsChannel.notify('onDocumentClick', e);
+         }
       });
 
       $(document).bind('mouseover', function (e) {
@@ -114,8 +121,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              * @cfg {Boolean} модальный или нет
              */
             isModal: false,
-            //Ограничить размеры только высотой экрана, в противном случае они ограничены границами экрана и расположением тагрета
-            fullHeight: false
+            /**
+             * Разрешить всплывающему окну перекрывать target 
+             * Например нужно для меню, которое может перекрывать target без потери функцианальности, 
+             * но не подходит для поля связи, так как может перекрывать вводимый текст 
+             * @type {Boolean}
+             */
+            allowOverlapTarget: false
          }
       },
 
@@ -513,7 +525,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
       _initWindowSizes: function () {
          this._windowSizes = {
-            height: $(window).height(),
+            height: $(window).height() - TouchKeyboardHelper.getKeyboardHeight(),
             width: $(window).width()
          };
       },
@@ -719,24 +731,26 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if (offset.top < 0 && this._options.verticalAlign.side !== 'top') {
                this._overflowedV = true;
                this._container.css('overflow-y', 'auto');
+               var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
                if (spaces.top < spaces.bottom) {
-                  if (this._options.fullHeight){
-                     var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
+                  if (this._options.allowOverlapTarget){
                      this._container.css('height', height);
                      offset.top = this._windowSizes.height - this._container.get(0).scrollHeight - this._containerSizes.border * 2;
                   } else {
                      this._isMovedV = !this._isMovedV;
                      oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
                      spaces = this._getSpaces(this._options.corner);
-                     this._container.css('height', spaces.bottom - vOffset - this._margins.top + this._margins.bottom);
+                     height = spaces.bottom - vOffset - this._margins.top + this._margins.bottom;
                      offset.top = this._targetSizes.offset.top + oppositeOffset.top;
                   }
                } else {
                   offset.top = 0;
                   //Если места снизу меньше чем сверху покажемся во весь размер (возможно поверх таргета), или в высоту окна если в него не влезаем
-                  var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
-                  this._container.css('height', height);
+                  if (!this._options.allowOverlapTarget){
+                     height = spaces.top - vOffset - this._margins.top + this._margins.bottom;
+                  }
                }
+               this._container.css('height', height);
             }
             if (this._containerSizes.originHeight + vOffset + this._margins.top - this._margins.bottom < spaces.bottom && this._overflowedV) {
                this._container.css('overflow-y', 'visible');
@@ -777,8 +791,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          var offset = this._targetSizes.offset,
             width = this._targetSizes.width,
             height = this._targetSizes.height,
-            windowHeight = $(window).height(),
-            windowWidth = $(window).width(),
+            windowHeight = this._windowSizes.height,
+            windowWidth = this._windowSizes.width,
             spaces = {
                top: 0,
                left: 0,

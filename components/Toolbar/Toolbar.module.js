@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.Toolbar', [
    'js!SBIS3.CONTROLS.ButtonGroupBase',
    'html!SBIS3.CONTROLS.Toolbar',
-   'browser!html!SBIS3.CONTROLS.Toolbar/resources/ItemTemplate',
+   'html!SBIS3.CONTROLS.Toolbar/resources/ItemTemplate',
 
    'js!SBIS3.CONTROLS.CommandsButton'
 ], function(ButtonGroupBase, dotTplFn, ItemTemplate) {
@@ -89,10 +89,12 @@ define('js!SBIS3.CONTROLS.Toolbar', [
     * Контрол, отображающий панель с иконками.
     * @class SBIS3.CONTROLS.Toolbar
     * @extends SBIS3.CONTROLS.ButtonGroupBase
-    * @control
-    * @public
     * @demo SBIS3.CONTROLS.Demo.MyToolbar
     * @author Крайнов Дмитрий Олегович
+    *
+    * @control
+    * @public
+    * @category Buttons
     */
 
    var Toolbar = ButtonGroupBase.extend(/** @lends SBIS3.CONTROLS.Toolbar.prototype */ {
@@ -140,8 +142,14 @@ define('js!SBIS3.CONTROLS.Toolbar', [
       },
 
       //обработчик для кнопок в тулбаре
-      _itemActivatedHandler: function(id, event) {
-         this._notifyItemActivate(id, 'toolbar');
+      _itemActivatedHandler: function(hash, event) {
+         var projItem = this._getItemsProjection().getByHash(hash),
+             item = projItem.getContents();
+         //Нотифицируем о нажатие на кнопку, только если она лежит в toolbar(не в меню), т.к. за нотификацию
+         //элементов меню отвечает обработчик _onMenuItemActivate.
+         if (item.get('showType') !== 0) {
+            this._notifyItemActivate(item.getId(), 'toolbar');
+         }
       },
 
       _notifyItemActivate: function(id, type) {

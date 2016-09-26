@@ -10,8 +10,9 @@
 // data grid
 @data-grid-cell-height:                         44px;;
 @data-grid-cell-padding:                        4px 6px;
-@data-grid-header-cell-font-size:               16px;
+@data-grid-header-cell-font-size:               18px;
 @data-grid-header-cell-height:                  22px;
+@data-grid-header-cell-padding:                 @data-grid-cell-padding;
 @data-grid-cell-line-height:                    34px;
 @data-grid-checkbox-margin:                     4px 0 -4px 10px;
 @data-grid-td-checkbox-width:                   30px;
@@ -24,6 +25,8 @@
 @tree-view-expand-margin:                       0 6px 8px 2px;
 @tree-view-editArrow-top:                       10px;
 @tree-view-expand-height:                       25px;
+
+@tree-view-value-left-margin:                   24px;
 
 // back-button
 @menu-item-icon-top-offset:                     14px;
@@ -50,6 +53,119 @@
 @combo-box-picker-item-hover-bg:                #F0F5FB;
 @combo-box-picker-item-bg:                      #E1ECF6;
 
+// ---------- //
+// Data Range //
+// ---------- //
+
+@date-range-font-size:                          inherit;
+
+// ----------------- //
+// Data Range Slider //
+// ----------------- //
+@date-range-slider-font-size:                   @globalDefaultFontSize;
+@date-range-slider-value-min-width:             124px;
+@date-range-slider-value-padding:               0;
+@date-range-slider-year-state-width:            136px;
+@date-range-slider-height:                      40px;
+@date-range-slider-prev-next-buttons-width:     40px;
+@date-range-slider-prev-next-buttons-font-size: @date-range-slider-font-size;
+
+
+// ----------------- //
+// Date Range Choose //
+// ----------------- //
+@date-range-choose-bg-color:                    #e1ecf6;
+@date-range-choose-bg-hover-color:              #f0f5fb;
+@date-range-choose-border-width:                0;
+@date-range-choose-border-radius:               0;
+@date-range-choose-font-size:                   @globalDefaultFontSize;
+@date-range-choose-color:                       #313e78;
+@date-range-choose-width:                       204px;
+@date-range-choose-year-state-width:            136px;
+
+
+@date-range-choose-current-value-font-size:     @globalDefaultFontSize;
+@date-range-choose-current-value-height:        60px;
+@date-range-choose-current-value-bg-color:      #c1d7f0;
+@date-range-choose-current-value-bg-hover-color:   @date-range-choose-current-value-bg-color;
+@date-range-choose-current-value-border-bottom: none;
+@date-range-choose-current-value-margin-bottom: 0;
+
+@date-range-choose-year-font-size:              @globalDefaultFontSize;
+@date-range-choose-year-height:                 40px;
+@date-range-choose-year-margin-bottom:          0;
+
+@date-range-choose-year-prev-next-btns-width:         40px;
+@date-range-choose-year-prev-next-btns-font-size:     @globalDefaultFontSize;
+
+
+@date-range-choose-month-height:                40px;
+@date-range-choose-container-caption-width:     40px;
+
+@date-range-choose-home-button-size:            40px;
+@date-range-choose-home-button-font-size:       32px;
+@date-range-choose-home-button-line-height:     40px;
+@date-range-choose-home-button-border-color:    transparent;
+
+// -------------- //
+// Date Range Big //
+// -------------- //
+
+@date-range-big-choose-width:                                  527px;
+
+@date-range-big-choose-header-padding:                         9px 0 9px 15px;
+@date-range-big-choose-header-home-button-margin:              1px 0;
+@date-range-big-choose-header-home-button-size:                40px;
+@date-range-big-choose-header-home-button-font-size:           24px;
+@date-range-big-choose-header-home-button-line-height:         38px;
+@date-range-big-choose-header-date-box-font-size:              inherit;
+@date-range-big-choose-header-date-pickers-margin-right:       75px;
+@date-range-big-choose-header-date-picker-height:              35px;
+@date-range-big-choose-header-apply-button-size:               40px;
+@date-range-big-choose-header-apply-button-font-size:          24px;
+@date-range-big-choose-header-apply-button-line-height:        38px;
+@date-range-big-choose-header-range-dash-width:                6px;
+@date-range-big-choose-header-range-dash-margin:               21px 8px 0 8px;
+
+@date-range-big-choose-left-right-width:                       40px;
+
+@date-range-big-choose-years-height:                           50px;
+
+@date-range-big-choose-years-panel-top-padding:                9px;
+@date-range-big-choose-years-panel-wrapper-font-size:          24px;
+@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:     30px;
+@date-range-big-choose-years-panel-toggle-choose-year-button-margin:          0 60px;
+@date-range-big-choose-years-panel-current-year-button-line-height:           30px;
+@date-range-big-choose-years-panel-back-button-font-size:                     24px;
+@date-range-big-choose-years-panel-back-button-line-height:                   26px;
+
+@date-range-big-choose-body-height:                545px;
+@date-range-big-choose-months-font-size:           24px;
+@date-range-big-choose-months-margin:              16px;
+@date-range-big-choose-months-range-btn-height:    128px;
+@date-range-big-choose-months-range-width:         124px;
+@date-range-big-choose-months-button-height:       45px;
+@date-range-big-choose-months-button-first-padding-top:     2px;
+@date-range-big-choose-months-button-first-height:          @date-range-big-choose-months-button-height + @date-range-big-choose-months-button-first-padding-top;
+@date-range-big-choose-months-button-last-padding-bottom:   3px;
+@date-range-big-choose-months-button-last-height:           @date-range-big-choose-months-button-height + @date-range-big-choose-months-button-last-padding-bottom;
+
+@date-range-big-choose-quarters-half-years-font-size:                16px;
+@date-range-big-choose-month-range-padding:                          16px;
+@date-range-big-choose-month-range-picker-month-width:               127px;
+@date-range-big-choose-month-range-picker-month-height:              127px;
+@date-range-big-choose-month-range-picker-caption-height:            30px;
+@date-range-big-choose-month-range-picker-caption-font-size:         16px;
+@date-range-big-choose-month-range-picker-table-element-height:      15px;
+@date-range-big-choose-month-range-picker-table-element-font-size:   12px;
+
+@date-range-big-choose-date-range-picker-left:                       @date-range-big-choose-months-range-width + 16px;
+@date-range-big-choose-date-range-picker-right:                      16px;
+@date-range-big-choose-date-range-picker-caption-font-size:          32px;
+@date-range-big-choose-date-range-picker-caption-height:             55px;
+@date-range-big-choose-date-range-picker-table-element-height:       60px;
+@date-range-big-choose-date-range-picker-table-element-font-size:    24px;
+@date-range-big-choose-date-range-picker-table-element-title-padding-top:    12px;
 
 // --------- //
 // List view //
@@ -66,6 +182,9 @@
 @listView-empty-data-color:                     #999999;
 @listView-empty-data-font-size:                 24px;
 @listView-empty-data-padding-top:               60px;
+
+@list-view-actions-item-height:                 32px;
+@list-view-actions-margin:                      0 8px;
 
 // ------ //
 // Button //
@@ -106,7 +225,6 @@
 // Big button
 
 @button-big-border-radius:                      0;
-@button-big-primary-active-border:              @button-big-primary-border;
 @button-big-font:                               @globalDefaultFontSize @font-basic-name;
 @button-big-min-width:                          60px;
 @button-big-height:                             60px;
@@ -125,7 +243,6 @@
 @button-big-icon-32-left-offset:                14px;
 
 // Big disabled button
-@button-big-disabled-border:                    @button-disabled-border;
 
 // ------------- //
 // Toggle button //
@@ -133,17 +250,17 @@
 
 // Normal default button
 @button-checked-border-width:                   0;
+@button-checked-font-weight:                    bold;
+@button-checked-text-color:                     @blue-dark-color;
 @button-checked-border:                         @button-checked-border-width solid transparent;
 @button-checked-text-margin-left:               @button-text-margin-left;
 @button-checked-text-margin-right:              @button-text-margin-right;
 // Normal primary button
 @button-primary-checked-border:                 @button-checked-border;
 // Big default button
-@button-big-checked-border:                     @button-checked-border;
 @button-big-checked-text-margin-left:           @button-big-text-margin-left;
 @button-big-checked-text-margin-right:          @button-big-text-margin-right;
 // Big primary button
-@button-big-primary-checked-border:             @button-primary-checked-border;
 
 // ----------- //
 // Menu button //
@@ -151,10 +268,6 @@
 
 // Menu
 @menu-button-menu-top-margin:                           0;
-@menu-button-menu-left-margin:                          0;
-@menu-button-menu-padding:                              4px 0;
-@menu-button-menu-border-width:                         2px;
-@menu-button-menu-border-style:                         @menu-border-style;
 @menu-button-menu-border-color:                         transparent;
 @menu-button-menu-bg:                                   #E1ECF6;
 
@@ -163,7 +276,6 @@
 
 @menu-button-header-left-width:                         0;
 @menu-button-header-left-height:                        0;
-@menu-button-header-left-margin:                        0;
 @menu-button-header-left-bg:                            transparent;
 @menu-button-header-left-bg-revert-horizontal:          transparent;
 @menu-button-header-right-bg-revert-vertical:           transparent;
@@ -171,7 +283,6 @@
 
 @menu-button-header-center-width:                       0;
 @menu-button-header-center-height:                      0;
-@menu-button-header-center-margin:                      0;
 @menu-button-header-center-bg:                          transparent;
 
 @menu-button-header-right-width:                        0;
@@ -186,10 +297,9 @@
 // Menu //
 // ---- //
 
-@menu-border-width:                             2px;
-@menu-border-style:                             solid;
 @menu-border-color:                             transparent;
 @menu-border-radius:                            0;
+@menu-header-padding:                           4px 8px;
 
 
 // --------- //
@@ -197,7 +307,6 @@
 // --------- //
 @menu-item-height:                              40px;
 @menu-header-height:                            @menu-item-height;
-@menu-item-line-height:                         @menu-item-height;
 @menu-item-bg:                                  @menu-button-menu-bg;
 @menu-item-hover-bg:                            #F0F5FB;
 @menu-item-hover-icon-color:                    @blue-dark-color!important;
@@ -250,12 +359,9 @@
 @search-background:                             #FFFFFF;
 @search-disabled-background:                    none;
 @search-focus-background:                       @text-box-focus-bg;
-@search-height:                                 @text-box-height;
-@search-padding:                                0 24px 0 16px;
 @search-left-margin:                            8px;
 @search-border-radius:                          0;
 @search-border-color:                           @text-box-border-color;
-@search-form-border-width:                      @text-box-border-width;
 @search-form-border-disabled-width:             0;
 @search-buttons-wrapper-width:                  32px + 40px;
 @search-hover-border-color:                     @text-box-bottom-border-color;
@@ -287,9 +393,9 @@
 
 @check-box-icon-third-state-bg:                 url(@check-box-icon-spritesheet) -4px 51px;
 
-@check-box-icon-disabled-bg:                    url(@check-box-icon-spritesheet) 30px -2px;
-@check-box-icon-disabled-checked-bg:            url(@check-box-icon-spritesheet) 30px 76px;
-@check-box-icon-disabled-third-state-bg:        url(@check-box-icon-spritesheet) 30px 76px;
+@check-box-icon-disabled-bg:                    url(@check-box-icon-spritesheet) 28px -2px;
+@check-box-icon-disabled-checked-bg:            url(@check-box-icon-spritesheet) 28px 74px;
+@check-box-icon-disabled-third-state-bg:        url(@check-box-icon-spritesheet) 28px 74px;
 
 // -------- //
 // Switcher //
@@ -299,15 +405,24 @@
 @switcher-height:                               45px;
 @switcher-line-height:                          40px;
 @switcher-line-width:                           60px;
-
+@switcher-line-color-disabled:                  @gray-color;
 @switcher-btn-margin:                           8px;
 @switcher-btn-radius:                           10px;
 @switcher-btn-size:                             22px;
 
+@switcher-btn-color-disabled:                   @switcher-do-disabled-line-color;
+
+@swithcer-do-font-weight:                       bold;
 @switcher-do-vertical-toggle-width:             40px;
 @switcher-do-vertical-toggle-height:            80px;
-
 @switcher-do-vertical-line-width:               60px;
+
+@switcher-do-disabled-line-color:               @gray-color;
+@switcher-do-disabled-toggle-border-color:      @switcher-do-disabled-line-color;
+@switcher-do-disabled-text-color:               @switcher-do-disabled-line-color;
+
+@switcher-do-horizontal-text-hover-color:       @blue-dark-color;
+@switcher-do-horizontal-btn-color-disabled:     @switcher-do-disabled-line-color;
 
 
 // Popup
@@ -325,8 +440,6 @@
 
 @closeButtonWidth:                              60px;
 @closeButtonHeight:                             40px;
-@closeButtonImage:                              @closeFilterButtonImage;
-@closeButtonImageHover:                         @closeFilterButtonImageHover;
 
 // EditDialog
 @editdialog-applybutton-width:                  130px;
@@ -370,6 +483,10 @@
 // --------- //
 
 @menu-link-line-height:                         38px;
+@menu-link-header-bg-color:                     #C1D7F0;
+@menu-link-menu-border-width:                   0;
+@menu-link-menu-margin:                         0 0 0 -8px;
+@menu-link-menu-padding:                        0;
 
 // ---------- //
 // Data Range //
@@ -383,6 +500,7 @@
 // ----------------------- //
 @controls-editInPlace-editor-margin-top:        2px;
 @controls-editInPlace-editor-margin-bottom:     2px;
+@controls-editInPlace-editor-padding:           2px;
 
 //FieldLink
 

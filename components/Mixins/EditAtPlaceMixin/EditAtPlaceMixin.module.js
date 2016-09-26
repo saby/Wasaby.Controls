@@ -57,13 +57,12 @@ define('js!SBIS3.CONTROLS.EditAtPlaceMixin',
           //указывать контрол на который ушёл фокус. У некоторых контролов(например DatePicker) есть логика на уход фокуса
           //и эта логика не выполняется. Поэтому мы сами позовём setActive(false) у активного дочернего контрола.
          _deactivateActiveChildControl: function() {
-            var
-                activeControl,
-                activeWindow = $ws.single.WindowManager.getActiveWindow(false, true);
-            if (activeWindow) {
-               activeControl = activeWindow.getActiveChildControl();
-               activeControl && activeControl.setActive(false);
+            var activeControl = this.getActiveChildControl();
+            //метод getActiveControl определен у compoundControl, поэтому у контролов унаследованных от Control его нет
+            while (activeControl.getActiveChildControl && activeControl.getActiveChildControl()) {
+               activeControl = activeControl.getActiveChildControl();
             }
+            activeControl && activeControl.setActive(false);
          },
          /**
           * Открывает диалог подтверждения при отмене радактирования.

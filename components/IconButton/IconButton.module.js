@@ -12,21 +12,9 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
     *
     * @class SBIS3.CONTROLS.IconButton
     * @extends SBIS3.CONTROLS.ButtonBase
-    * @control
-    * @public
-    *
     * @mixes SBIS3.CONTROLS.IconMixin
-    *
     * @demo SBIS3.CONTROLS.Demo.MyIconButton
-    *
     * @author Борисов Петр Сергеевич
-    *
-    * @category Buttons
-    *
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.IconButton'>
-    *    <option name="icon" value="icon-16 icon-AddButton icon-primary"></option>
-    * </component>
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
@@ -52,6 +40,14 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
     * По умолчанию граница серого цвета. При наведении курсора цвет границы изменяется в соответствии с цветом иконки, установленной в опции {@link icon}.
     * @cssModifier controls-IconButton__round-border-24 Устанавливает круглую границу (диаметр в 24 px) вокруг иконки быстрой операции, доступной по наведению курсора. Подробнее о таких типах операций вы можете прочитать <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">здесь</a>.
     * Модификатор применяется совместно с иконками размерами 16 px. Цвет границы соответствует цвету иконки, установленной в опции {@link icon}.
+    *
+    * @category Buttons
+    * @control
+    * @public
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.IconButton'>
+    *    <option name="icon" value="icon-16 icon-AddButton icon-primary"></option>
+    * </component>
     */
 
    var IconButton = ButtonBase.extend([IconMixin], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
@@ -77,10 +73,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
             iconClass = options._iconClass;
          if (iconClass) {
             options._moreClass = '';
-            if ((iconClass.indexOf('icon-error') < 0) && (iconClass.indexOf('icon-done') < 0)) {
-               options._moreClass += ' action-hover';
-            }
-            else {
+            if (((iconClass.indexOf('icon-error') >= 0) || (iconClass.indexOf('icon-done') >= 0))){
                if (iconClass.indexOf('icon-error') >= 0) {
                   options._moreClass += ' controls-IconButton__errorBorder';
                }

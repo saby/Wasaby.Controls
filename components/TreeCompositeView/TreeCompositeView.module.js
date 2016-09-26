@@ -7,13 +7,18 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    'use strict';
 
    /**
-    * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде таблицы, плитки или списка
+    * Контрол, отображающий набор данных с иерархической структурой в виде таблицы, плитки или списка.
+    * Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
+    *
     * @class SBIS3.CONTROLS.TreeCompositeView
     * @extends SBIS3.CONTROLS.TreeDataGridView
     * @mixes SBIS3.CONTROLS.CompositeViewMixin
-    * @public
     * @author Крайнов Дмитрий Олегович
+    * @demo SBIS3.CONTROLS.Demo.MyTreeCompositeView
+    *
+    * @public
     * @control
+    * @category Lists
     * @initial
     * <component data-component='SBIS3.CONTROLS.TreeCompositeView'>
     *    <options name="columns" type="array">
@@ -26,8 +31,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
     *       </options>
     *    </options>
     * </component>
-    *
-    * @demo SBIS3.CONTROLS.Demo.MyTreeCompositeView
     */
 
    var TreeCompositeView = TreeDataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.TreeCompositeView.prototype*/ {
@@ -76,14 +79,14 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          }
       },
 
-      _elemClickHandlerInternal: function(data, id, target) {
+      _elemClickHandlerInternal: function(data, id, target, e) {
          if (this._options.viewMode == 'table') {
             TreeCompositeView.superclass._elemClickHandlerInternal.apply(this, arguments);
          }
          else {
             var nodeID;
             nodeID = $(target).closest('.controls-ListView__item').data('id');
-            if (this.getItems().getRecordByKey(nodeID).get(this._options.hierField + '@')) {
+            if (this.getItems().getRecordById(nodeID).get(this._options.hierField + '@')) {
                this.setCurrentRoot(nodeID);
                this.reload();
             }
@@ -216,15 +219,15 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             removeOrRedraw = function(dataSet, row, recordOffset) {
                var
                   indexForRemove,
-                  record = needRedraw ? dataSet.getRecordByKey(row.key) : false,
+                  record = needRedraw ? dataSet.getRecordById(row.key) : false,
                   environment = [row.$row.prev(), row.$row.next()];
 
                //Если запись найдена в обновленном DataSet, то перерисовываем её
                if (record) {
-                  currentDataSet.getRecordByKey(row.key).merge(record);
+                  currentDataSet.getRecordById(row.key).merge(record);
                   self.redrawItem(record);
                } else { //Иначе - удаляем запись
-                  indexForRemove = currentDataSet.getIndexById(row.key);
+                  indexForRemove = currentDataSet.getIndexByValue(currentDataSet.getIdProperty(), row.key);
                   if (indexForRemove >= 0) {
                      currentDataSet.removeAt(indexForRemove);
                   }
@@ -233,7 +236,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                   row.$row.remove();
                   //Если количество записей в текущем DataSet меньше, чем в обновленном, то добавляем в него недостающую запись
                   if (needRedraw && currentDataSet.getCount() < dataSet.getCount()) {
-                     record = dataSet.getRecordByKey(dataSet.getRecordKeyByIndex(dataSet.getCount() - recordOffset));
+                     record = dataSet.at(dataSet.getCount() - recordOffset);
                      currentDataSet.addRecord(record);
                      self._drawItems([record]);
                   }
@@ -308,9 +311,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                   getBranch(branchId)
                      .addCallback(function(branchDataSet) {
                         $ws.helpers.forEach(branch, function(record, idx) {
-                           currentRecord = currentDataSet.getRecordByKey(record);
+                           currentRecord = currentDataSet.getRecordById(record);
                            dependentRecords = findDependentRecords(record, branchId);
-                           needRedraw = !!branchDataSet.getRecordByKey(record);
+                           needRedraw = !!branchDataSet.getRecordById(record);
                            //Удаляем то, что надо удалить и перерисовываем то, что надо перерисовать
                            removeAndRedraw(dependentRecords, branch.length - idx);
                         })

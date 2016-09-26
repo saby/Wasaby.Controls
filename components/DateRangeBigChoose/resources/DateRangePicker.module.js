@@ -12,7 +12,10 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
 
    var MonthSource = Base.extend(/** @lends SBIS3.CONTROLS.DateRangeBig.DateRangePicker.MonthSource.prototype */{
       _moduleName: 'SBIS3.CONTROLS.DateRangeBigChoose.MonthSource',
-
+      $protected: {
+         _dataSetItemsProperty: 'items',
+         _dataSetTotalProperty: 'total'
+      },
 
       query: function (query) {
          // throw new Error('Method must be implemented');
@@ -34,17 +37,10 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
             }
          );
          items = this._prepareQueryResult(
-            {items: adapter.getData(), total: 1000000000000},
-            'items', 'total'
+            {items: adapter.getData(), total: 1000000000000}
          );
          return $ws.proto.Deferred.success(items);
-      },
-      //region Public methods
-      //endregion Public methods
-
-      //region Protected methods
-
-      //endregion Protected methods
+      }
    });
 
    /**
@@ -85,19 +81,24 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
             now = new Date();
 
          this._onMonthViewRageChanged = this._onMonthViewRageChanged.bind(this);
-         // this._onMonthViewSelectionStarted = this._onMonthViewSelectionStarted.bind(this);
+         this._onMonthViewBeforeSelectionStarted = this._onMonthViewBeforeSelectionStarted.bind(this);
          this._onMonthViewSelectingRangeEndDateChange = this._onMonthViewSelectingRangeEndDateChange.bind(this);
          this._onMonthViewCaptionActivated = this._onMonthViewCaptionActivated.bind(this);
 
-         if (this._options.month) {
-            this._options.month = this._normalizeMonth(this._options.month);
-         } else {
-            this._options.month = (new Date(now.getFullYear(), now.getMonth(), 1));
-         }
+         // Представление обновляется только в setMonth и в любом случае будет использоваться месяц установленный в  setMonth
+         // TODO: Сделать, что бы компонент рендерился при построении если чузер открыт в режиме месяца. Тоже самое для режима года и для MonthPicker
+         // if (this._options.month) {
+         //    this._options.month = this._normalizeMonth(this._options.month);
+         // } else {
+         //    this._options.month = (new Date(now.getFullYear(), now.getMonth(), 1));
+         // }
 
          Component.superclass.init.call(this);
 
-         this.setDataSource(monthSource);
+         this.subscribe('onDrawItems', this._onDateRangePickerDrawItems.bind(this));
+
+         this.setDataSource(monthSource, true);
+         setTimeout(this._updateMonthsPosition.bind(this), 0);
       },
 
       setMonth: function (month) {
@@ -125,7 +126,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
          return _startingOffset + (month.getFullYear() - now.getFullYear()) * 12 + month.getMonth() - 1;
       },
 
-      _drawItemsCallback: function () {
+      _onDateRangePickerDrawItems: function () {
          var self = this,
             // controls = this.getItemsInstances(),
             control;
@@ -133,6 +134,8 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
          this.forEachMonthView(function(control) {
             control.unsubscribe('onRangeChange', self._onMonthViewRageChanged);
             control.subscribe('onRangeChange', self._onMonthViewRageChanged);
+            control.unsubscribe('onBeforeSelectionStarted', self._onMonthViewBeforeSelectionStarted);
+            control.subscribe('onBeforeSelectionStarted', self._onMonthViewBeforeSelectionStarted);
             control.unsubscribe('onSelectingRangeEndDateChange', self._onMonthViewSelectingRangeEndDateChange);
             control.subscribe('onSelectingRangeEndDateChange', self._onMonthViewSelectingRangeEndDateChange);
             control.unsubscribe('onActivated', self._onMonthViewCaptionActivated);
@@ -173,10 +176,12 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
             changed = Component.superclass.setRange.apply(this, arguments);
             // start = this.getStartValue();
             // end = this.getEndValue();
-            month = this.getMonth();
-            // if (!this._isDatesEqual(start, oldStart) && !this._isDatesEqual(end, oldEnd)) {
-            if (month && start && end && (start > new Date(month.getFullYear(), month.getMonth() + 1, 0) || end < month)) {
-               this.setMonth(start);
+            if (changed) {
+               month = this.getMonth();
+               // if (!this._isDatesEqual(start, oldStart) && !this._isDatesEqual(end, oldEnd)) {
+               if (month && start && end && (start > new Date(month.getFullYear(), month.getMonth() + 1, 0) || end < month)) {
+                  this.setMonth(start);
+               }
             }
          } else {
             changed = Component.superclass.setRange.apply(this, arguments);
@@ -207,6 +212,14 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
                control._setSelectionRangeEndItem(date, true);
             }
          });
+      },
+
+      _onMonthViewBeforeSelectionStarted: function (e, start, end) {
+         // Сохраняем состояние календаря, в котором начилось выделение, непосредственно перед началом выделения
+         // потому что во время выделения, он может быть удален если инициируется смена месяца.
+         // В этом случае обрабочик _onMonthViewSelectingRangeEndDateChange не будет выполнен.
+         this._selectionType = e.getTarget()._getSelectionType();
+         this._selectionRangeEndItem = end;
       },
 
       // _updateInnerComponents: function (start, end) {

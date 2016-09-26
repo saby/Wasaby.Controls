@@ -25,24 +25,24 @@ define('js!SBIS3.CONTROLS.TextBox', [
     * </ol>
     * @class SBIS3.CONTROLS.TextBox
     * @extends SBIS3.CONTROLS.TextBoxBase
-    * @control
-    * @public
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyTextBox
-    * @category Inputs
     *
-    * @ignoreOptions independentContext contextRestriction extendedTooltip className
-    * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
+    * @ignoreOptions independentContext contextRestriction className horizontalAlignment
+    * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth
     * @ignoreOptions isContainerInsideParent owner stateKey subcontrol verticalAlignment
     *
-    * @ignoreMethods applyEmptyState applyState findParent getAlignment getEventHandlers getEvents getExtendedTooltip
+    * @ignoreMethods applyEmptyState applyState findParent getAlignment getEventHandlers getEvents
     * @ignoreMethods getId getLinkedContext getMinHeight getMinSize getMinWidth getOwner getOwnerId getParentByClass
     * @ignoreMethods getParentByName getParentByWindow getStateKey getTopParent getUserData hasEvent hasEventHandlers
     * @ignoreMethods isDestroyed isSubControl makeOwnerName once sendCommand setOwner setStateKey setUserData setValue
     * @ignoreMethods subscribe unbind unsubscribe getClassName setClassName
     *
-    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
-    * @ignoreEvents onReady
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onChange onReady
+    *
+    * @control
+    * @public
+    * @category Inputs
     */
 
    var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.TextBox.prototype */ {

@@ -1,4 +1,5 @@
 <div class="controls-ListView{{ multiselect !== false ? ' controls-ListView__multiselect' : ' controls-ListView__multiselect__off'}}">
+    <div class="controls-ListView__fakeFocusElement" tabindex="-1"></div>
     <div class="controls-AjaxLoader ws-hidden">
         <div class="controls-AjaxLoader__outer">
             <div class="controls-AjaxLoader__block">
@@ -6,11 +7,14 @@
             </div>
         </div>
     </div>
+    <div class="controls-ListView__results-top"></div>
     <div class="controls-ListView__itemsContainer">
         <ws:if data="{{ _serverRender }}">
             <ws:partial template="{{_itemsTemplate}}" records="{{_records}}" tplData="{{_itemData}}" />
         </ws:if>
     </div>
+    <div class="controls-ListView__results-bottom"></div>
+    <div class="controls-ListView__EmptyData {{(!_serverRender || _records.length) ? 'ws-hidden'}}">{{emptyHTML}}</div>
     <ws:if data="{{ footerTpl }}">
         <div class="controls-ListView__footer">
             <ws:partial template="{{footerTpl}}" scope="{{...}}" />
@@ -18,6 +22,11 @@
     </ws:if>
     <ws:if data="{{ showPaging }}">
         <div class="controls-Pager-container"></div>
+    </ws:if>
+    <ws:if data="{{ infiniteScroll == 'demand'}}">
+      <component data-component="SBIS3.CONTROLS.Link" name="loadMoreButton" class="controls-ListView__loadMoreButton">
+         <option name="caption">Еще...</option>
+      </component>
     </ws:if>
     <div class="controls-ListView-scrollIndicator ws-hidden{{ infiniteScroll === 'up' ? ' controls-ListView-scrollIndicator__up'}}"></div>
     <div class="controls-ListView__ItemsToolbar-container ws-hidden"></div>

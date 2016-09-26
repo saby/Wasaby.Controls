@@ -5,15 +5,8 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
     * Пример использования - иерархические реестры
     * @class SBIS3.CONTROLS.BackButton
     * @extends $ws.proto.CompoundControl
-    * @control
-    * @public
-    * @demo SBIS3.CONTROLS.Demo.MyBackButton
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.BackButton'>
-    *    <option name="caption">Назад</option>
-    * </component>
-    * @category Buttons
     * @author Крайнов Дмитрий Олегович
+    * @demo SBIS3.CONTROLS.Demo.MyBackButton
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
@@ -35,6 +28,13 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
     * @ignoreEvents onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     *
+    * @control
+    * @public
+    * @category Navigation
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.BackButton'>
+    *    <option name="caption">Назад</option>
+    * </component>
     */
    var BackButton = CompoundControl.extend( /** @lends SBIS3.CONTROLS.BackButton.prototype */ {
       _dotTplFn: dotTpl,
@@ -70,7 +70,16 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
              * </pre>
              * @see setIcon
              */
-            icon: ''
+            icon: '',
+            /**
+             * @cfg {String} Устанавливает ссылку на кнопке.
+             * @example
+             * <pre class="brush: xml">
+             *    <option name="href">http://inside.tensor.ru</option>
+             * </pre>
+             * @see setHref
+             */
+            href: ''
          }
       },
 
@@ -100,6 +109,10 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
          return this._options.caption;
       },
 
+      getHref: function(){
+         return this._options.href;
+      },
+
       /**
        * Устанавливает текст кнопки
        * @param caption Текси
@@ -117,6 +130,14 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
       setIcon: function(icon){
          this._link.setIcon(icon);
          this._options.icon = icon;
+      },
+      /**
+       * Устанавливает ссылку кнопки
+       * @param href Ссылка для перехода по клику
+       */
+      setHref: function(href){
+         this._link.setHref(href);
+         this._options.href = href;
       }
    });
 

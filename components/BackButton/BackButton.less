@@ -33,6 +33,10 @@
       &:hover {
          .controls-BackButton__arrow{
             display: inline-block;
+            color: @icon-color-primary !important;
+            &:hover {
+               color: @icon-color-hover !important;
+            }
          }
       }
       &.controls-BackButton__hover-arrow{
@@ -69,6 +73,9 @@
          content: '';
          width: 0;
          margin: 0;
+      }
+      .controls-BackButton__caption {
+         padding-left: 0;
       }
    }
 

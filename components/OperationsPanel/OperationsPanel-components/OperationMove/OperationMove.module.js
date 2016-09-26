@@ -4,20 +4,15 @@
 define('js!SBIS3.CONTROLS.OperationMove', [
    'js!SBIS3.CONTROLS.Link',
    'i18n!SBIS3.CONTROLS.OperationMove'
-], function(Link, rk) {
+], function(Link) {
    /**
     * Операция перемещения.
     *
     * SBIS3.CONTROLS.OperationMove
     * @class SBIS3.CONTROLS.OperationMove
     * @extends SBIS3.CONTROLS.Link
-    * @control
+    * @author Сухоручкин Андрей Сергеевич
     * @public
-    * @author Крайнов Дмитрий Олегович
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.OperationMove'>
-    *
-    * </component>
     */
    var OperationMove = Link.extend(/** @lends SBIS3.CONTROLS.OperationMove.prototype */{
 

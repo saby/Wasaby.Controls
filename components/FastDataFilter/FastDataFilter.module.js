@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
       'use strict';
       /**
        * Контрол, отображающий набор выпадающих списков SBIS3.CONTROLS.DropdownList и работающий с фильтром в контексте
+       * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterfast/">Быстрые фильтры</a>.
        * @class SBIS3.CONTROLS.FastDataFilter
        * @extends $ws.proto.CompoundControl
        * @author Крайнов Дмитрий Олегович
@@ -22,8 +23,10 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
        * @mixes SBIS3.CONTROLS.FilterMixin
        * @demo SBIS3.CONTROLS.Demo.MyFastDataFilter Работа с статическими данными
        * @demo SBIS3.CONTROLS.Demo.MyFastDataFilterDataSource Работа с DataSource данными
+       * @cssModifier controls-FastDataFilter__resize Позволяет управлять шириной выпадающих списков, вписывая их по размеру в контейнер.
        * @control
        * @public
+       * @category Filtering
        */
       var FastDataFilter = CompoundControl.extend([FilterMixin, DSMixin],/** @lends SBIS3.CONTROLS.FastDataFilter.prototype */{
          $protected: {
@@ -92,23 +95,39 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          init: function () {
             FastDataFilter.superclass.init.apply(this, arguments);
             this._container.removeClass('ws-area');
-            //Непонятно, сейчас приходится делать setItems из прикладного кода
-            //this.reload();
          },
          _getItemTemplate: function(item) {
-            var  cfg = {
-               items: item.get('values'),
-               keyField: item.get('keyField'),
-               mode: this._options.mode,
-               multiselect : !!item.get('multiselect'),
-               showSelectedInList : !!item.get('showSelectedInList'),
-               displayField: item.get('displayField'),
-               className: item.get('className') || 'controls-DropdownList__linkStyle',
-               pickerClassName: (item.get('pickerClassName') + ' controls-DropdownList__picker') || 'controls-DropdownList__picker',
-               dataSource: item.get('dataSource'),
-               filter: item.get('filter'),
-               allowDblClick: !!item.get('allowDblClick')
-            };
+            var self = this,
+                cfg = {
+                   items: item.get('values'),
+                   keyField: item.get('keyField'),
+                   mode: this._options.mode,
+                   multiselect : !!item.get('multiselect'),
+                   showSelectedInList : !!item.get('showSelectedInList'),
+                   displayField: item.get('displayField'),
+                   className: (item.get('className') || 'controls-DropdownList__linkStyle') + ' controls-DropdownList-text-overflow',
+                   pickerClassName: (item.get('pickerClassName') + ' controls-DropdownList__picker') || 'controls-DropdownList__picker',
+                   dataSource: item.get('dataSource'),
+                   filter: item.get('filter'),
+                   allowDblClick: !!item.get('allowDblClick'),
+                   name: item.get('name'),
+                   pickerConfig: {
+                      handlers: {
+                         onShow: function () {
+                            /* По стандарту: в быстрых фильтрах может одновременно отображаться лишь одна выпадашка,
+                               особенно актуально это для выпадашек с множественным выбором, т.к. они не скрываются
+                               при уведении мыши, если там отметить запись чекбоксом */
+                            var hasVisibleDDList = $ws.helpers.find(self.getItemsInstances(), function (instance) {
+                               return instance !== this.getParent() && instance.isPickerVisible()
+                            }.bind(this));
+
+                            if(hasVisibleDDList) {
+                               this.hide();
+                            }
+                         }
+                      }
+                   }
+                };
             if(item.has('headTemplate')){
                cfg.headTemplate = item.get('headTemplate');
             }
@@ -118,10 +137,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             if(item.has('includedTemplates')){
                cfg.includedTemplates = item.get('includedTemplates');
             }
-            return '<component data-component="SBIS3.CONTROLS.DropdownList" config="' + $ws.helpers.encodeCfgAttr(cfg) + '">' +
-                        //'<opts name="selectedKeys" type="array" bind="' + cfg.filterName +'" ></opts>' + //direction="fromProperty" oneWay="true"
-                        //'<opt name="caption" type="array" bind="'+ cfg.displayField +'" direction="fromProperty" oneWay="true"></opt>' +
-                   '</component>';
+            return '<component data-component="SBIS3.CONTROLS.DropdownList" config="' + $ws.helpers.encodeCfgAttr(cfg) + '"></component>';
          },
          _drawItemsCallback: function(){
             var instances = this.getItemsInstances();
@@ -130,18 +146,21 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                   this._subscribeItemToHandlers(instances[i])
                }
             }
+            this._recalcDropdownWidth();
          },
          _getCurrentContext : function(){
             return this.getLinkedContext();
          },
          _subscribeItemToHandlers : function(item){
             var self = this;
-            item.subscribe('onClickMore', function(){
+
+            this.subscribeTo(item, 'onClickMore', function(){
                self._notify('onClickMore', item);
             });
-            item.subscribe('onSelectedItemsChange', function(event, idArray){
+
+            this.subscribeTo(item, 'onSelectedItemsChange', function(event, idArray){
                var idx = self._getFilterSctructureItemIndex(this.getContainer().data('id')),
-                  text = [], ds,
+                   text = [], ds,
                //Если выбрали дефолтное значение, то нужно взять из resetValue
                //TODO может быть всегда отдавать массивом?
                    filterValue =  idArray.length === 1 && (idArray[0] === this.getDefaultId()) && self._filterStructure[idx] ? self._filterStructure[idx].resetValue :
@@ -166,6 +185,75 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                }
             });
          },
+         _recalcDropdownWidth: function(){
+            this._resetMaxWidth();
+            if ($ws._const.browser.isIE && $ws._const.browser.IEVersion <= 10){
+               var ddlText = $('.controls-DropdownList__textWrapper', this.getContainer()),
+                   ieWidth = 2, //Отступ, чтобы ie правильно уместил содержимое в контейнер,
+                   containerWidth = this.getContainer().width() + ieWidth;
+               this._resizeDropdownContainersForIE(ddlText, containerWidth);
+            }
+            else{
+               var dropdownLists = $('.controls-DropdownList', this.getContainer());
+               dropdownLists.sort(function(el1, el2){
+                  return $(el1).width() > $(el2).width();
+               });
+               for (var i = 0, l = dropdownLists.length; i < l; i++){
+                  $(dropdownLists[i]).css('flex-shrink', i + 1);
+               }
+            }
+         },
+
+         _resetMaxWidth: function(){
+            var dropdownContainer = $('.controls-DropdownList', this.getContainer()),
+               dropdownLimitProperty = 'flex-shrink';
+            if ($ws._const.browser.isIE && $ws._const.browser.IEVersion <= 10){
+               dropdownContainer = $('.controls-DropdownList__textWrapper', this.getContainer());
+               dropdownLimitProperty = 'max-width';
+            }
+            $ws.helpers.forEach(dropdownContainer, function(elem){
+               $(elem).css(dropdownLimitProperty, '');
+            });
+         },
+
+         _resizeDropdownContainersForIE: function(dropdownText, containerWidth){
+            var ddlWidth = this._getDropdownListsWidth(),
+               maxDdl;
+            while (ddlWidth > containerWidth){
+               maxDdl = this._getDropdownMaxWidth(dropdownText);
+               maxDdl.css('max-width', (maxDdl.width() * 0.9)); //Уменьшаем ширину самого большого ddl на 10%
+               ddlWidth = this._getDropdownListsWidth();
+            }
+         },
+         _getDropdownMaxWidth: function(dropdownText){
+            var maxElem = $(dropdownText[0]);
+            for (var i = 1, l = dropdownText.length; i < l; i++){
+               if ($(dropdownText[i]).width() > maxElem.width()){
+                  maxElem = $(dropdownText[i]);
+               }
+            }
+            return maxElem;
+         },
+
+         _getDropdownListsWidth: function(){
+            var sumWidth = 0;
+            var dropdownContainer = $('.controls-DropdownList', this.getContainer());
+
+            for (var i = 0, l = dropdownContainer.length; i < l; i++){
+               sumWidth += $(dropdownContainer[i]).width();
+            }
+
+            return sumWidth;
+         },
+
+         _onResizeHandler: function(){
+            clearTimeout(this._resizeTimeout);
+            var self = this;
+            this._resizeTimeout = setTimeout(function () {
+                  self._recalcDropdownWidth();
+            }, 100);
+         },
+
          _recalcInternalContext: function() {
             var
                   changed = $ws.helpers.reduce(this._filterStructure, function(result, element) {

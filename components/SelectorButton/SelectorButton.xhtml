@@ -1,5 +1,5 @@
 <span class="controls-SelectorButton{{?!it.enabled}} ws-disabled {{?}}" {{?it.tooltip}} title="{{=it.tooltip}}"{{?}}>
     {{?it.icon}}<i class="controls-SelectorButton__icon {{=it._iconClass}}"></i>{{?}}
-    <span class="controls-SelectorButton__text">{{? it.caption}}{{=it.caption}}{{??}}{{it.defaultCaption}}{{?}}</span>
+    <span class="controls-SelectorButton__text{{? !it.caption && !it.defaultCaption}} ws-hidden{{?}}">{{? it.caption}}{{=it.caption}}{{??}}{{it.defaultCaption}}{{?}}</span>
     <i class="controls-SelectorButton__cross icon-16 icon-Close icon-disabled action-hover {{? !it.caption || it.caption === it.defaultCaption}}ws-hidden{{?}}"></i>
 </span>

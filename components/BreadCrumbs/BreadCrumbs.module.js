@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'js!SBIS3.CONTROLS.DSMixin',
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.DecorableMixin',
-   'html!SBIS3.CONTROLS.BreadCrumbs',
+   'tmpl!SBIS3.CONTROLS.BreadCrumbs',
    'html!SBIS3.CONTROLS.BreadCrumbs/resources/pointTpl'
 ], function(CompoundControl, DSMixin, PickerMixin, DecorableMixin, dotTpl, pointTpl) {
    /**
@@ -12,14 +12,16 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
     * @class SBIS3.CONTROLS.BreadCrumbs
     * @extends $ws.proto.CompoundControl
     * @author Крайнов Дмитрий Олегович
-    * @control
-    * @public
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.BreadCrumbs'>
-    * </component>
     * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.DecorableMixin
+    *
+    * @control
+    * @public
+    * @category Navigation
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.BreadCrumbs'>
+    * </component>
     */
    'use strict';
    //TODO: Переписать все к чертям 
@@ -33,6 +35,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          _arrowWidth: 0,
          _homeIconWidth: 0,
          _dotsWidth: 0,
+         _paddings: undefined,
+         _margins: undefined,
          _options: {
             keyField: 'id',
             displayField: 'title',
@@ -83,7 +87,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       $constructor: function() {
          this._publish('onItemClick');
          this._homeIcon = $('.controls-BreadCrumbs__crumb-home', this._container);
-         this._container.toggleClass('ws-hidden', (this._options.items && this._options.items.length == 0));
+         this.toggle(this._options.items && this._options.items.length == 0);
          this._homeIcon.data('id', null); //клик по домику ведет в корень TODO: придрочено под null
          this.getContainer().on('mousedown', this._onMousedownHandler);
          //инициализируем dataSet
@@ -103,6 +107,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                this._dotsClickHandler(crumb)
             } else if (crumb.length) {
                this._notify('onItemClick', crumb.data(this._options.keyField));
+               this.sendCommand('BreadCrumbsItemClick', crumb.data(this._options.keyField));
             }
             if (this._picker && this._picker.isVisible() && fromDropdown){
                this._picker.hide();
@@ -211,6 +216,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
       _calculateSizes: function() {
          this._initNonTextElementSizes();
+         this._paddings =  this._paddings === undefined ? this._container.innerWidth() - this._container.width() : this._paddings;
+         this._margins = this._margins === undefined ? this._container.outerWidth(true)  - this._container.outerWidth(): this._margins;
+
          // Уберем троеточие, что бы оно не мешало при расчете размеров
          // или создадим его, если его нет
          var dots = $('.controls-BreadCrumbs__dots', this._container);
@@ -230,7 +238,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
          var targetContainer = this._getTargetContainer(),
             maxWidth = parseFloat(this._container.css('max-width')),
-            containerWidth = maxWidth ? maxWidth : this._container.width(),
+            boundingClientRect = this._container[0].getBoundingClientRect(),
+             containerWidth = maxWidth ? maxWidth : Math.ceil(Math.abs(boundingClientRect.left - boundingClientRect.right) - this._paddings - this._margins),
             crumbs = $('.controls-BreadCrumbs__crumb', targetContainer),
             i = crumbs.length - 1;
 
@@ -253,7 +262,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          crumbs = $('.controls-BreadCrumbs__crumb', targetContainer).not('.ws-hidden').not('.controls-BreadCrumbs__dots');
 
          //Минимум остается первая и последняя хлебная крошка
-         if (targetContainer.width() + this._homeIconWidth >= containerWidth) {
+         if (targetContainer.outerWidth(true) + this._homeIconWidth >= containerWidth) {
             //ширина декоротивных элементов -  блок с домиком, троеточие, стрелки 
             var dotsWidth = $('.controls-BreadCrumbs__dots', this._container).outerWidth(true) || 0,
                width = this._homeIconWidth + dotsWidth + this._arrowWidth * 2,
@@ -282,9 +291,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          //Если датасета нет или он есть, но пустой, то скрываем home
          var isEmpty = (!this._dataSet || (this._dataSet && (this._dataSet.getCount() == 0)));
          this._toggleHomeIcon(isEmpty);
-         this._container.toggleClass('ws-hidden', isEmpty);
+         this.toggle(!isEmpty);
          BreadCrumbs.superclass._redraw.call(this);
-         if (this.getItems() && this.getItems().getCount()){
+         if (this.getItems() && this.getItems().getCount() && this.isVisible()){
             this._calculateSizes();
          }
       },

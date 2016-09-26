@@ -15,7 +15,12 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
     function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, MarkupTransformer) {
 
        'use strict';
-
+       /**
+        * @class SBIS3.CONTROLS.ItemsToolbar
+        * @extends SBIS3.CONTROLS.CompoundControl
+        * @author Авраменко Алексей Сергеевич
+        * @public
+        */
        var ItemsToolbar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.ItemsToolbar.prototype */ {
           $protected: {
              _dotTplFn: dotTplFn,
@@ -229,7 +234,16 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              var parentContainer = this.getParent().getContainer()[0],
                  targetContainer = this._currentTarget.container[0],
                  parentCords = parentContainer.getBoundingClientRect(),
-                 targetCords = targetContainer.getBoundingClientRect();
+                 targetCords;
+
+             /* Событие onMove из трэкера стреляет и при удалении элемента из DOM'a,
+                надо проверить на наличине элемента, а то получим неверные расчёты, а в худшем случае(ie) браузер падает */
+             if(!$ws.helpers.contains(parentContainer, targetContainer)) {
+                this._untrackingTarget();
+                return;
+             }
+
+             targetCords = targetContainer.getBoundingClientRect();
              this._currentTarget.position =  {
                 top: targetCords.top - parentCords.top + parentContainer.scrollTop,
                 left: targetCords.left - parentCords.left

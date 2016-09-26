@@ -13,10 +13,12 @@ define('js!SBIS3.CONTROLS.Browser', [
     * @class SBIS3.CONTROLS.Browser
     * @extends $ws.proto.CompoundControl
     * @author Крайнов Дмитрий Олегович
+    * @demo SBIS3.CONTROLS.Demo.MyBrowser
+    *
     * @control
     * @public
+    * @category Lists
     * @designTime plugin /design/DesignPlugin
-    * @demo SBIS3.CONTROLS.Demo.MyBrowser
     */
 
    var
@@ -74,7 +76,14 @@ define('js!SBIS3.CONTROLS.Browser', [
              */
             searchMode: 'current',
             /**
-             * @cfg {String} Id для работы с историей фильтров
+             * @cfg {String} Устанавливает Id для работы с историей фильтров.
+             * @remark
+             * Опция задает идентификатор, под которым будет сохраняться история фильтрации.
+             * Если значение для опции установлено, история фильтрации будет включена.
+             * @example
+             * <pre>
+             *     <option name="historyId">bankPayDocBrowser</option>
+             * </pre>
              */
             historyId : '',
             /**

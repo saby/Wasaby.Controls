@@ -83,10 +83,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *
         * @class SBIS3.CONTROLS.FieldLink
         * @extends SBIS3.CONTROLS.SuggestTextBox
-        * @control
-        * @public
-        *
-        * @category Inputs
         *
         * @author Герасимов Александр Максимович
         *
@@ -117,6 +113,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip setEmptyHTML setGroupBy
         *
         * ignoreEvents onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
+        *
+        * @control
+        * @public
+        * @category Inputs
         */
 
        var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, DSMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
@@ -353,6 +353,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this._notifyOnPropertyChanged('dictionaries');
           },
 
+
+          /**
+           * Для поля связи требуется своя реализация метода setSelectedKey, т.к.
+           * Selectable расчитывает на наличие проекции и items, которых в поле связи нет.
+           * + полю связи не требуется единичная отрисовка item'a, т.к. при синхронизации selectedKey и selectedKeys,
+           * всегда будет вызываться метод drawSelectedItems
+           * @param key
+           */
+          setSelectedKey: function(key) {
+             this._options.selectedKey = key;
+             this._notifySelectedItem(this._options.selectedKey);
+          },
+
           /**
            * Открывает справочник для поля связи.
            * @remark
@@ -382,6 +395,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              this._showChooser(template, componentOptions)
 
+          },
+
+          setActive: function(active) {
+             FieldLink.superclass.setActive.apply(this, arguments);
+
+             if (active && this._needFocusOnActivated() && this.isEnabled() && $ws._const.browser.isMobilePlatform) {
+                this._getElementToFocus().focus();
+             }
           },
 
           _getAdditionalChooserConfig: function () {
@@ -768,6 +789,25 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 },
                 horizontalAlign: {
                    side: 'left'
+                },
+                handlers: {
+                   onShow: function() {
+                      var revertedVertical = this._picker.getContainer().hasClass('controls-popup-revert-vertical');
+
+                      if($ws._const.browser.isMobileIOS) {
+                         revertedVertical = !revertedVertical;
+                      }
+
+                      if (revertedVertical) {
+                         if (!this._listReversed) {
+                            this._reverseList();
+                         }
+                      } else {
+                         if (this._listReversed) {
+                            this._reverseList();
+                         }
+                      }
+                   }.bind(this)
                 }
              };
              // Придрот для айпада. Выезжающая клавиатура может скрывать выпадашку, так как та влезает под нее. Поэтому на айпаде всегда открываем автодополнение вверх

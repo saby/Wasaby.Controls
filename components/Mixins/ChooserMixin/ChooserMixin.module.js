@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
       }
 
       return new Model({
-         data: rec.toJSON(),
+         rawData: rec.toJSON(),
          adapter: new SbisAdapter(),
          idProperty: idProp ? idProp : rec.getKeyField()
       })
@@ -100,8 +100,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
       _showChooser: function(template, componentOptions) {
          var self = this,
              config = this._getAdditionalChooserConfig(),
-             version = this._options.oldViews ? 'old' : 'newType',
-             selectorConfig, commonConfig, clickResult;
+             version, selectorConfig, commonConfig, clickResult;
 
          /* Обработка выбора из справочника со старым представлением данных */
          function oldConfirmSelectionCallback(event, result) {
@@ -117,7 +116,11 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
             }
          }
 
-         clickResult = this._notify('onChooserClick');
+         clickResult = this._notify('onChooserClick', template);
+         /* Т.к. не все успели перевести свои панели выбора на новые контролы,
+            то при использовании нескольких "Справочников" в поле связи, в событии onChooserClick
+            будут менять режим работы. Удалится как поле связи перейдёт на использование action'a */
+         version  = this._options.oldViews ? 'old' : 'newType';
 
          if(clickResult === false) {
             return;

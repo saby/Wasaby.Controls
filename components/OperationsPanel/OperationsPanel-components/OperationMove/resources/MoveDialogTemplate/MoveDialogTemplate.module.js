@@ -31,6 +31,7 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
          this._publish('onPrepareFilterOnMove', 'onMove');
          this._container.removeClass('ws-area');
          this.subscribe('onReady', this._onReady.bind(this));
+         $ws.single.CommandDispatcher.declareCommand(this, 'applyMove', this._onMoveButtonActivated.bind(this));
       },
       _onReady: function() {
          var
@@ -47,41 +48,14 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
          this._treeView.setDataSource(this.getDataSource());
       },
       _onMoveButtonActivated: function() {
-         var
-             self = this.getParent(),
-             moveTo = self._treeView.getSelectedKey();
-         moveTo = moveTo !== 'null' ? self._treeView._options._items.getRecordByKey(moveTo) : null;
-         if (self._treeView._checkRecordsForMove(self._options.records, moveTo)) {
-            self._notify('onMove', self._options.records, moveTo);
+         var moveTo = this._treeView.getSelectedKey();
+         if (moveTo !== null) {
+            moveTo = this._treeView.getItems().getRecordById(moveTo);
+         }
+         if (this._treeView._checkRecordsForMove(this._options.records, moveTo)) {
+            this._notify('onMove', this._options.records, moveTo);
          }
          this.sendCommand('close');
-      },
-      //TODO: в 3.7.4 переделать на фейковую запись, а не тупо подпихивать tr.
-      _createRoot: function() {
-         var
-             self = this,
-             rootBlock = this._container.find('tbody .controls-MoveDialog__root');
-         if (!rootBlock.length) {
-            rootBlock = $('<tr class="controls-DataGridView__tr controls-ListView__item controls-ListView__folder" style="" data-id="null"><td class="controls-DataGridView__td controls-MoveDialog__root"><div class="controls-TreeView__expand js-controls-TreeView__expand has-child controls-TreeView__expand__open"></div>' + rk("Корень") + '</td></tr>');
-            rootBlock.bind('click', function(event) {
-               self._container.find('.controls-ListView__item').toggleClass('ws-hidden');
-               rootBlock.toggleClass('ws-hidden').find('.controls-TreeView__expand').toggleClass('controls-TreeView__expand__open');
-               self.setSelectedKey('null');
-               rootBlock.addClass('controls-ListView__item__selected');
-               event.stopPropagation();
-               //Добавляем debounce, т.к. на iPad клик отрабатывает 2 раза, первый нативный, а второй генерируем мы сами в Control.module.js
-               //т.к. на iPad не всегда отрабатывает нативный клик. В 3.7.4 этот костль уйдёт вместе с этим методом, когда Мальцев сделает
-               //создание фейкового корня.
-            }.debounce(100));
-            rootBlock.prependTo(self._container.find('tbody'));
-            self.setSelectedKey('null');
-            //TODO: Установим марке отметки на фейковый корень по таймауту т.к. сначала стреляет событие onDrawItems по которому
-            //вызывается данный метод, а потом отрабатывает метод _drawItemsCallback который в Selectable.module.js
-            //убирает маркер т.к. не находит запись с id='null' в наборе данных.
-            setTimeout(function() {
-               rootBlock.addClass('controls-ListView__item__selected');
-            }, 0);
-         }
       },
 
       getDataSource: function() {

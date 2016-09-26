@@ -39,6 +39,7 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
                      titleText: $ws.helpers.escapeTagsFromStr(linkText, '')
                   });
                   self.toggle(!!linkText);
+                  self._notifyOnSizeChanged();
                };
 
             updateContext();

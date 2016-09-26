@@ -23,10 +23,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * Контрол, отображающий выбранные записи в виде текстовых значений через запятую.
     * @class SBIS3.CONTROLS.SelectorButton
     * @extends SBIS3.CONTROLS.ButtonBase
-    * @control
-    * @public
     * @author Крайнов Дмитрий Олегович
-    * @category Buttons
     * @mixes SBIS3.CONTROLS.IconMixin
     * @mixes SBIS3.CONTROLS.Clickable
     * @mixes SBIS3.CONTROLS.MultiSelectable
@@ -36,8 +33,11 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * @mixes SBIS3.CONTROLS.SyncSelectionMixin
     * @mixes SBIS3.CONTROLS.ChooserMixin
     * @mixes SBIS3.CONTROLS.DSMixin
-    *
     * @cssModifier controls-SelectorButton__asLink Отображает текст как ссылку.
+    *
+    * @category Buttons
+    * @control
+    * @public
     */
 
    var SelectorButton = ButtonBase.extend([DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin], /** @lends SBIS3.CONTROLS.SelectorButton.prototype */ {
@@ -145,6 +145,22 @@ define('js!SBIS3.CONTROLS.SelectorButton',
                 dic && dic.componentOptions
             )
          }
+      },
+
+      /**
+       * Установить набор диалогов выбора для поля связи
+       * @param {Array} dictionaries Набор диалогов выбора для поля связи
+       */
+      setDictionaries: function (dictionaries) {
+         this._options.dictionaries = dictionaries;
+      },
+
+      /**
+       * Получить набор диалогов выбора для поля связи
+       * @returns {Array} Набор диалогов выбора для поля связи
+       */
+      getDictionaries: function () {
+         return this._options.dictionaries;
       },
 
       _chooseCallback: function(result) {

@@ -12,13 +12,16 @@ define('js!SBIS3.CONTROLS.SearchForm', [
 
    /**
     * Cтрока поиска, поле ввода + кнопка поиска.
+    * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-search/">Строка поиска</a>.
     * @class SBIS3.CONTROLS.SearchForm
     * @extends SBIS3.CONTROLS.TextBox
     * @mixes SBIS3.CONTROLS.SearchMixin
-    * @public
-    * @control
     * @demo SBIS3.CONTROLS.Demo.MySearchForm
     * @author Крайнов Дмитрий Олегович
+    *
+    * @public
+    * @control
+    * @category Search
     */
 
    var SearchForm = TextBox.extend([SearchMixin, PickerMixin, SuggestMixin, SuggestTextBoxMixin],/** @lends SBIS3.CONTROLS.SearchForm.prototype */ {
@@ -107,24 +110,6 @@ define('js!SBIS3.CONTROLS.SearchForm', [
             e.stopPropagation();
             e.preventDefault();
          }
-      },
-
-      /**
-       * Сбросить поиск
-       * @see applySearch
-       */
-      resetSearch: function(){
-         this.setText('');
-         this.applySearch(true);
-      },
-
-      /**
-       * Запустить поиск
-       * @param {boolean} force Принудительный запуск поиска, даже если кол-во символов меньше чем {@link startCharacter}.
-       * @see resetSearch
-       */
-      applySearch: function(force) {
-         this._applySearch(this.getText(), force);
       }
    });
 

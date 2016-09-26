@@ -63,8 +63,14 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
       init: function(){
          this._container.addClass('controls-MenuIcon');
          this._options.pickerClassName += ' controls-MenuIcon__Menu';
-         if (this._container.hasClass('controls-IconButton__round-border')){
-            this._options.pickerClassName += ' controls-IconButton__round-border';
+         var cssModificators = [
+             'controls-IconButton__round-border',
+             'controls-IconButton__round-border-24'
+         ];
+         for (var i = 0, l = cssModificators.length; i < l; i++){
+            if (this.getContainer().hasClass(cssModificators[i])){
+               this._options.pickerClassName += ' ' + cssModificators[i];
+            }
          }
          if (this._container.hasClass('icon-24') && !this._container.hasClass('controls-Menu__hide-menu-header')){
             this._options.pickerClassName += ' controls-Menu__big-header';

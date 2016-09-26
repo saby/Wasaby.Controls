@@ -2,8 +2,13 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.RadioGroup', ['js!SBIS3.CONTROLS.RadioGroupBase','html!SBIS3.CONTROLS.RadioGroup', 'js!SBIS3.CONTROLS.RadioButton'],
-function(RadioGroupBase, dotTpl) {
+define('js!SBIS3.CONTROLS.RadioGroup', ['' +
+      'js!SBIS3.CONTROLS.RadioGroupBase',
+      'html!SBIS3.CONTROLS.RadioGroup',
+      'html!SBIS3.CONTROLS.RadioGroup/resources/ItemTemplate',
+      'js!SBIS3.CONTROLS.RadioButton'
+      ],
+function(RadioGroupBase, dotTpl, ItemTemplate) {
 
    'use strict';
 
@@ -12,10 +17,23 @@ function(RadioGroupBase, dotTpl) {
     * @class SBIS3.CONTROLS.RadioGroup
     * @extends SBIS3.CONTROLS.RadioGroupBase
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
-    * @control
     * @author Крайнов Дмитрий Олегович
-    * @public
     * @demo SBIS3.CONTROLS.Demo.MyRadioGroup
+    *
+    * @cssModifier controls-ButtonGroup__vertical Для вертикального расположения элементов в группе.
+    * @cssModifier controls-Radio__primary акцентные кнопки
+    *
+    * @ignoreOptions className extendedTooltip handlers linkedContext
+    *
+    * @ignoreMethods applyState applyEmptyState getClassName findParent getEventHandlers  getEvents getExtendedTooltip
+    * @ignoreMethods getOwner getOwnerId getTopParent getUserData makeOwnerName hasEvent hasEventHandlers once setOwner
+    * @ignoreMethods sendCommand setClassName setExtendedTooltip setStateKey setUserData subscribe unsubscribe
+    *
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onTooltipContentRequest
+    *
+    * @control
+    * @public
+    * @category Inputs
     * @initial
     * <component data-component='SBIS3.CONTROLS.RadioGroup'>
     *    <option name="displayField">title</option>
@@ -31,17 +49,6 @@ function(RadioGroupBase, dotTpl) {
     *       </options>
     *    </options>
     * </component>
-    *
-    * @cssModifier controls-ButtonGroup__vertical Для вертикального расположения элементов в группе.
-    * @cssModifier controls-Radio__primary акцентные кнопки
-    *
-    * @ignoreOptions className extendedTooltip handlers linkedContext
-    *
-    * @ignoreMethods applyState applyEmptyState getClassName findParent getEventHandlers  getEvents getExtendedTooltip
-    * @ignoreMethods getOwner getOwnerId getTopParent getUserData makeOwnerName hasEvent hasEventHandlers once setOwner
-    * @ignoreMethods sendCommand setClassName setExtendedTooltip setStateKey setUserData subscribe unsubscribe
-    *
-    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onTooltipContentRequest
     */
 
    var RadioGroup = RadioGroupBase.extend( /** @lends SBIS3.CONTROLS.RadioGroup.prototype */ {
@@ -77,18 +84,9 @@ function(RadioGroupBase, dotTpl) {
 
       $protected: {
          _options: {
-
+            _canServerRender: true,
+            _defaultItemTemplate: ItemTemplate
          }
-      },
-
-      _getItemTemplate : function(item) {
-         var
-            caption = item.get(this._options.displayField),
-            className = this._container.hasClass('controls-Radio__primary') ? ' class="controls-Radio__primary"' : '';
-
-         return '<component data-component="SBIS3.CONTROLS.RadioButton"'+className+'>' +
-               '<option name="caption">'+caption+'</option>'+
-            '</component>';
       }
    });
 

@@ -284,7 +284,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                this._lastParent = this._options._curRoot;
                this._lastDrawn = undefined;
                this._lastPath = [];
-               this._destroySearchBreadCrumbs();
+
                $ws.helpers.forEach(this._foldersFooters, function(val, key) {
                   self._destroyItemsFolderFooter([key]);
                });
@@ -305,7 +305,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             }
          }
       },
-      _elemClickHandlerInternal: function (data, id, target) {
+      _elemClickHandlerInternal: function (data, id, target, e) {
          var $target = $(target),
              nodeID = $target.closest('.js-controls-ListView__item').data('id'),
              closestExpand = this._findExpandByElement($(target));
@@ -327,7 +327,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
       //Переопределяем метод, чтоб передать тип записи
       _activateItem : function(id) {
          var
-            item = this._options._items.getRecordByKey(id),
+            item = this._options._items.getRecordById(id),
             meta = {
                id: id,
                item: item,

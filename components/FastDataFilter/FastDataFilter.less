@@ -1,4 +1,13 @@
 .controls-FastDataFilter {
   display: inline-block;
   border: @fastDataFilter-border;
+  &.controls-FastDataFilter__resize{
+    display: flex;
+    .controls-DropdownList {
+      overflow: hidden;
+      .controls-DropdownList__textWrapper{
+        text-overflow: ellipsis;
+      }
+    }
+  }
 }

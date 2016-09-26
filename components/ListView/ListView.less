@@ -1,4 +1,15 @@
 .controls-ListView {
+
+   //Данные стили обеспечивают правильное поведение ListView при активации.
+   //Фокус должен переходить на элемент с position fixed.
+   .controls-ListView__fakeFocusElement {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 1px;
+      height: 1px;
+   }
+
   .controls-ListView__item {
     overflow: hidden;
     position: relative;
@@ -121,11 +132,11 @@
       background: white;
       border-top: 1px solid @default-color;
       z-index: 10;
-      .control-Paging__prev{
-         display: none;
-      }
    }
 
+   .controls-ListView__loadMoreButton{
+      float: right;
+   }
 
    &.controls-ListView__orangeMarker {
       .controls-ListView__itemsContainer > {
@@ -211,8 +222,10 @@
 }
 
 .controls-DataGridView__results{
-  background: #F0F0F0;
+  background: #FFF;
   font-weight: bold;
+  font-size: 15px;
+  color: #313E78;
 }
 
 @ie8: \0screen;

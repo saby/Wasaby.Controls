@@ -15,22 +15,13 @@
          .controls__filterButton__area-text {
             font-size: @controls-filterButton-area-text-size;
             font-weight: @controls-filterButton-area-text-weight;
-            color: @blue-dark-color;
+            color: @controls-filterButton-area-text-color;
             line-height: @controls-filterButton-line-height;
-            overflow: hidden;
             margin: @controls-filterButton-area-text-margin;
          }
 
          .controls__filter-button__apply-filter {
             float: right;
-            margin-right: @controls-filterButton-apply-margin-right;
-         }
-
-         .controls-Link {
-            .controls-Link-link {
-               font-size: @font-basic-size;
-               line-height: @controls-filterButton-line-height;
-            }
          }
       }
 
@@ -170,7 +161,7 @@
                      position: @controls-filterButton-history-titleCont-position;
                      right: @controls-filterButton-history-titleCont-right;
                      left: @controls-filterButton-history-titleCont-left;
-                     top: 2px;
+                     top: 4px;
 
                      .controls-filterButton__historyView-item-title {
                         display: @controls-filterButton-history-title-display;
@@ -278,7 +269,7 @@
       cursor: pointer;
       color: @controls-filterLine-link-color;
       text-decoration: none;
-      line-height: normal;
+      line-height: 24px;
       padding: @controls-filterLine-items-padding;
       box-sizing: border-box;
    }
@@ -306,21 +297,33 @@
 }
 
 // ФИКС ДЛЯ ФФ
-@-moz-document url-prefix() {
-   .controls__filterButton .controls__filterButton__filterLine{
-      margin: 8px 32px 8px 0;
-   }
-   /* Из-за того, что в FF внезапно изменилось позиционирование с помощью float'a, то добавляю хаки для FF
-      чтобы корректно позиционировался крестик очистки и текст */
-   .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-table {
-      display: inline-block;
-      float: none;
-   }
-   .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-table-row {
-      height: 22px;
-   }
+.ws-is-firefox {
+   .controls__filterButton {
+      .controls__filterButton__filterLine {
+         margin: 8px 32px 8px 0;
+         white-space: normal;
 
-   .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-copyCross {
-      top: -23px;
+         .controls__filterButton__filterLine-table {
+            display: inline-block;
+            float: none;
+
+            .controls__filterButton__filterLine-table-row {
+               height: 22px;
+
+               .controls__filterButton__filterLine-arrow {
+                  vertical-align: baseline;
+                  position: relative;
+                  top: 2px;
+               }
+            }
+
+         }
+         .controls__filterButton__filterLine-copyCross {
+            top: -25px;
+         }
+         .controls__filterButton__filterLine-cross {
+            top: 1px;
+         }
+      }
    }
 }
