@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.DragEntity.ListRows', [
 ], function (Di, List) {
    'use strict';
    /**
-    * Список строк
+    * Список строк, обладающий информацией о том как обработать перемещаемые записи.
     * @class SBIS3.CONTROLS.DragEntity.ListRows
     */
    var ListRows = List.extend(/**@lends SBIS3.CONTROLS.DragEntity.ListRows.prototype*/{
