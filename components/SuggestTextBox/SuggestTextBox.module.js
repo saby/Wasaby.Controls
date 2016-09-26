@@ -65,9 +65,13 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          SuggestTextBox.superclass._onListDataLoad.apply(this, arguments);
 
          if(this._options.searchParam) {
-            if(this._checkPickerState(false)) {
-               this.showPicker();
-            }
+            /* Отображаем пикер только после отрисовки данных,
+               иначе будет некорретно работать инвертирование */
+            this.subscribeOnceTo(this.getList(), 'onDrawItems', $ws.helpers.forAliveOnly(function() {
+               if(this._checkPickerState(false)) {
+                  this.showPicker();
+               }
+            }, this));
          }
       }
    });
