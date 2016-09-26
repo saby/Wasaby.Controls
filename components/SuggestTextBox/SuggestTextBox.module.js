@@ -67,11 +67,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          if(this._options.searchParam) {
             /* Отображаем пикер только после отрисовки данных,
                иначе будет некорретно работать инвертирование */
-            this.subscribeOnceTo(this.getList(), 'onDrawItems', $ws.helpers.forAliveOnly(function() {
+            this.subscribeOnceTo(this.getList(), 'onDrawItems', function() {
                if(this._checkPickerState(false)) {
                   this.showPicker();
                }
-            }, this));
+            });
          }
       }
    });
