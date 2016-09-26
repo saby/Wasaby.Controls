@@ -334,7 +334,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
                   if (count > 0) {
                      if (!this._isEmptyIndex(this._options.selectedIndex)) {
                         if (this._options.selectedIndex > count - 1) {
-                           this._options.selectedIndex = 0;
+                           this._options.selectedIndex = count - 1;
                         }
                         if (oldItems.length == 1 && action == IBindCollection.ACTION_REMOVE && oldItems[0].getContents().getId() == this._options.selectedKey) {
                            this._isMove = true;
