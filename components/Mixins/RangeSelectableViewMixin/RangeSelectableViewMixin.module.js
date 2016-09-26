@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
          },
 
          _SELECTABLE_RANGE_CSS_CLASSES: {
-            rangeselect: 'controls-RangeSelectable__rangeselect',
+            // rangeselect: 'controls-RangeSelectable__rangeselect',
             item: 'controls-RangeSelectable__item',
             selected: 'controls-RangeSelectable__item-selected',
             selectedStart: 'controls-RangeSelectable__item-selectedStart',
@@ -39,14 +39,6 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
             throw new Error('RangeSelectableViewMixin mixin is required');
          }
          this._publish('onBeforeSelectionStarted', 'onSelectionStarted', 'onBeforeSelectionEnded', 'onSelectionEnded');
-      },
-
-      after: {
-         init: function () {
-            if (this._options.rangeselect) {
-               this.getContainer().addClass(this._SELECTABLE_RANGE_CSS_CLASSES.rangeselect);
-            }
-         }
       },
 
       /**
