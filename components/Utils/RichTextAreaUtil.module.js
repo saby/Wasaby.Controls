@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
       markRichContentOnCopy: function(target){
          target = target.get(0);
          //На ipad`e нет аозможности задать clipboardData, форматное копирование с меткой не поддерживаем
-         if (!$ws._const.browser.isMobileIOS) {
+         if (!$ws._const.browser.isMobileIOS && !$ws._const.browser.firefox) {
             if (target.addEventListener) {
                target.addEventListener('copy', this._markingRichContent, true);
                target.addEventListener('cut', this._markingRichContent, true);
