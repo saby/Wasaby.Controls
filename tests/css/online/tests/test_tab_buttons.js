@@ -219,4 +219,71 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
                 actions.mouseMove(this.add2);
             })
 	});
+	
+	gemini.suite('simple_view', function (test) {
+
+        test.setUrl('/regression_tab_buttons_online_8.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('#buttons', 40000);
+                this.tab3 = find('[data-id="3"]');
+                this.tab4 = find('[data-id="4"]');
+                this.add1 = find('.controls-TabButton__additionalText1');
+                this.add2 = find('.controls-TabButton__additionalText2');
+            })
+
+			.capture('plain')
+			
+			.capture('hovered_tab', function (actions) {
+                actions.mouseMove(this.tab3);
+            })
+	});
+	
+	gemini.suite('simple_view_orange', function (test) {
+
+        test.setUrl('/regression_tab_buttons_online_9.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('#buttons', 40000);
+                this.tab3 = find('[data-id="3"]');
+                this.tab4 = find('[data-id="4"]');
+                this.add1 = find('.controls-TabButton__additionalText1');
+                this.add2 = find('.controls-TabButton__additionalText2');
+            })
+
+			.capture('plain')
+	});
+	
+	gemini.suite('simple_view_hidden', function (test) {
+
+        test.setUrl('/regression_tab_buttons_online_10.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('#buttons', 40000);
+                this.tab3 = find('[data-id="3"]');
+                this.tab1 = find('[data-id="1"] .controls-TabButton__caption');
+            })
+
+			.capture('plain', function (actions) {
+				actions.mouseMove(this.tab3);
+				actions.mouseMove(this.tab1);
+			})
+			
+			.capture('hovered_tab', function (actions) {
+                actions.mouseMove(this.tab3);
+            })
+	});
+	
+	gemini.suite('with_counters', function (test) {
+
+        test.setUrl('/regression_tab_buttons_online_11.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('#buttons', 40000);
+                this.tab3 = find('[data-id="3"]');
+                this.tab1 = find('[data-id="1"] .controls-TabButton__caption');
+            })
+
+			.capture('plain')
+	});
 });
