@@ -517,14 +517,20 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       _create: function(config){
          var createConfig = {
                indicatorText: rk('Загрузка'),
-               needSetRecord: true,
-               needUpdateKey: true,
-               eventName: 'onCreateModel',
-               newRecord: true,
-               activateChildControlAfterLoad: true
-            };
+               eventName: 'onCreateModel'
+            },
+            self = this,
+            createDeferred = this._dataSource.create(this._options.initValues);
 
-         return this._prepareSyncOperation(this._dataSource.create(this._options.initValues), config, createConfig);
+         createDeferred.addCallback(function(record){
+            self.setRecord(record, true);
+            self._newRecord = true;
+            return record;
+         }).addBoth(function(data){
+            self._activateChildControlAfterLoad();
+            return data;
+         });
+         return this._prepareSyncOperation(createDeferred, config, createConfig);
       },
       /**
        * Удалить запись из источника данных диалога редактирования.
@@ -542,15 +548,16 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        */
       _destroyModel: function(){
          var record = this._options.record,
+            self = this,
             destroyConfig = {
                hideIndicator: true,
                eventName: 'onDestroyModel',
-               hideErrorDialog: true,
-               newRecord: false
+               hideErrorDialog: true
             },
             def = this._dataSource.destroy(record.getId());
 
          return this._prepareSyncOperation(def, {}, destroyConfig).addBoth(function(){
+            self._newRecord = false;
             record.setState(Record.RecordState.DELETED);
          });
       },
@@ -583,10 +590,10 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       _read: function (config) {
          var readConfig = {
                indicatorText: rk('Загрузка'),
-               needSetRecord: true,
-               eventName: 'onReadModel',
-               activateChildControlAfterLoad: true
+               eventName: 'onReadModel'
             },
+            self = this,
+            readDeferred,
             key;
 
          //TODO Выпилить в 200, все должны уже блыи перейти на объект
@@ -599,7 +606,14 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             key = config.key;
          }
          key = key || this._options.key;
-         return this._prepareSyncOperation(this._dataSource.read(key), config, readConfig);
+         readDeferred = this._dataSource.read(key).addCallback(function(record){
+            self.setRecord(record);
+            return record;
+         }).addBoth(function(data){
+            self._activateChildControlAfterLoad();
+            return data;
+         });
+         return this._prepareSyncOperation(readDeferred, config, readConfig);
       },
 
       /**
@@ -694,18 +708,22 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             updateConfig = {
                indicatorText: this._options.indicatorSavingMessage,
                eventName: 'onUpdateModel',
-               additionalData: additionalData,
-               newRecord: false
+               additionalData: additionalData
             },
             self = this,
-            def;
+            updateDeferred;
+
          if (this.validate()) {
             if (this._options.record.isChanged() || self._newRecord) {
-               def = this._prepareSyncOperation(this._dataSource.update(this._getRecordForUpdate()), config, updateConfig);
-               dResult.dependOn(def.addErrback(function (error) {
+               updateDeferred = this._dataSource.update(this._getRecordForUpdate()).addCallback(function(key){
+                  updateConfig.additionalData.key = key;
+                  self._newRecord = false;
+                  return key;
+               }).addErrback(function (error) {
                   self._saving = false;
                   return error;
-               }));
+               });
+               dResult.dependOn(this._prepareSyncOperation(updateDeferred, config, updateConfig));
             } else {
                dResult.callback();
             }
@@ -740,15 +758,9 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          }
          this._toggleOverlay(true);
          this._addSyncOperationPending();
-         operation.addCallback(function(record){
-            if (config.needSetRecord){
-               self.setRecord(record, config.needUpdateKey);
-            }
+         operation.addCallback(function(data){
             self._notify(config.eventName, self._options.record, config.additionalData);
-            if (config.hasOwnProperty('newRecord')){
-               self._newRecord = config.newRecord;
-            }
-            return record;
+            return data;
          }).addErrback(function(err){
                if (!config.hideErrorDialog && (err instanceof Error)){
                   self._processError(err);
@@ -758,9 +770,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                self._removeSyncOperationPending();
                self._hideLoadingIndicator();
                self._toggleOverlay(false);
-               if (config.activateChildControlAfterLoad){
-                  self._activateChildControlAfterLoad();
-               }
                return result;
          });
          return operation;
