@@ -675,6 +675,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
           * @private
           */
          setFontStyle: function(style) {
+            //При смене стиля без печати текста необходимо вначале удалять и только потом ставить стиль
             for (var stl in constants.styles) {
                if (style !== stl) {
                   this._removeFormat(stl);
@@ -683,6 +684,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
             if (style !== 'mainText') {
                this._applyFormat(style, true);
             }
+            //выполнение пустой команды необходимо для фокусировки
             this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._setTrimmedText(this._getTinyEditorValue());
