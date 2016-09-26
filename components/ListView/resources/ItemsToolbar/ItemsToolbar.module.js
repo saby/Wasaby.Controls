@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           showEditActions: function() {
              this._getEditActions().removeClass('ws-hidden');
-             this.getContainer().addClass('controls-ItemsToolbar__edit');
+             this._toggleEditClass(true);
           },
           /**
            * Скрывает кнопки редактирования
@@ -70,8 +70,12 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           hideEditActions: function() {
              if (this._editActions) {
                 this._editActions.addClass('ws-hidden');
-                this.getContainer().removeClass('controls-ItemsToolbar__edit');
+                this._toggleEditClass(false);
              }
+          },
+
+          _toggleEditClass: function(isEdit) {
+             this.getContainer().toggleClass('controls-ItemsToolbar__edit', isEdit);
           },
           /**
            * Проверяет, отображаются ли сейчас кнопки редактирования

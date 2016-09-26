@@ -1762,10 +1762,10 @@ define('js!SBIS3.CONTROLS.ListView',
          _showItemsToolbar: function(target) {
             var toolbar = this._getItemsToolbar();
             toolbar.show(target, this._touchSupport);
-            //При показе тулбара, возможно он будет показан у редактируемой строки. Цвет редактируемой строки отличается от цвета строки по ховеру.
-            //Т.к. ListView является контроллером для тулбара и редактирования, то добавим код, который при наведении на редактируемую строку, добавит
-            //на тулбар класс controls-ItemsToolbar__edit, по которому применятся все необходимые стили.
-            toolbar.getContainer().toggleClass('controls-ItemsToolbar__edit', target.container.is('.controls-editInPlace, .controls-editInPlace__editing'));
+            //При показе тулбара, возможно он будет показан у редактируемой строки.
+            //Цвет редактируемой строки отличается от цвета строки по ховеру.
+            //В таком случае переключим классы тулбара в режим редактирования.
+            toolbar._toggleEditClass(target.container.is('.controls-editInPlace, .controls-editInPlace__editing'));
          },
          _unlockItemsToolbar: function() {
             if (this._itemsToolbar) {
