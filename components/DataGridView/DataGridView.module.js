@@ -542,29 +542,20 @@ define('js!SBIS3.CONTROLS.DataGridView',
          headMarkup = MarkupTransformer(headTpl(headData));
          var body = $('.controls-DataGridView__tbody', this._container);
 
-         this._removeHead();
-         this._thead = $(headMarkup).insertBefore(body);
+         var newTHead = $(headMarkup);
+         if (this._thead && this._thead.length){
+            this._thead.replaceWith(newTHead);
+            this._thead = newTHead;
+         }
+         else {
+            this._thead = newTHead.insertBefore(body);
+         }
+         this.reviveComponents(this._thead);
 
          this._drawResults();
          this._redrawColgroup();
-         this.reviveComponents();
          this._bindHead();
          this._notify('onDrawHead');
-      },
-
-      _removeHead: function(){
-         var stickyThead;
-         if (this._thead) {
-            this._clearItems(this._thead);
-            this._thead.remove();
-         }
-         //ws-sticky-header__thead-copy удаляется в stikyManager после отрисовки шапки на событие onDrawHead
-         //получается что после выполнения метода redrawHead в теле таблицы 2 тега thead ( наш и sticky-header'a)
-         //в этом случае ipad криво рендерит верстку
-         if (this._options.stickyHeader){
-            stickyThead = $('.ws-sticky-header__thead-copy', this.getContainer());
-            stickyThead.remove();
-         }
       },
 
       _bindHead: function() {
@@ -619,10 +610,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
          data = prepareColGroupData(this._options);
          markup = colgroupTpl(data);
          body = $('.controls-DataGridView__tbody', this._container);
-         if(this._colgroup) {
-            this._colgroup.remove();
+         var newColGroup = $(markup);
+         if(this._colgroup && this._colgroup.length) {
+            this._colgroup.replaceWith(newColGroup);
+            this._colgroup = newColGroup;
          }
-         this._colgroup = $(markup).insertBefore(this._thead || body);
+         else {
+            this._colgroup = newColGroup.insertBefore(this._thead || body);
+         }
       },
 
       _drawItemsCallback: function () {
