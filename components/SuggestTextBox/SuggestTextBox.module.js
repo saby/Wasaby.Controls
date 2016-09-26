@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
                if(this._checkPickerState(false)) {
                   this.showPicker();
                }
-            });
+            }.bind(this));
          }
       }
    });
