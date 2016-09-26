@@ -15,6 +15,13 @@
 @primary-color:                           #ff7033;
 @secondary-color:                         transparent;
 
+@icon-color-attention:                    #FEC63F;
+@icon-color-done:                         #72be44;
+@icon-color-error:                        #ef463a;
+@icon-color-primary:                      @default-color;
+@icon-color-hover:                        #ff7033;
+@icon-color-disabled:                     #CCC;
+
 @bg:                                      transparent;
 @text-color:                              @black-color;
 
@@ -46,7 +53,7 @@
 @link-line-height:                        24px;
 @link-padding:                            0;
 
-@link-hover-text-color:                   @primary-color;
+@link-hover-text-color:                   @blue-dark-color;
 @link-hover-text-decoration:              underline;
 
 @link-active-text-color:                  @link-hover-text-color;
@@ -73,6 +80,8 @@
 @button-padding:                          0 12px;
 @button-margin:                           auto;
 @button-border-radius:                    16px;
+@button-icon-color-hover:                 @blue-dark-color;
+@button-icon-color:                       @icon-color-primary;
 @button-icon-top-offset:                  4px;                      // top offset of 16x16 icon
 @button-icon-left-offset:                 12px;
 @button-icon-gap:                         4px;                      // gap between icon and text
@@ -101,11 +110,11 @@
 @button-active-text-color:                @button-text-color;
 @button-active-border:                    @button-border;
 @button-active-shadow:                    @button-shadow;
-@button-active-bg:                        #cbd5e5;
+@button-active-bg:                        #E1ECF6;
 
 // Normal primary button
 @button-primary-text-color:               @button-text-color;
-@button-primary-border:                   1px solid @link-hover-text-color;
+@button-primary-border:                   1px solid @primary-color;
 @button-primary-shadow:                   @button-shadow;
 @button-primary-bg:                       @button-bg;
 
@@ -199,7 +208,12 @@
 @button-group-horizontal-item-margin:     0;
 @button-group-vertical-item-margin:       0 0 0 0;
 
+// ------------ //
+//  Icon Button //
+// ------------ //
 
+@button-icon-done-color: #72BE44;
+@button-icon-error-color: #EF463A;
 
 // ------------- //
 // Toggle button //
@@ -221,7 +235,7 @@
 
 // Normal primary button
 @button-primary-checked-text-color:       @button-primary-active-text-color;
-@button-primary-checked-border:           2px solid @link-hover-text-color;
+@button-primary-checked-border:           2px solid @primary-color;
 @button-primary-checked-shadow:           @button-primary-active-shadow;
 @button-primary-checked-bg:               @button-primary-hover-bg;
 
@@ -274,7 +288,7 @@
 @tab-button-height:                             28px;
 @tab-button-position:                           relative;
 @tab-button-overflow:                           hidden;
-@tab-button-color:                              #313E78;
+@tab-button-color:                              @blue-dark-color;
 @tab-button-font:                               14px 'TensorFont Regular', 'TensorFont';
 @tab-button-margin-top:                         0;
 @tab-button-border:                             1px solid transparent;
@@ -296,7 +310,7 @@
 @tab-button-bottomLine-display:                 block;
 
 @tab-button-checked-height:                     28px;
-@tab-button-checked-border-top:                 1px solid #313E78;
+@tab-button-checked-border-top:                 1px solid @blue-dark-color;
 @tab-button-checked-border-bottom:              1px solid #FFF;
 @tab-button-checked-border-left:                transparent;
 @tab-button-checked-border-right:               transparent;
@@ -626,7 +640,7 @@
 
 @menu-item-hover-text-color:              @menu-item-text-color;
 @menu-item-hover-bg:                      @default-itemHover-color;
-@menu-item-hover-icon-color:              @primary-color!important;
+@menu-item-hover-icon-color:              @default-color !important;
 
 @menu-item-icon-top-offset:               8px;
 @menu-item-icon-top-offset-big:           0px;
@@ -675,6 +689,7 @@
 @menu-button-header-right-width:                        28px;
 @menu-button-header-right-height:                       30px;
 @menu-button-header-right-margin:                       0 0 0 -6px;
+@menu-button-header-right-margin-revert-horizontal:     @menu-button-header-right-margin;
 @menu-button-header-right-bg:                           transparent url(@menu-button-header-spritesheet) 0 -4px;
 @menu-button-header-left-bg-revert-horizontal:          transparent url(@menu-button-header-spritesheet) 0 182px;
 @menu-button-header-left-bg-revert-vertical:            transparent url(@menu-button-header-spritesheet) 0 89px;
@@ -708,8 +723,9 @@
 // Menu
 @menu-link-menu-margin:                   -6px 0 0 -10px;
 @menu-link-menu-padding:                  0 0 4px 0;
+@menu-link-menu-item-container-padding:   4px 0 0 0;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
-@menu-link-header-bg-color:               @menu-button-menu-bg;
+@menu-link-header-bg-color:               #F4F4F4;
 @menu-link-menu-border-width:             @menu-border-width;
 @menu-link-icon-24-top:                   -4px;
 
