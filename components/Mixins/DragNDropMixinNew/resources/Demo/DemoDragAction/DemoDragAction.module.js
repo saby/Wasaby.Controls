@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.Demo.DemoDragActions', [
-      'js!SBIS3.CONTROLS.Action.Action', 'js!SBIS3.CONTROLS.DragObject', 'js!WS.Data/Collection/List'
+      'js!SBIS3.CONTROLS.Action.Action', 'js!SBIS3.CONTROLS.DragObject', 'js!SBIS3.CONTROLS.Utils.InformationPopupManager'
 ],
-function (Action, DragObject, List) {
+function (Action, DragObject, InformationPopupManager) {
    return Action.extend({
       $protected: {
          _options: {
@@ -27,6 +27,14 @@ function (Action, DragObject, List) {
          $ws.helpers.forEach(newItems, function(item) {
             this._options.recepient.getDataSource().update(item);
          }, this);
+         if (newItems.length > 0) {
+            var donor = this._options.donor.getName(),
+               recepient = this._options.recepient.getName();
+            InformationPopupManager.showNotification({
+               status: 'success',
+               caption: 'Перемещен элемент из ' + donor + ' в ' + recepient
+            });
+         }
       }
    });
 });
