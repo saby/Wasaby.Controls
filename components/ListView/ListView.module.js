@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.DragEntity.Row',
       'js!WS.Data/Collection/RecordSet',
       'i18n!SBIS3.CONTROLS.ListView',
-      'js!SBIS3.CONTROLS.DragEntity.ListRows'
+      'js!SBIS3.CONTROLS.DragEntity.List'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
@@ -253,6 +253,10 @@ define('js!SBIS3.CONTROLS.ListView',
           * @property {jQuery} domElement DOM элемент, отображающий запись.
           * @property {WS.Data/Entity/Model} model Модель, соответствующая записи.
           * @property {DragPosition|undefined} position Позиция элемента после перемещения (определяется только у целевого элемента - того, который находится под курсором мыши).
+          */
+          /**
+          * @typedef {Object} DragEntityListOptions
+          * @property {Array} items Массив перемещаемых элементов {@link SBIS3.CONTROLS.DragEntity.Row}.
           */
          $protected: {
             _floatCheckBox: null,
@@ -688,10 +692,10 @@ define('js!SBIS3.CONTROLS.ListView',
                dragEntity: 'dragentity.row',
                /**
                 * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS.DragEntity.Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS.DragEntity.Row}
-                * @see DragEntityOptions
-                * @see SBIS3.CONTROLS.DragEntity.Row
+                * @see DragEntityListOptions
+                * @see SBIS3.CONTROLS.DragEntity.List
                 */
-               dragEntityList: 'dragentity.listrows'
+               dragEntityList: 'dragentity.list'
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
