@@ -34,8 +34,7 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
       },
 
       prepareRecord: function(rec) {
-        var raw = rec.getRaw();
-        return raw ? raw : rec;
+        return rec.getRow ? rec.getRow() : rec;
       }
    };
 
@@ -135,7 +134,7 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
          /* Загрузим сразу все изменения, чтобы применить пачкой */
          colHelpers.forEach(fieldsToUpdate, function(elem) {
             if(elem.value !== null) {
-               readDeferred.push(_private.callSourceMethod(this.getProperty('dataSource'), elem).addCallback(function (rec) {
+               readDeferred.push(_private.callSourceMethod(self.getProperty('dataSource'), elem).addCallback(function (rec) {
                   var loadedRecord = _private.prepareRecord(rec);
 
                   /* Запомним изменения, чтобы применить их пачкой */
