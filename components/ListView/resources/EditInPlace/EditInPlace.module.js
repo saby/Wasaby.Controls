@@ -182,8 +182,6 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             hide: function() {
                EditInPlace.superclass.hide.apply(this, arguments);
                this.getContainer().removeAttr('data-id');
-               this._deactivateActiveChildControl();
-               this.setActive(false);
             },
             edit: function(model, itemProj, withoutActivateFirstControl) {
                if (!this.isVisible()) {

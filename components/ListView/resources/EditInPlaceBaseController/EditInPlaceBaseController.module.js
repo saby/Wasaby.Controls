@@ -136,7 +136,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   }
                };
                if (this._options.endEditByFocusOut) {
-                  config.handlers.onChildFocusOut = this._onChildFocusOut.bind(this);
+                  config.handlers.onFocusOut = this._onChildFocusOut.bind(this);
                }
                return config;
             },
@@ -462,14 +462,16 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._editNextTarget(this._getCurrentTarget(), !event.shiftKey);
                }
             },
-            _onChildFocusOut: function (event, control) {
+            _onChildFocusOut: function (event, destroyed, focusedControl) {
                var
                   eip,
                   withSaving,
                   // Если фокус ушел на кнопку закрытия диалога, то редактирование по месту не должно реагировать на это, т.к.
                   // его и так завершат через finishChildPendingOperation (и туда попадет правильный аргумент - с сохранением
                   // или без завершать редактирование по месту)
-                  endEdit = !$ws.helpers.instanceOfModule(control, 'SBIS3.CORE.CloseButton') && this._allowEndEdit(control) && (this._isAnotherTarget(control, this) || this._isCurrentTarget(control));
+                  endEdit = !$ws.helpers.instanceOfModule(focusedControl, 'SBIS3.CORE.CloseButton') &&
+                     this._allowEndEdit(focusedControl) &&
+                     (this._isAnotherTarget(focusedControl, this) || !focusedControl._container.closest('.controls-ListView').length);
                if (endEdit) {
                   eip = this._getEditingEip();
                   withSaving = eip.getEditingRecord().isChanged();
