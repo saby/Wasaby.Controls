@@ -134,7 +134,7 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
          /* Загрузим сразу все изменения, чтобы применить пачкой */
          colHelpers.forEach(fieldsToUpdate, function(elem) {
             if(elem.value !== null) {
-               readDeferred.push(_private.callSourceMethod(self.getProperty('dataSource'), elem).addCallback(function (rec) {
+               readDeferred.push(_private.callSourceMethod(self._options.dataSource, elem).addCallback(function (rec) {
                   var loadedRecord = _private.prepareRecord(rec);
 
                   /* Запомним изменения, чтобы применить их пачкой */
@@ -250,7 +250,7 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
             /* Ищем среди изменившехся полей,
                поля, которые мы отслеживаем,
                если нашли -> добавляем объект с изменившемся полем и его значением */
-            var obsField =  colHelpers.find(this.getProperty('observableFields'), function(elem) {
+            var obsField =  colHelpers.find(this._options.observableFields, function(elem) {
                return elem.field === field;
             }, this, false);
 
