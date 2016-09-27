@@ -762,6 +762,7 @@
 @text-box-height:                         40px;
 @text-box-wrapper-padding:                0 4px;
 @text-box-border-radius:                  0;
+@text-box-color:                          #666666;
 
 @text-box-field-font:                     inherit;
 @text-box-field-font-size:                inherit;
@@ -776,23 +777,23 @@
 @text-box-field-after-margin:             0 21px 0 0;
 
 @text-box-field-text-color:               inherit;
-@text-box-field-focus-text-color:         @text-box-field-text-color;
+@text-box-field-focus-text-color:         @white-color;
 @text-box-field-error-text-color:         @text-box-field-text-color;
 @text-box-field-hover-text-color:         @text-box-field-text-color;
 @text-box-field-disabled-text-color:      @text-box-field-text-color;
 
 @text-box-border-width:                   1px;
 @text-box-border-style:                   solid;
-@text-box-border-color:                   transparent transparent @gray-dark-color transparent;
-@text-box-bottom-border-color:            @gray-dark-color;
+@text-box-border-color:                   transparent transparent #2B3546 transparent;
+@text-box-bottom-border-color:            #2B3546;
 @text-box-bg:                             transparent;
 @text-box-editor-bg:                      #f3f3f3;
 @text-box-editor-text-color:              #999999;
 
 @text-box-focus-border-width:             @text-box-border-width;
 @text-box-focus-border-style:             @text-box-border-style;
-@text-box-focus-border-color:             @black-color;
-@text-box-focus-bg:                       @secondary-color;
+@text-box-focus-border-color:             #2B3546;
+@text-box-focus-bg:                       #293543;
 
 @text-box-error-border-width:             @text-box-border-width;
 @text-box-error-border-style:             @text-box-border-style;
@@ -801,7 +802,7 @@
 
 @text-box-hover-border-width:             @text-box-border-width;
 @text-box-hover-border-style:             @text-box-border-style;
-@text-box-hover-border-color:             @gray-dark-color;
+@text-box-hover-border-color:             #2B3546;
 @text-box-hover-bg:                       @text-box-bg;
 
 @text-box-disabled-border-width:          @text-box-border-width;
@@ -966,22 +967,22 @@
 
 @combo-box-arrow-border-width:                  8px 8px 0 8px;
 @combo-box-arrow-border-style:                  solid;
-@combo-box-arrow-border-color:                  @primary-color transparent transparent transparent;
+@combo-box-arrow-border-color:                  #999999 transparent transparent transparent;
 @combo-box-arrow-bg:                            transparent;
 
 @combo-box-arrow-hover-border-width:            @combo-box-arrow-border-width;
 @combo-box-arrow-hover-border-style:            @combo-box-arrow-border-style;
-@combo-box-arrow-hover-border-color:            darken(@primary-color, 10%) transparent transparent transparent;
+@combo-box-arrow-hover-border-color:            darken(#FF7033, 10%) transparent transparent transparent;
 @combo-box-arrow-hover-bg:                      @combo-box-arrow-bg;
 
 @combo-box-arrow-active-border-width:           0 8px 8px 8px;
 @combo-box-arrow-active-border-style:           @combo-box-arrow-border-style;
-@combo-box-arrow-active-border-color:           transparent transparent @primary-color transparent;
+@combo-box-arrow-active-border-color:           transparent transparent #FF7033 transparent;
 @combo-box-arrow-active-bg:                     @combo-box-arrow-bg;
 
 @combo-box-arrow-active-hover-border-width:     @combo-box-arrow-active-border-width;
 @combo-box-arrow-active-hover-border-style:     @combo-box-arrow-active-border-style;
-@combo-box-arrow-active-hover-border-color:     transparent transparent darken(@primary-color, 10%) transparent;
+@combo-box-arrow-active-hover-border-color:     @combo-box-arrow-active-border-color;
 @combo-box-arrow-active-hover-bg:               @combo-box-arrow-active-bg;
 
 @combo-box-arrow-disabled-border-width:         0;
@@ -989,23 +990,26 @@
 @combo-box-arrow-disabled-border-color:         transparent;
 @combo-box-arrow-disabled-bg:                   @combo-box-arrow-bg;
 
-@combo-box-picker-border:                       1px solid @gray-dark-color;
+@combo-box-picker-border:                       1px solid #E1ECF6;
 @combo-box-picker-border-radius:                0;
 @combo-box-picker-margin:                       -1px 0 0;
 @combo-box-picker-item-padding:                 11px 5px;
 @combo-box-picker-item-font:                    inherit;
 
 @combo-box-picker-item-text-color:              @combo-box-field-text-color;
-@combo-box-picker-item-bg:                      @text-box-focus-bg;
+@combo-box-picker-item-bg:                      #E1ECF6;
 
 @combo-box-picker-item-hover-text-color:        @black-color;
-@combo-box-picker-item-hover-bg:                @default-color;
+@combo-box-picker-item-hover-bg:                #F0F5FB;
 
 @combo-box-picker-item-selected-text-color:     @combo-box-picker-item-text-color;
 @combo-box-picker-item-selected-bg:             @combo-box-picker-item-bg;
 
 @compo-box-fieldWrapper-margin:                 @text-box-field-after-margin;
 @combo-box-after-width:                         @text-box-after-width;
+
+@compo-box-picker-show-color:                   @black-color;
+@combo-box-picker-show-background-color:        @combo-box-picker-item-hover-bg;
 
 // TODO: check whether it's required
 @combo-box-input-wrapper-right-offset:          18px;
@@ -1939,7 +1943,7 @@
 
 @controls-filterButton-area-text-size:            24px;
 @controls-filterButton-area-text-weight:          bold;
-@controls-filterButton-area-text-color:           @primary-color;
+@controls-filterButton-area-text-color:           @white-color;
 @controls-filterButton-area-text-margin:          0 12px 0 0;
 
 @controls-filterButton-title-fontSize:            15px;
@@ -2024,10 +2028,10 @@
 @drag-and-drop-border:                             1px solid @drag-and-drop-border-color;
 
 //FieldLink
-@controls-FieldLink-border-color:                  @text-area-border-color @text-area-border-color @gray-ccc-color @text-area-border-color;
-@controls-FieldLink-border-color-focus-hover:      @gray-ccc-color @gray-ccc-color @gray-ccc-color @gray-ccc-color;
+@controls-FieldLink-border-color:                  transparent transparent #2b3546 transparent;
+@controls-FieldLink-border-color-focus-hover:      #2b3546;
 @controls-FieldLink-border:                        1px solid;
-@controls-FieldLink-picker-show-color:             @white-color;
+@controls-FieldLink-picker-show-color:             #293543;
 
 @controls-FieldLink-fieldWrapper-margin:           0 !important;
 @controls-FieldLink-showAllLinks-top:              2px;
@@ -2039,7 +2043,7 @@
 @controls-FieldLink-picker-max-height:             500px;
 @controls-FieldLink-picker-min-height:             16px;
 @controls-FieldLink-picker-border:                 1px solid #eaeaea;
-@controls-FieldLink-picker-background:             @white-color;
+@controls-FieldLink-picker-background:             #293543;
 
 @controls-FieldLink-linkItem-cursor:               default;
 @controls-FieldLink-linkItem-margin:               2px 0;
@@ -2054,7 +2058,7 @@
 @controls-FieldLink-afterField-padding:            0 4px;
 @controls-FieldLink-afterField-height:             22px;
 
-@controls-FieldLink-afterField-background:         @white-color;
+@controls-FieldLink-afterField-background:         transparent;
 
 //SelectorButton
 @controls-SelectorButton-height:                   24px;
