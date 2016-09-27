@@ -262,6 +262,11 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
        *     var myItem = this.getChildControlByName('MyControl').getSelectedItem();
        * </pre>
        */
+       /*
+        TODO в отличие от multiselectable при хождении по папкам/фильтрации запоминания элемента не будет
+        но это вроде и правильно, а в мультиселекте неправильно хранить выдление при хождении по папкам, это логика
+        TreeView
+       */
       getSelectedItem : function() {
          var
              selKey = this.getSelectedKey(),
