@@ -869,7 +869,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._itemData = null;
          var i;
          if (newItems && newItems.length) {
-            if (this._isSlowDrawing()) {
+            if (this._isSlowDrawing(this._options.easyGroup)) {
                for (i = 0; i < newItems.length; i++) {
                   this._addItem(
                      newItems[i],
