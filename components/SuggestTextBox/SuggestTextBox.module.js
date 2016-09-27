@@ -69,6 +69,20 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
                this.showPicker();
             }
          }
+      },
+
+      _resetSearch: function() {
+         SuggestTextBox.superclass._resetSearch.apply(this, arguments);
+
+         if(this._options.searchParam) {
+            /* Т.к. при сбросе поиска в саггесте запрос отправлять не надо (саггест скрывается),
+               то просто удалим параметр поиска из фильтра */
+            var list = this.getList(),
+                filter = list.getFilter();
+
+            delete filter[this._options.searchParam];
+            list.setFilter(filter, true);
+         }
       }
    });
 
