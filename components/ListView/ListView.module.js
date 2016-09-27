@@ -815,10 +815,9 @@ define('js!SBIS3.CONTROLS.ListView',
             var scrollOnEdge = (this._options.infiniteScroll === 'up' && type === 'top') || // скролл вверх и доскролили до верхнего края
                                (this._options.infiniteScroll === 'down' && type === 'bottom') || // скролл вниз и доскролили до нижнего края
                                (this._options.infiniteScroll === 'both'); //скролл в обе стороны и доскролили до любого края
+
             if (scrollOnEdge && this.getItems()) {
-               var isTop = type == 'top';
-               this._needScrollCompensation = isTop;
-               this._scrollLoadNextPage(isTop ? 'up' : 'down');
+               this._scrollLoadNextPage(type == 'top' ? 'up' : 'down');
             }
          },
          _createScrollPager: function(){
