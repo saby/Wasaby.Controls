@@ -280,7 +280,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 template: prepTpl(dotTplForPicker)({
                    template: prepTpl(tpls.filterArea ? dotTplForComp({component: self._options.template}) : self._options.template),
                    additionalFilterParamsTemplate: prepTpl(tpls.additionalFilterArea ? dotTplForComp({component: self._options.additionalFilterParamsTemplate}) : self._options.additionalFilterParamsTemplate),
-                   historyController: this._historyController
+                   historyController: this._historyController,
+                   internalContextFilterName: this._options.internalContextFilterName
                 }),
                 handlers: {
                    onClose: function() {
