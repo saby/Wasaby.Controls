@@ -1,9 +1,9 @@
 <div class="controls-FieldLink__linkItem {{?it.className}}{{=it.className}}{{?}}">
     <span class="controls-FieldLink__linkItem-caption">
-        {{? it.itemTpl}}
-            {{=it.itemTpl(it.item, it.displayField)}}
+        {{? it.itemTemplate}}
+            {{=it.itemTemplate(it.item)}}
         {{??}}
-            {{= $ws.helpers.escapeHtml(it.item.get(it.displayField))}}
+            {{=it.Sanitize(it.itemContent(it))}}
         {{?}}
     </span>
     <span class="controls-FieldLink__linkItem-cross icon-16 icon-size icon-Close icon-disabled action-hover"/>
