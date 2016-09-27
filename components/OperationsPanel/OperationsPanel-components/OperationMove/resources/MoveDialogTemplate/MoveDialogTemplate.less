@@ -3,23 +3,13 @@
    min-width: @controls-movedialog-min-width;
 
    .controls-MoveDialogTemplate {
-      margin: 0 16px 16px 16px;
-      max-height: 384px;
       overflow-x: auto;
+
       .controls-MoveDialogTemplate-TreeDataGridView {
-         padding: 0 0 5px 0;
+         padding: @controls-movedialog-padding;
          overflow-x: hidden;
-         min-height: 50px;
+         min-height: @controls-movedialog-min-height;
          width: 100%;
-         /*TODO скрываем подгрузку (ещё null)*/
-         .controls-TreeDataGridView__folderFooter {
-            display: none;
-         }
-         .controls-DataGridView__table {
-            .controls-MoveDialog__root {
-               padding-left: 6px;
-            }
-         }
       }
    }
 }

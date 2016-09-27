@@ -4,15 +4,13 @@
          <option name="name" value="MoveDialogTemplate-moveButton"></option>
          <option name="caption" value="Перенести"></option>
          <option name="primary" type="boolean" value="true"></option>
-         <options name="handlers">
-            <option name="onActivated" type="function">js!SBIS3.CONTROLS.MoveDialogTemplate:prototype._onMoveButtonActivated</option>
-         </options>
+         <option name="command" value="applyMove"></option>
       </component>
    </div>
    <component data-component="SBIS3.CONTROLS.TreeDataGridView" class="controls-MoveDialogTemplate-TreeDataGridView">
       <option name="name" value="MoveDialogTemplate-TreeDataGridView"></option>
       <options name="itemsActions" type="array"></options>
-      <option name="allowEnterToFolder">false</option>
+      <option name="allowEnterToFolder" type="boolean">false</option>
       <option name="showHead" type="boolean">false</option>
       <option name="expand" type="boolean">false</option>
       <option name="displayType" type="string">folders</option>
@@ -20,7 +18,6 @@
       <option name="itemsDragNDrop" type="boolean">false</option>
       <option name="allowEmptySelection" type="boolean">true</option>
       <option name="partialyReload" type="boolean">{{=it.linkedView._options.partialyReload}}</option>
-      <option name="displayField" type="boolean">{{=it.linkedView._options.displayField}}</option>
       <options name="columns" type="array">
          <options>
             <option name="title"></option>
@@ -29,10 +26,13 @@
             <option name="cellTemplate">html!SBIS3.CONTROLS.MoveDialogTemplate/resources/FolderTitleTpl</option>
          </options>
       </options>
-      <option name="keyField" type="boolean">{{=it.linkedView._options.keyField}}</option>
-      <option name="hierField" type="boolean">{{=it.linkedView.getHierField()}}</option>
-      <options name="handlers">
-         <option name="onDrawItems" type="function">js!SBIS3.CONTROLS.MoveDialogTemplate:prototype._createRoot</option>
+      <option name="displayField">{{=it.linkedView._options.displayField}}</option>
+      <option name="keyField">{{=it.linkedView._options.keyField}}</option>
+      <option name="hierField">{{=it.linkedView.getHierField()}}</option>
+      <options name="root">
+         <option name="{{=it.linkedView._options.keyField}}" type="null">null</option>
+         <option name="{{=it.linkedView._options.displayField}}" type="string">{{=rk('Корень')}}</option>
+         <option name="{{=it.linkedView.getHierField()}}@" type="boolean">true</option>
       </options>
    </component>
 </div>

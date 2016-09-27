@@ -353,6 +353,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this._notifyOnPropertyChanged('dictionaries');
           },
 
+
+          /**
+           * Для поля связи требуется своя реализация метода setSelectedKey, т.к.
+           * Selectable расчитывает на наличие проекции и items, которых в поле связи нет.
+           * + полю связи не требуется единичная отрисовка item'a, т.к. при синхронизации selectedKey и selectedKeys,
+           * всегда будет вызываться метод drawSelectedItems
+           * @param key
+           */
+          setSelectedKey: function(key) {
+             this._options.selectedKey = key;
+             this._notifySelectedItem(this._options.selectedKey);
+          },
+
           /**
            * Открывает справочник для поля связи.
            * @remark
@@ -779,17 +792,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 },
                 handlers: {
                    onShow: function() {
-                      if($ws._const.browser.isMobileIOS) {
-                         var revertedVertical = !this._picker.getContainer().hasClass('controls-popup-revert-vertical');
+                      var revertedVertical = this._picker.getContainer().hasClass('controls-popup-revert-vertical');
 
-                         if (revertedVertical) {
-                            if (!this._listReversed) {
-                               this._reverseList();
-                            }
-                         } else {
-                            if (this._listReversed) {
-                               this._reverseList();
-                            }
+                      if($ws._const.browser.isMobileIOS) {
+                         revertedVertical = !revertedVertical;
+                      }
+
+                      if (revertedVertical) {
+                         if (!this._listReversed) {
+                            this._reverseList();
+                         }
+                      } else {
+                         if (this._listReversed) {
+                            this._reverseList();
                          }
                       }
                    }.bind(this)

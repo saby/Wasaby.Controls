@@ -3,11 +3,12 @@ define('js!SBIS3.CONTROLS.FilterButton',
        'js!SBIS3.CORE.CompoundControl',
        'html!SBIS3.CONTROLS.FilterButton',
        'html!SBIS3.CONTROLS.FilterButton/FilterAreaTemplate',
+       'html!SBIS3.CONTROLS.FilterButton/FilterComponentTemplate',
        'js!SBIS3.CONTROLS.FilterMixin',
        'js!SBIS3.CONTROLS.PickerMixin',
-       'js!SBIS3.CONTROLS.ControlHierarchyManager',
        'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
        'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+       'Core/ParallelDeferred',
        'js!SBIS3.CONTROLS.Link',
        'js!SBIS3.CONTROLS.Button',
        'js!SBIS3.CONTROLS.FilterButton.FilterLine',
@@ -15,7 +16,17 @@ define('js!SBIS3.CONTROLS.FilterButton',
        'js!SBIS3.CONTROLS.AdditionalFilterParams',
        'i18n!SBIS3.CONTROLS.FilterButton'
     ],
-    function(CompoundControl, dotTplFn, dotTplForPicker, FilterMixin, PickerMixin, ControlHierarchyManager, FilterToStringUtil, TemplateUtil) {
+    function(
+        CompoundControl,
+        dotTplFn,
+        dotTplForPicker,
+        dotTplForComp,
+        FilterMixin,
+        PickerMixin,
+        FilterToStringUtil,
+        TemplateUtil,
+        ParallelDeferred
+    ) {
 
        'use strict';
        /**
@@ -23,6 +34,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
         * фильтрами осуществляется только через контекст.
         * Если текст рядом с кнопкой фильтов может иметь большую ширину,
         * то ширину кнопки фильтров надо ограничить, навесив max-width.
+        * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/">Панель фильтров</a>.
         * @class SBIS3.CONTROLS.FilterButton
         * @extends $ws.proto.CompoundControl
         * @author Крайнов Дмитрий Олегович
@@ -35,12 +47,12 @@ define('js!SBIS3.CONTROLS.FilterButton',
         * @category Filtering
         */
 
-   function isFieldResetValue(element, fieldName, filter) {
-      var hasResetValue = 'resetValue' in element,
-	      hasValue = fieldName in filter;
+       function isFieldResetValue(element, fieldName, filter) {
+          var hasResetValue = 'resetValue' in element,
+              hasValue = fieldName in filter;
 
-      return hasResetValue && hasValue ? FilterToStringUtil.isEqualValues(filter[fieldName], element.resetValue) : !hasValue;
-   }
+          return hasResetValue && hasValue ? FilterToStringUtil.isEqualValues(filter[fieldName], element.resetValue) : !hasValue;
+       }
 
        var FilterButton = CompoundControl.extend([FilterMixin, PickerMixin],/** @lends SBIS3.CONTROLS.FilterButton.prototype */{
           _dotTplFn: dotTplFn,
@@ -98,22 +110,20 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 filterLineComponent: 'SBIS3.CONTROLS.FilterButton.FilterLine',
                 filterLineTemplate: undefined,
                 independentContext: true,
-                internalContextFilterName : 'sbis3-controls-filter-button'
+                internalContextFilterName : 'sbis3-controls-filter-button',
              },
 
              _pickerContext: null,        /* Контекст пикера */
              _filterStructure: null,      /* Структура фильтра */
              _historyController: null,    /* Контроллер для работы с историей */
-             _filterComponent: null,      /* Компонент, который будет отображаться на панели фильтрации */
-             _filterAdditional: null
+             _filterTemplates: {},      /* Компонент, который будет отображаться на панели фильтрации */
+             _dTemplatesReady: null
           },
 
           $constructor: function() {
              var dispatcher = $ws.single.CommandDispatcher,
                  declareCmd = dispatcher.declareCommand.bind(dispatcher, this),
                  showPicker = this.showPicker.bind(this);
-
-             this._container.removeClass('ws-area');
 
              declareCmd('apply-filter', this.applyFilter.bind(this));
              declareCmd('reset-filter-internal', this._resetFilter.bind(this, true));
@@ -126,63 +136,51 @@ define('js!SBIS3.CONTROLS.FilterButton',
           },
 
           showPicker: function() {
-             var self = this,
-                 template = this._options.template,
-                 additionalTemplate = this._options.additionalFilterParamsTemplate,
-                 toLoad = [];
-
-             function templateChecker(template) {
-                return /^(js!)?SBIS3.*/.test(template);
-             }
-
-             function templatePrepare(template) {
-               return (template.indexOf('js!') !== 0 ? 'js!' : '') + template
-             }
-
-             function showPicker() {
-                FilterButton.superclass.showPicker.call(self);
-                /* Если поле открытия фокус не на пикере, то вернём фокус в него.
-                 т.к. сам пикер при открытии не переводит на себя фокус, однако активация
-                 может вызываться дочериними контролами, то надо проверить на активность */
-                if(!self._picker.isActive()) {
-                   self._picker.setActive(true);
-                }
-             }
+             var showPicker = FilterButton.superclass.showPicker.bind(this);
 
              /* Не показываем кнопку фильтров, если она выключена */
              if(!this.isEnabled()) return;
 
              if(!this._picker) {
-                /* Если шаблон указали как имя компонента (строки которые начинаются с SBIS3 или js!SBIS3),
-                 то перед отображением панели фильтров сначала загрузим компонент. */
-                if(template && templateChecker(template)) {
-                   toLoad.push(templatePrepare(template));
-                }
-
-                if(additionalTemplate && templateChecker(additionalTemplate)) {
-                   toLoad.push(templatePrepare(additionalTemplate));
-                }
-
-                if(toLoad.length) {
-                   $ws.require(toLoad).addCallback(function(ctrls) {
-                      self._filterComponent = ctrls[0];
-                      self._filterAdditional = ctrls[1];
-                      showPicker();
-                   });
-                } else {
+                this._initTemplates();
+                this._dTemplatesReady.getResult().addCallback(function() {
                    showPicker();
-                }
+                })
              } else {
                 showPicker();
              }
           },
 
-          applyFilter: function() {
-             if(this._picker) {
-                if (this._picker.validate()) {
-                   this.hidePicker();
-                   FilterButton.superclass.applyFilter.call(this);
+          _initTemplates: function() {
+             if(this._dTemplatesReady) {
+                return;
+             }
+
+             var self = this;
+
+             function processTemplate(template, name) {
+                /* Если шаблон указали как имя компонента (строки которые начинаются с SBIS3 или js!SBIS3),
+                 то перед отображением панели фильтров сначала загрузим компонент. */
+                if(template && /^(js!)?SBIS3.*/.test(template)) {
+                   self._dTemplatesReady.push($ws.require(((template.indexOf('js!') !== 0 ? 'js!' : '') + template)).addCallback(function(comp) {
+                      self._filterTemplates[name] = comp[0];
+                      return comp;
+                   }));
                 }
+             }
+
+             this._dTemplatesReady = new ParallelDeferred();
+
+             processTemplate(this._options.template, 'filterArea');
+             processTemplate(this._options.additionalFilterParamsTemplate, 'additionalFilterArea');
+
+             this._dTemplatesReady.done();
+          },
+
+          applyFilter: function() {
+             if(this._picker && this._picker.validate()) {
+                this.hidePicker();
+                FilterButton.superclass.applyFilter.call(this);
              }
           },
 
@@ -194,32 +192,11 @@ define('js!SBIS3.CONTROLS.FilterButton',
              }
           },
 
-          _forEachFieldLinks: function(fn) {
-             if(this._picker) {
-                var fieldLink = require.defined('js!SBIS3.CORE.FieldLink') ? require('js!SBIS3.CORE.FieldLink') : null;
-                $ws.helpers.forEach(this._picker.getChildControls(), function (child) {
-                   if(fieldLink) {
-                      if (child instanceof fieldLink) {
-                         fn.call(this, child);
-                      }
-                   }
-                });
-             }
-          },
-
           _setPickerContent: function() {
              this._picker.getContainer().addClass('controls__filterButton-' + this._options.filterAlign);
              if(this._historyController) {
                 this._picker.getChildControlByName('filterHistory').setHistoryController(this._historyController);
              }
-
-             //FIXME убрать как переведут на новое поле связи
-             this._forEachFieldLinks(function(fieldLink) {
-                var suggest = fieldLink.getSuggest();
-                if(suggest) {
-                   ControlHierarchyManager.addNode(suggest);
-                }
-             });
           },
 
           _setPickerConfig: function () {
@@ -228,6 +205,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
                  isRightAlign = this._options.filterAlign === 'right',
                  firstTime = true,
                  self = this,
+                 prepTpl = TemplateUtil.prepareTemplate,
+                 tpls = this._filterTemplates,
                  byFilter, byCaption, byVisibility;
 
              function updatePickerContext() {
@@ -298,19 +277,15 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 closeByExternalClick: true,
                 context: context,
                 className: 'controls__filterButton__picker',
-                template: TemplateUtil.prepareTemplate(dotTplForPicker)({
-                   template: this._filterComponent ? null : TemplateUtil.prepareTemplate(this._options.template),
-                   additionalFilterParamsTemplate: TemplateUtil.prepareTemplate(this._options.additionalFilterParamsTemplate),
+                template: prepTpl(dotTplForPicker)({
+                   template: prepTpl(tpls.filterArea ? dotTplForComp({component: self._options.template}) : self._options.template),
+                   additionalFilterParamsTemplate: prepTpl(tpls.additionalFilterArea ? dotTplForComp({component: self._options.additionalFilterParamsTemplate}) : self._options.additionalFilterParamsTemplate),
                    historyController: this._historyController
                 }),
                 handlers: {
                    onClose: function() {
-                      self._forEachFieldLinks(function(fieldLink) {
-                         fieldLink.getSuggest()._hideMenu();
-                      });
                       /* Разрушаем панель при закрытии,
-                         надо для: сбрасывания валидации, удаления ненужных значений из контролов
-                       */
+                         надо для: сбрасывания валидации, удаления ненужных значений из контролов */
                       if(self._picker) {
                          self._picker.destroy();
                          self._picker = null;
@@ -321,22 +296,17 @@ define('js!SBIS3.CONTROLS.FilterButton',
                       if (!firstTime) {
                          updatePickerContext();
                       }
+
+                      if(!self._picker.isActive()) {
+                         self._picker.setActive(true);
+                      }
+
                       firstTime = false;
                    },
-                   //FIXME временное решение, пока пикер не научится работать с фокусом и обрабатывать клавиши
+
                    onKeyPressed: function(event, e) {
                       if(e.which === $ws._const.key.esc) {
                          this.hide();
-                      }
-                   },
-
-                   onInit: function() {
-                      if(self._filterComponent) {
-                         new self._filterComponent({
-                            parent: this,
-                            element: this._container.find('.controls__filterButton__templatedArea'),
-                            context: this.getLinkedContext()
-                         })
                       }
                    }
                 }
@@ -400,13 +370,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
           },
 
           destroy: function() {
-             this._forEachFieldLinks(function(fieldLink) {
-                var suggest = fieldLink.getSuggest();
-                if(suggest) {
-                   ControlHierarchyManager.removeNode(suggest);
-                }
-             });
-
              if(this._historyController) {
                 this._historyController.destroy();
                 this._historyController = null;

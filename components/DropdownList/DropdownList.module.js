@@ -236,7 +236,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             /* Сброс выделения надо делать до установки итемов, т.к. вызов родительского setItems по стеку генерирует
              * onDrawItems, подписвашись на которое люди устанавливают ключ, а сброс после родительского
              * этот ключ затирает*/
-            this.removeItemsSelectionAll();
+            this._options.selectedKeys = [];
             DropdownList.superclass.setItems.apply(this, arguments)
          },
          setSelectedKeys : function(idArray){
@@ -346,7 +346,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   $(items[i]).toggleClass('controls-DropdownList__item__selected', !!this._currentSelection[$(items[i]).data('id')]);
                }
                DropdownList.superclass.showPicker.apply(this, arguments);
-               this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', this._pickerListContainer[0].offsetWidth === this._pickerHeadContainer[0].offsetWidth);
+               this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', this._pickerBodyContainer[0].offsetWidth === this._pickerHeadContainer[0].offsetWidth);
                if (this._buttonChoose) {
                   this._buttonChoose.getContainer().addClass('ws-hidden');
                }

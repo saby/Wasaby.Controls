@@ -9,8 +9,12 @@
       .text-overflow();
    }
 
+   .controls-SelectorButton__icon {
+      position: absolute;
+   }
+
    .controls-SelectorButton__icon + .controls-SelectorButton__text:not(.ws-hidden) {
-      padding-left: 4px;
+      padding-left: 20px;
    }
 
 
@@ -18,11 +22,6 @@
       .controls-SelectorButton__text {
          color: @link-text-color;
          text-decoration: @link-text-decoration;
-
-         &:hover {
-            color: @link-hover-text-color;
-            text-decoration: @link-hover-text-decoration;
-         }
       }
    }
 
@@ -41,6 +40,20 @@
       }
       .controls-SelectorButton__cross {
          display: none;
+      }
+   }
+}
+
+.ws-is-desktop-platform {
+   .controls-Button:not(.ws-disabled) {
+      &.controls-SelectorButton__asLink {
+         &:hover {
+            color: @link-hover-text-color;
+            text-decoration: @link-hover-text-decoration;
+            .controls-SelectorButton__icon {
+               color: @link-hover-text-color !important;
+            }
+         }
       }
    }
 }

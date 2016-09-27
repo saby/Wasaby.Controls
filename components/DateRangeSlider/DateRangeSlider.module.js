@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
 ], function (CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, DateRangeChoosePickerMixin, PickerMixin) {
    'use strict';
 
-   var DateRangeSlider = CompoundControl.extend([PickerMixin, DateRangeMixin, RangeMixin, DateRangeChoosePickerMixin], {
+   var DateRangeSlider = CompoundControl.extend([PickerMixin, RangeMixin, DateRangeMixin, DateRangeChoosePickerMixin], {
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
