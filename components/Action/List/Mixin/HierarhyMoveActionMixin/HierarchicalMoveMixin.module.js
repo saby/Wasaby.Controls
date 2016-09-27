@@ -54,9 +54,9 @@ define('js!SBIS3.CONTROLS.Action.List.HierarchicalMoveMixin',[
 
             for (var i = 0, len = records.length; i < len; i++) {
                var record = records[i];
-               record.set(this._options.hierField, newParent);
+               record.set(this._options.parentProperty, newParent);
                if (record.getOwner()) {
-                  record.getOwner()._reindexTree(this._options.hierField);
+                  record.getOwner()._reindexTree(this._options.parentProperty);
                }
             }
          }

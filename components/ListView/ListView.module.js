@@ -87,6 +87,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @mixes SBIS3.CONTROLS.DecorableMixin
        * @mixes SBIS3.CONTROLS.DataBindMixin
        * @mixes SBIS3.CONTROLS.DragNDropMixinNew
+       * @mixes SBIS3.CONTROLS.MoveHandlers
        *
        * @cssModifier controls-ListView__orangeMarker Устанавливает отображение маркера активной строки у элементов списка. Модификатор актуален только для класса SBIS3.CONTROLS.ListView.
        * @cssModifier controls-ListView__showCheckBoxes Устанавливает постоянное отображение чекбоксов для записей списка. Модификатор применяется для режима множественного выбора записей (см. {@link multiselect}).
@@ -103,8 +104,8 @@ define('js!SBIS3.CONTROLS.ListView',
        * @category Lists
        */
 
-      /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
-      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DecorableMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
+      /*TODO CommonHandlers тут в наследовании не нужны*/
+      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DecorableMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DragNDropMixin, CommonHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem Происходит при переводе курсора мыши на другой элемент коллекции списка.
@@ -2738,7 +2739,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
-            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._getDragInitHandler());
+            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item',  this._getDragInitHandler());
          },
 
          /**
@@ -2908,33 +2909,17 @@ define('js!SBIS3.CONTROLS.ListView',
             return $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>');
          },
 
-         _endDragHandler: function(dragObject, droppable, e) {
-            if (droppable) {
-               var
-                  clickHandler,
-                  target = dragObject.getTarget();
-
-
-               if (target) {
-                  if (target.getModel().getId() == this.getSelectedKey()) {
-                     //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
-                     clickHandler = this._elemClickHandler;
-                     this._elemClickHandler = function () {
-                        this._elemClickHandler = clickHandler;
-                     };
-                  }
-                  if (dragObject.getOwner() === this) {
-                     var models = [];
-                     dragObject.getSource().each(function(item){
-                        models.push(item.getModel());
-                     });
-                     var position = target.getPosition();
-                     this._move(models, target.getModel(),
-                        position === DRAG_META_INSERT.on ? undefined : position === DRAG_META_INSERT.after
-                     );
-                  } else {
-                     this._moveFromOut(dragObject);
-                  }
+         _endDragHandler: function(dragObject) {
+            var
+               clickHandler,
+               target = dragObject.getTarget();
+            if (target) {
+               if (target.getModel().getId() == this.getSelectedKey()) {
+                  //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
+                  clickHandler = this._elemClickHandler;
+                  this._elemClickHandler = function () {
+                     this._elemClickHandler = clickHandler;
+                  };
                }
             }
 
@@ -3090,5 +3075,5 @@ define('js!SBIS3.CONTROLS.ListView',
          }
       });
 
-      return ListView.mixin([BreakClickBySelectMixin]);
+      return ListView.mixin([BreakClickBySelectMixin, MoveHandlers]);
    });
