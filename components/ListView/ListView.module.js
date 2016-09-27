@@ -1664,6 +1664,10 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._hasEditInPlace() && this._getEditInPlace().isEdit();
          },
 
+         _getEditingRecord: function() {
+            return this.isEdit() ? this._getEditInPlace()._getEditingRecord() : undefined;
+         },
+
          //********************************//
          //   БЛОК ОПЕРАЦИЙ НАД ЗАПИСЬЮ    //
          //*******************************//
@@ -1760,12 +1764,14 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _showItemsToolbar: function(target) {
-            var toolbar = this._getItemsToolbar();
+            var
+                toolbar = this._getItemsToolbar(),
+                editingRecord = this._getEditingRecord();
             toolbar.show(target, this._touchSupport);
             //При показе тулбара, возможно он будет показан у редактируемой строки.
             //Цвет редактируемой строки отличается от цвета строки по ховеру.
             //В таком случае переключим классы тулбара в режим редактирования.
-            toolbar._toggleEditClass(target.container.is('.controls-editInPlace, .controls-editInPlace__editing'));
+            toolbar._toggleEditClass(!!editingRecord && editingRecord.getId() == target.key);
          },
          _unlockItemsToolbar: function() {
             if (this._itemsToolbar) {

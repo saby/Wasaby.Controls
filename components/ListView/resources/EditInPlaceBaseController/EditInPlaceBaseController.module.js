@@ -204,6 +204,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _getCurrentTarget: function() {
                return this._eip.getTarget();
             },
+
+            _getEditingRecord: function() {
+               return this.isEdit() ? this._getEditingEip().getEditingRecord() : undefined;
+            },
+
             showEip: function(model, options, withoutActivateFirstControl) {
                if (options && options.isEdit) {
                   return this.edit(model, withoutActivateFirstControl);
