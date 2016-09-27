@@ -15,6 +15,13 @@
 @primary-color:                           #00c795;
 @secondary-color:                         transparent;
 
+@icon-color-attention:                    #FEC63F;
+@icon-color-done:                         #72be44;
+@icon-color-error:                        #ef463a;
+@icon-color-primary:                      #587ab0;
+@icon-color-hover:                        #ff7033;
+@icon-color-disabled:                     #CCC;
+
 @bg:                                      transparent;
 @text-color:                              @black-color;
 
@@ -78,6 +85,8 @@
 @button-padding:                          0 8px;
 @button-margin:                           auto;
 @button-border-radius:                    2px;
+@button-icon-color-hover:                 #313E78;
+@button-icon-color:                       @icon-color-primary;
 @button-icon-top-offset:                  7px;                      // top offset of 16x16 icon
 @button-icon-left-offset:                 8px;
 @button-icon-gap:                         4px;                      // gap between icon and text
@@ -204,7 +213,12 @@
 @button-group-horizontal-item-margin:     0 16px 0 0;
 @button-group-vertical-item-margin:       0 0 8px 0;
 
+// ------------ //
+//  Icon Button //
+// ------------ //
 
+@button-icon-done-color: #72BE44;
+@button-icon-error-color: #EF463A;
 
 // ------------- //
 // Toggle button //
@@ -724,6 +738,7 @@
 @menu-button-header-left-width:                         0;
 @menu-button-header-left-height:                        0;
 @menu-button-header-left-margin:                        0;
+@menu-button-header-right-margin-revert-vertical:       0;
 @menu-button-header-left-bg:                            transparent;
 @menu-button-header-left-bg-revert-horizontal:          transparent;
 @menu-button-header-right-bg-revert-vertical:           transparent;
@@ -737,6 +752,7 @@
 @menu-button-header-right-width:                        0;
 @menu-button-header-right-height:                       0;
 @menu-button-header-right-margin:                       0;
+@menu-button-header-right-margin-revert-horizontal:     0;
 @menu-button-header-right-bg:                           transparent;
 @menu-button-header-right-bg-revert-horizontal:         transparent;
 @menu-button-header-left-bg-revert-vertical:            transparent;
@@ -780,6 +796,7 @@
 // Menu
 @menu-link-menu-margin:                   0 0 0 -9px;
 @menu-link-menu-padding:                  0;
+@menu-link-menu-item-container-padding:   0;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
 @menu-link-header-bg-color:               @menu-button-menu-bg;
 @menu-link-menu-border-width:             @menu-border-width;

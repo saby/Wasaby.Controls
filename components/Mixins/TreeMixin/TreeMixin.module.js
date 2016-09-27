@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
-   'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree', 'js!WS.Data/Entity/Model', 'js!WS.Data/Relation/Hierarchy', 'js!WS.Data/Adapter/Sbis'], function (BreadCrumbs, groupByTpl, TreeProjection, Model, HierarchyRelation) {
+   'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree', 'tmpl!SBIS3.CONTROLS.TreeMixin/resources/searchRender', 'js!WS.Data/Entity/Model', 'js!WS.Data/Relation/Hierarchy', 'js!WS.Data/Adapter/Sbis'], function (BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -47,21 +47,93 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          return isNodeA ? -1 : 1;
       }
    },
+   getSearchCfg = function(cfg) {
+      return {
+         keyField: cfg.keyField,
+         displayField: cfg.displayField,
+         highlightEnabled: cfg.highlightEnabled,
+         highlightText: cfg.highlightText,
+         colorMarkEnabled: cfg.colorMarkEnabled,
+         colorField: cfg.colorField,
+         allowEnterToFolder: cfg.allowEnterToFolder
+      }
+   },
+   searchProcessing = function(projection, cfg) {
+      var resRecords = [], lastNode, lastPushedNode, curPath = [], pathElem, curParentContents;
+
+      function pushPath(records, path, cfg) {
+         if (path.length) {
+            records.push({
+               tpl: cfg._defaultSearchRender,
+               data: {
+                  path: $ws.core.clone(path),
+                  viewCfg: cfg._getSearchCfg(cfg)
+               }
+            });
+         }
+      }
+
+      projection.each(function (item) {
+         if ((item.getParent() != lastNode) && curPath.length) {
+            if (lastNode != lastPushedNode) {
+               pushPath(resRecords, curPath, cfg);
+               lastPushedNode = lastNode;
+            }
+            while (curPath.length > 0) {
+               lastNode = curPath[curPath.length - 1]['projItem'];
+               if (item.getParent() == lastNode) {
+                  break;
+               }
+               curPath.pop();
+            }
+         }
+
+         if (item.isNode()) {
+            curParentContents = item.getContents();
+            pathElem = {};
+            pathElem[cfg.keyField] = curParentContents.getId();
+            pathElem[cfg.displayField] = curParentContents.get(cfg.displayField);
+            pathElem['projItem'] = item;
+            curPath.push(pathElem);
+            lastNode = item;
+         }
+         else {
+            if (lastNode != lastPushedNode) {
+               pushPath(resRecords, curPath, cfg);
+               lastPushedNode = lastNode;
+            }
+            resRecords.push(item);
+         }
+      });
+
+      if ((curPath.length) && (lastNode != lastPushedNode)){
+         pushPath(resRecords, curPath, cfg);
+         lastPushedNode = lastNode;
+      }
+
+      return resRecords;
+   },
    getRecordsForRedraw = function(projection, cfg) {
       var
          records = [],
          projectionFilter;
-      if (cfg.expand) {
+      if (cfg.expand || cfg.hierarchyViewMode) {
          cfg._previousGroupBy = undefined;
          projection.setEventRaising(false);
-         expandAllItems(projection);
+         expandAllItems(projection, cfg);
          projection.setEventRaising(true);
-         projection.each(function(item) {
-            if (cfg.groupBy && cfg.easyGroup) {
-               cfg._groupItemProcessing(records, item, cfg);
-            }
-            records.push(item);
-         });
+
+         if (cfg.hierarchyViewMode) {
+            records = searchProcessing(projection, cfg);
+         }
+         else {
+            projection.each(function(item) {
+               if (cfg.groupBy && cfg.easyGroup) {
+                  cfg._groupItemProcessing(records, item, cfg);
+               }
+               records.push(item);
+            });
+         }
       }
       else {
          /**
@@ -175,7 +247,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       tplOptions.hierField = cfg.hierField;
       tplOptions.paddingSize = cfg._paddingSize;
       tplOptions.originallPadding = cfg._originallPadding;
-      tplOptions.isSearch = (!Object.isEmpty(cfg.groupBy) && cfg.groupBy.field === this._searchParamName);
+      tplOptions.isSearch = cfg.hierarchyViewMode;
       tplOptions.hierarchy = new HierarchyRelation({
          idProperty: cfg.keyField,
          parentProperty: cfg.hierField
@@ -277,13 +349,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          _options: {
             _buildTplArgs: buildTplArgsTV,
             _buildTplArgsTV: buildTplArgsTV,
+            _defaultSearchRender: searchRender,
+            _getSearchCfgTv: getSearchCfg,
+            _getSearchCfg: getSearchCfg,
             _paddingSize: 16,
             _originallPadding: 6,
             _getRecordsForRedraw: getRecordsForRedraw,
             _curRoot: null,
             _createDefaultProjection : createDefaultProjection,
             /**
-             * @cfg {String} Устанавливает идентификатор узла, относительно которого нужно отображать данные. Такой узел будет считаться вершиной иерархии.
+             * @cfg {String, Number} Устанавливает идентификатор узла, относительно которого нужно отображать данные. Такой узел будет считаться вершиной иерархии.
              * @example
              * <pre>
              *    <option name="root">12688410,ПапкаДокументов</option>
@@ -294,22 +369,27 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             root: undefined,
 
             /**
-             * @cfg {String} Поле иерархии
+             * @cfg {String} Устанавливает поле иерархии, по которому будут установлены иерархические связи записей списка.
+             * @remark
+             * Поле иерархии хранит первичный ключ той записи, которая является узлом для текущей. Значение null - запись расположена в корне иерархии.
+             * Например, поле иерархии "Раздел". Название поля "Раздел" необязательное, и в каждом случае может быть разным.
+             * По полю иерархии устанавливаются два других служебных поля - "Раздел@" и "Раздел$" , подробнее о назначении которых вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/hierarchy/#_2">Требования к источнику данных</a>.
              * @example
              * <pre>
              *    <option name="hierField">Раздел</option>
              * </pre>
+             * @see getHierarchy
+             * @see setHierarchy
              */
             hierField: null,
             /**
-             * @cfg {String} Устанавливает режим отображения данных, имеющих иерархическую структуру.
+             * @cfg {String} Устанавливает режим отображения записей: отображать только записи типа "Узел" (папка) или любые типы записей.
              * @remark
-             * Для набора данных, имеющих иерархическую структуру, опция определяет режим их отображения. Она позволяет пользователю отображать данные в виде развернутого или свернутого списка.
+             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * В режиме развернутого списка будут отображены узлы группировки данных (папки) и данные, сгруппированные по этим узлам.
              * В режиме свернутого списка будет отображен только список узлов (папок).
-             * Возможные значения опции:
-             * * folders - будут отображаться только узлы (папки),
-             * * all - будут отображаться узлы (папки) и их содержимое - элементы коллекции, сгруппированные по этим узлам.
+             * @variant folders Отображать только записи типа "Узел".
+             * @variant all Отображать записи всех типов иерархии.
              *
              * Подробное описание иерархической структуры приведено в документе {@link https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy "Типы отношений в таблицах БД"}
              * @example
@@ -320,26 +400,36 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              */
             displayType : 'all',
             /**
-             * @cfg {Boolean} При открытия узла закрывать другие
+             * @cfg {Boolean} Устанавливает поведение, при котором единовременно может быть раскрыт только одна запись типа "Узел" или "Скрытый узел" на одном структурном уровне.
+             * @remark
+             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
              *    <option name="singleExpand">true</option>
              * </pre>
              */
             singleExpand: false,
-
             /**
-             * @cfg {Boolean} Устанавливает режим отображения содержимого узлов (папок) в иерархии при построении контрола
-             * @variant true Содержимое узлов раскрыто.
-             * @variant false Содержимое узлов скрыто.
+             * @cfg {Boolean} Устанавливает режим отображения содержимого записей типа "Узел" (папка) при первой загрузке контрола.
+             * @remark
+             * true - содержимое узлов раскрыто, false - содержимое узлов скрыто.
+             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
              *    <option name="expand">true</option>
              * </pre>
+             * @see setExpand
+             * @see getExpand
              */
             expand: false,
             /**
-             * @cfg {Boolean} Запрашивать записи для папки если в текущем наборе данных их нет
+             * @cfg {Boolean} Устанавливает поведение загрузки дочерних данных для записей типа "Узел" (папка) и "Скрытый узел".
+             * @remark
+             * <ul>
+             *    <li>В значении true данные подгружаются только при раскрытии или проваливании внутрь.</li>
+             *    <li>В значении false данные подгружается сразу при загрузке контролов.</li>
+             * </ul>
+             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
              *    <option name="partialyReload">false</option>
@@ -348,24 +438,27 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             partialyReload: true,
             /**
              * @cfg {Boolean} Глубокая перезагрузка. Позволяет запрашивать текущие открытые папки при перезагрузке
-             * @deprecated Опция будет удалена в 3.7.4.100. Используйте передачу параметра deepReload в непосредственно в метод reload.
+             * @deprecated Опция будет удалена в 3.7.4.100. Используйте передачу параметра deepReload в непосредственно в метод {@link reload}.
              */
             deepReload: false,
             /**
-             * @cfg {Object}  Устанавливает набор открытых элементов иерархии.
-             * @see getOpenedPath
+             * @cfg {Object} Устанавливает список записей типа "Узел" (папка) и "Скрытый узел", содержимое которых будет раскрыто.
+             * @remark
+             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
              *    <options name="openedPath">
              *       <option name="12688410">true</option>
              *    </options>
              * </pre>
+             * @see getOpenedPath
+             * @see setOpenedPath
              */
             openedPath : {},
             /**
-             * @cfg {Boolean}
-             * Разрешить проваливаться в папки
-             * Если выключено, то папки можно открывать только в виде дерева, проваливаться в них нельзя
+             * @cfg {Boolean} Устанавливает признак, при котором клик по записи типа "Узел" (папка) или "Скрытый узел" не производит проваливание внутрь иерархии, а раскрывает её содержимое.
+             * @remark
+             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
              *    <option name="allowEnterToFolder">false</option>
@@ -373,9 +466,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              */
             allowEnterToFolder: true,
             /**
-             * @cfg {Function|null}
-             * Метод используется для сортировки элементов, если передать null то данные сортироваться не будут
-             * По умолчанию данные сортируются так: с начала папки потом листья
+             * @cfg {Function|null} Устанавливает метод для сортировки элементов.
+             * @remark
+             * Если передать null, то данные сортироваться не будут. По умолчанию данные сортируются так: с начала папки потом листья.
              * @example
              * <pre>
              *    <option name="itemsSortMethod" value="null"></option>
@@ -397,7 +490,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              * @see SBIS3.CONTROLS.ItemsControlMixin#itemsSortMethod
              * @see SBIS3.CONTROLS.ItemsControlMixin#setItemsSortMethod
              */
-            itemsSortMethod: _defaultItemsSortMethod
+            itemsSortMethod: _defaultItemsSortMethod,
+            hierarchyViewMode: false
          },
          _foldersFooters: {},
          _breadCrumbs : [],
@@ -424,23 +518,29 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          }
          this._previousRoot = this._options._curRoot;
          this.setFilter(filter, true);
+         $ws.single.CommandDispatcher.declareCommand(this, 'BreadCrumbsItemClick', this._breadCrumbsItemClick);
       },
       /**
-       * Задать поле иерархии
-       * @param hierField Название поля иерархии
+       * Устанавливает поле иерархии.
+       * @param {String }hierField Название поля иерархии.
+       * @see hierField
+       * @see getHierField
        */
       setHierField: function (hierField) {
          this._options.hierField = hierField;
       },
       /**
-       * Получить название поля иерархии
+       * Возвращает название поля иерархии.
+       * @return {String}
+       * @see hierField
+       * @see setHierField
        */
       getHierField : function(){
          return this._options.hierField;
       },
       /**
-       * Закрывает узел по переданному идентификатору
-       * @param {String} id Идентификатор закрываемого узла
+       * Закрывает узел по переданному идентификатору.
+       * @param {String, Number} id Идентификатор закрываемого узла.
        * @remark
        * Метод используют для программного управления видимостью содержимого узла в общей иерархии.
        * Чтобы раскрыть узел по переданному идентификатору, используйте метод {@link expandNode}.
@@ -453,16 +553,20 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          return new $ws.proto.Deferred.success();
       },
       /**
-       * Закрыть или открыть определенный узел
-       * @param {String} id Идентификатор переключаемого узла
+       * Закрыть или открыть узел.
+       * @param {String, Number} id Идентификатор переключаемого узла.
+       * @see collapseNode
+       * @see expandNode
        */
       toggleNode: function(id) {
          return this[this._getItemProjectionByItemId(id).isExpanded() ? 'collapseNode' : 'expandNode'](id);
       },
       /**
-       * Развернуть узел
-       * @param id Идентификатор раскрываемого узла
+       * Раскрывает узел.
+       * @param {String, Number} id Идентификатор раскрываемого узла
        * @returns {$ws.proto.Deferred}
+       * @see collapseNode
+       * @see toggleNode
        */
       expandNode: function(id) {
          var
@@ -507,6 +611,25 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        * Получить список записей для отрисовки
        * @private
        */
+      _breadCrumbsItemClick : function(id) {
+         //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onBreadCrumbClick'), а вотом выполняется setCurrentRoot
+         if (this.isEnabled() && this._notify('onSearchPathClick', id) !== false ) {
+
+
+            var filter = $ws.core.merge(this.getFilter(), {
+               'Разворот' : 'Без разворота'
+            });
+            /*TODO решить с этим параметром*/
+            filter[this._searchParamName] = undefined;
+            //Если бесконечный скролл был установлен в опции - вернем его
+            this.setInfiniteScroll(this._options.infiniteScroll, true);
+            this.setHighlightText('', false);
+            this.setFilter(filter, true);
+            this._options.hierarchyViewMode = false;
+            this.setCurrentRoot(id);
+            this.reload();
+         }
+      },
       _isVisibleItem: function(item, onlyFolders) {
          if (onlyFolders && (item.isNode() !== true)) {
             return false;
@@ -553,7 +676,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          }, this);
       },
       /**
-       * Получить текущий набор открытых элементов иерархии
+       * Получить текущий набор открытых элементов иерархии.
+       * @return {Object}
+       * @see openedPath
+       * @see setOpenedPath
        */
       getOpenedPath: function() {
          return this._options.openedPath;
@@ -568,6 +694,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        *       3: true
        *    });
        * </pre>
+       * @see openedPath
+       * @see getOpenedPath
        */
       setOpenedPath: function(openedPath) {
          var
@@ -795,16 +923,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             }
          }
       },
-      /*----------------HierarchySearchGroupBy-----------------*/
-      getSearchGroupBy: function(field){
-         return {
-            field: field,
-            template : groupByTpl,
-            method : this._searchMethod.bind(this),
-            render : this._searchRender.bind(this)
-         }
-      },
-
       /**
        * Метод разврачивает узлы дерева до нужной записи
        * @param {String} key ключ записи
@@ -836,172 +954,20 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             this.expandNode(nodes[i]);
          }
       },
-      //----------------- defaultSearch group
       /**
-       * Метод поиска по умолчанию
-       * @param record
-       * @param at
-       * @returns {{drawItem: boolean, drawGroup: boolean}}
-       */
-      _searchMethod: function(record, at, last, projItem){
-         //TODO lastParent - curRoot - правильно?. 2. Данные всегда приходят в правильном порядке?
-         var key,
-            curRecRoot,
-            drawItem = false,
-            kInd = -1;
-         if (this._lastParent === undefined) {
-            this._lastParent = this._options._curRoot;
-         }
-         key = record.getId();
-         curRecRoot = record.get(this._options.hierField);
-         //TODO для SBISServiceSource в ключе находится массив, а теперь он еще и к строке приводится...
-         curRecRoot = curRecRoot instanceof Array ? curRecRoot[0] : curRecRoot;
-         if (curRecRoot == this._lastParent){
-            //Лист
-            if (record.get(this._options.hierField + '@') !== true){
-               //Нарисуем путь до листа, если пришли из папки
-               if (this._lastDrawn !== 'leaf' && this._lastPath.length) {
-                  this._drawGroup(projItem.getContents(), at, undefined, projItem);
-               }
-               this._lastDrawn = 'leaf';
-               drawItem = true;
-            } else { //папка
-               this._lastDrawn = undefined;
-               this._lastPath.push(record);
-               this._lastParent = key;
-               //Если мы уже в последней записи в иерархии, то нужно отрисовать крошки и сбросить сохраненный путь
-               if (last) {
-                  this._drawGroup(projItem.getContents(), at, undefined, projItem);
-                  this._lastPath = [];
-                  this._lastParent = this._options._curRoot;
-               }
-            }
-         } else {//другой кусок иерархии
-            //Если текущий раздел у записи есть в lastPath, то возьмем все элементы до этого ключа
-            kInd = -1;
-            for (var k = 0; k < this._lastPath.length; k++) {
-               if (this._lastPath[k].getId() == curRecRoot){
-                  kInd = k;
-                  break;
-               }
-            }
-            //Если текущий раздел есть в this._lastPath его надо нарисовать
-            if (  this._lastDrawn !== 'leaf' && this._lastPath.length) {
-               this._drawGroup(projItem.getContents(), at, undefined, projItem);
-            }
-            this._lastDrawn = undefined;
-            this._lastPath = kInd >= 0 ? this._lastPath.slice(0, kInd + 1) : [];
-            //Лист
-            if (record.get(this._options.hierField + '@') !== true){
-               if ( this._lastPath.length) {
-                  this._drawGroup(projItem.getContents(), at, undefined, projItem);
-               }
-               drawItem = true;
-               this._lastDrawn = 'leaf';
-               this._lastParent = curRecRoot;
-            } else {//папка
-               this._lastDrawn = undefined;
-               this._lastPath.push(record);
-               this._lastParent = key;
-               //Если мы уже в последней записи в иерархии, то нужно отрисовать крошки и сбросить сохраненный путь
-               if (last) {
-                  this._drawGroup(projItem.getContents(), at, undefined, projItem);
-                  this._lastPath = [];
-                  this._lastParent = this._options._curRoot;
-               }
-            }
-         }
-         return {
-            drawItem : drawItem,
-            drawGroup: false
-         };
-      },
-      _searchRender: function(item, container){
-         this._drawBreadCrumbs(this._lastPath, item, container);
-         return container;
-      },
-      _drawBreadCrumbs:function(path, record, container){
-         if (path.length) {
-            var self = this,
-               elem,
-               groupBy = this._options.groupBy,
-               cfg,
-               td = container.find('td');
-            td.append(elem = $('<div style="width:'+ td.width() +'px"></div>'));
-            cfg = {
-               element : elem,
-               items: this._createPathItemsDS(path),
-               parent: this,
-               highlightEnabled: this._options.highlightEnabled,
-               highlightText: this._options.highlightText,
-               colorMarkEnabled: this._options.colorMarkEnabled,
-               colorField: this._options.colorField,
-               className : 'controls-BreadCrumbs__smallItems',
-               enable: this._options.allowEnterToFolder
-            };
-            if (groupBy.hasOwnProperty('breadCrumbsTpl')){
-               cfg.itemTemplate = groupBy.breadCrumbsTpl
-            }
-            var ps = new BreadCrumbs(cfg);
-            ps.once('onItemClick', function(event, id){
-               //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onBreadCrumbClick'), а вотом выполняется setCurrentRoot
-               event.setResult(false);
-               //TODO Выпилить в .100 проверку на задизабленность, ибо событие вообще не должно стрелять и мы сюда не попадем, если крошки задизаблены
-               if (this.isEnabled() && self._notify('onSearchPathClick', id) !== false ) {
-                  //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
-                  /*TODO для Алены. Временный фикс, потому что так удалось починить*/
-                  var filter = $ws.core.merge(self.getFilter(), {
-                     'Разворот' : 'Без разворота'
-                  });
-                  if (self._options.groupBy.field) {
-                     filter[self._options.groupBy.field] = undefined;
-                  }
-                  //Если бесконечный скролл был установлен в опции - вернем его
-                  self.setInfiniteScroll(self._options.infiniteScroll, true);
-                  self.setGroupBy({});
-                  self.setHighlightText('', false);
-                  self.setFilter(filter, true);
-                  self.setCurrentRoot(id);
-                  self.reload();
-               }
-            });
-            this._breadCrumbs.push(ps);
-         } else{
-            //если пути нет, то группировку надо бы убить...
-            container.remove();
-         }
-
-      },
-      _createPathItemsDS: function(pathRecords){
-         var dsItems = [],
-            parentID;
-         for (var i = 0; i < pathRecords.length; i++){
-            //TODO для SBISServiceSource в ключе находится массив
-            parentID = pathRecords[i].get(this._options.hierField);
-            dsItems.push({
-               id: pathRecords[i].getId(),
-               title: pathRecords[i].get(this._options.displayField),
-               parentId: parentID instanceof Array ? parentID[0] : parentID,
-               data: pathRecords[i]
-            });
-         }
-         return dsItems;
-      },
-      _destroySearchBreadCrumbs: function(){
-         for (var i =0; i < this._breadCrumbs.length; i++){
-            this._breadCrumbs[i].destroy();
-         }
-         this._breadCrumbs = [];
-      },
-      /**
-       * Установить корень выборки
-       * @param {String} root Идентификатор корня
+       * Устанавливает узел, относительно которого будет производиться выборка данных списочным методом.
+       * @param {String, Number} root Идентификатор корня.
+       * @see root
+       * @see getRoot
        */
       setRoot: function(root){
          this._options.root = root;
       },
       /**
-       * Возвращает корень выборки
+       * Возвращает узел, относительно которого будет производиться выборка данных списочным методом.
+       * @return {String, Number} Идентификатор корня.
+       * @see root
+       * @see setRoot
        */
       getRoot: function(){
          return this._options.root;
@@ -1073,15 +1039,23 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          return hierarchy;
       },
       /**
-       * Устанавливает режим отображения содержимого узлов (папок) в иерархии при построении контрола
-       * @param expand true - содержимое узлов раскрыто, false - содержимое узлов скрыто.
+       * Устанавливает режим отображения содержимого записей типа "Узел" (папка) при первой загрузке контрола.
+       * @remark
+       * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+       * @param {Boolena} expand true - содержимое узлов раскрыто, false - содержимое узлов скрыто.
+       * @see expand
+       * @see getExpand
        */
       setExpand: function(expand) {
          this._options.expand = !!expand;
       },
       /**
-       * Возвращает режим отображения содержимого узлов (папок) в иерархии при построении контрола
+       * Возвращает признак установленного режима отображения содержимого записей типа "Узел" (папка) при первой загрузке контрола.
+       * @remark
+       * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
        * @returns {Boolean} true - содержимое узлов раскрыто, false - содержимое узлов скрыто.
+       * @see expand
+       * @see setExpand
        */
       getExpand: function() {
          return this._options.expand;

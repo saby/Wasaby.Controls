@@ -346,7 +346,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   $(items[i]).toggleClass('controls-DropdownList__item__selected', !!this._currentSelection[$(items[i]).data('id')]);
                }
                DropdownList.superclass.showPicker.apply(this, arguments);
-               this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', this._pickerListContainer[0].offsetWidth === this._pickerHeadContainer[0].offsetWidth);
+               this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', this._pickerBodyContainer[0].offsetWidth === this._pickerHeadContainer[0].offsetWidth);
                if (this._buttonChoose) {
                   this._buttonChoose.getContainer().addClass('ws-hidden');
                }
