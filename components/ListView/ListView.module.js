@@ -1928,25 +1928,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.hierarchyViewMode;
          },
 
-         //TODO проверка для режима совместимости со старой отрисовкой
-         /*TODO easy параметр для временной поддержки группировки в быстрой отрисовке*/
-         _isSlowDrawing: function(easy) {
-            var result = !!this._options.itemTemplate || !!this._options.userItemAttributes;
-            if (easy) {
-               return result;
-            }
-            else {
-               return result || !Object.isEmpty(this._options.groupBy);
-            }
-         },
 
-         _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems) {
-            if (action === IBindCollection.ACTION_MOVE && this._isSearchMode()) {
-               this.redraw();
-            } else {
-               ListView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
-            }
-         },
          //**********************************//
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
          //*********************************//
@@ -2107,12 +2089,12 @@ define('js!SBIS3.CONTROLS.ListView',
                if (dataSet.getCount()) {
                   //TODO: вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
                   //Возвращаем самостоятельную отрисовку данных, пришедших в загрузке по скроллу
-                  if (this._isSlowDrawing()) {
+                  if (this._isSlowDrawing(this._options.easyGroup)) {
                      this._needToRedraw = false;
                   }
                   this._drawPage(dataSet, direction);
                   //И выключаем после отрисовки
-                  if (this._isSlowDrawing()) {
+                  if (this._isSlowDrawing(this._options.easyGroup)) {
                      this._needToRedraw = true;
                   }
                } else {
@@ -2152,7 +2134,7 @@ define('js!SBIS3.CONTROLS.ListView',
                at = {at: 0};
             }
 
-            if (this._isSlowDrawing()) {
+            if (this._isSlowDrawing(this._options.easyGroup)) {
                this._drawItems(dataSet.toArray(), at);
             }
             //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!

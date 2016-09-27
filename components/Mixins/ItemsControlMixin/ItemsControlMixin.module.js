@@ -445,12 +445,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             groupBy : {},
             /**
-             * @cfg {Function} Пользовательский метод добавления атрибутов на элементы коллекции
-             * @noShow
-             * @deprecated На текущий момент для быстрой отрисовки атрибуты задаются непосредственно в шаблоне. Опция будет удалена в 3.7.4.100.
-             */
-            userItemAttributes : null,
-            /**
              * @cfg {String|HTMLElement|jQuery} Отображаемый контент при отсутствии данных
              * @example
              * <pre class="brush:xml">
@@ -589,7 +583,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   parsedCfg._itemsProjection = proj;
                }
 
-               if (cfg._canServerRender && !cfg.userItemAttributes && !cfg.itemTemplate) {
+               if (cfg._canServerRender && !cfg.itemTemplate) {
                   if (Object.isEmpty(cfg.groupBy) || (cfg.easyGroup)) {
                      newCfg._serverRender = true;
                      newCfg._itemData = cfg._buildTplArgs(cfg);
@@ -621,8 +615,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._bindHandlers();
          this._prepareItemsConfig();
 
-         if (this._options.itemTemplate || this._options.userItemAttributes) {
-            $ws.single.ioc.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Заданы itemTemplate или userItemAttributes');
+         if (this._options.itemTemplate) {
+            $ws.single.ioc.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан itemTemplate');
+         }
+         if (!Object.isEmpty(this._options.groupBy) && !this._options.easyGroup) {
+            $ws.single.ioc.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Используется GroupBy без easyGroup: true');
+         }
+         if (this._options.userItemAttributes) {
+            $ws.single.ioc.resolve('ILogger').error('userItemAttributes', 'Option is no longer available since version 3.7.4.200. Use ItemTpl');
          }
 
       },
@@ -869,7 +869,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._itemData = null;
          var i;
          if (newItems && newItems.length) {
-            if (this._isSlowDrawing(this._options.easyGroup)) {
+            if (this._isSlowDrawing()) {
                for (i = 0; i < newItems.length; i++) {
                   this._addItem(
                      newItems[i],
@@ -1076,9 +1076,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return compsArray;
       },
 
+      //TODO проверка для режима совместимости со старой отрисовкой
       /*TODO easy параметр для временной поддержки группировки в быстрой отрисовке*/
-      _isSlowDrawing: function() {
-         return !!this._options.itemTemplate || !!this._options.userItemAttributes || !Object.isEmpty(this._options.groupBy);
+      _isSlowDrawing: function(easy) {
+         var result = !!this._options.itemTemplate;
+         if (easy) {
+            return result;
+         }
+         else {
+            return result || !Object.isEmpty(this._options.groupBy);
+         }
       },
 
       before : {
@@ -1851,11 +1858,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _isNeedToRedraw: function(){
          // Проверяем _needToRedraw для поддержки старой медленной отрисовки
          // Если быстрая отрисовка - считаем, что перерисовка необходима
-         return !!this._getItemsContainer() && (!this._isSlowDrawing() || this._needToRedraw);
+         return !!this._getItemsContainer() && (!this._isSlowDrawing(this._options.easyGroup) || this._needToRedraw);
       },
 
       _changeItemProperties: function(item, property) {
-         if (this._isSlowDrawing()) {
+         if (this._isSlowDrawing(this._options.easyGroup)) {
             this.redrawItem(item.getContents(), item);
          }
          else {
@@ -2041,9 +2048,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          container.attr('data-id', strKey).addClass('controls-ListView__item');
          container.attr('data-hash', item.getHash());
-         if (this._options.userItemAttributes && this._options.userItemAttributes instanceof Function) {
-            this._options.userItemAttributes(container, item.getContents());
-         }
       },
 
       _createItemInstance: function (item) {
@@ -2087,17 +2091,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
       _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems) {
          this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);
-         var ladderDecorator = this._options._decorators && this._options._decorators.getByName('ladder');
-         //todo опять неверно вызывается ladderCompare, используем костыль, чтобы этого не было
-//         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
-//            ladderDecorator.setIgnoreEnabled(true);
-//         }
          if (newItems.length) {
             this._addItems(newItems, newItemsIndex)
          }
-//         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
-//            ladderDecorator.setIgnoreEnabled(false);
-//         }
          this._toggleEmptyData(!this._options._itemsProjection.getCount());
          //this._view.checkEmpty(); toggleEmtyData
          this.reviveComponents(); //надо?
@@ -2157,7 +2153,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 	            case IBindCollection.ACTION_ADD:
                case IBindCollection.ACTION_MOVE:
                case IBindCollection.ACTION_REMOVE:
-                  if (action === IBindCollection.ACTION_MOVE && !Object.isEmpty(this._options.groupBy)) {
+                  if (action === IBindCollection.ACTION_MOVE && (!Object.isEmpty(this._options.groupBy) || this._isSearchMode())) {
                      this.redraw(); //TODO костыль, пока не будет группировки на стороне проекции.
                   } else {
                      this._onCollectionAddMoveRemove.apply(this, arguments);

@@ -579,7 +579,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                this._loadedNodes[id] = true;
                this._notify('onDataMerge', list); // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
                this._options._items.merge(list, {remove: false});
-               if (this._isSlowDrawing()) {
+               if (this._isSlowDrawing(this._options.easyGroup)) {
                   this._options._items.getTreeIndex(this._options.hierField, true);
                }
                this._toggleIndicator(false);
@@ -732,7 +732,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             fillBranchesForRedraw(oldItems);
             for (idx in branches) {
                if (branches.hasOwnProperty(idx)) {
-                  if (this._isSlowDrawing()) {
+                  if (this._isSlowDrawing(this._options.easyGroup)) {
                      this.redrawItem(branches[idx].getContents(), branches[idx]);
                   }
                   else {
