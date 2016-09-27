@@ -65,9 +65,16 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          SuggestTextBox.superclass._onListDataLoad.apply(this, arguments);
 
          if(this._options.searchParam) {
-            if(this._checkPickerState(false)) {
-               this.showPicker();
-            }
+            /* В событии onDataLoad момент нельзя показывать пикер т.к. :
+               1) Могут возникнуть проблемы, когда после отрисовки пикер меняет своё положение.
+               2) Данных в рекордсете ещё нет.
+               3) В onDataLoad приклданые программисты могу менять загруженный рекордсет.
+               Поэтому в этом событии просто одинарно подпишемся на событие отрисовки данных и покажем автодополнение (если требуется). */
+            this.subscribeOnceTo(this.getList(), 'onDrawItems', function() {
+               if(this._checkPickerState(false)) {
+                  this.showPicker();
+               }
+            }.bind(this));
          }
       },
 
