@@ -68,6 +68,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
 
          this._datePickerStart = this.getChildControlByName('DateRange__DatePickerStart');
          this._datePickerStart.subscribe('onDateChange', function(e, date) {
+            self.clearMark();
             self.setStartValue(date, false, true);
          });
          this._datePickerStart.subscribe('onInputFinished', function() {
@@ -75,6 +76,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
          });
          this._datePickerEnd = this.getChildControlByName('DateRange__DatePickerEnd');
          this._datePickerEnd.subscribe('onDateChange', function(e, date) {
+            self.clearMark();
             self.setEndValue(date, false, true);
          });
 
