@@ -13,6 +13,32 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
 
    var ABSTRACT_FIELD_NAME = '*';
 
+   var _private = {
+      callSourceMethod: function(source, elem) {
+         var isMemory = instance.instanceOfModule(source, 'WS.Data/Source/Memory'),
+             method = isMemory ? 'read' : 'call',
+             sourceBindings, callArgs;
+
+         if(isMemory) {
+            callArgs = [elem.value];
+         } else {
+            sourceBindings = source.getBinding();
+            callArgs = [sourceBindings.read, {
+               'ИдО': elem.value,
+               'ИмяМетода': sourceBindings.format || null,
+               'Связь': field
+            }];
+         }
+
+         return source[method].apply(source, callArgs);
+      },
+
+      prepareRecord: function(rec) {
+        var raw = rec.getRaw();
+        return raw ? raw : rec;
+      }
+   };
+
    /**
     * Контроллер, который умеет обновлять поля связной записи при изменении идентификатора свзяи.
     * @class SBIS3.CONTROLS.LinkFieldController
@@ -103,44 +129,14 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
 
       updateLinkFields: function(fieldsToUpdate) {
          var readDeferred = new ParallelDeferred(),
-             source = this.getProperty('dataSource'),
              updatedFields = {},
-             isMemorySource = instance.instanceOfModule(source, 'WS.Data/Source/Memory'),
              self = this;
-
-         /* Т.к. memorySource не поддерживает метод call,
-            то вызываем стандартный read */
-         function callSourceMethod(elem) {
-            var method = isMemorySource ? 'read' : 'call';
-            return source[method].apply(source, prepareReadArgs(elem.field, elem.value));
-         }
-
-         /* Функция, которая подготавливает агрументы для вычитывания записи,
-            если memorySource, то просто передаём id, иначе передаём аргументы,
-            требуемые для вычитки записи по формату */
-         function prepareReadArgs(field, value) {
-            if(isMemorySource) {
-               return [value];
-            } else {
-               var sourceBindings = source.getBinding();
-
-               return [sourceBindings.read, {
-                  'ИдО': value ? value : this.getRecord().get(field),
-                  'ИмяМетода': sourceBindings.format || null,
-                  'Связь': field
-               }];
-            }
-         }
-
-         function prepareRecord(rec) {
-            return isMemorySource ? rec : rec.getRow();
-         }
 
          /* Загрузим сразу все изменения, чтобы применить пачкой */
          colHelpers.forEach(fieldsToUpdate, function(elem) {
             if(elem.value !== null) {
-               readDeferred.push(callSourceMethod(elem).addCallback(function (rec) {
-                  var loadedRecord = prepareRecord(rec);
+               readDeferred.push(_private.callSourceMethod(this.getProperty('dataSource'), elem).addCallback(function (rec) {
+                  var loadedRecord = _private.prepareRecord(rec);
 
                   /* Запомним изменения, чтобы применить их пачкой */
                   colHelpers.forEach(self._getFieldsToChange(elem.field, loadedRecord, elem.map), function (value, key) {
