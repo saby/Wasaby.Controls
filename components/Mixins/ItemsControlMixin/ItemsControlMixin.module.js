@@ -2035,11 +2035,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                atContainer.after(itemBuildedTpl);
             }
             else {
-               atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at);
-               if (atContainer.length) {
-                  atContainer.before(itemBuildedTpl);
-               } else {
-                  targetContainer.append(itemBuildedTpl);
+               if (at.at == 0) {
+                  targetContainer.prepend(itemBuildedTpl);
+               }
+               else {
+                  atContainer = $('> .controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at);
+                  if (atContainer.length) {
+                     atContainer.before(itemBuildedTpl);
+                  } else {
+                     targetContainer.append(itemBuildedTpl);
+                  }
                }
             }
          }

@@ -854,15 +854,32 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
          }
       },
 
-      /* Для правильной работы биндингов, предполагаем, что масив [null] тоже является пустым выделением,
-         если такой записи нет в items */
       _isEmptySelection: function() {
          var selectedKeys = this._options.selectedKeys,
-             items = this.getItems();
+             selectedItems = this._options.selectedItems,
+             items = this.getItems(),
+             isEmpty = true;
 
-         /* Если selectedKeys - пустой или равен [null],
-            но этой записи нет в items, то считаем, что у нас ничего не выбрано */
-         return !selectedKeys.length || ($ws.helpers.isEqualObject(selectedKeys, EMPTY_SELECTION) && (!items || !items.getRecordById(null)));
+         if(selectedKeys.length) {
+            /* Для правильной работы биндингов, предполагаем, что масив [null] тоже является пустым выделением */
+            if($ws.helpers.isEqualObject(selectedKeys, EMPTY_SELECTION)) {
+
+               /* Пробуем найти в рекордсете запись с ключём null, если она есть - выделение не пустое. */
+               if(items && items.getRecordById(EMPTY_SELECTION[0])) {
+                  isEmpty = false;
+               }
+
+               /* Пробуем найти среди selectedItems запись с ключём null, если она есть - выделение не пустое. */
+               if(isEmpty && selectedItems && selectedItems.getIndexByValue(this._options.keyField, EMPTY_SELECTION[0]) !== -1) {
+                  isEmpty = false;
+               }
+            } else if(isEmpty) {
+               /* Если есть ключи и они не равны [null] - выделение не пустое. */
+               isEmpty = false;
+            }
+         }
+
+         return isEmpty;
       },
 
       /**
