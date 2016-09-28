@@ -218,8 +218,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _resizeFoldersFooters: function() {
-         var footers = $('.controls-TreeDataGridView__folderFooterContainer', this._container.get(0));
-         var width = this._container.width();
+         var footers = $('.controls-TreeView__folderFooterContainer', this._container.get(0));
+         /*TODO непонятно откуда появился отступ у футеров, выписываю задачу Сухоручкину, чтоб разобрался*/
+         var width = this._container.width() - 32;
          footers.width(width);
       },
 
@@ -311,7 +312,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          /* Т.к. у нас в вёрстке две иконки, то позиционируем в зависимости от той, которая показывается,
             в .200 переделаем на маркер */
          if(arrowContainer.length === 2) {
-            if (folderTitle[0].offsetWidth > td[0].offsetWidth) {
+            /* Для стандартного отображения учитываем паддинги и ширину икноки разворота папки */
+            if ((folderTitle[0].offsetWidth + HIER_WRAPPER_WIDTH + ADDITIONAL_LEVEL_OFFSET) > td[0].offsetWidth) {
                arrowContainer = arrowContainer[1];
             } else {
                arrowContainer = arrowContainer[0];

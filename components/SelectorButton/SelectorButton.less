@@ -1,6 +1,6 @@
 .controls-SelectorButton {
    .inline-flexbox();
-   align-items: center;
+   align-items: baseline;
    cursor: @link-cursor;
    line-height: @controls-SelectorButton-line-height;
    height: @controls-SelectorButton-height;
@@ -9,14 +9,14 @@
       .text-overflow();
    }
 
-   .controls-SelectorButton__icon {
-      position: absolute;
-   }
-
    .controls-SelectorButton__icon + .controls-SelectorButton__text:not(.ws-hidden) {
-      padding-left: 20px;
+      padding-left: 4px;
    }
 
+   .controls-SelectorButton__icon,
+   .controls-SelectorButton__cross {
+      align-self: center;
+   }
 
    &.controls-SelectorButton__asLink {
       .controls-SelectorButton__text {
@@ -77,11 +77,8 @@
 }
 
 .ws-is-firefox {
-   .controls-SelectorButton__text {
-      padding-bottom: 4px;
-   }
    .controls-SelectorButton__cross,
    .controls-SelectorButton__icon {
-      padding-bottom: 2px;
+      padding-top: 2px;
    }
 }
