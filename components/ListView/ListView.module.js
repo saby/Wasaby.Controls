@@ -2921,6 +2921,18 @@ define('js!SBIS3.CONTROLS.ListView',
                      this._elemClickHandler = clickHandler;
                   };
                }
+               if (dragObject.getOwner() === this) {
+                  var models = [];
+                  dragObject.getSource().each(function(item){
+                     models.push(item.getModel());
+                  });
+                  var position = target.getPosition();
+                  this.move(models, target.getModel(),
+                     position === 'on' ? undefined : position === 'after'
+                  );
+               } else {
+                  this._moveFromOutside(dragObject);
+               }
             }
 
             this._clearDragHighlight(dragObject);

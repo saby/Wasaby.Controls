@@ -30,14 +30,46 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
        * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
        */
       var Move = ActionBase.extend([ListMixin], /** @lends SBIS3.CONTROLS.Action.List.Move.prototype */{
-
+         $protected: {
+            _options:{
+               _moveStrategy: 'movestrategy.base'
+            }
+         },
          _doExecute: function (params) {
             if (params) {
-               return this._move(params.from, params.to, params.up);
+               return this._move(params.from, params.to, params.position);
             }
          },
 
-         _move: function () {
+         /**
+          * Возвращает стратегию перемещения
+          * @see WS.Data/MoveStrategy/IMoveStrategy
+          * @returns {WS.Data/MoveStrategy/IMoveStrategy}
+          */
+         getMoveStrategy: function () {
+            return this._moveStrategy || (this._moveStrategy = this._makeMoveStrategy());
+         },
+
+         /**
+          * Устанавливает стратегию перемещения
+          * @see WS.Data/MoveStrategy/IMoveStrategy
+          * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
+          */
+         setMoveStrategy: function (strategy){
+            if(!$ws.helpers.instanceOfMixin(strategy,'WS.Data/MoveStrategy/IMoveStrategy')){
+               throw new Error('The strategy must implemented interfaces the WS.Data/MoveStrategy/IMoveStrategy.')
+            }
+            this._moveStrategy = strategy;
+         },
+         /**
+          * Создает стратегию перемещения в зависимости от источника данных
+          * @returns {WS.Data/MoveStrategy/IMoveStrategy}
+          * @private
+          */
+         _makeMoveStrategy: function () {
+            return Di.resolve(this._options.moveStrategy, {
+               dataSource: this.getDataSource()
+            });
          }
 
       });

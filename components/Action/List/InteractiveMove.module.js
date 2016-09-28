@@ -1,10 +1,9 @@
 /*global define, $ws, rk*/
 define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'js!SBIS3.CONTROLS.Action.List.Move',
-      'js!SBIS3.CONTROLS.Action.List.HierarchicalMoveMixin',
       'js!SBIS3.CONTROLS.Action.DialogMixin'
    ],
-   function (ListMove, HierarchicalMoveMixin, DialogMixin) {
+   function (ListMove, DialogMixin) {
       'use strict';
       /**
        * Действие перемещения по иерархии с выбором места перемещения через диалог.
@@ -80,12 +79,12 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
        * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
        */
 
-      var InteractiveMove = ListMove.extend([HierarchicalMoveMixin, DialogMixin],/** @lends SBIS3.CONTROLS.Action.List.InteractiveMove.prototype */{
+      var InteractiveMove = ListMove.extend([DialogMixin],/** @lends SBIS3.CONTROLS.Action.List.InteractiveMove.prototype */{
          $protected:{
             _options : {
-               template : 'js!SBIS3.CONTROLS.MoveDialogTemplate'
-            },
-            _canExecute: true
+               template : 'js!SBIS3.CONTROLS.MoveDialogTemplate',
+               parentProperty: undefined
+            }
          },
 
          _doExecute: function(meta) {
@@ -109,11 +108,20 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                   onPrepareFilterOnMove: function(event, rec) {
                      event.setResult(self._options.linkedObject._notify('onPrepareFilterOnMove', rec));
                   },
-                  onMove: function(e, records, moveTo) {
-                     self._move(records, moveTo);
+                  onMove: function(e, records, target) {
+                     self._move(records, target);
                   }
                }
             };
+         },
+         _move: function(movedItems, target){
+
+         },
+         _makeMoveStrategy: function () {
+            return Di.resolve(this._options.moveStrategy, {
+               dataSource: this.getDataSource(),
+               hierField: this._options.parentProperty
+            });
          }
       });
       return InteractiveMove;

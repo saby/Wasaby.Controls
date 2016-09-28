@@ -100,7 +100,8 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
          _move: function (from) {
             var to = this._getNearestItem(from);
             if (to) {
-               return ReorderMove.superclass._move.call(this, from, to, (this._options.moveDirection === 'up'));
+               var def = this.getMoveStrategy().move(from, to, (this._options.moveDirection === 'up'))
+
             }
             return (new $ws.proto.Deferred()).callback(true);
          },

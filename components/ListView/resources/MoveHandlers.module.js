@@ -11,9 +11,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
    'js!WS.Data/MoveStrategy/Sbis'
 ], function(Dialog, SbisMoveStrategy, BaseMoveStrategy, InteractiveMove, Di) {
    /**
-    * Контрол, отображающий набор однотипных сущностей. Позволяет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать.
-    * Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
     *
+    * Миксин определяющий логику перемещения элементов
     * @mixin SBIS3.CONTROLS.MoveHandlers
     * @author Крайнов Дмитрий Олегович
     *
@@ -27,38 +26,18 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
         _moveStrategy: undefined
       },
 
-      after: {
-         _endDragHandler: function(dragObject){
-            var  target = dragObject.getTarget();
-            if (target) {
-               if (target.getModel().getId() == this.getSelectedKey()) {
-                  //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
-                  clickHandler = this._elemClickHandler;
-                  this._elemClickHandler = function () {
-                     this._elemClickHandler = clickHandler;
-                  };
-               }
-               if (dragObject.getOwner() === this) {
-                  var models = [];
-                  dragObject.getSource().each(function(item){
-                     models.push(item.getModel());
-                  });
-                  var position = target.getPosition();
-                  this._move(models, target.getModel(),
-                     position === 'on' ? undefined : position === 'after'
-                  );
-               } else {
-                  this._moveFromOut(dragObject);
-               }
-            }
-         }
-      },
-
 
       //region public
-      selectedMoveTo: function(moveTo) {
+      /**
+       *
+       * @param target
+       */
+      selectedMoveTo: function(target) {
          var selectedItems = this.getSelectedItems(false);
-         this._move(selectedItems ? selectedItems.toArray() : [], moveTo);
+         if (!$ws.helpers.instanceOfModule(moveTo, 'WS.Data/Entity/Model')) {
+            target = this.getItems().getRecordById(moveTo);
+         }
+         this.move(selectedItems ? selectedItems.toArray() : [], target);
       },
 
 
@@ -83,7 +62,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
          this._moveStrategy = strategy;
       },
       /**
-       * Обработчик для операции над записью, переместить ввниз
+       * Обработчик для быстрой операции над запись. Переместить на одну запись ввниз.
        * @param tr
        * @param id
        * @param record
@@ -95,7 +74,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
          }
       },
       /**
-       * Обработчик для операции над записью, переместить вверх
+       * Обработчик для быстрой операции над записью. Переместить на одну запись вверх.
        * @param tr
        * @param id
        * @param record
@@ -109,81 +88,56 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
       //endregion public
       //region protected
       /**
-       * перемещает записи в коллекции
+       *
        * @param movedItems
        * @param target
-       * @param after
-       */
-      moveInItems: function(movedItems, target, after) {
-         var movedItemIndex,
-            items = this.getItems(),
-            projection = this._getItemsProjection(),
-            orderPropery = this.getDataSource().getOrderProperty(),
-            orderValue = this._getOrderValue(movedItems[0], target, after);
-
-         $ws.helpers.forEach(movedItems, function(movedItem) {
-            var projectionItem =  projection.getItemBySourceItem(movedItem);
-            if (this._options.hierField) {
-               //если перемещение было по порядку и иерархии одновременно, то надо обновить hierField
-               movedItem.set(this._options.hierField, target.get(this._options.hierField));
-            }
-            if (after) { //Если перемещаем вверх то надо вставить перемещаемую запись перед записью к которой перемещаем.
-               var nextProjectionItem = projection.getNext(
-                  projection.getItemBySourceItem(target)
-               );
-               if (nextProjectionItem) {
-                  movedItemIndex = projection.getSourceIndexByItem(nextProjectionItem);
-               } else { //если не найден то вставляем в конец
-                  movedItemIndex = items.getCount();
-               }
-            } else {
-               movedItemIndex = items.getIndex(target);
-               movedItemIndex = movedItemIndex > -1 ?  movedItemIndex : 0;//если не нашли то всталяем вначало
-            }
-            if (items.getIndex(movedItem) < movedItemIndex ) {
-               movedItemIndex--; //если запись по списку сдвигается вниз то после ее удаления индексы сдвинутся
-            }
-            items.setEventRaising(false, true);
-            items.remove(movedItem);
-            items.add(
-               movedItem,
-               movedItemIndex < items.getCount() ? movedItemIndex : undefined
-            );
-            if (orderPropery && orderValue && movedItem.has(orderPropery)) {
-               movedItem.set(orderPropery, orderValue);
-            }
-            items.setEventRaising(true, true);
-         }.bind(this));
-      },
-      /**
-       * Вычисляет значение порномера, нужно если есть сортировка по порномеру на проекции
+       * @param position
        * @private
        */
-      _getOrderValue: function(movedItem, target, after) {
-         var projection = this._getItemsProjection(),
-            nearbyItemprojItem = projection[after ? 'getNext' : 'getPrevious'](
-               projection.getItemBySourceItem(movedItem)
-            ),
-            nearbyItem =  nearbyItemprojItem ? nearbyItemprojItem.getContents() : undefined,
-            orderPropery = this.getDataSource().getOrderProperty();
+      _move: function(movedItems, target, position) {
+         var
+            deferred,
+            self = this,
+            isNodeTo = true,
+            isChangeOrder = position !== 'on';
 
-         if (target.has(orderPropery)) {
-            var nearbyVal = nearbyItem ? nearbyItem.get(orderPropery) : undefined,
-               moveToVal = target.get(orderPropery);
-
-            if (nearbyVal && moveToVal) {
-               return Math.floor((moveToVal+nearbyVal)/2);
-            }
-            return moveToVal;
+         if (target !== null) {
+            isNodeTo = target.get(this._options.hierField + '@');
          }
-         return undefined;
+
+         if (this._checkRecordsForMove(movedItems, target, isChangeOrder)) {
+            this._toggleIndicator(true);
+
+            if (isNodeTo && !isChangeOrder) {
+               deferred = this.getMoveStrategy().hierarhyMove(movedItems, target);
+            } else  {
+               deferred = this.getMoveStrategy()._move(movedItems, target, position == 'after');
+            }
+            if (deferred !==false && !(deferred instanceof $ws.proto.Deferred)) {
+               deferred = new $ws.proto.Deferred().callback();
+            }
+
+            if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
+               deferred.addCallback(function() {
+                  if (isChangeOrder) {
+                     self.moveInItems(movedItems, target, position == 'after');
+                  } else {
+                     self.removeItemsSelectionAll();
+                  }
+               }).addBoth(function() {
+                  self._toggleIndicator(false);
+               });
+            } else {
+               self._toggleIndicator(false);
+            }
+         }
       },
       /**
        * Перемещает элементы из внешнего контрола, через drag'n'drop
        * @param {SBIS3.CONTROLS.DragObject} dragObject
        * @private
        */
-      _moveFromOut: function(dragObject) {
+      _moveFromOutside: function(dragObject) {
          var target = dragObject.getTarget(),
             dragSource = dragObject.getSource();
          if(dragObject.getSource().getAction()) {
@@ -200,7 +154,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
                if (target.getPosition() === 'on') {
                   def = this.getMoveStrategy().hierarhyMove(movedItems, dragObject.getTarget().getModel());
                } else {
-                  def = this.getMoveStrategy().move(movedItems, dragObject.getTarget().getModel(), target.getPosition() === 'after');
+                  def = this.getMoveStrategy()._move(movedItems, dragObject.getTarget().getModel(), target.getPosition() === 'after');
                }
             }
          }
@@ -235,11 +189,18 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
             }
          }
          return Di.resolve(this._options.moveStrategy, {
-            dataSource: this._dataSource,
+            dataSource: this.getDataSource(),
             hierField: this._options.hierField,
             listView: this
          });
       },
+      /**
+       *
+       * @param movedItem
+       * @param targetsId
+       * @param after
+       * @private
+       */
       _moveRecord: function(movedItem, targetsId, after) {
          var self = this,
             target = this._options._items.getRecordById(targetsId);
@@ -249,44 +210,15 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
             $ws.core.alert(e.message);
          });
       },
-      _move: function(movedItems, target, after) {
-         var
-            deferred,
-            self = this,
-            isNodeTo = true,
-            isChangeOrder = after !== undefined;
 
-         if (target !== null) {
-            isNodeTo = target.get(this._options.hierField + '@');
-         }
-
-         if (this._checkRecordsForMove(movedItems, target, isChangeOrder)) {
-            this._toggleIndicator(true);
-
-            if (isNodeTo && !isChangeOrder) {
-               deferred = this.getMoveStrategy().hierarhyMove(movedItems, target);
-            } else  {
-               deferred = this.getMoveStrategy().move(movedItems, target, after);
-            }
-            if (deferred !==false && !(deferred instanceof $ws.proto.Deferred)) {
-               deferred = new $ws.proto.Deferred().callback();
-            }
-
-            if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
-               deferred.addCallback(function() {
-                  if (isChangeOrder) {
-                     self.moveInItems(movedItems, target, after);
-                  } else {
-                     self.removeItemsSelectionAll();
-                  }
-               }).addBoth(function() {
-                  self._toggleIndicator(false);
-               });
-            } else {
-               self._toggleIndicator(false);
-            }
-         }
-      },
+      /**
+       *
+       * @param movedItems
+       * @param target
+       * @param isChangeOrder
+       * @returns {boolean}
+       * @private
+       */
       _checkRecordsForMove: function(movedItems, target, isChangeOrder) {
          var
             key,
@@ -309,6 +241,12 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
 
          return true;
       },
+      /**
+       *
+       * @param parentKey
+       * @returns {Array}
+       * @private
+       */
       _getParentsMap: function(parentKey) {
          var
             dataSet = this.getItems(),
@@ -348,7 +286,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
          var
             action = new InteractiveMove({
                linkedObject: this,
-               parentProperty: this._options.hierField
+               parentProperty: this._options.hierField,
+               moveStrategy: this.getMoveStrategy()
             });
 
          action.execute({records: records});
