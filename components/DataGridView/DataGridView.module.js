@@ -681,7 +681,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          var
             column = 0,
             canShow = this.isEnabled();
-         if (this._options.editingTemplate || targetColumnIndex === undefined) {
+         if (this._options.editingTemplate || targetColumnIndex === undefined || (targetColumnIndex === 0 && this._options.multiselect)) {
             // Отображаем редактирование по месту и для задизабленного DataGrid, но только если хоть у одиной колонки
             // доступен редактор при текущем состоянии задизабленности DataGrid.
             while (!canShow && column < this._options.columns.length) {
