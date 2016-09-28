@@ -219,9 +219,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
       _resizeFoldersFooters: function() {
          var footers = $('.controls-TreeView__folderFooterContainer', this._container.get(0));
-         /*TODO непонятно откуда появился отступ у футеров, выписываю задачу Сухоручкину, чтоб разобрался*/
-         var width = this._container.width() - 32;
-         footers.width(width);
+         var width = this._container.width();
+         footers.outerWidth(width);
       },
 
       _keyboardHover: function(e) {
