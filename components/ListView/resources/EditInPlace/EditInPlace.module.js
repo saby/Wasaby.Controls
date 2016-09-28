@@ -6,11 +6,10 @@ define('js!SBIS3.CONTROLS.EditInPlace',
    [
       'js!SBIS3.CORE.CompoundControl',
       'html!SBIS3.CONTROLS.EditInPlace',
-      'js!SBIS3.CORE.CompoundActiveFixMixin',
       'js!SBIS3.CONTROLS.CompoundFocusMixin',
       'js!WS.Data/Di'
    ],
-   function(Control, dotTplFn, CompoundActiveFixMixin, CompoundFocusMixin, Di) {
+   function(Control, dotTplFn, CompoundFocusMixin, Di) {
       'use strict';
 
       /**
@@ -22,7 +21,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
 
       var
          CONTEXT_RECORD_FIELD = 'sbis3-controls-edit-in-place',
-         EditInPlace = Control.extend([CompoundActiveFixMixin, CompoundFocusMixin], /** @lends SBIS3.CONTROLS.EditInPlace.prototype */ {
+         EditInPlace = Control.extend([CompoundFocusMixin], /** @lends SBIS3.CONTROLS.EditInPlace.prototype */ {
             _dotTplFn: dotTplFn,
             $protected: {
                _options: {
@@ -125,9 +124,6 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._previousModelState = this._cloneWithFormat(model);
                this._editingModel = this._cloneWithFormat(model);
                this.getContext().setValue(CONTEXT_RECORD_FIELD, this._editingModel);
-            },
-            canAcceptFocus: function () {
-               return false;
             },
             /**
              * Сохранить значения полей области редактирования по месту

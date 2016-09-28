@@ -474,8 +474,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      (this._isAnotherTarget(focusedControl, this) || !focusedControl._container.closest('.controls-ListView').length);
                if (endEdit) {
                   eip = this._getEditingEip();
-                  withSaving = eip.getEditingRecord().isChanged();
-                  this.endEdit(withSaving);
+                  if (eip) {
+                     withSaving = eip.getEditingRecord().isChanged();
+                     this.endEdit(withSaving);
+                  }
                }
             },
             _allowEndEdit: function(control) {
