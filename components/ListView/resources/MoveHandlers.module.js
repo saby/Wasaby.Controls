@@ -98,9 +98,6 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
                   if (isChangeOrder) {
                      self.moveInItems(records, recordTo, !insertAfter);
                   } else {
-                     //TODO: пока дерево не перевели на проекции, нужно пересчитывать дерево индексов, т.к. после set
-                     //в поле иерархии он сам этого не сделает
-                     self._options._items._reindexTree(self._options.hierField);
                      self.removeItemsSelectionAll();
                   }
                }).addBoth(function() {
@@ -147,16 +144,20 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
                3. это не исключает ситуации, когда БЛ не возвращает иерархию до корня, либо пользователь самостоятельно пытается что-то переместить с помощью интерфейса IDataSource.move. В таком случае мы считаем, что БЛ вне зависимости от возможности проверки на клиенте, всегда должна проверять входные значения при перемещении. В противном случае это приводит к зависанию запроса.
             */
             path = dataSet.getMetaData().path,
-            toMap = path ? $.map(path.getChildItems(), function(elem) {
-               return '' + elem;
-            }) : [];
+            toMap = [];
+
+         if (path) {
+            path.each(function(item) {
+               toMap.push('' + item.getId());
+            });
+         }
          var record = dataSet.getRecordById(parentKey);
          while (record) {
             parentKey = '' + record.getId();
             if ($.inArray(parentKey, toMap) === -1) {
                toMap.push(parentKey);
             }
-            parentKey = dataSet.getParentKey(record, hierField);
+            parentKey = record.get(hierField);
             record = dataSet.getRecordById(parentKey);
          }
          return toMap;
