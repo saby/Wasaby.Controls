@@ -35,11 +35,6 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
                _moveStrategy: 'movestrategy.base'
             }
          },
-         _doExecute: function (params) {
-            if (params) {
-               return this._move(params.from, params.to, params.position);
-            }
-         },
 
          /**
           * Возвращает стратегию перемещения
