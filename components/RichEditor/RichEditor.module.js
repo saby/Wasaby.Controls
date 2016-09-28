@@ -1520,7 +1520,10 @@ define('js!SBIS3.CONTROLS.RichEditor',
           * @returns {*} Текущее значение (в формате html-кода)
           */
          _getTinyEditorValue: function(){
-            return this._tinyEditor.serializer.serialize(this._tinyEditor.getBody(), {format: 'html', get: true, getInner: true});
+            var
+               content = this._tinyEditor.getContent({no_events: true}),
+               args = this._tinyEditor.fire('PostProcess', {content: content});
+            return args.content;
          },
 
          /**

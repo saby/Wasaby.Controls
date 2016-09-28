@@ -73,7 +73,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _lastTargetAdding: undefined,
                //Флаг отвечает за блокировку при добавлении записей. Если несколько раз подряд будет отправлена команда добавления, то уйдёт несколько запросов на бл
                _addLock: false,
-               _addTarget: undefined
+               _addTarget: undefined,
+               _isAdd: false
             },
             $constructor: function () {
                this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace', 'onChangeHeight');
@@ -347,11 +348,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _updateModel: function(eip, withSaving) {
                var
                   self = this,
-                  eipRecord = eip.getEditingRecord(),
-                  //Узнать происходит ли добавление, надёжнее всего проверяя есть ли запись с указанным Id в рекордсете.
-                  //Смотреть на state ненадёжно т.к. запись могли перечитать с бл, или могли позвать reload после начала редактирования.
-                  //Эти действия сделают запись не связанной с рекордсетом, и мы не сможем понять, происходит ли добавление или редактирование.
-                  isAdd = !this._options.items.getRecordById(eipRecord.getId());
+                  eipRecord = eip.getEditingRecord();
                if (withSaving) {
                   this._options.dataSource.update(eipRecord).addCallback(function() {
                      eip.acceptChanges();
@@ -359,7 +356,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         self._editingRecord.merge(eipRecord);
                         self._editingRecord = undefined;
                      }
-                     if (isAdd) {
+                     if (self._isAdd) {
                         self._options.items.push(eip._cloneWithFormat(eipRecord, self._options.items));
                      }
                   }).addErrback(function(error) {
@@ -368,7 +365,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      self._afterEndEdit(eip, withSaving);
                   });
                } else {
-                  if (isAdd && eipRecord.getId()) {
+                  if (this._isAdd && eipRecord.getId()) {
                      this._options.dataSource.destroy(eipRecord.getId());
                   }
                   this._afterEndEdit(eip, withSaving);
@@ -377,7 +374,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _afterEndEdit: function(eip, withSaving) {
                eip.endEdit();
-               if (this._addTarget) {
+               if (this._isAdd) {
+                  this._isAdd = false;
                   this._addTarget.remove();
                   this._addTarget = undefined;
                }
@@ -399,6 +397,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         if (self._options.hierField) {
                            model.set(self._options.hierField, options.target ? options.target.getContents().getId() : options.target);
                         }
+                        //Единственный надёжный способ при завершении добавления записи узнать, что происходит именно добавление, это запомнить флаг.
+                        //Раньше использовалось проверка на getState, но запись могли перечитать, и мы получали неверный результат.
+                        //Так же мы пытались находить запись в текущем рекордсете, но например при поиске надор данных изменяется и вызывается
+                        //завершение редактирования, но записи уже может не быть в рекордсете.
+                        self._isAdd = true;
                         self._createAddTarget(model, options);
                         self._getEip().edit(model);
                         editingRecord = self._getEip().getEditingRecord();
