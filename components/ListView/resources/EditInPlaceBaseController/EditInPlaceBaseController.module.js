@@ -21,11 +21,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
        * @control
        * @public
        */
-      var EndEditResult = {
-         CANCEL: 'Cancel',
-         SAVE: 'Save',
-         NOT_SAVE: 'NotSave',
-         CUSTOM_LOGIC: 'CustomLogic'
+      var EndEditResult = { // Возможные результаты события "onEndEdit"
+         CANCEL: 'Cancel', // Отменить завершение редактирования/добавления
+         SAVE: 'Save', // Завершать с штатным сохранением результатов редактирования/добавления.
+         NOT_SAVE: 'NotSave', // Завершать без сохранения результатов. ВНИМАНИЕ! Использование данной константы в добавлении по месту приводит к автоудалению созданной записи
+         CUSTOM_LOGIC: 'CustomLogic' // Завершать с кастомной логика сохранения. Используется, например, при добавлении по месту, когда разработчику необходимо самостоятельно обработать добавляемую запись
       };
 
       var
