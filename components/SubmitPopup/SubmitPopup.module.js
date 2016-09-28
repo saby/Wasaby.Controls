@@ -1,7 +1,5 @@
 define('js!SBIS3.CONTROLS.SubmitPopup', [
       'js!SBIS3.CONTROLS.InformationPopup',
-      'html!SBIS3.CONTROLS.SubmitPopup/resources/messageTemplate',
-      'html!SBIS3.CONTROLS.SubmitPopup/resources/detailsTemplate',
       'html!SBIS3.CONTROLS.SubmitPopup/resources/template',
       'js!SBIS3.CONTROLS.Button',
       'js!SBIS3.CONTROLS.Link'
@@ -16,7 +14,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
     * @control
     * @author Степин П.В.
     */
-   function(InformationPopup, messageTemplate, detailsTemplate, template){
+   function(InformationPopup, template){
       'use strict';
 
       var SubmitPopup = InformationPopup.extend(/** @lends SBIS3.CONTROLS.SubmitPopup.prototype */ {
@@ -104,12 +102,12 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                /**
                 * @cfg {Function} Шаблон для сообщения
                 */
-               messageTemplate: messageTemplate,
+               messageTemplate: null,
 
                /**
                 * @cfg {Function} Шаблон для деталей, отображается под основным сообщением
                 */
-               detailsTemplate: detailsTemplate,
+               detailsTemplate: null,
 
                /*
                 * @noShow

@@ -1,8 +1,8 @@
 <div class="controls-SubmitPopup">
 
    <div class="controls-SubmitPopup__body">
-      {{?it.messageTemplate}}{{=it.messageTemplate.apply(this, [it])}}{{?}}
-      {{?it.detailsTemplate}}{{=it.detailsTemplate.apply(this, [it])}}{{?}}
+      {{? it.messageTemplate || it.message }}<div class="controls-SubmitPopup__message">{{=(it.messageTemplate ? it.messageTemplate.apply(this, [it]) : it.message)}}</div>{{?}}
+      {{? it.detailsTemplate || it.details }}<div class="controls-SubmitPopup__details">{{=(it.detailsTemplate ? it.detailsTemplate.apply(this, [it]) : it.details)}}</div>{{?}}
    </div>
 
    <div class="controls-SubmitPopup__footer">
