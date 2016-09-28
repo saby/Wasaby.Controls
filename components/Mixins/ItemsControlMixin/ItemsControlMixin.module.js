@@ -1805,8 +1805,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _ladderCompare: function(rows){
-         var ladderDecorator = this._options._decorators.getByName('ladder');
-         if (ladderDecorator && ladderDecorator.isIgnoreEnabled()){
+         var ladderDecorator;
+         if (this._options._decorators){
+            ladderDecorator = this._options._decorators.getByName('ladder');
+            if (ladderDecorator && ladderDecorator.isIgnoreEnabled()){
+               return;
+            }
+         }
+         else {
             return;
          }
          //TODO придрот - метод нужен только для адекватной работы лесенки при перемещении элементов местами
