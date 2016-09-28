@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
    'js!SBIS3.CONTROLS.BreadCrumbs',
-   'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree'], function (Control, BreadCrumbs, groupByTpl, TreeProjection) {
+   'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree', 'js!WS.Data/Relation/Hierarchy'], function (Control, BreadCrumbs, groupByTpl, TreeProjection, HierarchyRelation) {
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeMixinDS
@@ -146,6 +146,14 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          });
       },
 
+      _getHierarchyRelation: function(idProperty) {
+         return new HierarchyRelation({
+            idProperty: idProperty || (this._items ? this._items.getIdProperty() : ''),
+            parentProperty: this._options.hierField,
+            nodeProperty: this._options.hierField + '@'
+         });
+      },
+
       _getRecordsForRedraw: function() {
          /*Получаем только рекорды с parent = curRoot*/
          var
@@ -196,12 +204,15 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
 
       //Рекурсивно удаляем из индекса открытых узлов все дочерние узлы закрываемого узла
       _collapseChilds: function(key){
-         var tree = this._items._indexTree;
-         if (tree[key]){
-            for (var i = 0; i < tree[key].length; i++){
-               this._collapseChilds(tree[key][i]);
-               delete(this._options.openedPath[tree[key][i]]);
-            }
+         var idProperty =  this._options.keyField || (this._dataSource ? this._dataSource.getIdProperty() : ''),
+            hierarchy = this._getHierarchyRelation(idProperty),
+            children = hierarchy.getChildren(key, this._items),
+            childId;
+
+         for (var i = 0; i < children.length; i++){
+            childId = children[i].get(idProperty);
+            this._collapseChilds(childId);
+            delete(this._options.openedPath[childId]);
          }
       },
 
@@ -243,8 +254,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
       expandNode: function (key) {
 
          if(!this._options.openedPath[key]) {
-            var self = this,
-               tree = this._items.getTreeIndex(this._options.hierField, true);
+            var self = this;
 
             this._folderOffsets[key || 'null'] = 0;
             this._options.openedPath[key] = true;
@@ -263,13 +273,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
                   self._notify('onNodeExpand', key);
                });
             } else {
-               var child = tree[key];
-               var records = [];
-               if (child) {
-                  for (var i = 0; i < child.length; i++) {
-                     records.push(this._items.getRecordById(child[i]));
-                  }
-               }
+               var hierarchy = this._getHierarchyRelation(),
+                  records = hierarchy.getChildren(key, this._items);
                this._drawLoadedNode(key, records, this._folderHasMore[key]);
                this._notify('onNodeExpand', key);
             }
@@ -321,7 +326,6 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          this._needToRedraw = false;
          this._items.merge(dataSet, {remove: false});
          this._needToRedraw = true;
-         this._items.getTreeIndex(this._options.hierField, true);
          var records = [];
          dataSet.each(function (record) {
             records.push(record);
@@ -404,7 +408,6 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             if (dataSet.getCount()) {
                var records = dataSet.toArray();
                self._items.merge(dataSet, {remove: false});
-               self._items.getTreeIndex(self._options.hierField, true);
                self._drawItemsFolderLoad(records, id);
                self._dataLoadedCallback();
             }
@@ -498,12 +501,16 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          _dataLoadedCallback: function () {
             //this._options.openedPath = {};
             if (this._options.expand) {
-               var tree = this._items.getTreeIndex(this._options.hierField);
-               for (var i in tree) {
-                  if (tree.hasOwnProperty(i) && i != 'null' && i != this._curRoot) {
-                     this._options.openedPath[i] = true;
+               var hierarchy = this._getHierarchyRelation(),
+                  items = this._items,
+                  openedPath = this._options.openedPath;
+               items.each(function(item) {
+                  var id = item.getId(),
+                     children = hierarchy.getChildren(item, items);
+                  if (children.length && id != 'null' && id != this._curRoot) {
+                     openedPath[id] = true;
                   }
-               }
+               });
             }
          },
          destroy : function() {
