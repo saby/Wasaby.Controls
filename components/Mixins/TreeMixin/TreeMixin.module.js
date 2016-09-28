@@ -224,7 +224,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       var tplOptions = cfg._buildTplArgsLV.call(this, cfg);
       tplOptions.displayType = cfg.displayType;
       tplOptions.hierField = cfg.hierField;
-      tplOptions.paddingSize = cfg._paddingSize;
+      tplOptions.paddingSize = !isNaN(cfg.paddingSize) && typeof cfg.paddingSize === 'number' ? cfg.paddingSize : cfg._paddingSize;
       tplOptions.originallPadding = cfg._originallPadding;
       tplOptions.isSearch = cfg.hierarchyViewMode;
       return tplOptions;
@@ -331,6 +331,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             _getRecordsForRedraw: getRecordsForRedraw,
             _curRoot: null,
             _createDefaultProjection : createDefaultProjection,
+            /**
+             * @cfg {Number} Задает размер отступов для каждого уровня иерархии
+             * @example
+             * <pre>
+             *    <option name="paddingSize">24</option>
+             * </pre>
+             */
+            paddingSize: undefined,
             /**
              * @cfg {String, Number} Устанавливает идентификатор узла, относительно которого нужно отображать данные. Такой узел будет считаться вершиной иерархии.
              * @example
