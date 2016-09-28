@@ -25,7 +25,21 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
         },
         _moveStrategy: undefined
       },
+      /**
+       * Перемещает записи через диалог
+       * @param records
+       * @deprecated Используйте SBIS3.CONTROLS.Action.List.InteractiveMove.
+       */
+      moveRecordsWithDialog: function(records) {
+         var
+            action = new InteractiveMove({
+               linkedObject: this,
+               parentProperty: this._options.hierField,
+               moveStrategy: this.getMoveStrategy()
+            });
 
+         action.execute({records: records});
+      },
 
       //region public
       /**
@@ -39,54 +53,6 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
          }
          this.move(selectedItems ? selectedItems.toArray() : [], target);
       },
-
-
-      /**
-       * Возвращает стратегию перемещения
-       * @see WS.Data/MoveStrategy/IMoveStrategy
-       * @returns {WS.Data/MoveStrategy/IMoveStrategy}
-       */
-      getMoveStrategy: function () {
-         return this._moveStrategy || (this._moveStrategy = this._makeMoveStrategy());
-      },
-
-      /**
-       * Устанавливает стратегию перемещения
-       * @see WS.Data/MoveStrategy/IMoveStrategy
-       * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
-       */
-      setMoveStrategy: function (strategy){
-         if(!$ws.helpers.instanceOfMixin(strategy,'WS.Data/MoveStrategy/IMoveStrategy')){
-            throw new Error('The strategy must implemented interfaces the WS.Data/MoveStrategy/IMoveStrategy.')
-         }
-         this._moveStrategy = strategy;
-      },
-      /**
-       * Обработчик для быстрой операции над запись. Переместить на одну запись ввниз.
-       * @param tr
-       * @param id
-       * @param record
-       */
-      moveRecordDown: function(tr, id, record) {
-         var nextItem = this.getNextItemById(id);
-         if(nextItem) {
-            this._moveRecord(record, nextItem.data('id'), true);
-         }
-      },
-      /**
-       * Обработчик для быстрой операции над записью. Переместить на одну запись вверх.
-       * @param tr
-       * @param id
-       * @param record
-       */
-      moveRecordUp: function(tr, id, record) {
-         var prevItem = this.getPrevItemById(id);
-         if(prevItem) {
-            this._moveRecord(record, prevItem.data('id'), false);
-         }
-      },
-      //endregion public
-      //region protected
       /**
        *
        * @param movedItems
@@ -132,85 +98,6 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
             }
          }
       },
-      /**
-       * Перемещает элементы из внешнего контрола, через drag'n'drop
-       * @param {SBIS3.CONTROLS.DragObject} dragObject
-       * @private
-       */
-      _moveFromOutside: function(dragObject) {
-         var target = dragObject.getTarget(),
-            dragSource = dragObject.getSource();
-         if(dragObject.getSource().getAction()) {
-            def = dragObject.getSource().getAction().execute();
-         } else {
-            var dragOwnerSource = dragObject.getOwner().getDataSource(),
-               dataSource = this.getDataSource();
-            var def;
-            if (dataSource === dragOwnerSource || dragOwnerSource.getEndpoint().contract == dataSource.getEndpoint().contract) {
-               var movedItems = [];
-               dragSource.each(function (movedItem) {
-                  movedItems.push(movedItem.getModel());
-               });
-               if (target.getPosition() === 'on') {
-                  def = this.getMoveStrategy().hierarhyMove(movedItems, dragObject.getTarget().getModel());
-               } else {
-                  def = this.getMoveStrategy()._move(movedItems, dragObject.getTarget().getModel(), target.getPosition() === 'after');
-               }
-            }
-         }
-         def = (def instanceof $ws.proto.Deferred) ? def : new $ws.proto.Deferred().callback();
-         var position = this.getItems().getIndex(target.getModel()),
-            ownerItems = dragObject.getOwner().getItems(),
-            self = this,
-            operation = dragSource.getOperation();
-         def.addCallback(function() {
-            dragSource.each(function(movedItem) {
-               var model = movedItem.getModel();
-               if (operation === 'add' || operation === 'move') {
-                  self.getItems().add(model.clone(), position);
-               }
-               if (operation === 'delete' || operation === 'move') {
-                  ownerItems.remove(model);
-               }
-            });
-         });
-      },
-      /**
-       * Создает стратегию перемещения в зависимости от источника данных
-       * @returns {WS.Data/MoveStrategy/IMoveStrategy}
-       * @private
-       */
-      _makeMoveStrategy: function () {
-         if (!this._options.moveStrategy) {
-            if ($ws.helpers.instanceOfModule(this._dataSource, 'WS.Data/Source/SbisService')) {
-               this._options.moveStrategy = 'movestrategy.sbis';
-            } else {
-               this._options.moveStrategy = 'movestrategy.base';
-            }
-         }
-         return Di.resolve(this._options.moveStrategy, {
-            dataSource: this.getDataSource(),
-            hierField: this._options.hierField,
-            listView: this
-         });
-      },
-      /**
-       *
-       * @param movedItem
-       * @param targetsId
-       * @param after
-       * @private
-       */
-      _moveRecord: function(movedItem, targetsId, after) {
-         var self = this,
-            target = this._options._items.getRecordById(targetsId);
-         this.getMoveStrategy().move([movedItem], target, after).addCallback(function() {
-            self.moveInItems([movedItem], target, after);
-         }).addErrback(function(e) {
-            $ws.core.alert(e.message);
-         });
-      },
-
       /**
        *
        * @param movedItems
@@ -275,24 +162,111 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
          }
          return toMap;
       },
-      //endregion protected
-      //region deprecated
       /**
-       * Перемещает записи через диалог
-       * @param records
-       * @deprecated Используйте SBIS3.CONTROLS.Action.List.InteractiveMove.
+       * Возвращает стратегию перемещения
+       * @see WS.Data/MoveStrategy/IMoveStrategy
+       * @returns {WS.Data/MoveStrategy/IMoveStrategy}
        */
-      moveRecordsWithDialog: function(records) {
-         var
-            action = new InteractiveMove({
-               linkedObject: this,
-               parentProperty: this._options.hierField,
-               moveStrategy: this.getMoveStrategy()
+      getMoveStrategy: function () {
+         return this._moveStrategy || (this._moveStrategy = this._makeMoveStrategy());
+      },
+      /**
+       * Создает стратегию перемещения в зависимости от источника данных
+       * @returns {WS.Data/MoveStrategy/IMoveStrategy}
+       * @private
+       */
+      _makeMoveStrategy: function () {
+         if (!this._options.moveStrategy) {
+            if ($ws.helpers.instanceOfModule(this._dataSource, 'WS.Data/Source/SbisService')) {
+               this._options.moveStrategy = 'movestrategy.sbis';
+            } else {
+               this._options.moveStrategy = 'movestrategy.base';
+            }
+         }
+         return Di.resolve(this._options.moveStrategy, {
+            dataSource: this.getDataSource(),
+            hierField: this._options.hierField,
+            listView: this
+         });
+      },
+      /**
+       * Устанавливает стратегию перемещения
+       * @see WS.Data/MoveStrategy/IMoveStrategy
+       * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
+       */
+      setMoveStrategy: function (strategy){
+         if(!$ws.helpers.instanceOfMixin(strategy,'WS.Data/MoveStrategy/IMoveStrategy')){
+            throw new Error('The strategy must implemented interfaces the WS.Data/MoveStrategy/IMoveStrategy.')
+         }
+         this._moveStrategy = strategy;
+      },
+      /**
+       * Обработчик для быстрой операции над запись. Переместить на одну запись ввниз.
+       * @param tr
+       * @param id
+       * @param record
+       */
+      moveRecordDown: function(tr, id, record) {
+         var nextItem = this.getNextItemById(id);
+         if(nextItem) {
+            this._moveRecord(record, nextItem.data('id'), true);
+         }
+      },
+      /**
+       * Обработчик для быстрой операции над записью. Переместить на одну запись вверх.
+       * @param tr
+       * @param id
+       * @param record
+       */
+      moveRecordUp: function(tr, id, record) {
+         var prevItem = this.getPrevItemById(id);
+         if(prevItem) {
+            this._moveRecord(record, prevItem.data('id'), false);
+         }
+      },
+      /**
+       * Перемещает элементы из внешнего контрола, через drag'n'drop
+       * @param {SBIS3.CONTROLS.DragObject} dragObject
+       * @private
+       */
+      _moveFromOutside: function(dragObject) {
+         var target = dragObject.getTarget(),
+            dragSource = dragObject.getSource();
+         if(dragObject.getSource().getAction()) {
+            def = dragObject.getSource().getAction().execute();
+         } else {
+            var dragOwnerSource = dragObject.getOwner().getDataSource(),
+               dataSource = this.getDataSource();
+            var def;
+            if (dataSource === dragOwnerSource || dragOwnerSource.getEndpoint().contract == dataSource.getEndpoint().contract) {
+               var movedItems = [];
+               dragSource.each(function (movedItem) {
+                  movedItems.push(movedItem.getModel());
+               });
+               if (target.getPosition() === 'on') {
+                  def = this.getMoveStrategy().hierarhyMove(movedItems, dragObject.getTarget().getModel());
+               } else {
+                  def = this.getMoveStrategy()._move(movedItems, dragObject.getTarget().getModel(), target.getPosition() === 'after');
+               }
+            }
+         }
+         def = (def instanceof $ws.proto.Deferred) ? def : new $ws.proto.Deferred().callback();
+         var position = this.getItems().getIndex(target.getModel()),
+            ownerItems = dragObject.getOwner().getItems(),
+            self = this,
+            operation = dragSource.getOperation();
+         def.addCallback(function() {
+            dragSource.each(function(movedItem) {
+               var model = movedItem.getModel();
+               if (operation === 'add' || operation === 'move') {
+                  self.getItems().add(model.clone(), position);
+               }
+               if (operation === 'delete' || operation === 'move') {
+                  ownerItems.remove(model);
+               }
             });
-
-         action.execute({records: records});
+         });
       }
-      //endregion deprecated
    };
 
    return MoveHandlers;
