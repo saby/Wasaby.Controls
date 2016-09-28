@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        'js!SBIS3.CONTROLS.Utils.DialogOpener',
        'js!SBIS3.CONTROLS.ITextValue',
        'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+       'js!WS.Data/Di',
        'js!SBIS3.CONTROLS.MenuIcon',
        'i18n!SBIS3.CONTROLS.FieldLink'
 
@@ -40,7 +41,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         /********************************************/
         DialogOpener,
         ITextValue,
-        TemplateUtil
+        TemplateUtil,
+        Di
     ) {
 
        'use strict';
@@ -687,13 +689,33 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           _prepareItems: function() {
              var items = FieldLink.superclass._prepareItems.apply(this, arguments),
-                 self = this;
+                 self = this,
+                 newRec, dataSource, dataSourceModel, dataSourceModelInstance;
 
              if(items) {
+                dataSource = this.getDataSource();
+
+                if(dataSource) {
+                   dataSourceModel = dataSource.getModel();
+                   /* Создадим инстанс модели, который указан в dataSource,
+                    чтобы по нему проверять модели которые выбраны в поле связи */
+                   dataSourceModelInstance = typeof dataSourceModel === 'string' ? Di.resolve(dataSourceModel) : new dataSourceModel();
+
+                   items.each(function(rec, index) {
+                      /* Если модель сорса и выбранной записи разные, то создадим копию модели сорса,
+                       и заполним её данными из выбранной записи */
+                      if( dataSourceModelInstance._moduleName !==  rec._moduleName) {
+                         (newRec = dataSourceModelInstance.clone()).merge(rec);
+                         rec = newRec;
+                         items.replace(rec, index);
+                      }
+                   });
+                }
+
                 /* Элементы, установленные из дилогов выбора / автодополнения могут иметь другой первичный ключ,
                    отличный от поля с ключём, установленного в поле связи. Это связно с тем, что "связь" устанавливается по опеределённому полю,
                    и не обязательному по первичному ключу у записей в списке. */
-                items.each(function(rec) {
+                items.each(function(rec, index) {
                    if(rec.getIdProperty() !== self._options.keyField && rec.get(self._options.keyField)) {
                       rec.setIdProperty(self._options.keyField);
                    }
