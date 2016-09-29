@@ -514,7 +514,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
             })
     });
-	
+	/*
 	gemini.suite('add_and_edit_again', function (test) {
 
         test.setUrl('/integration_datagrid_edit_at_place_19.html').skip('firefox').setCaptureElements('[sbisname="ТипНоменклатуры"]')
@@ -573,7 +573,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 				actions.click(this.clearData);
 				actions.wait(350);
             })
-    });
+    });*/
 
 	gemini.suite('editor_with_combobox', function (test) {
 
