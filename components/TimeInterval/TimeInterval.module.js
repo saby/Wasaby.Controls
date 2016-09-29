@@ -25,6 +25,7 @@ define(
        */
 
       var TimeInterval = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS.TimeInterval.prototype */{
+         _dotTplFn: dotTplFn,
           /**
            * @event onChangeInterval Срабатывает при изменении временного интервала.
            * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -47,19 +48,6 @@ define(
            * @see setMinutes
            */
          $protected: {
-            _dotTplFn: dotTplFn,
-            /**
-             * Допустимые управляющие символы в маске.
-             * Условные обозначения:
-             *     1. D(day) -  Календарный день
-             *     2. H(hour) - Час
-             *     3. I - Минута
-             */
-            _controlCharactersSet: {
-               'D' : 'd',
-               'H' : 'd',
-               'I' : 'd'
-            },
             _sections: {
                'days' : 'D',
                'hours' : "H",
@@ -87,6 +75,18 @@ define(
              * Опции создаваемого контролла
              */
             _options: {
+               /**
+                * Допустимые управляющие символы в маске.
+                * Условные обозначения:
+                *     1. D(day) -  Календарный день
+                *     2. H(hour) - Час
+                *     3. I - Минута
+                */
+               _controlCharactersSet: {
+                  'D' : 'd',
+                  'H' : 'd',
+                  'I' : 'd'
+               },
                /**
                 * @cfg {String} Формат отображения данных
                 * @remark
@@ -168,7 +168,7 @@ define(
             var self = this;
             this._publish('onChangeInterval');
 
-            this._options.text = this.formatModel.getStrMask(this._maskReplacer);
+            this._options.text = this._getFormatModel().getStrMask(this._getMaskReplacer());
             this.timeInterval = new $ws.proto.TimeInterval;
             if (this._options.interval){
                this.setInterval(this._options.interval);
@@ -298,7 +298,7 @@ define(
             this._updateTextByTimeInterval(true);
          },
          _getEmptyText: function(){
-            return this.formatModel.getStrMask(this._maskReplacer);
+            return this._getFormatModel().getStrMask(this._getMaskReplacer());
          },
          /**
           * Метод получения интервала, заданного либо опцией {@link interval}, либо методом {@link setInterval} возвращает
@@ -327,7 +327,7 @@ define(
           * @private
           */
          _incMask: function (length) {
-            var leftGroupMaskLength = this.formatModel.model[0].mask.length;
+            var leftGroupMaskLength = this._getFormatModel().model[0].mask.length;
             //Увеличиваем маску левой группы до размера не большего maxCharsAtLeftGroup
             if ((leftGroupMaskLength + length) > this._options.maxCharsAtLeftGroup){
                length = this._options.maxCharsAtLeftGroup - leftGroupMaskLength;
@@ -338,7 +338,7 @@ define(
             this._options.mask = this._options.mask.substr(0, length) + this._options.mask;
             TimeInterval.superclass.setMask.apply(this, [this._options.mask]);
             this._setText(this._options.text);
-            this.setCursor(this.formatModel._options.cursorPosition.group, this.formatModel._options.cursorPosition.position + 1);
+            this.setCursor(this._getFormatModel()._options.cursorPosition.group, this._getFormatModel()._options.cursorPosition.position + 1);
          },
          /**
           * Содержит ли интервал дни\минуты
@@ -363,7 +363,7 @@ define(
             TimeInterval.superclass._setText.call(this, text);
          },
          _getCorrectText: function(text){
-            this.formatModel.setText(text, this._maskReplacer);
+            this._getFormatModel().setText(text, this._getMaskReplacer());
             this._updateIntervalByText();
             return this._getTextByTimeInterval();
          },
@@ -378,7 +378,7 @@ define(
             //то выставляем максимальное значение, соответствующее максимально возможной маске (9999:00:00)
             if (valuesArray[0].toString().length > this._options.maxCharsAtLeftGroup){
                this._incMask(this._options.maxCharsAtLeftGroup);
-               result[0] = this.formatModel.model[0].mask.replace(/[a-z]/ig, '9');
+               result[0] = this._getFormatModel().model[0].mask.replace(/[a-z]/ig, '9');
                this.timeInterval.set([result[0], '00', '00']);
                this._notifyOnPropertyChanged('interval');
             }
@@ -392,9 +392,9 @@ define(
           * @private
           */
          _getTextCorrespondingToMask: function(text){
-            while ((text.length < this._options.mask.length || (text[0] != this._maskReplacer && text[0] != "0" && text.length == this._options.mask.length))
+            while ((text.length < this._options.mask.length || (text[0] != this._getMaskReplacer() && text[0] != "0" && text.length == this._options.mask.length))
                && text.split(':')[0].length < this._options.maxCharsAtLeftGroup){
-               text = this._maskReplacer + text;
+               text = this._getMaskReplacer() + text;
             }
             if (text.length > this._options.mask.length){
                this._options.text = text;
@@ -439,8 +439,8 @@ define(
             if (!this._hasMaskSection(this._sections.days)){
                sectionArray.push(0);
             }
-            for (var i = 0; i < this.formatModel.model.length; i += 2){
-               sectionArray.push(this.formatModel.model[i].value.join(''));
+            for (var i = 0; i < this._getFormatModel().model.length; i += 2){
+               sectionArray.push(this._getFormatModel().model[i].value.join(''));
             }
 
             this.timeInterval.set(sectionArray);
@@ -451,7 +451,7 @@ define(
           * @private
           */
          _updateTextByTimeInterval: function(needUpdate){
-            var currentText = this.formatModel.getText(this._maskReplacer);
+            var currentText = this._getFormatModel().getText(this._getMaskReplacer());
             if ((needUpdate === true) || (currentText !== this._getEmptyText())){
                this._setText(this._getTextByTimeInterval());
             }
@@ -461,15 +461,15 @@ define(
           * @private
           */
          _updateText: function(){
-            var text = this.formatModel.getText(this._maskReplacer),
+            var text = this._getFormatModel().getText(this._getMaskReplacer()),
                 oldText = this._options.text,
                 oldDate = this.timeInterval.toString();
 
             this._updateIntervalByText(text);
             this._options.text = text;
 
-            if ((text.split(':')[0].length == this.formatModel.model[0].mask.length) && text.split(':')[0].indexOf(this._maskReplacer) == -1 && this.formatModel.model[0].mask.length < this._options.maxCharsAtLeftGroup) {
-               this._options.text = this._maskReplacer + text;
+            if ((text.split(':')[0].length == this._getFormatModel().model[0].mask.length) && text.split(':')[0].indexOf(this._getMaskReplacer()) == -1 && this._getFormatModel().model[0].mask.length < this._options.maxCharsAtLeftGroup) {
+               this._options.text = this._getMaskReplacer() + text;
                this._incMask(1);
             }
 
