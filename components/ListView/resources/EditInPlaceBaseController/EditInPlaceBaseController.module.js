@@ -21,10 +21,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
        * @control
        * @public
        */
-      var EndEditResult = {
-         CANCEL: 'Cancel',
-         SAVE: 'Save',
-         NOT_SAVE: 'NotSave'
+      var EndEditResult = { // Возможные результаты события "onEndEdit"
+         CANCEL: 'Cancel', // Отменить завершение редактирования/добавления
+         SAVE: 'Save', // Завершать с штатным сохранением результатов редактирования/добавления.
+         NOT_SAVE: 'NotSave', // Завершать без сохранения результатов. ВНИМАНИЕ! Использование данной константы в добавлении по месту приводит к автоудалению созданной записи
+         CUSTOM_LOGIC: 'CustomLogic' // Завершать с кастомной логика сохранения. Используется, например, при добавлении по месту, когда разработчику необходимо самостоятельно обработать добавляемую запись
       };
 
       var
@@ -324,6 +325,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this._savingDeferred.isReady() ? $ws.proto.Deferred.success() : this._savingDeferred;
             },
             _endEdit: function(eip, withSaving, endEditResult) {
+               var self = this;
                //TODO: Поддержка старого варианта результата.
                if (typeof endEditResult === "boolean") {
                   endEditResult = endEditResult ? EndEditResult.SAVE : EndEditResult.NOT_SAVE;
@@ -338,7 +340,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._savingDeferred.errback();
                   return $ws.proto.Deferred.fail();
                } else {
-                  this._updateModel(eip, withSaving);
+                  if (endEditResult === EndEditResult.CUSTOM_LOGIC) {
+                     this._afterEndEdit(eip, withSaving);
+                  } else {
+                     this._updateModel(eip, withSaving).addBoth(function () {
+                        self._removePendingOperation();
+                        self._afterEndEdit(eip, withSaving);
+                     });
+                  }
                   return this._savingDeferred;
                }
             },
@@ -348,9 +357,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _updateModel: function(eip, withSaving) {
                var
                   self = this,
+                  deferred,
                   eipRecord = eip.getEditingRecord();
                if (withSaving) {
-                  this._options.dataSource.update(eipRecord).addCallback(function() {
+                  deferred = this._options.dataSource.update(eipRecord).addCallback(function() {
                      eip.acceptChanges();
                      if (self._editingRecord) {
                         self._editingRecord.merge(eipRecord);
@@ -361,16 +371,15 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      }
                   }).addErrback(function(error) {
                      $ws.helpers.alert(error);
-                  }).addBoth(function() {
-                     self._afterEndEdit(eip, withSaving);
                   });
                } else {
                   if (this._isAdd && eipRecord.getId()) {
-                     this._options.dataSource.destroy(eipRecord.getId());
+                     deferred = this._options.dataSource.destroy(eipRecord.getId());
+                  } else {
+                     deferred = $ws.proto.Deferred.success()
                   }
-                  this._afterEndEdit(eip, withSaving);
                }
-               this._removePendingOperation();
+               return deferred;
             },
             _afterEndEdit: function(eip, withSaving) {
                eip.endEdit();
