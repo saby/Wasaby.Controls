@@ -42,6 +42,28 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          _options: {
             expandedClassName: 'controls-FilterPanel_expanded',
             collapsedClassName: 'controls-FilterPanel_collapsed',
+            /**
+             * @typedef {Object} FilterPanelItem
+             * @property {String|Number} id Идентификатор поля фильтрации
+             * @property {String} caption Описание, используемое в редакторе поля фильтрации
+             * @property {Boolean} expanded Признак: true - редактор поля фильтрации создается в развернутом состоянии, false - в свёрнутом
+             * @property {*} value Текущее значение фильтра, это значение будет записываться в поле фильтрации по идентификатору id
+             * @property {*} resetValue Значение поля фильтрации, устанавливаемое при сбросе
+             * @property {String} template Шаблон редактора поля фильтрации.
+             * Возможные значения:
+             * <ol>
+             *    <li><b>tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser</b><br/>Шаблон, реализующий выборку идентификаторов, по которым будет формироваться значение поля фильтрации</li>
+             *    <li><b>tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateDataRange</b><br/>Шаблон, реализующий выборку из числового диапазона</li>
+             * </ol>
+             * Также доступно использование в качестве редактора обыкновенный CheckBox, для чего необходимо установить следующее значение template:
+             *    <b>js!SBIS3.CONTROLS.FilterPanelBoolean</b><br/>
+             * Внимание! Данный редактор поля фильтрации отображается без спойлера, в связи с чем рекомендуется размещать его в конце списка доступных фильтров.
+             * @property {Object} properties Опции, передаваемые в редактор поля фильтрации
+             */
+            /**
+             * @cfg {Array.<FilterPanelItem>} Структура, по которой строится панель фильтрации
+             * <a href="https://git.sbis.ru/sbis/controls/blob/rc-3.7.4.200/components/FilterPanel/Demo/MyFilterPanel/resources/MyFilterPanelData.module.js">Пример описания структуры.</a>
+             */
             items: null,
             /**
              * @cfg {String} Направление открытия панели фильтрации
@@ -55,6 +77,10 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
              * @variant 'right'
              */
             filterAlign: 'left',
+            /**
+             * @cfg {Object} Фильтр, сформированный по структуре, заданной в опции items.
+             * Внимание! Данная опция доступна только на чтение. Фильтр формируется исключительно через items.
+             */
             filter: {}
          },
          _filterAccordion: null,
