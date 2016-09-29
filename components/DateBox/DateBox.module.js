@@ -244,8 +244,10 @@ define(
       },
 
       /**
-       * Метод установки/замены даты.
+       * Производит установки даты.
        * @param {Date} date Новая дата.
+       * @remark
+       * При использовании с контролом {@link SBIS3.CONTROLS.DatePicker} существует следующее поведение: если в методе устанавливают несуществующую календарную дату, то в качестве значения контрола будет установлен null.
        * @example
        * <pre>
        *    //Зададим март 2016
@@ -367,12 +369,6 @@ define(
             if (!DateUtil.isValidDate(this._options.date)) {
                this._options.date = null;
             }
-            if (oldDate !== this._options.date && this._options.notificationMode === 'change') {
-               this._notifyOnDateChanged();
-            }
-            if (this._options.notificationMode === 'change') {
-               this._notifyOnTextChange();
-            }
             this._onTextChanged();
          }
       },
@@ -397,10 +393,8 @@ define(
                   this.setDate(date);
                }
             }
-            if (this._options.notificationMode === 'complete') {
-               this._notifyOnDateChanged();
-               this._notifyOnTextChange();
-            }
+            this._notifyOnDateChanged();
+            this._notifyOnTextChange();
          }
          DateBox.superclass.setActive.apply(this, arguments);
       },

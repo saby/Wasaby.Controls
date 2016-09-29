@@ -60,6 +60,27 @@
   }
 }
 
+.ws-is-desktop-platform {
+  .controls-Button:not(.ws-disabled) {
+    &:hover {
+      &.controls-Checked__checked {
+        border: @button-checked-border;
+
+        &.controls-Button__primary {
+          border: @button-primary-checked-border;
+        }
+        &.controls-Button__big {
+          border: @button-big-checked-border;
+
+          &.controls-Button__primary {
+            border: @button-big-primary-checked-border;
+          }
+        }
+      }
+    }
+  }
+}
+
 @-moz-document url-prefix() {
   .controls-Button.controls-Checked__checked {
     .controls-Button__icon {

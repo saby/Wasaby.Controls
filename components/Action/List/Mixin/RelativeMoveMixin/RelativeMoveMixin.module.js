@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.Action.List.RelativeMoveMixin',[
          },
 
          moveInItems: function (from, to, up) {
-            if ($ws.helpers.instanceOfModule(this.getLinkedObject(), 'js!SBIS3.CONTROLS.ListView')) {
+            if ($ws.helpers.instanceOfModule(this.getLinkedObject(), 'SBIS3.CONTROLS.ListView')) {
                this.getLinkedObject().moveInItems(from, to, up);
             }
          }

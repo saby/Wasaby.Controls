@@ -15,9 +15,10 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.DecorableMixin',
       'js!SBIS3.CONTROLS.DragNDropMixinNew',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
+      'js!SBIS3.CONTROLS.BreakClickBySelectMixin',
       'js!SBIS3.CONTROLS.ItemsToolbar',
       'js!SBIS3.CORE.MarkupTransformer',
-      'tmpl!SBIS3.CONTROLS.ListView',
+      'html!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'js!SBIS3.CONTROLS.CommonHandlers',
       'js!SBIS3.CONTROLS.MoveHandlers',
@@ -29,7 +30,6 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.ScrollWatcher',
       'js!WS.Data/Collection/IBind',
       'js!WS.Data/Collection/List',
-      'i18n!SBIS3.CONTROLS.ListView',
       'html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
       'html!SBIS3.CONTROLS.ListView/resources/emptyData',
       'tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
@@ -41,16 +41,17 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!WS.Data/Di',
       'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
+      'js!SBIS3.CONTROLS.DragEntity.Row',
       'js!WS.Data/Collection/RecordSet',
-      'js!SBIS3.CONTROLS.DragEntity.Row'
+      'i18n!SBIS3.CONTROLS.ListView'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
-             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
+             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
-             Link, ScrollWatcher, IBindCollection, List, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
+             Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder, Di, ArraySimpleValuesUtil) {
 
-      'use strict';
+     'use strict';
 
       var
          buildTplArgsLV = function(cfg) {
@@ -74,8 +75,9 @@ define('js!SBIS3.CONTROLS.ListView',
          };
 
       /**
-       * Контрол, отображающий внутри себя набор однотипных сущностей.
-       * Умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать.
+       * Контрол, отображающий набор однотипных сущностей. Позволяет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать.
+       * Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
+       *
        * @class SBIS3.CONTROLS.ListView
        * @extends $ws.proto.CompoundControl
        * @author Крайнов Дмитрий Олегович
@@ -85,16 +87,16 @@ define('js!SBIS3.CONTROLS.ListView',
        * @mixes SBIS3.CONTROLS.DecorableMixin
        * @mixes SBIS3.CONTROLS.DataBindMixin
        * @mixes SBIS3.CONTROLS.DragNDropMixinNew
-       * @control
-       * @public
-       * @cssModifier controls-ListView__orangeMarker Показывать маркер активной строки у элементов ListView. Актуально только для ListView.
-       * @cssModifier controls-ListView__showCheckBoxes Чекбоксы показываются не по ховеру, а сразу все.
-       * @cssModifier controls-ListView__hideCheckBoxes Скрыть все чекбоксы.
-       * @cssModifier controls-ListView__bottomStyle Оформляет операции строки под строкой
-       * @cssModifier controls-ListView__pagerNoSizePicker Скрыть выбор размера страницы в пейджинге.
-       * @cssModifier controls-ListView__pagerNoAmount Скрыть отображение количества записей на странице в пейджинге.
-       * @cssModifier controls-ListView__pagerHideEndButton Скрыть кнопку "Перейти к последней странице"
-       * Т.е. текст "1-10" при отображении 10 записей на 1-ой странице
+       *
+       * @cssModifier controls-ListView__orangeMarker Устанавливает отображение маркера активной строки у элементов списка. Модификатор актуален только для класса SBIS3.CONTROLS.ListView.
+       * @cssModifier controls-ListView__showCheckBoxes Устанавливает постоянное отображение чекбоксов для записей списка. Модификатор применяется для режима множественного выбора записей (см. {@link multiselect}).
+       * @cssModifier controls-ListView__hideCheckBoxes Скрывает отображение чекбоксов для записей списка, для которого установлен режим множественного выбора записей (см. {@link multiselect}).
+       * @cssModifier controls-ListView__bottomStyle Изменяет положение "быстрых операций над записью", при котором они будут отображение в специальном блоке под записью. Подробнее о таких операциях вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/index/">этом разделе</a>.
+       * @cssModifier controls-ListView__pagerNoSizePicker Скрывает отображение выпадающего списка, в котором производят выбор размера страницы для режима постраничной навигации (см. {@link showPaging}).
+       * @cssModifier controls-ListView__pagerNoAmount Скрывает отображение количества записей на странице для режима постраничной навигации (см. {@link showPaging}).
+       * @cssModifier controls-ListView__pagerHideEndButton Скрывает отображение кнопки "Перейти к последней странице". Используется для режима постраничной навигации (см. {@link showPaging}).
+       *
+       * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        *
        * @control
        * @public
@@ -239,6 +241,19 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {Array} idArray Ключи удаляемых записей.
           * @returns {*|Boolean} result Если result равен false то отменяется штатная логика удаления.
           */
+         /**
+          * @typedef {String} DragPosition
+          * @variant on Вставить перемещаемые элементы внутрь текущей записи.
+          * @variant after Вставить перемещаемые элементы после текущей записи.
+          * @variant before Вставить перемещаемые элементы перед текущей записью.
+          */
+         /**
+          * @typedef {Object} DragEntityOptions
+          * @property {SBIS3.CONTROLS.Control} owner Контрол, которому принадлежит запись.
+          * @property {jQuery} domElement DOM элемент, отображающий запись.
+          * @property {WS.Data/Entity/Model} model Модель, соответствующая записи.
+          * @property {DragPosition|undefined} position Позиция элемента после перемещения (определяется только у целевого элемента - того, который находится под курсором мыши).
+          */
          $protected: {
             _floatCheckBox: null,
             _dotItemTpl: null,
@@ -276,8 +291,7 @@ define('js!SBIS3.CONTROLS.ListView',
             ],
             _itemsToolbar: null,
             _notEndEditClassName: 'controls-ListView__onFocusNotEndEdit',
-            _emptyData: undefined,
-            _containerScrollHeight : 0,
+            _containerScrollHeight: undefined,
             // указывает на необходимость компенсации скрола при подгрузке данных вверх
             // необходим, так как компенсацию можно произвести только после отрисовки - в drawItemsCallback
             // безусловно это делать нельзя, так как drawItemsCallback срабатывает и при перерисовке одной записи
@@ -291,12 +305,9 @@ define('js!SBIS3.CONTROLS.ListView',
                _defaultItemTemplate: ItemTemplate,
                _defaultItemContentTemplate: ItemContentTemplate,
                /**
-                * @faq Почему нет чекбоксов в режиме множественного выбора значений (активация режима
-                производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
-                * Для отрисовки чекбоксов необходимо в шаблоне отображения элемента коллекции обозначить их
-                место.
-                * Это делают с помощью CSS-классов "controls-ListView__itemCheckBox js-controls-
-                ListView__itemCheckBox".
+                * @faq Почему нет чекбоксов в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
+                * Для отрисовки чекбоксов необходимо в шаблоне отображения элемента коллекции обозначить их место.
+                * Это делают с помощью CSS-классов "controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox".
                 * В следующем примере место отображения чекбоксом обозначено тегом span:
                 * <pre>
                 *     <div class="listViewItem" style="height: 30px;">
@@ -313,9 +324,10 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Шаблон - это пользовательская вёрстка элемента коллекции.
                 * Для доступа к полям элемента коллекции в шаблоне подразумевается использование конструкций шаблонизатора.
                 * Подробнее о шаблонизаторе вы можете прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/ Шаблонизация вёрстки компонента}.
-                *
+                * <br/>
                 * Шаблон может быть создан в отдельном XHTML-файле, когда вёрстка большая или требуется использовать его в разных компонентах.
                 * Шаблон создают в директории компонента в подпапке resources согласно правилам, описанным в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/file-structure/ Файловая структура компонента}.
+                * <br/>
                 * Чтобы такой шаблон можно было использовать, нужно:
                 * 1. Подключить шаблон в массив зависимостей компонента и импортировать его в переменную:
                 *       <pre>
@@ -386,6 +398,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @remark
                 * Если для контрола установлено значение false в опции {@link $ws.proto.Control#enabled}, то операции не будут отображаться при наведении курсора мыши.
                 * Однако с помощью подопции allowChangeEnable можно изменить это поведение.
+                * Подробнее о настройке таких действий вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">Быстрый доступ к операциям по наведению курсора</a>.
                 * @example
                 * <b>Пример 1.</b> Конфигурация операций через вёрстку компонента.
                 * <pre>
@@ -452,7 +465,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @variant "" Запрещено перемещение.
                 * @variant allow Разрешено перемещение.
                 * @variant false Запрещено перемещение.
-                * @variant true Разрешено перемещение.
                 * @example
                 * Подробнее о способах передачи значения в опцию вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/">Вёрстка компонента</a>.
                 * <b>Пример 1.</b> Ограничим возможность перемещения записей с помощью курсора мыши.
@@ -488,14 +500,9 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                elemClickHandler: null,
                /**
-                * @cfg {Boolean} Разрешить выбор нескольких строк
-                * @remark
-                * Позволяет выбрать несколько строк для одновременного взаимодействия с ними.
-                * @example
-                * <pre>
-                *    <option name="multiselect">false</option>
-                * </pre>
-                * @see itemTemplate
+                * @cfg {Boolean} Устанавливает режим множественного выбора элементов коллекции.
+                * * true Режим множественного выбора элементов коллекции установлен.
+                * * false Режим множественного выбора элементов коллекции отменен.
                 */
                multiselect: false,
                /**
@@ -507,6 +514,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Может использоваться для загрузки истории сообщений, например.
                 * @variant down Подгружать данные при достижении дна контейнера (подгрузка "вниз").
                 * @variant up Подгружать данные при достижении верха контейнера (подгрузка "вверх").
+                * @variant demand Подгружать данные при нажатии на кнопку "Еще...".
                 * @variant null Не загружать данные по скроллу.
                 *
                 * @example
@@ -548,6 +556,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see setPage
                 * @see getPage
                 * @see infiniteScroll
+                * @see partialPaging
                 * @see SBIS3.CONTROLS.DSMixin#pageSize
                 * @see SBIS3.CONTROLS.CompositeViewMixin#viewMode
                 * @see SBIS3.CONTROLS.TreeCompositeView
@@ -555,8 +564,16 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                showPaging: false,
                /**
-                * @cfg {String} Устанавливает режим редактирования по месту.<br>"" Редактирование по месту отключено.<br>click Режим редактирования по клику.<br>autoadd Режим автоматического добавления новых элементов коллекции; этот режим позволяет при завершении редактирования последнего элемента автоматически создавать новый.<br>toolbar Отображение панели инструментов при входе в режим редактирования записи.<br>single Режим редактирования единичной записи. После завершения редактирования текущей записи не происходит автоматического перехода к редактированию следующей записи.
+                * @cfg {String} Устанавливает режим редактирования по месту.
                 * @remark
+                * Варианты значений:
+                * <ul>
+                *    <li>"" (пустая строка) - Редактирование по месту отключено;</li>
+                *    <li>click - Режим редактирования по клику;</li>
+                *    <li>autoadd - Режим автоматического добавления новых элементов коллекции; этот режим позволяет при завершении редактирования последнего элемента автоматически создавать новый.</li>
+                *    <li>toolbar - Отображение панели инструментов при входе в режим редактирования записи.</li>
+                *    <li>single - Режим редактирования единичной записи. После завершения редактирования текущей записи не происходит автоматического перехода к редактированию следующей записи.</li>
+                * </ul>
                 * Режимы редактирования можно группировать и получать совмещенное поведение.
                 * Например, задать редактирование по клику и отобразить панель инструментов при входе в режим редактирования записи можно такой конфигурацией:
                 * <pre>
@@ -575,6 +592,7 @@ define('js!SBIS3.CONTROLS.ListView',
                editMode: '',
                /**
                 * @cfg {String} Устанавливает шаблон строки редактирования по месту.
+                * @remark
                 * Шаблон строки редактирования по месту используется для удобного представления редактируемой записи.
                 * Такой шаблон отрисовывается поверх редактируемой строки с прозрачным фоном.
                 * Это поведение считается нормальным в целях решения прикладных задач.
@@ -651,13 +669,20 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                resultsTpl: undefined,
                /**
-                * @cfg {Boolean} Использовать режим частичной навигации
-                * Задаёт какой режим навигации использовать: полный или частичный.
+                * @cfg {Boolean} Устанавливает тип постраничной навигации.
+                * @remark
+                * Постраничная навигация списка может работать в двух состояниях:
+                * <ol>
+                *    <li>Полная. Пользователь видит номера первых страниц, затем многоточие и номер последней страницы.</li>
+                *    <li>Частичная. Пользователь видит только номера текущей страницы, следующей и предыдущей. Общее количество страниц неизвестно.</li>
+                * </ol>
+                * @see showPaging
                 */
                partialPaging: true,
                scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
                /**
-                * @cfg Конструктор перемещяемой сущности должен вернуть элемент наследник класса SBIS3.CONTROLS.DragEntity.Row
+                * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS.DragEntity.Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS.DragEntity.Row}
+                * @see DragEntityOptions
                 * @see SBIS3.CONTROLS.DragEntity.Row
                 */
                dragEntity: 'dragentity.row'
@@ -692,7 +717,6 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing()) {
                this.setGroupBy(this._options.groupBy, false);
             }
-            this._drawEmptyData();
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
             if (!this._options._serverRender) {
@@ -799,7 +823,30 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._createScrollPager();
                }
                this._scrollWatcher.subscribe('onTotalScroll', this._onTotalScrollHandler.bind(this));
+            } else if (this._options.infiniteScroll == 'demand'){
+               this._loadMoreButton = this.getChildControlByName('loadMoreButton');
+               if (this.getItems()){
+                  this._setLoadMoreCaption(this.getItems());
+               }
+               this.subscribeTo(loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
             }
+         },
+
+         _setLoadMoreCaption: function(dataSet){
+            var more = dataSet.getMetaData().more;
+            if (typeof more == 'number'){
+               this._loadMoreButton.setCaption('Еще ' + more);
+            } else {
+               if (more === false){
+                  this._loadMoreButton.setVisible(false);
+               } else {
+                  this._loadMoreButton.setCaption('Еще...');
+               }
+            }
+         },
+
+         _onLoadMoreButtonActivated: function(event){
+            this._loadNextPage('down');
          },
 
          _createScrollWatcher: function(){
@@ -1171,16 +1218,12 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
-            if(this._emptyData && this._emptyData.length) {
-               if(html) {
-                  this._emptyData.empty().html(html)
-               } else {
-                  this._emptyData.remove();
-                  this._emptyData = undefined;
-               }
-            } else if(html) {
-               this._drawEmptyData();
-            }
+            this._getEmptyDataContainer().empty().html(html);
+            this._toggleEmptyData(!(this._getItemsProjection() && this._getItemsProjection().getCount()) && !!html);
+         },
+
+         _getEmptyDataContainer: function() {
+            return $('.controls-ListView__EmptyData', this._container.get(0));
          },
 
          setMultiselect: function(flag) {
@@ -1189,10 +1232,6 @@ define('js!SBIS3.CONTROLS.ListView',
                                .toggleClass('controls-ListView__multiselect__off', !flag);
          },
 
-         _drawEmptyData: function() {
-            var html = this._options.emptyHTML;
-            this._emptyData = html && $(emptyDataTpl({emptyHTML: html})).appendTo(this._container);
-         },
          /**
           * Устанавливает шаблон отображения элемента коллекции.
           * @param {String|Function} tpl Шаблон отображения каждого элемента коллекции.
@@ -1279,7 +1318,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      if (selectedItems && selectedItems.getCount()) {
                         selectedItems.clear();
                      }
-                     ListView.superclass.setSelectedItemsAll.call(this);
+                      this.setSelectedItemsAll.call(this);
                      if (dataSet.getCount() == 1000 && dataSet.getMetaData().more){
                         InformationPopupManager.showMessageDialog({
                            status: 'default',
@@ -1288,7 +1327,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                   }.bind(this));
             } else {
-               ListView.superclass.setSelectedItemsAll.call(this);
+               this.setSelectedItemsAll.call(this);
             }
          },
          _drawSelectedItems: function (idArray) {
@@ -1580,13 +1619,22 @@ define('js!SBIS3.CONTROLS.ListView',
                      onAfterBeginEdit: function(event, model) {
                         this._showToolbar(model);
                         this.setSelectedKey(model.getId());
+                        if (model.getState() === Record.RecordState.DETACHED) {
+                           $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
+                           $('.controls-ListView__item[data-id="' + model.getId() + '"]', this._container).addClass('controls-ListView__item__selected');
+                        }
+                        else {
+                           this.setSelectedKey(model.getId());
+                        }
                         this.scrollToItem(model);
                         event.setResult(this._notify('onAfterBeginEdit', model));
+                        this._toggleEmptyData(false);
                      }.bind(this),
                      onChangeHeight: function(event, model) {
                         if (this._getItemsToolbar().isToolbarLocking()) {
                            this._showItemsToolbar(this._getElementData(this._getElementByModel(model)));
                         }
+                        this._notifyOnSizeChanged(true);
                      }.bind(this),
                      onBeginAdd: function(event, options) {
                         event.setResult(this._notify('onBeginAdd', options));
@@ -1603,6 +1651,8 @@ define('js!SBIS3.CONTROLS.ListView',
                         //При разрушении редактирования скрывает toolbar. Иначе это ни кто не сделает. А разрушение могло
                         //произойти например из-за setEnabled(false) у ListView
                         this._hideToolbar();
+                        this._toggleEmptyData(!this.getItems().getCount());
+                        this._notifyOnSizeChanged(true);
                      }.bind(this)
                   }
                };
@@ -1873,13 +1923,13 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _isSearchMode: function() {
-            return this._searchParamName && !Object.isEmpty(this._options.groupBy) && this._options.groupBy.field === this._searchParamName;
+            return this._options.hierarchyViewMode;
          },
 
          //TODO проверка для режима совместимости со старой отрисовкой
          /*TODO easy параметр для временной поддержки группировки в быстрой отрисовке*/
          _isSlowDrawing: function(easy) {
-            var result = !!this._options.itemTemplate || !!this._options.userItemAttributes || this._isSearchMode();
+            var result = !!this._options.itemTemplate || !!this._options.userItemAttributes;
             if (easy) {
                return result;
             }
@@ -1999,7 +2049,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see setInfiniteScroll
           */
          isInfiniteScroll: function () {
-            return this._allowInfiniteScroll && !!this._options.infiniteScroll;
+            var scrollLoad = this._options.infiniteScroll == 'down' || this._options.infiniteScroll == 'up';
+            return this._allowInfiniteScroll && scrollLoad;
          },
          _cancelLoading: function(){
             ListView.superclass._cancelLoading.apply(this, arguments);
@@ -2067,6 +2118,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   if (hasNextPage){
                      this._scrollLoadNextPage();
                   }
+               }
+               if (this._options.infiniteScroll == 'demand'){
+                  this._setLoadMoreCaption(dataSet);
                }
             }, this)).addErrback(function (error) {
                //Здесь при .cancel приходит ошибка вида DeferredCanceledError
@@ -2290,7 +2344,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (show) {
                setTimeout(function(){
                   if (!self.isDestroyed() && self._showedLoading) {
-                     scrollContainer = self._getScrollContainer();
+                     scrollContainer = self._getScrollContainer()[0];
                      indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
                      if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].scrollHeight > scrollContainer.offsetHeight) {
                         /* Ищем кординату, которая находится по середине отображаемой области грида */
@@ -2311,11 +2365,9 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _toggleEmptyData: function(show) {
-            if(this._emptyData) {
-               this._emptyData.toggleClass('ws-hidden', !show);
-               if(this._pagerContainer) {
-                  this._pagerContainer.toggleClass('ws-hidden', show);
-               }
+            this._getEmptyDataContainer().toggleClass('ws-hidden', !show);
+            if(this._pagerContainer) {
+               this._pagerContainer.toggleClass('ws-hidden', show);
             }
          },
          //------------------------Paging---------------------
@@ -2507,10 +2559,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          /**
           * @typedef {Object} BeginEditOptions
-          * @property {String} [parentId] Идентификатор узла, в котором будет происходить добавление.
+          * @property {String} [parentId] Идентификатор узла иерархического списка, в котором будет происходить добавление.
           * @property {String} [addPosition = bottom] Расположение строки с добавлением по месту.
           * Опция может принимать значение 'top' или 'bottom'.
-          * @property {WS.Data/Entity/Model|Object} [model] Модель элемента коллекции, значения полей которой будут использованы при создании нового элемента.
+          * @property {WS.Data/Entity/Model|Object} [preparedModel] Модель элемента коллекции, значения полей которой будут использованы при создании нового элемента.
           * В упрощенном варианте можно передать объект, свойствами которого будут поля создаваемого элемента коллекции. Например, установим создание нового элемента с предопределенным значением поля 'Наименование':
           * <pre>
           * {
@@ -2523,13 +2575,25 @@ define('js!SBIS3.CONTROLS.ListView',
           * @remark
           * Команда применяется для создания нового элемента коллекции без использования диалога редактирования.
           * Схожим функционалом обладает автоматическое добавление по месту представлений данных (см. опцию {@link editMode}).
-          * @param {BeginEditOptions} [options]
+          * <br/>
+          * Полный пример использования команды для создания новых элементов коллекции в иерархическом списке вы можете найти {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ здесь}.
+          * <br/>
+          * Команда поддерживает инициацию добавления по месту для заранее подготовленной записи (см. примеры).
+          * @param {BeginEditOptions} [options] Параметры вызова команды.
           * @example
-          * Частный случай вызова команды для создания нового узла иерархии внутри другого узла:
+          * <u>Пример 1.</u> Частный случай вызова команды для создания нового узла иерархии внутри другого узла:
           * <pre>
           * this.sendCommand('beginAdd', {parentId: 'parentBranchId'});
           * </pre>
-          * Полный пример использования команды для создания новых элементов коллекции в иерархическом списке вы можете найти {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ здесь}.
+          * <u>Пример 2.</u> Добавления по месту для заранее подготовленной записи. Таким образом добавление по месту запускается синхронно и без единого запроса к бизнес-логике.
+          * <i>Вариант 1.</i>
+          * <pre>
+          * ListView.getDataSource().create().addCallback(function(preparedModel){...};
+          * </pre>
+          * <i>Вариант 2.</i>
+          * <pre>
+          * ListView.beginAdd({ preparedModel: preparedModel });
+          * </pre>
           * @returns {*|$ws.proto.Deferred} В случае ошибки, вернёт Deferred с текстом ошибки.
           * @private
           * @command beginAdd
@@ -3011,5 +3075,5 @@ define('js!SBIS3.CONTROLS.ListView',
          }
       });
 
-      return ListView;
+      return ListView.mixin([BreakClickBySelectMixin]);
    });

@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
       'use strict';
       /**
        * Контрол, отображающий набор выпадающих списков SBIS3.CONTROLS.DropdownList и работающий с фильтром в контексте
+       * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterfast/">Быстрые фильтры</a>.
        * @class SBIS3.CONTROLS.FastDataFilter
        * @extends $ws.proto.CompoundControl
        * @author Крайнов Дмитрий Олегович
@@ -109,6 +110,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                    dataSource: item.get('dataSource'),
                    filter: item.get('filter'),
                    allowDblClick: !!item.get('allowDblClick'),
+                   name: item.get('name'),
                    pickerConfig: {
                       handlers: {
                          onShow: function () {

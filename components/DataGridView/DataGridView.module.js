@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             var
                rowData = {},
                columns = $ws.core.clone(cfg.columns),
-               supportUnion = $ws.core.clone(columns[0]),
+               supportUnion,
                supportDouble,
                curCol,
                nextCol,
@@ -174,15 +174,19 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
          };
    /**
-    * Контрол, отображающий набор данных в виде таблицы с несколькими колонками.
+    * Контрол, отображающий набор данных в виде таблицы с несколькими колонками. Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
+    *
     * @class SBIS3.CONTROLS.DataGridView
     * @extends SBIS3.CONTROLS.ListView
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyDataGridView
     *
-    * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
-    * @cssModifier controls-DataGridView__markerRight Маркер отображается не слева строки, а справа.
-    * @cssModifier controls-DataGridView__hasSeparator Включает линии разделители между строками
+    * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
+    * @cssModifier controls-DataGridView__markerRight Устанавливает отображение маркера активной строки справа от записи. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
+    * @cssModifier controls-DataGridView__hasSeparator Устанавливает отображение линий-разделителей между строками.
+    * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
+    * @cssModifier controls-DataGridView__overflow-ellipsis Устанавливает обрезание троеточием текста во всех колонках таблицы.
+    *
     * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
     *
     * @control
@@ -201,12 +205,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
     *       </options>
     *    </options>
     * </component>
-    * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
-    * @cssModifier controls-DataGridView__markerRight Маркер отображается не слева строки, а справа.
-    * @cssModifier controls-DataGridView__hasSeparator Включает отображение линий-разделителей между строками.
-    * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
-    * @cssModifier controls-DataGridView__overflow-ellipsis Включить обрезание троеточием текста во ВСЕХ колонках таблицы
-    * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
     */
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
       _dotTplFn : dotTplFn,
@@ -313,7 +311,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              */
             columns: [],
             /**
-             * @cfg {Boolean} Отображать заголовки колонок
+             * @cfg {Boolean} Устанавливает отображение заголовков колонок списка.
              * @example
              * <pre>
              *     <option name="showHead">false</option>
@@ -321,10 +319,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
              */
             showHead : true,
             /**
-             * @cfg {Number} Количество столбцов слева, которые будут не скроллируемы
+             * @cfg {Number} Устанавливает количество столбцов слева, которые будут не скроллируемы.
              * @remark
-             * Для появления частичного скролла, надо установить такую ширину колонок,
-             * чтобы сумма ширин всех столбцов была больше чем ширина контейнера таблицы
+             * Для отображения частичного скролла, нужно установить такую ширину колонок, чтобы суммарная ширина всех столбцов была больше чем ширина контейнера таблицы.
+             * Подробнее об использовании опции вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/columns/horizontal-scroll/">Горизонтальный скролл колонок</a>.
              * @example
              * <pre>
              *     <option name="startScrollColumn">3</option>
@@ -333,8 +331,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
              */
             startScrollColumn: undefined,
             /**
-             * @cfg {Array} Лесенка
-             * Массив имен столбцов, по которым строится лесенка
+             * @cfg {Array.<String>} Устанавливает набор столбцов для режима отображения "Лесенка".
+             * @remark
+             * Подробнее о данном режиме списка вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/ladder/">Отображение записей лесенкой</a>.
              * @example
              * <pre>
              *    <option name="ladder" type="array">
@@ -377,13 +376,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
              */
             resultsTpl: resultsTpl,
             /**
-             * @cfg {Boolean} Производить ли преобразование колонок в шапке
-             * Если опция включена, то колонки в шапке будут преобразованы следующим образом:
+             * @cfg {Boolean} Устанавливает преобразование колонок в "шапке" списка.
+             * @remark
+             * Если опция включена, то колонки в "шапке" списка будут преобразованы следующим образом:
              *  <ul>
-             *    <li>Колонки с одинаковым title будут объединены</li>
-             *    <li>Для колонок, title которых задан через разделитель "точка", т.е. вида выводимоеОбщееИмя.выводимоеИмяДаннойКолонки,
-             *        будет отрисован двустрочный заголовок
+             *    <li>Колонки с одинаковым title будут объединены;</li>
+             *    <li>Для колонок, title которых задан через разделитель "точка", т.е. вида выводимоеОбщееИмя.выводимоеИмяДаннойКолонки, будет отрисован двустрочный заголовок.</li>
              * </ul>
+             * Пример использования опции вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/columns/head-merge/">Объединение заголовков</a>.
              * @example
              * <pre>
              *     <option name="transformHead">true</option>
@@ -391,8 +391,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              */
             transformHead: false,
             /**
-             * @cfg {Boolean} Скрывать шапку, если данных нет
-             * Нужно ли скрывать шапку, если данных нет
+             * @cfg {Boolean} Устанавливает поведение, при котором "шапка" списка будет скрыта, если данные отсутствуют.
              * @example
              * <pre>
              *     <option name="allowToggleHead">false</option>
@@ -400,7 +399,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
              */
             allowToggleHead: true,
             /**
-             * @cfg {Boolean} Включает фиксацию / прилипание заголовков таблицы к шапке страницы / всплывающей панели.
+             * @cfg {Boolean} Устанавливает фиксацию/прилипание заголовков списка к "шапке" страницы/всплывающей панели.
+             * @remark
+             * Подробнее об этом механизме вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/fixed-header/">Фиксация шапки страниц и всплывающих панелей</a>.
              * @example
              * <pre>
              *     <option name="stickyHeader">true</option>
@@ -1078,7 +1079,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _toggleEmptyData: function(show) {
          DataGridView.superclass._toggleEmptyData.apply(this, arguments);
-         if(this._emptyData && this._options.allowToggleHead) {
+         if (this._options.emptyHTML && this._options.allowToggleHead) {
             this._thead.toggleClass('ws-hidden', !!show);
          }
       },
@@ -1107,9 +1108,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             value = resultsRecord.get(col.field);
             if (value == undefined){
                value = index == 0 ? self._options.resultsText : '';
-            }
-            else{
-               value = $ws.render.defaultColumn.integer(value);
             }
             return self._getColumnResultTemplate(col, index, value, resultsRecord);
          });

@@ -143,12 +143,28 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
          }
       },
 
+      _projSelectedChange: function(projItem) {
+
+      },
+
       after : {
          init: function () {
             if(this._options.selectedItems) {
                this._options.selectedKeys = this._convertToKeys(this._options.selectedItems);
             }
             this._drawSelectedItems(this._options.selectedKeys);
+         },
+         _setItemsEventHandlers: function() {
+            if (!this._onCollectionItemChangeSelected) {
+               this._onCollectionItemChangeSelected = onCollectionItemChangeSelected.bind(this);
+            }
+            this.subscribeTo(this._getItemsProjection(), 'onCollectionItemChange', this._onCollectionItemChangeSelected);
+         },
+         _unsetItemsEventHandlers : function() {
+            if (this._getItemsProjection() && this._onCollectionItemChangeSelected) {
+               this.unsubscribeFrom(this._getItemsProjection(), 'onCollectionItemChange', this._onCollectionItemChangeSelected);
+            }
+
          },
          destroy: function() {
             if(this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
@@ -381,17 +397,18 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
       },
 
       _removeItemsSelection : function(idArray) {
-         var removedKeys = [];
+         var removedKeys = [],
+             selectedKeys = Array.clone(this._options.selectedKeys);
 
          if (Array.isArray(idArray)) {
             for (var i = idArray.length - 1; i >= 0; i--) {
                if (this._isItemSelected(idArray[i])) {
-                  Array.remove(this._options.selectedKeys, this._getSelectedIndex(idArray[i]));
+                  Array.remove(selectedKeys, this._getSelectedIndex(idArray[i], selectedKeys));
                   removedKeys.push(idArray[i]);
                }
             }
             /* Копируем, чтобы порвать ссылку на значение в контексте */
-            this._options.selectedKeys = Array.clone(this._options.selectedKeys);
+            this._options.selectedKeys = selectedKeys;
             return removedKeys;
          }
          else {
@@ -689,7 +706,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
 
          /* Соберём элементы для удаления, т.к. в методе each не отслеживаются изменения IList'а */
          selItems.each(function(rec) {
-            if(!self._isItemSelected(rec.getId())) {
+            if(!self._isItemSelected(rec.get(self._options.keyField))) {
                delItems.push(rec);
             }
          });
@@ -713,14 +730,14 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
          return this._getSelectedIndex(item) !== -1;
       },
 
-      _getSelectedIndex: function(item) {
-         var keys = this._options.selectedKeys,
+      _getSelectedIndex: function(item, array) {
+         var keys = array || this._options.selectedKeys,
              selectedItems = this._options.selectedItems,
              index = ArraySimpleValuesUtil.invertTypeIndexOf(keys, item);
 
          if(index === -1 && $ws.helpers.instanceOfModule(item, 'WS.Data/Entity/Model')) {
             if(selectedItems) {
-               index = selectedItems.getIndexByValue(item.getIdProperty(), item.getId());
+               index = selectedItems.getIndexByValue(item.getIdProperty(), item.get(this._options.keyField));
             } else {
                index = -1;
             }
@@ -837,15 +854,32 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
          }
       },
 
-      /* Для правильной работы биндингов, предполагаем, что масив [null] тоже является пустым выделением,
-         если такой записи нет в items */
       _isEmptySelection: function() {
          var selectedKeys = this._options.selectedKeys,
-             items = this.getItems();
+             selectedItems = this._options.selectedItems,
+             items = this.getItems(),
+             isEmpty = true;
 
-         /* Если selectedKeys - пустой или равен [null],
-            но этой записи нет в items, то считаем, что у нас ничего не выбрано */
-         return !selectedKeys.length || ($ws.helpers.isEqualObject(selectedKeys, EMPTY_SELECTION) && (!items || !items.getRecordById(null)));
+         if(selectedKeys.length) {
+            /* Для правильной работы биндингов, предполагаем, что масив [null] тоже является пустым выделением */
+            if($ws.helpers.isEqualObject(selectedKeys, EMPTY_SELECTION)) {
+
+               /* Пробуем найти в рекордсете запись с ключём null, если она есть - выделение не пустое. */
+               if(items && items.getRecordById(EMPTY_SELECTION[0])) {
+                  isEmpty = false;
+               }
+
+               /* Пробуем найти среди selectedItems запись с ключём null, если она есть - выделение не пустое. */
+               if(isEmpty && selectedItems && selectedItems.getIndexByValue(this._options.keyField, EMPTY_SELECTION[0]) !== -1) {
+                  isEmpty = false;
+               }
+            } else if(isEmpty) {
+               /* Если есть ключи и они не равны [null] - выделение не пустое. */
+               isEmpty = false;
+            }
+         }
+
+         return isEmpty;
       },
 
       /**
@@ -859,8 +893,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
 
          if(list) {
             list.each(function (rec) {
-               keys.push(rec.getId());
-            });
+               keys.push(rec.get(this._options.keyField));
+            }.bind(this));
          }
 
          return keys;
@@ -869,6 +903,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
 
    var EMPTY_SELECTION = [null];
 
+   var
+      onCollectionItemChangeSelected = function(eventObject, item, index, property) {
+
+      };
    return MultiSelectable;
 
 });

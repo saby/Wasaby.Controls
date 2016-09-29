@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.FieldLink',
     [
        'js!SBIS3.CONTROLS.SuggestTextBox',
-       'js!SBIS3.CONTROLS.DSMixin',
+       'js!SBIS3.CONTROLS.ItemsControlMixin',
        'js!SBIS3.CONTROLS.MultiSelectable',
        'js!SBIS3.CONTROLS.ActiveMultiSelectable',
        'js!SBIS3.CONTROLS.Selectable',
@@ -13,13 +13,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
        'js!SBIS3.CONTROLS.Utils.DialogOpener',
        'js!SBIS3.CONTROLS.ITextValue',
        'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+       'js!WS.Data/Di',
        'js!SBIS3.CONTROLS.MenuIcon',
        'i18n!SBIS3.CONTROLS.FieldLink'
 
     ],
     function (
         SuggestTextBox,
-        DSMixin,
+        ItemsControlMixin,
 
         /* Интерфейс для работы с набором выбранных записей */
         MultiSelectable,
@@ -40,7 +41,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         /********************************************/
         DialogOpener,
         ITextValue,
-        TemplateUtil
+        TemplateUtil,
+        Di
     ) {
 
        'use strict';
@@ -93,7 +95,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @mixes SBIS3.CONTROLS.ChooserMixin
         * @mixes SBIS3.CONTROLS.FormWidgetMixin
         * @mixes SBIS3.CONTROLS.SyncSelectionMixin
-        * @mixes SBIS3.CONTROLS.DSMixin
+        * @mixes SBIS3.CONTROLS.ItemsControlMixin
         *
         * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo Пример 1. Поле связи в режиме множественного выбора значений. Выбор можно производить как через справочник, так и через автодополнение.
         * @demo SBIS3.CONTROLS.Demo.FieldLinkSingleSelect Пример 2. Поле связи в режиме единичного выбора значений. Выбор можно производить как через справочник, так и через автодополнение.
@@ -110,7 +112,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings footerTpl emptyHTML groupBy
-        * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip setEmptyHTML setGroupBy
+        * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip setEmptyHTML setGroupBy itemTpl
         *
         * ignoreEvents onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
         *
@@ -119,7 +121,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @category Inputs
         */
 
-       var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, DSMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
+       var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ItemsControlMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
           /**
            * @name SBIS3.CONTROLS.FieldLink#textValue
            * @cfg {String} Хранит строку, сформированную из значений поля отображения выбранных элементов коллекции.
@@ -351,6 +353,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this._options.dictionaries = dictionaries;
              this.getChildControlByName('fieldLinkMenu').setItems(dictionaries);
              this._notifyOnPropertyChanged('dictionaries');
+          },
+
+
+          /**
+           * Для поля связи требуется своя реализация метода setSelectedKey, т.к.
+           * Selectable расчитывает на наличие проекции и items, которых в поле связи нет.
+           * + полю связи не требуется единичная отрисовка item'a, т.к. при синхронизации selectedKey и selectedKeys,
+           * всегда будет вызываться метод drawSelectedItems
+           * @param key
+           */
+          setSelectedKey: function(key) {
+             this._options.selectedKey = key;
+             this._notifySelectedItem(this._options.selectedKey);
           },
 
           /**
@@ -674,13 +689,33 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           _prepareItems: function() {
              var items = FieldLink.superclass._prepareItems.apply(this, arguments),
-                 self = this;
+                 self = this,
+                 newRec, dataSource, dataSourceModel, dataSourceModelInstance;
 
              if(items) {
+                dataSource = this.getDataSource();
+
+                if(dataSource) {
+                   dataSourceModel = dataSource.getModel();
+                   /* Создадим инстанс модели, который указан в dataSource,
+                    чтобы по нему проверять модели которые выбраны в поле связи */
+                   dataSourceModelInstance = typeof dataSourceModel === 'string' ? Di.resolve(dataSourceModel) : new dataSourceModel();
+
+                   items.each(function(rec, index) {
+                      /* Если модель сорса и выбранной записи разные, то создадим копию модели сорса,
+                       и заполним её данными из выбранной записи */
+                      if( dataSourceModelInstance._moduleName !==  rec._moduleName) {
+                         (newRec = dataSourceModelInstance.clone()).merge(rec);
+                         rec = newRec;
+                         items.replace(rec, index);
+                      }
+                   });
+                }
+
                 /* Элементы, установленные из дилогов выбора / автодополнения могут иметь другой первичный ключ,
                    отличный от поля с ключём, установленного в поле связи. Это связно с тем, что "связь" устанавливается по опеределённому полю,
                    и не обязательному по первичному ключу у записей в списке. */
-                items.each(function(rec) {
+                items.each(function(rec, index) {
                    if(rec.getIdProperty() !== self._options.keyField && rec.get(self._options.keyField)) {
                       rec.setIdProperty(self._options.keyField);
                    }
@@ -886,7 +921,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           /* Заглушка, само поле связи не занимается отрисовкой */
-          _redraw: $ws.helpers.nop,
+          redraw: $ws.helpers.nop,
 
 
           destroy: function() {
