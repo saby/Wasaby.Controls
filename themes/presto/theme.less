@@ -35,6 +35,23 @@
    }
 }
 
+.controls-PopupMixin__closeButton {
+  position: absolute;
+  top: @controls-Popup-closeButton-top;
+  right: @controls-Popup-closeButton-right;
+  width: @closeButtonWidth;
+  height: @closeButtonHeight;
+  cursor: pointer;
+  background: @closeButtonImage;
+  &:hover {
+    background: @closeButtonImageHover;
+  }
+  &:active {
+    background: @closeButtonImageHover;
+  }
+  z-index: 1;
+}
+
 .controls-Button {
   white-space: normal;
    padding-bottom: 0; // FF only
