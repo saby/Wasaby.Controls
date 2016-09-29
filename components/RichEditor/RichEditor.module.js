@@ -675,7 +675,11 @@ define('js!SBIS3.CONTROLS.RichEditor',
           * @private
           */
          setFontStyle: function(style) {
-            //При смене стиля без печати текста необходимо вначале удалять и только потом ставить стиль
+            /**
+             * Если поочередно поставить два стиля то может возникнуть сиуация <span class='firsStyle secondStyle'></span>
+             * если вначале производить добавлени и только потом удаление класса, поэтому необходимо
+             * сперва удалить предыдущий класс и только потом добавить новый
+             */
             for (var stl in constants.styles) {
                if (style !== stl) {
                   this._removeFormat(stl);
@@ -684,7 +688,12 @@ define('js!SBIS3.CONTROLS.RichEditor',
             if (style !== 'mainText') {
                this._applyFormat(style, true);
             }
-            //выполнение пустой команды необходимо для фокусировки
+            /**
+             * После установки стиля необходимо вернуть фокус в редаткор
+             * this._tinyEditor.focus() не всегда помогает => используем this._tinyEditor.execCommand('');
+             * тк перед выполнением команды происходят процессы восстановления фокуса в редакторе
+             * но тк команда не передана только восстановится фокус ( что нам и нужно)
+             */
             this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._setTrimmedText(this._getTinyEditorValue());
