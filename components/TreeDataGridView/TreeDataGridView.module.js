@@ -272,17 +272,19 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                allowChangeEnable: false,
                handlers: {
                   onActivated: function () {
-                     var hoveredItem = self.getHoveredItem();
+                     var hoveredItem = self.getHoveredItem(),
+                         id = hoveredItem.key;
 
                      // TODO для обратной совместимости - удалить позже
                      if(self._options.arrowActivatedHandler) {
                         self._options.arrowActivatedHandler.call(this,
                             hoveredItem.record,
-                            hoveredItem.key,
+                            id,
                             hoveredItem.container
                         );
                      } else {
-                        self._activateItem(hoveredItem.key);
+                        self.setSelectedKey(id);
+                        self._activateItem(id);
                      }
                   }
                }
