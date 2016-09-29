@@ -545,7 +545,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._removeHead();
          this._thead = $(headMarkup).insertBefore(body);
 
-         this._drawResults();
+         if (this._options.stickyHeader){
+            this._drawResults();
+         }
          this._redrawColgroup();
          this.reviveComponents();
          this._bindHead();
