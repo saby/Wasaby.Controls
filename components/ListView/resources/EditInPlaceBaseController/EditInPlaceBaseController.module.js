@@ -219,7 +219,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      if (preparedRecord) {
                         var
                             parentProjItem,
-                            itemProjItem = self._options.itemsProjection.getItemBySourceItem(preparedRecord);
+                            // Элемент проекции нужно получать именно по записи, открытой на редактирование, т.к. только у неё правильный hash
+                            itemProjItem = self._options.itemsProjection.getItemBySourceItem(model);
                         self._getEip().edit(preparedRecord, itemProjItem, withoutActivateFirstControl);
                         editingRecord = self._getEip().getEditingRecord();
                         self._notify('onAfterBeginEdit', editingRecord);
