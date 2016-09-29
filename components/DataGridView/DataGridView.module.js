@@ -680,9 +680,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
       _canShowEip: function(targetColumnIndex) {
          var
+            self = this,
             column = 0,
-            canShow = this.isEnabled();
-         if (this._options.editingTemplate || targetColumnIndex === undefined || (targetColumnIndex === 0 && this._options.multiselect)) {
+            canShow = this.isEnabled(),
+            canShowEditInColumn = function(columnIndex) {
+               return !!self._options.columns[columnIndex].editor && (canShow || self._options.columns[columnIndex].allowChangeEnable === false)
+            };
+         if (this._options.editingTemplate || targetColumnIndex === undefined) {
             // Отображаем редактирование по месту и для задизабленного DataGrid, но только если хоть у одиной колонки
             // доступен редактор при текущем состоянии задизабленности DataGrid.
             while (!canShow && column < this._options.columns.length) {
@@ -693,10 +697,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                }
             }
          } else {
-            if (this._options.multiselect) {
-               targetColumnIndex -= 1;
-            }
-            canShow = !!this._options.columns[targetColumnIndex].editor && (canShow || this._options.columns[targetColumnIndex].allowChangeEnable === false);
+               canShow = this._options.multiselect ? targetColumnIndex > 0 && canShowEditInColumn(targetColumnIndex - 1): canShowEditInColumn(targetColumnIndex);
          }
          return canShow;
       },
