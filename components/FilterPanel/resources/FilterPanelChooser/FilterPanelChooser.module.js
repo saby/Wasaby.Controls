@@ -95,9 +95,13 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
         },
 
         setFilter: function(keys) {
-            this._options.filter = keys;
-            this._updateFavoritesCheckBox();
+            this._setFilter(keys);
             this._getListView().setSelectedKeys(keys);
+            this._updateFavoritesCheckBox();
+        },
+
+        _setFilter: function(filter) {
+            this._options.filter = filter;
             this._notifyOnPropertyChanged('filter');
         },
 
@@ -108,13 +112,14 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
 
         _elemClickHandler: function(e, id) {
             this._getListView().toggleItemsSelection([id]);
+            this._setFilter(this._getFilter());
         },
 
         _onFavoritesCheckedChange: function() {
-            this._updateFilter();
+            this._setFilter(this._getFilter());
         },
 
-        _updateFilter: function() {
+        _getFilter: function() {
             var
                 favorites = this._options.favorites,
                 filter = $ws.core.clone(this._getListView().getSelectedKeys());
@@ -125,8 +130,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
                     }
                 }
             }
-            this._options.filter = filter;
-            this._notifyOnPropertyChanged('filter');
+            return filter;
         },
 
         _updateViewHeight: function() {
@@ -161,8 +165,6 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
                     this._updateViewHeight();
                 }, this);
             }
-            this._updateFilter();
-            this._updateFavoritesCheckBox();
         },
 
         _showAll: function() {
