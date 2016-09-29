@@ -403,8 +403,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       _closePanel: function(result){
          //Если задача открыта в новом окне, то FormController лежит не во floatArea => нет панели, которую нужно закрывать
          if (this._panel.close){
-            // ответ на вопрос сохранять ли результат, будет передан в пендинги
-            this._panel._saving = this._saving;
             this._panel.close(result);
          }
       },
