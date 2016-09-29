@@ -705,7 +705,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
       /* Для правильной работы контекста надо рвать ссылку, на текущее св-во,
          чтобы не было равенства при сравнении и в контекст записалось новое значение */
       _onSelectedItemsChangeHandler: function() {
-         this._options.selectedItems = this._options.selectedItems.clone();
+         this._options.selectedItems = this._options.selectedItems.clone(true);
          this._notifyOnPropertyChanged('selectedItems');
       },
 
