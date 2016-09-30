@@ -4,7 +4,6 @@
       <opt name="name" value="DropdownList1"></opt>
       <opt name="keyField" value="key"></opt>
       <opt name="displayField" value="title"></opt>
-      <opt name="mode" value="click"></opt>
       <opt name="multiselect" >false</opt>
       <opt name="itemTemplate" type="ref">{{@it.firstTemplate}}</opt>
       <opts name="selectedKeys"  type="array" bind="filter/title" direction="fromProperty" oneWay="true" nonexistent="none"></opts>
@@ -13,7 +12,6 @@
       <opt name="name" value="DropdownList2"></opt>
       <opt name="keyField" value="key"></opt>
       <opt name="displayField" value="title"></opt>
-      <opt name="mode" value="hover"></opt>
       <opt name="multiselect" >false</opt>
       <opts name="selectedKeys"  type="array" bind="filter/title" direction="fromProperty" oneWay="true" nonexistent="none"></opts>
    </component>
@@ -21,7 +19,6 @@
       <opt name="name" value="DropdownList3"></opt>
       <opt name="keyField" value="key"></opt>
       <opt name="displayField" value="title"></opt>
-      <opt name="mode" value="click"></opt>
       <opt name="type" value="titleHeader"></opt>
       <opt name="title" value="Сортировать"></opt>
       <opt name="multiselect" >false</opt>
@@ -31,21 +28,20 @@
         <opt name="name" value="DropdownList4"></opt>
         <opt name="keyField" value="key"></opt>
         <opt name="displayField" value="title"></opt>
-        <opt name="mode" value="click"></opt>
         <opt name="multiselect" >false</opt>
         <opt name="headTemplate" >html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownList_IconHead</opt>
         <opt name="itemTemplate" >html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownList_IconItem</opt>
         <opts name="selectedKeys"  type="array" bind="filter/title" direction="fromProperty" oneWay="true" nonexistent="none"></opts>
     </component>
-    <component id="dropdownList5" data-component="SBIS3.CONTROLS.DropdownList" class="DropdownList">
-        <opt name="name" value="DropdownList5"></opt>
-        <opt name="keyField" value="key"></opt>
-        <opt name="displayField" value="title"></opt>
-        <opt name="mode" value="click"></opt>
-        <opt name="type" value="markedDefaultItem"></opt>
-        <opt name="multiselect" >false</opt>
-        <opts name="selectedKeys"  type="array" bind="filter/title" direction="fromProperty" oneWay="true" nonexistent="none"></opts>
-    </component>
+    <!--<component id="dropdownList5" data-component="SBIS3.CONTROLS.DropdownList" class="DropdownList">-->
+        <!--<opt name="name" value="DropdownList5"></opt>-->
+        <!--<opt name="keyField" value="key"></opt>-->
+        <!--<opt name="displayField" value="title"></opt>-->
+        <!--<opt name="mode" value="click"></opt>-->
+        <!--<opt name="type" value="markedDefaultItem"></opt>-->
+        <!--<opt name="multiselect" >false</opt>-->
+        <!--<opts name="selectedKeys"  type="array" bind="filter/title" direction="fromProperty" oneWay="true" nonexistent="none"></opts>-->
+    <!--</component>-->
 
     <!--<component id="dropdownList6" data-component="SBIS3.CONTROLS.DropdownList" class="DropdownList">-->
         <!--<opt name="name" value="DropdownList6"></opt>-->
