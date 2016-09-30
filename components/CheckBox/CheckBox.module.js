@@ -1,5 +1,5 @@
 
-define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS.Checkable', 'html!SBIS3.CONTROLS.CheckBox', 'js!SBIS3.CONTROLS.ITextValue'], function(ButtonBase, Checkable, dotTplFn, ITextValue) {
+define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS.Checkable', 'tmpl!SBIS3.CONTROLS.CheckBox', 'tmpl!SBIS3.CONTROLS.CheckBox/resources/ContentTemplate', 'js!SBIS3.CONTROLS.ITextValue'], function(ButtonBase, Checkable, dotTplFn, defaultContentTemplate, ITextValue) {
 
    'use strict';
    var prepareChecked = function(checked, threeState) {
@@ -72,10 +72,17 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
              * @cfg {String} Текст подписи флага
              * @translatable
              */
-            textValue : ''
+            textValue : '',
+            contentTemplate: null
          }
       },
 
+      _modifyOptions: function() {
+         var
+             cfg = CheckBox.superclass._modifyOptions.apply(this, arguments);
+         cfg._contentTemplate = cfg.contentTemplate || defaultContentTemplate;
+         return cfg;
+      },
 
       $constructor: function() {
          this._checkBoxCaption = $('.js-controls-CheckBox__caption', this._container);

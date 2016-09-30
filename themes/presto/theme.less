@@ -8,7 +8,7 @@
 
 .controls-ComboBox {
   &.controls-Picker__show {
-    border-width: @text-box-hover-border-width;
+    border-width: 0;
     border-style: @text-box-hover-border-style;
     border-color: @text-box-hover-border-color;
   }
@@ -33,6 +33,23 @@
    &:active {
       background: @closeButtonImageHover;
    }
+}
+
+.controls-PopupMixin__closeButton {
+  position: absolute;
+  top: @controls-Popup-closeButton-top;
+  right: @controls-Popup-closeButton-right;
+  width: @closeButtonWidth;
+  height: @closeButtonHeight;
+  cursor: pointer;
+  background: @closeButtonImage;
+  &:hover {
+    background: @closeButtonImageHover;
+  }
+  &:active {
+    background: @closeButtonImageHover;
+  }
+  z-index: 1;
 }
 
 .controls-Button {

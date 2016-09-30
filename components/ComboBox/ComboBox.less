@@ -2,6 +2,14 @@
    line-height: normal;
    cursor: @combo-box-cursor;
 
+   &.controls-ComboBox_emptyValue.controls-TextBox {
+     .controls-TextBox__fieldWrapper {
+       .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
+         color: #ccc;
+       }
+     }
+   }
+
    .controls-TextBox__fieldWrapper {
       position: relative;
       .controls-TextBox__field {
@@ -73,7 +81,8 @@
       }
    }
    &.controls-Picker__show {
-      background-color: @text-box-focus-bg;
+      background-color: @combo-box-picker-show-background-color;
+      color: @compo-box-picker-show-color;
 
       .controls-TextBox__afterFieldWrapper {
          .controls-ComboBox__arrowDown {

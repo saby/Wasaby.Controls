@@ -1,0 +1,9 @@
+<div class="ws-window-titlebar-custom ws-sticky-header__block ws-float-area__close-button-wrapper">
+    {{? it.topContent}}{{=it.topContent}}{{?}}
+    <component data-component="SBIS3.CONTROLS.Button" class="controls-selectorComponent__chooseButton">
+        <options name="command">selectComplete</options>
+    </component>
+</div>
+<componet data-component="SBIS3.CONTROLS.SelectorWrapper">
+    <option name="content" type="ref">{{@it.content}}</option>
+</componet>

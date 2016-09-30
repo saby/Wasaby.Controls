@@ -793,7 +793,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                dot = data.defaultItemTpl;
             }
 
-               var ladder = this._options._decorators.getByName('ladder');
+               var ladder = this._options._decorators && this._options._decorators.getByName('ladder');
                ladder && ladder.setMarkLadderColumn(true);
 
             markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this._options);
@@ -1590,7 +1590,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       redrawItem: function(item, projItem) {
          projItem = projItem || this._getItemProjectionByItemId(item.getId());
-         var ladder = this._options._decorators.getByName('ladder');
+         var ladder = this._options._decorators && this._options._decorators.getByName('ladder');
          ladder && ladder.setMarkLadderColumn(true);
          var
             targetElement = this._getElementByModel(item),
@@ -1625,7 +1625,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                resultGroup,
                drawGroup,
                drawItem = true;
-         if (this._canApplyGrouping(item)) {
+         if (!Object.isEmpty(groupBy) && this._canApplyGrouping(item)) {
             resultGroup = groupBy.method.apply(this, [item.getContents(), at, last, item, this._options]);
             drawGroup = typeof resultGroup === 'boolean' ? resultGroup : (resultGroup instanceof Object && resultGroup.hasOwnProperty('drawGroup') ? !!resultGroup.drawGroup : false);
             drawItem = resultGroup instanceof Object && resultGroup.hasOwnProperty('drawItem') ? !!resultGroup.drawItem : true;
@@ -1805,8 +1805,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _ladderCompare: function(rows){
-         var ladderDecorator = this._options._decorators.getByName('ladder');
-         if (ladderDecorator && ladderDecorator.isIgnoreEnabled()){
+         var ladderDecorator;
+         if (this._options._decorators){
+            ladderDecorator = this._options._decorators.getByName('ladder');
+            if (ladderDecorator && ladderDecorator.isIgnoreEnabled()){
+               return;
+            }
+         }
+         else {
             return;
          }
          //TODO придрот - метод нужен только для адекватной работы лесенки при перемещении элементов местами
@@ -1961,7 +1967,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _addItem: function (projItem, at, withoutNotify) {
          var
             item = projItem.getContents(),
-            ladderDecorator = this._options._decorators.getByName('ladder'),
+            ladderDecorator = this._options._decorators && this._options._decorators.getByName('ladder'),
             canApplyGrouping = this._canApplyGrouping(projItem),
             previousGroupBy = this._previousGroupBy;//После добавления записи восстанавливаем это значение, чтобы не сломалась группировка
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
@@ -2035,11 +2041,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                atContainer.after(itemBuildedTpl);
             }
             else {
-               atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at);
-               if (atContainer.length) {
-                  atContainer.before(itemBuildedTpl);
-               } else {
-                  targetContainer.append(itemBuildedTpl);
+               if (at.at == 0) {
+                  targetContainer.prepend(itemBuildedTpl);
+               }
+               else {
+                  atContainer = $('> .controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at);
+                  if (atContainer.length) {
+                     atContainer.before(itemBuildedTpl);
+                  } else {
+                     targetContainer.append(itemBuildedTpl);
+                  }
                }
             }
          }
