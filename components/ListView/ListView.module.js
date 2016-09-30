@@ -1630,6 +1630,8 @@ define('js!SBIS3.CONTROLS.ListView',
                //Отображаем itemsToolbar для редактируемого элемента и фиксируем его
                this._showItemsToolbar(this.getHoveredItem());
                itemsToolbar.lockToolbar();
+            } else {
+               this._updateItemsToolbar();
             }
          },
          _hideToolbar: function() {
@@ -1647,6 +1649,8 @@ define('js!SBIS3.CONTROLS.ListView',
                } else {
                   this._hideItemsToolbar();
                }
+            } else {
+               this._updateItemsToolbar();
             }
          },
 
@@ -1771,8 +1775,11 @@ define('js!SBIS3.CONTROLS.ListView',
             //При показе тулбара, возможно он будет показан у редактируемой строки.
             //Цвет редактируемой строки отличается от цвета строки по ховеру.
             //В таком случае переключим классы тулбара в режим редактирования.
-            toolbar._toggleEditClass(!!editingRecord && editingRecord.getId() == target.key);
+            if (!toolbar.isToolbarLocking()) {
+               toolbar._toggleEditClass(!!editingRecord && editingRecord.getId() == target.key);
+            }
          },
+
          _unlockItemsToolbar: function() {
             if (this._itemsToolbar) {
                this._itemsToolbar.unlockToolbar();
