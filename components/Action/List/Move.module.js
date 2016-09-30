@@ -35,6 +35,13 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
                _moveStrategy: 'movestrategy.base'
             }
          },
+         /**
+          * Перемещает елементы. Должен быть реализован в наследниках
+          * @private
+          */
+         _move: function(){
+
+         },
 
          /**
           * Возвращает стратегию перемещения

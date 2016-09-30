@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
        *             });
        *          },
        *          moveUp: function(el, key, record) {
-       *             move.execute({from:record});
+       *             move.execute({movedItems:record});
        *          }
        *       }
        *    })
@@ -90,18 +90,19 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
                throw new Error('move direction must be equal Up or Down');
             }
          },
-
+         _doExecute: function(meta) {
+            this._move(meta.movedItems || meta.from);
+         },
          /**
-          * метод выполнящий перемещение
-          * @param {WS.Data/Entity/Model} from элемент который будет перемещен
+          * Метод выполнящий перемещение
+          * @param {WS.Data/Entity/Model} movedItems элемент который будет перемещен
           * @returns {$ws.proto.Deferred}
           * @private
           */
-         _move: function (from) {
-            var to = this._getNearestItem(from);
+         _move: function (movedItems) {
+            var to = this._getNearestItem(movedItems);
             if (to) {
-               var def = this.getMoveStrategy().move(from, to, (this._options.moveDirection === 'up'))
-
+              return this.getMoveStrategy().reorderMove(movedItems, to, (this._options.moveDirection === 'up'));
             }
             return (new $ws.proto.Deferred()).callback(true);
          },

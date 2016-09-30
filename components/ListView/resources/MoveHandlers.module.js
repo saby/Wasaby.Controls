@@ -2,35 +2,30 @@
  * Created by as.suhoruchkin on 21.07.2015.
  */
 define('js!SBIS3.CONTROLS.MoveHandlers', [
-   'js!SBIS3.CORE.Dialog',
-   'js!WS.Data/MoveStrategy/Sbis',
-   'js!WS.Data/MoveStrategy/Base',
    'js!SBIS3.CONTROLS.Action.List.InteractiveMove',
    'js!WS.Data/Di',
-   'i18n!SBIS3.CONTROLS.MoveHandlers',
-   'js!WS.Data/MoveStrategy/Sbis'
-], function(Dialog, SbisMoveStrategy, BaseMoveStrategy, InteractiveMove, Di) {
+   'js!WS.Data/MoveStrategy/Base',
+   'i18n!SBIS3.CONTROLS.MoveHandlers'
+], function(InteractiveMove, Di) {
    /**
     *
     * Миксин определяющий логику перемещения элементов
     * @mixin SBIS3.CONTROLS.MoveHandlers
     * @author Крайнов Дмитрий Олегович
-    *
     * @public
     */
    var MoveHandlers = {
       $protected: {
         _options: {
-           moveStrategy: undefined
-        },
-        _moveStrategy: undefined
+           moveStrategy: 'movestrategy.base'
+        }
       },
       /**
-       * Перемещает записи через диалог
-       * @param records
+       * Перемещает записи через диалог. По умолчанию берет все выделенные записи.
+       * @param [Array] MovedItems Массив рекордов, которые надо переместить
        * @deprecated Используйте SBIS3.CONTROLS.Action.List.InteractiveMove.
        */
-      moveRecordsWithDialog: function(records) {
+      moveRecordsWithDialog: function(MovedItems) {
          var
             action = new InteractiveMove({
                linkedObject: this,
@@ -38,20 +33,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
                moveStrategy: this.getMoveStrategy()
             });
 
-         action.execute({records: records});
-      },
-
-      //region public
-      /**
-       *
-       * @param target
-       */
-      selectedMoveTo: function(target) {
-         var selectedItems = this.getSelectedItems(false);
-         if (!$ws.helpers.instanceOfModule(moveTo, 'WS.Data/Entity/Model')) {
-            target = this.getItems().getRecordById(moveTo);
-         }
-         this.move(selectedItems ? selectedItems.toArray() : [], target);
+         action.execute({records: MovedItems});
       },
       /**
        *
@@ -61,106 +43,21 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
        * @private
        */
       _move: function(movedItems, target, position) {
-         var
-            deferred,
-            self = this,
-            isNodeTo = true,
-            isChangeOrder = position !== 'on';
-
-         if (target !== null) {
-            isNodeTo = target.get(this._options.hierField + '@');
-         }
-
-         if (this._checkRecordsForMove(movedItems, target, isChangeOrder)) {
-            this._toggleIndicator(true);
-
-            if (isNodeTo && !isChangeOrder) {
-               deferred = this.getMoveStrategy().hierarhyMove(movedItems, target);
-            } else  {
-               deferred = this.getMoveStrategy()._move(movedItems, target, position == 'after');
-            }
-            if (deferred !==false && !(deferred instanceof $ws.proto.Deferred)) {
-               deferred = new $ws.proto.Deferred().callback();
-            }
-
-            if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
-               deferred.addCallback(function() {
-                  if (isChangeOrder) {
-                     self.moveInItems(movedItems, target, position == 'after');
-                  } else {
-                     self.removeItemsSelectionAll();
-                  }
-               }).addBoth(function() {
-                  self._toggleIndicator(false);
-               });
-            } else {
-               self._toggleIndicator(false);
-            }
-         }
+         this._toggleIndicator(true);
+         this.getMoveStrategy().move(movedItems, target, position).addBoth(function(){
+            this._toggleIndicator(false);
+         }.bind(this));
       },
       /**
-       *
-       * @param movedItems
-       * @param target
-       * @param isChangeOrder
-       * @returns {boolean}
-       * @private
+       * Перемещает выделенные элементы.
+       * @param {WS.Data/Entity/Record|String} target  К какому элементу переместить выделенные. Рекорд либо его идентификатор в рекордсете.
        */
-      _checkRecordsForMove: function(movedItems, target, isChangeOrder) {
-         var
-            key,
-            toMap = [];
-         if (target === undefined) {
-            return false;
+      selectedMoveTo: function(target) {
+         var selectedItems = this.getSelectedItems(false);
+         if (!$ws.helpers.instanceOfModule(target, 'WS.Data/Entity/Model')) {
+            target = this.getItems().getRecordById(target);
          }
-         if (target !== null && $ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.TreeMixin')) {
-            toMap = this._getParentsMap(target.getId());
-            for (var i = 0; i < movedItems.length; i++) {
-               key = '' + (($ws.helpers.instanceOfModule(movedItems[i], 'SBIS3.CONTROLS.Record')||$ws.helpers.instanceOfModule(movedItems[i], 'WS.Data/Entity/Model')) ? movedItems[i].getId() : movedItems[i]);
-               if ($.inArray(key, toMap) !== -1) {
-                  return false;
-               }
-               if (target !== null && !isChangeOrder && !target.get(this._options.hierField + '@')) {
-                  return false;
-               }
-            }
-         }
-
-         return true;
-      },
-      /**
-       *
-       * @param parentKey
-       * @returns {Array}
-       * @private
-       */
-      _getParentsMap: function(parentKey) {
-         var
-            dataSet = this.getItems(),
-            hierField = this.getHierField(),
-         /*
-          TODO: проверяем, что не перемещаем папку саму в себя, либо в одного из своих детей.
-          В текущей реализации мы можем всего-лишь из метаданных вытащить путь от корня до текущего открытого раздела.
-          Это костыль, т.к. мы расчитываем на то, что БЛ при открытии узла всегда вернет нам путь до корня.
-          Решить проблему можно следующими способами:
-          1. во первых в каталоге номенклатуры перемещение сделано не по стандарту. при нажатии в операциях над записью кнопки "переместить" всегда должен открываться диалог выбора папки. сейчас же они без открытия диалога сразу что-то перемещают и от этого мы имеем проблемы. Если всегда перемещать через диалог перемещения, то у нас всегда будет полная иерархия, и мы сможем определять зависимость между двумя узлами, просто пройдясь вверх по иерархии.
-          2. тем не менее это не отменяет сценария обычного Ctrl+C/Ctrl+V. В таком случае при операции Ctrl+C нам нужно запоминать в метаданные для перемещения текущую позицию иерархии от корня (если это возможно), чтобы в будущем при вставке произвести анализ на корректность операции
-          3. это не исключает ситуации, когда БЛ не возвращает иерархию до корня, либо пользователь самостоятельно пытается что-то переместить с помощью интерфейса IDataSource.move. В таком случае мы считаем, что БЛ вне зависимости от возможности проверки на клиенте, всегда должна проверять входные значения при перемещении. В противном случае это приводит к зависанию запроса.
-          */
-            path = dataSet.getMetaData().path,
-            toMap = path ? $.map(path.getChildItems(), function(elem) {
-               return '' + elem;
-            }) : [];
-         var record = dataSet.getRecordById(parentKey);
-         while (record) {
-            parentKey = '' + record.getId();
-            if ($.inArray(parentKey, toMap) === -1) {
-               toMap.push(parentKey);
-            }
-            parentKey = dataSet.getParentKey(record, hierField);
-            record = dataSet.getRecordById(parentKey);
-         }
-         return toMap;
+         this._move(selectedItems ? selectedItems.toArray() : [], target);
       },
       /**
        * Возвращает стратегию перемещения
@@ -194,7 +91,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
        * @see WS.Data/MoveStrategy/IMoveStrategy
        * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
        */
-      setMoveStrategy: function (strategy){
+      setMoveStrategy: function (strategy) {
          if(!$ws.helpers.instanceOfMixin(strategy,'WS.Data/MoveStrategy/IMoveStrategy')){
             throw new Error('The strategy must implemented interfaces the WS.Data/MoveStrategy/IMoveStrategy.')
          }
@@ -246,7 +143,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
                if (target.getPosition() === 'on') {
                   def = this.getMoveStrategy().hierarhyMove(movedItems, dragObject.getTarget().getModel());
                } else {
-                  def = this.getMoveStrategy()._move(movedItems, dragObject.getTarget().getModel(), target.getPosition() === 'after');
+                  def = this.getMoveStrategy().move(movedItems, dragObject.getTarget().getModel(), target.getPosition() === 'after');
                }
             }
          }

@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
        *          },
        *          interactiveMove: function(el, key, record) {
        *             //переместить только переданные записи
-       *             move.execute({records: [record]});
+       *             move.execute({movedItems: [record]});
        *          },
        *          buttonInteractiveMove: function(){
        *             //переместить выбранные в ListView записи
@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
 
          _doExecute: function(meta) {
             meta = meta || {};
-            var records = meta.records || this.getSelectedItems();
+            meta.movedItems = meta.movedItems || this.getSelectedItems();
             this._opendEditComponent({
                title: rk('Перенести') + ' ' + records.length + $ws.helpers.wordCaseByNumber(records.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
                cssClassName: 'controls-moveDialog',
@@ -102,21 +102,23 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             var self = this;
             return {
                linkedView: this._options.linkedObject,
-               dataSource: this._options.dataSource,
-               records: meta.records,
+               dataSource: this.getDataSource(),
+               records: meta.movedItems,
                handlers: {
                   onPrepareFilterOnMove: function(event, rec) {
                      event.setResult(self._options.linkedObject._notify('onPrepareFilterOnMove', rec));
                   },
-                  onMove: function(e, records, target) {
-                     self._move(records, target);
+                  onMove: function(e, movedItems, target) {
+                     self._move(movedItems, target);
                   }
                }
             };
          },
-         _move: function(movedItems, target){
 
+         _move: function(movedItems, target){
+            this.getMoveStrategy().move(movedItems, target, 'on');
          },
+
          _makeMoveStrategy: function () {
             return Di.resolve(this._options.moveStrategy, {
                dataSource: this.getDataSource(),

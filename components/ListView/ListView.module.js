@@ -2927,9 +2927,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      models.push(item.getModel());
                   });
                   var position = target.getPosition();
-                  this.move(models, target.getModel(),
-                     position === 'on' ? undefined : position === 'after'
-                  );
+                  this._move(models, target.getModel(), position);
                } else {
                   this._moveFromOutside(dragObject);
                }
