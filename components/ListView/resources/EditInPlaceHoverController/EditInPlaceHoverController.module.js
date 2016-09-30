@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                return $ws.core.merge(EditInPlaceHoverController.superclass._getEditInPlaceConfig.apply(this), {
                   handlers: {
                      onChildControlFocusIn: this._onChildControlFocusIn.bind(this),
-                     onChildFocusIn: this._onChildFocusIn.bind(this)
+                     onFocusIn: this._onChildFocusIn.bind(this)
                   }
                })
             },
@@ -112,15 +112,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             },
             /**
              * Обработчик события по приходу фокуса на контрол в области редактирования по месту
-             * @param e
-             * @param control
              * @private
              */
-            _onChildFocusIn: function(e, control) {
+            _onChildFocusIn: function() {
                var
-                  target = control.getContainer().closest('.controls-editInPlace'),
                   editingEip = this._getEditingEip();
-               if (!editingEip || editingEip.getContainer().get(0) !== target.get(0)) {
+               if (!editingEip || editingEip.getContainer().get(0) !== this.getContainer().get(0)) {
                   this.edit(this._hoveredEip.getEditingRecord());
                }
             },
