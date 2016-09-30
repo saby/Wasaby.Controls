@@ -1775,7 +1775,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //При показе тулбара, возможно он будет показан у редактируемой строки.
             //Цвет редактируемой строки отличается от цвета строки по ховеру.
             //В таком случае переключим классы тулбара в режим редактирования.
-            if (!toolbar.isToolbarLocking()) {
+            if (this._options.editMode.indexOf('toolbar') === -1) {
                toolbar._toggleEditClass(!!editingRecord && editingRecord.getId() == target.key);
             }
          },
