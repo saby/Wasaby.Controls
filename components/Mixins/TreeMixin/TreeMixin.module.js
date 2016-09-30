@@ -849,8 +849,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       },
 
       _getHierarchyRelation: function(idProperty) {
+         var items = this.getItems();
          return new HierarchyRelation({
-            idProperty: idProperty || (this._items ? this._items.getIdProperty() : ''),
+            idProperty: idProperty || (items ? items.getIdProperty() : ''),
             parentProperty: this._options.hierField,
             nodeProperty: this._options.hierField + '@'
          });
@@ -868,7 +869,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             //this._options.openedPath = {};
             if (this._options.expand) {
                var hierarchy = this._getHierarchyRelation(),
-                  items = this._options._items,
+                  items = this.getItems(),
                   openedPath = this._options.openedPath;
                items.each(function(item) {
                   var id = item.getId(),
