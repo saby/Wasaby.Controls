@@ -11,13 +11,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'js!SBIS3.CONTROLS.ImitateEvents',
       'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
+      'js!WS.Data/Ladder/Ladder',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'html!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate',
       'html!SBIS3.CONTROLS.DataGridView/resources/ItemContentTemplate',
       'html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate',
       'html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate'
    ],
-   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, LadderDecorator, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate) {
+   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, LadderDecorator, Ladder, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate) {
    'use strict';
 
       var ANIMATION_DURATION = 500, //Продолжительность анимации скролла заголовков
@@ -66,12 +67,20 @@ define('js!SBIS3.CONTROLS.DataGridView',
          buildTplArgsDG = function(cfg) {
             var tplOptions = cfg._buildTplArgsLV.call(this, cfg);
             tplOptions.columns = _prepareColumns.call(this, cfg.columns, cfg);
+            if (cfg.newLadder) {
+               cfg.newLadder.ladder = new Ladder(
+               {
+                  collection: cfg._itemsProjection,
+                  columnNames: cfg.newLadder.columns
+               });
+            }
             tplOptions.cellData = {
                /*TODO hierField вроде тут не должно быть*/
                hierField: cfg.hierField,
                getColumnVal: getColumnVal,
                decorators : tplOptions.decorators,
-               displayField : tplOptions.displayField
+               displayField : tplOptions.displayField,
+               ladder: (cfg.newLadder && cfg.newLadder.ladder)
             };
             tplOptions.startScrollColumn = cfg.startScrollColumn;
 
@@ -413,7 +422,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _modifyOptions: function() {
          var newCfg = DataGridView.superclass._modifyOptions.apply(this, arguments);
-         newCfg._decorators.add(new LadderDecorator());
+         if (!newCfg.newLadder) {
+            newCfg._decorators.add(new LadderDecorator());
+         }
          checkColumns(newCfg);
          newCfg._colgroupData = prepareColGroupData(newCfg);
          newCfg._headData = prepareHeadData(newCfg);
