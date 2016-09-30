@@ -1,0 +1,44 @@
+@controls-Spoiler-title-font: bold @font-basic-size @font-basic-name;
+@controls-Spoiler-title-cursor: pointer;
+@controls-Spoiler-title-padding: 6px 0;
+@controls-Spoiler-title-height: 30px;
+@controls-Spoiler-title-line-height: 30px;
+@controls-Spoiler-title-text-color: #313E78;
+
+.controls-Spoiler {
+   .controls-Spoiler__title {
+      cursor: @controls-Spoiler-title-cursor;
+      height: @controls-Spoiler-title-height;
+      font: @controls-Spoiler-title-font;
+      padding: @controls-Spoiler-title-padding;
+      box-sizing: border-box;
+      position: relative;
+      white-space: nowrap;
+      .user-select();
+      .controls-Spoiler__text {
+         color: @controls-Spoiler-title-text-color;
+      }
+      .controls-Spoiler__toggle-item {
+         display: inline-block;
+         padding: 0 2px;
+      }
+      .controls-Spoiler__title-caption {
+         display: inline-block;
+         width: calc(100% ~"-" 20px);
+         .controls-Spoilter__title-caption-text {
+            max-width: 100%;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            display: inline-block;
+         }
+      }
+   }
+   .controls-Spoiler__content {
+      display: none;
+   }
+   &.controls-Spoiler_expanded {
+      .controls-Spoiler__content {
+         display: block;
+      }
+   }
+}

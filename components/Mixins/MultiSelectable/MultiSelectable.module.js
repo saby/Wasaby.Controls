@@ -149,9 +149,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
 
       after : {
          init: function () {
-            if(this._options.selectedItems) {
-               this._options.selectedKeys = this._convertToKeys(this._options.selectedItems);
-            }
             this._drawSelectedItems(this._options.selectedKeys);
          },
          _setItemsEventHandlers: function() {
@@ -186,6 +183,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
             this.once('onItemsReady', function() {
                this._checkNewItemsFormat(this.getItems());
             })
+         },
+         init: function() {
+            if (this._options.selectedItems) {
+               this._options.selectedKeys = this._convertToKeys(this._options.selectedItems);
+            }
          }
       },
       /**

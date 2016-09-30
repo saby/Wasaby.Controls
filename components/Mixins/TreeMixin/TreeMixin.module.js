@@ -245,7 +245,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       var tplOptions = cfg._buildTplArgsLV.call(this, cfg);
       tplOptions.displayType = cfg.displayType;
       tplOptions.hierField = cfg.hierField;
-      tplOptions.paddingSize = cfg._paddingSize;
+      tplOptions.paddingSize = !isNaN(cfg.paddingSize) && typeof cfg.paddingSize === 'number' ? cfg.paddingSize : cfg._paddingSize;
       tplOptions.originallPadding = cfg._originallPadding;
       tplOptions.isSearch = cfg.hierarchyViewMode;
       tplOptions.hierarchy = new HierarchyRelation({
@@ -357,6 +357,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             _getRecordsForRedraw: getRecordsForRedraw,
             _curRoot: null,
             _createDefaultProjection : createDefaultProjection,
+            /**
+             * @cfg {Number} Задает размер отступов для каждого уровня иерархии
+             * @example
+             * <pre>
+             *    <option name="paddingSize">24</option>
+             * </pre>
+             */
+            paddingSize: undefined,
             /**
              * @cfg {String, Number} Устанавливает идентификатор узла, относительно которого нужно отображать данные. Такой узел будет считаться вершиной иерархии.
              * @example
@@ -849,8 +857,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       },
 
       _getHierarchyRelation: function(idProperty) {
+         var items = this.getItems();
          return new HierarchyRelation({
-            idProperty: idProperty || (this._items ? this._items.getIdProperty() : ''),
+            idProperty: idProperty || (items ? items.getIdProperty() : ''),
             parentProperty: this._options.hierField,
             nodeProperty: this._options.hierField + '@'
          });
@@ -868,7 +877,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             //this._options.openedPath = {};
             if (this._options.expand) {
                var hierarchy = this._getHierarchyRelation(),
-                  items = this._options._items,
+                  items = this.getItems(),
                   openedPath = this._options.openedPath;
                items.each(function(item) {
                   var id = item.getId(),
