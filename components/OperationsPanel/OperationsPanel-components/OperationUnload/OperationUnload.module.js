@@ -128,8 +128,8 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
        * @param columns
        * @private
        */
-      _notifyOnApply : function(columns){
-         return this._notify('onApplyOperation', 'export', columns);
+      _notifyOnApply : function(columns, data){
+         return this._notify('onApplyOperation', 'export', columns, data);
       },
       _applyMassOperation : function(ds){
          if (this._isClientUnload()) {
