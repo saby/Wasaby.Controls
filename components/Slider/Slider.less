@@ -1,0 +1,102 @@
+.controls-Slider {
+   padding-top: 8px;
+
+   &__withBorder {
+
+      .controls-Slider__wrapper {
+         border: 1px solid #E4E4E4;
+         border-radius: 14px;
+         padding: 0 8px;
+      }
+   }
+
+   &__mainSlider {
+      position: relative;
+      height: 12px;
+      padding: 6px 0;
+      width: ~"calc(100% - 12px)";
+
+      &.controls-Slider__big {
+         height: 20px;
+         padding: 2px 0;
+         width: ~"calc(100% - 20px)";
+
+         .controls-Slider__point{
+            width: 16px;
+            height: 16px;
+            border-radius:  10px;
+         }
+
+         .controls-Slider__line {
+            margin-top: 9px;
+
+            &.controls-Slider__line__empty {
+               padding-right: 20px;
+            }
+         }
+      }
+   }
+
+   &__point {
+      position:absolute;
+      cursor: pointer;
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border: 2px solid #587AB0;
+      border-radius:  6px;
+      background-color: white;
+      z-index: 2;
+
+      &__left {
+         left: 0%;
+      }
+
+      &__right {
+         left: 100%;
+      }
+
+      &.lastActivePoint{
+         z-index: 3;
+      }
+   }
+
+   &__line {
+      position:absolute;
+      display: inline-block;
+      height: 2px;
+      width: 100%;
+      margin-top: 5px;
+
+      &__empty {
+         background-color: #999999;
+         padding-right: 12px;
+      }
+
+      &__full {
+         z-index: 1;
+         background-color: #587AB0;
+      }
+   }
+
+   &__labels {
+      position: relative;
+      min-height: 14px;
+      color:#999999;
+      padding-top: 3px;
+   }
+
+   &__label {
+      position: absolute;
+      display: inline-block;
+
+      &__start {
+         left: 0;
+      }
+
+      &__end {
+         right: 0;
+      }
+   }
+
+}
