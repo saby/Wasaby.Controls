@@ -274,14 +274,15 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _setPlaceholder: function(text){
+         text = text ? text : text == 0 ? text : '';
          if (!$ws._const.compatibility.placeholder) {
             if (!this._compatPlaceholder) {
                this._createCompatPlaceholder();
             }
-            this._compatPlaceholder.text(text || '');
+            this._compatPlaceholder.text(text);
          }
          else {
-            this._inputField.attr('placeholder', text || '');
+            this._inputField.attr('placeholder', text);
          }
       },
 

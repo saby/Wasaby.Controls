@@ -61,6 +61,24 @@
    &.ws-area{
       height: auto;
    }
+   &.controls-IconButton_filter-left, &.controls-IconButton_filter-right {
+      height: 24px;
+      width: 35px;
+      cursor: pointer;
+      display: inline-block;
+   }
+   &.controls-IconButton_filter-left {
+      background: @FilterPanelButtonLeft;
+      &:hover {
+         background: @FilterPanelButtonHoverLeft;
+      }
+   }
+   &.controls-IconButton_filter-right {
+      background: @FilterPanelButtonRight;
+      &:hover {
+         background: @FilterPanelButtonHoverRight;
+      }
+   }
 }
 
 .ws-enabled,

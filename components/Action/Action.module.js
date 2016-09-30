@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.Action.Action',
          },
 
          $constructor: function () {
-            this._publish(['onChangeCanExecute', 'onExecuted', 'onExecute', 'onError']);
+            this._publish('onChangeCanExecute', 'onExecuted', 'onExecute', 'onError');
          },
          /**
           * Метод запускающий выполнение Action'а
@@ -79,8 +79,8 @@ define('js!SBIS3.CONTROLS.Action.Action',
          execute: function (meta) {
             var self = this;
             if (this.isCanExecute()) {
-               return this._callHandlerMethod([meta], 'onExecute', '_doExecute').addCallbacks(function () {
-                  return self._notify('onExecuted', meta);
+               return this._callHandlerMethod([meta], 'onExecute', '_doExecute').addCallbacks(function (result) {
+                  return self._notify('onExecuted', meta, result);
                }, function (error) {
                   self._handleError(error, meta);
                   self._notify('onError', error, meta);
