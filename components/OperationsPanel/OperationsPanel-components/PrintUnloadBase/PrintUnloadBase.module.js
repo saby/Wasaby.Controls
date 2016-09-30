@@ -132,12 +132,11 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
 
       _applyOperation : function(dataSet){
          var
-             self = this,
-             columns = this._prepareOperationColumns();
+             self = this;
          this._prepareData(dataSet).addCallback(function(data) {
             self.applyOperation({
                dataSet: data,
-               columns: columns
+               columns: self._prepareOperationColumns(data)
             });
          });
       },
@@ -153,10 +152,10 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          }
       },
 
-      _prepareOperationColumns: function(){
+      _prepareOperationColumns: function(data){
          var columns = this._getView().getColumns(),
              result;
-         result = this._notifyOnApply(columns);
+         result = this._notifyOnApply(columns, data);
          if (result instanceof Array) {
             columns = result;
          }
