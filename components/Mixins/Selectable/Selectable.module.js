@@ -254,6 +254,27 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
          return this._options.selectedIndex;
       },
 
+      /**
+       * Возвращает выбранный элемент коллекции.
+       * @returns {WS.Data|Entity|Model}
+       * @example
+       * <pre>
+       *     var myItem = this.getChildControlByName('MyControl').getSelectedItem();
+       * </pre>
+       */
+       /*
+        TODO в отличие от multiselectable при хождении по папкам/фильтрации запоминания элемента не будет
+        но это вроде и правильно, а в мультиселекте неправильно хранить выдление при хождении по папкам, это логика
+        TreeView
+       */
+      getSelectedItem : function() {
+         var
+             selKey = this.getSelectedKey(),
+             items = this.getItems();
+
+         return selKey && items ? items.getRecordById(selKey) : null;
+      },
+
       _drawSelectedItem : function() {
          /*Method must be implemented*/
       },
@@ -334,7 +355,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
                   if (count > 0) {
                      if (!this._isEmptyIndex(this._options.selectedIndex)) {
                         if (this._options.selectedIndex > count - 1) {
-                           this._options.selectedIndex = 0;
+                           this._options.selectedIndex = count - 1;
                         }
                         if (oldItems.length == 1 && action == IBindCollection.ACTION_REMOVE && oldItems[0].getContents().getId() == this._options.selectedKey) {
                            this._isMove = true;

@@ -19,9 +19,6 @@
 @font-folder-size:                        14px;
 @font-basic-line-height:                  20px;
 
-@closeButtonWidth:                        36px;
-@closeButtonHeight:                       24px;
-
 @default-itemHover-color:                 @primary-color;
 @default-itemSelected-color:              @primary-color;
 
@@ -58,6 +55,13 @@
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
 
+@FilterPanelButtonRight: url('img/FilterPanelButton.png') -70px 0;
+@FilterPanelButtonLeft: url('img/FilterPanelButton.png') -35px 0;
+@FilterPanelButtonHide: url('img/FilterPanelButton.png') 0 0;
+@FilterPanelButtonHoverRight: url('img/FilterPanelButton.png') -70px 24px;
+@FilterPanelButtonHoverLeft: url('img/FilterPanelButton.png') -35px 24px;
+@FilterPanelButtonHoverHide: url('img/FilterPanelButton.png') 0 -24px;
+
 // Normal default button
 @button-border:                           @button-border-width none;
 @button-bg:                               @default-color;
@@ -76,7 +80,7 @@
 
 @button-primary-hover-border:             0 none;
 @button-primary-hover-shadow:             @button-shadow;
-@button-primary-hover-bg:                 @primary-color;
+@button-primary-hover-bg:                 #FFA34F;
 
 @button-primary-active-text-color:        @button-active-text-color;
 @button-primary-active-border:            @button-active-border;
@@ -767,7 +771,6 @@
 @list-view-actions-menu-close-right:            4px;
 @list-view-actions-menu-close-height:           16px;
 @list-view-actions-menu-close-width:            16px;
-@list-view-actions-menu-close-revVert-bottom:   4px;
 @list-view-actions-menu-padding:                @menu-padding;
 
 @listView-empty-data-color:                     @black-color;
@@ -859,7 +862,8 @@
 // ----------------------- //
 
 @controls-OperationsPanelButton-width:             24px;
-@controls-OperationsPanelButton-hor-height:        30px;
+@controls-OperationsPanelButton-hor-height:        29px;
+@controls-OperationsPanelButton-hor-line-height:   30px;
 @controls-OperationsPanelButton-vert-height:       24px;
 @controls-OperationsPanelButton-font:              18px 'TensorFont Regular', 'TensorFont';
 @controls-OperationsPanelButton-icon-left:         6px;
@@ -900,14 +904,14 @@
 @controls-filterButton-picker-height:             auto !important; //Приходится использовать important, т.к. попап считает высоту и выставляет её в inline-styles
 @controls-filterButton-picker-border-width:       0;
 @controls-filterButton-picker-border-radius:      0;
-@controls-Popup-closeButton-top:                  12px;
+@controls-Popup-closeButton-top:                  16px;
 
 @controls-filterButton-button-height:             24px;
 @controls-filterButton-button-margin:             8px 8px 8px 0;
 
 @controls-filterButton-button-arrow-margin:       -4px;;
 
-@controls-filterButton-area-header-padding:       16px 48px 16px 12px;
+@controls-filterButton-area-header-padding:       16px 76px 16px 12px;
 
 @controls-filterButton-area-text-size:            24px;
 @controls-filterButton-area-text-color:           @primary-color;
@@ -923,9 +927,17 @@
 
 //FilterLine
 @controls-filterLine-wrapper-height:              24px;
+@controls-filterLine-line-display:                table-row;
+@controls-filterLine-items-display:               table-cell;
+@controls-filterLine-items-padding:               0;
+@controls-filterLine-arrow-height:                19px;
+@controls-filterLine-link-color:                  #0055bb;
 @controls-filterLine-link-hover-color:            @primary-color;
 
 @controls-filterLine-copyCross-top:               -20px;
+@controls-filterLine-copyCross-margin:            -16px;
+@controls-filterLine-copyCross-shadow:            -8px 0px 10px 2px @white-color;
+@controls-filterLine-copyCross-cross-top:         3px;
 
 //FieldLink
 @controls-FieldLink-showAllLinks-lineHeight:       22px;

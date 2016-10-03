@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
     'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellRadioButtonTpl',
     'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl',
     'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellTitleTpl',
+    'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/rowTpl',
     'i18n!!SBIS3.CONTROLS.MergeDialogTemplate'
 ], function(Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter, RecordSet) {
 
@@ -58,11 +59,6 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             this.subscribe('onReady', this._onReady);
             $ws.single.CommandDispatcher.declareCommand(this, 'beginMerge', this.onMergeButtonActivated);
         },
-        addUserItemAttributes: function(row, record) {
-            if (record.get(AVAILABLE_FIELD_NAME) === false) {
-                row.addClass('controls-MergeDialogTemplate__notMergeAvailable');
-            }
-        },
         onSearchPathClick: function(event) {
             //Откажемся от перехода по хлебным крошкам
             event.setResult(false);
@@ -74,18 +70,10 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             this._applyContainer = this.getContainer().find('.controls-MergeDialogTemplate__applyBlock');
             this._treeView = this.getChildControlByName('MergeDialogTemplate__treeDataGridView');
             this._treeView.subscribe('onSelectedItemChange', this.onSelectedItemChange.bind(this));
-            this._treeView.setGroupBy(this._treeView.getSearchGroupBy(), false);
+            //this._treeView.setGroupBy(this._treeView.getSearchGroupBy(), false);
             dataSource = new SbisServiceSource(this._options.dataSource._options);
             dataSource.getBinding().query = this._options.queryMethodName ? this._options.queryMethodName : this._options.dataSource.getBinding().query;
             this._treeView.setDataSource(dataSource, true);
-            this._treeView._projectionFilter = function() { return true }; //todo ИСПРАВИТЬ. Возможно, нужно поправить тест и передавать поле, которое будет использоваться в поиске при группировке
-            this._treeView._isSearchMode = function() { return true }; //todo говорим списку, что он отображается в режиме поиска (с хлебными крошками) надо исправить
-            this._treeView.once('onItemsReady', function(){
-               this._getItemsProjection().setEventRaising(false);
-               this._getItemsProjection().setFilter(function() { return true });//todo ИСПРАВИТЬ. Возможно, нужно поправить тест и передавать поле, которое будет использоваться в поиске при группировке
-               this._getItemsProjection().setEventRaising(true);
-            });
-
             this._treeView.reload({
                 'Разворот': 'С разворотом',
                 'usePages': 'full',

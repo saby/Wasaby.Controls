@@ -779,7 +779,7 @@ define('js!SBIS3.CONTROLS.ListView',
                т.к. оно стреляет после тапа. После тапа событие mousemove имеет нулевой сдвиг, поэтому обрабатываем его как touch событие
                 + добавляю проверку, что до этого мы были в touch режиме,
                это надо например для тестов, в которых эмулирется событие mousemove так же без сдвига, как и на touch устройствах. */
-            this._setTouchSupport(Array.indexOf(['swipe', 'tap'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && $ws._const.compatibility.touch && (originalEvent.touches || $ws._const.browser.isMobileIOS)));
+            this._setTouchSupport(Array.indexOf(['swipe', 'tap'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && $ws._const.compatibility.touch && (originalEvent.touches || $ws._const.browser.isMobilePlatform)));
 
             switch (e.type) {
                case 'mousemove':
@@ -862,10 +862,9 @@ define('js!SBIS3.CONTROLS.ListView',
             var scrollOnEdge = (this._options.infiniteScroll === 'up' && type === 'top') || // скролл вверх и доскролили до верхнего края
                                (this._options.infiniteScroll === 'down' && type === 'bottom') || // скролл вниз и доскролили до нижнего края
                                (this._options.infiniteScroll === 'both'); //скролл в обе стороны и доскролили до любого края
+
             if (scrollOnEdge && this.getItems()) {
-               var isTop = type == 'top';
-               this._needScrollCompensation = isTop;
-               this._scrollLoadNextPage(isTop ? 'up' : 'down');
+               this._scrollLoadNextPage(type == 'top' ? 'up' : 'down');
             }
          },
          _createScrollPager: function(){
@@ -1197,10 +1196,20 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
+            var itemsActions;
+
             if (this._isSupportedItemsToolbar()) {
                if (target.container){
                   if (!this._touchSupport) {
                      this._showItemsToolbar(target);
+                  }
+                  // setItemsActions стреляет событием onChangeHoveredItem, чтобы прикладники могли скрыть/показать нужные опции для строки
+                  // поэтому после события нужно обновить видимость элементов
+                  itemsActions = this.getItemsActions();
+                  if(itemsActions) {
+                     if (itemsActions.isVisible()) {
+                        itemsActions.applyItemActions();
+                     }
                   }
                } else {
                   this._hideItemsToolbar();
@@ -1660,7 +1669,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return config;
          },
          _showToolbar: function(model) {
-            var itemsInstances, itemsToolbar;
+            var itemsInstances, itemsToolbar, editedItem;
             if (this._options.editMode.indexOf('toolbar') !== -1) {
                itemsToolbar = this._getItemsToolbar();
 
@@ -1678,9 +1687,16 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                   }
                }
+               // подменяю рекод выделенного элемента на рекорд редактируемого
+               // т.к. тулбар в режиме редактикрования по месту должен работать с измененной запись
+               editedItem = $ws.core.clone(this.getHoveredItem());
+               editedItem.record = model;
+
                //Отображаем itemsToolbar для редактируемого элемента и фиксируем его
-               this._showItemsToolbar(this.getHoveredItem());
+               this._showItemsToolbar(editedItem);
                itemsToolbar.lockToolbar();
+            } else {
+               this._updateItemsToolbar();
             }
          },
          _hideToolbar: function() {
@@ -1698,6 +1714,8 @@ define('js!SBIS3.CONTROLS.ListView',
                } else {
                   this._hideItemsToolbar();
                }
+            } else {
+               this._updateItemsToolbar();
             }
          },
 
@@ -1713,6 +1731,10 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          isEdit: function() {
             return this._hasEditInPlace() && this._getEditInPlace().isEdit();
+         },
+
+         _getEditingRecord: function() {
+            return this.isEdit() ? this._getEditInPlace()._getEditingRecord() : undefined;
          },
 
          //********************************//
@@ -1811,8 +1833,18 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _showItemsToolbar: function(target) {
-            this._getItemsToolbar().show(target, this._touchSupport);
+            var
+                toolbar = this._getItemsToolbar(),
+                editingRecord = this._getEditingRecord();
+            toolbar.show(target, this._touchSupport);
+            //При показе тулбара, возможно он будет показан у редактируемой строки.
+            //Цвет редактируемой строки отличается от цвета строки по ховеру.
+            //В таком случае переключим классы тулбара в режим редактирования.
+            if (this._options.editMode.indexOf('toolbar') === -1) {
+               toolbar._toggleEditClass(!!editingRecord && editingRecord.getId() == target.key);
+            }
          },
+
          _unlockItemsToolbar: function() {
             if (this._itemsToolbar) {
                this._itemsToolbar.unlockToolbar();
@@ -1924,13 +1956,13 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _isSearchMode: function() {
-            return this._searchParamName && !Object.isEmpty(this._options.groupBy) && this._options.groupBy.field === this._searchParamName;
+            return this._options.hierarchyViewMode;
          },
 
          //TODO проверка для режима совместимости со старой отрисовкой
          /*TODO easy параметр для временной поддержки группировки в быстрой отрисовке*/
          _isSlowDrawing: function(easy) {
-            var result = !!this._options.itemTemplate || !!this._options.userItemAttributes || this._isSearchMode();
+            var result = !!this._options.itemTemplate || !!this._options.userItemAttributes;
             if (easy) {
                return result;
             }

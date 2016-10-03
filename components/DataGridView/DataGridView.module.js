@@ -542,29 +542,22 @@ define('js!SBIS3.CONTROLS.DataGridView',
          headMarkup = MarkupTransformer(headTpl(headData));
          var body = $('.controls-DataGridView__tbody', this._container);
 
-         this._removeHead();
-         this._thead = $(headMarkup).insertBefore(body);
+         var newTHead = $(headMarkup);
+         if (this._thead && this._thead.length){
+            this._thead.replaceWith(newTHead);
+            this._thead = newTHead;
+         }
+         else {
+            this._thead = newTHead.insertBefore(body);
+         }
+         this.reviveComponents(this._thead);
 
-         this._drawResults();
+         if (this._options.stickyHeader){
+            this._drawResults();
+         }
          this._redrawColgroup();
-         this.reviveComponents();
          this._bindHead();
          this._notify('onDrawHead');
-      },
-
-      _removeHead: function(){
-         var stickyThead;
-         if (this._thead) {
-            this._clearItems(this._thead);
-            this._thead.remove();
-         }
-         //ws-sticky-header__thead-copy удаляется в stikyManager после отрисовки шапки на событие onDrawHead
-         //получается что после выполнения метода redrawHead в теле таблицы 2 тега thead ( наш и sticky-header'a)
-         //в этом случае ipad криво рендерит верстку
-         if (this._options.stickyHeader){
-            stickyThead = $('.ws-sticky-header__thead-copy', this.getContainer());
-            stickyThead.remove();
-         }
       },
 
       _bindHead: function() {
@@ -592,15 +585,41 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
 
+      /**
+       * Метод возвращает текущий thead табличного представления (он может быть в таблице, или вынесен в фиксированную шапку)
+       * @returns {jQuery} - текущий thead табличного представления
+       * @noShow
+       */
+      getTHead: function(){
+         return this._thead;
+      },
+
+      /**
+       * Изменяет значение опции, фиксирующей заголовки табличного представления в шапке.
+       * Возимеет эффект только если фиксация ещё не прошла (на этапе инициилизации).
+       * @param isSticky
+       * @noShow
+       */
+      setStickyHeader: function(isSticky){
+         if (this._options.stickyHeader !== isSticky){
+            this._options.stickyHeader = isSticky;
+            this.getContainer().find('.controls-DataGridView__table').toggleClass('ws-sticky-header__table', isSticky);
+         }
+      },
+
       _redrawColgroup : function() {
          var markup, data, body;
          data = prepareColGroupData(this._options);
          markup = colgroupTpl(data);
          body = $('.controls-DataGridView__tbody', this._container);
-         if(this._colgroup) {
-            this._colgroup.remove();
+         var newColGroup = $(markup);
+         if(this._colgroup && this._colgroup.length) {
+            this._colgroup.replaceWith(newColGroup);
+            this._colgroup = newColGroup;
          }
-         this._colgroup = $(markup).insertBefore(this._thead || body);
+         else {
+            this._colgroup = newColGroup.insertBefore(this._thead || body);
+         }
       },
 
       _drawItemsCallback: function () {
@@ -664,7 +683,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                targetColumnIndex = targetColumn.index();
             }
          }
-         event.setResult(this.showEip(record, { isEdit: true }, targetColumnIndex)
+         event.setResult(this.showEip(record, { isEdit: true }, false, targetColumnIndex)
             .addCallback(function(result) {
                if (originalEvent.type === 'click') {
                   ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
@@ -675,13 +694,17 @@ define('js!SBIS3.CONTROLS.DataGridView',
                return true;
             }));
       },
-      showEip: function(model, options, targetColumnIndex) {
-         return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().showEip(model, options) : $ws.proto.Deferred.fail();
+      showEip: function(model, options, withoutActivateFirstControl, targetColumnIndex) {
+         return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().showEip(model, options, withoutActivateFirstControl) : $ws.proto.Deferred.fail();
       },
       _canShowEip: function(targetColumnIndex) {
          var
+            self = this,
             column = 0,
-            canShow = this.isEnabled();
+            canShow = this.isEnabled(),
+            canShowEditInColumn = function(columnIndex) {
+               return !!self._options.columns[columnIndex].editor && (canShow || self._options.columns[columnIndex].allowChangeEnable === false)
+            };
          if (this._options.editingTemplate || targetColumnIndex === undefined) {
             // Отображаем редактирование по месту и для задизабленного DataGrid, но только если хоть у одиной колонки
             // доступен редактор при текущем состоянии задизабленности DataGrid.
@@ -693,10 +716,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                }
             }
          } else {
-            if (this._options.multiselect) {
-               targetColumnIndex -= 1;
-            }
-            canShow = !!this._options.columns[targetColumnIndex].editor && (canShow || this._options.columns[targetColumnIndex].allowChangeEnable === false);
+               canShow = this._options.multiselect ? targetColumnIndex > 0 && canShowEditInColumn(targetColumnIndex - 1): canShowEditInColumn(targetColumnIndex);
          }
          return canShow;
       },

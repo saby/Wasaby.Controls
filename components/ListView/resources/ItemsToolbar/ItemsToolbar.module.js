@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           showEditActions: function() {
              this._getEditActions().removeClass('ws-hidden');
-             this.getContainer().addClass('controls-ItemsToolbar__edit');
+             this._toggleEditClass(true);
           },
           /**
            * Скрывает кнопки редактирования
@@ -75,8 +75,12 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           hideEditActions: function() {
              if (this._editActions) {
                 this._editActions.addClass('ws-hidden');
-                this.getContainer().removeClass('controls-ItemsToolbar__edit');
+                this._toggleEditClass(false);
              }
+          },
+
+          _toggleEditClass: function(isEdit) {
+             this.getContainer().toggleClass('controls-ItemsToolbar__edit', isEdit);
           },
           /**
            * Проверяет, отображаются ли сейчас кнопки редактирования
@@ -234,7 +238,16 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              var parentContainer = this.getParent().getContainer()[0],
                  targetContainer = this._currentTarget.container[0],
                  parentCords = parentContainer.getBoundingClientRect(),
-                 targetCords = targetContainer.getBoundingClientRect();
+                 targetCords;
+
+             /* Событие onMove из трэкера стреляет и при удалении элемента из DOM'a,
+                надо проверить на наличине элемента, а то получим неверные расчёты, а в худшем случае(ie) браузер падает */
+             if(!$ws.helpers.contains(parentContainer, targetContainer)) {
+                this._untrackingTarget();
+                return;
+             }
+
+             targetCords = targetContainer.getBoundingClientRect();
              this._currentTarget.position =  {
                 top: targetCords.top - parentCords.top + parentContainer.scrollTop,
                 left: targetCords.left - parentCords.left
