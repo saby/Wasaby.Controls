@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.Slider',
                   single: false,//TODO:setter/getter
                   startLabel: undefined,//TODO:setter/getter
                   endLabel: undefined,//TODO:setter/getter
-                  bigPoint: false,//TODO:setter/getter
+                  bigPoint: false//TODO:setter/getter
                },
                _endValue: 0,
                _startValue: 0,
