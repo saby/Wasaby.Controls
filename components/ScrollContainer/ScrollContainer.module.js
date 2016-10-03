@@ -72,17 +72,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
             /**
              * {jQuery} Контент
              */
-            _content: undefined,
-
-            /**
-             * {Number} Высота контейнера
-             */
-            _heightContainer: undefined,
-
-            /**
-             * {Number} Высота контента
-             */
-            _heightContent: undefined
+            _content: undefined
          },
 
          $constructor: function() {
@@ -94,12 +84,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
 
             //Подписка на события (наведение курсора на контейнер) при которых нужно инициализировать скролл.
             this.getContainer().bind('mousemove touchstart', this._create.bind(this));
-
-            /**
-             * Первое изменение _hasScroll свидетельствует о переполнении контейнера и поэтому нам
-             * нужно запустить обработчик который скроет часть контента который не влезает в контейнер
-             */
-            this._hasScroll.once('onChange', this._onChangeHasScrollHandler.bind(this));
          },
 
          /**
@@ -108,17 +92,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
           */
          getContent: function() {
             return this._options.content;
-         },
-
-         _onResizeHandler: function() {
-            this._heightContainer = this._container.height();
-         },
-
-         _onChangeHasScrollHandler: function() {
-            /**
-             * Вешаем класс который скроет часть контента не влезающий в контейнер
-             */
-            this.getContainer().addClass('controls-ScrollContainer__overflow-hidden')
          },
 
          /**
@@ -133,6 +106,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
                theme: 'minimal-dark',
                scrollInertia: 0,
                updateOnContentResize: false,
+               alwaysTriggerOffsets: false,
                callbacks: {
                   onInit: function(){
                      self._scroll = this;
@@ -165,7 +139,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
           * @see hasScroll
           */
          isScrollOnTop: function() {
-            return this.hasScroll() && !this.getScrollTop();
+            return this._scroll && this.hasScroll() && !this.getScrollTop();
          },
 
          /**
@@ -176,11 +150,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
           */
          isScrollOnBottom: function() {
             var
-               container = this.getContainer(),
-               scroll_cotainer = container.find('.mCSB_draggerContainer'),
-               scroll = container.find('#mCSB_1_dragger_vertical');
+               container = this._container,
+               scroll = container.find('.mCSB_dragger_bar');
 
-            return this.hasScroll() && scroll_cotainer.height() === (scroll.height() + this.getScrollTop());
+            return this._scroll && this.hasScroll() && this._container.height() === (scroll.height() + this.getScrollTop());
          },
 
          /**
@@ -206,10 +179,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
              * а уже потом при наведении на контрол скролл инициализируется.
              */
             if (!this._scroll) {
-               heightContainer = this._heightContainer;
-               heightContent = this._content.height();
+               if (!this._content) {
+                  this._content = this._container.children();
+               }
 
-               this._hasScroll = this._content.height() > this._heightContainer;
+               return this._content.height() > this._container.height();
             }
 
             return this._hasScroll;
@@ -217,12 +191,13 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
 
          /**
           * Верхнее положение скролла в пискселях
+          * Если скролл на момент вызова не инициализированн вернёт 0
           * @returns {.mcs.draggerTop|*}
           */
          getScrollTop: function() {
-            if (this._scroll){
-               return this._scroll.mcs.draggerTop;
-            }
+            var scroll = this._scroll;
+
+            return scroll ? scroll.mcs.draggerTop : 0;
          },
 
          /**
@@ -240,9 +215,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
 
             this._scroll = undefined;
             this._hasScroll = undefined;
-            this._contentContainer = undefined;
-            this._heightContainer = undefined;
-            this._heightContent = undefined;
+            this._content = undefined;
 
             Scroll.superclass.destroy.call(this);
          }
