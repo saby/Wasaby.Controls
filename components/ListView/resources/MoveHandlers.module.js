@@ -78,13 +78,6 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
        * @private
        */
       _makeMoveStrategy: function () {
-         if (!this._options.moveStrategy) {
-            if ($ws.helpers.instanceOfModule(this._dataSource, 'WS.Data/Source/SbisService')) {
-               this._options.moveStrategy = 'movestrategy.sbis';
-            } else {
-               this._options.moveStrategy = 'movestrategy.base';
-            }
-         }
          return Di.resolve(this._options.moveStrategy, {
             dataSource: this.getDataSource(),
             hierField: this._options.hierField,
