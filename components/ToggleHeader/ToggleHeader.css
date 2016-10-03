@@ -1,10 +1,10 @@
-.controls-LeftNavigation {
+.controls-ToggleHeader {
    display: inline-block;
    height: 24px;
    line-height: 24px;
 }
 
-.controls-LeftNavigation__caption {
+.controls-ToggleHeader__caption {
    display: inline-block;
    float: left;
    margin-left: 4px;
@@ -13,7 +13,7 @@
    color: #313E78;
 }
 
-.controls-LeftNavigation__count {
+.controls-ToggleHeader__count {
    display: inline-block;
    float: left;
    font-family: 'TensorFont';
@@ -21,30 +21,30 @@
    color: #D94700;
 }
 
-.controls-LeftNavigation__icon {
+.controls-ToggleHeader__icon {
    display: inline-block;
    float: left;
    text-align: center;
    width: 24px;
 }
 
-.controls-LeftNavigation__icon:after{
+.controls-ToggleHeader__icon:after{
    content: '\E013';
    font-family: 'TensorFont';
    font-size: 18px;
    color: #D94700;
 }
 
-.controls-Checked__checked .controls-LeftNavigation__icon:after {
+.controls-Checked__checked .controls-ToggleHeader__icon:after {
    content: '\E000';
    font-family: 'TensorFont';
    font-size: 18px;
    color: #D94700;
 }
 
-.controls-LeftNavigation:hover .controls-LeftNavigation__icon:after,
-.controls-LeftNavigation:hover .controls-LeftNavigation__count,
-.controls-LeftNavigation:hover .controls-LeftNavigation__caption {
+.controls-ToggleHeader:hover .controls-ToggleHeader__icon:after,
+.controls-ToggleHeader:hover .controls-ToggleHeader__count,
+.controls-ToggleHeader:hover .controls-ToggleHeader__caption {
    color: #FF7033;
    cursor: pointer;
 }

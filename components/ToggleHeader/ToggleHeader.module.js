@@ -1,27 +1,27 @@
-define('js!SBIS3.CONTROLS.LeftNavigation',
+define('js!SBIS3.CONTROLS.ToggleHeader',
    [
       'js!SBIS3.CONTROLS.Header',
       'js!SBIS3.CONTROLS.Clickable',
       'js!SBIS3.CONTROLS.Checkable',
-      'html!SBIS3.CONTROLS.LeftNavigation',
-      'css!SBIS3.CONTROLS.LeftNavigation'
+      'html!SBIS3.CONTROLS.ToggleHeader',
+      'css!SBIS3.CONTROLS.ToggleHeader'
    ],
    function(Header, Clickable, Checkable, dotTplFn){
 
       'use strict';
       /**
        * Контролл для отображения заголовков с функцией сворачивания и разворачивания записей
-       * @class SBIS3.CONTROLS.LeftNavigation
+       * @class SBIS3.CONTROLS.ToggleHeader
        * @extends SBIS3.CONTROLS.Header
        * @mixes SBIS3.CONTROLS.Checkable
        * @initial
-       * <component data-component="SBIS3.CONTROLS.LeftNavigation">
+       * <component data-component="SBIS3.CONTROLS.ToggleHeader">
        *    <option name="caption">Заголовок</option>
        *    <option name="count">120</option>
        * </component>
        * @author Крайнов Дмитрий Олегович
        * */
-      var LeftNavigation = Header.extend([Clickable, Checkable], {
+      var ToggleHeader = Header.extend([Clickable, Checkable], {
          _dotTplFn: dotTplFn,
 
          $protected: {
@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.LeftNavigation',
          },
 
          init: function() {
-            LeftNavigation.superclass.init.call(this);
+            ToggleHeader.superclass.init.call(this);
 
             this.getLinkedContext().setValue('count', this.getCount());
          },
@@ -55,6 +55,6 @@ define('js!SBIS3.CONTROLS.LeftNavigation',
          }
       });
 
-      return LeftNavigation;
+      return ToggleHeader;
    }
 );
