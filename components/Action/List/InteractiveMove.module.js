@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
        *          _onInintHandler: function(){
        *             //создаем action
        *             move = new InteractiveMove({
-       *                linkedObject: this
+       *                linkedObject: this.getChildControlByName('MyListView')
        *             });
        *          },
        *          interactiveMove: function(el, key, record) {
@@ -61,6 +61,17 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
        *    </component>
        *    </div>
        * </pre>
+       * Если на спике для перемещения используется своя стратегия, тогда ее надо передать в екшен.
+       * Подробнее про стратегии {@link WS.Data/MoveStrategy/Base}
+       * <pre>
+       *    ...
+       *    move = new InteractiveMove({
+       *       linkedObject: this.getChildControlByName('MyListView')
+       *       moveStrategy: 'movestrategy.base'
+       *    });
+       *    ...
+       * </pre>
+       * @see WS.Data/MoveStrategy/Base
        * @ignoreOptions validators independentContext contextRestriction extendedTooltip
        *
        * @ignoreMethods activateFirstControl activateLastControl addPendingOperation applyEmptyState applyState clearMark
