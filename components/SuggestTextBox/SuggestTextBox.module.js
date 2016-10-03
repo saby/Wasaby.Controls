@@ -76,6 +76,19 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
                }
             }.bind(this));
          }
+      },
+
+      _resetSearch: function() {
+         SuggestTextBox.superclass._resetSearch.apply(this, arguments);
+
+         if(this._options.searchParam) {
+            /* Т.к. при сбросе поиска в саггесте запрос отправлять не надо (саггест скрывается),
+               то просто удалим параметр поиска из фильтра */
+            var listFilter = $ws.core.clone(this.getList().getFilter()); /* Клонируем фильтр, т.к. он передаётся по ссылке */
+
+            delete listFilter[this._options.searchParam];
+            this.setListFilter(listFilter, true);
+         }
       }
    });
 
