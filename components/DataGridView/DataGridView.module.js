@@ -552,7 +552,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
          this.reviveComponents(this._thead);
 
-         this._drawResults();
+         if (this._options.stickyHeader){
+            this._drawResults();
+         }
          this._redrawColgroup();
          this._bindHead();
          this._notify('onDrawHead');
