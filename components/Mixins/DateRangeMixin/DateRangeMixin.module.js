@@ -17,11 +17,14 @@ define('js!SBIS3.CONTROLS.DateRangeMixin', [
          if(!$ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.RangeMixin')) {
             throw new Error('RangeMixin mixin is required');
          }
-         this._options.startValue = this._normalizeDate(this._options.startValue);
-         this._options.endValue = this._normalizeDate(this._options.endValue);
       },
 
       around : {
+         _modifyOptions: function (parentFnc, opts) {
+            opts.startValue = this._normalizeDate(opts.startValue);
+            opts.endValue = this._normalizeDate(opts.endValue);
+            return parentFnc.call(this, opts)
+         },
          setStartValue: function (parentFnc, value, silent) {
             value = this._normalizeDate(value);
             return parentFnc.call(this, value, silent);
