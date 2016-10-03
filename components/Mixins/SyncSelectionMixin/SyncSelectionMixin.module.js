@@ -55,6 +55,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], func
                 */
                switch (propName) {
                   case 'selectedItem':
+                      /* При синхронизации selectedItem -> selectedItems, так же проверяем наличие ключевых поле у selectedItem */
                      if($ws.helpers.instanceOfModule(propValue, 'WS.Data/Entity/Model') &&
                         !isEmptyItem(propValue, this._options.displayField, this._options.keyField)) {
                         this.setSelectedItems([propValue]);
