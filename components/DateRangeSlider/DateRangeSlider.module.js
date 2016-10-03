@@ -10,7 +10,23 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
 ], function (CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, DateRangeChoosePickerMixin, PickerMixin, DateUtil) {
    'use strict';
 
-   var DateRangeSlider = CompoundControl.extend([PickerMixin, RangeMixin, DateRangeMixin, DateRangeChoosePickerMixin], {
+   /**
+    * Контрол позволяющий выбирать диапазон дат равный месяцу, кварталу, полугодию или году.
+    * SBIS3.CONTROLS.DateRangeSlider
+    * @class SBIS3.CONTROLS.DateRangeSlider
+    * @extends $ws.proto.CompoundControl
+    * @mixes SBIS3.CONTROLS.PickerMixin
+    * @mixes SBIS3.CONTROLS.RangeMixin
+    * @mixes SBIS3.CONTROLS.DateRangeMixin
+    * @mixes SBIS3.CONTROLS.DateRangeChoosePickerMixin
+    * @author Миронов Александр Юрьевич
+    * @demo SBIS3.CONTROLS.Demo.MyDateRangeSlider
+    *
+    * @control
+    * @public
+    * @category Date/Time
+    */
+   var DateRangeSlider = CompoundControl.extend([PickerMixin, RangeMixin, DateRangeMixin, DateRangeChoosePickerMixin], /** @lends SBIS3.CONTROLS.DateRangeSlider.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
