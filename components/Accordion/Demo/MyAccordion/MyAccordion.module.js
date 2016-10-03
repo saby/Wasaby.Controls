@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.Demo.MyAccordion', [
       'html!SBIS3.CONTROLS.Demo.MyAccordion',
       'css!SBIS3.CONTROLS.Demo.MyAccordion',
       'js!SBIS3.CONTROLS.Accordion',
-      'html!SBIS3.CONTROLS.Demo.MyLink'
+      'js!SBIS3.CONTROLS.Demo.MyLink'
    ], function(CompoundControl, dotTplFn) {
    /**
     * SBIS3.CONTROLS.Demo.MyAccordion
