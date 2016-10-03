@@ -219,9 +219,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
       _resizeFoldersFooters: function() {
          var footers = $('.controls-TreeView__folderFooterContainer', this._container.get(0));
-         /*TODO непонятно откуда появился отступ у футеров, выписываю задачу Сухоручкину, чтоб разобрался*/
-         var width = this._container.width() - 32;
-         footers.width(width);
+         var width = this._container.width();
+         footers.outerWidth(width);
       },
 
       _keyboardHover: function(e) {
@@ -273,17 +272,19 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                allowChangeEnable: false,
                handlers: {
                   onActivated: function () {
-                     var hoveredItem = self.getHoveredItem();
+                     var hoveredItem = self.getHoveredItem(),
+                         id = hoveredItem.key;
 
                      // TODO для обратной совместимости - удалить позже
                      if(self._options.arrowActivatedHandler) {
                         self._options.arrowActivatedHandler.call(this,
                             hoveredItem.record,
-                            hoveredItem.key,
+                            id,
                             hoveredItem.container
                         );
                      } else {
-                        self._activateItem(hoveredItem.key);
+                        self.setSelectedKey(id);
+                        self._activateItem(id);
                      }
                   }
                }
@@ -412,13 +413,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          container.addClass('controls-ListView__item-type-' + itemType);
          var
             key = item.getId(),
-            parentKey = this._options._items.getParentKey(item, this._options.hierField),
+            parentKey = item.get(this._options.hierField),
          	parentContainer = $('.controls-ListView__item[data-id="' + parentKey + '"]', this._getItemsContainer().get(0)).get(0);
          container.attr('data-parent', parentKey);
 
          if (this._options.openedPath[key]) {
-            var tree = this._options._items.getTreeIndex(this._options.hierField);
-            if (tree[key]) {
+            var hierarchy = this._getHierarchyRelation(),
+               children = hierarchy.getChildren(key, this._options._items);
+
+            if (children.length) {
                $('.js-controls-TreeView__expand', container).addClass('controls-TreeView__expand__open');
             } else {
                /*TODO:

@@ -2,7 +2,8 @@ define('js!SBIS3.CONTROLS.DataGridView/design/DesignPlugin', ['js!SBIS3.CONTROLS
    DataGridView.extendPlugin({
       setColumns: function(){
          var self = this;
-         setTimeout(function(){
+         setTimeout(function() {
+            self._redrawHead();
             self._notify('onDataLoad');
          }, 0);
       }

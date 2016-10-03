@@ -675,7 +675,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                targetColumnIndex = targetColumn.index();
             }
          }
-         event.setResult(this.showEip(record, { isEdit: true }, targetColumnIndex)
+         event.setResult(this.showEip(record, { isEdit: true }, false, targetColumnIndex)
             .addCallback(function(result) {
                if (originalEvent.type === 'click') {
                   ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
@@ -686,13 +686,17 @@ define('js!SBIS3.CONTROLS.DataGridView',
                return true;
             }));
       },
-      showEip: function(model, options, targetColumnIndex) {
-         return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().showEip(model, options) : $ws.proto.Deferred.fail();
+      showEip: function(model, options, withoutActivateFirstControl, targetColumnIndex) {
+         return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().showEip(model, options, withoutActivateFirstControl) : $ws.proto.Deferred.fail();
       },
       _canShowEip: function(targetColumnIndex) {
          var
+            self = this,
             column = 0,
-            canShow = this.isEnabled();
+            canShow = this.isEnabled(),
+            canShowEditInColumn = function(columnIndex) {
+               return !!self._options.columns[columnIndex].editor && (canShow || self._options.columns[columnIndex].allowChangeEnable === false)
+            };
          if (this._options.editingTemplate || targetColumnIndex === undefined) {
             // Отображаем редактирование по месту и для задизабленного DataGrid, но только если хоть у одиной колонки
             // доступен редактор при текущем состоянии задизабленности DataGrid.
@@ -704,10 +708,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                }
             }
          } else {
-            if (this._options.multiselect) {
-               targetColumnIndex -= 1;
-            }
-            canShow = !!this._options.columns[targetColumnIndex].editor && (canShow || this._options.columns[targetColumnIndex].allowChangeEnable === false);
+               canShow = this._options.multiselect ? targetColumnIndex > 0 && canShowEditInColumn(targetColumnIndex - 1): canShowEditInColumn(targetColumnIndex);
          }
          return canShow;
       },

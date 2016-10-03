@@ -103,7 +103,6 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                    keyField: item.get('keyField'),
                    mode: this._options.mode,
                    multiselect : !!item.get('multiselect'),
-                   showSelectedInList : !!item.get('showSelectedInList'),
                    displayField: item.get('displayField'),
                    className: (item.get('className') || 'controls-DropdownList__linkStyle') + ' controls-DropdownList-text-overflow',
                    pickerClassName: (item.get('pickerClassName') + ' controls-DropdownList__picker') || 'controls-DropdownList__picker',
@@ -111,6 +110,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                    filter: item.get('filter'),
                    allowDblClick: !!item.get('allowDblClick'),
                    name: item.get('name'),
+                   type: 'fastDataFilter',
                    pickerConfig: {
                       handlers: {
                          onShow: function () {

@@ -779,7 +779,7 @@ define('js!SBIS3.CONTROLS.ListView',
                т.к. оно стреляет после тапа. После тапа событие mousemove имеет нулевой сдвиг, поэтому обрабатываем его как touch событие
                 + добавляю проверку, что до этого мы были в touch режиме,
                это надо например для тестов, в которых эмулирется событие mousemove так же без сдвига, как и на touch устройствах. */
-            this._setTouchSupport(Array.indexOf(['swipe', 'tap'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && $ws._const.compatibility.touch && (originalEvent.touches || $ws._const.browser.isMobileIOS)));
+            this._setTouchSupport(Array.indexOf(['swipe', 'tap'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && $ws._const.compatibility.touch && (originalEvent.touches || $ws._const.browser.isMobilePlatform)));
 
             switch (e.type) {
                case 'mousemove':
@@ -1196,10 +1196,20 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
+            var itemsActions;
+
             if (this._isSupportedItemsToolbar()) {
                if (target.container){
                   if (!this._touchSupport) {
                      this._showItemsToolbar(target);
+                  }
+                  // setItemsActions стреляет событием onChangeHoveredItem, чтобы прикладники могли скрыть/показать нужные опции для строки
+                  // поэтому после события нужно обновить видимость элементов
+                  itemsActions = this.getItemsActions();
+                  if(itemsActions) {
+                     if (itemsActions.isVisible()) {
+                        itemsActions.applyItemActions();
+                     }
                   }
                } else {
                   this._hideItemsToolbar();

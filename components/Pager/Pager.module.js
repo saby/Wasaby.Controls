@@ -69,6 +69,7 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
             //TODO может менять pageSize модно будет в фильтре?
             var value = arr[0];
             self._options.pageSize = value;
+            self.getPaging()._maxPage = self.getPaging().getPage();
             self.getPaging().setPageSize(value);
             self.getOpener().setPageSize(value);
          });

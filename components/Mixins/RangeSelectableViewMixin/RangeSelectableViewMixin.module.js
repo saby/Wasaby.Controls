@@ -18,6 +18,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
          },
 
          _SELECTABLE_RANGE_CSS_CLASSES: {
+            // rangeselect: 'controls-RangeSelectable__rangeselect',
             item: 'controls-RangeSelectable__item',
             selected: 'controls-RangeSelectable__item-selected',
             selectedStart: 'controls-RangeSelectable__item-selectedStart',

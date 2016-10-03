@@ -139,8 +139,9 @@
    }
    &.controls-popup-revert-vertical {
       .controls-PopupMixin__closeButton {
-         bottom: @list-view-actions-menu-close-revVert-bottom;
-         top: @list-view-actions-menu-close-revVert-top;
+         right: auto;
+         left: @list-view-actions-menu-close-right;
+         .transform(rotate(@suggest-picker-invertVal));
       }
    }
 }
