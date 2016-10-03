@@ -1640,6 +1640,8 @@ define('js!SBIS3.CONTROLS.ListView',
                //Отображаем itemsToolbar для редактируемого элемента и фиксируем его
                this._showItemsToolbar(this.getHoveredItem());
                itemsToolbar.lockToolbar();
+            } else {
+               this._updateItemsToolbar();
             }
          },
          _hideToolbar: function() {
@@ -1657,6 +1659,8 @@ define('js!SBIS3.CONTROLS.ListView',
                } else {
                   this._hideItemsToolbar();
                }
+            } else {
+               this._updateItemsToolbar();
             }
          },
 
@@ -1672,6 +1676,10 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          isEdit: function() {
             return this._hasEditInPlace() && this._getEditInPlace().isEdit();
+         },
+
+         _getEditingRecord: function() {
+            return this.isEdit() ? this._getEditInPlace()._getEditingRecord() : undefined;
          },
 
          //********************************//
@@ -1770,8 +1778,18 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _showItemsToolbar: function(target) {
-            this._getItemsToolbar().show(target, this._touchSupport);
+            var
+                toolbar = this._getItemsToolbar(),
+                editingRecord = this._getEditingRecord();
+            toolbar.show(target, this._touchSupport);
+            //При показе тулбара, возможно он будет показан у редактируемой строки.
+            //Цвет редактируемой строки отличается от цвета строки по ховеру.
+            //В таком случае переключим классы тулбара в режим редактирования.
+            if (this._options.editMode.indexOf('toolbar') === -1) {
+               toolbar._toggleEditClass(!!editingRecord && editingRecord.getId() == target.key);
+            }
          },
+
          _unlockItemsToolbar: function() {
             if (this._itemsToolbar) {
                this._itemsToolbar.unlockToolbar();
