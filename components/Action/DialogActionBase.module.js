@@ -309,7 +309,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        */
       _updateModel: function (model, additionalData) {
          if (additionalData && additionalData.isNewRecord){
-            this._createRecord(model);
+            this._createRecord(model, 0, additionalData);
          }
          else{
             this._mergeRecords(model);
@@ -410,7 +410,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          }
       },
 
-      _createRecord: function(model, at){
+      _createRecord: function(model, at, additionalData){
          var collection = this._options.linkedObject,
             rec;
          at = at || 0;
@@ -421,7 +421,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
                idProperty: collection.getItems().getIdProperty(),
                adapter: collection.getItems().getAdapter()
             });
-            this._mergeRecords(model, rec, true);
+            this._mergeRecords(model, rec, additionalData);
          } else  {
             rec = model.clone();
          }
@@ -448,7 +448,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       /**
        * Мержим поля из редактируемой записи в существующие поля записи из связного списка.
        */
-      _mergeRecords: function(model, colRec, newModel){
+      _mergeRecords: function(model, colRec, additionalData){
          var collectionRecord = colRec || this._getCollectionRecord(model),
             collectionData = this._getCollectionData(),
             recValue;
@@ -456,8 +456,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             return;
          }
 
-         if (newModel){
-            collectionRecord.set(collectionData.getIdProperty(), model.getId().toString());
+         if (additionalData && additionalData.isNewRecord){
+            collectionRecord.set(collectionData.getIdProperty(), additionalData.key);
          }
 
          collectionRecord.each(function (key, value) {
