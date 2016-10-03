@@ -3,7 +3,9 @@
  */
 define('js!SBIS3.CONTROLS.SelectorDefaultComponent', [
        'js!SBIS3.CONTROLS.SelectorController',
-       'html!SBIS3.CONTROLS.SelectorDefaultComponent'
+       'html!SBIS3.CONTROLS.SelectorDefaultComponent',
+       'js!SBIS3.CONTROLS.Button',
+       'js!SBIS3.CONTROLS.SelectorWrapper'
     ],
     function (SelectorController, SelectorDefaultComponent) {
        'use strict';
