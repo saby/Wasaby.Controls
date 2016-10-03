@@ -28,17 +28,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
       });
 
    }
-   var
-
-      buildTplArgsLV = function (cfg) {
-         var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
-         tplOptions.multiselect = cfg.multiselect;
-         tplOptions.decorators = this._decorators;
-         tplOptions.colorField = cfg.colorField;
-
-         return tplOptions;
-      },
-      DragAndDropMixin = /**@lends SBIS3.CONTROLS.DragNDropMixinNew.prototype*/{
+   var DragAndDropMixin = /**@lends SBIS3.CONTROLS.DragNDropMixinNew.prototype*/{
          $protected: {
             /**
              * @event onBeginDrag При начале перемещения элемента. Если из события вернуть false, то перемещение будет отменено.

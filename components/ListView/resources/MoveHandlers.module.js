@@ -44,8 +44,13 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
        */
       _move: function(movedItems, target, position) {
          this._toggleIndicator(true);
-         this.getMoveStrategy().move(movedItems, target, position).addBoth(function(){
+         this.getMoveStrategy().move(movedItems, target, position).addCallback(function(result){
+            if (result !== false){
+               this.removeItemsSelectionAll();
+            }
+         }.bind(this)).addBoth(function(){
             this._toggleIndicator(false);
+
          }.bind(this));
       },
       /**
