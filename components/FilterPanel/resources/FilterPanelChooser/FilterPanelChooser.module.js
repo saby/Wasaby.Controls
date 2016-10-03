@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
                 filter: [],
                 favorites: [],
                 favoritesCount: 0,
-                allButtonCaption: 'Все',
+                captionFullList: 'Все',
                 //list, dictionary, favorites
                 viewMode: 'list',
                 keyField: 'id',
