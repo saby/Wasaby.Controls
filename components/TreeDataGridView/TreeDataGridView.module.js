@@ -1,14 +1,16 @@
 define('js!SBIS3.CONTROLS.TreeDataGridView', [
-   'js!SBIS3.CONTROLS.DataGridView',
-   'html!SBIS3.CONTROLS.TreeDataGridView',
-   'js!SBIS3.CONTROLS.TreeMixin',
-   'js!SBIS3.CONTROLS.TreeViewMixin',
-   'js!SBIS3.CONTROLS.IconButton',
-   'html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate',
-   'html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate',
-   'html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate',
-   'tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender'
-], function(DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
+   "Core/core-merge",
+   "Core/constants",
+   "js!SBIS3.CONTROLS.DataGridView",
+   "html!SBIS3.CONTROLS.TreeDataGridView",
+   "js!SBIS3.CONTROLS.TreeMixin",
+   "js!SBIS3.CONTROLS.TreeViewMixin",
+   "js!SBIS3.CONTROLS.IconButton",
+   "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate",
+   "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate",
+   "html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate",
+   "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender"
+], function( cMerge, constants,DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
 
 
    var HIER_WRAPPER_WIDTH = 16,
@@ -18,7 +20,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var tplOptions, tvOptions;
          tplOptions = cfg._buildTplArgsDG.call(this, cfg);
          tvOptions = cfg._buildTplArgsTV.call(this, cfg);
-         $ws.core.merge(tplOptions, tvOptions);
+         cMerge(tplOptions, tvOptions);
          tplOptions.arrowActivatedHandler = cfg.arrowActivatedHandler;
          tplOptions.editArrow = cfg.editArrow;
          return tplOptions;
@@ -230,10 +232,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              isBranch = rec && rec.get(this._options.hierField + '@');
 
          switch(e.which) {
-            case $ws._const.key.right:
+            case constants.key.right:
                isBranch && this.expandNode(selectedKey);
                break;
-            case $ws._const.key.left:
+            case constants.key.left:
                isBranch && this.collapseNode(selectedKey);
                break;
          }

@@ -3,8 +3,9 @@ define('js!SBIS3.CONTROLS.PagerMore', [
    'js!SBIS3.CORE.CompoundControl',
    'js!WS.Data/Collection/ISourceLoadable',
    'html!SBIS3.CONTROLS.PagerMore',
+   'Core/core-instance',
    'i18n!SBIS3.CONTROLS.PagerMore'
-], function(CompoundControl, ISourceLoadable, dotTplFn) {
+], function(CompoundControl, ISourceLoadable, dotTplFn, cInstance) {
    'use strict';
 
    /**
@@ -155,7 +156,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
       setItems: function(items) {
          this._unsubscribeItems();
 
-         if (items && $ws.helpers.instanceOfModule(items, 'WS.Data/Display/TreeItem')) {
+         if (items && cInstance.instanceOfModule(items, 'WS.Data/Display/TreeItem')) {
             items = items.getChildren();
          }
          this._items = items;
@@ -239,7 +240,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
             return;
          }
          
-         if ($ws.helpers.instanceOfMixin(this._items, 'WS.Data/Query/IQueryable')) {
+         if (cInstance.instanceOfMixin(this._items, 'WS.Data/Query/IQueryable')) {
             this._items.getQuery()
                .offset(this._getOffset())
                .limit(this._options.pageSize);
@@ -260,7 +261,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
        */
       _loadAttempt: function() {
          if (!this._options.items ||
-            !$ws.helpers.instanceOfMixin(this._items, 'WS.Data/Collection/ISourceLoadable') ||
+            !cInstance.instanceOfMixin(this._items, 'WS.Data/Collection/ISourceLoadable') ||
             this._isItemsLoading
          ) {
             return;

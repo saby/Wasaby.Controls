@@ -3,12 +3,13 @@
  */
 
 define('js!SBIS3.CONTROLS.StylesPanel', [
-   'js!SBIS3.CORE.CompoundControl',
-   'html!SBIS3.CONTROLS.StylesPanel',
-   'js!SBIS3.CONTROLS.ToggleButton',
-   'js!SBIS3.CONTROLS.ComboBox',
-   'js!SBIS3.CONTROLS.ColorGroup'
-], function(CompoundControl, dotTplFn) {
+   "Core/CommandDispatcher",
+   "js!SBIS3.CORE.CompoundControl",
+   "html!SBIS3.CONTROLS.StylesPanel",
+   "js!SBIS3.CONTROLS.ToggleButton",
+   "js!SBIS3.CONTROLS.ComboBox",
+   "js!SBIS3.CONTROLS.ColorGroup"
+], function( CommandDispatcher,CompoundControl, dotTplFn) {
 
    'use strict';
 
@@ -28,7 +29,7 @@ define('js!SBIS3.CONTROLS.StylesPanel', [
          }
       },
       $constructor: function(){
-         $ws.single.CommandDispatcher.declareCommand(this, 'save', this.saveHandler);
+         CommandDispatcher.declareCommand(this, 'save', this.saveHandler);
       },
       saveHandler: function(){
          var

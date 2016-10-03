@@ -7,10 +7,11 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
    'html!SBIS3.CONTROLS.RichEditorRoundToolbar',
    'js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
    'js!SBIS3.CONTROLS.FloatArea',
+   'Core/helpers/string-helpers',
    'js!SBIS3.CONTROLS.MenuIcon',
    'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS.StylesPanel'
-], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea) {
+], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea, strHelpers) {
 
    'use strict';
    var
@@ -153,7 +154,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                      var smileName = $(this).attr('title');
                      $(this).replaceWith('[' + (smileName ? smileName : rk('смайл')) +']');
                   });
-                  stripText = title = $ws.helpers.escapeHtml($tmpDiv.text());
+                  stripText = title = strHelpers.escapeHtml($tmpDiv.text());
                   stripText = stripText.replace('/\n/gi', '');
                   if (!stripText && value) {
                      stripText = rk('Контент содержит только html-разметку, без текста.');

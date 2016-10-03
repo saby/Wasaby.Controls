@@ -2,13 +2,14 @@
  * Created by am.gerasimov on 11.08.2016.
  */
 define('js!SBIS3.CONTROLS.SelectorController', [
-       'js!SBIS3.CORE.CompoundControl',
-       'js!WS.Data/Di',
-       'Core/helpers/collection-helpers',
-       'js!SBIS3.CONTROLS.SelectorWrapper',
-       'js!WS.Data/Collection/List'
-    ],
-    function (CompoundControl, Di, collectionHelpers) {
+   "Core/CommandDispatcher",
+   "js!SBIS3.CORE.CompoundControl",
+   "js!WS.Data/Di",
+   "Core/helpers/collection-helpers",
+   "js!SBIS3.CONTROLS.SelectorWrapper",
+   "js!WS.Data/Collection/List"
+],
+    function ( CommandDispatcher,CompoundControl, Di, collectionHelpers) {
 
        'use strict';
 
@@ -27,7 +28,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
              }
           },
           $constructor: function () {
-             var commandDispatcher = $ws.single.CommandDispatcher;
+             var commandDispatcher = CommandDispatcher;
              this._publish('onSelectComplete');
 
              commandDispatcher.declareCommand(this, 'selectorWrapperSelectionChanged', this._chooserWrapperSelectionChanged);

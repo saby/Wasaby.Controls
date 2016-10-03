@@ -2,7 +2,12 @@
  * Created by iv.cheremushkin on 28.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SBIS3.CONTROLS.NumberTextBox/resources/NumberTextBoxArrows'], function (TextBox, arrowTpl) {
+define('js!SBIS3.CONTROLS.NumberTextBox', [
+   "Core/defaultRenders",
+   "Core/constants",
+   "js!SBIS3.CONTROLS.TextBox",
+   "html!SBIS3.CONTROLS.NumberTextBox/resources/NumberTextBoxArrows"
+], function ( cDefaultRenders, constants,TextBox, arrowTpl) {
 
    'use strict';
    /**
@@ -298,7 +303,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          if (value == '-') {
             return value;
          }
-         value = $ws.render.defaultColumn.numeric(
+         value = cDefaultRenders.defaultColumn.numeric(
             value,
             this._options.integers,
             this._options.delimiters,
@@ -338,12 +343,12 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          if (event.ctrlKey){
             this._CTRL_KEY = true;
          }
-         if (event.which == $ws._const.key.f5   || // F5, не отменяем действие по-умолчанию
-            event.which == $ws._const.key.f12   || // F12,не отменяем действие по-умолчанию
-            event.which == $ws._const.key.left  || // не отменяем arrow keys (влево, вправо)
-            event.which == $ws._const.key.right ||
-            event.which == $ws._const.key.end   || // не отменяем home, end
-            event.which == $ws._const.key.home
+         if (event.which == constants.key.f5   || // F5, не отменяем действие по-умолчанию
+            event.which == constants.key.f12   || // F12,не отменяем действие по-умолчанию
+            event.which == constants.key.left  || // не отменяем arrow keys (влево, вправо)
+            event.which == constants.key.right ||
+            event.which == constants.key.end   || // не отменяем home, end
+            event.which == constants.key.home
          ) {
             return true;
          }
@@ -569,7 +574,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             b,
             e,
             l;
-         if ($ws._const.browser.isIE && $ws._const.browser.IEVersion < 9) { //IE
+         if (constants.browser.isIE && constants.browser.IEVersion < 9) { //IE
             var range = document.selection.createRange();
             l = range.text.length;
             range.moveStart('textedit', -1);
@@ -592,7 +597,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       _setCaretPosition : function(pos, pos2){
          pos2 = pos2 || pos;
          var obj = this._inputField.get(0);
-         if ($ws._const.browser.isIE && $ws._const.browser.IEVersion < 9) { //IE
+         if (constants.browser.isIE && constants.browser.IEVersion < 9) { //IE
             var r = obj.createTextRange();
             r.collapse(true);
             r.moveStart("character", pos);

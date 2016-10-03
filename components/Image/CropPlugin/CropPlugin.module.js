@@ -3,21 +3,24 @@
  */
 define('js!SBIS3.CONTROLS.Image.CropPlugin',
    [
-      'js!WS.Data/Source/SbisService',
-      'js!SBIS3.CONTROLS.Utils.ImageUtil',
-      "browser!js!SBIS3.CORE.FieldImage/resources/ext/jcrop/jquery.Jcrop.min",
-      "css!SBIS3.CORE.FieldImage/resources/ext/jcrop/jquery.Jcrop.min"
-   ], function(SbisService, ImageUtil) {
+   "Core/Abstract",
+   "Transport/BLObject",
+   "Core/constants",
+   "js!WS.Data/Source/SbisService",
+   "js!SBIS3.CONTROLS.Utils.ImageUtil",
+   "browser!js!SBIS3.CORE.FieldImage/resources/ext/jcrop/jquery.Jcrop.min",
+   "css!SBIS3.CORE.FieldImage/resources/ext/jcrop/jquery.Jcrop.min"
+], function( cAbstract, BLObject, constants,SbisService, ImageUtil) {
       'use strict';
       /**
        * Контрол, позволяющий обрезать произвольное изображение.
        * @class SBIS3.CONTROLS.Image.CropPlugin
-       * @extends $ws.proto.Abstract
+       * @extends cAbstract
        * @author Крайнов Дмитрий Олегович
        * @control
        * @public
        */
-      var CropPlugin = $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.Image.CropPlugin.prototype */{
+      var CropPlugin = cAbstract.extend(/** @lends SBIS3.CONTROLS.Image.CropPlugin.prototype */{
          $protected: {
             _options: {
                /**
@@ -104,7 +107,7 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
                onSelect: storeCropCoords
             };
             element = this._options.image.eq(0);
-            if($ws._const.browser.isModernIE) {
+            if(constants.browser.isModernIE) {
                jQuery.Jcrop(element[0], jCropObj);
             } else {
                element.Jcrop(jCropObj);
@@ -145,10 +148,10 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
                } else if (beginCropResult) {
                   filter = beginCropResult;
                }
-               new $ws.proto.BLObject({
+               new BLObject({
                      name: dataSource.getEndpoint().contract,
                      serviceUrl: dataSource.getEndpoint().address
-                  }).call(dataSource.getBinding().update, filter, $ws.proto.BLObject.RETURN_TYPE_ASIS).addBoth(function(result) {
+                  }).call(dataSource.getBinding().update, filter, BLObject.RETURN_TYPE_ASIS).addBoth(function(result) {
                      self.finishCrop();
                      self._notify('onEndSave', result);
                      return result;

@@ -1,11 +1,15 @@
 define(
    'js!SBIS3.CONTROLS.FormattedTextBoxBase',
    [
+      'Core/IoC',
+      'Core/ConsoleLogger',
+      'Core/constants',
+      'Core/core-extend',
       'js!SBIS3.CONTROLS.TextBoxBase',
       'html!SBIS3.CONTROLS.FormattedTextBoxBase/FormattedTextBoxBase_mask',
       'is!msIe?js!SBIS3.CONTROLS.FormattedTextBoxBase/resources/ext/ierange-m2-min'
    ],
-   function (TextBoxBase, maskTemplateFn) {
+   function (IoC, ConsoleLogger, constants, cExtend, TextBoxBase, maskTemplateFn) {
 
    'use strict';
 
@@ -81,7 +85,7 @@ define(
        * @private
        */
       _moveCursor = function(container, position) {
-         if ($ws._const.browser.isIE  &&  $ws._const.browser.IEVersion < 12) { //в Edge (ie12) не работает createTextRange
+         if (constants.browser.isIE  &&  constants.browser.IEVersion < 12) { //в Edge (ie12) не работает createTextRange
             var rng = document.body.createTextRange();
             rng.moveToElementText(container.parentNode);
             rng.move('character', position);
@@ -140,7 +144,7 @@ define(
        * @protected
        */
       _getCursor = function(position) {
-         var selection = $ws._const.browser.isIE8 || $ws._const.browser.isIE9 || $ws._const.browser.isIE10 ? window.getSelectionForIE() : window.getSelection();
+         var selection = constants.browser.isIE8 || constants.browser.isIE9 || constants.browser.isIE10 ? window.getSelectionForIE() : window.getSelection();
          if (selection.type !== 'None') {
             selection = selection.getRangeAt(0);
             this._lastSelection = selection;
@@ -212,7 +216,7 @@ define(
    /**
     * Класс для модели форматного поля
     */
-   var FormatModel = $ws.core.extend({}, /** @lends $ws.proto.FormatModel.prototype */{
+   var FormatModel = cExtend({}, /** @lends $ws.proto.FormatModel.prototype */{
       $protected: {
          _options: {
             /* позиция курсора: храним индекс группы в модели + позцию символа в ней. */
@@ -710,7 +714,7 @@ define(
              3) Из события не возможно понять какая клавиша была нажата, т.к. возвращается keyCode = 229 || 0
              Для таких андроидов обрабатываем ввод символа отдельно
              */
-            if ($ws._const.browser.isMobileAndroid && (event.keyCode === 229 || event.keyCode === 0)){
+            if (constants.browser.isMobileAndroid && (event.keyCode === 229 || event.keyCode === 0)){
                setTimeout(self._keyDownBindAndroid.bind(self, event), 0);
             }
             else{
@@ -735,13 +739,13 @@ define(
       //Просто проигнорируем это событие, т.к. управляющая клавиша уже обработана в keydown. Так же отдельно обработаем
       //ctrl+A, т.к. для этой комбинации keypress так же вызываться не должен.
       _isFirefoxKeypressBug: function(event) {
-         return $ws._const.browser.firefox && (event.charCode === 0 || event.ctrlKey && event.charCode === 97);
+         return constants.browser.firefox && (event.charCode === 0 || event.ctrlKey && event.charCode === 97);
       },
       //В Chrome при уходе фокуса из поля ввода, если фокус ушёл с помощью jQuery focus, то каретка остаётся в поле ввода,
       //при этом при вводе, события клавиатуры на поле ввода не генерируются, и символы вставляются несмотря на маску.
       //В таком случае сами уберём каретку из поля ввода.
       _chromeCaretBugFix: function() {
-         if ($ws._const.browser.chrome) {
+         if (constants.browser.chrome) {
             this._inputField.bind('blur', function () {
                window.getSelection().removeAllRanges();
             });
@@ -759,17 +763,17 @@ define(
              isShift = event.shiftKey,
              key = event.which || event.keyCode;
 
-         if (key == $ws._const.key.home && !isShift) {
+         if (key == constants.key.home && !isShift) {
             _setHomePosition.call(this);
-         } else if (key == $ws._const.key.end && !isShift) {
+         } else if (key == constants.key.end && !isShift) {
             _setEndPosition.call(this);
-         } else if (key == $ws._const.key.left && !isShift) {
+         } else if (key == constants.key.left && !isShift) {
             _setPreviousPosition.call(this);
-         } else if (key == $ws._const.key.right && !isShift) {
+         } else if (key == constants.key.right && !isShift) {
             _setNextPosition.call(this);
-         } else if (key == $ws._const.key.del) {
+         } else if (key == constants.key.del) {
             this._clearCommandHandler('delete');
-         } else if (key == $ws._const.key.backspace) {
+         } else if (key == constants.key.backspace) {
             this._clearCommandHandler('backspace');
          } else if (key == 88 && isCtrl) {
             //предотвращаем вырезание Ctrl+X
@@ -1113,7 +1117,7 @@ define(
             try {
                self._keyPressHandler(18);
             } catch(ex) {
-               $ws.single.ioc.resolve('ILogger').log('FormattedTextBox', ex.message);
+               IoC.resolve('ILogger').log('FormattedTextBox', ex.message);
             }
          }, 0);
       }

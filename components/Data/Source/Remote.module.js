@@ -1,6 +1,10 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Source.Remote', ['js!WS.Data/Source/Remote'], function (Remote) {
+define('js!SBIS3.CONTROLS.Data.Source.Remote', [
+   "Core/IoC",
+   "Core/ConsoleLogger",
+   "js!WS.Data/Source/Remote"
+], function ( IoC, ConsoleLogger,Remote) {
    'use strict';
-   $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Source.Remote', 'Module is no longer available since version 3.7.4.100. Use WS.Data/Source/Remote instead.');
+   IoC.resolve('ILogger').error('SBIS3.CONTROLS.Data.Source.Remote', 'Module is no longer available since version 3.7.4.100. Use WS.Data/Source/Remote instead.');
    return Remote;
 });

@@ -1,8 +1,13 @@
 define('js!SBIS3.CONTROLS.TreeCompositeView', [
-   'js!SBIS3.CONTROLS.TreeDataGridView',
-   'js!SBIS3.CONTROLS.CompositeViewMixin',
-   'html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl'
-], function(TreeDataGridView, CompositeViewMixin, folderTpl) {
+   "Core/core-functions",
+   "Core/constants",
+   "Core/Deferred",
+   "js!SBIS3.CONTROLS.TreeDataGridView",
+   "js!SBIS3.CONTROLS.CompositeViewMixin",
+   "html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl",
+   "Core/helpers/collection-helpers",
+   "Core/helpers/fast-control-helpers"
+], function( cFunctions, constants, Deferred,TreeDataGridView, CompositeViewMixin, folderTpl, colHelpers, fcHelpers) {
 
    'use strict';
 
@@ -124,7 +129,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                      else {
                         var src;
                         if (!item.get(this._options.imageField)) {
-                           src = item.get(this._options.hierField + '@') ? $ws._const.resourceRoot + 'SBIS3.CONTROLS/themes/online/img/defaultFolder.png' : $ws._const.resourceRoot + 'SBIS3.CONTROLS/themes/online/img/defaultItem.png';
+                           src = item.get(this._options.hierField + '@') ? constants.resourceRoot + 'SBIS3.CONTROLS/themes/online/img/defaultFolder.png' : constants.resourceRoot + 'SBIS3.CONTROLS/themes/online/img/defaultItem.png';
                         } else {
                            src = '{{=it.item.get(it.image)}}';
                         }
@@ -246,7 +251,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             removeAndRedraw = function(row, recordOffset) {
                //Если есть дочерние, то для каждого из них тоже зовем removeAndRedraw
                if (row.childs && row.childs.length) {
-                  $ws.helpers.forEach(row.childs, function(childRow, idx) {
+                  colHelpers.forEach(row.childs, function(childRow, idx) {
                      removeAndRedraw(childRow, row.childs.length - idx);
                   });
                   //Если не нужна перерисовка, то просто удалим строку
@@ -266,7 +271,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             //Получаем данные ветки (ищем в branchesData или запрашиваем с БЛ)
             getBranch = function(branchId) {
                if (branchesData[branchId]) {
-                  return new $ws.proto.Deferred()
+                  return new Deferred()
                      .addCallback(function() {
                         return branchesData[branchId];
                      })
@@ -288,12 +293,12 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                      });
                }
             };
-         $ws.helpers.toggleIndicator(true);
+         fcHelpers.toggleIndicator(true);
          if (items) {
             currentDataSet = this.getItems();
-            filter = $ws.core.clone(this.getFilter());
+            filter = cFunctions.clone(this.getFilter());
             //Группируем записи по веткам (чтобы как можно меньше запросов делать)
-            $ws.helpers.forEach(items, function(id) {
+            colHelpers.forEach(items, function(id) {
                item = this._options._items.getRecordById(id);
                if (item) {
                   parentBranchId = this.getParentKey(undefined, this._options._items.getRecordById(id));
@@ -304,13 +309,13 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                }
             }, this);
             if (Object.isEmpty(recordsGroup)) {
-               $ws.helpers.toggleIndicator(false);
+               fcHelpers.toggleIndicator(false);
             } else {
-               $ws.helpers.forEach(recordsGroup, function(branch, branchId) {
+               colHelpers.forEach(recordsGroup, function(branch, branchId) {
                   //Загружаем содержимое веток
                   getBranch(branchId)
                      .addCallback(function(branchDataSet) {
-                        $ws.helpers.forEach(branch, function(record, idx) {
+                        colHelpers.forEach(branch, function(record, idx) {
                            currentRecord = currentDataSet.getRecordById(record);
                            dependentRecords = findDependentRecords(record, branchId);
                            needRedraw = !!branchDataSet.getRecordById(record);
@@ -319,7 +324,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                         })
                      })
                      .addBoth(function() {
-                        $ws.helpers.toggleIndicator(false);
+                        fcHelpers.toggleIndicator(false);
                      });
                });
             }
