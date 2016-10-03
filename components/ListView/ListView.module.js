@@ -1669,7 +1669,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return config;
          },
          _showToolbar: function(model) {
-            var itemsInstances, itemsToolbar;
+            var itemsInstances, itemsToolbar, editedItem;
             if (this._options.editMode.indexOf('toolbar') !== -1) {
                itemsToolbar = this._getItemsToolbar();
 
@@ -1687,8 +1687,13 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                   }
                }
+               // подменяю рекод выделенного элемента на рекорд редактируемого
+               // т.к. тулбар в режиме редактикрования по месту должен работать с измененной запись
+               editedItem = $ws.core.clone(this.getHoveredItem());
+               editedItem.record = model;
+
                //Отображаем itemsToolbar для редактируемого элемента и фиксируем его
-               this._showItemsToolbar(this.getHoveredItem());
+               this._showItemsToolbar(editedItem);
                itemsToolbar.lockToolbar();
             } else {
                this._updateItemsToolbar();
