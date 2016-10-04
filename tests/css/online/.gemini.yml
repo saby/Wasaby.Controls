@@ -1,8 +1,9 @@
-rootUrl: http://test-autotest67:30103
+rootUrl: http://usd-prog130:1000
+# rootUrl: http://test-autotest67:30103
 gridUrl: http://10.76.159.209:4444/wd/hub
 screenshotsDir: './screenshots'
 windowSize: 1024x768
-sessionsPerBrowser: 16
+sessionsPerBrowser: 8
 
 browsers:
   chrome:
@@ -15,4 +16,3 @@ browsers:
 
 system:
   diffColor: '#018def'
-  referenceImageAbsence: 'error'
