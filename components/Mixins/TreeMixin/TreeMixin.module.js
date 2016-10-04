@@ -735,6 +735,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             }
             return parentFn.apply(this, [id]);
          },
+         _isSlowDrawing: function(parentFnc, easy) {
+            if (this._options.hierarchyViewMode) {
+               return true;
+            }
+            else {
+               return parentFnc.call(easy);
+            }
+         },
          _canApplyGrouping: function(parentFn, projItem) {
             if (this._isSearchMode()) {
                return true;
