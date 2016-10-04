@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
        * @class SBIS3.CONTROLS.Action.List.InteractiveMove
        * @public
        * @extends SBIS3.CONTROLS.Action.List.Move
-       * @mixes SBIS3.CONTROLS.Action.List.HierarchicalMoveMixin
        * @mixes SBIS3.CONTROLS.Action.DialogMixin
        * @author Крайнов Дмитрий Олегович
        * @example

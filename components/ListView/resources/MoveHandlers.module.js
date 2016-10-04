@@ -15,6 +15,12 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
     * @public
     */
    var MoveHandlers = {
+      /**
+       * @typedef {String} Position
+       * @variant on Вставить перемещаемые элементы внутрь целевой записи.
+       * @variant after Вставить перемещаемые элементы после целевой записи.
+       * @variant before Вставить перемещаемые элементы перед целевой записью.
+       */
       $protected: {
         _options: {
            moveStrategy: 'movestrategy.base'
@@ -22,7 +28,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
       },
       /**
        * Перемещает записи через диалог. По умолчанию берет все выделенные записи.
-       * @param [Array] MovedItems Массив рекордов, которые надо переместить
+       * @param {Array} MovedItems Массив перемещаемых элементов
        * @deprecated Используйте SBIS3.CONTROLS.Action.List.InteractiveMove.
        */
       moveRecordsWithDialog: function(MovedItems) {
@@ -36,26 +42,34 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
          action.execute({records: MovedItems});
       },
       /**
-       *
-       * @param movedItems
-       * @param target
-       * @param position
+       * Перемещает переданные записи
+       * @param {Array} movedItems  Массив перемещаемых записей.
+       * @param {WS.Data/Entity/Model} target Запись к которой надо преместить..
+       * @param {Position} position Как перемещать записи
        * @private
        */
       _move: function(movedItems, target, position) {
          this._toggleIndicator(true);
-         this.getMoveStrategy().move(movedItems, target, position).addCallback(function(result){
+         var moveStrategy = this.getMoveStrategy(),
+            deferred;
+         if ($ws.helpers.instanceOfModule(moveStrategy, 'WS.Data/MoveStrategy/Sbis')){
+            //todo метод на время переходного периода, нужно перевести всех прикладников на новый метод и тока потом отпилить
+            //свои стратегии они наследуют от MoveStrategy/Sbis туда добавлен костыль.
+            deferred = moveStrategy.moveNew(movedItems, target, position);
+         } else {
+            deferred = moveStrategy.move(movedItems, target, position);
+         }
+         deferred.addCallback(function(result){
             if (result !== false){
                this.removeItemsSelectionAll();
             }
          }.bind(this)).addBoth(function(){
             this._toggleIndicator(false);
-
          }.bind(this));
       },
       /**
-       * Перемещает выделенные элементы.
-       * @param {WS.Data/Entity/Record|String} target  К какому элементу переместить выделенные. Рекорд либо его идентификатор в рекордсете.
+       * Перемещает выделенные записи.
+       * @param {WS.Data/Entity/Model|String} target  К какой записи переместить выделенные. Модель либо ее идентификатор.
        */
       selectedMoveTo: function(target) {
          var selectedItems = this.getSelectedItems(false);
@@ -120,7 +134,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
          }
       },
       /**
-       * Перемещает элементы из внешнего контрола, через drag'n'drop
+       * Перемещает записи из внешнего контрола, через drag'n'drop
        * @param {SBIS3.CONTROLS.DragObject} dragObject
        * @private
        */
@@ -141,7 +155,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
                if (target.getPosition() === 'on') {
                   def = this.getMoveStrategy().hierarhyMove(movedItems, dragObject.getTarget().getModel());
                } else {
-                  def = this.getMoveStrategy().move(movedItems, dragObject.getTarget().getModel(), target.getPosition() === 'after');
+                  def = this.getMoveStrategy().reorderMove(movedItems, dragObject.getTarget().getModel(), target.getPosition() === 'after');
                }
             }
          }
