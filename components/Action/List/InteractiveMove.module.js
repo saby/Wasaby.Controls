@@ -134,7 +134,8 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
          _makeMoveStrategy: function () {
             return Di.resolve(this._options.moveStrategy, {
                dataSource: this.getDataSource(),
-               hierField: this._options.parentProperty
+               hierField: this._options.parentProperty,
+               listView: this._getListView()
             });
          }
       });

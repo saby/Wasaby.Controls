@@ -71,7 +71,8 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
           */
          _makeMoveStrategy: function () {
             return Di.resolve(this._options.moveStrategy, {
-               dataSource: this.getDataSource()
+               dataSource: this.getDataSource(),
+               listView: this._getListView()
             });
          }
 

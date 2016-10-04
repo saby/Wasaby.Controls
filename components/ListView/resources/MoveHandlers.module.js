@@ -4,9 +4,10 @@
 define('js!SBIS3.CONTROLS.MoveHandlers', [
    'js!SBIS3.CONTROLS.Action.List.InteractiveMove',
    'js!WS.Data/Di',
+   'js!WS.Data/Utils',
    'js!WS.Data/MoveStrategy/Base',
    'i18n!SBIS3.CONTROLS.MoveHandlers'
-], function(InteractiveMove, Di) {
+], function(InteractiveMove, Di, Utils) {
    /**
     *
     * Миксин определяющий логику перемещения элементов
@@ -44,6 +45,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
                movedItems[i] = items.getRecordById(item);
             }
          }, this);
+         Utils.logger.stack(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"', 1);
          action.execute({movedItems: movedItems});
       },
       /**
