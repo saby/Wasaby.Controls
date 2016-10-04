@@ -94,6 +94,10 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             this._options.dragEntity = dragEntityFactory;
             this._dragEntity = undefined;
          },
+
+         getItemsDragNDrop: function(){
+            return true;
+         },
          //endregion public
 
          //region handlers
