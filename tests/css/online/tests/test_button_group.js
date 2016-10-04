@@ -1,5 +1,3 @@
-var gemini = require('gemini');
-
 gemini.suite('SBIS3.CONTROLS.ButtonGroup Online', function () {
 
     gemini.suite('horizontal', function (test) {

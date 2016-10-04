@@ -1,5 +1,3 @@
-var gemini = require('gemini');
-
 gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 
 	gemini.suite('row_template', function (test) {

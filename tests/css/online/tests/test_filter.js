@@ -1,5 +1,3 @@
-var gemini = require('gemini');
-
 gemini.suite('SBIS3.CONTROLS.Filter Online', function () {
 
     gemini.suite('base', function (test) {
@@ -69,58 +67,6 @@ gemini.suite('SBIS3.CONTROLS.Filter Online', function () {
 				actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('filterButton').setEnabled(false);
                 });
-            })
-    });
-
-	gemini.suite('combobox_items_count', function (test) {
-
-        test.setUrl('/regression_filter_online_2.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-				actions.waitForElementToShow('[sbisname="filterButton"]', 40000);
-                this.filter = find('[sbisname="filterButton"]');
-				this.filter_line = find('[name="filterLine"] .controls__filterButton__filterLine-items span');
-            })
-			
-			.capture('large_items_count', function (actions, find) {
-                actions.click(this.filter_line);
-				actions.waitForElementToShow('[sbisname="VersionsOfUbuntu"]', 1000);
-				this.box = find('[sbisname="VersionsOfUbuntu"] .controls-ComboBox__arrowDown');
-                actions.click(this.box);
-				actions.waitForElementToShow('[data-id="none"]', 1000);
-				actions.waitForElementToShow('[data-id="1"]', 1000);
-				actions.waitForElementToShow('[data-id="2"]', 1000);
-            })
-			
-			.capture('small_items_count', function (actions, find) {
-                actions.executeJS(function (window) {
-					var items = [{
-						key: null,
-						title: 'Не выбрано'
-					},{
-						key: 1,
-						title: 'Fedora 24'
-					},{
-						key: 2,
-						title: 'Fedora 23'
-					},{
-						key: 3,
-						title: 'Fedora 22'
-					},{
-						key: 4,
-						title: 'Fedora 21'
-					},{
-						key: 5,
-						title: 'Fedora 20'
-					}]
-                    window.$ws.single.ControlStorage.getByName('VersionsOfUbuntu').setItems(items);
-                });
-				actions.waitForElementToShow('[data-id="null"]', 1000);
-				actions.waitForElementToShow('[data-id="1"]', 1000);
-				actions.waitForElementToShow('[data-id="2"]', 1000);
-				actions.waitForElementToShow('[data-id="3"]', 1000);
-				actions.waitForElementToShow('[data-id="4"]', 1000);
-				actions.waitForElementToShow('[data-id="5"]', 1000);
             })
     });
 

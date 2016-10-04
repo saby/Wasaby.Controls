@@ -1,4 +1,4 @@
-var gemini = require('gemini');
+
 
 gemini.suite('SBIS3.CONTROLS.ProgressBar Online', function () {
 

@@ -1,5 +1,3 @@
-var gemini = require('gemini');
-
 gemini.suite('SBIS3.CONTROLS.FormattedTextBox Online', function () {
 
     gemini.suite('copy_paste', function (test) {

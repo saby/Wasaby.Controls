@@ -1,5 +1,3 @@
-var gemini = require('gemini');
-
 gemini.suite('SBIS3.CONTROLS.Decorators Online', function () {
 
     gemini.suite('HighlightDecorator', function (test) {

@@ -1,5 +1,3 @@
-var gemini = require('gemini');
-
 gemini.suite('SBIS3.CONTROLS.EditAtPlace Online', function () {
 
 	gemini.suite('group_float', function (test) {

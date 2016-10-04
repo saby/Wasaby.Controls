@@ -1,5 +1,3 @@
-var gemini = require('gemini');
-
 gemini.suite('SBIS3.CONTROLS.MenuIcon Online', function () {
 
 	gemini.suite('with_icon16', function (test) {

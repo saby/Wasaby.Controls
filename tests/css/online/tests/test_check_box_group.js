@@ -1,5 +1,3 @@
-var gemini = require('gemini');
-
 gemini.suite('SBIS3.CONTROLS.CheckBoxGroup Online', function () {
 
     gemini.suite('horizontal', function (test) {
