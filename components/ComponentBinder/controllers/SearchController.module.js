@@ -1,0 +1,276 @@
+define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver'], function(KbLayoutRevertObserver) {
+
+   var SearchController = $ws.proto.Abstract.extend({
+      $protected: {
+         _options: {
+            view: null,
+            searchForm: null,
+            searchParamName: null,
+            searchCrumbsTpl: null,
+            searchMode: null,
+            doNotRespondOnReset: null
+         },
+         _kbLayoutRevertObserver: null,
+         _firstSearch: true,
+         _searchReload : true,
+         _searchMode: false,
+         _searchForm : undefined,
+         _lastRoot : undefined,
+      },
+
+      _breakSearch: function(searchForm, withReload) {
+         this._searchReload = !!withReload;
+         this._firstSearch = !!withReload;
+         //Если в строке поиска что-то есть, очистим и сбросим Фильтр
+         if (searchForm.getText()) {
+            searchForm._resetSearch();
+         }
+      },
+
+      _needSearch: function(text, searchParamName) {
+         return text && this._options.view.getFilter()[searchParamName] !== text;
+      },
+
+      _startHierSearch: function(text) {
+         var searchParamName = this._options.searchParamName
+         if (this._needSearch(this, text, searchParamName)) {
+            var filter = $ws.core.merge(this._options.view.getFilter(), {
+                  'Разворот': 'С разворотом',
+                  'usePages': 'full'
+               }),
+               view = this._options.view,
+
+               args = arguments,
+               self = this;
+
+            filter[searchParamName] = text;
+            view._options.hierarchyViewMode = true;
+            view.setHighlightText(text, false);
+            view.setHighlightEnabled(true);
+
+            if (self._isInfiniteScroll == undefined) {
+               self._isInfiniteScroll = view.isInfiniteScroll();
+            }
+            view.setInfiniteScroll(true, true);
+
+            if (this._firstSearch) {
+               this._lastRoot = view.getCurrentRoot();
+               //Запомнили путь в хлебных крошках перед тем как их сбросить для режима поиска
+               if (this._options.breadCrumbs && this._options.breadCrumbs.getItems()) {
+                  this._pathDSRawData = $ws.core.clone(this._options.breadCrumbs.getItems().getRawData());
+               }
+            }
+            this._firstSearch = false;
+            //Флаг обозначает, что ввод был произведен пользователем
+            this._searchReload = true;
+            //Это нужно чтобы поиск был от корня, а крошки при этом отображаться не должны
+            //Почему тут просто не скрыть их через css?
+            if (this._options.breadCrumbs) {
+               this._options.breadCrumbs.setItems([]);
+            }
+
+            if (this._options.searchMode == 'root') {
+               filter[view.getHierField()] = undefined;
+            }
+
+            view.once('onDataLoad', function(event, data) {
+               var root;
+               //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
+               if (self._options.backButton) {
+                  self._options.backButton.getContainer().css({
+                     'display': 'none'
+                  });
+               }
+
+               if (this._options.searchMode === 'root') {
+                  root = view._options.root !== undefined ? view._options.root : null;
+                  //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
+                  view._options._itemsProjection.setEventRaising(false);
+                  //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
+                  view._options._itemsProjection.setRoot(root);
+                  view._options._curRoot = root;
+                  view._options._itemsProjection.setEventRaising(true);
+               }
+            });
+
+            view.reload(filter, view.getSorting(), 0).addCallback(function() {
+               view._container.addClass('controls-GridView__searchMode');
+            });
+            this._searchMode = true;
+         }
+      },
+
+      _startSearch: function(text) {
+         var searchParamName = this._options.searchParamName;
+         if (this._needSearch(this, text, searchParamName)) {
+            var view = this._options.view,
+               filter = $ws.core.merge(view.getFilter(), {
+                  'usePages': 'full'
+               }),
+               args = arguments;
+
+            filter[searchParamName] = text;
+            view.setHighlightText(text, false);
+            view.setHighlightEnabled(true);
+            view.setInfiniteScroll(true, true);
+            view.reload(filter, view.getSorting(), 0);
+         }
+      },
+
+      _resetSearch: function() {
+         var view = this._options.view,
+            filter = view.getFilter();
+
+         delete(filter[this._options.searchParamName]);
+         view.setHighlightText('', false);
+         view.setHighlightEnabled(false);
+         view.reload(filter, view.getSorting(), 0);
+      },
+
+      _resetGroup: function() {
+         var
+            view = this._options.view,
+            filter = $ws.core.merge(view.getFilter(), {
+               'Разворот': 'Без разворота'
+            }),
+            self = this;
+         delete(filter[this._options.searchParamName]);
+         //При сбрасывании группировки в иерархии нужно снять класс-можификатор, но сделать это можно
+         //только после релоада, иначе визуально будут прыжки и дерганья (класс меняет паддинги)
+         view.once('onDataLoad', function() {
+            view._container.removeClass('controls-GridView__searchMode');
+            view._options._curRoot = self._lastRoot || null;
+            view._getItemsProjection().setRoot(self._lastRoot || null);
+         });
+         this._searchMode = false;
+         view._options.hierarchyViewMode = false;
+         //Если мы ничего не искали, то и сбрасывать нечего
+         if (this._firstSearch) {
+            return;
+         }
+         view.setInfiniteScroll(this._isInfiniteScroll, true);
+         this._isInfiniteScroll = undefined;
+         view.setHighlightText('', false);
+         view.setHighlightEnabled(false);
+         this._firstSearch = true;
+         if (this._searchReload) {
+            //Нужно поменять фильтр и загрузить нужный корень.
+            //TODO менять фильтр в контексте, когда появятся data-binding'и
+            filter[view.getHierField()] = this._lastRoot;
+            //DataGridView._filter = filter;
+            //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
+            //Релоад сделает то же самое, так как он стреляет onSetRoot даже если корень на самом деле не понменялся
+            view.reload(filter, view.getSorting(), 0);
+            // TODO: Нужно оставить одно поле хранящее путь, сейчас в одно запоминается состояние хлебных крошек
+            // перед тем как их сбросить, а в другом весь путь вместе с кнопкой назад
+
+            //Если сбросили поиск (по крестику) вернем путь в хлебные крошки и покажем кнопку назад
+            view.once('onDataLoad', function() {
+               self._path = self._pathDSRawData || [];
+               if (self._options.breadCrumbs) {
+                  self._options.breadCrumbs.getItems().setRawData(self._pathDSRawData);
+                  self._options.breadCrumbs._redraw();
+               }
+               if (self._options.backButton) {
+                  self._options.backButton.getContainer().css({
+                     'display': ''
+                  });
+               }
+            })
+         } else {
+            //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
+            view.setFilter(filter, true);
+         }
+      },
+
+      bindSearch: function() {
+         var self = this,
+            view = this._options.view,
+            isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
+         searchForm = this._options.searchForm;
+
+         if (!this._kbLayoutRevertObserver) {
+            this._kbLayoutRevertObserver = new KbLayoutRevertObserver({
+               textBox: searchForm,
+               view: view,
+               param: this._options.searchParamName
+            })
+         }
+         if (isTree) {
+            this._lastRoot = view.getCurrentRoot();
+            view.subscribe('onBeforeSetRoot', function(ev, newRoot) {
+               self._lastRoot = newRoot;
+               if (self._searchMode) {
+                  this._breakSearch(self, searchForm, false);
+               }
+            });
+            //В хлебные крошки
+            /*view.subscribe('onSetRoot', function(event, curRoot, hierarchy) {
+               //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде),
+               //при этом не нужно запоминать текущий корень и делать видимым путь
+               if (!self._searchMode) {
+                  self._lastRoot = curRoot;
+                  //Запоминаем путь в хлебных крошках при смене корня
+                  //Похоже на то, что его достаточно запоминать только непосредственно перед началом поиска
+                  if (self._options.breadCrumbs && self._options.breadCrumbs.getItems()) {
+                     var crumbsItems = self._options.breadCrumbs.getItems();
+                     self._pathDSRawData = crumbsItems ? crumbsItems.getRawData() : [];
+                  }
+                  if (self._options.backButton) {
+                     self._options.backButton.getContainer().css({
+                        'display': ''
+                     });
+                  }
+               }
+            });*/
+            //Перед переключением в крошках в режиме поиска сбросим фильтр поиска
+            view.subscribe('onSearchPathClick', function(ev, id) {
+               view.setCurrentRoot(id);
+               view.reload();
+            });
+         }
+
+         this._subscribeOnSearchFormEvents();
+         searchForm.applySearch(false);
+      },
+
+      _subscribeOnSearchFormEvents: function() {
+         var searchForm = this._options.searchForm,
+            view = this._options.view,
+            self = this;
+         if (!this._options.doNotRespondOnReset) {
+            searchForm.subscribe('onReset', function(event, text) {
+               self._kbLayoutRevertObserver.stopObserve();
+               if (isTree) {
+                  self._resetGroup();
+               } else {
+                  self._resetSearch();
+               }
+            });
+         }
+
+         searchForm.subscribe('onSearch', function(event, text) {
+            self._kbLayoutRevertObserver.startObserve();
+            if (isTree) {
+               self._startHierSearch(text);
+            } else {
+               self._startSearch(text);
+            }
+         });
+
+         searchForm.subscribe('onKeyPressed', function(eventObject, event) {
+            // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
+            if ((event.which == $ws._const.key.tab || event.which == $ws._const.key.down) && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)) {
+               view.setSelectedIndex(0);
+               view.setActive(true);
+               event.stopPropagation();
+               event.preventDefault();
+            }
+         });
+      }
+
+   });
+
+   return SearchController;
+
+});
