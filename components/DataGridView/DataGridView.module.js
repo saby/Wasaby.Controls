@@ -10,15 +10,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'js!SBIS3.CONTROLS.DragAndDropMixin',
       'js!SBIS3.CONTROLS.ImitateEvents',
       'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
-      'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
-      'js!WS.Data/Ladder/Ladder',
+      'js!WS.Data/Display/Ladder',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'html!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate',
       'html!SBIS3.CONTROLS.DataGridView/resources/ItemContentTemplate',
       'html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate',
       'html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate'
    ],
-   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, LadderDecorator, Ladder, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate) {
+   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, Ladder, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate) {
    'use strict';
 
       var ANIMATION_DURATION = 500, //Продолжительность анимации скролла заголовков
@@ -66,21 +65,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          buildTplArgsDG = function(cfg) {
             var tplOptions = cfg._buildTplArgsLV.call(this, cfg);
+            cfg._ladderInstance = new Ladder(cfg._itemsProjection);
             tplOptions.columns = _prepareColumns.call(this, cfg.columns, cfg);
-            if (cfg.newLadder) {
-               cfg.newLadder.ladder = new Ladder(
-               {
-                  collection: cfg._itemsProjection,
-                  columnNames: cfg.newLadder.columns
-               });
-            }
             tplOptions.cellData = {
+               ladder: cfg._ladderInstance,
+               ladderColumns: cfg.ladder || [],
                /*TODO hierField вроде тут не должно быть*/
                hierField: cfg.hierField,
                getColumnVal: getColumnVal,
                decorators : tplOptions.decorators,
-               displayField : tplOptions.displayField,
-               ladder: (cfg.newLadder && cfg.newLadder.ladder)
+               displayField : tplOptions.displayField
             };
             tplOptions.startScrollColumn = cfg.startScrollColumn;
 
@@ -286,13 +280,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *    <li>field - имя поля</li>
              *    <li>highlight - есть ли подсветка</li>
              * </ol>
-             * Необходимо указать настройки декораторов разметки, если требуется
-             * Пример
+             * Следует указать настройки декораторов разметки, если требуется. Используем декоратор подсветки текста:
              * <pre>
              *    {{=it.decorators.applyOnly(it.value, {
-             *      highlight: it.highlight,
-             *      ladder: it.field
+             *       highlight: it.highlight,
              *    })}}
+             * </pre>
+             * Также можно использовать лесенку:
+             * <pre>
+             *    {{=it.ladder.get(it.item, it.field)}}
              * </pre>
              * @remark
              * Если в настройке колонки имя поля соответствует шаблону ['Name1.Name2'] то при подготовке полей для рендеринга
@@ -422,9 +418,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _modifyOptions: function() {
          var newCfg = DataGridView.superclass._modifyOptions.apply(this, arguments);
-         if (!newCfg.newLadder) {
-            newCfg._decorators.add(new LadderDecorator());
-         }
          checkColumns(newCfg);
          newCfg._colgroupData = prepareColGroupData(newCfg);
          newCfg._headData = prepareHeadData(newCfg);
@@ -435,6 +428,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
             некорректно ведут себя в абсолютно позиционированных элементах (каким является stickyHeader). */
          if(newCfg.stickyHeader && newCfg.startScrollColumn !== undefined) {
             newCfg.stickyHeader = false;
+         }
+
+         if (!newCfg.ladder) {
+            newCfg.ladder = [];
          }
 
          return newCfg;
@@ -1171,7 +1168,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
                decorators: this._options._decorators,
                field: column.field,
                value: value,
-               highlight: column.highlight
+               highlight: column.highlight,
+               ladderColumns: this._options.ladder
             };
             if (column.templateBinding) {
                tplOptions.templateBinding = column.templateBinding;
@@ -1187,13 +1185,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
             value = MarkupTransformer((cellTpl)(tplOptions));
          } else {
+            if (
+               Array.indexOf(this._options.ladder, column.field) > -1 &&
+               !this._options._ladderInstance.isPrimary(item, column.field)
+            ) {
+               value = null;
+            }
             value = this._options._decorators.applyOnly(
                   value === undefined || value === null ? '' : $ws.helpers.escapeHtml(value), {
-                  highlight: column.highlight,
-                  ladder: {
-                     column: column.field,
-                     parentId: item.get(this._options.hierField)
-                  }
+                  highlight: column.highlight
                }
             );
          }
@@ -1201,7 +1201,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _getColumnValue: function(item, colName){
-
          if (!colName || !this._isCompositeRecordValue(colName)){
             return item.get(colName);
          }

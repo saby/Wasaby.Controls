@@ -588,14 +588,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             this._options.openedPath[id] = true;
             this._folderOffsets[id] = 0;
             return this._loadNode(id).addCallback(function() {
-               var
-                  ladderDecorator = this._options._decorators.getByName('ladder');
-               if (ladderDecorator){
-                  ladderDecorator.removeNodeData(id);
-                  ladderDecorator.setIgnoreEnabled(true);
-               }
                this._getItemProjectionByItemId(id).setExpanded(true);
-               ladderDecorator && ladderDecorator.setIgnoreEnabled(false);
             }.bind(this));
          }
       },

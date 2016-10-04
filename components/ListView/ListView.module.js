@@ -2142,16 +2142,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var at = null;
             //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
             if (direction === 'down') {
-               //TODO новый миксин не задействует декоратор лесенки в принципе при любых действиях, кроме первичной отрисовки
-               //это неправильно, т.к. лесенка умеет рисовать и дорисовывать данные, если они добавляются последовательно
-               //здесь мы говорим, чтобы лесенка отработала при отрисовке данных
-               var ladder = this._options._decorators.getByName('ladder');
-               if (ladder){
-                  ladder.setIgnoreEnabled(true);
-               }
                //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
                this.getItems().append(dataSet);
-               ladder && ladder.setIgnoreEnabled(false);
             } else {
                this._needScrollCompensation = true;
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight();
@@ -2726,7 +2718,6 @@ define('js!SBIS3.CONTROLS.ListView',
                rows = [itemContainer.prev(), anchor, itemContainer, anchor.next()];
                itemContainer.insertAfter(anchor);
             }
-            this._ladderCompare(rows);
          },
          /*DRAG_AND_DROP START*/
          /**

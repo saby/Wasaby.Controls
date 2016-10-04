@@ -241,21 +241,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       collapseNode: function (key) {
-         this._clearLadderData(key);
          return TreeDataGridView.superclass.collapseNode.apply(this, arguments);
       },
 
       expandNode: function (key) {
-         this._clearLadderData(key);
          return TreeDataGridView.superclass.expandNode.apply(this, arguments);
-      },
-
-
-      _clearLadderData: function(key){
-         var ladderDecorator = this._options._decorators.getByName('ladder');
-         if (ladderDecorator){
-            ladderDecorator.removeNodeData(key);
-         }
       },
 
       /**

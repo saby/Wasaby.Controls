@@ -232,7 +232,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                      currentDataSet.removeAt(indexForRemove);
                   }
                   self._destroyItemsFolderFooter([row.key]);
-                  self._ladderCompare(environment);
                   row.$row.remove();
                   //Если количество записей в текущем DataSet меньше, чем в обновленном, то добавляем в него недостающую запись
                   if (needRedraw && currentDataSet.getCount() < dataSet.getCount()) {
