@@ -167,7 +167,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                   this.setChecked(false);
                }.bind(this), this._container);
             }
-         }
+         },
+         visible: !$ws._const.browser.isIE8
       },
 
       {
@@ -178,7 +179,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          handlers: {
             onActivated: onButtonClick
          },
-         enabled: false
+         enabled: false,
+         visible: !$ws._const.browser.isIE8
       },
 
       {

@@ -1,7 +1,7 @@
 var gemini = require('gemini');
 
 gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
-
+	/*
     gemini.suite('base', function (test) {
 
         test.setUrl('/regression_dropdown_list_online.html').setCaptureElements('.capture')
@@ -224,7 +224,7 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
             .capture('hovered', function (actions) {
                 actions.mouseMove(this.title);
             })
-    });
+    });*/
 	
 	gemini.suite('single', function (test) {
 
@@ -624,7 +624,7 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
 				actions.mouseMove(this.input);
             })
     });
-	
+	/*
 	gemini.suite('head_template', function (test) {
 
         test.setUrl('/regression_dropdown_list_online_14.html').setCaptureElements('.capture')
@@ -666,7 +666,7 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
 				actions.waitForElementToShow('.controls-DropdownList__item[data-id="3"]', 1000);
 				actions.mouseMove(this.input);
             })
-    });
+    });*/
 
     gemini.suite('ellipsis', function (test) {
 
@@ -675,7 +675,7 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="DropdownList 1"]', 40000);
                 this.list = '[name="DropdownList 1"]';
-				this.title = '.capture .controls-DropdownList__arrowIcon';
+				this.title = '[name="DropdownList 1"] .controls-DropdownList__textWrapper';
 				this.item4 = '.controls-DropdownList__item[data-id="4"]';
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = '[sbisname="TextBox 1"] input';

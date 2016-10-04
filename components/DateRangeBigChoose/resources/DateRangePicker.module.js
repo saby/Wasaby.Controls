@@ -138,8 +138,10 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
             control.subscribe('onBeforeSelectionStarted', self._onMonthViewBeforeSelectionStarted);
             control.unsubscribe('onSelectingRangeEndDateChange', self._onMonthViewSelectingRangeEndDateChange);
             control.subscribe('onSelectingRangeEndDateChange', self._onMonthViewSelectingRangeEndDateChange);
-            control.unsubscribe('onActivated', self._onMonthViewCaptionActivated);
-            control.subscribe('onActivated', self._onMonthViewCaptionActivated);
+            if (self._options.rangeselect) {
+               control.unsubscribe('onActivated', self._onMonthViewCaptionActivated);
+               control.subscribe('onActivated', self._onMonthViewCaptionActivated);
+            }
          });
          this._updateSelectionInInnerComponents();
          this._updateMonthsPosition();

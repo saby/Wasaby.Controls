@@ -1833,8 +1833,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _ladderCompare: function(rows){
-         var ladderDecorator = this._options._decorators.getByName('ladder');
-         if (ladderDecorator && ladderDecorator.isIgnoreEnabled()){
+         var ladderDecorator;
+         if (this._options._decorators){
+            ladderDecorator = this._options._decorators.getByName('ladder');
+            if (ladderDecorator && ladderDecorator.isIgnoreEnabled()){
+               return;
+            }
+         }
+         else {
             return;
          }
          //TODO придрот - метод нужен только для адекватной работы лесенки при перемещении элементов местами
@@ -2060,11 +2066,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                atContainer.after(itemBuildedTpl);
             }
             else {
-               atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at);
-               if (atContainer.length) {
-                  atContainer.before(itemBuildedTpl);
-               } else {
-                  targetContainer.append(itemBuildedTpl);
+               if (at.at == 0) {
+                  targetContainer.prepend(itemBuildedTpl);
+               }
+               else {
+                  atContainer = $('> .controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at);
+                  if (atContainer.length) {
+                     atContainer.before(itemBuildedTpl);
+                  } else {
+                     targetContainer.append(itemBuildedTpl);
+                  }
                }
             }
          }
