@@ -100,7 +100,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
          var prevGroupId = undefined;
          projection.each(function (item, index, group) {
-            if (cfg.groupBy && cfg.easyGroup) {
+            if (!Object.isEmpty(cfg.groupBy) && cfg.easyGroup) {
                if (prevGroupId != group) {
                   cfg._groupItemProcessing(group, records, item,  cfg);
                   prevGroupId = group;
@@ -853,8 +853,19 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
-      _getItemsForRedrawOnAdd: function(items) {
-         return items;
+      _getItemsForRedrawOnAdd: function(items, groupId) {
+         var itemsToAdd = items;
+         if (!Object.isEmpty(this._options.groupBy) && this._options.easyGroup) {
+
+            //Если в группе один элемент (или меньше), то это значит что добавился элемент в группу, которая еще не отрисована
+            //и надо ее отрисовать
+            itemsToAdd = [];
+            if (this._getItemsProjection().getGroupItems(groupId).length <= 1) {
+               this._options._groupItemProcessing(groupId, itemsToAdd, itemsToAdd[0], this._options);
+            }
+            itemsToAdd.concat(items);
+         }
+         return itemsToAdd;
       },
 
       _optimizedInsertMarkup: function(container, markup, prepend) {
@@ -865,7 +876,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
-      _addItems: function(newItems, newItemsIndex) {
+      _addItems: function(newItems, newItemsIndex, groupId) {
          this._itemData = null;
          var i;
          if (newItems && newItems.length) {
@@ -895,7 +906,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                }
                /*TODO Лесенка*/
 
-               itemsToDraw = this._getItemsForRedrawOnAdd(newItems);
+               itemsToDraw = this._getItemsForRedrawOnAdd(newItems, groupId);
                if (itemsToDraw.length) {
                   data = {
                      records: itemsToDraw,
@@ -2100,10 +2111,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             );
          }
       },
-      _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems) {
+      _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
          this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);
          if (newItems.length) {
-            this._addItems(newItems, newItemsIndex)
+            this._addItems(newItems, newItemsIndex, groupId)
          }
          this._toggleEmptyData(!this._options._itemsProjection.getCount());
          //this._view.checkEmpty(); toggleEmtyData
@@ -2158,7 +2169,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
        * @private
        */
-      onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems) {
+      onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
          if (this._isNeedToRedraw()) {
 	         switch (action) {
 	            case IBindCollection.ACTION_ADD:

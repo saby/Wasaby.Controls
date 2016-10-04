@@ -720,14 +720,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
-            if (!this._options._serverRender) {
-               if (this.getItems()) {
-                  this.redraw()
-               }
-               else if (this._dataSource){
-                  this.reload();
-               }
-            }
          },
          _modifyOptions : function(opts){
             var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
