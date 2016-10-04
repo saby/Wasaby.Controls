@@ -111,26 +111,28 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
       },
       /**
        * Обработчик для быстрой операции над запись. Переместить на одну запись ввниз.
-       * @param tr
-       * @param id
-       * @param record
+       * @remark Сингнатура метода соответсвует обработчику быстрых операций над записью.
+       * @param {String} tr Строка содержащая html-представление записи
+       * @param {String} id Идентификатор записи
+       * @param {WS.Data/Entity/Record} record Запись
        */
       moveRecordDown: function(tr, id, record) {
          var nextItem = this.getNextItemById(id);
          if(nextItem) {
-            this._moveRecord(record, nextItem.data('id'), true);
+            this.getMoveStrategy.reorderMove([record], this.getItems().getRecordById(prevItem.data('id')), true);
          }
       },
       /**
        * Обработчик для быстрой операции над записью. Переместить на одну запись вверх.
-       * @param tr
-       * @param id
-       * @param record
+       * @remark Сингнатура метода соответсвует обработчику быстрых операций над записью.
+       * @param {String} tr Строка содержащая html-представление записи
+       * @param {String} id Идентификатор записи
+       * @param {WS.Data/Entity/Record} record Запись
        */
       moveRecordUp: function(tr, id, record) {
          var prevItem = this.getPrevItemById(id);
          if(prevItem) {
-            this._moveRecord(record, prevItem.data('id'), false);
+            this.getMoveStrategy.reorderMove([record], this.getItems().getRecordById(prevItem.data('id')), false);
          }
       },
       /**
