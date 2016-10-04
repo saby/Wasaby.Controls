@@ -4,28 +4,37 @@ gemini.suite('SBIS3.CONTROLS.DateRange Online', function () {
 
         test.setUrl('/regression_date_range_online.html').setCaptureElements('html')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="DateRange 1"]', 40000);
-				actions.waitForElementToShow('[name="DateRange__Button"]', 40000);
-				this.open_chooser = find('[name="DateRange__Button"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-				this.quarter = find('[sbisname="QuarterRangeBtn0"]');
-				this.halfyear = find('[sbisname="HalfyearRangeBtn0"]');
-				this.nextyear = find('[sbisname="NextYearButton"]');
-				this.prevyear = find('[sbisname="PrevYearButton"]');
-				this.chooseyear = find('[sbisname="ToggleChooseYearButton"]');
-				this.first = find('.controls-DateRangeBigChoose__yearsRange .controls-DateRangeBigChoose__years-yearsRange-btn:nth-child(1)');
-				this.third = find('.controls-DateRangeBigChoose__yearsRange .controls-DateRangeBigChoose__years-yearsRange-btn:nth-child(3)');
-				this.current = find('[sbisname="CurrentYearButton"]');
-				this.second = find('.controls-DateRangeBigChoose__months-month .controls-DateRangeBigChoose-MonthView:nth-child(2) .controls-MonthView__caption-text')
-				this.seven = find('.controls-DateRangeBigChoose__months-month .controls-DateRangeBigChoose-MonthView:nth-child(7) .controls-MonthView__caption-text')
-				this.month = find('.controls-DateRangeBigChoose__months-month .controls-DateRangeBigChoose-MonthView:nth-child(1) .controls-MonthView__tableBody')
-				this.november = find('[sbisname="MonthRangeBtn10"]');
-				this.calendar = find('[sbisname="BackToYearButton"]');
-				this.apply = find('[sbisname="ApplyButton"]');
-				this.close = find('[sbisname="CloseButton"]');
-				this.icon = find('.controls-DateRangeBigChoose__homeBtn');
+            .before(function (actions) {
+
+				this.dr = '[sbisname="DateRange 1"]';
+                this.input = '[name="TextBox 1"] input';
+				this.open_chooser = '[name="DateRange__Button"]';
+				this.quarter = '[sbisname="QuarterRangeBtn0"]';
+				this.halfyear = '[sbisname="HalfyearRangeBtn0"]';
+				this.nextyear = '[sbisname="NextYearButton"]';
+				this.prevyear = '[sbisname="PrevYearButton"]';
+				this.chooseyear = '[sbisname="ToggleChooseYearButton"]';
+				this.first = '.controls-DateRangeBigChoose__yearsRange .controls-DateRangeBigChoose__years-yearsRange-btn:nth-child(1)';
+				this.third = '.controls-DateRangeBigChoose__yearsRange .controls-DateRangeBigChoose__years-yearsRange-btn:nth-child(3)';
+				this.current = '[sbisname="CurrentYearButton"]';
+				this.second = '.controls-DateRangeBigChoose__months-month .controls-DateRangeBigChoose-MonthView:nth-child(2) .controls-MonthView__caption-text';
+				this.seven = '.controls-DateRangeBigChoose__months-month .controls-DateRangeBigChoose-MonthView:nth-child(7) .controls-MonthView__caption-text';
+				this.month = '.controls-DateRangeBigChoose__months-month .controls-DateRangeBigChoose-MonthView:nth-child(1) .controls-MonthView__tableBody';
+				this.november = '[sbisname="MonthRangeBtn10"]';
+				this.calendar = '[sbisname="BackToYearButton"]';
+				this.apply = '[sbisname="ApplyButton"]';
+				this.close = '[sbisname="CloseButton"]';
+				this.icon = '.controls-DateRangeBigChoose__homeBtn';
+				this.m3 = '.controls-RangeSelectable__item.controls-DateRangeBigChoose-MonthView:nth-child(3)';
+				this.m6 = '.controls-RangeSelectable__item.controls-DateRangeBigChoose-MonthView:nth-child(6)';
+				this.m9 = '.controls-RangeSelectable__item.controls-DateRangeBigChoose-MonthView:nth-child(9)';
+				this.m12 = '.controls-RangeSelectable__item.controls-DateRangeBigChoose-MonthView:nth-child(12)';
+				this.a1 = '.controls-DateRangeBigChoose__yearsRange .controls-DateRangeBigChoose__years-yearsRange-btn:nth-child(1)';
+				this.a3 = '.controls-DateRangeBigChoose__yearsRange .controls-DateRangeBigChoose__years-yearsRange-btn:nth-child(3)';
+				this.a5 = '.controls-DateRangeBigChoose__yearsRange .controls-DateRangeBigChoose__years-yearsRange-btn:nth-child(5)';
+				
+				actions.waitForElementToShow(this.dr, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('plain', function (actions) {
@@ -34,12 +43,12 @@ gemini.suite('SBIS3.CONTROLS.DateRange Online', function () {
 
             .capture('opened_chooser', function (actions) {
                 actions.click(this.open_chooser);
-				actions.waitForElementToShow('.controls-RangeSelectable__item.controls-DateRangeBigChoose-MonthView:nth-child(3)', 1000);
-				actions.waitForElementToShow('.controls-RangeSelectable__item.controls-DateRangeBigChoose-MonthView:nth-child(6)', 1000);
-				actions.waitForElementToShow('.controls-RangeSelectable__item.controls-DateRangeBigChoose-MonthView:nth-child(9)', 1000);
-				actions.waitForElementToShow('.controls-RangeSelectable__item.controls-DateRangeBigChoose-MonthView:nth-child(12)', 1000);
-				actions.waitForElementToShow('[sbisname="ApplyButton"]', 1000);
-				actions.waitForElementToShow('[sbisname="CloseButton"]', 1000);
+				actions.waitForElementToShow(this.m3, 5000);
+				actions.waitForElementToShow(this.m6, 5000);
+				actions.waitForElementToShow(this.m9, 5000);
+				actions.waitForElementToShow(this.m12, 5000);
+				actions.waitForElementToShow(this.apply, 5000);
+				actions.waitForElementToShow(this.close, 5000);
             })
 			
 			.capture('hovered_quarter', function (actions) {
@@ -72,9 +81,9 @@ gemini.suite('SBIS3.CONTROLS.DateRange Online', function () {
 			
 			.capture('opened_chooseyear', function (actions) {
                 actions.click(this.chooseyear);
-				actions.waitForElementToShow('.controls-DateRangeBigChoose__yearsRange .controls-DateRangeBigChoose__years-yearsRange-btn:nth-child(1)', 1000);
-				actions.waitForElementToShow('.controls-DateRangeBigChoose__yearsRange .controls-DateRangeBigChoose__years-yearsRange-btn:nth-child(3)', 1000);
-				actions.waitForElementToShow('.controls-DateRangeBigChoose__yearsRange .controls-DateRangeBigChoose__years-yearsRange-btn:nth-child(5)', 1000);
+				actions.waitForElementToShow(this.a1, 5000);
+				actions.waitForElementToShow(this.a3, 5000);
+				actions.waitForElementToShow(this.a5, 5000);
             })
 			
 			.capture('hovered_first_year', function (actions) {
@@ -116,7 +125,6 @@ gemini.suite('SBIS3.CONTROLS.DateRange Online', function () {
 			
 			.capture('opened_month_picker', function (actions) {
                 actions.click(this.month);
-				actions.wait(500);
 				actions.mouseMove(this.november);
             })
 			

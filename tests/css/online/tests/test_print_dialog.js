@@ -6,7 +6,7 @@ gemini.suite('SBIS3.CONTROLS.PrintDialog Online', function () {
 
         test.setUrl('/regression_print_dialog_online.html').skip('chrome').setCaptureElements('body')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="DataGridView 1"]', 40000);
                 this.open_button = find('.controls-OperationsPanelButton__icon');
 				this.print = find('span[data-id="print"] .controls-Link__field');

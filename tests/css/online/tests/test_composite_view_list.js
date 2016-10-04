@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.CompositeViewList Online', function () {
 
         test.setUrl('/regression_composite_view_list_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
 				
 				this.cvl = '[name="CompositeView 1"]';
 				this.input = '[sbisname="TextBox 1"] input';
@@ -32,7 +32,7 @@ gemini.suite('SBIS3.CONTROLS.CompositeViewList Online', function () {
 
         test.setUrl('/regression_composite_view_list_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
 				
 				this.cvl = '[name="CompositeView 1"]';
 				this.input = '[sbisname="TextBox 1"] input';

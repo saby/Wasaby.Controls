@@ -6,7 +6,7 @@ gemini.suite('SBIS3.CONTROLS.TextArea Online', function () {
 
         test.setUrl('/regression_text_area_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TextArea 1"]', 40000);
                 this.input = find('.controls-TextArea__inputField');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -35,7 +35,7 @@ gemini.suite('SBIS3.CONTROLS.TextArea Online', function () {
 
         test.setUrl('/regression_text_area_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TextArea 1"]', 40000);
                 this.input = find('.controls-TextArea__inputField');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -64,7 +64,7 @@ gemini.suite('SBIS3.CONTROLS.TextArea Online', function () {
 
         test.setUrl('/regression_text_area_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TextArea 1"]', 40000);
                 this.input = find('.controls-TextArea__inputField');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -93,7 +93,7 @@ gemini.suite('SBIS3.CONTROLS.TextArea Online', function () {
 
         test.setUrl('/regression_text_area_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TextArea 1"]', 40000);
                 this.input = find('.controls-TextArea__inputField');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -120,7 +120,7 @@ gemini.suite('SBIS3.CONTROLS.TextArea Online', function () {
 
         test.setUrl('/regression_text_area_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TextArea 1"]', 40000);
                 this.input = find('.controls-TextArea__inputField');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -141,7 +141,7 @@ gemini.suite('SBIS3.CONTROLS.TextArea Online', function () {
 
         test.setUrl('/regression_text_area_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TextArea 1"]', 40000);
                 this.input = find('.controls-TextArea__inputField');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);

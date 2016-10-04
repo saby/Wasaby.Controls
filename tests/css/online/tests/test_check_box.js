@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.CheckBox Online', function () {
 
         test.setUrl('/regression_check_box_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 
 				this.box = '[name="CheckBox 1"]';
                 this.input = '[sbisname="TextBox 1"] input';
@@ -46,7 +46,7 @@ gemini.suite('SBIS3.CONTROLS.CheckBox Online', function () {
 
         test.setUrl('/regression_check_box_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 
 				this.box = '[name="CheckBox 1"]';
                 this.input = '[sbisname="TextBox 1"] input';

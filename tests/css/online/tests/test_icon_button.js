@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.IconButton Online', function () {
 
         test.setUrl('/regression_icon_button_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="IconButton 1"]', 40000);
                 this.icon_button = find('[name="IconButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -32,7 +32,7 @@ gemini.suite('SBIS3.CONTROLS.IconButton Online', function () {
 
         test.setUrl('/regression_icon_button_online_7.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="IconButton 1"]', 40000);
                 this.icon_button = find('[name="IconButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -60,7 +60,7 @@ gemini.suite('SBIS3.CONTROLS.IconButton Online', function () {
 
         test.setUrl('/regression_icon_button_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="IconButton 1"]', 40000);
                 this.icon_button = find('[name="IconButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -88,7 +88,7 @@ gemini.suite('SBIS3.CONTROLS.IconButton Online', function () {
 
         test.setUrl('/regression_icon_button_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="IconButton 1"]', 40000);
                 this.icon_button = find('[name="IconButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -111,7 +111,7 @@ gemini.suite('SBIS3.CONTROLS.IconButton Online', function () {
 
         test.setUrl('/regression_icon_button_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="IconButton 1"]', 40000);
                 this.icon_button = find('[name="IconButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -139,7 +139,7 @@ gemini.suite('SBIS3.CONTROLS.IconButton Online', function () {
 
         test.setUrl('/regression_icon_button_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="IconButton 1"]', 40000);
                 this.icon_button = find('[name="IconButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -162,7 +162,7 @@ gemini.suite('SBIS3.CONTROLS.IconButton Online', function () {
 
         test.setUrl('/regression_icon_button_online_6.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="IconButton 1"]', 40000);
                 this.icon_button = find('[name="IconButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -190,7 +190,7 @@ gemini.suite('SBIS3.CONTROLS.IconButton Online', function () {
 
         test.setUrl('/regression_icon_button_online_6.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="IconButton 1"]', 40000);
                 this.icon_button = find('[name="IconButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);

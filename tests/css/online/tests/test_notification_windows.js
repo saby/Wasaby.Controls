@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.NotificationWindows Online', function () {
 
         test.setUrl('/regression_info_windows_online.html').setCaptureElements('html')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('.butt1', 40000);
                 this.success = find('.butt1');				
 				actions.waitForElementToShow('.butt2', 40000);

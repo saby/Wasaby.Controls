@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.MonthPicker Online', function () {
 
         test.setUrl('/regression_month_picker_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="MonthPicker 1"]', 40000);
                 this.field = find('.controls-MonthPicker__field');
                 this.arrow_left = find('.controls-MonthPicker__arrowLeft');
@@ -44,7 +44,7 @@ gemini.suite('SBIS3.CONTROLS.MonthPicker Online', function () {
 
         test.setUrl('/regression_month_picker_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="MonthPicker 1"]', 40000);
                 this.field = find('.controls-MonthPicker__field');
                 this.arrow_left = find('.controls-MonthPicker__arrowLeft');

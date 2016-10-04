@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.ButtonGroup Online', function () {
 
         test.setUrl('/regression_button_group_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
 				
 				this.button = '[name="Button 1"]';
                 this.input = '[sbisname="TextBox 1"] input';
@@ -22,7 +22,7 @@ gemini.suite('SBIS3.CONTROLS.ButtonGroup Online', function () {
 
         test.setUrl('/regression_button_group_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 
 				this.button = '[name="Button 1"]';
                 this.input = '[sbisname="TextBox 1"] input';

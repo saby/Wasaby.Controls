@@ -6,7 +6,7 @@ gemini.suite('SBIS3.CONTROLS.Toolbar Online', function () {
 
         test.setUrl('/regression_toolbar_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="MyToolbar"]', 40000);
                 this.data = find('[sbisname="MyToolbar"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -71,7 +71,7 @@ gemini.suite('SBIS3.CONTROLS.Toolbar Online', function () {
 
         test.setUrl('/regression_toolbar_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="Toolbar 1"]', 40000);
                 this.data = find('[sbisname="Toolbar 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);

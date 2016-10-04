@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.ComboBox Online', function () {
 
         test.setUrl('/regression_combo_box_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 
 				this.cb = '[name="ComboBox 1"]';
 				this.arrow = '.controls-ComboBox__arrowDown';
@@ -51,7 +51,7 @@ gemini.suite('SBIS3.CONTROLS.ComboBox Online', function () {
 
         test.setUrl('/regression_combo_box_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
 				
 				this.cb = '[name="ComboBox 1"]';
 				this.arrow = '.controls-ComboBox__arrowDown';
@@ -89,7 +89,7 @@ gemini.suite('SBIS3.CONTROLS.ComboBox Online', function () {
 
         test.setUrl('/regression_combo_box_online_4.html').setCaptureElements('html')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
 				
 				this.cb = '[name="ComboBox 1"]';
 				this.box_input = '[name="ComboBox 1"] input';

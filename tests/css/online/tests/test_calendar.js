@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.Calendar Online', function () {
 
         test.setUrl('/regression_calendar_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 
 				this.calendar = '[name="Calendar 1"]';
 				this.input = '[sbisname="TextBox 1"] input';

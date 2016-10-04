@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.NumberTextBox Online', function () {
 
         test.setUrl('/regression_number_text_box_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="NumberTextBox 1"]', 40000);
 				this.number_input = find('[name="NumberTextBox 1"] input');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -21,7 +21,7 @@ gemini.suite('SBIS3.CONTROLS.NumberTextBox Online', function () {
 
         test.setUrl('/regression_number_text_box_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="NumberTextBox 1"]', 40000);
 				this.number_input = find('[name="NumberTextBox 1"] input');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -38,7 +38,7 @@ gemini.suite('SBIS3.CONTROLS.NumberTextBox Online', function () {
 
         test.setUrl('/regression_number_text_box_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="NumberTextBox 1"]', 40000);
                 this.box = find('[name="NumberTextBox 1"]');
                 this.up = find('.controls-NumberTextBox__arrowUp');
@@ -66,7 +66,7 @@ gemini.suite('SBIS3.CONTROLS.NumberTextBox Online', function () {
 
         test.setUrl('/regression_number_text_box_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="NumberTextBox 1"]', 40000);
 				this.number_input = find('[name="NumberTextBox 1"] input');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);

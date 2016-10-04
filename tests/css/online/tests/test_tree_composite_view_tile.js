@@ -6,7 +6,7 @@ gemini.suite('SBIS3.CONTROLS.TreeCompositeViewTile Online', function () {
 
         test.setUrl('/regression_tree_composite_view_tile_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeCompositeView 1"]', 40000);
                 this.item4 = find('[data-id="4"]');
 				this.item4_checker = find('[data-id="4"] .controls-ListView__itemCheckBox');
@@ -44,7 +44,7 @@ gemini.suite('SBIS3.CONTROLS.TreeCompositeViewTile Online', function () {
 
         test.setUrl('/regression_tree_composite_view_table_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeCompositeView 1"]', 40000);
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
 				this.input = find('[sbisname="TextBox 1"] input');
@@ -59,7 +59,7 @@ gemini.suite('SBIS3.CONTROLS.TreeCompositeViewTile Online', function () {
 
         test.setUrl('/regression_tree_composite_view_table_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeCompositeView 1"]', 40000);
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
 				this.input = find('[sbisname="TextBox 1"] input');

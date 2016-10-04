@@ -6,7 +6,7 @@ gemini.suite('SBIS3.CONTROLS.TextBox Online', function () {
 
         test.setUrl('/regression_text_box_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.box = find('[sbisname="TextBox 1"]');
                 this.text_inpit = find('.controls-TextBox__fieldWrapper > input');
@@ -32,7 +32,7 @@ gemini.suite('SBIS3.CONTROLS.TextBox Online', function () {
 
         test.setUrl('/regression_text_box_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
 				actions.waitForElementToShow('[name="TextBox 2"]', 40000);
                 this.focus_input = find('[name="TextBox 2"] input');
@@ -55,7 +55,7 @@ gemini.suite('SBIS3.CONTROLS.TextBox Online', function () {
 
         test.setUrl('/regression_text_box_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
 				actions.waitForElementToShow('[name="TextBox 2"]', 40000);
                 this.focus_input = find('[name="TextBox 2"] input');
@@ -75,7 +75,7 @@ gemini.suite('SBIS3.CONTROLS.TextBox Online', function () {
 
         test.setUrl('/regression_text_box_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 actions.waitForElementToShow('[name="TextBox 2"]', 40000);
                 this.focus_input = find('[name="TextBox 2"] input');
@@ -90,7 +90,7 @@ gemini.suite('SBIS3.CONTROLS.TextBox Online', function () {
 
         test.setUrl('/regression_text_box_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 actions.waitForElementToShow('[name="TextBox 2"]', 40000);
                 this.focus_input = find('[name="TextBox 2"] input');
@@ -105,7 +105,7 @@ gemini.suite('SBIS3.CONTROLS.TextBox Online', function () {
 
         test.setUrl('/regression_text_box_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 actions.waitForElementToShow('[name="TextBox 2"]', 40000);
                 this.focus_input = find('[name="TextBox 2"] input');

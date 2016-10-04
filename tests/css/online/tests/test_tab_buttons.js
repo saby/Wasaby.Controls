@@ -6,7 +6,7 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('#buttons', 40000);
                 this.tab2 = find('[data-id="2"]');
 				this.tab3 = find('[data-id="3"]');
@@ -47,7 +47,7 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online_7.html').skip('chrome').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TabButtons"]', 40000);
                 this.tab3 = find('[data-id="id3"]');
                 this.tab5 = find('[data-id="id5"]');
@@ -82,7 +82,7 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('#buttons', 40000);
                 this.tab2 = find('[data-id="2"]');
 				this.tab3 = find('[data-id="3"]');
@@ -111,7 +111,7 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online_5.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('#buttons', 40000);
                 this.tab3 = find('[data-id="3"]');
                 this.tab4 = find('[data-id="4"]');
@@ -135,7 +135,7 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('#buttons', 40000);
                 this.tab3 = find('[data-id="3"]');
                 this.tab4 = find('[data-id="4"]');
@@ -156,7 +156,7 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('#buttons', 40000);
                 this.tab3 = find('[data-id="3"]');
                 this.tab4 = find('[data-id="4"]');
@@ -180,7 +180,7 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online_6.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('#buttons', 40000);
                 this.tab3 = find('[data-id="3"]');
                 this.tab4 = find('[data-id="4"]');
@@ -224,7 +224,7 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online_8.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('#buttons', 40000);
                 this.tab3 = find('[data-id="3"]');
                 this.tab4 = find('[data-id="4"]');
@@ -243,7 +243,7 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online_9.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('#buttons', 40000);
                 this.tab3 = find('[data-id="3"]');
                 this.tab4 = find('[data-id="4"]');
@@ -258,7 +258,7 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online_10.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('#buttons', 40000);
                 this.tab3 = find('[data-id="3"]');
                 this.tab1 = find('[data-id="1"] .controls-TabButton__caption');
@@ -278,7 +278,7 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online_11.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('#buttons', 40000);
                 this.tab3 = find('[data-id="3"]');
                 this.tab1 = find('[data-id="1"] .controls-TabButton__caption');

@@ -6,7 +6,7 @@ gemini.suite('SBIS3.CONTROLS.Switcher Online', function () {
 
         test.setUrl('/regression_switcher_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="Switcher 1"]', 40000);
                 this.switcher = find('[name="Switcher 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -27,7 +27,7 @@ gemini.suite('SBIS3.CONTROLS.Switcher Online', function () {
 
         test.setUrl('/regression_switcher_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="Switcher 1"]', 40000);
                 this.switcher = find('[name="Switcher 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);

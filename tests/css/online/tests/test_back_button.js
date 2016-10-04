@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.BackButton Online', function () {
 
         test.setUrl('/regression_back_button_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.item4 = find('[data-id="4"]');
                 this.item13 = find('[data-id="13"]');
@@ -24,7 +24,7 @@ gemini.suite('SBIS3.CONTROLS.BackButton Online', function () {
 
         test.setUrl('/regression_back_button_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.item4 = find('[data-id="4"]');
                 this.item13 = find('[data-id="13"]');
@@ -48,7 +48,7 @@ gemini.suite('SBIS3.CONTROLS.BackButton Online', function () {
 
         test.setUrl('/regression_back_button_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.item4 = find('[data-id="4"]');
                 this.item13 = find('[data-id="13"]');
@@ -88,7 +88,7 @@ gemini.suite('SBIS3.CONTROLS.BackButton Online', function () {
 
         test.setUrl('/regression_back_button_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.item4 = find('[data-id="4"]');
                 this.item13 = find('[data-id="13"]');

@@ -6,7 +6,7 @@ gemini.suite('SBIS3.CONTROLS.ToggleButton Online', function () {
 
         test.setUrl('/regression_toggle_button_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="ToggleButton 1"]', 40000);
                 this.button = find('[name="ToggleButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -30,7 +30,7 @@ gemini.suite('SBIS3.CONTROLS.ToggleButton Online', function () {
 
         test.setUrl('/regression_toggle_button_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="ToggleButton 1"]', 40000);
                 this.button = find('[name="ToggleButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -51,7 +51,7 @@ gemini.suite('SBIS3.CONTROLS.ToggleButton Online', function () {
 
         test.setUrl('/regression_toggle_button_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="ToggleButton 1"]', 40000);
                 this.button = find('[name="ToggleButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -78,7 +78,7 @@ gemini.suite('SBIS3.CONTROLS.ToggleButton Online', function () {
 
         test.setUrl('/regression_toggle_button_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="ToggleButton 1"]', 40000);
                 this.button = find('[name="ToggleButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -100,7 +100,7 @@ gemini.suite('SBIS3.CONTROLS.ToggleButton Online', function () {
 
         test.setUrl('/regression_toggle_button_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="ToggleButton 1"]', 40000);
                 this.button = find('[name="ToggleButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -124,7 +124,7 @@ gemini.suite('SBIS3.CONTROLS.ToggleButton Online', function () {
 
         test.setUrl('/regression_toggle_button_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="ToggleButton 1"]', 40000);
                 this.button = find('[name="ToggleButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -145,7 +145,7 @@ gemini.suite('SBIS3.CONTROLS.ToggleButton Online', function () {
 
         test.setUrl('/regression_toggle_button_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="ToggleButton 1"]', 40000);
                 this.button = find('[name="ToggleButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -172,7 +172,7 @@ gemini.suite('SBIS3.CONTROLS.ToggleButton Online', function () {
 
         test.setUrl('/regression_toggle_button_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="ToggleButton 1"]', 40000);
                 this.button = find('[name="ToggleButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -194,7 +194,7 @@ gemini.suite('SBIS3.CONTROLS.ToggleButton Online', function () {
 
         test.setUrl('/regression_toggle_button_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="ToggleButton 1"]', 40000);
                 this.button = find('[name="ToggleButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -218,7 +218,7 @@ gemini.suite('SBIS3.CONTROLS.ToggleButton Online', function () {
 
         test.setUrl('/regression_toggle_button_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="ToggleButton 1"]', 40000);
                 this.button = find('[name="ToggleButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -239,7 +239,7 @@ gemini.suite('SBIS3.CONTROLS.ToggleButton Online', function () {
 
         test.setUrl('/regression_toggle_button_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="ToggleButton 1"]', 40000);
                 this.button = find('[name="ToggleButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -263,7 +263,7 @@ gemini.suite('SBIS3.CONTROLS.ToggleButton Online', function () {
 
         test.setUrl('/regression_toggle_button_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="ToggleButton 1"]', 40000);
                 this.button = find('[name="ToggleButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -284,7 +284,7 @@ gemini.suite('SBIS3.CONTROLS.ToggleButton Online', function () {
 
         test.setUrl('/regression_toggle_button_online_5.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="ToggleButton 1"]', 40000);
                 this.button = find('[name="ToggleButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -308,7 +308,7 @@ gemini.suite('SBIS3.CONTROLS.ToggleButton Online', function () {
 
         test.setUrl('/regression_toggle_button_online_5.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="ToggleButton 1"]', 40000);
                 this.button = find('[name="ToggleButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -329,7 +329,7 @@ gemini.suite('SBIS3.CONTROLS.ToggleButton Online', function () {
 
         test.setUrl('/regression_toggle_button_online_6.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="ToggleButton 1"]', 40000);
                 this.button = find('[name="ToggleButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -353,7 +353,7 @@ gemini.suite('SBIS3.CONTROLS.ToggleButton Online', function () {
 
         test.setUrl('/regression_toggle_button_online_6.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="ToggleButton 1"]', 40000);
                 this.button = find('[name="ToggleButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);

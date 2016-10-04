@@ -6,7 +6,7 @@ gemini.suite('SBIS3.CONTROLS.SwitcherDouble Online', function () {
 
         test.setUrl('/regression_switcher_double_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="Switcher 1"]', 40000);
                 this.switcher = find('[name="Switcher 1"] .controls-SwitcherDouble__toggle');
                 this.unselected = find('.controls-SwitcherDouble__unselected');
@@ -32,7 +32,7 @@ gemini.suite('SBIS3.CONTROLS.SwitcherDouble Online', function () {
 
         test.setUrl('/regression_switcher_double_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="Switcher 1"]', 40000);
                 this.switcher = find('[name="Switcher 1"]');
                 this.text = find('.controls-SwitcherDouble__text');
@@ -57,7 +57,7 @@ gemini.suite('SBIS3.CONTROLS.SwitcherDouble Online', function () {
 
         test.setUrl('/regression_switcher_double_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="Switcher 1"]', 40000);
                 this.switcher = find('[name="Switcher 1"] .controls-SwitcherDouble__toggle');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -78,7 +78,7 @@ gemini.suite('SBIS3.CONTROLS.SwitcherDouble Online', function () {
 
         test.setUrl('/regression_switcher_double_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="Switcher 1"]', 40000);
                 this.switcher = find('[name="Switcher 1"]');
                 this.text = find('.controls-SwitcherDouble__text');
@@ -103,7 +103,7 @@ gemini.suite('SBIS3.CONTROLS.SwitcherDouble Online', function () {
 
         test.setUrl('/regression_switcher_double_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="Switcher 1"]', 40000);
                 this.switcher = find('[name="Switcher 1"]');
                 this.unselected = find('.controls-SwitcherDouble__unselected');
@@ -122,7 +122,7 @@ gemini.suite('SBIS3.CONTROLS.SwitcherDouble Online', function () {
 
         test.setUrl('/regression_switcher_double_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="Switcher 1"]', 40000);
                 this.switcher = find('[name="Switcher 1"]');
                 this.text = find('.controls-SwitcherDouble__text');

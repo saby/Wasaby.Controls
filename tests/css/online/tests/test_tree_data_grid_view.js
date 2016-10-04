@@ -6,7 +6,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
         test.setUrl('/regression_tree_data_grid_view_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.data2 = find('[data-id="2"]');
 				this.data4_expand = find('[data-id="4"] .controls-TreeView__expand');
@@ -39,7 +39,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
         test.setUrl('/regression_tree_data_grid_view_online_11.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.data4 = find('[data-id="4"]');
 				this.arrow = find('.controls-TreeView__editArrow-container');
@@ -77,7 +77,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
         test.setUrl('/regression_tree_data_grid_view_online_9.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.data2 = find('[data-id="2"]');
 				this.data4_expand = find('[data-id="4"] .controls-TreeView__expand');
@@ -110,7 +110,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
         test.setUrl('/regression_tree_data_grid_view_online_6.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.data2 = find('[data-id="2"]');
 				this.data4_expand = find('[data-id="1"] .controls-TreeView__expand');
@@ -142,7 +142,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
         test.setUrl('/regression_tree_data_grid_view_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.data2 = find('[data-id="2"]');
 				this.data6 = find('[data-id="6"]');
@@ -176,7 +176,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
         test.setUrl('/regression_tree_data_grid_view_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
 				this.input = find('[sbisname="TextBox 1"] input');
@@ -191,7 +191,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
         test.setUrl('/regression_tree_data_grid_view_online_10.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
 				this.input = find('[sbisname="TextBox 1"] input');
@@ -206,7 +206,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
         test.setUrl('/regression_tree_data_grid_view_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
 				this.input = find('[sbisname="TextBox 1"] input');
@@ -224,7 +224,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
         test.setUrl('/regression_tree_data_grid_view_online_4.html').skip('chrome').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.data2 = find('[data-id="2"]');
 				this.data4_expand = find('[data-id="4"] .controls-TreeView__expand');
@@ -242,7 +242,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
         test.setUrl('/regression_tree_data_grid_view_online_5.html').skip('chrome').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.data2 = find('[data-id="4"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -259,7 +259,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
         test.setUrl('/regression_tree_data_grid_view_online_7.html').skip('chrome').setCaptureElements('html')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGrid 1"]', 40000);
                 this.data2 = find('[data-id="2"]');
 				this.data6 = find('[data-id="6"] .controls-ListView__itemCheckBox');
@@ -316,7 +316,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
         test.setUrl('/regression_tree_data_grid_view_online_8.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.data2 = find('[data-id="2"]');
 				this.data4_expand = find('[data-id="4"] .controls-TreeView__expand');
@@ -338,7 +338,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
         test.setUrl('/regression_tree_data_grid_view_online_12.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
 				this.data4_expand = '[data-id="4"] .controls-TreeView__expand';
 				this.data4 = '[data-id="4"]';
@@ -368,7 +368,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
         test.setUrl('/regression_tree_data_grid_view_online_13.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
 				this.input = find('[sbisname="TextBox 1"] input');
@@ -383,7 +383,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
         test.setUrl('/regression_tree_data_grid_view_online_14.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
 				this.input = find('[sbisname="TextBox 1"] input');
@@ -398,7 +398,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
         test.setUrl('/regression_tree_data_grid_view_online_4.html').skip('chrome').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.data1 = find('[data-id="1"]');
 				this.data1_box = find('[data-id="1"] .controls-ListView__itemCheckBox');
@@ -422,7 +422,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
         test.setUrl('/regression_tree_data_grid_view_online_15.html').skip('chrome').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
 				this.input = find('[sbisname="TextBox 1"] input');
@@ -437,7 +437,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
         test.setUrl('/regression_tree_data_grid_view_online_19.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.data1 = find('[data-id="1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -454,7 +454,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
         test.setUrl('/regression_tree_data_grid_view_online_18.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="ТипНоменклатуры"]', 40000);
                 this.data1 = find('[data-id="1"]');
 				this.data1_expand = find('[data-id="0"] .controls-TreeView__expand');

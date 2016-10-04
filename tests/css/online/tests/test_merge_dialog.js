@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.MergeDialogs Online', function () {
 
         test.setUrl('/regression_merge_dialog_online.html').setCaptureElements('html')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="browserView"]', 40000);
                 this.open_button = find('.controls-OperationsPanelButton__icon');
 				actions.click(this.open_button);
@@ -41,7 +41,7 @@ gemini.suite('SBIS3.CONTROLS.MergeDialogs Online', function () {
 
         test.setUrl('/regression_merge_dialog_online_2.html').setCaptureElements('html')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="browserView"]', 40000);
                 this.open_button = find('.controls-OperationsPanelButton__icon');
 				actions.click(this.open_button);

@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TreeCompositeView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -52,7 +52,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_17.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TreeCompositeView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -100,7 +100,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TreeCompositeView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -134,7 +134,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TreeCompositeView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -168,7 +168,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="CompositeView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -202,7 +202,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_18.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="CompositeView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -236,7 +236,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_5.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="CompositeView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -270,7 +270,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_6.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="CompositeView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -304,7 +304,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_7.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="DataGridView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -338,7 +338,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_24.html').setCaptureElements('html')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="DataGridView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -375,7 +375,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_21.html').skip('chrome').setCaptureElements('html')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="DataGrid 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')				
@@ -399,7 +399,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_19.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="DataGridView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -433,7 +433,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_8.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TreeDataGridView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -481,7 +481,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_25.html').setCaptureElements('html')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TreeDataGridView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -532,7 +532,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_23.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="browserView"]', 40000);
                 actions.waitForElementToShow('[data-id="5"]', 1000);
 				this.item_5 = find('[data-id="5"]')
@@ -580,7 +580,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_22.html').skip('chrome').setCaptureElements('html')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TreeDataGrid 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -621,7 +621,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_20.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TreeDataGridView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -669,7 +669,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_9.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TreeCompositeView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -678,7 +678,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				this.item_12 = find('[data-id="12"]')				
             })
 
-			.capture('with_read_item', function (actions, find) {
+			.capture('with_read_item', function (actions) {
 				actions.mouseMove(this.item_3);
 				actions.waitForElementToShow('.controls-ItemActions .controls-ItemActions__menu-button', 1000);
 				this.menu_button = find('.controls-ItemActions .controls-ItemActions__menu-button');
@@ -688,7 +688,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_12);
             })
 			
-			.capture('without_read_item', function (actions, find) {
+			.capture('without_read_item', function (actions) {
 				actions.waitForElementToShow('.controls-PopupMixin__closeButton', 1000);
 				this.close_button = find('.controls-PopupMixin__closeButton');
 				actions.click(this.close_button);
@@ -701,7 +701,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_12);
             })
 			
-			.capture('with_read_item_again', function (actions, find) {
+			.capture('with_read_item_again', function (actions) {
 				actions.waitForElementToShow('.controls-PopupMixin__closeButton', 1000);
 				this.close_button = find('.controls-PopupMixin__closeButton');
 				actions.click(this.close_button);
@@ -719,7 +719,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_10.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TreeCompositeView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -728,7 +728,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				this.item_12 = find('[data-id="12"]')				
             })
 
-			.capture('with_read_item', function (actions, find) {
+			.capture('with_read_item', function (actions) {
 				actions.mouseMove(this.item_3);
 				actions.waitForElementToShow('.controls-ItemActions .controls-ItemActions__menu-button', 1000);
 				this.menu_button = find('.controls-ItemActions .controls-ItemActions__menu-button');
@@ -738,7 +738,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_12);
             })
 			
-			.capture('without_read_item', function (actions, find) {
+			.capture('without_read_item', function (actions) {
 				actions.waitForElementToShow('.controls-PopupMixin__closeButton', 1000);
 				this.close_button = find('.controls-PopupMixin__closeButton');
 				actions.click(this.close_button);
@@ -751,7 +751,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_12);
             })
 			
-			.capture('with_read_item_again', function (actions, find) {
+			.capture('with_read_item_again', function (actions) {
 				actions.waitForElementToShow('.controls-PopupMixin__closeButton', 1000);
 				this.close_button = find('.controls-PopupMixin__closeButton');
 				actions.click(this.close_button);
@@ -769,7 +769,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_11.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TreeCompositeView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -778,7 +778,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				this.item_12 = find('[data-id="12"]')				
             })
 
-			.capture('with_read_item', function (actions, find) {
+			.capture('with_read_item', function (actions) {
 				actions.mouseMove(this.item_3);
 				actions.waitForElementToShow('.controls-ItemActions .controls-ItemActions__menu-button', 1000);
 				this.menu_button = find('.controls-ItemActions .controls-ItemActions__menu-button');
@@ -788,7 +788,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_12);
             })
 			
-			.capture('without_read_item', function (actions, find) {
+			.capture('without_read_item', function (actions) {
 				actions.waitForElementToShow('.controls-PopupMixin__closeButton', 1000);
 				this.close_button = find('.controls-PopupMixin__closeButton');
 				actions.click(this.close_button);
@@ -801,7 +801,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_12);
             })
 			
-			.capture('with_read_item_again', function (actions, find) {
+			.capture('with_read_item_again', function (actions) {
 				actions.waitForElementToShow('.controls-PopupMixin__closeButton', 1000);
 				this.close_button = find('.controls-PopupMixin__closeButton');
 				actions.click(this.close_button);
@@ -819,7 +819,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_12.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="CompositeView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -828,7 +828,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				this.item_12 = find('[data-id="12"]')
 			})
 
-			.capture('with_read_item', function (actions, find) {
+			.capture('with_read_item', function (actions) {
 				actions.mouseMove(this.item_3);
 				actions.waitForElementToShow('.controls-ItemActions .controls-ItemActions__menu-button', 1000);
 				this.menu_button = find('.controls-ItemActions .controls-ItemActions__menu-button');
@@ -838,7 +838,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_12);
             })
 			
-			.capture('without_read_item', function (actions, find) {
+			.capture('without_read_item', function (actions) {
 				actions.waitForElementToShow('.controls-PopupMixin__closeButton', 1000);
 				this.close_button = find('.controls-PopupMixin__closeButton');
 				actions.click(this.close_button);
@@ -851,7 +851,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_12);
             })
 			
-			.capture('with_read_item_again', function (actions, find) {
+			.capture('with_read_item_again', function (actions) {
 				actions.waitForElementToShow('.controls-PopupMixin__closeButton', 1000);
 				this.close_button = find('.controls-PopupMixin__closeButton');
 				actions.click(this.close_button);
@@ -869,7 +869,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_13.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="CompositeView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -878,7 +878,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				this.item_12 = find('[data-id="12"]')
             })
 
-			.capture('with_read_item', function (actions, find) {
+			.capture('with_read_item', function (actions) {
 				actions.mouseMove(this.item_3);
 				actions.waitForElementToShow('.controls-ItemActions .controls-ItemActions__menu-button', 1000);
 				this.menu_button = find('.controls-ItemActions .controls-ItemActions__menu-button');
@@ -888,7 +888,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_12);
             })
 			
-			.capture('without_read_item', function (actions, find) {
+			.capture('without_read_item', function (actions) {
 				actions.waitForElementToShow('.controls-PopupMixin__closeButton', 1000);
 				this.close_button = find('.controls-PopupMixin__closeButton');
 				actions.click(this.close_button);
@@ -901,7 +901,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_12);
             })
 			
-			.capture('with_read_item_again', function (actions, find) {
+			.capture('with_read_item_again', function (actions) {
 				actions.waitForElementToShow('.controls-PopupMixin__closeButton', 1000);
 				this.close_button = find('.controls-PopupMixin__closeButton');
 				actions.click(this.close_button);
@@ -919,7 +919,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_14.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="CompositeView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -928,7 +928,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				this.item_12 = find('[data-id="12"]')						
             })
 
-			.capture('with_read_item', function (actions, find) {
+			.capture('with_read_item', function (actions) {
 				actions.mouseMove(this.item_3);
 				actions.waitForElementToShow('.controls-ItemActions .controls-ItemActions__menu-button', 1000);
 				this.menu_button = find('.controls-ItemActions .controls-ItemActions__menu-button');
@@ -938,7 +938,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_12);
             })
 			
-			.capture('without_read_item', function (actions, find) {
+			.capture('without_read_item', function (actions) {
 				actions.waitForElementToShow('.controls-PopupMixin__closeButton', 1000);
 				this.close_button = find('.controls-PopupMixin__closeButton');
 				actions.click(this.close_button);
@@ -951,7 +951,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_12);
             })
 			
-			.capture('with_read_item_again', function (actions, find) {
+			.capture('with_read_item_again', function (actions) {
 				actions.waitForElementToShow('.controls-PopupMixin__closeButton', 1000);
 				this.close_button = find('.controls-PopupMixin__closeButton');
 				actions.click(this.close_button);
@@ -969,7 +969,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_15.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="DataGridView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -978,7 +978,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				this.item_12 = find('[data-id="12"]')	
             })
 
-			.capture('with_read_item', function (actions, find) {
+			.capture('with_read_item', function (actions) {
 				actions.mouseMove(this.item_3);
 				actions.waitForElementToShow('.controls-ItemActions .controls-ItemActions__menu-button', 1000);
 				this.menu_button = find('.controls-ItemActions .controls-ItemActions__menu-button');
@@ -988,7 +988,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_12);
             })
 			
-			.capture('without_read_item', function (actions, find) {
+			.capture('without_read_item', function (actions) {
 				actions.waitForElementToShow('.controls-PopupMixin__closeButton', 1000);
 				this.close_button = find('.controls-PopupMixin__closeButton');
 				actions.click(this.close_button);
@@ -1001,7 +1001,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_12);
             })
 			
-			.capture('with_read_item_again', function (actions, find) {
+			.capture('with_read_item_again', function (actions) {
 				actions.waitForElementToShow('.controls-PopupMixin__closeButton', 1000);
 				this.close_button = find('.controls-PopupMixin__closeButton');
 				actions.click(this.close_button);
@@ -1019,7 +1019,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_16.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TreeDataGridView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')
@@ -1028,7 +1028,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				this.item_12 = find('[data-id="12"]')				
             })
 
-			.capture('with_read_item', function (actions, find) {
+			.capture('with_read_item', function (actions) {
 				actions.mouseMove(this.item_3);
 				actions.waitForElementToShow('.controls-ItemActions .controls-ItemActions__menu-button', 1000);
 				this.menu_button = find('.controls-ItemActions .controls-ItemActions__menu-button');
@@ -1038,7 +1038,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_12);
             })
 			
-			.capture('without_read_item', function (actions, find) {
+			.capture('without_read_item', function (actions) {
 				actions.waitForElementToShow('.controls-PopupMixin__closeButton', 1000);
 				this.close_button = find('.controls-PopupMixin__closeButton');
 				actions.click(this.close_button);
@@ -1051,7 +1051,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_12);
             })
 			
-			.capture('with_read_item_again', function (actions, find) {
+			.capture('with_read_item_again', function (actions) {
 				actions.waitForElementToShow('.controls-PopupMixin__closeButton', 1000);
 				this.close_button = find('.controls-PopupMixin__closeButton');
 				actions.click(this.close_button);
@@ -1069,7 +1069,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_26.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TreeDataGridView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
                 this.data3 = find('[data-id="3"]')				
@@ -1088,7 +1088,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 
         test.setUrl('/regression_items_action_online_27.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TreeDataGridView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="3"]', 1000);
 				this.item_3 = find('[data-id="3"]')

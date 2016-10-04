@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.OperationsPanel Online', function () {
 
         test.setUrl('/regression_operations_panel_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="DataGridView 1"]', 40000);
                 this.open_button = find('.controls-OperationsPanelButton__icon');
                 this.select_all = find('.controls-OperationsMark-checkBox > .controls-CheckBox__icon')

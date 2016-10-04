@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 
         test.setUrl('/regression_bread_crumbs_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.item4 = find('[data-id="4"]');
                 this.item13 = find('[data-id="13"]');
@@ -29,7 +29,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 
         test.setUrl('/regression_bread_crumbs_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.item4 = find('[data-id="4"]');
                 this.item13 = find('[data-id="13"]');
@@ -64,7 +64,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 
         test.setUrl('/regression_bread_crumbs_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 actions.waitForElementToShow('[data-id="4"]', 2000);
             })
@@ -76,7 +76,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 
         test.setUrl('/regression_bread_crumbs_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.item4 = find('[data-id="4"]');
                 this.item13 = find('[data-id="13"]');
@@ -101,7 +101,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 
         test.setUrl('/regression_bread_crumbs_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.item4 = find('[data-id="4"]');
                 this.item13 = find('[data-id="13"]');
@@ -129,7 +129,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 
         test.setUrl('/regression_engine_browser_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="browserView"]', 40000);
                 this.view = find('[sbisname="browserView"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -148,7 +148,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 				actions.waitForElementToShow('[sbisname="BackButton-caption"]', 1000);
             })
 			
-			.capture('opened_dots', function (actions, find) {
+			.capture('opened_dots', function (actions) {
                 this.dots = find('.controls-BreadCrumbs__dots');
 				actions.click(this.dots);
 				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(1)', 1000);
@@ -162,7 +162,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 
         test.setUrl('/regression_engine_browser_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="browserView"]', 40000);
                 this.view = find('[sbisname="browserView"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -181,7 +181,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 				actions.waitForElementToShow('[sbisname="BackButton-caption"]', 1000);
             })
 			
-			.capture('opened_dots', function (actions, find) {
+			.capture('opened_dots', function (actions) {
                 this.dots = find('.controls-BreadCrumbs__dots');
 				actions.click(this.dots);
 				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(1)', 1000);
@@ -195,7 +195,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 
         test.setUrl('/regression_engine_browser_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="browserView"]', 40000);
                 this.view = find('[sbisname="browserView"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -214,7 +214,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 				actions.waitForElementToShow('[sbisname="BackButton-caption"]', 1000);
             })
 			
-			.capture('opened_dots', function (actions, find) {
+			.capture('opened_dots', function (actions) {
                 this.dots = find('.controls-BreadCrumbs__dots');
 				actions.click(this.dots);
 				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(1)', 1000);
@@ -228,7 +228,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 
         test.setUrl('/regression_engine_browser_online_5.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="browserView"]', 40000);
                 this.view = find('[sbisname="browserView"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -247,7 +247,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 				actions.waitForElementToShow('[sbisname="BackButton-caption"]', 1000);
             })
 			
-			.capture('opened_dots', function (actions, find) {
+			.capture('opened_dots', function (actions) {
                 this.dots = find('.controls-BreadCrumbs__dots');
 				actions.click(this.dots);
 				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(1)', 1000);
@@ -261,7 +261,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 
         test.setUrl('/regression_engine_browser_online_6.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="browserView"]', 40000);
                 this.view = find('[sbisname="browserView"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -280,7 +280,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 				actions.waitForElementToShow('[sbisname="BackButton-caption"]', 1000);
             })
 			
-			.capture('opened_dots', function (actions, find) {
+			.capture('opened_dots', function (actions) {
                 this.dots = find('.controls-BreadCrumbs__dots');
 				actions.click(this.dots);
 				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(1)', 1000);
@@ -294,7 +294,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 
         test.setUrl('/regression_engine_browser_online_7.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="browserView"]', 40000);
                 this.view = find('[sbisname="browserView"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -313,7 +313,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 				actions.waitForElementToShow('[sbisname="BackButton-caption"]', 1000);
             })
 			
-			.capture('opened_dots', function (actions, find) {
+			.capture('opened_dots', function (actions) {
                 this.dots = find('.controls-BreadCrumbs__dots');
 				actions.click(this.dots);
 				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(1)', 1000);
@@ -327,7 +327,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 
         test.setUrl('/regression_engine_browser_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="browserView"]', 40000);
                 this.view = find('[sbisname="browserView"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -349,7 +349,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 				actions.wait(500);
             })
 
-			.capture('into_folder', function (actions, find) {
+			.capture('into_folder', function (actions) {
                 actions.click(this.data5);
 				actions.wait(500);
             })
@@ -359,7 +359,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 
         test.setUrl('/regression_engine_browser_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="browserView"]', 40000);
                 this.view = find('[sbisname="browserView"]');
                 this.data2 = find('[data-id="2"]');
@@ -384,7 +384,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 
         test.setUrl('/regression_engine_browser_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="browserView"]', 40000);
                 this.view = find('[sbisname="browserView"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);

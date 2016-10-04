@@ -6,7 +6,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
         test.setUrl('/IntRichFieldEditor2.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
 				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__editorFrame');
 				this.input2 = find('[sbisname="FieldRichEditor 2"] .controls-RichEditor__editorFrame');
@@ -106,7 +106,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
         test.setUrl('/IntRichFieldEditor2.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
 				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__editorFrame');
 				this.input2 = find('[sbisname="FieldRichEditor 2"] .controls-RichEditor__editorFrame');
@@ -321,7 +321,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
         test.setUrl('/IntRichFieldEditor14.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
 				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__editorFrame');
 				actions.wait(500);				
@@ -360,7 +360,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
         test.setUrl('/IntRichFieldEditor2.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
 				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__editorFrame');
 				actions.wait(500);				
@@ -389,7 +389,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
         test.setUrl('/IntRichFieldEditor8.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
 				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__editorFrame');
 				actions.wait(500);				
@@ -402,7 +402,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
         test.setUrl('/IntRichFieldEditor9.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
 				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__editorFrame');
 				actions.wait(500);
@@ -418,7 +418,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
         test.setUrl('/IntRichFieldEditor12.html').setCaptureElements('html')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
 				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__editorFrame');
 				this.image = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__editorFrame img');
@@ -457,7 +457,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
         test.setUrl('/IntRichFieldEditor11.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
 				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__editorFrame');
 				actions.wait(2000);				
@@ -480,7 +480,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
         test.setUrl('/IntRichFieldEditor10.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
 				actions.wait(2000);				
             })
@@ -499,7 +499,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
         test.setUrl('/IntRichFieldEditor.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
 				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__editorFrame');
 				this.toolbar = find('.controls-RichEditorToolbar__toggleButton');
@@ -520,7 +520,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
         test.setUrl('/IntRichFieldEditor.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
 				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__editorFrame');
 				this.toolbar = find('.controls-RichEditorToolbar__toggleButton');
@@ -557,7 +557,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
         test.setUrl('/IntRichFieldEditor13.html').setCaptureElements('html')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
 				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__editorFrame');
 				this.image = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__editorFrame img');
@@ -577,7 +577,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
         test.setUrl('/IntRichFieldEditor15.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
 				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__editorFrame');
 				this.textColor = find('[sbisname="FieldRichEditor 1"] [sbisname="color"]')
@@ -691,7 +691,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
         test.setUrl('/IntRichFieldEditor16.html').setCaptureElements('html')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
 				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__editorFrame');
 				this.input2 = find('[sbisname="FieldRichEditor 2"] .controls-RichEditor__editorFrame');
@@ -728,7 +728,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
         test.setUrl('/IntRichFieldEditor19.html').setCaptureElements('html')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
 				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__editorFrame');
 				actions.waitForElementToShow('[sbisname="smile"]', 40000);

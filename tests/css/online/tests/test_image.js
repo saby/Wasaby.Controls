@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.Image Online', function () {
 
         test.setUrl('/regression_image_online.html').setCaptureElements('[sbisname="Image 1"]')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="Image 1"]', 40000);
                 this.image = find('[name="Image 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -29,7 +29,7 @@ gemini.suite('SBIS3.CONTROLS.Image Online', function () {
 
         test.setUrl('/regression_image_online_2.html').setCaptureElements('html')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="Image 1"]', 40000);
                 this.image = find('[name="Image 1"] .controls-image__image');
 				this.edit = find('.controls-image__image-bar .icon-Edit');
@@ -64,7 +64,7 @@ gemini.suite('SBIS3.CONTROLS.Image Online', function () {
 
         test.setUrl('/regression_image_online_3.html').setCaptureElements('[sbisname="Image 1"]')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="Image 1"]', 40000);
                 this.image = find('[name="Image 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);

@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.EditAtPlace Online', function () {
 
         test.setUrl('/regression_edit_at_place_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="poop"]', 40000);
                 this.item1 = find('[sbisname="ololo2"]');
 				this.item2 = find('[sbisname="ololo3"]');
@@ -27,7 +27,7 @@ gemini.suite('SBIS3.CONTROLS.EditAtPlace Online', function () {
 
         test.setUrl('/regression_edit_at_place_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="poop"]', 40000);
                 this.item1 = find('[sbisname="ololo2"]');
 				this.item2 = find('[sbisname="ololo3"]');
@@ -57,7 +57,7 @@ gemini.suite('SBIS3.CONTROLS.EditAtPlace Online', function () {
 
         test.setUrl('/regression_edit_at_place_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="poop"]', 40000);
                 this.item1 = find('[sbisname="ololo2"]');
 				this.item2 = find('[sbisname="ololo3"]');
@@ -80,7 +80,7 @@ gemini.suite('SBIS3.CONTROLS.EditAtPlace Online', function () {
 
         test.setUrl('/regression_edit_at_place_online_4.html').setTolerance(250).setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TabControl"]', 40000);
 				this.fam = find('.controls-TabButtons__leftContainer [sbisname="fam"]');
 				this.name_inp = find('[sbisname="EditName"] input');
@@ -119,7 +119,7 @@ gemini.suite('SBIS3.CONTROLS.EditAtPlace Online', function () {
 
         test.setUrl('/regression_edit_at_place_online_5.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="TabControl"]', 40000);
 				this.fam = find('.controls-TabButtons__leftContainer [sbisname="fam"]');
 				this.name_inp = find('[sbisname="EditName"] input');

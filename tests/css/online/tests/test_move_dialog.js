@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.MoveDialog Online', function () {
 
         test.setUrl('/regression_move_dialog_online.html').setCaptureElements('body')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.open_button = find('.controls-OperationsPanelButton__icon');
                 this.item1 = find('[data-id="1"] .controls-ListView__itemCheckBox');
@@ -24,7 +24,7 @@ gemini.suite('SBIS3.CONTROLS.MoveDialog Online', function () {
 
         test.setUrl('/regression_move_dialog_online_2.html').setCaptureElements('body')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.open_button = find('.controls-OperationsPanelButton__icon');
                 this.item1 = find('[data-id="1"] .controls-ListView__itemCheckBox');
@@ -44,7 +44,7 @@ gemini.suite('SBIS3.CONTROLS.MoveDialog Online', function () {
 
         test.setUrl('/regression_move_dialog_online_3.html').setCaptureElements('body')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
                 this.open_button = find('.controls-OperationsPanelButton__icon');
                 this.item1 = find('[data-id="1"] .controls-ListView__itemCheckBox');

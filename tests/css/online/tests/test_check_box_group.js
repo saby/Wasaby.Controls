@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.CheckBoxGroup Online', function () {
 
         test.setUrl('/regression_check_box_group_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 
 				this.cbg = '[name="CheckBoxGroup 1"]';
 				this.input = '[sbisname="TextBox 1"] input';
@@ -22,7 +22,7 @@ gemini.suite('SBIS3.CONTROLS.CheckBoxGroup Online', function () {
 
         test.setUrl('/regression_check_box_group_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 
 				this.cbg = '[name="CheckBoxGroup 1"]';
 				this.input = '[sbisname="TextBox 1"] input';

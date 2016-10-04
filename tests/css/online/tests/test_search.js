@@ -6,7 +6,7 @@ gemini.suite('SBIS3.CONTROLS.Search Online', function () {
 
         test.setUrl('/regression_search_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGrid 1"]', 40000);
                 this.data = find('[name="TreeDataGrid 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -48,7 +48,7 @@ gemini.suite('SBIS3.CONTROLS.Search Online', function () {
 
         test.setUrl('/regression_search_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="TreeDataGrid 1"]', 40000);
                 this.data = find('[name="TreeDataGrid 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);

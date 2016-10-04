@@ -6,7 +6,7 @@ gemini.suite('SBIS3.CONTROLS.PasswordTextBox Online', function () {
 
         test.setUrl('/regression_password_text_box_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="PasswordTextBox 1"]', 40000);
                 this.input = find('[name="PasswordTextBox 1"] .controls-TextBox__field');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -34,7 +34,7 @@ gemini.suite('SBIS3.CONTROLS.PasswordTextBox Online', function () {
 
         test.setUrl('/regression_password_text_box_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="PasswordTextBox 1"]', 40000);
                 actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.focus_input = find('[sbisname="TextBox 1"] input');

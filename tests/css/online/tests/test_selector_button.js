@@ -6,7 +6,7 @@ gemini.suite('SBIS3.CONTROLS.SelectorButton Online', function () {
 
         test.setUrl('/regression_selector_button_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="SelectorButton 1"]', 40000);
                 this.button = find('[sbisname="SelectorButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 4356"]', 40000);
@@ -47,7 +47,7 @@ gemini.suite('SBIS3.CONTROLS.SelectorButton Online', function () {
 
         test.setUrl('/regression_selector_button_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="SelectorButton 1"]', 40000);
                 this.button = find('[sbisname="SelectorButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 4356"]', 40000);
@@ -82,7 +82,7 @@ gemini.suite('SBIS3.CONTROLS.SelectorButton Online', function () {
 
         test.setUrl('/regression_selector_button_online_3.html').skip('chrome').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="SelectorButton 1"]', 40000);
                 this.button = find('[sbisname="SelectorButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 4356"]', 40000);

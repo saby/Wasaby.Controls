@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Online', function () {
 
         test.setUrl('/regression_fast_data_filter_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FastDataFilter"]', 40000);
                 this.title = find('[sbisname="FastDataFilter"] .controls-DropdownList__text');
                 this.item2 = find('.controls-DropdownList__item[data-id="2"]');
@@ -41,7 +41,7 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Online', function () {
 
         test.setUrl('/regression_fast_data_filter_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FastDataFilter"]', 40000);
                 this.title = find('[sbisname="FastDataFilter"] .controls-DropdownList__text');
                 this.item2 = find('.controls-DropdownList__item[data-id="2"]');
@@ -86,7 +86,7 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Online', function () {
 
         test.setUrl('/regression_fast_data_filter_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FastDataFilter"]', 40000);
                 this.box = find('[sbisname="TextBox 1"] input');
                 this.first_title = find('[sbisname="FastDataFilter"] [data-id="first"] .controls-DropdownList__text');

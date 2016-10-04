@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.Link Online', function () {
 
         test.setUrl('/regression_link_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="Link 1"]', 40000);
                 this.link = find('[name="Link 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -32,7 +32,7 @@ gemini.suite('SBIS3.CONTROLS.Link Online', function () {
 
         test.setUrl('/regression_link_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="Link 1"]', 40000);
                 this.link = find('[name="Link 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -53,7 +53,7 @@ gemini.suite('SBIS3.CONTROLS.Link Online', function () {
 
         test.setUrl('/regression_link_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="Link 1"]', 40000);
                 this.link = find('[name="Link 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -81,7 +81,7 @@ gemini.suite('SBIS3.CONTROLS.Link Online', function () {
 
         test.setUrl('/regression_link_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="Link 1"]', 40000);
                 this.link = find('[name="Link 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -102,7 +102,7 @@ gemini.suite('SBIS3.CONTROLS.Link Online', function () {
 
         test.setUrl('/regression_link_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="Link 1"]', 40000);
                 this.link = find('[name="Link 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -130,7 +130,7 @@ gemini.suite('SBIS3.CONTROLS.Link Online', function () {
 
         test.setUrl('/regression_link_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="Link 1"]', 40000);
                 this.link = find('[name="Link 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -151,7 +151,7 @@ gemini.suite('SBIS3.CONTROLS.Link Online', function () {
 
         test.setUrl('/regression_link_online_3.html').setCaptureElements('[name="Link 1"]')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="Link 1"]', 40000);
                 this.link = find('[name="Link 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -179,7 +179,7 @@ gemini.suite('SBIS3.CONTROLS.Link Online', function () {
 
         test.setUrl('/regression_link_online_3.html').setCaptureElements('[name="Link 1"]')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="Link 1"]', 40000);
                 this.link = find('[name="Link 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);

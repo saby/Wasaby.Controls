@@ -6,7 +6,7 @@ gemini.suite('SBIS3.CONTROLS.RadioGroup Online', function () {
 
         test.setUrl('/regression_radio_group_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="RadioGroup 1"]', 40000);
                 this.radio_1 = find('[data-id="1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -31,7 +31,7 @@ gemini.suite('SBIS3.CONTROLS.RadioGroup Online', function () {
 
         test.setUrl('/regression_radio_group_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="RadioGroup 1"]', 40000);
                 this.radio_1 = find('[data-id="1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -56,7 +56,7 @@ gemini.suite('SBIS3.CONTROLS.RadioGroup Online', function () {
 
         test.setUrl('/regression_radio_group_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="RadioGroup 1"]', 40000);
                 this.radio_1 = find('[data-id="1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -90,7 +90,7 @@ gemini.suite('SBIS3.CONTROLS.RadioGroup Online', function () {
 
         test.setUrl('/regression_radio_group_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="RadioGroup 1"]', 40000);
                 this.radio_1 = find('[data-id="1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -115,7 +115,7 @@ gemini.suite('SBIS3.CONTROLS.RadioGroup Online', function () {
 
         test.setUrl('/regression_radio_group_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="RadioGroup 1"]', 40000);
                 this.radio_1 = find('[data-id="1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);

@@ -4,7 +4,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 
         test.setUrl('/regression_engine_browser_online.html').skip('chrome').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="browserView"]', 40000);
                 this.view = find('[name="browserView"]');
 				actions.waitForElementToShow('[name="browserSearch"]', 40000);
@@ -31,7 +31,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 				actions.waitForElementToShow('[name="BackButton-caption"]', 1000);
             })
 			
-			.capture('opened_dots', function (actions, find) {
+			.capture('opened_dots', function (actions) {
                 this.dots = find('.controls-BreadCrumbs__dots');
 				actions.click(this.dots);
 				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(1)', 1000);
@@ -40,7 +40,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(3) .controls-BreadCrumbs__hierWrapper:nth-child(2)', 1000);
             })
 
-            .capture('opened_fast_filter', function (actions, find) {
+            .capture('opened_fast_filter', function (actions) {
 				this.dots = find('.controls-BreadCrumbs__dots');
 				actions.click(this.dots);
 				actions.mouseMove(this.fast_filter);
@@ -48,7 +48,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 				actions.waitForElementToShow('.controls-DropdownList__item[data-id="20"]', 1000);
             })
 			
-			.capture('opened_filter', function (actions, find) {
+			.capture('opened_filter', function (actions) {
                 this.item1 = find('.controls-DropdownList__item[data-id="34"]');
 				actions.click(this.item1)
 				actions.click(this.filter)
@@ -58,13 +58,13 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 				actions.mouseMove(this.input);
             })
 			
-			.capture('opened_combobox_in_filter', function (actions, find) {
+			.capture('opened_combobox_in_filter', function (actions) {
                 this.arrow = find('.controls-ComboBox__arrowDown');
 				actions.click(this.arrow)
 				actions.mouseMove(this.input);
             })
 			
-			.capture('filtred', function (actions, find) {
+			.capture('filtred', function (actions) {
                 actions.waitForElementToShow('.controls-ComboBox__itemRow[data-id="1"]', 1000);
 				actions.waitForElementToShow('.controls-ComboBox__itemRow[data-id="2"]', 1000);
 				this.no_nds = find('.controls-ComboBox__itemRow[data-id="1"]');
@@ -80,18 +80,18 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 				actions.mouseMove(this.input);
             })
 			
-			.capture('selected_items', function (actions, find) {
+			.capture('selected_items', function (actions) {
 				this.box = find('.controls-OperationsMark-checkBox');
 				actions.click(this.box)
 				actions.mouseMove(this.input);
             })
 			
-			.capture('with_search_string', function (actions, find) {
+			.capture('with_search_string', function (actions) {
 				actions.sendKeys(this.search_input, 'за')
 				actions.click(this.input);
             })
 			
-			.capture('disabled_and_clicked_check_box', function (actions, find) {
+			.capture('disabled_and_clicked_check_box', function (actions) {
 				this.box = find('.controls-OperationsMark-checkBox');
 				actions.click(this.box)
 				actions.executeJS(function (window) {
@@ -106,7 +106,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 
         test.setUrl('/regression_browser_online.html').skip('firefox').setCaptureElements('html')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="browserView"]', 40000);
                 this.view = find('[name="browserView"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
@@ -114,7 +114,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 				actions.wait(10000);				
             })
 			
-			.capture('plain', function (actions, find) {
+			.capture('plain', function (actions) {
 				actions.click(this.input);
 				this.dialogs = find('[name="Диалоги"] .controls-Button__text')
 				actions.click(this.dialogs);
@@ -128,7 +128,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 
         test.setUrl('/regression_engine_browser_online_8.html').skip('chrome').setCaptureElements('.controls-Browser__table-fullFilterBlock')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="browserView"]', 40000);
                 this.view = find('[name="browserView"]');
 				actions.waitForElementToShow('[name="browserSearch"]', 40000);
@@ -160,7 +160,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 
         test.setUrl('/regression_engine_browser_online_8.html').setCaptureElements('html')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="browserView"]', 40000);
                 this.view = find('[name="browserView"]');
 				actions.waitForElementToShow('[name="browserSearch"]', 40000);
@@ -177,7 +177,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 				this.data4 = find('[data-id="31"]');
             })
 
-            .capture('first_level', function (actions, find) {
+            .capture('first_level', function (actions) {
                 actions.click(this.data2);
 				actions.mouseMove('.controls-BackButton__caption');
             })

@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.FormattedTextBox Online', function () {
 
         test.setUrl('/regression_formatted_text_box_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="FormattedTextBox 1"]', 40000);
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[sbisname="TextBox 1"] input');
@@ -46,7 +46,7 @@ gemini.suite('SBIS3.CONTROLS.FormattedTextBox Online', function () {
 
         test.setUrl('/regression_formatted_text_box_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="FormattedTextBox 1"]', 40000);
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[sbisname="TextBox 1"] input');
@@ -62,7 +62,7 @@ gemini.suite('SBIS3.CONTROLS.FormattedTextBox Online', function () {
 
         test.setUrl('/regression_formatted_text_box_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="FormattedTextBox 1"]', 40000);
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[sbisname="TextBox 1"] input');
@@ -80,7 +80,7 @@ gemini.suite('SBIS3.CONTROLS.FormattedTextBox Online', function () {
 
         test.setUrl('/regression_formatted_text_box_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[name="FormattedTextBox 1"]', 40000);
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[sbisname="TextBox 1"] input');

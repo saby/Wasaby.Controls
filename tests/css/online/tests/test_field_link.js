@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
 
         test.setUrl('/regression_field_link_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldLinkSingleSelect"]', 40000);
                 this.input = find('.controls-TextBox__field');
                 this.open_menu = find('[sbisname="fieldLinkMenu"]');
@@ -47,7 +47,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
 
         test.setUrl('/regression_field_link_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldLinkMultiSelect"]', 40000);
                 this.input = find('.controls-TextBox__field');
                 this.open_menu = find('[sbisname="fieldLinkMenu"]');
@@ -95,7 +95,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
 
         test.setUrl('/regression_field_link_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldLinkSingleSelect"]', 40000);
                 this.input = find('.controls-TextBox__field');
                 this.open_menu = find('[sbisname="fieldLinkMenu"]');
@@ -131,7 +131,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
 
         test.setUrl('/regression_field_link_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldLinkSingleSelect"]', 40000);
                 this.input = find('.controls-TextBox__field');
                 this.open_menu = find('[sbisname="fieldLinkMenu"]');
@@ -167,7 +167,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
 
         test.setUrl('/regression_field_link_online_7.html').skip('chrome').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldLinkMultiSelect"]', 40000);
                 this.input = find('.controls-TextBox__field');
                 this.open_menu = find('[sbisname="fieldLinkMenu"]');
@@ -186,7 +186,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
 
         test.setUrl('/regression_field_link_online_6.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldLinkMultiSelect"]', 40000);
                 this.input = find('.controls-TextBox__field');
                 this.open_menu = find('[sbisname="fieldLinkMenu"]');
@@ -214,7 +214,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
 
         test.setUrl('/regression_field_link_online_6.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldLinkMultiSelect"]', 40000);
                 this.input = find('.controls-TextBox__field');
                 this.open_menu = find('[sbisname="fieldLinkMenu"]');
@@ -251,7 +251,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
 
         test.setUrl('/regression_field_link_online_6.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldLinkMultiSelect"]', 40000);
                 this.input = find('.controls-TextBox__field');
                 this.open_menu = find('[sbisname="fieldLinkMenu"]');
@@ -292,7 +292,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
 
         test.setUrl('/regression_field_link_online_8.html').setCaptureElements('html')
 
-            .before(function (actions, find) {
+            .before(function (actions) {
                 actions.waitForElementToShow('[sbisname="FieldLink 1"]', 40000);
                 this.input = find('[sbisname="FieldLink 1"] .controls-TextBox__field');
             })
