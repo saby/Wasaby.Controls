@@ -2755,7 +2755,6 @@ define('js!SBIS3.CONTROLS.ListView',
             //_findItemByElement, без завязки на _items.
             if (target.length) {
                id = target.data('id');
-               this.setSelectedKey(id);
                var items = this._getDragItems(id),
                   source = [];
                $ws.helpers.forEach(items, function (id) {
