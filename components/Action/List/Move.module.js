@@ -1,9 +1,10 @@
 /*global define, $ws*/
 define('js!SBIS3.CONTROLS.Action.List.Move', [
       'js!SBIS3.CONTROLS.Action.Action',
-      'js!SBIS3.CONTROLS.Action.List.ListMixin'
+      'js!SBIS3.CONTROLS.Action.List.ListMixin',
+      'js!WS.Data/Di'
    ],
-   function (ActionBase, ListMixin) {
+   function (ActionBase, ListMixin, Di) {
       'use strict';
       /**
        * Базовый класс перемещения элементов в списке

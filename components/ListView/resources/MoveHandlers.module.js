@@ -28,18 +28,23 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
       },
       /**
        * Перемещает записи через диалог. По умолчанию берет все выделенные записи.
-       * @param {Array} MovedItems Массив перемещаемых элементов
+       * @param {Array} MovedItems Массив перемещаемых записей
        * @deprecated Используйте SBIS3.CONTROLS.Action.List.InteractiveMove.
        */
-      moveRecordsWithDialog: function(MovedItems) {
+      moveRecordsWithDialog: function(movedItems) {
          var
             action = new InteractiveMove({
                linkedObject: this,
                parentProperty: this._options.hierField,
                moveStrategy: this.getMoveStrategy()
-            });
-
-         action.execute({records: MovedItems});
+            }),
+            items = this.getItems();
+         $ws.helpers.forEach(movedItems, function(item, i) {
+            if (!$ws.helpers.instanceOfModule(item, 'WS.Data/Entity/Record')) {
+               movedItems[i] = items.getRecordById(item);
+            }
+         }, this);
+         action.execute({movedItems: movedItems});
       },
       /**
        * Перемещает переданные записи
@@ -119,7 +124,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
       moveRecordDown: function(tr, id, record) {
          var nextItem = this.getNextItemById(id);
          if(nextItem) {
-            this.getMoveStrategy.reorderMove([record], this.getItems().getRecordById(prevItem.data('id')), true);
+            this.getMoveStrategy().reorderMove([record], this.getItems().getRecordById(nextItem.data('id')), true);
          }
       },
       /**
@@ -132,7 +137,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
       moveRecordUp: function(tr, id, record) {
          var prevItem = this.getPrevItemById(id);
          if(prevItem) {
-            this.getMoveStrategy.reorderMove([record], this.getItems().getRecordById(prevItem.data('id')), false);
+            this.getMoveStrategy().reorderMove([record], this.getItems().getRecordById(prevItem.data('id')), false);
          }
       },
       /**
