@@ -830,7 +830,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
-      _removeItem: function (item) {
+      _removeItem: function (item, groupId) {
          var targetElement = this._getDomElementByItem(item);
          if (targetElement.length) {
             this._clearItems(targetElement);
@@ -838,13 +838,19 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             this._ladderCompare([targetElement.prev(), targetElement.next()]);
 
-            /*TODO Особое поведение при группировке*/
             if (!Object.isEmpty(this._options.groupBy)) {
-               var prev = targetElement.prev();
-               if (prev.length && prev.hasClass('controls-GroupBy')) {
-                  var next = targetElement.next();
-                  if (!next.length || next.hasClass('controls-GroupBy')) {
-                     prev.remove();
+               if (false /*this._options.easyGroup*/ /*TODO косяк Лехи - не присылает группу при удалении*/) {
+                  if (this._getItemsProjection().getGroupItems(groupId).length < 1) {
+                     $('[data-group="' + groupId + '"]', this._container.get(0)).remove();
+                  }
+               }
+               else {
+                  var prev = targetElement.prev();
+                  if (prev.length && prev.hasClass('controls-GroupBy')) {
+                     var next = targetElement.next();
+                     if (!next.length || next.hasClass('controls-GroupBy')) {
+                        prev.remove();
+                     }
                   }
                }
             }
@@ -861,7 +867,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             //и надо ее отрисовать
             itemsToAdd = [];
             if (this._getItemsProjection().getGroupItems(groupId).length <= 1) {
-               this._options._groupItemProcessing(groupId, itemsToAdd, itemsToAdd[0], this._options);
+               this._options._groupItemProcessing(groupId, itemsToAdd, items[0], this._options);
             }
             itemsToAdd.concat(items);
          }
@@ -2103,16 +2109,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             );*/
          }
       },
-      _onCollectionRemove: function(items, notCollapsed) {
+      _onCollectionRemove: function(items, notCollapsed, groupId) {
          var i;
          for (i = 0; i < items.length; i++) {
             this._removeItem(
-               items[i]
+               items[i], groupId
             );
          }
       },
       _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
-         this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);
+         this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE, groupId);
          if (newItems.length) {
             this._addItems(newItems, newItemsIndex, groupId)
          }
