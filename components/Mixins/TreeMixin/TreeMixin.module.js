@@ -148,7 +148,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          restoreFilterAndRunEventRaising.call(this, projection, projectionFilter, false);
       }
 
-      if (cfg.searchRender) {
+      if (cfg.hierarchyViewMode) {
          records = searchProcessing(projection, cfg);
       }
       else {
@@ -740,7 +740,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                return true;
             }
             else {
-               return parentFnc.call(easy);
+               return parentFnc.call(this, easy);
             }
          },
          _canApplyGrouping: function(parentFn, projItem) {
