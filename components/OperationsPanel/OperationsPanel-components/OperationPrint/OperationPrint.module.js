@@ -49,8 +49,8 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
        * @param columns
        * @private
        */
-      _notifyOnApply : function(columns){
-         return this._notify('onApplyOperation', 'print', columns);
+      _notifyOnApply : function(columns, data){
+         return this._notify('onApplyOperation', 'print', columns, data);
       },
       applyOperation: function(cfg){
          var p;
