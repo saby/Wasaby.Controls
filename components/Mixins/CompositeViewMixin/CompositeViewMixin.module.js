@@ -241,6 +241,10 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
 
          //TODO заглушка для CompositeView
          _isSlowDrawing: function(parentFnc) {
+            /*TODO заглушка для режима поиска в группировкой, в 200 выпилится*/
+            if (this._options.hierarchyViewMode) {
+               return false;
+            }
             var flag = parentFnc.call(this);
             if (this._options.viewMode == 'list' || this._options.viewMode == 'tile') {
                flag = true;
