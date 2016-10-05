@@ -404,8 +404,11 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             this.subscribeTo(control, 'onFocusOut', function(e, destroyed, focusedControl) {
                /* Если фокус ушёл на список, или на дочерний контрол списка - возвращаем обратно в поле ввода */
                if(self._list && (self._list === focusedControl || ~Array.indexOf(self._list.getChildControls(), focusedControl))) {
-                  focusedControl.setActive(false, false, false, this);
-                  this.setActive(true);
+                  // todo https://inside.tensor.ru/opendoc.html?guid=dbf8a5ab-9298-48f5-b624-4c2a6a9d379e&description=
+                  // костыль, нужно выпилить как можно скорее. Нужно делать this.setActive(true); после того, как была выбрана запись и отработал click
+                  setTimeout(function() {
+                     this.setActive(true);
+                  }.bind(this), 100);
                }
             });
          }, this);
