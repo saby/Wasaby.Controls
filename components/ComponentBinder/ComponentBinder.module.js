@@ -765,7 +765,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
 
          var pagesCount = this._scrollPages.length;
 
-         if (!this._options.view.getItems().getMetaData().more && pagesCount > 1){
+         if (pagesCount > 1){
             this._options.view.getContainer().css('padding-bottom', '32px');
          }
          if (this._options.paging.getSelectedKey() > pagesCount){
