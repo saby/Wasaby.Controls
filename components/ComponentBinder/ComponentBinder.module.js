@@ -63,7 +63,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                    self._options.backButton.getContainer().css({'display': 'none'});
                 }
                 //Это нужно чтобы поиск был от корня, а крошки при этом отображаться не должны
-                //Почему тут просто не скрыть их через css?
                 if (self._options.breadCrumbs) {
                    self._options.breadCrumbs.getContainer().css({'display': 'none'});
                 }
