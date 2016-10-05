@@ -1,6 +1,5 @@
 @controls-Spoiler-title-font: bold @font-basic-size @font-basic-name;
 @controls-Spoiler-title-cursor: pointer;
-@controls-Spoiler-title-padding: 6px 0;
 @controls-Spoiler-title-height: 30px;
 @controls-Spoiler-title-line-height: 30px;
 @controls-Spoiler-title-text-color: #313E78;
@@ -10,26 +9,35 @@
       cursor: @controls-Spoiler-title-cursor;
       height: @controls-Spoiler-title-height;
       font: @controls-Spoiler-title-font;
-      padding: @controls-Spoiler-title-padding;
       box-sizing: border-box;
       position: relative;
-      white-space: nowrap;
+      display: inline-flex;
+      width: 100%;
       .user-select();
-      .controls-Spoiler__text {
-         color: @controls-Spoiler-title-text-color;
+      .controls-Spoiler__toggle-item { //left
+         padding: 6px 4px 0 4px;
       }
-      .controls-Spoiler__toggle-item {
-         display: inline-block;
-         padding: 0 2px;
-      }
-      .controls-Spoiler__title-caption {
-         display: inline-block;
-         width: calc(100% ~"-" 20px);
-         .controls-Spoilter__title-caption-text {
-            max-width: 100%;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            display: inline-block;
+      .controls-Spoiler__title-caption { //middle
+         padding-top: 5px;
+         overflow: hidden;
+         .controls-Spoiler__title-caption-text {
+            float: left;
+            color: @controls-Spoiler-title-text-color;
+            white-space: nowrap;
+         }
+         .controls-Spoiler__title-caption-blur { //blur
+            position: relative;
+            float: right;
+            &:before {
+               background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1));
+               height: 30px;
+               width: 30px;
+               content: ' ';
+               display: block;
+               position: absolute;
+               top: -30px;
+               right: 0;
+            }
          }
       }
    }

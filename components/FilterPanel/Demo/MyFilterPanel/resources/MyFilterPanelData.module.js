@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanelData', function() {
             }
          },
          {
-            caption: 'Поставщики с избранными длинное название',
+            caption: 'Поставщики с избранными длинный текст',
             expanded: true,
             id: 'Поставщики с избранными',
             value: [1,2],
@@ -77,12 +77,15 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanelData', function() {
             value: true,
             resetValue: false,
             template: 'js!SBIS3.CONTROLS.FilterPanelBoolean',
-            properties: {
-               minValue: 1,
-               maxValue: 200000,
-               middleLabel: '-',
-               endLabel: '₽'
-            }
+            className: 'controls-FilterPanelItem__withSeparator'
+         },
+         {
+            caption: 'В наличии',
+            expanded: true,
+            id: 'В наличии',
+            value: false,
+            resetValue: false,
+            template: 'js!SBIS3.CONTROLS.FilterPanelBoolean'
          }
       ];
 

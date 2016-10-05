@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    'tmpl!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelItemContentTemplate',
    'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser',
    'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateDataRange',
-   'tmpl!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelSpoilerTitleTemplate',
+   'tmpl!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelSpoilerRightPartTitleTemplate',
    'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.Accordion',
    'js!SBIS3.CONTROLS.FilterPanelChooser',
@@ -28,6 +28,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
     * Контрол, представляющий собой панель фильтрации.
     * @author Авраменко Алексей Сергеевич
     * @class SBIS3.CONTROLS.FilterPanel
+    * @public
     * @extends SBIS3.CONTROLS.CompoundControl
     */
 
@@ -62,7 +63,6 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
              */
             /**
              * @cfg {Array.<FilterPanelItem>} Структура, по которой строится панель фильтрации
-             * <a href="https://git.sbis.ru/sbis/controls/blob/rc-3.7.4.200/components/FilterPanel/Demo/MyFilterPanel/resources/MyFilterPanelData.module.js">Пример описания структуры.</a>
              */
             items: null,
             /**
@@ -84,7 +84,8 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
             filter: {}
          },
          _filterAccordion: null,
-         _onFilterItemChangeFn: null
+         _onFilterItemChangeFn: null,
+         _notifyOnFilterChange: true
       },
       _modifyOptions: function() {
          var
@@ -97,11 +98,10 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          $ws.single.CommandDispatcher.declareCommand(this, 'resetFilter', this._resetFilter);
          $ws.single.CommandDispatcher.declareCommand(this, 'resetFilterField', this._resetFilterField);
          this._onFilterItemChangeFn = this._onFilterItemChange.bind(this);
-         this._publish('onFilterChange');
+         this._publish('onFilterChange', 'onFilterReset');
       },
       init: function() {
          this.subscribe('onExpandedChange', this._onExpandedChange);
-         $('.controls-FilterPanel__switchButton', this._getHeadContainer()).click(this._onClickSwitchButton.bind(this));
          FilterPanel.superclass.init.apply(this, arguments);
          setTimeout($ws.helpers.forAliveOnly(function() {
             if (this.isExpanded()) {
@@ -138,7 +138,9 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
       },
       _updateFilterProperty: function(filter) {
          this._options.filter = filter;
-         this._notify('onFilterChange', filter);
+         if (this._notifyOnFilterChange) {
+            this._notify('onFilterChange', filter);
+         }
          this._notifyOnPropertyChanged('filter');
       },
       _initializeFilter: function() {
@@ -154,11 +156,6 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
       },
       setFilter: function() {
          throw new Error('Свойство "filter" работает только на чтение. Менять его надо через метод setFilterStructure');
-      },
-      _onClickSwitchButton: function(event) {
-         event.preventDefault();
-         event.stopImmediatePropagation();
-         this.toggleExpanded();
       },
       _onExpandedChange: function(event, expanded) {
          if (expanded && !this._filterAccordion) {
@@ -182,10 +179,16 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          this._filterAccordion = this.getChildControlByName('FilterAccordion');
          this._initializeFilter();
       },
+      _setNotifyOnFilterChange: function(flag) {
+         this._notifyOnFilterChange = !!flag;
+      },
       _resetFilter: function() {
+         this._setNotifyOnFilterChange(false);
          this._filterAccordion.getItems().each(function(item) {
             item.set(ITEM_FILTER_VALUE, $ws.core.clone(item.get(ITEM_FILTER_RESET_VALUE)));
          });
+         this._setNotifyOnFilterChange(true);
+         this._notify('onFilterReset', this.getFilter());
       },
       _resetFilterField: function(fieldName) {
          var

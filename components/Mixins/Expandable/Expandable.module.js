@@ -50,6 +50,7 @@ define('js!SBIS3.CONTROLS.Expandable', [], function() {
 
       $constructor: function() {
          this._publish('onExpandedChange');
+         $ws.single.CommandDispatcher.declareCommand(this, 'toggleExpanded', this.toggleExpanded);
       },
       /**
        * Устанавливает состояние развернутости.
