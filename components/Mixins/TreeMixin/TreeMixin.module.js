@@ -123,17 +123,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          expandAllItems(projection, cfg);
          projection.setEventRaising(true);
 
-         if (cfg.hierarchyViewMode) {
-            records = searchProcessing(projection, cfg);
-         }
-         else {
-            projection.each(function(item) {
-               if (cfg.groupBy && cfg.easyGroup) {
-                  cfg._groupItemProcessing(records, item, cfg);
-               }
-               records.push(item);
-            });
-         }
+
       }
       else {
          /**
@@ -153,7 +143,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       }
       else {
          projection.each(function(item, index, group) {
-            if (cfg.groupBy && cfg.easyGroup) {
+            if (!Object.isEmpty(cfg.groupBy) && cfg.easyGroup) {
                if (prevGroupId != group) {
                   cfg._groupItemProcessing(group, records, item, cfg);
                   prevGroupId = group;
