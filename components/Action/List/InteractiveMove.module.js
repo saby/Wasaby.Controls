@@ -127,8 +127,15 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             };
          },
 
-         _move: function(movedItems, target){
-            this.getMoveStrategy().move(movedItems, target, 'on');
+         _move: function(movedItems, target) {
+            $ws.single.loadingIndicator.show();
+            this.getMoveStrategy().move(movedItems, target, 'on').addCallback(function(result){
+               if (result !== false && this._getListView()) {
+                  this._getListView().removeItemsSelectionAll();
+               }
+            }.bind(this)).addBoth(function() {
+               $ws.single.loadingIndicator.hide();
+            });
          },
 
          _makeMoveStrategy: function () {
