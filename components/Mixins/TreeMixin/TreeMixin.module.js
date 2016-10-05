@@ -727,7 +727,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          },
          _isSlowDrawing: function(parentFnc, easy) {
             if (this._options.hierarchyViewMode) {
-               return true;
+               return false;
             }
             else {
                return parentFnc.call(this, easy);
