@@ -698,7 +698,9 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                dragEntityList: 'dragentity.list',
                /**
-                *
+                * @cfg {WS.Data/MoveStrategy/IMoveStrategy) Стратегия перемещения. Класс, который реализует перемещение записей. Подробнее тут {@link WS.Data/MoveStrategy/Base}.
+                * @see {@link WS.Data/MoveStrategy/Base}
+                * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
                 */
                moveStrategy: 'movestrategy.base'
             },
@@ -2963,9 +2965,9 @@ define('js!SBIS3.CONTROLS.ListView',
                      models.push(item.getModel());
                   });
                   var position = target.getPosition();
-                  this._move(models, target.getModel(), position);
+                  this._getMover().move(models, target.getModel(), position);
                } else {
-                  this._moveFromOutside(dragObject);
+                  this._getMover().moveFromOutside(dragObject);
                }
             }
 
@@ -2986,7 +2988,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   action = new InteractiveMove({
                      linkedObject: this,
                      parentProperty: this._options.hierField,
-                     moveStrategy: this.getMoveStrategy()
+                     moveStrategy: this._getMover().getMoveStrategy()
                   }),
                   items = this.getItems();
                $ws.helpers.forEach(movedItems, function(item, i) {
@@ -2997,26 +2999,7 @@ define('js!SBIS3.CONTROLS.ListView',
                action.execute({movedItems: movedItems});
             }.bind(this));
          },
-         /**
-          * Перемещает переданные записи
-          * @param {Array} movedItems  Массив перемещаемых записей.
-          * @param {WS.Data/Entity/Model} target Запись к которой надо преместить..
-          * @param {Position} position Как перемещать записи
-          * @deprecated Используйте getMoveStrategy().move()
-          * @private
-          */
-         _move: function(movedItems, target, position) {
-            //todo метод на время переходного периода, нужно перевести всех прикладников на новый метод и тока потом отпилить
-            //свои стратегии они наследуют от MoveStrategy/Sbis туда добавлен костыль.
-            var deferred,
-               moveStrategy = this.getMoveStrategy();
-            if ($ws.helpers.instanceOfModule(moveStrategy, 'WS.Data/MoveStrategy/Sbis')){
-               deferred = moveStrategy.moveNew(movedItems, target, position);
-            } else {
-               deferred = moveStrategy.move(movedItems, target, position);
-            }
-            return deferred;
-         },
+
          /**
           * Перемещает выделенные записи.
           * @param {WS.Data/Entity/Model|String} target  К какой записи переместить выделенные. Модель либо ее идентификатор.
@@ -3026,7 +3009,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (!$ws.helpers.instanceOfModule(target, 'WS.Data/Entity/Model')) {
                target = this.getItems().getRecordById(target);
             }
-            this._move(selectedItems ? selectedItems.toArray() : [], target).addCallback(function(res){
+            this._getMover.move(selectedItems ? selectedItems.toArray() : [], target).addCallback(function(res){
                if (res !== false) {
                   this.removeItemsSelectionAll();
                }
@@ -3037,7 +3020,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see WS.Data/MoveStrategy/IMoveStrategy
           * @returns {WS.Data/MoveStrategy/IMoveStrategy}
           */
-         getMoveStrategy: function () {
+         getMoveStrategy: function() {
             return this._moveStrategy || (this._moveStrategy = this._makeMoveStrategy());
          },
          /**
@@ -3057,7 +3040,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see WS.Data/MoveStrategy/IMoveStrategy
           * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
           */
-         setMoveStrategy: function (strategy) {
+         setMoveStrategy: function (moveStrategy) {
             if(!$ws.helpers.instanceOfMixin(strategy,'WS.Data/MoveStrategy/IMoveStrategy')){
                throw new Error('The strategy must implemented interfaces the WS.Data/MoveStrategy/IMoveStrategy.')
             }
@@ -3071,10 +3054,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {WS.Data/Entity/Record} record Запись
           */
          moveRecordDown: function(tr, id, record) {
-            var nextItem = this.getNextItemById(id);
-            if(nextItem) {
-               this.getMoveStrategy().reorderMove([record], this.getItems().getRecordById(nextItem.data('id')), true);
-            }
+            this._getMover().moveRecordDown(record);
          },
          /**
           * Обработчик для быстрой операции над записью. Переместить на одну запись вверх.
@@ -3084,49 +3064,18 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {WS.Data/Entity/Record} record Запись
           */
          moveRecordUp: function(tr, id, record) {
-            var prevItem = this.getPrevItemById(id);
-            if(prevItem) {
-               this.getMoveStrategy().reorderMove([record], this.getItems().getRecordById(prevItem.data('id')), false);
-            }
+            this._getMover().moveRecordUp(record);
          },
          /**
-          * Перемещает записи из внешнего контрола, через drag'n'drop
-          * @param {SBIS3.CONTROLS.DragObject} dragObject
+          * Возвращает перемещатор
           * @private
           */
-         _moveFromOutside: function(dragObject) {
-            var target = dragObject.getTarget(),
-               dragSource = dragObject.getSource();
-            if(dragObject.getSource().getAction()) {
-               def = dragObject.getSource().getAction().execute();
-            } else {
-               var dragOwnerSource = dragObject.getOwner().getDataSource(),
-                  dataSource = this.getDataSource();
-               var def;
-               if (dataSource === dragOwnerSource || dragOwnerSource.getEndpoint().contract == dataSource.getEndpoint().contract) {
-                  var movedItems = [];
-                  dragSource.each(function (movedItem) {
-                     movedItems.push(movedItem.getModel());
-                  });
-                  def = this.getMoveStrategy().move(movedItems, dragObject.getTarget().getModel(), target.getPosition());
-               }
-            }
-            def = (def instanceof $ws.proto.Deferred) ? def : new $ws.proto.Deferred().callback();
-            var position = this.getItems().getIndex(target.getModel()),
-               ownerItems = dragObject.getOwner().getItems(),
-               self = this,
-               operation = dragSource.getOperation();
-            def.addCallback(function() {
-               dragSource.each(function(movedItem) {
-                  var model = movedItem.getModel();
-                  if (operation === 'add' || operation === 'move') {
-                     self.getItems().add(model.clone(), position);
-                  }
-                  if (operation === 'delete' || operation === 'move') {
-                     ownerItems.remove(model);
-                  }
-               });
-            });
+         _getMover: function(){
+            this._mover || (this._mover = Di.resolve('listview.mover', {
+               moveStrategy: this.getMoveStrategy(),
+               items: this.getItems(),
+               projection: this._getItemsProjection()
+            }));
          },
          //endregion move_methods
          /**
@@ -3165,7 +3114,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return $(resultsSelector, this.getContainer());
          },
          _makeResultsTemplate: function(resultsData){
-            if (!resultsData){
+            if (!resultsData) {
                return;
             }
             var item = this._getResultsRecord(),
