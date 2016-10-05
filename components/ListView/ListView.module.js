@@ -1035,11 +1035,11 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
                 target = this._findItemByElement($target),
-                id;
+                model;
 
             if (target.length && this._isViewElement(target)) {
-               id = this._getItemsProjection().getByHash(target.data('hash')).getContents().getId();
-               this._elemClickHandler(id, this.getItems().getRecordById(id), e.target, e);
+               model = this._getItemsProjection().getByHash(target.data('hash')).getContents();
+               this._elemClickHandler(model.getId(), model, e.target, e);
             }
             if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox')){
                $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
