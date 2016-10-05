@@ -26,15 +26,6 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             projection: undefined
          }
       },
-      /**
-       * Устанавливает контрол который инициализировал Drag'n'drop. Метод должен вызываться только из SBIS3.CONTROLS.DragNDropMixin
-       * @param {SBIS3.CONTROLS.Control} owner контрол, который инициализировал Drag'n'drop
-       * @protected
-       */
-      setOwner: function (owner) {
-         this._owner = owner;
-      },
-
       moveRecordDown: function(record) {
          this._moveToOneRow(record, true);
       },

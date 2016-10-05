@@ -43,7 +43,8 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!WS.Data/Collection/RecordSet',
       'i18n!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.DragEntity.List',
-      'js!WS.Data/MoveStrategy/Base'
+      'js!WS.Data/MoveStrategy/Base',
+      'js!SBIS3.CONTROLS.ListView.Mover'
    ],
    function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
