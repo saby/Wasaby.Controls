@@ -779,6 +779,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 },
                 handlers: {
                    onShow: function() {
+                      if(!this._options.reverseItemsOnListRevert) {
+                         return;
+                      }
+
                       var revertedVertical = this._picker.getContainer().hasClass('controls-popup-revert-vertical');
 
                       if($ws._const.browser.isMobileIOS) {
