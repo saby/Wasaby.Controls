@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.ToggleHeader',
          init: function() {
             ToggleHeader.superclass.init.call(this);
 
-            this.getLinkedContext().setValue('count', this.getCount());
+            this.setCount(this._options.count);
          },
          /**
           * Возвращает число записей
@@ -46,10 +46,13 @@ define('js!SBIS3.CONTROLS.ToggleHeader',
           * @param count число записей
           */
          setCount: function(count) {
+            var type;
+
             count = Number(count);
-            this._options.count = count;
-            if(count < 1) {
-               count = 0;
+            type = $ws.helpers.type(count);
+
+            if(type !== 'number' || count < 1) {
+               count = '';
             }
             this.getLinkedContext().setValue('count', count);
          }
