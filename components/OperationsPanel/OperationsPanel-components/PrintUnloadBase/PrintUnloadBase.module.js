@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
       },
 
       $constructor: function() {
-         this._publish('onApplyOperation');
+         this._publish('onApplyOperation', 'onPrepareData');
       },
       /**
        * Can be implemented
@@ -129,19 +129,33 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
       _applyMassOperation : function(ds){
          this._applyOperation(ds);
       },
+
       _applyOperation : function(dataSet){
-         var columns = this._prepareOperationColumns(),
-             cfg;
-         cfg = {
-            dataSet : dataSet || this._getView().getItems(),
-            columns: columns
-         };
-         this.applyOperation(cfg);
+         var
+             self = this;
+         this._prepareData(dataSet).addCallback(function(data) {
+            self.applyOperation({
+               dataSet: data,
+               columns: self._prepareOperationColumns(data)
+            });
+         });
       },
-      _prepareOperationColumns: function(){
+
+      _prepareData: function(dataSet) {
+         var
+             originData = dataSet || this._getView().getItems(),
+             newData = this._notify('onPrepareData', originData);
+         if (newData instanceof $ws.proto.Deferred) {
+            return newData;
+         } else {
+            return $ws.proto.Deferred.success(newData || originData);
+         }
+      },
+
+      _prepareOperationColumns: function(data){
          var columns = this._getView().getColumns(),
              result;
-         result = this._notifyOnApply(columns);
+         result = this._notifyOnApply(columns, data);
          if (result instanceof Array) {
             columns = result;
          }

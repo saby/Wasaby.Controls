@@ -36,6 +36,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
 
          popup.show();
          popup.setActive(true);
+         return popup;
       };
 
       return /** @lends SBIS3.CONTROLS.Utils.InformationPopupManager.prototype */{
@@ -45,26 +46,29 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           * @param {Function} positiveHandler Обработчик нажатия на кнопку "Да"
           * @param {Function} negativeHandler Обработчик нажатия на кнопку "Нет"
           * @param {Function} [cancelHandler] Обработчик нажатия на кнопку "Отмена"
+          * @returns {SBIS3.CONTROLS.SubmitPopup} экземпляр диалога
           */
          showConfirmDialog: function(config, positiveHandler, negativeHandler, cancelHandler){
-            showSubmitDialog($ws.core.merge(config, {
+            return showSubmitDialog($ws.core.merge(config, {
                status: 'confirm'
             }), positiveHandler, negativeHandler, cancelHandler);
          },
 
          /**
-          * Показать диалог с состоянием "Ошибка"
+          * Показать диалог с сообщением и 1 кнопкой. Диалог может иметь одно из состояний: "Ошибка" / "Успешно" / "Предупреждение"
           * @param {Configuration} Устанавливает конфигурацию для окна - {@link SBIS3.CONTROLS.SubmitPopup}
           * @param {Function} handler Обработчик нажатия на кнопку "Ок"
+          * @returns {SBIS3.CONTROLS.SubmitPopup} экземпляр диалога
           */
          showMessageDialog: function(config, handler){
-            showSubmitDialog(config, null, null, handler);
+            return showSubmitDialog(config, null, null, handler);
          },
 
          /**
           * Показать нотификационное сообщение
           * @param {Configuration} Устанавливает конфигурацию для окна - {@link SBIS3.CONTROLS.NotificationPopup}
           * @param {Boolean} notHide Не прятать окно по истичению времени жизни
+          * @returns {SBIS3.CONTROLS.NotificationPopup} экземпляр нотификационного сообщения
           */
          showNotification: function(config, notHide){
             var popup = new NotificationPopup($ws.core.merge({
@@ -83,6 +87,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           */
          showCustomNotification: function(inst, notHide){
             NotificationManager.showNotification(inst, notHide);
+            return popup;
          }
       };
    }

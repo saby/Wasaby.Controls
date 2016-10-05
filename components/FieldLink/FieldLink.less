@@ -1,14 +1,18 @@
 .controls-FieldLink__picker {
    max-height: @controls-FieldLink-picker-max-height;
    min-height: @controls-FieldLink-picker-min-height;
-   border: @controls-FieldLink-border;
-   border-color: @controls-FieldLink-border-color-focus-hover;
+   border: @controls-FieldLink-border @gray-ccc-color;
+   margin-top: 0;
    border-top: none;
-   background: @controls-FieldLink-picker-background !important;
    overflow: auto;
 
    .controls-FieldLink__linksContainer {
       padding: @controls-FieldLink-linkContainer-padding;
+   }
+
+   &.controls-popup-revert-vertical {
+      border-top: @controls-FieldLink-border @gray-ccc-color;
+      border-bottom: none;
    }
 }
 

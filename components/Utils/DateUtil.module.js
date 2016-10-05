@@ -130,6 +130,70 @@ define('js!SBIS3.CONTROLS.Utils.DateUtil',[], function () {
             date = null;
          }
          return date;
+      },
+      /**
+       * Возвращает true если переданное число является началом месяца
+       * @param date
+       * @return {boolean}
+       */
+      isStartOfMonth: function (date) {
+         return date.getDate() === 1;
+      },
+      /**
+       * Возвращает дату соответсвующую началу месяца по переданной дате
+       * @param date
+       * @return {Date}
+       */
+      getEndOfMonth: function (date) {
+         return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+      },
+      /**
+       * Возвращает true если переданное число является началом квартала
+       * @param date
+       * @return {boolean}
+       */
+      isStartOfQuarter: function (date) {
+         return date.getDate() === 1 && date.getMonth()%3 === 0;
+      },
+      /**
+       * Возвращает дату соответсвующую началу квартала по переданной дате
+       * @param date
+       * @return {Date}
+       */
+      getEndOfQuarter: function (date) {
+         return new Date(date.getFullYear(), (Math.floor(date.getMonth()/3) + 1)*3, 0);
+      },
+      /**
+       * Возвращает true если переданное число является началом полугодия
+       * @param date
+       * @return {boolean}
+       */
+      isStartOfHalfyear: function (date) {
+         return date.getDate() === 1 && date.getMonth()%6 === 0;
+      },
+      /**
+       * Возвращает дату соответсвующую началу полугодия по переданной дате
+       * @param date
+       * @return {Date}
+       */
+      getEndOfHalfyear: function (date) {
+         return new Date(date.getFullYear(), (Math.floor(date.getMonth()/6) + 1)*6, 0);
+      },
+      /**
+       * Возвращает true если переданное число является началом года
+       * @param date
+       * @return {boolean}
+       */
+      isStartOfYear: function (date) {
+         return date.getDate() === 1 && date.getMonth() === 0;
+      },
+      /**
+       * Возвращает дату соответсвующую началу года по переданной дате
+       * @param date
+       * @return {Date}
+       */
+      getEndOfYear: function (date) {
+         return new Date(date.getFullYear(), 12, 0);
       }
    };
 

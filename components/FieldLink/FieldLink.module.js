@@ -715,8 +715,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 /* Элементы, установленные из дилогов выбора / автодополнения могут иметь другой первичный ключ,
                    отличный от поля с ключём, установленного в поле связи. Это связно с тем, что "связь" устанавливается по опеределённому полю,
                    и не обязательному по первичному ключу у записей в списке. */
-                items.each(function(rec, index) {
-                   if(rec.getIdProperty() !== self._options.keyField && rec.get(self._options.keyField)) {
+                items.each(function(rec) {
+                   if(rec.getIdProperty() !== self._options.keyField && rec.get(self._options.keyField) !== undefined) {
                       rec.setIdProperty(self._options.keyField);
                    }
                 })
@@ -922,6 +922,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           /* Заглушка, само поле связи не занимается отрисовкой */
           redraw: $ws.helpers.nop,
+          /* Заглушка, само поле связи не занимается загрузкой списка */
+          reload: $ws.helpers.nop,
 
 
           destroy: function() {

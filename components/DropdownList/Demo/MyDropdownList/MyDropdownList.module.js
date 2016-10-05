@@ -8,7 +8,9 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
          'html!SBIS3.CONTROLS.Demo.MyDropdownList',
          'html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownListItem',
          'i18n!SBIS3.CONTROLS.Demo.MyDropdownList',
-         'css!SBIS3.CONTROLS.Demo.MyDropdownList'
+         'css!SBIS3.CONTROLS.Demo.MyDropdownList',
+         'html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownList_IconHead',
+         'html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownList_IconItem'
       ],
 
       function(CompoundControl, DropdownList, dotTplFn, itemTpl, rk) {
@@ -62,6 +64,10 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
                this.getChildControlByName('DropdownList1').setItems(this._options.data);
                this.getChildControlByName('DropdownList2').setItems(this._options.data);
                this.getChildControlByName('DropdownList3').setItems(this._options.data);
+               this.getChildControlByName('DropdownList4').setItems(this._options.data);
+               this.getChildControlByName('DropdownList5').setItems(this._options.data);
+//               this.getChildControlByName('DropdownList6').setItems(this._options.data);
+               this.getChildControlByName('DropdownList7').setItems(this._options.data);
             }
          });
          return MyDropdownList;
