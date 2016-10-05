@@ -1,5 +1,5 @@
 gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
-	/*
+	
     gemini.suite('base', function (test) {
 
         test.setUrl('/regression_bread_crumbs_online.html').setCaptureElements('.capture')
@@ -116,7 +116,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 			.capture('hovered_text', function (actions) {
 				actions.mouseMove(this.title);
 			})
-    });*/
+    });
 	
 	gemini.suite('have_titles', function (test) {
 
@@ -131,7 +131,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 				this.d1 = 'div.js-controls-BreadCrumbs__crumb:nth-child(1)';
 				this.d2 = 'div.js-controls-BreadCrumbs__crumb:nth-child(2)';
 				this.d3 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3)';
-				this.d4 = 'div.js-controls-BreadCrumbs__crumb:nth-child(4)';
+				this.d4 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3) .controls-BreadCrumbs__hierWrapper:nth-child(2)';
                 
 				actions.waitForElementToShow(this.view, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -167,7 +167,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 				this.d1 = 'div.js-controls-BreadCrumbs__crumb:nth-child(1)';
 				this.d2 = 'div.js-controls-BreadCrumbs__crumb:nth-child(2)';
 				this.d3 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3)';
-				this.d4 = 'div.js-controls-BreadCrumbs__crumb:nth-child(4)';
+				this.d4 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3) .controls-BreadCrumbs__hierWrapper:nth-child(2)';
                 
 				actions.waitForElementToShow(this.view, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -203,7 +203,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 				this.d1 = 'div.js-controls-BreadCrumbs__crumb:nth-child(1)';
 				this.d2 = 'div.js-controls-BreadCrumbs__crumb:nth-child(2)';
 				this.d3 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3)';
-				this.d4 = 'div.js-controls-BreadCrumbs__crumb:nth-child(4)';
+				this.d4 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3) .controls-BreadCrumbs__hierWrapper:nth-child(2)';
                 
 				actions.waitForElementToShow(this.view, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -239,7 +239,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 				this.d1 = 'div.js-controls-BreadCrumbs__crumb:nth-child(1)';
 				this.d2 = 'div.js-controls-BreadCrumbs__crumb:nth-child(2)';
 				this.d3 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3)';
-				this.d4 = 'div.js-controls-BreadCrumbs__crumb:nth-child(4)';
+				this.d4 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3) .controls-BreadCrumbs__hierWrapper:nth-child(2)';
                 
 				actions.waitForElementToShow(this.view, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -275,7 +275,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 				this.d1 = 'div.js-controls-BreadCrumbs__crumb:nth-child(1)';
 				this.d2 = 'div.js-controls-BreadCrumbs__crumb:nth-child(2)';
 				this.d3 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3)';
-				this.d4 = 'div.js-controls-BreadCrumbs__crumb:nth-child(4)';
+				this.d4 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3) .controls-BreadCrumbs__hierWrapper:nth-child(2)';
                 
 				actions.waitForElementToShow(this.view, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -311,7 +311,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 				this.d1 = 'div.js-controls-BreadCrumbs__crumb:nth-child(1)';
 				this.d2 = 'div.js-controls-BreadCrumbs__crumb:nth-child(2)';
 				this.d3 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3)';
-				this.d4 = 'div.js-controls-BreadCrumbs__crumb:nth-child(4)';
+				this.d4 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3) .controls-BreadCrumbs__hierWrapper:nth-child(2)';
                 
 				actions.waitForElementToShow(this.view, 40000);
 				actions.waitForElementToShow(this.input, 5000);
