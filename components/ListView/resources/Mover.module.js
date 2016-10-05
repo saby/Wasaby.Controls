@@ -106,6 +106,10 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             isNodeTo = true,
             isChangeOrder = position !== 'on';
 
+         if (!$ws.helpers.instanceOfModule(target, 'WS.Data/Entity/Model')) {
+            target = this.getItems().getRecordById(target);
+         }
+
          if (target !== null) {
             isNodeTo = target.get(this._options.hierField + '@');
          }

@@ -2976,20 +2976,20 @@ define('js!SBIS3.CONTROLS.ListView',
             this._updateItemsToolbar();
          },
          /*DRAG_AND_DROP END*/
-         //region move_methods
+         //region moveMethods
          /**
           * Перемещает записи через диалог. По умолчанию берет все выделенные записи.
           * @param {Array} MovedItems Массив перемещаемых записей
           * @deprecated Используйте SBIS3.CONTROLS.Action.List.InteractiveMove.
           */
          moveRecordsWithDialog: function(movedItems) {
-            Utils.logger.stack(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"', 1);
-            require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove'], function(InteractiveMove) {
+            require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove','js!WS.Data/Utils'], function(InteractiveMove, Utils) {
+               Utils.logger.stack(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"', 1);
                var
                   action = new InteractiveMove({
                      linkedObject: this,
                      parentProperty: this._options.hierField,
-                     moveStrategy: this._getMover().getMoveStrategy()
+                     moveStrategy: this.getMoveStrategy()
                   }),
                   items = this.getItems();
                $ws.helpers.forEach(movedItems, function(item, i) {
@@ -3007,10 +3007,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          selectedMoveTo: function(target) {
             var selectedItems = this.getSelectedItems(false);
-            if (!$ws.helpers.instanceOfModule(target, 'WS.Data/Entity/Model')) {
-               target = this.getItems().getRecordById(target);
-            }
-            this._getMover.move(selectedItems ? selectedItems.toArray() : [], target).addCallback(function(res){
+            this._getMover.move(selectedItems, target).addCallback(function(res){
                if (res !== false) {
                   this.removeItemsSelectionAll();
                }
@@ -3042,10 +3039,10 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
           */
          setMoveStrategy: function (moveStrategy) {
-            if(!$ws.helpers.instanceOfMixin(strategy,'WS.Data/MoveStrategy/IMoveStrategy')){
+            if(!$ws.helpers.instanceOfMixin(moveStrategy,'WS.Data/MoveStrategy/IMoveStrategy')){
                throw new Error('The strategy must implemented interfaces the WS.Data/MoveStrategy/IMoveStrategy.')
             }
-            this._moveStrategy = strategy;
+            this._moveStrategy = moveStrategy;
          },
          /**
           * Обработчик для быстрой операции над запись. Переместить на одну запись ввниз.
@@ -3078,7 +3075,7 @@ define('js!SBIS3.CONTROLS.ListView',
                projection: this._getItemsProjection()
             }));
          },
-         //endregion move_methods
+         //endregion moveMethods
          /**
           * Устанавливает позицию строки итогов
           * @param {String} position Позиция
