@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           */
          showCustomNotification: function(inst, notHide){
             NotificationManager.showNotification(inst, notHide);
-            return popup;
+            return inst;
          }
       };
    }
