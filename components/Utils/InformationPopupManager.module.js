@@ -40,44 +40,8 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
 
       return /** @lends SBIS3.CONTROLS.Utils.InformationPopupManager.prototype */{
          /**
-          * @typedef {Object} ConfirmCfg
-          * @property {String} message Отображаемое сообщение.
-          * @property {String} details Детали сообщения, отображаются под основным сообщением.
-          * @property {Boolean} hasCancelButton Использовать ли кнопку "Отмена".
-          */
-
-         /**
-          * @typedef {String} MessageDialogStatus
-          * @variant default  Окно без состояния. Цвет линии в шапке - синий.
-          * @variant success  "Успешно". Цвет линии в шапке - зеленый.
-          * @variant error    "Ошибка". Цвет линии в шапке - красный.
-          * @variant warning  "Предупреждение". Цвет линии в шапке - оранжевый.
-          */
-
-         /**
-          * @typedef {Object} OneButtonDialogCfg
-          * @property {String} message Отображаемое сообщение.
-          * @property {String} details Детали сообщения, отображаются под основным сообщением.
-          * @property {MessageDialogStatus} status Состояние диалога. От состояния заивисит цвет линии в шапке.
-          */
-
-         /**
-          * @typedef {String} NotificationStatus
-          * @variant default  Окно без состояния. Цвет линии в шапке - синий, иконка по умолчанию не задана.
-          * @variant success  "Успешно". Цвет линии в шапке - зеленый, иконка - зелёная галка.
-          * @variant error    "Ошибка". Цвет линии в шапке - красный, иконка - треугольник с воскл.знаком.
-          * @variant warning  "Предупреждение". Цвет линии в шапке - оранжевый, иконка по умолчанию не задана.
-          */
-
-         /**
-          * @typedef {Object} NotificationCfg
-          * @property {String} caption Заголовок (основной текст) информационного окна.
-          * @property {NotificationStatus} status Состояние окна. От состояния заивисит цвет линии в шапке и иконка по умолчанию.
-          */
-
-         /**
           * Показать диалог с кнопками "Да", "Нет" и (опционально) "Отмена"
-          * @param {ConfirmCfg} config Настройки для SBIS3.CONTROLS.SubmitPopup
+          * @param {Configuration} Устанавливает конфигурацию для окна - {@link SBIS3.CONTROLS.SubmitPopup}
           * @param {Function} positiveHandler Обработчик нажатия на кнопку "Да"
           * @param {Function} negativeHandler Обработчик нажатия на кнопку "Нет"
           * @param {Function} [cancelHandler] Обработчик нажатия на кнопку "Отмена"
@@ -90,7 +54,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
 
          /**
           * Показать диалог с состоянием "Ошибка"
-          * @param {OneButtonDialogCfg} config Объект настроек диалога
+          * @param {Configuration} Устанавливает конфигурацию для окна - {@link SBIS3.CONTROLS.SubmitPopup}
           * @param {Function} handler Обработчик нажатия на кнопку "Ок"
           */
          showMessageDialog: function(config, handler){
@@ -99,14 +63,26 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
 
          /**
           * Показать нотификационное сообщение
-          * @param {NotificationCfg} config Объект настроек для SBIS3.CONTROLS.NotificationPopup
+          * @param {Configuration} Устанавливает конфигурацию для окна - {@link SBIS3.CONTROLS.NotificationPopup}
+          * @param {Boolean} notHide Не прятать окно по истичению времени жизни
           */
-         showNotification: function(config){
+         showNotification: function(config, notHide){
             var popup = new NotificationPopup($ws.core.merge({
                element: $('<div></div>')
             }, config));
 
-            NotificationManager.showNotification(popup);
+            NotificationManager.showNotification(popup, notHide);
+
+            return popup;
+         },
+
+         /**
+          * Показать произвольное нотификационное сообщение
+          * @param inst Экземпляр окна
+          * @param {Boolean} notHide Не прятать окно по истичению времени жизни
+          */
+         showCustomNotification: function(inst, notHide){
+            NotificationManager.showNotification(inst, notHide);
          }
       };
    }

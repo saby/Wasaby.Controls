@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
     * @class SBIS3.CONTROLS.SubmitPopup
     * @extends SBIS3.CONTROLS.InformationPopup
     * @control
+    * @public
     * @author Степин П.В.
     */
    function(InformationPopup, template){
