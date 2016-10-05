@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!WS.Data/Entity/Model', 'i18n!SBIS3.CONTROLS.DialogActionBase'], function(ActionBase, Dialog, FloatArea, Model){
+define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!WS.Data/Entity/Model', 'js!SBIS3.CONTROLS.Utils.InformationPopupManager', 'i18n!SBIS3.CONTROLS.DialogActionBase'], function(ActionBase, Dialog, FloatArea, Model, InformationPopupManager){
    'use strict';
 
    /**
@@ -192,7 +192,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if (getRecordProtoMethod){
             def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
             def.addCallback(function (record) {
-               self._hideLoadingIndicator();
                config.componentOptions.record = record;
                if (def.isNewRecord)
                   config.componentOptions.isNewRecord = true;
@@ -201,6 +200,13 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
                   config.componentOptions.key = record.getId();
                }
                self._showDialog(config, meta, mode);
+            }).addErrback(function(error){
+               InformationPopupManager.showMessageDialog({
+                  message: error.message,
+                  status: 'error'
+               })
+            }).addBoth(function(){
+               self._hideLoadingIndicator();
             });
          }
          else{
