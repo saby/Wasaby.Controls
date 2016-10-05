@@ -1,20 +1,31 @@
 gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
-
+	/*
     gemini.suite('base', function (test) {
 
         test.setUrl('/regression_bread_crumbs_online.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-                actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
-                this.item4 = find('[data-id="4"]');
-                this.item13 = find('[data-id="13"]');
-                this.home = find('.icon-Home3');
-                this.title = find('.controls-BreadCrumbs__title');
-                actions.click(this.item4);
-                actions.click(this.item13)
+                
+				this.tdgv = '[name="TreeDataGridView 1"]';
+				this.item4 = '[data-id="4"]';
+                this.item13 = '[data-id="13"]';
+				this.item14 = '[data-id="14"]';
+				this.item21 = '[data-id="21"]';
+                this.home = '.icon-Home3';
+                this.title = '.controls-BreadCrumbs__title';
+                
+				actions.waitForElementToShow(this.tdgv, 40000);
+				actions.waitForElementToShow(this.item4, 5000);
             })
 
             .capture('plain')
+			
+			.capture('into_folder', function (actions) {
+                actions.click(this.item4);
+				actions.waitForElementToShow(this.item14, 5000);
+                actions.click(this.item13)
+				actions.waitForElementToShow(this.item21, 5000);
+            })
 
             .capture('hovered_home', function (actions) {
                 actions.mouseMove(this.home);
@@ -24,28 +35,75 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
                 actions.mouseMove(this.title);
             })
     });
+
+    gemini.suite('small_items', function (test) {
+
+        test.setUrl('/regression_bread_crumbs_online_3.html').setCaptureElements('.capture')
+
+            .before(function (actions) {
+				
+				this.tdgv = '[name="TreeDataGridView 1"]';
+				this.item4 = '[data-id="4"]';
+                this.item13 = '[data-id="13"]';
+				this.item14 = '[data-id="14"]';
+				this.item21 = '[data-id="21"]';
+                this.home = '.icon-Home3';
+                this.title = '.controls-BreadCrumbs__title';
+                
+				actions.waitForElementToShow(this.tdgv, 40000);
+				actions.waitForElementToShow(this.item4, 5000);
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.item4);
+				actions.waitForElementToShow(this.item14, 5000);
+                actions.click(this.item13)
+				actions.waitForElementToShow(this.item21, 5000);
+            })
+    });
 	
-	gemini.suite('disabled', function (test) {
+    gemini.suite('dots', function (test) {
 
         test.setUrl('/regression_bread_crumbs_online_2.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-                actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
-                this.item4 = find('[data-id="4"]');
-                this.item13 = find('[data-id="13"]');
-                this.item21 = find('[data-id="21"]');
-                this.item22 = find('[data-id="22"]');
-                this.home = find('.icon-Home3');
-                this.title = find('.controls-BreadCrumbs__title');
-                this.dots = find('.controls-BreadCrumbs__dots');
-                this.dot_item1 = find('.controls-BreadCrumbs .controls-MenuItem:nth-child(1)')
-                actions.click(this.item4);
-                actions.click(this.item13);
-                actions.click(this.item21);
-                actions.click(this.item22)
+
+				this.tdgv = '[name="TreeDataGridView 1"]';
+				this.item4 = '[data-id="4"]';
+                this.item13 = '[data-id="13"]';
+				this.item14 = '[data-id="14"]';
+				this.item21 = '[data-id="21"]';
+				this.item22 = '[data-id="22"]';
+                this.home = '.icon-Home3';
+                this.title = '.controls-BreadCrumbs__title';
+				this.title = '.controls-BreadCrumbs__title';
+                this.dots = '.controls-BreadCrumbs__dots';
+                this.dot_item1 = '.controls-BreadCrumbs .controls-MenuItem:nth-child(1)';
+                
+				actions.waitForElementToShow(this.tdgv, 40000);
+				actions.waitForElementToShow(this.item4, 5000);
             })
 
             .capture('plain', function (actions) {
+				actions.click(this.item4);
+				actions.waitForElementToShow(this.item14, 5000);
+                actions.click(this.item13);
+				actions.waitForElementToShow(this.item21, 5000);
+                actions.click(this.item21);
+				actions.waitForElementToShow(this.item22, 5000);
+                actions.click(this.item22);
+			})
+
+            .capture('hovered_dots', function (actions) {
+                actions.mouseMove(this.dots);
+            })
+			
+			.capture('opened_dots', function (actions) {
+                actions.click(this.dots);
+				actions.waitForElementToShow(this.dot_item1, 5000);
+            })
+			
+			.capture('disabled', function (actions) {
 				actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('BreadCrumbs 55').setEnabled(false);
                 });
@@ -58,86 +116,25 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 			.capture('hovered_text', function (actions) {
 				actions.mouseMove(this.title);
 			})
-    });
-	
-	gemini.suite('no_home_icons_on_load', function (test) {
-
-        test.setUrl('/regression_bread_crumbs_online.html').setCaptureElements('.capture')
-
-            .before(function (actions) {
-                actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
-                actions.waitForElementToShow('[data-id="4"]', 2000);
-            })
-
-            .capture('plain')
-    });
-
-    gemini.suite('small_items', function (test) {
-
-        test.setUrl('/regression_bread_crumbs_online_3.html').setCaptureElements('.capture')
-
-            .before(function (actions) {
-                actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
-                this.item4 = find('[data-id="4"]');
-                this.item13 = find('[data-id="13"]');
-                this.home = find('.icon-Home3');
-                this.title = find('.controls-BreadCrumbs__title');
-                actions.click(this.item4);
-                actions.click(this.item13)
-            })
-
-            .capture('plain')
-
-            .capture('hovered_home', function (actions) {
-                actions.mouseMove(this.home);
-            })
-
-            .capture('hovered_title', function (actions) {
-                actions.mouseMove(this.title);
-            })
-    });
-
-    gemini.suite('dots', function (test) {
-
-        test.setUrl('/regression_bread_crumbs_online_2.html').setCaptureElements('.capture')
-
-            .before(function (actions) {
-                actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
-                this.item4 = find('[data-id="4"]');
-                this.item13 = find('[data-id="13"]');
-                this.item21 = find('[data-id="21"]');
-                this.item22 = find('[data-id="22"]');
-                this.home = find('.icon-Home3');
-                this.title = find('.controls-BreadCrumbs__title');
-                this.dots = find('.controls-BreadCrumbs__dots');
-                this.dot_item1 = find('.controls-BreadCrumbs .controls-MenuItem:nth-child(1)')
-                actions.click(this.item4);
-                actions.click(this.item13);
-                actions.click(this.item21);
-                actions.click(this.item22)
-            })
-
-            .capture('plain')
-
-            .capture('hovered_dot_item', function (actions) {
-                actions.click(this.dots);
-                actions.mouseMove(this.dot_item1);
-            })
-    });
+    });*/
 	
 	gemini.suite('have_titles', function (test) {
 
         test.setUrl('/regression_engine_browser_online_2.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-                actions.waitForElementToShow('[sbisname="browserView"]', 40000);
-                this.view = find('[sbisname="browserView"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.input);
+                
+				this.view = '[sbisname="browserView"]';
+                this.input = '[sbisname="TextBox 1"] input';
+				this.caption = '[sbisname="BackButton-caption"]';
+				this.dots = '.controls-BreadCrumbs__dots';
+				this.d1 = 'div.js-controls-BreadCrumbs__crumb:nth-child(1)';
+				this.d2 = 'div.js-controls-BreadCrumbs__crumb:nth-child(2)';
+				this.d3 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3)';
+				this.d4 = 'div.js-controls-BreadCrumbs__crumb:nth-child(4)';
+                
+				actions.waitForElementToShow(this.view, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('into_folder', function (actions) {
@@ -145,16 +142,15 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
                     window.$ws.single.ControlStorage.getByName('browserView').setCurrentRoot(33);
 					window.$ws.single.ControlStorage.getByName('browserView').reload();
                 });
-				actions.waitForElementToShow('[sbisname="BackButton-caption"]', 1000);
+				actions.waitForElementToShow(this.caption, 5000);
             })
 			
-			.capture('opened_dots', function (actions) {
-                this.dots = find('.controls-BreadCrumbs__dots');
+			.capture('opened_dots', function (actions) {                
 				actions.click(this.dots);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(1)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(2)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(3)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(3) .controls-BreadCrumbs__hierWrapper:nth-child(2)', 1000);
+				actions.waitForElementToShow(this.d1, 5000);
+				actions.waitForElementToShow(this.d2, 5000);
+				actions.waitForElementToShow(this.d3, 5000);
+				actions.waitForElementToShow(this.d4, 5000);
             })
     });
 	
@@ -163,14 +159,18 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
         test.setUrl('/regression_engine_browser_online_3.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-                actions.waitForElementToShow('[sbisname="browserView"]', 40000);
-                this.view = find('[sbisname="browserView"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.input);
+				
+				this.view = '[sbisname="browserView"]';
+                this.input = '[sbisname="TextBox 1"] input';
+				this.caption = '[sbisname="BackButton-caption"]';
+				this.dots = '.controls-BreadCrumbs__dots';
+				this.d1 = 'div.js-controls-BreadCrumbs__crumb:nth-child(1)';
+				this.d2 = 'div.js-controls-BreadCrumbs__crumb:nth-child(2)';
+				this.d3 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3)';
+				this.d4 = 'div.js-controls-BreadCrumbs__crumb:nth-child(4)';
+                
+				actions.waitForElementToShow(this.view, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('into_folder', function (actions) {
@@ -178,16 +178,15 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
                     window.$ws.single.ControlStorage.getByName('browserView').setCurrentRoot(33);
 					window.$ws.single.ControlStorage.getByName('browserView').reload();
                 });
-				actions.waitForElementToShow('[sbisname="BackButton-caption"]', 1000);
+				actions.waitForElementToShow(this.caption, 5000);
             })
 			
 			.capture('opened_dots', function (actions) {
-                this.dots = find('.controls-BreadCrumbs__dots');
 				actions.click(this.dots);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(1)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(2)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(3)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(3) .controls-BreadCrumbs__hierWrapper:nth-child(2)', 1000);
+				actions.waitForElementToShow(this.d1, 5000);
+				actions.waitForElementToShow(this.d2, 5000);
+				actions.waitForElementToShow(this.d3, 5000);
+				actions.waitForElementToShow(this.d4, 5000);
             })
     });
 	
@@ -196,14 +195,18 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
         test.setUrl('/regression_engine_browser_online_4.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-                actions.waitForElementToShow('[sbisname="browserView"]', 40000);
-                this.view = find('[sbisname="browserView"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.input);
+				
+				this.view = '[sbisname="browserView"]';
+                this.input = '[sbisname="TextBox 1"] input';
+				this.caption = '[sbisname="BackButton-caption"]';
+				this.dots = '.controls-BreadCrumbs__dots';
+				this.d1 = 'div.js-controls-BreadCrumbs__crumb:nth-child(1)';
+				this.d2 = 'div.js-controls-BreadCrumbs__crumb:nth-child(2)';
+				this.d3 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3)';
+				this.d4 = 'div.js-controls-BreadCrumbs__crumb:nth-child(4)';
+                
+				actions.waitForElementToShow(this.view, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('into_folder', function (actions) {
@@ -211,16 +214,15 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
                     window.$ws.single.ControlStorage.getByName('browserView').setCurrentRoot(33);
 					window.$ws.single.ControlStorage.getByName('browserView').reload();
                 });
-				actions.waitForElementToShow('[sbisname="BackButton-caption"]', 1000);
+				actions.waitForElementToShow(this.caption, 5000);
             })
 			
 			.capture('opened_dots', function (actions) {
-                this.dots = find('.controls-BreadCrumbs__dots');
 				actions.click(this.dots);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(1)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(2)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(3)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(3) .controls-BreadCrumbs__hierWrapper:nth-child(2)', 1000);
+				actions.waitForElementToShow(this.d1, 5000);
+				actions.waitForElementToShow(this.d2, 5000);
+				actions.waitForElementToShow(this.d3, 5000);
+				actions.waitForElementToShow(this.d4, 5000);
             })
     });
 	
@@ -229,14 +231,18 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
         test.setUrl('/regression_engine_browser_online_5.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-                actions.waitForElementToShow('[sbisname="browserView"]', 40000);
-                this.view = find('[sbisname="browserView"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.input);
+				
+				this.view = '[sbisname="browserView"]';
+                this.input = '[sbisname="TextBox 1"] input';
+				this.caption = '[sbisname="BackButton-caption"]';
+				this.dots = '.controls-BreadCrumbs__dots';
+				this.d1 = 'div.js-controls-BreadCrumbs__crumb:nth-child(1)';
+				this.d2 = 'div.js-controls-BreadCrumbs__crumb:nth-child(2)';
+				this.d3 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3)';
+				this.d4 = 'div.js-controls-BreadCrumbs__crumb:nth-child(4)';
+                
+				actions.waitForElementToShow(this.view, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('into_folder', function (actions) {
@@ -244,16 +250,15 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
                     window.$ws.single.ControlStorage.getByName('browserView').setCurrentRoot(33);
 					window.$ws.single.ControlStorage.getByName('browserView').reload();
                 });
-				actions.waitForElementToShow('[sbisname="BackButton-caption"]', 1000);
+				actions.waitForElementToShow(this.caption, 5000);
             })
 			
 			.capture('opened_dots', function (actions) {
-                this.dots = find('.controls-BreadCrumbs__dots');
 				actions.click(this.dots);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(1)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(2)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(3)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(3) .controls-BreadCrumbs__hierWrapper:nth-child(2)', 1000);
+				actions.waitForElementToShow(this.d1, 5000);
+				actions.waitForElementToShow(this.d2, 5000);
+				actions.waitForElementToShow(this.d3, 5000);
+				actions.waitForElementToShow(this.d4, 5000);
             })
     });
 	
@@ -262,14 +267,18 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
         test.setUrl('/regression_engine_browser_online_6.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-                actions.waitForElementToShow('[sbisname="browserView"]', 40000);
-                this.view = find('[sbisname="browserView"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.input);
+				
+				this.view = '[sbisname="browserView"]';
+                this.input = '[sbisname="TextBox 1"] input';
+				this.caption = '[sbisname="BackButton-caption"]';
+				this.dots = '.controls-BreadCrumbs__dots';
+				this.d1 = 'div.js-controls-BreadCrumbs__crumb:nth-child(1)';
+				this.d2 = 'div.js-controls-BreadCrumbs__crumb:nth-child(2)';
+				this.d3 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3)';
+				this.d4 = 'div.js-controls-BreadCrumbs__crumb:nth-child(4)';
+                
+				actions.waitForElementToShow(this.view, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('into_folder', function (actions) {
@@ -277,16 +286,15 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
                     window.$ws.single.ControlStorage.getByName('browserView').setCurrentRoot(33);
 					window.$ws.single.ControlStorage.getByName('browserView').reload();
                 });
-				actions.waitForElementToShow('[sbisname="BackButton-caption"]', 1000);
+				actions.waitForElementToShow(this.caption, 5000);
             })
 			
 			.capture('opened_dots', function (actions) {
-                this.dots = find('.controls-BreadCrumbs__dots');
 				actions.click(this.dots);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(1)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(2)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(3)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(3) .controls-BreadCrumbs__hierWrapper:nth-child(2)', 1000);
+				actions.waitForElementToShow(this.d1, 5000);
+				actions.waitForElementToShow(this.d2, 5000);
+				actions.waitForElementToShow(this.d3, 5000);
+				actions.waitForElementToShow(this.d4, 5000);
             })
     });
 	
@@ -295,14 +303,18 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
         test.setUrl('/regression_engine_browser_online_7.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-                actions.waitForElementToShow('[sbisname="browserView"]', 40000);
-                this.view = find('[sbisname="browserView"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.input);
+				
+				this.view = '[sbisname="browserView"]';
+                this.input = '[sbisname="TextBox 1"] input';
+				this.caption = '[sbisname="BackButton-caption"]';
+				this.dots = '.controls-BreadCrumbs__dots';
+				this.d1 = 'div.js-controls-BreadCrumbs__crumb:nth-child(1)';
+				this.d2 = 'div.js-controls-BreadCrumbs__crumb:nth-child(2)';
+				this.d3 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3)';
+				this.d4 = 'div.js-controls-BreadCrumbs__crumb:nth-child(4)';
+                
+				actions.waitForElementToShow(this.view, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('into_folder', function (actions) {
@@ -310,16 +322,15 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
                     window.$ws.single.ControlStorage.getByName('browserView').setCurrentRoot(33);
 					window.$ws.single.ControlStorage.getByName('browserView').reload();
                 });
-				actions.waitForElementToShow('[sbisname="BackButton-caption"]', 1000);
+				actions.waitForElementToShow(this.caption, 5000);
             })
 			
 			.capture('opened_dots', function (actions) {
-                this.dots = find('.controls-BreadCrumbs__dots');
 				actions.click(this.dots);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(1)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(2)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(3)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(3) .controls-BreadCrumbs__hierWrapper:nth-child(2)', 1000);
+				actions.waitForElementToShow(this.d1, 5000);
+				actions.waitForElementToShow(this.d2, 5000);
+				actions.waitForElementToShow(this.d3, 5000);
+				actions.waitForElementToShow(this.d4, 5000);
             })
     });
 
@@ -328,17 +339,18 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
         test.setUrl('/regression_engine_browser_online_4.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-                actions.waitForElementToShow('[sbisname="browserView"]', 40000);
-                this.view = find('[sbisname="browserView"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-				this.data3 = find('[data-id="3"]');
-				this.data5 = find('[data-id="5"]');
+
+				this.view = '[sbisname="browserView"]';
+                this.input = '[sbisname="TextBox 1"] input';
+				this.data3 = '[data-id="3"]';
+				this.data5 = '[data-id="5"]';
+                
+				actions.waitForElementToShow(this.view, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('plain', function (actions) {
 				actions.click(this.data3);
-				actions.wait(500);
             })
 
             .capture('without_table_head', function (actions) {
@@ -346,57 +358,10 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
                     $ws.single.ControlStorage.getByName('browserView')._options.showHead = false
 					$ws.single.ControlStorage.getByName('browserView')._redrawHead();
                 });
-				actions.wait(500);
             })
 
 			.capture('into_folder', function (actions) {
                 actions.click(this.data5);
-				actions.wait(500);
-            })
-    });
-
-    gemini.suite('have_titles_24_and_more', function (test) {
-
-        test.setUrl('/regression_engine_browser_online_4.html').setCaptureElements('.capture')
-
-            .before(function (actions) {
-                actions.waitForElementToShow('[sbisname="browserView"]', 40000);
-                this.view = find('[sbisname="browserView"]');
-                this.data2 = find('[data-id="2"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.input);
-            })
-
-            .capture('into_folder', function (actions) {
-                actions.click(this.data2);
-				actions.wait(500);
-				actions.executeJS(function (window) {
-                    window.$('[sbisname="browserView"] .controls-DataGridView__thead tr:nth-child(1) th:nth-child(3) .controls-DataGridView__th-content').html('Ara')
-                });
-            })
-    });
-
-    gemini.suite('bread_crumbs_max_lenght', function (test) {
-
-        test.setUrl('/regression_engine_browser_online_4.html').setCaptureElements('.capture')
-
-            .before(function (actions) {
-                actions.waitForElementToShow('[sbisname="browserView"]', 40000);
-                this.view = find('[sbisname="browserView"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-            })
-
-            .capture('into_folder', function (actions) {
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('browserView').setCurrentRoot(11);
-					window.$ws.single.ControlStorage.getByName('browserView').reload();
-                });
-				actions.waitForElementToShow('[sbisname="BackButton-caption"]', 1000);
             })
     });
 });
