@@ -32,9 +32,9 @@ define('js!SBIS3.CONTROLS.FilterPanelDataRange',
                if (filter[0] === this.getStartValue() && filter[1] === this.getEndValue()) {
                   return;
                }
-               this._options.filter = filter;
                this.setStartValue(filter[0]);
                this.setEndValue(filter[1]);
+               this._options.filter = filter;
             },
 
             getFilter: function() {
@@ -42,15 +42,19 @@ define('js!SBIS3.CONTROLS.FilterPanelDataRange',
             },
 
             setStartValue: function(value) {
-               this._options.filter = [value, this._options.filter[1]];
-               FilterPanelDataRange.superclass.setStartValue.apply(this, [value]);
-               this._notifyFilterChange();
+               if (value !== this._options.filter[0]) {
+                  this._options.filter = [value, this._options.filter[1]];
+                  FilterPanelDataRange.superclass.setStartValue.apply(this, [value]);
+                  this._notifyFilterChange();
+               }
             },
 
             setEndValue: function(value) {
-               this._options.filter = [this._options.filter[0], value];
-               FilterPanelDataRange.superclass.setEndValue.apply(this, [value]);
-               this._notifyFilterChange();
+               if (value !== this._options.filter[1]) {
+                  this._options.filter = [this._options.filter[0], value];
+                  FilterPanelDataRange.superclass.setEndValue.apply(this, [value]);
+                  this._notifyFilterChange();
+               }
             },
 
             _notifyFilterChangeFn: function () {
