@@ -62,6 +62,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           showEditActions: function() {
              this._getEditActions().removeClass('ws-hidden');
+             this.getContainer().toggleClass('controls-ItemsToolbar__withEditActions', true);
              this._toggleEditClass(true);
           },
           /**
@@ -70,6 +71,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           hideEditActions: function() {
              if (this._editActions) {
                 this._editActions.addClass('ws-hidden');
+                this.getContainer().toggleClass('controls-ItemsToolbar__withEditActions', false);
                 this._toggleEditClass(false);
              }
           },
