@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
          'html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownList_IconItem'
       ],
 
-      function(CompoundControl, DropdownList, dotTplFn, itemTpl, rk) {
+      function(CompoundControl, DropdownList, dotTplFn, itemTpl) {
          'use strict';
          var MyDropdownList = CompoundControl.extend([],{
             $protected: {
