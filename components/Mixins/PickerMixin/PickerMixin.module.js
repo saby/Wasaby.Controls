@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
             });
          }
 
-         pickerConfig.parent = pickerConfig.parent || parent;
+         pickerConfig.parent = pickerConfig.parent !== undefined ? pickerConfig.parent : parent;
          pickerConfig.opener = this;
          pickerConfig.context = pickerConfig.context || (parent && parent.getLinkedContext());
          pickerConfig.target = pickerConfig.target || this._container;
