@@ -1,4 +1,4 @@
-<div class="controls-FilterPanelItem">
+<div class="controls-FilterPanelItem{{item.template === 'js!SBIS3.CONTROLS.FilterPanelBoolean' ? ' controls-FilterPanelItem__boolean'}}">
    <ws:if data="{{item.template === 'js!SBIS3.CONTROLS.FilterPanelBoolean'}}">
       <ws:SBIS3.CONTROLS.FilterPanelBoolean hasMarkup="{{ true }}" caption="{{item.caption}}" filter="{{'filter'|mutable}}"/>
    </ws:if>
@@ -8,7 +8,7 @@
               caption="{{ item.caption }}"
               properties="{{ item.properties }}"
               name="{{ item.id }}"
-              titleTpl="tmpl!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelSpoilerTitleTemplate"
+              rightPartTitleTpl="tmpl!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelSpoilerRightPartTitleTemplate"
               contentTpl="{{ item.template }}" >
       </ws:SBIS3.CONTROLS.Spoiler>
    </ws:else>

@@ -4,7 +4,7 @@
          <opt name="caption" value="Сбросить фильтр"/>
          <opt name="command" value="resetFilter"/>
       </component>
-      <div class="controls-FilterPanel__switchButton"></div>
+      <ws:SBIS3.CONTROLS.IconButton className="controls-FilterPanel__hideFilterButton controls-IconButton_filter-{{filterAlign}}-close" command="toggleFilter"/>
    </div>
    <div class="controls-FilterPanel__contentContainer">
       <ws:if data="{{ expanded }}">
