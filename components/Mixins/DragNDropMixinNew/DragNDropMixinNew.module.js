@@ -122,6 +122,14 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          setDragEntity: function(dragEntityFactory) {
             this._options.dragEntity = dragEntityFactory;
          },
+
+         getItemsDragNDrop: function(){
+            return true;
+         },
+
+         getItemsDragNDrop: function(){
+            return true;
+         },
          //endregion public
 
          //region handlers
@@ -448,8 +456,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
                   //если есть таргет то запускаем _endDrag над таргетом иначе запускаем над тем кто начал
                   this._endDrag(e, inside ? this._findDragDropContainer(e, DragObject.getTargetsDomElemet()) : false);
                }
-               this._moveBeginX = null;
-               this._moveBeginY = null;
             }
          },
          /**
