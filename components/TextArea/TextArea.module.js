@@ -35,8 +35,8 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
     */
 
    var TextArea = TextBoxBase.extend( /** @lends SBIS3.CONTROLS.TextArea.prototype */ {
+      _dotTplFn: dotTplFn,
       $protected: {
-         _dotTplFn: dotTplFn,
          _inputField: null,
          _cachedW: null,
          _cachedH: null,

@@ -28,13 +28,13 @@
     <div class="controls-FilterPanelChooser__footer">
         <ws:SBIS3.CONTROLS.Link name="controls-FilterPanelChooser__dictionaryButton"
             className="controls-FilterPanelChooser__dictionaryButton"
-            caption="{{ allButtonCaption }}"
+            caption="{{ captionFullList }}"
             command="showDictionary"
             visible="{{ viewMode !== 'list' }}">
         </ws:SBIS3.CONTROLS.Link>
         <ws:SBIS3.CONTROLS.Link name="controls-FilterPanelChooser__allButton"
             className="controls-FilterPanelChooser__allButton"
-            caption="{{ viewMode === 'dictionary' ? ('Ещё' + ' ' + (_itemsCount - 3)) : allButtonCaption }}"
+            caption="{{ viewMode === 'dictionary' ? ('Ещё' + ' ' + (_itemsCount - 3)) : captionFullList }}"
             command="showAll"
             visible="{{ _itemsCount > 3 }}">
         </ws:SBIS3.CONTROLS.Link>

@@ -10,6 +10,26 @@ define(
    'use strict';
 
       var
+         createModel = function(controlCharactersSet, mask) {
+            return new FormatModel({controlCharactersSet: controlCharactersSet, mask: mask});
+         },
+         getItemsForTemplate = function(formatModel, maskReplacer) {
+            var
+                value,
+                items = [],
+                model = formatModel.model;
+
+            for (var i = 0; i < model.length; i++) {
+               value = '';
+               for (var j = 0; j < model[i].mask.length; j++) {
+                  value += (typeof model[i].value[j] === 'undefined') ? maskReplacer : model[i].value[j];
+               }
+               items.push({isGroup: model[i].isGroup, text: value});
+            }
+            return items;
+         };
+
+      var
       /**
        * Замещает символ в определенном контейнере в определённой позиции
        * @param container контейнер
@@ -29,7 +49,7 @@ define(
        * @private
        */
       _setHomePosition = function () {
-         var group = this.formatModel.model[0];
+         var group = this._getFormatModel().model[0];
          _moveCursor(_getContainerByIndex.call(this, (group  &&  group.isGroup) ? 0 : 1), 0);
       },
 
@@ -38,9 +58,11 @@ define(
        * @private
        */
       _setEndPosition = function () {
-         var groupInd = this.formatModel.model.length - 1;
-         var group = this.formatModel.model[groupInd];
-         _moveCursor(_getContainerByIndex.call(this, (group  &&  group.isGroup) ? groupInd : --groupInd), this.formatModel.model[groupInd].mask.length);
+         var
+             formatModel = this._getFormatModel(),
+             groupInd = formatModel.model.length - 1,
+             group = formatModel.model[groupInd];
+         _moveCursor(_getContainerByIndex.call(this, (group  &&  group.isGroup) ? groupInd : --groupInd), formatModel.model[groupInd].mask.length);
       },
       _setPreviousPosition = function () {
          var cursor = _getCursor.call(this, true),
@@ -140,16 +162,18 @@ define(
        * @protected
        */
       _getCursor = function(position) {
-         var selection = $ws._const.browser.isIE8 || $ws._const.browser.isIE9 || $ws._const.browser.isIE10 ? window.getSelectionForIE() : window.getSelection();
+         var
+             formatModel = this._getFormatModel(),
+             selection = $ws._const.browser.isIE8 || $ws._const.browser.isIE9 || $ws._const.browser.isIE10 ? window.getSelectionForIE() : window.getSelection();
          if (selection.type !== 'None') {
             selection = selection.getRangeAt(0);
             this._lastSelection = selection;
          } else {
             selection = this._lastSelection || selection;
-            if (selection  &&  this.formatModel._options.newContainer) {
-               selection.setStart(this.formatModel._options.newContainer, 0);
-               selection.setEnd(this.formatModel._options.newContainer, 0);
-               this.formatModel._options.newContainer = undefined;
+            if (selection  &&  formatModel._options.newContainer) {
+               selection.setStart(formatModel._options.newContainer, 0);
+               selection.setEnd(formatModel._options.newContainer, 0);
+               formatModel._options.newContainer = undefined;
             }
          }
 
@@ -176,7 +200,7 @@ define(
             isSepCont,// [Number] является ли контейнер разделителем (1) или вводимым блоком (0)
             cnt,// [Number] если контейнер - разделитель, то возвращается положение следующего контейнера
             pos = position,// [Number] если контейнер - разделитель, то возвращается начальная позиция курсора в контейнере
-            sepFirst = !this.formatModel.model[0].isGroup,
+            sepFirst = !this._getFormatModel().model[0].isGroup,
             input = this._inputField.get(0);// поле ввода
          if (container.parentNode.childNodes.length > 1) {
             for (var i = 0; i < container.parentNode.childNodes.length; i++){
@@ -192,7 +216,7 @@ define(
             }
          } else {
             buf = $(container.parentNode).index();
-            isSepCont = (buf + !this.formatModel.model[0].isGroup) % 2;
+            isSepCont = (buf + !this._getFormatModel().model[0].isGroup) % 2;
             cnt = isSepCont ? buf + 1 : buf;
             pos = isSepCont ? 0 : position;
             // если контейнер - разделитель и он последний
@@ -622,46 +646,6 @@ define(
           */
          _inputField: null,
          /**
-          * Символ-заполнитель, на который замещаются все управляющие символы в маске для последующего отображения на
-          * странице. В маске изначально не должны присутствовать символы-заполнители. По умолчанию используется знак
-          * нижнего подчёркивания.
-          * !Важно: нельзя использовать знак вопроса.
-          */
-         _maskReplacer: '_',
-         /**
-          * Набор допустимых управляющих символов в маске. Задаются отдельно в каждом контроле в зависимости от контекста.
-          * Пример:
-          *       Для контролла DatePicker это: Y(год), M(месяц), D(день), H(час), I(минута), S(секунда), U(доля секунды).
-          * Каждому допустимому символу ставится в соответствие основной управляющий символ, в зависимости от которого
-          * определяется, какой тип символа может вводиться.
-          * Условные обозначения основных управляющих символов:
-          *     1. d - Цифра
-          *     2. L - Заглавная буква
-          *     3. l - Строчная буква
-          *     4. x - Буква или цифра
-          * Если допустимые управляющие символы не заданы, используются основные управляющие символы.
-          * Сами управляющие символы используются для задании маски при создании контролла в опции mask.
-          * Любой символ, не являющийся управляющим трактуется как разделитель.
-          * Набор указывается строго символ к символу. Пример:
-          *       Для контролла DatePicker
-          *             _controlCharactersSet: {
-          *                   'Y' : 'd',
-          *                   'M' : 'd',
-          *                   'D' : 'd',
-          *                   'H' : 'd',
-          *                   'I' : 'd',
-          *                   'H' : 'd',
-          *                   'U' : 'd'
-          *             }
-          */
-         _controlCharactersSet: {
-            'd': 'd',
-            'L': 'L',
-            'l': 'l',
-            'X': 'X',
-            'x': 'x'
-         },
-         /**
           * Допустимые при создании контролла маски.
           */
          _possibleMasks: null,
@@ -669,15 +653,50 @@ define(
           * Опции создаваемого контролла
           */
          _options: {
+            /**
+             * Набор допустимых управляющих символов в маске. Задаются отдельно в каждом контроле в зависимости от контекста.
+             * Пример:
+             *       Для контролла DatePicker это: Y(год), M(месяц), D(день), H(час), I(минута), S(секунда), U(доля секунды).
+             * Каждому допустимому символу ставится в соответствие основной управляющий символ, в зависимости от которого
+             * определяется, какой тип символа может вводиться.
+             * Условные обозначения основных управляющих символов:
+             *     1. d - Цифра
+             *     2. L - Заглавная буква
+             *     3. l - Строчная буква
+             *     4. x - Буква или цифра
+             * Если допустимые управляющие символы не заданы, используются основные управляющие символы.
+             * Сами управляющие символы используются для задании маски при создании контролла в опции mask.
+             * Любой символ, не являющийся управляющим трактуется как разделитель.
+             * Набор указывается строго символ к символу. Пример:
+             *       Для контролла DatePicker
+             *             _controlCharactersSet: {
+             *                   'Y' : 'd',
+             *                   'M' : 'd',
+             *                   'D' : 'd',
+             *                   'H' : 'd',
+             *                   'I' : 'd',
+             *                   'H' : 'd',
+             *                   'U' : 'd'
+             *             }
+             */
+            _controlCharactersSet: {
+               'd': 'd',
+               'L': 'L',
+               'l': 'l',
+               'X': 'X',
+               'x': 'x'
+            },
+            /**
+             * Символ-заполнитель, на который замещаются все управляющие символы в маске для последующего отображения на
+             * странице. В маске изначально не должны присутствовать символы-заполнители. По умолчанию используется знак
+             * нижнего подчёркивания.
+             * !Важно: нельзя использовать знак вопроса.
+             */
+            _maskReplacer: '_',
             // ! в файле маски (FormattedTextBoxBase_mask.xhtml) не оставлять пробелы и переносы строк
-            maskTemplateFn: maskTemplateFn,
+            _maskTemplateFn: maskTemplateFn,
             //упрощенная модель для вставки в xhtml-шаблон
-            modelForMaskTpl: []
-         },
-         /**
-          * Модель форматного поля
-          */
-         formatModel: {
+            _modelForMaskTpl: []
          }
       },
 
@@ -719,13 +738,15 @@ define(
          });
          this._inputField.bind('paste', function(e) {
             var
+                formatModel = self._getFormatModel(),
+                maskReplacer = self._getMaskReplacer(),
                 //Единственный способ понять, что мы пытаемся вставить это посмотреть в буфере.
                 //Берём из буфера только текст, так-как возможно там присутствует и разметка, которая нас не интересует.
                 pasteValue = e.originalEvent.clipboardData ? e.originalEvent.clipboardData.getData('text') : window.clipboardData.getData('text');
             //Пропустим вставляемый текст через модель. Если setText модели вернет true - значит
             //вставляемый текст соответствует маске и мы его можем проставить в значение текстового поля
-            if (self.formatModel.setText(pasteValue, self._maskReplacer)) {
-               self.setText(self.formatModel.getText(self._maskReplacer));
+            if (formatModel.setText(pasteValue, maskReplacer)) {
+               self.setText(formatModel.getText(maskReplacer));
             }
             e.preventDefault();
          });
@@ -748,8 +769,12 @@ define(
          }
       },
 
-      init: function(){
-         FormattedTextBoxBase.superclass.init.apply(this, arguments);
+      _getFormatModel: function() {
+         return this._options._formatModel;
+      },
+
+      _getMaskReplacer: function() {
+         return this._options._maskReplacer;
       },
 
       //Тут обрабатываются управляющие команды
@@ -793,10 +818,10 @@ define(
          var keyInsertInfo;
 
          //TODO сбрасываем, чтобы после setText(null) _updateText после ввода символов обновлял опцию text
-         this.formatModel._settedText = '';
+         this._getFormatModel()._settedText = '';
 
          character = event.shiftKey ? character.toUpperCase() : character.toLowerCase();
-         keyInsertInfo = this.formatModel.insertCharacter(groupNum, position, character);
+         keyInsertInfo = this._getFormatModel().insertCharacter(groupNum, position, character);
          this._afterCharacterInsertHandler(keyInsertInfo);
 
          event.preventDefault();
@@ -844,7 +869,7 @@ define(
              keyInsertInfo;
 
          //TODO сбрасываем, чтобы после setText(null) _updateText после ввода символов обновлял опцию text
-         this.formatModel._settedText = '';
+         this._getFormatModel()._settedText = '';
 
          //Если в поле ввода выделен текст
          if (positionIndexesBegin[0] != positionIndexesEnd[0] || positionIndexesBegin[1] != positionIndexesEnd[1]) {
@@ -852,7 +877,7 @@ define(
             startGroupNum = positionIndexesBegin[0];
             endGroupNum   = positionIndexesEnd[0];
             for (var i = endGroupNum; i >= startGroupNum; i--) {
-               group = this.formatModel.model[i];
+               group = this._getFormatModel().model[i];
                //проходим только группы, т.к. разделители не интересуют
                if ( ! group.isGroup) {
                   continue;
@@ -872,14 +897,14 @@ define(
                   startCharNum = positionIndexesBegin[1];
                }
                for (var j = endCharNum; j >= startCharNum; j--) {
-                  keyInsertInfo = this.formatModel.insertCharacter(i, j, this._maskReplacer, true);
+                  keyInsertInfo = this._getFormatModel().insertCharacter(i, j, this._getMaskReplacer(), true);
                }
             }
             //модель обновили - обновляем опцию text и html-отображение
             this._updateText();
             this._inputField.html(this._getHtmlMask());
          } else {
-            keyInsertInfo = this.formatModel.insertCharacter(groupNum, position + positionOffset, this._maskReplacer, true);
+            keyInsertInfo = this._getFormatModel().insertCharacter(groupNum, position + positionOffset, this._getMaskReplacer(), true);
          }
          this._afterCharacterInsertHandler(keyInsertInfo, positionOffset);
       },
@@ -888,20 +913,21 @@ define(
          var
              position,
              container,
-             lastGroupNum;
+             lastGroupNum,
+             formatModel = this._getFormatModel();
          if (keyInsertInfo) {
             container = _getContainerByIndex.call(this, keyInsertInfo.groupNum);
             //записываем символ в html
             _replaceCharacter.call(this, container, keyInsertInfo.position, keyInsertInfo.character);
-            position = this.formatModel._options.cursorPosition.position + (positionOffset || 0);
+            position = formatModel._options.cursorPosition.position + (positionOffset || 0);
             //проверяем был ли введен последний символ в последней группе
-            lastGroupNum = this.formatModel.model.length - 1;
-            lastGroupNum = this.formatModel.model[lastGroupNum].isGroup ? lastGroupNum : lastGroupNum - 1;
+            lastGroupNum = formatModel.model.length - 1;
+            lastGroupNum = formatModel.model[lastGroupNum].isGroup ? lastGroupNum : lastGroupNum - 1;
             //Заново ищем контейнер группы, т.к. после замены символа, снаружи значение текста может быть изменено(например setText)
             //и html будет полность изменён, а в переменной container лежит элемент, которого в DOM уже нет, и курсор не сможет верно спозиционироваться
             _moveCursor(_getContainerByIndex.call(this, keyInsertInfo.groupNum), position);
             //Если positionOffset = -1, это значит был нажат backspace, и onInputFinished в таком случае стрелять не надо
-            if (positionOffset !== -1 && keyInsertInfo.groupNum == lastGroupNum  &&  keyInsertInfo.position == this.formatModel.model[lastGroupNum].mask.length - 1) {
+            if (positionOffset !== -1 && keyInsertInfo.groupNum == lastGroupNum  &&  keyInsertInfo.position == formatModel.model[lastGroupNum].mask.length - 1) {
                this._notify('onInputFinished');
             }
          }
@@ -917,17 +943,13 @@ define(
        * Изменяем опции до отрисовки
        */
       _modifyOptions: function(options) {
-         //_modifyOptions вызывается дважды, в первом вызове следующие переменные не определены
-         //TODO в Control.module.js _modifyOptions первый раз вызывается на разметке, без нужного контекста
-         if ( !this._controlCharactersSet  ||  !this._maskReplacer  ||  !options.mask) {
-            return options;
-         }
-         this.formatModel = new FormatModel({controlCharactersSet: this._controlCharactersSet, mask: options.mask});
+         var formatModel = createModel(options._controlCharactersSet, options.mask);
          if (options.text) {
-            this.formatModel.setText(options.text, this._maskReplacer);
+            formatModel.setText(options.text, options._maskReplacer);
          }
+         options._formatModel = formatModel;
          //записываем модель для шаблона
-         options.modelForMaskTpl = this._getItemsForTemplate();
+         options._modelForMaskTpl = getItemsForTemplate(formatModel, options._maskReplacer);
          return options;
       },
       /**
@@ -941,7 +963,8 @@ define(
       },
 
       _updateTextFromModel: function() {
-         this._options.text = (this.formatModel._settedText !== null && typeof this.formatModel._settedText !== "undefined") ? this.formatModel.getText(this._maskReplacer) : this.formatModel._settedText;
+         var formatModel = this._getFormatModel();
+         this._options.text = (formatModel._settedText !== null && typeof formatModel._settedText !== "undefined") ? formatModel.getText(this._getMaskReplacer()) : formatModel._settedText;
       },
 
       _notifyOnTextChange: function() {
@@ -967,23 +990,6 @@ define(
          }
       },
 
-      _getItemsForTemplate: function() {
-         var value;
-
-         if ( !this.formatModel || !this.formatModel.model) {
-            return [];
-         }
-         var model = this.formatModel.model;
-         var items = [];
-         for (var i = 0; i < model.length; i++) {
-            value = '';
-            for (var j = 0; j < model[i].mask.length; j++) {
-               value += (typeof model[i].value[j] === 'undefined') ? this._maskReplacer : model[i].value[j];
-            }
-            items.push({isGroup: model[i].isGroup, text: value});
-         }
-         return items;
-      },
       /**
        * Возвращает html-разметку для заданной маски
        * @returns {string} html-разметка
@@ -991,7 +997,7 @@ define(
        */
       _getHtmlMask: function() {
          //передать в шаблон
-         return maskTemplateFn(this._getItemsForTemplate());
+         return maskTemplateFn(getItemsForTemplate(this._getFormatModel(), this._getMaskReplacer()));
       },
 
       /**
@@ -1001,7 +1007,7 @@ define(
        */
       _focusHandler: function() {
          var
-            child = !this.formatModel.model[0].isGroup ? 1 : 0,
+            child = !this._getFormatModel().model[0].isGroup ? 1 : 0,
             startContainer = this._inputField.get(0).childNodes[child].childNodes[0],
             startPosition = 0;
          _moveCursor(startContainer, startPosition);
@@ -1040,11 +1046,12 @@ define(
        * @see onInputFinished
        */
       setCursor: function(groupNum, position) {
-         if (!this.formatModel.setCursor(groupNum, position)) {
+         var formatModel = this._getFormatModel();
+         if (!formatModel.setCursor(groupNum, position)) {
             return false;
          }
-         this.formatModel._options.newContainer = _getContainerByIndex.call(this, this.formatModel._options.cursorPosition.group);
-         this.formatModel._options.newPosition = this.formatModel._options.cursorPosition.position;
+         formatModel._options.newContainer = _getContainerByIndex.call(this, formatModel._options.cursorPosition.group);
+         formatModel._options.newPosition = formatModel._options.cursorPosition.position;
       },
 
       /**
@@ -1084,7 +1091,7 @@ define(
          this._setText(text);
       },
       _setText: function(text){
-         this.formatModel.setText(text, this._maskReplacer);
+         this._getFormatModel().setText(text, this._getMaskReplacer());
          this._updateText();
          this._textChanged = true;
          //обновить html
@@ -1104,7 +1111,7 @@ define(
       setMask: function(mask) {
          var self = this;
          this._options.mask = mask;
-         this.formatModel.setMask(mask);
+         this._getFormatModel().setMask(mask);
          this._inputField.html(this._getHtmlMask());
          //TODO исправить выставление курсора
          setTimeout(function() {

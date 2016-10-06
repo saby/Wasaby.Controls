@@ -896,8 +896,17 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notify('onScrollPageChange', scrollPage);
          },
          _setScrollPagerPosition: function(){
-            var right = $(window).width() - this.getContainer().get(0).getBoundingClientRect().right;
-            this._scrollPager.getContainer().css('right', right);
+            var right;
+            // На iOS ширина экрана всегда меньше  максимальной шираны страницы,
+            // поэтому устанавливаем для iOS right=0 через css.
+            // Этот хак исправляет проблемы с неправильным позиционированием пэджера
+            // при изменении масштаба страницы на iOS устройствах.
+            // https://inside.tensor.ru/opendoc.html?guid=14851482-d80d-417f-a157-ea67c942b59b
+            // Для других устройств right рассчитываем динамически.
+            if (!$ws._const.browser.isMobileIOS) {
+               right = $(window).width() - this.getContainer().get(0).getBoundingClientRect().right;
+               this._scrollPager.getContainer().css('right', right);
+            }
          },
          _keyboardHover: function (e) {
             var
@@ -1034,11 +1043,11 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
                 target = this._findItemByElement($target),
-                id;
+                model;
 
             if (target.length && this._isViewElement(target)) {
-               id = this._getItemsProjection().getByHash(target.data('hash')).getContents().getId();
-               this._elemClickHandler(id, this.getItems().getRecordById(id), e.target, e);
+               model = this._getItemsProjection().getByHash(target.data('hash')).getContents();
+               this._elemClickHandler(model.getId(), model, e.target, e);
             }
             if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox')){
                $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();

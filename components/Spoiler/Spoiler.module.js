@@ -4,8 +4,9 @@ define('js!SBIS3.CONTROLS.Spoiler', [
    'js!SBIS3.CORE.MarkupTransformer',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'tmpl!SBIS3.CONTROLS.Spoiler',
-   'tmpl!SBIS3.CONTROLS.Spoiler/resources/TitleContent'
-], function(ButtonBase, Expandable, MarkupTransformer, TemplateUtil, dotTplFn, TitleContent) {
+   'tmpl!SBIS3.CONTROLS.Spoiler/resources/LeftPartTitleTemplate',
+   'tmpl!SBIS3.CONTROLS.Spoiler/resources/MiddlePartTitleTemplate'
+], function(ButtonBase, Expandable, MarkupTransformer, TemplateUtil, dotTplFn, LeftPartTitleTemplate, MiddlePartTitleTemplate) {
 
    'use strict';
 
@@ -49,7 +50,9 @@ define('js!SBIS3.CONTROLS.Spoiler', [
          _options: {
             expandedClassName: 'controls-Spoiler_expanded',
             contentTpl: '',
-            titleTpl: '',
+            leftPartTitleTpl: '',
+            middlePartTitleTpl: '',
+            rightPartTitleTpl: '',
             properties: null
          },
          _contentInitialized: false
@@ -58,7 +61,9 @@ define('js!SBIS3.CONTROLS.Spoiler', [
          var
             opts = Spoiler.superclass._modifyOptions.apply(this, arguments);
          opts._contentTpl = TemplateUtil.prepareTemplate(opts.contentTpl);
-         opts._titleTpl = opts.titleTpl ? TemplateUtil.prepareTemplate(opts.titleTpl) : TitleContent;
+         opts._leftPartTitleTpl = opts.leftPartTitleTpl ? TemplateUtil.prepareTemplate(opts.leftPartTitleTpl) : LeftPartTitleTemplate;
+         opts._middlePartTitleTpl = opts.middlePartTitleTpl ? TemplateUtil.prepareTemplate(opts.middlePartTitleTpl) : MiddlePartTitleTemplate;
+         opts._rightPartTitleTpl = opts.rightPartTitleTpl ? TemplateUtil.prepareTemplate(opts.rightPartTitleTpl) : false;
          return opts;
       },
       init: function() {
@@ -91,7 +96,7 @@ define('js!SBIS3.CONTROLS.Spoiler', [
          this._container.attr('disabled', !this.isEnabled());
       },
       _onExpandedChange: function(event, expanded) {
-         this._getToggleItemContainer().toggleClass('icon-Expand', expanded).toggleClass('icon-Next', !expanded);
+         this._getToggleItemContainer().toggleClass('icon-CollapseLight', expanded).toggleClass('icon-ExpandLight', !expanded);
          if (expanded && !this._contentInitialized) {
             this._initializeContent();
          }
