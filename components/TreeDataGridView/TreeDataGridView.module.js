@@ -277,15 +277,16 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
                      // TODO для обратной совместимости - удалить позже
                      if(self._options.arrowActivatedHandler) {
+                        $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.TreeDataGridView', 'Опция arrowActivatedHandler помечена как deprecated и будет удалена в 3.7.4.200.');
                         self._options.arrowActivatedHandler.call(this,
                             hoveredItem.record,
                             id,
                             hoveredItem.container
                         );
                      } else {
-                        self.setSelectedKey(id);
                         self._activateItem(id);
                      }
+                     self.setSelectedKey(id);
                   }
                }
             });
