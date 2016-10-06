@@ -1,11 +1,15 @@
 define(
    'js!SBIS3.CONTROLS.FormattedTextBoxBase',
    [
+      'Core/IoC',
+      'Core/ConsoleLogger',
+      'Core/constants',
+      'Core/core-extend',
       'js!SBIS3.CONTROLS.TextBoxBase',
       'html!SBIS3.CONTROLS.FormattedTextBoxBase/FormattedTextBoxBase_mask',
       'is!msIe?js!SBIS3.CONTROLS.FormattedTextBoxBase/resources/ext/ierange-m2-min'
    ],
-   function (TextBoxBase, maskTemplateFn) {
+   function (IoC, ConsoleLogger, constants, cExtend, TextBoxBase, maskTemplateFn) {
 
    'use strict';
 
@@ -798,6 +802,9 @@ define(
             this._clearCommandHandler('backspace');
          } else if (key == 88 && isCtrl) {
             //предотвращаем вырезание Ctrl+X
+         } else if (key == constants.key.enter && constants.browser.firefox) {
+            //в firefox по нажатию на enter в вёрстку добавляется <br> и начинает ехать вёрстка
+            event.preventDefault();
          } else {
             return;
          }
