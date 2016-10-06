@@ -224,13 +224,18 @@ define(
       },
 
       _addDefaultValidator: function() {
-         var self = this;
+         var self = this,
+            _validationErrors = {
+               time: rk('Время заполнено некорректно'),
+               date: rk('Дата заполнена некорректно'),
+               datetime: rk('Дата или время заполнены некорректно')
+            };
          //Добавляем к прикладным валидаторам стандартный, который проверяет что дата заполнена корректно.
          this._options.validators.push({
             validator: function() {
                return self._getFormatModel().isEmpty(this._getMaskReplacer()) ? true : self._options.date instanceof Date;
             },
-            errorMessage: rk('Дата заполнена некорректно')
+            errorMessage: _validationErrors[this.getType()]
          });
       },
 
@@ -315,6 +320,42 @@ define(
             throw new Error('Аргументом должна являться строка или дата');
          }
          $ws.single.ioc.resolve('ILogger').log('DateBox', 'метод "setValue" будет удален в 3.7.3.20. Используйте "setDate" или "setText".');
+      },
+
+      /**
+       * Получить тип отображаемых данных.
+       * Возвращает режим работы: дата/ время/ дата и время.
+       * @returns (String) Тип данных ('date' || 'time' || 'datetime').
+       * @example
+       * <pre>
+       *    var type = control.getType();
+       *    switch(type){
+       *       case "date": $ws.core.alert("Дата"); break;
+       *       case "time": $ws.core.alert("Время"); break;
+       *       case "datetime": $ws.core.alert("ДатаВремя"); break;
+       *    }
+       * </pre>
+       * @see mask
+       */
+      getType: function(){
+         var
+            dateTypes = {
+               date : ['Y', 'M', 'D'],
+               time : ['H', 'I', 'S', 'U']
+            },
+            mask = this._getMask().split(''),
+            result = '',
+            s = 0;
+         for (var dateType in dateTypes){
+            for (var j = 0, l = dateTypes[dateType].length; j < l; j++){
+               if (mask.indexOf(dateTypes[dateType][j]) != -1){
+                  s++;
+                  result = dateType;
+                  break;
+               }
+            }
+         }
+         return s == 2 ? 'datetime' : result;
       },
 
       /**
