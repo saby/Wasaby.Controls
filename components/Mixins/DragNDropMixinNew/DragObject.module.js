@@ -227,20 +227,6 @@ define('js!SBIS3.CONTROLS.DragObject', [
          this._owner = owner;
       },
 
-      _getTargetsControl: function(){
-         var control = $(this.getTargetsDomElemet()).wsControl(),
-            found = function(control) {
-               if (control) {
-                  if ($ws.helpers.instanceOfMixin(control, 'SBIS3.CONTROLS.DragNDropMixinNew') && control.getItemsDragNDrop()) {
-                     return control;
-                  }
-                  return found(control.getParent());
-               }
-            };
-
-         return found(control);
-      },
-
       _getTargetsControl: function() {
          var control = $(this.getTargetsDomElemet()).wsControl(),
             found = function(control) {
