@@ -1,3 +1,4 @@
+/*
 gemini.suite('SBIS3.CONTROLS.MenuLink Online', function () {
 
 	gemini.suite('base', function (test) {
@@ -1298,4 +1299,4 @@ gemini.suite('SBIS3.CONTROLS.MenuLink Online', function () {
                 actions.mouseMove(this.button);
             })
     });
-});
+});*/

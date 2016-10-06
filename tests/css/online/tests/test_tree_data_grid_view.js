@@ -183,7 +183,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 	
 	gemini.suite('ellipsis_column_and_arrow_handler', function (test) {
 
-        test.setUrl('/regression_tree_data_grid_view_online_5.html').skip('chrome').setCaptureElements('.capture')
+        test.setUrl('/regression_tree_data_grid_view_online_5.html').setCaptureElements('.capture')
 
             .before(function (actions) {
 				

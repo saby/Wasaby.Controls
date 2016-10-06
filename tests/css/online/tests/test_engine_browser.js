@@ -1,3 +1,4 @@
+/*
 gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 	
     gemini.suite('base', function (test) {
@@ -187,4 +188,4 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 				actions.mouseMove('.controls-BackButton__caption');
             })
     });
-});
+});*/

@@ -1,3 +1,4 @@
+/*
 gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 	
     gemini.suite('TreeCompositeViewTable', function (test) {
@@ -1107,4 +1108,4 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_4);
             })
     });
-});
+});*/

@@ -1,5 +1,4 @@
-
-
+/*
 gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
     gemini.suite('base', function (test) {
@@ -743,4 +742,4 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.smile_menu);
 			})
     });
-});
+});*/

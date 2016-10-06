@@ -1,5 +1,4 @@
-
-
+/*
 gemini.suite('SBIS3.CONTROLS.SelectorButton Online', function () {
 
     gemini.suite('base', function (test) {
@@ -112,4 +111,4 @@ gemini.suite('SBIS3.CONTROLS.SelectorButton Online', function () {
                 actions.mouseMove('.controls-SelectorButton__cross');
             })
     });
-});
+});*/

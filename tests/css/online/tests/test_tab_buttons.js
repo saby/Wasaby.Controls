@@ -1,5 +1,4 @@
-
-
+/*
 gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
     gemini.suite('base', function (test) {
@@ -286,4 +285,4 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
 			.capture('plain')
 	});
-});
+});*/

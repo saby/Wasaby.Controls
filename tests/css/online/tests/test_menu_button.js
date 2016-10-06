@@ -1,3 +1,4 @@
+/*
 gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
 
     gemini.suite('base', function (test) {
@@ -138,7 +139,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
                 actions.mouseMove(this.item_1);
             })
     });*/
-
+/*
 	gemini.suite('with_scroll', function (test) {
 
         test.setUrl('/regression_menu_button_online_21.html').setCaptureElements('html')
@@ -891,7 +892,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
 			.capture('hovered_item', function (actions) {
                 actions.mouseMove(this.item_3);
             })
-    });
+    });*/
     /*
 	gemini.suite('right_side_with_submenu', function (test) {
 
@@ -934,7 +935,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
                 actions.mouseMove(this.item_3);
             })
     });*/
-	
+	/*
 	gemini.suite('bottom_side_with_submenu', function (test) {
 
         test.setUrl('/regression_menu_button_online_15.html').skip('firefox').setCaptureElements('html')
@@ -968,7 +969,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
 			.capture('hovered_item', function (actions) {
                 actions.mouseMove(this.item_1);
             })
-    });
+    });*/
 	/*
 	gemini.suite('bottom_right_side_with_submenu', function (test) {
 
@@ -1005,7 +1006,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
                 actions.mouseMove(this.item_1);
             })
     });*/
-
+/*
     gemini.suite('disabled_base_with_submenu', function (test) {
 
         test.setUrl('/regression_menu_button_online_15.html').setCaptureElements('.capture')
@@ -1315,7 +1316,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
             .capture('hovered', function (actions) {
                 actions.mouseMove(this.button);
             })
-    });
+    });*/
 	/*
 	gemini.suite('opened_menu_not_scrolling', function (test) {
 
@@ -1357,7 +1358,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
                 }, 2000);
             })
     });*/
-	
+	/*
 	gemini.suite('with_picker_class_name', function (test) {
 
         test.setUrl('/regression_menu_button_online_23.html').setCaptureElements('.capture')
@@ -1389,4 +1390,4 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
                 actions.mouseMove(this.item_1);
             })
     });
-});
+});*/
