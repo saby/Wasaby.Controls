@@ -89,13 +89,16 @@
   .controls-DropdownList__item, .controls-DropdownList__selectedItem *{
     font-size: 15px;
   }
+
   &.controls-DropdownList__equalsWidth {
       .controls-DropdownList__body {
          border-radius: @DropdownList-picker-list-border-radius;
       }
    }
-
    &.controls-DropdownList__type-fastDataFilter {
+     .controls-DropdownList__body {
+       max-width: 400px;
+     }
      .controls-DropdownList__selectedItem{
        .controls-DropdownList__textWrapper{
          color: #313E78;
