@@ -178,10 +178,26 @@ define('js!SBIS3.CONTROLS.DragObject', [
          }
       },
 
+      _getTargetsControl: function() {
+         var control = $(this.getTargetsDomElemet()).wsControl(),
+            found = function(control) {
+               //такой поиск нужен что бы в таргете всегда был контрол с dnd миксином, кроме того на ipade контрол находит себя по таргету
+               //если внутри контрола будут вложенные контролы то там драгндроп работать не будет.
+               if (control) {
+                  if ($ws.helpers.instanceOfMixin(control, 'SBIS3.CONTROLS.DragNDropMixinNew') && control.getItemsDragNDrop()) {
+                     return control;
+                  }
+                  return found(control.getParent());
+               }
+            };
+
+         return found(control);
+      },
+
       onDragHandler: function (e) {
          if (this._jsEvent !== e) {
             this._jsEvent = e;
-            this._targetsControl = $(this.getTargetsDomElemet()).wsControl();
+            this._targetsControl = this._getTargetsControl();
             this._setAvatarPosition(e);
          }
       }
