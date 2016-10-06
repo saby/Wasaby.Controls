@@ -2932,10 +2932,8 @@ define('js!SBIS3.CONTROLS.ListView',
          _endDragHandler: function(dragObject, droppable, e) {
             if (droppable) {
                var
-                  clickHandler,
                   target = dragObject.getTarget();
 
-               //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
                if (target) {
                   if (dragObject.getOwner() === this) {
                      var models = [];
