@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.OperationMerge', [
     'js!SBIS3.CONTROLS.Link',
    'i18n!SBIS3.CONTROLS.OperationMerge'
-], function(Link, rk) {
+], function(Link) {
     /**
      * Операция панели действий, которая предназначена для объединения записей.
      * Пример использования операции вы можете найти в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/panel/basic-operations/merge/ Операция объединения записей реестра}.
