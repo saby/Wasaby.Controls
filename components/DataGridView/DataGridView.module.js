@@ -284,7 +284,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * Следует указать настройки декораторов разметки, если требуется. Используем декоратор подсветки текста:
              * <pre>
              *    {{=it.decorators.applyOnly(it.value, {
-             *       highlight: it.highlight,
+             *       highlight: it.highlight
              *    })}}
              * </pre>
              * Также можно использовать лесенку:
