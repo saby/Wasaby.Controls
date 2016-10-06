@@ -303,6 +303,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                view: view,
                param: searchParamName
             })
+         } else {
+            this._kbLayoutRevertObserver.setParam(searchParamName);
          }
          view._searchParamName = searchParamName;
          if (isTree){
