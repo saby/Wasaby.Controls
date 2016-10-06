@@ -1241,26 +1241,28 @@ define('js!SBIS3.CONTROLS.ListView',
                       self._elemClickHandlerInternal(data, id, target, e);
                       elClickHandler && elClickHandler.call(self, id, data, target, e);
                    }
-                }, this);
-
-            if (this._options.multiselect) {
-               if ($target.hasClass('js-controls-ListView__itemCheckBox')) {
-                  this._onCheckBoxClick($target);
+                }, this),
+                dragObject = require('js!SBIS3.CONTROLS.DragObject');
+            if (!dragObject.isDragging()) {//если тащят элемент обработчик клика срабатывать не должен
+               if (this._options.multiselect) {
+                  if ($target.hasClass('js-controls-ListView__itemCheckBox')) {
+                     this._onCheckBoxClick($target);
+                  }
+                  else {
+                     onItemClickResult = this._notifyOnItemClick(id, data, target, e);
+                  }
                }
                else {
                   onItemClickResult = this._notifyOnItemClick(id, data, target, e);
                }
-            }
-            else {
-               onItemClickResult = this._notifyOnItemClick(id, data, target, e);
-            }
-            if (onItemClickResult instanceof $ws.proto.Deferred) {
-               onItemClickResult.addCallback(function (result) {
-                  afterHandleClickResult(result);
-                  return result;
-               });
-            } else {
-               afterHandleClickResult(onItemClickResult);
+               if (onItemClickResult instanceof $ws.proto.Deferred) {
+                  onItemClickResult.addCallback(function (result) {
+                     afterHandleClickResult(result);
+                     return result;
+                  });
+               } else {
+                  afterHandleClickResult(onItemClickResult);
+               }
             }
          },
          _notifyOnItemClick: function(id, data, target, e) {
@@ -2871,13 +2873,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
                //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
                if (target) {
-                  if (target.getModel().getId() == this.getSelectedKey()) {
-                     clickHandler = this._elemClickHandler;
-                     this._elemClickHandler = function () {
-                        this._elemClickHandler = clickHandler;
-                     };
-                  }
-
                   if (dragObject.getOwner() === this) {
                      var models = [];
                      dragObject.getSource().each(function(item){
