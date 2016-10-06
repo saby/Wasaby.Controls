@@ -34,6 +34,7 @@ define(
     */
 
    var DateBox = FormattedTextBoxBase.extend([FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateBox.prototype */{
+      _dotTplFn: dotTplFn,
        /**
         * @event onDateChange Происходит при изменении даты.
         * @remark
@@ -55,27 +56,6 @@ define(
         * </pre>
         */
       $protected: {
-         _dotTplFn: dotTplFn,
-         /**
-          * Допустимые управляющие символы в маске.
-          * Условные обозначения:
-          *     1. D(day) -  Календарный день
-          *     2. M(month) - Месяц
-          *     3. Y(year) - Год
-          *     4. H(hour) - Час
-          *     5. I - Минута
-          *     6. S(second) - Секунда
-          *     7. U - Доля секунды
-          */
-         _controlCharactersSet: {
-            'D' : 'd',
-            'M' : 'd',
-            'Y' : 'd',
-            'H' : 'd',
-            'I' : 'd',
-            'S' : 'd',
-            'U' : 'd'
-         },
          /**
           * Допустимые при создании контролла маски.
           */
@@ -114,6 +94,27 @@ define(
           * Опции создаваемого контролла
           */
          _options: {
+            /**
+             * Допустимые управляющие символы в маске.
+             * Условные обозначения:
+             *     1. D(day) -  Календарный день
+             *     2. M(month) - Месяц
+             *     3. Y(year) - Год
+             *     4. H(hour) - Час
+             *     5. I - Минута
+             *     6. S(second) - Секунда
+             *     7. U - Доля секунды
+             * @noShow
+             */
+            _controlCharactersSet: {
+               'D' : 'd',
+               'M' : 'd',
+               'Y' : 'd',
+               'H' : 'd',
+               'I' : 'd',
+               'S' : 'd',
+               'U' : 'd'
+            },
             /**
              * @cfg {String} Формат отображения данных
              * @remark
@@ -227,7 +228,7 @@ define(
          //Добавляем к прикладным валидаторам стандартный, который проверяет что дата заполнена корректно.
          this._options.validators.push({
             validator: function() {
-               return self.formatModel.isEmpty(this._maskReplacer) ? true : self._options.date instanceof Date;
+               return self._getFormatModel().isEmpty(this._getMaskReplacer()) ? true : self._options.date instanceof Date;
             },
             errorMessage: rk('Дата заполнена некорректно')
          });
@@ -274,7 +275,7 @@ define(
              oldText   = this._options.text;
          if (date === null || typeof date === 'undefined') {
             this._options.date = date;
-            this._options.text = this.formatModel.getStrMask(this._maskReplacer);
+            this._options.text = this._getFormatModel().getStrMask(this._getMaskReplacer());
             isCorrect = true;
          }
          if (date instanceof Date) {
@@ -346,7 +347,7 @@ define(
       _drawDate: function(){
          var newText = this._options.date == null ? '' : this._getTextByDate( this._options.date );
          //записываем текст в модель
-         this.formatModel.setText(newText, this._maskReplacer);
+         this._getFormatModel().setText(newText, this._getMaskReplacer());
          this._inputField.html( this._getHtmlMask() );
       },
 
@@ -387,7 +388,7 @@ define(
          var date;
 
          if (!active) {
-            if (!this.formatModel.isFilled()) {
+            if (!this._getFormatModel().isFilled()) {
                date = this._getDateByText(this._options.text, this._options.date, true);
                if (date) {
                   this.setDate(date);
@@ -425,16 +426,16 @@ define(
             ii   = date ? date.getMinutes() : 0,
             ss   = date ? date.getSeconds() : 0,
             uuu  = date ? date.getMilliseconds() : 0;
-         for (var i = 0; i < this.formatModel.model.length; i++) {
-            item = this.formatModel.model[i];
+         for (var i = 0; i < this._getFormatModel().model.length; i++) {
+            item = this._getFormatModel().model[i];
             if ( !item.isGroup) {
                continue;
             }
             value = '';
             for (var j = 0; j < item.mask.length; j++) {
-               value += (typeof item.value[j] === "undefined") ? this._maskReplacer : item.value[j];
+               value += (typeof item.value[j] === "undefined") ? this._getMaskReplacer() : item.value[j];
             }
-            if (value.indexOf(this._maskReplacer) === -1) {
+            if (value.indexOf(this._getMaskReplacer()) === -1) {
                switch (item.mask) {
                   case 'YY' :
                      value = Number(value);
@@ -469,7 +470,7 @@ define(
             }
          }
          if (this._dateIsValid(yyyy, mm, dd, hh, ii, ss)) {
-            if (this.formatModel.isFilled()) {
+            if (this._getFormatModel().isFilled()) {
                return new Date(yyyy, mm, dd, hh, ii, ss, uuu);
             } else if (autoComplete) {
                //TODO: На данный момент по требованиям данной задачи: (https://inside.tensor.ru/opendoc.html?guid=a46626d6-abed-453f-92fe-c66f345863ef&description=)
@@ -483,7 +484,7 @@ define(
                      return new Date(now.getFullYear(), mm, dd, hh, ii, ss, uuu);
                   }
                } else if (Array.indexOf(filled, "HH") !== -1 && Array.indexOf(notFilled, "II") !== -1) {
-                  ii = this.formatModel.getGroupValueByMask("II", '0');
+                  ii = this._getFormatModel().getGroupValueByMask("II", '0');
                   return new Date(yyyy, mm, dd, hh, ii, ss, uuu);
                }
             }
@@ -506,8 +507,8 @@ define(
             text = '',
             item;
 
-         for (var i = 0; i < this.formatModel.model.length; i++) {
-            item = this.formatModel.model[i];
+         for (var i = 0; i < this._getFormatModel().model.length; i++) {
+            item = this._getFormatModel().model[i];
             if (item.isGroup) {
                switch ( item.mask ){
                   case 'YY'   : text += ( '000' + date.getFullYear() ).slice(-2);     break;
