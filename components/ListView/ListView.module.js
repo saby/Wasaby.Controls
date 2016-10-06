@@ -913,7 +913,7 @@ define('js!SBIS3.CONTROLS.ListView',
             // при изменении масштаба страницы на iOS устройствах.
             // https://inside.tensor.ru/opendoc.html?guid=14851482-d80d-417f-a157-ea67c942b59b
             // Для других устройств right рассчитываем динамически.
-            if (!$ws._const.browser.isMobileIOS) {
+            if (!constants.browser.isMobileIOS) {
                right = $(window).width() - this.getContainer().get(0).getBoundingClientRect().right;
                this._scrollPager.getContainer().css('right', right);
             }
