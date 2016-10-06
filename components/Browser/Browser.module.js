@@ -2,9 +2,8 @@ define('js!SBIS3.CONTROLS.Browser', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Browser',
    'js!SBIS3.CONTROLS.ComponentBinder',
-   'js!SBIS3.CONTROLS.FilterHistoryController',
    'html!SBIS3.CONTROLS.Browser/resources/contentTpl'
-], function(CompoundControl, dotTplFn, ComponentBinder, HistoryController, contentTpl){
+], function(CompoundControl, dotTplFn, ComponentBinder, contentTpl){
    'use strict';
 
    /**
@@ -169,7 +168,6 @@ define('js!SBIS3.CONTROLS.Browser', [
                    this._options.historyId,
                    this._options.ignoreFiltersList,
                    this._options.applyHistoryFilterOnLoad,
-                   HistoryController,
                    this);
             } else {
                this._notifyOnFiltersReady();

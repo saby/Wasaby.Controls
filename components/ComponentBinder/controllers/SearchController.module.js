@@ -8,22 +8,25 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
             searchParamName: null,
             searchCrumbsTpl: null,
             searchMode: null,
-            doNotRespondOnReset: null
+            doNotRespondOnReset: null,
+            breadCrumbs: null,
+            backButton: null
          },
          _kbLayoutRevertObserver: null,
          _firstSearch: true,
-         _searchReload : true,
+         _searchReload: true,
          _searchMode: false,
-         _searchForm : undefined,
-         _lastRoot : undefined,
+         _searchForm: undefined,
+         _lastRoot: undefined,
       },
 
-      _breakSearch: function(searchForm, withReload) {
+      _breakSearch: function(withReload) {
+         var searchForm = this._options.searchForm;
          this._searchReload = !!withReload;
          this._firstSearch = !!withReload;
          //Если в строке поиска что-то есть, очистим и сбросим Фильтр
          if (searchForm.getText()) {
-            searchForm._resetSearch();
+            searchForm.resetSearch();
          }
       },
 
@@ -63,12 +66,6 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
             this._firstSearch = false;
             //Флаг обозначает, что ввод был произведен пользователем
             this._searchReload = true;
-            //Это нужно чтобы поиск был от корня, а крошки при этом отображаться не должны
-            //Почему тут просто не скрыть их через css?
-            if (this._options.breadCrumbs) {
-               this._options.breadCrumbs.setItems([]);
-            }
-
             if (this._options.searchMode == 'root') {
                filter[view.getHierField()] = undefined;
             }
@@ -77,12 +74,14 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
                var root;
                //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
                if (self._options.backButton) {
-                  self._options.backButton.getContainer().css({
-                     'display': 'none'
-                  });
+                  self._options.backButton.getContainer().css({'display': 'none'});
+               }
+               //Это нужно чтобы поиск был от корня, а крошки при этом отображаться не должны
+               if (self._options.breadCrumbs) {
+                  self._options.breadCrumbs.getContainer().css({'display': 'none'});
                }
 
-               if (this._options.searchMode === 'root') {
+               if (self._options.searchMode === 'root') {
                   root = view._options.root !== undefined ? view._options.root : null;
                   //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
                   view._options._itemsProjection.setEventRaising(false);
@@ -168,13 +167,11 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
             view.once('onDataLoad', function() {
                self._path = self._pathDSRawData || [];
                if (self._options.breadCrumbs) {
-                  self._options.breadCrumbs.getItems().setRawData(self._pathDSRawData);
+                  self._options.breadCrumbs.getContainer().css({'display': ''});
                   self._options.breadCrumbs._redraw();
                }
                if (self._options.backButton) {
-                  self._options.backButton.getContainer().css({
-                     'display': ''
-                  });
+                  self._options.backButton.getContainer().css({'display': ''});
                }
             })
          } else {
@@ -201,11 +198,11 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
             view.subscribe('onBeforeSetRoot', function(ev, newRoot) {
                self._lastRoot = newRoot;
                if (self._searchMode) {
-                  this._breakSearch(self, searchForm, false);
+                  self._breakSearch(false);
                }
             });
-            //В хлебные крошки
-            /*view.subscribe('onSetRoot', function(event, curRoot, hierarchy) {
+
+            view.subscribe('onSetRoot', function(event, curRoot, hierarchy) {
                //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде),
                //при этом не нужно запоминать текущий корень и делать видимым путь
                if (!self._searchMode) {
@@ -215,14 +212,14 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
                   if (self._options.breadCrumbs && self._options.breadCrumbs.getItems()) {
                      var crumbsItems = self._options.breadCrumbs.getItems();
                      self._pathDSRawData = crumbsItems ? crumbsItems.getRawData() : [];
+                     self._options.breadCrumbs.getContainer().css({'display': ''});
                   }
                   if (self._options.backButton) {
-                     self._options.backButton.getContainer().css({
-                        'display': ''
-                     });
+                     self._options.backButton.getContainer().css({'display': ''});
                   }
                }
-            });*/
+            });
+
             //Перед переключением в крошках в режиме поиска сбросим фильтр поиска
             view.subscribe('onSearchPathClick', function(ev, id) {
                view.setCurrentRoot(id);

@@ -2,9 +2,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
     [
        'js!SBIS3.CONTROLS.HistoryController',
        'js!SBIS3.CONTROLS.SearchController',
-       'js!SBIS3.CONTROLS.ScrollPagingController'
+       'js!SBIS3.CONTROLS.ScrollPagingController',
+       'js!SBIS3.CONTROLS.PagingController',
+       'js!SBIS3.CONTROLS.BreadCrumbsController',
+      'js!SBIS3.CONTROLS.FilterHistoryController',
     ],
-    function (HistoryController, SearchController, ScrollPagingController) {
+    function (HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
@@ -47,10 +50,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
     */
    var ComponentBinder = $ws.proto.Abstract.extend(/**@lends SBIS3.CONTROLS.ComponentBinder.prototype*/{
       $protected : {
-         _searchMode: false,
-         _currentRoot: null,
-         _pathDSRawData : [],
-         _path: [],
          _options: {
             /**
              * @cfg {SBIS3.CONROLS.DataGridView} объект представления данных
@@ -80,7 +79,14 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
              * @cfg {SBIS3.CONROLS.Pagign} объект пэйджинга
              */
             paging: undefined
-         }
+         },
+         _historyController: null, 
+         _searchController: null, 
+         _scrollPagingController: null, 
+         _pagingController: null, 
+         _breadCrumbsController: null, 
+         _filterHistoryController: null,
+         _pagingHistoryController: null
       },
 
       /**
@@ -126,12 +132,14 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                searchParamName: searchParamName,
                searchCrumbsTpl: searchCrumbsTpl,
                searchMode: searchMode,
-               doNotRespondOnReset: doNotRespondOnReset
+               doNotRespondOnReset: doNotRespondOnReset,
+               breadCrumbs: this._options.breadCrumbs,
+               backButton: this._options.backButton
             });
          }
          this._searchController.bindSearch();
       },
-      bindSearchComposite: function(searchParamName, searchCrumbsTpl, searchForm) {
+      bindSearchComposite: function() {
          this.bindSearchGrid.apply(this, arguments);
       },
 
@@ -151,100 +159,14 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        * </pre>
        */
       bindBreadCrumbs: function(breadCrumbs, backButton){
-         var self = this,
-            view = this._options.view;
-
-         backButton = backButton || this._options.backButton;
-         breadCrumbs = breadCrumbs || this._options.breadCrumbs;
-
-         function createBreadCrumb(data){
-            var point = {};
-            point[breadCrumbs._options.displayField] = data.title;
-            point[breadCrumbs._options.keyField] = data.id;
-            point[breadCrumbs._options.colorField] = data.color;
-            point.data = data.data;
-            return point;
+         if (!this._breadCrumbsController){
+            this._breadCrumbsController = new BreadCrumbsController({
+               view: this._options.view,
+               breadCrumbs: breadCrumbs || this._options.breadCrumbs,
+               backButton: backButton || this._options.backButton
+            });
          }
-
-         function setPreviousRoot() {
-            var previousRoot = self._path[self._path.length - 1];
-
-            if(self._currentRoot !== null) {
-               self._currentRoot = previousRoot;
-               if (self._path.length) self._path.splice(self._path.length - 1);
-               view.setCurrentRoot(previousRoot ? previousRoot[breadCrumbs._options.keyField] : null);
-            }
-            view.reload();
-         }
-
-         view.subscribe('onSetRoot', function(event, id, hier){
-            //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде),
-            //при этом не нужно пересчитывать хлебные крошки
-            if (!self._searchMode){
-               var i;
-               /*
-                TODO: Хак для того перерисовки хлебных крошек при переносе из папки в папку
-                Проверить совпадение родительского id и текущего единственный способ понять,
-                что в папку не провалились, а попали через перенос.
-                От этого нужно избавиться как только будут новые датасорсы и не нужно будет считать пути для крошек
-                */
-               if (self._currentRoot && hier.length && hier[hier.length - 1].parent != self._currentRoot.id){
-                  self._currentRoot = hier[0];
-                  self._path = hier.reverse();
-               } else {
-                  /* Если root не установлен, и переданный id === null, то считаем, что мы в корне */
-                  if ( (id === view._options.root) || (!view._options.root && id === null) ){
-                      self._currentRoot = null;
-                      self._path = [];
-                  }
-                  for (i = hier.length - 1; i >= 0; i--) {
-                     var rec = hier[i];
-                     if (rec){
-                        var c = createBreadCrumb(rec);
-                        if (self._currentRoot && !Object.isEmpty(self._currentRoot)) {
-                           self._path.push(self._currentRoot);
-                        } else {
-
-                        }
-                        self._currentRoot = c;
-                     }
-                  }
-               }
-
-               for (i = 0; i < self._path.length; i++){
-                  if (self._path[i].id == id) {
-                     self._path.splice(i, self._path.length - i);
-                     break;
-                  }
-               }
-
-               breadCrumbs.setItems(self._path);
-               backButton.setCaption(self._currentRoot ? self._currentRoot.title : '');
-            }
-         });
-
-         view.subscribe('onKeyPressed', function(event, jqEvent) {
-            if(jqEvent.which === $ws._const.key.backspace) {
-               setPreviousRoot();
-               jqEvent.preventDefault();
-            }
-         });
-
-         breadCrumbs.subscribe('onItemClick', function(event, id){
-            self._currentRoot = this._dataSet.getRecordById(id);
-            self._currentRoot = self._currentRoot ? self._currentRoot.getRawData() : null;
-            if (id === null){
-               self._path = [];
-            }
-            this.setItems(self._path);
-            view.setCurrentRoot(id);
-            view.reload();
-            this._toggleHomeIcon(!self._path.length);
-         });
-
-         backButton.subscribe('onActivated', function(){
-            setPreviousRoot();
-         });
+         this._breadCrumbsController.bindBreadCrumbs(breadCrumbs, backButton);
       },
       /**
        * Метод для связывания панели массовых оперций с представлением данных
@@ -282,10 +204,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       /**
        * Метод для связывания истории фильтров с представлением данных
        */
-      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, applyOnLoad, controller, browser) {
-         var view = browser.getView(),
-             noSaveFilters = ['Разворот', 'ВидДерева'],
-             historyController, filter;
+      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, applyOnLoad, browser) {
+         var noSaveFilters = ['Разворот', 'ВидДерева'],
+            view = browser.getView(),
+            filter;
 
          if(searchParam) {
             noSaveFilters.push(searchParam);
@@ -299,7 +221,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             noSaveFilters = noSaveFilters.concat(ignoreFiltersList);
          }
 
-         historyController = new controller({
+         this._filterHistoryController = new FilterHistoryController({
             historyId: historyId,
             filterButton: filterButton,
             fastDataFilter: fastDataFilter,
@@ -307,13 +229,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             noSaveFilters: noSaveFilters
          });
 
-         filterButton.setHistoryController(historyController);
+         filterButton.setHistoryController(this._filterHistoryController);
          if(applyOnLoad) {
-            filter = historyController.getActiveFilter();
+            filter = this._filterHistoryController.getActiveFilter();
 
             if(filter) {
                /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
-               filterButton.setFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
+               filterButton.setFilterStructure(this._filterHistoryController._prepareStructureElemForApply(filter.filter));
                /* Это синхронизирует фильтр и структуру, т.к. некоторые фильтры возможно мы не сохраняли,
                   и надо, чтобы это отразилось в структуре */
                view.setFilter(filter.viewFilter, true);
@@ -326,62 +248,38 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       },
 
       bindPagingHistory: function(view, id) {
-         var pagingHistoryController = new HistoryController({historyId: id}),
-             historyLimit = pagingHistoryController.getHistory();
+         this._pagingHistoryController = new HistoryController({historyId: id});
+         var historyLimit = this._pagingHistoryController.getHistory();
 
          if(historyLimit) {
             view.setPageSize(historyLimit, true);
          }
 
          view.subscribe('onPageSizeChange', function(event, pageSize) {
-            pagingHistoryController.setHistory(pageSize, true);
+            this._pagingHistoryController.setHistory(pageSize, true);
          });
       },
 
       bindPaging: function(paging) {
-         var view = this._options.view, self = this;
-         this._paging = paging;
-         paging.subscribe('onSelectedItemChange', function(e, key){
-            var newPage, curPage;
-            if (key > 0) {
-               newPage = key - 1;
-               curPage = view.getPage();
-               if (curPage != newPage) {
-                  view.setPage(newPage);
-               }
-            }
-         });
-
-         view.subscribe('onPageChange', function(e, page){
-            var newKey, curKey;
-            if (page >= 0) {
-               newKey = page + 1;
-               curKey = parseInt(self._paging.getSelectedKey(), 10);
-               if (curKey != newKey) {
-                  self._paging.setSelectedKey(newKey);
-               }
-            }
-         });
-
-         view.subscribe('onDataLoad', function(e, list) {
-            if ((paging.getMode() == 'part')) {
-               var meta = list.getMetaData && list.getMetaData().more;
-               if  (meta && (paging.getSelectedKey() == paging.getItems().getCount()) && view._hasNextPage(meta)) {
-                  paging.setPagesCount(paging.getPagesCount() + 1);
-               }
-            }
-         })
+         if (!this._pagingController){
+            this._pagingController = new PagingController({
+               view: this._options.view,
+               paging: paging || this._options.paging
+            })
+         }
       },
 
+      //TODO: избавиться - зовется из ListView
       _updateScrollPages: function(){
          if (this._scrollPagingController){
             this._scrollPagingController.updateScrollPages();
          }
       },
 
+      //TODO: избавиться - зовется из ListView
       _getScrollPage: function(){
          if (this._scrollPagingController){
-            this._scrollPagingController.getScrollPage();
+            return this._scrollPagingController.getScrollPage();
          }
       },
 
@@ -396,8 +294,35 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       },
 
       destroy: function(){
-         $(window).off('resize.wsScrollPaging');
-         ComponentBinder.superclass.destroy.apply(this, arguments);
+         if (this._historyController){
+            this._historyController.destroy();
+            this._historyController  = null;
+         } 
+         if (this._searchController){
+            this._searchController.destroy();
+            this._searchController = null;
+         }
+         if (this._scrollPagingController){
+            this._scrollPagingController.destroy();
+            this._scrollPagingController = null;
+         }
+         if (this._pagingController){
+            this._pagingController.destroy();
+            this._pagingController = null;
+         }
+         if (this._breadCrumbsController){
+            this._breadCrumbsController.destroy();
+            this._breadCrumbsController = null;
+         }
+         if (this._filterHistoryController){
+            this._filterHistoryController.destroy();
+            this._filterHistoryController = null;
+         }
+         if (this._pagingHistoryController){
+            this._pagingHistoryController.destroy();
+            this._pagingHistoryController = null;
+         }
+         ComponentBinder.superclass.destroy.call(this);
       }
 
    });

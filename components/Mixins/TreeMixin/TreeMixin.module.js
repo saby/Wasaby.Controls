@@ -893,14 +893,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             if (path) {
                hierarchy = this._getHierarchy(path, this._options._curRoot);
             }
-            // При каждой загрузке данных стреляем onSetRoot, не совсем правильно
-            // но есть случаи когда при reload присылают новый path,
-            // а хлебные крошки не перерисовываются так как корень не поменялся
-            this._notify('onSetRoot', this._options._curRoot, hierarchy);
-            //TODO Совсем быстрое и временное решение. Нужно скроллиться к первому элементу при проваливании в папку.
-            // Выпилить, когда это будет делать установка выделенного элемента
             if (this._previousRoot !== this._options._curRoot) {
-
+               this._notify('onSetRoot', this._options._curRoot, hierarchy);
+               //TODO Совсем быстрое и временное решение. Нужно скроллиться к первому элементу при проваливании в папку.
+               // Выпилить, когда это будет делать установка выделенного элемента
                //TODO курсор
                /*Если в текущем списке есть предыдущий путь, значит это выход из папки*/
                if (this.getItems().getRecordById(this._previousRoot)) {
