@@ -71,7 +71,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       },
       /**
        * @typedef {Object} ExecuteMetaConfig
-       * @property {DataSource} dataSource Источник данных, который будет установлен для диалога редактирования.
        * @property {String|Number} id Первичный ключ записи, которую нужно открыть на диалоге редактирования. Если свойство не задано, то нужно передать запись свойством record.
        * @property {Boolean} newModel Признак: true - в диалоге редактирования открыта новая запись, которой не существует в источнике данных.
        * @property {Object} filter Объект, данные которого будут использованы в качестве инициализирующих данных при создании новой записи.
@@ -95,6 +94,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        * });
        *
        */
+      $constructor: function() {
+         this._publish('onBeforeShow', 'onExecuted', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel');
+      },
+
       execute : function(meta) {
          this._opendEditComponent(meta, this._options.dialogComponent);
       },
@@ -170,6 +173,9 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
                var record = this._getTemplateComponent().getRecord && this._getTemplateComponent().getRecord();
                self._dialog = undefined;
                self._notifyOnExecuted(meta, record);
+            },
+            onBeforeShow: function(){
+               self._notify('onBeforeShow');
             }
          };
 
