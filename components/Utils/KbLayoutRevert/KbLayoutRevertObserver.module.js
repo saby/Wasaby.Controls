@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
       _onViewDataLoad: function(event, data) {
          var view = this._options.view;
          var viewFilter = view.getFilter();
-         var searchValue = viewFilter[this._options.param];
+         var searchValue = viewFilter[this.getParam()];
          var revertedSearchValue = KbLayoutRevertUtil.process(searchValue);
 
          /* Не производим смену раскладки если:
@@ -76,15 +76,23 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                   текст в строке поиска не меняем
                2) Смены раскладки не было, то транслитизируем текст поиска, и поищем ещё раз   */
             if(this._textBeforeTranslate) {
-               viewFilter[this._options.param] = this._textBeforeTranslate;
+               viewFilter[this.getParam()] = this._textBeforeTranslate;
                view.setFilter(viewFilter, true);
                this._textBeforeTranslate = null;
             } else {
                this._textBeforeTranslate = searchValue;
-               viewFilter[this._options.param] = revertedSearchValue;
+               viewFilter[this.getParam()] = revertedSearchValue;
                view.setFilter(viewFilter);
             }
          }
+      },
+
+      setParam: function(param) {
+         this._options.param = param
+      },
+
+      getParam: function() {
+         return this._options.param;
       },
 
       destroy: function() {
