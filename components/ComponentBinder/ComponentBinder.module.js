@@ -321,6 +321,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                   if (self._options.breadCrumbs && self._options.breadCrumbs.getItems()){
                      var crumbsItems = self._options.breadCrumbs.getItems();
                      self._pathDSRawData = crumbsItems ? crumbsItems.getRawData() : [];
+                     self._options.breadCrumbs.getContainer().css({'display': ''});
                   }
                   if (self._options.backButton) {
                      self._options.backButton.getContainer().css({'display': ''});
