@@ -419,8 +419,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
-      _getItemTemplate: function (item) {
-         var title = item.get(this._options.displayField);
+      _getItemTemplate: function (projItem) {
+         var
+            item = projItem.getContents(),
+            title = item.get(this._options.displayField);
+         
          if (this._options.itemTemplate) {
             return doT.template(this._options.itemTemplate)({item : item, displayField : title})
          }

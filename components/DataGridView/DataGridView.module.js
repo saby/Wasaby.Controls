@@ -544,10 +544,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          var newTHead = $(headMarkup);
          if (this._thead && this._thead.length){
+            this._destroyControls(this._thead);
             this._thead.replaceWith(newTHead);
             this._thead = newTHead;
-         }
-         else {
+         } else {
             this._thead = newTHead.insertBefore(body);
          }
          this.reviveComponents(this._thead);
