@@ -1,11 +1,12 @@
 define('js!SBIS3.CONTROLS.Demo.MyListView',
     [
-        'js!SBIS3.CORE.CompoundControl',
-        'html!SBIS3.CONTROLS.Demo.MyListView',
-        'css!SBIS3.CONTROLS.Demo.MyListView',
-        'js!SBIS3.CONTROLS.ListView',
-        'js!SBIS3.CONTROLS.TreeView'
-    ], function(CompoundControl, dotTplFn) {
+   "Core/core-functions",
+   "js!SBIS3.CORE.CompoundControl",
+   "html!SBIS3.CONTROLS.Demo.MyListView",
+   "css!SBIS3.CONTROLS.Demo.MyListView",
+   "js!SBIS3.CONTROLS.ListView",
+   "js!SBIS3.CONTROLS.TreeView"
+], function( cFunctions,CompoundControl, dotTplFn) {
    /**
     * SBIS3.CONTROLS.Demo.MyListView
     * @class SBIS3.CONTROLS.Demo.MyListView
@@ -30,10 +31,10 @@ define('js!SBIS3.CONTROLS.Demo.MyListView',
       },
 
        myOnActivatedHandlerD: function(){
-           $ws.core.alert('Вы нажали кнопку DELETE');
+           cFunctions.alert('Вы нажали кнопку DELETE');
        },
        myOnActivatedHandlerE: function(){
-           $ws.core.alert('Вы нажали кнопку EDIT');
+           cFunctions.alert('Вы нажали кнопку EDIT');
        }
    });
    return moduleClass;

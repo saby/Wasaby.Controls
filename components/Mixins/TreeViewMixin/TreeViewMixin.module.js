@@ -1,4 +1,10 @@
-define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS.Utils.TemplateUtil'], function (Control, TemplateUtil) {
+define('js!SBIS3.CONTROLS.TreeViewMixin', [
+   "Core/constants",
+   "js!SBIS3.CORE.Control",
+   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
+   "Core/helpers/collection-helpers",
+   "Core/core-instance"
+], function ( constants,Control, TemplateUtil, colHelpers, cInstance) {
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeViewMixin
@@ -191,7 +197,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
          }
       },
       _createAllFolderFooters: function() {
-         $ws.helpers.forEach(this._options.openedPath, function(val, key) {
+         colHelpers.forEach(this._options.openedPath, function(val, key) {
             //Рисуем футер, только если узел есть в проекции, иначе он скрыт и футер рисовать не нужно
             if (this._getItemProjectionByItemId(key)) {
                this._createFolderFooter(key);
@@ -242,7 +248,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
           * @private
           */
          _isViewElement: function(parentFunc, elem) {
-            return  parentFunc.call(this, elem) && !elem.hasClass('controls-HierarchyDataGridView__path') && !($ws.helpers.instanceOfModule(elem.wsControl(), 'SBIS3.CONTROLS.BreadCrumbs'));
+            return  parentFunc.call(this, elem) && !elem.hasClass('controls-HierarchyDataGridView__path') && !(cInstance.instanceOfModule(elem.wsControl(), 'SBIS3.CONTROLS.BreadCrumbs'));
          },
          /**
           * Обработка изменения item property
@@ -273,7 +279,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
       before: {
          _keyboardHover: function (e) {
             switch (e.which) {
-               case $ws._const.key.m:
+               case constants.key.m:
                   e.ctrlKey && this.moveRecordsWithDialog();
                   break;
             }
@@ -285,7 +291,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                this._lastDrawn = undefined;
                this._lastPath = [];
 
-               $ws.helpers.forEach(this._foldersFooters, function(val, key) {
+               colHelpers.forEach(this._foldersFooters, function(val, key) {
                   self._destroyItemsFolderFooter([key]);
                });
             }
@@ -299,7 +305,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
          //TODO: после переход на серверную вёрстку фолдерфутера, данный метод не понадобится
          setOpenedPath: function(openedPath) {
             if (this._getItemsProjection()) {
-               $ws.helpers.forEach(openedPath, function (val, key) {
+               colHelpers.forEach(openedPath, function (val, key) {
                   this._createFolderFooter(key);
                }.bind(this));
             }

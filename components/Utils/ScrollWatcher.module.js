@@ -1,9 +1,12 @@
 /**
  * Created by ad.chistyakova on 12.11.2015.
  */
-define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
+define('js!SBIS3.CONTROLS.ScrollWatcher', [
+   "Core/Abstract",
+   "Core/helpers/string-helpers"
+], function( cAbstract,strHelpers) {
    'use strict';
-   var ScrollWatcher = $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.ScrollWatcher.prototype */{
+   var ScrollWatcher = cAbstract.extend(/** @lends SBIS3.CONTROLS.ScrollWatcher.prototype */{
       /**
        * @event onScroll Событие проиходит, когда срабатывает проверка на скроллею Например, когда достигли низа страницы
        * @remark
@@ -147,7 +150,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
       scrollTo:function(offset){
          var element = this.getScrollContainer();
          if (this._customScroll){
-            element[0].wsControl.scrollTo(typeof offset === 'string' ? (offset === 'top' ? 0 : 'bottom') : $ws.helpers.format({offset: offset}, '-=$offset$s$'));
+            element[0].wsControl.scrollTo(typeof offset === 'string' ? (offset === 'top' ? 0 : 'bottom') : strHelpers.format({offset: offset}, '-=$offset$s$'));
             this._lastScrollTop = element[0].wsControl.getScrollTop();
             return;
          }

@@ -4,13 +4,16 @@
 define(
    'js!SBIS3.CONTROLS.DateBox',
    [
+      'Core/IoC',
+      'Core/ConsoleLogger',
+      'Core/constants',
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'html!SBIS3.CONTROLS.DateBox',
       'js!SBIS3.CONTROLS.FormWidgetMixin'
       // 'i18n!SBIS3.CONTROLS.DateBox'
    ],
-   function (FormattedTextBoxBase, DateUtil, dotTplFn, FormWidgetMixin) {
+   function (IoC, ConsoleLogger, constants, FormattedTextBoxBase, DateUtil, dotTplFn, FormWidgetMixin) {
 
    'use strict';
 
@@ -209,11 +212,11 @@ define(
              curDate = this.getDate(),
              key = event.which || event.keyCode;
 
-         if (key == $ws._const.key.insert) {
+         if (key == constants.key.insert) {
             this.setDate(new Date());
-         } else if (key == $ws._const.key.plus || key == $ws._const.key.minus) {
+         } else if (key == constants.key.plus || key == constants.key.minus) {
             if (curDate) {
-               curDate.setDate(curDate.getDate() + (key == $ws._const.key.plus ? 1 : -1));
+               curDate.setDate(curDate.getDate() + (key == constants.key.plus ? 1 : -1));
                this.setDate(curDate);
             }
          } else {
@@ -313,7 +316,7 @@ define(
          else {
             throw new Error('Аргументом должна являться строка или дата');
          }
-         $ws.single.ioc.resolve('ILogger').log('DateBox', 'метод "setValue" будет удален в 3.7.3.20. Используйте "setDate" или "setText".');
+         IoC.resolve('ILogger').log('DateBox', 'метод "setValue" будет удален в 3.7.3.20. Используйте "setDate" или "setText".');
       },
 
       /**

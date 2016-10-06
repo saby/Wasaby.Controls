@@ -1,7 +1,12 @@
 /**
  * Created by am.gerasimov on 01.02.2016.
  */
-define('js!SBIS3.CONTROLS.ControlsValidators', ['js!SBIS3.CORE.CoreValidators', 'i18n!SBIS3.CONTROLS.ControlsValidators'],function(CoreValidators) {
+define('js!SBIS3.CONTROLS.ControlsValidators', [
+   'js!SBIS3.CORE.CoreValidators',
+   'Core/core-instance',
+   'Core/Enum',
+   'i18n!SBIS3.CONTROLS.ControlsValidators'
+],function(CoreValidators, cInstace, cEnum) {
 
    'use strict';
 
@@ -44,9 +49,9 @@ define('js!SBIS3.CONTROLS.ControlsValidators', ['js!SBIS3.CORE.CoreValidators', 
                isEmpty = isNaN(option);
                break;
             case 'object' :
-               if(option instanceof $ws.proto.Enum) {
+               if(option instanceof cEnum) {
                   isEmpty = option.getCurrentValue() === null;
-               } else if($ws.helpers.instanceOfModule(option, 'WS.Data/Collection/List')) {
+               } else if(cInstace.instanceOfModule(option, 'WS.Data/Collection/List')) {
                   isEmpty = !Boolean(option.getCount());
                } else if(option instanceof Array) {
                   isEmpty = !Boolean(option.length);

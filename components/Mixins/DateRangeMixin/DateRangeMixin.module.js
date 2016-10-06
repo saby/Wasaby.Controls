@@ -1,6 +1,8 @@
 define('js!SBIS3.CONTROLS.DateRangeMixin', [
-   'js!SBIS3.CONTROLS.Utils.DateUtil'
-], function (DateUtil) {
+   'js!SBIS3.CONTROLS.Utils.DateUtil',
+   'Core/core-instance',
+   'Core/helpers/date-helpers'
+], function (DateUtil, cInstance, dateHelpers) {
    /**
     * Миксин, добавляющий поведение хранения начального и конечного значений диапазона типа Date.
     * Реализует логику которая приводит значения диапазона к типу Date, а так же общие методы для работы
@@ -15,7 +17,7 @@ define('js!SBIS3.CONTROLS.DateRangeMixin', [
       },
 
       $constructor: function() {
-         if(!$ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.RangeMixin')) {
+         if(!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.RangeMixin')) {
             throw new Error('RangeMixin mixin is required');
          }
       },
@@ -44,7 +46,7 @@ define('js!SBIS3.CONTROLS.DateRangeMixin', [
        * @private
        */
       _getPeriodLengthInMonth: function (start, end) {
-         var periodType = $ws.helpers.getPeriodType(start, end);
+         var periodType = dateHelpers.getPeriodType(start, end);
          if(periodType === 'month') {
             return 1;
          } else if(periodType === 'quarter') {

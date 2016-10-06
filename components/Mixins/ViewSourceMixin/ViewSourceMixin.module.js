@@ -3,8 +3,12 @@
  */
 
 define('js!SBIS3.CONTROLS.ViewSourceMixin', [
-   'js!WS.Data/Query/Query'
-], function(Query) {
+   "Core/SessionStorage",
+   "Core/core-merge",
+   "Core/Deferred",
+   "js!WS.Data/Query/Query",
+   "Core/helpers/string-helpers"
+], function( cSessionStorage, cMerge, Deferred,Query, strHelpers) {
 
    var ViewSourceMixin = /**@lends SBIS3.CONTROLS.ViewSourceMixin.prototype  */{
 
@@ -23,7 +27,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
       setViewDataSource: function(source, browserName, filter, offset, limit, sorting, historyId) {
          var query = new Query(),
              historyFilter = {},
-             resultDef = new $ws.proto.Deferred(),
+             resultDef = new Deferred(),
              applyFilterOnLoad = true,
              queryDef, history, serializedHistory, queryFilter;
 
@@ -38,10 +42,10 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
 
          /* Если есть historyId и разрешёно применение из истории, то попытаемся достать фильтр из истории */
          if(applyFilterOnLoad) {
-            history = $ws.single.SessionStorage.get(historyId);
+            history = cSessionStorage.get(historyId);
 
             if (history) {
-               serializedHistory = $ws.helpers.deserializeURLData(history);
+               serializedHistory = strHelpers.deserializeURLData(history);
                if (serializedHistory) {
                   for(var i = 0, len = serializedHistory.length; i < len; i++) {
                      if(serializedHistory[i].isActiveFilter) {
@@ -54,7 +58,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
          }
 
          /* Подготавливаем фильтр */
-         queryFilter = $ws.core.merge(filter || {}, historyFilter);
+         queryFilter = cMerge(filter || {}, historyFilter);
 
          /* Подготавливаем query */
          query.where(queryFilter)

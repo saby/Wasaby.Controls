@@ -1,7 +1,10 @@
 /**
  * Created by am.gerasimov on 28.01.2016.
  */
-define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], function(Model) {
+define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
+   'js!WS.Data/Entity/Model',
+   'Core/core-instance'
+], function(Model, cInstace) {
 
    /**
     * Миксин, добавляющий синхронизацию выбранных элементов
@@ -56,7 +59,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], func
                switch (propName) {
                   case 'selectedItem':
                       /* При синхронизации selectedItem -> selectedItems, так же проверяем наличие ключевых поле у selectedItem */
-                     if($ws.helpers.instanceOfModule(propValue, 'WS.Data/Entity/Model') &&
+                     if(cInstace.instanceOfModule(propValue, 'WS.Data/Entity/Model') &&
                         !isEmptyItem(propValue, this._options.displayField, this._options.keyField)) {
                         this.setSelectedItems([propValue]);
                      } else {
@@ -102,7 +105,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], func
       around: {
          setSelectedItem: function (parentFunc, item) {
             var hasRequiredFields,
-                isModel = item && $ws.helpers.instanceOfModule(item, 'WS.Data/Entity/Model'),
+                isModel = item && cInstace.instanceOfModule(item, 'WS.Data/Entity/Model'),
                 currentSelItem = this._options.selectedItem,
                 keyField = this._options.keyField,
                 displayField = this._options.displayField;

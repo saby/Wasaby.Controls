@@ -1,7 +1,13 @@
 define('js!SBIS3.CONTROLS.SuggestMixin', [
-   'js!SBIS3.CONTROLS.PickerMixin',
-   'js!SBIS3.CONTROLS.SuggestShowAll'
-], function (PickerMixin) {
+   "Core/core-functions",
+   "Core/core-merge",
+   "Core/Deferred",
+   "js!SBIS3.CONTROLS.PickerMixin",
+   "Core/helpers/collection-helpers",
+   "Core/core-instance",
+   "Core/helpers/functional-helpers",
+   "js!SBIS3.CONTROLS.SuggestShowAll"
+], function ( cFunctions, cMerge, Deferred,PickerMixin, colHelpers, cInstance, fHelpers) {
    'use strict';
 
 
@@ -255,13 +261,13 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          _loadingIndicator: undefined,          /* {Object} Индикатор загрузки */
          _list: undefined,                      /* {SBIS3.CONTROLS.DSMixin}{SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable} Контрол списка сущностей */
          _listContainer: undefined,             /* {jQuery} Контейнер для контрола списка сущностей */
-         _loadDeferred: null,                   /* {$ws.proto.Deferred|null} Деферред загрузки данных для контрола списка сущностей */
+         _loadDeferred: null,                   /* {Deferred|null} Деферред загрузки данных для контрола списка сущностей */
          _showAllButton: undefined,              /* {$ws.proto.Control} Кнопка открытия всех записей */
          _listReversed: false
       },
 
       $constructor: function () {
-         if (!$ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.PickerMixin')) {
+         if (!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.PickerMixin')) {
             throw new Error('Mixin SBIS3.CONTROLS.PickerMixin is required.');
          }
 
@@ -320,7 +326,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              changedFields = [],
              items = this._getListItems();
 
-         $ws.helpers.forEach(filter, function(value, key) {
+         colHelpers.forEach(filter, function(value, key) {
             if(value !== self._options.listFilter[key]) {
                changedFields.push(key);
             }
@@ -399,7 +405,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          var self = this;
 
          //Подписываемся на события в отслеживаемых контролах
-         $ws.helpers.forEach(this._options.observableControls, function (control) {
+         colHelpers.forEach(this._options.observableControls, function (control) {
             this.subscribeTo(control, 'onFocusIn', self._observableControlFocusHandler.bind(self));
 
             /* Если фокус уходит на список - вернём его обратно в контрол, с которого фокус ушёл */
@@ -473,17 +479,17 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          var options, component, dataSource;
 
          if (!this._list) {
-            if ($ws.helpers.instanceOfMixin(this._options.list, 'SBIS3.CONTROLS.DSMixin')) {
+            if (cInstance.instanceOfMixin(this._options.list, 'SBIS3.CONTROLS.DSMixin')) {
                /* Если передали в опции готовый инстанс, то ничего создавать не надо */
                this._list = this._options.list;
                this._initList();
                return this._list;
             } else {
                //Набор "Сделай сам"
-               options = $ws.core.clone(this._options.list.options);
+               options = cFunctions.clone(this._options.list.options);
                component = require(this._options.list.component);
 
-               $ws.helpers.forEach(DEFAULT_LIST_CONFIG, function(value, key) {
+               colHelpers.forEach(DEFAULT_LIST_CONFIG, function(value, key) {
                   if(!options.hasOwnProperty(key)) {
                      options[key] = typeof value === 'function' ? value.call(this) : value;
                   }
@@ -577,7 +583,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          if(!Object.isEmpty(this._options.showAllConfig)) {
             return this._options.showAllConfig;
          } else {
-            return $ws.core.merge({
+            return cMerge({
                componentOptions: {
                   chooserMode: this._options.chooserMode
                }
@@ -645,7 +651,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _onListItemSelect: function (id, item) {
-         var def = new $ws.proto.Deferred(),
+         var def = new Deferred(),
              items = this._getListItems(),
              ctx = this._getBindingContext(),
              self = this,
@@ -695,7 +701,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _isObservableControlFocused: function() {
-         return $ws.helpers.find(this._options.observableControls, function(ctrl) {
+         return colHelpers.find(this._options.observableControls, function(ctrl) {
             return ctrl.isActive();
          }, this, false)
       },
@@ -718,7 +724,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       _setPickerContent: function () {
          this._picker.getContainer().addClass('controls-Suggest__picker');
          /* Заглушка, picker автодополнения не должен вызывать расчёты авторазмеров, т.к. создаётся абсолютом в body */
-         this._picker._notifyOnSizeChanged = $ws.helpers.nop;
+         this._picker._notifyOnSizeChanged = fHelpers.nop;
       },
 
       showPicker: function () {

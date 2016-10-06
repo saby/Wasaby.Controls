@@ -10,9 +10,10 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
        'html!SBIS3.CONTROLS.ItemsToolbar',
        'html!SBIS3.CONTROLS.ItemsToolbar/editActions',
        'js!SBIS3.CORE.MarkupTransformer',
+       'Core/helpers/dom&controls-helpers',
        'i18n!SBIS3.CONTROLS.ItemsToolbar'
     ],
-    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, MarkupTransformer) {
+    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, MarkupTransformer, dcHelpers) {
 
        'use strict';
        /**
@@ -206,7 +207,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * @private
            */
           _trackingTarget: function() {
-             $ws.helpers.trackElement(this._currentTarget.container, true).subscribe('onMove', this._recalculatePosition, this);
+             dcHelpers.trackElement(this._currentTarget.container, true).subscribe('onMove', this._recalculatePosition, this);
           },
           /**
            * Меняет режим отображения тулбара, если touch - то тулбар отображается с анимацией
@@ -227,7 +228,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           _untrackingTarget: function() {
              if(this._currentTarget) {
-                $ws.helpers.trackElement(this._currentTarget.container, false);
+                dcHelpers.trackElement(this._currentTarget.container, false);
              }
           },
           /**
@@ -242,7 +243,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
 
              /* Событие onMove из трэкера стреляет и при удалении элемента из DOM'a,
                 надо проверить на наличине элемента, а то получим неверные расчёты, а в худшем случае(ie) браузер падает */
-             if(!$ws.helpers.contains(parentContainer, targetContainer)) {
+             if(!dcHelpers.contains(parentContainer, targetContainer)) {
                 this._untrackingTarget();
                 return;
              }
@@ -337,7 +338,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
               * а изменение положения опций не произойдет
               */
              if(!this._isVisible){
-                $ws.helpers.trackElement(this._container, true).subscribe('onMove', this._recalculatePosition, this);
+                dcHelpers.trackElement(this._container, true).subscribe('onMove', this._recalculatePosition, this);
              }
              if (hasItemsActions) {       // Если имеются опции записи, то создаем их и отображаем
                 this.showItemsActions(target);
@@ -378,7 +379,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              if (!this._lockingToolbar && this._isVisible) {
                 this._isVisible = false;
                 container = this.getContainer();
-                $ws.helpers.trackElement(this._container, false);
+                dcHelpers.trackElement(this._container, false);
 
                 if (this._options.touchMode || animate) {
                    this._untrackingTarget();

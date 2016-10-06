@@ -3,12 +3,13 @@
  */
 define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
     [
-       'js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil'
-    ],
-    function (KbLayoutRevertUtil) {
+   "Core/core-extend",
+   "js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil"
+],
+    function ( cExtend,KbLayoutRevertUtil) {
    'use strict';
 
-   var KbLayoutRevertObserver = $ws.core.extend({}, {
+   var KbLayoutRevertObserver = cExtend({}, {
       $protected: {
          _options: {
             /**

@@ -1,22 +1,27 @@
 define('js!SBIS3.CONTROLS.FilterButton',
     [
-       'js!SBIS3.CORE.CompoundControl',
-       'html!SBIS3.CONTROLS.FilterButton',
-       'html!SBIS3.CONTROLS.FilterButton/FilterAreaTemplate',
-       'html!SBIS3.CONTROLS.FilterButton/FilterComponentTemplate',
-       'js!SBIS3.CONTROLS.FilterMixin',
-       'js!SBIS3.CONTROLS.PickerMixin',
-       'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
-       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-       'Core/ParallelDeferred',
-       'js!SBIS3.CONTROLS.Link',
-       'js!SBIS3.CONTROLS.Button',
-       'js!SBIS3.CONTROLS.FilterButton.FilterLine',
-       'js!SBIS3.CONTROLS.FilterHistory',
-       'js!SBIS3.CONTROLS.AdditionalFilterParams',
-       'i18n!SBIS3.CONTROLS.FilterButton'
-    ],
-    function(
+   "Core/moduleStubs",
+   "Core/Context",
+   "Core/CommandDispatcher",
+   "Core/constants",
+   "js!SBIS3.CORE.CompoundControl",
+   "html!SBIS3.CONTROLS.FilterButton",
+   "html!SBIS3.CONTROLS.FilterButton/FilterAreaTemplate",
+   "html!SBIS3.CONTROLS.FilterButton/FilterComponentTemplate",
+   "js!SBIS3.CONTROLS.FilterMixin",
+   "js!SBIS3.CONTROLS.PickerMixin",
+   "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
+   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
+   "Core/ParallelDeferred",
+   "Core/helpers/collection-helpers",
+   "js!SBIS3.CONTROLS.Link",
+   "js!SBIS3.CONTROLS.Button",
+   "js!SBIS3.CONTROLS.FilterButton.FilterLine",
+   "js!SBIS3.CONTROLS.FilterHistory",
+   "js!SBIS3.CONTROLS.AdditionalFilterParams",
+   "i18n!SBIS3.CONTROLS.FilterButton"
+],
+    function( mStubs, cContext, CommandDispatcher, constants,
         CompoundControl,
         dotTplFn,
         dotTplForPicker,
@@ -25,7 +30,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
         PickerMixin,
         FilterToStringUtil,
         TemplateUtil,
-        ParallelDeferred
+        ParallelDeferred,
+        colHelpers
     ) {
 
        'use strict';
@@ -121,7 +127,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
           },
 
           $constructor: function() {
-             var dispatcher = $ws.single.CommandDispatcher,
+             var dispatcher = CommandDispatcher,
                  declareCmd = dispatcher.declareCommand.bind(dispatcher, this),
                  showPicker = this.showPicker.bind(this);
 
@@ -162,7 +168,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 /* Если шаблон указали как имя компонента (строки которые начинаются с SBIS3 или js!SBIS3),
                  то перед отображением панели фильтров сначала загрузим компонент. */
                 if(template && /^(js!)?SBIS3.*/.test(template)) {
-                   self._dTemplatesReady.push($ws.require(((template.indexOf('js!') !== 0 ? 'js!' : '') + template)).addCallback(function(comp) {
+                   self._dTemplatesReady.push(mStubs.require(((template.indexOf('js!') !== 0 ? 'js!' : '') + template)).addCallback(function(comp) {
                       self._filterTemplates[name] = comp[0];
                       return comp;
                    }));
@@ -200,7 +206,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
           },
 
           _setPickerConfig: function () {
-             var context = new $ws.proto.Context({restriction: 'set'}),
+             var context = new cContext({restriction: 'set'}),
                  rootName = this._options.internalContextFilterName,
                  isRightAlign = this._options.filterAlign === 'right',
                  firstTime = true,
@@ -258,7 +264,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
              });
 
              context.subscribe('onFieldsChanged', function() {
-                var changed = $ws.helpers.reduce(self._filterStructure, function(result, element) {
+                var changed = colHelpers.reduce(self._filterStructure, function(result, element) {
                        return result || !isFieldResetValue(element, element.internalValueField, context.getValue(rootName + '/filter'));
                     }, false);
                 self._changeFieldInternal(rootName + '/filterChanged', changed);
@@ -306,7 +312,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                    },
 
                    onKeyPressed: function(event, e) {
-                      if(e.which === $ws._const.key.esc) {
+                      if(e.which === constants.key.esc) {
                          this.hide();
                       }
                    }

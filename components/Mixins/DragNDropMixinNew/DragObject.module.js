@@ -1,6 +1,8 @@
 /*global define, $ws, $*/
 define('js!SBIS3.CONTROLS.DragObject', [
-], function () {
+   "Core/Abstract",
+   "Core/WindowManager"
+], function( cAbstract, cWindowManager) {
    'use strict';
    /**
     * Синглтон объект, в котором содержится информация о текущем состоянии Drag'n'drop:
@@ -24,7 +26,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
     * </pre>
     */
    var DRAG_AVATAR_OFFSET = 5;
-   var DragObject = $ws.proto.Abstract.extend(/**@lends SBIS3.CONTROLS.DragObject.prototype*/{
+   var DragObject = cAbstract.extend(/**@lends SBIS3.CONTROLS.DragObject.prototype*/{
       $protected: {
          /**
           * @member {SBIS3.CONTROLS.Control} Контрол, который инициализировал Drag'n'drop.
@@ -149,7 +151,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
             this._avatar = $(avatar);
             this._setAvatarPosition(this._jsEvent);
             this._avatar.css({
-               'z-index': $ws.single.WindowManager.acquireZIndex(false),
+               'z-index': cWindowManager.acquireZIndex(false),
                position: 'absolute'
             }).appendTo($('body'));
          }

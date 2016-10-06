@@ -5,8 +5,8 @@
  * Модуль для преобразования текста введенного в неверной раскладке
  */
 define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil',
-    [],
-    function () {
+    ['Core/helpers/collection-helpers'],
+    function (colHelpers) {
        'use strict';
 
        var SEARCH_SOURCE_CONFIG = {
@@ -102,7 +102,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil',
                  dir,
                  wordsConv = [];
 
-             $ws.helpers.forEach(words, function(word) {
+             colHelpers.forEach(words, function(word) {
 
                 if(!word) {
                    wordsConv.push({ word : ' '});
@@ -157,7 +157,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil',
                  layoutMap = (directionByWorld.direction  === 1) ? layoutObj.straight : layoutObj.reverse,
                  result = '';
 
-             $ws.helpers.forEach(directionByWorld.words, function(wordDef) {
+             colHelpers.forEach(directionByWorld.words, function(wordDef) {
 
                 var word = wordDef.word;
 

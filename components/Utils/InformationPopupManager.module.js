@@ -1,9 +1,10 @@
 define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
    [
-      'js!SBIS3.CONTROLS.SubmitPopup',
-      'js!SBIS3.CONTROLS.NotificationPopup',
-      'browser!js!SBIS3.CONTROLS.Utils.NotificationStackManager'
-   ],
+   "Core/core-merge",
+   "js!SBIS3.CONTROLS.SubmitPopup",
+   "js!SBIS3.CONTROLS.NotificationPopup",
+   "browser!js!SBIS3.CONTROLS.Utils.NotificationStackManager"
+],
 
    /**
     * Интерфейс для работы с информационными окнами.
@@ -12,11 +13,11 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
     * @author Степин П.В.
     * @public
     */
-   function(SubmitPopup, NotificationPopup, NotificationManager){
+   function( cMerge,SubmitPopup, NotificationPopup, NotificationManager){
       'use strict';
 
       var showSubmitDialog = function(config, positiveHandler, negativeHandler, cancelHandler){
-         var popup = new SubmitPopup($ws.core.merge(config, {
+         var popup = new SubmitPopup(cMerge(config, {
             element: $('<div></div>'),
             isModal: true
          }));
@@ -83,7 +84,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           * @param {Function} [cancelHandler] Обработчик нажатия на кнопку "Отмена"
           */
          showConfirmDialog: function(config, positiveHandler, negativeHandler, cancelHandler){
-            showSubmitDialog($ws.core.merge(config, {
+            showSubmitDialog(cMerge(config, {
                status: 'confirm'
             }), positiveHandler, negativeHandler, cancelHandler);
          },
@@ -102,7 +103,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           * @param {NotificationCfg} config Объект настроек для SBIS3.CONTROLS.NotificationPopup
           */
          showNotification: function(config){
-            var popup = new NotificationPopup($ws.core.merge({
+            var popup = new NotificationPopup(cMerge({
                element: $('<div></div>')
             }, config));
 
