@@ -885,9 +885,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             parentID = pathRecords[i].get(this._options.hierField);
             dsItems.push({
                id: pathRecords[i].getId(),
-               title: pathRecords[i].get(this._options.displayField),
-               parentId: parentID instanceof Array ? parentID[0] : parentID,
-               data: pathRecords[i]
+               title: pathRecords[i].get(this._options.displayField)
             });
          }
          return dsItems;
