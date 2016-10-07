@@ -642,6 +642,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 }
              });
              FieldLink.superclass.setDataSource.apply(this, arguments);
+
+             /* Если в поле связи есть выбранные ключи, то после установки сорса надо
+                загрузить записи и отрисовать их */
+             if(!this._isEmptySelection) {
+                this._loadAndDrawItems();
+             }
           },
 
           _loadAndDrawItems: function(amount) {
