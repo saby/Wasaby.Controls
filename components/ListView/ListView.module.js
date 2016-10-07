@@ -1241,28 +1241,26 @@ define('js!SBIS3.CONTROLS.ListView',
                       self._elemClickHandlerInternal(data, id, target, e);
                       elClickHandler && elClickHandler.call(self, id, data, target, e);
                    }
-                }, this),
-                dragObject = require('js!SBIS3.CONTROLS.DragObject');
-            if (!dragObject.isDragging()) {//если тащят элемент обработчик клика срабатывать не должен
-               if (this._options.multiselect) {
-                  if ($target.hasClass('js-controls-ListView__itemCheckBox')) {
-                     this._onCheckBoxClick($target);
-                  }
-                  else {
-                     onItemClickResult = this._notifyOnItemClick(id, data, target, e);
-                  }
+                }, this);
+
+            if (this._options.multiselect) {
+               if ($target.hasClass('js-controls-ListView__itemCheckBox')) {
+                  this._onCheckBoxClick($target);
                }
                else {
                   onItemClickResult = this._notifyOnItemClick(id, data, target, e);
                }
-               if (onItemClickResult instanceof $ws.proto.Deferred) {
-                  onItemClickResult.addCallback(function (result) {
-                     afterHandleClickResult(result);
-                     return result;
-                  });
-               } else {
-                  afterHandleClickResult(onItemClickResult);
-               }
+            }
+            else {
+               onItemClickResult = this._notifyOnItemClick(id, data, target, e);
+            }
+            if (onItemClickResult instanceof $ws.proto.Deferred) {
+               onItemClickResult.addCallback(function (result) {
+                  afterHandleClickResult(result);
+                  return result;
+               });
+            } else {
+               afterHandleClickResult(onItemClickResult);
             }
          },
          _notifyOnItemClick: function(id, data, target, e) {
@@ -2868,12 +2866,14 @@ define('js!SBIS3.CONTROLS.ListView',
          _endDragHandler: function(dragObject, droppable, e) {
             if (droppable) {
                var
+                  clickHandler,
                   target = dragObject.getTarget(),
                   models = [],
-                  dropBySelf = false,
-                  targetsModel = target.getModel();
+                  dropBySelf;
+
 
                if (target) {
+                  var targetsModel = target.getModel();
                   dragObject.getSource().each(function(item){
                      var model = item.getModel();
                      models.push(model);
@@ -2881,10 +2881,14 @@ define('js!SBIS3.CONTROLS.ListView',
                         dropBySelf = true;
                      }
                   });
+                  if (dropBySelf) { //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
+                     clickHandler = this._elemClickHandler;
+                     this._elemClickHandler = function () {
+                        this._elemClickHandler = clickHandler;
+                     };
+                  }
+
                   if (dragObject.getOwner() === this) {
-                     if (dropBySelf) {//если бросают элемент сам на себя, делаем  stopPropagation чтобы не отработал обработчик клика
-                        e.stopPropagation();
-                     }
                      var position = target.getPosition();
                      this._move(models, target.getModel(),
                         position === DRAG_META_INSERT.on ? undefined : position === DRAG_META_INSERT.after
