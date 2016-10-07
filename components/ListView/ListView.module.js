@@ -2932,14 +2932,23 @@ define('js!SBIS3.CONTROLS.ListView',
          _endDragHandler: function(dragObject, droppable, e) {
             if (droppable) {
                var
-                  target = dragObject.getTarget();
+                  target = dragObject.getTarget(),
+                  models = [],
+                  dropBySelf = false,
+                  targetsModel = target.getModel();
 
                if (target) {
+                  dragObject.getSource().each(function(item){
+                     var model = item.getModel();
+                     models.push(model);
+                     if (targetsModel == model) {
+                        dropBySelf = true;
+                     }
+                  });
                   if (dragObject.getOwner() === this) {
-                     var models = [];
-                     dragObject.getSource().each(function(item){
-                        models.push(item.getModel());
-                     });
+                     if (dropBySelf) {//если бросают элемент сам на себя, делаем  stopPropagation чтобы не отработал обработчик клика
+                        e.stopPropagation();
+                     }
                      var position = target.getPosition();
                      this._move(models, target.getModel(),
                         position === DRAG_META_INSERT.on ? undefined : position === DRAG_META_INSERT.after
