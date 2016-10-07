@@ -1,4 +1,3 @@
-/*
 gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 	
     gemini.suite('TreeCompositeViewTable', function (test) {
@@ -6,20 +5,23 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
         test.setUrl('/regression_items_action_online.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-                actions.waitForElementToShow('[sbisname="TreeCompositeView 1"]', 40000);
-                actions.waitForElementToShow('[data-id="3"]', 1000);
-				this.item_3 = find('[data-id="3"]')
-				this.item_4 = find('[data-id="4"]')
-				this.item_15 = find('[data-id="15"]')
-				this.expander = find('[data-id="4"] .controls-TreeView__expand')
-				actions.mouseMove(this.item_3);
-				actions.waitForElementToShow('.controls-ItemActions [data-id="delete"]', 1000);
-				this.delete_icon = find('.controls-ItemActions [data-id="delete"]');
-				actions.waitForElementToShow('.controls-ItemActions .controls-ItemActions__menu-button', 1000);
-				this.menu_button = find('.controls-ItemActions .controls-ItemActions__menu-button');
+				
+				this.table = '[sbisname="TreeCompositeView 1"]';
+				this.item_3 = '[data-id="3"]';
+				this.item_4 = '[data-id="4"]';
+				this.item_13 = '[data-id="13"]';
+				this.item_15 = '[data-id="15"]';
+				this.expander = '[data-id="4"] .controls-TreeView__expand';
+				this.delete_icon = '.controls-ItemActions [data-id="delete"]';
+				this.menu_button = '.controls-ItemActions .controls-ItemActions__menu-button';
+                
+				actions.waitForElementToShow(this.table, 40000);
+                actions.waitForElementToShow(this.item_3, 5000);
             })
 
-            .capture('plain')
+            .capture('plain', function (actions) {
+				actions.mouseMove(this.item_3);
+            })
 			
 			.capture('hovered_main_action', function (actions) {
 				actions.mouseMove(this.delete_icon);
@@ -39,8 +41,8 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 			
 			.capture('expanded_folder', function (actions) {
 				actions.click(this.expander);
-				actions.waitForElementToShow('[data-id="13"]', 1000);
-				actions.waitForElementToShow('[data-id="15"]', 1000);
+				actions.waitForElementToShow(this.item_13, 5000);
+				actions.waitForElementToShow(this.item_15, 5000);
 				actions.mouseMove(this.item_4);
             })
 			
@@ -48,7 +50,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_15);
             })
     });
-	
+	/*
 	gemini.suite('TreeCompositeViewTable BottomStyle', function (test) {
 
         test.setUrl('/regression_items_action_online_17.html').setCaptureElements('.capture')
@@ -1107,5 +1109,5 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.click(this.menu_button);
 				actions.mouseMove(this.item_4);
             })
-    });
-});*/
+    });*/
+});
