@@ -116,24 +116,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
    getRecordsForRedraw = function(projection, cfg) {
       var
          records = [],
-         projectionFilter;
+         projectionFilter,
+         prevGroupId = undefined;
       if (cfg.expand || cfg.hierarchyViewMode) {
-         cfg._previousGroupBy = undefined;
          projection.setEventRaising(false);
          expandAllItems(projection, cfg);
          projection.setEventRaising(true);
 
-         if (cfg.hierarchyViewMode) {
-            records = searchProcessing(projection, cfg);
-         }
-         else {
-            projection.each(function(item) {
-               if (cfg.groupBy && cfg.easyGroup) {
-                  cfg._groupItemProcessing(records, item, cfg);
-               }
-               records.push(item);
-            });
-         }
+
       }
       else {
          /**
@@ -143,19 +133,24 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
           * https://inside.tensor.ru/opendoc.html?guid=6f1758f0-f45d-496b-a8fe-fde7390c92c7
           * @private
           */
-         var items = [];
          projectionFilter = resetFilterAndStopEventRaising.call(this, projection, false);
          applyExpandToItemsProjection.call(this, projection, cfg);
          restoreFilterAndRunEventRaising.call(this, projection, projectionFilter, false);
-         cfg._previousGroupBy = undefined;
-         projection.each(function(item) {
-            if (cfg.groupBy && cfg.easyGroup) {
-               cfg._groupItemProcessing(items, item, cfg);
-            }
-            items.push(item);
-         });
-         return items;
+      }
 
+      if (cfg.hierarchyViewMode) {
+         records = searchProcessing(projection, cfg);
+      }
+      else {
+         projection.each(function(item, index, group) {
+            if (!Object.isEmpty(cfg.groupBy) && cfg.easyGroup) {
+               if (prevGroupId != group) {
+                  cfg._groupItemProcessing(group, records, item, cfg);
+                  prevGroupId = group;
+               }
+            }
+            records.push(item);
+         });
       }
       return records;
    },
@@ -730,6 +725,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             }
             return parentFn.apply(this, [id]);
          },
+         _isSlowDrawing: function(parentFnc, easy) {
+            if (this._options.hierarchyViewMode) {
+               return false;
+            }
+            else {
+               return parentFnc.call(this, easy);
+            }
+         },
          _canApplyGrouping: function(parentFn, projItem) {
             if (this._isSearchMode()) {
                return true;
@@ -758,7 +761,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             fillBranchesForRedraw(oldItems);
             for (idx in branches) {
                if (branches.hasOwnProperty(idx)) {
-                  if (this._isSlowDrawing()) {
+                  if (this._isSlowDrawing(this._options.easyGroup)) {
                      this.redrawItem(branches[idx].getContents(), branches[idx]);
                   }
                   else {
