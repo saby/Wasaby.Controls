@@ -201,7 +201,7 @@ define('js!SBIS3.CONTROLS.FormController',
          this._dataSource = this._options.source;
          if (this._options.dataSource && this._options.dataSource.endpoint) {
             this._dataSource = this._dataSource || FormController.prototype.createDataSource(this._options);
-            if (!this._options.record) {
+            if (!this._options.record && !$ws.helpers.instanceOfModule(this._options._receiptRecordDeferred, 'Core/Deferred')) {
                this._getRecordFromSource({});
             }
          }
