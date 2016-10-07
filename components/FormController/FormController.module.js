@@ -197,6 +197,12 @@ define('js!SBIS3.CONTROLS.FormController',
          this._setDefaultContextRecord();
          this._processingRecordDeferred();
 
+         this._newRecord = this._options.isNewRecord;
+         this._panelReadyDeferred = new $ws.proto.Deferred();
+         this._panel = this.getTopParent();
+         this._panel.subscribe('onBeforeClose', this._onBeforeCloseHandler);
+         this._panel.subscribe('onAfterShow', this._onAfterShowHandler);
+
          //TODO в рамках совместимости
          this._dataSource = this._options.source;
          if (this._options.dataSource && this._options.dataSource.endpoint) {
@@ -205,12 +211,6 @@ define('js!SBIS3.CONTROLS.FormController',
                this._getRecordFromSource({});
             }
          }
-
-         this._newRecord = this._options.isNewRecord;
-         this._panelReadyDeferred = new $ws.proto.Deferred();
-         this._panel = this.getTopParent();
-         this._panel.subscribe('onBeforeClose', this._onBeforeCloseHandler);
-         this._panel.subscribe('onAfterShow', this._onAfterShowHandler);
       },
 
       _declareCommands: function(){
