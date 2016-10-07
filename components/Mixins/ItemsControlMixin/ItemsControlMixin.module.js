@@ -796,27 +796,31 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
-      _removeItem: function (item) {
-         var targetElement = this._getDomElementByItem(item);
-         if (targetElement.length) {
-            this._clearItems(targetElement);
-            /*TODO С этим отдельно разобраться*/
+      _removeItems: function (items) {
+         var removedElements = $([]);
+         for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var targetElement = this._getDomElementByItem(item);
+            if (targetElement.length) {
+               this._clearItems(targetElement);
+               /*TODO С этим отдельно разобраться*/
 
-            this._ladderCompare([targetElement.prev(), targetElement.next()]);
+               this._ladderCompare([targetElement.prev(), targetElement.next()]);
 
-            /*TODO Особое поведение при группировке*/
-            if (!Object.isEmpty(this._options.groupBy)) {
-               var prev = targetElement.prev();
-               if (prev.length && prev.hasClass('controls-GroupBy')) {
-                  var next = targetElement.next();
-                  if (!next.length || next.hasClass('controls-GroupBy')) {
-                     prev.remove();
+               /*TODO Особое поведение при группировке*/
+               if (!Object.isEmpty(this._options.groupBy)) {
+                  var prev = targetElement.prev();
+                  if (prev.length && prev.hasClass('controls-GroupBy')) {
+                     var next = targetElement.next();
+                     if (!next.length || next.hasClass('controls-GroupBy')) {
+                        prev.remove();
+                     }
                   }
                }
+               removedElements.push(targetElement.get(0));
             }
-
-            targetElement.remove();
          }
+         removedElements.remove();
       },
 
       _getItemsForRedrawOnAdd: function(items) {
@@ -2061,11 +2065,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
       _onCollectionRemove: function(items, notCollapsed) {
          var i;
-         for (i = 0; i < items.length; i++) {
-            this._removeItem(
-               items[i]
-            );
-         }
+         this._removeItems(items);
       },
       _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems) {
          this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);

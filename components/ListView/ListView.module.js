@@ -2018,8 +2018,8 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
          },
-         _removeItem: function(item){
-            ListView.superclass._removeItem.call(this, item);
+         _removeItems: function(item){
+            ListView.superclass._removeItems.call(this, item);
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
             }
