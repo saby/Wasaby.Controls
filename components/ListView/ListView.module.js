@@ -304,6 +304,7 @@ define('js!SBIS3.CONTROLS.ListView',
                _buildTplArgsLV: buildTplArgsLV,
                _defaultItemTemplate: ItemTemplate,
                _defaultItemContentTemplate: ItemContentTemplate,
+               _groupTemplate: GroupTemplate,
                /**
                 * @faq Почему нет чекбоксов в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
                 * Для отрисовки чекбоксов необходимо в шаблоне отображения элемента коллекции обозначить их место.
@@ -714,19 +715,11 @@ define('js!SBIS3.CONTROLS.ListView',
             if (typeof this._options.pageSize === 'string') {
                this._options.pageSize = this._options.pageSize * 1;
             }
-            if (this._isSlowDrawing()) {
+            if (this._isSlowDrawing(this._options.easyGroup)) {
                this.setGroupBy(this._options.groupBy, false);
             }
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
-            if (!this._options._serverRender) {
-               if (this.getItems()) {
-                  this.redraw()
-               }
-               else if (this._dataSource){
-                  this.reload();
-               }
-            }
          },
          _modifyOptions : function(opts){
             var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
@@ -1959,25 +1952,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.hierarchyViewMode;
          },
 
-         //TODO проверка для режима совместимости со старой отрисовкой
-         /*TODO easy параметр для временной поддержки группировки в быстрой отрисовке*/
-         _isSlowDrawing: function(easy) {
-            var result = !!this._options.itemTemplate || !!this._options.userItemAttributes;
-            if (easy) {
-               return result;
-            }
-            else {
-               return result || !Object.isEmpty(this._options.groupBy);
-            }
-         },
 
-         _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems) {
-            if (action === IBindCollection.ACTION_MOVE && this._isSearchMode()) {
-               this.redraw();
-            } else {
-               ListView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
-            }
-         },
          //**********************************//
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
          //*********************************//
@@ -2059,8 +2034,8 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
          },
-         _removeItem: function(item){
-            ListView.superclass._removeItem.call(this, item);
+         _removeItem: function(item, groupId){
+            ListView.superclass._removeItem.call(this, item, groupId);
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
             }
@@ -2138,12 +2113,12 @@ define('js!SBIS3.CONTROLS.ListView',
                if (dataSet.getCount()) {
                   //TODO: вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
                   //Возвращаем самостоятельную отрисовку данных, пришедших в загрузке по скроллу
-                  if (this._isSlowDrawing()) {
+                  if (this._isSlowDrawing(this._options.easyGroup)) {
                      this._needToRedraw = false;
                   }
                   this._drawPage(dataSet, direction);
                   //И выключаем после отрисовки
-                  if (this._isSlowDrawing()) {
+                  if (this._isSlowDrawing(this._options.easyGroup)) {
                      this._needToRedraw = true;
                   }
                } else {
@@ -2179,7 +2154,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this.getItems().append(dataSet);
             ladder && ladder.setIgnoreEnabled(false);
 
-            if (this._isSlowDrawing()) {
+            if (this._isSlowDrawing(this._options.easyGroup)) {
                this._drawItems(dataSet.toArray(), at);
             }
             //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!

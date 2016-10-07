@@ -221,7 +221,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
          }
       },
       around: {
-         _onCollectionRemove: function(parentFunc, items, notCollapsed) {
+         _onCollectionRemove: function(parentFunc, items, notCollapsed, groupId) {
             var i, item, itemId;
             for (i = 0; i < items.length; i++) {
                item = items[i];
@@ -232,7 +232,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                   this._destroyItemsFolderFooter([itemId]);
                }
             }
-            return parentFunc.call(this, items);
+            return parentFunc.call(this, items, notCollapsed, groupId);
          },
          /**
           * Проверяет, является ли $-элемент визуальным отображением элемента коллекции
