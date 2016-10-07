@@ -50,86 +50,25 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.item_15);
             })
     });
-	/*
-	gemini.suite('TreeCompositeViewTable BottomStyle', function (test) {
-
-        test.setUrl('/regression_items_action_online_17.html').setCaptureElements('.capture')
-
-            .before(function (actions) {
-                actions.waitForElementToShow('[sbisname="TreeCompositeView 1"]', 40000);
-                actions.waitForElementToShow('[data-id="3"]', 1000);
-				this.item_3 = find('[data-id="3"]')
-				this.item_4 = find('[data-id="4"]')
-				this.item_15 = find('[data-id="15"]')
-				this.expander = find('[data-id="4"] .controls-TreeView__expand')
-				actions.mouseMove(this.item_3);
-				actions.waitForElementToShow('.controls-ItemActions [data-id="delete"]', 1000);
-				this.delete_icon = find('.controls-ItemActions [data-id="delete"]');
-				actions.waitForElementToShow('.controls-ItemActions [data-id="edit"]', 1000);
-				this.menu_button = find('.controls-ItemActions [data-id="edit"]');
-            })
-
-            .capture('plain')
-			
-			.capture('hovered_main_action', function (actions) {
-				actions.mouseMove(this.delete_icon);
-            })
-			
-			.capture('hovered_menu_button', function (actions) {
-				actions.mouseMove(this.menu_button);
-            })
-			
-			.capture('opened_menu', function (actions) {
-				actions.click(this.menu_button);
-            })
-			
-			.capture('hovered_second_action', function (actions) {
-				actions.mouseMove(this.delete_icon);
-            })
-			
-			.capture('expanded_folder', function (actions) {
-				actions.click(this.expander);
-				actions.waitForElementToShow('[data-id="13"]', 1000);
-				actions.waitForElementToShow('[data-id="15"]', 1000);
-				actions.mouseMove(this.item_4);
-            })
-			
-			.capture('hovered_child', function (actions) {
-				actions.mouseMove(this.item_15);
-            })
-    });
+	
 	
 	gemini.suite('TreeCompositeViewList', function (test) {
 
         test.setUrl('/regression_items_action_online_2.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-                actions.waitForElementToShow('[sbisname="TreeCompositeView 1"]', 40000);
-                actions.waitForElementToShow('[data-id="3"]', 1000);
-				this.item_3 = find('[data-id="3"]')
-				actions.mouseMove(this.item_3);
-				actions.waitForElementToShow('.controls-ItemActions [data-id="delete"]', 1000);
-				this.delete_icon = find('.controls-ItemActions [data-id="delete"]');
-				actions.waitForElementToShow('.controls-ItemActions .controls-ItemActions__menu-button', 1000);
-				this.menu_button = find('.controls-ItemActions .controls-ItemActions__menu-button');
-            })
-
-            .capture('plain')
-			
-			.capture('hovered_main_action', function (actions) {
-				actions.mouseMove(this.delete_icon);
-            })
-			
-			.capture('hovered_menu_button', function (actions) {
-				actions.mouseMove(this.menu_button);
+				
+				this.table = '[sbisname="TreeCompositeView 1"]';
+				this.item_3 = '[data-id="3"]';
+				this.menu_button = '.controls-ItemActions .controls-ItemActions__menu-button';
+                
+				actions.waitForElementToShow(this.table, 40000);
+                actions.waitForElementToShow(this.item_3, 5000);
             })
 			
 			.capture('opened_menu', function (actions) {
+				actions.mouseMove(this.item_3);
 				actions.click(this.menu_button);
-            })
-			
-			.capture('hovered_second_action', function (actions) {
-				actions.mouseMove(this.delete_icon);
             })
     });
 	
@@ -138,32 +77,18 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
         test.setUrl('/regression_items_action_online_3.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-                actions.waitForElementToShow('[sbisname="TreeCompositeView 1"]', 40000);
-                actions.waitForElementToShow('[data-id="3"]', 1000);
-				this.item_3 = find('[data-id="3"]')
-				actions.mouseMove(this.item_3);
-				actions.waitForElementToShow('.controls-ItemActions [data-id="delete"]', 1000);
-				this.delete_icon = find('.controls-ItemActions [data-id="delete"]');
-				actions.waitForElementToShow('.controls-ItemActions .controls-ItemActions__menu-button', 1000);
-				this.menu_button = find('.controls-ItemActions .controls-ItemActions__menu-button');
+				
+				this.table = '[sbisname="TreeCompositeView 1"]';
+				this.item_3 = '[data-id="3"]';
+				this.menu_button = '.controls-ItemActions .controls-ItemActions__menu-button';
+                
+				actions.waitForElementToShow(this.table, 40000);
+                actions.waitForElementToShow(this.item_3, 5000);
             })
 
-            .capture('plain')
-			
-			.capture('hovered_main_action', function (actions) {
-				actions.mouseMove(this.delete_icon);
-            })
-			
-			.capture('hovered_menu_button', function (actions) {
-				actions.mouseMove(this.menu_button);
-            })
-			
 			.capture('opened_menu', function (actions) {
+				actions.mouseMove(this.item_3);
 				actions.click(this.menu_button);
-            })
-			
-			.capture('hovered_second_action', function (actions) {
-				actions.mouseMove(this.delete_icon);
             })
     });
 	
@@ -172,66 +97,18 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
         test.setUrl('/regression_items_action_online_4.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-                actions.waitForElementToShow('[sbisname="CompositeView 1"]', 40000);
-                actions.waitForElementToShow('[data-id="3"]', 1000);
-				this.item_3 = find('[data-id="3"]')
-				actions.mouseMove(this.item_3);
-				actions.waitForElementToShow('.controls-ItemActions [data-id="delete"]', 1000);
-				this.delete_icon = find('.controls-ItemActions [data-id="delete"]');
-				actions.waitForElementToShow('.controls-ItemActions .controls-ItemActions__menu-button', 1000);
-				this.menu_button = find('.controls-ItemActions .controls-ItemActions__menu-button');
+				
+				this.table = '[sbisname="CompositeView 1"]';
+				this.item_3 = '[data-id="3"]';
+				this.menu_button = '.controls-ItemActions .controls-ItemActions__menu-button';
+                
+				actions.waitForElementToShow(this.table, 40000);
+                actions.waitForElementToShow(this.item_3, 5000);
             })
 
-            .capture('plain')
-			
-			.capture('hovered_main_action', function (actions) {
-				actions.mouseMove(this.delete_icon);
-            })
-			
-			.capture('hovered_menu_button', function (actions) {
-				actions.mouseMove(this.menu_button);
-            })
-			
 			.capture('opened_menu', function (actions) {
-				actions.click(this.menu_button);
-            })
-			
-			.capture('hovered_second_action', function (actions) {
-				actions.mouseMove(this.delete_icon);
-            })
-    });
-	
-	gemini.suite('CompositeViewTable BottomStyle', function (test) {
-
-        test.setUrl('/regression_items_action_online_18.html').setCaptureElements('.capture')
-
-            .before(function (actions) {
-                actions.waitForElementToShow('[sbisname="CompositeView 1"]', 40000);
-                actions.waitForElementToShow('[data-id="3"]', 1000);
-				this.item_3 = find('[data-id="3"]')
 				actions.mouseMove(this.item_3);
-				actions.waitForElementToShow('.controls-ItemActions [data-id="delete"]', 1000);
-				this.delete_icon = find('.controls-ItemActions [data-id="delete"]');
-				actions.waitForElementToShow('.controls-ItemActions [data-id="edit"]', 1000);
-				this.menu_button = find('.controls-ItemActions [data-id="edit"]');
-            })
-
-            .capture('plain')
-			
-			.capture('hovered_main_action', function (actions) {
-				actions.mouseMove(this.delete_icon);
-            })
-			
-			.capture('hovered_menu_button', function (actions) {
-				actions.mouseMove(this.menu_button);
-            })
-			
-			.capture('opened_menu', function (actions) {
 				actions.click(this.menu_button);
-            })
-			
-			.capture('hovered_second_action', function (actions) {
-				actions.mouseMove(this.delete_icon);
             })
     });
 	
@@ -240,32 +117,18 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
         test.setUrl('/regression_items_action_online_5.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-                actions.waitForElementToShow('[sbisname="CompositeView 1"]', 40000);
-                actions.waitForElementToShow('[data-id="3"]', 1000);
-				this.item_3 = find('[data-id="3"]')
-				actions.mouseMove(this.item_3);
-				actions.waitForElementToShow('.controls-ItemActions [data-id="delete"]', 1000);
-				this.delete_icon = find('.controls-ItemActions [data-id="delete"]');
-				actions.waitForElementToShow('.controls-ItemActions .controls-ItemActions__menu-button', 1000);
-				this.menu_button = find('.controls-ItemActions .controls-ItemActions__menu-button');
+				
+				this.table = '[sbisname="CompositeView 1"]';
+				this.item_3 = '[data-id="3"]';
+				this.menu_button = '.controls-ItemActions .controls-ItemActions__menu-button';
+                
+				actions.waitForElementToShow(this.table, 40000);
+                actions.waitForElementToShow(this.item_3, 5000);
             })
 
-            .capture('plain')
-			
-			.capture('hovered_main_action', function (actions) {
-				actions.mouseMove(this.delete_icon);
-            })
-			
-			.capture('hovered_menu_button', function (actions) {
-				actions.mouseMove(this.menu_button);
-            })
-			
 			.capture('opened_menu', function (actions) {
+				actions.mouseMove(this.item_3);
 				actions.click(this.menu_button);
-            })
-			
-			.capture('hovered_second_action', function (actions) {
-				actions.mouseMove(this.delete_icon);
             })
     });
 	
@@ -274,32 +137,18 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
         test.setUrl('/regression_items_action_online_6.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-                actions.waitForElementToShow('[sbisname="CompositeView 1"]', 40000);
-                actions.waitForElementToShow('[data-id="3"]', 1000);
-				this.item_3 = find('[data-id="3"]')
-				actions.mouseMove(this.item_3);
-				actions.waitForElementToShow('.controls-ItemActions [data-id="delete"]', 1000);
-				this.delete_icon = find('.controls-ItemActions [data-id="delete"]');
-				actions.waitForElementToShow('.controls-ItemActions .controls-ItemActions__menu-button', 1000);
-				this.menu_button = find('.controls-ItemActions .controls-ItemActions__menu-button');
+				
+				this.table = '[sbisname="CompositeView 1"]';
+				this.item_3 = '[data-id="3"]';
+				this.menu_button = '.controls-ItemActions .controls-ItemActions__menu-button';
+                
+				actions.waitForElementToShow(this.table, 40000);
+                actions.waitForElementToShow(this.item_3, 5000);
             })
 
-            .capture('plain')
-			
-			.capture('hovered_main_action', function (actions) {
-				actions.mouseMove(this.delete_icon);
-            })
-			
-			.capture('hovered_menu_button', function (actions) {
-				actions.mouseMove(this.menu_button);
-            })
-			
 			.capture('opened_menu', function (actions) {
+				actions.mouseMove(this.item_3);
 				actions.click(this.menu_button);
-            })
-			
-			.capture('hovered_second_action', function (actions) {
-				actions.mouseMove(this.delete_icon);
             })
     });
 	
@@ -308,35 +157,21 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
         test.setUrl('/regression_items_action_online_7.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-                actions.waitForElementToShow('[sbisname="DataGridView 1"]', 40000);
-                actions.waitForElementToShow('[data-id="3"]', 1000);
-				this.item_3 = find('[data-id="3"]')
-				actions.mouseMove(this.item_3);
-				actions.waitForElementToShow('.controls-ItemActions [data-id="delete"]', 1000);
-				this.delete_icon = find('.controls-ItemActions [data-id="delete"]');
-				actions.waitForElementToShow('.controls-ItemActions .controls-ItemActions__menu-button', 1000);
-				this.menu_button = find('.controls-ItemActions .controls-ItemActions__menu-button');
+				
+				this.table = '[sbisname="DataGridView 1"]';
+				this.item_3 = '[data-id="3"]';
+				this.menu_button = '.controls-ItemActions .controls-ItemActions__menu-button';
+                
+				actions.waitForElementToShow(this.table, 40000);
+                actions.waitForElementToShow(this.item_3, 5000);
             })
 
-            .capture('plain')
-			
-			.capture('hovered_main_action', function (actions) {
-				actions.mouseMove(this.delete_icon);
-            })
-			
-			.capture('hovered_menu_button', function (actions) {
-				actions.mouseMove(this.menu_button);
-            })
-			
 			.capture('opened_menu', function (actions) {
+				actions.mouseMove(this.item_3);
 				actions.click(this.menu_button);
             })
-			
-			.capture('hovered_second_action', function (actions) {
-				actions.mouseMove(this.delete_icon);
-            })
     });
-	
+	/*
 	gemini.suite('DataGridView Hierarchy', function (test) {
 
         test.setUrl('/regression_items_action_online_24.html').setCaptureElements('html')
