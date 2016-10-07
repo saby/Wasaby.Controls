@@ -476,6 +476,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var
             selKey,
             oldKey = this._options.selectedKey,
+            oldText = this.getText(),
             self = this,
             filterFieldObj = {};
 
@@ -495,12 +496,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   }
                });
 
-               if (noItems) {
-                  self._options.selectedKey = null;
-                  if (oldKey !== self._options.selectedKey) {
-                     self._notifySelectedItem(null);
-                     self._drawSelectedItem(null);
-                  }
+               if (noItems && oldKey !== null) {
+                  self.setSelectedKey(null);
+                  self._drawText(oldText);
                }
             });
          }
