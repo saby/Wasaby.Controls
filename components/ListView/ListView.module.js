@@ -3078,8 +3078,8 @@ define('js!SBIS3.CONTROLS.ListView',
             message = message || (idArray.length !== 1 ? rk("Удалить записи?", "ОперацииНадЗаписями") : rk("Удалить текущую запись?", "ОперацииНадЗаписями"));
             return $ws.helpers.question(message).addCallback(function(res) {
                if (res) {
-                  self._toggleIndicator(true);
                   if (self._notify('onBeginDelete', idArray) !== false) {
+                     self._toggleIndicator(true);
                      return self._deleteRecords(idArray).addCallback(function () {
                         self.removeItemsSelection(idArray);
                         //Если записи удалялись из DataSource, то перезагрузим реест, если из items, то реестр уже в актальном состоянии
