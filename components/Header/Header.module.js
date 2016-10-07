@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.Header',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
-      'html!SBIS3.CONTROLS.Header',
+      'tmpl!SBIS3.CONTROLS.Header',
       'css!SBIS3.CONTROLS.Header'
    ],
    function(CompoundControl, dotTplFn){

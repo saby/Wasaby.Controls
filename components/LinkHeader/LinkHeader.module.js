@@ -1,18 +1,16 @@
 define('js!SBIS3.CONTROLS.LinkHeader',
    [
-      'js!SBIS3.CONTROLS.Header',
+      'js!SBIS3.CONTROLS.ButtonBase',
       'html!SBIS3.CONTROLS.LinkHeader',
-      'js!SBIS3.CONTROLS.Clickable',
       'css!SBIS3.CONTROLS.LinkHeader'
    ],
-   function(Header, dotTplFn, Clickable){
+   function(ButtonBase, dotTplFn){
 
       'use strict';
       /**
        * Контролл для отображения заголовков с функцией перехода по ссылке
        * @class SBIS3.CONTROLS.LinkHeader
-       * @extends SBIS3.CONTROLS.Header
-       * @mixes SBIS3.CONTROLS.Clickable
+       * @extends SBIS3.CONTROLS.ButtonBase
        * @initial
        * <component data-component="SBIS3.CONTROLS.LinkHeader">
        *    <option name="caption">Заголовок</option>
@@ -21,10 +19,8 @@ define('js!SBIS3.CONTROLS.LinkHeader',
        * cssModifier controls-LinkHeader__separator После текста появляется разделитель |
        * @author Крайнов Дмитрий Олегович
        * */
-      var LinkHeader = Header.extend([Clickable], {
+      var LinkHeader = ButtonBase.extend({
          _dotTplFn: dotTplFn,
-
-         _link: null,
 
          $protected: {
             _options: {
@@ -48,17 +44,36 @@ define('js!SBIS3.CONTROLS.LinkHeader',
          },
          /**
           * Возвращает ссылку
+          * @example
+          * <pre>
+          *    var
+          *       linkHeader = this.getChildControlByName('myLinkHeader'),
+          *       caption = linkHeader.gerHref();
+          * </pre>
           * */
          getHref: function() {
             return this._options.href;
          },
+
          /**
-          * Устанавливает ссылку
-          * @param href ссылка
-          * */
+          * Изменить ссылку
+          * @param {String} href ссылка
+          * @example
+          * <pre>
+          *    var linkHeader = this.getChildControlByName('linkHeader');
+          *    linkHeader.setHref('https://inside.tensor.ru');
+          * </pre>
+          * @returns {Error|String}
+          */
          setHref: function(href) {
+            if (typeof href !== 'string') {
+               return new Error('Ссылка не является строкой');
+            }
+
             this._options.href = href;
             this.getLinkedContext().setValue('href', href);
+
+            return this._options.href;
          }
       });
 
