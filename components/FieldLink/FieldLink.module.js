@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        'js!SBIS3.CONTROLS.Utils.TemplateUtil',
        'js!WS.Data/Di',
        'js!SBIS3.CONTROLS.MenuIcon',
+       'js!SBIS3.CONTROLS.Action.SelectorAction',
        'i18n!SBIS3.CONTROLS.FieldLink'
 
     ],
@@ -140,15 +141,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @param {SBIS3.CONTROLS.Record} meta.item Экземпляр класса выбранного значения.
            */
           $protected: {
-             _inputWrapper: undefined,     /* Обертка инпута */
-             _linksWrapper: undefined,     /* Контейнер для контрола выбранных элементов */
-             _dropAllButton: undefined,    /* Кнопка очистки всех выбранных записей */
-             _showAllLink: undefined,      /* Кнопка показа всех записей в пикере */
-             _linkCollection: undefined,   /* Контрол отображающий выбранные элементы */
+             _inputWrapper: null,     /* Обертка инпута */
+             _linksWrapper: null,     /* Контейнер для контрола выбранных элементов */
+             _dropAllButton: null,    /* Кнопка очистки всех выбранных записей */
+             _showAllLink: null,      /* Кнопка показа всех записей в пикере */
+             _linkCollection: null,   /* Контрол отображающий выбранные элементы */
+             _selectorAction: null,   /* Action выбора */
              _checkWidth: true,
              _lastFieldLinkWidth: null,
-             _afterFieldWrapper: undefined,
-             _beforeFieldWrapper: undefined,
+             _afterFieldWrapper: null,
+             _beforeFieldWrapper: null,
              _options: {
                 /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
                 afterFieldWrapper: afterFieldWrapper,
@@ -162,7 +164,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    }
                 },
                 /**
+                 * @typedef {String} selectionTypeDef Режим выбора.
+                 * @variant node выбираются только узлы
+                 * @variant leaf выбираются только листья
+                 * @variant all выбираются все записи
+                 *
                  * @typedef {Object} Dictionaries
+                 * @property {String} name Имя (Идентификатор справочника).
+                 * @property {selectionTypeDef} selectionType
                  * @property {String} caption Текст в меню выбора справочников. Опция актуальна, когда для поля связи установлено несколько справочников.
                  * Открыть справочник можно через меню выбора справочников или с помощью метода {@link showSelector}.
                  * Меню выбора справочников - это кнопка, которая расположена внутри поля связи с правого края:
@@ -257,7 +266,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  *     <option name="itemTemplate" type="string">html!SBIS3.MyArea.MyComponent/resources/myTemplate</option>
                  * </pre>
                  */
-                itemTemplate: null
+                itemTemplate: null,
+                /**
+                 * @cfg {Boolean} Использовать для выбора {@link SBIS3.CONTROLS.Action.SelectorAction}
+                 */
+                useSelectorAction: false
              }
           },
 
@@ -303,6 +316,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           init: function() {
              FieldLink.superclass.init.apply(this, arguments);
+
+             if(this._options.useSelectorAction) {
+                this.subscribeTo((this._selectorAction = this.getChildControlByName('FieldLinkSelectorAction')), 'onExecuted', function(event, meta, result) {
+                   if(result) {
+                      this.setSelectedItems(result);
+                   }
+                }.bind(this));
+             }
+
              this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
           },
 
@@ -321,7 +343,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           _menuItemActivatedHandler: function(e, item) {
              var rec = this.getItems().getRecordById(item);
-             this.getParent().showSelector(rec.get('template'), rec.get('componentOptions'));
+             this.getParent().showSelector(rec.get('template'), rec.get('componentOptions'), rec.get('selectionType'));
           },
 
           /**
@@ -389,14 +411,22 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @see dictionaries
            * @see setDictionaries
            */
-          showSelector: function(template, componentOptions) {
-             //FIXME и ещё один костыль до перевода пикера на фокусную систему
+          showSelector: function(template, componentOptions, selectionType) {
              if(this.isPickerVisible()) {
                 this.hidePicker();
              }
 
-             this._showChooser(template, componentOptions)
-
+             if(this._options.useSelectorAction) {
+                this._selectorAction.execute({
+                   template: template,
+                   componentOptions: componentOptions,
+                   multiselect: this.getMultiselect(),
+                   selectionType: selectionType,
+                   selectedItems: this.getSelectedItems()
+                });
+             } else {
+                this._showChooser(template, componentOptions);
+             }
           },
 
           setActive: function(active) {
