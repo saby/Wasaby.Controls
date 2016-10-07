@@ -62,14 +62,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
             return value;
          },
+         buildTplArgsLadder = function(args, cfg) {
+            cfg._ladderInstance = cfg._ladderInstance || new Ladder(cfg._itemsProjection);
 
+            args.ladder = cfg._ladderInstance;
+            args.ladderColumns = cfg.ladder || [];
+         },
          buildTplArgsDG = function(cfg) {
             var tplOptions = cfg._buildTplArgsLV.call(this, cfg);
-            cfg._ladderInstance = new Ladder(cfg._itemsProjection);
             tplOptions.columns = _prepareColumns.call(this, cfg.columns, cfg);
             tplOptions.cellData = {
-               ladder: cfg._ladderInstance,
-               ladderColumns: cfg.ladder || [],
                /*TODO hierField вроде тут не должно быть*/
                hierField: cfg.hierField,
                getColumnVal: getColumnVal,
@@ -77,6 +79,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                displayField : tplOptions.displayField
             };
             tplOptions.startScrollColumn = cfg.startScrollColumn;
+            buildTplArgsLadder(tplOptions.cellData, cfg);
 
             return tplOptions;
          },
@@ -535,6 +538,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             isSearch : args.isSearch
          };
          args.startScrollColumn = cfg.startScrollColumn;
+         buildTplArgsLadder(args.cellData, cfg);
 
          return args;
       },
