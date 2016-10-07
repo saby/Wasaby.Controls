@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        *
        */
       $constructor: function() {
-         this._publish('onBeforeShow', 'onExecuted', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel');
+         this._publish('onAfterShow', 'onBeforeShow', 'onExecuted', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel');
       },
 
       execute : function(meta) {
@@ -176,6 +176,9 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             },
             onBeforeShow: function(){
                self._notify('onBeforeShow');
+            },
+            onAfterShow: function(){
+               self._notify('onAfterShow');
             }
          };
 
