@@ -81,7 +81,8 @@ define('js!SBIS3.CONTROLS.MergeAction', [
                  * Шаблон - это XHTML-файл, который создают в директории компонента в подпапке resources.
                  * @see dialogComponent
                  */
-                titleCellTemplate: undefined
+                titleCellTemplate: undefined,
+                initializingWay: 'local'
             }
         },
 
