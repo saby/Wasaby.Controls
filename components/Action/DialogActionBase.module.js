@@ -186,7 +186,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.OpenDialogAction', 'meta.controllerSource is no longer available since version 3.7.4.200. Use option initializingWay = OpenDialogAction.INITIALIZING_WAY_REMOTE instead.');
          }
 
-         if (initializingWay == DialogActionBase.INITIALIZING_WAY_REMOTE && this._linkedModelKey !== meta.id) {
+         if (initializingWay == DialogActionBase.INITIALIZING_WAY_REMOTE && (this._linkedModelKey !== meta.id || !meta.id)) {
             this._showLoadingIndicator();
             require([dialogComponent], this._initTemplateComponentCallback.bind(this, config, meta, mode));
          }
