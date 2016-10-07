@@ -3043,14 +3043,13 @@ define('js!SBIS3.CONTROLS.ListView',
                   self._toggleIndicator(true);
                   if (self._notify('onBeginDelete', idArray) !== false) {
                      return self._deleteRecords(idArray).addCallback(function () {
-                        self.removeItemsSelection(idArray);
                         //Если записи удалялись из DataSource, то перезагрузим реест, если из items, то реестр уже в актальном состоянии
                         if (self.getDataSource()) {
-                           if ($ws.helpers.instanceOfModule(self, 'SBIS3.CONTROLS.TreeCompositeView') && self.getViewMode() === 'table') {
-                              self.partialyReload(idArray);
-                           } else {
-                              self.reload();
-                           }
+                           return self._reloadViewAfterDelete(idArray).addCallback(function() {
+                              self._syncSelectedKeys();
+                           });
+                        } else {
+                           self._syncSelectedKeys();
                         }
                      }).addErrback(function (result) {
                         $ws.helpers.alert(result)
@@ -3062,6 +3061,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             });
          },
+
          _deleteRecords: function(idArray) {
             var
                 items = this.getItems(),
@@ -3076,6 +3076,22 @@ define('js!SBIS3.CONTROLS.ListView',
                items.setEventRaising(true, true);
                return $ws.proto.Deferred.success(true);
             }
+         },
+
+         _reloadViewAfterDelete: function() {
+            return this.reload();
+         },
+
+         _syncSelectedKeys: function() {
+            var
+                self = this,
+                keysForRemove = [];
+            $ws.helpers.forEach(this.getSelectedKeys(), function(key) {
+               if (!self._getItemProjectionByItemId(key)) {
+                  keysForRemove.push(key);
+               }
+            });
+            self.removeItemsSelection(keysForRemove);
          }
       });
 
