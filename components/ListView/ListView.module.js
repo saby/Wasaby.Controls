@@ -2243,6 +2243,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _createLoadingIndicator : function () {
             this._loadingIndicator = this._container.find('.controls-ListView-scrollIndicator');
+            // При подгрузке вверх индикатор должен быть над списком
+            if (this._options.infiniteScroll == 'up'){
+               this._loadingIndicator.prependTo(this._container);
+            }
          },
          /**
           * Метод изменения возможности подгрузки по скроллу.
