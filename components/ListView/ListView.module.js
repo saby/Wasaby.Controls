@@ -1559,6 +1559,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._hasEditInPlace()) {
                this._getEditInPlace()._destroyEip();
             }
+            this._redrawResults();
             ListView.superclass.redraw.apply(this, arguments);
          },
 
@@ -2011,7 +2012,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             this._notifyOnSizeChanged(true);
-            this._drawResults();
          },
          _drawItemsCallbackSync: function(){
             ListView.superclass._drawItemsCallbackSync.call(this);
@@ -2953,6 +2953,11 @@ define('js!SBIS3.CONTROLS.ListView',
          setResultsPosition: function(position){
            this._options.resultsPosition = position;
          },
+
+         _redrawResults: function(){
+           this._drawResults();
+         },
+
          _drawResults: function(){
             if (!this._checkResults()){
                this._removeDrawnResults();
