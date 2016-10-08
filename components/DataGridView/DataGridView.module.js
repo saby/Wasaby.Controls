@@ -242,6 +242,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             _canServerRender: true,
             _buildTplArgs: buildTplArgsDG,
             _buildTplArgsDG: buildTplArgsDG,
+            _groupTemplate: GroupTemplate,
             /**
              * @typedef {Object} Columns
              * @property {String} title Заголовок колонки. Отображение заголовков можно изменять с помощью опции {@link showHead}. Также с помощью опции {@link allowToggleHead} можно скрывать заголовки при отсутствии в списке данных.
@@ -544,10 +545,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          var newTHead = $(headMarkup);
          if (this._thead && this._thead.length){
+            this._destroyControls(this._thead);
             this._thead.replaceWith(newTHead);
             this._thead = newTHead;
-         }
-         else {
+         } else {
             this._thead = newTHead.insertBefore(body);
          }
          this.reviveComponents(this._thead);

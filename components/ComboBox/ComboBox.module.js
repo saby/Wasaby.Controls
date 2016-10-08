@@ -419,8 +419,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
-      _getItemTemplate: function (item) {
-         var title = item.get(this._options.displayField);
+      _getItemTemplate: function (projItem) {
+         var
+            item = projItem.getContents(),
+            title = item.get(this._options.displayField);
+         
          if (this._options.itemTemplate) {
             return doT.template(this._options.itemTemplate)({item : item, displayField : title})
          }
@@ -473,6 +476,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var
             selKey,
             oldKey = this._options.selectedKey,
+            oldText = this.getText(),
             self = this,
             filterFieldObj = {};
 
@@ -492,12 +496,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   }
                });
 
-               if (noItems) {
-                  self._options.selectedKey = null;
-                  if (oldKey !== self._options.selectedKey) {
-                     self._notifySelectedItem(null);
-                     self._drawSelectedItem(null);
-                  }
+               if (noItems && oldKey !== null) {
+                  self.setSelectedKey(null);
+                  self._drawText(oldText);
                }
             });
          }
@@ -518,9 +519,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
-      _redraw: function () {
+      redraw: function () {
          if (this._picker) {
-            ComboBox.superclass._redraw.call(this);
+            ComboBox.superclass.redraw.call(this);
             // Сделано для того, что бы в при уменьшении колчества пунктов при поиске нормально усеньшались размеры пикера
             // В 3.7.3.200 сделано нормально на уровне попапа
             this._picker.getContainer().css('height', '');

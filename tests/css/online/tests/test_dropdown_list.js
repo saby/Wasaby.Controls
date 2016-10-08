@@ -485,7 +485,9 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
                 this.list = '[name="DropdownList 1"]';
 				this.title = '[name="DropdownList 1"] .controls-DropdownList__text';
 				this.item2 = '.controls-DropdownList__item[data-id="2"]';
+				this.item2_box = '.controls-DropdownList__item[data-id="2"] .controls-DropdownList__itemCheckBox';
 				this.item4 = '.controls-DropdownList__item[data-id="4"]';
+				this.item4_box = '.controls-DropdownList__item[data-id="4"] .controls-DropdownList__itemCheckBox';
 				this.apply = '[sbisname="DropdownList_buttonChoose"]';
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = '[sbisname="TextBox 1"] input';
@@ -507,8 +509,10 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
             })
 			
 			.capture('selected_items', function (actions) {
-                actions.click(this.item2);
-				actions.click(this.item4);
+                actions.mouseMove(this.item2);
+				actions.waitForElementToShow(this.item2_box, 1000);
+				actions.click(this.item2_box);
+				actions.click(this.item4_box);
 				actions.mouseMove(this.input);
             })
 			
@@ -733,7 +737,9 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
                 this.list = '[name="DropdownList 1"]';
 				this.title = '[name="DropdownList 1"] .controls-DropdownList__text';
 				this.item1 = '.controls-DropdownList__item[data-id="1"]';
+				this.item1_box = '.controls-DropdownList__item[data-id="1"] .controls-DropdownList__itemCheckBox';
 				this.item2 = '.controls-DropdownList__item[data-id="2"]';				
+				this.item2_box = '.controls-DropdownList__item[data-id="2"] .controls-DropdownList__itemCheckBox';
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = '[sbisname="TextBox 1"] input';
             })
@@ -747,8 +753,10 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
             })
 			
 			.capture('selected_items', function (actions) {
-                actions.click(this.item1);
-				actions.click(this.item2);
+				actions.mouseMove(this.item1);
+				actions.waitForElementToShow(this.item1_box, 1000);
+                actions.click(this.item1_box);
+				actions.click(this.item2_box);
 				actions.mouseMove(this.input);
             })
     });

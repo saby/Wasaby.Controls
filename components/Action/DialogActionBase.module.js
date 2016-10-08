@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!WS.Data/Entity/Model', 'i18n!SBIS3.CONTROLS.DialogActionBase'], function(ActionBase, Dialog, FloatArea, Model){
+define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!WS.Data/Entity/Model', 'js!SBIS3.CONTROLS.Utils.InformationPopupManager', 'i18n!SBIS3.CONTROLS.DialogActionBase'], function(ActionBase, Dialog, FloatArea, Model, InformationPopupManager){
    'use strict';
 
    /**
@@ -71,7 +71,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       },
       /**
        * @typedef {Object} ExecuteMetaConfig
-       * @property {DataSource} dataSource Источник данных, который будет установлен для диалога редактирования.
        * @property {String|Number} id Первичный ключ записи, которую нужно открыть на диалоге редактирования. Если свойство не задано, то нужно передать запись свойством record.
        * @property {Boolean} newModel Признак: true - в диалоге редактирования открыта новая запись, которой не существует в источнике данных.
        * @property {Object} filter Объект, данные которого будут использованы в качестве инициализирующих данных при создании новой записи.
@@ -95,6 +94,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        * });
        *
        */
+      $constructor: function() {
+         this._publish('onAfterShow', 'onBeforeShow', 'onExecuted', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel');
+      },
+
       execute : function(meta) {
          this._opendEditComponent(meta, this._options.dialogComponent);
       },
@@ -170,6 +173,12 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
                var record = this._getTemplateComponent().getRecord && this._getTemplateComponent().getRecord();
                self._dialog = undefined;
                self._notifyOnExecuted(meta, record);
+            },
+            onBeforeShow: function(){
+               self._notify('onBeforeShow');
+            },
+            onAfterShow: function(){
+               self._notify('onAfterShow');
             }
          };
 
@@ -192,7 +201,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if (getRecordProtoMethod){
             def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
             def.addCallback(function (record) {
-               self._hideLoadingIndicator();
                config.componentOptions.record = record;
                if (def.isNewRecord)
                   config.componentOptions.isNewRecord = true;
@@ -201,6 +209,13 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
                   config.componentOptions.key = record.getId();
                }
                self._showDialog(config, meta, mode);
+            }).addErrback(function(error){
+               InformationPopupManager.showMessageDialog({
+                  message: error.message,
+                  status: 'error'
+               })
+            }).addBoth(function(){
+               self._hideLoadingIndicator();
             });
          }
          else{

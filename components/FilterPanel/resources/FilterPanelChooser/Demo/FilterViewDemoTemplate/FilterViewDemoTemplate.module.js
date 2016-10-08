@@ -8,7 +8,6 @@ define('js!SBIS3.CONTROLS.Demo.FilterViewDemoTemplate',
       'js!SBIS3.CONTROLS.DataGridView',
       'js!SBIS3.CONTROLS.Button',
       'css!SBIS3.CONTROLS.Demo.FilterViewDemoTemplate',
-      'js!SBIS3.Engine.SelectorBrowser',
       'js!SBIS3.CONTROLS.TabControl'
    ],
    function(CompoundControl, dotTplFn, AdapterSbis, StaticSource, FormChooseController){

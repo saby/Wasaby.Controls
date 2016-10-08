@@ -304,6 +304,7 @@ define('js!SBIS3.CONTROLS.ListView',
                _buildTplArgsLV: buildTplArgsLV,
                _defaultItemTemplate: ItemTemplate,
                _defaultItemContentTemplate: ItemContentTemplate,
+               _groupTemplate: GroupTemplate,
                /**
                 * @faq Почему нет чекбоксов в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
                 * Для отрисовки чекбоксов необходимо в шаблоне отображения элемента коллекции обозначить их место.
@@ -714,19 +715,11 @@ define('js!SBIS3.CONTROLS.ListView',
             if (typeof this._options.pageSize === 'string') {
                this._options.pageSize = this._options.pageSize * 1;
             }
-            if (this._isSlowDrawing()) {
+            if (this._isSlowDrawing(this._options.easyGroup)) {
                this.setGroupBy(this._options.groupBy, false);
             }
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
-            if (!this._options._serverRender) {
-               if (this.getItems()) {
-                  this.redraw()
-               }
-               else if (this._dataSource){
-                  this.reload();
-               }
-            }
          },
          _modifyOptions : function(opts){
             var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
@@ -1035,11 +1028,11 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
                 target = this._findItemByElement($target),
-                id;
+                model;
 
             if (target.length && this._isViewElement(target)) {
-               id = this._getItemsProjection().getByHash(target.data('hash')).getContents().getId();
-               this._elemClickHandler(id, this.getItems().getRecordById(id), e.target, e);
+               model = this._getItemsProjection().getByHash(target.data('hash')).getContents();
+               this._elemClickHandler(model.getId(), model, e.target, e);
             }
             if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox')){
                $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
@@ -1959,25 +1952,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.hierarchyViewMode;
          },
 
-         //TODO проверка для режима совместимости со старой отрисовкой
-         /*TODO easy параметр для временной поддержки группировки в быстрой отрисовке*/
-         _isSlowDrawing: function(easy) {
-            var result = !!this._options.itemTemplate || !!this._options.userItemAttributes;
-            if (easy) {
-               return result;
-            }
-            else {
-               return result || !Object.isEmpty(this._options.groupBy);
-            }
-         },
 
-         _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems) {
-            if (action === IBindCollection.ACTION_MOVE && this._isSearchMode()) {
-               this.redraw();
-            } else {
-               ListView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
-            }
-         },
          //**********************************//
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
          //*********************************//
@@ -2059,8 +2034,8 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
          },
-         _removeItem: function(item){
-            ListView.superclass._removeItem.call(this, item);
+         _removeItem: function(item, groupId){
+            ListView.superclass._removeItem.call(this, item, groupId);
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
             }
@@ -2138,12 +2113,12 @@ define('js!SBIS3.CONTROLS.ListView',
                if (dataSet.getCount()) {
                   //TODO: вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
                   //Возвращаем самостоятельную отрисовку данных, пришедших в загрузке по скроллу
-                  if (this._isSlowDrawing()) {
+                  if (this._isSlowDrawing(this._options.easyGroup)) {
                      this._needToRedraw = false;
                   }
                   this._drawPage(dataSet, direction);
                   //И выключаем после отрисовки
-                  if (this._isSlowDrawing()) {
+                  if (this._isSlowDrawing(this._options.easyGroup)) {
                      this._needToRedraw = true;
                   }
                } else {
@@ -2164,26 +2139,22 @@ define('js!SBIS3.CONTROLS.ListView',
          _drawPage: function(dataSet, direction){
             var at = null;
             //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
-            if (direction === 'down') {
-               //TODO новый миксин не задействует декоратор лесенки в принципе при любых действиях, кроме первичной отрисовки
-               //это неправильно, т.к. лесенка умеет рисовать и дорисовывать данные, если они добавляются последовательно
-               //здесь мы говорим, чтобы лесенка отработала при отрисовке данных
-               var ladder = this._options._decorators.getByName('ladder');
-               if (ladder){
-                  ladder.setIgnoreEnabled(true);
-               }
-               //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
-               this.getItems().append(dataSet);
-               ladder && ladder.setIgnoreEnabled(false);
-            } else {
+            if (direction === 'up') {
                this._needScrollCompensation = true;
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight();
                var items = dataSet.toArray();
-               this.getItems().prepend(items);
                at = {at: 0};
             }
+            //TODO новый миксин не задействует декоратор лесенки в принципе при любых действиях, кроме первичной отрисовки
+            //это неправильно, т.к. лесенка умеет рисовать и дорисовывать данные, если они добавляются последовательно
+            //здесь мы говорим, чтобы лесенка отработала при отрисовке данных
+            var ladder = this._options._decorators.getByName('ladder');
+            ladder && ladder.setIgnoreEnabled(true);
+            //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
+            this.getItems().append(dataSet);
+            ladder && ladder.setIgnoreEnabled(false);
 
-            if (this._isSlowDrawing()) {
+            if (this._isSlowDrawing(this._options.easyGroup)) {
                this._drawItems(dataSet.toArray(), at);
             }
             //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
@@ -3072,14 +3043,13 @@ define('js!SBIS3.CONTROLS.ListView',
                   self._toggleIndicator(true);
                   if (self._notify('onBeginDelete', idArray) !== false) {
                      return self._deleteRecords(idArray).addCallback(function () {
-                        self.removeItemsSelection(idArray);
                         //Если записи удалялись из DataSource, то перезагрузим реест, если из items, то реестр уже в актальном состоянии
                         if (self.getDataSource()) {
-                           if ($ws.helpers.instanceOfModule(self, 'SBIS3.CONTROLS.TreeCompositeView') && self.getViewMode() === 'table') {
-                              self.partialyReload(idArray);
-                           } else {
-                              self.reload();
-                           }
+                           return self._reloadViewAfterDelete(idArray).addCallback(function() {
+                              self._syncSelectedKeys();
+                           });
+                        } else {
+                           self._syncSelectedKeys();
                         }
                      }).addErrback(function (result) {
                         $ws.helpers.alert(result)
@@ -3091,6 +3061,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             });
          },
+
          _deleteRecords: function(idArray) {
             var
                 items = this.getItems(),
@@ -3105,6 +3076,22 @@ define('js!SBIS3.CONTROLS.ListView',
                items.setEventRaising(true, true);
                return $ws.proto.Deferred.success(true);
             }
+         },
+
+         _reloadViewAfterDelete: function() {
+            return this.reload();
+         },
+
+         _syncSelectedKeys: function() {
+            var
+                self = this,
+                keysForRemove = [];
+            $ws.helpers.forEach(this.getSelectedKeys(), function(key) {
+               if (!self._getItemProjectionByItemId(key)) {
+                  keysForRemove.push(key);
+               }
+            });
+            self.removeItemsSelection(keysForRemove);
          }
       });
 
