@@ -46,6 +46,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
        */
       var DropdownList = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
          _dotTplFn: dotTplFn,
+         /**
+          * @event onClickMore При клике на кнопку "Ещё"
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          */
          $protected: {
             _options: {
                /**
