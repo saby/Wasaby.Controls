@@ -13,11 +13,16 @@
 @bg:                                      @secondary-color;
 @text-color:                              @white-color;
 
-@font-basic-name:                         Exo2, sans-serif;
+@font-basic-name:                         'TensorFont Regular', 'TensorFont', sans-serif;;
 @font-basic-size:                         14px;
 @font-popup-size:                         14px;
 @font-folder-size:                        14px;
 @font-basic-line-height:                  20px;
+
+@closeBigButtonImage:                     url('img/areaBigCloseButton.png') 0 0;
+@closeBigButtonImageHover:                url('img/areaBigCloseButton.png') 0 -40px;
+@closeBigButtonWidth:                     60px;
+@closeBigButtonHeight:                    40px;
 
 @default-itemHover-color:                 @primary-color;
 @default-itemSelected-color:              @primary-color;
@@ -41,6 +46,10 @@
 // ------ //
 
 // Normal button
+
+@button-font-size:                        24px;
+@button-font:                             @button-font-size @font-basic-name;
+@button-text-alignment:                   center;
 @button-min-width:                        24px;
 @button-padding:                          0 8px;
 @button-icon-top-offset:                  12px;                     // top offset of 16x16 icon
@@ -55,12 +64,14 @@
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
 
-@FilterPanelButtonRight: url('img/FilterPanelButton.png') -70px 0;
-@FilterPanelButtonLeft: url('img/FilterPanelButton.png') -35px 0;
-@FilterPanelButtonHide: url('img/FilterPanelButton.png') 0 0;
-@FilterPanelButtonHoverRight: url('img/FilterPanelButton.png') -70px 24px;
-@FilterPanelButtonHoverLeft: url('img/FilterPanelButton.png') -35px 24px;
-@FilterPanelButtonHoverHide: url('img/FilterPanelButton.png') 0 -24px;
+@FilterPanelButtonRightClose: url('img/FilterPanelButton.png') 0 0;
+@FilterPanelButtonLeftClose: url('img/FilterPanelButton.png') -35px 0;
+@FilterPanelButtonRightOpen: url('img/FilterPanelButton.png') -70px 0;
+@FilterPanelButtonLeftOpen: url('img/FilterPanelButton.png') -105px 0;
+@FilterPanelButtonHoverRightClose: url('img/FilterPanelButton.png') 0 24px;
+@FilterPanelButtonHoverLeftClose: url('img/FilterPanelButton.png') -35px 24px;
+@FilterPanelButtonHoverRightOpen: url('img/FilterPanelButton.png') -70px -24px;
+@FilterPanelButtonHoverLeftOpen: url('img/FilterPanelButton.png') -105px -24px;
 
 // Normal default button
 @button-border:                           @button-border-width none;
@@ -438,7 +449,8 @@
 @text-box-field-padding:                  0;
 @text-box-field-after-margin:             0 21px 0 0;
 
-@text-box-field-focus-text-color:         @text-box-field-text-color;
+@text-box-field-text-color:               #666666;
+@text-box-field-focus-text-color:         @white-color;
 @text-box-field-hover-text-color:         @text-box-field-text-color;
 
 @text-box-border-color:                   transparent transparent @gray-dark-color transparent;
@@ -505,11 +517,10 @@
 
 @search-background:                                   none;
 @search-disabled-background:                          @text-box-disabled-bg;
-@search-focus-background:                             #444E57;
 @search-height:                                       40px;
-@search-border-color:                                 #666666;
-@search-hover-border-color:                           @search-border-color;
-@search-bottom-border-color:                          @search-border-color;
+@search-border-color:                                 transparent;
+@search-hover-border-color:                           #2B3546;
+@search-bottom-border-color:                          @search-hover-border-color;
 @search-form-border-disabled-width:                   @text-box-disabled-border-width;
 @search-form-icon-padding:                            11px 8px 0 0;
 @search-form-icon-disabled-display:                   block;
@@ -761,6 +772,7 @@
 @list-view-actions-active-bg:                   #F3F3F3;
 
 @list-view-items-toolbar-vertical-locked-box-shadow: -2px  2px 5px @data-grid-row-hover-bg;
+@list-view-items-toolbar-line-height:                16px;
 @list-view-items-toolbar-vertical-line-height:       24px;
 @list-view-items-toolbar-locked-bg:                  @controls-editInPlace-editor-bg;
 

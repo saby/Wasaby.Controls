@@ -22,5 +22,6 @@
    border-right: 1px solid black;
 }
 .controls-MyFilterPanelToggleButton {
+   margin-top: 12px;
    float: left;
 }

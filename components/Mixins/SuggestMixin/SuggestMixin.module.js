@@ -339,7 +339,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             if(items && items.getCount()) {
                items.clear();
             }
-            this.getList().setFilter(this._options.listFilter, true);
+            if(this._list) {
+               this._list.setFilter(this._options.listFilter, true);
+            }
             return;
          }
 

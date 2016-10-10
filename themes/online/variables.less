@@ -95,12 +95,14 @@
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
 
-@FilterPanelButtonRight: url('img/FilterPanelButton.png') -70px 0;
-@FilterPanelButtonLeft: url('img/FilterPanelButton.png') -35px 0;
-@FilterPanelButtonHide: url('img/FilterPanelButton.png') 0 0;
-@FilterPanelButtonHoverRight: url('img/FilterPanelButton.png') -70px 24px;
-@FilterPanelButtonHoverLeft: url('img/FilterPanelButton.png') -35px 24px;
-@FilterPanelButtonHoverHide: url('img/FilterPanelButton.png') 0 -24px;
+@FilterPanelButtonRightClose: url('img/FilterPanelButton.png') 0 0;
+@FilterPanelButtonLeftClose: url('img/FilterPanelButton.png') -35px 0;
+@FilterPanelButtonRightOpen: url('img/FilterPanelButton.png') -70px 0;
+@FilterPanelButtonLeftOpen: url('img/FilterPanelButton.png') -105px 0;
+@FilterPanelButtonHoverRightClose: url('img/FilterPanelButton.png') 0 24px;
+@FilterPanelButtonHoverLeftClose: url('img/FilterPanelButton.png') -35px 24px;
+@FilterPanelButtonHoverRightOpen: url('img/FilterPanelButton.png') -70px -24px;
+@FilterPanelButtonHoverLeftOpen: url('img/FilterPanelButton.png') -105px -24px;
 
 // Normal default button
 @button-text-color:                       @black-color;
@@ -1536,12 +1538,14 @@
 @list-view-actions-active-bg:                   @data-grid-row-hover-bg !important;
 @list-view-actions-bg:                          @data-grid-row-hover-bg;
 
-@list-view-items-toolbar-margin:                     0 0 1px 0;
+@list-view-items-toolbar-bottom:                     1px;
+@list-view-items-toolbar-right:                      0;
 @list-view-items-toolbar-zindex:                     10;
 @list-view-items-toolbar-box-shadow:                 -2px -2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-locked-box-shadow:          none;
 @list-view-items-toolbar-vertical-box-shadow:        -2px  2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-vertical-locked-box-shadow: -2px  2px 5px @default-itemSelected-color;
+@list-view-items-toolbar-line-height:                16px;
 @list-view-items-toolbar-vertical-line-height:       24px;
 @list-view-items-toolbar-bg:                         @data-grid-row-hover-bg;
 @list-view-items-toolbar-locked-bg:                  @default-itemSelected-color;
@@ -1966,7 +1970,7 @@
 @controls-filterButton-history-maxHeight-overflow:hidden;
 @controls-filterButton-history-actions-right:     auto !important;
 @controls-filterButton-history-actions-left:      -4px !important;
-@controls-filterButton-history-actions-margin:    0;
+@controls-filterButton-history-actions-bottom:    0;
 
 @controls-filterButton-history-item-min-height:   24px;
 

@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
    'js!SBIS3.CORE.Dialog',
    'js!SBIS3.CONTROLS.Utils.DataProcessor',
    'i18n!SBIS3.CONTROLS.OperationPrint'
-], function(PrintUnloadBase, Dialog, Printer, rk) {
+], function(PrintUnloadBase, Dialog, Printer) {
    /**
     * Контрол для печати подготовленных данных
     * @class SBIS3.CONTROLS.OperationPrint

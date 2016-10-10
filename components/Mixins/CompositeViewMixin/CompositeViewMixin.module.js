@@ -240,8 +240,8 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
          },
 
          //TODO заглушка для CompositeView
-         _isSlowDrawing: function(parentFnc) {
-            var flag = parentFnc.call(this);
+         _isSlowDrawing: function(parentFnc, easy) {
+            var flag = parentFnc.call(this, easy);
             if (this._options.viewMode == 'list' || this._options.viewMode == 'tile') {
                flag = true;
             }
