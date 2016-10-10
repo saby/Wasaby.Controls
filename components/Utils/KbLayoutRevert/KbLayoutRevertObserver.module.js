@@ -4,9 +4,10 @@
 define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
     [
    "Core/core-extend",
+   "Core/helpers/string-helpers",
    "js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil"
 ],
-    function ( cExtend,KbLayoutRevertUtil) {
+    function ( cExtend, strHelpers, KbLayoutRevertUtil) {
    'use strict';
 
    var KbLayoutRevertObserver = cExtend({}, {
@@ -86,7 +87,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                this._textBeforeTranslate = null;
             } else {
                // ищем разницу между старым и текущим значением поискового запроса
-               symbolsDifference = $ws.helpers.searchSymbolsDifference(searchValue, this._oldSearchValue);
+               symbolsDifference = strHelpers.searchSymbolsDifference(searchValue, this._oldSearchValue);
 
                /* 1) Между запросами есть разница, тогда
                      а) Если есть общая часть, то значит пользователь

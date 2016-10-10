@@ -1,8 +1,9 @@
 /*global define, $ws, $*/
 define('js!SBIS3.CONTROLS.DragObject', [
    "Core/Abstract",
-   "Core/WindowManager"
-], function( cAbstract, cWindowManager) {
+   "Core/WindowManager",
+   "Core/core-instance"
+], function( cAbstract, cWindowManager, cInstance) {
    'use strict';
    /**
     * Синглтон объект, в котором содержится информация о текущем состоянии Drag'n'drop:
@@ -235,7 +236,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
                //такой поиск нужен что бы в таргете всегда был контрол с dnd миксином, кроме того на ipade контрол находит себя по таргету
                //если внутри контрола будут вложенные контролы то там драгндроп работать не будет.
                if (control) {
-                  if ($ws.helpers.instanceOfMixin(control, 'SBIS3.CONTROLS.DragNDropMixinNew') && control.getItemsDragNDrop()) {
+                  if (cInstance.instanceOfMixin(control, 'SBIS3.CONTROLS.DragNDropMixinNew') && control.getItemsDragNDrop()) {
                      return control;
                   }
                   return found(control.getParent());

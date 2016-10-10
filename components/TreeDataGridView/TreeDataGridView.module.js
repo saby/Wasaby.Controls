@@ -1,4 +1,5 @@
 define('js!SBIS3.CONTROLS.TreeDataGridView', [
+   "Core/IoC",
    "Core/core-merge",
    "Core/constants",
    "js!SBIS3.CONTROLS.DataGridView",
@@ -9,8 +10,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate",
    "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate",
    "html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate",
-   "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender"
-], function( cMerge, constants,DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
+   "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender",
+   "Core/ConsoleLogger"
+], function( IoC, cMerge, constants,DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
 
 
    var HIER_WRAPPER_WIDTH = 16,
@@ -279,7 +281,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
                      // TODO для обратной совместимости - удалить позже
                      if(self._options.arrowActivatedHandler) {
-                        $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.TreeDataGridView', 'Опция arrowActivatedHandler помечена как deprecated и будет удалена в 3.7.4.200.');
+                        IoC.resolve('ILogger').log('SBIS3.CONTROLS.TreeDataGridView', 'Опция arrowActivatedHandler помечена как deprecated и будет удалена в 3.7.4.200.');
                         self._options.arrowActivatedHandler.call(this,
                             hoveredItem.record,
                             id,

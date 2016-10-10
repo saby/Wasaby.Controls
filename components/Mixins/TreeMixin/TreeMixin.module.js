@@ -1022,7 +1022,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                if (this.isEnabled() && self._notify('onSearchPathClick', id) !== false ) {
                   //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
                   /*TODO для Алены. Временный фикс, потому что так удалось починить*/
-                  var filter = $ws.core.merge(self.getFilter(), {
+                  var filter = cMerge(self.getFilter(), {
                      'Разворот' : 'Без разворота'
                   });
                   if (self._options.groupBy.field) {

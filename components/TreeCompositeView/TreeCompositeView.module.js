@@ -333,7 +333,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                return deferred.done().getResult();
             }
          }
-         return $ws.proto.Deferred.success();
+         return Deferred.success();
       },
       //Переопределим метод определения направления изменения порядкового номера, так как если элементы отображаются в плиточном режиме,
       //нужно подвести DragNDrop объект не к верхней(нижней) части элемента, а к левой(правой)

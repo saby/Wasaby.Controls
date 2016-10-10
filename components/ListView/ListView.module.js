@@ -3099,7 +3099,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                 self = this,
                 keysForRemove = [];
-            $ws.helpers.forEach(this.getSelectedKeys(), function(key) {
+            colHelpers.forEach(this.getSelectedKeys(), function(key) {
                if (!self._getItemProjectionByItemId(key)) {
                   keysForRemove.push(key);
                }
