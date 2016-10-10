@@ -2794,7 +2794,6 @@ define('js!SBIS3.CONTROLS.ListView',
             //_findItemByElement, без завязки на _items.
             if (target.length) {
                id = target.data('id');
-               this.setSelectedKey(id);
                var items = this._getDragItems(id),
                   source = [];
                $ws.helpers.forEach(items, function (id) {
@@ -2907,11 +2906,21 @@ define('js!SBIS3.CONTROLS.ListView',
             if (droppable) {
                var
                   clickHandler,
-                  target = dragObject.getTarget();
+                  target = dragObject.getTarget(),
+                  models = [],
+                  dropBySelf;
 
-               //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
+
                if (target) {
-                  if (target.getModel().getId() == this.getSelectedKey()) {
+                  var targetsModel = target.getModel();
+                  dragObject.getSource().each(function(item){
+                     var model = item.getModel();
+                     models.push(model);
+                     if (targetsModel == model) {
+                        dropBySelf = true;
+                     }
+                  });
+                  if (dropBySelf) { //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
                      clickHandler = this._elemClickHandler;
                      this._elemClickHandler = function () {
                         this._elemClickHandler = clickHandler;
@@ -2919,10 +2928,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
 
                   if (dragObject.getOwner() === this) {
-                     var models = [];
-                     dragObject.getSource().each(function(item){
-                        models.push(item.getModel());
-                     });
                      var position = target.getPosition();
                      this._move(models, target.getModel(),
                         position === DRAG_META_INSERT.on ? undefined : position === DRAG_META_INSERT.after

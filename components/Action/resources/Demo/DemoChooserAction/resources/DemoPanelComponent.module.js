@@ -1,7 +1,6 @@
 define('js!SBIS3.CONTROLS.Demo.DemoPanelComponent', [
    'js!SBIS3.CORE.CompoundControl',
-   'html!SBIS3.CONTROLS.Demo.DemoPanelComponent',
-   'js!SBIS3.CONTROLS.TabButtons'
+    'html!SBIS3.CONTROLS.Demo.DemoPanelComponent'
 ], function (CompoundControl, SelectorAction, dotTplFn) {
 
    var DemoPanelComponent = CompoundControl.extend({
