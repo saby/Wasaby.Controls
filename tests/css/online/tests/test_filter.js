@@ -130,13 +130,13 @@ gemini.suite('SBIS3.CONTROLS.Filter Online', function () {
 
             .before(function (actions, find) {
 				actions.waitForElementToShow('[sbisname="MyDataGrid"]', 40000);
-                this.data = find('[sbisname="MyDataGrid"]');
+                this.data = '[sbisname="MyDataGrid"]';
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] .controls-TextBox__field');
+                this.input = '[sbisname="TextBox 1"] .controls-TextBox__field';
 				actions.waitForElementToShow('[sbisname="filterButton"]', 40000);
-                this.filter = find('[sbisname="filterButton"]');
-				this.filter_line = find('[name="filterLine"] .controls__filterButton__filterLine-items span');
-				this.filter_icon = find('[sbisname="filterButton"] .controls__filterButton-button');
+                this.filter = '[sbisname="filterButton"]';
+				this.filter_line = '[name="filterLine"] .controls__filterButton__filterLine-items span';
+				this.filter_icon = '[sbisname="filterButton"] .controls__filterButton-button';
             })
 			
 			.capture('one_item_in_history', function (actions, find) {
@@ -147,7 +147,7 @@ gemini.suite('SBIS3.CONTROLS.Filter Online', function () {
 				actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('ComboBox 1').setSelectedKey(2);
                 });
-				this.apply_button = find('.controls__filter-button__apply-filter');
+				this.apply_button = '.controls__filter-button__apply-filter';
 				actions.click(this.apply_button);
 				actions.click(this.filter_icon);
 				actions.waitForElementToShow('[name="historyView"]', 1000);
@@ -164,18 +164,18 @@ gemini.suite('SBIS3.CONTROLS.Filter Online', function () {
             })
 
 			.capture('hovered_history_line', function (actions, find) {
-				this.history_line = find('[name="historyView"] .controls-filterButton__historyView-item-title');
+				this.history_line = '[name="historyView"] .controls-filterButton__historyView-item-title';
 				actions.mouseMove(this.history_line);
 				actions.waitForElementToShow('[name="historyView"] .controls-ItemActions__itemsContainer i.icon-Pin', 1000);
             })
 			
 			.capture('hovered_history_icon', function (actions, find) {
-				this.history_icon = find('[name="historyView"] .controls-ItemActions__itemsContainer i.icon-Pin');
+				this.history_icon = '[name="historyView"] .controls-ItemActions__itemsContainer i.icon-Pin';
 				actions.mouseMove(this.history_icon);
             })
 			
 			.capture('checked_history_icon', function (actions, find) {
-				this.history_icon = find('.controls-ItemActions__itemsContainer i.icon-Pin');
+				this.history_icon = '.controls-ItemActions__itemsContainer i.icon-Pin';
 				actions.click(this.history_icon);
 				actions.mouseMove(this.input);
             })
@@ -186,20 +186,20 @@ gemini.suite('SBIS3.CONTROLS.Filter Online', function () {
                 });
             })
     });
-	
+
 	gemini.suite('custom_templates', function (test) {
 
         test.setUrl('/regression_filter_online_4.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
 				actions.waitForElementToShow('[sbisname="MyDataGrid"]', 40000);
-                this.data = find('[sbisname="MyDataGrid"]');
+                this.data = '[sbisname="MyDataGrid"]';
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] .controls-TextBox__field');
+                this.input = '[sbisname="TextBox 1"] .controls-TextBox__field';
 				actions.waitForElementToShow('[sbisname="filterButton"]', 40000);
-                this.filter = find('[sbisname="filterButton"]');
-				this.filter_line = find('[name="filterLine"] .controls__filterButton__filterLine-items span');
-				this.filter_icon = find('[sbisname="filterButton"] .controls__filterButton-button');
+                this.filter = '[sbisname="filterButton"]';
+				this.filter_line = '[name="filterLine"] .controls__filterButton__filterLine-items span';
+				this.filter_icon = '[sbisname="filterButton"] .controls__filterButton-button';
             })
 			
 			.capture('selected', function (actions, find) {
@@ -210,7 +210,7 @@ gemini.suite('SBIS3.CONTROLS.Filter Online', function () {
 				actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('ComboBox 1').setSelectedKey(2);
                 });
-				this.apply_button = find('.controls__filter-button__apply-filter');
+				this.apply_button = '.controls__filter-button__apply-filter';
 				actions.click(this.apply_button);
             })
 			
@@ -230,18 +230,18 @@ gemini.suite('SBIS3.CONTROLS.Filter Online', function () {
             })
 
 			.capture('hovered_history_line', function (actions, find) {
-				this.history_line = find('[name="historyView"] .controls-filterButton__historyView-item-title');
+				this.history_line = '[name="historyView"] .controls-filterButton__historyView-item-title';
 				actions.mouseMove(this.history_line);
 				actions.waitForElementToShow('[name="historyView"] .controls-ItemActions__itemsContainer i.icon-Pin', 1000);
             })
 			
 			.capture('hovered_history_icon', function (actions, find) {
-				this.history_icon = find('[name="historyView"] .controls-ItemActions__itemsContainer i.icon-Pin');
+				this.history_icon = '[name="historyView"] .controls-ItemActions__itemsContainer i.icon-Pin';
 				actions.mouseMove(this.history_icon);
             })
 			
 			.capture('checked_history_icon', function (actions, find) {
-				this.history_icon = find('.controls-ItemActions__itemsContainer i.icon-Pin');
+				this.history_icon = '.controls-ItemActions__itemsContainer i.icon-Pin';
 				actions.click(this.history_icon);
 				actions.mouseMove(this.input);
             })

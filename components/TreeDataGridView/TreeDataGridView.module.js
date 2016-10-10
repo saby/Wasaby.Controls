@@ -6,8 +6,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.IconButton',
    'html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate',
    'html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate',
-   'html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate'
-], function(DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate) {
+   'html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate',
+   'tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender'
+], function(DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
+
 
    var HIER_WRAPPER_WIDTH = 16,
        //Число 19 это сумма padding'ов, margin'ов элементов которые составляют отступ у первого поля, по которому строится лесенка отступов в дереве
@@ -20,6 +22,18 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          tplOptions.arrowActivatedHandler = cfg.arrowActivatedHandler;
          tplOptions.editArrow = cfg.editArrow;
          return tplOptions;
+      },
+      getSearchCfg = function(cfg) {
+         return {
+            keyField: cfg.keyField,
+            displayField: cfg.displayField,
+            highlightEnabled: cfg.highlightEnabled,
+            highlightText: cfg.highlightText,
+            colorMarkEnabled: cfg.colorMarkEnabled,
+            colorField: cfg.colorField,
+            allowEnterToFolder: cfg.allowEnterToFolder,
+            colspan: cfg.columns.length + (cfg.multiselect ? 1 : 0)
+         }
       };
 
    'use strict';
@@ -90,6 +104,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             _canServerRender: true,
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
+            _defaultSearchRender: searchRender,
+            _getSearchCfg: getSearchCfg,
             /**
              * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике по кнопке справа от названия узла (папки) или скрытого узла.
              * @remark
@@ -202,9 +218,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _resizeFoldersFooters: function() {
-         var footers = $('.controls-TreeDataGridView__folderFooterContainer', this._container.get(0));
+         var footers = $('.controls-TreeView__folderFooterContainer', this._container.get(0));
          var width = this._container.width();
-         footers.width(width);
+         footers.outerWidth(width);
       },
 
       _keyboardHover: function(e) {
@@ -256,18 +272,21 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                allowChangeEnable: false,
                handlers: {
                   onActivated: function () {
-                     var hoveredItem = self.getHoveredItem();
+                     var hoveredItem = self.getHoveredItem(),
+                         id = hoveredItem.key;
 
                      // TODO для обратной совместимости - удалить позже
                      if(self._options.arrowActivatedHandler) {
+                        $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.TreeDataGridView', 'Опция arrowActivatedHandler помечена как deprecated и будет удалена в 3.7.4.200.');
                         self._options.arrowActivatedHandler.call(this,
                             hoveredItem.record,
-                            hoveredItem.key,
+                            id,
                             hoveredItem.container
                         );
                      } else {
-                        self._activateItem(hoveredItem.key);
+                        self._activateItem(id);
                      }
+                     self.setSelectedKey(id);
                   }
                }
             });
@@ -295,7 +314,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          /* Т.к. у нас в вёрстке две иконки, то позиционируем в зависимости от той, которая показывается,
             в .200 переделаем на маркер */
          if(arrowContainer.length === 2) {
-            if (folderTitle[0].offsetWidth > td[0].offsetWidth) {
+            /* Для стандартного отображения учитываем паддинги и ширину икноки разворота папки */
+            if ((folderTitle[0].offsetWidth + HIER_WRAPPER_WIDTH + ADDITIONAL_LEVEL_OFFSET) > td[0].offsetWidth) {
                arrowContainer = arrowContainer[1];
             } else {
                arrowContainer = arrowContainer[0];
@@ -394,13 +414,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          container.addClass('controls-ListView__item-type-' + itemType);
          var
             key = item.getId(),
-            parentKey = this._options._items.getParentKey(item, this._options.hierField),
+            parentKey = item.get(this._options.hierField),
          	parentContainer = $('.controls-ListView__item[data-id="' + parentKey + '"]', this._getItemsContainer().get(0)).get(0);
          container.attr('data-parent', parentKey);
 
          if (this._options.openedPath[key]) {
-            var tree = this._options._items.getTreeIndex(this._options.hierField);
-            if (tree[key]) {
+            var hierarchy = this._getHierarchyRelation(),
+               children = hierarchy.getChildren(key, this._options._items);
+
+            if (children.length) {
                $('.js-controls-TreeView__expand', container).addClass('controls-TreeView__expand__open');
             } else {
                /*TODO:

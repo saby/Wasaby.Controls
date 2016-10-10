@@ -144,7 +144,7 @@
                   box-shadow: none;
                   right: @controls-filterButton-history-actions-right;
                   left: @controls-filterButton-history-actions-left;
-                  margin-bottom: @controls-filterButton-history-actions-margin;
+                  bottom: @controls-filterButton-history-actions-bottom;
                }
 
                .controls-filterButton__historyView-item {
@@ -269,7 +269,7 @@
       cursor: pointer;
       color: @controls-filterLine-link-color;
       text-decoration: none;
-      line-height: 24px;
+      line-height: @controls-filterLine-items-line-height;
       padding: @controls-filterLine-items-padding;
       box-sizing: border-box;
    }
@@ -319,7 +319,7 @@
 
          }
          .controls__filterButton__filterLine-copyCross {
-            top: -25px;
+            top: @controls-filterLine-copyCross-ff-top;
          }
          .controls__filterButton__filterLine-cross {
             top: 1px;

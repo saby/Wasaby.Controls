@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
    'js!SBIS3.CORE.Dialog',
    'js!SBIS3.CONTROLS.Utils.DataProcessor',
    'i18n!SBIS3.CONTROLS.OperationPrint'
-], function(PrintUnloadBase, Dialog, Printer, rk) {
+], function(PrintUnloadBase, Dialog, Printer) {
    /**
     * Контрол для печати подготовленных данных
     * @class SBIS3.CONTROLS.OperationPrint
@@ -49,8 +49,8 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
        * @param columns
        * @private
        */
-      _notifyOnApply : function(columns){
-         return this._notify('onApplyOperation', 'print', columns);
+      _notifyOnApply : function(columns, data){
+         return this._notify('onApplyOperation', 'print', columns, data);
       },
       applyOperation: function(cfg){
          var p;

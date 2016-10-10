@@ -18,10 +18,12 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
          },
 
          _SELECTABLE_RANGE_CSS_CLASSES: {
+            // rangeselect: 'controls-RangeSelectable__rangeselect',
             item: 'controls-RangeSelectable__item',
             selected: 'controls-RangeSelectable__item-selected',
             selectedStart: 'controls-RangeSelectable__item-selectedStart',
-            selectedEnd: 'controls-RangeSelectable__item-selectedEnd'
+            selectedEnd: 'controls-RangeSelectable__item-selectedEnd',
+            selecting: 'controls-RangeSelectable__selecting'
          },
 
          _selectedRangeItemIdAtr: 'data-selected-range-id',
@@ -36,7 +38,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
          if(!$ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.RangeSelectableViewMixin')) {
             throw new Error('RangeSelectableViewMixin mixin is required');
          }
-         this._publish('onSelectionStarted', 'onSelectionEnded');
+         this._publish('onBeforeSelectionStarted', 'onSelectionStarted', 'onBeforeSelectionEnded', 'onSelectionEnded');
       },
 
       /**
@@ -113,7 +115,8 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
             return false;
          }
          this._rangeSelectionEnd = item;
-         this._rangeSelection = item ? true : false;
+         this._rangeSelection = !!item;
+         this._updateContainerSelectionClass();
          this.validateRangeSelectionItemsView();
          return true;
       },
@@ -124,6 +127,14 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
        */
       _getSelectionRangeEndItem: function () {
          return this._rangeSelectionEnd;
+      },
+
+      _updateContainerSelectionClass: function () {
+         if (this._rangeSelection) {
+            this.getContainer().addClass(this._SELECTABLE_RANGE_CSS_CLASSES.selecting);
+         } else {
+            this.getContainer().removeClass(this._SELECTABLE_RANGE_CSS_CLASSES.selecting);
+         }
       },
 
       /**
@@ -142,9 +153,11 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
          } else {
             end = start;
          }
+         this._notify('onBeforeSelectionStarted', start, end);
          this._rangeSelection = true;
          this.setRange(start, end, silent);
          this._setSelectionRangeEndItem(this.getEndValue(), silent);
+         this._updateContainerSelectionClass();
          this._notify('onSelectionStarted');
       },
       /**
@@ -155,9 +168,11 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
        */
       _stopRangeSelection: function (date, endDate) {
          var range = this._getUpdatedRange(this.getStartValue(), this.getEndValue(), date, endDate);
+         this._notify('onBeforeSelectionEnded', range[0], range[1]);
          this.setRange(range[0], range[1]);
          this._setSelectionRangeEndItem();
          this.validateRangeSelectionItemsView();
+         this._updateContainerSelectionClass();
          this._notify('onSelectionEnded');
       },
       /**

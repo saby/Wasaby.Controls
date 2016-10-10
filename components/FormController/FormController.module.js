@@ -11,6 +11,11 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
     */
    'use strict';
 
+   //Открыли FormController в новой вкладке
+   function isOpenedFromNewTab(){
+      return !$ws.helpers.instanceOfModule(this, 'SBIS3.CORE.FloatArea') && !$ws.helpers.instanceOfModule(this, 'SBIS3.CORE.Dialog');
+   }
+
    var FormController = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.FormController.prototype */ {
       /**
        * @typedef {Object} dataSource
@@ -38,6 +43,27 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see onCreateModel
        * @see onUpdateModel
        * @see onDestroyModel
+       * @see onFail
+       */
+      /**
+       * @event onAfterFormLoad Происходит при показе панели с построеной версткой по установленной записи
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @see read
+       * @see dataSource
+       * @see onCreateModel
+       * @see onUpdateModel
+       * @see onDestroyModel
+       * @see onFail
+       */
+      /**
+       * @event onBeforeUpdateModel Происходит перед сохранением записи в источнике данных диалога редактирования.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {WS.Data/Entity/Record} record Сохраняемая запись.
+       * @see submit
+       * @see update
+       * @see onCreateModel
+       * @see onDestroyModel
+       * @see onReadModel
        * @see onFail
        */
       /**
@@ -85,6 +111,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          _isConfirmDialogShowed: false,
          _syncOperationCallback: undefined,
          _panelReadyDeferred: undefined,
+         _overlay: undefined,
          _options: {
             /**
              * @cfg {String} Устанавливает первичный ключ записи, редактируемой на диалоге.
@@ -154,15 +181,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
 
       $constructor: function(cfg) {
          this._newRecord = cfg.isNewRecord || false;
-         this._publish('onFail', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel', 'onAfterFormLoad');
-         $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
-         $ws.single.CommandDispatcher.declareCommand(this, 'read', this._read);
-         $ws.single.CommandDispatcher.declareCommand(this, 'update', this.update);
-         $ws.single.CommandDispatcher.declareCommand(this, 'destroy', this._destroyModel);
-         $ws.single.CommandDispatcher.declareCommand(this, 'create', this._create);
-         $ws.single.CommandDispatcher.declareCommand(this, 'notify', this._actionNotify);
-         $ws.single.CommandDispatcher.declareCommand(this, 'activateChildControl', this._createChildControlActivatedDeferred);
-
+         this._publish('onFail', 'onReadModel', 'onBeforeUpdateModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel', 'onAfterFormLoad');
+         this._declareCommands();
          this.subscribeTo($ws.single.EventBus.channel('navigation'), 'onBeforeNavigate', $ws.helpers.forAliveOnly(this._onBeforeNavigate, this));
 
          this._updateDocumentTitle();
@@ -177,29 +197,40 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                this._getRecordFromSource({});
             }
          }
-         var loadingTime = new Date();
-         this.subscribe('onAfterShow', function(){
-            $ws.single.ioc.resolve('ILogger').log('FormController', 'Время загрузки ' + (new Date() - loadingTime) + 'мс');
-         });
-         //Выписал задачу, чтобы при событии onBeforeClose стрелял метод у floatArea, который мы бы переопределили здесь,
-         //чтобы не дергать getTopParent
          this._panel.subscribe('onBeforeClose', this._onBeforeCloseHandler);
          this._panelReadyDeferred = new $ws.proto.Deferred();
          this._panel.subscribe('onAfterShow', this._onAfterShowHandler);
       },
 
+      _declareCommands: function(){
+         $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
+         $ws.single.CommandDispatcher.declareCommand(this, 'read', this._read);
+         $ws.single.CommandDispatcher.declareCommand(this, 'update', this.update);
+         $ws.single.CommandDispatcher.declareCommand(this, 'destroy', this._destroyModel);
+         $ws.single.CommandDispatcher.declareCommand(this, 'create', this._create);
+         $ws.single.CommandDispatcher.declareCommand(this, 'notify', this._actionNotify);
+         $ws.single.CommandDispatcher.declareCommand(this, 'activateChildControl', this._createChildControlActivatedDeferred);
+      },
+
       _onAfterShowHandler: function(){
          //Если мы в новой вкладке браузера, то ничего не делаем
-         if (!($ws.helpers.instanceOfModule(this, 'SBIS3.CORE.FloatArea') || $ws.helpers.instanceOfModule(this, 'SBIS3.CORE.Dialog'))){
+         if (isOpenedFromNewTab.call(this)){
+            this._notifyOnAfterFormLoadEvent(); //Если открылись в новой вкладке, событие onAfterShow стреляет непосредственно для FC
             return;
          }
          var self = this._getTemplateComponent();
          self._updateIndicatorZIndex();
-         if (self.getRecord()){
-            self._actionNotify('onAfterFormLoad');
+         self._notifyOnAfterFormLoadEvent();
+      },
+
+      _notifyOnAfterFormLoadEvent: function(){
+         //Если у нас показалась панель и есть рекорд, то в этом случае верстка по установленной записи уже построена и мы просто кидаем событие
+         //Если же записи нет, дожидаемся, когда получим ее с БЛ.
+         if (this.getRecord()){
+            this._actionNotify('onAfterFormLoad');
          }
          else{
-            self._panelReadyDeferred.callback();
+            this._panelReadyDeferred.callback();
          }
       },
 
@@ -214,7 +245,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          //TODO: Сейчас нет механизма, позволяющего работать с панелью не через события и влиять на ее работу. хорошо бы такой иметь
 
          //Если мы в новой вкладке браузера, то ничего не делаем
-         if (!($ws.helpers.instanceOfModule(this, 'SBIS3.CORE.FloatArea') || $ws.helpers.instanceOfModule(this, 'SBIS3.CORE.Dialog'))){
+         if (isOpenedFromNewTab.call(this)){
             return;
          }
          var self = this._getTemplateComponent(),
@@ -224,7 +255,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             return;
          }
          //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
-         if (self._saving || !record.isChanged()){
+         if (self._saving || !record.isChanged() && !self._panel.getChildPendingOperations().length){
             //Дестроим запись, когда выполнены три условия
             //1. если это было создание
             //2. если есть ключ (метод создать его вернул)
@@ -502,14 +533,20 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       _create: function(config){
          var createConfig = {
                indicatorText: rk('Загрузка'),
-               needSetRecord: true,
-               needUpdateKey: true,
-               eventName: 'onCreateModel',
-               newRecord: true,
-               activateChildControlAfterLoad: true
-            };
+               eventName: 'onCreateModel'
+            },
+            self = this,
+            createDeferred = this._dataSource.create(this._options.initValues);
 
-         return this._prepareSyncOperation(this._dataSource.create(this._options.initValues), config, createConfig);
+         createDeferred.addCallback(function(record){
+            self.setRecord(record, true);
+            self._newRecord = true;
+            return record;
+         }).addBoth(function(data){
+            self._activateChildControlAfterLoad();
+            return data;
+         });
+         return this._prepareSyncOperation(createDeferred, config, createConfig);
       },
       /**
        * Удалить запись из источника данных диалога редактирования.
@@ -527,15 +564,16 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        */
       _destroyModel: function(){
          var record = this._options.record,
+            self = this,
             destroyConfig = {
                hideIndicator: true,
                eventName: 'onDestroyModel',
-               hideErrorDialog: true,
-               newRecord: false
+               hideErrorDialog: true
             },
             def = this._dataSource.destroy(record.getId());
 
          return this._prepareSyncOperation(def, {}, destroyConfig).addBoth(function(){
+            self._newRecord = false;
             record.setState(Record.RecordState.DELETED);
          });
       },
@@ -568,10 +606,10 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       _read: function (config) {
          var readConfig = {
                indicatorText: rk('Загрузка'),
-               needSetRecord: true,
-               eventName: 'onReadModel',
-               activateChildControlAfterLoad: true
+               eventName: 'onReadModel'
             },
+            self = this,
+            readDeferred,
             key;
 
          //TODO Выпилить в 200, все должны уже блыи перейти на объект
@@ -584,7 +622,14 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             key = config.key;
          }
          key = key || this._options.key;
-         return this._prepareSyncOperation(this._dataSource.read(key), config, readConfig);
+         readDeferred = this._dataSource.read(key).addCallback(function(record){
+            self.setRecord(record);
+            return record;
+         }).addBoth(function(data){
+            self._activateChildControlAfterLoad();
+            return data;
+         });
+         return this._prepareSyncOperation(readDeferred, config, readConfig);
       },
 
       /**
@@ -624,6 +669,11 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see dataSource
        */
       update: function(config){
+         var self = this,
+            updateDeferred = new $ws.proto.Deferred(),
+            errorMessage = 'updateModel canceled from onBeforeUpdateModel event',
+            onBeforeUpdateResult;
+         
          if (typeof(config) !== 'object'){
             config = {
                closePanelAfterSubmit: config
@@ -631,7 +681,23 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             $ws.single.ioc.resolve('ILogger').log('FormController', 'команда update в качестве аргумента принимает объект');
          }
          config.hideQuestion = true;
-         return this._saveRecord(config);
+
+         onBeforeUpdateResult = this._notify('onBeforeUpdateModel', this.getRecord());
+         if (onBeforeUpdateResult instanceof $ws.proto.Deferred){
+            onBeforeUpdateResult.addCallback(function(result){
+               if (result !== false){
+                  updateDeferred.dependOn(self._saveRecord(config));
+               }
+               else{
+                  updateDeferred.errback(errorMessage);
+               }
+            });
+            return updateDeferred;
+         }
+         else if (onBeforeUpdateResult !== false) {
+            return this._saveRecord(config);
+         }
+         return updateDeferred.errback(errorMessage);
       },
 
       _saveRecord: function(config){
@@ -679,18 +745,22 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             updateConfig = {
                indicatorText: this._options.indicatorSavingMessage,
                eventName: 'onUpdateModel',
-               additionalData: additionalData,
-               newRecord: false
+               additionalData: additionalData
             },
             self = this,
-            def;
+            updateDeferred;
+
          if (this.validate()) {
             if (this._options.record.isChanged() || self._newRecord) {
-               def = this._prepareSyncOperation(this._dataSource.update(this._getRecordForUpdate()), config, updateConfig);
-               dResult.dependOn(def.addErrback(function (error) {
+               updateDeferred = this._dataSource.update(this._getRecordForUpdate()).addCallback(function(key){
+                  updateConfig.additionalData.key = key;
+                  self._newRecord = false;
+                  return key;
+               }).addErrback(function (error) {
                   self._saving = false;
                   return error;
-               }));
+               });
+               dResult.dependOn(this._prepareSyncOperation(updateDeferred, config, updateConfig));
             } else {
                dResult.callback();
             }
@@ -723,16 +793,11 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          if (!config.hideIndicator){
             this._showLoadingIndicator(config.indicatorText);
          }
+         this._toggleOverlay(true);
          this._addSyncOperationPending();
-         operation.addCallback(function(record){
-            if (config.needSetRecord){
-               self.setRecord(record, config.needUpdateKey);
-            }
+         operation.addCallback(function(data){
             self._notify(config.eventName, self._options.record, config.additionalData);
-            if (config.hasOwnProperty('newRecord')){
-               self._newRecord = config.newRecord;
-            }
-            return record;
+            return data;
          }).addErrback(function(err){
                if (!config.hideErrorDialog && (err instanceof Error)){
                   self._processError(err);
@@ -741,12 +806,17 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          }).addBoth(function(result){
                self._removeSyncOperationPending();
                self._hideLoadingIndicator();
-               if (config.activateChildControlAfterLoad){
-                  self._activateChildControlAfterLoad();
-               }
+               self._toggleOverlay(false);
                return result;
          });
          return operation;
+      },
+
+      _toggleOverlay: function(show){
+         if (!this._overlay){
+            this._overlay = $('<div class="controls-FormController-overlay ws-hidden"></div>').appendTo(this.getContainer());
+         }
+         this._overlay.toggleClass('ws-hidden', !show);
       },
 
       _addSyncOperationPending: function(){

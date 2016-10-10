@@ -171,6 +171,12 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          }
       },
 
+      _getAdditionalChooserConfig: function() {
+         return {
+            multiSelect: this.getMultiselect()
+         }
+      },
+
       _redraw: $ws.helpers.nop
    });
 

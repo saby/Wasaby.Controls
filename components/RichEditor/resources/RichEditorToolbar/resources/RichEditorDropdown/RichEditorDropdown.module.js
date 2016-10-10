@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown',
          $protected : {
             _options : {
                multiselect: false,
-               showSelectedInList: true,
+               type: 'fastDataFilter',
                headTemplate: headerTemplate,
                itemTemplate: itemTemplate,
                mode: 'click'

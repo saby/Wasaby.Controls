@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.InformationPopup',
     * @class SBIS3.CONTROLS.InformationPopup
     * @extends SBIS3.CORE.CompoundControl
     * @control
+    * @public
     * @author Степин П.В.
     */
    function(CompoundControl, PopupMixin, LikeWindowMixin, dotTpl){

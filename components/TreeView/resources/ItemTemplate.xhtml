@@ -1,6 +1,11 @@
 {{ var
       hierField = it.item.get(it.hierField + '@'),
-      hasLoadedChild = !!it.projItem.getOwner().getCollection().getChildItems(it.projItem.getContents().getId(), undefined, it.projItem.getOwner().getParentProperty()).length,
+      projection = it.projItem.getOwner(),
+      children = it.hierarchy.getChildren(
+         it.item,
+         projection.getCollection()
+      ),
+      hasLoadedChild = children.length > 0,
       loadedWithoutChilds = it.projItem.isLoaded() && !hasLoadedChild && hierField != null,
       padding = it.paddingSize * (it.projItem.getLevel() - 1) + it.originallPadding,
       drawExpandIcon = !!hierField;

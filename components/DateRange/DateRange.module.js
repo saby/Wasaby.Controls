@@ -28,17 +28,6 @@ define('js!SBIS3.CONTROLS.DateRange', [
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
-            pickerConfig: {
-               corner: 'tl',
-               horizontalAlign: {
-                  side: 'left',
-                  offset: -133
-               },
-               verticalAlign: {
-                  side: 'top',
-                  offset: -11
-               }
-            },
             /**
              * @cfg {Date|String} Начальная дата диапазона
              * При задании задается вместе с endDate, либо обе даты остаются не заданными
@@ -68,6 +57,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
 
          this._datePickerStart = this.getChildControlByName('DateRange__DatePickerStart');
          this._datePickerStart.subscribe('onDateChange', function(e, date) {
+            self.clearMark();
             self.setStartValue(date, false, true);
          });
          this._datePickerStart.subscribe('onInputFinished', function() {
@@ -75,6 +65,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
          });
          this._datePickerEnd = this.getChildControlByName('DateRange__DatePickerEnd');
          this._datePickerEnd.subscribe('onDateChange', function(e, date) {
+            self.clearMark();
             self.setEndValue(date, false, true);
          });
 
@@ -105,6 +96,20 @@ define('js!SBIS3.CONTROLS.DateRange', [
          this._updateDatePicker(self._datePickerEnd, this.getEndValue());
 
          this._addDefaultValidator();
+      },
+
+      _setPickerConfig: function() {
+         return {
+            corner: 'tl',
+            horizontalAlign: {
+               side: 'left',
+               offset: -133
+            },
+            verticalAlign: {
+               side: 'top',
+               offset: -11
+            }
+         }
       },
 
       _addDefaultValidator: function() {

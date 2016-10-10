@@ -1,14 +1,18 @@
 .controls-FieldLink__picker {
    max-height: @controls-FieldLink-picker-max-height;
    min-height: @controls-FieldLink-picker-min-height;
-   border: @controls-FieldLink-border;
-   border-color: @controls-FieldLink-border-color-focus-hover;
+   border: @controls-FieldLink-border @gray-ccc-color;
+   margin-top: 0;
    border-top: none;
-   background: @controls-FieldLink-picker-background;
    overflow: auto;
 
    .controls-FieldLink__linksContainer {
       padding: @controls-FieldLink-linkContainer-padding;
+   }
+
+   &.controls-popup-revert-vertical {
+      border-top: @controls-FieldLink-border @gray-ccc-color;
+      border-bottom: none;
    }
 }
 
@@ -153,5 +157,14 @@
       /* Ширина - паддинг под крестик, чтобы не выезжало за ширину пикера */
       max-width: calc(100% ~"-" @controls-FieldLink-afterField-height);
       vertical-align: middle;
+   }
+}
+
+.ws-is-mobile-chrome-ios, .ws-is-mobile-safari {
+   .controls-FieldLink__picker {
+      &.controls-popup-revert-vertical {
+         border-top: none;
+         border-bottom: @controls-FieldLink-border @gray-ccc-color;
+      }
    }
 }
