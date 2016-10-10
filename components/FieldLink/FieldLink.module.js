@@ -476,22 +476,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
 
-          _showSelector: function(key) {
-             var config;
-
-             if(key) {
-                config = $ws.helpers.find(this._options.dictionaries, function (elem) {
-                   return elem.name === key;
-                });
-             } else {
-                config = this._options.dictionaries[0];
-             }
-
-             if(config) {
-                this.showSelector(config.template, config.componentOptions);
-             }
-          },
-
           setActive: function(active) {
              FieldLink.superclass.setActive.apply(this, arguments);
 
