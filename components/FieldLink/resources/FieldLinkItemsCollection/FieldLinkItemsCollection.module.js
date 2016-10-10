@@ -165,7 +165,10 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
 
          _drawItemsCallback: function() {
             if(this.isPickerVisible() && !this.getItems().getCount()) {
-               this.hidePicker()
+               this.hidePicker();
+               /* Если после скрытия пикера не перевести фокус на поле связи, то он улетит на body,
+                т.к. до это он был на пикере, который скрылся */
+               this._parentFieldLink.setActive(true);
             }
          },
 
