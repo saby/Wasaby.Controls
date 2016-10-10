@@ -278,7 +278,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
                если она включена, то логика стирания текста обрабатывается по-другому. */
             this.subscribe('onSelectedItemsChange', function(event, result, changed) {
                if(self.getText() && !self._options.alwaysShowTextBox) {
-                  self.setText('');
+                  /* Т.к. текст сбрасывается програмно, а searchMixin реагирует лишь на ввод текста с клавиатуры,
+                   то надо позвать метод searchMixin'a, который сбросит текст и поднимет событие */
+                  self.resetSearch();
                }
                /* При добавлении элементов надо запустить валидацию,
                   если же элементы были удалены,
