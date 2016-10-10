@@ -2072,8 +2072,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
       _onCollectionRemove: function(items, notCollapsed) {
-         var i;
-         this._removeItems(items);
+         if (items.length) {
+            this._removeItems(items);
+         }
       },
       _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems) {
          this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);
