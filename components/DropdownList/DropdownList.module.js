@@ -46,6 +46,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
        */
       var DropdownList = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
          _dotTplFn: dotTplFn,
+         /**
+          * @event onClickMore При клике на кнопку "Ещё"
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          */
          $protected: {
             _options: {
                /**
@@ -152,7 +156,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * По умолчанию - 'hover'
                 * Если задать 'click', то работа будет по клику
                 */
-               mode: 'hover',
+               mode: 'click',
                /**
                 * @cfg {String} Текст заголовка
                 * @translatable
@@ -306,13 +310,16 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _clickItemHandler : function (e) {
             var  self = this,
-                row = $(e.target).closest('.' + self._getItemClass()),
-                  selected;
+                 row = $(e.target).closest('.' + self._getItemClass()),
+                 selectedKeys = this.getSelectedKeys(),
+                 isCheckBoxClick = !!$(e.target).closest('.js-controls-DropdownList__itemCheckBox').length,
+                 selected;
             if (row.length && (e.button === ($ws._const.browser.isIE8 ? 1 : 0))) {
 
                //Если множественный выбор, то после клика скрыть менюшку можно только по кнопке отобрать
                this._hideAllowed = !this._options.multiselect;
-               if (this._options.multiselect && !$(e.target).closest('.controls-ListView__defaultItem').length /* && $(e.target).hasClass('js-controls-DropdownList__itemCheckBox')*/) {
+               if (this._options.multiselect && !$(e.target).closest('.controls-ListView__defaultItem').length &&
+                  (selectedKeys.length > 1 || selectedKeys[0] != this._defaultId) || isCheckBoxClick){
                   var changedSelectionIndex = Array.indexOf(this._changedSelectedKeys, row.data('id'));
                   if (changedSelectionIndex < 0){
                      this._changedSelectedKeys.push(row.data('id'));
@@ -320,7 +327,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   else{
                      this._changedSelectedKeys.splice(changedSelectionIndex, 1);
                   }
-                  this._buttonChoose.getContainer().toggleClass('ws-hidden', !this._changedSelectedKeys.length);
+                  this._buttonChoose.getContainer().removeClass('ws-hidden');
                   selected =  !row.hasClass('controls-DropdownList__item__selected');
                   row.toggleClass('controls-DropdownList__item__selected', selected);
                   this._currentSelection[row.data('id')] = selected;
@@ -510,11 +517,17 @@ define('js!SBIS3.CONTROLS.DropdownList',
                      pickerContainer.find('.controls-DropdownList__item__selected').removeClass('controls-DropdownList__item__selected');
                      pickerContainer.find('[data-id="' + id[0] + '"]').addClass('controls-DropdownList__item__selected');
                   }
-                  self._setText(textValue.join(', '));
+                  self._setText(self._prepareText(textValue));
                   self._redrawHead(isDefaultIdSelected);
                   self._resizeFastDataFilter();
                });
             }
+         },
+         _prepareText: function(textValue){
+            if (textValue.length > 1){
+               return textValue[0] + ' и еще ' + (textValue.length - 1);
+            }
+            return textValue.join('');
          },
          _resizeFastDataFilter: function(){
             var parent = this.getParent();

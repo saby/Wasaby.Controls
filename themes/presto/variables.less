@@ -33,7 +33,7 @@
 
 @link-text-color:                         #A8ACC3;
 @link-line-height:                        normal;
-
+@link-font-size:                          24px;
 @link-hover-text-color:                   #FFA34F;
 @link-icon-hover-icon:                    @link-hover-text-color;
 
@@ -448,7 +448,8 @@
 @text-box-field-padding:                  0;
 @text-box-field-after-margin:             0 21px 0 0;
 
-@text-box-field-focus-text-color:         @text-box-field-text-color;
+@text-box-field-text-color:               #666666;
+@text-box-field-focus-text-color:         @white-color;
 @text-box-field-hover-text-color:         @text-box-field-text-color;
 
 @text-box-border-color:                   transparent transparent @gray-dark-color transparent;
@@ -515,11 +516,10 @@
 
 @search-background:                                   none;
 @search-disabled-background:                          @text-box-disabled-bg;
-@search-focus-background:                             #444E57;
 @search-height:                                       40px;
-@search-border-color:                                 #666666;
-@search-hover-border-color:                           @search-border-color;
-@search-bottom-border-color:                          @search-border-color;
+@search-border-color:                                 transparent;
+@search-hover-border-color:                           #2B3546;
+@search-bottom-border-color:                          @search-hover-border-color;
 @search-form-border-disabled-width:                   @text-box-disabled-border-width;
 @search-form-icon-padding:                            11px 8px 0 0;
 @search-form-icon-disabled-display:                   block;
@@ -774,6 +774,7 @@
 @list-view-items-toolbar-line-height:                16px;
 @list-view-items-toolbar-vertical-line-height:       24px;
 @list-view-items-toolbar-locked-bg:                  @controls-editInPlace-editor-bg;
+@touch-mode-items-toolbar-icon-margin-top:           -24px;
 
 @list-view-actions-menu-icon-width:             16px;
 
@@ -926,6 +927,7 @@
 
 @controls-filterButton-area-text-size:            24px;
 @controls-filterButton-area-text-color:           @primary-color;
+@controls-filterButton-clear-margin-right:        16px;
 
 @controls-filterButton-area-content-margin:       0 16px 12px 16px;
 @controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;

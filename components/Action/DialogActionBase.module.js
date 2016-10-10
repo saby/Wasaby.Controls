@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!WS.Data/Entity/Model', 'js!SBIS3.CONTROLS.Utils.InformationPopupManager', 'i18n!SBIS3.CONTROLS.DialogActionBase'], function(ActionBase, Dialog, FloatArea, Model, InformationPopupManager){
+define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!WS.Data/Entity/Record', 'js!SBIS3.CONTROLS.Utils.InformationPopupManager', 'js!WS.Data/Di', 'i18n!SBIS3.CONTROLS.DialogActionBase'], function(ActionBase, Dialog, FloatArea, Record, InformationPopupManager, Di){
    'use strict';
 
    /**
@@ -71,7 +71,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       },
       /**
        * @typedef {Object} ExecuteMetaConfig
-       * @property {DataSource} dataSource Источник данных, который будет установлен для диалога редактирования.
        * @property {String|Number} id Первичный ключ записи, которую нужно открыть на диалоге редактирования. Если свойство не задано, то нужно передать запись свойством record.
        * @property {Boolean} newModel Признак: true - в диалоге редактирования открыта новая запись, которой не существует в источнике данных.
        * @property {Object} filter Объект, данные которого будут использованы в качестве инициализирующих данных при создании новой записи.
@@ -95,6 +94,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        * });
        *
        */
+      $constructor: function() {
+         this._publish('onAfterShow', 'onBeforeShow', 'onExecuted', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel');
+      },
+
       execute : function(meta) {
          this._opendEditComponent(meta, this._options.dialogComponent);
       },
@@ -170,6 +173,12 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
                var record = this._getTemplateComponent().getRecord && this._getTemplateComponent().getRecord();
                self._dialog = undefined;
                self._notifyOnExecuted(meta, record);
+            },
+            onBeforeShow: function(){
+               self._notify('onBeforeShow');
+            },
+            onAfterShow: function(){
+               self._notify('onAfterShow');
             }
          };
 
@@ -356,8 +365,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.MultiSelectable')) {
             collection.removeItemsSelection([collectionRecord.getId()]);
          }
-         if ($ws.helpers.instanceOfModule(collection.getDataSet && collection.getDataSet(), 'WS.Data/Collection/RecordSet')) {
-            collection = collection.getDataSet();
+         if ($ws.helpers.instanceOfModule(collection.getItems && collection.getItems(), 'WS.Data/Collection/RecordSet')) {
+            collection = collection.getItems();
          }
          collection.remove(collectionRecord);
       },
@@ -420,12 +429,12 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          var collection = this._options.linkedObject,
             rec;
          at = at || 0;
-         if ($ws.helpers.instanceOfModule(collection.getDataSet(), 'WS.Data/Collection/RecordSet')) {
-            //Создаем новую модель, т.к. Record не знает, что такое первичный ключ - это добавляется на модели.
-            rec = new Model({
-               format: collection.getDataSet().getFormat(),
-               idProperty: collection.getItems().getIdProperty(),
-               adapter: collection.getItems().getAdapter()
+         if ($ws.helpers.instanceOfModule(collection.getItems(), 'WS.Data/Collection/RecordSet')) {
+             //Создаем новую модель, т.к. Record не знает, что такое первичный ключ - это добавляется на модели.
+            rec = Di.resolve(collection.getItems().getModel(), {
+               adapter: collection.getItems().getAdapter(),
+               format: collection.getItems().getFormat(),
+               idProperty: collection.getItems().getIdProperty()
             });
             this._mergeRecords(model, rec, additionalData);
          } else  {
@@ -466,7 +475,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             collectionRecord.set(collectionData.getIdProperty(), additionalData.key);
          }
 
-         collectionRecord.each(function (key, value) {
+         Record.prototype.each.call(collectionRecord, function (key, value) {
             recValue = model.get(key);
             if (model.has(key) && recValue != value && key !== model.getIdProperty()) {
                //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет

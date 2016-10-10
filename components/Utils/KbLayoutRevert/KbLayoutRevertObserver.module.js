@@ -29,7 +29,8 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
          },
          _textBeforeTranslate: null,
          _onViewDataLoadHandler: null,
-         _observed: false
+         _observed: false,
+         _oldSearchValue: ''
       },
 
       $constructor: function() {
@@ -48,15 +49,16 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
             this._options.view.unsubscribe('onDataLoad', this._onViewDataLoadHandler);
             this._textBeforeTranslate = null;
             this._observed = false;
+            this._oldSearchValue = '';
          }
       },
 
       _onViewDataLoad: function(event, data) {
-         var view = this._options.view;
-         var viewFilter = view.getFilter();
-         var searchValue = viewFilter[this.getParam()];
-         var revertedSearchValue = KbLayoutRevertUtil.process(searchValue);
-
+         var view = this._options.view,
+             viewFilter = view.getFilter(),
+             searchValue = viewFilter[this.getParam()],
+             revertedSearchValue = KbLayoutRevertUtil.process(searchValue),
+             symbolsDifference;
          /* Не производим смену раскладки если:
             1) Нет поискового значения.
             2) После смены раскладки поисковое значения не меняется. */
@@ -70,6 +72,8 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                this._options.textBox.setText(searchValue);
                this._textBeforeTranslate = null;
             }
+            // если поиск произошел то запоминаем текущее значение
+            this._oldSearchValue = searchValue;
          } else {
             /* Если данных нет, то обработаем два случая:
                1) Была сменена раскладка - просто возвращаем фильтр в исходное состояние,
@@ -80,6 +84,30 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                view.setFilter(viewFilter, true);
                this._textBeforeTranslate = null;
             } else {
+               // ищем разницу между старым и текущим значением поискового запроса
+               symbolsDifference = $ws.helpers.searchSymbolsDifference(searchValue, this._oldSearchValue);
+
+               /* 1) Между запросами есть разница, тогда
+                     а) Если есть общая часть, то значит пользователь
+                        продолжил ввод запроса и нужно транслитизировать добавленную часть
+                     б) Общей части нет, значит запрос изменился и нужно транслитизировать новое значение
+
+                  2) Если пользователь захотел искать один и тот же запрос дважды, то транслитизируем текущее значение
+                */
+               if(symbolsDifference) {
+                  if (symbolsDifference[0].length) {
+                     // будем транслитизировать только добавленную часть
+                     revertedSearchValue = this._oldSearchValue + KbLayoutRevertUtil.process(symbolsDifference[1]);
+                  } else {
+                     // если совпадений нет, то значит нужно транслитизировать новое значение
+                     revertedSearchValue = KbLayoutRevertUtil.process(searchValue);
+                  }
+               }else {
+                  // если новый запрос такой же как и старый, то транслитизируем и попытаемся найти данные
+                  revertedSearchValue = KbLayoutRevertUtil.process(searchValue);
+               }
+
+
                this._textBeforeTranslate = searchValue;
                viewFilter[this.getParam()] = revertedSearchValue;
                view.setFilter(viewFilter);

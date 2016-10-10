@@ -52,6 +52,7 @@
 @link-text-alignment:                     center;
 @link-line-height:                        24px;
 @link-padding:                            0;
+@link-font-size:                          @font-basic-size;
 
 @link-hover-text-color:                   @blue-dark-color;
 @link-hover-text-decoration:              underline;
@@ -1538,7 +1539,8 @@
 @list-view-actions-active-bg:                   @data-grid-row-hover-bg !important;
 @list-view-actions-bg:                          @data-grid-row-hover-bg;
 
-@list-view-items-toolbar-margin:                     0 0 1px 0;
+@list-view-items-toolbar-bottom:                     1px;
+@list-view-items-toolbar-right:                      0;
 @list-view-items-toolbar-zindex:                     10;
 @list-view-items-toolbar-box-shadow:                 -2px -2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-locked-box-shadow:          none;
@@ -1553,6 +1555,7 @@
 @list-view-items-toolbar-float:                      right;
 @list-view-items-toolbar-ipad-minHeight:             30px;
 @list-view-items-toolbar-margin-right-tile:          1px;
+@touch-mode-items-toolbar-icon-margin-top:           -24px;
 
 @list-view-actions-verAlign-margin:             8px 3px 0 0;
 @list-view-actions-verAlign-width:              20px;
@@ -1955,6 +1958,8 @@
 @controls-filterButton-area-text-color:           @blue-dark-color;
 @controls-filterButton-area-text-margin:          0 12px 0 0;
 
+@controls-filterButton-clear-margin-right:        0;
+
 @controls-filterButton-title-fontSize:            15px;
 @controls-filterButton-title-text-color:          #313e78;
 
@@ -1969,7 +1974,7 @@
 @controls-filterButton-history-maxHeight-overflow:hidden;
 @controls-filterButton-history-actions-right:     auto !important;
 @controls-filterButton-history-actions-left:      -4px !important;
-@controls-filterButton-history-actions-margin:    0;
+@controls-filterButton-history-actions-bottom:    0;
 
 @controls-filterButton-history-item-min-height:   24px;
 
