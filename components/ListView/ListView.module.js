@@ -850,17 +850,8 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notify('onScrollPageChange', scrollPage);
          },
          _setScrollPagerPosition: function(){
-            var right;
-            // На iOS ширина экрана всегда меньше  максимальной шираны страницы,
-            // поэтому устанавливаем для iOS right=0 через css.
-            // Этот хак исправляет проблемы с неправильным позиционированием пэджера
-            // при изменении масштаба страницы на iOS устройствах.
-            // https://inside.tensor.ru/opendoc.html?guid=14851482-d80d-417f-a157-ea67c942b59b
-            // Для других устройств right рассчитываем динамически.
-            if (!$ws._const.browser.isMobileIOS) {
-               right = $(window).width() - this.getContainer().get(0).getBoundingClientRect().right;
-               this._scrollPager.getContainer().css('right', right);
-            }
+            var right = $(window).width() - this.getContainer().get(0).getBoundingClientRect().right;
+            this._scrollPager.getContainer().css('right', right);
          },
          _keyboardHover: function (e) {
             var
