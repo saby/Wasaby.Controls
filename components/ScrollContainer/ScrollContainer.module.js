@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
          },
 
          /**
-          * Дотиг ли скролл верха контента
+          * Доcтиг ли скролл верха контента
           * @returns {*|boolean}
           * @see iScrollOnBottom
           * @see hasScroll
@@ -143,7 +143,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
          },
 
          /**
-          * Дотиг ли скролл низа контента
+          * Доcтиг ли скролл низа контента
           * @returns {*|boolean}
           * @see isScrollOnTop
           * @see hasScroll
@@ -157,7 +157,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
          },
 
          /**
-          * Сдвиг скролла на указанную величину
+          * Сдвигает скролл на указанную величину
           * @param option величина сдвига скролла
           */
          scrollTo: function(option) {
@@ -190,7 +190,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
          },
 
          /**
-          * Верхнее положение скролла в пискселях
+          * Вернёт верхнее положение скролла в пискселях
           * Если скролл на момент вызова не инициализированн вернёт 0
           * @returns {.mcs.draggerTop|*}
           */
@@ -201,14 +201,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
          },
 
          /**
-          * Обновление скролла
+          * Обновляет скролл
           */
          _updateScroll: function() {
             this.getContainer().mCustomScrollbar('update');
          },
 
          /**
-          * Разрушение контрола
+          * Разрушает скролл
           */
          destroy: function() {
             this.getContainer().mCustomScrollbar('destroy');
