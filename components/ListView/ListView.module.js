@@ -2034,8 +2034,8 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
          },
-         _removeItem: function(item, groupId){
-            ListView.superclass._removeItem.call(this, item, groupId);
+         _removeItems: function(item, groupId){
+            ListView.superclass._removeItems.call(this, item, groupId);
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
             }
