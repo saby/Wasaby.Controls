@@ -1428,20 +1428,6 @@ define('js!SBIS3.CONTROLS.ListView',
          //********************************//
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
-         _notifyOnSizeChanged: function() {
-            var eip;
-            ListView.superclass._notifyOnSizeChanged.apply(this, arguments);
-            //Т.к. редактирование по месту не является ребёнком таблицы, нужно самим позвать _notifyOnSizeChanged для редактирования,
-            //чтобы метод вызвался для все детей редактирования.
-            if (this._hasEditInPlace()) {
-               eip = this._getEditInPlace();
-               eip._notifyOnSizeChanged.apply(eip, arguments);
-            }
-         },
-         toggleCheckboxes: function(toggle) {
-            this._container.toggleClass('controls-ListView__hideCheckBoxes', !toggle);
-            this._notifyOnSizeChanged(true);
-         },
          _isHoverEditMode: function() {
             return !$ws._const.compatibility.touch && this._options.editMode.indexOf('hover') !== -1;
          },
