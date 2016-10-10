@@ -55,6 +55,7 @@ define('js!SBIS3.CONTROLS.Spoiler', [
             rightPartTitleTpl: '',
             properties: null
          },
+         _checkClickByTap: false,
          _contentInitialized: false
       },
       _modifyOptions: function(opts) {
