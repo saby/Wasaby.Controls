@@ -196,7 +196,7 @@ define(
              * @noShow
              * @deprecated
              */
-            serializationMode: 'datetime'
+            serializationMode: 'auto'
          }
       },
 

@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.DateRangeMixin', [
              * @noShow
              * @deprecated
              */
-            serializationMode: 'datetime'
+            serializationMode: 'date'
          }
       },
 
