@@ -3044,10 +3044,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _getMover: function(){
-            this._mover || (this._mover = Di.resolve('listview.mover', {
+            return this._mover || (this._mover = Di.resolve('listview.mover', {
                moveStrategy: this.getMoveStrategy(),
                items: this.getItems(),
-               projection: this._getItemsProjection()
+               projection: this._getItemsProjection(),
+               hierField: this._options.hierField
             }));
          },
          //endregion moveMethods
