@@ -497,6 +497,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          config.getEditorOffset = this._getEditorOffset.bind(this);
          config.hierField = this._options.hierField;
          return config;
+      },
+
+      _onDragHandler: function (dragObject, e) {
+         DataGridView.superclass._onDragHandler.call(this, dragObject, e);
+         this._onDragCallback(dragObject, e);
       }
    });
 
