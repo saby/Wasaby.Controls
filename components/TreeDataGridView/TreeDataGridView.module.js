@@ -175,14 +175,16 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          this.reviveComponents();
       },
       _getFolderFooterOptions: function(key) {
+         debugger;
+         var level = this._getItemProjectionByItemId(key).getLevel();
          return {
             key: key,
             item: this.getItems().getRecordById(key),
-            level: this._getItemProjectionByItemId(key).getLevel(),
+            level: level,
             footerTpl: this._options.folderFooterTpl,
             multiselect: this._options.multiselect,
             colspan: this._options.columns.length,
-            levelOffsetWidth: HIER_WRAPPER_WIDTH
+            padding: this._options._paddingSize * level
          }
       },
       _getFolderFooterWrapper: function() {
@@ -204,9 +206,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
       _resizeFoldersFooters: function() {
          var footers = $('.controls-TreeView__folderFooterContainer', this._container.get(0));
-         /*TODO непонятно откуда появился отступ у футеров, выписываю задачу Сухоручкину, чтоб разобрался*/
-         var width = this._container.width() - 32;
-         footers.width(width);
+         var width = this._container.width();
+         if (this._options.multiselect) {
+            width -= 24;
+         }
+         footers.outerWidth(width);
       },
 
       _keyboardHover: function(e) {
