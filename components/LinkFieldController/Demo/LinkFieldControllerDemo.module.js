@@ -6,8 +6,9 @@ define('js!SBIS3.CONTROLS.Demo.LinkFieldController', [
    'js!SBIS3.CONTROLS.LinkFieldController',
    'js!WS.Data/Entity/Model',
    'js!WS.Data/Source/Memory',
-   'js!WS.Data/Adapter/Json'
-], function(Abstract, LinkFieldController, Model, Memory, Json){
+   'js!WS.Data/Adapter/Json',
+   'Core/helpers/collection-helpers'
+], function(Abstract, LinkFieldController, Model, Memory, Json, colHelpers){
 
    'use strict';
 
@@ -86,7 +87,7 @@ define('js!SBIS3.CONTROLS.Demo.LinkFieldController', [
 
          console.log(model.toObject());
 
-         console.log('Всё ок: ' + $ws.helpers.isEqualObject(model.toObject(), {
+         console.log('Всё ок: ' + colHelpers.isEqualObject(model.toObject(), {
             Возраст:55,
             Должность:'Премьер-министр',
             'Должность.Зарплата':100,

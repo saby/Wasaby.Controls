@@ -1,12 +1,13 @@
 define('js!SBIS3.CONTROLS.SearchForm', [
-   'js!SBIS3.CONTROLS.TextBox',
-   'js!SBIS3.CONTROLS.SearchMixin',
-   'js!SBIS3.CONTROLS.SuggestMixin',
-   'js!SBIS3.CONTROLS.SuggestTextBoxMixin',
-   'js!SBIS3.CONTROLS.PickerMixin',
-   'html!SBIS3.CONTROLS.SearchForm',
-   'html!SBIS3.CONTROLS.SearchForm/resources/SearchFormButtons'
-], function (TextBox, SearchMixin, SuggestMixin, SuggestTextBoxMixin, PickerMixin, dotTplFn, buttonsTpl) {
+   "Core/constants",
+   "js!SBIS3.CONTROLS.TextBox",
+   "js!SBIS3.CONTROLS.SearchMixin",
+   "js!SBIS3.CONTROLS.SuggestMixin",
+   "js!SBIS3.CONTROLS.SuggestTextBoxMixin",
+   "js!SBIS3.CONTROLS.PickerMixin",
+   "html!SBIS3.CONTROLS.SearchForm",
+   "html!SBIS3.CONTROLS.SearchForm/resources/SearchFormButtons"
+], function ( constants,TextBox, SearchMixin, SuggestMixin, SuggestTextBoxMixin, PickerMixin, dotTplFn, buttonsTpl) {
 
    'use strict';
 
@@ -74,7 +75,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
        * @private
        */
       _keyUpBind:function(event) {
-         if (event.which === $ws._const.key.enter) {
+         if (event.which === constants.key.enter) {
             if (this._options.usePicker && this.isPickerVisible()) {
                SearchForm.superclass._keyUpBind.apply(this, arguments);
             } else {
@@ -106,7 +107,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
        */
       _keyDownBind: function(e) {
          SearchForm.superclass._keyDownBind.apply(this, arguments);
-         if (e.which === $ws._const.key.enter) {
+         if (e.which === constants.key.enter) {
             e.stopPropagation();
             e.preventDefault();
          }

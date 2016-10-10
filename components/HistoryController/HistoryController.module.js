@@ -1,12 +1,19 @@
 /**
  * Created by am.gerasimov on 12.01.2016.
  */
-define('js!SBIS3.CONTROLS.HistoryController', [], function() {
+define('js!SBIS3.CONTROLS.HistoryController', [
+   "Core/SessionStorage",
+   "Core/Abstract",
+   "Core/UserConfig",
+   "Core/helpers/string-helpers",
+   "Core/Deferred",
+   "Core/helpers/functional-helpers"
+], function( cSessionStorage, cAbstract, UserConfig, strHelpers, Deferred,fHelpers) {
 
    'use strict';
 
    var serializeFnc = function(serialize, value) {
-      return value ? $ws.helpers[serialize ? 'serializeURLData' : 'deserializeURLData'](value) : null;
+      return value ? strHelpers[serialize ? 'serializeURLData' : 'deserializeURLData'](value) : null;
    };
 
    /**
@@ -14,7 +21,7 @@ define('js!SBIS3.CONTROLS.HistoryController', [], function() {
     * @author Герасимов Александр Максимович
     * @public
     */
-   var HistoryController = $ws.proto.Abstract.extend([],/** @lends SBIS3.CONTROLS.HistoryController.prototype */{
+   var HistoryController = cAbstract.extend([],/** @lends SBIS3.CONTROLS.HistoryController.prototype */{
       $protected: {
          _options: {
             /**
@@ -41,7 +48,7 @@ define('js!SBIS3.CONTROLS.HistoryController', [], function() {
       },
 
       $constructor: function() {
-         this._history = this._options.serialize(false, $ws.single.SessionStorage.get(this._options.historyId));
+         this._history = this._options.serialize(false, cSessionStorage.get(this._options.historyId));
       },
 
       /**
@@ -56,7 +63,7 @@ define('js!SBIS3.CONTROLS.HistoryController', [], function() {
        * Устанавливает и сохраняет историю
        * @param {*} history История
        * @param {Boolean} needSave Нужно ли сохранять историю в пользовательские параметры
-       * @returns {$ws.proto.Deferred}
+       * @returns {Deferred}
        */
       setHistory: function(history, needSave) {
          this._history = history;
@@ -73,9 +80,9 @@ define('js!SBIS3.CONTROLS.HistoryController', [], function() {
          var self = this;
 
          if(!this.isNowSaving()) {
-            this._saveParamsDeferred = new $ws.proto.Deferred();
+            this._saveParamsDeferred = new Deferred();
 
-            $ws.single.UserConfig.setParam(this._options.historyId, this._options.serialize(true, this._history), true).addCallback($ws.helpers.forAliveOnly(function() {
+            UserConfig.setParam(this._options.historyId, this._options.serialize(true, this._history), true).addCallback(fHelpers.forAliveOnly(function() {
                self._saveParamsDeferred.callback();
             }, self));
          }
@@ -93,7 +100,7 @@ define('js!SBIS3.CONTROLS.HistoryController', [], function() {
 
       /**
        * Возвращает, сохраняется ли сейчас история
-       * @returns {$ws.proto.Deferred|*|boolean}
+       * @returns {Deferred|*|boolean}
        */
       isNowSaving: function() {
          return this._saveParamsDeferred && !this._saveParamsDeferred.isReady()
@@ -101,7 +108,7 @@ define('js!SBIS3.CONTROLS.HistoryController', [], function() {
 
       /**
        * Возвращает деферед сохранения истории (если она сейчас сохраняется)
-       * @returns {$ws.proto.Deferred|*|boolean}
+       * @returns {Deferred|*|boolean}
        */
       getSaveDeferred: function() {
          return this._saveParamsDeferred

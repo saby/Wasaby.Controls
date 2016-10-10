@@ -4,12 +4,13 @@
 
 define('js!SBIS3.CONTROLS.FloatAreaSelector',
    [
+      'Core/core-extend',
       'js!SBIS3.CONTROLS.SelectorMixin',
       'js!SBIS3.CORE.FloatArea'
-   ], function( selectorMixin, FloatArea ) {
+   ], function(cExtend, selectorMixin, FloatArea ) {
 
       'use strict';
 
-      return $ws.core.mixin(FloatArea, selectorMixin);
+      return cExtend.mixin(FloatArea, selectorMixin);
 
    });

@@ -2,9 +2,14 @@
  * Created by am.gerasimov on 21.01.2016.
  */
 define('js!SBIS3.CONTROLS.ChooserMixin', [
-   'js!WS.Data/Entity/Model',
-   'js!WS.Data/Adapter/Sbis'
-], function(Model, SbisAdapter) {
+   "Core/Context",
+   "Core/core-functions",
+   "Core/core-merge",
+   "Core/Deferred",
+   "js!WS.Data/Entity/Model",
+   "js!WS.Data/Adapter/Sbis",
+   "Core/helpers/collection-helpers"
+], function( cContext, cFunctions, cMerge, Deferred,Model, SbisAdapter, colHelpers) {
    /**
     * Миксин, добавляющий интерфейс для открытия окна выбора.
     * @mixin SBIS3.CONTROLS.ChooserMixin
@@ -29,9 +34,9 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
    var ChooserMixin = /**@lends SBIS3.CONTROLS.ChooserMixin.prototype  */{
           /**
            * @event onChooserClick Происходит при клике на кнопку открытия диалога выбора.
-           * @return {$ws.proto.Deferred|Boolean|*} Возможные значения:
+           * @return {Deferred|Boolean|*} Возможные значения:
            * <ol>
-           *    <li>$ws.proto.Deferred - {@link $ws.proto.Deferred Деферед}, результатом выполнения которого будут выбранные записи.</li>
+           *    <li>Deferred - {@link Deferred Деферед}, результатом выполнения которого будут выбранные записи.</li>
            *    <li>Если вернуть false - диалог выбора открыт не будет.</li>
            *    <li>Любой другой результат - диалог выбора будет открыт стандартным образом.</li>
            * </ol>
@@ -104,7 +109,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
 
          /* Обработка выбора из справочника со старым представлением данных */
          function oldConfirmSelectionCallback(event, result) {
-            self._chooseCallback($ws.helpers.reduce(result, function(res, elem) {
+            self._chooseCallback(colHelpers.reduce(result, function(res, elem) {
                if(elem !== null) {
                   res.push(recordConverter.call(self, elem));
                   return res;
@@ -124,7 +129,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
 
          if(clickResult === false) {
             return;
-         } else if(clickResult instanceof $ws.proto.Deferred) {
+         } else if(clickResult instanceof Deferred) {
             clickResult.addCallback(function(result) {
                self._options.oldViews ?
                    oldConfirmSelectionCallback(null, result) :
@@ -144,19 +149,19 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
             }
          };
 
-         commonConfig = $ws.core.merge({
+         commonConfig = cMerge({
             template: template,
             componentOptions: componentOptions || {},
             opener: this,
             parent: this._options.chooserMode === 'dialog' ? this : null,
-            context: new $ws.proto.Context().setPrevious(this.getLinkedContext()),
+            context: new cContext().setPrevious(this.getLinkedContext()),
             target: this.getContainer()
          }, config || {});
 
 
 
          requirejs([this._chooserConfig.type[version][this._options.chooserMode]], function(ctrl) {
-            new ctrl($ws.core.merge($ws.core.clone(self._chooserConfig.config), $ws.core.merge(selectorConfig[version], commonConfig)));
+            new ctrl(cMerge(cFunctions.clone(self._chooserConfig.config), cMerge(selectorConfig[version], commonConfig)));
          });
       },
 

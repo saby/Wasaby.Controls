@@ -1,25 +1,41 @@
 define('js!SBIS3.CONTROLS.FieldLink',
     [
-       'js!SBIS3.CONTROLS.SuggestTextBox',
-       'js!SBIS3.CONTROLS.ItemsControlMixin',
-       'js!SBIS3.CONTROLS.MultiSelectable',
-       'js!SBIS3.CONTROLS.ActiveMultiSelectable',
-       'js!SBIS3.CONTROLS.Selectable',
-       'js!SBIS3.CONTROLS.ActiveSelectable',
-       'js!SBIS3.CONTROLS.SyncSelectionMixin',
-       'js!SBIS3.CONTROLS.FieldLinkItemsCollection',
-       'html!SBIS3.CONTROLS.FieldLink/afterFieldWrapper',
-       'html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper',
-       'js!SBIS3.CONTROLS.Utils.DialogOpener',
-       'js!SBIS3.CONTROLS.ITextValue',
-       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-       'js!WS.Data/Di',
-       'js!SBIS3.CONTROLS.MenuIcon',
-       'js!SBIS3.CONTROLS.Action.SelectorAction',
-       'i18n!SBIS3.CONTROLS.FieldLink'
+       "Core/CommandDispatcher",
+       "Core/constants",
+       "Core/IoC",
+       "Core/ConsoleLogger",
+       "Core/core-instance",
+       "Core/helpers/functional-helpers",
+       "Core/helpers/dom&controls-helpers",
+       "Core/helpers/string-helpers",
+       "js!SBIS3.CONTROLS.SuggestTextBox",
+       "js!SBIS3.CONTROLS.ItemsControlMixin",
+       "js!SBIS3.CONTROLS.MultiSelectable",
+       "js!SBIS3.CONTROLS.ActiveMultiSelectable",
+       "js!SBIS3.CONTROLS.Selectable",
+       "js!SBIS3.CONTROLS.ActiveSelectable",
+       "js!SBIS3.CONTROLS.SyncSelectionMixin",
+       "js!SBIS3.CONTROLS.FieldLinkItemsCollection",
+       "html!SBIS3.CONTROLS.FieldLink/afterFieldWrapper",
+       "html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper",
+       "js!SBIS3.CONTROLS.Utils.DialogOpener",
+       "js!SBIS3.CONTROLS.ITextValue",
+       "js!SBIS3.CONTROLS.Utils.TemplateUtil",
+       "js!WS.Data/Di",
+       "js!SBIS3.CONTROLS.MenuIcon",
+       "js!SBIS3.CONTROLS.Action.SelectorAction",
+       "i18n!SBIS3.CONTROLS.FieldLink"
 
     ],
     function (
+        CommandDispatcher,
+        constants,
+        IoC,
+        ConsoleLogger,
+        cInstance,
+        fHelpers,
+        dcHelpers,
+        strHelpers,
         SuggestTextBox,
         ItemsControlMixin,
 
@@ -275,7 +291,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           $constructor: function() {
-             var commandDispatcher = $ws.single.CommandDispatcher,
+             var commandDispatcher = CommandDispatcher,
                  self = this;
 
              this._publish('onItemActivate');
@@ -310,7 +326,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             });
 
             if(this._options.oldViews) {
-               $ws.single.ioc.resolve('ILogger').log('FieldLink', 'В 3.8.0 будет удалена опция oldViews, а так же поддержка старых представлений данных на диалогах выбора.');
+               IoC.resolve('ILogger').log('FieldLink', 'В 3.8.0 будет удалена опция oldViews, а так же поддержка старых представлений данных на диалогах выбора.');
             }
           },
 
@@ -432,7 +448,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           setActive: function(active) {
              FieldLink.superclass.setActive.apply(this, arguments);
 
-             if (active && this._needFocusOnActivated() && this.isEnabled() && $ws._const.browser.isMobilePlatform) {
+             if (active && this._needFocusOnActivated() && this.isEnabled() && constants.browser.isMobilePlatform) {
                 this._getElementToFocus().focus();
              }
           },
@@ -529,7 +545,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              var isModel;
 
              if(result && result.length) {
-                isModel = $ws.helpers.instanceOfModule(result[0], 'WS.Data/Entity/Model');
+                isModel = cInstance.instanceOfModule(result[0], 'WS.Data/Entity/Model');
                 this.setText('');
 
                 if(isModel) {
@@ -546,7 +562,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @returns {string}
            */
           getCaption: function() {
-             $ws.single.ioc.resolve('ILogger').log('FieldLink::getCaption', 'Метод getCaption устарел, используйте getTextValue');
+             IoC.resolve('ILogger').log('FieldLink::getCaption', 'Метод getCaption устарел, используйте getTextValue');
              return this.getTextValue();
           },
 
@@ -567,7 +583,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
               if(selectedItems) {
                  selectedItems.each(function(rec) {
-                    displayFields.push($ws.helpers.htmlToText(rec.get(self._options.displayField) || ''));
+                    displayFields.push(strHelpers.htmlToText(rec.get(self._options.displayField) || ''));
                  });
               }
 
@@ -801,7 +817,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
               то отрисовываться он не будет и покажется троеточие, однако хотя бы один элемент в поле связи должен поместиться */
              if(this._checkWidth) {
                 inputWidth = this._getInputWidth();
-                newItemWidth = $ws.helpers.getTextWidth(item[0].outerHTML);
+                newItemWidth = dcHelpers.getTextWidth(item[0].outerHTML);
                 /* Считаем, нужно ли отрисовывать элемент по следующему правилу:
                    Ширина добавляемого элемента + минимальная ширина поля ввода (для мултивыбора) не должны быть больше ширины контейнера контрола */
                 needDrawItem = (newItemWidth + inputMinWidth) < (inputWidth + INPUT_WRAPPER_PADDING);
@@ -852,7 +868,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    onShow: function() {
                       var revertedVertical = this._picker.getContainer().hasClass('controls-popup-revert-vertical');
 
-                      if($ws._const.browser.isMobileIOS) {
+                      if(constants.browser.isMobileIOS) {
                          revertedVertical = !revertedVertical;
                       }
 
@@ -869,7 +885,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 }
              };
              // Придрот для айпада. Выезжающая клавиатура может скрывать выпадашку, так как та влезает под нее. Поэтому на айпаде всегда открываем автодополнение вверх
-             if ($ws._const.browser.isMobileIOS){
+             if (constants.browser.isMobileIOS){
                 cfg.corner = 'tl';
                 cfg.verticalAlign.side = 'bottom';
              }
@@ -882,7 +898,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              FieldLink.superclass._keyUpBind.apply(this, arguments);
              switch (e.which) {
                 /* ESC закрывает все пикеры у поля связи(если они открыты) */
-                case $ws._const.key.esc:
+                case constants.key.esc:
                    var linkCollection =  this._getLinkCollection();
 
                    if(this.isPickerVisible() || linkCollection.isPickerVisible()) {
@@ -897,13 +913,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _keyDownBind: function(e) {
              FieldLink.superclass._keyDownBind.apply(this, arguments);
              switch (e.which) {
-                case $ws._const.key.del:
+                case constants.key.del:
                    if(!this.getText()) {
                       this.removeItemsSelectionAll();
                    }
                    break;
                 /* Нажатие на backspace должно удалять последние значение, если нет набранного текста */
-                case $ws._const.key.backspace:
+                case constants.key.backspace:
                    if(!this.getText() && !this._isEmptySelection()) {
                       var selectedKeys = this.getSelectedKeys();
                       this.removeItemsSelection([selectedKeys[selectedKeys.length - 1]]);
@@ -957,9 +973,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           /* Заглушка, само поле связи не занимается отрисовкой */
-          redraw: $ws.helpers.nop,
+          redraw: fHelpers.nop,
           /* Заглушка, само поле связи не занимается загрузкой списка */
-          reload: $ws.helpers.nop,
+          reload: fHelpers.nop,
 
 
           destroy: function() {

@@ -1,9 +1,10 @@
 define('js!SBIS3.CONTROLS.Demo.MyButton',
     ['js!SBIS3.CORE.CompoundControl',
      'html!SBIS3.CONTROLS.Demo.MyButton',
+     'Core/helpers/fast-control-helpers',
      'css!SBIS3.CONTROLS.Demo.MyButton',
      'js!SBIS3.CONTROLS.Button'],
-    function(CompoundControl, dotTplFn) {
+    function(CompoundControl, dotTplFn, fcHelpers) {
    /**
     * SBIS3.CONTROLS.Demo.MyButton
     * @class SBIS3.CONTROLS.Demo.MyButton
@@ -23,7 +24,7 @@ define('js!SBIS3.CONTROLS.Demo.MyButton',
       init: function() {
          moduleClass.superclass.init.call(this);
          this.getChildControlByName("Button 1").subscribe("onActivated", function() {
-            $ws.helpers.question("Может передумали?"); 
+            fcHelpers.question("Может передумали?");
          });
       }
    });

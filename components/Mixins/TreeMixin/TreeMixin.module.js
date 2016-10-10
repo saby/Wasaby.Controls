@@ -1,5 +1,19 @@
-define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
-   'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree', 'tmpl!SBIS3.CONTROLS.TreeMixin/resources/searchRender', 'js!WS.Data/Entity/Model', 'js!WS.Data/Relation/Hierarchy', 'js!WS.Data/Adapter/Sbis'], function (BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation) {
+define('js!SBIS3.CONTROLS.TreeMixin', [
+   "Core/core-functions",
+   "Core/core-merge",
+   "Core/CommandDispatcher",
+   "Core/Deferred",
+   "js!SBIS3.CONTROLS.BreadCrumbs",
+   "html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
+   "js!WS.Data/Display/Tree",
+   "tmpl!SBIS3.CONTROLS.TreeMixin/resources/searchRender",
+   "js!WS.Data/Entity/Model",
+   "js!WS.Data/Relation/Hierarchy",
+   "Core/helpers/collection-helpers",
+   "Core/core-instance",
+   "Core/helpers/functional-helpers",
+   "js!WS.Data/Adapter/Sbis"
+], function ( cFunctions, cMerge, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, colHelpers, cInstance, fHelpers) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -66,7 +80,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             records.push({
                tpl: cfg._defaultSearchRender,
                data: {
-                  path: $ws.core.clone(path),
+                  path: cFunctions.clone(path),
                   viewCfg: cfg._getSearchCfg(cfg)
                }
             });
@@ -166,7 +180,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       var
           itemParent = itemProj.getParent(),
           itemParentContent = itemParent && itemParent.getContents();
-      return ($ws.helpers.instanceOfModule(itemParentContent, 'WS.Data/Entity/Record') && itemParentContent.get(this.hierField + '@') !== false && this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
+      return (cInstance.instanceOfModule(itemParentContent, 'WS.Data/Entity/Record') && itemParentContent.get(this.hierField + '@') !== false && this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
    },
    projectionFilterOnlyFolders = function(item, index, itemProj) {
       return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj, true);
@@ -521,7 +535,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          }
          this._previousRoot = this._options._curRoot;
          this.setFilter(filter, true);
-         $ws.single.CommandDispatcher.declareCommand(this, 'BreadCrumbsItemClick', this._breadCrumbsItemClick);
+         CommandDispatcher.declareCommand(this, 'BreadCrumbsItemClick', this._breadCrumbsItemClick);
       },
       /**
        * Устанавливает поле иерархии.
@@ -553,7 +567,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        */
       collapseNode: function(id) {
          this._getItemProjectionByItemId(id).setExpanded(false);
-         return new $ws.proto.Deferred.success();
+         return new Deferred.success();
       },
       /**
        * Закрыть или открыть узел.
@@ -567,7 +581,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       /**
        * Раскрывает узел.
        * @param {String, Number} id Идентификатор раскрываемого узла
-       * @returns {$ws.proto.Deferred}
+       * @returns {Deferred}
        * @see collapseNode
        * @see toggleNode
        */
@@ -575,7 +589,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          var
             item = this._getItemProjectionByItemId(id);
          if (item.isExpanded()) {
-            return $ws.proto.Deferred.success();
+            return Deferred.success();
          } else {
             if (this._options.singleExpand) {
                this._collapseNodes(this.getOpenedPath(), id);
@@ -607,7 +621,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                this._getItemProjectionByItemId(id).setLoaded(true);
             }.bind(this));
          } else {
-            return $ws.proto.Deferred.success();
+            return Deferred.success();
          }
       },
       /**
@@ -619,7 +633,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          if (this.isEnabled() && this._notify('onSearchPathClick', id) !== false ) {
 
 
-            var filter = $ws.core.merge(this.getFilter(), {
+            var filter = cMerge(this.getFilter(), {
                'Разворот' : 'Без разворота'
             });
             /*TODO решить с этим параметром*/
@@ -657,12 +671,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        */
       _createTreeFilter: function(key) {
          var
-            filter = $ws.core.clone(this.getFilter()) || {};
+            filter = cFunctions.clone(this.getFilter()) || {};
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
          }
-         this.setFilter($ws.core.clone(filter), true);
+         this.setFilter(cFunctions.clone(filter), true);
          filter[this._options.hierField] = key;
          return filter;
       },
@@ -672,7 +686,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        * @private
        */
       _collapseNodes: function(openedPath, ignoreKey) {
-         $ws.helpers.forEach(openedPath, function(value, key) {
+         colHelpers.forEach(openedPath, function(value, key) {
             if (!ignoreKey || key != ignoreKey) {
                this.collapseNode(key);
             }
@@ -800,7 +814,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       },
       _getFilterForReload: function(filter, sorting, offset, limit, deepReload) {
          var
-            filter = $ws.core.clone(this._options.filter),
+            filter = cFunctions.clone(this._options.filter),
             hierField;
          if ((this._options.deepReload || deepReload) && !Object.isEmpty(this._options.openedPath)) {
             hierField = this._options.hierField;
@@ -822,7 +836,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             self = this,
             filter;
          this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit);
-         this._loader = this._callQuery(this._createTreeFilter(id), this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
+         this._loader = this._callQuery(this._createTreeFilter(id), this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
             self._notify('onDataMerge', dataSet);
@@ -890,7 +904,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                });
             }
             var path = this._options._items.getMetaData().path,
-               hierarchy = $ws.core.clone(this._hier),
+               hierarchy = cFunctions.clone(this._hier),
                item;
             if (path) {
                hierarchy = this._getHierarchy(path, this._options._curRoot);
@@ -1149,7 +1163,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       getParentKey: function (DataSet, item) {
          var
             itemParent = this._options._itemsProjection.getItemBySourceItem(item).getParent().getContents();
-         return $ws.helpers.instanceOfModule(itemParent, 'WS.Data/Entity/Record') ? itemParent.getId() : itemParent;
+         return cInstance.instanceOfModule(itemParent, 'WS.Data/Entity/Record') ? itemParent.getId() : itemParent;
       },
 
       _dropPageSave: function(){

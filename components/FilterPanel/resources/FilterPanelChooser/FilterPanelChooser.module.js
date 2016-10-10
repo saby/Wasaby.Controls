@@ -1,17 +1,22 @@
 define('js!SBIS3.CONTROLS.FilterPanelChooser', [
-    'js!SBIS3.CORE.CompoundControl',
-    'js!SBIS3.CONTROLS.IFilterItem',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser/resources/itemTpl',
-    'js!SBIS3.CONTROLS.Action.SelectorAction',
-    'js!WS.Data/Source/Memory',
-    'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
-    'js!SBIS3.CONTROLS.ListView',
-    'js!SBIS3.CONTROLS.ScrollContainer',
-    'js!SBIS3.CONTROLS.Link',
-    'js!SBIS3.CONTROLS.FilterPanelBoolean',
-    'i18n!SBIS3.CONTROLS.FilterPanelChooser'
-], function(CompoundControl, IFilterItem, dotTplFn, itemTpl, SelectorAction, Memory, ArraySimpleUtil) {
+   "Core/core-functions",
+   "Core/CommandDispatcher",
+   "js!SBIS3.CORE.CompoundControl",
+   "js!SBIS3.CONTROLS.IFilterItem",
+   "tmpl!SBIS3.CONTROLS.FilterPanelChooser",
+   "tmpl!SBIS3.CONTROLS.FilterPanelChooser/resources/itemTpl",
+   "js!SBIS3.CONTROLS.Action.SelectorAction",
+   "js!WS.Data/Source/Memory",
+   "js!SBIS3.CONTROLS.ArraySimpleValuesUtil",
+   "Core/helpers/collection-helpers",
+   "Core/core-instance",
+   "Core/helpers/functional-helpers",
+   "js!SBIS3.CONTROLS.ListView",
+   "js!SBIS3.CONTROLS.ScrollContainer",
+   "js!SBIS3.CONTROLS.Link",
+   "js!SBIS3.CONTROLS.FilterPanelBoolean",
+   "i18n!SBIS3.CONTROLS.FilterPanelChooser"
+], function( cFunctions, CommandDispatcher,CompoundControl, IFilterItem, dotTplFn, itemTpl, SelectorAction, Memory, ArraySimpleUtil, colHelpers, cInstance, fHelpers) {
 
     var MAX_ITEMS_COUNT = 7,
         contains = function(arr1, arr2) {
@@ -58,8 +63,8 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
         },
 
         $constructor: function() {
-            $ws.single.CommandDispatcher.declareCommand(this, 'showAll', this._showAll.bind(this));
-            $ws.single.CommandDispatcher.declareCommand(this, 'showDictionary', this._showDictionary.bind(this))
+            CommandDispatcher.declareCommand(this, 'showAll', this._showAll.bind(this));
+            CommandDispatcher.declareCommand(this, 'showDictionary', this._showDictionary.bind(this))
         },
 
         init: function() {
@@ -122,7 +127,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
         _getFilter: function() {
             var
                 favorites = this._options.favorites,
-                filter = $ws.core.clone(this._getListView().getSelectedKeys());
+                filter = cFunctions.clone(this._getListView().getSelectedKeys());
             if (this._options.viewMode === 'favorites' && this._getFavoritesCheckBox().isChecked()) {
                 for (var i = 0; i < favorites.length; i++) {
                     if (!ArraySimpleUtil.hasInArray(filter, favorites[i])) {
@@ -156,7 +161,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
             if (this._isSelected) {
                 items = this._getListView().getItems();
                 source = this._getListView().getDataSource();
-                $ws.helpers.forEach(changed.removed, function(id) {
+                colHelpers.forEach(changed.removed, function(id) {
                     item = items.getRecordById(id);
                     if (item) {
                         items.remove(items.getRecordById(id));
@@ -196,7 +201,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
             var
                 items = [],
                 selectedKeys = [];
-            if ($ws.helpers.instanceOfModule(result, 'WS.Data/Collection/List')) {
+            if (cInstance.instanceOfModule(result, 'WS.Data/Collection/List')) {
                 result.each(function(item) {
                     items.push(item.toObject());
                 });
@@ -216,7 +221,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
         _getListView: controlGetter.call(this, 'controls-FilterPanelChooser__ListView', '_getListView'),
         _getScroll: controlGetter.call(this, 'controls-FilterPanelChooser__ScrollContainer', '_getScroll'),
         _getFavoritesCheckBox: controlGetter.call(this, 'controls-FilterPanelChooser__favoritesCheckBox', '_getFavoritesCheckBox'),
-        _getSelector: $ws.helpers.memoize(function() {
+        _getSelector: fHelpers.memoize(function() {
             return new SelectorAction({
                 mode: 'floatArea',
                 template: this._options.dictionaryTemplate,
@@ -229,7 +234,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
     });
 
     function controlGetter (controlName, fnName) {
-        return $ws.helpers.memoize(function() {
+        return fHelpers.memoize(function() {
             return this.getChildControlByName(controlName);
         }, fnName)
     }

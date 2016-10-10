@@ -1,9 +1,10 @@
 define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
    [
-      'js!SBIS3.CONTROLS.SubmitPopup',
-      'js!SBIS3.CONTROLS.NotificationPopup',
-      'browser!js!SBIS3.CONTROLS.Utils.NotificationStackManager'
-   ],
+   "Core/core-merge",
+   "js!SBIS3.CONTROLS.SubmitPopup",
+   "js!SBIS3.CONTROLS.NotificationPopup",
+   "browser!js!SBIS3.CONTROLS.Utils.NotificationStackManager"
+],
 
    /**
     * Интерфейс для работы с информационными окнами.
@@ -12,11 +13,11 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
     * @author Степин П.В.
     * @public
     */
-   function(SubmitPopup, NotificationPopup, NotificationManager){
+   function( cMerge,SubmitPopup, NotificationPopup, NotificationManager){
       'use strict';
 
       var showSubmitDialog = function(config, positiveHandler, negativeHandler, cancelHandler){
-         var popup = new SubmitPopup($ws.core.merge(config, {
+         var popup = new SubmitPopup(cMerge(config, {
             element: $('<div></div>'),
             isModal: true
          }));
@@ -49,7 +50,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           * @returns {SBIS3.CONTROLS.SubmitPopup} экземпляр диалога
           */
          showConfirmDialog: function(config, positiveHandler, negativeHandler, cancelHandler){
-            return showSubmitDialog($ws.core.merge(config, {
+            return showSubmitDialog(cMerge.merge(config, {
                status: 'confirm'
             }), positiveHandler, negativeHandler, cancelHandler);
          },
@@ -71,7 +72,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           * @returns {SBIS3.CONTROLS.NotificationPopup} экземпляр нотификационного сообщения
           */
          showNotification: function(config, notHide){
-            var popup = new NotificationPopup($ws.core.merge({
+            var popup = new NotificationPopup(cMerge.merge({
                element: $('<div></div>')
             }, config));
 

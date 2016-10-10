@@ -1,8 +1,9 @@
 define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
    [
-      'js!SBIS3.CONTROLS.RichTextArea/resources/smiles',
-      'i18n!SBIS3.CONTROLS.RichEditor'
-   ], function (smiles) {
+   "Core/constants",
+   "js!SBIS3.CONTROLS.RichTextArea/resources/smiles",
+   "i18n!SBIS3.CONTROLS.RichEditor"
+], function ( constants,smiles) {
 
    'use strict';
 
@@ -168,7 +169,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                }.bind(this), this._container);
             }
          },
-         visible: !$ws._const.browser.isIE8
+         visible: !constants.browser.isIE8
       },
 
       {
@@ -180,7 +181,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             onActivated: onButtonClick
          },
          enabled: false,
-         visible: !$ws._const.browser.isIE8
+         visible: !constants.browser.isIE8
       },
 
       {
@@ -224,7 +225,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                }, this._container);
             }
          },
-         visible: !$ws._const.browser.isMobilePlatform && !$ws._const.browser.isMacOSDesktop
+         visible: !constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop
       },
 
       {

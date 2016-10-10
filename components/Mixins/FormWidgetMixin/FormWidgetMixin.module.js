@@ -1,4 +1,10 @@
-define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function (Infobox) {
+define('js!SBIS3.CONTROLS.FormWidgetMixin', [
+   "Core/constants",
+   "Core/IoC",
+   "Core/ConsoleLogger",
+   "js!SBIS3.CORE.Infobox",
+   "Core/helpers/string-helpers"
+], function ( constants, IoC, ConsoleLogger,Infobox, strHelpers) {
    /**
     * Миксин, который добавляет функционал валидаторов.
     * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/index/">Валидация вводимых данных</a>.
@@ -133,7 +139,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
             try {
                res = currValidator.validator.apply(this, [this._options[currValidator.option]]);
             } catch (e) {
-               $ws.single.ioc.resolve('ILogger').log('FieldAbstract', 'Exception while validating ' + e.message);
+               IoC.resolve('ILogger').log('FieldAbstract', 'Exception while validating ' + e.message);
             }
 
             if (res !== true) { // Валидация не успешна
@@ -227,12 +233,12 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
          }
 
          if (message) {
-            messageBox.find('.ws-warning-message-text').html($ws.helpers.escapeHtml(message));
+            messageBox.find('.ws-warning-message-text').html(strHelpers.escapeHtml(message));
          }
          try {
             if (settings) {
                if (settings['icon'] && messageBox.data('current-icon') != settings['icon']) {
-                  var iconPath = $ws._const.wsRoot + 'img/infobox/icon-' + settings['icon'] + '.png';
+                  var iconPath = constants.wsRoot + 'img/infobox/icon-' + settings['icon'] + '.png';
                   messageBox.find('.ws-warning-icon').css({
                      'background-image': 'url("' + iconPath + '")',
                      'display': 'block'});
@@ -252,7 +258,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
                }
             }
          } catch (e) {
-            $ws.single.ioc.resolve('ILogger').log('Error', 'Ошибка установки опций в функции Control.' + '_getMessageBox');
+            IoC.resolve('ILogger').log('Error', 'Ошибка установки опций в функции Control.' + '_getMessageBox');
          }
          return messageBox;
       },
