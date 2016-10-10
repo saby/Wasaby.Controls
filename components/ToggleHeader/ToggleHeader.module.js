@@ -1,7 +1,8 @@
 define('js!SBIS3.CONTROLS.ToggleHeader',
    [
       'js!SBIS3.CONTROLS.ToggleButton',
-      'tmpl!SBIS3.CONTROLS.ToggleHeader'
+      'tmpl!SBIS3.CONTROLS.ToggleHeader',
+      'css!SBIS3.CONTROLS.ToggleHeader'
    ],
    function(ToggleButton, dotTplFn){
 

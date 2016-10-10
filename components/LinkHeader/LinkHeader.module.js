@@ -1,7 +1,8 @@
 define('js!SBIS3.CONTROLS.LinkHeader',
    [
       'js!SBIS3.CONTROLS.ButtonBase',
-      'tmpl!SBIS3.CONTROLS.LinkHeader'
+      'tmpl!SBIS3.CONTROLS.LinkHeader',
+      'css!SBIS3.CONTROLS.LinkHeader'
    ],
    function(ButtonBase, dotTplFn){
 
@@ -40,7 +41,7 @@ define('js!SBIS3.CONTROLS.LinkHeader',
             LinkHeader.superclass.init.call(this);
 
             this.getLinkedContext().setValue('caption', this._options.caption);
-            this.getLinkedContext().setValue('href', this._options.caption);
+            this.getLinkedContext().setValue('href', this._options.href);
          },
 
          /**
@@ -53,7 +54,6 @@ define('js!SBIS3.CONTROLS.LinkHeader',
           * </pre>
           * @see caption
           * @see setCaption
-          *
           */
          getCaptiot: function() {
             return this._options.caption;
