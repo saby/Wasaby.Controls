@@ -51,11 +51,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
              this._firstSearch = false;
              //Флаг обозначает, что ввод был произведен пользователем
              this._searchReload = true;
-             //Это нужно чтобы поиск был от корня, а крошки при этом отображаться не должны
-             //Почему тут просто не скрыть их через css?
-             if (this._options.breadCrumbs) {
-                this._options.breadCrumbs.setItems([]);
-             }
 
              if (searchMode == 'root'){
                 filter[view.getHierField()] = undefined;
@@ -66,6 +61,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                 //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
                 if (self._options.backButton) {
                    self._options.backButton.getContainer().css({'display': 'none'});
+                }
+                //Это нужно чтобы поиск был от корня, а крошки при этом отображаться не должны
+                if (self._options.breadCrumbs) {
+                   self._options.breadCrumbs.getContainer().css({'display': 'none'});
                 }
 
                 if (mode === 'root') {
@@ -153,8 +152,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          view.once('onDataLoad', function() {
             self._path = self._pathDSRawData || [];
             if (self._options.breadCrumbs) {
-               self._options.breadCrumbs.getItems().setRawData(self._pathDSRawData);
-               self._options.breadCrumbs._redraw();
+               self._options.breadCrumbs.getContainer().css({'display': ''});
             }
             if (self._options.backButton) {
                self._options.backButton.getContainer().css({'display': ''});
@@ -325,6 +323,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                   if (self._options.breadCrumbs && self._options.breadCrumbs.getItems()){
                      var crumbsItems = self._options.breadCrumbs.getItems();
                      self._pathDSRawData = crumbsItems ? crumbsItems.getRawData() : [];
+                     self._options.breadCrumbs.getContainer().css({'display': ''});
                   }
                   if (self._options.backButton) {
                      self._options.backButton.getContainer().css({'display': ''});

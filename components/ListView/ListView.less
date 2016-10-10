@@ -233,24 +233,14 @@
    }
 }
 
-.ws-is-mobile-platform {
-   .controls-ListView__scrollPager {
-      position: fixed;
-      bottom: 0;
-      height: 32px;
-      background: white;
-      border-top: 1px solid @default-color;
-      z-index: 10;
-      .control-Paging__prev {
-         display: none;
-      }
-   }
-   &.ws-is-mobile-safari, .ws-is-mobile-chrome-ios{
-      .controls-ListView__scrollPager{
-         // На iOS ширина экрана всегда меньше максимальной шираны страницы,
-         // поэтому можно зафиксировать положение пэйджера с помощью right: 0.
-         // Для остальных устройств right устанавливается динамически из js.
-         right: 0;
-      }
+.ws-is-mobile-platform .controls-ListView__scrollPager{
+   position: fixed;
+   bottom: 0;
+   height: 32px;
+   background: white;
+   border-top: 1px solid @default-color;
+   z-index: 10;
+   .control-Paging__prev{
+      display: none;
    }
 }
