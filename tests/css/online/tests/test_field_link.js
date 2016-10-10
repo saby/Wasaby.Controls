@@ -208,6 +208,9 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
 				
 				this.fl = '[sbisname="FieldLink 1"]';
 				this.input = '[sbisname="FieldLink 1"] input';
+				this.data0 = '[data-id="0"]';
+				this.data2 = '[data-id="2"]';
+				this.data3 = '[data-id="3"]';
 				
                 actions.waitForElementToShow(this.fl, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -217,6 +220,9 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
                 actions.sendKeys(this.input, 'ене');
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.SHIFT+gemini.CONTROL+gemini.HOME);
+				actions.waitForElementToShow(this.data0, 5000);
+				actions.waitForElementToShow(this.data2, 5000);
+				actions.waitForElementToShow(this.data3, 5000);
             })
 			
 			.capture('with_max_width', function (actions) {
@@ -227,6 +233,8 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
 				actions.sendKeys(this.input, 'р');
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.SHIFT+gemini.CONTROL+gemini.HOME);
+				actions.waitForElementToShow(this.data0, 5000);
+				actions.waitForElementToShow(this.data3, 5000);
             })
 			
 			.capture('not_found', function (actions) {

@@ -10,6 +10,8 @@ gemini.suite('SBIS3.CONTROLS.CompositeViewList Online', function () {
 				this.input = '[sbisname="TextBox 1"] input';
 				this.item4 = '[data-id="Trusty Tahr"]';
 				this.item6 = '[data-id="Raring Ringtail"]';
+				this.delete_btn = '[data-id="delete"]';
+				this.selected = '.controls-ListView__item__selected';
                 
 				actions.waitForElementToShow(this.cvl, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -21,10 +23,12 @@ gemini.suite('SBIS3.CONTROLS.CompositeViewList Online', function () {
 
             .capture('hovered_item', function (actions) {
                 actions.mouseMove(this.item4);
+				actions.waitForElementToShow(this.delete_btn, 5000);
             })
 
             .capture('selected_item', function (actions) {
                 actions.click(this.item6);
+				actions.waitForElementToShow(this.selected, 5000);
             })
     });
 	

@@ -1,8 +1,9 @@
 gemini.suite('SBIS3.CONTROLS.PrintDialog Online', function () {
 
     gemini.suite('base', function (test) {
-
-        test.setUrl('/regression_print_dialog_online.html').setCaptureElements('html')
+		
+		// Скипаем Chrome т.к. там по умолчанию показывается стандартный диалог печати
+        test.setUrl('/regression_print_dialog_online.html').skip('chrome').setCaptureElements('html')
 
             .before(function (actions) {
                 

@@ -13,6 +13,8 @@ gemini.suite('SBIS3.CONTROLS.TreeCompositeViewTable Online', function () {
 				this.item6 = '[data-id="6"]';
 				this.item14 = '[data-id="14"]';
 				this.input = '[sbisname="TextBox 1"] input';
+				this.delete_btn = '[data-id="delete"]';
+				this.selected = '.controls-ListView__item__selected';
                 
 				actions.waitForElementToShow(this.tcv, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -24,19 +26,23 @@ gemini.suite('SBIS3.CONTROLS.TreeCompositeViewTable Online', function () {
 
             .capture('hovered_item', function (actions) {
                 actions.mouseMove(this.item6);
+				actions.waitForElementToShow(this.delete_btn, 5000);
             })
 
             .capture('selected_item', function (actions) {
                 actions.click(this.item6);
+				actions.waitForElementToShow(this.selected, 5000);
             })
 			
 			.capture('hovered_folder', function (actions) {
                 actions.mouseMove(this.item4);
+				actions.waitForElementToShow(this.delete_btn, 5000);
 				actions.waitForElementToShow(this.item4_checker, 5000);
             })
 
             .capture('selected_folder', function (actions) {
                 actions.click(this.item4_checker);
+				actions.waitForElementToShow(this.selected, 5000);
             })
 			
 			.capture('opened_folder', function (actions) {

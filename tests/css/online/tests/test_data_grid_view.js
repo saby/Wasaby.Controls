@@ -11,6 +11,8 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
                 this.data1_box = '[data-id="1"] .controls-ListView__itemCheckBox';
 				this.data2 = '[data-id="2"]';
 				this.data6 = '[data-id="6"]';
+				this.delete_btn = '[data-id="delete"]';
+				this.selected = '.controls-ListView__item__selected';
                 
 				actions.waitForElementToShow(this.dgv, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -22,10 +24,12 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 
             .capture('hovered_row', function (actions) {
                 actions.mouseMove(this.data2);
+				actions.waitForElementToShow(this.delete_btn, 5000);
             })
 
             .capture('selected_row', function (actions) {
                 actions.click(this.data6);
+				actions.waitForElementToShow(this.selected, 5000);
             })
 			
 			.capture('disabled', function (actions) {
@@ -141,6 +145,8 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 				this.thumb = '.controls-DataGridView__PartScroll__thumb';
                 
 				actions.waitForElementToShow(this.dgv, 40000);
+				actions.waitForElementToShow(this.arrow_left, 5000);
+				actions.waitForElementToShow(this.arrow_right, 5000);
             })
 
             .capture('plain')
@@ -216,6 +222,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 				this.dgv = '[name="DataGridView 1"]'
 				this.input = '[sbisname="TextBox 1"] input';
 				this.data6 = '[data-id="6"]';
+				this.selected = '.controls-ListView__item__selected';
                 
 				actions.waitForElementToShow(this.dgv, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -223,6 +230,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 
             .capture('selected_row', function (actions) {
                 actions.click(this.data6);
+				actions.waitForElementToShow(this.selected, 5000);
             })
     });
 	
@@ -235,6 +243,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 				this.dgv = '[name="DataGridView 1"]'
 				this.input = '[sbisname="TextBox 1"] input';
 				this.data6 = '[data-id="6"]';
+				this.selected = '.controls-ListView__item__selected';
                 
 				actions.waitForElementToShow(this.dgv, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -242,6 +251,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 
             .capture('selected_row', function (actions) {
                 actions.click(this.data6);
+				actions.waitForElementToShow(this.selected, 5000);
             })
     });
 

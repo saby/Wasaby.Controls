@@ -15,6 +15,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				this.expander = '[data-id="4"] .controls-TreeView__expand';
 				this.delete_icon = '.controls-ItemActions [data-id="delete"]';
 				this.menu_button = '.controls-ItemActions .controls-ItemActions__menu-button';
+				this.selected = '.controls-ListView__item__selected';
                 
 				actions.waitForElementToShow(this.table, 40000);
                 actions.waitForElementToShow(this.item_3, 5000);
@@ -34,6 +35,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 			
 			.capture('opened_menu', function (actions) {
 				actions.click(this.menu_button);
+				actions.waitForElementToShow(this.selected, 5000);
             })
 			
 			.capture('hovered_second_action', function (actions) {
@@ -69,6 +71,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				this.table = '[sbisname="TreeCompositeView 1"]';
 				this.item_3 = '[data-id="3"]';
 				this.menu_button = '.controls-ItemActions .controls-ItemActions__menu-button';
+				this.selected = '.controls-ListView__item__selected';
                 
 				actions.waitForElementToShow(this.table, 40000);
                 actions.waitForElementToShow(this.item_3, 5000);
@@ -77,6 +80,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 			.capture('opened_menu', function (actions) {
 				actions.mouseMove(this.item_3);
 				actions.click(this.menu_button);
+				actions.waitForElementToShow(this.selected, 5000);
             })
     });
 	
@@ -89,6 +93,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				this.table = '[sbisname="TreeCompositeView 1"]';
 				this.item_3 = '[data-id="3"]';
 				this.menu_button = '.controls-ItemActions .controls-ItemActions__menu-button';
+				this.selected = '.controls-ListView__item__selected';
                 
 				actions.waitForElementToShow(this.table, 40000);
                 actions.waitForElementToShow(this.item_3, 5000);
@@ -97,6 +102,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 			.capture('opened_menu', function (actions) {
 				actions.mouseMove(this.item_3);
 				actions.click(this.menu_button);
+				actions.waitForElementToShow(this.selected, 5000);
             })
     });
 	
@@ -109,6 +115,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				this.table = '[sbisname="CompositeView 1"]';
 				this.item_3 = '[data-id="3"]';
 				this.menu_button = '.controls-ItemActions .controls-ItemActions__menu-button';
+				this.selected = '.controls-ListView__item__selected';
                 
 				actions.waitForElementToShow(this.table, 40000);
                 actions.waitForElementToShow(this.item_3, 5000);
@@ -117,6 +124,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 			.capture('opened_menu', function (actions) {
 				actions.mouseMove(this.item_3);
 				actions.click(this.menu_button);
+				actions.waitForElementToShow(this.selected, 5000);
             })
     });
 	
@@ -129,6 +137,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				this.table = '[sbisname="CompositeView 1"]';
 				this.item_3 = '[data-id="3"]';
 				this.menu_button = '.controls-ItemActions .controls-ItemActions__menu-button';
+				this.selected = '.controls-ListView__item__selected';
                 
 				actions.waitForElementToShow(this.table, 40000);
                 actions.waitForElementToShow(this.item_3, 5000);
@@ -137,6 +146,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 			.capture('opened_menu', function (actions) {
 				actions.mouseMove(this.item_3);
 				actions.click(this.menu_button);
+				actions.waitForElementToShow(this.selected, 5000);
             })
     });
 	
@@ -149,6 +159,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				this.table = '[sbisname="CompositeView 1"]';
 				this.item_3 = '[data-id="3"]';
 				this.menu_button = '.controls-ItemActions .controls-ItemActions__menu-button';
+				this.selected = '.controls-ListView__item__selected';
                 
 				actions.waitForElementToShow(this.table, 40000);
                 actions.waitForElementToShow(this.item_3, 5000);
@@ -157,6 +168,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 			.capture('opened_menu', function (actions) {
 				actions.mouseMove(this.item_3);
 				actions.click(this.menu_button);
+				actions.waitForElementToShow(this.selected, 5000);
             })
     });
 	
@@ -169,6 +181,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				this.table = '[sbisname="DataGridView 1"]';
 				this.item_3 = '[data-id="3"]';
 				this.menu_button = '.controls-ItemActions .controls-ItemActions__menu-button';
+				this.selected = '.controls-ListView__item__selected';
                 
 				actions.waitForElementToShow(this.table, 40000);
                 actions.waitForElementToShow(this.item_3, 5000);
@@ -177,6 +190,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 			.capture('opened_menu', function (actions) {
 				actions.mouseMove(this.item_3);
 				actions.click(this.menu_button);
+				actions.waitForElementToShow(this.selected, 5000);
             })
     });
 	
@@ -220,6 +234,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				this.expander = '[data-id="4"] .controls-TreeView__expand';
 				this.delete_icon = '.controls-ItemActions [data-id="delete"]';
 				this.menu_button = '.controls-ItemActions .controls-ItemActions__menu-button';
+				this.selected = '.controls-ListView__item__selected';
                 
 				actions.waitForElementToShow(this.grid, 40000);
                 actions.waitForElementToShow(this.item_3, 5000);
@@ -228,6 +243,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 			.capture('opened_menu', function (actions) {
 				actions.mouseMove(this.item_3);
 				actions.click(this.menu_button);
+				actions.waitForElementToShow(this.selected, 5000);
             })
 			
 			.capture('expanded_folder', function (actions) {
@@ -299,6 +315,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				this.data3 = '[data-id="3"]';	
 				this.item_4 = '[data-id="4"]';	
 				this.menu_button = '.controls-ItemActions .controls-ItemActions__menu-button';
+				this.selected = '.controls-ListView__item__selected';
                 
 				actions.waitForElementToShow(this.table, 40000);
                 actions.waitForElementToShow(this.data3, 5000);
@@ -308,6 +325,7 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.data3);
 				actions.click(this.menu_button);
 				actions.mouseMove(this.item_4);
+				actions.waitForElementToShow(this.selected, 5000);
             })
     });
 });

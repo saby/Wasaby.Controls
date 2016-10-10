@@ -76,6 +76,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 			
 			.capture('opened_operations_panel', function (actions) {
 				actions.click(this.open_panel)
+				actions.wait(500)
             })
 			
 			.capture('selected_items', function (actions) {

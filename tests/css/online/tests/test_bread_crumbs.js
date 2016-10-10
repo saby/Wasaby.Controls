@@ -25,6 +25,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 				actions.waitForElementToShow(this.item14, 5000);
                 actions.click(this.item13)
 				actions.waitForElementToShow(this.item21, 5000);
+				actions.waitForElementToShow(this.title, 5000);
             })
 
             .capture('hovered_home', function (actions) {
@@ -59,6 +60,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 				actions.waitForElementToShow(this.item14, 5000);
                 actions.click(this.item13)
 				actions.waitForElementToShow(this.item21, 5000);
+				actions.waitForElementToShow(this.title, 5000);
             })
     });
 	
@@ -344,6 +346,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
                 this.input = '[sbisname="TextBox 1"] input';
 				this.data3 = '[data-id="3"]';
 				this.data5 = '[data-id="5"]';
+				this.caption = '[sbisname="BackButton-caption"]';
                 
 				actions.waitForElementToShow(this.view, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -351,6 +354,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 
             .capture('plain', function (actions) {
 				actions.click(this.data3);
+				actions.waitForElementToShow(this.caption, 5000);
             })
 
             .capture('without_table_head', function (actions) {
@@ -358,10 +362,12 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
                     $ws.single.ControlStorage.getByName('browserView')._options.showHead = false
 					$ws.single.ControlStorage.getByName('browserView')._redrawHead();
                 });
+				actions.waitForElementToShow(this.caption, 5000);
             })
 
 			.capture('into_folder', function (actions) {
                 actions.click(this.data5);
+				actions.waitForElementToShow(this.caption, 5000);
             })
     });
 });

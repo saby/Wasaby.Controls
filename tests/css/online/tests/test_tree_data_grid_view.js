@@ -12,6 +12,8 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 				this.data6 = '[data-id="6"]';
 				this.data14 = '[data-id="14"]';
 				this.input = '[sbisname="TextBox 1"] input';
+				this.delete_btn = '[data-id="delete"]';
+				this.selected = '.controls-ListView__item__selected';
                 
 				actions.waitForElementToShow(this.tdgv, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -23,14 +25,17 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
             .capture('hovered_row', function (actions) {
                 actions.mouseMove(this.data2);
+				actions.waitForElementToShow(this.delete_btn, 5000);
             })
 
             .capture('selected_row', function (actions) {
                 actions.click(this.data6);
+				actions.waitForElementToShow(this.selected, 5000);
             })
 			
 			.capture('opened_folder', function (actions) {
                 actions.click(this.data4_expand);
+				actions.waitForElementToShow(this.delete_btn, 5000);
 				actions.waitForElementToShow(this.data14, 5000);
             })
 			
@@ -418,7 +423,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
             .before(function (actions) {
 				
-				this.tdgv = '[name="TreeDataGridView 1"]';
+				this.tdgv = '[name="ТипНоменклатуры"]';
 				this.input = '[sbisname="TextBox 1"] input';
 				this.data1_expand = '[data-id="0"] .controls-TreeView__expand';
 				this.data4 = '[data-id="4"]';

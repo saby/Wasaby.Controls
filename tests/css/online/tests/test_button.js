@@ -435,45 +435,6 @@ gemini.suite('SBIS3.CONTROLS.Button Online', function () {
             })
     });
 
-    gemini.suite('big_with_empty_caption', function (test) {
-
-        test.setUrl('/regression_button_online_10.html').setCaptureElements('[sbisname="Button 1"]')
-
-            .before(function (actions) {
-                
-				this.button = '[name="Button 1"]';
-                this.input = '[sbisname="TextBox 1"] input';
-                
-				actions.waitForElementToShow(this.button, 40000);
-				actions.waitForElementToShow(this.input, 5000);
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.input);
-            })
-    });
-
-    gemini.suite('primary_big_with_empty_caption', function (test) {
-
-        test.setUrl('/regression_button_online_10.html').setCaptureElements('[sbisname="Button 1"]')
-
-            .before(function (actions) {
-                
-				this.button = '[name="Button 1"]';
-                this.input = '[sbisname="TextBox 1"] input';
-                
-				actions.waitForElementToShow(this.button, 40000);
-				actions.waitForElementToShow(this.input, 5000);
-            })
-
-            .capture('plain', function (actions) {
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('Button 1').setPrimary(true);
-                });
-				actions.click(this.input);
-            })
-    });
-
     gemini.suite('ellipsis', function (test) {
 
         test.setUrl('/regression_button_online_9.html').setCaptureElements('[sbisname="Button 1"]')
