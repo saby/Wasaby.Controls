@@ -830,33 +830,38 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
-      _removeItem: function (item, groupId) {
-         var targetElement = this._getDomElementByItem(item);
-         if (targetElement.length) {
-            this._clearItems(targetElement);
-            /*TODO С этим отдельно разобраться*/
+      _removeItems: function (items, groupId) {
+         var removedElements = $([]);
+         for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var targetElement = this._getDomElementByItem(item);
+            if (targetElement.length) {
+               this._clearItems(targetElement);
+               /*TODO С этим отдельно разобраться*/
 
-            this._ladderCompare([targetElement.prev(), targetElement.next()]);
+               this._ladderCompare([targetElement.prev(), targetElement.next()]);
 
-            if (!Object.isEmpty(this._options.groupBy)) {
-               if (false /*this._options.easyGroup*/ /*TODO косяк Лехи - не присылает группу при удалении*/) {
-                  if (this._getItemsProjection().getGroupItems(groupId).length < 1) {
-                     $('[data-group="' + groupId + '"]', this._container.get(0)).remove();
+               if (!Object.isEmpty(this._options.groupBy)) {
+                  if (false /*this._options.easyGroup*/ /*TODO косяк Лехи - не присылает группу при удалении*/) {
+                     if (this._getItemsProjection().getGroupItems(groupId).length < 1) {
+                        $('[data-group="' + groupId + '"]', this._container.get(0)).remove();
+                     }
                   }
-               }
-               else {
-                  var prev = targetElement.prev();
-                  if (prev.length && prev.hasClass('controls-GroupBy')) {
-                     var next = targetElement.next();
-                     if (!next.length || next.hasClass('controls-GroupBy')) {
-                        prev.remove();
+                  else {
+                     var prev = targetElement.prev();
+                     if (prev.length && prev.hasClass('controls-GroupBy')) {
+                        var next = targetElement.next();
+                        if (!next.length || next.hasClass('controls-GroupBy')) {
+                           prev.remove();
+                        }
                      }
                   }
                }
-            }
 
-            targetElement.remove();
+               removedElements.push(targetElement.get(0));
+            }
          }
+         removedElements.remove();
       },
 
       _getItemsForRedrawOnAdd: function(items, groupId) {
@@ -2109,12 +2114,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             );*/
          }
       },
-      _onCollectionRemove: function(items, notCollapsed, groupId) {
-         var i;
-         for (i = 0; i < items.length; i++) {
-            this._removeItem(
-               items[i], groupId
-            );
+      _onCollectionRemove: function(items, notCollapsed) {
+         if (items.length) {
+            this._removeItems(items)
          }
       },
       _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
