@@ -1559,6 +1559,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._hasEditInPlace()) {
                this._getEditInPlace()._destroyEip();
             }
+            //TODO: Перевести строку итогов на верстку через шаблон по задаче https://inside.tensor.ru/opendoc.html?guid=19ba61d7-ce74-4567-90c9-e5f3565e30b7&description=
             this._redrawResults();
             ListView.superclass.redraw.apply(this, arguments);
          },
