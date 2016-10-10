@@ -235,7 +235,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
          var d = this._options.endValue;
          if (d) {
             d = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
-            d = d.setSQLSerializationMode(this._getSQLSerializationMode());
+            d.setSQLSerializationMode(this._getSQLSerializationMode());
          }
          return d;
       }
