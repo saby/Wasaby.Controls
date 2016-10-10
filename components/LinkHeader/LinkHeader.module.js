@@ -1,8 +1,7 @@
 define('js!SBIS3.CONTROLS.LinkHeader',
    [
       'js!SBIS3.CONTROLS.ButtonBase',
-      'html!SBIS3.CONTROLS.LinkHeader',
-      'css!SBIS3.CONTROLS.LinkHeader'
+      'tmpl!SBIS3.CONTROLS.LinkHeader'
    ],
    function(ButtonBase, dotTplFn){
 
@@ -25,14 +24,14 @@ define('js!SBIS3.CONTROLS.LinkHeader',
          $protected: {
             _options: {
                /**
-                * @cfg {String} Устанавливает ссылку.
+                * @cfg {String} Ссылка.
                 * @example
                 * <pre class="brush: xml">
                 *    <option name="href">https://inside.tensor.ru</option>
                 * </pre>
                 * @see getHref
                 * @see setHref
-                * */
+                */
                href: ''
             }
          },
@@ -40,40 +39,72 @@ define('js!SBIS3.CONTROLS.LinkHeader',
          init: function() {
             LinkHeader.superclass.init.call(this);
 
-            this.getLinkedContext().setValue('href', this.getHref());
+            this.getLinkedContext().setValue('caption', this._options.caption);
+            this.getLinkedContext().setValue('href', this._options.caption);
          },
+
          /**
-          * Возвращает ссылку
+          * Вернёт текст заголовка
           * @example
           * <pre>
           *    var
           *       linkHeader = this.getChildControlByName('myLinkHeader'),
-          *       caption = linkHeader.gerHref();
+          *       caption = linkHeader.gerCaption();
           * </pre>
-          * */
+          * @see caption
+          * @see setCaption
+          *
+          */
+         getCaptiot: function() {
+            return this._options.caption;
+         },
+
+         /**
+          * Изменит текст заголовка
+          * @param {String} caption ссылка
+          * @example
+          * <pre>
+          *    var linkHeader = this.getChildControlByName('linkHeader');
+          *    linkHeader.setCaption('Заголовок');
+          * </pre>
+          * @see caption
+          * @see getCaption
+          */
+         setCaption: function(caption) {
+            this.superclass.setCaption(caption).call(this);
+
+            this.getLinkedContext().setValue('caption', caption);
+         },
+
+         /**
+          * Вернёт ссылку
+          * @example
+          * <pre>
+          *    var
+          *       linkHeader = this.getChildControlByName('myLinkHeader'),
+          *       href = linkHeader.gerHref();
+          * </pre>
+          * @see href
+          * @see setHref
+          */
          getHref: function() {
             return this._options.href;
          },
 
          /**
-          * Изменить ссылку
+          * Изменит ссылку
           * @param {String} href ссылка
           * @example
           * <pre>
           *    var linkHeader = this.getChildControlByName('linkHeader');
           *    linkHeader.setHref('https://inside.tensor.ru');
           * </pre>
-          * @returns {Error|String}
+          * @see href
+          * @see getHref
           */
          setHref: function(href) {
-            if (typeof href !== 'string') {
-               return new Error('Ссылка не является строкой');
-            }
-
             this._options.href = href;
             this.getLinkedContext().setValue('href', href);
-
-            return this._options.href;
          }
       });
 
