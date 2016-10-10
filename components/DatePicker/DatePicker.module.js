@@ -42,6 +42,7 @@ define(
     */
 
    var DatePicker = DateBox.extend([PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
+      _dotTplFn: dotTplFn,
        /**
         * @event onDateChange Происходит при изменении даты.
         * @remark
@@ -70,7 +71,6 @@ define(
        * @param {Date} date Дата, которую установили.
        */
       $protected: {
-         _dotTplFn: dotTplFn,
          /**
           * Контролл Calendar в пикере
           */
@@ -141,6 +141,7 @@ define(
                if (self.isEnabled()) {
                   self.togglePicker();
 
+                  self._initFocusInHandler();
                   // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
                   if (self._picker.isVisible() && self.getDate()) {
                      self._chooserControl.setStartValue(self.getDate());

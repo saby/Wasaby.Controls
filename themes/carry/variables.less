@@ -9,7 +9,7 @@
 @default-itemSelected-color:                    #FDECD9;
 // data grid
 @data-grid-cell-height:                         44px;;
-@data-grid-cell-padding:                        4px 6px;
+@data-grid-cell-padding:                        4px 8px;
 @data-grid-header-cell-font-size:               18px;
 @data-grid-header-cell-height:                  22px;
 @data-grid-header-cell-padding:                 @data-grid-cell-padding;
@@ -176,6 +176,7 @@
 
 @list-view-actions-menu-padding:                0;
 @list-view-items-toolbar-vertical-line-height:  38px;
+@touch-mode-items-toolbar-icon-margin-top:      -38px;
 
 @listView-check-box-top:                        7px;
 
@@ -320,7 +321,7 @@
 
 //FilterButton
 @controls-filterButton-button-margin:           14px 8px 8px 8px;
-@controls-filterButton-area-header-padding:     24px 44px 16px 12px;
+@controls-filterButton-area-header-padding:     24px 76px 16px 12px;
 @controls-filterButton-area-header-height:      40px;
 @controls-filterButton-area-text-size:          @globalDefaultFontSize;
 @controls-filterButton-area-content-padding:    16px 24px 24px 24px;
@@ -330,9 +331,12 @@
 @controls-filterLine-link-hover-color:          @controls-filterLine-link-color;
 @controls-filterButton-button-height:           40px;
 @controls-filterLine-wrapper-height:            @controls-filterButton-button-height;
+@controls-filterLine-items-line-height:         40px;
 
 //FilterLine
 @controls-filterLine-copyCross-top:             -32px;
+// FilterLine FireFox hack
+@controls-filterLine-copyCross-ff-top:          -39px;
 
 // -------- //
 // Text box //
@@ -450,7 +454,7 @@
 //MoveDialog
 @controls-movedialog-activate-right:            65px;
 @controls-movedialog-activate-top:              10px;
-@controls-movedialog-min-width:                 455px;
+@controls-movedialog-min-width:                 525px;
 
 // Big button
 @button-big-font:                               @globalDefaultFontSize;
@@ -473,7 +477,8 @@
 // ----------------------- //
 
 @controls-OperationsPanelButton-width:          32px;
-@controls-OperationsPanelButton-hor-height:     32px;
+@controls-OperationsPanelButton-hor-height:     31px;
+@controls-OperationsPanelButton-hor-line-height:32px;
 @controls-OperationsPanelButton-vert-height:    32px;
 @controls-OperationsPanelButton-icon-left:      8px;
 @controls-OperationsPanelButton-font:           24px 'TensorFont Regular', 'TensorFont';

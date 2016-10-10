@@ -157,11 +157,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._options.displayField = 'title';
          }
 
-         this._container.keyup(function(e) {
-            e.stopPropagation();
-            return false;
-         });
-
          if (this._options.autocomplete){
             this.subscribe('onSearch', this._onSearch);
             this.subscribe('onReset', this._onResetSearch);
@@ -343,12 +338,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                      ComboBox.superclass.setText.call(self, newText);
                      self._drawNotEditablePlaceholder(newText);
                      $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(newText);
-                     if ((key != undefined) && (key !== null)) {
-                        self._container.removeClass('controls-ComboBox_emptyValue');
-                     }
-                     else {
-                        self._container.addClass('controls-ComboBox_emptyValue');
-                     }
+                     self._container.toggleClass('controls-ComboBox_emptyValue', (key == undefined));
                   }
                }
                else {
@@ -429,8 +419,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
-      _getItemTemplate: function (item) {
-         var title = item.get(this._options.displayField);
+      _getItemTemplate: function (projItem) {
+         var
+            item = projItem.getContents(),
+            title = item.get(this._options.displayField);
+         
          if (this._options.itemTemplate) {
             return doT.template(this._options.itemTemplate)({item : item, displayField : title})
          }
@@ -465,11 +458,16 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
 
       _keyUpBind: function (e) {
+         var keys = $ws._const.key;
          /*по изменению текста делаем то же что и в текстбоксе*/
          ComboBox.superclass._keyUpBind.apply(this, arguments);
          /*не делаем смену значения при нажатии на стрелки вверх вниз. Иначе событие смены ключа срабатывает два раза*/
-         if ((e.which != 40) && (e.which != 38)) {
+         if ((e.which != keys.down) && (e.which != keys.up)) {
             this._setKeyByText();
+         }
+         /*при нажатии enter или escape, событие должно всплывать. Возможно эти кнопки являются управляющими командами (например в редактировании по месту)*/
+         if ((e.which != keys.enter) && (e.which != keys.esc)) {
+            e.stopPropagation();
          }
       },
 
@@ -478,6 +476,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var
             selKey,
             oldKey = this._options.selectedKey,
+            oldText = this.getText(),
             self = this,
             filterFieldObj = {};
 
@@ -497,12 +496,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   }
                });
 
-               if (noItems) {
-                  self._options.selectedKey = null;
-                  if (oldKey !== self._options.selectedKey) {
-                     self._notifySelectedItem(null);
-                     self._drawSelectedItem(null);
-                  }
+               if (noItems && oldKey !== null) {
+                  self.setSelectedKey(null);
+                  self._drawText(oldText);
                }
             });
          }
@@ -523,9 +519,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
-      _redraw: function () {
+      redraw: function () {
          if (this._picker) {
-            ComboBox.superclass._redraw.call(this);
+            ComboBox.superclass.redraw.call(this);
             // Сделано для того, что бы в при уменьшении колчества пунктов при поиске нормально усеньшались размеры пикера
             // В 3.7.3.200 сделано нормально на уровне попапа
             this._picker.getContainer().css('height', '');

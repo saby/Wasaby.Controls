@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
 ], function (CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, DateUtil) {
    'use strict';
 
-   var DateRangeChoose = CompoundControl.extend([DateRangeMixin, RangeMixin], {
+   var DateRangeChoose = CompoundControl.extend([RangeMixin, DateRangeMixin], {
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
@@ -19,8 +19,23 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
             showQuarters: true,
             showHalfyears: true,
 
-            checkedMonthStart: null,
-            checkedMonthEnd: null,
+            checkedStart: null,
+            checkedEnd: null,
+
+            /**
+             * @cfg {Function} устанавливает функцию которая будет вызвана во время перерисовки компонента.
+             * @remark
+             * Аргументы функции:
+             * <ol>
+             *    <li>periods - Массив содержащий массивы из начала и конца периода</li>
+             * </ol>
+             * Функция должна вернуть объект содержащий информацию об отображаемой иконке или $ws.proto.Deferred,
+             * стреляющий таким объектом.
+             * { iconClass: 'icon-Yes icon-done',
+             *   title: 'Период отчетности закрыт'
+             *   }
+             */
+            iconsHandler: null,
 
             _months: [
                {
@@ -70,8 +85,8 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
 
       $constructor: function () {
          this._publish('onChoose');
-         this._options.checkedMonthStart = this._normalizeDate(this._options.checkedMonthStart);
-         this._options.checkedMonthEnd = this._normalizeDate(this._options.checkedMonthEnd);
+         this._options.checkedStart = this._normalizeDate(this._options.checkedStart);
+         this._options.checkedEnd = this._normalizeDate(this._options.checkedEnd);
       },
 
       init: function () {
@@ -260,38 +275,66 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
 
       _updateCheckMarks: function () {
          var self = this,
-            checkedMonthStart = this._options.checkedMonthStart,
-            checkedMonthEnd = this._options.checkedMonthEnd,
-            year = this.getYear(),
-            startIndex, endIndex,
-            containers, container;
+            iconsHandler = this._options.iconsHandler || this._getIcons,
+            periods = [],
+            containers, step, pType, container, icons;
 
-         if (!checkedMonthStart && !checkedMonthEnd) {
+         if (!this._options.checkedStart && !this._options.checkedEnd && !this._options.iconsHandler) {
             return;
          }
 
-         checkedMonthStart = checkedMonthStart? checkedMonthStart.getMonth(): 0;
-         checkedMonthEnd = checkedMonthEnd? checkedMonthEnd.getMonth(): 11;
          if (this._options.showMonths) {
             containers = this.getContainer().find(['.', this._cssDateRangeChoose.month].join(''));
-            startIndex = checkedMonthStart;
-            endIndex = checkedMonthEnd;
-         } else {
+            step = 1;
+            pType = 'month';
+         } else if (this._options.showQuarters) {
             containers = this.getContainer().find(['.', this._cssDateRangeChoose.quarter].join(''));
-            startIndex = Math.floor(checkedMonthStart/4);
-            endIndex = Math.floor(checkedMonthEnd/4);
+            step = 3;
+            pType = 'quarter';
+         } else {
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.DateRangeChoose', 'Not implemented.');
+            return;
+         }
+         for (var i = 0; i < 12; i += step) {
+            periods.push([new Date(this.getYear(), i, 1), new Date(this.getYear(), i + step, 0)]);
          }
 
-         containers.each(function (index) {
-            container = $(this).find(['>.', self._cssDateRangeChoose.checkbox].join(''));
-            if (index >= startIndex && index <= endIndex) {
-               container.removeClass('icon-disabled').addClass('icon-done');
-               container.prop('title', rk('Период отчетности закрыт'));
-            } else {
-               container.removeClass('icon-done').addClass('icon-disabled');
-               container.prop('title', rk('Период отчетности не закрыт'));
-            }
+         icons = iconsHandler.call(this, periods, pType);
+         if (!$ws.helpers.instanceOfModule($ws.proto.Deferred)) {
+            icons = (new $ws.proto.Deferred()).callback(icons);
+         }
+
+         icons.addCallback(function (_icons) {
+            containers.each(function (index) {
+               container = $(this).find(['>.', self._cssDateRangeChoose.checkbox].join(''));
+               container.removeClass().addClass([self._cssDateRangeChoose.checkbox, 'icon-16', _icons[index].iconClass].join(' '));
+               container.prop('title', _icons[index].title);
+            });
          });
+      },
+
+      _getIcons: function (periods) {
+         var icons = [];
+         for (var i = 0; i < periods.length; i++) {
+            icons.push(this._getIcon(periods[i][0], periods[i][1]));
+         }
+         return icons;
+      },
+
+      _getIcon: function (start, end) {
+         var checkedStart = this._options.checkedStart,
+             checkedEnd = this._options.checkedEnd;
+         if (!checkedStart && checkedEnd) {
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.DateRangeChoose', 'checkedStart and checkedEnd options must be set.');
+            return [];
+         }
+         checkedStart = checkedStart? checkedStart.getTime(): 0;
+         checkedEnd = checkedEnd? checkedEnd.getTime(): Infinity;
+         if (Math.max(start.getTime(), checkedStart) <= Math.min(end.getTime(), checkedEnd)) {
+            return {iconClass: 'icon-Yes icon-done', title: rk('Период отчетности закрыт')};
+         } else {
+            return {iconClass: 'icon-Yes icon-disabled', title: rk('Период отчетности закрыт')};
+         }
       },
 
       // Режим года

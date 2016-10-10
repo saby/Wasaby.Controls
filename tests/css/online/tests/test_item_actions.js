@@ -1085,4 +1085,28 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.wait(500);
             })			
     });
+	
+	gemini.suite('TreeDataGridView LongItemName', function (test) {
+
+        test.setUrl('/regression_items_action_online_27.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="TreeDataGridView 1"]', 40000);
+                actions.waitForElementToShow('[data-id="3"]', 1000);
+				this.item_3 = find('[data-id="3"]')
+				this.item_4 = find('[data-id="4"]')
+				this.item_15 = find('[data-id="15"]')
+				this.expander = find('[data-id="4"] .controls-TreeView__expand')
+				actions.mouseMove(this.item_3);
+				actions.waitForElementToShow('.controls-ItemActions [data-id="delete"]', 1000);
+				this.delete_icon = find('.controls-ItemActions [data-id="delete"]');
+				actions.waitForElementToShow('.controls-ItemActions .controls-ItemActions__menu-button', 1000);
+				this.menu_button = find('.controls-ItemActions .controls-ItemActions__menu-button');
+            })
+			
+			.capture('opened_menu', function (actions) {
+				actions.click(this.menu_button);
+				actions.mouseMove(this.item_4);
+            })
+    });
 });

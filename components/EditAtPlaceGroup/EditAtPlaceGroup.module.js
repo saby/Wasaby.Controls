@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
                });
             }
             if (!this._options.editInPopup){
-               this.subscribe('onChildFocusOut', function(){
+               this.subscribe('onFocusOut', function(){
                   self._applyEdit();
                });
             }

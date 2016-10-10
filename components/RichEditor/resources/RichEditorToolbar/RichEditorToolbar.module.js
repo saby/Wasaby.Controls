@@ -287,9 +287,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
          /*БЛОК ФУНКЦИЙ ОБЁРТОК ДЛЯ ОТПРАВКИ КОМАНД РЕДАКТОРУ*/
 
          destroy: function() {
-            this._unbindEditor();
             this._toggleToolbarButton.unbind('click');
-            this._handlersInstances = null;
             this._toggleToolbarButton = null;
             RichEditorToolbar.superclass.destroy.apply(this, arguments);
             this._itemsContainer = null;

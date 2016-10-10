@@ -8,9 +8,10 @@ define('js!SBIS3.CONTROLS.Menu', [
    'js!SBIS3.CONTROLS.hierarchyMixin',
    'js!SBIS3.CONTROLS.TreeMixinDS',
    'js!SBIS3.CONTROLS.FloatArea',
-   'js!SBIS3.CONTROLS.MenuItem'
+   'js!SBIS3.CONTROLS.MenuItem',
+   'js!WS.Data/Relation/Hierarchy'
 
-], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea) {
+], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, MenuItem, Hierarchy) {
 
    'use strict';
 
@@ -179,26 +180,38 @@ define('js!SBIS3.CONTROLS.Menu', [
       //По нормальному можно было бы сделать через css, но имеются три различных отступа слева у пунктов
       //для разных меню и совершенно не ясно как это делать.
       _checkIcons: function() {
-         var tree = this._items.getTreeIndex(this._options.hierField);
-         for (var i in tree) {
-            if (tree.hasOwnProperty(i)) {
-               var hasIcon = false,
-                  icon = '',
-                  childs = tree[i];
-               for (var j = 0; j < childs.length; j++) {
-                  icon = this._items.getRecordById(childs[j]).get('icon');
-                  if (icon) {
-                     if (icon.indexOf('icon-16') !== -1) { icon = 'sprite:icon-16'; } else { icon = 'sprite:icon-24'; }
-                     hasIcon = true;
-                     break;
-                  }
+         var hierField = this._options.hierField,
+            hierarchy = new Hierarchy({
+               idProperty: this._items.getIdProperty(),
+               parentProperty: hierField,
+               nodeProperty: hierField + '@'
+            }),
+            parents = {},
+            children,
+            child,
+            pid,
+            i,
+            icon;
+
+         this._items.each(function(item) {
+            icon = item.get('icon');
+            if (icon) {
+               pid = item.get(hierField);
+               if (!parents.hasOwnProperty(pid)) {
+                  parents[pid] = [pid, icon.indexOf('icon-16') === -1 ? 'sprite:icon-24' : 'sprite:icon-16'];
                }
-               if (hasIcon) {
-                  for (var j = 0; j < childs.length; j++) {
-                     if (!this._items.getRecordById(childs[j]).get('icon')) {
-                        this._items.getRecordById(childs[j]).set('icon', icon);
-                     }
+            }
+         });
+
+         for (var key in parents) {
+            if (parents.hasOwnProperty(key)) {
+               children = hierarchy.getChildren(parents[key][0], this._items);
+               for (i = 0; i < children.length; i++) {
+                  child = children[i];
+                  if (!child.get('icon')) {
+                     child.set('icon', parents[key][1]);
                   }
+
                }
             }
          }
