@@ -186,7 +186,18 @@ define(
              * @noShow
              * @deprecated
              */
-            notificationMode: 'change'
+            notificationMode: 'change',
+
+            /**
+             * @cfg {String} Режим серализации даты при отправке в бизнес логику. В 140 версии значение по умолчанию datetime. В последующих опция будет убрана, а поведение будет соответствовать auto.
+             * @variant 'auto' дата будет сериализоваться в зависимости от маски контрола, т.е. если установлена маска в которой присутствует только время, то дата будет сериализоваться как Время, если происутствует дата и время, то как ДатаВремя, если присутствует только дата, то как Дата.
+             * @variant 'time'
+             * @variant 'date'
+             * @variant 'datetime'
+             * @noShow
+             * @deprecated
+             */
+            serializationMode: 'auto'
          }
       },
 
@@ -371,7 +382,21 @@ define(
        * @see onDateChange
        */
       getDate: function() {
-        return this._options.date;
+         var modeMap = {
+               'datetime': Date.SQL_SERIALIZE_MODE_DATETIME,
+               'date': Date.SQL_SERIALIZE_MODE_DATE,
+               'time': Date.SQL_SERIALIZE_MODE_TIME
+            },
+            mode;
+         if (this._options.serializationMode === 'auto') {
+            mode = modeMap[this.getType()];
+         } else {
+            mode = modeMap[this._options.serializationMode];
+         }
+         if (this._options.date) {
+            this._options.date.setSQLSerializationMode(mode);
+         }
+         return this._options.date;
       },
 
       /**
