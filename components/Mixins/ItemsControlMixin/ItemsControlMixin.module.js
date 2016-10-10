@@ -830,7 +830,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
-      _removeItems: function (items) {
+      _removeItems: function (items, groupId) {
          var removedElements = $([]);
          for (var i = 0; i < items.length; i++) {
             var item = items[i];
