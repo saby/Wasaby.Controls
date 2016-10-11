@@ -2052,8 +2052,8 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
          },
-         _removeItem: function(item, groupId){
-            ListView.superclass._removeItem.call(this, item, groupId);
+         _removeItems: function(item, groupId){
+            ListView.superclass._removeItems.call(this, item, groupId);
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
             }
@@ -2812,7 +2812,6 @@ define('js!SBIS3.CONTROLS.ListView',
             //_findItemByElement, без завязки на _items.
             if (target.length) {
                id = target.data('id');
-               this.setSelectedKey(id);
                var items = this._getDragItems(id),
                   source = [];
                $ws.helpers.forEach(items, function (id) {
@@ -2923,27 +2922,34 @@ define('js!SBIS3.CONTROLS.ListView',
             return $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>');
          },
 
-         _endDragHandler: function(dragObject) {
-            var
-               clickHandler,
-               target = dragObject.getTarget();
-            if (target) {
-               if (target.getModel().getId() == this.getSelectedKey()) {
-                  //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
-                  clickHandler = this._elemClickHandler;
-                  this._elemClickHandler = function () {
-                     this._elemClickHandler = clickHandler;
-                  };
-               }
-               if (dragObject.getOwner() === this) {
-                  var models = [];
+         _endDragHandler: function(dragObject, droppable, e) {
+            if (droppable) {
+               var
+                  target = dragObject.getTarget(),
+                  models = [],
+                  dropBySelf = false,
+                  targetsModel = target.getModel();
+
+               if (target) {
                   dragObject.getSource().each(function(item){
-                     models.push(item.getModel());
+                     var model = item.getModel();
+                     models.push(model);
+                     if (targetsModel == model) {
+                        dropBySelf = true;
+                     }
                   });
-                  var position = target.getPosition();
-                  this._getMover().move(models, target.getModel(), position);
-               } else {
-                  this._getMover().moveFromOutside(dragObject);
+                  if (dropBySelf) {//TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
+                     var clickHandler = this._elemClickHandler;
+                     this._elemClickHandler = function () {
+                        this._elemClickHandler = clickHandler;
+                     };
+                  }
+                  if (dragObject.getOwner() === this) {
+                     var position = target.getPosition();
+                     this._getMover().move(models, target.getModel(), position);
+                  } else {
+                     this._getMover().moveFromOutside(dragObject);
+                  }
                }
             }
 
