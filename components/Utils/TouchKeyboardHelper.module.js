@@ -39,8 +39,8 @@ define('js!SBIS3.CONTROLS.TouchKeyboardHelper', [], function() {
    };
 
    if ($ws._const.compatibility.touch){
-      $ws.single.EventBus.globalChannel().subscribe('MobileInputFocus', TouchKeyboardHelper._keyboardShowHandler);
-      $ws.single.EventBus.globalChannel().subscribe('MobileInputFocusOut', TouchKeyboardHelper._keyboardHideHandler);
+      $ws.single.EventBus.globalChannel().subscribe('MobileInputFocus', TouchKeyboardHelper._keyboardShowHandler.bind(TouchKeyboardHelper));
+      $ws.single.EventBus.globalChannel().subscribe('MobileInputFocusOut', TouchKeyboardHelper._keyboardHideHandler.bind(TouchKeyboardHelper));
    }
 
    return TouchKeyboardHelper;

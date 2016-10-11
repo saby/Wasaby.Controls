@@ -11,6 +11,19 @@ define('js!SBIS3.CONTROLS.DateRangeMixin', [
 
    var DateRangeMixin = /**@lends SBIS3.CONTROLS.DateRangeMixin.prototype  */{
       $protected: {
+         _options: {
+            /**
+             * @cfg {String} Режим серализации даты при отправке в бизнес логику.
+             * В 140 версии значение по умолчанию datetime.
+             * В последующих версиях опция будет убрана, а поведение будет соответствовать datetime.
+             * @variant 'time'
+             * @variant 'date'
+             * @variant 'datetime'
+             * @noShow
+             * @deprecated
+             */
+            serializationMode: 'datetime'
+         }
       },
 
       $constructor: function() {
@@ -31,7 +44,32 @@ define('js!SBIS3.CONTROLS.DateRangeMixin', [
          setEndValue: function (parentFnc, value, silent) {
             value = this._normalizeDate(value);
             return parentFnc.call(this, value, silent);
+         },
+
+         getStartValue: function (parentFnc) {
+            value = parentFnc.apply(this);
+            if (value) {
+               value.setSQLSerializationMode(this._getSQLSerializationMode());
+            }
+            return value;
+         },
+
+         getEndValue: function (parentFnc) {
+            value = parentFnc.call(this);
+            if (value) {
+               value.setSQLSerializationMode(this._getSQLSerializationMode());
+            }
+            return value;
          }
+      },
+
+      _getSQLSerializationMode: function () {
+         var modeMap = {
+            'datetime': Date.SQL_SERIALIZE_MODE_DATETIME,
+            'date': Date.SQL_SERIALIZE_MODE_DATE,
+            'time': Date.SQL_SERIALIZE_MODE_TIME
+         };
+         return modeMap[this._options.serializationMode];
       },
 
       /**
