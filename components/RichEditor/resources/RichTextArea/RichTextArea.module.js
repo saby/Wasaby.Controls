@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "Core/helpers/dom&controls-helpers",
    "css!SBIS3.CORE.RichContentStyles",
    "i18n!SBIS3.CONTROLS.RichEditor"
-], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, constants, Deferred,TextBoxBase, dotTplFn, RichUtil, FileLoader, smiles, PluginManager, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers) {
+], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, FileLoader, smiles, PluginManager, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers) {
       'use strict';
 
       var
@@ -363,7 +363,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          destroy: function() {
-            constants.$win.unbind('beforeunload', this._saveBeforeWindowClose);
+            cConstants.$win.unbind('beforeunload', this._saveBeforeWindowClose);
             this.saveToHistory(this.getText());
             RichUtil.unmarkRichContentOnCopy(this._dataReview);
             RichUtil.unmarkRichContentOnCopy(this._inputControl);
@@ -554,7 +554,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             //При смене формата содаётся новый <span class='classFormat'>.
             //В FF в некторых случаях символ каретки не удаляется из предыдущего <span> блока при смене формата
             //из за-чего происход разрыв строки.
-            if (constants.browser.firefox &&  $(this._tinyEditor.selection.getNode()).find('br').attr('data-mce-bogus') == '1') {
+            if (cConstants.browser.firefox &&  $(this._tinyEditor.selection.getNode()).find('br').attr('data-mce-bogus') == '1') {
                $(this._tinyEditor.selection.getNode()).find('br').remove();
             }
             for (var stl in constants.styles) {
@@ -663,7 +663,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          execCommand: function(command) {
             this._tinyEditor.execCommand(command);
             //TODO:https://github.com/tinymce/tinymce/issues/3104, восстанавливаю выделение тк оно теряется если после нжатия кнопки назад редактор стал пустым
-            if ((constants.browser.firefox || constants.browser.isIE) && command == 'undo' && this._getTinyEditorValue() == '') {
+            if ((cConstants.browser.firefox || cConstants.browser.isIE) && command == 'undo' && this._getTinyEditorValue() == '') {
                this._tinyEditor.selection.select(this._tinyEditor.getBody(), true);
             }
          },
@@ -766,7 +766,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            },
                            element: okButton
                         });
-                        if (constants.browser.isMobileIOS) {
+                        if (cConstants.browser.isMobileIOS) {
                            //финт ушами, тк фокус с редактора убрать никак нельзя
                            //тк кнопки на которую нажали у нас в обработчике тоже нет
                            //ставим фокус на любой блок внутри нового диалогового окна, например на контейнер кнопки
@@ -952,7 +952,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
                this._inputControl.attr('tabindex', 1);
 
-               if (!constants.browser.firefox) { //в firefox работает нативно
+               if (!cConstants.browser.firefox) { //в firefox работает нативно
                   this._inputControl.bind('mouseup', function (e) { //в ie криво отрабатывает клик
                      if (e.ctrlKey) {
                         var target = e.target;
@@ -984,7 +984,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             //БИНДЫ НА ВСТАВКУ КОНТЕНТА И ДРОП
             editor.on('Paste', function(e) {
                self._clipboardText = e.clipboardData ?
-                  constants.browser.isMobileIOS ? e.clipboardData.getData('text/plain') : e.clipboardData.getData('text') :
+                  cConstants.browser.isMobileIOS ? e.clipboardData.getData('text/plain') : e.clipboardData.getData('text') :
                   window.clipboardData.getData('text');
                editor.plugins.paste.clipboard.pasteFormat = 'html';
             });
@@ -1069,7 +1069,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
              });
 
             //БИНДЫ НА СОБЫТИЯ КЛАВИАТУРЫ (ВВОД)
-            if (constants.browser.isMobileIOS || constants.browser.isMobileAndroid) {
+            if (cConstants.browser.isMobileIOS || cConstants.browser.isMobileAndroid) {
                //TODO: https://github.com/tinymce/tinymce/issues/2533
                this._inputControl.on('input', function() {
                   self._setTrimmedText(self._getTinyEditorValue());
@@ -1078,14 +1078,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             //Передаём на контейнер нажатие ctrl+enter и escape
             this._container.bind('keydown', function(e) {
-               if (!(e.which === constants.key.enter && e.ctrlKey) && e.which !== constants.key.esc) {
+               if (!(e.which === cConstants.key.enter && e.ctrlKey) && e.which !== cConstants.key.esc) {
                   e.stopPropagation();
                }
             });
 
             //Запрещаем всплытие Enter, Up и Down
             this._container.bind('keyup', function(e) {
-               if (e.which === constants.key.enter || e.which === constants.key.up || e.which === constants.key.down) {
+               if (e.which === cConstants.key.enter || e.which === cConstants.key.up || e.which === cConstants.key.down) {
                   e.stopPropagation();
                   e.preventDefault();
                }
@@ -1093,7 +1093,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             editor.on('keyup', function(e) {
                self._typeInProcess = false;
-               if (!(e.keyCode === constants.key.enter && e.ctrlKey)) { // Не нужно обрабатывать ctrl+enter, т.к. это сочетание для дефолтной кнопки
+               if (!(e.keyCode === cConstants.key.enter && e.ctrlKey)) { // Не нужно обрабатывать ctrl+enter, т.к. это сочетание для дефолтной кнопки
                   self._setTrimmedText(self._getTinyEditorValue());
                }
             });
@@ -1101,11 +1101,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             editor.on('keydown', function(e) {
                self._typeInProcess = true;
 
-               if (e.which === constants.key.pageDown || e.which === constants.key.pageUp || (e.which === constants.key.insert && !e.shiftKey && !e.ctrlKey)) {
+               if (e.which === cConstants.key.pageDown || e.which === cConstants.key.pageUp || (e.which === cConstants.key.insert && !e.shiftKey && !e.ctrlKey)) {
                   e.stopPropagation();
                   e.preventDefault();
                }
-               if (e.keyCode == constants.key.tab) {
+               if (e.keyCode == cConstants.key.tab) {
                   var
                      area = self.getParent(),
                      nextControl = area.getNextActiveChildControl(e.shiftKey);
@@ -1116,7 +1116,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   e.stopImmediatePropagation();
                   e.preventDefault();
                   return false;
-               } else if (e.which === constants.key.enter && e.ctrlKey) {
+               } else if (e.which === cConstants.key.enter && e.ctrlKey) {
                   e.preventDefault();//по ctrl+enter отменяем дефолтное(чтобы не было перевода строки лишнего), разрешаем всплытие
                   //по ctrl+enter может произойти перехват события( например главная кнопка) и keyup может не сработать
                   //необходимо сбрасывать флаг зажатой кнопки, чтобы шло обновление опции text (сейчас обновление опции text не идёт при зажатаой клавише, чтобы не тормозило)
@@ -1176,7 +1176,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             //Решение: в mouseLeave смотреть зажата ли мышь, и если зажата убирать activeEditor
             //тк activeEditor будет пустой не запомнится LastFocusBookmark и не будет восстановления выделения
             //activeEditor восстановится сразу после ввода символа а может и раньше, главное что восстновления выделения не будет
-            if (!constants.browser.isMobileIOS && !constants.browser.isMobileAndroid) {
+            if (!cConstants.browser.isMobileIOS && !cConstants.browser.isMobileAndroid) {
                editor.on('mousedown', function(e) {
                   self._mouseIsPressed = true;
                });
@@ -1194,7 +1194,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this._saveBeforeWindowClose  =  function() {
                this.saveToHistory(this.getText());
             }.bind(this);
-            constants.$win.bind('beforeunload', this._saveBeforeWindowClose);
+            cConstants.$win.bind('beforeunload', this._saveBeforeWindowClose);
 
             /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ UNDOMANAGER*/
             editor.on('TypingUndo AddUndo ClearUndos redo undo', function() {
@@ -1383,7 +1383,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                });
             img.on('load', function() {
                var
-                  isIEMore8 = constants.browser.isIE && !constants.browser.isIE8,
+                  isIEMore8 = cConstants.browser.isIE && !cConstants.browser.isIE8,
                // naturalWidth и naturalHeight - html5, работают IE9+
                   imgWidth =  isIEMore8 ? this.naturalWidth : this.width,
                   imgHeight =  isIEMore8 ? this.naturalHeight : this.height,
@@ -1392,12 +1392,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (maxSide[1] > constants.maximalPictureSize) {
                   style = ' style="'+ maxSide[0] +': ' + constants.maximalPictureSize + 'px;"';
                }
-               if (constants.browser.isIE8) {
+               if (cConstants.browser.isIE8) {
                   img.remove();
                }
                self.insertHtml('<img src="' + path + '"' + style + ' alt="' + name + '"></img>');
             });
-            if (constants.browser.isIE8) {
+            if (cConstants.browser.isIE8) {
                $('body').append(img);
             }
          },
@@ -1461,7 +1461,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (this.isVisible()) {
                if (this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this._textChanged && (this._inputControl[0] === document.activeElement)) {
                   closestParagraph = $(this._tinyEditor.selection.getNode()).closest('p')[0];
-                  if (closestParagraph  && constants.browser.isMobileIOS) {
+                  if (closestParagraph  && cConstants.browser.isMobileIOS) {
                      this._scrollToPrev(closestParagraph);//необходимо передавать абзац
                   }
                }
@@ -1477,7 +1477,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                var
                   targetOffset = target.getBoundingClientRect(),
                   keyboardCoef = (window.innerHeight > window.innerWidth) ? constants.ipadCoefficient[side].vertical : constants.ipadCoefficient[side].horizontal; //Для альбома и портрета коэффициенты разные.
-               return constants.browser.isMobileIOS && this.isEnabled() && targetOffset[side] > window.innerHeight * keyboardCoef;
+               return cConstants.browser.isMobileIOS && this.isEnabled() && targetOffset[side] > window.innerHeight * keyboardCoef;
             },
 
             _scrollTo: function(target, side){
