@@ -4,10 +4,11 @@
 
 define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
    [
-      'js!SBIS3.CONTROLS.EditInPlaceBaseController',
-      'js!SBIS3.CONTROLS.EditInPlace'
-   ],
-   function (EditInPlaceBaseController, EditInPlace) {
+   "Core/core-merge",
+   "js!SBIS3.CONTROLS.EditInPlaceBaseController",
+   "js!SBIS3.CONTROLS.EditInPlace"
+],
+   function ( cMerge,EditInPlaceBaseController, EditInPlace) {
 
       'use strict';
 
@@ -38,7 +39,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             },
 
             _getEditInPlaceConfig: function() {
-               return $ws.core.merge(EditInPlaceHoverController.superclass._getEditInPlaceConfig.apply(this), {
+               return cMerge(EditInPlaceHoverController.superclass._getEditInPlaceConfig.apply(this), {
                   handlers: {
                      onChildControlFocusIn: this._onChildControlFocusIn.bind(this),
                      onFocusIn: this._onChildFocusIn.bind(this)

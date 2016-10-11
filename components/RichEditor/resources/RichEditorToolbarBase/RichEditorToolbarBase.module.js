@@ -1,6 +1,9 @@
 define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
-   'js!SBIS3.CONTROLS.ButtonGroupBase'
-   ], function(ButtonGroupBase) {
+   "Core/core-functions",
+   "Core/core-merge",
+   "Core/EventBus",
+   "js!SBIS3.CONTROLS.ButtonGroupBase"
+], function( cFunctions, cMerge, EventBus,ButtonGroupBase) {
 
    'use strict';
 
@@ -116,7 +119,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
          _toggleContentSourceHandler: function() {},
 
          _blockFocusEvents: function(event) {
-            var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
+            var eventsChannel = EventBus.channel('WindowChangeChannel');
             event.preventDefault();
             event.stopPropagation();
             //Если случился mousedown то нужно нотифицировать о клике, перебив дефолтное событие перехода фокуса
@@ -129,7 +132,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
             var
                items,
                deleteIdexes = [];
-            items = $ws.core.clone(defaultConfig);
+            items = cFunctions.clone(defaultConfig);
             //мерж массивов
             for (var i in userItems){
                if (userItems.hasOwnProperty(i)) {
@@ -138,7 +141,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                   for (var j in defaultConfig) { //бегаем по default чтобы не бегать по только что добавленным
                      if (items.hasOwnProperty(j)) {
                         if (items[j].name == userItems[i].name) {
-                           $ws.core.merge(items[j], userItems[i]);
+                           cMerge(items[j], userItems[i]);
                            inDefault = true;
                            break;
                         }
@@ -151,7 +154,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
             }
             for (var i in items) {
                if (items.hasOwnProperty(i)) {
-                  items[i] = $ws.core.merge({
+                  items[i] = cMerge({
                      activableByClick: false
                   }, items[i]);
 

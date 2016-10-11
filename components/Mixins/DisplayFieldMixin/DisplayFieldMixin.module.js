@@ -1,7 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.DisplayFieldMixin', [
-   'js!WS.Data/Utils'
-], function (Utils) {
+   "Core/IoC",
+   "Core/ConsoleLogger",
+   "js!WS.Data/Utils"
+], function ( IoC, ConsoleLogger,Utils) {
    'use strict';
 
    /**
@@ -40,7 +42,7 @@ define('js!SBIS3.CONTROLS.DisplayFieldMixin', [
 
          if (!('displayField' in cfg) && ('captionField' in cfg)) {
             this._options.displayField = cfg.captionField;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.DisplayFieldMixin', 'Опция "captionField" устарела. Используйте опцию "displayField".');
+            IoC.resolve('ILogger').log('SBIS3.CONTROLS.DisplayFieldMixin', 'Опция "captionField" устарела. Используйте опцию "displayField".');
          }
 
          if (!this._options.keyField && this._options.items instanceof Array) {

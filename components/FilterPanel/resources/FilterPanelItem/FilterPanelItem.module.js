@@ -1,4 +1,8 @@
-define('js!SBIS3.CONTROLS.FilterPanelItem', ['js!SBIS3.CONTROLS.CompoundControl', 'tmpl!SBIS3.CONTROLS.FilterPanelItem'], function (CompoundControl, dotTplFn) {
+define('js!SBIS3.CONTROLS.FilterPanelItem', [
+   "Core/Context",
+   "js!SBIS3.CONTROLS.CompoundControl",
+   "tmpl!SBIS3.CONTROLS.FilterPanelItem"
+], function ( cContext,CompoundControl, dotTplFn) {
    /**
     * Миксин, задающий любому контролу поведение работы с набором фильтров.
     * @mixin SBIS3.CONTROLS.FilterPanelItem
@@ -29,11 +33,11 @@ define('js!SBIS3.CONTROLS.FilterPanelItem', ['js!SBIS3.CONTROLS.CompoundControl'
          ctx.subscribe('onFieldNameResolution', function (event, fieldName) {
             var
                item,
-               path = fieldName.split($ws.proto.Context.STRUCTURE_SEPARATOR);
+               path = fieldName.split(cContext.STRUCTURE_SEPARATOR);
             if (path[0] !== CONTEXT_ITEM_FIELD) {
                item = this.getValue(CONTEXT_ITEM_FIELD);
                if (item.get(ITEM_FILTER_ID)) {
-                  event.setResult(CONTEXT_ITEM_FIELD  + $ws.proto.Context.STRUCTURE_SEPARATOR + ITEM_FILTER_VALUE);
+                  event.setResult(CONTEXT_ITEM_FIELD  + cContext.STRUCTURE_SEPARATOR + ITEM_FILTER_VALUE);
                }
             }
          });

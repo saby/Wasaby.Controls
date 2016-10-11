@@ -4,12 +4,13 @@
 
 define('js!SBIS3.CONTROLS.DialogSelector',
    [
+      'Core/core-extend',
       'js!SBIS3.CONTROLS.SelectorMixin',
       'js!SBIS3.CORE.Dialog'
-   ], function( selectorMixin, Dialog ) {
+   ], function(cExtend, selectorMixin, Dialog ) {
 
       'use strict';
 
-      return $ws.core.mixin(Dialog, selectorMixin);
+      return cExtend.mixin(Dialog, selectorMixin);
 
    });

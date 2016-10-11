@@ -4,12 +4,15 @@
 
 define('js!SBIS3.CONTROLS.EditInPlace',
    [
-      'js!SBIS3.CORE.CompoundControl',
-      'html!SBIS3.CONTROLS.EditInPlace',
-      'js!SBIS3.CONTROLS.CompoundFocusMixin',
-      'js!WS.Data/Di'
-   ],
-   function(Control, dotTplFn, CompoundFocusMixin, Di) {
+   "Core/Deferred",
+   "js!SBIS3.CORE.CompoundControl",
+   "html!SBIS3.CONTROLS.EditInPlace",
+   "js!SBIS3.CONTROLS.CompoundFocusMixin",
+   "js!WS.Data/Di",
+   "Core/core-instance",
+   "Core/helpers/fast-control-helpers"
+],
+   function( Deferred,Control, dotTplFn, CompoundFocusMixin, Di, cInstance, fcHelpers) {
       'use strict';
 
       /**
@@ -64,14 +67,14 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   if (difference.length) { //Если есть разница, то нотифицируем об этом в событии
                      result = this._notify('onItemValueChanged', difference, this._editingModel);
                      //Результат может быть деферредом (потребуется обработка на бизнес логике)
-                     if (result instanceof $ws.proto.Deferred) {
+                     if (result instanceof Deferred) {
                         loadingIndicator = setTimeout(function () { //Если обработка изменения значения поля длится более 100мс, то показываем индикатор
-                           $ws.helpers.toggleIndicator(true);
+                           fcHelpers.toggleIndicator(true);
                         }, 100);
                         this._editingDeferred = result.addBoth(function () {
                            clearTimeout(loadingIndicator);
                            this._previousModelState = this._cloneWithFormat(this._editingModel);
-                           $ws.helpers.toggleIndicator(false);
+                           fcHelpers.toggleIndicator(false);
                         }.bind(this));
                      } else {
                         this._previousModelState = this._cloneWithFormat(this._editingModel);
@@ -87,7 +90,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                var
                    raw1, raw2,
                    result = [];
-               if ($ws.helpers.instanceOfModule(this._editingModel, 'WS.Data/Entity/Model')) {
+               if (cInstance.instanceOfModule(this._editingModel, 'WS.Data/Entity/Model')) {
                   this._editingModel.each(function(field, value) {
                      if (value != this._previousModelState.get(field)) {
                         result.push(field);
@@ -130,7 +133,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
              */
             acceptChanges: function() {
                this._deactivateActiveChildControl();
-               return (this._editingDeferred || $ws.proto.Deferred.success()).addCallback(function() {
+               return (this._editingDeferred || Deferred.success()).addCallback(function() {
                   this._model.merge(this._editingModel);
                }.bind(this))
             },

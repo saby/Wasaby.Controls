@@ -1,18 +1,20 @@
 define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
-   'js!SBIS3.CORE.CompoundControl',
-   'html!SBIS3.CONTROLS.DateRangeBigChoose',
-   'js!SBIS3.CONTROLS.RangeMixin',
-   'js!SBIS3.CONTROLS.RangeSelectableViewMixin',
-   'js!SBIS3.CONTROLS.Utils.DateUtil',
-   'js!SBIS3.CONTROLS.Button',
-   'js!SBIS3.CONTROLS.IconButton',
-   'js!SBIS3.CONTROLS.Link',
-   'js!SBIS3.CONTROLS.DateBox',
-   'js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker',
-   'js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker',
-   'js!SBIS3.CORE.CloseButton',
-   'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
-], function (CompoundControl, dotTplFn, RangeMixin, RangeSelectableViewMixin, DateUtil) {
+   "Core/constants",
+   "js!SBIS3.CORE.CompoundControl",
+   "html!SBIS3.CONTROLS.DateRangeBigChoose",
+   "js!SBIS3.CONTROLS.RangeMixin",
+   "js!SBIS3.CONTROLS.RangeSelectableViewMixin",
+   "js!SBIS3.CONTROLS.Utils.DateUtil",
+   "Core/helpers/event-helpers",
+   "js!SBIS3.CONTROLS.Button",
+   "js!SBIS3.CONTROLS.IconButton",
+   "js!SBIS3.CONTROLS.Link",
+   "js!SBIS3.CONTROLS.DateBox",
+   "js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker",
+   "js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker",
+   "js!SBIS3.CORE.CloseButton",
+   "browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers"
+], function ( constants,CompoundControl, dotTplFn, RangeMixin, RangeSelectableViewMixin, DateUtil, eHelpers) {
    'use strict';
 
    var
@@ -49,9 +51,9 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          _options: {
          },
           _keysWeHandle: [
-             $ws._const.key.tab,
-             $ws._const.key.enter,
-             $ws._const.key.esc
+             constants.key.tab,
+             constants.key.enter,
+             constants.key.esc
           ],
          // _currentYear: null,
          _state: states.year,
@@ -142,9 +144,9 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             this.getContainer().removeClass(css_classes.selectionProcessing);
          }.bind(this));
 
-         $ws.helpers.wheel(container.find('.controls-DateRangeBigChoose__months-month-picker'), this._onMonthPickerWheel.bind(this));
-         $ws.helpers.wheel(container.find('.controls-DateRangeBigChoose__dates-dates'), this._onDatesPickerWheel.bind(this));
-         if ($ws._const.browser.isMobileIOS) {
+         eHelpers.wheel(container.find('.controls-DateRangeBigChoose__months-month-picker'), this._onMonthPickerWheel.bind(this));
+         eHelpers.wheel(container.find('.controls-DateRangeBigChoose__dates-dates'), this._onDatesPickerWheel.bind(this));
+         if (constants.browser.isMobileIOS) {
             container.find('.controls-DateRangeBigChoose__months-month-picker').on('swipeVertical', this._onMonthPickerSwipe.bind(this));
             container.find('.controls-DateRangeBigChoose__dates-dates').on('swipeVertical', this._onDatesPickerSwipe.bind(this));
             container.find('.controls-DateRangeBigChoose__months-month-picker').on('touchmove', function(event){event.preventDefault()});
@@ -172,10 +174,10 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
 
       _keyboardHover: function (e) {
          switch (e.which) {
-            case $ws._const.key.enter:
+            case constants.key.enter:
                this._onApplyButtonClick();
                return false;
-            case $ws._const.key.esc:
+            case constants.key.esc:
                this._onCloseButtonClick();
                return false;
          }

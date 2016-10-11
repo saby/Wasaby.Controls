@@ -5,8 +5,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
    'js!SBIS3.CONTROLS.ChooserMixin',
    'js!SBIS3.CONTROLS.SuggestTextBoxMixin',
    'js!SBIS3.CONTROLS.SearchMixin',
-   'js!SBIS3.CONTROLS.ComponentBinder'
-], function (TextBox, PickerMixin, SuggestMixin, ChooserMixin, SuggestTextBoxMixin, SearchMixin, ComponentBinder) {
+   'js!SBIS3.CONTROLS.ComponentBinder',
+   'Core/core-functions'
+], function (TextBox, PickerMixin, SuggestMixin, ChooserMixin, SuggestTextBoxMixin, SearchMixin, ComponentBinder, cFunctions) {
    'use strict';
 
    /**
@@ -98,7 +99,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          if(this._options.searchParam) {
             /* Т.к. при сбросе поиска в саггесте запрос отправлять не надо (саггест скрывается),
                то просто удалим параметр поиска из фильтра */
-            var listFilter = $ws.core.clone(this.getList().getFilter()); /* Клонируем фильтр, т.к. он передаётся по ссылке */
+            var listFilter = cFunctions.clone(this.getList().getFilter()); /* Клонируем фильтр, т.к. он передаётся по ссылке */
 
             delete listFilter[this._options.searchParam];
             this.setListFilter(listFilter, true);

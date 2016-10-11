@@ -1,10 +1,13 @@
 define('js!SBIS3.CONTROLS.TextBoxBase',
    [
-      'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.FormWidgetMixin',
-      'js!SBIS3.CONTROLS.DataBindMixin',
-      'js!SBIS3.CORE.CompoundActiveFixMixin'
-   ], function(CompoundControl, FormWidgetMixin, DataBindMixin, CompoundActiveFixMixin) {
+   "Core/constants",
+   "Core/IoC",
+   "Core/ConsoleLogger",
+   "js!SBIS3.CORE.CompoundControl",
+   "js!SBIS3.CONTROLS.FormWidgetMixin",
+   "js!SBIS3.CONTROLS.DataBindMixin",
+   "js!SBIS3.CORE.CompoundActiveFixMixin"
+], function( constants, IoC, ConsoleLogger,CompoundControl, FormWidgetMixin, DataBindMixin, CompoundActiveFixMixin) {
 
    'use strict';
 
@@ -48,14 +51,14 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
 
       $protected: {
          _keysWeHandle: [
-            $ws._const.key.del,
-            $ws._const.key.backspace,
-            $ws._const.key.left,
-            $ws._const.key.right,
-            $ws._const.key.minus,
-            $ws._const.key.space,
-            $ws._const.key.m,
-            $ws._const.key.o
+            constants.key.del,
+            constants.key.backspace,
+            constants.key.left,
+            constants.key.right,
+            constants.key.minus,
+            constants.key.space,
+            constants.key.m,
+            constants.key.o
          ],
          /* Флаг, по которому смотрим, надо ли запускать валидацию по уходу фокуса,
             выставляется он методе setText. Если опция забиндена на контекст, то компонент должен создаваться уже проставленой опцией,
@@ -246,12 +249,12 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       },
 
       getValue : function() {
-         $ws.single.ioc.resolve('ILogger').log('getValue()', 'getValue is deprecated. Use getText()');
+         IoC.resolve('ILogger').log('getValue()', 'getValue is deprecated. Use getText()');
          return this.getText();
       },
 
       setValue : function(txt) {
-         $ws.single.ioc.resolve('ILogger').log('setValue()', 'setValue is deprecated. Use setText()');
+         IoC.resolve('ILogger').log('setValue()', 'setValue is deprecated. Use setText()');
          this.setText(txt);
       }
    });
