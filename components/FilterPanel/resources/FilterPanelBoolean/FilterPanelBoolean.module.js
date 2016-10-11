@@ -6,7 +6,8 @@ var
          _options: {
             contentTemplate: ContentTemplate,
             className: 'controls-FilterPanelBoolean'
-         }
+         },
+         _checkClickByTap: false
       },
 
       _modifyOptions: function() {
