@@ -562,19 +562,21 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see onDestroyModel
        * @see dataSource
        */
-      _destroyModel: function(){
+      _destroyModel: function(cfg){
          var record = this._options.record,
+            config = cfg || {},
             self = this,
             destroyConfig = {
-               hideIndicator: true,
+               hideIndicator: config.hideIndicator ? config.hideIndicator : true,
                eventName: 'onDestroyModel',
                hideErrorDialog: true
             },
             def = this._dataSource.destroy(record.getId());
 
-         return this._prepareSyncOperation(def, {}, destroyConfig).addBoth(function(){
+         return this._prepareSyncOperation(def, config, destroyConfig).addBoth(function(data){
             self._newRecord = false;
             record.setState(Record.RecordState.DELETED);
+            return data;
          });
       },
 
