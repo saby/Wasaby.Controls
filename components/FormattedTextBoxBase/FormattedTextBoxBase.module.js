@@ -672,7 +672,8 @@ define(
             // ! в файле маски (FormattedTextBoxBase_mask.xhtml) не оставлять пробелы и переносы строк
             maskTemplateFn: maskTemplateFn,
             //упрощенная модель для вставки в xhtml-шаблон
-            modelForMaskTpl: []
+            modelForMaskTpl: [],
+            getTextWithMask: true
          },
          _pasteProcessing: 0,
 
@@ -1028,7 +1029,12 @@ define(
        * @see setText
        */
       getText: function() {
-         this._updateText();
+         //Костыль для .140 версии, для тех, кто биндит опцию text на контекст. При инициализации контекст синхрнизирует значения,
+         //а метод _updateText записывает в опцию пустую маску, если значение в контексте не было, получается при инициализации контекста, он сразу изменён
+         //в .200 убираем опцию, и скчитаем что по умолчанию значение в контроле вызов getText не меняет
+         if (this._options.getTextWithMask) {
+            this._updateText();
+         }
          return FormattedTextBoxBase.superclass.getText.apply(this, arguments);
       },
       /**
