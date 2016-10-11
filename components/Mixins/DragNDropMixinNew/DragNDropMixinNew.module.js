@@ -127,9 +127,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             return true;
          },
 
-         getItemsDragNDrop: function(){
-            return true;
-         },
          //endregion public
 
          //region handlers
