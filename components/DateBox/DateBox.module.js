@@ -350,11 +350,13 @@ define(
             result = '',
             s = 0;
          for (var dateType in dateTypes){
-            for (var j = 0, l = dateTypes[dateType].length; j < l; j++){
-               if (mask.indexOf(dateTypes[dateType][j]) != -1){
-                  s++;
-                  result = dateType;
-                  break;
+            if (dateTypes.hasOwnProperty(dateType)) {
+               for (var j = 0, l = dateTypes[dateType].length; j < l; j++) {
+                  if (mask.indexOf(dateTypes[dateType][j]) != -1) {
+                     s++;
+                     result = dateType;
+                     break;
+                  }
                }
             }
          }
