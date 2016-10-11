@@ -303,7 +303,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          if (value == '-') {
             return value;
          }
-         value = cDefaultRenders.defaultColumn.numeric(
+         value = cDefaultRenders.numeric(
             value,
             this._options.integers,
             this._options.delimiters,

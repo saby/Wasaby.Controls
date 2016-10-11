@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           * @returns {SBIS3.CONTROLS.SubmitPopup} экземпляр диалога
           */
          showConfirmDialog: function(config, positiveHandler, negativeHandler, cancelHandler){
-            return showSubmitDialog(cMerge.merge(config, {
+            return showSubmitDialog(cMerge(config, {
                status: 'confirm'
             }), positiveHandler, negativeHandler, cancelHandler);
          },
@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           * @returns {SBIS3.CONTROLS.NotificationPopup} экземпляр нотификационного сообщения
           */
          showNotification: function(config, notHide){
-            var popup = new NotificationPopup(cMerge.merge({
+            var popup = new NotificationPopup(cMerge({
                element: $('<div></div>')
             }, config));
 
