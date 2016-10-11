@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             if (this._controlsId[itemId]) {
                items[i].title = rk('Список')  + extraText + rk('в', 'направление') + ' ' + this._controlsId[itemId].objectName;
                //TODO Возможно, когда-нибудь будет правильный метод для перерисовки внутренностей меню и внизу можно будет вызывать полную перерисовку picker без его уничтожения
-               this._picker._container.find('>[data-id="' + itemId + '"]').find('.controls-MenuItem__text').text( items[i].title );
+               this.getItemInstance(itemId).setCaption(items[i].title);
             }
          }
          //this._picker._drawItems(); - это заенит строку выше с .text, когда заработает
