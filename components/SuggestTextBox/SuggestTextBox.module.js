@@ -35,6 +35,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
       $constructor: function() {
          /* Если передали параметр поиска, то поиск производим через ComponentBinder */
          if(this._options.searchParam) {
+            this.subscribe('onSearch', function() {
+               this._showLoadingIndicator();
+               this.hidePicker();
+            });
+
             this.once('onSearch', function () {
                var componentBinder = new ComponentBinder({
                       view: this.getList(),
@@ -46,15 +51,6 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
                   передаём параметр, чтобы биндер не реагировал на сброс,
                   т.к. список просто скрывается по сбросу, и лишний запрос делать не надо */
                componentBinder.bindSearchGrid(this._options.searchParam, undefinedArg, undefinedArg, undefinedArg, true);
-
-               /* Поднимем событие onSearch ещё раз,
-                  чтобы componentBinder начал поиск в гриде */
-               this._applySearch(this.getText(), true);
-            });
-
-            this.subscribe('onSearch', function() {
-               this._showLoadingIndicator();
-               this.hidePicker();
             });
 
             this.subscribe('onReset', this._resetSearch.bind(this));
