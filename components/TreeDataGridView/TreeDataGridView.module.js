@@ -175,7 +175,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          this.reviveComponents();
       },
       _getFolderFooterOptions: function(key) {
-         debugger;
          var level = this._getItemProjectionByItemId(key).getLevel();
          return {
             key: key,
@@ -207,8 +206,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _resizeFoldersFooters: function() {
          var footers = $('.controls-TreeView__folderFooterContainer', this._container.get(0));
          var width = this._container.width();
+         //Если в браузере присутствует колонка с checkbox'ом, то нужно вычесть его ширину из общей ширины футера
          if (this._options.multiselect) {
-            width -= 24;
+            width = width - this._colgroup.find('col:first').width();
          }
          footers.outerWidth(width);
       },
