@@ -95,9 +95,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
             deferred = deferred === true ? new $ws.proto.Deferred().callback(true) : deferred;
             if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
                deferred.addCallback(function() {
-                  if (isChangeOrder) {
-                     self.moveInItems(records, recordTo, !insertAfter);
-                  } else {
+                  if (!isChangeOrder) {
                      self.removeItemsSelectionAll();
                   }
                }).addBoth(function() {
@@ -219,9 +217,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
       _moveRecord: function(item, moveToId, current, up) {
          var self = this,
              moveToItem = this._options._items.getRecordById(moveToId);
-         this.getMoveStrategy().move([item], moveToItem, !up).addCallback(function() {
-            self.moveInItems([item], moveToItem, up);
-         }).addErrback(function(e) {
+         this.getMoveStrategy().move([item], moveToItem, !up).addErrback(function(e) {
             $ws.core.alert(e.message);
          });
       }
