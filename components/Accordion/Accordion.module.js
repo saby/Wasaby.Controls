@@ -29,7 +29,8 @@ define('js!SBIS3.CONTROLS.Accordion', [
             itemTpl: ItemTemplate,
             itemContentTpl: ItemContentTemplate,
             _canServerRender: true
-         }
+         },
+         _checkClickByTap: false
       }
    });
 
