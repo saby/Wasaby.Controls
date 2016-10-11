@@ -81,7 +81,7 @@ gemini.suite('SBIS3.CONTROLS.TreeCompositeViewTable Online', function () {
 	
 	gemini.suite('ellipsis_column', function (test) {
 
-        test.setUrl('/regression_tree_composite_view_table_online_4.html').setCaptureElements('.capture')
+        test.setUrl('/regression_tree_composite_view_table_online_4.html').skip('chrome').setCaptureElements('.capture')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="TreeCompositeView 1"]', 40000);
@@ -100,7 +100,7 @@ gemini.suite('SBIS3.CONTROLS.TreeCompositeViewTable Online', function () {
 	
 	gemini.suite('ellipsis_column_and_arrow_handler', function (test) {
 
-        test.setUrl('/regression_tree_composite_view_table_online_5.html').setCaptureElements('.capture')
+        test.setUrl('/regression_tree_composite_view_table_online_5.html').skip('chrome').setCaptureElements('.capture')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="TreeCompositeView 1"]', 40000);

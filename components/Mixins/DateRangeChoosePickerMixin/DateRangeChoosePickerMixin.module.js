@@ -27,8 +27,29 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
              */
             showHalfyears: true,
 
-            checkedMonthStart: null,
-            checkedMonthEnd: null,
+            /**
+             * @cfg {Date|String} Дата, начиная с которой месяца будут отмечены зеленой галочкой.
+             */
+            checkedStart: null,
+            /**
+             * @cfg {Date|String} Дата, до которой месяца будут отмечены зеленой галочкой.
+             */
+            checkedEnd: null,
+
+            /**
+             * @cfg {Function} устанавливает функцию которая будет вызвана во время перерисовки компонента.
+             * @remark
+             * Аргументы функции:
+             * <ol>
+             *    <li>periods - Массив содержащий массивы из начала и конца периода</li>
+             * </ol>
+             * Функция должна вернуть объект содержащий информацию об отображаемой иконке или $ws.proto.Deferred,
+             * стреляющий таким объектом.
+             * { iconClass: 'icon-Yes icon-done',
+             *   title: 'Период отчетности закрыт'
+             *   }
+             */
+            iconsHandler: null,
 
             pickerConfig: {
                corner: 'tl',
@@ -44,7 +65,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
          _chooserControl: null
       },
 
-      $constructor: function() {
+      $constructor: function () {
          if (!($ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.RangeMixin' ||
                $ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.DateRangeMixin')))) {
             throw new Error('RangeMixin or DateRangeMixin mixin is required');
@@ -88,8 +109,9 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
                showMonths: this._options.showMonths,
                showQuarters: this._options.showQuarters,
                showHalfyears: this._options.showHalfyears,
-               checkedMonthStart: this._options.checkedMonthStart,
-               checkedMonthEnd: this._options.checkedMonthEnd
+               checkedStart: this._options.checkedStart,
+               checkedEnd: this._options.checkedEnd,
+               iconsHandler: this._options.iconsHandler
             });
 
             // Добавляем в пикер

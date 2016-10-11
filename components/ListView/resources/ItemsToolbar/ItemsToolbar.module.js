@@ -15,7 +15,12 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
     function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, MarkupTransformer) {
 
        'use strict';
-
+       /**
+        * @class SBIS3.CONTROLS.ItemsToolbar
+        * @extends SBIS3.CONTROLS.CompoundControl
+        * @author Авраменко Алексей Сергеевич
+        * @public
+        */
        var ItemsToolbar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.ItemsToolbar.prototype */ {
           $protected: {
              _dotTplFn: dotTplFn,
@@ -279,24 +284,19 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                  size = target.size,
                  parentContainer = this.getParent().getContainer()[0],
                  isVertical = target.container.hasClass('js-controls-CompositeView__verticalItemActions'),
-                 rightPosition = parentContainer.offsetWidth - (position.left + size.width),
-                 topPosition = 'auto',
-                 bottomPosition = parentContainer.offsetHeight - (position.top + size.height);
+                 marginRight = parentContainer.offsetWidth - (position.left + size.width),
+                 marginTop = position.top,
+                 marginBottom = parentContainer.offsetHeight - (position.top + size.height);
 
-             if(rightPosition < 0 && !isVertical) {
-                rightPosition = 0;
-             }
-
-             if(isVertical) {
-                topPosition = position.top;
-                bottomPosition = 'auto';
+             if(marginRight < 0 && !isVertical) {
+                marginRight = 0;
              }
 
              this.getContainer()[isVertical ? 'addClass' : 'removeClass']('controls-ItemsToolbar__vertical');
              return {
-                right : rightPosition,
-                top : topPosition,
-                bottom : bottomPosition
+                'margin-right' : marginRight,
+                'margin-top' : marginTop,
+                'margin-bottom': marginBottom
              };
           },
           /**

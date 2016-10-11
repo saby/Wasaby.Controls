@@ -46,6 +46,13 @@ gemini.suite('SBIS3.CONTROLS.EditAtPlace Online', function () {
 				actions.wait(500);
 				actions.mouseMove(this.input);
             })
+
+            .capture('disabled', function (actions) {
+                actions.click(this.input);
+                actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('poop').setEnabled(false)
+                });
+            })
     });
 
 	gemini.suite('with_panel', function (test) {

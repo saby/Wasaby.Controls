@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.OperationMove', [
    'js!SBIS3.CONTROLS.Link',
    'i18n!SBIS3.CONTROLS.OperationMove'
-], function(Link, rk) {
+], function(Link) {
    /**
     * Операция перемещения.
     *

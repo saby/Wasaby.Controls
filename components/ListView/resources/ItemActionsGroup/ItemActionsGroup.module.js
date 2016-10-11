@@ -36,7 +36,13 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             offset: 4
          }
       };
-
+      /**
+       * Класс для работы с операциями над записями, которые появляются при наведении курсора мыши.
+       * @class SBIS3.CONTROLS.ItemActionsGroup
+       * @extends SBIS3.CONTROLS.ButtonGroupBaseDS
+       * @author Герасимов Александр Максимович
+       * @public
+       */
       var ItemActionsGroup = ButtonGroupBaseDS.extend( /** @lends SBIS3.CONTROLS.ItemActionsGroup.prototype */ {
          $protected: {
             _dotTplFn: dotTplFn,
@@ -186,7 +192,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._activeItem.container.addClass(this._activeCls);
             this._itemActionsMenu.recalcPosition(true);
             /*TODO фикс теста, для операций над записью должна быть особая иконка*/
-            $('.controls-PopupMixin__closeButton', this._itemActionsMenu.getContainer()).addClass('icon-16 icon-size icon-ExpandUp icon-primary action-hover');
+            $('.controls-PopupMixin__closeButton', this._itemActionsMenu.getContainer()).addClass('icon-16 icon-size icon-ExpandUp icon-primary');
          },
 
          /**

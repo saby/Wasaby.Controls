@@ -78,6 +78,20 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          }
       },
 
+      showPicker: function() {
+         SuggestTextBox.superclass.showPicker.apply(this, arguments);
+         this._setEqualPickerWidth();
+      },
+
+      _setEqualPickerWidth: function() {
+         var textBoxWidth = this.getContainer()[0].clientWidth,
+             pickerContainer = this._picker.getContainer()[0];
+
+         if (this._picker && textBoxWidth !== pickerContainer.clientWidth) {
+            pickerContainer.style.width = textBoxWidth + 'px';
+         }
+      },
+
       _resetSearch: function() {
          SuggestTextBox.superclass._resetSearch.apply(this, arguments);
 

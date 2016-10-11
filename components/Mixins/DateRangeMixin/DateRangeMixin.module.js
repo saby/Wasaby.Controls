@@ -3,12 +3,13 @@ define('js!SBIS3.CONTROLS.DateRangeMixin', [
 ], function (DateUtil) {
    /**
     * Миксин, добавляющий поведение хранения начального и конечного значений диапазона типа Date.
-    * Используется только совместно с SBIS3.CONTROLS.DateRange.
+    * Реализует логику которая приводит значения диапазона к типу Date, а так же общие методы для работы
+    * с этим типом диапазона.
+    * Используется только совместно с SBIS3.CONTROLS.RangeMixin.
     * @mixin SBIS3.CONTROLS.DateRangeMixin
     * @public
     * @author Миронов Александр Юрьевич
     */
-
    var DateRangeMixin = /**@lends SBIS3.CONTROLS.DateRangeMixin.prototype  */{
       $protected: {
          _options: {
@@ -22,7 +23,7 @@ define('js!SBIS3.CONTROLS.DateRangeMixin', [
              * @noShow
              * @deprecated
              */
-            serializationMode: 'datetime'
+            serializationMode: 'date'
          }
       },
 
@@ -30,11 +31,14 @@ define('js!SBIS3.CONTROLS.DateRangeMixin', [
          if(!$ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.RangeMixin')) {
             throw new Error('RangeMixin mixin is required');
          }
-         this._options.startValue = this._normalizeDate(this._options.startValue);
-         this._options.endValue = this._normalizeDate(this._options.endValue);
       },
 
       around : {
+         _modifyOptions: function (parentFnc, opts) {
+            opts.startValue = this._normalizeDate(opts.startValue);
+            opts.endValue = this._normalizeDate(opts.endValue);
+            return parentFnc.call(this, opts)
+         },
          setStartValue: function (parentFnc, value, silent) {
             value = this._normalizeDate(value);
             return parentFnc.call(this, value, silent);

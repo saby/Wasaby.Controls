@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownListFilter',
       'css!SBIS3.CONTROLS.Demo.MyDropdownListFilter'
    ],
 
-   function(CompoundControl, DropdownList, FilterButtonMainDemo, dotTplFn, rk) {
+   function(CompoundControl, DropdownList, FilterButtonMainDemo, dotTplFn) {
       'use strict';
       var MyDropdownList = CompoundControl.extend([],{
          $protected: {

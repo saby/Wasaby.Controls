@@ -21,14 +21,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                     'usePages': 'full'
                  }),
                  view = this._options.view,
-                 groupBy = view.getSearchGroupBy(searchParamName),
+
                  args = arguments,
                  self = this,
                  mode = searchMode;
-             if (searchCrumbsTpl) {
-                groupBy.breadCrumbsTpl = searchCrumbsTpl;
-             }
+
              filter[searchParamName] = text;
+             view._options.hierarchyViewMode = true;
              view.setHighlightText(text, false);
              view.setHighlightEnabled(true);
 
@@ -37,10 +36,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
              }
              view.setInfiniteScroll(true, true);
 
-             if (self._lastGroup == undefined) {
-                self._lastGroup = view._options.groupBy;
-             }
-             view.setGroupBy(groupBy);
              if (this._firstSearch) {
                 this._lastRoot = view.getCurrentRoot();
                 //Запомнили путь в хлебных крошках перед тем как их сбросить для режима поиска
@@ -126,14 +121,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          view._getItemsProjection().setRoot(self._lastRoot || null);
       });
       this._searchMode = false;
+      view._options.hierarchyViewMode = false;
       //Если мы ничего не искали, то и сбрасывать нечего
       if (this._firstSearch) {
          return;
       }
       view.setInfiniteScroll(this._isInfiniteScroll, true);
       this._isInfiniteScroll = undefined;
-      view.setGroupBy(this._lastGroup);
-      this._lastGroup = undefined;
       view.setHighlightText('', false);
       view.setHighlightEnabled(false);
       this._firstSearch = true;
@@ -181,7 +175,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       if (gridView._options.multiselect) {
          gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
          if (hideCheckBoxes) {
-            gridView.toggleCheckboxes(operationPanel.isVisible());
+            gridView._container.toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isVisible());
             gridView.removeItemsSelectionAll();
          }
          if (gridView._options.startScrollColumn !== undefined) {

@@ -11,14 +11,6 @@
   color: @menu-item-text-color;
   background: @menu-item-bg;
 
-  &:hover {
-    color: @menu-item-hover-text-color;
-    background: @menu-item-hover-bg;
-    .controls-MenuItem__icon{
-      color: @menu-item-hover-icon-color;
-    }
-  }
-
    &.controls-MenuItem__padding-16{
       padding-left: 30px;
    }
@@ -61,7 +53,32 @@
       background: transparent;
       cursor: default;
    }
-   &.controls-MenuItem:hover .controls-MenuItem__icon {
+   .controls-MenuItem__icon {
       color: @menu-item-disabled-text-color !important;
    }
+}
+
+.ws-is-desktop-platform {
+  .controls-MenuItem:not(.ws-disabled) {
+    &:hover {
+      color: @menu-item-hover-text-color;
+      background: @menu-item-hover-bg;
+      .controls-MenuItem__icon{
+        color: @menu-item-hover-icon-color !important;
+        &.icon-error {
+          color: @icon-color-error !important;
+        }
+        &.icon-done {
+          color: @icon-color-done !important;
+        }
+      }
+    }
+  }
+  .controls-MenuItem {
+    &.ws-disabled {
+      &.controls-MenuItem:hover{
+        color: @menu-item-disabled-text-color !important;
+      }
+    }
+  }
 }

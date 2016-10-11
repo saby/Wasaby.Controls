@@ -15,6 +15,13 @@
 @primary-color:                           #00c795;
 @secondary-color:                         transparent;
 
+@icon-color-attention:                    #FEC63F;
+@icon-color-done:                         #72be44;
+@icon-color-error:                        #ef463a;
+@icon-color-primary:                      #587ab0;
+@icon-color-hover:                        #ff7033;
+@icon-color-disabled:                     #CCC;
+
 @bg:                                      transparent;
 @text-color:                              @black-color;
 
@@ -79,6 +86,8 @@
 @button-padding:                          0 8px;
 @button-margin:                           auto;
 @button-border-radius:                    2px;
+@button-icon-color-hover:                 #313E78;
+@button-icon-color:                       @icon-color-primary;
 @button-icon-top-offset:                  7px;                      // top offset of 16x16 icon
 @button-icon-left-offset:                 8px;
 @button-icon-gap:                         4px;                      // gap between icon and text
@@ -214,7 +223,12 @@
 @button-group-horizontal-item-margin:     0 16px 0 0;
 @button-group-vertical-item-margin:       0 0 8px 0;
 
+// ------------ //
+//  Icon Button //
+// ------------ //
 
+@button-icon-done-color: #72BE44;
+@button-icon-error-color: #EF463A;
 
 // ------------- //
 // Toggle button //
@@ -385,6 +399,14 @@
 @tab-button-disabled-bg:                        transparent;
 @tab-button-disabled-inner-color:               #CCCCCC;
 @tab-button-disabled-inner-after-display:       none;
+
+// -----------  //
+// Tab control //
+// -----------  //
+@tab-control-background-color:                  #fff;
+@tab-control-padding-top:                       30px;
+@tab-control-box-sizing:                        border-box;
+
 // ------------ //
 // Radio button //
 // ------------ //
@@ -726,6 +748,7 @@
 @menu-button-header-left-width:                         0;
 @menu-button-header-left-height:                        0;
 @menu-button-header-left-margin:                        0;
+@menu-button-header-right-margin-revert-vertical:       0;
 @menu-button-header-left-bg:                            transparent;
 @menu-button-header-left-bg-revert-horizontal:          transparent;
 @menu-button-header-right-bg-revert-vertical:           transparent;
@@ -739,6 +762,7 @@
 @menu-button-header-right-width:                        0;
 @menu-button-header-right-height:                       0;
 @menu-button-header-right-margin:                       0;
+@menu-button-header-right-margin-revert-horizontal:     0;
 @menu-button-header-right-bg:                           transparent;
 @menu-button-header-right-bg-revert-horizontal:         transparent;
 @menu-button-header-left-bg-revert-vertical:            transparent;
@@ -782,6 +806,7 @@
 // Menu
 @menu-link-menu-margin:                   0 0 0 -9px;
 @menu-link-menu-padding:                  0;
+@menu-link-menu-item-container-padding:   0;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
 @menu-link-header-bg-color:               @menu-button-menu-bg;
 @menu-link-menu-border-width:             @menu-border-width;
@@ -1521,7 +1546,8 @@
 @list-view-actions-active-bg:                   @data-grid-row-hover-bg !important;
 @list-view-actions-bg:                          @data-grid-row-hover-bg;
 
-@list-view-items-toolbar-margin:                     0 0 1px 0;
+@list-view-items-toolbar-bottom:                     1px;
+@list-view-items-toolbar-right:                      0;
 @list-view-items-toolbar-zindex:                     10;
 @list-view-items-toolbar-box-shadow:                 -2px -2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-locked-box-shadow:          none;
@@ -1535,8 +1561,8 @@
 @list-view-items-toolbar-elements-margin:            0 4px;
 @list-view-items-toolbar-float:                      right;
 @list-view-items-toolbar-ipad-minHeight:             30px;
-@list-view-items-toolbar-margin-right-tile:          1px;
 @touch-mode-items-toolbar-icon-margin-top:           -24px;
+@list-view-items-toolbar-right-tile:                 1px;
 
 @list-view-actions-verAlign-margin:             8px 3px 0 0;
 @list-view-actions-verAlign-width:              20px;
@@ -1561,8 +1587,6 @@
 @list-view-actions-menu-close-right:            4px;
 @list-view-actions-menu-close-height:           16px;
 @list-view-actions-menu-close-width:            16px;
-@list-view-actions-menu-close-revVert-bottom:   4px;
-@list-view-actions-menu-close-revVert-top:      auto;
 @list-view-actions-menu-item-padding-right:     24px;
 @list-view-actions-menu-padding:                @menu-padding;
 
@@ -1596,6 +1620,8 @@
 @tree-view-expand-width:                        auto;
 @tree-view-expand-height:                       auto;
 @tree-view-expand-margin:                       3px 0 0 3px;
+
+@tree-view-value-left-margin:                   16px;
 
 @tree-view-first-td-padding-left:               6px;
 
@@ -1782,7 +1808,8 @@
 // ----------------------- //
 
 @controls-OperationsPanelButton-width:             24px;
-@controls-OperationsPanelButton-hor-height:        30px;
+@controls-OperationsPanelButton-hor-height:        29px;
+@controls-OperationsPanelButton-hor-line-height:   30px;
 @controls-OperationsPanelButton-vert-height:       24px;
 @controls-OperationsPanelButton-vert-border-radius: 7px;
 @controls-OperationsPanelButton-font:              18px 'TensorFont Regular', 'TensorFont';
@@ -1884,10 +1911,10 @@
 @DropdownList-picker-hor-revert-head-margin:          @DropdownList-picker-head-margin;
 @DropdownList-picker-padding:                         4px 0;
 @DropdownList-picker-border:                          2px solid @DropdownList-border-color;
-@DropdownList-picker-head-border-radius:              5px 5px 0 0;
-@DropdownList-picker-list-border-radius:              0 0 5px 5px;
-@DropdownList-picker-list-right-border-radius:        0 5px 5px 5px;
-@DropdownList-picker-list-left-border-radius:         5px 0 5px 5px;
+@DropdownList-picker-head-border-radius:              4px 4px 0 0;
+@DropdownList-picker-list-border-radius:              0 0 4px 4px;
+@DropdownList-picker-list-right-border-radius:        0 4px 4px 4px;
+@DropdownList-picker-list-left-border-radius:         4px 0 4px 4px;
 @DropdownList-picker-menu-font-size:                  15px;
 @DropdownList-picker-menu-white-space:                nowrap;
 @DropdownList-picker-menu-item-padding:               4px 16px 4px 16px;
@@ -1896,7 +1923,7 @@
 @DropdownList-picker-menu-item-color:                 @white-color;
 @DropdownList-picker-menu-item-hover:                 #F0F5FB;
 @DropdownList-linkStyleColor:                         #0055bb;
-@DropdownList-linkStyleHoverColor:                    #ff7033;
+@DropdownList-linkStyleHoverColor:                    #313E78;
 @DropdownList-footer-buttonsBlock-position:           relative;
 @DropdownList-footer-buttonsBlock-height:             24px;
 @DropdownList-footer-buttons-position:                absolute;
@@ -1960,7 +1987,7 @@
 @controls-filterButton-history-maxHeight-overflow:hidden;
 @controls-filterButton-history-actions-right:     auto !important;
 @controls-filterButton-history-actions-left:      -4px !important;
-@controls-filterButton-history-actions-margin:    0;
+@controls-filterButton-history-actions-bottom:    0;
 
 @controls-filterButton-history-item-min-height:   24px;
 

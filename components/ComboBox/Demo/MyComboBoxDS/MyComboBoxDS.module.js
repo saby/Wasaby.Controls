@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.Demo.MyComboBoxDS', ['js!SBIS3.CORE.CompoundControl', 
                ];   
          var ds1 = new StaticSource({
             data: arrayOfObj,
-            keyField: '@Заметка'
+            idProperty: '@Заметка'
             });
          this.getChildControlByName("ComboBox 1").setDataSource(ds1);
       }

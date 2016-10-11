@@ -16,12 +16,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'html!SBIS3.CONTROLS.DropdownList',
       'html!SBIS3.CONTROLS.DropdownList/DropdownListHead',
+      'html!SBIS3.CONTROLS.DropdownList/DropdownListPickerHead',
       'html!SBIS3.CONTROLS.DropdownList/DropdownListItem',
       'html!SBIS3.CONTROLS.DropdownList/DropdownListPicker',
       'i18n!SBIS3.CONTROLS.DropdownList'
    ],
 
-   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, dotTplFn, dotTplFnHead, dotTplFnForItem, dotTplFnPicker) {
+   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -38,16 +39,17 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * @demo SBIS3.CONTROLS.Demo.MyDropdownListFilter Выпадающий список с фильтрацией
        * @ignoreOptions emptyHTML
        * @ignoreMethods setEmptyHTML
-       * @cssModifier controls-DropdownList__withoutArrow Убрать стрелочку слева от выбранного текста.
        * @cssModifier controls-DropdownList__withoutCross Убрать крестик справа от выбранного текста.
-       * @cssModifier controls-DropdownList__linkStyle Отобразить текст в шапке в виде ссылки.
-       * @cssModifier controls-DropdownList__ellipsis Текст в шапке обрезается троеточием, если не умещается в контейнере
-       *
        * @control
        * @public
        * @category Inputs
        */
       var DropdownList = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
+         _dotTplFn: dotTplFn,
+         /**
+          * @event onClickMore При клике на кнопку "Ещё"
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          */
          $protected: {
             _options: {
                /**
@@ -96,6 +98,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * @see itemTemplate
                 */
                headTemplate: dotTplFnHead,
+               headPickerTemplate: dotTplFnPickerHead,
                /**
                 * @cfg {String} Устанавливает шаблон отображения элемента коллекции.
                 * @remark
@@ -153,21 +156,31 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * По умолчанию - 'hover'
                 * Если задать 'click', то работа будет по клику
                 */
-               mode: 'hover',
+               mode: 'click',
                /**
                 * @cfg {String} Текст заголовка
                 * @translatable
                 */
                text : '',
                /**
-                * @cfg {boolean} Отображать Все элементы  в выпадающем списке (включая выбранный)
+                * @cfg {String} Текст заголовка в headPickerTemplate
+                * @remark
+                * Используется только совместно с опцией type = 'titleHeader'
                 */
-               showSelectedInList : false,
+               title: '',
+               /**
+                * @cfg {String} Стилистическое отображение выпадающего списка
+                * @remark
+                * Возможные значение
+                * <ul>
+                *    <li><b>simple</b> - значение по умолчанию. В выпадающем списке отображаются все доступные записи</li>
+                *    <li><b>duplicateHeader</b> - В выпадающем списке выбранное значение дублируется в шапке</li>
+                *    <li><b>titleHeader</b> - В шапке отображается заголовок, установленный в опции title</li>
+                * </ul>
+                */
+               type: 'simple',
                allowEmptyMultiSelection: false
             },
-            _dotTplFn: dotTplFn,
-            _text: null,
-            _pickerText: null,
             _pickerListContainer: null,
             _pickerHeadContainer: null,
             _pickerFooterContainer: null,
@@ -217,10 +230,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._setVariables();
             this.reload();
             this._bindItemSelect();
-            this._pickerResetButton.click(function() {
-               self.removeItemsSelectionAll();
-               self.hidePicker();
-            });
+
             if(this._options.mode === 'hover') {
                this._pickerHeadContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, true));
                this._pickerBodyContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, false));
@@ -300,13 +310,16 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _clickItemHandler : function (e) {
             var  self = this,
-                row = $(e.target).closest('.' + self._getItemClass()),
-                  selected;
+                 row = $(e.target).closest('.' + self._getItemClass()),
+                 selectedKeys = this.getSelectedKeys(),
+                 isCheckBoxClick = !!$(e.target).closest('.js-controls-DropdownList__itemCheckBox').length,
+                 selected;
             if (row.length && (e.button === ($ws._const.browser.isIE8 ? 1 : 0))) {
 
                //Если множественный выбор, то после клика скрыть менюшку можно только по кнопке отобрать
                this._hideAllowed = !this._options.multiselect;
-               if (this._options.multiselect && !$(e.target).closest('.controls-ListView__defaultItem').length /* && $(e.target).hasClass('js-controls-DropdownList__itemCheckBox')*/) {
+               if (this._options.multiselect && !$(e.target).closest('.controls-ListView__defaultItem').length &&
+                  (selectedKeys.length > 1 || selectedKeys[0] != this._defaultId) || isCheckBoxClick){
                   var changedSelectionIndex = Array.indexOf(this._changedSelectedKeys, row.data('id'));
                   if (changedSelectionIndex < 0){
                      this._changedSelectedKeys.push(row.data('id'));
@@ -314,7 +327,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   else{
                      this._changedSelectedKeys.splice(changedSelectionIndex, 1);
                   }
-                  this._buttonChoose.getContainer().toggleClass('ws-hidden', !this._changedSelectedKeys.length);
+                  this._buttonChoose.getContainer().removeClass('ws-hidden');
                   selected =  !row.hasClass('controls-DropdownList__item__selected');
                   row.toggleClass('controls-DropdownList__item__selected', selected);
                   this._currentSelection[row.data('id')] = selected;
@@ -351,7 +364,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   $(items[i]).toggleClass('controls-DropdownList__item__selected', !!this._currentSelection[$(items[i]).data('id')]);
                }
                DropdownList.superclass.showPicker.apply(this, arguments);
-               this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', this._pickerListContainer[0].offsetWidth === this._pickerHeadContainer[0].offsetWidth);
+               this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', this._pickerBodyContainer[0].offsetWidth === this._pickerHeadContainer[0].offsetWidth);
                if (this._buttonChoose) {
                   this._buttonChoose.getContainer().addClass('ws-hidden');
                }
@@ -414,15 +427,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var pickerContainer = this._getPickerContainer(),
                self = this;
 
-            this._text = this._container.find('.controls-DropdownList__text');
             this._selectedItemContainer = this._container.find('.controls-DropdownList__selectedItem');
-            this._resetButton = this._container.find('.controls-DropdownList__crossIcon');
-            this._resetButton.click(function() {
-               self.removeItemsSelectionAll();
-               self.hidePicker();
-            });
-            this._pickerText  = pickerContainer.find('.controls-DropdownList__text');
-            this._pickerResetButton = pickerContainer.find('.controls-DropdownList__crossIcon');
+            this._setHeadVariables();
+
             this._pickerListContainer = pickerContainer.find('.controls-DropdownList__list');
             this._pickerBodyContainer = pickerContainer.find('.controls-DropdownList__body');
             this._pickerHeadContainer = pickerContainer.find('.controls-DropdownList__header');
@@ -443,9 +450,20 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   self.hidePicker();
                });
             }
-            if (this._options.showSelectedInList) {
-               pickerContainer.addClass('controls-DropdownList__showSelectedInList');
+         },
+         _setHeadVariables: function(){
+            if (this._resetButton){
+               this._resetButton.unbind('click');
+               this._pickerResetButton.unbind('click');
             }
+            this._resetButton = $('.controls-DropdownList__crossIcon', this.getContainer());
+            this._resetButton.bind('click', this._resetButtonClickHandler.bind(this));
+            this._pickerResetButton = $('.controls-DropdownList__crossIcon', this._getPickerContainer());
+            this._pickerResetButton.bind('click', this._resetButtonClickHandler.bind(this));
+         },
+         _resetButtonClickHandler: function(){
+            this.removeItemsSelectionAll();
+            this.hidePicker();
          },
          _addItemAttributes: function (container, item) {
             /*implemented from DSMixin*/
@@ -493,24 +511,23 @@ define('js!SBIS3.CONTROLS.DropdownList',
                });
 
                def.addCallback(function(textValue) {
-                  var isDefaultIdSelected = id[0] === self._defaultId;
+                  var isDefaultIdSelected = id[0] == self._defaultId;
                   pickerContainer = self._getPickerContainer();
                   if (!self._options.multiselect) {
                      pickerContainer.find('.controls-DropdownList__item__selected').removeClass('controls-DropdownList__item__selected');
                      pickerContainer.find('[data-id="' + id[0] + '"]').addClass('controls-DropdownList__item__selected');
                   }
-                  self.setText(textValue.join(', '));
-                  if (!self._pickerText.length){ //Если у нас собственный headTpl
-                     var headTpl = MarkupTransformer(TemplateUtil.prepareTemplate(self._options.headTemplate.call(self, self._options)))();
-                     self._pickerHeadContainer.html(headTpl);
-                     self._selectedItemContainer.html(headTpl);
-                  }
+                  self._setText(self._prepareText(textValue));
+                  self._redrawHead(isDefaultIdSelected);
                   self._resizeFastDataFilter();
-                  self.getContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
-                  self._getPickerContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
-                  self._setResetButtonVisibility(isDefaultIdSelected);
                });
             }
+         },
+         _prepareText: function(textValue){
+            if (textValue.length > 1){
+               return textValue[0] + ' и еще ' + (textValue.length - 1);
+            }
+            return textValue.join('');
          },
          _resizeFastDataFilter: function(){
             var parent = this.getParent();
@@ -518,6 +535,27 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if ($ws.helpers.instanceOfModule(parent, 'SBIS3.CONTROLS.FastDataFilter')){
                parent._recalcDropdownWidth();
             }
+         },
+         _redrawHead: function(isDefaultIdSelected){
+            var pickerHeadContainer = $('.controls-DropdownList__selectedItem', this._getPickerContainer()),
+                headTpl = MarkupTransformer(TemplateUtil.prepareTemplate(this._options.headTemplate.call(this, this._options)))();
+            if (this._options.type !== 'fastDataFilter'){
+               var pickerHeadTpl = $(MarkupTransformer(TemplateUtil.prepareTemplate(this._options.headPickerTemplate.call(this, this._options)))());
+               pickerHeadTpl.click(function(e){
+                  e.stopImmediatePropagation();
+               });
+               pickerHeadContainer.html(pickerHeadTpl);
+            }
+            else{
+               pickerHeadContainer.html(headTpl);
+            }
+            this._selectedItemContainer.html(headTpl);
+            this.getContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
+            this._getPickerContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
+            if (this._options.type == 'markedDefaultItem'){
+               this.getContainer().toggleClass('controls-DropdownList__type-defaultItem', isDefaultIdSelected);
+            }
+            this._setHeadVariables();
          },
          /**
           * Получить ключ элемента для выбора "по умолчанию"
@@ -531,10 +569,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
           * @param text
           */
          setText: function(text) {
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.DropdownList', 'Метод setText в скором времени будет удален. Значения должны отрисовываться на наборе данных');
+            this._setText(text);
+         },
+         _setText: function(text){
             if(typeof text === 'string') {
                this._options.text = text;
-               this._text.text(text);
-               this._pickerText.text(text);
                this._notifyOnPropertyChanged('text');
             }
          },
@@ -545,25 +585,40 @@ define('js!SBIS3.CONTROLS.DropdownList',
          getText: function() {
             return this._options.text;
          },
-         _setResetButtonVisibility: function(show) {
-            this._resetButton.toggleClass('ws-hidden', show);
-            this._pickerResetButton.toggleClass('ws-hidden', show);
-         },
          _getItemsContainer : function () {
             return this._pickerListContainer;
          },
          _setPickerConfig: function () {
-            var hasContainerArrow = !this.getContainer().hasClass('controls-DropdownList__withoutArrow');
+            var pickerClassName,
+               offset = {
+                   top: -8,
+                   left: -10
+                };
+            if (this._options.type == 'duplicateHeader'){
+               offset.top = -10;
+               pickerClassName = 'controls-dropdownlist__showHead controls-DropdownList__type-duplicateHeader';
+            }
+            else if (this._options.type == 'titleHeader'){
+               offset.top = -6;
+               pickerClassName = 'controls-dropdownlist__showHead controls-DropdownList__type-title';
+            }
+            else if (this._options.type == 'fastDataFilter'){
+               offset.top = -2;
+               offset.left = -2;
+               pickerClassName = 'controls-DropdownList__type-fastDataFilter controls-DropdownList__hideSelectedInList';
+               this.getContainer().addClass('controls-DropdownList__type-fastDataFilter');
+            }
             return {
                corner: 'tl',
                verticalAlign: {
                   side: 'top',
-                  offset: -2
+                  offset: offset.top
                },
                horizontalAlign: {
                   side: 'left',
-                  offset: hasContainerArrow ? -2 : -6
+                  offset: offset.left
                },
+               className: pickerClassName,
                //Если мы не в ховер-моде, нужно отключить эту опцию, чтобы попап после клика сразу не схлапывался
                closeByExternalOver: this._options.mode === 'hover' && !this._options.multiselect,
                closeByExternalClick : true,

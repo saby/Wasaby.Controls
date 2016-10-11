@@ -2,12 +2,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'js!SBIS3.CONTROLS.TextBox',
    'html!SBIS3.CONTROLS.ComboBox',
    'js!SBIS3.CONTROLS.PickerMixin',
-   'js!SBIS3.CONTROLS.DSMixin',
+   'js!SBIS3.CONTROLS.ItemsControlMixin',
    'js!SBIS3.CONTROLS.Selectable',
    'js!SBIS3.CONTROLS.DataBindMixin',
    'js!SBIS3.CONTROLS.SearchMixin',
-   'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown'
-], function (TextBox, dotTplFn, PickerMixin, DSMixin, Selectable, DataBindMixin, SearchMixin, arrowTpl) {
+   'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown',
+   'html!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate',
+   'html!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate'
+], function (TextBox, dotTplFn, PickerMixin, ItemsControlMixin, Selectable, DataBindMixin, SearchMixin, arrowTpl, ItemTemplate, ItemContentTemplate) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора.
@@ -48,7 +50,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * </component>
     */
 
-   var ComboBox = TextBox.extend([PickerMixin, DSMixin, Selectable, DataBindMixin, SearchMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
+   var ComboBox = TextBox.extend([PickerMixin, ItemsControlMixin, Selectable, DataBindMixin, SearchMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       _dotTplFn: dotTplFn,
       /**
        * @typedef {Object} ItemsComboBox
@@ -93,6 +95,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          _isClearing: false,
          _keysWeHandle: [$ws._const.key.up, $ws._const.key.down, $ws._const.key.enter, $ws._const.key.esc],
          _options: {
+            _defaultItemTemplate: ItemTemplate,
+            _defaultItemContentTemplate: ItemContentTemplate,
             searchDelay: 0,
             startCharacter: 1,
             focusOnActivatedOnMobiles: false,
@@ -153,11 +157,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._options.displayField = 'title';
          }
 
-         this._container.keyup(function(e) {
-            e.stopPropagation();
-            return false;
-         });
-
          if (this._options.autocomplete){
             this.subscribe('onSearch', this._onSearch);
             this.subscribe('onReset', this._onResetSearch);
@@ -194,7 +193,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          //TODO: Обобщить поиск с автодополнением и строкой поиска
          //Сделать общую точку входа для поиска, для понимания где искать на источнике или на проекции
          var itemText = model.get(this._options.displayField).toLowerCase(),
-             text = this.getText().toLowerCase()
+             text = this.getText().toLowerCase();
          if (itemText.match(text)){
             return true;
          }
@@ -203,14 +202,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _onSearch: function(){
          this.setSelectedIndex(-1);
-         this._itemsProjection.setFilter(this._searchFilter.bind(this));
+         this._getItemsProjection().setFilter(this._searchFilter.bind(this));
          this.redraw();
          this.showPicker();
       },
 
       _onResetSearch: function(){
          this.setSelectedIndex(-1);
-         this._itemsProjection.setFilter(null);
+         this._getItemsProjection().setFilter(null);
          this.redraw();
       },
 
@@ -241,11 +240,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
          }
          else {
-            if (this._dataSet) {
+            if (this.getItems()) {
                var num = null, i = 0, nextRec, prevRec;
-               if (this._dataSet.getCount()) {
+               if (this.getItems().getCount()) {
                   if (selectedKey) {
-                     this._dataSet.each(function (rec) {
+                     this.getItems().each(function (rec) {
                         if (rec.getId() == selectedKey) {
                            num = i;
                         }
@@ -253,22 +252,22 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                      });
                      if (num !== null) {
                         if (num == 0) {
-                           nextRec = this._dataSet.at(num + 1);
-                           prevRec = this._dataSet.at(0)
+                           nextRec = this.getItems().at(num + 1);
+                           prevRec = this.getItems().at(0)
                         }
-                        else if (num == this._dataSet.getCount() - 1) {
-                           nextRec = this._dataSet.at(this._dataSet.getCount() - 1);
-                           prevRec = this._dataSet.at(num - 1)
+                        else if (num == this.getItems().getCount() - 1) {
+                           nextRec = this.getItems().at(this.getItems().getCount() - 1);
+                           prevRec = this.getItems().at(num - 1)
                         }
                         else {
-                           nextRec = this._dataSet.at(num + 1);
-                           prevRec = this._dataSet.at(num - 1)
+                           nextRec = this.getItems().at(num + 1);
+                           prevRec = this.getItems().at(num - 1)
                         }
                      }
                   }
                   else {
-                     prevRec = this._dataSet.at(0);
-                     nextRec = this._dataSet.at(0);
+                     prevRec = this.getItems().at(0);
+                     nextRec = this.getItems().at(0);
                   }
                   if (e.which === $ws._const.key.up) {
                      this.setSelectedKey(prevRec.getId());
@@ -314,14 +313,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
             this._container.addClass('controls-ComboBox_emptyValue');
          }
-         var item, def;
+         var def;
          def = new $ws.proto.Deferred();
-         if (this._dataSet) {
-            if (typeof key !== 'undefined') {
-               item = this.getItems().getRecordById(key);
-               if (item) {
-                  def.callback(item);
-               }
+
+         if (this._getItemsProjection()) {
+            if (!this._isEmptyIndex(index)) {
+               var projItem = this._getItemsProjection().at(index);
+               def.callback(projItem.getContents());
             }
             else {
                if (this._dataSource) {
@@ -335,17 +333,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             var self = this;
             def.addCallback(function (item) {
                if (item) {
-                  var newText = item.get(self._options.displayField);
+                  var newText = self._propertyValueGetter(item, self._options.displayField);
                   if (newText != self._options.text) {
                      ComboBox.superclass.setText.call(self, newText);
                      self._drawNotEditablePlaceholder(newText);
                      $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(newText);
-                     if ((key != undefined) && (key !== null)) {
-                        self._container.removeClass('controls-ComboBox_emptyValue');
-                     }
-                     else {
-                        self._container.addClass('controls-ComboBox_emptyValue');
-                     }
+                     self._container.toggleClass('controls-ComboBox_emptyValue', (key == undefined));
                   }
                }
                else {
@@ -382,15 +375,16 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._picker.getContainer().mouseup(function (e) {
             var row = $(e.target).closest('.js-controls-ComboBox__itemRow');
             if (row.length) {
-               var strKey = $(row).attr('data-id');
-               if (strKey == 'null') {
-                  strKey = null;
-               }
+
+               var hash = $(row).attr('data-hash');
+               var projItem, index;
+               projItem = self._getItemsProjection().getByHash(hash);
+               index = self._getItemsProjection().getIndex(projItem);
                if (self._options.autocomplete){
-                  self._itemsProjection.setFilter(null);
+                  self._getItemsProjection().setFilter(null);
                   self.redraw();
                }
-               self.setSelectedKey(strKey);
+               self.setSelectedIndex(index);
                self.hidePicker();
                // чтобы не было выделения текста, когда фокус вернули в выпадашку
                self._fromTab = false;
@@ -425,8 +419,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
-      _getItemTemplate: function (item) {
-         var title = item.get(this._options.displayField);
+      _getItemTemplate: function (projItem) {
+         var
+            item = projItem.getContents(),
+            title = item.get(this._options.displayField);
+         
          if (this._options.itemTemplate) {
             return doT.template(this._options.itemTemplate)({item : item, displayField : title})
          }
@@ -461,11 +458,16 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
 
       _keyUpBind: function (e) {
+         var keys = $ws._const.key;
          /*по изменению текста делаем то же что и в текстбоксе*/
          ComboBox.superclass._keyUpBind.apply(this, arguments);
          /*не делаем смену значения при нажатии на стрелки вверх вниз. Иначе событие смены ключа срабатывает два раза*/
-         if ((e.which != 40) && (e.which != 38)) {
+         if ((e.which != keys.down) && (e.which != keys.up)) {
             this._setKeyByText();
+         }
+         /*при нажатии enter или escape, событие должно всплывать. Возможно эти кнопки являются управляющими командами (например в редактировании по месту)*/
+         if ((e.which != keys.enter) && (e.which != keys.esc)) {
+            e.stopPropagation();
          }
       },
 
@@ -517,9 +519,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
-      _redraw: function () {
+      redraw: function () {
          if (this._picker) {
-            ComboBox.superclass._redraw.call(this);
+            ComboBox.superclass.redraw.call(this);
             // Сделано для того, что бы в при уменьшении колчества пунктов при поиске нормально усеньшались размеры пикера
             // В 3.7.3.200 сделано нормально на уровне попапа
             this._picker.getContainer().css('height', '');
@@ -630,6 +632,15 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._isClearing = true;
          }
          ComboBox.superclass.setSelectedKey.apply(this, arguments);
+      },
+
+      _scrollToItem: function(itemId) {
+         var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
+         if (itemContainer.length) {
+            itemContainer
+               .attr('tabindex', -1)
+               .focus();
+         }
       }
    });
 

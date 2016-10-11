@@ -1,6 +1,18 @@
 .controls-ComboBox {
    line-height: normal;
    cursor: @combo-box-cursor;
+   padding-right: 4px;
+
+   &.controls-ComboBox_emptyValue.controls-TextBox {
+     .controls-TextBox__fieldWrapper {
+       .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
+         color: #ccc;
+       }
+     }
+     .controls-TextBox__afterFieldWrapper{
+       color: #587AB0!important;
+     }
+   }
 
    .controls-TextBox__fieldWrapper {
       position: relative;
@@ -19,9 +31,24 @@
       }
    }
 
-   .controls-TextBox__afterFieldWrapper {
-      width: @combo-box-after-width;
-      .controls-ComboBox__arrowDown {
+   &.controls-TextBox {
+     &.controls-ComboBox_emptyValue{
+       border-color: #EAEAEA #EAEAEA #CCCCCC #EAEAEA;
+     }
+     &.ws-has-focus, &:hover{
+       border-color: #ccc;
+       .controls-ComboBox__arrowDown{
+         color: #313E78!important;
+       }
+     }
+     border-color: #ccc;
+     .controls-TextBox__afterFieldWrapper {
+       width: @combo-box-after-width;
+       + .controls-TextBox__fieldWrapper{
+         margin-right: 16px;
+         padding-right: 0;
+       }
+       .controls-ComboBox__arrowDown {
          position: absolute;
          top: @combo-box-arrow-top-offset;
          right: @combo-box-arrow-right-offset;
@@ -34,15 +61,15 @@
          border-width: @combo-box-arrow-border-width;
          border-style: @combo-box-arrow-border-style;
          border-color: @combo-box-arrow-border-color;
-
          .box-sizing(border-box);
          &:hover {
-            text-decoration: none;
-            border-width: @combo-box-arrow-hover-border-width;
-            border-style: @combo-box-arrow-hover-border-style;
-            border-color: @combo-box-arrow-hover-border-color;
+           text-decoration: none;
+           border-width: @combo-box-arrow-hover-border-width;
+           border-style: @combo-box-arrow-hover-border-style;
+           border-color: @combo-box-arrow-hover-border-color;
          }
-      }
+       }
+     }
    }
    &.controls-ComboBox__editable-false {
       .controls-TextBox__fieldWrapper {
@@ -121,15 +148,11 @@
    .border-radius(@combo-box-picker-border-radius);
    .controls-ComboBox__itemRow {
       font: @combo-box-picker-item-font;
-      font-size: @text-box-field-font-size;
-      padding: @combo-box-picker-item-padding;
+      font-size: 15px;
+      padding: 6px 4px;
       cursor: @combo-box-cursor;
       color: @combo-box-picker-item-text-color;
       background: @combo-box-picker-item-bg;
-      &.controls-ComboBox__itemRow__selected {
-         color: @combo-box-picker-item-selected-text-color;
-         background: @combo-box-picker-item-selected-bg;
-      }
       &:hover {
          color: @combo-box-picker-item-hover-text-color;
          background: @combo-box-picker-item-hover-bg;
