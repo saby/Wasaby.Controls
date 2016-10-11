@@ -1062,22 +1062,6 @@ define(
       },
 
       /**
-       * Получает текстовое значение поля ввода.
-       * @returns {String} Текст - значение поля ввода.
-       * @example
-       * <pre>
-       *     if (control.getText() == "Введите ФИО") {
-       *        control.setText("");
-       *     }
-       * </pre>
-       * @see text
-       * @see setText
-       */
-      getText: function() {
-         this._updateText();
-         return FormattedTextBoxBase.superclass.getText.apply(this, arguments);
-      },
-      /**
        * Установить значение в поле.
        * @remark
        * Значение вводится в точности с маской, включая разделяющие символы.
