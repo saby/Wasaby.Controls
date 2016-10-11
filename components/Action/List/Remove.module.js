@@ -1,9 +1,11 @@
 /*global $ws, define*/
-define('js!SBIS3.CONTROLS.List.Remove',
-   ['js!SBIS3.CONTROLS.Action.Action',
-      'js!SBIS3.CONTROLS.Action.List.ListMixin'
+define('js!SBIS3.CONTROLS.List.Remove', [
+      'js!SBIS3.CONTROLS.Action.Action',
+      'js!SBIS3.CONTROLS.Action.List.ListMixin',
+      'Core/helpers/fast-control-helpers',
+      'Core/core-instance'
    ],
-   function (ActionBase, ListMixin) {
+   function (ActionBase, ListMixin, fcHelpers, cInstance) {
       'use strict';
       /**
        * Акшен удаления записей
@@ -84,7 +86,7 @@ define('js!SBIS3.CONTROLS.List.Remove',
                   confirmText = confirmText.call(this, items);
                }
                var self = this;
-               return $ws.helpers.question(confirmText).addCallback(function (res) {
+               return fcHelpers.question(confirmText).addCallback(function (res) {
                   if (!res) {
                      return;
                   }
@@ -114,7 +116,7 @@ define('js!SBIS3.CONTROLS.List.Remove',
             });
          },
          _handleError: function (error) {
-            $ws.helpers.alert(error);
+            fcHelpers.alert(error);
          },
          _getDefaultConfirmText: function(items) {
             return items.length > 1 ? 'Удалить записи?' : 'Удалить текущую запись?';
@@ -122,7 +124,7 @@ define('js!SBIS3.CONTROLS.List.Remove',
 
          _removeSelection: function(items) {
             var linkedObject = this.getLinkedObject();
-            if ($ws.helpers.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.MultiSelectable')) {
+            if (cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.MultiSelectable')) {
                var ids = [];
                for (var i = 0; i < items.length; i++) {
                   ids.push(items[i].getId());

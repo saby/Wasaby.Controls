@@ -1,7 +1,7 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(
-   ['js!SBIS3.CONTROLS.Action.Action'],
-   function (ActionBase) {
+   ['js!SBIS3.CONTROLS.Action.Action', 'Core/Deferred'],
+   function (ActionBase, Deferred) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Action.Action', function () {
@@ -14,7 +14,7 @@ define(
          describe('.execute()', function () {
             it('should return deffered', function () {
                var def = actionBase.execute();
-               assert.isTrue((def instanceof $ws.proto.Deferred));
+               assert.isTrue((def instanceof Deferred));
             });
 
             it('should notify onExecuted', function (done) {
@@ -61,7 +61,7 @@ define(
             it('should notify onError', function (done) {
                var myAction = new (ActionBase.extend({
                   _doExecute: function () {
-                     return (new $ws.proto.Deferred()).errback(new Error());
+                     return (new Deferred()).errback(new Error());
                   }
                }));
                myAction.subscribe('onError', function () {
@@ -157,7 +157,7 @@ define(
                   }
                }));
                myAct.subscribe('onExecute', function(e) {
-                  var def = new $ws.proto.Deferred();
+                  var def = new Deferred();
                   def.addCallback(function(){
                      return '_exec2';
                   });
@@ -176,7 +176,7 @@ define(
                   }
                }));
                myAct.subscribe('onExecute', function(e) {
-                  var def = new $ws.proto.Deferred();
+                  var def = new Deferred();
                   def.addCallback(function(){
                      return false;
                   });
@@ -197,7 +197,7 @@ define(
                   }
                }));
                myAct.subscribe('onExecute', function(e) {
-                  var def = new $ws.proto.Deferred();
+                  var def = new Deferred();
                   def.addCallback(function(){
                      return ActionBase.ACTION_CUSTOM;
                   });

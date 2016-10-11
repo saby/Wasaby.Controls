@@ -2,7 +2,11 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS.MultiSelectable'], function(ButtonGroupBase, MultiSelectable) {
+define('js!SBIS3.CONTROLS.CheckBoxGroupBase', [
+   'js!SBIS3.CONTROLS.ButtonGroupBase',
+   'js!SBIS3.CONTROLS.MultiSelectable',
+   'Core/core-instance'
+], function(ButtonGroupBase, MultiSelectable, cInstance) {
 
    'use strict';
 
@@ -49,7 +53,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
          projItem = this._getItemsProjection().getByHash(hash);
          //TODO Пока делаем отдельную ветку для Флагов.
          //Леха Мальцев должен решить задачу https://inside.tensor.ru/opendoc.html?guid=566894c5-8384-4a2a-8ea6-df9dc5bd2137&description=
-         if (this.getItems() && $ws.helpers.instanceOfModule(this.getItems(), 'WS.Data/Types/Flags')) {
+         if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Types/Flags')) {
             projItem.setSelected(!projItem.isSelected());
          }
          else {
@@ -73,7 +77,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
          //TODO Пока делаем отдельную ветку для Флагов.
          //Леха Мальцев должен решить задачу https://inside.tensor.ru/opendoc.html?guid=566894c5-8384-4a2a-8ea6-df9dc5bd2137&description=
          var i, hash;
-         if (this.getItems() && $ws.helpers.instanceOfModule(this.getItems(), 'WS.Data/Types/Flags')) {
+         if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Types/Flags')) {
             for (i in controls) {
                if (controls.hasOwnProperty(i)) {
                   hash = controls[i].getContainer().data('hash');

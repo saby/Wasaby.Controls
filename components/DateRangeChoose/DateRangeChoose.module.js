@@ -1,12 +1,18 @@
 define('js!SBIS3.CONTROLS.DateRangeChoose',[
-   'js!SBIS3.CORE.CompoundControl',
-   'tmpl!SBIS3.CONTROLS.DateRangeChoose',
-   'js!SBIS3.CONTROLS.RangeMixin',
-   'js!SBIS3.CONTROLS.DateRangeMixin',
-   'js!SBIS3.CONTROLS.Utils.DateUtil',
-   'js!SBIS3.CONTROLS.IconButton',
-   'js!SBIS3.CONTROLS.Link'
-], function (CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, DateUtil) {
+   "Core/Deferred",
+   "Core/IoC",
+   "Core/ConsoleLogger",
+   "js!SBIS3.CORE.CompoundControl",
+   "tmpl!SBIS3.CONTROLS.DateRangeChoose",
+   "js!SBIS3.CONTROLS.RangeMixin",
+   "js!SBIS3.CONTROLS.DateRangeMixin",
+   "js!SBIS3.CONTROLS.Utils.DateUtil",
+   "Core/core-instance",
+   "Core/helpers/event-helpers",
+   "Core/helpers/date-helpers",
+   "js!SBIS3.CONTROLS.IconButton",
+   "js!SBIS3.CONTROLS.Link"
+], function ( Deferred, IoC, ConsoleLogger,CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, DateUtil, cInstance, eHelpers, dateHelpers) {
    'use strict';
 
    var DateRangeChoose = CompoundControl.extend([RangeMixin, DateRangeMixin], {
@@ -29,7 +35,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
              * <ol>
              *    <li>periods - Массив содержащий массивы из начала и конца периода</li>
              * </ol>
-             * Функция должна вернуть объект содержащий информацию об отображаемой иконке или $ws.proto.Deferred,
+             * Функция должна вернуть объект содержащий информацию об отображаемой иконке или Deferred,
              * стреляющий таким объектом.
              * { iconClass: 'icon-Yes icon-done',
              *   title: 'Период отчетности закрыт'
@@ -136,7 +142,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          container.find('.controls-DateRangeChoose__year-next').click(this._onNextYearBtnClick.bind(this));
          container.find('.controls-DateRangeChoose__yearsMode-prev').click(this._onNextYearBtnClick.bind(this));
          container.find('.controls-DateRangeChoose__yearsMode-next').click(this._onPrevYearBtnClick.bind(this));
-         $ws.helpers.wheel(container.find(['.', this._cssDateRangeChoose.yearsModeWrapper].join('')), this._onMouseWheel.bind(this));
+         eHelpers.wheel(container.find(['.', this._cssDateRangeChoose.yearsModeWrapper].join('')), this._onMouseWheel.bind(this));
 
          container.find(['.', this._cssDateRangeChoose.halfYearCaption].join('')).click(this._onHalfYearClick.bind(this));
          container.find(['.', this._cssDateRangeChoose.quarterCaption].join('')).click(this._onQuarterClick.bind(this));
@@ -190,7 +196,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          } else if (this._options.showHalfyears) {
             periodType = 'halfyear'
          }
-         period = $ws.helpers.getCurrentPeriod(periodType)
+         period = dateHelpers.getCurrentPeriod(periodType)
          this.setRange(period[0], period[1]);
          this.setYear((new Date()).getFullYear());
          this._notify('onChoose', period[0], period[1]);
@@ -269,7 +275,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          this.getContainer().find(
             ['.', this._cssDateRangeChoose.currentValue].join('')
          ).text(
-            $ws.helpers.getFormattedDateRange(this.getStartValue(), this.getEndValue(), {shortYear: true, contractToHalfYear: true, contractToQuarter: true})
+            dateHelpers.getFormattedDateRange(this.getStartValue(), this.getEndValue(), {shortYear: true, contractToHalfYear: true, contractToQuarter: true})
          );
       },
 
@@ -292,7 +298,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
             step = 3;
             pType = 'quarter';
          } else {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.DateRangeChoose', 'Not implemented.');
+            IoC.resolve('ILogger').error('SBIS3.CONTROLS.DateRangeChoose', 'Not implemented.');
             return;
          }
          for (var i = 0; i < 12; i += step) {
@@ -300,8 +306,8 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          }
 
          icons = iconsHandler.call(this, periods, pType);
-         if (!$ws.helpers.instanceOfModule($ws.proto.Deferred)) {
-            icons = (new $ws.proto.Deferred()).callback(icons);
+         if (!cInstance.instanceOfModule(Deferred)) {
+            icons = (new Deferred()).callback(icons);
          }
 
          icons.addCallback(function (_icons) {
@@ -325,7 +331,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          var checkedStart = this._options.checkedStart,
              checkedEnd = this._options.checkedEnd;
          if (!checkedStart && checkedEnd) {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.DateRangeChoose', 'checkedStart and checkedEnd options must be set.');
+            IoC.resolve('ILogger').error('SBIS3.CONTROLS.DateRangeChoose', 'checkedStart and checkedEnd options must be set.');
             return [];
          }
          checkedStart = checkedStart? checkedStart.getTime(): 0;

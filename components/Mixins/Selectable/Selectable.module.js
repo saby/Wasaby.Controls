@@ -2,7 +2,11 @@
  * Created by iv.cheremushkin on 14.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collection/IBind'], function(Utils, IBindCollection) {
+define('js!SBIS3.CONTROLS.Selectable', [
+   'js!WS.Data/Utils',
+   'js!WS.Data/Collection/IBind',
+   'Core/core-instance'
+], function(Utils, IBindCollection, cInstance) {
 
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного.
@@ -96,12 +100,12 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
 
       _prepareSelectedConfig: function(index, key) {
          if (this._isEmptyIndex(index)) {
-            if (this.getItems() && $ws.helpers.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet') && typeof key != 'undefined') {
+            if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet') && typeof key != 'undefined') {
                this._options.selectedIndex = this._getItemIndexByKey(key);
             }
          }
          else {
-            if (this.getItems() && $ws.helpers.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet')) {
+            if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet')) {
                this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
             }
          }
@@ -300,7 +304,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
       _getKeyByIndex: function(index) {
          if(this._hasItemByIndex(index)) {
             var itemContents = this._getItemsProjection().at(index).getContents();
-            if ($ws.helpers.instanceOfModule(itemContents, 'WS.Data/Entity/Model')) {
+            if (cInstance.instanceOfModule(itemContents, 'WS.Data/Entity/Model')) {
                return itemContents.getId();
             }
          }

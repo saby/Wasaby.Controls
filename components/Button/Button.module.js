@@ -1,5 +1,9 @@
 
-define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CONTROLS.Button'], function(ButtonBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.Button', [
+   "Core/constants",
+   "js!SBIS3.CONTROLS.ButtonBase",
+   "html!SBIS3.CONTROLS.Button"
+], function( constants,ButtonBase, dotTplFn) {
 
    'use strict';
 
@@ -62,7 +66,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
       _dotTplFn : dotTplFn,
       $protected: {
          _keysWeHandle: [
-            $ws._const.key.enter
+            constants.key.enter
          ],
          _options: {
             /**

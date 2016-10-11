@@ -1,6 +1,15 @@
-define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
-   'js!SBIS3.CONTROLS.BreadCrumbs',
-   'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree', 'js!WS.Data/Relation/Hierarchy'], function (Control, BreadCrumbs, groupByTpl, TreeProjection, HierarchyRelation) {
+define('js!SBIS3.CONTROLS.TreeMixinDS', [
+   "Core/core-functions",
+   "Core/core-merge",
+   "Core/constants",
+   "js!SBIS3.CORE.Control",
+   "js!SBIS3.CONTROLS.BreadCrumbs",
+   "html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
+   "js!WS.Data/Display/Tree",
+   "js!WS.Data/Relation/Hierarchy",
+   "Core/helpers/collection-helpers",
+   "Core/helpers/functional-helpers"
+], function ( cFunctions, cMerge, constants,Control, BreadCrumbs, groupByTpl, TreeProjection, HierarchyRelation, colHelpers, fHelpers) {
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeMixinDS
@@ -241,12 +250,12 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
       },
       _createTreeFilter: function(key) {
          var
-            filter = $ws.core.clone(this.getFilter()) || {};
+            filter = cFunctions.clone(this.getFilter()) || {};
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
          }
-         this.setFilter($ws.core.clone(filter), true);
+         this.setFilter(cFunctions.clone(filter), true);
          filter[this._options.hierField] = key;
          return filter;
       },
@@ -382,7 +391,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             self = this,
             filter = id ? this._createTreeFilter(id) : this.getFilter();
          this._notify('onBeforeDataLoad', filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit);
-         this._loader = this._callQuery(filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
+         this._loader = this._callQuery(filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
             self._notify('onDataMerge', dataSet);
@@ -471,7 +480,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          var
             controls,
             self = this;
-         $ws.helpers.forEach(items, function(item) {
+         colHelpers.forEach(items, function(item) {
             if (self._foldersFooters[item]) {
                controls = self._foldersFooters[item].find('.ws-component');
                for (var i = 0; i < controls.length; i++) {
@@ -493,7 +502,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          },
          _keyboardHover: function(e) {
             switch(e.which) {
-               case $ws._const.key.m:
+               case constants.key.m:
                   e.ctrlKey && this.moveRecordsWithDialog();
                   break;
             }
@@ -525,7 +534,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
                this._lastDrawn = undefined;
                this._lastPath = [];
                this._destroySearchBreadCrumbs();
-               $ws.helpers.forEach(this._foldersFooters, function(val, key) {
+               colHelpers.forEach(this._foldersFooters, function(val, key) {
                   self._destroyFolderFooter([key]);
                });
             }
@@ -683,7 +692,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
                if (this.isEnabled() && self._notify('onSearchPathClick', id) !== false ) {
                   //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
                   /*TODO для Алены. Временный фикс, потому что так удалось починить*/
-                  var filter = $ws.core.merge(self.getFilter(), {
+                  var filter = cMerge(self.getFilter(), {
                      'Разворот' : 'Без разворота'
                   });
                   if (self._options.groupBy.field) {

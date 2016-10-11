@@ -3,14 +3,15 @@
  */
 
 define('js!SBIS3.CONTROLS.RichEditorToolbar', [
-   'js!SBIS3.CONTROLS.RichEditorToolbarBase',
-   'html!SBIS3.CONTROLS.RichEditorToolbar',
-   'js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
-   'js!SBIS3.CONTROLS.Button',
-   'js!SBIS3.CONTROLS.ToggleButton',
-   'js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton',
-   'js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown'
-   ], function(RichEditorToolbarBase, dotTplFn, defaultConfig) {
+   "Core/core-merge",
+   "js!SBIS3.CONTROLS.RichEditorToolbarBase",
+   "html!SBIS3.CONTROLS.RichEditorToolbar",
+   "js!SBIS3.CONTROLS.RichEditorToolbar/resources/config",
+   "js!SBIS3.CONTROLS.Button",
+   "js!SBIS3.CONTROLS.ToggleButton",
+   "js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton",
+   "js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown"
+], function( cMerge,RichEditorToolbarBase, dotTplFn, defaultConfig) {
 
    'use strict';
 
@@ -218,7 +219,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                items = RichEditorToolbar.superclass._prepareItems.apply(this, arguments);
             for (var i in items) {
                if (items.hasOwnProperty(i)) {
-                  items[i] = $ws.core.merge({
+                  items[i] = cMerge({
                      cssClassName: 'controls-RichEditorToolbar__item mce-',
                      tabindex: -1,
                      caption: '',
