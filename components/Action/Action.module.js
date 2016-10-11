@@ -1,7 +1,10 @@
 /*global $ws, define*/
 define('js!SBIS3.CONTROLS.Action.Action',
-   ['js!SBIS3.CORE.Control'],
-   function (Control) {
+   [
+   "Core/Deferred",
+   "js!SBIS3.CORE.Control"
+],
+   function ( Deferred,Control) {
       'use strict';
 
       /**
@@ -74,7 +77,7 @@ define('js!SBIS3.CONTROLS.Action.Action',
          /**
           * Метод запускающий выполнение Action'а
           * @param {Object} meta объект содержащий мета параметры Action'а
-          * @returns {$ws.proto.Deferred}
+          * @returns {Deferred}
           */
          execute: function (meta) {
             var self = this;
@@ -109,14 +112,14 @@ define('js!SBIS3.CONTROLS.Action.Action',
           * @param {Array} args  Параметры которые будут переданы в event и method
           * @param {String} event  Название события которое надо поднято
           * @param {String} method  Название метода который надо вызвать
-          * @returns {$ws.proto.Deferred}
+          * @returns {Deferred}
           * @private
           */
          _callHandlerMethod: function (args, event, method) {
             var evenResult = this._notify.apply(this, [event].concat(args)),
                call = typeof this[evenResult] === 'function' ? this[evenResult] : this[method];
             if (evenResult !== false && evenResult !== Action.ACTION_CUSTOM) {
-               var def = evenResult instanceof $ws.proto.Deferred ? evenResult : new $ws.proto.Deferred().callback(true),
+               var def = evenResult instanceof Deferred ? evenResult : new Deferred().callback(true),
                   self = this;
                return def.addCallback(function (defResult) {
                   if(defResult !== false && defResult !== Action.ACTION_CUSTOM) {
@@ -127,7 +130,7 @@ define('js!SBIS3.CONTROLS.Action.Action',
                   }
                });
             }
-            return new $ws.proto.Deferred().callback(evenResult);
+            return new Deferred().callback(evenResult);
          },
          /**
           * Вовращает признак может ли выполниться Action

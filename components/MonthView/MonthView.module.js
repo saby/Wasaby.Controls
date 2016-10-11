@@ -4,6 +4,7 @@
 define(
    'js!SBIS3.CONTROLS.MonthView',
    [
+      'Core/constants',
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.ControlHierarchyManager',
       'js!SBIS3.CONTROLS.RangeMixin',
@@ -14,7 +15,7 @@ define(
       'js!SBIS3.CONTROLS.MonthPicker',
       'i18n!SBIS3.CONTROLS.Calendar'
    ],
-   function (CompoundControl, ControlHierarchyManager, RangeMixin, RangeSelectableViewMixin, DateUtil, MonthViewTableBodyTpl, dotTplFn) {
+   function (constants, CompoundControl, ControlHierarchyManager, RangeMixin, RangeSelectableViewMixin, DateUtil, MonthViewTableBodyTpl, dotTplFn) {
 
       'use strict';
 
@@ -129,7 +130,7 @@ define(
                   self._onDayMouseEnter($(this));
                });
                //TODO:продумать как правильно выбирать неделю на Ipad
-               if (!$ws._const.browser.isMobileIOS) {
+               if (!constants.browser.isMobileIOS) {
                   itemsContainers.on('mouseenter', ['.', this._MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
                      self._onDayBorderMouseEnter($(this), self._getItemDate($(this)));
                   }).on('mouseleave', ['.', this._MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
@@ -186,7 +187,7 @@ define(
             }
             date = this._getItemDate(element);
             //TODO:продумать как правильно выбирать неделю на Ipad
-            if (!$ws._const.browser.isMobileIOS) {
+            if (!constants.browser.isMobileIOS) {
                startDate = this._getStartOfWeek(date);
                endDate = this._getEndOfWeek(date);
                this._setSelectionType(selectionTypes.WEEK);

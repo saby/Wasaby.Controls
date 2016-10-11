@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
+define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', ['Core/core-instance', 'Core/helpers/dom&controls-helpers'], function(cInstance, colHelpers) {
    /**
     * Миксин, добавляющий поведение выделения интервала из нескольких фиксированных элементов
     * @mixin SBIS3.CONTROLS.RangeSelectableViewMixin
@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
       },
 
       $constructor: function() {
-         if(!$ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.RangeSelectableViewMixin')) {
+         if(!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.RangeSelectableViewMixin')) {
             throw new Error('RangeSelectableViewMixin mixin is required');
          }
          this._publish('onBeforeSelectionStarted', 'onSelectionStarted', 'onBeforeSelectionEnded', 'onSelectionEnded');
@@ -310,7 +310,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', [], function() {
             ids = [ids];
          }
 
-         ids = $ws.helpers.map(ids, function (itemId) {
+         ids = colHelpers.map(ids, function (itemId) {
             return [
                '.',
                this._SELECTABLE_RANGE_CSS_CLASSES.item,

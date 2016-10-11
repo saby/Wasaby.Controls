@@ -3,17 +3,29 @@
  */
 define('js!SBIS3.CONTROLS.RichTextArea',
    [
-      'js!SBIS3.CONTROLS.TextBoxBase',
-      'html!SBIS3.CONTROLS.RichTextArea',
-      'js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',
-      'js!SBIS3.CORE.FileStorageLoader',
-      'js!SBIS3.CONTROLS.RichTextArea/resources/smiles',
-      'js!SBIS3.CORE.PluginManager',
-      'js!SBIS3.CONTROLS.Utils.ImageUtil',
-      'Core/Sanitize',
-      'css!SBIS3.CORE.RichContentStyles',
-      'i18n!SBIS3.CONTROLS.RichEditor'
-   ], function(TextBoxBase, dotTplFn, RichUtil, FileLoader, smiles, PluginManager, ImageUtil, Sanitize) {
+   "Core/UserConfig",
+   "Core/pathResolver",
+   "Core/Context",
+   "Core/Indicator",
+   "Core/core-functions",
+   "Core/CommandDispatcher",
+   "Core/constants",
+   "Core/Deferred",
+   "js!SBIS3.CONTROLS.TextBoxBase",
+   "html!SBIS3.CONTROLS.RichTextArea",
+   "js!SBIS3.CONTROLS.Utils.RichTextAreaUtil",
+   "js!SBIS3.CORE.FileStorageLoader",
+   "js!SBIS3.CONTROLS.RichTextArea/resources/smiles",
+   "js!SBIS3.CORE.PluginManager",
+   "js!SBIS3.CONTROLS.Utils.ImageUtil",
+   "Core/Sanitize",
+   "Core/helpers/collection-helpers",
+   "Core/helpers/fast-control-helpers",
+   "Core/helpers/string-helpers",
+   "Core/helpers/dom&controls-helpers",
+   "css!SBIS3.CORE.RichContentStyles",
+   "i18n!SBIS3.CONTROLS.RichEditor"
+], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, constants, Deferred,TextBoxBase, dotTplFn, RichUtil, FileLoader, smiles, PluginManager, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers) {
       'use strict';
 
       var
@@ -164,12 +176,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this._publish('onInitEditor', 'onUndoRedoChange','onNodeChange', 'onFormatChange', 'onToggleContentSource');
             this._sourceContainer = this._container.find('.controls-RichEditor__sourceContainer');
             this._sourceArea = this._sourceContainer.find('.controls-RichEditor__sourceArea').bind('input', this._onChangeAreaValue.bind(this));
-            this._readyContolDeffered = new $ws.proto.Deferred().addCallback(function(){
+            this._readyContolDeffered = new Deferred().addCallback(function(){
                this._notify('onReady');
             }.bind(this));
             this._dChildReady.push(this._readyContolDeffered);
             this._dataReview = this._container.find('.controls-RichEditor__dataReview');
-            this._tinyReady = new $ws.proto.Deferred();
+            this._tinyReady = new Deferred();
             this._inputControl = this._container.find('.controls-RichEditor__editorFrame');
             this._fakeArea = this._container.find('.controls-RichEditor__fakeArea');
             this._initInputHeight();
@@ -216,7 +228,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                return result;
             }
 
-            if ((id = this._getYouTubeVideoId($ws.helpers.escapeTagsFromStr(link, [])))) {
+            if ((id = this._getYouTubeVideoId(strHelpers.escapeTagsFromStr(link, [])))) {
                content = [
                   '<iframe',
                   ' width="' + constants.defaultYoutubeWidth + '"',
@@ -351,7 +363,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          destroy: function() {
-            $ws._const.$win.unbind('beforeunload', this._saveBeforeWindowClose);
+            constants.$win.unbind('beforeunload', this._saveBeforeWindowClose);
             this.saveToHistory(this.getText());
             RichUtil.unmarkRichContentOnCopy(this._dataReview);
             RichUtil.unmarkRichContentOnCopy(this._inputControl);
@@ -368,7 +380,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
                this._tinyEditor.theme = null;
             }
-            $ws.helpers.trackElement(this._container, false);
+            dcHelpers.trackElement(this._container, false);
             this._container.unbind('keydown keyup');
             this._sourceArea.unbind('input');
             this._tinyEditor = null;
@@ -414,7 +426,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   return false;
                },
                createDialog = function() {
-                  $ws.single.Indicator.hide();
+                  cIndicator.hide();
                   require(['js!SBIS3.CORE.Dialog', 'js!SBIS3.CONTROLS.Button'], function(Dialog, Button) {
                      dialog = new Dialog({
                         resizable: false,
@@ -455,13 +467,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      });
                   });
                };
-            $ws.single.Indicator.show();
+            cIndicator.show();
             PluginManager.getPlugin('Clipboard', '1.0.1.0', {silent: true}).addCallback(function(clipboard) {
                if (clipboard.getContentType && clipboard.getHtml) {
                   clipboard.getContentType().addCallback(function(ContentType) {
                      clipboard[ContentType === 'Text/Html' || ContentType === 'Text/Rtf' || ContentType === 'Html' || ContentType === 'Rtf' ? 'getHtml' : 'getText']()
                         .addCallback(function(content) {
-                           $ws.single.Indicator.hide();
+                           cIndicator.hide();
                            prepareAndInsertContent(content);
                            if (typeof onAfterCloseHandler === 'function') {
                               onAfterCloseHandler();
@@ -495,7 +507,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (valParam && typeof valParam === 'string' && self._textChanged) {
                this.getHistory().addCallback(function(arrBL){
                   if( typeof arrBL  === 'object') {
-                     $ws.helpers.forEach(arrBL, function (valBL, keyBL) {
+                     colHelpers.forEach(arrBL, function (valBL, keyBL) {
                         if (valParam === valBL) {
                            isDublicate = true;
                         }
@@ -512,7 +524,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * <wiTag group="Управление">
           * Получить историю ввода.
           * Вовзращает деферред истории ввода вводимых значений.
-          * @return {$ws.proto.Deferred} в случае успеха, дефферед врнет массив данных
+          * @return {Deferred} в случае успеха, дефферед врнет массив данных
           * @example
           * <pre>
           *    fre.getHistory().addCallback(function(arrBL){
@@ -529,7 +541,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @public
           */
          getHistory: function() {
-            return $ws.single.UserConfig.getParamValues(this._getNameForHistory());
+            return UserConfig.getParamValues(this._getNameForHistory());
          },
 
          /**
@@ -542,7 +554,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             //При смене формата содаётся новый <span class='classFormat'>.
             //В FF в некторых случаях символ каретки не удаляется из предыдущего <span> блока при смене формата
             //из за-чего происход разрыв строки.
-            if ($ws._const.browser.firefox &&  $(this._tinyEditor.selection.getNode()).find('br').attr('data-mce-bogus') == '1') {
+            if (constants.browser.firefox &&  $(this._tinyEditor.selection.getNode()).find('br').attr('data-mce-bogus') == '1') {
                $(this._tinyEditor.selection.getNode()).find('br').remove();
             }
             for (var stl in constants.styles) {
@@ -651,7 +663,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          execCommand: function(command) {
             this._tinyEditor.execCommand(command);
             //TODO:https://github.com/tinymce/tinymce/issues/3104, восстанавливаю выделение тк оно теряется если после нжатия кнопки назад редактор стал пустым
-            if (($ws._const.browser.firefox || $ws._const.browser.isIE) && command == 'undo' && this._getTinyEditorValue() == '') {
+            if ((constants.browser.firefox || constants.browser.isIE) && command == 'undo' && this._getTinyEditorValue() == '') {
                this._tinyEditor.selection.select(this._tinyEditor.getBody(), true);
             }
          },
@@ -665,12 +677,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                editor = this._tinyEditor,
                selection = editor.selection,
-               range = $ws.core.clone(selection.getRng()),
+               range = cFunctions.clone(selection.getRng()),
                element = selection.getNode(),
                anchor = editor.dom.getParent(element, 'a[href]'),
                href = anchor ? editor.dom.getAttrib(anchor, 'href') : '',
                fre = this,
-               context = new $ws.proto.Context(),
+               context = new cContext(),
                dom = editor.dom,
                protocol = /(https?|ftp|file):\/\//gi,
                dialogWidth = 440;
@@ -733,7 +745,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                                     if (href) {
                                        dom.setAttribs(element, {
                                           target: '_blank',
-                                          href: $ws.helpers.escapeHtml(href)
+                                          href: strHelpers.escapeHtml(href)
                                        });
                                     } else {
                                        editor.execCommand('unlink');
@@ -754,7 +766,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            },
                            element: okButton
                         });
-                        if ($ws._const.browser.isMobileIOS) {
+                        if (constants.browser.isMobileIOS) {
                            //финт ушами, тк фокус с редактора убрать никак нельзя
                            //тк кнопки на которую нажали у нас в обработчике тоже нет
                            //ставим фокус на любой блок внутри нового диалогового окна, например на контейнер кнопки
@@ -879,7 +891,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   editorWidth: self._inputControl.width(),
                   handlers: {
                      onBeforeShow: function () {
-                        $ws.single.CommandDispatcher.declareCommand(this, 'saveImage', function () {
+                        CommandDispatcher.declareCommand(this, 'saveImage', function () {
                            var
                               dataMceStyle = '',
                               percentSizes = this.getChildControlByName('valueType').getValue() === 'per',
@@ -940,7 +952,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
                this._inputControl.attr('tabindex', 1);
 
-               if (!$ws._const.browser.firefox) { //в firefox работает нативно
+               if (!constants.browser.firefox) { //в firefox работает нативно
                   this._inputControl.bind('mouseup', function (e) { //в ie криво отрабатывает клик
                      if (e.ctrlKey) {
                         var target = e.target;
@@ -972,7 +984,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             //БИНДЫ НА ВСТАВКУ КОНТЕНТА И ДРОП
             editor.on('Paste', function(e) {
                self._clipboardText = e.clipboardData ?
-                  $ws._const.browser.isMobileIOS ? e.clipboardData.getData('text/plain') : e.clipboardData.getData('text') :
+                  constants.browser.isMobileIOS ? e.clipboardData.getData('text/plain') : e.clipboardData.getData('text') :
                   window.clipboardData.getData('text');
                editor.plugins.paste.clipboard.pasteFormat = 'html';
             });
@@ -998,7 +1010,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
                      if (self._clipboardText !== false) {
                         //взял строку из метода pasteText, благодаря ей вставка сохраняет спецсимволы
-                        e.content = $ws.helpers.escapeHtml(editor.dom.encode(self._clipboardText).replace(/\r\n/g, '\n'));
+                        e.content = strHelpers.escapeHtml(editor.dom.encode(self._clipboardText).replace(/\r\n/g, '\n'));
                      }
                   }
                }
@@ -1057,7 +1069,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
              });
 
             //БИНДЫ НА СОБЫТИЯ КЛАВИАТУРЫ (ВВОД)
-            if ($ws._const.browser.isMobileIOS || $ws._const.browser.isMobileAndroid) {
+            if (constants.browser.isMobileIOS || constants.browser.isMobileAndroid) {
                //TODO: https://github.com/tinymce/tinymce/issues/2533
                this._inputControl.on('input', function() {
                   self._setTrimmedText(self._getTinyEditorValue());
@@ -1066,14 +1078,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             //Передаём на контейнер нажатие ctrl+enter и escape
             this._container.bind('keydown', function(e) {
-               if (!(e.which === $ws._const.key.enter && e.ctrlKey) && e.which !== $ws._const.key.esc) {
+               if (!(e.which === constants.key.enter && e.ctrlKey) && e.which !== constants.key.esc) {
                   e.stopPropagation();
                }
             });
 
             //Запрещаем всплытие Enter, Up и Down
             this._container.bind('keyup', function(e) {
-               if (e.which === $ws._const.key.enter || e.which === $ws._const.key.up || e.which === $ws._const.key.down) {
+               if (e.which === constants.key.enter || e.which === constants.key.up || e.which === constants.key.down) {
                   e.stopPropagation();
                   e.preventDefault();
                }
@@ -1081,7 +1093,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             editor.on('keyup', function(e) {
                self._typeInProcess = false;
-               if (!(e.keyCode === $ws._const.key.enter && e.ctrlKey)) { // Не нужно обрабатывать ctrl+enter, т.к. это сочетание для дефолтной кнопки
+               if (!(e.keyCode === constants.key.enter && e.ctrlKey)) { // Не нужно обрабатывать ctrl+enter, т.к. это сочетание для дефолтной кнопки
                   self._setTrimmedText(self._getTinyEditorValue());
                }
             });
@@ -1089,11 +1101,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             editor.on('keydown', function(e) {
                self._typeInProcess = true;
 
-               if (e.which === $ws._const.key.pageDown || e.which === $ws._const.key.pageUp || (e.which === $ws._const.key.insert && !e.shiftKey && !e.ctrlKey)) {
+               if (e.which === constants.key.pageDown || e.which === constants.key.pageUp || (e.which === constants.key.insert && !e.shiftKey && !e.ctrlKey)) {
                   e.stopPropagation();
                   e.preventDefault();
                }
-               if (e.keyCode == $ws._const.key.tab) {
+               if (e.keyCode == constants.key.tab) {
                   var
                      area = self.getParent(),
                      nextControl = area.getNextActiveChildControl(e.shiftKey);
@@ -1104,7 +1116,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   e.stopImmediatePropagation();
                   e.preventDefault();
                   return false;
-               } else if (e.which === $ws._const.key.enter && e.ctrlKey) {
+               } else if (e.which === constants.key.enter && e.ctrlKey) {
                   e.preventDefault();//по ctrl+enter отменяем дефолтное(чтобы не было перевода строки лишнего), разрешаем всплытие
                   //по ctrl+enter может произойти перехват события( например главная кнопка) и keyup может не сработать
                   //необходимо сбрасывать флаг зажатой кнопки, чтобы шло обновление опции text (сейчас обновление опции text не идёт при зажатаой клавише, чтобы не тормозило)
@@ -1164,7 +1176,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             //Решение: в mouseLeave смотреть зажата ли мышь, и если зажата убирать activeEditor
             //тк activeEditor будет пустой не запомнится LastFocusBookmark и не будет восстановления выделения
             //activeEditor восстановится сразу после ввода символа а может и раньше, главное что восстновления выделения не будет
-            if (!$ws._const.browser.isMobileIOS && !$ws._const.browser.isMobileAndroid) {
+            if (!constants.browser.isMobileIOS && !constants.browser.isMobileAndroid) {
                editor.on('mousedown', function(e) {
                   self._mouseIsPressed = true;
                });
@@ -1182,7 +1194,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this._saveBeforeWindowClose  =  function() {
                this.saveToHistory(this.getText());
             }.bind(this);
-            $ws._const.$win.bind('beforeunload', this._saveBeforeWindowClose);
+            constants.$win.bind('beforeunload', this._saveBeforeWindowClose);
 
             /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ UNDOMANAGER*/
             editor.on('TypingUndo AddUndo ClearUndos redo undo', function() {
@@ -1288,7 +1300,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                require(['css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/skin.min',
                   'css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/content.inline.min',
                   'js!SBIS3.CONTROLS.RichTextArea/resources/tinymce/tinymce'],function(){
-                  tinyMCE.baseURL = $ws.helpers.resolveComponentPath('SBIS3.CONTROLS.RichTextArea') + 'resources/tinymce';
+                  tinyMCE.baseURL = cPathResolver.resolveComponentPath('SBIS3.CONTROLS.RichTextArea') + 'resources/tinymce';
                   tinyMCE.init(self._options.editorConfig);
                });
             }
@@ -1353,7 +1365,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          _addToHistory: function(valParam) {
-            return $ws.single.UserConfig.setParamValue(this._getNameForHistory(), valParam);
+            return UserConfig.setParamValue(this._getNameForHistory(), valParam);
          },
 
          _getNameForHistory: function() {
@@ -1371,7 +1383,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                });
             img.on('load', function() {
                var
-                  isIEMore8 = $ws._const.browser.isIE && !$ws._const.browser.isIE8,
+                  isIEMore8 = constants.browser.isIE && !constants.browser.isIE8,
                // naturalWidth и naturalHeight - html5, работают IE9+
                   imgWidth =  isIEMore8 ? this.naturalWidth : this.width,
                   imgHeight =  isIEMore8 ? this.naturalHeight : this.height,
@@ -1380,12 +1392,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (maxSide[1] > constants.maximalPictureSize) {
                   style = ' style="'+ maxSide[0] +': ' + constants.maximalPictureSize + 'px;"';
                }
-               if ($ws._const.browser.isIE8) {
+               if (constants.browser.isIE8) {
                   img.remove();
                }
                self.insertHtml('<img src="' + path + '"' + style + ' alt="' + name + '"></img>');
             });
-            if ($ws._const.browser.isIE8) {
+            if (constants.browser.isIE8) {
                $('body').append(img);
             }
          },
@@ -1417,7 +1429,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      if (json.result && json.result.code === 201) {
                         self._insertImg(json.result.filePath, imgName);
                      } else {
-                        $ws.helpers.alert(decodeURIComponent(json.result ? json.result.message : json.error ? json.error.message : ''));
+                        fcHelpers.alert(decodeURIComponent(json.result ? json.result.message : json.error ? json.error.message : ''));
                      }
                   },
                   onChange: function(e, filePath) {
@@ -1449,7 +1461,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (this.isVisible()) {
                if (this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this._textChanged && (this._inputControl[0] === document.activeElement)) {
                   closestParagraph = $(this._tinyEditor.selection.getNode()).closest('p')[0];
-                  if (closestParagraph  && $ws._const.browser.isMobileIOS) {
+                  if (closestParagraph  && constants.browser.isMobileIOS) {
                      this._scrollToPrev(closestParagraph);//необходимо передавать абзац
                   }
                }
@@ -1465,7 +1477,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                var
                   targetOffset = target.getBoundingClientRect(),
                   keyboardCoef = (window.innerHeight > window.innerWidth) ? constants.ipadCoefficient[side].vertical : constants.ipadCoefficient[side].horizontal; //Для альбома и портрета коэффициенты разные.
-               return $ws._const.browser.isMobileIOS && this.isEnabled() && targetOffset[side] > window.innerHeight * keyboardCoef;
+               return constants.browser.isMobileIOS && this.isEnabled() && targetOffset[side] > window.innerHeight * keyboardCoef;
             },
 
             _scrollTo: function(target, side){
@@ -1494,7 +1506,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                value = '<p>' + value.replace(/\n/gi, '<br/>') + '</p>';
             }
             value = Sanitize(value);
-            return (this._options || it).highlightLinks ? $ws.helpers.wrapURLs($ws.helpers.wrapFiles(value), true) : value;
+            return (this._options || it).highlightLinks ? strHelpers.wrapURLs(strHelpers.wrapFiles(value), true) : value;
          },
 
          //установка значения в редактор

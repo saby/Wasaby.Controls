@@ -3,18 +3,24 @@
  */
 define('js!SBIS3.CONTROLS.FilterHistoryController',
     [
-       'js!SBIS3.CONTROLS.HistoryController',
-       'js!WS.Data/Collection/List',
-       'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil'
-    ],
+   "Core/core-functions",
+   "Core/EventBus",
+   "Core/IoC",
+   "Core/ConsoleLogger",
+   "js!SBIS3.CONTROLS.HistoryController",
+   "js!WS.Data/Collection/List",
+   "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
+   "Core/helpers/collection-helpers",
+   "Core/helpers/generate-helpers"
+],
 
-    function(HistoryController, List, FilterToStringUtil) {
+    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, colHelpers, genHelpers) {
 
        'use strict';
 
        var MAX_FILTERS_AMOUNT = 10;
        var LAST_FILTER_NUMBER = 9;
-       var HISTORY_CHANNEL = $ws.single.EventBus.channel('FilterHistoryChannel');
+       var HISTORY_CHANNEL = EventBus.channel('FilterHistoryChannel');
 
        var FilterHistoryController = HistoryController.extend({
           $protected: {
@@ -67,13 +73,13 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 return;
              }
 
-             var isHistoryEqual = $ws.helpers.isEqualObject(this._listHistory.toArray(), newHistory.toArray()),
+             var isHistoryEqual = colHelpers.isEqualObject(this._listHistory.toArray(), newHistory.toArray()),
                  filterButton = this._options.filterButton,
                  currentActiveFilter = this.getActiveFilter();
 
              /* Если при изменении активные фильтры или вся история одинаковы,
                 то не надо запускать механизм синхронизации истории */
-             if (isHistoryEqual || (currentActiveFilter && activeFilter && $ws.helpers.isEqualObject(currentActiveFilter, activeFilter))) {
+             if (isHistoryEqual || (currentActiveFilter && activeFilter && colHelpers.isEqualObject(currentActiveFilter, activeFilter))) {
                 /* Для случая, когда фильтр был синхронизирован из внешнего контекста (т.е. его в истории нет),
                    при сбросе фильтра, мы должны синхронизировать и другие фильтры, которые подписаны на канал изменения с одинаковым id,
                    т.е. вызвать у них сброс фильтра */
@@ -86,7 +92,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
              /* Запишем новую историю */
              /* Надо обязательно клонировать историю, чтобы по ссылке не передавались изменения */
-             this._listHistory.assign($ws.core.clone(newHistory.toArray()));
+             this._listHistory.assign(cFunctions.clone(newHistory.toArray()));
              this._saveParamsDeferred = saveDeferred;
 
              if(activeFilter) {
@@ -119,9 +125,9 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
           _prepareStructureElemToSave: function(structure) {
              /* Все правки надо делать с копией, чтобы не портить оригинальную структуру */
-             var structureCopy = $ws.core.clone(structure);
+             var structureCopy = cFunctions.clone(structure);
 
-             $ws.helpers.forEach(structureCopy, function(elem) {
+             colHelpers.forEach(structureCopy, function(elem) {
                 /* Хак для испрвления даты, при записи на бл история приводится к строке через метод JSON.stringify,
                   а метод stringify сериализует дату, учитывая сдвиг (GMT/UTC)
                   и в итоге мы можем получить не ту дату */
@@ -165,7 +171,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              });
 
              if(toDelete.length) {
-                $ws.helpers.forEach(toDelete, function(elem) {
+                colHelpers.forEach(toDelete, function(elem) {
                    self._listHistory.remove(elem);
                 });
              }
@@ -173,7 +179,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
           _prepareStructureElemForApply: function(structure) {
              /* Чтобы не портить текущую историю, сделаем копию (иначе не применится фильтр) */
-             var currentStructureCopy = $ws.core.clone(this._options.filterButton.getFilterStructure());
+             var currentStructureCopy = cFunctions.clone(this._options.filterButton.getFilterStructure());
              prepareNewStructure(currentStructureCopy, structure);
 
              /* Алгоритм следующий:
@@ -181,8 +187,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                      элементы в структуре из истории с таким же internalValueField
                   2) Если нашли, то смержим эти элементы
                   3) Если не нашли, и есть значение в value, то сбросим этот фильтр */
-             $ws.helpers.forEach(currentStructureCopy, function(elem) {
-                var elemFromHistory = $ws.helpers.find(structure, function(structureElem) {
+             colHelpers.forEach(currentStructureCopy, function(elem) {
+                var elemFromHistory = colHelpers.find(structure, function(structureElem) {
                    return elem.internalValueField === structureElem.internalValueField;
                 }, false);
 
@@ -198,7 +204,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                    if(elemFromHistory.visibilityValue !== undefined) {
                       elem.visibilityValue = elemFromHistory.visibilityValue;
                    }
-                } else if(elem.value && elem.resetValue && !$ws.helpers.isEqualObject(elem.value, elem.resetValue)) {
+                } else if(elem.value && elem.resetValue && !colHelpers.isEqualObject(elem.value, elem.resetValue)) {
                    elem.value = elem.resetValue;
                 }
              });
@@ -260,8 +266,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            * @param filterObject
            */
           saveToHistory: function(filterObject) {
-             var equalFilter = $ws.helpers.find(this.getHistoryArr(), function(item) {
-                    return $ws.helpers.isEqualObject(item.filter, filterObject.filter) || item.linkText === filterObject.linkText;
+             var equalFilter = colHelpers.find(this.getHistoryArr(), function(item) {
+                    return colHelpers.isEqualObject(item.filter, filterObject.filter) || item.linkText === filterObject.linkText;
                  }),
                  activeFilter = this.getActiveFilter();
 
@@ -291,7 +297,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
              /* Добавим новый фильтр в начало набора */
              this._listHistory.add({
-                id: $ws.helpers.randomId(),
+                id: genHelpers.randomId(),
                 linkText: filterObject.linkText,
 	            viewFilter: this.prepareViewFilter(),
                 filter: filterObject.filter,
@@ -304,9 +310,9 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
           prepareViewFilter: function(filter) {
              var view = this._options.view,
-                 viewFilter = $ws.core.clone(filter || view.getFilter());
+                 viewFilter = cFunctions.clone(filter || view.getFilter());
 
-             $ws.helpers.forEach(this._options.noSaveFilters, function(filter) {
+             colHelpers.forEach(this._options.noSaveFilters, function(filter) {
                 if(viewFilter[filter]) {
                    delete viewFilter[filter];
                 }
@@ -315,7 +321,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              /* Т.к. в реестре задач (возможно где-то ещё)
                 в поле фильтра с типом "Дата" ожидают строку даты со сдвигом(чтобы её обработать),
                 а не стандартный ISO формат, то использую наш специальный метод для приведения даты в строку */
-             $ws.helpers.forEach(viewFilter, function(val, key, obj) {
+             colHelpers.forEach(viewFilter, function(val, key, obj) {
                 if(val instanceof Date) {
                    obj[key] = val.toSQL(true);
                 }
@@ -340,7 +346,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            * @private
            */
           getActiveFilter: function() {
-             return $ws.helpers.find(this.getHistoryArr(), function(item) {
+             return colHelpers.find(this.getHistoryArr(), function(item) {
                 return item.isActiveFilter;
              }, this, false);
           },
@@ -351,7 +357,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            * @private
            */
           findFilterByKey: function(key) {
-             return $ws.helpers.find(this.getHistoryArr(), function(item) {
+             return colHelpers.find(this.getHistoryArr(), function(item) {
                 return item.id == key;
              }, this, false);
           },
@@ -421,12 +427,12 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
        function prepareNewStructure(currentStructure, newStructure) {
           var toDelete = [];
 
-          $ws.helpers.forEach(newStructure, function(newStructureElem, key) {
-             var elemFromCurrentStructure = $ws.helpers.find(currentStructure, function(elem) {
+          colHelpers.forEach(newStructure, function(newStructureElem, key) {
+             var elemFromCurrentStructure = colHelpers.find(currentStructure, function(elem) {
                 /* По неустановленной причине, в структуре из истории могут появляться null'ы,
                    скорее всего, это прикладная ошибка, но надо от этого защититься (повторяется только на некоторых фильтрах ЭДО) */
                 if(!newStructureElem) {
-                   $ws.single.ioc.resolve('ILogger').log('FilterHistoryController', 'В стукрутре из истории присутствуют null элементы');
+                   IoC.resolve('ILogger').log('FilterHistoryController', 'В стукрутре из истории присутствуют null элементы');
                    return false;
                 } else {
                    return newStructureElem.internalValueField === elem.internalValueField;
@@ -438,7 +444,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              }
           });
 
-          $ws.helpers.forEach(toDelete, function(elem) {
+          colHelpers.forEach(toDelete, function(elem) {
              delete newStructure[elem];
           });
        }

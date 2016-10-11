@@ -1,4 +1,6 @@
-define('js!SBIS3.CONTROLS.BreakClickBySelectMixin', [], function() {
+define('js!SBIS3.CONTROLS.BreakClickBySelectMixin', [
+   "Core/constants"
+], function( constants) {
     /**
      * Миксин, предотвращающий вызов обработчика клика, при выделении текста внутри контрола.
      * @mixin SBIS3.CONTROLS.BreakClickBySelect
@@ -20,7 +22,7 @@ define('js!SBIS3.CONTROLS.BreakClickBySelectMixin', [], function() {
             return !selection.isCollapsed && !!this._container.find(selection.focusNode).length;
         },
         _getSelection: function() {
-            return $ws._const.browser.isIE8 ? window.getSelectionForIE() : window.getSelection();
+            return constants.browser.isIE8 ? window.getSelectionForIE() : window.getSelection();
         },
         around: {
             _onClickHandler: function(parentFunc, event) {
