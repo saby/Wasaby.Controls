@@ -185,6 +185,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 				this.dgv = '[name="DataGridView 1"]'
 				this.input = '[sbisname="TextBox 1"] input';
 				this.data2 = '[data-id="2"]';
+				this.delete_btn = '[data-id="delete"]';
                 
 				actions.waitForElementToShow(this.dgv, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -192,6 +193,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 
             .capture('hovered_row', function (actions) {
                 actions.mouseMove(this.data2);
+				actions.waitForElementToShow(this.delete_btn, 5000);
             })
     });
 	
