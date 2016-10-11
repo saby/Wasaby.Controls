@@ -19,7 +19,8 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    'js!SBIS3.CONTROLS.FilterPanelChooser',
    'js!SBIS3.CONTROLS.FilterPanelDataRange',
    'js!SBIS3.CONTROLS.FilterPanelBoolean',
-   'js!SBIS3.CONTROLS.IconButton'
+   'js!SBIS3.CONTROLS.IconButton',
+   'js!SBIS3.CONTROLS.ScrollContainer'
 ], function(CompoundControl, Expandable, FilterPanelItem, MarkupTransformer, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
 
    'use strict';
