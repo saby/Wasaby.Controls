@@ -517,6 +517,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                left: this._options.horizontalAlign.offset + this._containerSizes.originWidth
             };
          }
+         //Может быть открыта клавиатура, тогда реальный top больше на ее высоту - нужно это учесть
+         this._containerSizes.requiredOffset.top += TouchKeyboardHelper.getKeyboardHeight();
          this._containerSizes.width = this._containerSizes.originWidth;
          this._containerSizes.height = this._containerSizes.originHeight;
          this._containerSizes.boundingClientRect = container.get(0).getBoundingClientRect();
