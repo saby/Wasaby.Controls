@@ -95,9 +95,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
             deferred = deferred === true ? new $ws.proto.Deferred().callback(true) : deferred;
             if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
                deferred.addCallback(function() {
-                  if (isChangeOrder) {
-                     self.moveInItems(records, recordTo, !insertAfter);
-                  } else {
+                  if (!isChangeOrder) {
                      self.removeItemsSelectionAll();
                   }
                }).addBoth(function() {
@@ -219,80 +217,9 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
       _moveRecord: function(item, moveToId, current, up) {
          var self = this,
              moveToItem = this._options._items.getRecordById(moveToId);
-         this.getMoveStrategy().move([item], moveToItem, !up).addCallback(function() {
-            self.moveInItems([item], moveToItem, up);
-         }).addErrback(function(e) {
+         this.getMoveStrategy().move([item], moveToItem, !up).addErrback(function(e) {
             $ws.core.alert(e.message);
          });
-      },
-
-      moveInItems: function(moveItems, moveToItem, up) {
-         var moveToIndex,
-            items = this.getItems(),
-            projection = this._getItemsProjection(),
-            orderPropery = this.getDataSource().getOrderProperty(),
-            orderValue = this._getOrderValue(moveToItem, moveItems[0], up);
-
-         $ws.helpers.forEach(moveItems, function(item) {
-            var projectionItem =  projection.getItemBySourceItem(item);
-            if (this._options.hierField) {
-               //если перемещение было по порядку и иерархии одновременно, то надо обновить hierField
-               item.set(this._options.hierField, moveToItem.get(this._options.hierField));
-            }
-            if(up) { //Если перемещаем вверх то надо вставить перемещаемую запись перед записью к которой перемещаем.
-               moveToIndex = items.getIndex(moveToItem);
-               moveToIndex = moveToIndex > -1 ?  moveToIndex : 0;//если не нашли то всталяем вначало
-            } else {
-               //Если перемещаем вниз то нужно найти следующий элемент в проекции потом его индекс в рекордсете
-               //и вставить запись после него, потомучто может быть перемещение через dragndrop а оно может вставить куда угодно.
-               var nextProjectionItem = projection.getNext(
-                  projection.getItemBySourceItem(moveToItem)
-               );
-               if(nextProjectionItem) {
-                  moveToIndex = projection.getSourceIndexByIndex(
-                     projection.getIndex(nextProjectionItem)
-                  );
-               } else { //если не найден то вставляем в конец
-                  moveToIndex = items.getCount();
-               }
-            }
-            if (items.getIndex(item) < moveToIndex ) {
-               moveToIndex--; //если запись по списку сдвигается вниз то после ее удаления индексы сдвинутся
-            }
-            items.setEventRaising(false, true);
-            items.remove(item);
-            items.add(
-               item,
-               moveToIndex < items.getCount() ? moveToIndex : undefined
-            );
-            if (orderPropery && orderValue && item.has(orderPropery)) {
-               item.set(orderPropery, orderValue);
-            }
-            items.setEventRaising(true, true);
-         }.bind(this));
-      },
-      /**
-       * вычисляет значение порномера, нужно если есть сортировка по порномеру на проекции
-       * @private
-       */
-      _getOrderValue: function(moveToItem, moveItem, up) {
-         var projection = this._getItemsProjection(),
-            nearbyItemprojItem = projection[up ? 'getPrevious' : 'getNext'](
-               projection.getItemBySourceItem(moveToItem)
-            ),
-            nearbyItem =  nearbyItemprojItem ? nearbyItemprojItem.getContents() : undefined,
-            orderPropery = this.getDataSource().getOrderProperty();
-
-         if (moveToItem.has(orderPropery)) {
-            var nearbyVal = nearbyItem ? nearbyItem.get(orderPropery) : undefined,
-               moveToVal = moveToItem.get(orderPropery);
-
-            if (nearbyVal && moveToVal) {
-               return Math.floor((moveToVal+nearbyVal)/2);
-            }
-            return moveToVal;
-         }
-         return undefined;
       }
    };
 

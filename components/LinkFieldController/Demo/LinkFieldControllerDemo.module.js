@@ -84,9 +84,9 @@ define('js!SBIS3.CONTROLS.Demo.LinkFieldController', [
             observableFields: observableFields
          });
 
-         console.log(model.toObject());
+         $ws.single.ioc.resolve('ILogger').log(model.toObject());
 
-         console.log('Всё ок: ' + $ws.helpers.isEqualObject(model.toObject(), {
+         $ws.single.ioc.resolve('ILogger').log('Всё ок: ' + $ws.helpers.isEqualObject(model.toObject(), {
             Возраст:55,
             Должность:'Премьер-министр',
             'Должность.Зарплата':100,
@@ -101,15 +101,15 @@ define('js!SBIS3.CONTROLS.Demo.LinkFieldController', [
 
          model.set('ИД', 1);
 
-         console.log(model.toObject());
+         $ws.single.ioc.resolve('ILogger').log(model.toObject());
 
          model.set('ИД', 2);
 
-         console.log(model.toObject());
+         $ws.single.ioc.resolve('ILogger').log(model.toObject());
 
          model.set('ИД', null);
 
-         console.log(model.toObject());
+         $ws.single.ioc.resolve('ILogger').log(model.toObject());
       }
    });
 });

@@ -7,7 +7,6 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
     'js!WS.Data/Source/Memory',
     'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
     'js!SBIS3.CONTROLS.ListView',
-    'js!SBIS3.CONTROLS.ScrollContainer',
     'js!SBIS3.CONTROLS.Link',
     'js!SBIS3.CONTROLS.FilterPanelBoolean',
     'i18n!SBIS3.CONTROLS.FilterPanelChooser'
@@ -45,7 +44,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
                 filter: [],
                 favorites: [],
                 favoritesCount: 0,
-                allButtonCaption: 'Все',
+                captionFullList: 'Все',
                 //list, dictionary, favorites
                 viewMode: 'list',
                 keyField: 'id',
@@ -68,7 +67,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
                 sorting = {};
             FilterPanelChooser.superclass.init.apply(this, arguments);
             listView = this._getListView();
-            listView.subscribe('onDrawItems', this._updateViewHeight.bind(this));
+            listView._checkClickByTap = false;
             listView.subscribe('onItemClick', this._elemClickHandler.bind(this));
             listView.subscribe('onSelectedItemsChange', this._selectedItemsChangeHandler.bind(this));
             //TODO: декларативно не задать, потому что не поддерживается динамическое имя опции объекта
@@ -133,21 +132,6 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
             return filter;
         },
 
-        _updateViewHeight: function() {
-            var
-                height = 0,
-                scrollContainer = this._getScroll().getContainer(),
-                items = $('.js-controls-ListView__item', this._getListView()._getItemsContainer());
-
-            scrollContainer.height('');
-            if (items.length > MAX_ITEMS_COUNT) {
-                for (var i = 0; i < MAX_ITEMS_COUNT; i++) {
-                    height += $(items[i]).outerHeight();
-                }
-                scrollContainer.height(height);
-            }
-        },
-
         _selectedItemsChangeHandler: function(event, idArray, changed) {
             var
                 item,
@@ -162,7 +146,6 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
                         items.remove(items.getRecordById(id));
                         source.destroy(id);
                     }
-                    this._updateViewHeight();
                 }, this);
             }
         },
@@ -214,7 +197,6 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
 
         _getAllButton: controlGetter.call(this, 'controls-FilterPanelChooser__allButton', '_getAllButton'),
         _getListView: controlGetter.call(this, 'controls-FilterPanelChooser__ListView', '_getListView'),
-        _getScroll: controlGetter.call(this, 'controls-FilterPanelChooser__ScrollContainer', '_getScroll'),
         _getFavoritesCheckBox: controlGetter.call(this, 'controls-FilterPanelChooser__favoritesCheckBox', '_getFavoritesCheckBox'),
         _getSelector: $ws.helpers.memoize(function() {
             return new SelectorAction({

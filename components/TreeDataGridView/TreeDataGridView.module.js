@@ -190,14 +190,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          this.reviveComponents();
       },
       _getFolderFooterOptions: function(key) {
+         var level = this._getItemProjectionByItemId(key).getLevel();
          return {
             key: key,
             item: this.getItems().getRecordById(key),
-            level: this._getItemProjectionByItemId(key).getLevel(),
+            level: level,
             footerTpl: this._options.folderFooterTpl,
             multiselect: this._options.multiselect,
             colspan: this._options.columns.length,
-            levelOffsetWidth: HIER_WRAPPER_WIDTH
+            padding: this._options._paddingSize * level
          }
       },
       _getFolderFooterWrapper: function() {
@@ -220,6 +221,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _resizeFoldersFooters: function() {
          var footers = $('.controls-TreeView__folderFooterContainer', this._container.get(0));
          var width = this._container.width();
+         //Если в браузере присутствует колонка с checkbox'ом, то нужно вычесть его ширину из общей ширины футера
+         if (this._options.multiselect) {
+            width = width - this._colgroup.find('col:first').width();
+         }
          footers.outerWidth(width);
       },
 
@@ -277,15 +282,16 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
                      // TODO для обратной совместимости - удалить позже
                      if(self._options.arrowActivatedHandler) {
+                        $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.TreeDataGridView', 'Опция arrowActivatedHandler помечена как deprecated и будет удалена в 3.7.4.200.');
                         self._options.arrowActivatedHandler.call(this,
                             hoveredItem.record,
                             id,
                             hoveredItem.container
                         );
                      } else {
-                        self.setSelectedKey(id);
                         self._activateItem(id);
                      }
+                     self.setSelectedKey(id);
                   }
                }
             });

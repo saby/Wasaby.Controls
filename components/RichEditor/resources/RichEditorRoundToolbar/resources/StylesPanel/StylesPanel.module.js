@@ -7,7 +7,8 @@ define('js!SBIS3.CONTROLS.StylesPanel', [
    'html!SBIS3.CONTROLS.StylesPanel',
    'js!SBIS3.CONTROLS.ToggleButton',
    'js!SBIS3.CONTROLS.ComboBox',
-   'js!SBIS3.CONTROLS.ColorGroup'
+   'js!SBIS3.CONTROLS.ColorGroup',
+   'js!SBIS3.CONTROLS.IconButton'
 ], function(CompoundControl, dotTplFn) {
 
    'use strict';

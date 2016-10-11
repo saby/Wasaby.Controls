@@ -1,4 +1,13 @@
-define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CORE.LoadingIndicator', 'js!WS.Data/Entity/Record', 'js!WS.Data/Entity/Model', 'js!WS.Data/Source/SbisService', 'i18n!SBIS3.CONTROLS.FormController'],
+define('js!SBIS3.CONTROLS.FormController',
+   [
+      'js!SBIS3.CORE.CompoundControl',
+      'js!SBIS3.CORE.LoadingIndicator',
+      'js!WS.Data/Entity/Record',
+      'js!WS.Data/Entity/Model',
+      'js!WS.Data/Source/SbisService',
+      'js!SBIS3.CONTROLS.OpenDialogAction',
+      'i18n!SBIS3.CONTROLS.FormController'
+   ],
    function(CompoundControl, LoadingIndicator, Record, Model, SbisService) {
    /**
     * Компонент, на основе которого создают диалоги редактирования записей.
@@ -179,37 +188,49 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          }
       },
 
-      $constructor: function(cfg) {
-         this._newRecord = cfg.isNewRecord || false;
+      $constructor: function() {
          this._publish('onFail', 'onReadModel', 'onBeforeUpdateModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel', 'onAfterFormLoad');
          this._declareCommands();
          this.subscribeTo($ws.single.EventBus.channel('navigation'), 'onBeforeNavigate', $ws.helpers.forAliveOnly(this._onBeforeNavigate, this));
 
          this._updateDocumentTitle();
          this._setDefaultContextRecord();
+         this._processingRecordDeferred();
+
+         this._newRecord = this._options.isNewRecord;
+         this._panelReadyDeferred = new $ws.proto.Deferred();
          this._panel = this.getTopParent();
-         //для совместимости со старыми формами создает источник данных только если в опциях на прототипе есть данные об источнике данных
-         //в противном случае люди сами устанавливать источник
+         this._panel.subscribe('onBeforeClose', this._onBeforeCloseHandler);
+         this._panel.subscribe('onAfterShow', this._onAfterShowHandler);
+
+         //TODO в рамках совместимости
          this._dataSource = this._options.source;
-         if(this._options.dataSource && this._options.dataSource.endpoint) {
+         if (this._options.dataSource && this._options.dataSource.endpoint) {
             this._dataSource = this._dataSource || FormController.prototype.createDataSource(this._options);
-            if (!this._options.record){
+            if (!this._options.record && !$ws.helpers.instanceOfModule(this._options._receiptRecordDeferred, 'Core/Deferred')) {
                this._getRecordFromSource({});
             }
          }
-         this._panel.subscribe('onBeforeClose', this._onBeforeCloseHandler);
-         this._panelReadyDeferred = new $ws.proto.Deferred();
-         this._panel.subscribe('onAfterShow', this._onAfterShowHandler);
       },
 
       _declareCommands: function(){
-         $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
          $ws.single.CommandDispatcher.declareCommand(this, 'read', this._read);
          $ws.single.CommandDispatcher.declareCommand(this, 'update', this.update);
          $ws.single.CommandDispatcher.declareCommand(this, 'destroy', this._destroyModel);
          $ws.single.CommandDispatcher.declareCommand(this, 'create', this._create);
          $ws.single.CommandDispatcher.declareCommand(this, 'notify', this._actionNotify);
          $ws.single.CommandDispatcher.declareCommand(this, 'activateChildControl', this._createChildControlActivatedDeferred);
+      },
+
+      _processingRecordDeferred: function(){
+         var receiptRecordDeferred = this._options._receiptRecordDeferred,
+             needUpdateKey = !this._options.key,
+             self = this;
+         if ($ws.helpers.instanceOfModule(receiptRecordDeferred, 'Core/Deferred')){
+            receiptRecordDeferred.addCallback(function(record){
+               self.setRecord(record, needUpdateKey);
+            });
+         }
       },
 
       _onAfterShowHandler: function(){
@@ -302,17 +323,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          if (this._previousDocumentTitle){
             document.title = this._previousDocumentTitle;
          }
-      },
-
-      /**
-       * Используйте команду update.
-       * @command
-       * @see update
-       * @deprecated
-       */
-      submit: function(closePanelAfterSubmit){
-        $ws.single.ioc.resolve('ILogger').info('FormController', 'Command "submit" is deprecated and will be removed in 3.7.4. Use sendCommand("update")');
-        return this.update(closePanelAfterSubmit);
       },
 
       _getRecordForUpdate: function () {
@@ -434,6 +444,9 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       getDataSource: function(){
          return this._dataSource;
       },
+      isNewRecord: function(){
+         return this._newRecord;
+      },
       /**
        * Устанавливает источник данных диалогу редактирования.
        * @remark
@@ -457,7 +470,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see getDataSource
        */
       setDataSource: function(source, config){
-         $ws.single.ioc.resolve('ILogger').log('FormController', 'Метод setDataSource в скором времени будет удален, задать источник данных необходимо через конфигурацию dataSource');
+         $ws.single.ioc.resolve('ILogger').error('FormController', 'Метод setDataSource в скором времени будет удален, задать источник данных необходимо через конфигурацию dataSource');
          this._dataSource = source;
          return this._getRecordFromSource(config)
       },
@@ -480,6 +493,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          if (updateKey){
             newKey = record.getId();
             this._options.key = newKey;
+            this._newRecord = true;
          }
          this._updateDocumentTitle();
          this._setContextRecord(record);
@@ -540,7 +554,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
 
          createDeferred.addCallback(function(record){
             self.setRecord(record, true);
-            self._newRecord = true;
             return record;
          }).addBoth(function(data){
             self._activateChildControlAfterLoad();
@@ -562,19 +575,21 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see onDestroyModel
        * @see dataSource
        */
-      _destroyModel: function(){
+      _destroyModel: function(cfg){
          var record = this._options.record,
+            config = cfg || {},
             self = this,
             destroyConfig = {
-               hideIndicator: true,
+               hideIndicator: config.hideIndicator ? config.hideIndicator : true,
                eventName: 'onDestroyModel',
                hideErrorDialog: true
             },
             def = this._dataSource.destroy(record.getId());
 
-         return this._prepareSyncOperation(def, {}, destroyConfig).addBoth(function(){
+         return this._prepareSyncOperation(def, config, destroyConfig).addBoth(function(data){
             self._newRecord = false;
             record.setState(Record.RecordState.DELETED);
+            return data;
          });
       },
 
@@ -884,19 +899,27 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       //todo Костыль, позволяющий с прототипа компонента вычитать запись до инициализации компонента и прокинуть ее в опции. Сделано в рамках ускорения
       FormController.prototype.getRecordFromSource = function (opt) {
          var prototypeProtectedData = {},
+             dataSource,
+             options,
              result;
+
          this._initializer.call(prototypeProtectedData); //На прототипе опции не доступны, получаем их через initializer
-         var options = prototypeProtectedData._options;
+         options = prototypeProtectedData._options;
          $ws.core.merge(options, opt);
-         if (!$ws.helpers.instanceOfModule(options.source, 'WS.Data/Source/Base')) {
-            options.source = opt.source = this.createDataSource(options);
+
+         //TODO в рамках совместимости
+         if (Object.isEmpty(options.dataSource) && !options.source){
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.FormController', 'Необходимо задать опцию dataSource');
+            return false;
          }
+
+         options.source = this.createDataSource(options);
+
          if (options.key){
             result = options.source.read(options.key);
          }
          else{
             result = options.source.create(options.initValues);
-            result.isNewRecord = true;
          }
          return result;
       };
@@ -905,6 +928,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          if (!$ws.helpers.instanceOfModule(options.source, 'WS.Data/Source/Base')) {
             return new SbisService(options.dataSource);
          }
+         return options.source;
       };
    return FormController;
 

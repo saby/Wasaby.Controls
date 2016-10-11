@@ -55,9 +55,13 @@ input[type="reset"]::-moz-focus-inner {
 }
 
 /* HOVER styles */
-.icon-hover,
-.action-hover:hover {
+.icon-hover{
   color: @icon-color-hover !important;
+}
+.ws-is-desktop-platform {
+  .action-hover:hover {
+    color: @icon-color-hover !important;
+  }
 }
 
 .ws-disabled {

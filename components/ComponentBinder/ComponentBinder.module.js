@@ -46,11 +46,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
              this._firstSearch = false;
              //Флаг обозначает, что ввод был произведен пользователем
              this._searchReload = true;
-             //Это нужно чтобы поиск был от корня, а крошки при этом отображаться не должны
-             //Почему тут просто не скрыть их через css?
-             if (this._options.breadCrumbs) {
-                this._options.breadCrumbs.setItems([]);
-             }
 
              if (searchMode == 'root'){
                 filter[view.getHierField()] = undefined;
@@ -61,6 +56,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                 //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
                 if (self._options.backButton) {
                    self._options.backButton.getContainer().css({'display': 'none'});
+                }
+                //Это нужно чтобы поиск был от корня, а крошки при этом отображаться не должны
+                if (self._options.breadCrumbs) {
+                   self._options.breadCrumbs.getContainer().css({'display': 'none'});
                 }
 
                 if (mode === 'root') {
@@ -147,8 +146,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          view.once('onDataLoad', function() {
             self._path = self._pathDSRawData || [];
             if (self._options.breadCrumbs) {
-               self._options.breadCrumbs.getItems().setRawData(self._pathDSRawData);
-               self._options.breadCrumbs._redraw();
+               self._options.breadCrumbs.getContainer().css({'display': ''});
             }
             if (self._options.backButton) {
                self._options.backButton.getContainer().css({'display': ''});
@@ -177,7 +175,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       if (gridView._options.multiselect) {
          gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
          if (hideCheckBoxes) {
-            gridView._container.toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isVisible());
+            gridView.toggleCheckboxes(operationPanel.isVisible());
             gridView.removeItemsSelectionAll();
          }
          if (gridView._options.startScrollColumn !== undefined) {
@@ -297,6 +295,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                view: view,
                param: searchParamName
             })
+         } else {
+            this._kbLayoutRevertObserver.setParam(searchParamName);
          }
          view._searchParamName = searchParamName;
          if (isTree){
@@ -317,6 +317,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                   if (self._options.breadCrumbs && self._options.breadCrumbs.getItems()){
                      var crumbsItems = self._options.breadCrumbs.getItems();
                      self._pathDSRawData = crumbsItems ? crumbsItems.getRawData() : [];
+                     self._options.breadCrumbs.getContainer().css({'display': ''});
                   }
                   if (self._options.backButton) {
                      self._options.backButton.getContainer().css({'display': ''});
@@ -759,7 +760,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
 
          var pagesCount = this._scrollPages.length;
 
-         if (!this._options.view.getItems().getMetaData().more && pagesCount > 1){
+         if (pagesCount > 1){
             this._options.view.getContainer().css('padding-bottom', '32px');
          }
          if (this._options.paging.getSelectedKey() > pagesCount){
