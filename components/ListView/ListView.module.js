@@ -1428,6 +1428,10 @@ define('js!SBIS3.CONTROLS.ListView',
          //********************************//
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
+         toggleCheckboxes: function(toggle) {
+            this._container.toggleClass('controls-ListView__hideCheckBoxes', !toggle);
+            this._notifyOnSizeChanged(true);
+         },
          _isHoverEditMode: function() {
             return !$ws._const.compatibility.touch && this._options.editMode.indexOf('hover') !== -1;
          },
