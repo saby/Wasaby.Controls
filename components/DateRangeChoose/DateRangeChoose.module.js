@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
                   name: 'II',
                   quarters: [
                      {name: 'III', months: ['Июль', 'Август', 'Сентябрь']},
-                     {name: 'VI', months: ['Октябрь', 'Ноябрь', 'Декабрь']}
+                     {name: 'IV', months: ['Октябрь', 'Ноябрь', 'Декабрь']}
                   ]
                }
             ]
