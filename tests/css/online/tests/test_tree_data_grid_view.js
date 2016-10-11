@@ -1,5 +1,5 @@
 gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
-
+	
     gemini.suite('base', function (test) {
 
         test.setUrl('/regression_tree_data_grid_view_online.html').setCaptureElements('.capture')
@@ -249,14 +249,6 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 				actions.mouseUp(this.thumb);
 				actions.mouseMove(this.arrow_right);
             })
-			
-			.capture('hovered_folder_and_ajax', function (actions) {
-				actions.mouseMove(this.data6_folder);
-				actions.executeJS(function (window) {
-                    window.$('.controls-AjaxLoader').removeClass('ws-hidden');
-					window.$('.controls-AjaxLoader__LoadingIndicator').remove();
-                });
-            })
     });
 	
 	gemini.suite('group_by', function (test) {
@@ -423,7 +415,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 
             .before(function (actions) {
 				
-				this.tdgv = '[name="ТипНоменклатуры"]';
+				this.tdgv = '[name="Nomenclature"]';
 				this.input = '[sbisname="TextBox 1"] input';
 				this.data1_expand = '[data-id="0"] .controls-TreeView__expand';
 				this.data4 = '[data-id="4"]';

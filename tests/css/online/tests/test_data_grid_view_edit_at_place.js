@@ -6,13 +6,13 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 
             .before(function (actions) {
                 
-				this.dgv = '[sbisname="ТипНоменклатуры"]';
-                this.item3 = '[sbisname="ТипНоменклатуры"] [data-id="3"]';
-				this.item7 = '[sbisname="ТипНоменклатуры"] [data-id="7"]';
+				this.dgv = '[sbisname="Nomenclature"]';
+                this.item3 = '[sbisname="Nomenclature"] [data-id="3"]';
+				this.item7 = '[sbisname="Nomenclature"] [data-id="7"]';
                 this.input = '[name="TextBox 1"] input';
 				this.cancel = '[title="Отмена"]';
 				this.save = '[title="Сохранить"]';
-				this.editor_input = '[sbisname="Содержимое_bind"] input';
+				this.editor_input = '[sbisname="bind_text"] input';
 				
 				actions.waitForElementToShow(this.dgv, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -56,10 +56,10 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 
             .before(function (actions) {
 				
-				this.dgv = '[sbisname="ТипНоменклатуры"]';
+				this.dgv = '[sbisname="Nomenclature"]';
 				this.input = '[name="TextBox 1"] input';
-                this.item3 = '[sbisname="ТипНоменклатуры"] [data-id="3"]';
-				this.editor_input = '[sbisname="Содержимоеbind"] textarea';
+                this.item3 = '[sbisname="Nomenclature"] [data-id="3"]';
+				this.editor_input = '[sbisname="bind_text"] textarea';
 				
 				actions.waitForElementToShow(this.dgv, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -79,10 +79,10 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 
             .before(function (actions) {
 				
-				this.dgv = '[sbisname="ТипНоменклатуры"]';
+				this.dgv = '[sbisname="Nomenclature"]';
 				this.input = '[name="TextBox 1"] input';
-                this.item3 = '[sbisname="ТипНоменклатуры"] [data-id="3"]';
-				this.editor_input = '[sbisname="Содержимое_bind"] .controls-RichEditor__editorFrame';
+                this.item3 = '[sbisname="Nomenclature"] [data-id="3"]';
+				this.editor_input = '[sbisname="bind_text"] .controls-RichEditor__editorFrame';
 				
 				actions.waitForElementToShow(this.dgv, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -154,13 +154,13 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 
             .before(function (actions) {
 				
-				this.dgv = '[sbisname="ТипНоменклатуры"]';
-                this.item3 = '[sbisname="ТипНоменклатуры"] [data-id="3"]';
-				this.item7 = '[sbisname="ТипНоменклатуры"] [data-id="7"]';
+				this.dgv = '[sbisname="Nomenclature"]';
+                this.item3 = '[sbisname="Nomenclature"] [data-id="3"]';
+				this.item7 = '[sbisname="Nomenclature"] [data-id="7"]';
                 this.input = '[name="TextBox 1"] input';
 				this.cancel = '[title="Отмена"]';
 				this.save = '[title="Сохранить"]';
-				this.editor_input = '[sbisname="Содержимоеbind"] input';
+				this.editor_input = '[sbisname="bind_text"] input';
 				
 				actions.waitForElementToShow(this.dgv, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -195,13 +195,13 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 
             .before(function (actions) {
                 
-				this.dgv = '[sbisname="ТипНоменклатуры"]';
-                this.item3 = '[sbisname="ТипНоменклатуры"] [data-id="3"]';
-				this.item7 = '[sbisname="ТипНоменклатуры"] [data-id="7"]';
+				this.dgv = '[sbisname="Nomenclature"]';
+                this.item3 = '[sbisname="Nomenclature"] [data-id="3"]';
+				this.item7 = '[sbisname="Nomenclature"] [data-id="7"]';
                 this.input = '[name="TextBox 1"] input';
 				this.cancel = '[title="Отмена"]';
 				this.save = '[title="Сохранить"]';
-				this.editor_input = '[sbisname="Содержимое_bind"] input';
+				this.editor_input = '[sbisname="bind_text"] input';
 				
 				actions.waitForElementToShow(this.dgv, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -237,13 +237,13 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 
             .before(function (actions) {
 				
-				this.dgv = '[sbisname="ТипНоменклатуры"]';
-                this.item3 = '[sbisname="ТипНоменклатуры"] [data-id="3"]';
-				this.item7 = '[sbisname="ТипНоменклатуры"] [data-id="7"]';
+				this.dgv = '[sbisname="Nomenclature"]';
+                this.item3 = '[sbisname="Nomenclature"] [data-id="3"]';
+				this.item7 = '[sbisname="Nomenclature"] [data-id="7"]';
                 this.input = '[name="TextBox 1"] input';
 				this.cancel = '[title="Отмена"]';
 				this.save = '[title="Сохранить"]';
-				this.editor_input = '[sbisname="Содержимоеbind"] input';
+				this.editor_input = '[sbisname="bind_text"] input';
 				
 				actions.waitForElementToShow(this.dgv, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -278,8 +278,8 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 
             .before(function (actions) {
 				
-				this.dgv = '[sbisname="ТипНоменклатуры"]';
-                this.item4 = '[sbisname="ТипНоменклатуры"] [data-id="4"]';
+				this.dgv = '[sbisname="Nomenclature"]';
+                this.item4 = '[sbisname="Nomenclature"] [data-id="4"]';
                 this.input = '[name="TextBox 1"] input';
 				this.editor_input = '[sbisname="withoutNDS_bind"] input';
 				
@@ -306,10 +306,10 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 
             .before(function (actions) {
 				
-				this.dgv = '[sbisname="ТипНоменклатуры"]';
-                this.item4 = '[sbisname="ТипНоменклатуры"] [data-id="4"]';
+				this.dgv = '[sbisname="Nomenclature"]';
+                this.item4 = '[sbisname="Nomenclature"] [data-id="4"]';
                 this.input = '[name="TextBox 1"] input';
-				this.editor_input = '[sbisname="Содержимоеbind"] input';
+				this.editor_input = '[sbisname="bind_text"] input';
 				
 				actions.waitForElementToShow(this.dgv, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -329,10 +329,10 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 
             .before(function (actions) {
 				
-				this.dgv = '[sbisname="ТипНоменклатуры"]';
-                this.item3 = '[sbisname="ТипНоменклатуры"] [data-id="3"]';
+				this.dgv = '[sbisname="Nomenclature"]';
+                this.item3 = '[sbisname="Nomenclature"] [data-id="3"]';
                 this.input = '[name="TextBox 1"] input';
-				this.editor_input = '[sbisname="Содержимоеbind"] input';
+				this.editor_input = '[sbisname="bind_text"] input';
 				this.cancel = '[title="Отмена"]';
 				this.save = '[title="Сохранить"]';
 				
@@ -355,10 +355,10 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 
             .before(function (actions) {
 				
-				this.dgv = '[sbisname="ТипНоменклатуры"]';
-                this.item3 = '[sbisname="ТипНоменклатуры"] [data-id="3"]';
+				this.dgv = '[sbisname="Nomenclature"]';
+                this.item3 = '[sbisname="Nomenclature"] [data-id="3"]';
                 this.input = '[name="TextBox 1"] input';
-				this.editor_input = '[sbisname="Содержимоеbind"] input';
+				this.editor_input = '[sbisname="bind_text"] input';
 				this.cancel = '[title="Отмена"]';
 				this.save = '[title="Сохранить"]';
 				
@@ -381,10 +381,10 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 
             .before(function (actions) {
 				
-				this.dgv = '[sbisname="ТипНоменклатуры"]';
-                this.item3 = '[sbisname="ТипНоменклатуры"] [data-id="3"]';
+				this.dgv = '[sbisname="Nomenclature"]';
+                this.item3 = '[sbisname="Nomenclature"] [data-id="3"]';
                 this.input = '[name="TextBox 1"] input';
-				this.editor_input = '[sbisname="Содержимоеbind"] input';
+				this.editor_input = '[sbisname="bind_text"] input';
 				this.cancel = '[title="Отмена"]';
 				this.save = '[title="Сохранить"]';
 				
