@@ -1884,6 +1884,9 @@ define('js!SBIS3.CONTROLS.ListView',
 
                   }
                });
+               this._itemsToolbar.getItemsActions().subscribe('onHideMenu', function() {
+                  self.setActive(true);
+               });
             }
             return this._itemsToolbar;
          },
