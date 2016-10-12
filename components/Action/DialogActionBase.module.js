@@ -162,6 +162,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          }
 
          var config,
+             self = this,
              compOptions = this._buildComponentConfig(meta),
              initializingWay = compOptions.initializingWay;
 
