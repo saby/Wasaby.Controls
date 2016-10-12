@@ -279,7 +279,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              /* Не сохраняем в историю, если:
                 1) Ещё не сохранился предыдущий фильтр,
                 2) Такой фильтр уже есть в истории */
-             if(this.isNowSaving() || equalFilter) {
+             if(this.isNowSaving() || equalFilter || !filterObject.linkText) {
                 /* Если такой фильтр есть в истории, то надо его сделать активным */
                 if(equalFilter && !equalFilter.isActiveFilter) {
                    equalFilter.isActiveFilter = true;
