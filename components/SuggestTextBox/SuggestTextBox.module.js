@@ -3,8 +3,10 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.SuggestMixin',
    'js!SBIS3.CONTROLS.ChooserMixin',
-   'js!SBIS3.CONTROLS.SuggestTextBoxMixin'
-], function (TextBox, PickerMixin, SuggestMixin, ChooserMixin, SuggestTextBoxMixin) {
+   'js!SBIS3.CONTROLS.SuggestTextBoxMixin',
+   'js!SBIS3.CONTROLS.SearchMixin',
+   'js!SBIS3.CONTROLS.ComponentBinder'
+], function (TextBox, PickerMixin, SuggestMixin, ChooserMixin, SuggestTextBoxMixin, SearchMixin, ComponentBinder) {
    'use strict';
 
    /**
@@ -21,7 +23,56 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
     * @public
     * @category Inputs
     */
-   var SuggestTextBox = TextBox.extend([PickerMixin, SuggestMixin, ChooserMixin, SuggestTextBoxMixin],{
+   var SuggestTextBox = TextBox.extend([PickerMixin, SuggestMixin, ChooserMixin, SuggestTextBoxMixin, SearchMixin], {
+      $protected: {
+         _options: {
+            /**
+             * @cfg {String} Имя параметр фильтрации для поиска
+             */
+            searchParam : ''
+         }
+      },
+      $constructor: function() {
+         /* Если передали параметр поиска, то поиск производим через ComponentBinder */
+         if(this._options.searchParam) {
+            this.subscribe('onSearch', function() {
+               this._showLoadingIndicator();
+               this.hidePicker();
+            });
+
+            this.once('onSearch', function () {
+               var componentBinder = new ComponentBinder({
+                      view: this.getList(),
+                      searchForm: this
+                   }),
+                   undefinedArg;
+
+               /* Биндим suggestTextBox и список с помощью биндера,
+                  передаём параметр, чтобы биндер не реагировал на сброс,
+                  т.к. список просто скрывается по сбросу, и лишний запрос делать не надо */
+               componentBinder.bindSearchGrid(this._options.searchParam, undefinedArg, undefinedArg, undefinedArg, true);
+            });
+
+            this.subscribe('onReset', this._resetSearch.bind(this));
+         }
+      },
+
+      _onListDataLoad: function() {
+         SuggestTextBox.superclass._onListDataLoad.apply(this, arguments);
+
+         if(this._options.searchParam) {
+            /* В событии onDataLoad момент нельзя показывать пикер т.к. :
+               1) Могут возникнуть проблемы, когда после отрисовки пикер меняет своё положение.
+               2) Данных в рекордсете ещё нет.
+               3) В onDataLoad приклданые программисты могу менять загруженный рекордсет.
+               Поэтому в этом событии просто одинарно подпишемся на событие отрисовки данных и покажем автодополнение (если требуется). */
+            this.subscribeOnceTo(this.getList(), 'onDrawItems', function() {
+               if(this._checkPickerState(false)) {
+                  this.showPicker();
+               }
+            }.bind(this));
+         }
+      },
 
       showPicker: function() {
          SuggestTextBox.superclass.showPicker.apply(this, arguments);
@@ -35,7 +86,21 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          if (this._picker && textBoxWidth !== pickerContainer.clientWidth) {
             pickerContainer.style.width = textBoxWidth + 'px';
          }
+      },
+
+      _resetSearch: function() {
+         SuggestTextBox.superclass._resetSearch.apply(this, arguments);
+
+         if(this._options.searchParam) {
+            /* Т.к. при сбросе поиска в саггесте запрос отправлять не надо (саггест скрывается),
+               то просто удалим параметр поиска из фильтра */
+            var listFilter = $ws.core.clone(this.getList().getFilter()); /* Клонируем фильтр, т.к. он передаётся по ссылке */
+
+            delete listFilter[this._options.searchParam];
+            this.setListFilter(listFilter, true);
+         }
       }
    });
+
    return SuggestTextBox;
 });

@@ -1,8 +1,15 @@
 /**
- * Created by iv.cheremushkin on 14.08.2014.
+ * Created by as.avramenko on 09.08.2016.
  */
 
-define('js!SBIS3.CONTROLS.Accordion', ['js!SBIS3.CONTROLS.SwitchableArea'], function(SwitchableArea) {
+define('js!SBIS3.CONTROLS.Accordion', [
+   'js!SBIS3.CORE.CompoundControl',
+   'js!SBIS3.CONTROLS.ItemsControlMixin',
+   'html!SBIS3.CONTROLS.Accordion',
+   'browser!tmpl!SBIS3.CONTROLS.Accordion/resources/ItemTemplate',
+   'browser!tmpl!SBIS3.CONTROLS.Accordion/resources/ItemContentTemplate',
+   'js!SBIS3.CONTROLS.Spoiler'
+], function(CompoundControl, ItemsControlMixin, dotTplFn, ItemTemplate, ItemContentTemplate) {
 
    'use strict';
 
@@ -10,20 +17,20 @@ define('js!SBIS3.CONTROLS.Accordion', ['js!SBIS3.CONTROLS.SwitchableArea'], func
     * Контрол, содержащий несколько областей содержащих контент.
     * В каждый момент времени отображается только одна область.
     * Отображаемая область может переключаться при клике на корневые пункты аккордеона.
-    * @author Крайнов Дмитрий Олегович
+    * @author Авраменко Алексей Сергеевич
     * @class SBIS3.CONTROLS.Accordion
-    * @extends SBIS3.CONTROLS.SwitchableArea
+    * @extends SBIS3.CONTROLS.CompoundControl
     */
 
-   var Accordion = SwitchableArea.extend( /** @lends SBIS3.CONTROLS.Accordion.prototype */ {
+   var Accordion = CompoundControl.extend([ItemsControlMixin], /** @lends SBIS3.CONTROLS.Accordion.prototype */ {
+      _dotTplFn: dotTplFn,
       $protected: {
          _options: {
-
-         }
-      },
-
-      $constructor: function() {
-
+            itemTpl: ItemTemplate,
+            itemContentTpl: ItemContentTemplate,
+            _canServerRender: true
+         },
+         _checkClickByTap: false
       }
    });
 

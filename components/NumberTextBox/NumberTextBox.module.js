@@ -196,7 +196,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _setText: function(text){
-         this._setNumericValue(text);
          if (text !== '-' && text !== '.' && text !== ''){
             text = this._formatText(text);
             if (text.indexOf('.') === text.length - 1) {
@@ -205,6 +204,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
                return;
             }
          }
+         this._setNumericValue(text);
          this._inputField.val(text);
          this._setCaretPosition(this._caretPosition[0], this._caretPosition[1]);
       },
@@ -304,7 +304,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             this._options.delimiters,
             decimals,
             this._options.onlyPositive,
-            this._options.maxLength
+            this._options.maxLength,
+            true
          );
          if(isDotLast){
             value = value ? value + '.' : '.';

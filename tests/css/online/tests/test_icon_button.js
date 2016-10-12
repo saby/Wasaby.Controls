@@ -30,6 +30,34 @@ gemini.suite('SBIS3.CONTROLS.IconButton Online', function () {
             })
     });
 
+    gemini.suite('round_border_plus', function (test) {
+
+        test.setUrl('/regression_icon_button_online_7.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="IconButton 1"]', 40000);
+                this.icon_button = find('[name="IconButton 1"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[sbisname="TextBox 1"] input');
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.input);
+            })
+
+            .capture('hovered', function (actions) {
+                actions.mouseMove(this.icon_button);
+            })
+
+            .capture('actived', function (actions) {
+                actions.mouseDown(this.icon_button);
+            })
+
+            .after(function (actions) {
+                actions.mouseUp(this.icon_button);
+            })
+    });
+
     gemini.suite('strange', function (test) {
 
         test.setUrl('/regression_icon_button_online_2.html').setCaptureElements('.capture')

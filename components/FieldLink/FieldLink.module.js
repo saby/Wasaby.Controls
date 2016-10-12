@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.FieldLink',
     [
        'js!SBIS3.CONTROLS.SuggestTextBox',
-       'js!SBIS3.CONTROLS.DSMixin',
+       'js!SBIS3.CONTROLS.ItemsControlMixin',
        'js!SBIS3.CONTROLS.MultiSelectable',
        'js!SBIS3.CONTROLS.ActiveMultiSelectable',
        'js!SBIS3.CONTROLS.Selectable',
@@ -13,13 +13,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
        'js!SBIS3.CONTROLS.Utils.DialogOpener',
        'js!SBIS3.CONTROLS.ITextValue',
        'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+       'js!WS.Data/Di',
        'js!SBIS3.CONTROLS.MenuIcon',
+       'js!SBIS3.CONTROLS.Action.SelectorAction',
        'i18n!SBIS3.CONTROLS.FieldLink'
 
     ],
     function (
         SuggestTextBox,
-        DSMixin,
+        ItemsControlMixin,
 
         /* Интерфейс для работы с набором выбранных записей */
         MultiSelectable,
@@ -40,7 +42,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         /********************************************/
         DialogOpener,
         ITextValue,
-        TemplateUtil
+        TemplateUtil,
+        Di
     ) {
 
        'use strict';
@@ -93,7 +96,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @mixes SBIS3.CONTROLS.ChooserMixin
         * @mixes SBIS3.CONTROLS.FormWidgetMixin
         * @mixes SBIS3.CONTROLS.SyncSelectionMixin
-        * @mixes SBIS3.CONTROLS.DSMixin
+        * @mixes SBIS3.CONTROLS.ItemsControlMixin
         *
         * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo Пример 1. Поле связи в режиме множественного выбора значений. Выбор можно производить как через справочник, так и через автодополнение.
         * @demo SBIS3.CONTROLS.Demo.FieldLinkSingleSelect Пример 2. Поле связи в режиме единичного выбора значений. Выбор можно производить как через справочник, так и через автодополнение.
@@ -110,7 +113,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings footerTpl emptyHTML groupBy
-        * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip setEmptyHTML setGroupBy
+        * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip setEmptyHTML setGroupBy itemTpl
         *
         * ignoreEvents onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
         *
@@ -119,7 +122,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @category Inputs
         */
 
-       var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, DSMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
+       var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ItemsControlMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
           /**
            * @name SBIS3.CONTROLS.FieldLink#textValue
            * @cfg {String} Хранит строку, сформированную из значений поля отображения выбранных элементов коллекции.
@@ -138,15 +141,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @param {SBIS3.CONTROLS.Record} meta.item Экземпляр класса выбранного значения.
            */
           $protected: {
-             _inputWrapper: undefined,     /* Обертка инпута */
-             _linksWrapper: undefined,     /* Контейнер для контрола выбранных элементов */
-             _dropAllButton: undefined,    /* Кнопка очистки всех выбранных записей */
-             _showAllLink: undefined,      /* Кнопка показа всех записей в пикере */
-             _linkCollection: undefined,   /* Контрол отображающий выбранные элементы */
+             _inputWrapper: null,     /* Обертка инпута */
+             _linksWrapper: null,     /* Контейнер для контрола выбранных элементов */
+             _dropAllButton: null,    /* Кнопка очистки всех выбранных записей */
+             _showAllLink: null,      /* Кнопка показа всех записей в пикере */
+             _linkCollection: null,   /* Контрол отображающий выбранные элементы */
+             _selectorAction: null,   /* Action выбора */
              _checkWidth: true,
              _lastFieldLinkWidth: null,
-             _afterFieldWrapper: undefined,
-             _beforeFieldWrapper: undefined,
+             _afterFieldWrapper: null,
+             _beforeFieldWrapper: null,
              _options: {
                 /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
                 afterFieldWrapper: afterFieldWrapper,
@@ -160,7 +164,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    }
                 },
                 /**
+                 * @typedef {String} selectionTypeDef Режим выбора.
+                 * @variant node выбираются только узлы
+                 * @variant leaf выбираются только листья
+                 * @variant all выбираются все записи
+                 *
                  * @typedef {Object} Dictionaries
+                 * @property {String} name Имя (Идентификатор справочника).
+                 * @property {selectionTypeDef} selectionType
                  * @property {String} caption Текст в меню выбора справочников. Опция актуальна, когда для поля связи установлено несколько справочников.
                  * Открыть справочник можно через меню выбора справочников или с помощью метода {@link showSelector}.
                  * Меню выбора справочников - это кнопка, которая расположена внутри поля связи с правого края:
@@ -255,7 +266,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  *     <option name="itemTemplate" type="string">html!SBIS3.MyArea.MyComponent/resources/myTemplate</option>
                  * </pre>
                  */
-                itemTemplate: null
+                itemTemplate: null,
+                /**
+                 * @cfg {Boolean} Использовать для выбора {@link SBIS3.CONTROLS.Action.SelectorAction}
+                 */
+                useSelectorAction: false
              }
           },
 
@@ -278,7 +293,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
                если она включена, то логика стирания текста обрабатывается по-другому. */
             this.subscribe('onSelectedItemsChange', function(event, result, changed) {
                if(self.getText() && !self._options.alwaysShowTextBox) {
-                  self.setText('');
+                  /* Т.к. текст сбрасывается програмно, а searchMixin реагирует лишь на ввод текста с клавиатуры,
+                   то надо позвать метод searchMixin'a, который сбросит текст и поднимет событие */
+                  self.resetSearch();
                }
                /* При добавлении элементов надо запустить валидацию,
                   если же элементы были удалены,
@@ -301,6 +318,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           init: function() {
              FieldLink.superclass.init.apply(this, arguments);
+
+             if(this._options.useSelectorAction) {
+                this.subscribeTo((this._selectorAction = this.getChildControlByName('FieldLinkSelectorAction')), 'onExecuted', function(event, meta, result) {
+                   if(result) {
+                      this.setSelectedItems(result);
+                   }
+                }.bind(this));
+             }
+
              this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
           },
 
@@ -319,7 +345,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           _menuItemActivatedHandler: function(e, item) {
              var rec = this.getItems().getRecordById(item);
-             this.getParent().showSelector(rec.get('template'), rec.get('componentOptions'));
+             this.getParent().showSelector(rec.get('template'), rec.get('componentOptions'), rec.get('selectionType'));
           },
 
           /**
@@ -353,6 +379,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this._notifyOnPropertyChanged('dictionaries');
           },
 
+
+          /**
+           * Для поля связи требуется своя реализация метода setSelectedKey, т.к.
+           * Selectable расчитывает на наличие проекции и items, которых в поле связи нет.
+           * + полю связи не требуется единичная отрисовка item'a, т.к. при синхронизации selectedKey и selectedKeys,
+           * всегда будет вызываться метод drawSelectedItems
+           * @param key
+           */
+          setSelectedKey: function(key) {
+             this._options.selectedKey = key;
+             this._notifySelectedItem(this._options.selectedKey);
+          },
+
           /**
            * Открывает справочник для поля связи.
            * @remark
@@ -374,14 +413,22 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @see dictionaries
            * @see setDictionaries
            */
-          showSelector: function(template, componentOptions) {
-             //FIXME и ещё один костыль до перевода пикера на фокусную систему
+          showSelector: function(template, componentOptions, selectionType) {
              if(this.isPickerVisible()) {
                 this.hidePicker();
              }
 
-             this._showChooser(template, componentOptions)
-
+             if(this._options.useSelectorAction) {
+                this._selectorAction.execute({
+                   template: template,
+                   componentOptions: componentOptions,
+                   multiselect: this.getMultiselect(),
+                   selectionType: selectionType,
+                   selectedItems: this.getSelectedItems()
+                });
+             } else {
+                this._showChooser(template, componentOptions);
+             }
           },
 
           setActive: function(active) {
@@ -627,6 +674,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 }
              });
              FieldLink.superclass.setDataSource.apply(this, arguments);
+
+             /* Если в поле связи есть выбранные ключи, то после установки сорса надо
+                загрузить записи и отрисовать их */
+             if(!this._isEmptySelection) {
+                this._loadAndDrawItems();
+             }
           },
 
           _loadAndDrawItems: function(amount) {
@@ -674,14 +727,34 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           _prepareItems: function() {
              var items = FieldLink.superclass._prepareItems.apply(this, arguments),
-                 self = this;
+                 self = this,
+                 newRec, dataSource, dataSourceModel, dataSourceModelInstance;
 
              if(items) {
+                dataSource = this.getDataSource();
+
+                if(dataSource) {
+                   dataSourceModel = dataSource.getModel();
+                   /* Создадим инстанс модели, который указан в dataSource,
+                    чтобы по нему проверять модели которые выбраны в поле связи */
+                   dataSourceModelInstance = typeof dataSourceModel === 'string' ? Di.resolve(dataSourceModel) : new dataSourceModel();
+
+                   items.each(function(rec, index) {
+                      /* Если модель сорса и выбранной записи разные, то создадим копию модели сорса,
+                       и заполним её данными из выбранной записи */
+                      if( dataSourceModelInstance._moduleName !==  rec._moduleName) {
+                         (newRec = dataSourceModelInstance.clone()).merge(rec);
+                         rec = newRec;
+                         items.replace(rec, index);
+                      }
+                   });
+                }
+
                 /* Элементы, установленные из дилогов выбора / автодополнения могут иметь другой первичный ключ,
                    отличный от поля с ключём, установленного в поле связи. Это связно с тем, что "связь" устанавливается по опеределённому полю,
                    и не обязательному по первичному ключу у записей в списке. */
                 items.each(function(rec) {
-                   if(rec.getIdProperty() !== self._options.keyField && rec.get(self._options.keyField)) {
+                   if(rec.getIdProperty() !== self._options.keyField && rec.get(self._options.keyField) !== undefined) {
                       rec.setIdProperty(self._options.keyField);
                    }
                 })
@@ -779,17 +852,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 },
                 handlers: {
                    onShow: function() {
-                      if($ws._const.browser.isMobileIOS) {
-                         var revertedVertical = !this._picker.getContainer().hasClass('controls-popup-revert-vertical');
+                      var revertedVertical = this._picker.getContainer().hasClass('controls-popup-revert-vertical');
 
-                         if (revertedVertical) {
-                            if (!this._listReversed) {
-                               this._reverseList();
-                            }
-                         } else {
-                            if (this._listReversed) {
-                               this._reverseList();
-                            }
+                      if($ws._const.browser.isMobileIOS) {
+                         revertedVertical = !revertedVertical;
+                      }
+
+                      if (revertedVertical) {
+                         if (!this._listReversed) {
+                            this._reverseList();
+                         }
+                      } else {
+                         if (this._listReversed) {
+                            this._reverseList();
                          }
                       }
                    }.bind(this)
@@ -884,7 +959,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           /* Заглушка, само поле связи не занимается отрисовкой */
-          _redraw: $ws.helpers.nop,
+          redraw: $ws.helpers.nop,
+          /* Заглушка, само поле связи не занимается загрузкой списка */
+          reload: $ws.helpers.nop,
 
 
           destroy: function() {

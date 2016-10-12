@@ -1,12 +1,11 @@
 .column-ellipsis(){
    .controls-DataGridView__columnValue {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      .text-overflow();
    }
-   overflow: hidden;
-   text-overflow: ellipsis;
-   white-space: nowrap;
+   .controls-TreeView__folderTitle {
+      .text-overflow();
+   }
+   .text-overflow();
 }
 .controls-DataGridView {
    .controls-ListView__item {
@@ -59,7 +58,7 @@
          }
       }
       .controls-ItemsToolbar {
-         margin-right: 3px;
+         right: 3px;
       }
    }
 

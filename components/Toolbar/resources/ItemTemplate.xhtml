@@ -4,8 +4,8 @@
     options = item.get('options') || {},
     className = item.get('className') || '',
     itemKey = item.get(it.keyField),
-    visible = !!(item.get('showType') == it.showType.MENU_TOOLBAR || item.get('showType') == it.showType.TOOLBAR );
-    if (visible) {
+    isToolbarItem = !!(item.get('showType') == it.showType.MENU_TOOLBAR || item.get('showType') == it.showType.TOOLBAR );
+    if (isToolbarItem) {
         subItems = it.getSubItems(itemKey, null, it.items, it.keyField, it.hierField);
         subItems = $ws.core.clone(subItems);
         for (var i = 0; i < subItems.length; i++) {
@@ -24,7 +24,7 @@
            data-hash="{{=it.projItem.getHash()}}"
            data-id="{{=itemKey}}"
            class="controls-ListView__item js-controls-ListView__item controls-ToolBar__item {{=className}}">
-    <option name="visible" type="boolean">{{=visible}}</option>
+    <option name="visible" type="boolean">{{=(isToolbarItem && item.get('visible'))}}</option>
     <option name="keyField">{{=it.keyField}}</option>
     {{?item.get('icon')}}<option name="icon">{{=item.get('icon')}}</option>{{?}}
     {{?item.get('caption')}}<option name="caption">{{=item.get('caption')}}</option>{{?}}

@@ -5,8 +5,9 @@
 define('js!SBIS3.CONTROLS.PopupMixin', [
       'js!SBIS3.CONTROLS.ControlHierarchyManager',
       'js!SBIS3.CORE.ModalOverlay',
+      'js!SBIS3.CONTROLS.TouchKeyboardHelper',
       'Core/helpers/helpers'
-   ], function (ControlHierarchyManager, ModalOverlay, coreHelpers) {
+   ], function (ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers) {
    'use strict';
    if (typeof window !== 'undefined') {
       var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
@@ -166,7 +167,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                self.hide();
             });
          }
-         container.appendTo('body');
+
+         this._attachContainer();
 
          this._saveDefault();
          this._resetToDefault();
@@ -176,6 +178,16 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             // на iPad при появлении всплывахи над FloatArea при проведении пальцем над всплывахой - скроллится FloatArea (бажное поведение iPad с инетным скроллом)
             // приходится отключать инертный скролл в момент показа всплывахи и включать обратно при скрытии
             this._parentFloatArea = topParent;
+         }
+      },
+
+      _attachContainer: function(){
+         var container = this._container,
+            parentToAttach = container.parents('.ws-body-scrolling-content');
+         if (parentToAttach.length){
+            container.appendTo(parentToAttach);
+         } else {
+            container.appendTo('body');
          }
       },
 
@@ -516,6 +528,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                left: this._options.horizontalAlign.offset + this._containerSizes.originWidth
             };
          }
+         //Может быть открыта клавиатура, тогда реальный top больше на ее высоту - нужно это учесть
+         this._containerSizes.requiredOffset.top += TouchKeyboardHelper.getKeyboardHeight();
          this._containerSizes.width = this._containerSizes.originWidth;
          this._containerSizes.height = this._containerSizes.originHeight;
          this._containerSizes.boundingClientRect = container.get(0).getBoundingClientRect();
@@ -524,7 +538,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
       _initWindowSizes: function () {
          this._windowSizes = {
-            height: $(window).height(),
+            height: $(window).height() - TouchKeyboardHelper.getKeyboardHeight(),
             width: $(window).width()
          };
       },
@@ -790,8 +804,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          var offset = this._targetSizes.offset,
             width = this._targetSizes.width,
             height = this._targetSizes.height,
-            windowHeight = $(window).height(),
-            windowWidth = $(window).width(),
+            windowHeight = this._windowSizes.height,
+            windowWidth = this._windowSizes.width,
             spaces = {
                top: 0,
                left: 0,

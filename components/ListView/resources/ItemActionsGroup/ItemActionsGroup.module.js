@@ -125,6 +125,13 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             ItemActionsGroup.superclass.setEnabled.apply(this, arguments);
             this.applyItemActions();
          },
+
+         /**
+          * Возвращает элемент для которого отображаются Операции над записью
+          */
+         getTarget: function () {
+            return this._activeItem;
+         },
          /**
           * Создаёт меню для операций над записью
           * @private
@@ -185,7 +192,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._activeItem.container.addClass(this._activeCls);
             this._itemActionsMenu.recalcPosition(true);
             /*TODO фикс теста, для операций над записью должна быть особая иконка*/
-            $('.controls-PopupMixin__closeButton', this._itemActionsMenu.getContainer()).addClass('icon-16 icon-size icon-ExpandUp icon-primary action-hover');
+            $('.controls-PopupMixin__closeButton', this._itemActionsMenu.getContainer()).addClass('icon-16 icon-size icon-ExpandUp icon-primary');
          },
 
          /**
@@ -250,8 +257,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._itemActionsButtons ={};
             this._itemActionsMenu && this._itemActionsMenu.setItems(items);
             ItemActionsGroup.superclass.setItems.apply(this, arguments);
-            if(this.isVisible()) {
-               this.applyItemActions();
+            if(this.isItemActionsMenuVisible()){
+               this._onBeforeMenuShowHandler();
             }
          },
          /**

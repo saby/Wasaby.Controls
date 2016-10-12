@@ -40,6 +40,8 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
     * По умолчанию граница серого цвета. При наведении курсора цвет границы изменяется в соответствии с цветом иконки, установленной в опции {@link icon}.
     * @cssModifier controls-IconButton__round-border-24 Устанавливает круглую границу (диаметр в 24 px) вокруг иконки быстрой операции, доступной по наведению курсора. Подробнее о таких типах операций вы можете прочитать <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">здесь</a>.
     * Модификатор применяется совместно с иконками размерами 16 px. Цвет границы соответствует цвету иконки, установленной в опции {@link icon}.
+    * @cssModifier controls-IconButton__filter-left Устанавливает внешний вид кнопки для кнопки открытия/закрытия фильтров слева
+    * @cssModifier controls-IconButton__filter-right Устанавливает внешний вид кнопки для кнопки открытия/закрытия фильтров справа
     *
     * @category Buttons
     * @control
@@ -73,10 +75,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
             iconClass = options._iconClass;
          if (iconClass) {
             options._moreClass = '';
-            if ((iconClass.indexOf('icon-error') < 0) && (iconClass.indexOf('icon-done') < 0)) {
-               options._moreClass += ' action-hover';
-            }
-            else {
+            if (((iconClass.indexOf('icon-error') >= 0) || (iconClass.indexOf('icon-done') >= 0))){
                if (iconClass.indexOf('icon-error') >= 0) {
                   options._moreClass += ' controls-IconButton__errorBorder';
                }

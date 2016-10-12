@@ -1,7 +1,8 @@
 define('js!SBIS3.CONTROLS.SubmitPopup', [
       'js!SBIS3.CONTROLS.InformationPopup',
       'html!SBIS3.CONTROLS.SubmitPopup/resources/template',
-      'js!SBIS3.CONTROLS.Button'
+      'js!SBIS3.CONTROLS.Button',
+      'js!SBIS3.CONTROLS.Link'
    ],
 
    /**
@@ -11,6 +12,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
     * @class SBIS3.CONTROLS.SubmitPopup
     * @extends SBIS3.CONTROLS.InformationPopup
     * @control
+    * @public
     * @author Степин П.В.
     */
    function(InformationPopup, template){
@@ -38,6 +40,12 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
           * @param {ChosenStatus} Вариант диалога, выбранный нажатием соответствующей кнопки
           * @variant
           */
+
+         /**
+          * @typedef {Object} ButtonConfig
+          * @property {Boolean} isLink Показать кнопку ссылку вместо обычной кнопки
+          * @property {String} caption Текст кнопки.
+          */
          $protected: {
             _options: {
 
@@ -54,11 +62,53 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                 * @cfg {String} Детали сообщения, отображаются под основным сообщением.
                 */
                details: '',
+               
+               /**
+                * @cfg {ButtonConfig} Настройки кнопки подтверждения. Применяется для диалогов со статусом confirm.
+                */
+               positiveButton: {
+                  caption: rk('Да'),
+                  isLink: false
+               },
+
+               /**
+                * @cfg {ButtonConfig} Настройки кнопки отрицания. Применяется для диалогов со статусом confirm.
+                */
+               negativeButton: {
+                  caption: rk('Нет'),
+                  isLink: false
+               },
+
+               /**
+                * @cfg {ButtonConfig} Настройки кнопки отмены. Применяется для диалогов со статусом confirm.
+                */
+               cancelButton: {
+                  caption: rk('Отмена'),
+                  isLink: false
+               },
+
+               /**
+                * @cfg {ButtonConfig} Настройки кнопки подтверждения. Применяется для диалогов со статусом default, success, error и warning.
+                */
+               submitButton: {
+                  caption: rk('ОК'),
+                  isLink: false
+               },
 
                /**
                 * @cfg {Boolean} Использовать ли кнопку Отмена. Опция актуальна только для окна подтверждения.
                 */
                hasCancelButton: false,
+
+               /**
+                * @cfg {Function} Шаблон для сообщения
+                */
+               messageTemplate: null,
+
+               /**
+                * @cfg {Function} Шаблон для деталей, отображается под основным сообщением
+                */
+               detailsTemplate: null,
 
                /*
                 * @noShow

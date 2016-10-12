@@ -21,10 +21,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
        * @control
        * @public
        */
-      var EndEditResult = {
-         CANCEL: 'Cancel',
-         SAVE: 'Save',
-         NOT_SAVE: 'NotSave'
+      var EndEditResult = { // Возможные результаты события "onEndEdit"
+         CANCEL: 'Cancel', // Отменить завершение редактирования/добавления
+         SAVE: 'Save', // Завершать с штатным сохранением результатов редактирования/добавления.
+         NOT_SAVE: 'NotSave', // Завершать без сохранения результатов. ВНИМАНИЕ! Использование данной константы в добавлении по месту приводит к автоудалению созданной записи
+         CUSTOM_LOGIC: 'CustomLogic' // Завершать с кастомной логика сохранения. Используется, например, при добавлении по месту, когда разработчику необходимо самостоятельно обработать добавляемую запись
       };
 
       var
@@ -73,7 +74,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _lastTargetAdding: undefined,
                //Флаг отвечает за блокировку при добавлении записей. Если несколько раз подряд будет отправлена команда добавления, то уйдёт несколько запросов на бл
                _addLock: false,
-               _addTarget: undefined
+               _addTarget: undefined,
+               _isAdd: false
             },
             $constructor: function () {
                this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace', 'onChangeHeight');
@@ -135,7 +137,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   }
                };
                if (this._options.endEditByFocusOut) {
-                  config.handlers.onChildFocusOut = this._onChildFocusOut.bind(this);
+                  config.handlers.onFocusOut = this._onChildFocusOut.bind(this);
                }
                return config;
             },
@@ -202,9 +204,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _getCurrentTarget: function() {
                return this._eip.getTarget();
             },
+
+            _getEditingRecord: function() {
+               return this.isEdit() ? this._getEditingEip().getEditingRecord() : undefined;
+            },
+
             showEip: function(model, options, withoutActivateFirstControl) {
                if (options && options.isEdit) {
-                  return this.edit(model, options, withoutActivateFirstControl);
+                  return this.edit(model, withoutActivateFirstControl);
                } else {
                   return this.add(options);
                }
@@ -217,7 +224,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      if (preparedRecord) {
                         var
                             parentProjItem,
-                            itemProjItem = self._options.itemsProjection.getItemBySourceItem(preparedRecord);
+                            // Элемент проекции нужно получать именно по записи, открытой на редактирование, т.к. только у неё правильный hash
+                            itemProjItem = self._options.itemsProjection.getItemBySourceItem(model);
                         self._getEip().edit(preparedRecord, itemProjItem, withoutActivateFirstControl);
                         editingRecord = self._getEip().getEditingRecord();
                         self._notify('onAfterBeginEdit', editingRecord);
@@ -309,6 +317,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (eip && this._savingDeferred.isReady()) {
                   this._savingDeferred = new $ws.proto.Deferred();
                   record = eip.getEditingRecord();
+                  //Если редактирование(не добавление) завершается с сохранением, но запись не изменена, то нет смысл производить сохранение,
+                  //т.к. отправится лишний запрос на бл, который ни чего по сути не сделает
+                  if (withSaving && !this._isAdd && !record.isChanged()) {
+                     withSaving = false;
+                  }
                   endEditResult = this._notify('onEndEdit', record, withSaving);
                   if (endEditResult instanceof $ws.proto.Deferred) {
                      return endEditResult.addBoth(function(result) {
@@ -323,6 +336,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this._savingDeferred.isReady() ? $ws.proto.Deferred.success() : this._savingDeferred;
             },
             _endEdit: function(eip, withSaving, endEditResult) {
+               var self = this;
                //TODO: Поддержка старого варианта результата.
                if (typeof endEditResult === "boolean") {
                   endEditResult = endEditResult ? EndEditResult.SAVE : EndEditResult.NOT_SAVE;
@@ -337,7 +351,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._savingDeferred.errback();
                   return $ws.proto.Deferred.fail();
                } else {
-                  this._updateModel(eip, withSaving);
+                  if (endEditResult === EndEditResult.CUSTOM_LOGIC) {
+                     this._afterEndEdit(eip, withSaving);
+                  } else {
+                     this._updateModel(eip, withSaving).addBoth(function () {
+                        self._removePendingOperation();
+                        self._afterEndEdit(eip, withSaving);
+                     });
+                  }
                   return this._savingDeferred;
                }
             },
@@ -347,37 +368,34 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _updateModel: function(eip, withSaving) {
                var
                   self = this,
-                  eipRecord = eip.getEditingRecord(),
-                  //Узнать происходит ли добавление, надёжнее всего проверяя есть ли запись с указанным Id в рекордсете.
-                  //Смотреть на state ненадёжно т.к. запись могли перечитать с бл, или могли позвать reload после начала редактирования.
-                  //Эти действия сделают запись не связанной с рекордсетом, и мы не сможем понять, происходит ли добавление или редактирование.
-                  isAdd = !this._options.items.getRecordById(eipRecord.getId());
+                  deferred,
+                  eipRecord = eip.getEditingRecord();
                if (withSaving) {
-                  this._options.dataSource.update(eipRecord).addCallback(function() {
+                  deferred = this._options.dataSource.update(eipRecord).addCallback(function() {
                      eip.acceptChanges();
                      if (self._editingRecord) {
                         self._editingRecord.merge(eipRecord);
                         self._editingRecord = undefined;
                      }
-                     if (isAdd) {
+                     if (self._isAdd) {
                         self._options.items.add(eip._cloneWithFormat(eipRecord, self._options.items));
                      }
                   }).addErrback(function(error) {
                      $ws.helpers.alert(error);
-                  }).addBoth(function() {
-                     self._afterEndEdit(eip, withSaving);
                   });
                } else {
-                  if (isAdd && eipRecord.getId()) {
-                     this._options.dataSource.destroy(eipRecord.getId());
+                  if (this._isAdd && eipRecord.getId()) {
+                     deferred = this._options.dataSource.destroy(eipRecord.getId());
+                  } else {
+                     deferred = $ws.proto.Deferred.success()
                   }
-                  this._afterEndEdit(eip, withSaving);
                }
-               this._removePendingOperation();
+               return deferred;
             },
             _afterEndEdit: function(eip, withSaving) {
                eip.endEdit();
-               if (this._addTarget) {
+               if (this._isAdd) {
+                  this._isAdd = false;
                   this._addTarget.remove();
                   this._addTarget = undefined;
                }
@@ -389,7 +407,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             add: function(options) {
                var
                   self = this,
-                  modelOptions = options.model || this._notify('onBeginAdd'),
+                  beginAddResult = this._notify('onBeginAdd'),
+                  modelOptions = options.model || beginAddResult,
                   preparedModel = options.preparedModel,
                   editingRecord;
                this._lastTargetAdding = options.target;
@@ -399,6 +418,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         if (self._options.hierField) {
                            model.set(self._options.hierField, options.target ? options.target.getContents().getId() : options.target);
                         }
+                        //Единственный надёжный способ при завершении добавления записи узнать, что происходит именно добавление, это запомнить флаг.
+                        //Раньше использовалось проверка на getState, но запись могли перечитать, и мы получали неверный результат.
+                        //Так же мы пытались находить запись в текущем рекордсете, но например при поиске надор данных изменяется и вызывается
+                        //завершение редактирования, но записи уже может не быть в рекордсете.
+                        self._isAdd = true;
                         self._createAddTarget(model, options);
                         self._getEip().edit(model);
                         editingRecord = self._getEip().getEditingRecord();
@@ -458,18 +482,22 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._editNextTarget(this._getCurrentTarget(), !event.shiftKey);
                }
             },
-            _onChildFocusOut: function (event, control) {
+            _onChildFocusOut: function (event, destroyed, focusedControl) {
                var
                   eip,
                   withSaving,
                   // Если фокус ушел на кнопку закрытия диалога, то редактирование по месту не должно реагировать на это, т.к.
                   // его и так завершат через finishChildPendingOperation (и туда попадет правильный аргумент - с сохранением
                   // или без завершать редактирование по месту)
-                  endEdit = !$ws.helpers.instanceOfModule(control, 'SBIS3.CORE.CloseButton') && this._allowEndEdit(control) && (this._isAnotherTarget(control, this) || this._isCurrentTarget(control));
+                  endEdit = !$ws.helpers.instanceOfModule(focusedControl, 'SBIS3.CORE.CloseButton') && !focusedControl ||
+                     (this._allowEndEdit(focusedControl) &&
+                     (this._isAnotherTarget(focusedControl, this) || !focusedControl._container.closest('.controls-ListView').length));
                if (endEdit) {
                   eip = this._getEditingEip();
-                  withSaving = eip.getEditingRecord().isChanged();
-                  this.endEdit(withSaving);
+                  if (eip) {
+                     withSaving = eip.getEditingRecord().isChanged();
+                     this.endEdit(withSaving);
+                  }
                }
             },
             _allowEndEdit: function(control) {

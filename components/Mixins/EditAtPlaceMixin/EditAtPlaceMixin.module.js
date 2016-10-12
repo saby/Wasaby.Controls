@@ -58,7 +58,8 @@ define('js!SBIS3.CONTROLS.EditAtPlaceMixin',
           //и эта логика не выполняется. Поэтому мы сами позовём setActive(false) у активного дочернего контрола.
          _deactivateActiveChildControl: function() {
             var activeControl = this.getActiveChildControl();
-            while (activeControl.getActiveChildControl()) {
+            //метод getActiveControl определен у compoundControl, поэтому у контролов унаследованных от Control его нет
+            while (activeControl && activeControl.getActiveChildControl && activeControl.getActiveChildControl()) {
                activeControl = activeControl.getActiveChildControl();
             }
             activeControl && activeControl.setActive(false);

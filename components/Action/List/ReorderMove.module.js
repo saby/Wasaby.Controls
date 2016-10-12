@@ -12,14 +12,43 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
        * @extends SBIS3.CONTROLS.Action.List.Move
        * @mixes SBIS3.CONTROLS.Action.List.RelativeMoveMixin
        * @author Крайнов Дмитрий Олегович
+       * @example
+       * Пример использования ReorderMove:
        * <pre>
-       *    var move = new InteractiveMove({
-       *       linkedObject: myListView
-       *       moveDirection: 'Up'
-       *    });
-       *
-       *    move.execute({from:Model1});//Переместит запись Model1 на одну строчку вверх
+       *    define('js!SBIS3.Demo.ReorderMove', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.Action.List.ReorderMove'],
+       *    function(CompoundControl, ReorderMove){
+       *       var move;
+       *       return CompoundControl.extend({
+       *          _onInintHandler: function(){
+       *             //создаем action
+       *             move = new ReorderMove({
+       *                linkedObject: this,
+       *                moveDirection: 'Up'
+       *             });
+       *          },
+       *          moveUp: function(el, key, record) {
+       *             move.execute({from:record});
+       *          }
+       *       }
+       *    })
        * </pre>
+       * В xhtml навесим обработчик:
+       * <pre>
+       *    <div class="MyListView">
+       *    <component data-component="SBIS3.CONTROLS.ListView" name="MyListView">
+       *       <options name="itemsActions" type="Array">
+       *          <options>
+       *             <option name="name" value="moveUp"></option>
+       *             <option name="icon" value="sprite:icon-16 icon-ArrowUp icon-primary"></option>
+       *             <option name="title" value="move up"></option>
+       *             <option name="isMainAction" value="true" type="boolean"></option>
+       *             <option name="onActivated" type="function">js!SBIS3.Demo.ReorderMove:prototype.moveUp</option>
+       *          </options>
+       *       </options>
+       *    </component>
+       *    </div>
+       * </pre>
+       *
        * @ignoreOptions validators independentContext contextRestriction extendedTooltip
        *
        * @ignoreMethods activateFirstControl activateLastControl addPendingOperation applyEmptyState applyState clearMark

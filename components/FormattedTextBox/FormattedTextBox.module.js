@@ -33,8 +33,8 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBo
     */
 
    var FormattedTextBox = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS.FormattedTextBox.prototype */{
+      _dotTplFn: dotTplFn,
       $protected: {
-         _dotTplFn: dotTplFn,
          /**
           * Опции создаваемого контролла
           */

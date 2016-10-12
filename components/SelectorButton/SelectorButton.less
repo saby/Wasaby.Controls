@@ -1,6 +1,6 @@
 .controls-SelectorButton {
    .inline-flexbox();
-   align-items: center;
+   align-items: baseline;
    cursor: @link-cursor;
    line-height: @controls-SelectorButton-line-height;
    height: @controls-SelectorButton-height;
@@ -13,16 +13,15 @@
       padding-left: 4px;
    }
 
+   .controls-SelectorButton__icon,
+   .controls-SelectorButton__cross {
+      align-self: center;
+   }
 
    &.controls-SelectorButton__asLink {
       .controls-SelectorButton__text {
          color: @link-text-color;
          text-decoration: @link-text-decoration;
-
-         &:hover {
-            color: @link-hover-text-color;
-            text-decoration: @link-hover-text-decoration;
-         }
       }
    }
 
@@ -41,6 +40,20 @@
       }
       .controls-SelectorButton__cross {
          display: none;
+      }
+   }
+}
+
+.ws-is-desktop-platform {
+   .controls-Button:not(.ws-disabled) {
+      &.controls-SelectorButton__asLink {
+         &:hover {
+            color: @link-hover-text-color;
+            text-decoration: @link-hover-text-decoration;
+            .controls-SelectorButton__icon {
+               color: @link-hover-text-color !important;
+            }
+         }
       }
    }
 }
@@ -64,11 +77,8 @@
 }
 
 .ws-is-firefox {
-   .controls-SelectorButton__text {
-      padding-bottom: 4px;
-   }
    .controls-SelectorButton__cross,
    .controls-SelectorButton__icon {
-      padding-bottom: 2px;
+      padding-top: 2px;
    }
 }
