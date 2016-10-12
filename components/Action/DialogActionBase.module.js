@@ -1,4 +1,19 @@
-define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!WS.Data/Entity/Record', 'js!SBIS3.CONTROLS.Utils.InformationPopupManager', 'js!WS.Data/Di', 'i18n!SBIS3.CONTROLS.DialogActionBase'], function(ActionBase, Dialog, FloatArea, Record, InformationPopupManager, Di){
+define('js!SBIS3.CONTROLS.DialogActionBase', [
+   "Core/Indicator",
+   "Core/core-merge",
+   "Core/Deferred",
+   "Core/helpers/fast-control-helpers",
+   "Core/helpers/collection-helpers",
+   "Core/core-instance",
+   "Core/IoC",
+   "js!SBIS3.CONTROLS.ActionBase",
+   "js!SBIS3.CORE.Dialog",
+   "js!SBIS3.CORE.FloatArea",
+   "js!WS.Data/Entity/Record",
+   "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
+   "js!WS.Data/Di",
+   "i18n!SBIS3.CONTROLS.DialogActionBase"
+], function(cIndicator, cMerge, Deferred, fcHelpers, colHelpers, cInstance, IoC, ActionBase, Dialog, FloatArea, Record, InformationPopupManager, Di){
    'use strict';
 
    /**
@@ -136,7 +151,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          templateComponent = this._dialog._getTemplateComponent();
          currentRecord = (templateComponent && templateComponent.getRecord) ? templateComponent.getRecord() : null; //Ярик говорит, что dialogActionBase используется не только для formController'a
          if (currentRecord && currentRecord.isChanged()){
-            $ws.helpers.question(rk('Сохранить изменения?'), {opener: templateComponent}).addCallback(function(result){
+            fcHelpers.question(rk('Сохранить изменения?'), {opener: templateComponent}).addCallback(function(result){
                if (result === true){
                   templateComponent.update({hideQuestion: true}).addCallback(function(){
                      self._setConfig.apply(self, args);
@@ -184,7 +199,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          //TODO Выпилить в 200+
          if (meta.controllerSource){
             initializingWay = DialogActionBase.INITIALIZING_WAY_REMOTE;
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.OpenDialogAction', 'meta.controllerSource is no longer available since version 3.7.4.200. Use option initializingWay = OpenDialogAction.INITIALIZING_WAY_REMOTE instead.');
+            IoC.resolve('ILogger').error('SBIS3.CONTROLS.OpenDialogAction', 'meta.controllerSource is no longer available since version 3.7.4.200. Use option initializingWay = OpenDialogAction.INITIALIZING_WAY_REMOTE instead.');
          }
 
          if (initializingWay == DialogActionBase.INITIALIZING_WAY_REMOTE) {
@@ -212,7 +227,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
              def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
          this._hideLoadingIndicator();
          //TODO Условие в рамках совместимости. убрать как все перейдут на установку dataSource с опций
-         if (!$ws.helpers.instanceOfModule(def, 'Core/Deferred')){
+         if (!cInstance.instanceOfModule(def, 'Core/Deferred')){
             this._showDialog(config, meta, mode);
             return;
          }
@@ -229,7 +244,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
 
             //TODO Условие в рамках совместимости. убрать как все перейдут на установку dataSource с опций
-            if (!$ws.helpers.instanceOfModule(def, 'Core/Deferred')){
+            if (!cInstance.instanceOfModule(def, 'Core/Deferred')){
                self._hideLoadingIndicator();
                self._showDialog(config, meta, mode);
                return;
@@ -258,17 +273,17 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
 
       _showLoadingIndicator: function(){
          this._showedLoading = true;
-         $ws.single.Indicator.setMessage('Загрузка...');
+         cIndicator.setMessage('Загрузка...');
          window.setTimeout(function(){
             if (this._showedLoading){
-               $ws.single.Indicator.show();
+               cIndicator.show();
             }
          }.bind(this), 750);
       },
 
       _hideLoadingIndicator: function(){
          this._showedLoading = false;
-         $ws.single.Indicator.hide();
+         cIndicator.hide();
       },
 
       _showDialog: function(config, meta, mode){
@@ -278,7 +293,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if (mode == 'floatArea'){
             Component = FloatArea;
             floatAreaCfg = this._getFloatAreaConfig(meta);
-            $ws.core.merge(config, floatAreaCfg);
+            cMerge(config, floatAreaCfg);
          } else if (mode == 'dialog') {
             Component = Dialog;
          }
@@ -294,7 +309,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
         return this._dialog && !this._dialog.isAutoHide();
       },
       _setNewDialogConfig: function(config){
-         $ws.core.merge(this._dialog._options, config);
+         cMerge(this._dialog._options, config);
          this._dialog.reload();
       },
       _getFloatAreaConfig: function(meta){
@@ -311,7 +326,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             },
             floatAreaCfg = {};
 
-         $ws.helpers.forEach(defaultConfig, function(value, prop){
+         colHelpers.forEach(defaultConfig, function(value, prop){
             floatAreaCfg[prop] = meta[prop] !== undefined ? meta[prop] : defaultConfig[prop];
          });
 
@@ -396,10 +411,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             return;
          }
          //Уберём удаляемый элемент из массива выбранных у контрола, являющегося linkedObject.
-         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.MultiSelectable')) {
+         if (cInstance.instanceOfMixin(collection, 'SBIS3.CONTROLS.MultiSelectable')) {
             collection.removeItemsSelection([collectionRecord.getId()]);
          }
-         if ($ws.helpers.instanceOfModule(collection.getItems && collection.getItems(), 'WS.Data/Collection/RecordSet')) {
+         if (cInstance.instanceOfModule(collection.getItems && collection.getItems(), 'WS.Data/Collection/RecordSet')) {
             collection = collection.getItems();
          }
          collection.remove(collectionRecord);
@@ -446,7 +461,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if (actionResult !== undefined){
             genericMethod = actionResult;
          }
-         if (actionResult instanceof $ws.proto.Deferred){
+         if (actionResult instanceof Deferred){
             actionResult.addCallback(function(result){
                if (self[genericMethod]){
                   self[genericMethod].apply(this, args);
@@ -463,7 +478,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          var collection = this._options.linkedObject,
             rec;
          at = at || 0;
-         if ($ws.helpers.instanceOfModule(collection.getItems(), 'WS.Data/Collection/RecordSet')) {
+         if (cInstance.instanceOfModule(collection.getItems(), 'WS.Data/Collection/RecordSet')) {
              //Создаем новую модель, т.к. Record не знает, что такое первичный ключ - это добавляется на модели.
             rec = Di.resolve(collection.getItems().getModel(), {
                adapter: collection.getItems().getAdapter(),
@@ -474,7 +489,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          } else  {
             rec = model.clone();
          }
-         if ($ws.helpers.instanceOfMixin(collection, 'WS.Data/Collection/IList')) {
+         if (cInstance.instanceOfMixin(collection, 'WS.Data/Collection/IList')) {
             collection.add(rec, at);
          }
          else {
@@ -533,7 +548,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          var collectionData = this._getCollectionData(),
             index;
 
-         if (collectionData && $ws.helpers.instanceOfMixin(collectionData, 'WS.Data/Collection/IList') && $ws.helpers.instanceOfMixin(collectionData, 'WS.Data/Collection/IIndexedCollection')) {
+         if (collectionData && cInstance.instanceOfMixin(collectionData, 'WS.Data/Collection/IList') && cInstance.instanceOfMixin(collectionData, 'WS.Data/Collection/IIndexedCollection')) {
             index = collectionData.getIndexByValue(collectionData.getIdProperty(), this._linkedModelKey || model.getId());
             return collectionData.at(index);
          }
@@ -542,7 +557,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
 
       _getCollectionData:function(){
          var collection = this._options.linkedObject;
-         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.ItemsControlMixin')) {
+         if (cInstance.instanceOfMixin(collection, 'SBIS3.CONTROLS.ItemsControlMixin')) {
             collection = collection.getItems();
          }
          return collection;

@@ -1,28 +1,34 @@
 define('js!SBIS3.CONTROLS.DataGridView',
    [
-      'js!SBIS3.CONTROLS.ListView',
-      'html!SBIS3.CONTROLS.DataGridView',
-      'html!SBIS3.CONTROLS.DataGridView/resources/rowTpl',
-      'html!SBIS3.CONTROLS.DataGridView/resources/colgroupTpl',
-      'html!SBIS3.CONTROLS.DataGridView/resources/headTpl',
-      'html!SBIS3.CONTROLS.DataGridView/resources/ResultsTpl',
-      'js!SBIS3.CORE.MarkupTransformer',
-      'js!SBIS3.CONTROLS.DragAndDropMixin',
-      'js!SBIS3.CONTROLS.ImitateEvents',
-      'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
-      'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
-      'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-      'html!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate',
-      'html!SBIS3.CONTROLS.DataGridView/resources/ItemContentTemplate',
-      'html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate',
-      'html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate'
-   ],
-   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, LadderDecorator, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate) {
+   "Core/core-functions",
+   "Core/core-merge",
+   "Core/constants",
+   "Core/Deferred",
+   "js!SBIS3.CONTROLS.ListView",
+   "html!SBIS3.CONTROLS.DataGridView",
+   "html!SBIS3.CONTROLS.DataGridView/resources/rowTpl",
+   "html!SBIS3.CONTROLS.DataGridView/resources/colgroupTpl",
+   "html!SBIS3.CONTROLS.DataGridView/resources/headTpl",
+   "html!SBIS3.CONTROLS.DataGridView/resources/ResultsTpl",
+   "js!SBIS3.CORE.MarkupTransformer",
+   "js!SBIS3.CONTROLS.DragAndDropMixin",
+   "js!SBIS3.CONTROLS.ImitateEvents",
+   "html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
+   "js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator",
+   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
+   "html!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate",
+   "html!SBIS3.CONTROLS.DataGridView/resources/ItemContentTemplate",
+   "html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate",
+   "html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
+   "Core/helpers/collection-helpers",
+   "Core/helpers/string-helpers"
+],
+   function( cFunctions, cMerge, constants, Deferred,ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, LadderDecorator, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate, colHelpers, strHelpers) {
    'use strict';
 
       var ANIMATION_DURATION = 500, //Продолжительность анимации скролла заголовков
          _prepareColumns = function(columns, cfg) {
-            var columnsNew = $ws.core.clone(columns);
+            var columnsNew = cFunctions.clone(columns);
             for (var i = 0; i < columnsNew.length; i++) {
                if (columnsNew[i].cellTemplate) {
                   columnsNew[i].contentTpl = TemplateUtil.prepareTemplate(columnsNew[i].cellTemplate);
@@ -88,7 +94,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          prepareHeadColumns = function(cfg){
             var
                rowData = {},
-               columns = $ws.core.clone(cfg.columns),
+               columns = cFunctions.clone(cfg.columns),
                supportUnion,
                supportDouble,
                curCol,
@@ -111,7 +117,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                nextColSplitTitle = nextCol && nextCol.title.split('.');
 
                if (!supportDouble){
-                  supportDouble = $ws.core.clone(curCol);
+                  supportDouble = cFunctions.clone(curCol);
                }
                else {
                   curColSplitTitle = [supportDouble.value, curColSplitTitle];
@@ -129,7 +135,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                }
 
                if (!supportUnion){
-                  supportUnion = $ws.core.clone(curCol);
+                  supportUnion = cFunctions.clone(curCol);
                }
                if (nextCol && (supportUnion.title == nextCol.title)){
                   supportUnion.colspan = ++supportUnion.colspan || 2;
@@ -144,7 +150,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          prepareHeadData = function(cfg) {
             var
                headData = {
-                  columns: $ws.core.clone(cfg.columns),
+                  columns: cFunctions.clone(cfg.columns),
                   multiselect : cfg.multiselect,
                   startScrollColumn: cfg.startScrollColumn,
                   showHead: cfg.showHead
@@ -152,7 +158,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                value,
                column,
                headColumns = prepareHeadColumns(cfg);
-            $ws.core.merge(headData, headColumns);
+            cMerge(headData, headColumns);
             for (var i = 0; i < headData.content[0].length; i++) {
                column = headData.content[0][i];
 
@@ -161,7 +167,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                      column: column
                   }));
                } else {
-                  value = '<div class="controls-DataGridView__th-content">' + ($ws.helpers.escapeHtml(column.title) || '') + '</div>';
+                  value = '<div class="controls-DataGridView__th-content">' + (strHelpers.escapeHtml(column.title) || '') + '</div>';
                }
                column.value = value;
             }
@@ -697,7 +703,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }));
       },
       showEip: function(model, options, withoutActivateFirstControl, targetColumnIndex) {
-         return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().showEip(model, options, withoutActivateFirstControl) : $ws.proto.Deferred.fail();
+         return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().showEip(model, options, withoutActivateFirstControl) : Deferred.fail();
       },
       _canShowEip: function(targetColumnIndex) {
          var
@@ -727,12 +733,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
             self = this,
             columns = this._options.enabled ? this._options.columns : [];
          if (!this._options.enabled) {
-            $ws.helpers.forEach(this._options.columns, function(item) {
+            colHelpers.forEach(this._options.columns, function(item) {
                columns.push(item.allowChangeEnable === false ? item : {});
             });
          }
 
-         return $ws.core.merge(DataGridView.superclass._getEditInPlaceConfig.apply(this, arguments), {
+         return cMerge(DataGridView.superclass._getEditInPlaceConfig.apply(this, arguments), {
             columns: columns,
             getCellTemplate: function(item, column) {
                return this._getCellTemplate(item, column);
@@ -832,7 +838,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _dragStart: function(e) {
-         $ws._const.$body.addClass('ws-unSelectable');
+         constants.$body.addClass('ws-unSelectable');
 
          /* Если скролл происходит перетаскиванием заголовков
             то выставим соответствующие флаги */
@@ -869,7 +875,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          /* Навешиваем класс на body,
             это самый оптимальный способ избавиться от выделения */
-         $ws._const.$body.removeClass('ws-unSelectable');
+         constants.$body.removeClass('ws-unSelectable');
          if(this._isHeaderScrolling) {
             this.getContainer().removeClass('controls-DataGridView__scrollingNow');
          }
@@ -1126,7 +1132,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (!resultsRecord){
             return;
          }
-         data = $ws.helpers.map(this.getColumns(), function(col, index){
+         data = colHelpers.map(this.getColumns(), function(col, index){
             value = resultsRecord.get(col.field);
             if (value == undefined){
                value = index == 0 ? self._options.resultsText : '';
@@ -1198,7 +1204,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             value = MarkupTransformer((cellTpl)(tplOptions));
          } else {
             value = this._options._decorators.applyOnly(
-                  value === undefined || value === null ? '' : $ws.helpers.escapeHtml(value), {
+                  value === undefined || value === null ? '' : strHelpers.escapeHtml(value), {
                   highlight: column.highlight,
                   ladder: {
                      column: column.field,
@@ -1216,7 +1222,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             return item.get(colName);
          }
          var colNameParts = colName.slice(2, -2).split('.'),
-            curItem = $ws.core.clone(item),
+            curItem = cFunctions.clone(item),
             value;
          for (var i = 0; i < colNameParts.length; i++){
             if (i !== colNameParts.length - 1){

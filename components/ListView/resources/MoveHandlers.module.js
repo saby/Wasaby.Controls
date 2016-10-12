@@ -1,7 +1,16 @@
 /**
  * Created by as.suhoruchkin on 21.07.2015.
  */
-define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/MoveStrategy/Sbis', 'js!WS.Data/MoveStrategy/Base', 'i18n!SBIS3.CONTROLS.MoveHandlers'], function(Dialog, SbisMoveStrategy, BaseMoveStrategy) {
+define('js!SBIS3.CONTROLS.MoveHandlers', [
+   "Core/core-functions",
+   "Core/Deferred",
+   "js!SBIS3.CORE.Dialog",
+   "js!WS.Data/MoveStrategy/Sbis",
+   "js!WS.Data/MoveStrategy/Base",
+   "Core/core-instance",
+   "Core/helpers/string-helpers",
+   "i18n!SBIS3.CONTROLS.MoveHandlers"
+], function( cFunctions, Deferred,Dialog, SbisMoveStrategy, BaseMoveStrategy, cInstance, strHelpers) {
    var MoveHandlers = {
       $protected: {
         _moveStrategy: undefined
@@ -12,7 +21,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
          if (records.length) {
             new Dialog({
                template: 'js!SBIS3.CONTROLS.MoveDialogTemplate',
-               title: rk('Перенести') + ' ' + records.length + $ws.helpers.wordCaseByNumber(records.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в', 'направление'),
+               title: rk('Перенести') + ' ' + records.length + strHelpers.wordCaseByNumber(records.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в', 'направление'),
                cssClassName: 'controls-moveDialog',
                componentOptions: {
                   linkedView: this,
@@ -56,7 +65,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
             isChangeOrder = insertAfter !== undefined;
 
          if (moveTo !== null) {
-            if ($ws.helpers.instanceOfModule(moveTo, 'WS.Data/Entity/Model')) {
+            if (cInstance.instanceOfModule(moveTo, 'WS.Data/Entity/Model')) {
                recordTo = moveTo;
                moveTo = recordTo.getId();
             } else {
@@ -72,7 +81,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
          if (this._checkRecordsForMove(records, recordTo, isChangeOrder)) {
             for (var i = 0; i < records.length; i++) {
                var record = records[i];
-               if ($ws.helpers.instanceOfModule(record, 'WS.Data/Entity/Model')) {
+               if (cInstance.instanceOfModule(record, 'WS.Data/Entity/Model')) {
                   if (this.getItems().getIndex(record) === -1) {
                      var itemsRecord =  this.getItems().getRecordById(record.getId());
                      if (itemsRecord) {
@@ -92,8 +101,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
             } else {
                return;
             }
-            deferred = deferred === true ? new $ws.proto.Deferred().callback(true) : deferred;
-            if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
+            deferred = deferred === true ? new Deferred().callback(true) : deferred;
+            if (deferred instanceof Deferred) {//обновляем view если вернули true либо deferred
                deferred.addCallback(function() {
                   if (!isChangeOrder) {
                      self.removeItemsSelectionAll();
@@ -113,10 +122,10 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
          if (recordTo === undefined) {
             return false;
          }
-         if (recordTo !== null && $ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.TreeMixin')) {
+         if (recordTo !== null && cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.TreeMixin')) {
             toMap = this._getParentsMap(recordTo.getId());
             for (var i = 0; i < records.length; i++) {
-               key = '' + (($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record')||$ws.helpers.instanceOfModule(records[i], 'WS.Data/Entity/Model')) ? records[i].getId() : records[i]);
+               key = '' + ((cInstance.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record')||cInstance.instanceOfModule(records[i], 'WS.Data/Entity/Model')) ? records[i].getId() : records[i]);
                if ($.inArray(key, toMap) !== -1) {
                   return false;
                }
@@ -174,8 +183,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
        * @private
        */
       _makeMoveStrategy: function () {
-         if($ws.helpers.instanceOfModule(this._dataSource,'WS.Data/Source/SbisService') ||
-            $ws.helpers.instanceOfModule(this._dataSource,'SBIS3.CONTROLS.SbisServiceSource')
+         if(cInstance.instanceOfModule(this._dataSource,'WS.Data/Source/SbisService') ||
+            cInstance.instanceOfModule(this._dataSource,'SBIS3.CONTROLS.SbisServiceSource')
          ) {
             return new SbisMoveStrategy({
                dataSource: this._dataSource,
@@ -195,7 +204,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
        * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
        */
       setMoveStrategy: function (strategy){
-         if(!$ws.helpers.instanceOfMixin(strategy,'WS.Data/MoveStrategy/IMoveStrategy')){
+         if(!cInstance.instanceOfMixin(strategy,'WS.Data/MoveStrategy/IMoveStrategy')){
             throw new Error('The strategy must implemented interfaces the WS.Data/MoveStrategy/IMoveStrategy.')
          }
          this._moveStrategy = strategy;
@@ -218,7 +227,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
          var self = this,
              moveToItem = this._options._items.getRecordById(moveToId);
          this.getMoveStrategy().move([item], moveToItem, !up).addErrback(function(e) {
-            $ws.core.alert(e.message);
+            cFunctions.alert(e.message);
          });
       }
    };

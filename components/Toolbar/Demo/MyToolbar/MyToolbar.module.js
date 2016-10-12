@@ -1,14 +1,15 @@
 define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
-   'js!SBIS3.CORE.CompoundControl',
-   'html!SBIS3.CONTROLS.Demo.MyToolbar',
-   'js!WS.Data/Collection/List',
-   'js!WS.Data/Collection/RecordSet',
-   'css!SBIS3.CONTROLS.Demo.MyToolbar',
-   'js!SBIS3.CONTROLS.Toolbar',
-   'js!SBIS3.CONTROLS.TextArea',
-   'js!SBIS3.CONTROLS.Link',
-   'js!SBIS3.CONTROLS.Button'
-], function (CompoundControl, dotTplFn, List, RecordSet) {
+   "Core/CommandDispatcher",
+   "js!SBIS3.CORE.CompoundControl",
+   "html!SBIS3.CONTROLS.Demo.MyToolbar",
+   "js!WS.Data/Collection/List",
+   "js!WS.Data/Collection/RecordSet",
+   "css!SBIS3.CONTROLS.Demo.MyToolbar",
+   "js!SBIS3.CONTROLS.Toolbar",
+   "js!SBIS3.CONTROLS.TextArea",
+   "js!SBIS3.CONTROLS.Link",
+   "js!SBIS3.CONTROLS.Button"
+], function ( CommandDispatcher,CompoundControl, dotTplFn, List, RecordSet) {
    'use strict';
    /**
     * SBIS3.CONTROLS.Demo.MyToolbar
@@ -31,7 +32,7 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
          MyToolbar.superclass.init.call(this);
 
          this._textArea = this.getChildControlByName('TextArea');
-         $ws.single.CommandDispatcher.declareCommand(this, 'testCommand', this._testCommand);
+         CommandDispatcher.declareCommand(this, 'testCommand', this._testCommand);
 
          this._MyToolbar = this.getChildControlByName('MyToolbar');
          this._MyToolbar.subscribe('onToolbarItemActivate', this._onToolbarItemActivate.bind(this) );

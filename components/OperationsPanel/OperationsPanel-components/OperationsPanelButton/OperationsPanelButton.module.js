@@ -5,8 +5,9 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
    'js!SBIS3.CORE.Control',
    'js!SBIS3.CONTROLS.Clickable',
    'js!SBIS3.CONTROLS.Checkable',
-   'html!SBIS3.CONTROLS.OperationsPanelButton'
-], function(Control, Clickable, Checkable, dotTplFn) {
+   'html!SBIS3.CONTROLS.OperationsPanelButton',
+   'Core/core-instance'
+], function(Control, Clickable, Checkable, dotTplFn, cInstance) {
 
    /**
     * Кнопка управления панелью массовых операций.
@@ -63,7 +64,7 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
             this._notify('onBeforeLinkedPanelToggle', linkedPanel.isVisible());
 
             //Проверка для совместимости со тарой панелью операций, у которой метод toggle влияет на видимость
-            linkedPanel[$ws.helpers.instanceOfModule(linkedPanel, 'SBIS3.CONTROLS.OperationsPanel') ? 'toggle' : 'togglePanel']();
+            linkedPanel[cInstance.instanceOfModule(linkedPanel, 'SBIS3.CONTROLS.OperationsPanel') ? 'toggle' : 'togglePanel']();
          }
          OperationsPanelButton.superclass._clickHandler.apply(this);
       },
@@ -80,7 +81,7 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
        * @see linkedPanel
        */
       setLinkedPanel: function(linkedPanel) {
-         if (linkedPanel && ($ws.helpers.instanceOfModule(linkedPanel, 'SBIS3.CORE.OperationsPanel') || $ws.helpers.instanceOfModule(linkedPanel, 'SBIS3.CONTROLS.OperationsPanel'))) {
+         if (linkedPanel && (cInstance.instanceOfModule(linkedPanel, 'SBIS3.CORE.OperationsPanel') || cInstance.instanceOfModule(linkedPanel, 'SBIS3.CONTROLS.OperationsPanel'))) {
             this._reassignPanel(linkedPanel);
             this.setChecked(linkedPanel.isVisible());
          }

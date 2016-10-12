@@ -1,8 +1,11 @@
 /**
  * Created by iv.cheremushkin on 21.04.2015.
  */
-define('js!SBIS3.CONTROLS.DropdownListMixin', ['js!SBIS3.CONTROLS.Utils.TemplateUtil'],
-    function (TemplateUtil) {
+define('js!SBIS3.CONTROLS.DropdownListMixin', [
+   "Core/constants",
+   "js!SBIS3.CONTROLS.Utils.TemplateUtil"
+],
+    function ( constants,TemplateUtil) {
         /**
          * @mixin SBIS3.CONTROLS.DropdownListMixin
          * @public
@@ -71,7 +74,7 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', ['js!SBIS3.CONTROLS.Utils.Template
             },
            _clickItemHandler : function (e) {
               var row = $(e.target).closest('.' + self._getItemClass());
-              if (row.length && (e.button === ($ws._const.browser.isIE8 ? 1 : 0))) {
+              if (row.length && (e.button === (constants.browser.isIE8 ? 1 : 0))) {
                  self.setSelectedKeys([row.data('id')]);
                  self.hidePicker();
               }

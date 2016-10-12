@@ -3,11 +3,12 @@
  */
 define('js!SBIS3.CONTROLS.AdditionalFilterParams',
     [
-       'js!SBIS3.CORE.CompoundControl',
-       'html!SBIS3.CONTROLS.AdditionalFilterParams',
-       'js!SBIS3.CONTROLS.ToggleButton'
-    ],
-    function(CompoundControl, dotTpl) {
+   "Core/CommandDispatcher",
+   "js!SBIS3.CORE.CompoundControl",
+   "html!SBIS3.CONTROLS.AdditionalFilterParams",
+   "js!SBIS3.CONTROLS.ToggleButton"
+],
+    function( CommandDispatcher,CompoundControl, dotTpl) {
 
        'use strict';
 
@@ -32,7 +33,7 @@ define('js!SBIS3.CONTROLS.AdditionalFilterParams',
           $constructor: function() {
              this._container.removeClass('ws-area');
              this._templateContainer = this._container.find('.controls-filterButton__additionalFilterParams-content');
-             $ws.single.CommandDispatcher.declareCommand(this, 'toggleAdditionalFilterParams', this.toggleAdditionalFiltersBlock);
+             CommandDispatcher.declareCommand(this, 'toggleAdditionalFilterParams', this.toggleAdditionalFiltersBlock);
 
              this.once('onInit', function() {
                 this._toggleButton = this.getChildControlByName('toggleAdditionalFilterParams');

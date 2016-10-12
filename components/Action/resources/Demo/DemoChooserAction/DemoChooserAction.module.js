@@ -3,13 +3,15 @@
  */
 /* global define */
 define('js!SBIS3.CONTROLS.Demo.DemoSelectorAction', [
-   'js!SBIS3.CORE.CompoundControl',
-   'js!SBIS3.CONTROLS.Action.SelectorAction',
-   'html!SBIS3.CONTROLS.Demo.DemoSelectorAction',
-   'js!SBIS3.CONTROLS.Demo.DemoPanelComponent',
-   'js!SBIS3.CONTROLS.FieldLink',
-   'js!SBIS3.CONTROLS.Button'
-], function (CompoundControl, SelectorAction, dotTplFn) {
+   "Core/CommandDispatcher",
+   "js!SBIS3.CORE.CompoundControl",
+   "js!SBIS3.CONTROLS.Action.SelectorAction",
+   "html!SBIS3.CONTROLS.Demo.DemoSelectorAction",
+   "Core/helpers/fast-control-helpers",
+   "js!SBIS3.CONTROLS.Demo.DemoPanelComponent",
+   "js!SBIS3.CONTROLS.FieldLink",
+   "js!SBIS3.CONTROLS.Button"
+], function ( CommandDispatcher,CompoundControl, SelectorAction, dotTplFn, fcHelpers) {
 
    var DemoSelectorAction = CompoundControl.extend({
       _dotTplFn: dotTplFn,
@@ -17,8 +19,8 @@ define('js!SBIS3.CONTROLS.Demo.DemoSelectorAction', [
          _action: null
       },
       $constructor: function() {
-         $ws.single.CommandDispatcher.declareCommand(this, 'showPanel', this.showPanel);
-         $ws.single.CommandDispatcher.declareCommand(this, 'showPanelWithDefaultTemplate', this.showPanelWithDefaultTemplate);
+         CommandDispatcher.declareCommand(this, 'showPanel', this.showPanel);
+         CommandDispatcher.declareCommand(this, 'showPanelWithDefaultTemplate', this.showPanelWithDefaultTemplate);
       },
 
       init: function() {
@@ -29,7 +31,7 @@ define('js!SBIS3.CONTROLS.Demo.DemoSelectorAction', [
       showPanel: function() {
          this._action.execute({template: 'js!SBIS3.CONTROLS.Demo.DemoPanelComponent'});
          this._action.once('onExecuted', function(event, meta) {
-            $ws.helpers.alert('Выбрано ' + (meta && meta.selectedItems) ? meta.selectedItems.getCount() : 0 + ' записей');
+            fcHelpers.alert('Выбрано ' + (meta && meta.selectedItems) ? meta.selectedItems.getCount() : 0 + ' записей');
          });
       },
 
