@@ -1,7 +1,10 @@
 define('js!SBIS3.CONTROLS.TextBox', [
-   'js!SBIS3.CONTROLS.TextBoxBase',
-   'html!SBIS3.CONTROLS.TextBox',
-   'js!SBIS3.CONTROLS.Utils.TemplateUtil'], function(TextBoxBase, dotTplFn, TemplateUtil) {
+   "Core/constants",
+   "js!SBIS3.CONTROLS.TextBoxBase",
+   "html!SBIS3.CONTROLS.TextBox",
+   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
+   "Core/helpers/dom&controls-helpers"
+], function( constants,TextBoxBase, dotTplFn, TemplateUtil, dcHelpers) {
 
    'use strict';
 
@@ -177,7 +180,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._inputField.bind('focusin', this._inputFocusInHandler.bind(this))
                          .bind('focusout', this._inputFocusOutHandler.bind(this));
 
-         if (this._options.placeholder && !$ws._const.compatibility.placeholder) {
+         if (this._options.placeholder && !constants.compatibility.placeholder) {
             this._createCompatPlaceholder();
          }
 
@@ -221,8 +224,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
       _applyTooltip: function() {
          if (this._tooltipText != this._options.text) {
             var scrollWidth;
-            if ($ws._const.browser.isIE) {
-               scrollWidth = $ws.helpers.getTextWidth(this._options.text);
+            if (constants.browser.isIE) {
+               scrollWidth = dcHelpers.getTextWidth(this._options.text);
             }
             else {
                scrollWidth = this._inputField[0].scrollWidth;
@@ -274,7 +277,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
       _setPlaceholder: function(text){
          text = text ? text : text == 0 ? text : '';
-         if (!$ws._const.compatibility.placeholder) {
+         if (!constants.compatibility.placeholder) {
             if (!this._compatPlaceholder) {
                this._createCompatPlaceholder();
             }
@@ -323,7 +326,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
             this._setTextByKeyboard(newText);
          }
          var key = event.which || event.keyCode;
-         if (Array.indexOf([$ws._const.key.up, $ws._const.key.down], key) >= 0) {
+         if (Array.indexOf([constants.key.up, constants.key.down], key) >= 0) {
             event.stopPropagation();
          }
       },

@@ -1,4 +1,16 @@
-define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!SBIS3.CONTROLS.ArraySimpleValuesUtil'], function(List, ArraySimpleValuesUtil) {
+define('js!SBIS3.CONTROLS.MultiSelectable', [
+   "Core/ParallelDeferred",
+   "Core/helpers/helpers",
+   "Core/core-functions",
+   "Core/Deferred",
+   "Core/IoC",
+   "Core/ConsoleLogger",
+   "js!WS.Data/Collection/List",
+   "js!SBIS3.CONTROLS.ArraySimpleValuesUtil",
+   "Core/helpers/collection-helpers",
+   "Core/core-instance",
+   "Core/helpers/functional-helpers"
+], function( ParallelDeferred, cHelpers, cFunctions, Deferred, IoC, ConsoleLogger,List, ArraySimpleValuesUtil, colHelpers, cInstance, fHelpers) {
 
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
@@ -249,13 +261,13 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
              currElem;
 
          /* Найдём удаленные */
-         result.removed = $ws.helpers.filter(arrayOne, function(item) {
+         result.removed = colHelpers.filter(arrayOne, function(item) {
             currElem = item;
             return !ArraySimpleValuesUtil.hasInArray(arrayTwo, currElem);
          });
 
          /* Найдём добавленные */
-         result.added = $ws.helpers.filter(arrayTwo, function(item) {
+         result.added = colHelpers.filter(arrayTwo, function(item) {
             currElem = item;
             return !ArraySimpleValuesUtil.hasInArray(arrayOne, currElem);
          });
@@ -498,13 +510,13 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
                }
                else {
                   if (this._isItemSelected(idArray[0])) {
-                     removedKeysTotal = $ws.core.clone(this._options.selectedKeys);
+                     removedKeysTotal = cFunctions.clone(this._options.selectedKeys);
                      this._options.selectedKeys = [];
                   }
                   else {
-                     removedKeysTotal = $ws.core.clone(this._options.selectedKeys);
+                     removedKeysTotal = cFunctions.clone(this._options.selectedKeys);
                      this._options.selectedKeys = idArray.slice(0, 1);
-                     addedKeysTotal = $ws.core.clone(this._options.selectedKeys);
+                     addedKeysTotal = cFunctions.clone(this._options.selectedKeys);
                   }
                }
                this._afterSelectionHandler(addedKeysTotal, removedKeysTotal);
@@ -590,7 +602,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
        * @param {Boolean} loadItems Необходимость загрузки элементов коллекции, если их нет в текущем наборе выбранных элементов
        * и они отсутствуют в наборе данных, полученных из источника.
        * @param {Number} count Ограничение количества отдаваемых элементов коллекции.
-       * @returns {WS.Data/Collection/List|$ws.proto.Deferred|null} Коллекция элементов с доступом по индексу.
+       * @returns {WS.Data/Collection/List|Deferred|null} Коллекция элементов с доступом по индексу.
        * @example
        * <pre>
        *    if (!checkBoxGroup.getSelectedItems().at(0).get('Текст') === 'Не выбрано') {
@@ -623,10 +635,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
          } else if (this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
             return this._loadItemsDeferred;
          } else if(this._isEmptySelection()) {
-            return new $ws.proto.Deferred().callback(this._options.selectedItems);
+            return new Deferred().callback(this._options.selectedItems);
          }
 
-         this._loadItemsDeferred = new $ws.proto.Deferred();
+         this._loadItemsDeferred = new Deferred();
          itemsKeysArr = this._convertToKeys(this._options.selectedItems);
 
          /* Сфоримруем массив ключей записей, которые требуется вычитать с бл или взять из dataSet'a*/
@@ -640,14 +652,14 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
          if(loadKeysAmount) {
             /* Если ограничили кол-во отдаваемых записей */
             loadKeysAmount = count < loadKeysAmount ? count : loadKeysAmount;
-            dMultiResult = new $ws.proto.ParallelDeferred({stopOnFirstError: false});
+            dMultiResult = new ParallelDeferred({stopOnFirstError: false});
 
             if(!this._options.selectedItems) {
                this.initializeSelectedItems();
             }
 
             /* Если сорс грузит данные, то дожидаемся его */
-            $ws.helpers.callbackWrapper(this._loader, $ws.helpers.forAliveOnly(function(res) {
+            cHelpers.callbackWrapper(this._loader, fHelpers.forAliveOnly(function(res) {
                for (var j = 0; loadKeysAmount > j; j++) {
                   item = self.getItems() && self.getItems().getRecordById(loadKeysArr[j]);
 
@@ -658,7 +670,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
                   }
 
                   if (!self._dataSource) {
-                     $ws.single.ioc.resolve('ILogger').log('MultiSelectable', 'Потенциальная ошибка. У контрола ' + self.getName() + ' не задан dataSource для вычитки записей.');
+                     IoC.resolve('ILogger').log('MultiSelectable', 'Потенциальная ошибка. У контрола ' + self.getName() + ' не задан dataSource для вычитки записей.');
                      continue;
                   }
 
@@ -741,7 +753,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
              selectedItems = this._options.selectedItems,
              index = ArraySimpleValuesUtil.invertTypeIndexOf(keys, item);
 
-         if(index === -1 && $ws.helpers.instanceOfModule(item, 'WS.Data/Entity/Model')) {
+         if(index === -1 && cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
             if(selectedItems) {
                index = selectedItems.getIndexByValue(item.getIdProperty(), item.get(this._options.keyField));
             } else {
@@ -823,7 +835,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
             /* Запомним, если selectedItems пустой, то при добавлении в него записей, нам не нужно проверять,
                есть ли эти записи там уже, и можно из просто добавлять, не боясь что там будут 2 одинаковые записи */
             isEmpty = !this._options.selectedItems.getCount();
-            $ws.helpers.forEach(this.getSelectedKeys(), function (key) {
+            colHelpers.forEach(this.getSelectedKeys(), function (key) {
                record = dataSet.getRecordById(key);
                if (record) {
                   if(isEmpty) {
@@ -853,7 +865,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
       _checkNewItemsFormat: function(newItems) {
          var selectedItems = this._options.selectedItems;
 
-         if(!selectedItems || !newItems || !$ws.helpers.instanceOfMixin(selectedItems, 'WS.Data/Entity/FormattableMixin') || !$ws.helpers.instanceOfMixin(newItems, 'WS.Data/Entity/FormattableMixin')) {
+         if(!selectedItems || !newItems || !cInstance.instanceOfMixin(selectedItems, 'WS.Data/Entity/FormattableMixin') || !cInstance.instanceOfMixin(newItems, 'WS.Data/Entity/FormattableMixin')) {
             return false;
          } else if(newItems.getAdapter()._moduleName !== selectedItems.getAdapter()._moduleName || !newItems.getFormat().isEqual(selectedItems.getFormat())) {
             this._options.selectedItems = null;
@@ -868,7 +880,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!WS.Data/Collection/List', 'js!S
 
          if(selectedKeys.length) {
             /* Для правильной работы биндингов, предполагаем, что масив [null] тоже является пустым выделением */
-            if($ws.helpers.isEqualObject(selectedKeys, EMPTY_SELECTION)) {
+            if(colHelpers.isEqualObject(selectedKeys, EMPTY_SELECTION)) {
 
                /* Пробуем найти в рекордсете запись с ключём null, если она есть - выделение не пустое. */
                if(items && items.getRecordById(EMPTY_SELECTION[0])) {

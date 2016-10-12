@@ -2,9 +2,10 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
    [
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
-      'html!SBIS3.CONTROLS.FilterButton.FilterLine'
+      'html!SBIS3.CONTROLS.FilterButton.FilterLine',
+      'Core/helpers/string-helpers'
    ],
-   function(CompoundControl, FilterToStringUtil, dotTplFn) {
+   function(CompoundControl, FilterToStringUtil, dotTplFn, strHelpers) {
 
       /**
        * Контрол, отображающий строку из применённых фильтров рядом с кнопкой фильтров.
@@ -36,7 +37,7 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
 
                   context.setValueSelf({
                      linkText: linkText,
-                     titleText: $ws.helpers.escapeTagsFromStr(linkText, '')
+                     titleText: strHelpers.escapeTagsFromStr(linkText, '')
                   });
                   self.toggle(!!linkText);
                   self._notifyOnSizeChanged();

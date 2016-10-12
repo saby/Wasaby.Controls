@@ -1,14 +1,16 @@
 define('js!SBIS3.CONTROLS.Demo.MyOperationsPanel', [
-    'js!SBIS3.CORE.CompoundControl',
-    'html!SBIS3.CONTROLS.Demo.MyOperationsPanel',
-    'js!SBIS3.CONTROLS.ComponentBinder',
-    'css!SBIS3.CONTROLS.Demo.MyOperationsPanel',
-    'js!SBIS3.CONTROLS.OperationsPanelButton',
-    'js!SBIS3.CONTROLS.OperationsPanel',
-    'js!SBIS3.CONTROLS.TreeDataGridView',
-    'js!SBIS3.CONTROLS.BackButton',
-    'js!SBIS3.CONTROLS.Action.List.Sum'],
-    function(CompoundControl, dotTplFn, ComponentBinder) {
+   "Core/CommandDispatcher",
+   "js!SBIS3.CORE.CompoundControl",
+   "html!SBIS3.CONTROLS.Demo.MyOperationsPanel",
+   "js!SBIS3.CONTROLS.ComponentBinder",
+   "css!SBIS3.CONTROLS.Demo.MyOperationsPanel",
+   "js!SBIS3.CONTROLS.OperationsPanelButton",
+   "js!SBIS3.CONTROLS.OperationsPanel",
+   "js!SBIS3.CONTROLS.TreeDataGridView",
+   "js!SBIS3.CONTROLS.BackButton",
+   "js!SBIS3.CONTROLS.Action.List.Sum"
+],
+    function( CommandDispatcher,CompoundControl, dotTplFn, ComponentBinder) {
     /**
      * SBIS3.CONTROLS.Demo.MyOperationsPanel
      * @class SBIS3.CONTROLS.Demo.MyOperationsPanel
@@ -39,7 +41,7 @@ define('js!SBIS3.CONTROLS.Demo.MyOperationsPanel', [
             componentBinder.bindBreadCrumbs();
             panelsButton.setLinkedPanel(operationsPanel);
             actionSum.setLinkedObject(dataGridView);
-            $ws.single.CommandDispatcher.declareCommand(this, 'sumItems', function() {
+            CommandDispatcher.declareCommand(this, 'sumItems', function() {
                 actionSum.execute({});
             });
         },
