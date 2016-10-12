@@ -1,14 +1,18 @@
 define('js!SBIS3.CONTROLS.TreeDataGridView', [
-   'js!SBIS3.CONTROLS.DataGridView',
-   'html!SBIS3.CONTROLS.TreeDataGridView',
-   'js!SBIS3.CONTROLS.TreeMixin',
-   'js!SBIS3.CONTROLS.TreeViewMixin',
-   'js!SBIS3.CONTROLS.IconButton',
-   'html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate',
-   'html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate',
-   'html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate',
-   'tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender'
-], function(DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
+   "Core/IoC",
+   "Core/core-merge",
+   "Core/constants",
+   "js!SBIS3.CONTROLS.DataGridView",
+   "html!SBIS3.CONTROLS.TreeDataGridView",
+   "js!SBIS3.CONTROLS.TreeMixin",
+   "js!SBIS3.CONTROLS.TreeViewMixin",
+   "js!SBIS3.CONTROLS.IconButton",
+   "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate",
+   "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate",
+   "html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate",
+   "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender",
+   "Core/ConsoleLogger"
+], function( IoC, cMerge, constants,DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
 
 
    var HIER_WRAPPER_WIDTH = 16,
@@ -18,7 +22,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var tplOptions, tvOptions;
          tplOptions = cfg._buildTplArgsDG.call(this, cfg);
          tvOptions = cfg._buildTplArgsTV.call(this, cfg);
-         $ws.core.merge(tplOptions, tvOptions);
+         cMerge(tplOptions, tvOptions);
          tplOptions.arrowActivatedHandler = cfg.arrowActivatedHandler;
          tplOptions.editArrow = cfg.editArrow;
          return tplOptions;
@@ -235,10 +239,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              isBranch = rec && rec.get(this._options.hierField + '@');
 
          switch(e.which) {
-            case $ws._const.key.right:
+            case constants.key.right:
                isBranch && this.expandNode(selectedKey);
                break;
-            case $ws._const.key.left:
+            case constants.key.left:
                isBranch && this.collapseNode(selectedKey);
                break;
          }
@@ -282,7 +286,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
                      // TODO для обратной совместимости - удалить позже
                      if(self._options.arrowActivatedHandler) {
-                        $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.TreeDataGridView', 'Опция arrowActivatedHandler помечена как deprecated и будет удалена в 3.7.4.200.');
+                        IoC.resolve('ILogger').log('SBIS3.CONTROLS.TreeDataGridView', 'Опция arrowActivatedHandler помечена как deprecated и будет удалена в 3.7.4.200.');
                         self._options.arrowActivatedHandler.call(this,
                             hoveredItem.record,
                             id,

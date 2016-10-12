@@ -7,6 +7,7 @@
 define(
    'js!SBIS3.CONTROLS.MonthPicker',
    [
+      'Core/constants',
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
@@ -14,7 +15,7 @@ define(
       'html!SBIS3.CONTROLS.MonthPicker',
       'i18n!SBIS3.CONTROLS.MonthPicker'
    ],
-   function(CompoundControl, PickerMixin, DateUtil, DropdownTpl, dotTplFn){
+   function(constants, CompoundControl, PickerMixin, DateUtil, DropdownTpl, dotTplFn){
 
    'use strict';
 
@@ -101,7 +102,7 @@ define(
          /**
           * Массив месяцев
           */
-         _months: $ws._const.Date.longMonths,
+         _months: constants.Date.longMonths,
          /**
           * Управляющие клавиши
           */

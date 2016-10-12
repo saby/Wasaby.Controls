@@ -4,14 +4,16 @@
 define(
    'js!SBIS3.CONTROLS.DatePicker',
    [
+      'Core/EventBus',
       'js!SBIS3.CONTROLS.DateBox',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'js!SBIS3.CONTROLS.DateRangeBigChoose',
       'html!SBIS3.CONTROLS.DatePicker',
+      'Core/helpers/dom&controls-helpers',
       'i18n!SBIS3.CONTROLS.DatePicker'
    ],
-   function (DateBox, PickerMixin, DateUtil, DateRangeBigChoose, dotTplFn) {
+   function (EventBus, DateBox, PickerMixin, DateUtil, DateRangeBigChoose, dotTplFn, dcHelpers) {
 
    'use strict';
 
@@ -219,14 +221,14 @@ define(
       _initFocusInHandler: function() {
          if (!this._onFocusInHandler) {
             this._onFocusInHandler = this._onFocusIn.bind(this);
-            this.subscribeTo($ws.single.EventBusGlobalChannel, 'onFocusIn', this._onFocusInHandler);
+            this.subscribeTo(EventBus.globalChannel(), 'onFocusIn', this._onFocusInHandler);
          }
       },
 
       _onFocusIn: function(event) {
-         if (!$ws.helpers.isChildControl(this, event.getTarget())) {
+         if (!dcHelpers.isChildControl(this, event.getTarget())) {
             this._notify('onDateSelect');
-            this.unsubscribeFrom($ws.single.EventBusGlobalChannel, 'onFocusIn', this._onFocusInHandler);
+            this.unsubscribeFrom(EventBus.globalChannel(), 'onFocusIn', this._onFocusInHandler);
             this._onFocusInHandler = null;
          }
       }

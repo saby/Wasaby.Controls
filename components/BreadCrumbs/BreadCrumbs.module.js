@@ -4,8 +4,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.DecorableMixin',
    'tmpl!SBIS3.CONTROLS.BreadCrumbs',
-   'html!SBIS3.CONTROLS.BreadCrumbs/resources/pointTpl'
-], function(CompoundControl, DSMixin, PickerMixin, DecorableMixin, dotTpl, pointTpl) {
+   'html!SBIS3.CONTROLS.BreadCrumbs/resources/pointTpl',
+   'Core/helpers/string-helpers'
+], function(CompoundControl, DSMixin, PickerMixin, DecorableMixin, dotTpl, pointTpl, strHelpers) {
    /**
     * Контрол рисующий "Хлебные крошки"
     * Пример использования - иерархические реестры
@@ -187,7 +188,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                if (record.get(self._options.keyField)){
                   var point = $('<div class="controls-MenuItem js-controls-BreadCrumbs__crumb"></div>');
                      point.html(self._options._decorators.apply(
-                           $ws.helpers.escapeHtml(record.get(self._options.displayField))
+                           strHelpers.escapeHtml(record.get(self._options.displayField))
                      ))
                      .attr('style', self._options._decorators.apply(
                         self._options.colorField ? record.get(self._options.colorField) : '', 'color'

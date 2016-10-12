@@ -2,13 +2,16 @@
  * Created by as.avramenko on 02.10.2015.
  */
 define('js!SBIS3.CONTROLS.Image.EditDialog', [
-   'js!SBIS3.CORE.CompoundControl',
-   'html!SBIS3.CONTROLS.Image.EditDialog',
-   'js!SBIS3.CONTROLS.Image.CropPlugin',
-   'js!SBIS3.CONTROLS.Utils.ImageUtil',
-   'js!SBIS3.CONTROLS.Button',
-   'i18n!SBIS3.CONTROLS.Image.EditDialog'
-], function(CompoundControl, dotTplFn, CropPlugin, ImageUtil) {
+   "Transport/BLObject",
+   "js!SBIS3.CORE.CompoundControl",
+   "html!SBIS3.CONTROLS.Image.EditDialog",
+   "js!SBIS3.CONTROLS.Image.CropPlugin",
+   "js!SBIS3.CONTROLS.Utils.ImageUtil",
+   "Core/helpers/transport-helpers",
+   "Core/helpers/helpers",
+   "js!SBIS3.CONTROLS.Button",
+   "i18n!SBIS3.CONTROLS.Image.EditDialog"
+], function( BLObject,CompoundControl, dotTplFn, CropPlugin, ImageUtil, transHelpers, cHelpers) {
    /**
     * SBIS3.CONTROLS.Image.EditDialog
     * @class SBIS3.CONTROLS.Image.EditDialog
@@ -95,9 +98,9 @@ define('js!SBIS3.CONTROLS.Image.EditDialog', [
             self._notify('onOpenError', event);
             self.sendCommand('close');
          });
-         this._imageUrl = $ws.helpers.prepareGetRPCInvocationURL(this._options.dataSource.getEndpoint().contract,
-            this._options.dataSource.getBinding().read, this._options.filter, $ws.proto.BLObject.RETURN_TYPE_ASIS);
-         $ws.helpers.reloadImage(this._image, this._imageUrl);
+         this._imageUrl = transHelpers.prepareGetRPCInvocationURL(this._options.dataSource.getEndpoint().contract,
+            this._options.dataSource.getBinding().read, this._options.filter, BLObject.RETURN_TYPE_ASIS);
+         cHelpers.reloadImage(this._image, this._imageUrl);
       },
       onActivateSaveButton: function() {
          this.getParent()._cropPlugin.makeCrop();

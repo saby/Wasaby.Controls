@@ -1,7 +1,9 @@
-define('js!SBIS3.CONTROLS.Demo.FilterButtonMocks', [],
-   function() {
+define('js!SBIS3.CONTROLS.Demo.FilterButtonMocks', [
+   "Core/EventBus"
+],
+   function( EventBus) {
       var
-         channel = $ws.single.EventBus.channel('Transport'),
+         channel = EventBus.channel('Transport'),
          suggestDataResp = {
             "jsonrpc":"2.0",
             "result":{

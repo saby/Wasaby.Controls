@@ -1,10 +1,14 @@
 define('js!SBIS3.CONTROLS.HighChartsLight', [
-   'js!SBIS3.CORE.Control',
-   'html!SBIS3.CONTROLS.HighChartsLight',
-   'browser!cdn!/highcharts/4.2.3/highcharts-more-min.js',
-   'css!SBIS3.CONTROLS.HighChartsLight'
+   "Core/core-functions",
+   "Core/core-merge",
+   "Core/constants",
+   "js!SBIS3.CORE.Control",
+   "html!SBIS3.CONTROLS.HighChartsLight",
+   "Core/helpers/dom&controls-helpers",
+   "browser!cdn!/highcharts/4.2.3/highcharts-more-min.js",
+   "css!SBIS3.CONTROLS.HighChartsLight"
 ],
-function(BaseControl, dotTpl){
+function( cFunctions, cMerge, constants,BaseControl, dotTpl, dcHelpers){
    'use strict';
 
    /**
@@ -506,9 +510,9 @@ function(BaseControl, dotTpl){
          Highcharts.setOptions({
             lang: {
                numericSymbols: ['', '', '', '', '', ''],
-               months : $ws._const.Date.longMonths,
-               shortMonths : $ws._const.Date.months,
-               weekdays: $ws._const.Date.longDays,
+               months : constants.Date.longMonths,
+               shortMonths : constants.Date.months,
+               weekdays: constants.Date.longDays,
                thousandsSep : ' '
             }
          });
@@ -569,7 +573,7 @@ function(BaseControl, dotTpl){
          }
 
          //TODO прописываем опции для spline теже что и line
-         this._options.highChartOptions.plotOptions.spline = $ws.core.clone(this._options.highChartOptions.plotOptions.line);
+         this._options.highChartOptions.plotOptions.spline = cFunctions.clone(this._options.highChartOptions.plotOptions.line);
       },
 
       init : function() {
@@ -579,7 +583,7 @@ function(BaseControl, dotTpl){
             this._drawHighChart();
          }
          //перерисовываем график, если он стал видимым. без этого график не занимает всю ширину контейнера, если был скрыт
-         var trg = $ws.helpers.trackElement(this._container, true);
+         var trg = dcHelpers.trackElement(this._container, true);
          trg.subscribe('onVisible', function (event, visible) {
             if (self._chartObj && visible) {
                self._chartObj.reflow();
@@ -600,12 +604,12 @@ function(BaseControl, dotTpl){
       },
 
       setConfig : function(config) {
-         this._options.highChartOptions = $ws.core.merge(this._options.highChartOptions, config);
+         this._options.highChartOptions = cMerge(this._options.highChartOptions, config);
          this._drawHighChart();
       },
 
       setFullConfig : function(config) {
-         this._options.highChartOptions = $ws.core.merge(config, this._defaultOptions);
+         this._options.highChartOptions = cMerge(config, this._defaultOptions);
          this._drawHighChart();
       },
 
@@ -614,7 +618,7 @@ function(BaseControl, dotTpl){
       },
 
       destroy: function() {
-         $ws.helpers.trackElement(this._container, false);
+         dcHelpers.trackElement(this._container, false);
          HighChartsLight.superclass.destroy.call(this);
       }
    });

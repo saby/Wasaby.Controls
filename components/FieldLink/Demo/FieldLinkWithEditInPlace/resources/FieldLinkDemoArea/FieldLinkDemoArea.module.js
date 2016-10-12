@@ -1,13 +1,14 @@
 define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoArea', [
-   'js!SBIS3.CONTROLS.CompoundControl',
-   'html!SBIS3.CONTROLS.Demo.FieldLinkDemoArea',
-   'js!SBIS3.CONTROLS.DataGridView',
-   'js!SBIS3.CONTROLS.Demo.FieldLinkDemoMemory',
-   'js!WS.Data/Entity/Model',
-   'js!WS.Data/Adapter/Sbis',
-   'css!SBIS3.CONTROLS.Demo.FieldLinkDemoArea',
-   'js!SBIS3.CONTROLS.FieldLink'
-], function(CompoundControl, dotTplFn, DataGridView, FieldLinkDemoMemory, Model, SbisAdapter) {
+   "Core/CommandDispatcher",
+   "js!SBIS3.CONTROLS.CompoundControl",
+   "html!SBIS3.CONTROLS.Demo.FieldLinkDemoArea",
+   "js!SBIS3.CONTROLS.DataGridView",
+   "js!SBIS3.CONTROLS.Demo.FieldLinkDemoMemory",
+   "js!WS.Data/Entity/Model",
+   "js!WS.Data/Adapter/Sbis",
+   "css!SBIS3.CONTROLS.Demo.FieldLinkDemoArea",
+   "js!SBIS3.CONTROLS.FieldLink"
+], function( CommandDispatcher,CompoundControl, dotTplFn, DataGridView, FieldLinkDemoMemory, Model, SbisAdapter) {
    /**
     * SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace
     * @class SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace
@@ -23,7 +24,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoArea', [
       },
 
       $constructor: function() {
-         $ws.single.CommandDispatcher.declareCommand(this, 'addWorkPlaceField', this._addWorkPlaceField.bind(this));
+         CommandDispatcher.declareCommand(this, 'addWorkPlaceField', this._addWorkPlaceField.bind(this));
       },
 
       setDataSet: function(dataSet) {

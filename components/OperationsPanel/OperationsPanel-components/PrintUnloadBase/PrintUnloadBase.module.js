@@ -5,11 +5,13 @@
 //Невероятное ветвление кода, и вроде бы таки одинаковые вещи как выгрузка всех записей и выгрузка выбранных совершенно в разных ветках.
 //Нужно сделать общую точку входа, и ветвление только непосредственно перед вызовом тех или иннных функций бл.
 define('js!SBIS3.CONTROLS.PrintUnloadBase', [
-   'js!SBIS3.CONTROLS.MenuLink',
-   'js!SBIS3.CORE.DialogSelector',
-   'js!WS.Data/Adapter/Json',
-   'js!WS.Data/Collection/RecordSet'
-], function(MenuLink, Dialog, SbisAdapter, RecordSet) {
+   "Core/Deferred",
+   "js!SBIS3.CONTROLS.MenuLink",
+   "js!SBIS3.CORE.DialogSelector",
+   "js!WS.Data/Adapter/Json",
+   "js!WS.Data/Collection/RecordSet",
+   "Core/helpers/fast-control-helpers"
+], function( Deferred,MenuLink, Dialog, SbisAdapter, RecordSet, fcHelpers) {
    //TODO: ограничение на максимальное количество записей, получаемое на клиент для печати/выгрузки.
    //Необходимо т.к. на сервере сейчас невозможно произвести xsl преобразование. Выписана задача:
    //(https://inside.tensor.ru/opendoc.html?guid=f852d5cc-b75e-4957-9635-3401e1832e80&description=)
@@ -145,10 +147,10 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          var
              originData = dataSet || this._getView().getItems(),
              newData = this._notify('onPrepareData', originData);
-         if (newData instanceof $ws.proto.Deferred) {
+         if (newData instanceof Deferred) {
             return newData;
          } else {
-            return $ws.proto.Deferred.success(newData || originData);
+            return Deferred.success(newData || originData);
          }
       },
 
@@ -190,15 +192,15 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          }
       },
       _loadFullData: function(pageSize){
-         var deferred = new $ws.proto.Deferred(),
+         var deferred = new Deferred(),
             self = this;
-         $ws.helpers.question('Операция займет продолжительное время. Провести операцию?', {}, self).addCallback(function(answer){
+         fcHelpers.question('Операция займет продолжительное время. Провести операцию?', {}, self).addCallback(function(answer){
             if (answer) {
-               $ws.helpers.toggleIndicator(true);
+               fcHelpers.toggleIndicator(true);
                self._getView()._callQuery(self._getView().getFilter(), self._getView().getSorting(),0,  pageSize || MAX_RECORDS_COUNT).addCallback(function (dataSet) {
                   deferred.callback(dataSet)
                }).addBoth(function() {
-                  $ws.helpers.toggleIndicator(false);
+                  fcHelpers.toggleIndicator(false);
                });
             } else{
                deferred.errback();
