@@ -127,7 +127,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              * но не подходит для поля связи, так как может перекрывать вводимый текст 
              * @type {Boolean}
              */
-            allowOverlapTarget: false
+            targetOverlay: false
          }
       },
 
@@ -746,7 +746,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._container.css('overflow-y', 'auto');
                var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
                if (spaces.top < spaces.bottom) {
-                  if (this._options.allowOverlapTarget){
+                  if (this._options.targetOverlay){
                      this._container.css('height', height);
                      offset.top = this._windowSizes.height - this._container.get(0).scrollHeight - this._containerSizes.border * 2;
                   } else {
@@ -759,7 +759,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                } else {
                   offset.top = 0;
                   //Если места снизу меньше чем сверху покажемся во весь размер (возможно поверх таргета), или в высоту окна если в него не влезаем
-                  if (!this._options.allowOverlapTarget){
+                  if (!this._options.targetOverlay){
                      height = spaces.top - vOffset - this._margins.top + this._margins.bottom;
                   }
                }
