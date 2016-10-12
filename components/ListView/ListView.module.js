@@ -3063,9 +3063,9 @@ define('js!SBIS3.CONTROLS.ListView',
           *    new ListView({
           *       itemsActions: {
       	 *	         name: 'moveSelected'
-      	 *	         tooltip: 'Переместить выделленые записи ниже этой'
+      	 *	         tooltip: 'Переместить выделленые записи внутрь папки'
       	 *	         onActivated: function(tr, id, record) {
-      	 *             this.move(this.getSelectedItems().toArray(), record, 'after')
+      	 *             this.move(this.getSelectedItems().toArray(), record, 'on')
       	 *	         }
       	 *	      }
           *    })
