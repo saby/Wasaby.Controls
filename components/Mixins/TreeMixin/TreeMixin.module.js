@@ -116,24 +116,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
    getRecordsForRedraw = function(projection, cfg) {
       var
          records = [],
-         projectionFilter;
+         projectionFilter,
+         prevGroupId = undefined;
       if (cfg.expand || cfg.hierarchyViewMode) {
-         cfg._previousGroupBy = undefined;
          projection.setEventRaising(false);
          expandAllItems(projection, cfg);
          projection.setEventRaising(true);
 
-         if (cfg.hierarchyViewMode) {
-            records = searchProcessing(projection, cfg);
-         }
-         else {
-            projection.each(function(item) {
-               if (cfg.groupBy && cfg.easyGroup) {
-                  cfg._groupItemProcessing(records, item, cfg);
-               }
-               records.push(item);
-            });
-         }
+
       }
       else {
          /**
@@ -143,19 +133,24 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
           * https://inside.tensor.ru/opendoc.html?guid=6f1758f0-f45d-496b-a8fe-fde7390c92c7
           * @private
           */
-         var items = [];
          projectionFilter = resetFilterAndStopEventRaising.call(this, projection, false);
          applyExpandToItemsProjection.call(this, projection, cfg);
          restoreFilterAndRunEventRaising.call(this, projection, projectionFilter, false);
-         cfg._previousGroupBy = undefined;
-         projection.each(function(item) {
-            if (cfg.groupBy && cfg.easyGroup) {
-               cfg._groupItemProcessing(items, item, cfg);
-            }
-            items.push(item);
-         });
-         return items;
+      }
 
+      if (cfg.hierarchyViewMode) {
+         records = searchProcessing(projection, cfg);
+      }
+      else {
+         projection.each(function(item, index, group) {
+            if (!Object.isEmpty(cfg.groupBy) && cfg.easyGroup) {
+               if (prevGroupId != group) {
+                  cfg._groupItemProcessing(group, records, item, cfg);
+                  prevGroupId = group;
+               }
+            }
+            records.push(item);
+         });
       }
       return records;
    },
@@ -730,6 +725,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             }
             return parentFn.apply(this, [id]);
          },
+         _isSlowDrawing: function(parentFnc, easy) {
+            if (this._options.hierarchyViewMode) {
+               return false;
+            }
+            else {
+               return parentFnc.call(this, easy);
+            }
+         },
          _canApplyGrouping: function(parentFn, projItem) {
             if (this._isSearchMode()) {
                return true;
@@ -758,7 +761,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             fillBranchesForRedraw(oldItems);
             for (idx in branches) {
                if (branches.hasOwnProperty(idx)) {
-                  if (this._isSlowDrawing()) {
+                  if (this._isSlowDrawing(this._options.easyGroup)) {
                      this.redrawItem(branches[idx].getContents(), branches[idx]);
                   }
                   else {
@@ -966,6 +969,81 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        */
       setRoot: function(root){
          this._options.root = root;
+      },
+      _searchRender: function(item, container){
+         this._drawBreadCrumbs(this._lastPath, item, container);
+         return container;
+      },
+      _drawBreadCrumbs:function(path, record, container){
+         if (path.length) {
+            var self = this,
+               elem,
+               groupBy = this._options.groupBy,
+               cfg,
+               td = container.find('td');
+            td.append(elem = $('<div style="width:'+ td.width() +'px"></div>'));
+            cfg = {
+               element : elem,
+               items: this._createPathItemsDS(path),
+               parent: this,
+               highlightEnabled: this._options.highlightEnabled,
+               highlightText: this._options.highlightText,
+               colorMarkEnabled: this._options.colorMarkEnabled,
+               colorField: this._options.colorField,
+               className : 'controls-BreadCrumbs__smallItems',
+               enable: this._options.allowEnterToFolder
+            };
+            if (groupBy.hasOwnProperty('breadCrumbsTpl')){
+               cfg.itemTemplate = groupBy.breadCrumbsTpl
+            }
+            var ps = new BreadCrumbs(cfg);
+            ps.once('onItemClick', function(event, id){
+               //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onBreadCrumbClick'), а вотом выполняется setCurrentRoot
+               event.setResult(false);
+               //TODO Выпилить в .100 проверку на задизабленность, ибо событие вообще не должно стрелять и мы сюда не попадем, если крошки задизаблены
+               if (this.isEnabled() && self._notify('onSearchPathClick', id) !== false ) {
+                  //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
+                  /*TODO для Алены. Временный фикс, потому что так удалось починить*/
+                  var filter = $ws.core.merge(self.getFilter(), {
+                     'Разворот' : 'Без разворота'
+                  });
+                  if (self._options.groupBy.field) {
+                     filter[self._options.groupBy.field] = undefined;
+                  }
+                  //Если бесконечный скролл был установлен в опции - вернем его
+                  self.setInfiniteScroll(self._options.infiniteScroll, true);
+                  self.setGroupBy({});
+                  self.setHighlightText('', false);
+                  self.setFilter(filter, true);
+                  self.setCurrentRoot(id);
+                  self.reload();
+               }
+            });
+            this._breadCrumbs.push(ps);
+         } else{
+            //если пути нет, то группировку надо бы убить...
+            container.remove();
+         }
+
+      },
+      _createPathItemsDS: function(pathRecords){
+         var dsItems = [],
+            parentID;
+         for (var i = 0; i < pathRecords.length; i++){
+            //TODO для SBISServiceSource в ключе находится массив
+            parentID = pathRecords[i].get(this._options.hierField);
+            dsItems.push({
+               id: pathRecords[i].getId(),
+               title: pathRecords[i].get(this._options.displayField)
+            });
+         }
+         return dsItems;
+      },
+      _destroySearchBreadCrumbs: function(){
+         for (var i =0; i < this._breadCrumbs.length; i++){
+            this._breadCrumbs[i].destroy();
+         }
+         this._breadCrumbs = [];
       },
       /**
        * Возвращает узел, относительно которого будет производиться выборка данных списочным методом.

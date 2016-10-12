@@ -9,14 +9,15 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
     * @class SBIS3.CONTROLS.NotificationPopup
     * @extends SBIS3.CONTROLS.InformationPopup
     * @control
+    * @public
     * @author Степин П.В.
     */
    function(InformationPopup, template, headerTpl){
       'use strict';
 
       var ICONS = {
-         success: 'icon-24 icon-Yes icon-done',
-         error: 'icon-24 icon-Alert icon-error',
+         success: 'icon-size icon-24 icon-Yes icon-done',
+         error: 'icon-size icon-24 icon-Alert icon-error',
          warning: '',
          'default': ''
       };

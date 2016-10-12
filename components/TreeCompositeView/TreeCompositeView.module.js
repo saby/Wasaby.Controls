@@ -183,6 +183,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          var
             self = this,
             filter,
+            deferred,
             currentDataSet,
             currentRecord,
             needRedraw,
@@ -306,9 +307,10 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             if (Object.isEmpty(recordsGroup)) {
                $ws.helpers.toggleIndicator(false);
             } else {
+               deferred = new $ws.proto.ParallelDeferred();
                $ws.helpers.forEach(recordsGroup, function(branch, branchId) {
                   //Загружаем содержимое веток
-                  getBranch(branchId)
+                  deferred.push(getBranch(branchId)
                      .addCallback(function(branchDataSet) {
                         $ws.helpers.forEach(branch, function(record, idx) {
                            currentRecord = currentDataSet.getRecordById(record);
@@ -320,10 +322,12 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                      })
                      .addBoth(function() {
                         $ws.helpers.toggleIndicator(false);
-                     });
+                     }));
                });
+               return deferred.done().getResult();
             }
          }
+         return $ws.proto.Deferred.success();
       },
       //Переопределим метод определения направления изменения порядкового номера, так как если элементы отображаются в плиточном режиме,
       //нужно подвести DragNDrop объект не к верхней(нижней) части элемента, а к левой(правой)
@@ -334,6 +338,14 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             }
          } else {
             return TreeCompositeView.superclass._getDirectionOrderChange.apply(this, arguments);
+         }
+      },
+
+      _reloadViewAfterDelete: function(idArray) {
+         if (this.getViewMode() === 'table') {
+            return this.partialyReload(idArray);
+         } else {
+            return TreeCompositeView.superclass._reloadViewAfterDelete.apply(this, arguments);
          }
       }
 

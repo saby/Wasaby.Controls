@@ -96,8 +96,10 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                toggleButton = this.getItemInstance('toggle'),
                icon = (expanded && this._options.side === 'right') || (!expanded && this._options.side === 'left') ? 'Back' : '';
             for (var button in buttons){
-               if (!buttons[button]._options.basic) {
-                  buttons[button].setVisible(expanded);
+               if (buttons.hasOwnProperty(button)) {
+                  if (!buttons[button]._options.basic) {
+                     buttons[button].setVisible(expanded);
+                  }
                }
             }
             toggleButton.setIcon('sprite:icon-16 icon-View' + icon + ' icon-primary');

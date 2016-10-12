@@ -115,12 +115,12 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                       self.hide(false);
                    },
                    onShowMenu: function() {
-                      this.getContainer().addClass('ws-invisible');
+                      self.getContainer().addClass('ws-invisible');
                       self.lockToolbar();
                       self._notify('onShowItemActionsMenu');
                    },
                    onHideMenu: function() {
-                      this.getContainer().removeClass('ws-invisible');
+                      self.getContainer().removeClass('ws-invisible');
                       if (self._isEditActionsHidden()) {
                          self.unlockToolbar();
                       }
@@ -284,24 +284,19 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                  size = target.size,
                  parentContainer = this.getParent().getContainer()[0],
                  isVertical = target.container.hasClass('js-controls-CompositeView__verticalItemActions'),
-                 rightPosition = parentContainer.offsetWidth - (position.left + size.width),
-                 topPosition = 'auto',
-                 bottomPosition = parentContainer.offsetHeight - (position.top + size.height);
+                 marginRight = parentContainer.offsetWidth - (position.left + size.width),
+                 marginTop = position.top,
+                 marginBottom = parentContainer.offsetHeight - (position.top + size.height);
 
-             if(rightPosition < 0 && !isVertical) {
-                rightPosition = 0;
-             }
-
-             if(isVertical) {
-                topPosition = position.top;
-                bottomPosition = 'auto';
+             if(marginRight < 0 && !isVertical) {
+                marginRight = 0;
              }
 
              this.getContainer()[isVertical ? 'addClass' : 'removeClass']('controls-ItemsToolbar__vertical');
              return {
-                right : rightPosition,
-                top : topPosition,
-                bottom : bottomPosition
+                'margin-right' : marginRight,
+                'margin-top' : marginTop,
+                'margin-bottom': marginBottom
              };
           },
           /**

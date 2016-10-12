@@ -85,7 +85,8 @@
 
 
 @date-range-choose-current-value-font-size:     @globalDefaultFontSize;
-@date-range-choose-current-value-height:        60px;
+@date-range-choose-current-value-height:        53px;
+@date-range-choose-current-value-line-height:   52px;
 @date-range-choose-current-value-bg-color:      #c1d7f0;
 @date-range-choose-current-value-bg-hover-color:   @date-range-choose-current-value-bg-color;
 @date-range-choose-current-value-border-bottom: none;
@@ -176,6 +177,7 @@
 
 @list-view-actions-menu-padding:                0;
 @list-view-items-toolbar-vertical-line-height:  38px;
+@touch-mode-items-toolbar-icon-margin-top:      -38px;
 
 @listView-check-box-top:                        7px;
 
@@ -332,10 +334,31 @@
 @controls-filterLine-wrapper-height:            @controls-filterButton-button-height;
 @controls-filterLine-items-line-height:         40px;
 
+@controls-filterButton-clear-margin-right:      16px;
+
 //FilterLine
 @controls-filterLine-copyCross-top:             -32px;
 // FilterLine FireFox hack
 @controls-filterLine-copyCross-ff-top:          -39px;
+
+// --------------- //
+// DropdownList//
+// --------------- //
+
+@DropdownList-min-height:                       40px;
+@DropdownList-picker-menu-font-size:            @font-basic-size;
+@DropdownList-picker-margin-top:                0;
+@DropdownList-picker-padding:                   0;
+@DropdownList-picker-head-border-radius:        0;
+@DropdownList-picker-head-margin:               2px 0 0 2px;
+@DropdownList-picker-hor-revert-head-margin:    2px 2px 0 0;
+@DropdownList-picker-border:                    0;
+@DropdownList-picker-list-right-border-radius:  @DropdownList-picker-head-border-radius;
+@DropdownList-border-color:                     transparent;
+@DropdownList-picker-menu-item-color:           #E1ECF6;
+@DropdownList-picker-bg:                        transparent;
+@DropdownList-header-bg:                        #C1D7F0;
+@DropdownList-linkStyleHoverColor:              @blue-dark-color;
 
 // -------- //
 // Text box //
@@ -453,7 +476,7 @@
 //MoveDialog
 @controls-movedialog-activate-right:            65px;
 @controls-movedialog-activate-top:              10px;
-@controls-movedialog-min-width:                 455px;
+@controls-movedialog-min-width:                 525px;
 
 // Big button
 @button-big-font:                               @globalDefaultFontSize;
@@ -523,3 +546,8 @@
 
 //SubmitPopup
 @controls-SubmitPopup-button-height:               40px;
+
+//InformationPopup
+@controls-InformationPopup-border:              1px solid #CCCCCC;
+@controls-InformationPopup-border-bottom:       3px solid;
+@controls-InformationPopup-border-top:          @controls-InformationPopup-border !important;

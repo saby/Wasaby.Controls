@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!WS.Data/Entity/Model', 'js!SBIS3.CONTROLS.Utils.InformationPopupManager', 'i18n!SBIS3.CONTROLS.DialogActionBase'], function(ActionBase, Dialog, FloatArea, Model, InformationPopupManager){
+define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!WS.Data/Entity/Record', 'js!SBIS3.CONTROLS.Utils.InformationPopupManager', 'js!WS.Data/Di', 'i18n!SBIS3.CONTROLS.DialogActionBase'], function(ActionBase, Dialog, FloatArea, Record, InformationPopupManager, Di){
    'use strict';
 
    /**
@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop
     */
-   var OpenDialogAction = ActionBase.extend(/** @lends SBIS3.CONTROLS.DialogActionBase.prototype */{
+   var DialogActionBase = ActionBase.extend(/** @lends SBIS3.CONTROLS.DialogActionBase.prototype */{
       $protected : {
          _options : {
             /**
@@ -55,7 +55,15 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
              * Список должен быть с примесью миксинов ({@link SBIS3.CONTROLS.DSMixin} или {@link WS.Data/Collection/IList}) для работы с однотипными элементами.
              * Подробнее о базовых платформенных списках вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-types/">Виды списков</a>.
              */
-            linkedObject: undefined
+            linkedObject: undefined,
+            /**
+             * @cfg {String} Устанавливает поведение для чтения записи и её установки в контекст диалога редактирования.
+             * Подробнее о данной опции можно прочитать по <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/strategy/'>ссылке</a>
+             * @variant local
+             * @variant remote
+             * @variant delayedRemote
+             */
+            initializingWay: 'remote'
          },
          _dialog: undefined,
          /**
@@ -71,7 +79,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       },
       /**
        * @typedef {Object} ExecuteMetaConfig
-       * @property {DataSource} dataSource Источник данных, который будет установлен для диалога редактирования.
        * @property {String|Number} id Первичный ключ записи, которую нужно открыть на диалоге редактирования. Если свойство не задано, то нужно передать запись свойством record.
        * @property {Boolean} newModel Признак: true - в диалоге редактирования открыта новая запись, которой не существует в источнике данных.
        * @property {Object} filter Объект, данные которого будут использованы в качестве инициализирующих данных при создании новой записи.
@@ -95,6 +102,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        * });
        *
        */
+      $constructor: function() {
+         this._publish('onAfterShow', 'onBeforeShow', 'onExecuted', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel');
+      },
+
       execute : function(meta) {
          this._opendEditComponent(meta, this._options.dialogComponent);
       },
@@ -150,53 +161,83 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             meta.id = this._getEditKey(meta.item) || meta.id;
          }
 
-         var self = this,
-            config,
-            compOptions = this._buildComponentConfig(meta);
+         var config,
+             compOptions = this._buildComponentConfig(meta),
+             initializingWay = compOptions.initializingWay;
+
          config = {
             opener: this,
             template: dialogComponent,
-            componentOptions: compOptions
-         };
-         if (meta.title) {
-            config.title = meta.title;
-         }
-
-         config.componentOptions.handlers = this._getFormControllerHandlers();
-
-         config.handlers = {
-            onAfterClose: function (e, meta) {
-               //В качестве шаблона могут использовать не FormController, проверяем на наличие метода getRecord
-               var record = this._getTemplateComponent().getRecord && this._getTemplateComponent().getRecord();
-               self._dialog = undefined;
-               self._notifyOnExecuted(meta, record);
+            componentOptions: compOptions,
+            handlers: {
+               onAfterClose: this._onAfterCloseDialogHandler.bind(this),
+               onBeforeShow: function(){
+                  self._notify('onBeforeShow');
+               },
+               onAfterShow: function(){
+                  self._notify('onAfterShow');
+               }
             }
          };
 
-         //делам загрузку компонента, только если в мете явно указали, что на прототипе в опциях есть данные об источнике данных
-         if (meta.controllerSource && ( !config.componentOptions.record || meta.preloadRecord !== false )) {
-            //Загружаем компонент, отнаследованный от formController'a, чтобы с его прототипа вычитать запись, которую мы прокинем при инициализации компонента
-            //Сделано в рамках ускорения
+         //TODO Выпилить в 200+
+         if (meta.controllerSource){
+            initializingWay = DialogActionBase.INITIALIZING_WAY_REMOTE;
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.OpenDialogAction', 'meta.controllerSource is no longer available since version 3.7.4.200. Use option initializingWay = OpenDialogAction.INITIALIZING_WAY_REMOTE instead.');
+         }
+
+         if (initializingWay == DialogActionBase.INITIALIZING_WAY_REMOTE) {
             this._showLoadingIndicator();
             require([dialogComponent], this._initTemplateComponentCallback.bind(this, config, meta, mode));
+         }
+         else if (initializingWay == DialogActionBase.INITIALIZING_WAY_DELAYED_REMOTE){
+            this._showLoadingIndicator();
+            require([dialogComponent], this._getRecordDeferred.bind(this, config, meta, mode));
          }
          else {
             this._showDialog(config, meta, mode);
          }
       },
 
+      _onAfterCloseDialogHandler: function(e, meta){
+         //В качестве шаблона могут использовать не FormController, проверяем на наличие метода getRecord
+         var record = this._dialog._getTemplateComponent().getRecord && this._dialog._getTemplateComponent().getRecord();
+         this._dialog = undefined;
+         this._notifyOnExecuted(meta, record);
+      },
+
+      _getRecordDeferred: function(config, meta, mode, templateComponent){
+         var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource,
+             def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
+         this._hideLoadingIndicator();
+         //TODO Условие в рамках совместимости. убрать как все перейдут на установку dataSource с опций
+         if (!$ws.helpers.instanceOfModule(def, 'Core/Deferred')){
+            this._showDialog(config, meta, mode);
+            return;
+         }
+         config.componentOptions._receiptRecordDeferred = def;
+         this._showDialog(config, meta, mode);
+      },
+
       _initTemplateComponentCallback: function (config, meta, mode, templateComponent) {
          var self = this,
-            def;
+             isNewRecord = !config.componentOptions.key,
+             def;
          var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource;
          if (getRecordProtoMethod){
             def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
+
+            //TODO Условие в рамках совместимости. убрать как все перейдут на установку dataSource с опций
+            if (!$ws.helpers.instanceOfModule(def, 'Core/Deferred')){
+               self._hideLoadingIndicator();
+               self._showDialog(config, meta, mode);
+               return;
+            }
+
             def.addCallback(function (record) {
                config.componentOptions.record = record;
-               if (def.isNewRecord)
-                  config.componentOptions.isNewRecord = true;
-               if (!config.componentOptions.key){
-                  //Если не было ключа, то отработал метод "создать". Запоминаем ключ созданной записи
+               config.componentOptions.isNewRecord = isNewRecord;
+               if (isNewRecord){
                   config.componentOptions.key = record.getId();
                }
                self._showDialog(config, meta, mode);
@@ -263,6 +304,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
                showOnControlsReady: true,
                autoCloseOnHide: true,
                target: '',
+               title: '',
                side: 'left',
                animation: 'slide'
             },
@@ -356,8 +398,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.MultiSelectable')) {
             collection.removeItemsSelection([collectionRecord.getId()]);
          }
-         if ($ws.helpers.instanceOfModule(collection.getDataSet && collection.getDataSet(), 'WS.Data/Collection/RecordSet')) {
-            collection = collection.getDataSet();
+         if ($ws.helpers.instanceOfModule(collection.getItems && collection.getItems(), 'WS.Data/Collection/RecordSet')) {
+            collection = collection.getItems();
          }
          collection.remove(collectionRecord);
       },
@@ -393,11 +435,11 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          eventResult = actionResult = this._notify.apply(this, [eventName].concat(args));
 
          genericMethod = genericMethods[eventName];
-         if (eventResult !== OpenDialogAction.ACTION_CUSTOM) {
+         if (eventResult !== DialogActionBase.ACTION_CUSTOM) {
             methodResult  = this['_' + eventName].apply(this, args);
             actionResult = methodResult || eventResult;
          }
-         if (actionResult === OpenDialogAction.ACTION_CUSTOM || !this._options.linkedObject) {
+         if (actionResult === DialogActionBase.ACTION_CUSTOM || !this._options.linkedObject) {
             return;
          }
          if (actionResult !== undefined){
@@ -420,12 +462,12 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          var collection = this._options.linkedObject,
             rec;
          at = at || 0;
-         if ($ws.helpers.instanceOfModule(collection.getDataSet(), 'WS.Data/Collection/RecordSet')) {
-            //Создаем новую модель, т.к. Record не знает, что такое первичный ключ - это добавляется на модели.
-            rec = new Model({
-               format: collection.getDataSet().getFormat(),
-               idProperty: collection.getItems().getIdProperty(),
-               adapter: collection.getItems().getAdapter()
+         if ($ws.helpers.instanceOfModule(collection.getItems(), 'WS.Data/Collection/RecordSet')) {
+             //Создаем новую модель, т.к. Record не знает, что такое первичный ключ - это добавляется на модели.
+            rec = Di.resolve(collection.getItems().getModel(), {
+               adapter: collection.getItems().getAdapter(),
+               format: collection.getItems().getFormat(),
+               idProperty: collection.getItems().getIdProperty()
             });
             this._mergeRecords(model, rec, additionalData);
          } else  {
@@ -466,7 +508,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             collectionRecord.set(collectionData.getIdProperty(), additionalData.key);
          }
 
-         collectionRecord.each(function (key, value) {
+         Record.prototype.each.call(collectionRecord, function (key, value) {
             recValue = model.get(key);
             if (model.has(key) && recValue != value && key !== model.getIdProperty()) {
                //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
@@ -505,14 +547,22 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          return collection;
       },
 
-      _buildComponentConfig: function() {
-         return {}
+      _buildComponentConfig: function(meta) {
+         return {
+            handlers: this._getFormControllerHandlers(),
+            initializingWay: meta.initializingWay || this._options.initializingWay
+         };
       }
    });
-   OpenDialogAction.ACTION_CUSTOM = 'custom';
-   OpenDialogAction.ACTION_MERGE = '_mergeRecords';
-   OpenDialogAction.ACTION_ADD = '_createRecord'; //что добавляем? сделал через create
-   OpenDialogAction.ACTION_RELOAD = '_collectionReload';
-   OpenDialogAction.ACTION_DELETE = '_destroyModel';
-   return OpenDialogAction;
+
+   DialogActionBase.ACTION_CUSTOM = 'custom';
+   DialogActionBase.ACTION_MERGE = '_mergeRecords';
+   DialogActionBase.ACTION_ADD = '_createRecord';
+   DialogActionBase.ACTION_RELOAD = '_collectionReload';
+   DialogActionBase.ACTION_DELETE = '_destroyModel';
+   DialogActionBase.INITIALIZING_WAY_LOCAL = 'local';
+   DialogActionBase.INITIALIZING_WAY_REMOTE = 'remote';
+   DialogActionBase.INITIALIZING_WAY_DELAYED_REMOTE = 'delayedRemote';
+
+   return DialogActionBase;
 });

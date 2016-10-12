@@ -23,8 +23,21 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                 /**
                  * Набор выбранных элементов
                  */
-                selectedItems: null
-             }
+                selectedItems: null,
+                /**
+                 * Разрешён ли множественный выбор
+                 */
+                multiselect: false,
+                /**
+                 * Тип выбираемых записей
+                 */
+                selectionType: 'all',
+                /**
+                 * Имя кнопки, клик по которой завершает выбор
+                 */
+                selectButton: 'SelectorControllerButton'
+             },
+             _selectButton: null
           },
           $constructor: function () {
              var commandDispatcher = $ws.single.CommandDispatcher;
@@ -37,9 +50,19 @@ define('js!SBIS3.CONTROLS.SelectorController', [
              if(this._options.selectedItems) {
                 if(Array.isArray(this._options.selectedItems)) {
                    this._options.selectedItems = Di.resolve('collection.list', {items: this._options.selectedItems});
+                } else {
+                   this._options.selectedItems = this._options.selectedItems.clone(true);
                 }
              } else {
                 this._options.selectedItems = Di.resolve('collection.list');
+             }
+          },
+
+          init: function() {
+             SelectorController.superclass.init.apply(this, arguments);
+             if(this.hasChildControlByName(this._options.selectButton)) {
+                this._selectButton = this.getChildControlByName(this._options.selectButton);
+                this.subscribeTo(this._selectButton, 'onActivated', this.sendCommand.bind(this, 'selectComplete'));
              }
           },
 
@@ -49,7 +72,11 @@ define('js!SBIS3.CONTROLS.SelectorController', [
            * @private
            */
           _chooserWrapperInitialized: function(chooserWrapper) {
-             chooserWrapper.setSelectedItems(this._options.selectedItems);
+             chooserWrapper.setProperties({
+                multiselect: this._options.multiselect,
+                selectedItems: this._options.selectedItems,
+                selectionType: this._options.selectionType
+             });
           },
 
           /**
@@ -59,12 +86,20 @@ define('js!SBIS3.CONTROLS.SelectorController', [
            * @private
            */
           _chooserWrapperSelectionChanged: function(difference, keyField) {
-             var currentItems = this._options.selectedItems;
+             var currentItems = this._options.selectedItems,
+                 self = this;
+
+             function onChangeSelection() {
+                if(self._selectButton) {
+                   self._selectButton.show();
+                }
+             }
 
              if(difference.removed.length) {
                 collectionHelpers.forEach(difference.removed, function (removedKey) {
                    currentItems.removeAt(currentItems.getIndexByValue(keyField, removedKey));
-                }, this);
+                });
+                onChangeSelection();
              }
 
              if(difference.added.length) {
@@ -76,7 +111,8 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                    } else {
                       currentItems.replace(item, index);
                    }
-                }, this);
+                });
+                onChangeSelection();
              }
           },
 

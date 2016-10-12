@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
             /**
              * @cfg {Number} временной интервал, который показывает с какой частотой бросать событие поиска
              */
-            searchDelay : 300
+            searchDelay : 500
          }
       },
 

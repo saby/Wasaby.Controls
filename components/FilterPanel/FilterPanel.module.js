@@ -19,7 +19,8 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    'js!SBIS3.CONTROLS.FilterPanelChooser',
    'js!SBIS3.CONTROLS.FilterPanelDataRange',
    'js!SBIS3.CONTROLS.FilterPanelBoolean',
-   'js!SBIS3.CONTROLS.IconButton'
+   'js!SBIS3.CONTROLS.IconButton',
+   'js!SBIS3.CONTROLS.ScrollContainer'
 ], function(CompoundControl, Expandable, FilterPanelItem, MarkupTransformer, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
 
    'use strict';
@@ -83,6 +84,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
              */
             filter: {}
          },
+         _filterInitialized: false,
          _filterAccordion: null,
          _onFilterItemChangeFn: null,
          _notifyOnFilterChange: true
@@ -104,10 +106,8 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          this.subscribe('onExpandedChange', this._onExpandedChange);
          FilterPanel.superclass.init.apply(this, arguments);
          setTimeout($ws.helpers.forAliveOnly(function() {
-            if (this.isExpanded()) {
-               this._filterAccordion = this.getChildControlByName('FilterAccordion');
+            if (this.isExpanded() && !this._filterInitialized) { // Защита от повторной инициализации (если фильтр был инициализирован через setItems)
                this._initializeFilter();
-               this._filterAccordion.getItems().subscribe('onCollectionItemChange', this._onFilterItemChangeFn);
             }
          }, this).bind(this), 1);
       },
@@ -144,12 +144,19 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          this._notifyOnPropertyChanged('filter');
       },
       _initializeFilter: function() {
-         var filter = {};
-         this._filterAccordion.getItems().each(function(item) {
-            filter[item.get(ITEM_FILTER_ID)] = item.get(ITEM_FILTER_VALUE);
-         });
-         this._updateFilterProperty(filter);
-         this._updateResetFilterButtons();
+         var
+            items, filter = {};
+         this._filterAccordion = this.getChildControlByName('FilterAccordion');
+         items = this._filterAccordion.getItems();
+         if (items) {
+            items.each(function (item) {
+               filter[item.get(ITEM_FILTER_ID)] = item.get(ITEM_FILTER_VALUE);
+            });
+            this._updateFilterProperty(filter);
+            this._updateResetFilterButtons();
+            this._filterAccordion.getItems().subscribe('onCollectionItemChange', this._onFilterItemChangeFn);
+         }
+         this._filterInitialized = true;
       },
       getFilter: function() {
          return this._options.filter;
@@ -158,7 +165,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          throw new Error('Свойство "filter" работает только на чтение. Менять его надо через метод setFilterStructure');
       },
       _onExpandedChange: function(event, expanded) {
-         if (expanded && !this._filterAccordion) {
+         if (expanded && !this._filterInitialized) {
             this._initializeContent();
          }
       },
@@ -167,16 +174,19 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
       },
       setItems: function(items) {
          this._options.items = items;
+         this._destroyFilter();
+         this._initializeContent();
+      },
+      _destroyFilter: function() {
          if (this._filterAccordion) {
             this._filterAccordion.destroy();
             this._filterAccordion = null;
-            this._initializeContent();
          }
+         this._filterInitialized = false;
       },
       _initializeContent: function() {
          this._getContentContainer().html(MarkupTransformer(this._options._contentTpl(this._options)));
          this.reviveComponents();
-         this._filterAccordion = this.getChildControlByName('FilterAccordion');
          this._initializeFilter();
       },
       _setNotifyOnFilterChange: function(flag) {

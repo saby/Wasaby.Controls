@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeViewMixin'], function(dotTplFn) {
+define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeViewMixin', 'js!SBIS3.CONTROLS.Link'], function(dotTplFn) {
    'use strict';
    /**
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
@@ -240,12 +240,8 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
          },
 
          //TODO заглушка для CompositeView
-         _isSlowDrawing: function(parentFnc) {
-            /*TODO заглушка для режима поиска в группировкой, в 200 выпилится*/
-            if (this._options.hierarchyViewMode) {
-               return false;
-            }
-            var flag = parentFnc.call(this);
+         _isSlowDrawing: function(parentFnc, easy) {
+            var flag = parentFnc.call(this, easy);
             if (this._options.viewMode == 'list' || this._options.viewMode == 'tile') {
                flag = true;
             }

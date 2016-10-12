@@ -186,7 +186,18 @@ define(
              * @noShow
              * @deprecated
              */
-            notificationMode: 'change'
+            notificationMode: 'change',
+
+            /**
+             * @cfg {String} Режим серализации даты при отправке в бизнес логику. В 140 версии значение по умолчанию datetime. В последующих опция будет убрана, а поведение будет соответствовать auto.
+             * @variant 'auto' дата будет сериализоваться в зависимости от маски контрола, т.е. если установлена маска в которой присутствует только время, то дата будет сериализоваться как Время, если происутствует дата и время, то как ДатаВремя, если присутствует только дата, то как Дата.
+             * @variant 'time'
+             * @variant 'date'
+             * @variant 'datetime'
+             * @noShow
+             * @deprecated
+             */
+            serializationMode: 'auto'
          }
       },
 
@@ -224,13 +235,18 @@ define(
       },
 
       _addDefaultValidator: function() {
-         var self = this;
+         var self = this,
+            _validationErrors = {
+               time: rk('Время заполнено некорректно'),
+               date: rk('Дата заполнена некорректно'),
+               datetime: rk('Дата или время заполнены некорректно')
+            };
          //Добавляем к прикладным валидаторам стандартный, который проверяет что дата заполнена корректно.
          this._options.validators.push({
             validator: function() {
                return self._getFormatModel().isEmpty(this._getMaskReplacer()) ? true : self._options.date instanceof Date;
             },
-            errorMessage: rk('Дата заполнена некорректно')
+            errorMessage: _validationErrors[this.getType()]
          });
       },
 
@@ -318,6 +334,44 @@ define(
       },
 
       /**
+       * Получить тип отображаемых данных.
+       * Возвращает режим работы: дата/ время/ дата и время.
+       * @returns (String) Тип данных ('date' || 'time' || 'datetime').
+       * @example
+       * <pre>
+       *    var type = control.getType();
+       *    switch(type){
+       *       case "date": $ws.core.alert("Дата"); break;
+       *       case "time": $ws.core.alert("Время"); break;
+       *       case "datetime": $ws.core.alert("ДатаВремя"); break;
+       *    }
+       * </pre>
+       * @see mask
+       */
+      getType: function(){
+         var
+            dateTypes = {
+               date : ['Y', 'M', 'D'],
+               time : ['H', 'I', 'S', 'U']
+            },
+            mask = this._getMask().split(''),
+            result = '',
+            s = 0;
+         for (var dateType in dateTypes){
+            if (dateTypes.hasOwnProperty(dateType)) {
+               for (var j = 0, l = dateTypes[dateType].length; j < l; j++) {
+                  if (mask.indexOf(dateTypes[dateType][j]) != -1) {
+                     s++;
+                     result = dateType;
+                     break;
+                  }
+               }
+            }
+         }
+         return s == 2 ? 'datetime' : result;
+      },
+
+      /**
        * Метод получения текущего значения даты.
        * @returns {Date|String} Начальное значение даты, с которой откроется контрол.
        * @example
@@ -330,7 +384,21 @@ define(
        * @see onDateChange
        */
       getDate: function() {
-        return this._options.date;
+         var modeMap = {
+               'datetime': Date.SQL_SERIALIZE_MODE_DATETIME,
+               'date': Date.SQL_SERIALIZE_MODE_DATE,
+               'time': Date.SQL_SERIALIZE_MODE_TIME
+            },
+            mode;
+         if (this._options.serializationMode === 'auto') {
+            mode = modeMap[this.getType()];
+         } else {
+            mode = modeMap[this._options.serializationMode];
+         }
+         if (this._options.date) {
+            this._options.date.setSQLSerializationMode(mode);
+         }
+         return this._options.date;
       },
 
       /**
