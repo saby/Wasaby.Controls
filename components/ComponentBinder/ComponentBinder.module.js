@@ -1,22 +1,29 @@
 define('js!SBIS3.CONTROLS.ComponentBinder',
     [
-       'js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
-       'js!SBIS3.CONTROLS.HistoryController',
-       'js!SBIS3.StickyHeaderManager'
-    ],
-    function (KbLayoutRevertObserver, HistoryController, StickyHeaderManager) {
+   "Core/Abstract",
+   "Core/core-functions",
+   "Core/core-merge",
+   "Core/constants",
+   "js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver",
+   "js!SBIS3.CONTROLS.HistoryController",
+   "js!SBIS3.StickyHeaderManager",
+   "Core/helpers/collection-helpers",
+   "Core/core-instance",
+   "Core/helpers/functional-helpers"
+],
+    function ( cAbstract, cFunctions, cMerge, constants,KbLayoutRevertObserver, HistoryController, StickyHeaderManager, colHelpers, cInstance, fHelpers) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
     * @class SBIS3.CONTROLS.ComponentBinder
-    * @extends $ws.proto.Abstract
+    * @extends cAbstract
     * @author Крайнов Дмитрий Олегович
     * @public
     */
    /*методы для поиска*/
    var startHierSearch = function hierSearch(text, searchParamName, searchCrumbsTpl, searchMode, searchForm) {
           if (needSearch.call(this, text, searchParamName)) {
-             var filter = $ws.core.merge(this._options.view.getFilter(), {
+             var filter = cMerge(this._options.view.getFilter(), {
                     'Разворот': 'С разворотом',
                     'usePages': 'full'
                  }),
@@ -40,7 +47,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                 this._lastRoot = view.getCurrentRoot();
                 //Запомнили путь в хлебных крошках перед тем как их сбросить для режима поиска
                 if (this._options.breadCrumbs && this._options.breadCrumbs.getItems()){
-                   this._pathDSRawData = $ws.core.clone(this._options.breadCrumbs.getItems().getRawData());
+                   this._pathDSRawData = cFunctions.clone(this._options.breadCrumbs.getItems().getRawData());
                 }
              }
              this._firstSearch = false;
@@ -82,7 +89,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        startSearch = function search(text, searchParamName, searchForm){
           if (needSearch.call(this, text, searchParamName)){
              var view = this._options.view,
-                 filter = $ws.core.merge(view.getFilter(), {
+                 filter = cMerge(view.getFilter(), {
                     'usePages': 'full'
                  }),
                  args = arguments;
@@ -108,7 +115,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
    function resetGroup(searchParamName) {
       var
          view = this._options.view,
-         filter = $ws.core.merge(view.getFilter(), {
+         filter = cMerge(view.getFilter(), {
             'Разворот' : 'Без разворота'
          }),
          self = this;
@@ -185,8 +192,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
    }
    function drawItemsCallback(operationPanel, view) {
       //TODO: После перехода на экшены, кнопки ни чего знать о view не будут, и этот костыль уйдёт.
-      $ws.helpers.forEach(operationPanel.getItemsInstances(), function(instance) {
-         if ($ws.helpers.instanceOfModule(instance, 'SBIS3.CONTROLS.OperationsMark')) {
+      colHelpers.forEach(operationPanel.getItemsInstances(), function(instance) {
+         if (cInstance.instanceOfModule(instance, 'SBIS3.CONTROLS.OperationsMark')) {
             instance.setLinkedView(view);
          } else {
             instance._options.linkedView = view;
@@ -198,10 +205,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
     * Контроллер, позволяющий связывать компоненты осуществляя базовое взаимодейтсие между ними
     * @author Крайнов Дмитрий
     * @class SBIS3.CONTROLS.ComponentBinder
-    * @extends $ws.proto.Abstract
+    * @extends cAbstract
     * @public
     */
-   var ComponentBinder = $ws.proto.Abstract.extend(/**@lends SBIS3.CONTROLS.ComponentBinder.prototype*/{
+   var ComponentBinder = cAbstract.extend(/**@lends SBIS3.CONTROLS.ComponentBinder.prototype*/{
       $protected : {
          _searchReload : true,
          _searchMode: false,
@@ -355,7 +362,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
 
             searchForm.subscribe('onKeyPressed', function (eventObject, event) {
                // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
-               if ((event.which == $ws._const.key.tab || event.which == $ws._const.key.down) && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)) {
+               if ((event.which == constants.key.tab || event.which == constants.key.down) && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)) {
                   view.setSelectedIndex(0);
                   view.setActive(true);
                   event.stopPropagation();
@@ -460,7 +467,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          });
 
          view.subscribe('onKeyPressed', function(event, jqEvent) {
-            if(jqEvent.which === $ws._const.key.backspace) {
+            if(jqEvent.which === constants.key.backspace) {
                setPreviousRoot();
                jqEvent.preventDefault();
             }
@@ -527,7 +534,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             noSaveFilters.push(searchParam);
          }
 
-         if($ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin')) {
+         if(cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin')) {
             noSaveFilters.push(view.getHierField());
          }
 
@@ -555,7 +562,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                view.setFilter(filter.viewFilter, true);
             }
          }
-         setTimeout($ws.helpers.forAliveOnly(function() {
+         setTimeout(fHelpers.forAliveOnly(function() {
             // Через timeout, чтобы можно было подписаться на соыбтие, уйдёт с серверным рендерингом
             browser._notifyOnFiltersReady();
          }, view), 0);
@@ -610,7 +617,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       },
 
       _isTreeView: function(view){
-         return $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
+         return cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
       },
 
       bindScrollPaging: function(paging) {

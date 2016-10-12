@@ -1,9 +1,10 @@
 define('js!SBIS3.CONTROLS.SubmitPopup', [
-      'js!SBIS3.CONTROLS.InformationPopup',
-      'html!SBIS3.CONTROLS.SubmitPopup/resources/template',
-      'js!SBIS3.CONTROLS.Button',
-      'js!SBIS3.CONTROLS.Link'
-   ],
+   "Core/constants",
+   "js!SBIS3.CONTROLS.InformationPopup",
+   "html!SBIS3.CONTROLS.SubmitPopup/resources/template",
+   "js!SBIS3.CONTROLS.Button",
+   "js!SBIS3.CONTROLS.Link"
+],
 
    /**
     * Информационное окно.
@@ -15,7 +16,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
     * @public
     * @author Степин П.В.
     */
-   function(InformationPopup, template){
+   function( constants,InformationPopup, template){
       'use strict';
 
       var SubmitPopup = InformationPopup.extend(/** @lends SBIS3.CONTROLS.SubmitPopup.prototype */ {
@@ -143,7 +144,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
 
             //По esc закрываем диалог. Кидаем событие со значением undefined.
             this.subscribe('onKeyPressed', function(e, event){
-               if(event.which === $ws._const.key.esc){
+               if(event.which === constants.key.esc){
                   self._choose();
                }
             });
@@ -174,8 +175,8 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
 
             this.subscribeTo(inst, 'onKeyPressed', function(e, event){
                switch(event.which){
-                  case $ws._const.key.left: self._switchButton(index, false); break;
-                  case $ws._const.key.right: self._switchButton(index, true); break;
+                  case constants.key.left: self._switchButton(index, false); break;
+                  case constants.key.right: self._switchButton(index, true); break;
                }
             });
          }

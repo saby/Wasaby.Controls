@@ -1,13 +1,16 @@
 define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
-   'js!SBIS3.CONTROLS.ListView',
-   'html!SBIS3.CONTROLS.DateRangeBigChoose/resources/MonthRangePickerItem',
-   'js!SBIS3.CONTROLS.RangeMixin',
-   'js!SBIS3.CONTROLS.RangeSelectableViewMixin',
-   'js!WS.Data/Source/Base',
-   'js!WS.Data/Source/DataSet',
-   // 'js!SBIS3.CONTROLS.DateRangeBigChoose.ScrollWatcher',
-   'js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView'
-], function (ListView, ItemTmpl, RangeMixin, RangeSelectableViewMixin, Base, DataSet, ScrollWatcher) {
+   "Core/constants",
+   "Core/Deferred",
+   "js!SBIS3.CONTROLS.ListView",
+   "html!SBIS3.CONTROLS.DateRangeBigChoose/resources/MonthRangePickerItem",
+   "js!SBIS3.CONTROLS.RangeMixin",
+   "js!SBIS3.CONTROLS.RangeSelectableViewMixin",
+   "js!WS.Data/Source/Base",
+   "js!WS.Data/Source/DataSet",
+   "Core/helpers/collection-helpers",
+   "Core/core-instance",
+   "js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView"
+], function ( constants, Deferred,ListView, ItemTmpl, RangeMixin, RangeSelectableViewMixin, Base, DataSet, colHelpers, cInstance, ScrollWatcher) {
    'use strict';
 
    var _startingOffset = 1000000;
@@ -41,7 +44,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
          items = this._prepareQueryResult(
             {items: adapter.getData(), total: 1000000000000}
          );
-         return $ws.proto.Deferred.success(items);
+         return Deferred.success(items);
       }
       //region Public methods
       //endregion Public methods
@@ -206,7 +209,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
          var $target = $(e.target),
             target = $target.closest('.controls-RangeSelectable__item', this._getItemsContainer());
 
-         if (!$ws._const.browser.isMobileIOS) {
+         if (!constants.browser.isMobileIOS) {
             target.addClass(this._css_classes.hovered);
          }
          this._onRangeItemElementMouseEnter(Date.fromSQL(target.attr(this._selectedRangeItemIdAtr)));
@@ -282,12 +285,12 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
       },
 
       _isMonthView: function (control) {
-         return $ws.helpers.instanceOfModule(control, 'SBIS3.CONTROLS.DateRangeBigChoose.MonthView');
+         return cInstance.instanceOfModule(control, 'SBIS3.CONTROLS.DateRangeBigChoose.MonthView');
       },
 
       forEachMonthView: function (func) {
          var self = this;
-         $ws.helpers.forEach(this.getChildControls(), function(control) {
+         colHelpers.forEach(this.getChildControls(), function(control) {
             // Почему то в control иногда попадают левые контролы
             if (self._isMonthView(control)) {
                func(control);

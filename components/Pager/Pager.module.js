@@ -5,7 +5,15 @@
  * Time: 10:50
  * To change this template use File | Settings | File Templates.
  */
-define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Pager', 'js!SBIS3.CONTROLS.DropdownList',  'js!SBIS3.CORE.Paging', 'i18n!SBIS3.CONTROLS.Pager'], function(CompoundControl, dotTplFn, Combobox, Paging) {
+define('js!SBIS3.CONTROLS.Pager', [
+   'js!SBIS3.CORE.CompoundControl',
+   'html!SBIS3.CONTROLS.Pager',
+   'js!SBIS3.CONTROLS.DropdownList',
+   'js!SBIS3.CORE.Paging',
+   'Core/core-instance',
+   'Core/helpers/string-helpers',
+   'i18n!SBIS3.CONTROLS.Pager'
+], function(CompoundControl, dotTplFn, Combobox, Paging, cInstance, strHelpers) {
 
    'use strict';
 
@@ -79,7 +87,7 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
          });
          //TODO Надо как-то по-другому понимать изменения в выделении listView
          opener = this.getOpener();
-         if ($ws.helpers.instanceOfMixin(opener, 'SBIS3.CONTROLS.MultiSelectable')){
+         if (cInstance.instanceOfMixin(opener, 'SBIS3.CONTROLS.MultiSelectable')){
             opener.subscribe('onSelectedItemsChange', function(ev, array){
                self.updateAmount(self._lastNumRecords, self._lastNextPage, array.length);
             });
@@ -112,8 +120,8 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
             if (numRecords == 1) {
                pagerStr = rk('Выбрана') + ' 1 ' + rk('запись');
             } else {
-               pagerStr = $ws.helpers.wordCaseByNumber(selectedCount, rk('Выбрано'), rk('Выбрана'), rk('Выбраны')) +
-               ' ' + selectedCount + $ws.helpers.wordCaseByNumber(selectedCount, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + '. ' + pagerStr;
+               pagerStr = strHelpers.wordCaseByNumber(selectedCount, rk('Выбрано'), rk('Выбрана'), rk('Выбраны')) +
+               ' ' + selectedCount + strHelpers.wordCaseByNumber(selectedCount, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + '. ' + pagerStr;
             }
          }
          this.getContainer().find('.controls-Amount-text_js').text(pagerStr + ',');
