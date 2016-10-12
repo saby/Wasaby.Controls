@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        'js!SBIS3.CONTROLS.ScrollPagingController',
        'js!SBIS3.CONTROLS.PagingController',
        'js!SBIS3.CONTROLS.BreadCrumbsController',
-      'js!SBIS3.CONTROLS.FilterHistoryController',
+      'js!SBIS3.CONTROLS.FilterHistoryController'
     ],
     function (HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController) {
    /**
@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       if (gridView._options.multiselect) {
          gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
          if (hideCheckBoxes) {
-            gridView._container.toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isVisible());
+            gridView.toggleCheckboxes('controls-ListView__hideCheckBoxes', !operationPanel.isVisible());
             gridView.removeItemsSelectionAll();
          }
          if (gridView._options.startScrollColumn !== undefined) {
@@ -255,8 +255,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             view.setPageSize(historyLimit, true);
          }
 
+         var self = this;
          view.subscribe('onPageSizeChange', function(event, pageSize) {
-            this._pagingHistoryController.setHistory(pageSize, true);
+            self._pagingHistoryController.setHistory(pageSize, true);
          });
       },
 

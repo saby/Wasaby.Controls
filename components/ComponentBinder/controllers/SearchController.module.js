@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
          _searchReload: true,
          _searchMode: false,
          _searchForm: undefined,
-         _lastRoot: undefined,
+         _lastRoot: undefined
       },
 
       _breakSearch: function(withReload) {
@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
       },
 
       _startHierSearch: function(text) {
-         var searchParamName = this._options.searchParamName
+         var searchParamName = this._options.searchParamName;
          if (this._needSearch(this, text, searchParamName)) {
             var filter = $ws.core.merge(this._options.view.getFilter(), {
                   'Разворот': 'С разворотом',
@@ -192,6 +192,9 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
                view: view,
                param: this._options.searchParamName
             })
+         }
+         else {
+            this._kbLayoutRevertObserver.setParam(searchParamName);
          }
          if (isTree) {
             this._lastRoot = view.getCurrentRoot();
