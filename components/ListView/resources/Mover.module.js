@@ -1,7 +1,10 @@
-/*global define, $ws, $*/
+/*global define, $*/
 define('js!SBIS3.CONTROLS.ListView.Mover', [
-   'js!WS.Data/Di'
-], function (Di) {
+   'js!WS.Data/Di',
+   "Core/core-instance",
+   "Core/Deferred",
+   "Core/Abstract"
+], function (Di, cInstance, Deferred, Abstract) {
    'use strict';
    /**
     * Перемещает элементы
@@ -9,7 +12,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
     * @private
     * @author Крайнов Дмитрий Олегович
     */
-   var Mover = $ws.proto.Abstract.extend(/**@lends SBIS3.CONTROLS.ListView.Mover.prototype*/{
+   var Mover = Abstract.extend(/**@lends SBIS3.CONTROLS.ListView.Mover.prototype*/{
       $protected: {
          _options: {
             /**
@@ -77,7 +80,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
                def = this.move(movedItems, dragObject.getTarget().getModel(), target.getPosition());
             }
          }
-         def = (def instanceof $ws.proto.Deferred) ? def : new $ws.proto.Deferred().callback();
+         def = (def instanceof Deferred) ? def : new Deferred().callback();
          var position = this.getItems().getIndex(target.getModel()),
             ownerItems = dragObject.getOwner().getItems(),
             self = this,
@@ -106,7 +109,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             isNodeTo = true,
             isChangeOrder = position !== 'on';
 
-         if (!$ws.helpers.instanceOfModule(target, 'WS.Data/Entity/Model')) {
+         if (!cInstance.instanceOfModule(target, 'WS.Data/Entity/Model')) {
             target = this.getItems().getRecordById(target);
          }
 
@@ -121,7 +124,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
                result = this.getMoveStrategy().move(movedItems, target, position == 'after');
             }
          }
-         return (result instanceof $ws.proto.Deferred) ? result : new $ws.proto.Deferred().callback(result);
+         return (result instanceof Deferred) ? result : new Deferred().callback(result);
       },
 
       //region move_strategy
@@ -158,10 +161,10 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          if (target === undefined) {
             return false;
          }
-         if (target !== null && $ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.TreeMixin')) {
+         if (target !== null && cInstanceinstanceOfMixin(this, 'SBIS3.CONTROLS.TreeMixin')) {
             toMap = this._getParentsMap(target.getId());
             for (var i = 0; i < movedItems.length; i++) {
-               key = '' + ($ws.helpers.instanceOfModule(movedItems[i], 'WS.Data/Entity/Model') ? movedItems[i].getId() : movedItems[i]);
+               key = '' + (cInstanceinstanceOfModule(movedItems[i], 'WS.Data/Entity/Model') ? movedItems[i].getId() : movedItems[i]);
                if ($.inArray(key, toMap) !== -1) {
                   return false;
                }
