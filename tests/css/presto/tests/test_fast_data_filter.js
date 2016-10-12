@@ -12,7 +12,7 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Presto', function () {
                 this.item2 = '.controls-DropdownList__item[data-id="2"]';
                 this.close_icon = '[sbisname="FastDataFilter"] .controls-DropdownList__crossIcon';
 				
-                actions.waitForElementToShow(this.fdf, 50000);
+                actions.waitForElementToShow(this.fdf, 40000);
 				actions.waitForElementToShow(this.box, 5000);
             })
 
@@ -51,17 +51,19 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Presto', function () {
                 this.box = '[sbisname="TextBox 1"] input';
                 this.title = '[sbisname="FastDataFilter"] .controls-DropdownList__text';
                 this.item2 = '.controls-DropdownList__item[data-id="2"]';
+				this.item2_box = '.controls-DropdownList__item[data-id="2"] .controls-DropdownList__itemCheckBox';
                 this.item3 = '.controls-DropdownList__item[data-id="3"]';
+				this.item3_box = '.controls-DropdownList__item[data-id="3"] .controls-DropdownList__itemCheckBox';
                 this.close_icon = '[sbisname="FastDataFilter"] .controls-DropdownList__crossIcon';
                 this.accept = '[sbisname="DropdownList_buttonChoose"]';
 				
-                actions.waitForElementToShow(this.fdf, 50000);
+                actions.waitForElementToShow(this.fdf, 40000);
 				actions.waitForElementToShow(this.box, 5000);
             })
 
             .capture('opened', function (actions) {
                 actions.mouseMove(this.title);
-				actions.waitForElementToShow(this.item2, 50000);
+				actions.waitForElementToShow(this.item2, 5000);
             })
 
             .capture('hovered_item', function (actions) {
@@ -69,8 +71,12 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Presto', function () {
             })
 
             .capture('selected_item', function (actions) {
-                actions.click(this.item2);
-                actions.click(this.item3);
+                actions.mouseMove(this.item2);
+				actions.waitForElementToShow(this.item2_box, 5000);
+				actions.click(this.item2_box);
+                actions.mouseMove(this.item3);
+				actions.waitForElementToShow(this.item3_box, 5000);
+				actions.click(this.item3_box);
                 actions.click(this.accept);
                 actions.click(this.box);
             })
@@ -94,7 +100,7 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Presto', function () {
                 this.second_title = '[sbisname="FastDataFilter"] [data-id="second"] .controls-DropdownList__text';
 				this.item2 = '.controls-DropdownList__item[data-id="2"]';
 				
-                actions.waitForElementToShow(this.fdf, 50000);
+                actions.waitForElementToShow(this.fdf, 40000);
 				actions.waitForElementToShow(this.box, 5000);
             })
 

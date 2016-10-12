@@ -193,8 +193,10 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
 				this.title = '[name="DropdownList 1"] .controls-DropdownList__text';
 				this.item1 = '.controls-DropdownList__item[data-id="1"]';
 				this.item2 = '.controls-DropdownList__item[data-id="2"]';
+				this.item2_box = '.controls-DropdownList__item[data-id="2"] .controls-DropdownList__itemCheckBox';
 				this.item3 = '.controls-DropdownList__item[data-id="3"]';
 				this.item4 = '.controls-DropdownList__item[data-id="4"]';
+				this.item4_box = '.controls-DropdownList__item[data-id="4"] .controls-DropdownList__itemCheckBox';
 				this.apply = '[sbisname="DropdownList_buttonChoose"]';
 				
 				actions.waitForElementToShow(this.dl, 40000);
@@ -209,8 +211,12 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
             })
 			
 			.capture('selected_items', function (actions) {
-                actions.click(this.item2);
-				actions.click(this.item4);
+                actions.mouseMove(this.item2);
+				actions.waitForElementToShow(this.item2_box, 5000);
+				actions.click(this.item2_box);
+				actions.mouseMove(this.item4);
+				actions.waitForElementToShow(this.item4_box, 5000);
+				actions.click(this.item4_box);
 				actions.mouseMove(this.input);
             })
 			
@@ -268,7 +274,7 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
 				
 				this.dl = '[sbisname="DropdownList 1"]';
                 this.input = '[name="TextBox 1"] input';
-				this.title = '[name="DropdownList 1"] .controls-DropdownList__text';
+				this.title = '[name="DropdownList 1"] .controls-DropdownList__textWrapper';
 				this.item4 = '.controls-DropdownList__item[data-id="4"]';
 				
 				actions.waitForElementToShow(this.dl, 40000);
@@ -333,7 +339,9 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
                 this.input = '[name="TextBox 1"] input';
 				this.title = '[name="DropdownList 1"] .controls-DropdownList__text';
 				this.item1 = '.controls-DropdownList__item[data-id="1"]';
+				this.item1_box = '.controls-DropdownList__item[data-id="1"] .controls-DropdownList__itemCheckBox';
 				this.item2 = '.controls-DropdownList__item[data-id="2"]';
+				this.item2_box = '.controls-DropdownList__item[data-id="2"] .controls-DropdownList__itemCheckBox';
 				this.more = '.controls-DropdownListFooter_hasMore';
 				
 				actions.waitForElementToShow(this.dl, 40000);
@@ -349,8 +357,12 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
             })
 			
 			.capture('selected_items', function (actions) {
-                actions.click(this.item1);
-				actions.click(this.item2);
+                actions.mouseMove(this.item1);
+				actions.waitForElementToShow(this.item1_box, 5000);
+				actions.click(this.item1_box);
+				actions.mouseMove(this.item2);
+				actions.waitForElementToShow(this.item2_box, 5000);
+				actions.click(this.item2_box);
 				actions.mouseMove(this.input);
             })
     });

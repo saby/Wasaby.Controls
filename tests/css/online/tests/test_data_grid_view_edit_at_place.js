@@ -91,6 +91,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
             .capture('opened_editor', function (actions) {
                 actions.click(this.item3);
 				actions.waitForElementToShow(this.editor_input, 5000);
+				actions.wait(500);
 				actions.click(this.editor_input);
 				actions.sendKeys(this.editor_input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
