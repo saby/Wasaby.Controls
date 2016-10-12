@@ -244,7 +244,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {*|Boolean} result Если result равен false то отменяется штатная логика удаления.
           */
          /**
-          * @typedef {String} DragPosition
+          * @typedef {String} MovePosition
           * @variant on Вставить перемещаемые элементы внутрь текущей записи.
           * @variant after Вставить перемещаемые элементы после текущей записи.
           * @variant before Вставить перемещаемые элементы перед текущей записью.
@@ -254,7 +254,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @property {SBIS3.CONTROLS.Control} owner Контрол, которому принадлежит запись.
           * @property {jQuery} domElement DOM элемент, отображающий запись.
           * @property {WS.Data/Entity/Model} model Модель, соответствующая записи.
-          * @property {DragPosition|undefined} position Позиция элемента после перемещения (определяется только у целевого элемента - того, который находится под курсором мыши).
+          * @property {MovePosition|undefined} position Позиция элемента после перемещения (определяется только у целевого элемента - того, который находится под курсором мыши).
           */
           /**
           * @typedef {Object} DragEntityListOptions
@@ -2984,6 +2984,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          /**
           * Перемещает выделенные записи.
+          * @deprecated используйте метод move
           * @param {WS.Data/Entity/Model|String} target  К какой записи переместить выделенные. Модель либо ее идентификатор.
           */
          selectedMoveTo: function(target) {
@@ -2993,6 +2994,20 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.removeItemsSelectionAll();
                }
             });
+         },
+         /**
+          * Переместить на одну запись ввниз.
+          * @param {WS.Data/Entity/Record} record Запись которую надо переместить
+          */
+         moveRecordDown: function(record) {
+            this._getMover().moveRecordDown(arguments[2]||record);//поддерживаем старую сигнатуру
+         },
+         /**
+          * Переместить на одну запись вверх.
+          * @param {WS.Data/Entity/Record} record Запись которую надо переместить
+          */
+         moveRecordUp: function(record) {
+            this._getMover().moveRecordDown(arguments[2]||record);
          },
          /**
           * Возвращает стратегию перемещения
@@ -3025,37 +3040,39 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this._moveStrategy = moveStrategy;
          },
-         /**
-          * Обработчик для быстрой операции над запись. Переместить на одну запись ввниз.
-          * @remark Сингнатура метода соответсвует обработчику быстрых операций над записью.
-          * @param {String} tr Строка содержащая html-представление записи
-          * @param {String} id Идентификатор записи
-          * @param {WS.Data/Entity/Record} record Запись
-          */
-         moveRecordDown: function(tr, id, record) {
-            this._getMover().moveRecordDown(record);
-         },
-         /**
-          * Обработчик для быстрой операции над записью. Переместить на одну запись вверх.
-          * @remark Сингнатура метода соответсвует обработчику быстрых операций над записью.
-          * @param {String} tr Строка содержащая html-представление записи
-          * @param {String} id Идентификатор записи
-          * @param {WS.Data/Entity/Record} record Запись
-          */
-         moveRecordUp: function(tr, id, record) {
-            this._getMover().moveRecordUp(record);
-         },
+
          /**
           * Возвращает перемещатор
           * @private
           */
-         _getMover: function(){
+         _getMover: function() {
             return this._mover || (this._mover = Di.resolve('listview.mover', {
                moveStrategy: this.getMoveStrategy(),
                items: this.getItems(),
                projection: this._getItemsProjection(),
                hierField: this._options.hierField
             }));
+         },
+         /**
+          * Перемещает переданные записи
+          * @param {Array} movedItems  Массив перемещаемых записей.
+          * @param {WS.Data/Entity/Model} target Запись к которой надо преместить..
+          * @param {MovePosition} position Как перемещать записи
+          * @example
+          * <pre>
+          *    new ListView({
+          *       itemsActions: {
+      	 *	         name: 'moveSelected'
+      	 *	         tooltip: 'Переместить выделленые записи ниже этой'
+      	 *	         onActivated: function(tr, id, record) {
+      	 *             this.move(this.getSelectedItems().toArray(), record, 'after')
+      	 *	         }
+      	 *	      }
+          *    })
+          * </pre>
+          */
+         move: function(movedItems, target, position) {
+            this._getMover().move(models, target.getModel(), position);
          },
          //endregion moveMethods
          /**
