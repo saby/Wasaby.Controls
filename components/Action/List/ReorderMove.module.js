@@ -1,9 +1,10 @@
 /*global define, $ws*/
 define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
-      'js!SBIS3.CONTROLS.Action.List.Move',
-      'js!SBIS3.CONTROLS.Action.List.RelativeMoveMixin'
-   ],
-   function (ListMove, RelativeMoveMixin) {
+   "Core/Deferred",
+   "js!SBIS3.CONTROLS.Action.List.Move",
+   "js!SBIS3.CONTROLS.Action.List.RelativeMoveMixin"
+],
+   function ( Deferred,ListMove, RelativeMoveMixin) {
       'use strict';
       /**
        * Действие перемещения в низ/верх на одну запись
@@ -96,7 +97,7 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
          /**
           * Метод выполнящий перемещение
           * @param {WS.Data/Entity/Model} movedItems элемент который будет перемещен
-          * @returns {$ws.proto.Deferred}
+          * @returns {Deferred}
           * @private
           */
          _move: function (movedItems) {
@@ -104,7 +105,7 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
             if (to) {
               return this.getMoveStrategy().reorderMove(movedItems, to, (this._options.moveDirection === 'up'));
             }
-            return (new $ws.proto.Deferred()).callback(true);
+            return (new Deferred()).callback(true);
          },
          /**
           * возвращает соседий элемент

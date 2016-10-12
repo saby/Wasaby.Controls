@@ -1,7 +1,11 @@
 /**
  * Created by am.gerasimov on 08.06.2016.
  */
-define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', ['js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil'], function (KbLayoutRevertUtil) {
+define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
+   "Core/constants",
+   "js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil",
+   "Core/core-instance"
+], function ( constants,KbLayoutRevertUtil, cInstace) {
    'use strict';
 
    function stopEvent(e) {
@@ -33,7 +37,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', ['js!SBIS3.CONTROLS.Utils.KbLayo
       },
 
       _chooseCallback: function(result) {
-         if(result && $ws.helpers.instanceOfModule(result[0], 'WS.Data/Entity/Model')) {
+         if(result && cInstace.instanceOfModule(result[0], 'WS.Data/Entity/Model')) {
             var item = result[0];
             this._onListItemSelect(item.getId(), item);
          }
@@ -44,7 +48,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', ['js!SBIS3.CONTROLS.Utils.KbLayo
          _keyDownBind: function(e) {
             /* Запрещаем всплытие enter по событию keyDown,
              т.к. Area тоже его слушает и закрывает floatArea */
-            if(e.which === $ws._const.key.enter && this.isPickerVisible()) {
+            if(e.which === constants.key.enter && this.isPickerVisible()) {
                stopEvent(e);
             } else {
                this._changedByKeyboard = true;
@@ -65,15 +69,15 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', ['js!SBIS3.CONTROLS.Utils.KbLayo
             switch (e.which) {
                /* Чтобы нормально работала навигация стрелками и не случалось ничего лишнего,
                 то запретим всплытие события */
-               case $ws._const.key.down:
-               case $ws._const.key.up:
-               case $ws._const.key.enter:
+               case constants.key.down:
+               case constants.key.up:
+               case constants.key.enter:
                   if(this.isPickerVisible()) {
                      this._list && this._list._keyboardHover(e);
                      stopEvent(e);
                   }
                   break;
-               case $ws._const.key.esc:
+               case constants.key.esc:
                   if(this.isPickerVisible()) {
                      this.hidePicker();
                      stopEvent(e);

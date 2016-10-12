@@ -1,5 +1,5 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Action.List.ListMixin', function () {
+define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], function (cInstance) {
    'use strict';
    /**
     * @mixin SBIS3.CONTROLS.Action.List.ListMixin
@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', function () {
          if (this._options.dataSource)
             return this._options.dataSource;
 
-         if ($ws.helpers.instanceOfMixin(this.getLinkedObject(), 'SBIS3.CONTROLS.ItemsControlMixin')) {
+         if (cInstance.instanceOfMixin(this.getLinkedObject(), 'SBIS3.CONTROLS.ItemsControlMixin')) {
             return this.getLinkedObject().getDataSource();
          }
       },
@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', function () {
          if(!this.getLinkedObject())
             return [];
 
-         if ($ws.helpers.instanceOfMixin(this.getLinkedObject(), 'SBIS3.CONTROLS.MultiSelectable')) {
+         if (cInstance.instanceOfMixin(this.getLinkedObject(), 'SBIS3.CONTROLS.MultiSelectable')) {
             var selItems = this.getLinkedObject().getSelectedItems(false),
                records = [];
             if (selItems && selItems.getCount()) {
@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', function () {
                return records;
             }
          }
-         if ($ws.helpers.instanceOfMixin(this.getLinkedObject(), 'SBIS3.CONTROLS.Selectable')) {
+         if (cInstance.instanceOfMixin(this.getLinkedObject(), 'SBIS3.CONTROLS.Selectable')) {
             var key = this.getLinkedObject().getSelectedKey(),
                record = this.getLinkedObject().getItems().getRecordById(key);
             return record ? [record] : undefined;
@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', function () {
        */
       _getItems: function() {
          var listView = this.getLinkedObject();
-         if ($ws.helpers.instanceOfModule(listView, 'SBIS3.CONTROLS.ListView')) {
+         if (cInstance.instanceOfModule(listView, 'SBIS3.CONTROLS.ListView')) {
             return this.getLinkedObject().getItems();
          }
          return this.getLinkedObject();

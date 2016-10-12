@@ -1,8 +1,10 @@
 /*global $ws, define, $ */
 define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
-   'js!SBIS3.CONTROLS.DragObject',
-   'js!WS.Data/Di'
-], function (DragObject, Di) {
+   "Core/EventBus",
+   "js!SBIS3.CONTROLS.DragObject",
+   "js!WS.Data/Di",
+   "Core/core-instance"
+], function ( EventBus,DragObject, Di, cInstance) {
    'use strict';
    /**
     * Миксин, задающий логику перемещения.
@@ -14,7 +16,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
     * @see SBIS3.CONTROLS.DragEntity.Entity
     */
    if (typeof window !== 'undefined') {
-      var EventBusChannel = $ws.single.EventBus.channel('DragAndDropChannel');
+      var EventBusChannel = EventBus.channel('DragAndDropChannel');
 
       // Добавлены события для мультитач-девайсов
       // Для обработки используются уже существующие обработчики,
@@ -97,8 +99,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          //region public
          $constructor: function () {
             this._publish('onDragMove', 'onBeginDrag', 'onEndDrag');
-            $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMouseup', this._onMouseupOutside, this);
-            $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMousemove', this._onMousemove, this);
+            EventBus.channel('DragAndDropChannel').subscribe('onMouseup', this._onMouseupOutside, this);
+            EventBus.channel('DragAndDropChannel').subscribe('onMousemove', this._onMousemove, this);
          },
 
          after: {
@@ -301,13 +303,13 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
                   self._preparePageXY(moveEvent);
                   if (self._isDrag(moveEvent, clickEvent)) {
                      self._beginDrag(clickEvent);
-                     $ws.single.EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
+                     EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
                   }
                };
             this._preparePageXY(clickEvent);
-            $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMousemove', dragStrarter);
-            $ws.single.EventBus.channel('DragAndDropChannel').once('onMouseup', function(){
-               $ws.single.EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
+            EventBus.channel('DragAndDropChannel').subscribe('onMousemove', dragStrarter);
+            EventBus.channel('DragAndDropChannel').once('onMouseup', function(){
+               EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
             });
 
          },
@@ -451,7 +453,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
                this._preparePageXY(e);
                DragObject.onDragHandler(e);
                var target = DragObject.getTargetsControl();
-               target = target && $ws.helpers.instanceOfMixin(target, 'SBIS3.CONTROLS.DragNDropMixinNew') ? target : null;
+               target = target && cInstance.instanceOfMixin(target, 'SBIS3.CONTROLS.DragNDropMixinNew') ? target : null;
                if (DragObject.isDragging() && ((target === this || !target && DragObject.getOwner() === this) || inside)) {
                   //если есть таргет то запускаем _endDrag над таргетом иначе запускаем над тем кто начал
                   this._endDrag(e, inside ? this._findDragDropContainer(e, DragObject.getTargetsDomElemet()) : false);

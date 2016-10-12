@@ -1,10 +1,12 @@
 /*global define, $ws, rk*/
 define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'js!SBIS3.CONTROLS.Action.List.Move',
+      'js!SBIS3.CONTROLS.Action.List.HierarchicalMoveMixin',
       'js!SBIS3.CONTROLS.Action.DialogMixin',
+      'Core/helpers/string-helpers'
       'js!WS.Data/Di'
    ],
-   function (ListMove, DialogMixin, Di) {
+   function (ListMove, HierarchicalMoveMixin, DialogMixin, strHelpers, Di) {
       'use strict';
       /**
        * Действие перемещения по иерархии с выбором места перемещения через диалог.
@@ -103,7 +105,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             var movedItems = meta.movedItems || meta.records || this.getSelectedItems();
             meta.movedItems = movedItems;
             this._opendEditComponent({
-               title: rk('Перенести') + ' ' + movedItems.length + $ws.helpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
+               title: rk('Перенести') + ' ' + movedItems.length + strHelpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
                cssClassName: 'controls-moveDialog',
                opener: this._options.linkedObject,
                movedItems: movedItems

@@ -1,9 +1,12 @@
 /**
  * Created by am.gerasimov on 26.05.2015.
  */
-define('js!SBIS3.CONTROLS.DragAndDropMixin', [], function() {
+define('js!SBIS3.CONTROLS.DragAndDropMixin', [
+   "Core/constants",
+   "Core/helpers/collection-helpers"
+], function( constants,colHelpers) {
 
-   var isMobile = $ws._const.browser.isMobilePlatform;
+   var isMobile = constants.browser.isMobilePlatform;
 
    var DragAndDropMixin = {
       $protected: {
@@ -47,7 +50,7 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [], function() {
       _bindDragEvents: function() {
          for (var i in this._eventHandlers) {
             if(this._eventHandlers.hasOwnProperty(i)) {
-               $ws._const.$doc.bind(i + '.dragNDrop', this[this._eventHandlers[i]].bind(this));
+               constants.$doc.bind(i + '.dragNDrop', this[this._eventHandlers[i]].bind(this));
             }
          }
       },
@@ -66,7 +69,7 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [], function() {
        * Выключает/включает стандартный drag-N-Drop браузера
        */
       _toggleNativeDragNDrop: function(enable) {
-         $ws.helpers.forEach(this._dragContainers, function(elem) {
+         colHelpers.forEach(this._dragContainers, function(elem) {
             elem.ondragstart = function() {
                return enable;
             }
@@ -100,7 +103,7 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [], function() {
        * Отписывается от событий, вызывает метод dragEnd
        */
       _moveEnd: function(e) {
-	     $ws._const.$doc.unbind('.dragNDrop');
+	     constants.$doc.unbind('.dragNDrop');
          this._dragEnd(e);
       },
 

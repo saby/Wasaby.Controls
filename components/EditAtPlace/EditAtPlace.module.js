@@ -5,9 +5,10 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'js!SBIS3.CONTROLS.EditAtPlaceMixin',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators.DateFormatDecorator',
       'html!SBIS3.CONTROLS.EditAtPlace',
+      'Core/helpers/string-helpers',
       'i18n!SBIS3.CONTROLS.EditAtPlace'
    ],
-   function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, DateFormatDecorator, dotTplFn) {
+   function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, DateFormatDecorator, dotTplFn, strHelpers) {
       'use strict';
 
       var dateDecorator = null;
@@ -32,7 +33,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
          else if (text instanceof Object && text.startDate && text.endDate){
             text = getTextByDateRange(text);
          }
-         return $ws.helpers.escapeHtml(text);
+         return strHelpers.escapeHtml(text);
       }
 
       /**

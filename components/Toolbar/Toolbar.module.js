@@ -1,10 +1,12 @@
 define('js!SBIS3.CONTROLS.Toolbar', [
-   'js!SBIS3.CONTROLS.ButtonGroupBase',
-   'html!SBIS3.CONTROLS.Toolbar',
-   'html!SBIS3.CONTROLS.Toolbar/resources/ItemTemplate',
-
-   'js!SBIS3.CONTROLS.CommandsButton'
-], function(ButtonGroupBase, dotTplFn, ItemTemplate) {
+   "Core/IoC",
+   "Core/ConsoleLogger",
+   "js!SBIS3.CONTROLS.ButtonGroupBase",
+   "html!SBIS3.CONTROLS.Toolbar",
+   "html!SBIS3.CONTROLS.Toolbar/resources/ItemTemplate",
+   "Core/core-instance",
+   "js!SBIS3.CONTROLS.CommandsButton"
+], function( IoC, ConsoleLogger,ButtonGroupBase, dotTplFn, ItemTemplate, cInstance) {
 
    'use strict';
     var
@@ -23,7 +25,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             }
             arrKeys = arrKeys || [];
             if (Array.indexOf(arrKeys, key) >= 0) {
-               $ws.single.ioc.resolve('ILogger').error('Toolbar', 'getSubItems. Зацикливание в дереве.');
+               IoC.resolve('ILogger').error('Toolbar', 'getSubItems. Зацикливание в дереве.');
                return [];
             }
             arrKeys.push(key);
@@ -66,11 +68,11 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             if (items instanceof Array) {
                rawData = items;
             }
-            if (!rawData && $ws.helpers.instanceOfModule(items,'WS.Data/Collection/RecordSet')) {
+            if (!rawData && cInstance.instanceOfModule(items,'WS.Data/Collection/RecordSet')) {
                rawData = items.getRawData();
             }
             if (!rawData) {
-               $ws.single.ioc.resolve('ILogger').log('Toolbar:_getArrayItems. Неизвестный тип items');
+               IoC.resolve('ILogger').log('Toolbar:_getArrayItems. Неизвестный тип items');
                return [];
             }
             return rawData;
@@ -164,7 +166,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          for (var i in itemsInstances) {
             if (itemsInstances.hasOwnProperty(i)) {
                var item = itemsInstances[i];
-               if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.MenuButtonMixin')) {
+               if (cInstance.instanceOfMixin(item, 'SBIS3.CONTROLS.MenuButtonMixin')) {
                   item.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
                }
             }
