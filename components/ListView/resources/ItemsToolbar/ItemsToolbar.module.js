@@ -115,12 +115,12 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                       self.hide(false);
                    },
                    onShowMenu: function() {
-                      this.getContainer().addClass('ws-invisible');
+                      self.getContainer().addClass('ws-invisible');
                       self.lockToolbar();
                       self._notify('onShowItemActionsMenu');
                    },
                    onHideMenu: function() {
-                      this.getContainer().removeClass('ws-invisible');
+                      self.getContainer().removeClass('ws-invisible');
                       if (self._isEditActionsHidden()) {
                          self.unlockToolbar();
                       }
