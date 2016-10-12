@@ -1562,6 +1562,8 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._hasEditInPlace()) {
                this._getEditInPlace()._destroyEip();
             }
+            //TODO: Перевести строку итогов на верстку через шаблон по задаче https://inside.tensor.ru/opendoc.html?guid=19ba61d7-ce74-4567-90c9-e5f3565e30b7&description=
+            this._redrawResults();
             ListView.superclass.redraw.apply(this, arguments);
          },
 
@@ -2014,7 +2016,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             this._notifyOnSizeChanged(true);
-            this._drawResults();
          },
          _drawItemsCallbackSync: function(){
             ListView.superclass._drawItemsCallbackSync.call(this);
@@ -2958,6 +2959,11 @@ define('js!SBIS3.CONTROLS.ListView',
          setResultsPosition: function(position){
            this._options.resultsPosition = position;
          },
+
+         _redrawResults: function(){
+           this._drawResults();
+         },
+
          _drawResults: function(){
             if (!this._checkResults()){
                this._removeDrawnResults();
@@ -3049,8 +3055,8 @@ define('js!SBIS3.CONTROLS.ListView',
             message = message || (idArray.length !== 1 ? rk("Удалить записи?", "ОперацииНадЗаписями") : rk("Удалить текущую запись?", "ОперацииНадЗаписями"));
             return $ws.helpers.question(message).addCallback(function(res) {
                if (res) {
-                  self._toggleIndicator(true);
                   if (self._notify('onBeginDelete', idArray) !== false) {
+                     self._toggleIndicator(true);
                      return self._deleteRecords(idArray).addCallback(function () {
                         //Если записи удалялись из DataSource, то перезагрузим реест, если из items, то реестр уже в актальном состоянии
                         if (self.getDataSource()) {
