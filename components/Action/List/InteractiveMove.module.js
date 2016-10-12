@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'js!SBIS3.CONTROLS.Action.List.Move',
       'js!SBIS3.CONTROLS.Action.List.HierarchicalMoveMixin',
       'js!SBIS3.CONTROLS.Action.DialogMixin',
-      'Core/helpers/string-helpers'
+      'Core/helpers/string-helpers',
       'js!WS.Data/Di'
    ],
    function (ListMove, HierarchicalMoveMixin, DialogMixin, strHelpers, Di) {
