@@ -473,7 +473,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   }
                }
 
-
                hoveredColumn.cells = $(cells).addClass('controls-DataGridView__hoveredColumn__cell');
             }
          }
@@ -553,12 +552,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
          this.reviveComponents(this._thead);
 
-         if (this._options.stickyHeader){
-            this._drawResults();
-         }
+         this._drawResults();
          this._redrawColgroup();
          this._bindHead();
          this._notify('onDrawHead');
+      },
+
+      _redrawResults: function(){
+         //Не перерисовываем строку итогов на redraw, сделаем это при перерисовке шапки.
       },
 
       _bindHead: function() {
