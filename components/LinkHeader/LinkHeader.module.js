@@ -8,9 +8,12 @@ define('js!SBIS3.CONTROLS.LinkHeader',
 
       'use strict';
       /**
-       * Контролл для отображения заголовков с функцией перехода по ссылке
+       * Контрол для отображения кликабельных заголовков с функцией перехода по ссылке
        * @class SBIS3.CONTROLS.LinkHeader
+       * @demo SBIS3.CONTROLS.Demo.MyLinkHeader
        * @extends SBIS3.CONTROLS.ButtonBase
+       * @public
+       * @control
        * @initial
        * <component data-component="SBIS3.CONTROLS.LinkHeader">
        *    <option name="caption">Заголовок</option>
@@ -18,7 +21,7 @@ define('js!SBIS3.CONTROLS.LinkHeader',
        * </component>
        * cssModifier controls-LinkHeader__separator После текста появляется разделитель |
        * @author Крайнов Дмитрий Олегович
-       * */
+       */
       var LinkHeader = ButtonBase.extend({
          _dotTplFn: dotTplFn,
 
@@ -38,14 +41,14 @@ define('js!SBIS3.CONTROLS.LinkHeader',
          },
 
          init: function() {
-            LinkHeader.superclass.init.call(this);
+            this.getLinkedContext().setValueSelf('caption', this._options.caption);
+            this.getLinkedContext().setValueSelf('href', this._options.href);
 
-            this.getLinkedContext().setValue('caption', this._options.caption);
-            this.getLinkedContext().setValue('href', this._options.href);
+            LinkHeader.superclass.init.call(this);
          },
 
          /**
-          * Вернёт текст заголовка
+          * Получить текст заголовка
           * @example
           * <pre>
           *    var
@@ -55,12 +58,12 @@ define('js!SBIS3.CONTROLS.LinkHeader',
           * @see caption
           * @see setCaption
           */
-         getCaptiot: function() {
+         getCaption: function() {
             return this._options.caption;
          },
 
          /**
-          * Изменит текст заголовка
+          * Изменить текст заголовка
           * @param {String} caption ссылка
           * @example
           * <pre>
@@ -71,13 +74,13 @@ define('js!SBIS3.CONTROLS.LinkHeader',
           * @see getCaption
           */
          setCaption: function(caption) {
-            this.superclass.setCaption(caption).call(this);
+            LinkHeader.superclass.setCaption.call(this);
 
-            this.getLinkedContext().setValue('caption', caption);
+            this.getLinkedContext().setValueSelf('caption', caption);
          },
 
          /**
-          * Вернёт ссылку
+          * Получить ссылку
           * @example
           * <pre>
           *    var
@@ -92,7 +95,7 @@ define('js!SBIS3.CONTROLS.LinkHeader',
          },
 
          /**
-          * Изменит ссылку
+          * Изменить ссылку
           * @param {String} href ссылка
           * @example
           * <pre>
@@ -103,8 +106,8 @@ define('js!SBIS3.CONTROLS.LinkHeader',
           * @see getHref
           */
          setHref: function(href) {
-            this._options.href = href;
-            this.getLinkedContext().setValue('href', href);
+            this._options.href = href = '' + href;
+            this.getLinkedContext().setValueSelf('href', href);
          }
       });
 

@@ -201,10 +201,10 @@
   }
 }
 
-.ws-header-mixin() {
+.ws-header-mixin(@font, @color) {
   display: inline-block;
   padding-left: @header-mixin-padding-left;
   padding-right: @header-mixin-padding-right;
-  font-family: @header-mixin-font-family;
-  line-height: @header-mixin-line-height;
+  font: @font;
+  color: @color;
 }

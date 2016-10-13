@@ -71,25 +71,17 @@ input[type="reset"]::-moz-focus-inner {
 }
 
 .ws-header {
-  .ws-header-mixin();
-  font-size: @header-font-size;
-  color: @header-color;
+  .ws-header-mixin(@header-font, @header-color);
 }
 
 .ws-bigHeader {
-  .ws-header-mixin();
-  font-size: @bigHeader-font-size;
-  color: @bigHeader-color;
+  .ws-header-mixin(@bigHeader-font, @bigHeader-color);
 }
 
 .ws-subheader {
-  .ws-header-mixin();
-  font-size: @subheader-font-size;
-  color: @subheader-color;
+  .ws-header-mixin(@subheader-font, @subheader-color);
 }
 
 .ws-bigSubheader {
-  .ws-header-mixin();
-  font-size: @bigSubheader-font-size;
-  color: @bigSubheader-color;
+  .ws-header-mixin(@bigSubheader-font, @bigSubheader-color);
 }

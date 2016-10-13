@@ -8,8 +8,10 @@ define('js!SBIS3.CONTROLS.ToggleHeader',
 
       'use strict';
       /**
-       * Контролл для отображения заголовков с функцией сворачивания и разворачивания записей
+       * Контрол для отображения кликабельных заголовков с функцией сворачивания
+       * и разворачивания записей, имеющий счётчик слева от текста заголовка.
        * @class SBIS3.CONTROLS.ToggleHeader
+       * @demo SBIS3.CONTROLS.Demo.MyToggleHeader
        * @extends SBIS3.CONTROLS.ToggleButton
        * @initial
        * <component data-component="SBIS3.CONTROLS.ToggleHeader">
@@ -24,7 +26,7 @@ define('js!SBIS3.CONTROLS.ToggleHeader',
          $protected: {
             _options: {
                /**
-                * @cfg {Number} Число записей
+                * @cfg {Number} Значение счётчика
                 * @example
                 * <pre class="brush: xml">
                 *    <option name="count">120</option>
@@ -32,51 +34,56 @@ define('js!SBIS3.CONTROLS.ToggleHeader',
                 * @see getCount
                 * @see setCount
                 */
-               count: 1
+               count: undefined
             }
          },
 
-         init: function() {
-            ToggleHeader.superclass.init.call(this);
-
-            this.getLinkedContext().setValue('caption', this._options.caption);
+         init: function () {
+            this.getLinkedContext().setValueSelf('caption', this._options.caption);
             this.setCount(this._options.count);
+
+            ToggleHeader.superclass.init.call(this);
          },
          /**
-          * Вернёт текст заголовка
+          * Получить текст заголовка
           * @example
           * <pre>
           *    var
-          *       linkHeader = this.getChildControlByName('myLinkHeader'),
+          *       linkHeader = this.getChildControlByName('myToggleHeader'),
           *       caption = linkHeader.gerCaption();
           * </pre>
           * @see caption
           * @see setCaption
-          *
           */
-         getCaptiot: function() {
+         getCaption: function() {
             return this._options.caption;
          },
 
          /**
-          * Изменит текст заголовка
+          * Изменить текст заголовка
           * @param {String} caption ссылка
           * @example
           * <pre>
-          *    var linkHeader = this.getChildControlByName('linkHeader');
+          *    var linkHeader = this.getChildControlByName('myToggleHeader');
           *    linkHeader.setCaption('Заголовок');
           * </pre>
           * @see caption
           * @see getCaption
           */
          setCaption: function(caption) {
-            this.superclass.setCaption(caption).call(this);
+            ToggleHeader.superclass.setCaption.call(this);
 
             this.getLinkedContext().setValue('caption', caption);
          },
 
          /**
-          * Вернёт количество записей
+          * Получить значение счётчика
+          * @example
+          * <pre>
+          *    var
+          *       linkHeader = this.getChildControlByName('myToggleHeader'),
+          *       count = linkHeader.getCount();
+          * </pre>
           * @see count
           * @see setCount
           */
@@ -84,8 +91,13 @@ define('js!SBIS3.CONTROLS.ToggleHeader',
             return this._options.count;
          },
          /**
-          * Установит количество записей
-          * @param count число записей
+          * Изменить значение счётчика
+          * @param {Number} count значение счётчика
+          * @example
+          * <pre>
+          *    var linkHeader = this.getChildControlByName('myToggleHeader');
+          *    linkHeader.setCount(120);
+          * </pre>
           * @see count
           * @see getCount
           */
@@ -98,6 +110,8 @@ define('js!SBIS3.CONTROLS.ToggleHeader',
             if(type !== 'number' || count < 1) {
                count = '';
             }
+
+            this._options.count = count;
             this.getLinkedContext().setValue('count', count);
          }
       });

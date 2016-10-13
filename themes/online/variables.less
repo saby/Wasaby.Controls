@@ -2171,23 +2171,39 @@
 @controls-Paging-btn-padding:                      8px 10px;
 @controls-Paging-btn-sprite:                       url('img/PagingArrows.png');
 
-//---------//
-// Header  //
-//---------//
+//----------//
+//  Header  //
+//----------//
 
 @header-mixin-padding-left: 8px;
 @header-mixin-padding-right: 12px;
-@header-mixin-font-family: 'TensorFont Bold';
-@header-mixin-line-height: 32px;
+@header-mixin-height: 32px;
 
-@header-font-size: 18px;
+@header-mixin-font: 'TensorFont Bold' 18px/@header-mixin-height;
 @header-color: #D94700;
 
-@bigHeader-font-size: 20px;
+@bigHeader-font: 'TensorFont Bold' 20px/@header-mixin-height;
 @bigHeader-color: #D94700;
 
-@subheader-font-size: 15px;
+@subheader-font: 'TensorFont Bold' 15px/@header-mixin-height;
 @subheader-color: #313E78;
 
-@bigSubheader-font-size: 18px;
+@bigSubheader-font: 'TensorFont Bold' 18px/@header-mixin-height;
 @bigSubheader-color: #313E78;
+
+//--------------//
+//  LinkHeader  //
+//--------------//
+@link-header-padding-left: 8px;
+@link-header-padding-right: 12px;
+@link-header-height: 32px;
+@link-header-font-size: 18px;
+
+@link-header-caption-color: #D94700;
+@link-header-caption-font-family: 'TensorFont Bold';
+
+@link-header-hover-color: #D94700;
+@link-header
+//----------------//
+//  ToggleHeader  //
+//----------------//
