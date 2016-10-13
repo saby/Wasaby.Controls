@@ -509,6 +509,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   self.getContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
                   self._getPickerContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
                   self._setResetButtonVisibility(isDefaultIdSelected);
+                  self._pickerBodyContainer.css('max-width', '');
+                  if (self._pickerHeadContainer.width() > self._pickerBodyContainer.width()){
+                     self._pickerBodyContainer.css('max-width', self._pickerHeadContainer.width());
+                  }
                });
             }
          },
