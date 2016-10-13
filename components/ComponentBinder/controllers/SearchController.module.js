@@ -183,7 +183,7 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
       bindSearch: function() {
          var self = this,
             view = this._options.view,
-            isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
+            isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin'),
          searchForm = this._options.searchForm;
 
          if (!this._kbLayoutRevertObserver) {
@@ -237,7 +237,8 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
       _subscribeOnSearchFormEvents: function() {
          var searchForm = this._options.searchForm,
             view = this._options.view,
-            self = this;
+            self = this,
+            isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
          if (!this._options.doNotRespondOnReset) {
             searchForm.subscribe('onReset', function(event, text) {
                self._kbLayoutRevertObserver.stopObserve();
