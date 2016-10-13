@@ -79,6 +79,17 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
              */
             filterAlign: 'left',
             /**
+             * @cfg {String} Режим формирования результирующего фильтра
+             * Возможные значения:
+             * <ol>
+             *    <li>full - результирующий фильтр формируется из всех полей;</li>
+             *    <li>onlyChanges - результирующий фильтр формируется только из полей, отличающихся от изначального значения (resetValue).</li>
+             * </ol>
+             * @variant 'full'
+             * @variant 'onlyChanges'
+             */
+            filterMode: 'onlyChanges',
+            /**
              * @cfg {Object} Фильтр, сформированный по структуре, заданной в опции items.
              * Внимание! Данная опция доступна только на чтение. Фильтр формируется исключительно через items.
              */
@@ -86,8 +97,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          },
          _filterInitialized: false,
          _filterAccordion: null,
-         _onFilterItemChangeFn: null,
-         _notifyOnFilterChange: true
+         _onFilterItemChangeFn: null
       },
       _modifyOptions: function() {
          var
@@ -137,10 +147,8 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          this.getChildControlByName('ResetFilterButton').setEnabled(!disableResetButton);
       },
       _updateFilterProperty: function(filter) {
-         this._options.filter = filter;
-         if (this._notifyOnFilterChange) {
-            this._notify('onFilterChange', filter);
-         }
+         this._options.filter = this._prepareFilter(filter);
+         this._notify('onFilterChange', this.getFilter());
          this._notifyOnPropertyChanged('filter');
       },
       _initializeFilter: function() {
@@ -158,11 +166,26 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          }
          this._filterInitialized = true;
       },
+      _prepareFilter: function() {
+         var
+            value, filter = {};
+         if (this._options.filterMode === 'onlyChanges') {
+            this._filterAccordion.getItems().each(function(item) {
+               value = item.get(ITEM_FILTER_VALUE);
+               if (!FilterToStringUtil.isEqualValues(value, item.get(ITEM_FILTER_RESET_VALUE))) {
+                  filter[item.get(ITEM_FILTER_ID)] = value;
+               }
+            });
+            return filter;
+         } else {
+            return this._options.filter;
+         }
+      },
       getFilter: function() {
          return this._options.filter;
       },
       setFilter: function() {
-         throw new Error('Свойство "filter" работает только на чтение. Менять его надо через метод setFilterStructure');
+         throw new Error('Свойство "filter" работает только на чтение. Менять его надо через метод setItems');
       },
       _onExpandedChange: function(event, expanded) {
          if (expanded && !this._filterInitialized) {
@@ -189,15 +212,10 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          this.reviveComponents();
          this._initializeFilter();
       },
-      _setNotifyOnFilterChange: function(flag) {
-         this._notifyOnFilterChange = !!flag;
-      },
       _resetFilter: function() {
-         this._setNotifyOnFilterChange(false);
          this._filterAccordion.getItems().each(function(item) {
             item.set(ITEM_FILTER_VALUE, $ws.core.clone(item.get(ITEM_FILTER_RESET_VALUE)));
          });
-         this._setNotifyOnFilterChange(true);
          this._notify('onFilterReset', this.getFilter());
       },
       _resetFilterField: function(fieldName) {
