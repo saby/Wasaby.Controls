@@ -238,7 +238,7 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
          var searchForm = this._options.searchForm,
             view = this._options.view,
             self = this,
-            isTree = cInstance(view, 'SBIS3.CONTROLS.TreeMixin');
+            isTree = cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
          if (!this._options.doNotRespondOnReset) {
             searchForm.subscribe('onReset', function(event, text) {
                self._kbLayoutRevertObserver.stopObserve();
