@@ -125,6 +125,14 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             return args;
          },
 
+         /**
+          * Для обратной совместимости, если шаблон задают как itemTemplate,
+          * то в качестве базового шаблона всё равно должен использоваться defaultItemTemplate
+          */
+         _getItemTemplate: function() {
+            return this._options._defaultItemTemplate;
+         },
+
          _setEnabled: function () {
             /* Т.к. при изменении состояния поля связи, для всех элементов появляются/исчезают крестики удаления,
                то надо вызывать перерисовку элементов, чтобы правильно проставилась ширина */
