@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                   и в итоге мы можем получить не ту дату */
                 if(elem.value) {
                    if(elem.value instanceof Date) {
-                      elem.value = elem.value.toSQL(true);
+                      elem.value = elem.value.toSQL();
                    }
                 }
                 /* Надо удалить из истории шаблоны, т.к. история сохраняется строкой */
