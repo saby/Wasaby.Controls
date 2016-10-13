@@ -2988,7 +2988,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   }),
                   items = this.getItems();
                $ws.helpers.forEach(movedItems, function(item, i) {
-                  if (!$ws.helpers.instanceOfModule(item, 'WS.Data/Entity/Record')) {
+                  if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
                      movedItems[i] = items.getRecordById(item);
                   }
                }, this);
@@ -3049,7 +3049,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
           */
          setMoveStrategy: function (moveStrategy) {
-            if(!$ws.helpers.instanceOfMixin(moveStrategy,'WS.Data/MoveStrategy/IMoveStrategy')){
+            if(!cInstance.instanceOfMixin(moveStrategy,'WS.Data/MoveStrategy/IMoveStrategy')){
                throw new Error('The strategy must implemented interfaces the WS.Data/MoveStrategy/IMoveStrategy.')
             }
             this._moveStrategy = moveStrategy;

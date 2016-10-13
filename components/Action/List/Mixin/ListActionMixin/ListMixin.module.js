@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], functi
        */
       _getListView: function() {
          var listView = this.getLinkedObject();
-         if ($ws.helpers.instanceOfModule(listView, 'SBIS3.CONTROLS.ListView')) {
+         if (cInstance.instanceOfModule(listView, 'SBIS3.CONTROLS.ListView')) {
             return listView;
          }
          return undefined;

@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
           * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
           */
          setMoveStrategy: function (strategy){
-            if(!$ws.helpers.instanceOfMixin(strategy,'WS.Data/MoveStrategy/IMoveStrategy')){
+            if(!cInstance.instanceOfMixin(strategy,'WS.Data/MoveStrategy/IMoveStrategy')){
                throw new Error('The strategy must implemented interfaces the WS.Data/MoveStrategy/IMoveStrategy.')
             }
             this._moveStrategy = strategy;
