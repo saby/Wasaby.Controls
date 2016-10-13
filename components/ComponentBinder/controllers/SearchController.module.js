@@ -183,7 +183,7 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
       bindSearch: function() {
          var self = this,
             view = this._options.view,
-            isTree = cIns.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin'),
+            isTree = cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin'),
          searchForm = this._options.searchForm;
 
          if (!this._kbLayoutRevertObserver) {
