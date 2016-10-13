@@ -20,6 +20,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       allowEmptySelection: false,
       itemsDragNDrop: false,
       emptyHTML: 'Не найдено',
+      scrollPaging: false,
       element: function() { return this._getListContainer(); },
       filter: function() { return this.getProperty('listFilter'); },
       parent: function() { return this._picker; }

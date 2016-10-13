@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', ['Core/core-instance', 'Core/helpers/dom&controls-helpers'], function(cInstance, colHelpers) {
+define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', ['Core/core-instance', 'Core/helpers/collection-helpers'], function(cInstance, colHelpers) {
    /**
     * Миксин, добавляющий поведение выделения интервала из нескольких фиксированных элементов
     * @mixin SBIS3.CONTROLS.RangeSelectableViewMixin

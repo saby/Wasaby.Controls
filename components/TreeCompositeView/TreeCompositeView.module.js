@@ -199,6 +199,8 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             recordsGroup = {},
             branchesData = {},
             container = this.getContainer(),
+            // а вдруг будет корень 0 нельзя делать ||
+            curRoot = self._options._curRoot === undefined ? null : self._options._curRoot,
             //Метод формирования полного списка зависимостей
             findDependentRecords = function(key, parentKey) {
                var
@@ -282,7 +284,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                   filter[self._options.hierField] = branchId === 'null' ? null : branchId;
                   var limit;
                   //проверяем, является ли обновляемый узел корневым, если да, обновляем записи до подгруженной записи (_infiniteScrollOffset)
-                  if ( String(self._options._curRoot) == branchId  &&  self._infiniteScrollOffset) { // т.к. null != "null", _infiniteScrollOffset проверяем на случай, если нет подгрузки по скроллу
+                  if ( String(curRoot) == branchId  &&  self._infiniteScrollOffset) { // т.к. null != "null", _infiniteScrollOffset проверяем на случай, если нет подгрузки по скроллу
                      limit = self._infiniteScrollOffset + self._options.pageSize;
                   } else if (self._limit !== undefined) {
                      limit = (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit;
@@ -324,7 +326,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                            needRedraw = !!branchDataSet.getRecordById(record);
                            //Удаляем то, что надо удалить и перерисовываем то, что надо перерисовать
                            removeAndRedraw(dependentRecords, branch.length - idx);
-                        })
+                        });
+                        if(String(curRoot) == branchId)
+                           self.getItems().setMetaData(branchDataSet.getMetaData());
                      })
                      .addBoth(function() {
                         fcHelpers.toggleIndicator(false);
