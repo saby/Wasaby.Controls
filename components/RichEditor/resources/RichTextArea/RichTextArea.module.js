@@ -399,8 +399,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   //получение результата из события  BeforePastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
                   //withStyles: true нужно чтобы в нашем обработчике BeforePastePreProcess мы не обрабатывали а прокинули результат в обработчик тини
                   eventResult = self.getTinyEditor().fire('BeforePastePreProcess', {content: content, withStyles: true});
-                  content = Sanitize(eventResult.content, {validNodes: {img: false}});
-                  self.insertHtml(content);
+                  self.insertHtml(eventResult.content);
                   self._setTrimmedText(self._getTinyEditorValue());
                },
                onPaste = function(event) {
@@ -1003,6 +1002,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      }
                   }
                }
+               e.content = Sanitize(e.content, {validNodes: {img: false}});
                isYouTubeReady = self.addYouTubeVideo(e.content);
                if (isYouTubeReady) {
                   self._tinyEditor.fire('change');
