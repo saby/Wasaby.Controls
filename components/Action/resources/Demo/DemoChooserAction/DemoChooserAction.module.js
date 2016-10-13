@@ -2,11 +2,11 @@
  * Created by am.gerasimov on 26.08.2016.
  */
 /* global define */
-define('js!SBIS3.CONTROLS.Demo.DemoSelectorAction', [
+define('js!SBIS3.CONTROLS.Demo.DemoChooserAction', [
    "Core/CommandDispatcher",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.Action.SelectorAction",
-   "html!SBIS3.CONTROLS.Demo.DemoSelectorAction",
+   "html!SBIS3.CONTROLS.Demo.DemoChooserAction",
    "Core/helpers/fast-control-helpers",
    "js!SBIS3.CONTROLS.Demo.DemoPanelComponent",
    "js!SBIS3.CONTROLS.FieldLink",

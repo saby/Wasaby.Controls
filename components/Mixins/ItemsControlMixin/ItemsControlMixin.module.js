@@ -850,12 +850,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._ladderCompare([targetElement.prev(), targetElement.next()]);
 
                if (!Object.isEmpty(this._options.groupBy)) {
-                  if (false /*this._options.easyGroup*/ /*TODO косяк Лехи - не присылает группу при удалении*/) {
+                  /*TODO косяк Лехи - не присылает группу при удалении*/
+                  /*if (this._options.easyGroup) {
                      if (this._getItemsProjection().getGroupItems(groupId).length < 1) {
                         $('[data-group="' + groupId + '"]', this._container.get(0)).remove();
                      }
                   }
-                  else {
+                  else {*/
                      var prev = targetElement.prev();
                      if (prev.length && prev.hasClass('controls-GroupBy')) {
                         var next = targetElement.next();
@@ -863,7 +864,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                            prev.remove();
                         }
                      }
-                  }
+                  /*}*/
                }
 
                removedElements.push(targetElement.get(0));
