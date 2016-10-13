@@ -161,10 +161,10 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          if (target === undefined) {
             return false;
          }
-         if (target !== null && cInstanceinstanceOfMixin(this, 'SBIS3.CONTROLS.TreeMixin')) {
+         if (target !== null && cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.TreeMixin')) {
             toMap = this._getParentsMap(target.getId());
             for (var i = 0; i < movedItems.length; i++) {
-               key = '' + (cInstanceinstanceOfModule(movedItems[i], 'WS.Data/Entity/Model') ? movedItems[i].getId() : movedItems[i]);
+               key = '' + (cInstance.instanceOfModule(movedItems[i], 'WS.Data/Entity/Model') ? movedItems[i].getId() : movedItems[i]);
                if ($.inArray(key, toMap) !== -1) {
                   return false;
                }
