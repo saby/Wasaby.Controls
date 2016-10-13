@@ -5,10 +5,10 @@ define('js!SBIS3.CONTROLS.TouchKeyboardHelper', [
    "Core/constants",
    "Core/EventBus"
 ], function( constants, EventBus) {
-
+   /*Коэфицент Борисова*/
    var ipadCoefficient = {
-      portrait: 0.7,
-      landscape: 0.44
+      portrait: 0.3,
+      landscape: 0.56
    };
 
    var TouchKeyboardHelper = {
