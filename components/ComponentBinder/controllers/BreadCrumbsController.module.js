@@ -1,6 +1,6 @@
-define('js!SBIS3.CONTROLS.BreadCrumbsController', function() {
+define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstract"], function(constants, cAbstract) {
 
-   var BreadCrumbsController = $ws.proto.Abstract.extend({
+   var BreadCrumbsController = cAbstract.extend({
       $protected: {
          _options: {
             view: null,
@@ -109,7 +109,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', function() {
          });
 
          view.subscribe('onKeyPressed', function(event, jqEvent) {
-            if(jqEvent.which === $ws._const.key.backspace) {
+            if(jqEvent.which === constants.key.backspace) {
                setPreviousRoot();
                jqEvent.preventDefault();
             }

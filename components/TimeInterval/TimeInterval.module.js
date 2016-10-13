@@ -4,10 +4,11 @@
 define(
    'js!SBIS3.CONTROLS.TimeInterval',
    [
+      'Core/TimeInterval',
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
       'html!SBIS3.CONTROLS.TimeInterval'
    ],
-   function (FormattedTextBoxBase, dotTplFn) {
+   function (cTimeInterval, FormattedTextBoxBase, dotTplFn) {
 
       'use strict';
 
@@ -169,7 +170,7 @@ define(
             this._publish('onChangeInterval');
 
             this._options.text = this._getFormatModel().getStrMask(this._getMaskReplacer());
-            this.timeInterval = new $ws.proto.TimeInterval;
+            this.timeInterval = new cTimeInterval;
             if (this._options.interval){
                this.setInterval(this._options.interval);
             }

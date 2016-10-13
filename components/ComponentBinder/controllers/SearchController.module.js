@@ -1,6 +1,6 @@
-define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver'], function(KbLayoutRevertObserver) {
+define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver', "Core/constants", "Core/core-functions", "Core/core-merge", "Core/Abstract", "Core/core-instance"], function(KbLayoutRevertObserver, constants, cFunctions, cMerge, cAbstract, cInstance) {
 
-   var SearchController = $ws.proto.Abstract.extend({
+   var SearchController = cAbstract.extend({
       $protected: {
          _options: {
             view: null,
@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
       _startHierSearch: function(text) {
          var searchParamName = this._options.searchParamName;
          if (this._needSearch(this, text, searchParamName)) {
-            var filter = $ws.core.merge(this._options.view.getFilter(), {
+            var filter = cMerge(this._options.view.getFilter(), {
                   'Разворот': 'С разворотом',
                   'usePages': 'full'
                }),
@@ -60,7 +60,7 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
                this._lastRoot = view.getCurrentRoot();
                //Запомнили путь в хлебных крошках перед тем как их сбросить для режима поиска
                if (this._options.breadCrumbs && this._options.breadCrumbs.getItems()) {
-                  this._pathDSRawData = $ws.core.clone(this._options.breadCrumbs.getItems().getRawData());
+                  this._pathDSRawData = cFunctions.clone(this._options.breadCrumbs.getItems().getRawData());
                }
             }
             this._firstSearch = false;
@@ -103,7 +103,7 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
          var searchParamName = this._options.searchParamName;
          if (this._needSearch(this, text, searchParamName)) {
             var view = this._options.view,
-               filter = $ws.core.merge(view.getFilter(), {
+               filter = cMerge(view.getFilter(), {
                   'usePages': 'full'
                }),
                args = arguments;
@@ -129,7 +129,7 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
       _resetGroup: function() {
          var
             view = this._options.view,
-            filter = $ws.core.merge(view.getFilter(), {
+            filter = cMerge(view.getFilter(), {
                'Разворот': 'Без разворота'
             }),
             self = this;
@@ -183,7 +183,7 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
       bindSearch: function() {
          var self = this,
             view = this._options.view,
-            isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin'),
+            isTree = cIns.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin'),
          searchForm = this._options.searchForm;
 
          if (!this._kbLayoutRevertObserver) {
@@ -238,7 +238,7 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
          var searchForm = this._options.searchForm,
             view = this._options.view,
             self = this,
-            isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
+            isTree = cInstance(view, 'SBIS3.CONTROLS.TreeMixin');
          if (!this._options.doNotRespondOnReset) {
             searchForm.subscribe('onReset', function(event, text) {
                self._kbLayoutRevertObserver.stopObserve();
@@ -261,7 +261,7 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
 
          searchForm.subscribe('onKeyPressed', function(eventObject, event) {
             // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
-            if ((event.which == $ws._const.key.tab || event.which == $ws._const.key.down) && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)) {
+            if ((event.which == constants.key.tab || event.which == constants.key.down) && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)) {
                view.setSelectedIndex(0);
                view.setActive(true);
                event.stopPropagation();

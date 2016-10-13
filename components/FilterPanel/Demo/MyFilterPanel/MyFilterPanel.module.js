@@ -1,12 +1,13 @@
 define('js!SBIS3.CONTROLS.Demo.MyFilterPanel', [
-      'js!SBIS3.CORE.CompoundControl',
-      'js!WS.Data/Source/Memory',
-      'js!SBIS3.CONTROLS.Demo.MyFilterPanelData',
-      'tmpl!SBIS3.CONTROLS.Demo.MyFilterPanel',
-      'css!SBIS3.CONTROLS.Demo.MyFilterPanel',
-      'js!SBIS3.CONTROLS.FilterPanel',
-      'js!SBIS3.CONTROLS.Link'
-   ], function(CompoundControl, Memory, MyFilterPanelData, dotTplFn) {
+   "Core/CommandDispatcher",
+   "js!SBIS3.CORE.CompoundControl",
+   "js!WS.Data/Source/Memory",
+   "js!SBIS3.CONTROLS.Demo.MyFilterPanelData",
+   "tmpl!SBIS3.CONTROLS.Demo.MyFilterPanel",
+   "css!SBIS3.CONTROLS.Demo.MyFilterPanel",
+   "js!SBIS3.CONTROLS.FilterPanel",
+   "js!SBIS3.CONTROLS.Link"
+], function( CommandDispatcher,CompoundControl, Memory, MyFilterPanelData, dotTplFn) {
    /**
     * SBIS3.CONTROLS.Demo.MyFilterPanel
     * @class SBIS3.CONTROLS.Demo.MyFilterPanel
@@ -24,7 +25,7 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanel', [
             cfg = moduleClass.superclass._modifyOptions.apply(this, arguments);
          cfg._items = MyFilterPanelData;
          cfg._onFilterChange = this._onFilterChange;
-         $ws.single.CommandDispatcher.declareCommand(this, 'toggleFilter', this._toggleFilter);
+         CommandDispatcher.declareCommand(this, 'toggleFilter', this._toggleFilter);
          return cfg;
       },
       _onFilterChange: function(event, filter) {

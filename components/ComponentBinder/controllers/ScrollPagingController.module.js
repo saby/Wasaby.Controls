@@ -1,6 +1,6 @@
-define('js!SBIS3.CONTROLS.ScrollPagingController', ['js!SBIS3.StickyHeaderManager'], function(StickyHeaderManager) {
+define('js!SBIS3.CONTROLS.ScrollPagingController', ['js!SBIS3.StickyHeaderManager', "Core/Abstract", "Core/core-instance"], function(StickyHeaderManager, cAbstract, cInstance) {
 
-   var ScrollPagingController = $ws.proto.Abstract.extend({
+   var ScrollPagingController = cAbstract.extend({
       $protected: {
          _options: {
             view: null,
@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController', ['js!SBIS3.StickyHeaderManage
       bindScrollPaging: function(paging) {
          var view = this._options.view, self = this;
          paging = paging || this._options.paging;
-         isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
+         var isTree = cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
 
          if (isTree){
             view.subscribe('onSetRoot', function(){

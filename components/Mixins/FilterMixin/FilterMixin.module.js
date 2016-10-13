@@ -1,7 +1,12 @@
 /**
  * Created by ad.chistyakova on 05.10.2015.
  */
-define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil'], function (FilterToStringUtil) {
+define('js!SBIS3.CONTROLS.FilterMixin', [
+   "Core/core-functions",
+   "Core/core-merge",
+   "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
+   "Core/helpers/collection-helpers"
+], function ( cFunctions, cMerge,FilterToStringUtil, colHelpers) {
 
 
    /**
@@ -122,14 +127,14 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
          };
 
          if (filterStructure) {
-            this._filterStructure = $ws.helpers.map(filterStructure, function(element) {
+            this._filterStructure = colHelpers.map(filterStructure, function(element) {
                var newEl;
 
                if(typeof element.internalValueField !== 'string') {
                   throw new Error('У элемента структуры должно быть поле internalValueField');
                }
 
-               newEl = $ws.core.merge($ws.core.clone(FILTER_STRUCTURE_DEFAULT_ELEMENT), element);
+               newEl = cMerge(cFunctions.clone(FILTER_STRUCTURE_DEFAULT_ELEMENT), element);
 
                if (!newEl.internalCaptionField) {
                   newEl.internalCaptionField = newEl.internalValueField;
@@ -141,8 +146,8 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
             });
          }
          if (filter) {
-            this._filterStructure = $ws.helpers.map(this._filterStructure, function(element) {
-               var newElement = $ws.core.clone(element),
+            this._filterStructure = colHelpers.map(this._filterStructure, function(element) {
+               var newElement = cFunctions.clone(element),
                    field = newElement.internalValueField;
 
                function setDescriptionWithReset(description, deleteDescription) {
@@ -195,14 +200,14 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
          return -1;
       },
       _findFilterStructureElement: function(func) {
-         return $ws.helpers.find(this._filterStructure, function(element) {
+         return colHelpers.find(this._filterStructure, function(element) {
             return func(element);
          });
       },
 
       _recalcInternalContext: function() {
          this.getLinkedContext().setValueSelf({
-            filterChanged: $ws.helpers.reduce(this._filterStructure, function(result, element) {
+            filterChanged: colHelpers.reduce(this._filterStructure, function(result, element) {
                return result || (element.hasOwnProperty('value') ? !FilterToStringUtil.isEqualValues(element.resetValue, element.value) : false);
             }, false),
             filterStructure: this._filterStructure,
@@ -250,7 +255,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
       }),
 
       _mapFilterStructureByProp: function(prop) {
-         return $ws.helpers.reduce(this._filterStructure, function(result, element) {
+         return colHelpers.reduce(this._filterStructure, function(result, element) {
             if (element.hasOwnProperty(prop)) {
                result[element.internalValueField] = element[prop];
             }
@@ -259,7 +264,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', ['js!SBIS3.CONTROLS.FilterButton.FilterT
       },
 
       _mapFilterStructureByVisibilityField: function(prop) {
-         return $ws.helpers.reduce(this._filterStructure, function(result, element) {
+         return colHelpers.reduce(this._filterStructure, function(result, element) {
             if(element.internalVisibilityField) {
                if (element.hasOwnProperty(prop)) {
                   result[element.internalVisibilityField] = element[prop];

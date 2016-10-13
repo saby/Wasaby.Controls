@@ -1,11 +1,18 @@
 define('js!SBIS3.CONTROLS.HighCharts', [
-   'js!SBIS3.CORE.Control',
-   'html!SBIS3.CONTROLS.HighCharts',
-   'browser!cdn!/highcharts/4.2.3/highcharts-more-min.js',
-   'css!SBIS3.CONTROLS.HighCharts',
-   'i18n!SBIS3.CONTROLS.HighCharts'
+   "Transport/BLObject",
+   "Core/helpers/helpers",
+   "Core/core-functions",
+   "Core/constants",
+   "Core/Deferred",
+   "js!SBIS3.CORE.Control",
+   "html!SBIS3.CONTROLS.HighCharts",
+   "Core/helpers/functional-helpers",
+   "Core/helpers/dom&controls-helpers",
+   "browser!cdn!/highcharts/4.2.3/highcharts-more-min.js",
+   "css!SBIS3.CONTROLS.HighCharts",
+   "i18n!SBIS3.CONTROLS.HighCharts"
 ],
-function(BaseControl, dotTpl){
+function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTpl, fHelpers, dcHelpers){
    'use strict';
 
    function ctxOnFieldChange(e, field, value, init) {
@@ -636,9 +643,9 @@ function(BaseControl, dotTpl){
          Highcharts.setOptions({
             lang: {
                numericSymbols: ['', '', '', '', '', ''],
-               months : $ws._const.Date.longMonths,
-               shortMonths : $ws._const.Date.months,
-               weekdays: $ws._const.Date.longDays,
+               months : constants.Date.longMonths,
+               shortMonths : constants.Date.months,
+               weekdays: constants.Date.longDays,
                thousandsSep : ' '
             }
          });
@@ -718,7 +725,7 @@ function(BaseControl, dotTpl){
          }
 
          //TODO прописываем опции для spline теже что и line
-         this._options.highChartOptions.plotOptions.spline = $ws.core.clone(this._options.highChartOptions.plotOptions.line);
+         this._options.highChartOptions.plotOptions.spline = cFunctions.clone(this._options.highChartOptions.plotOptions.line);
       },
 
       init : function() {
@@ -759,7 +766,7 @@ function(BaseControl, dotTpl){
          }
 
          //перерисовываем график, если он стал видимым. без этого график не занимает всю ширину контейнера, если был скрыт
-         var trg = $ws.helpers.trackElement(this._container, true);
+         var trg = dcHelpers.trackElement(this._container, true);
          trg.subscribe('onVisible', function (event, visible) {
             if (self._chartObj && visible) {
                self._chartObj.reflow();
@@ -971,18 +978,18 @@ function(BaseControl, dotTpl){
       _getData : function() {
          var
             self = this,
-            resultDef = new $ws.proto.Deferred();
+            resultDef = new Deferred();
          /*Метод бизнес логики*/
          if (this._sourceData.getDataType == 'standartBL') {
             /*если задан метод БЛ, дергаем его*/
             var BL = this._options.sourceData.methodBL.split(".");
             if (BL.length > 1) {
                // запускаем запрос на получение данных
-               $ws.proto.BLObject(BL[0]).query(BL[1], this._filters).addCallback($ws.helpers.forAliveOnly(function (rs) {
+               BLObject(BL[0]).query(BL[1], this._filters).addCallback(fHelpers.forAliveOnly(function (rs) {
                   /*результат метода пишем в data*/
                   self._sourceData.data = rs;
                   resultDef.callback();
-               }, self)).addErrback($ws.helpers.forAliveOnly(function (err) {
+               }, self)).addErrback(fHelpers.forAliveOnly(function (err) {
                   self.hide();
                   resultDef.errback(err);
                }, self));
@@ -997,7 +1004,7 @@ function(BaseControl, dotTpl){
                var tempResult = this._sourceData.userGetData(this._filters);
 
                /*если он асинхронный, то ждем результат и его считаем данными*/
-               if (tempResult instanceof $ws.proto.Deferred) {
+               if (tempResult instanceof Deferred) {
                   tempResult.addCallback(function(res){
                      self._sourceData.data = res;
                      resultDef.callback()
@@ -1062,7 +1069,7 @@ function(BaseControl, dotTpl){
       reload : function(noUpdateFromCtx) {
          this._loadingIndicator.removeClass('ws-hidden');
          var
-            def = new $ws.proto.Deferred(),
+            def = new Deferred(),
             self = this;
          /*смотрим на изменение фильтра в контексте*/
          if (!noUpdateFromCtx) {
@@ -1078,7 +1085,7 @@ function(BaseControl, dotTpl){
          }
          this._notify("onFilterChange", changedFilters, this._filters);
 
-         this._getData().addCallback($ws.helpers.forAliveOnly(function(){
+         this._getData().addCallback(fHelpers.forAliveOnly(function(){
             /*обновим текущие примененные фильтры*/
             self._updateLoadedFilters();
 
@@ -1095,7 +1102,7 @@ function(BaseControl, dotTpl){
             self._loadingIndicator.addClass('ws-hidden');
             self._drawHighChart();
             def.callback();
-         }, self)).addErrback($ws.helpers.forAliveOnly(function(){
+         }, self)).addErrback(fHelpers.forAliveOnly(function(){
             throw new Error(rk('Ошибка получения данных для диаграммы'));
          }, self));
 
@@ -1103,7 +1110,7 @@ function(BaseControl, dotTpl){
       },
 
       setQuery : function (obj) {
-         if ($ws.helpers.type(obj) == 'object') {
+         if (cHelpers.type(obj) == 'object') {
             this._filters = {};
             for (var i in obj) {
                if (obj.hasOwnProperty(i)) {
@@ -1123,7 +1130,7 @@ function(BaseControl, dotTpl){
             this.getLinkedContext().unsubscribe('onFieldChange', this._ctxFieldChangeHandler);
             this.getLinkedContext().unsubscribe('onDataBind', this._ctxDataBindHandler);
          }
-         $ws.helpers.trackElement(this._container, false);
+         dcHelpers.trackElement(this._container, false);
          HighCharts.superclass.destroy.call(this);
       }
 
