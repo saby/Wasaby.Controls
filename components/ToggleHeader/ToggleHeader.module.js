@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.ToggleHeader',
           * @see getCaption
           */
          setCaption: function(caption) {
-            this.superclass.setCaption(caption).call(this);
+            ToggleHeader.superclass.setCaption.call(this);
 
             this.getLinkedContext().setValue('caption', caption);
          },

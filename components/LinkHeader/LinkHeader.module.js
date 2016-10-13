@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.LinkHeader',
           * @see getCaption
           */
          setCaption: function(caption) {
-            this.superclass.setCaption(caption).call(this);
+            LinkHeader.superclass.setCaption.call(this);
 
             this.getLinkedContext().setValue('caption', caption);
          },
