@@ -2,10 +2,10 @@
  * Утилита рассчета высоты клавиатуры на тач устройствах
  */
 define('js!SBIS3.CONTROLS.TouchKeyboardHelper', [], function() {
-
+   /*Коэфицент Борисова*/
    var ipadCoefficient = {
-      portrait: 0.7,
-      landscape: 0.44
+      portrait: 0.3,
+      landscape: 0.56
    };
 
    var TouchKeyboardHelper = {
@@ -39,8 +39,8 @@ define('js!SBIS3.CONTROLS.TouchKeyboardHelper', [], function() {
    };
 
    if ($ws._const.compatibility.touch){
-      $ws.single.EventBus.globalChannel().subscribe('MobileInputFocus', TouchKeyboardHelper._keyboardShowHandler.bind(TouchKeyboardHelper));
-      $ws.single.EventBus.globalChannel().subscribe('MobileInputFocusOut', TouchKeyboardHelper._keyboardHideHandler.bind(TouchKeyboardHelper));
+      $ws.single.EventBus.globalChannel().subscribe('MobileInputFocus', TouchKeyboardHelper._keyboardShowHandler);
+      $ws.single.EventBus.globalChannel().subscribe('MobileInputFocusOut', TouchKeyboardHelper._keyboardHideHandler);
    }
 
    return TouchKeyboardHelper;
