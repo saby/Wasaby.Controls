@@ -4,9 +4,10 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'js!SBIS3.CONTROLS.Action.List.HierarchicalMoveMixin',
       'js!SBIS3.CONTROLS.Action.DialogMixin',
       'Core/helpers/string-helpers',
-      'js!WS.Data/Di'
+      'js!WS.Data/Di',
+      'Core/Indicator'
    ],
-   function (ListMove, HierarchicalMoveMixin, DialogMixin, strHelpers, Di) {
+   function (ListMove, HierarchicalMoveMixin, DialogMixin, strHelpers, Di, Indicator) {
       'use strict';
       /**
        * Действие перемещения по иерархии с выбором места перемещения через диалог.
@@ -130,13 +131,13 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
          },
 
          _move: function(movedItems, target) {
-            $ws.single.Indicator.show();
+            Indicator.show();
             this.getMoveStrategy().hierarhyMove(movedItems, target).addCallback(function(result){
                if (result !== false && this._getListView()) {
                   this._getListView().removeItemsSelectionAll();
                }
             }.bind(this)).addBoth(function() {
-               $ws.single.Indicator.hide();
+               Indicator.hide();
             });
          },
 
