@@ -526,6 +526,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   self._setText(self._prepareText(textValue));
                   self._redrawHead(isDefaultIdSelected);
                   self._resizeFastDataFilter();
+                  self._pickerBodyContainer.css('max-width', '');
+                  if (self._pickerHeadContainer.width() > self._pickerBodyContainer.width()){
+                     self._pickerBodyContainer.css('max-width', self._pickerHeadContainer.width());
+                  }
                });
             }
          },
