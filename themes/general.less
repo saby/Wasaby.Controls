@@ -58,9 +58,17 @@ input[type="reset"]::-moz-focus-inner {
 .icon-hover{
   color: @icon-color-hover !important;
 }
+
+.gray-color {
+  color: @gray-color;
+}
+
 .ws-is-desktop-platform {
-  .action-hover:hover {
+  .action-hover:not(.ws-disabled):hover {
     color: @icon-color-hover !important;
+  }
+  .gray-color:not(.ws-disabled):hover {
+    color: @gray-color;
   }
 }
 
@@ -69,3 +77,4 @@ input[type="reset"]::-moz-focus-inner {
     color: @icon-color-disabled !important;
   }
 }
+
