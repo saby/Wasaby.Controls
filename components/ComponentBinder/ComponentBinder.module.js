@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       if (gridView._options.multiselect) {
          gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
          if (hideCheckBoxes) {
-            gridView.toggleCheckboxes('controls-ListView__hideCheckBoxes', !operationPanel.isVisible());
+            gridView.toggleCheckboxes(!operationPanel.isVisible());
             gridView.removeItemsSelectionAll();
          }
          if (gridView._options.startScrollColumn !== undefined) {
