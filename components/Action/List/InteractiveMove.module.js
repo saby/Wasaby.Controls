@@ -1,13 +1,12 @@
 /*global define, $ws, rk*/
 define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'js!SBIS3.CONTROLS.Action.List.Move',
-      'js!SBIS3.CONTROLS.Action.List.HierarchicalMoveMixin',
       'js!SBIS3.CONTROLS.Action.DialogMixin',
       'Core/helpers/string-helpers',
       'js!WS.Data/Di',
       'Core/Indicator'
    ],
-   function (ListMove, HierarchicalMoveMixin, DialogMixin, strHelpers, Di, Indicator) {
+   function (ListMove, DialogMixin, strHelpers, Di, Indicator) {
       'use strict';
       /**
        * Действие перемещения по иерархии с выбором места перемещения через диалог.

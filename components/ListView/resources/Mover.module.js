@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             item = projection.getItemBySourceItem(record),
             targetItem = down ? projection.getNext(item) : projection.getPrevious(item);
          if(targetItem) {
-            this.getMoveStrategy().reorderMove([record], targetItem.getContents(), down);
+            this.getMoveStrategy().move([record], targetItem.getContents(), down);
          }
       },
 

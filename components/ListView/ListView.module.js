@@ -3021,7 +3021,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {WS.Data/Entity/Record} record Запись которую надо переместить
           */
          moveRecordUp: function(record) {
-            this._getMover().moveRecordDown(arguments[2]||record);
+            this._getMover().moveRecordUp(arguments[2]||record);
          },
          /**
           * Возвращает стратегию перемещения
