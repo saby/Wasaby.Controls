@@ -586,7 +586,7 @@
 
 @switcher-do-horizontal-line-width:             @switcher-line-width;
 @switcher-do-vertical-line-width:               38px;
-@switcher-do-horizontal-line-color:             @gray-color;
+@switcher-do-horizontal-line-background-color:  @gray-color;
 @switcher-do-horizontal-disabled-line-color:    @gray-light-color;
 
 @switcher-do-horizontal-btn-color:              @switcher-btn-color;
@@ -1898,6 +1898,12 @@
 @DropdownList-shadow-hover:                   0 0 0 1px @DropdownList-border-color;
 
 @DropdownList-picker-bg:                              @white-color;
+@DropdownList-header-bg:                              @DropdownList-picker-bg;
+@DropdownList-picker-margin-top:                      -2px;
+@DropdownList-picker-head-margin:                     0;
+@DropdownList-picker-hor-revert-head-margin:          @DropdownList-picker-head-margin;
+@DropdownList-picker-padding:                         4px 0;
+@DropdownList-picker-head-margin:                     0;
 @DropdownList-picker-border:                          2px solid @DropdownList-border-color;
 @DropdownList-picker-head-border-radius:              4px 4px 0 0;
 @DropdownList-picker-list-border-radius:              0 0 4px 4px;
@@ -2115,12 +2121,15 @@
 
 //InformationPopup
 @controls-InformationPopup-bg:                                white;
+@controls-InformationPopup-default-status-border-color:       #0055BB;
+@controls-InformationPopup-success-status-border-color:       #7ACB49;
+@controls-InformationPopup-error-status-border-color:         #EF463A;
+@controls-InformationPopup-warning-status-border-color:       #FEC63F;
 @controls-InformationPopup-border:                            1px solid #CCCCCC;
 @controls-InformationPopup-border-top:                        3px solid;
-@controls-InformationPopup-default-status-border-top-color:    #0055BB;
-@controls-InformationPopup-success-status-border-top-color:    #7ACB49;
-@controls-InformationPopup-error-status-border-top-color:      #EF463A;
-@controls-InformationPopup-warning-status-border-top-color:    #FEC63F;
+@controls-InformationPopup-border-left:                       @controls-InformationPopup-border !important;
+@controls-InformationPopup-border-right:                      @controls-InformationPopup-border !important;
+@controls-InformationPopup-border-bottom:                     @controls-InformationPopup-border !important;
 
 //NotificationPopup
 @controls-NotificationPopup-header-height:                                   48px;

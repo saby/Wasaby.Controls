@@ -4,14 +4,21 @@
 
 define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    [
-      'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CORE.PendingOperationProducerMixin',
-      'html!SBIS3.CONTROLS.EditInPlaceBaseController/AddRowTpl',
-      'js!SBIS3.CONTROLS.EditInPlace',
-      'js!WS.Data/Entity/Model',
-      'js!WS.Data/Entity/Record'
-   ],
-   function (CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Record) {
+   "Core/Context",
+   "Core/constants",
+   "Core/Deferred",
+   "Core/IoC",
+   "Core/ConsoleLogger",
+   "js!SBIS3.CORE.CompoundControl",
+   "js!SBIS3.CORE.PendingOperationProducerMixin",
+   "html!SBIS3.CONTROLS.EditInPlaceBaseController/AddRowTpl",
+   "js!SBIS3.CONTROLS.EditInPlace",
+   "js!WS.Data/Entity/Model",
+   "js!WS.Data/Entity/Record",
+   "Core/core-instance",
+   "Core/helpers/fast-control-helpers"
+],
+   function ( cContext, constants, Deferred, IoC, ConsoleLogger,CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Record, cInstance, fcHelpers) {
 
       'use strict';
 
@@ -80,7 +87,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             $constructor: function () {
                this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace', 'onChangeHeight');
                this._createEip();
-               this._savingDeferred = $ws.proto.Deferred.success();
+               this._savingDeferred = Deferred.success();
             },
 
             isEdit: function() {
@@ -146,15 +153,15 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _getContextForEip: function () {
                var
-                  ctx = new $ws.proto.Context({restriction: 'set'});
+                  ctx = new cContext({restriction: 'set'});
                ctx.subscribe('onFieldNameResolution', function (event, fieldName) {
                   var
                      record,
-                     path = fieldName.split($ws.proto.Context.STRUCTURE_SEPARATOR);
+                     path = fieldName.split(cContext.STRUCTURE_SEPARATOR);
                   if (path[0] !== CONTEXT_RECORD_FIELD) {
                      record = this.getValue(CONTEXT_RECORD_FIELD);
                      if (record && record.get(path[0]) !== undefined) {
-                        event.setResult(CONTEXT_RECORD_FIELD + $ws.proto.Context.STRUCTURE_SEPARATOR + fieldName);
+                        event.setResult(CONTEXT_RECORD_FIELD + cContext.STRUCTURE_SEPARATOR + fieldName);
                      }
                   }
                });
@@ -166,14 +173,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
              */
             _onKeyPress: function (e) {
                var key = e.which;
-               if (key === $ws._const.key.esc) {
+               if (key === constants.key.esc) {
                   e.stopImmediatePropagation();
                   e.preventDefault();
                   this.endEdit(false);
-               } else if (key === $ws._const.key.enter || key === $ws._const.key.down || key === $ws._const.key.up) {
+               } else if (key === constants.key.enter || key === constants.key.down || key === constants.key.up) {
                   e.stopImmediatePropagation();
                   e.preventDefault();
-                  this._editNextTarget(this._getCurrentTarget(), key === $ws._const.key.down || key === $ws._const.key.enter);
+                  this._editNextTarget(this._getCurrentTarget(), key === constants.key.down || key === constants.key.enter);
                }
             },
             _editNextTarget: function (currentTarget, editNextRow) {
@@ -248,16 +255,16 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   loadingIndicator;
                //Если необходимо перечитывать запись перед редактированием, то делаем это
                beginEditResult = this._notify('onBeginEdit', record);
-               if (beginEditResult instanceof $ws.proto.Deferred) {
+               if (beginEditResult instanceof Deferred) {
                   loadingIndicator = setTimeout(function () {
-                     $ws.helpers.toggleIndicator(true);
+                     fcHelpers.toggleIndicator(true);
                   }, 100);
                   return beginEditResult.addCallback(function(readRecord) {
                      self._editingRecord = record;
                      return readRecord;
                   }).addBoth(function (result) {
                      clearTimeout(loadingIndicator);
-                     $ws.helpers.toggleIndicator(false);
+                     fcHelpers.toggleIndicator(false);
                      return result;
                   });
                } else {
@@ -265,7 +272,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   //то не логично запрещать его. Например почти все кто использует редактирование, запрещают редактирование папок,
                   //но не нужно запрещать редактирование только что добавленных папок.
                   allowEdit = record.getState() === Record.RecordState.DETACHED || beginEditResult !== false;
-                  return $ws.proto.Deferred.success(allowEdit ? record : false);
+                  return Deferred.success(allowEdit ? record : false);
                }
             },
             /**
@@ -315,7 +322,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                //произойдёт раньше чем завершится первый, то мы два раза попытаемся завершить редактирование, что ведёт к 2 запросам
                //на сохранения записи. Чтобы это предотвратить добавим проверку на то, что сейчас уже идёт сохранение(this._savingDeferred.isReady())
                if (eip && this._savingDeferred.isReady()) {
-                  this._savingDeferred = new $ws.proto.Deferred();
+                  this._savingDeferred = new Deferred();
                   record = eip.getEditingRecord();
                   //Если редактирование(не добавление) завершается с сохранением, но запись не изменена, то нет смысл производить сохранение,
                   //т.к. отправится лишний запрос на бл, который ни чего по сути не сделает
@@ -323,7 +330,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      withSaving = false;
                   }
                   endEditResult = this._notify('onEndEdit', record, withSaving);
-                  if (endEditResult instanceof $ws.proto.Deferred) {
+                  if (endEditResult instanceof Deferred) {
                      return endEditResult.addBoth(function(result) {
                         result = endEditResult.isSuccessful() ? result : EndEditResult.CANCEL;
                         return self._endEdit(eip, withSaving, result);
@@ -333,14 +340,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   }
                }
                //TODO: Надо обсудить c Витей, почему в стрельнувшем Deferred и если результат тоже был Deferred - нельзя делать addCallback.
-               return this._savingDeferred.isReady() ? $ws.proto.Deferred.success() : this._savingDeferred;
+               return this._savingDeferred.isReady() ? Deferred.success() : this._savingDeferred;
             },
             _endEdit: function(eip, withSaving, endEditResult) {
                var self = this;
                //TODO: Поддержка старого варианта результата.
                if (typeof endEditResult === "boolean") {
                   endEditResult = endEditResult ? EndEditResult.SAVE : EndEditResult.NOT_SAVE;
-                  $ws.single.ioc.resolve('ILogger').log('onEndEdit', 'Boolean result is deprecated. Use constants EditInPlaceBaseController.EndEditResult.');
+                  IoC.resolve('ILogger').log('onEndEdit', 'Boolean result is deprecated. Use constants EditInPlaceBaseController.EndEditResult.');
                }
 
                if (endEditResult) {
@@ -349,7 +356,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
 
                if (endEditResult === EndEditResult.CANCEL || !eip.validate() && withSaving) {
                   this._savingDeferred.errback();
-                  return $ws.proto.Deferred.fail();
+                  return Deferred.fail();
                } else {
                   if (endEditResult === EndEditResult.CUSTOM_LOGIC) {
                      this._afterEndEdit(eip, withSaving);
@@ -381,13 +388,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         self._options.items.add(eip._cloneWithFormat(eipRecord, self._options.items));
                      }
                   }).addErrback(function(error) {
-                     $ws.helpers.alert(error);
+                     fcHelpers.alert(error);
                   });
                } else {
                   if (this._isAdd && eipRecord.getId()) {
                      deferred = this._options.dataSource.destroy(eipRecord.getId());
                   } else {
-                     deferred = $ws.proto.Deferred.success()
+                     deferred = Deferred.success()
                   }
                }
                return deferred;
@@ -436,9 +443,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _createModel: function(modelOptions, preparedModel) {
                var self = this;
                if (this._addLock) {
-                  return $ws.proto.Deferred.fail();
+                  return Deferred.fail();
                } else if (preparedModel instanceof Model) {
-                  return $ws.proto.Deferred.success(preparedModel);
+                  return Deferred.success(preparedModel);
                } else {
                   this._addLock = true;
                   return this._options.dataSource.create(modelOptions).addBoth(function(model) {
@@ -478,7 +485,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
              * @private
              */
             _focusCatch: function (event) {
-               if (event.which === $ws._const.key.tab) {
+               if (event.which === constants.key.tab) {
                   this._editNextTarget(this._getCurrentTarget(), !event.shiftKey);
                }
             },
@@ -489,7 +496,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   // Если фокус ушел на кнопку закрытия диалога, то редактирование по месту не должно реагировать на это, т.к.
                   // его и так завершат через finishChildPendingOperation (и туда попадет правильный аргумент - с сохранением
                   // или без завершать редактирование по месту)
-                  endEdit = !$ws.helpers.instanceOfModule(focusedControl, 'SBIS3.CORE.CloseButton') && !focusedControl ||
+                  endEdit = !cInstance.instanceOfModule(focusedControl, 'SBIS3.CORE.CloseButton') && !focusedControl ||
                      (this._allowEndEdit(focusedControl) &&
                      (this._isAnotherTarget(focusedControl, this) || !focusedControl._container.closest('.controls-ListView').length));
                if (endEdit) {

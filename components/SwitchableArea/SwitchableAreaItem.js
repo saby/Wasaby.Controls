@@ -1,6 +1,6 @@
 /* На основе SBIS3.CORE.SwitchableAreaItem */
-define(['js!SBIS3.CORE.CompoundControl'],
-   function(CompoundControl) {
+define(['js!SBIS3.CORE.CompoundControl', 'Core/helpers/generate-helpers', 'Core/Deferred', 'Core/ParallelDeferred'],
+   function(CompoundControl, genHelpers, Deferred, ParallelDeferred) {
       'use strict';
 
       /**
@@ -90,7 +90,7 @@ define(['js!SBIS3.CORE.CompoundControl'],
          setId: function(id) {
             var oldId = this.getId();
             if (!id){ // не может быть пустым
-               id = $ws.helpers.randomId('ws-area-');
+               id = genHelpers.randomId('ws-area-');
             }
             this._options.id = id;
             this._notify('onIdChanged', oldId, id);
@@ -119,11 +119,11 @@ define(['js!SBIS3.CORE.CompoundControl'],
           * @returns {$ws.proto.Deferred} - Deferred готовности
           */
          loadChildControls: function() {
-            var def = new $ws.proto.Deferred();
+            var def = new Deferred();
             if (!this.isLoaded()){
                var self = this;
                this.setLoaded(true);
-               self._loadControlsBySelector(new $ws.proto.ParallelDeferred(), undefined, '[data-component]')
+               self._loadControlsBySelector(new ParallelDeferred(), undefined, '[data-component]')
                   .getResult().addCallback(function(){
                      self._notify('onReady');
                      def.callback();

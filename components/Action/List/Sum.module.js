@@ -1,13 +1,16 @@
 /*global define, $ws*/
 define('js!SBIS3.CONTROLS.Action.List.Sum', [
-        'js!SBIS3.CONTROLS.Action.Action',
-        'js!SBIS3.CONTROLS.Action.List.ListMixin',
-        'js!SBIS3.CONTROLS.Action.DialogMixin',
-        'js!WS.Data/Source/SbisService',
-        'js!WS.Data/Entity/Model',
-        'js!WS.Data/Adapter/Sbis'
-    ],
-    function (ActionBase, ListMixin, DialogMixin, SbisService, Model) {
+   "Core/Deferred",
+   "js!SBIS3.CONTROLS.Action.Action",
+   "js!SBIS3.CONTROLS.Action.List.ListMixin",
+   "js!SBIS3.CONTROLS.Action.DialogMixin",
+   "js!WS.Data/Source/SbisService",
+   "js!WS.Data/Entity/Model",
+   "Core/core-instance",
+   "Core/helpers/functional-helpers",
+   "js!WS.Data/Adapter/Sbis"
+],
+    function ( Deferred,ActionBase, ListMixin, DialogMixin, SbisService, Model, cInstance, fHelpers) {
         'use strict';
         /**
          * Класс суммирования полей в списке
@@ -73,7 +76,7 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
             _doExecute: function () {
                 var self = this;
                 return this._sum().addCallback(function(item) {
-                    if ($ws.helpers.instanceOfModule(item, 'WS.Data/Source/DataSet')) {
+                    if (cInstance.instanceOfModule(item, 'WS.Data/Source/DataSet')) {
                         item = item.getRow();
                     }
                     return self._opendEditComponent({
@@ -144,10 +147,10 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
                 for (i = 0; i < fields.length; i++) {
                     resultRecord.addField(format.at(format.getFieldIndex(fields[i])), i + 1, resultFields[fields[i]]);
                 }
-                return $ws.proto.Deferred.success(resultRecord);
+                return Deferred.success(resultRecord);
             },
 
-            _getSumSource: $ws.helpers.memoize(function() {
+            _getSumSource: fHelpers.memoize(function() {
                 return new SbisService({
                     endpoint: "Сумма"
                 });

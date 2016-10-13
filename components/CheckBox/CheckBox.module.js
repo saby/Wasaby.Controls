@@ -1,5 +1,12 @@
 
-define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS.Checkable', 'tmpl!SBIS3.CONTROLS.CheckBox', 'tmpl!SBIS3.CONTROLS.CheckBox/resources/ContentTemplate', 'js!SBIS3.CONTROLS.ITextValue'], function(ButtonBase, Checkable, dotTplFn, defaultContentTemplate, ITextValue) {
+define('js!SBIS3.CONTROLS.CheckBox', [
+   "Core/constants",
+   "js!SBIS3.CONTROLS.ButtonBase",
+   "js!SBIS3.CONTROLS.Checkable",
+   "tmpl!SBIS3.CONTROLS.CheckBox",
+   "tmpl!SBIS3.CONTROLS.CheckBox/resources/ContentTemplate",
+   "js!SBIS3.CONTROLS.ITextValue"
+], function( constants,ButtonBase, Checkable, dotTplFn, defaultContentTemplate, ITextValue) {
 
    'use strict';
    var prepareChecked = function(checked, threeState) {
@@ -53,7 +60,7 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
       _dotTplFn : dotTplFn,
       $protected: {
          _checkBoxCaption: null,
-         _keysWeHandle: [$ws._const.key.space],
+         _keysWeHandle: [constants.key.space],
          _options: {
             /**
              * @cfg {Boolean} Наличие неопределённого состояния
@@ -127,7 +134,7 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
       },
 
       _keyboardHover: function(e) {
-         if (e.which === $ws._const.key.space) {
+         if (e.which === constants.key.space) {
             this.setChecked(!this.isChecked());
          }
          return false;
