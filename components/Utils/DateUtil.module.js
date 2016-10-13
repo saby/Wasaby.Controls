@@ -1,20 +1,22 @@
 /**
  * Created by is.protasov on 06.04.2015.
  */
-define('js!SBIS3.CONTROLS.Utils.DateUtil',[], function () {
+define('js!SBIS3.CONTROLS.Utils.DateUtil',[
+   "Core/constants"
+], function( constants) {
    'use strict';
    /**
     *
     */
    var DateUtil = {
       dateFromIsoString: function (isoDate) {
-         if ($ws._const.browser.isIE8
+         if (constants.browser.isIE8
             // не поддерживает даты с часовым пояслм вида '2016-07-31 22:10:01+03'
-            || $ws._const.browser.firefox
+            || constants.browser.firefox
             // не поддерживает даты с часовым поясом и разделитель в виде пробела '2016-07-31 22:10:01+03'
-            || $ws._const.browser.safari
+            || constants.browser.safari
             // на ios все браузеры работают через Apple UIWebView и ведут себя так же как safari
-            || $ws._const.browser.isMobileIOS
+            || constants.browser.isMobileIOS
          ) {
             return this._isoStringToDate(isoDate); //IE8 only
          } else {
@@ -32,7 +34,7 @@ define('js!SBIS3.CONTROLS.Utils.DateUtil',[], function () {
             return false;
          }
 
-         if ($ws._const.browser.isIE8) {
+         if (constants.browser.isIE8) {
             return this._dateToIsoString(date); //IE8 only
          } else {
             return date.toISOString();

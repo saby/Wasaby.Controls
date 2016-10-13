@@ -1,7 +1,8 @@
 define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
    'js!SBIS3.CONTROLS.DateRangeChoose',
-   'js!SBIS3.CONTROLS.Utils.DateUtil'
-], function (DateRangeChoose, DateUtil) {
+   'js!SBIS3.CONTROLS.Utils.DateUtil',
+   'Core/core-instance'
+], function (DateRangeChoose, DateUtil, cInstance) {
    /**
     * Миксин, умеющий отображать выпадающий вниз блок содержащий контрол SBIS3.CONTROLS.DateRangeChoose.
     * Используется только совместно с SBIS3.CONTROLS.DateRangeMixin(SBIS3.CONTROLS.RangeMixin) и SBIS3.CONTROLS.PickerMixin.
@@ -66,11 +67,11 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
       },
 
       $constructor: function () {
-         if (!($ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.RangeMixin' ||
-               $ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.DateRangeMixin')))) {
+         if (!(cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.RangeMixin' ||
+               cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.DateRangeMixin')))) {
             throw new Error('RangeMixin or DateRangeMixin mixin is required');
          }
-         if (!$ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.PickerMixin')) {
+         if (!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.PickerMixin')) {
             throw new Error('PickerMixin mixin is required');
          }
          if (!this._options.startValue) {

@@ -2,12 +2,14 @@
  * Created by am.gerasimov on 26.09.2016.
  */
 define('js!SBIS3.CONTROLS.Demo.LinkFieldController', [
+   'Core/IoC',
    'Core/Abstract',
    'js!SBIS3.CONTROLS.LinkFieldController',
    'js!WS.Data/Entity/Model',
    'js!WS.Data/Source/Memory',
-   'js!WS.Data/Adapter/Json'
-], function(Abstract, LinkFieldController, Model, Memory, Json){
+   'js!WS.Data/Adapter/Json',
+   'Core/helpers/collection-helpers'
+], function(IoC, Abstract, LinkFieldController, Model, Memory, Json, colHelpers){
 
    'use strict';
 
@@ -84,9 +86,9 @@ define('js!SBIS3.CONTROLS.Demo.LinkFieldController', [
             observableFields: observableFields
          });
 
-         $ws.single.ioc.resolve('ILogger').log(model.toObject());
+         IoC.resolve('ILogger').log(model.toObject());
 
-         $ws.single.ioc.resolve('ILogger').log('Всё ок: ' + $ws.helpers.isEqualObject(model.toObject(), {
+         IoC.resolve('ILogger').log('Всё ок: ' + colHelpers.isEqualObject(model.toObject(), {
             Возраст:55,
             Должность:'Премьер-министр',
             'Должность.Зарплата':100,
@@ -101,15 +103,15 @@ define('js!SBIS3.CONTROLS.Demo.LinkFieldController', [
 
          model.set('ИД', 1);
 
-         $ws.single.ioc.resolve('ILogger').log(model.toObject());
+         IoC.resolve('ILogger').log(model.toObject());
 
          model.set('ИД', 2);
 
-         $ws.single.ioc.resolve('ILogger').log(model.toObject());
+         IoC.resolve('ILogger').log(model.toObject());
 
          model.set('ИД', null);
 
-         $ws.single.ioc.resolve('ILogger').log(model.toObject());
+         IoC.resolve('ILogger').log(model.toObject());
       }
    });
 });

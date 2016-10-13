@@ -2,21 +2,23 @@
  * Created by as.suhoruchkin on 02.04.2015.
  */
 define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
-    'js!SBIS3.CORE.CompoundControl',
-    'html!SBIS3.CONTROLS.MergeDialogTemplate',
-    'js!WS.Data/Source/SbisService',
-    'js!WS.Data/Source/Memory',
-    'js!WS.Data/Adapter/Sbis',
-    'js!WS.Data/Collection/RecordSet',
-    'i18n!SBIS3.CONTROLS.MergeDialogTemplate',
-    'js!SBIS3.CONTROLS.Button',
-    'js!SBIS3.CONTROLS.TreeDataGridView',
-    'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellRadioButtonTpl',
-    'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl',
-    'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellTitleTpl',
-    'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/rowTpl',
-    'i18n!!SBIS3.CONTROLS.MergeDialogTemplate'
-], function(Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter, RecordSet) {
+   "Core/CommandDispatcher",
+   "js!SBIS3.CORE.CompoundControl",
+   "html!SBIS3.CONTROLS.MergeDialogTemplate",
+   "js!WS.Data/Source/SbisService",
+   "js!WS.Data/Source/Memory",
+   "js!WS.Data/Adapter/Sbis",
+   "js!WS.Data/Collection/RecordSet",
+   "Core/helpers/fast-control-helpers",
+   "i18n!SBIS3.CONTROLS.MergeDialogTemplate",
+   "js!SBIS3.CONTROLS.Button",
+   "js!SBIS3.CONTROLS.TreeDataGridView",
+   "html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellRadioButtonTpl",
+   "html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl",
+   "html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellTitleTpl",
+   "html!SBIS3.CONTROLS.MergeDialogTemplate/resources/rowTpl",
+   "i18n!!SBIS3.CONTROLS.MergeDialogTemplate"
+], function( CommandDispatcher,Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter, RecordSet, fcHelpers) {
 
     var COMMENT_FIELD_NAME = 'Comment',
         AVAILABLE_FIELD_NAME = 'Available';
@@ -57,7 +59,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
         $constructor: function() {
             this._container.removeClass('ws-area');
             this.subscribe('onReady', this._onReady);
-            $ws.single.CommandDispatcher.declareCommand(this, 'beginMerge', this.onMergeButtonActivated);
+            CommandDispatcher.declareCommand(this, 'beginMerge', this.onMergeButtonActivated);
         },
         onSearchPathClick: function(event) {
             //Откажемся от перехода по хлебным крошкам
@@ -121,7 +123,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             } else {
                 errorsTexts = [error.message];
             }
-            $ws.helpers.openErrorsReportDialog({
+            fcHelpers.openErrorsReportDialog({
                 'numSelected': count,
                 'numSuccess': count - errorsTexts.length,
                 'errors': errorsTexts,

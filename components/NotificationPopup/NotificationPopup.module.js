@@ -16,8 +16,8 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
       'use strict';
 
       var ICONS = {
-         success: 'icon-24 icon-Yes icon-done',
-         error: 'icon-24 icon-Alert icon-error',
+         success: 'icon-size icon-24 icon-Yes icon-done',
+         error: 'icon-size icon-24 icon-Alert icon-error',
          warning: '',
          'default': ''
       };
