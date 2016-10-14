@@ -1,11 +1,14 @@
 /*global define, require, $ws*/
 define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
-   'js!SBIS3.CONTROLS.Action.Action',
-   'js!SBIS3.CONTROLS.Action.DialogMixin',
-   'js!SBIS3.CONTROLS.Action.List.ListMixin',
-   'js!WS.Data/Entity/Model',
-   'js!WS.Data/Utils'
-], function(Action, DialogMixin, ListMixin, Model, Utils){
+   "Core/Deferred",
+   "Core/core-merge",
+   "js!SBIS3.CONTROLS.Action.Action",
+   "js!SBIS3.CONTROLS.Action.DialogMixin",
+   "js!SBIS3.CONTROLS.Action.List.ListMixin",
+   "js!WS.Data/Entity/Model",
+   "js!WS.Data/Utils",
+   "Core/core-instance"
+], function( Deferred, cMerge,Action, DialogMixin, ListMixin, Model, Utils, cInstance){
    'use strict';
 
    /**
@@ -33,7 +36,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       _showDialog: function(config, meta, template, mode) {
          //добавляем обработчики формконтронтроллера в конфиг
-         config.componentOptions.handlers = $ws.core.merge(
+         config.componentOptions.handlers = cMerge(
             config.componentOptions.handlers || {},
             this._getFormControllerHandlers()
          );
@@ -71,7 +74,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
             });
          }
          else {
-            return new $ws.proto.Deffered().callback();
+            return new Deferred().callback();
          }
       },
 
@@ -138,10 +141,10 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
             return;
          }
          //Уберём удаляемый элемент из массива выбранных у контрола, являющегося linkedObject.
-         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.MultiSelectable')) {
+         if (cInstance.instanceOfMixin(collection, 'SBIS3.CONTROLS.MultiSelectable')) {
             collection.removeItemsSelection([collectionRecord.getId()]);
          }
-         if ($ws.helpers.instanceOfModule(collection.getDataSet && collection.getDataSet(), 'WS.Data/Adapter/RecordSet')) {
+         if (cInstance.instanceOfModule(collection.getDataSet && collection.getDataSet(), 'WS.Data/Adapter/RecordSet')) {
             collection = collection.getDataSet();
          }
          collection.remove(collectionRecord);
@@ -177,7 +180,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          var collection = this._options.linkedObject,
             rec;
          at = at || 0;
-         if ($ws.helpers.instanceOfModule(collection.getDataSet(), 'WS.Data/Adapter/RecordSet')) {
+         if (cInstance.instanceOfModule(collection.getDataSet(), 'WS.Data/Adapter/RecordSet')) {
             //Создаем новую модель, т.к. Record не знает, что такое первичный ключ - это добавляется на модели.
             rec = new Model({
                format: collection.getDataSet().getFormat(),
@@ -188,7 +191,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          } else  {
             rec = model.clone();
          }
-         if ($ws.helpers.instanceOfMixin(collection, 'WS.Data/Collection/IList')) {
+         if (cInstance.instanceOfMixin(collection, 'WS.Data/Collection/IList')) {
             collection.add(rec, at);
          }
          else {
@@ -247,7 +250,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          var collectionData = this._getItems(),
             index;
 
-         if (collectionData && $ws.helpers.instanceOfMixin(collectionData, 'WS.Data/Collection/IList') && $ws.helpers.instanceOfMixin(collectionData, 'WS.Data/Collection/IIndexedCollection')) {
+         if (collectionData && cInstance.instanceOfMixin(collectionData, 'WS.Data/Collection/IList') && cInstance.instanceOfMixin(collectionData, 'WS.Data/Collection/IIndexedCollection')) {
             index = collectionData.getIndexByValue(collectionData.getIdProperty(), this._linkedModelKey || model.getId());
             return collectionData.at(index);
          }

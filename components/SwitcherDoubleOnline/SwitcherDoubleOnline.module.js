@@ -1,4 +1,8 @@
-define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherDouble'], function(SwitcherDouble) {
-   $ws.single.ioc.resolve('ILogger').log('DataGrid', 'Класс SBIS3.Engine.SwitcherDoubleOnline устарел, используйте SBIS3.CONTROLS.SwitcherDouble');
+define('js!SBIS3.Engine.SwitcherDoubleOnline', [
+   "Core/IoC",
+   "Core/ConsoleLogger",
+   "js!SBIS3.CONTROLS.SwitcherDouble"
+], function( IoC, ConsoleLogger,SwitcherDouble) {
+   IoC.resolve('ILogger').log('DataGrid', 'Класс SBIS3.Engine.SwitcherDoubleOnline устарел, используйте SBIS3.CONTROLS.SwitcherDouble');
    return SwitcherDouble;
 });

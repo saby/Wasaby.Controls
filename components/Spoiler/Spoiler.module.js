@@ -5,8 +5,9 @@ define('js!SBIS3.CONTROLS.Spoiler', [
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'tmpl!SBIS3.CONTROLS.Spoiler',
    'tmpl!SBIS3.CONTROLS.Spoiler/resources/LeftPartTitleTemplate',
-   'tmpl!SBIS3.CONTROLS.Spoiler/resources/MiddlePartTitleTemplate'
-], function(ButtonBase, Expandable, MarkupTransformer, TemplateUtil, dotTplFn, LeftPartTitleTemplate, MiddlePartTitleTemplate) {
+   'tmpl!SBIS3.CONTROLS.Spoiler/resources/MiddlePartTitleTemplate',
+   'Core/helpers/dom&controls-helpers'
+], function(ButtonBase, Expandable, MarkupTransformer, TemplateUtil, dotTplFn, LeftPartTitleTemplate, MiddlePartTitleTemplate, dcHelpers) {
 
    'use strict';
 
@@ -111,7 +112,7 @@ define('js!SBIS3.CONTROLS.Spoiler', [
          var
             titleContainer = this._getTitleContainer()[0];
          Spoiler.superclass._notifyOnActivated.apply(this, arguments);
-         if (originalEvent.target === titleContainer || $ws.helpers.contains(titleContainer, originalEvent.target)) {
+         if (originalEvent.target === titleContainer || dcHelpers.contains(titleContainer, originalEvent.target)) {
             this.toggleExpanded();
          }
       }

@@ -5,14 +5,14 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
         test.setUrl('/regression_field_link_online.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-				
+
 				this.fl = '[sbisname="FieldLinkSingleSelect"]';
                 this.box = '[sbisname="TextBox 1"] input';
 				this.input = '.controls-TextBox__field';
                 this.open_menu = '[sbisname="fieldLinkMenu"]';
-				this.caption = '.controls-FieldLink__linkItem-caption';
-				this.cross = '.controls-FieldLink__linkItem-cross';
-				
+				this.caption = '.controls-FieldLink__item-caption';
+				this.cross = '.controls-FieldLink__item-cross';
+
                 actions.waitForElementToShow(this.fl, 40000);
 				actions.waitForElementToShow(this.box, 5000);
             })
@@ -53,13 +53,13 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
         test.setUrl('/regression_field_link_online_2.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-                
+
 				this.fl = '[sbisname="FieldLinkMultiSelect"]';
                 this.box = '[sbisname="TextBox 1"] input';
 				this.input = '.controls-TextBox__field';
                 this.more = '.controls-FieldLink__showAllLinks';
-				this.clear_all = '.controls-FieldLink__showAllLinks ~ span .controls-Link-link';
-				
+				this.clear_all = '.controls-FieldLink__dropAllLinks';
+
                 actions.waitForElementToShow(this.fl, 40000);
 				actions.waitForElementToShow(this.box, 5000);
             })
@@ -82,7 +82,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
             .capture('hovered_clear_all', function (actions) {
                 actions.mouseMove(this.clear_all);
             })
-			
+
 			.capture('disabled', function (actions) {
 				actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('FieldLinkMultiSelect').setSelectedKeys([0,2,3,4,5,6])
@@ -102,12 +102,12 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
         test.setUrl('/regression_field_link_online_3.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-				
+
 				this.fl = '[sbisname="FieldLinkSingleSelect"]';
                 this.box = '[sbisname="TextBox 1"] input';
 				this.input = '.controls-TextBox__field';
-				this.caption = '.controls-FieldLink__linkItem-caption';
-				
+				this.caption = '.controls-FieldLink__item-caption';
+
                 actions.waitForElementToShow(this.fl, 40000);
 				actions.waitForElementToShow(this.box, 5000);
             })
@@ -129,10 +129,10 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
         test.setUrl('/regression_field_link_online_4.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-				
+
 				this.fl = '[sbisname="FieldLinkSingleSelect"]';
                 this.box = '[sbisname="TextBox 1"] input';
-				
+
                 actions.waitForElementToShow(this.fl, 40000);
 				actions.waitForElementToShow(this.box, 5000);
             })
@@ -150,11 +150,11 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
         test.setUrl('/regression_field_link_online_7.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-				
+
 				this.fl = '[sbisname="FieldLinkMultiSelect"]';
                 this.box = '[sbisname="TextBox 1"] input';
 				this.open_menu = '[sbisname="fieldLinkMenu"]';
-				
+
                 actions.waitForElementToShow(this.fl, 40000);
 				actions.waitForElementToShow(this.box, 5000);
             })
@@ -164,17 +164,17 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
 				actions.mouseMove(this.box);
             })
     });
-	
+
 	gemini.suite('hide_and_show_multiselect', function (test) {
 
         test.setUrl('/regression_field_link_online_2.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-				
+
 				this.fl = '[sbisname="FieldLinkMultiSelect"]';
                 this.box = '[sbisname="TextBox 1"] input';
                 this.more = '.controls-FieldLink__showAllLinks';
-				
+
                 actions.waitForElementToShow(this.fl, 40000);
 				actions.waitForElementToShow(this.box, 5000);
             })
@@ -205,13 +205,13 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
         test.setUrl('/regression_field_link_online_8.html').setCaptureElements('html')
 
             .before(function (actions) {
-				
+
 				this.fl = '[sbisname="FieldLink 1"]';
 				this.input = '[sbisname="FieldLink 1"] input';
 				this.data0 = '[data-id="0"]';
 				this.data2 = '[data-id="2"]';
 				this.data3 = '[data-id="3"]';
-				
+
                 actions.waitForElementToShow(this.fl, 40000);
 				actions.waitForElementToShow(this.input, 5000);
             })

@@ -3,25 +3,28 @@
  */
 
 define('js!SBIS3.CONTROLS.FilterPanel', [
-   'js!SBIS3.CONTROLS.CompoundControl',
-   'js!SBIS3.CONTROLS.Expandable',
-   'js!SBIS3.CONTROLS.FilterPanelItem',
-   'js!SBIS3.CORE.MarkupTransformer',
-   'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
-   'tmpl!SBIS3.CONTROLS.FilterPanel',
-   'tmpl!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelContent',
-   'tmpl!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelItemContentTemplate',
-   'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser',
-   'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateDataRange',
-   'tmpl!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelSpoilerRightPartTitleTemplate',
-   'js!SBIS3.CONTROLS.Link',
-   'js!SBIS3.CONTROLS.Accordion',
-   'js!SBIS3.CONTROLS.FilterPanelChooser',
-   'js!SBIS3.CONTROLS.FilterPanelDataRange',
-   'js!SBIS3.CONTROLS.FilterPanelBoolean',
-   'js!SBIS3.CONTROLS.IconButton',
-   'js!SBIS3.CONTROLS.ScrollContainer'
-], function(CompoundControl, Expandable, FilterPanelItem, MarkupTransformer, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
+   "Core/core-functions",
+   "Core/CommandDispatcher",
+   "Core/helpers/functional-helpers",
+   "js!SBIS3.CONTROLS.CompoundControl",
+   "js!SBIS3.CONTROLS.Expandable",
+   "js!SBIS3.CONTROLS.FilterPanelItem",
+   "js!SBIS3.CORE.MarkupTransformer",
+   "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
+   "tmpl!SBIS3.CONTROLS.FilterPanel",
+   "tmpl!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelContent",
+   "tmpl!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelItemContentTemplate",
+   "tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser",
+   "tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateDataRange",
+   "tmpl!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelSpoilerRightPartTitleTemplate",
+   "js!SBIS3.CONTROLS.Link",
+   "js!SBIS3.CONTROLS.Accordion",
+   "js!SBIS3.CONTROLS.FilterPanelChooser",
+   "js!SBIS3.CONTROLS.FilterPanelDataRange",
+   "js!SBIS3.CONTROLS.FilterPanelBoolean",
+   "js!SBIS3.CONTROLS.IconButton",
+   "js!SBIS3.CONTROLS.ScrollContainer"
+], function( cFunctions, CommandDispatcher, fHelpers, CompoundControl, Expandable, FilterPanelItem, MarkupTransformer, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
 
    'use strict';
 
@@ -79,6 +82,17 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
              */
             filterAlign: 'left',
             /**
+             * @cfg {String} Режим формирования результирующего фильтра
+             * Возможные значения:
+             * <ol>
+             *    <li>full - результирующий фильтр формируется из всех полей;</li>
+             *    <li>onlyChanges - результирующий фильтр формируется только из полей, отличающихся от изначального значения (resetValue).</li>
+             * </ol>
+             * @variant 'full'
+             * @variant 'onlyChanges'
+             */
+            filterMode: 'onlyChanges',
+            /**
              * @cfg {Object} Фильтр, сформированный по структуре, заданной в опции items.
              * Внимание! Данная опция доступна только на чтение. Фильтр формируется исключительно через items.
              */
@@ -86,8 +100,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          },
          _filterInitialized: false,
          _filterAccordion: null,
-         _onFilterItemChangeFn: null,
-         _notifyOnFilterChange: true
+         _onFilterItemChangeFn: null
       },
       _modifyOptions: function() {
          var
@@ -97,15 +110,15 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          return cfg;
       },
       $constructor: function() {
-         $ws.single.CommandDispatcher.declareCommand(this, 'resetFilter', this._resetFilter);
-         $ws.single.CommandDispatcher.declareCommand(this, 'resetFilterField', this._resetFilterField);
+         CommandDispatcher.declareCommand(this, 'resetFilter', this._resetFilter);
+         CommandDispatcher.declareCommand(this, 'resetFilterField', this._resetFilterField);
          this._onFilterItemChangeFn = this._onFilterItemChange.bind(this);
          this._publish('onFilterChange', 'onFilterReset');
       },
       init: function() {
          this.subscribe('onExpandedChange', this._onExpandedChange);
          FilterPanel.superclass.init.apply(this, arguments);
-         setTimeout($ws.helpers.forAliveOnly(function() {
+         setTimeout(fHelpers.forAliveOnly(function() {
             if (this.isExpanded() && !this._filterInitialized) { // Защита от повторной инициализации (если фильтр был инициализирован через setItems)
                this._initializeFilter();
             }
@@ -113,7 +126,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
       },
       _onFilterItemChange: function(event, model, index, changes) {
          var
-            filter = $ws.core.clone(this.getFilter());
+            filter = cFunctions.clone(this.getFilter());
          if (changes.value !== undefined) {
             filter[model.get(ITEM_FILTER_ID)] = changes.value;
             this._updateFilterProperty(filter);
@@ -137,10 +150,8 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          this.getChildControlByName('ResetFilterButton').setEnabled(!disableResetButton);
       },
       _updateFilterProperty: function(filter) {
-         this._options.filter = filter;
-         if (this._notifyOnFilterChange) {
-            this._notify('onFilterChange', filter);
-         }
+         this._options.filter = this._prepareFilter(filter);
+         this._notify('onFilterChange', this.getFilter());
          this._notifyOnPropertyChanged('filter');
       },
       _initializeFilter: function() {
@@ -158,11 +169,26 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          }
          this._filterInitialized = true;
       },
+      _prepareFilter: function() {
+         var
+            value, filter = {};
+         if (this._options.filterMode === 'onlyChanges') {
+            this._filterAccordion.getItems().each(function(item) {
+               value = item.get(ITEM_FILTER_VALUE);
+               if (!FilterToStringUtil.isEqualValues(value, item.get(ITEM_FILTER_RESET_VALUE))) {
+                  filter[item.get(ITEM_FILTER_ID)] = value;
+               }
+            });
+            return filter;
+         } else {
+            return this._options.filter;
+         }
+      },
       getFilter: function() {
          return this._options.filter;
       },
       setFilter: function() {
-         throw new Error('Свойство "filter" работает только на чтение. Менять его надо через метод setFilterStructure');
+         throw new Error('Свойство "filter" работает только на чтение. Менять его надо через метод setItems');
       },
       _onExpandedChange: function(event, expanded) {
          if (expanded && !this._filterInitialized) {
@@ -189,22 +215,17 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          this.reviveComponents();
          this._initializeFilter();
       },
-      _setNotifyOnFilterChange: function(flag) {
-         this._notifyOnFilterChange = !!flag;
-      },
       _resetFilter: function() {
-         this._setNotifyOnFilterChange(false);
          this._filterAccordion.getItems().each(function(item) {
-            item.set(ITEM_FILTER_VALUE, $ws.core.clone(item.get(ITEM_FILTER_RESET_VALUE)));
+            item.set(ITEM_FILTER_VALUE, cFunctions.clone(item.get(ITEM_FILTER_RESET_VALUE)));
          });
-         this._setNotifyOnFilterChange(true);
          this._notify('onFilterReset', this.getFilter());
       },
       _resetFilterField: function(fieldName) {
          var
             items = this._filterAccordion.getItems(),
             item = items.at(items.getIndexByValue(ITEM_FILTER_ID, fieldName));
-         item.set(ITEM_FILTER_VALUE, $ws.core.clone(item.get(ITEM_FILTER_RESET_VALUE)));
+         item.set(ITEM_FILTER_VALUE, cFunctions.clone(item.get(ITEM_FILTER_RESET_VALUE)));
       },
       _getContentContainer: function() {
          return $('.controls-FilterPanel__contentContainer', this.getContainer());
