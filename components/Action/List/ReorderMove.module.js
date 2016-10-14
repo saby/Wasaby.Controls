@@ -96,7 +96,7 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
          },
          /**
           * Метод выполнящий перемещение
-          * @param {WS.Data/Entity/Model} movedItems элемент который будет перемещен
+          * @param {WS.Data/Entity/Model} movedItems Элемент который будет перемещен
           * @returns {Deferred}
           * @private
           */
@@ -108,8 +108,8 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
             return (new Deferred()).callback(true);
          },
          /**
-          * возвращает соседий элемент
-          * @param {WS.Data/Entity/Model} item
+          * Возвращает соседий элемент
+          * @param {WS.Data/Entity/Model} item Элемент у которого надо определить соседний
           * @returns {WS.Data/Entity/Model}
           * @private
           */
