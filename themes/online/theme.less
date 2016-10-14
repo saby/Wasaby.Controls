@@ -107,3 +107,14 @@
    border-style: @menu-border-style;
    border-color: @menu-border-color;
 }
+
+//TODO Костылище для приемлимой работы фиксированной шапки, в 3.7.4.200 разобраться и выпилить
+.ws-is-ie {
+   .controls-DataGridView__colgroup {
+      display: table-row;
+      col {
+         display: table-cell;
+      }
+   }
+}
+//TODO Конец костыля
