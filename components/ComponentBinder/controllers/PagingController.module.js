@@ -1,6 +1,6 @@
-define('js!SBIS3.CONTROLS.PagingController', ['js!SBIS3.StickyHeaderManager'], function(StickyHeaderManager) {
+define('js!SBIS3.CONTROLS.PagingController', ['js!SBIS3.StickyHeaderManager', "Core/Abstract"], function(StickyHeaderManager, cAbstract) {
 
-   var PagingController = $ws.proto.Abstract.extend({
+   var PagingController = cAbstract.extend({
       $protected: {
          _options: {
             view: null,

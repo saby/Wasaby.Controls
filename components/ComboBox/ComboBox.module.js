@@ -1,15 +1,17 @@
 define('js!SBIS3.CONTROLS.ComboBox', [
-   'js!SBIS3.CONTROLS.TextBox',
-   'html!SBIS3.CONTROLS.ComboBox',
-   'js!SBIS3.CONTROLS.PickerMixin',
-   'js!SBIS3.CONTROLS.ItemsControlMixin',
-   'js!SBIS3.CONTROLS.Selectable',
-   'js!SBIS3.CONTROLS.DataBindMixin',
-   'js!SBIS3.CONTROLS.SearchMixin',
-   'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown',
-   'html!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate',
-   'html!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate'
-], function (TextBox, dotTplFn, PickerMixin, ItemsControlMixin, Selectable, DataBindMixin, SearchMixin, arrowTpl, ItemTemplate, ItemContentTemplate) {
+   "Core/constants",
+   "Core/Deferred",
+   "js!SBIS3.CONTROLS.TextBox",
+   "html!SBIS3.CONTROLS.ComboBox",
+   "js!SBIS3.CONTROLS.PickerMixin",
+   "js!SBIS3.CONTROLS.ItemsControlMixin",
+   "js!SBIS3.CONTROLS.Selectable",
+   "js!SBIS3.CONTROLS.DataBindMixin",
+   "js!SBIS3.CONTROLS.SearchMixin",
+   "html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown",
+   "html!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate",
+   "html!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate"
+], function ( constants, Deferred,TextBox, dotTplFn, PickerMixin, ItemsControlMixin, Selectable, DataBindMixin, SearchMixin, arrowTpl, ItemTemplate, ItemContentTemplate) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора.
@@ -93,7 +95,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          //если он true, то при условии ключа null текст будет оцищаться
          //нельзя всегда очищать текст, потому что при ручном вводе текста, даже при пустом ключе текст стирать не надо
          _isClearing: false,
-         _keysWeHandle: [$ws._const.key.up, $ws._const.key.down, $ws._const.key.enter, $ws._const.key.esc],
+         _keysWeHandle: [constants.key.up, constants.key.down, constants.key.enter, constants.key.esc],
          _options: {
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
@@ -218,7 +220,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             selectedKey = this.getSelectedKey(),
             selectedItem, newSelectedItem, newSelectedItemId;
          if (this._picker) {
-            if(!this._picker.isVisible() && e.which === $ws._const.key.esc ){
+            if(!this._picker.isVisible() && e.which === constants.key.esc ){
                return true;
             }
 
@@ -227,9 +229,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
             selectedItem = $('.controls-ComboBox__itemRow__selected', this._picker.getContainer());
             //навигация по стрелкам
-            if (e.which === $ws._const.key.up) {
+            if (e.which === constants.key.up) {
                newSelectedItem = selectedKey ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
-            } else if (e.which === $ws._const.key.down) {
+            } else if (e.which === constants.key.down) {
                newSelectedItem = selectedKey ? selectedItem.next('.controls-ListView__item') : items.eq(0);
             }
             if (newSelectedItem && newSelectedItem.length) {
@@ -269,16 +271,16 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                      prevRec = this.getItems().at(0);
                      nextRec = this.getItems().at(0);
                   }
-                  if (e.which === $ws._const.key.up) {
+                  if (e.which === constants.key.up) {
                      this.setSelectedKey(prevRec.getId());
-                  } else if (e.which === $ws._const.key.down) {
+                  } else if (e.which === constants.key.down) {
                      this.setSelectedKey(nextRec.getId());
                   }
                }
             }
          }
 
-         if (e.which === $ws._const.key.enter || e.which === $ws._const.key.esc) {
+         if (e.which === constants.key.enter || e.which === constants.key.esc) {
             this.hidePicker()
          }
 
@@ -314,7 +316,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._container.addClass('controls-ComboBox_emptyValue');
          }
          var def;
-         def = new $ws.proto.Deferred();
+         def = new Deferred();
 
          if (this._getItemsProjection()) {
             if (!this._isEmptyIndex(index)) {
@@ -458,7 +460,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
 
       _keyUpBind: function (e) {
-         var keys = $ws._const.key;
+         var keys = constants.key;
          /*по изменению текста делаем то же что и в текстбоксе*/
          ComboBox.superclass._keyUpBind.apply(this, arguments);
          /*не делаем смену значения при нажатии на стрелки вверх вниз. Иначе событие смены ключа срабатывает два раза*/
@@ -476,6 +478,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var
             selKey,
             oldKey = this._options.selectedKey,
+            oldText = this.getText(),
             self = this,
             filterFieldObj = {};
 
@@ -495,12 +498,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   }
                });
 
-               if (noItems) {
-                  self._options.selectedKey = null;
-                  if (oldKey !== self._options.selectedKey) {
-                     self._notifySelectedItem(null);
-                     self._drawSelectedItem(null);
-                  }
+               if (noItems && oldKey !== null) {
+                  self.setSelectedKey(null);
+                  self._drawText(oldText);
                }
             });
          }
@@ -521,9 +521,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
-      _redraw: function () {
+      redraw: function () {
          if (this._picker) {
-            ComboBox.superclass._redraw.call(this);
+            ComboBox.superclass.redraw.call(this);
             // Сделано для того, что бы в при уменьшении колчества пунктов при поиске нормально усеньшались размеры пикера
             // В 3.7.3.200 сделано нормально на уровне попапа
             this._picker.getContainer().css('height', '');
@@ -622,10 +622,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       //TODO заглушка
       /**
        * @noShow
-       * @returns {$ws.proto.Deferred}
+       * @returns {Deferred}
        */
       reviveComponents : function() {
-         var def = new $ws.proto.Deferred();
+         var def = new Deferred();
          def.callback();
          return def;
       },

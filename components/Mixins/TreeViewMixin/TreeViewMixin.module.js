@@ -1,10 +1,18 @@
-define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS.Utils.TemplateUtil'], function (Control, TemplateUtil) {
+define('js!SBIS3.CONTROLS.TreeViewMixin', [
+   "Core/constants",
+   "js!SBIS3.CORE.Control",
+   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
+   "Core/helpers/collection-helpers",
+   "Core/core-instance"
+], function ( constants,Control, TemplateUtil, colHelpers, cInstance) {
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeViewMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     * @cssModifier controls-ListView__item-without-child Класс добавляется к визуальному представлению папки, у которой отсутствуют дочерние элементы.
+    * @cssModifier controls-ListView__hideCheckBoxes-leaf Скрыть чекбоксы у листьев.
+    * @cssModifier controls-ListView__hideCheckBoxes-node Скрыть чекбоксы у папок.
     */
 
    var TreeViewMixin = /** @lends SBIS3.CONTROLS.TreeViewMixin.prototype */{
@@ -191,7 +199,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
          }
       },
       _createAllFolderFooters: function() {
-         $ws.helpers.forEach(this._options.openedPath, function(val, key) {
+         colHelpers.forEach(this._options.openedPath, function(val, key) {
             //Рисуем футер, только если узел есть в проекции, иначе он скрыт и футер рисовать не нужно
             if (this._getItemProjectionByItemId(key)) {
                this._createFolderFooter(key);
@@ -221,7 +229,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
          }
       },
       around: {
-         _onCollectionRemove: function(parentFunc, items, notCollapsed) {
+         _onCollectionRemove: function(parentFunc, items, notCollapsed, groupId) {
             var i, item, itemId;
             for (i = 0; i < items.length; i++) {
                item = items[i];
@@ -232,7 +240,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                   this._destroyItemsFolderFooter([itemId]);
                }
             }
-            return parentFunc.call(this, items);
+            return parentFunc.call(this, items, notCollapsed, groupId);
          },
          /**
           * Проверяет, является ли $-элемент визуальным отображением элемента коллекции
@@ -242,7 +250,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
           * @private
           */
          _isViewElement: function(parentFunc, elem) {
-            return  parentFunc.call(this, elem) && !elem.hasClass('controls-HierarchyDataGridView__path') && !($ws.helpers.instanceOfModule(elem.wsControl(), 'SBIS3.CONTROLS.BreadCrumbs'));
+            return  parentFunc.call(this, elem) && !elem.hasClass('controls-HierarchyDataGridView__path') && !(cInstance.instanceOfModule(elem.wsControl(), 'SBIS3.CONTROLS.BreadCrumbs'));
          },
          /**
           * Обработка изменения item property
@@ -273,7 +281,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
       before: {
          _keyboardHover: function (e) {
             switch (e.which) {
-               case $ws._const.key.m:
+               case constants.key.m:
                   e.ctrlKey && this.moveRecordsWithDialog();
                   break;
             }
@@ -285,7 +293,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                this._lastDrawn = undefined;
                this._lastPath = [];
 
-               $ws.helpers.forEach(this._foldersFooters, function(val, key) {
+               colHelpers.forEach(this._foldersFooters, function(val, key) {
                   self._destroyItemsFolderFooter([key]);
                });
             }
@@ -299,7 +307,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
          //TODO: после переход на серверную вёрстку фолдерфутера, данный метод не понадобится
          setOpenedPath: function(openedPath) {
             if (this._getItemsProjection()) {
-               $ws.helpers.forEach(openedPath, function (val, key) {
+               colHelpers.forEach(openedPath, function (val, key) {
                   this._createFolderFooter(key);
                }.bind(this));
             }

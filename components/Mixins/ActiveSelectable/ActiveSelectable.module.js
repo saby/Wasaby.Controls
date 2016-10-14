@@ -1,7 +1,11 @@
 /**
  * Created by am.gerasimov on 24.11.2015.
  */
-define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!WS.Data/Entity/Model'], function(Model) {
+define('js!SBIS3.CONTROLS.ActiveSelectable', [
+   "Core/Deferred",
+   "js!WS.Data/Entity/Model",
+   "Core/core-instance"
+], function( Deferred,Model, cInstance) {
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента
     * @mixin SBIS3.CONTROLS.ActiveSelectable
@@ -44,7 +48,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!WS.Data/Entity/Model'], functi
       },
 
       $constructor: function() {
-         if(!$ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.Selectable')) {
+         if(!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.Selectable')) {
             throw new Error('Selectable mixin is required');
          }
 
@@ -99,7 +103,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!WS.Data/Entity/Model'], functi
        */
       getSelectedItem: function(loadItem) {
          var
-            dResult = new $ws.proto.Deferred(),
+            dResult = new Deferred(),
             selItem, selKey, self = this;
 
          this._syncSelectedItem();

@@ -6,8 +6,9 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
    'js!SBIS3.CONTROLS.DateRangeChoosePickerMixin',
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.Utils.DateUtil',
+   'Core/helpers/date-helpers',
    'js!SBIS3.CONTROLS.Link'
-], function (CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, DateRangeChoosePickerMixin, PickerMixin, DateUtil) {
+], function (CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, DateRangeChoosePickerMixin, PickerMixin, DateUtil, dateHelpers) {
    'use strict';
 
    /**
@@ -122,7 +123,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
       },
 
       _updateValueView: function () {
-         var caption = $ws.helpers.getFormattedDateRange(this.getStartValue(), this.getEndValue(), {shortYear: true, contractToHalfYear: true, contractToQuarter: true});
+         var caption = dateHelpers.getFormattedDateRange(this.getStartValue(), this.getEndValue(), {shortYear: true, contractToHalfYear: true, contractToQuarter: true});
          if (this._options.type === 'normal') {
             this.getContainer().find(['.', this._cssRangeSlider.value].join('')).text(caption);
          } else {

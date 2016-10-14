@@ -1,8 +1,10 @@
-define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
+define('js!SBIS3.CONTROLS.DragNDropMixin', [
+   "Core/EventBus"
+], function( EventBus) {
    'use strict';
 
    if (typeof window !== 'undefined') {
-      var EventBusChannel = $ws.single.EventBus.channel('DragAndDropChannel');
+      var EventBusChannel = EventBus.channel('DragAndDropChannel');
 
       // Добавлены события для мультитач-девайсов
       // Для обработки используются уже существующие обработчики,
@@ -39,8 +41,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
       $constructor: function() {
          var self = this;
          self._publish('onDragMove');
-         $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMouseup', this.onMouseup, this);
-         $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMousemove', this.onMousemove, this);
+         EventBus.channel('DragAndDropChannel').subscribe('onMouseup', this.onMouseup, this);
+         EventBus.channel('DragAndDropChannel').subscribe('onMousemove', this.onMousemove, this);
       },
 
       preparePageXY: function(e) {

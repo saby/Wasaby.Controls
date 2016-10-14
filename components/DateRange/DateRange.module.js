@@ -233,7 +233,11 @@ define('js!SBIS3.CONTROLS.DateRange', [
       getEndDate: function() {
          // Временно делаем, что бы возвращаемая конечная дата содержала время 23:59:59.999
          var d = this._options.endValue;
-         return this._options.endValue? new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999): null;
+         if (d) {
+            d = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
+            d.setSQLSerializationMode(this._getSQLSerializationMode());
+         }
+         return d;
       }
    });
    return DateRange;

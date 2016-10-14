@@ -2,8 +2,9 @@ define('js!SBIS3.CONTROLS.Browser', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Browser',
    'js!SBIS3.CONTROLS.ComponentBinder',
-   'html!SBIS3.CONTROLS.Browser/resources/contentTpl'
-], function(CompoundControl, dotTplFn, ComponentBinder, contentTpl){
+   'html!SBIS3.CONTROLS.Browser/resources/contentTpl',
+   'Core/core-instance'
+], function(CompoundControl, dotTplFn, ComponentBinder, contentTpl, cInstance){
    'use strict';
 
    /**
@@ -22,8 +23,8 @@ define('js!SBIS3.CONTROLS.Browser', [
 
    var
       checkViewType = function(view) {
-         if (view && $ws.helpers.instanceOfModule(view, 'SBIS3.CONTROLS.ListView')) {
-            return $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
+         if (view && cInstance.instanceOfModule(view, 'SBIS3.CONTROLS.ListView')) {
+            return cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
          }
          else {
             throw new Error('Browser: Can\'t define linkedView');

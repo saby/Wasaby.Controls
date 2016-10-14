@@ -1,18 +1,25 @@
 define('js!SBIS3.CONTROLS.ComponentBinder',
     [
+       "Core/Abstract",
+       "Core/core-functions",
+       "Core/core-merge",
+       "Core/constants",
        'js!SBIS3.CONTROLS.HistoryController',
        'js!SBIS3.CONTROLS.SearchController',
        'js!SBIS3.CONTROLS.ScrollPagingController',
        'js!SBIS3.CONTROLS.PagingController',
        'js!SBIS3.CONTROLS.BreadCrumbsController',
       'js!SBIS3.CONTROLS.FilterHistoryController',
+       "Core/helpers/collection-helpers",
+       "Core/core-instance",
+       "Core/helpers/functional-helpers"
     ],
-    function (HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController) {
+    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, colHelpers, cInstance, fHelpers) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
     * @class SBIS3.CONTROLS.ComponentBinder
-    * @extends $ws.proto.Abstract
+    * @extends Core/Abstract
     * @author Крайнов Дмитрий Олегович
     * @public
     */
@@ -22,7 +29,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       if (gridView._options.multiselect) {
          gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
          if (hideCheckBoxes) {
-            gridView._container.toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isVisible());
+            gridView.toggleCheckboxes(operationPanel.isVisible());
             gridView.removeItemsSelectionAll();
          }
          if (gridView._options.startScrollColumn !== undefined) {
@@ -32,8 +39,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
    }
    function drawItemsCallback(operationPanel, view) {
       //TODO: После перехода на экшены, кнопки ни чего знать о view не будут, и этот костыль уйдёт.
-      $ws.helpers.forEach(operationPanel.getItemsInstances(), function(instance) {
-         if ($ws.helpers.instanceOfModule(instance, 'SBIS3.CONTROLS.OperationsMark')) {
+      colHelpers.forEach(operationPanel.getItemsInstances(), function(instance) {
+         if (cInstance.instanceOfModule(instance, 'SBIS3.CONTROLS.OperationsMark')) {
             instance.setLinkedView(view);
          } else {
             instance._options.linkedView = view;
@@ -45,10 +52,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
     * Контроллер, позволяющий связывать компоненты осуществляя базовое взаимодейтсие между ними
     * @author Крайнов Дмитрий
     * @class SBIS3.CONTROLS.ComponentBinder
-    * @extends $ws.proto.Abstract
+    * @extends Core/Abstract
     * @public
     */
-   var ComponentBinder = $ws.proto.Abstract.extend(/**@lends SBIS3.CONTROLS.ComponentBinder.prototype*/{
+   var ComponentBinder = cAbstract.extend(/**@lends SBIS3.CONTROLS.ComponentBinder.prototype*/{
       $protected : {
          _options: {
             /**
@@ -213,7 +220,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             noSaveFilters.push(searchParam);
          }
 
-         if($ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin')) {
+         if(cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin')) {
             noSaveFilters.push(view.getHierField());
          }
 
@@ -241,7 +248,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                view.setFilter(filter.viewFilter, true);
             }
          }
-         setTimeout($ws.helpers.forAliveOnly(function() {
+         setTimeout(fHelpers.forAliveOnly(function() {
             // Через timeout, чтобы можно было подписаться на соыбтие, уйдёт с серверным рендерингом
             browser._notifyOnFiltersReady();
          }, view), 0);
@@ -255,8 +262,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             view.setPageSize(historyLimit, true);
          }
 
+         var self = this;
          view.subscribe('onPageSizeChange', function(event, pageSize) {
-            this._pagingHistoryController.setHistory(pageSize, true);
+            self._pagingHistoryController.setHistory(pageSize, true);
          });
       },
 

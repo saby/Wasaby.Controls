@@ -1,7 +1,7 @@
 /**
  * Created by iv.cheremushkin on 23.01.2015.
  */
-define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], function(ContextMenu) {
+define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'Core/helpers/collection-helpers'], function(ContextMenu, colHelpers) {
    /**
     * Миксин, добавляющий поведение работы с выподающим меню
     * @mixin SBIS3.CONTROLS.MenuButtonMixin
@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             footerTpl: this._options.footerTpl
          };
          if (this._options.pickerConfig){
-            $ws.helpers.forEach(this._options.pickerConfig, function(val, key) {
+            colHelpers.forEach(this._options.pickerConfig, function(val, key) {
                menuconfig[key] = val;
             });
          }

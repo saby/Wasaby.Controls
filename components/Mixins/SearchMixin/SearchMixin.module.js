@@ -1,7 +1,7 @@
 /**
  * Created by cheremushkin iv on 19.01.2015.
  */
-define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
+define('js!SBIS3.CONTROLS.SearchMixin', ['Core/helpers/functional-helpers'], function(fHelpers) {
 
    /**
     * Миксин, добавляющий иконку
@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
             /**
              * @cfg {Number} временной интервал, который показывает с какой частотой бросать событие поиска
              */
-            searchDelay : 300
+            searchDelay : 500
          }
       },
 
@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
 
       _startSearch: function(text) {
          this._clearSearchDelay();
-         this._searchDelay = setTimeout($ws.helpers.forAliveOnly(function () {
+         this._searchDelay = setTimeout(fHelpers.forAliveOnly(function () {
             this._applySearch(text);
          }, this), this._options.searchDelay);
       },

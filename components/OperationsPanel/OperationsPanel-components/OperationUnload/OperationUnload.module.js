@@ -2,12 +2,14 @@
  * Created by ad.chistyakova on 08.04.2015.
  */
 define('js!SBIS3.CONTROLS.OperationUnload', [
-   'js!SBIS3.CONTROLS.PrintUnloadBase',
-   'js!SBIS3.CONTROLS.Utils.DataProcessor',
-   'js!WS.Data/Entity/Record',
-   'js!WS.Data/Adapter/Sbis',
-   'i18n!SBIS3.CONTROLS.OperationUnload'
-], function(PrintUnloadBase, Exporter, Record, SbisAdapter, rk) {
+   "Core/constants",
+   "Core/core-instance",
+   "js!SBIS3.CONTROLS.PrintUnloadBase",
+   "js!SBIS3.CONTROLS.Utils.DataProcessor",
+   "js!WS.Data/Entity/Record",
+   "js!WS.Data/Adapter/Sbis",
+   "i18n!SBIS3.CONTROLS.OperationUnload"
+], function( constants, cInstance, PrintUnloadBase, Exporter, Record, SbisAdapter) {
    //TODO Идея! нужно просто вызвать у view.export, он в свою очередь поднимает событие onUnload, а событие подхыватит выгрузчик. тогда в кнопке вообще только визуализация будет
    /**
     * Контрол для экспорта в Excel, PDF  подготовленных данных
@@ -110,7 +112,10 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             if (this._controlsId[itemId]) {
                items[i].title = rk('Список')  + extraText + rk('в', 'направление') + ' ' + this._controlsId[itemId].objectName;
                //TODO Возможно, когда-нибудь будет правильный метод для перерисовки внутренностей меню и внизу можно будет вызывать полную перерисовку picker без его уничтожения
-               this._picker._container.find('>[data-id="' + itemId + '"]').find('.controls-MenuItem__text').text( items[i].title );
+               // этот код не проверяет наличие _picker и вообще jQuery не есть хорошо
+               //this._picker._container.find('>[data-id="' + itemId + '"]').find('.controls-MenuItem__text').text( items[i].title );
+               // гарантированно создаем _picker, и ставим название через правильный платформенный метод
+               this.getItemInstance(itemId).setCaption(items[i].title);
             }
          }
          //this._picker._drawItems(); - это заенит строку выше с .text, когда заработает
@@ -189,7 +194,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                filter : view.getFilter(),
                offset: view._offset
             };
-         if ($ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin')) {
+         if (cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin')) {
             cfg.hierField = view.getHierField();
             cfg.openedPath = view.getOpenedPath();
             cfg.root = view.getCurrentRoot();
@@ -251,7 +256,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       },
       _isClientUnload : function() {
          //Для IOS всегда будем выгружать через сервер. Android прекрасно умеет выгружать
-         return !(this._getCurrentItem().get('serverSideExport') || $ws._const.browser.isMobileSafari);
+         return !(this._getCurrentItem().get('serverSideExport') || constants.browser.isMobileSafari);
       }
    });
 

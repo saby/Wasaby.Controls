@@ -56,6 +56,7 @@
 @link-text-alignment:                     center;
 @link-line-height:                        normal;
 @link-padding:                            0;
+@link-font-size:                          @font-basic-size;
 
 @link-hover-text-color:                   @primary-color;
 @link-hover-text-decoration:              underline;
@@ -585,7 +586,7 @@
 
 @switcher-do-horizontal-line-width:             @switcher-line-width;
 @switcher-do-vertical-line-width:               38px;
-@switcher-do-horizontal-line-color:             @gray-color;
+@switcher-do-horizontal-line-background-color:  @gray-color;
 @switcher-do-horizontal-disabled-line-color:    @gray-light-color;
 
 @switcher-do-horizontal-btn-color:              @switcher-btn-color;
@@ -1545,7 +1546,8 @@
 @list-view-actions-active-bg:                   @data-grid-row-hover-bg !important;
 @list-view-actions-bg:                          @data-grid-row-hover-bg;
 
-@list-view-items-toolbar-margin:                     0 0 1px 0;
+@list-view-items-toolbar-bottom:                     1px;
+@list-view-items-toolbar-right:                      0;
 @list-view-items-toolbar-zindex:                     10;
 @list-view-items-toolbar-box-shadow:                 -2px -2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-locked-box-shadow:          none;
@@ -1559,7 +1561,8 @@
 @list-view-items-toolbar-elements-margin:            0 4px;
 @list-view-items-toolbar-float:                      right;
 @list-view-items-toolbar-ipad-minHeight:             30px;
-@list-view-items-toolbar-margin-right-tile:          1px;
+@touch-mode-items-toolbar-icon-margin-top:           -24px;
+@list-view-items-toolbar-right-tile:                 1px;
 
 @list-view-actions-verAlign-margin:             8px 3px 0 0;
 @list-view-actions-verAlign-width:              20px;
@@ -1902,6 +1905,11 @@
 @DropdownList-shadow-hover:                   0 0 0 1px @DropdownList-border-color;
 
 @DropdownList-picker-bg:                              @white-color;
+@DropdownList-header-bg:                              @DropdownList-picker-bg;
+@DropdownList-picker-margin-top:                      -2px;
+@DropdownList-picker-head-margin:                     0;
+@DropdownList-picker-hor-revert-head-margin:          @DropdownList-picker-head-margin;
+@DropdownList-picker-padding:                         4px 0;
 @DropdownList-picker-border:                          2px solid @DropdownList-border-color;
 @DropdownList-picker-head-border-radius:              4px 4px 0 0;
 @DropdownList-picker-list-border-radius:              0 0 4px 4px;
@@ -1963,6 +1971,8 @@
 @controls-filterButton-area-text-color:           @blue-dark-color;
 @controls-filterButton-area-text-margin:          0 12px 0 0;
 
+@controls-filterButton-clear-margin-right:        0;
+
 @controls-filterButton-title-fontSize:            15px;
 @controls-filterButton-title-text-color:          #313e78;
 
@@ -1977,7 +1987,7 @@
 @controls-filterButton-history-maxHeight-overflow:hidden;
 @controls-filterButton-history-actions-right:     auto !important;
 @controls-filterButton-history-actions-left:      -4px !important;
-@controls-filterButton-history-actions-margin:    0;
+@controls-filterButton-history-actions-bottom:    0;
 
 @controls-filterButton-history-item-min-height:   24px;
 

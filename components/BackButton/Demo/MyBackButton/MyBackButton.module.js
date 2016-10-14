@@ -1,8 +1,10 @@
-define('js!SBIS3.CONTROLS.Demo.MyBackButton',
-   ['js!SBIS3.CORE.CompoundControl',
+define('js!SBIS3.CONTROLS.Demo.MyBackButton', [
+      'js!SBIS3.CORE.CompoundControl',
       'html!SBIS3.CONTROLS.Demo.MyBackButton',
-      'js!SBIS3.CONTROLS.BackButton'],
-   function(CompoundControl, dotTplFn) {
+      'js!SBIS3.CONTROLS.BackButton',
+      'Core/helpers/fast-control-helpers'
+   ],
+   function(CompoundControl, dotTplFn, BackButton, fcHelpers) {
       /**
        * SBIS3.CONTROLS.Demo.MyButton
        * @class SBIS3.CONTROLS.Demo.MyButton
@@ -22,7 +24,7 @@ define('js!SBIS3.CONTROLS.Demo.MyBackButton',
          init: function() {
             moduleClass.superclass.init.call(this);
             this.getChildControlByName("Button 1").subscribe("onActivated", function() {
-               $ws.helpers.question("Вернемся назад");
+               fcHelpers.question("Вернемся назад");
             });
          }
       });

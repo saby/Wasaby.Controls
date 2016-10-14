@@ -7,9 +7,11 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
       'js!SBIS3.CONTROLS.PickerMixin',
       'html!SBIS3.CONTROLS.FieldLinkItemsCollection',
       'html!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemTemplate',
-      'html!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemContentTemplate'
-   ],
-   function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate) {
+      'html!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemContentTemplate',
+      'Core/helpers/collection-helpers',
+      'Core/core-instance',
+      'Core/helpers/functional-helpers'
+   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, colHelpers, cInstance, fHelpers) {
 
       var PICKER_BORDER_WIDTH = 2;
 
@@ -26,7 +28,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
              tplArgs ={},
              res = [];
 
-         if(opts._preRenderValues.selectedItem && $ws.helpers.instanceOfModule(opts._preRenderValues.selectedItem, 'WS.Data/Entity/Model')) {
+         if(opts._preRenderValues.selectedItem && cInstance.instanceOfModule(opts._preRenderValues.selectedItem, 'WS.Data/Entity/Model')) {
             items = [opts._preRenderValues.selectedItem];
          } else if (opts._preRenderValues.selectedItems) {
             items = opts._preRenderValues.selectedItems.toArray();
@@ -36,7 +38,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             tplArgs = opts._buildTplArgs(opts);
             tplArgs.className = 'controls-ListView__item';
             tplArgs.itemTemplate = opts.itemTemplate;
-            $ws.helpers.forEach(items, function(item) {
+            colHelpers.forEach(items, function(item) {
                tplArgs.item = item;
                res.push(tplArgs.defaultItemTpl(tplArgs));
             })
@@ -139,7 +141,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             if(list) {
                /* RecordSet клонировать нельзя, иначе записи склонируются с ключевым полем
                   рекордсета, хотя оно могло быть изменено */
-               if(!$ws.helpers.instanceOfModule(list, 'WS.Data/Collection/RecordSet')) {
+               if(!cInstance.instanceOfModule(list, 'WS.Data/Collection/RecordSet')) {
                   list = list.clone();
                }
             } else {
@@ -155,12 +157,12 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          /* Контрол не должен принимать фокус ни по клику, ни по табу */
-         _initFocusCatch: $ws.helpers.nop,
-         canAcceptFocus: $ws.helpers.nop,
+         _initFocusCatch: fHelpers.nop,
+         canAcceptFocus: fHelpers.nop,
 
          _drawItemsCallback: function() {
             if(this.isPickerVisible() && !this.getItems().getCount()) {
-               this.hidePicker()
+               this.hidePicker();
             }
          },
 
@@ -175,6 +177,9 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             this._clearItems();
             FieldLinkItemsCollection.superclass.hidePicker.apply(this, arguments);
             this.redraw();
+            /* Если после скрытия пикера не перевести фокус на поле связи, то он улетит на body,
+               т.к. до это он был на пикере, который скрылся */
+            this._parentFieldLink.setActive(true);
          },
 
          _setPickerContent: function () {
@@ -187,7 +192,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             /* Зачем сделано:
                Не надо, чтобы пикер поля связи вызывал перерасчёт размеров,
                т.к. никаких расчётов при его показе не происходит, а просто отрисовываются элементы */
-            this._picker._notifyOnSizeChanged = $ws.helpers.nop;
+            this._picker._notifyOnSizeChanged = fHelpers.nop;
          },
 
          /**
@@ -208,6 +213,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                closeByExternalClick: true,
                targetPart: true,
                className: 'controls-FieldLink__picker',
+               activableByClick: false,
                verticalAlign: {
                   side: 'top'
                },
