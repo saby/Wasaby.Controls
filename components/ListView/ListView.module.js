@@ -1648,7 +1648,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._toggleEmptyData(false);
                      }.bind(this),
                      onChangeHeight: function(event, model) {
-                        if (this._getItemsToolbar().isToolbarLocking()) {
+                        if (this._options.editMode.indexOf('toolbar') !== -1 && this._getItemsToolbar().isToolbarLocking()) {
                            this._showItemsToolbar(this._getElementData(this._getElementByModel(model)));
                         }
                         this._notifyOnSizeChanged(true);
@@ -1893,6 +1893,9 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
 
                   }
+               });
+               this._itemsToolbar.getItemsActions().subscribe('onHideMenu', function() {
+                  self.setActive(true);
                });
             }
             return this._itemsToolbar;

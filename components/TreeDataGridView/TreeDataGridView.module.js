@@ -227,7 +227,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var width = this._container.width();
          //Если в браузере присутствует колонка с checkbox'ом, то нужно вычесть его ширину из общей ширины футера
          if (this._options.multiselect) {
-            width = width - this._colgroup.find('col:first').width();
+            //Нельзя смотреть ширину первой колонки, позвав метод width у элемента col (дочерний элемент colgroup)
+            //т.к. в 8 и 10 ie это приводит к тому, что начинает ехать ширина у остальных колонок
+            width = width - this._container.find('.controls-DataGridView__td__checkBox').first().width();
          }
          footers.outerWidth(width);
       },
@@ -324,7 +326,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             в .200 переделаем на маркер */
          if(arrowContainer.length === 2) {
             /* Для стандартного отображения учитываем паддинги и ширину икноки разворота папки */
-            if ((folderTitle[0].offsetWidth + HIER_WRAPPER_WIDTH + ADDITIONAL_LEVEL_OFFSET) > td[0].offsetWidth) {
+            if ((folderTitle[0].offsetWidth + td.find('.js-controls-TreeView__expand').outerWidth(true) + ADDITIONAL_LEVEL_OFFSET) > td[0].offsetWidth) {
                arrowContainer = arrowContainer[1];
             } else {
                arrowContainer = arrowContainer[0];

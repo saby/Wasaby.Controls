@@ -1014,6 +1014,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      }
                   }
                }
+               e.content = Sanitize(e.content, {validNodes: {img: false}});
                isYouTubeReady = self.addYouTubeVideo(e.content);
                if (isYouTubeReady) {
                   self._tinyEditor.fire('change');

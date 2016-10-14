@@ -13,8 +13,6 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
       'Core/helpers/functional-helpers'
    ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, colHelpers, cInstance, fHelpers) {
 
-      var PICKER_BORDER_WIDTH = 2;
-
       'use strict';
 
       /**
@@ -78,12 +76,6 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                case 'onItemActivate':
                   fieldLink._onItemActivateItemsCollection.call(fieldLink, arg);
                   break;
-               case 'onShowPicker':
-                  fieldLink._onShowPickerItemsCollection.call(fieldLink);
-                  break;
-               case 'onClosePicker':
-                  fieldLink._onClosePickerItemsCollection.call(fieldLink);
-                  break;
             }
          },
 
@@ -97,9 +89,9 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                self._parentFieldLink.setActive(true);
             }
 
-            itemContainer = $target.closest('.controls-ListView__item', this._container[0]);
+            itemContainer = $target.closest('.controls-FieldLink__item', this._container[0]);
             if(itemContainer.length) {
-               deleteAction = $target.hasClass('controls-FieldLink__linkItem-cross');
+               deleteAction = $target.hasClass('controls-FieldLink__item-cross');
                this._notify(deleteAction ? 'onCrossClick' : 'onItemActivate', itemContainer.data('id'));
             }
 
@@ -125,6 +117,14 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             return args;
          },
 
+         /**
+          * Для обратной совместимости, если шаблон задают как itemTemplate,
+          * то в качестве базового шаблона всё равно должен использоваться defaultItemTemplate
+          */
+         _getItemTemplate: function() {
+            return this._options._defaultItemTemplate;
+         },
+
          _setEnabled: function () {
             /* Т.к. при изменении состояния поля связи, для всех элементов появляются/исчезают крестики удаления,
                то надо вызывать перерисовку элементов, чтобы правильно проставилась ширина */
@@ -143,17 +143,13 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                   рекордсета, хотя оно могло быть изменено */
                if(!cInstance.instanceOfModule(list, 'WS.Data/Collection/RecordSet')) {
                   list = list.clone();
+               } else {
+                  list.setEventRaising(false, false);
                }
             } else {
                list = [];
             }
             FieldLinkItemsCollection.superclass.setItems.call(this, list);
-         },
-
-         _appendItemTemplate:function(item, targetContainer, itemInstance) {
-            if(this._parentFieldLink._checkItemBeforeDraw.call(this._parentFieldLink, itemInstance)) {
-               FieldLinkItemsCollection.superclass._appendItemTemplate.apply(this, arguments);
-            }
          },
 
          /* Контрол не должен принимать фокус ни по клику, ни по табу */
@@ -173,35 +169,17 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             this._picker.recalcPosition(true);
          },
 
-         hidePicker: function() {
-            this._clearItems();
-            FieldLinkItemsCollection.superclass.hidePicker.apply(this, arguments);
-            this.redraw();
-            /* Если после скрытия пикера не перевести фокус на поле связи, то он улетит на body,
-               т.к. до это он был на пикере, который скрылся */
-            this._parentFieldLink.setActive(true);
-         },
-
          _setPickerContent: function () {
             var pickerContainer = this._picker.getContainer(),
-                flWidth = this._parentFieldLink.getContainer()[0].offsetWidth - PICKER_BORDER_WIDTH;
-            pickerContainer.on('click', '.controls-ListView__item', this._onClickHandler.bind(this));
+                pickerWidth = this._parentFieldLink.getContainer()[0].offsetWidth - pickerContainer.outerWidth();
+            pickerContainer.on('click', '.controls-FieldLink__item', this._onClickHandler.bind(this));
             /* Не очень правильное решение, пикер может сам менять ширину, поэтому устанавливаю минимальну и максимальную */
-            pickerContainer[0].style.maxWidth = flWidth + 'px';
-            pickerContainer[0].style.minWidth = flWidth + 'px';
+            pickerContainer[0].style.maxWidth = pickerWidth + 'px';
+            pickerContainer[0].style.minWidth = pickerWidth + 'px';
             /* Зачем сделано:
                Не надо, чтобы пикер поля связи вызывал перерасчёт размеров,
                т.к. никаких расчётов при его показе не происходит, а просто отрисовываются элементы */
             this._picker._notifyOnSizeChanged = fHelpers.nop;
-         },
-
-         /**
-          * Т.к. полю связи нужно высчитывать размеры элементов,
-          * то включаем медленный режим отрисовки
-          * @private
-          */
-         _isSlowDrawing: function() {
-            return true;
          },
 
          _setPickerConfig: function () {
@@ -224,7 +202,6 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                   /* Надо сообщить о закрытии пикера полю связи, а так же перерисовать элементы, но только после закрытия */
                   onClose: function() {
                      self._notify('onClosePicker');
-                     self._clearItems();
                      setTimeout(self.redraw.bind(self), 0);
                   },
                   onShow: function() {
