@@ -103,7 +103,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 				actions.click(this.box)
             })
     });
-	
+	/*
 	 gemini.suite('with_dialogs', function (test) {
 
         test.setUrl('/regression_browser_online.html').skip('firefox').setCaptureElements('html')
@@ -124,7 +124,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 				actions.waitForElementToShow('.ws-window.ws-modal', 40000);
 				actions.wait(1000);
             })
-    });
+    });*/
 	
 	gemini.suite('lonf_filter_text', function (test) {
 

@@ -95,6 +95,9 @@
       padding: 6px 0 0 4px;
       box-sizing: border-box;
       word-wrap: break-word;
+      table {
+         margin-bottom: 5px;
+      }
    }
 }
 
@@ -214,6 +217,13 @@
          border: none;
       }
       border: 1px solid @fieldRichEditorBorderColor;
+   }
+}
+.ws-is-ie {
+   .controls-RichEditor__empty {
+      .controls-RichEditor__editorFrame.ws-basic-style {
+         background-color:rgba(0, 0, 0, 0);
+      }
    }
 }
 .ws-is-chrome {
