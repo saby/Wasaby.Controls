@@ -163,14 +163,14 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          }
          if (target !== null && this._options.hierField) {
             toMap = this._getParentsMap(target.getId());
-            for (var i = 0; i < movedItems.length; i++) {
-               key = '' + (cInstance.instanceOfModule(movedItems[i], 'WS.Data/Entity/Model') ? movedItems[i].getId() : movedItems[i]);
-               if ($.inArray(key, toMap) !== -1) {
-                  return false;
-               }
-               if (target !== null && !isChangeOrder && !target.get(this._options.hierField + '@')) {
-                  return false;
-               }
+         }
+         for (var i = 0; i < movedItems.length; i++) {
+            key = '' + (cInstance.instanceOfModule(movedItems[i], 'WS.Data/Entity/Model') ? movedItems[i].getId() : movedItems[i]);
+            if ($.inArray(key, toMap) !== -1) {
+               return false;
+            }
+            if (target !== null && !isChangeOrder && !target.get(this._options.hierField + '@')) {
+               return false;
             }
          }
 
@@ -200,15 +200,15 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             toMap = $.map(path.getChildItems(), function (elem) {
                return '' + elem;
             });
-            var record = recordSet.getRecordById(parentKey);
-            while (record) {
-               parentKey = '' + record.getId();
-               if ($.inArray(parentKey, toMap) === -1) {
-                  toMap.push(parentKey);
-               }
-               parentKey = recordSet.getParentKey(record, this._options.hierField);
-               record = recordSet.getRecordById(parentKey);
+         }
+         var record = recordSet.getRecordById(parentKey);
+         while (record) {
+            parentKey = '' + record.getId();
+            if ($.inArray(parentKey, toMap) === -1) {
+               toMap.push(parentKey);
             }
+            parentKey = record.get(this._options.hierField);
+            record = recordSet.getRecordById(parentKey);
          }
          return toMap;
       }
