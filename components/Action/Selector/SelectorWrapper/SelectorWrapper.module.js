@@ -9,10 +9,16 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
 
    /**
     * Интерфейс открывателя диалога/всплывающей панели
-    * @mixin SBIS3.CONTROLS.IDialogOpener
+    * @extend SBIS3.CORE.CompoundControl
     * @public
     * @author Крайнов Дмитрий
     */
+
+   var SELECTION_TYPE_CLASSES = {
+      leaf: 'controls-ListView__hideCheckBoxes-node',
+      node: 'controls-ListView__hideCheckBoxes-leaf',
+      all: ''
+   };
 
    var SelectorWrapper = CompoundControl.extend([], {
       _dotTplFn: dotTplFn,
@@ -37,7 +43,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
          var self = this;
 
          this.once('onInit', function() {
-            var childControl = this.getChildControlByName(this._options.linkedObjectName);
+            var childControl = this._getLinkedObject();
 
             this.subscribeTo(childControl, 'onSelectedItemsChange', function(event, array, diff) {
                var result = _private.getDefaultSelectionResult();
@@ -71,12 +77,21 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             });
 
             this.subscribeTo(childControl, 'onItemActivate', function(e, meta) {
-               if(!this.getMultiselect() || this._isEmptySelection()) {
-                  var result = _private.getDefaultSelectionResult();
-                  result.added.push(meta.item);
-                  self.sendCommand('selectorWrapperSelectionChanged', result);
-                  self.sendCommand('selectComplete');
+               var isBranch = meta.item.get(childControl.getProperty('hierField') + '@');
+
+               if(isBranch && _private.selectionType === 'node' || !isBranch && _private.selectionType === 'leaf') {
+                  return;
                }
+
+               if(childControl.getMultiselect() && !childControl._isEmptySelection()) {
+                  childControl.addItemsSelection([meta.id]);
+                  return;
+               }
+
+               var result = _private.getDefaultSelectionResult();
+               result.added.push(meta.item);
+               self.sendCommand('selectorWrapperSelectionChanged', result);
+               self.sendCommand('selectComplete');
             });
 
             this.sendCommand('selectorWrapperInitialized', this);
@@ -94,8 +109,21 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
          });
 
          if(keys.length) {
-            this.getChildControlByName(this._options.linkedObjectName).setSelectedKeys(keys);
+            this._getLinkedObject().setSelectedKeys(keys);
          }
+      },
+
+      setMultiselect: function(multiselect) {
+         this._getLinkedObject().setMultiselect(multiselect);
+      },
+
+      setSelectionType: function(selectionType) {
+         _private.selectionType = selectionType;
+         this._getLinkedObject().getContainer().addClass(SELECTION_TYPE_CLASSES[selectionType]);
+      },
+
+      _getLinkedObject: function() {
+         return this.getChildControlByName(this._options.linkedObjectName);
       }
    });
 
@@ -105,7 +133,8 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             added: [],
             removed: []
          }
-      }
+      },
+      selectionType: 'all'
    };
 
    return SelectorWrapper;

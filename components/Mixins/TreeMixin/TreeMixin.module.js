@@ -1,5 +1,19 @@
-define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
-   'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree', 'tmpl!SBIS3.CONTROLS.TreeMixin/resources/searchRender', 'js!WS.Data/Entity/Model', 'js!WS.Data/Relation/Hierarchy', 'js!WS.Data/Adapter/Sbis'], function (BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation) {
+define('js!SBIS3.CONTROLS.TreeMixin', [
+   "Core/core-functions",
+   "Core/core-merge",
+   "Core/CommandDispatcher",
+   "Core/Deferred",
+   "js!SBIS3.CONTROLS.BreadCrumbs",
+   "html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
+   "js!WS.Data/Display/Tree",
+   "tmpl!SBIS3.CONTROLS.TreeMixin/resources/searchRender",
+   "js!WS.Data/Entity/Model",
+   "js!WS.Data/Relation/Hierarchy",
+   "Core/helpers/collection-helpers",
+   "Core/core-instance",
+   "Core/helpers/functional-helpers",
+   "js!WS.Data/Adapter/Sbis"
+], function ( cFunctions, cMerge, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, colHelpers, cInstance, fHelpers) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -66,7 +80,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             records.push({
                tpl: cfg._defaultSearchRender,
                data: {
-                  path: $ws.core.clone(path),
+                  path: cFunctions.clone(path),
                   viewCfg: cfg._getSearchCfg(cfg)
                }
             });
@@ -116,24 +130,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
    getRecordsForRedraw = function(projection, cfg) {
       var
          records = [],
-         projectionFilter;
+         projectionFilter,
+         prevGroupId = undefined;
       if (cfg.expand || cfg.hierarchyViewMode) {
-         cfg._previousGroupBy = undefined;
          projection.setEventRaising(false);
          expandAllItems(projection, cfg);
          projection.setEventRaising(true);
 
-         if (cfg.hierarchyViewMode) {
-            records = searchProcessing(projection, cfg);
-         }
-         else {
-            projection.each(function(item) {
-               if (cfg.groupBy && cfg.easyGroup) {
-                  cfg._groupItemProcessing(records, item, cfg);
-               }
-               records.push(item);
-            });
-         }
+
       }
       else {
          /**
@@ -143,19 +147,24 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
           * https://inside.tensor.ru/opendoc.html?guid=6f1758f0-f45d-496b-a8fe-fde7390c92c7
           * @private
           */
-         var items = [];
          projectionFilter = resetFilterAndStopEventRaising.call(this, projection, false);
          applyExpandToItemsProjection.call(this, projection, cfg);
          restoreFilterAndRunEventRaising.call(this, projection, projectionFilter, false);
-         cfg._previousGroupBy = undefined;
-         projection.each(function(item) {
-            if (cfg.groupBy && cfg.easyGroup) {
-               cfg._groupItemProcessing(items, item, cfg);
-            }
-            items.push(item);
-         });
-         return items;
+      }
 
+      if (cfg.hierarchyViewMode) {
+         records = searchProcessing(projection, cfg);
+      }
+      else {
+         projection.each(function(item, index, group) {
+            if (!Object.isEmpty(cfg.groupBy) && cfg.easyGroup) {
+               if (prevGroupId != group) {
+                  cfg._groupItemProcessing(group, records, item, cfg);
+                  prevGroupId = group;
+               }
+            }
+            records.push(item);
+         });
       }
       return records;
    },
@@ -171,7 +180,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       var
           itemParent = itemProj.getParent(),
           itemParentContent = itemParent && itemParent.getContents();
-      return ($ws.helpers.instanceOfModule(itemParentContent, 'WS.Data/Entity/Record') && itemParentContent.get(this.hierField + '@') !== false && this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
+      return (cInstance.instanceOfModule(itemParentContent, 'WS.Data/Entity/Record') && itemParentContent.get(this.hierField + '@') !== false && this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
    },
    projectionFilterOnlyFolders = function(item, index, itemProj) {
       return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj, true);
@@ -526,7 +535,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          }
          this._previousRoot = this._options._curRoot;
          this.setFilter(filter, true);
-         $ws.single.CommandDispatcher.declareCommand(this, 'BreadCrumbsItemClick', this._breadCrumbsItemClick);
+         CommandDispatcher.declareCommand(this, 'BreadCrumbsItemClick', this._breadCrumbsItemClick);
       },
       /**
        * Устанавливает поле иерархии.
@@ -558,7 +567,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        */
       collapseNode: function(id) {
          this._getItemProjectionByItemId(id).setExpanded(false);
-         return new $ws.proto.Deferred.success();
+         return new Deferred.success();
       },
       /**
        * Закрыть или открыть узел.
@@ -572,7 +581,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       /**
        * Раскрывает узел.
        * @param {String, Number} id Идентификатор раскрываемого узла
-       * @returns {$ws.proto.Deferred}
+       * @returns {Deferred}
        * @see collapseNode
        * @see toggleNode
        */
@@ -580,7 +589,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          var
             item = this._getItemProjectionByItemId(id);
          if (item.isExpanded()) {
-            return $ws.proto.Deferred.success();
+            return Deferred.success();
          } else {
             if (this._options.singleExpand) {
                this._collapseNodes(this.getOpenedPath(), id);
@@ -595,7 +604,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       _loadNode: function(id) {
          if (this._dataSource && !this._loadedNodes[id] && this._options.partialyReload) {
             this._toggleIndicator(true);
-            this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), 0, this._limit);
+            this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), 0, this._limit);
             return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(function (list) {
                this._folderHasMore[id] = list.getMetaData().more;
                this._loadedNodes[id] = true;
@@ -605,7 +614,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                this._getItemProjectionByItemId(id).setLoaded(true);
             }.bind(this));
          } else {
-            return $ws.proto.Deferred.success();
+            return Deferred.success();
          }
       },
       /**
@@ -617,7 +626,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          if (this.isEnabled() && this._notify('onSearchPathClick', id) !== false ) {
 
 
-            var filter = $ws.core.merge(this.getFilter(), {
+            var filter = cMerge(this.getFilter(), {
                'Разворот' : 'Без разворота'
             });
             /*TODO решить с этим параметром*/
@@ -655,12 +664,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        */
       _createTreeFilter: function(key) {
          var
-            filter = $ws.core.clone(this.getFilter()) || {};
+            filter = cFunctions.clone(this.getFilter()) || {};
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
          }
-         this.setFilter($ws.core.clone(filter), true);
+         this.setFilter(cFunctions.clone(filter), true);
          filter[this._options.hierField] = key;
          return filter;
       },
@@ -670,7 +679,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        * @private
        */
       _collapseNodes: function(openedPath, ignoreKey) {
-         $ws.helpers.forEach(openedPath, function(value, key) {
+         colHelpers.forEach(openedPath, function(value, key) {
             if (!ignoreKey || key != ignoreKey) {
                this.collapseNode(key);
             }
@@ -723,6 +732,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             }
             return parentFn.apply(this, [id]);
          },
+         _isSlowDrawing: function(parentFnc, easy) {
+            if (this._options.hierarchyViewMode) {
+               return false;
+            }
+            else {
+               return parentFnc.call(this, easy);
+            }
+         },
          _canApplyGrouping: function(parentFn, projItem) {
             if (this._isSearchMode()) {
                return true;
@@ -751,7 +768,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             fillBranchesForRedraw(oldItems);
             for (idx in branches) {
                if (branches.hasOwnProperty(idx)) {
-                  if (this._isSlowDrawing()) {
+                  if (this._isSlowDrawing(this._options.easyGroup)) {
                      this.redrawItem(branches[idx].getContents(), branches[idx]);
                   }
                   else {
@@ -790,7 +807,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       },
       _getFilterForReload: function(filter, sorting, offset, limit, deepReload) {
          var
-            filter = $ws.core.clone(this._options.filter),
+            filter = cFunctions.clone(this._options.filter),
             hierField;
          if ((this._options.deepReload || deepReload) && !Object.isEmpty(this._options.openedPath)) {
             hierField = this._options.hierField;
@@ -811,9 +828,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          var
             self = this,
             filter;
-         this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit);
-         filter = id ? this._createTreeFilter(id) : this.getFilter();
-         this._loader = this._callQuery(filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
+         this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit);
+         this._loader = this._callQuery(this._createTreeFilter(id), this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
             self._notify('onDataMerge', dataSet);
@@ -881,7 +897,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
                });
             }
             var path = this._options._items.getMetaData().path,
-               hierarchy = $ws.core.clone(this._hier),
+               hierarchy = cFunctions.clone(this._hier),
                item;
             if (path) {
                hierarchy = this._getHierarchy(path, this._options._curRoot);
@@ -964,6 +980,81 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        */
       setRoot: function(root){
          this._options.root = root;
+      },
+      _searchRender: function(item, container){
+         this._drawBreadCrumbs(this._lastPath, item, container);
+         return container;
+      },
+      _drawBreadCrumbs:function(path, record, container){
+         if (path.length) {
+            var self = this,
+               elem,
+               groupBy = this._options.groupBy,
+               cfg,
+               td = container.find('td');
+            td.append(elem = $('<div style="width:'+ td.width() +'px"></div>'));
+            cfg = {
+               element : elem,
+               items: this._createPathItemsDS(path),
+               parent: this,
+               highlightEnabled: this._options.highlightEnabled,
+               highlightText: this._options.highlightText,
+               colorMarkEnabled: this._options.colorMarkEnabled,
+               colorField: this._options.colorField,
+               className : 'controls-BreadCrumbs__smallItems',
+               enable: this._options.allowEnterToFolder
+            };
+            if (groupBy.hasOwnProperty('breadCrumbsTpl')){
+               cfg.itemTemplate = groupBy.breadCrumbsTpl
+            }
+            var ps = new BreadCrumbs(cfg);
+            ps.once('onItemClick', function(event, id){
+               //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onBreadCrumbClick'), а вотом выполняется setCurrentRoot
+               event.setResult(false);
+               //TODO Выпилить в .100 проверку на задизабленность, ибо событие вообще не должно стрелять и мы сюда не попадем, если крошки задизаблены
+               if (this.isEnabled() && self._notify('onSearchPathClick', id) !== false ) {
+                  //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
+                  /*TODO для Алены. Временный фикс, потому что так удалось починить*/
+                  var filter = cMerge(self.getFilter(), {
+                     'Разворот' : 'Без разворота'
+                  });
+                  if (self._options.groupBy.field) {
+                     filter[self._options.groupBy.field] = undefined;
+                  }
+                  //Если бесконечный скролл был установлен в опции - вернем его
+                  self.setInfiniteScroll(self._options.infiniteScroll, true);
+                  self.setGroupBy({});
+                  self.setHighlightText('', false);
+                  self.setFilter(filter, true);
+                  self.setCurrentRoot(id);
+                  self.reload();
+               }
+            });
+            this._breadCrumbs.push(ps);
+         } else{
+            //если пути нет, то группировку надо бы убить...
+            container.remove();
+         }
+
+      },
+      _createPathItemsDS: function(pathRecords){
+         var dsItems = [],
+            parentID;
+         for (var i = 0; i < pathRecords.length; i++){
+            //TODO для SBISServiceSource в ключе находится массив
+            parentID = pathRecords[i].get(this._options.hierField);
+            dsItems.push({
+               id: pathRecords[i].getId(),
+               title: pathRecords[i].get(this._options.displayField)
+            });
+         }
+         return dsItems;
+      },
+      _destroySearchBreadCrumbs: function(){
+         for (var i =0; i < this._breadCrumbs.length; i++){
+            this._breadCrumbs[i].destroy();
+         }
+         this._breadCrumbs = [];
       },
       /**
        * Возвращает узел, относительно которого будет производиться выборка данных списочным методом.
@@ -1065,7 +1156,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       getParentKey: function (DataSet, item) {
          var
             itemParent = this._options._itemsProjection.getItemBySourceItem(item).getParent().getContents();
-         return $ws.helpers.instanceOfModule(itemParent, 'WS.Data/Entity/Record') ? itemParent.getId() : itemParent;
+         return cInstance.instanceOfModule(itemParent, 'WS.Data/Entity/Record') ? itemParent.getId() : itemParent;
       },
 
       _dropPageSave: function(){

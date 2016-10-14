@@ -1,64 +1,86 @@
-@FilterPanelBackgroundColor: #F9F9F9;
+@FilterPanelBackgroundColor: rgb(249, 249, 249);
 @FilterPanelBorderStyle: solid 3px #E4E4E4;
 @FilterPanelResetFilterButtonColor: #999999;
 
 .controls-FilterPanel {
    box-sizing: border-box;
    overflow: hidden;
+   background-color: @FilterPanelBackgroundColor;
+   border-right: @FilterPanelBorderStyle;
+   .controls-FilterPanel__headContainer {
+      .controls-FilterPanel__resetFilter {
+         display: block;
+      }
+   }
+   .controls-FilterPanel__contentContainer {
+      height: ~"calc(100% - 48px)";
+      display: block;
+      .controls-ScrollContainer {
+         height: 100%;
+      }
+   }
    &.controls-FilterPanel_collapsed {
       display: none;
    }
    .controls-FilterPanel__headContainer {
       position: relative;
       height: 48px;
-      .controls-FilterPanel__switchButton {
+      .controls-FilterPanel__hideFilterButton {
          height: 24px;
          width: 35px;
          cursor: pointer;
-         right: 0;
+         left: 0;
          top: 12px;
          position: absolute;
-         background: @FilterPanelButtonHide;
-         &:hover {
-            background: @FilterPanelButtonHoverHide;
-         }
       }
       .controls-FilterPanel__resetFilter {
          color: @FilterPanelResetFilterButtonColor;
-         left: 8px;
+         &.ws-disabled {
+            color: #ccc;
+         }
+         right: 8px;
          top: 12px;
          position: absolute;
       }
    }
-   &.controls-FilterPanel_expanded {
-      width: auto;
-      background-color: @FilterPanelBackgroundColor;
-      &.controls-FilterPanel_align-left {
-         border-right: @FilterPanelBorderStyle;
-      }
-      &.controls-FilterPanel_align-right {
-         border-left: @FilterPanelBorderStyle;
-      }
+   &.controls-FilterPanel_align-right {
+      border-left: @FilterPanelBorderStyle;
+      border-right: none;
       .controls-FilterPanel__headContainer {
-         .controls-FilterPanel__resetFilter {
-            display: block;
+         .controls-FilterPanel__hideFilterButton {
+            right: 0;
+            left: auto;
          }
-      }
-      .controls-FilterPanel__contentContainer {
-         display: block;
+         .controls-FilterPanel__resetFilter {
+            left: 8px;
+            right: auto;
+         }
       }
    }
    .controls-Spoiler {
       .controls-Spoiler__title {
          .controls-Spoiler__title-caption {
-            .controls-Spoilter__title-caption-text {
-               max-width: calc(100% ~"-" 32px);
-            }
-            .controls-Spoiler__resetFilterField {
-               padding: 0 8px;
-               vertical-align: baseline;
+            .controls-Spoiler__title-caption-blur:before {
+               background: linear-gradient(to right, rgba(249, 249, 249, 0), rgba(249, 249, 249, 1));
             }
          }
+         .controls-Spoiler__resetFilterField {
+            float: left;
+            padding: 6px 4px 0 0;
+         }
       }
+   }
+   .controls-FilterPanelItem__withSeparator {
+      &:before {
+         height: 1px;
+         position: absolute;
+         left: 0;
+         right: 0;
+         top: -15px;
+         background-color: #EAEAEA;
+         content: ' ';
+      }
+      position: relative;
+      margin-top: 30px;
    }
 }

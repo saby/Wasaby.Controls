@@ -1,7 +1,7 @@
 /**
  * Created by as.avramenko on 07.09.2016.
  */
-define('js!SBIS3.CONTROLS.Expandable', [], function() {
+define('js!SBIS3.CONTROLS.Expandable', ['Core/CommandDispatcher'], function(CommandDispatcher) {
 
    /**
     * Миксин, добавляющий поведение хранения состояния развернутости
@@ -50,6 +50,7 @@ define('js!SBIS3.CONTROLS.Expandable', [], function() {
 
       $constructor: function() {
          this._publish('onExpandedChange');
+         CommandDispatcher.declareCommand(this, 'toggleExpanded', this.toggleExpanded);
       },
       /**
        * Устанавливает состояние развернутости.

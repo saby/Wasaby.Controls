@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction', [
        * @class SBIS3.CONTROLS.Action.SelectorAction
        * @public
        * @extends SBIS3.CONTROLS.Action.OpenDialog
+       * @demo SBIS3.CONTROLS.Demo.DemoSelectorAction
        * @author Герасимов Александр Максимович
        */
        var SelectorAction = Action.extend([DialogMixin], {
@@ -22,7 +23,9 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction', [
                           this.sendCommand('close', meta);
                        }
                     },
-                    selectedItems: metaConfig.selectedItems
+                    selectedItems: metaConfig.selectedItems,
+                    multiselect: metaConfig.multiselect,
+                    selectionType: metaConfig.selectionType
                  };
 
              return сMerge(cfg, chooseCfg);

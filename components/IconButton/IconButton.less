@@ -79,38 +79,46 @@
    &.ws-area{
       height: auto;
    }
-   &.controls-IconButton_filter-left, &.controls-IconButton_filter-right {
-      height: 24px;
-      width: 35px;
-      cursor: pointer;
-      display: inline-block;
-   }
-   &.controls-IconButton_filter-left {
-      background: @FilterPanelButtonLeft;
-      &:hover {
-         background: @FilterPanelButtonHoverLeft;
+   &.controls-IconButton_filter {
+      &-left-open, &-left-close, &-right-open, &-right-close {
+         height: 24px;
+         width: 35px;
+         cursor: pointer;
+         display: inline-block;
       }
-   }
-   &.controls-IconButton_filter-right {
-      background: @FilterPanelButtonRight;
-      &:hover {
-         background: @FilterPanelButtonHoverRight;
+      &-left-close {
+         background: @FilterPanelButtonLeftClose;
+         &:hover {
+            background: @FilterPanelButtonHoverLeftClose;
+         }
+      }
+      &-right-close {
+         background: @FilterPanelButtonRightClose;
+         &:hover {
+            background: @FilterPanelButtonHoverRightClose;
+         }
+      }
+      &-left-open {
+         background: @FilterPanelButtonLeftOpen;
+         &:hover {
+            background: @FilterPanelButtonHoverLeftOpen;
+         }
+      }
+      &-right-open {
+         background: @FilterPanelButtonRightOpen;
+         &:hover {
+            background: @FilterPanelButtonHoverRightOpen;
+         }
       }
    }
 }
 .ws-is-desktop-platform {
   .controls-IconButton:not(.ws-disabled) {
     &:hover {
-      color: @blue-dark-color !important;
-      &.icon-error {
-        color: @icon-color-error !important;
+      &.icon-primary {
+        color: @blue-dark-color !important;
       }
-      &.icon-done {
-        color: @icon-color-done !important;
-      }
-
     }
-
     &.controls-IconButton__round-border, &.controls-IconButton__round-border-24, &.controls-IconButton__round-border-32{
       .round-button-hover-mixin();
     }

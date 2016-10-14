@@ -1,104 +1,96 @@
 .controls-FilterPanelChooser {
 
-   .controls-Scroll__container {
-      overflow: hidden;
+   .controls-ListView {
+      .controls-ListView__itemsContainer {
+         .controls-ListView__item {
+            cursor: pointer;
+            padding: 6px 30px 6px 24px;
+            background-color: #F9F9F9;
 
-      .controls-ListView {
-         .controls-ListView__itemsContainer {
-            .controls-ListView__item {
-               cursor: pointer;
-               padding: 6px 30px 6px 20px;
+            .controls-ListView__itemCheckBox {
+               position: absolute;
+               left: 4px;
+               top: 6px;
+            }
+
+            .controls-FilterPanelChooser__count {
+               display: inline-block;
+               position: absolute;
+               top: 6px;
+               right: 0;
+               padding-right: 8px;
+               color: #8991A9;
                background-color: #F9F9F9;
+               box-shadow: -12px 0 5px #F9F9F9;
+            }
 
-               .controls-ListView__itemCheckBox {
+            .controls-FilterPanelChooser__title {
+               color: #8991A9;
+               max-height: 54px;
+               overflow: hidden;
+               position: relative;
+
+               .controls-FilterPanelChooser__titleShadow {
                   position: absolute;
-                  left: 2px;
-                  top: 6px;
+                  right: 0;
+                  top: 36px;
+                  width: 15px;
+                  height: 18px;
+                  box-shadow: -10px 0 10px #F9F9F9;
+                  background-color: #F9F9F9;
                }
+            }
+
+            &.controls-ListView__hoveredItem {
+               background-color: #EAECEE;
 
                .controls-FilterPanelChooser__count {
-                  display: inline-block;
-                  position: absolute;
-                  top: 6px;
-                  right: 0;
-                  padding-right: 8px;
-                  color: #8991A9;
-                  background-color: #F9F9F9;
-                  box-shadow: -12px 0 5px #F9F9F9;
+                  background-color: #EAECEE;
+                  box-shadow: -12px 0 5px #EAECEE;
                }
 
                .controls-FilterPanelChooser__title {
-                  color: #8991A9;
-                  max-height: 54px;
-                  overflow: hidden;
-                  position: relative;
-
                   .controls-FilterPanelChooser__titleShadow {
-                     position: absolute;
-                     right: 0;
-                     top: 36px;
-                     width: 15px;
-                     height: 18px;
-                     box-shadow: -10px 0 10px #F9F9F9;
-                     background-color: #F9F9F9;
+                     box-shadow: -10px 0 10px #EAECEE;
+                     background-color: #EAECEE;
                   }
                }
 
-               &.controls-ListView__hoveredItem {
+               &.controls-ListView__item__multiSelected {
                   background-color: #EAECEE;
 
                   .controls-FilterPanelChooser__count {
                      background-color: #EAECEE;
                      box-shadow: -12px 0 5px #EAECEE;
                   }
-
                   .controls-FilterPanelChooser__title {
                      .controls-FilterPanelChooser__titleShadow {
                         box-shadow: -10px 0 10px #EAECEE;
                         background-color: #EAECEE;
                      }
                   }
-
-                  &.controls-ListView__item__multiSelected {
-                     background-color: #EAECEE;
-
-                     .controls-FilterPanelChooser__count {
-                        background-color: #EAECEE;
-                        box-shadow: -12px 0 5px #EAECEE;
-                     }
-                     .controls-FilterPanelChooser__title {
-                        .controls-FilterPanelChooser__titleShadow {
-                           box-shadow: -10px 0 10px #EAECEE;
-                           background-color: #EAECEE;
-                        }
-                     }
-                  }
                }
-
-               &.controls-ListView__item__multiSelected {
-                  background-color: #F3F3F3;
-
-                  .controls-FilterPanelChooser__title {
-                     color: #000000;
-
-                     .controls-FilterPanelChooser__titleShadow {
-                        box-shadow: -10px 0 10px #F3F3F3;
-                        background-color: #F3F3F3;
-                     }
-                  }
-
-                  .controls-FilterPanelChooser__count {
-                     background-color: #F3F3F3;
-                     box-shadow: -12px 0 5px #F3F3F3;
-                  }
-               }
-
             }
-         }
-      }
 
-      .mCSB_scrollTools {
-         width: 8px;
+            &.controls-ListView__item__multiSelected {
+               background-color: #F3F3F3;
+
+               .controls-FilterPanelChooser__title {
+                  color: #000000;
+
+                  .controls-FilterPanelChooser__titleShadow {
+                     box-shadow: -10px 0 10px #F3F3F3;
+                     background-color: #F3F3F3;
+                  }
+               }
+
+               .controls-FilterPanelChooser__count {
+                  background-color: #F3F3F3;
+                  box-shadow: -12px 0 5px #F3F3F3;
+               }
+            }
+
+         }
       }
    }
 
@@ -115,6 +107,7 @@
 
       .controls-FilterPanelChooser__dictionaryButton, .controls-FilterPanelChooser__allButton {
          line-height: 30px;
+         font-size: 12px;
          &, &:hover {
             color: #8991A9;
          }

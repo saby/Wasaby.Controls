@@ -1,8 +1,14 @@
 define('js!SBIS3.CONTROLS.TreeCompositeView', [
-   'js!SBIS3.CONTROLS.TreeDataGridView',
-   'js!SBIS3.CONTROLS.CompositeViewMixin',
-   'html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl'
-], function(TreeDataGridView, CompositeViewMixin, folderTpl) {
+   "Core/core-functions",
+   "Core/constants",
+   "Core/Deferred",
+   "Core/ParallelDeferred",
+   "js!SBIS3.CONTROLS.TreeDataGridView",
+   "js!SBIS3.CONTROLS.CompositeViewMixin",
+   "html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl",
+   "Core/helpers/collection-helpers",
+   "Core/helpers/fast-control-helpers"
+], function( cFunctions, constants, Deferred, ParallelDeferred, TreeDataGridView, CompositeViewMixin, folderTpl, colHelpers, fcHelpers) {
 
    'use strict';
 
@@ -124,7 +130,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                      else {
                         var src;
                         if (!item.get(this._options.imageField)) {
-                           src = item.get(this._options.hierField + '@') ? $ws._const.resourceRoot + 'SBIS3.CONTROLS/themes/online/img/defaultFolder.png' : $ws._const.resourceRoot + 'SBIS3.CONTROLS/themes/online/img/defaultItem.png';
+                           src = item.get(this._options.hierField + '@') ? constants.resourceRoot + 'SBIS3.CONTROLS/themes/online/img/defaultFolder.png' : constants.resourceRoot + 'SBIS3.CONTROLS/themes/online/img/defaultItem.png';
                         } else {
                            src = '{{=it.item.get(it.image)}}';
                         }
@@ -183,6 +189,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          var
             self = this,
             filter,
+            deferred,
             currentDataSet,
             currentRecord,
             needRedraw,
@@ -192,6 +199,8 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             recordsGroup = {},
             branchesData = {},
             container = this.getContainer(),
+            // а вдруг будет корень 0 нельзя делать ||
+            curRoot = self._options._curRoot === undefined ? null : self._options._curRoot,
             //Метод формирования полного списка зависимостей
             findDependentRecords = function(key, parentKey) {
                var
@@ -245,7 +254,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             removeAndRedraw = function(row, recordOffset) {
                //Если есть дочерние, то для каждого из них тоже зовем removeAndRedraw
                if (row.childs && row.childs.length) {
-                  $ws.helpers.forEach(row.childs, function(childRow, idx) {
+                  colHelpers.forEach(row.childs, function(childRow, idx) {
                      removeAndRedraw(childRow, row.childs.length - idx);
                   });
                   //Если не нужна перерисовка, то просто удалим строку
@@ -265,7 +274,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             //Получаем данные ветки (ищем в branchesData или запрашиваем с БЛ)
             getBranch = function(branchId) {
                if (branchesData[branchId]) {
-                  return new $ws.proto.Deferred()
+                  return new Deferred()
                      .addCallback(function() {
                         return branchesData[branchId];
                      })
@@ -274,7 +283,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                   filter[self._options.hierField] = branchId === 'null' ? null : branchId;
                   var limit;
                   //проверяем, является ли обновляемый узел корневым, если да, обновляем записи до подгруженной записи (_infiniteScrollOffset)
-                  if ( String(self._options._curRoot) == branchId  &&  self._infiniteScrollOffset) { // т.к. null != "null", _infiniteScrollOffset проверяем на случай, если нет подгрузки по скроллу
+                  if ( String(curRoot) == branchId  &&  self._infiniteScrollOffset) { // т.к. null != "null", _infiniteScrollOffset проверяем на случай, если нет подгрузки по скроллу
                      limit = self._infiniteScrollOffset + self._options.pageSize;
                   } else if (self._limit !== undefined) {
                      limit = (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit;
@@ -287,12 +296,12 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                      });
                }
             };
-         $ws.helpers.toggleIndicator(true);
+         fcHelpers.toggleIndicator(true);
          if (items) {
             currentDataSet = this.getItems();
-            filter = $ws.core.clone(this.getFilter());
+            filter = cFunctions.clone(this.getFilter());
             //Группируем записи по веткам (чтобы как можно меньше запросов делать)
-            $ws.helpers.forEach(items, function(id) {
+            colHelpers.forEach(items, function(id) {
                item = this._options._items.getRecordById(id);
                if (item) {
                   parentBranchId = this.getParentKey(undefined, this._options._items.getRecordById(id));
@@ -303,26 +312,31 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                }
             }, this);
             if (Object.isEmpty(recordsGroup)) {
-               $ws.helpers.toggleIndicator(false);
+               fcHelpers.toggleIndicator(false);
             } else {
-               $ws.helpers.forEach(recordsGroup, function(branch, branchId) {
+               deferred = new ParallelDeferred();
+               colHelpers.forEach(recordsGroup, function(branch, branchId) {
                   //Загружаем содержимое веток
-                  getBranch(branchId)
+                  deferred.push(getBranch(branchId)
                      .addCallback(function(branchDataSet) {
-                        $ws.helpers.forEach(branch, function(record, idx) {
+                        colHelpers.forEach(branch, function(record, idx) {
                            currentRecord = currentDataSet.getRecordById(record);
                            dependentRecords = findDependentRecords(record, branchId);
                            needRedraw = !!branchDataSet.getRecordById(record);
                            //Удаляем то, что надо удалить и перерисовываем то, что надо перерисовать
                            removeAndRedraw(dependentRecords, branch.length - idx);
-                        })
+                        });
+                        if(String(curRoot) == branchId)
+                           self.getItems().setMetaData(branchDataSet.getMetaData());
                      })
                      .addBoth(function() {
-                        $ws.helpers.toggleIndicator(false);
-                     });
+                        fcHelpers.toggleIndicator(false);
+                     }));
                });
+               return deferred.done().getResult();
             }
          }
+         return Deferred.success();
       },
       //Переопределим метод определения направления изменения порядкового номера, так как если элементы отображаются в плиточном режиме,
       //нужно подвести DragNDrop объект не к верхней(нижней) части элемента, а к левой(правой)
@@ -333,6 +347,14 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             }
          } else {
             return TreeCompositeView.superclass._getDirectionOrderChange.apply(this, arguments);
+         }
+      },
+
+      _reloadViewAfterDelete: function(idArray) {
+         if (this.getViewMode() === 'table') {
+            return this.partialyReload(idArray);
+         } else {
+            return TreeCompositeView.superclass._reloadViewAfterDelete.apply(this, arguments);
          }
       }
 

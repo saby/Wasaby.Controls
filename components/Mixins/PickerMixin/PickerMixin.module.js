@@ -1,4 +1,8 @@
-define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], function(FloatArea) {
+define('js!SBIS3.CONTROLS.PickerMixin', [
+   "Core/constants",
+   "js!SBIS3.CONTROLS.FloatArea",
+   "Core/helpers/collection-helpers"
+], function( constants,FloatArea, colHelpers) {
    /**
     * Миксин, умеющий отображать выдающий вниз блок.
     * Задаётся контент и методы, позволяющие открывать, закрывать блок.
@@ -52,7 +56,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
          }
 
          // чтобы не нарушать выравнивание по базовой линии
-         $ws._const.$body.append(pickerContainer);
+         constants.$body.append(pickerContainer);
          self._picker = self._createPicker(pickerContainer);
          self._picker
              .subscribe('onAlignmentChange', function(event, alignment){
@@ -79,11 +83,11 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
              parent = this;
 
          if (this._options.pickerConfig){
-            $ws.helpers.forEach(this._options.pickerConfig, function(val, key) {
+            colHelpers.forEach(this._options.pickerConfig, function(val, key) {
                /* Нельзя перебивать обработчики из оригинального конфига, иначе может поломаться логика,
                   просто добавляем к оригинальным обработчикам пользовательские */
                if(key === 'handlers' && pickerConfig[key]) {
-                  $ws.helpers.forEach(val, function(handlerVal, handlerKey) {
+                  colHelpers.forEach(val, function(handlerVal, handlerKey) {
                      if(pickerConfig[key][handlerKey]) {
                         pickerConfig[key][handlerKey] = [pickerConfig[key][handlerKey]];
                         pickerConfig[key][handlerKey].push(handlerVal);
@@ -95,7 +99,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
             });
          }
 
-         pickerConfig.parent = pickerConfig.parent || parent;
+         pickerConfig.parent = pickerConfig.parent !== undefined ? pickerConfig.parent : parent;
          pickerConfig.opener = this;
          pickerConfig.context = pickerConfig.context || (parent && parent.getLinkedContext());
          pickerConfig.target = pickerConfig.target || this._container;

@@ -2,9 +2,10 @@
 define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'js!SBIS3.CONTROLS.Action.List.Move',
       'js!SBIS3.CONTROLS.Action.List.HierarchicalMoveMixin',
-      'js!SBIS3.CONTROLS.Action.DialogMixin'
+      'js!SBIS3.CONTROLS.Action.DialogMixin',
+      'Core/helpers/string-helpers'
    ],
-   function (ListMove, HierarchicalMoveMixin, DialogMixin) {
+   function (ListMove, HierarchicalMoveMixin, DialogMixin, strHelpers) {
       'use strict';
       /**
        * Действие перемещения по иерархии с выбором места перемещения через диалог.
@@ -92,7 +93,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             meta = meta || {};
             var records = meta.records || this.getSelectedItems();
             this._opendEditComponent({
-               title: rk('Перенести') + ' ' + records.length + $ws.helpers.wordCaseByNumber(records.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
+               title: rk('Перенести') + ' ' + records.length + strHelpers.wordCaseByNumber(records.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
                cssClassName: 'controls-moveDialog',
                opener: this._options.linkedObject,
                records: records

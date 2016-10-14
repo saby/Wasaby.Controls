@@ -55,9 +55,21 @@ input[type="reset"]::-moz-focus-inner {
 }
 
 /* HOVER styles */
-.icon-hover,
-.action-hover:hover {
+.icon-hover{
   color: @icon-color-hover !important;
+}
+
+.gray-color {
+  color: @gray-color;
+}
+
+.ws-is-desktop-platform {
+  .action-hover:not(.ws-disabled):hover {
+    color: @icon-color-hover !important;
+  }
+  .gray-color:not(.ws-disabled):hover {
+    color: @gray-color;
+  }
 }
 
 .ws-disabled {
@@ -65,3 +77,4 @@ input[type="reset"]::-moz-focus-inner {
     color: @icon-color-disabled !important;
   }
 }
+

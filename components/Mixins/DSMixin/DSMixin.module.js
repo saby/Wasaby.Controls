@@ -1,15 +1,22 @@
 define('js!SBIS3.CONTROLS.DSMixin', [
-   'js!WS.Data/Source/Memory',
-   'js!WS.Data/Source/SbisService',
-   'js!WS.Data/Collection/RecordSet',
-   'js!WS.Data/Query/Query',
-   'js!SBIS3.CORE.MarkupTransformer',
-   'js!WS.Data/Collection/ObservableList',
-   'js!WS.Data/Display/Display',
-   'js!WS.Data/Collection/IBind',
-   'js!WS.Data/Display/Collection',
-   'js!SBIS3.CONTROLS.Utils.TemplateUtil'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil) {
+   "Core/core-functions",
+   "Core/Deferred",
+   "Core/IoC",
+   "Core/ConsoleLogger",
+   "js!WS.Data/Source/Memory",
+   "js!WS.Data/Source/SbisService",
+   "js!WS.Data/Collection/RecordSet",
+   "js!WS.Data/Query/Query",
+   "js!SBIS3.CORE.MarkupTransformer",
+   "js!WS.Data/Collection/ObservableList",
+   "js!WS.Data/Display/Display",
+   "js!WS.Data/Collection/IBind",
+   "js!WS.Data/Display/Collection",
+   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
+   "Core/core-instance",
+   "Core/helpers/functional-helpers",
+   "Core/helpers/fast-control-helpers"
+], function ( cFunctions, Deferred, IoC, ConsoleLogger,MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, cInstance, fHelpers, fcHelpers) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -513,20 +520,20 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var keyField = this._options.keyField;
 
          if (!keyField) {
-            $ws.single.ioc.resolve('ILogger').log('Option keyField is required');
+            IoC.resolve('ILogger').log('Option keyField is required');
          }
 
          if (sourceOpt) {
             this._dataSource = this._prepareSource(sourceOpt);
             this._items = null;
          } else if (itemsOpt) {
-            if ($ws.helpers.instanceOfModule(itemsOpt, 'WS.Data/Display/Display')) {
+            if (cInstance.instanceOfModule(itemsOpt, 'WS.Data/Display/Display')) {
                this._itemsProjection = itemsOpt;
                this._items = this._convertItems(this._itemsProjection.getCollection());
                this._setItemsEventHandlers();
                this._notify('onItemsReady');
                this._itemsReadyCallback();
-            } else if($ws.helpers.instanceOfModule(itemsOpt, 'WS.Data/Collection/RecordSet')) {
+            } else if(cInstance.instanceOfModule(itemsOpt, 'WS.Data/Collection/RecordSet')) {
                this._processingData(itemsOpt);
             } else if (itemsOpt instanceof Array) {
                /*TODO уменьшаем количество ошибок с key*/
@@ -574,7 +581,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             });
          }
 
-         if (!$ws.helpers.instanceOfMixin(items, 'WS.Data/Collection/IEnumerable')) {
+         if (!cInstance.instanceOfMixin(items, 'WS.Data/Collection/IEnumerable')) {
             throw new Error('Items should implement WS.Data/Collection/IEnumerable');
          }
 
@@ -588,7 +595,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                result = sourceOpt.call(this);
                break;
             case 'object':
-               if ($ws.helpers.instanceOfMixin(sourceOpt, 'WS.Data/Source/ISource')) {
+               if (cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ISource')) {
                   result = sourceOpt;
                }
                if ('module' in sourceOpt) {
@@ -698,7 +705,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       /*TODO поддержка старого API*/
       getDataSet: function(compatibilityMode) {
          if(!compatibilityMode) {
-            $ws.single.ioc.resolve('ILogger').log('Получение DataSet явялется устаревшим функционалом используйте getItems()');
+            IoC.resolve('ILogger').log('Получение DataSet явялется устаревшим функционалом используйте getItems()');
          }
          return this._dataSet;
       },
@@ -755,7 +762,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              /*класс для автотестов*/
              this._container.removeClass('controls-ListView__dataLoaded');
              def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit)
-                .addCallback($ws.helpers.forAliveOnly(function (list) {
+                .addCallback(fHelpers.forAliveOnly(function (list) {
                     var hasItems = !!this._items;
 
                     self._toggleIndicator(false);
@@ -778,11 +785,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                     //self._notify('onBeforeRedraw');
                     return list;
                 }, self))
-                .addErrback($ws.helpers.forAliveOnly(function (error) {
+                .addErrback(fHelpers.forAliveOnly(function (error) {
                    if (!error.canceled) {
                       self._toggleIndicator(false);
                       if (self._notify('onDataLoadError', error) !== true) {
-                         $ws.helpers.message(error.message.toString().replace('Error: ', ''));
+                         fcHelpers.message(error.message.toString().replace('Error: ', ''));
                       }
                    }
                    return error;
@@ -792,7 +799,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              if (this._items) {
                 this._redraw();
              }
-             def = new $ws.proto.Deferred();
+             def = new Deferred();
              def.callback();
           }
 
@@ -940,7 +947,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * @private
        */
       _isLoading: function () {
-         $ws.single.ioc.resolve('ILogger').log('ListView', 'Метод _isLoading() будет удален в 3.7.4 используйте isLoading()');
+         IoC.resolve('ILogger').log('ListView', 'Метод _isLoading() будет удален в 3.7.4 используйте isLoading()');
          return this.isLoading();
       },
       isLoading: function () {
@@ -1182,7 +1189,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var
                groupBy = this._options.groupBy,
                tplOptions = {
-                  columns : $ws.core.clone(this._options.columns || []),
+                  columns : cFunctions.clone(this._options.columns || []),
                   multiselect : this._options.multiselect,
                   hierField: this._options.hierField + '@'
                },

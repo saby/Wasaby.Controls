@@ -28,17 +28,6 @@ define('js!SBIS3.CONTROLS.DateRange', [
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
-            pickerConfig: {
-               corner: 'tl',
-               horizontalAlign: {
-                  side: 'left',
-                  offset: -133
-               },
-               verticalAlign: {
-                  side: 'top',
-                  offset: -11
-               }
-            },
             /**
              * @cfg {Date|String} Начальная дата диапазона
              * При задании задается вместе с endDate, либо обе даты остаются не заданными
@@ -107,6 +96,20 @@ define('js!SBIS3.CONTROLS.DateRange', [
          this._updateDatePicker(self._datePickerEnd, this.getEndValue());
 
          this._addDefaultValidator();
+      },
+
+      _setPickerConfig: function() {
+         return {
+            corner: 'tl',
+            horizontalAlign: {
+               side: 'left',
+               offset: -133
+            },
+            verticalAlign: {
+               side: 'top',
+               offset: -11
+            }
+         }
       },
 
       _addDefaultValidator: function() {
@@ -230,7 +233,11 @@ define('js!SBIS3.CONTROLS.DateRange', [
       getEndDate: function() {
          // Временно делаем, что бы возвращаемая конечная дата содержала время 23:59:59.999
          var d = this._options.endValue;
-         return this._options.endValue? new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999): null;
+         if (d) {
+            d = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
+            d.setSQLSerializationMode(this._getSQLSerializationMode());
+         }
+         return d;
       }
    });
    return DateRange;

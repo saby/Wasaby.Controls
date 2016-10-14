@@ -7,11 +7,11 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
       'js!SBIS3.CONTROLS.PickerMixin',
       'html!SBIS3.CONTROLS.FieldLinkItemsCollection',
       'html!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemTemplate',
-      'html!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemContentTemplate'
-   ],
-   function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate) {
-
-      var PICKER_BORDER_WIDTH = 2;
+      'html!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemContentTemplate',
+      'Core/helpers/collection-helpers',
+      'Core/core-instance',
+      'Core/helpers/functional-helpers'
+   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, colHelpers, cInstance, fHelpers) {
 
       'use strict';
 
@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
              tplArgs ={},
              res = [];
 
-         if(opts._preRenderValues.selectedItem && $ws.helpers.instanceOfModule(opts._preRenderValues.selectedItem, 'WS.Data/Entity/Model')) {
+         if(opts._preRenderValues.selectedItem && cInstance.instanceOfModule(opts._preRenderValues.selectedItem, 'WS.Data/Entity/Model')) {
             items = [opts._preRenderValues.selectedItem];
          } else if (opts._preRenderValues.selectedItems) {
             items = opts._preRenderValues.selectedItems.toArray();
@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             tplArgs = opts._buildTplArgs(opts);
             tplArgs.className = 'controls-ListView__item';
             tplArgs.itemTemplate = opts.itemTemplate;
-            $ws.helpers.forEach(items, function(item) {
+            colHelpers.forEach(items, function(item) {
                tplArgs.item = item;
                res.push(tplArgs.defaultItemTpl(tplArgs));
             })
@@ -76,12 +76,6 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                case 'onItemActivate':
                   fieldLink._onItemActivateItemsCollection.call(fieldLink, arg);
                   break;
-               case 'onShowPicker':
-                  fieldLink._onShowPickerItemsCollection.call(fieldLink);
-                  break;
-               case 'onClosePicker':
-                  fieldLink._onClosePickerItemsCollection.call(fieldLink);
-                  break;
             }
          },
 
@@ -95,9 +89,9 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                self._parentFieldLink.setActive(true);
             }
 
-            itemContainer = $target.closest('.controls-ListView__item', this._container[0]);
+            itemContainer = $target.closest('.controls-FieldLink__item', this._container[0]);
             if(itemContainer.length) {
-               deleteAction = $target.hasClass('controls-FieldLink__linkItem-cross');
+               deleteAction = $target.hasClass('controls-FieldLink__item-cross');
                this._notify(deleteAction ? 'onCrossClick' : 'onItemActivate', itemContainer.data('id'));
             }
 
@@ -139,8 +133,10 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             if(list) {
                /* RecordSet клонировать нельзя, иначе записи склонируются с ключевым полем
                   рекордсета, хотя оно могло быть изменено */
-               if(!$ws.helpers.instanceOfModule(list, 'WS.Data/Collection/RecordSet')) {
+               if(!cInstance.instanceOfModule(list, 'WS.Data/Collection/RecordSet')) {
                   list = list.clone();
+               } else {
+                  list.setEventRaising(false, false);
                }
             } else {
                list = [];
@@ -148,19 +144,13 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             FieldLinkItemsCollection.superclass.setItems.call(this, list);
          },
 
-         _appendItemTemplate:function(item, targetContainer, itemInstance) {
-            if(this._parentFieldLink._checkItemBeforeDraw.call(this._parentFieldLink, itemInstance)) {
-               FieldLinkItemsCollection.superclass._appendItemTemplate.apply(this, arguments);
-            }
-         },
-
          /* Контрол не должен принимать фокус ни по клику, ни по табу */
-         _initFocusCatch: $ws.helpers.nop,
-         canAcceptFocus: $ws.helpers.nop,
+         _initFocusCatch: fHelpers.nop,
+         canAcceptFocus: fHelpers.nop,
 
          _drawItemsCallback: function() {
             if(this.isPickerVisible() && !this.getItems().getCount()) {
-               this.hidePicker()
+               this.hidePicker();
             }
          },
 
@@ -171,32 +161,17 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             this._picker.recalcPosition(true);
          },
 
-         hidePicker: function() {
-            this._clearItems();
-            FieldLinkItemsCollection.superclass.hidePicker.apply(this, arguments);
-            this.redraw();
-         },
-
          _setPickerContent: function () {
             var pickerContainer = this._picker.getContainer(),
-                flWidth = this._parentFieldLink.getContainer()[0].offsetWidth - PICKER_BORDER_WIDTH;
-            pickerContainer.on('click', '.controls-ListView__item', this._onClickHandler.bind(this));
+                pickerWidth = this._parentFieldLink.getContainer()[0].offsetWidth - pickerContainer.outerWidth();
+            pickerContainer.on('click', '.controls-FieldLink__item', this._onClickHandler.bind(this));
             /* Не очень правильное решение, пикер может сам менять ширину, поэтому устанавливаю минимальну и максимальную */
-            pickerContainer[0].style.maxWidth = flWidth + 'px';
-            pickerContainer[0].style.minWidth = flWidth + 'px';
+            pickerContainer[0].style.maxWidth = pickerWidth + 'px';
+            pickerContainer[0].style.minWidth = pickerWidth + 'px';
             /* Зачем сделано:
                Не надо, чтобы пикер поля связи вызывал перерасчёт размеров,
                т.к. никаких расчётов при его показе не происходит, а просто отрисовываются элементы */
-            this._picker._notifyOnSizeChanged = $ws.helpers.nop;
-         },
-
-         /**
-          * Т.к. полю связи нужно высчитывать размеры элементов,
-          * то включаем медленный режим отрисовки
-          * @private
-          */
-         _isSlowDrawing: function() {
-            return true;
+            this._picker._notifyOnSizeChanged = fHelpers.nop;
          },
 
          _setPickerConfig: function () {
@@ -208,6 +183,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                closeByExternalClick: true,
                targetPart: true,
                className: 'controls-FieldLink__picker',
+               activableByClick: false,
                verticalAlign: {
                   side: 'top'
                },
@@ -218,7 +194,6 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                   /* Надо сообщить о закрытии пикера полю связи, а так же перерисовать элементы, но только после закрытия */
                   onClose: function() {
                      self._notify('onClosePicker');
-                     self._clearItems();
                      setTimeout(self.redraw.bind(self), 0);
                   },
                   onShow: function() {

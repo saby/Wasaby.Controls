@@ -10,9 +10,10 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
        'html!SBIS3.CONTROLS.ItemsToolbar',
        'html!SBIS3.CONTROLS.ItemsToolbar/editActions',
        'js!SBIS3.CORE.MarkupTransformer',
+       'Core/helpers/dom&controls-helpers',
        'i18n!SBIS3.CONTROLS.ItemsToolbar'
     ],
-    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, MarkupTransformer) {
+    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, MarkupTransformer, dcHelpers) {
 
        'use strict';
        /**
@@ -67,7 +68,8 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           showEditActions: function() {
              this._getEditActions().removeClass('ws-hidden');
-             this.getContainer().addClass('controls-ItemsToolbar__edit');
+             this.getContainer().toggleClass('controls-ItemsToolbar__withEditActions', true);
+             this._toggleEditClass(true);
           },
           /**
            * Скрывает кнопки редактирования
@@ -75,8 +77,13 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           hideEditActions: function() {
              if (this._editActions) {
                 this._editActions.addClass('ws-hidden');
-                this.getContainer().removeClass('controls-ItemsToolbar__edit');
+                this.getContainer().toggleClass('controls-ItemsToolbar__withEditActions', false);
+                this._toggleEditClass(false);
              }
+          },
+
+          _toggleEditClass: function(isEdit) {
+             this.getContainer().toggleClass('controls-ItemsToolbar__edit', isEdit);
           },
           /**
            * Проверяет, отображаются ли сейчас кнопки редактирования
@@ -109,12 +116,12 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                       self.hide(false);
                    },
                    onShowMenu: function() {
-                      this.getContainer().addClass('ws-invisible');
+                      self.getContainer().addClass('ws-invisible');
                       self.lockToolbar();
                       self._notify('onShowItemActionsMenu');
                    },
                    onHideMenu: function() {
-                      this.getContainer().removeClass('ws-invisible');
+                      self.getContainer().removeClass('ws-invisible');
                       if (self._isEditActionsHidden()) {
                          self.unlockToolbar();
                       }
@@ -202,7 +209,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * @private
            */
           _trackingTarget: function() {
-             $ws.helpers.trackElement(this._currentTarget.container, true).subscribe('onMove', this._recalculatePosition, this);
+             dcHelpers.trackElement(this._currentTarget.container, true).subscribe('onMove', this._recalculatePosition, this);
           },
           /**
            * Меняет режим отображения тулбара, если touch - то тулбар отображается с анимацией
@@ -223,7 +230,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           _untrackingTarget: function() {
              if(this._currentTarget) {
-                $ws.helpers.trackElement(this._currentTarget.container, false);
+                dcHelpers.trackElement(this._currentTarget.container, false);
              }
           },
           /**
@@ -238,7 +245,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
 
              /* Событие onMove из трэкера стреляет и при удалении элемента из DOM'a,
                 надо проверить на наличине элемента, а то получим неверные расчёты, а в худшем случае(ie) браузер падает */
-             if(!$ws.helpers.contains(parentContainer, targetContainer)) {
+             if(!dcHelpers.contains(parentContainer, targetContainer)) {
                 this._untrackingTarget();
                 return;
              }
@@ -278,24 +285,19 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                  size = target.size,
                  parentContainer = this.getParent().getContainer()[0],
                  isVertical = target.container.hasClass('js-controls-CompositeView__verticalItemActions'),
-                 rightPosition = parentContainer.offsetWidth - (position.left + size.width),
-                 topPosition = 'auto',
-                 bottomPosition = parentContainer.offsetHeight - (position.top + size.height);
+                 marginRight = parentContainer.offsetWidth - (position.left + size.width),
+                 marginTop = position.top,
+                 marginBottom = parentContainer.offsetHeight - (position.top + size.height);
 
-             if(rightPosition < 0 && !isVertical) {
-                rightPosition = 0;
-             }
-
-             if(isVertical) {
-                topPosition = position.top;
-                bottomPosition = 'auto';
+             if(marginRight < 0 && !isVertical) {
+                marginRight = 0;
              }
 
              this.getContainer()[isVertical ? 'addClass' : 'removeClass']('controls-ItemsToolbar__vertical');
              return {
-                right : rightPosition,
-                top : topPosition,
-                bottom : bottomPosition
+                'margin-right' : marginRight,
+                'margin-top' : marginTop,
+                'margin-bottom': marginBottom
              };
           },
           /**
@@ -333,7 +335,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
               * а изменение положения опций не произойдет
               */
              if(!this._isVisible){
-                $ws.helpers.trackElement(this._container, true).subscribe('onMove', this._recalculatePosition, this);
+                dcHelpers.trackElement(this._container, true).subscribe('onMove', this._recalculatePosition, this);
              }
              if (hasItemsActions) {       // Если имеются опции записи, то создаем их и отображаем
                 this.showItemsActions(target);
@@ -374,7 +376,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              if (!this._lockingToolbar && this._isVisible) {
                 this._isVisible = false;
                 container = this.getContainer();
-                $ws.helpers.trackElement(this._container, false);
+                dcHelpers.trackElement(this._container, false);
 
                 if (this._options.touchMode || animate) {
                    this._untrackingTarget();

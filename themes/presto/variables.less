@@ -13,11 +13,16 @@
 @bg:                                      @secondary-color;
 @text-color:                              @white-color;
 
-@font-basic-name:                         Exo2, sans-serif;
+@font-basic-name:                         'TensorFont Regular', 'TensorFont', sans-serif;;
 @font-basic-size:                         14px;
 @font-popup-size:                         14px;
 @font-folder-size:                        14px;
 @font-basic-line-height:                  20px;
+
+@closeBigButtonImage:                     url('img/areaBigCloseButton.png') 0 0;
+@closeBigButtonImageHover:                url('img/areaBigCloseButton.png') 0 -40px;
+@closeBigButtonWidth:                     60px;
+@closeBigButtonHeight:                    40px;
 
 @default-itemHover-color:                 @primary-color;
 @default-itemSelected-color:              @primary-color;
@@ -28,7 +33,7 @@
 
 @link-text-color:                         #A8ACC3;
 @link-line-height:                        normal;
-
+@link-font-size:                          24px;
 @link-hover-text-color:                   #FFA34F;
 @link-icon-hover-icon:                    @link-hover-text-color;
 
@@ -41,6 +46,9 @@
 // ------ //
 
 // Normal button
+@button-font-size:                        24px;
+@button-font:                             @button-font-size @font-basic-name;
+@button-text-alignment:                   center;
 @button-min-width:                        24px;
 @button-padding:                          0 8px;
 @button-icon-top-offset:                  12px;                     // top offset of 16x16 icon
@@ -55,12 +63,14 @@
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
 
-@FilterPanelButtonRight: url('img/FilterPanelButton.png') -70px 0;
-@FilterPanelButtonLeft: url('img/FilterPanelButton.png') -35px 0;
-@FilterPanelButtonHide: url('img/FilterPanelButton.png') 0 0;
-@FilterPanelButtonHoverRight: url('img/FilterPanelButton.png') -70px 24px;
-@FilterPanelButtonHoverLeft: url('img/FilterPanelButton.png') -35px 24px;
-@FilterPanelButtonHoverHide: url('img/FilterPanelButton.png') 0 -24px;
+@FilterPanelButtonRightClose: url('img/FilterPanelButton.png') 0 0;
+@FilterPanelButtonLeftClose: url('img/FilterPanelButton.png') -35px 0;
+@FilterPanelButtonRightOpen: url('img/FilterPanelButton.png') -70px 0;
+@FilterPanelButtonLeftOpen: url('img/FilterPanelButton.png') -105px 0;
+@FilterPanelButtonHoverRightClose: url('img/FilterPanelButton.png') 0 24px;
+@FilterPanelButtonHoverLeftClose: url('img/FilterPanelButton.png') -35px 24px;
+@FilterPanelButtonHoverRightOpen: url('img/FilterPanelButton.png') -70px -24px;
+@FilterPanelButtonHoverLeftOpen: url('img/FilterPanelButton.png') -105px -24px;
 
 // Normal default button
 @button-border:                           @button-border-width none;
@@ -246,16 +256,15 @@
 // -------- //
 // Switcher //
 // -------- //
-
-@switcher-width:                                46px;
-@switcher-height:                               24px;
-@switcher-line-height:                          @switcher-height;
-@switcher-line-width:                           36px;
 @switcher-line-color-disabled:                  @gray-light-color;
 @switcher-btn-color-disabled:                   @gray-light-color;
-@switcher-btn-radius:                           6px;
-@switcher-btn-size:                             12px;
-@switcher-btn-margin:                           5px;
+@switcher-btn-bg-color:                         #202835;
+
+@switcher-border:                               1px solid #293543;
+@switcher-btn-color:                            #FF7033;
+@switcher-do-horizontal-line-background-color:  @switcher-btn-color;
+@switcher-do-text-color:                        @white-color;
+@switcher-do-unselected-text-color:             #999999;
 
 // ---- //
 // Menu //
@@ -438,7 +447,8 @@
 @text-box-field-padding:                  0;
 @text-box-field-after-margin:             0 21px 0 0;
 
-@text-box-field-focus-text-color:         @text-box-field-text-color;
+@text-box-field-text-color:               #666666;
+@text-box-field-focus-text-color:         @white-color;
 @text-box-field-hover-text-color:         @text-box-field-text-color;
 
 @text-box-border-color:                   transparent transparent @gray-dark-color transparent;
@@ -505,11 +515,10 @@
 
 @search-background:                                   none;
 @search-disabled-background:                          @text-box-disabled-bg;
-@search-focus-background:                             #444E57;
 @search-height:                                       40px;
-@search-border-color:                                 #666666;
-@search-hover-border-color:                           @search-border-color;
-@search-bottom-border-color:                          @search-border-color;
+@search-border-color:                                 transparent;
+@search-hover-border-color:                           #2B3546;
+@search-bottom-border-color:                          @search-hover-border-color;
 @search-form-border-disabled-width:                   @text-box-disabled-border-width;
 @search-form-icon-padding:                            11px 8px 0 0;
 @search-form-icon-disabled-display:                   block;
@@ -586,6 +595,8 @@
 
 @suggest-list-item-hover-bg:                    #f3f3f3;
 @suggest-list-item-selected-bg:                 darken(@suggest-list-item-hover-bg, 5%);
+@suggest-list-footer-height:                    30px;
+@suggest-list-footer-padding:                   0 8px;
 
 // ----------- //
 // Date picker //
@@ -718,6 +729,7 @@
 @date-range-choose-current-value-font-size:     @date-range-choose-font-size;
 @date-range-choose-current-value-font-weight:   bold;
 @date-range-choose-current-value-height:        54px;
+@date-range-choose-current-value-line-height:   52px;
 
 @date-range-choose-year-font-size:              @date-range-choose-font-size;
 @date-range-choose-year-prev-next-btns-font-size:     @date-range-choose-font-size;
@@ -761,8 +773,10 @@
 @list-view-actions-active-bg:                   #F3F3F3;
 
 @list-view-items-toolbar-vertical-locked-box-shadow: -2px  2px 5px @data-grid-row-hover-bg;
+@list-view-items-toolbar-line-height:                16px;
 @list-view-items-toolbar-vertical-line-height:       24px;
 @list-view-items-toolbar-locked-bg:                  @controls-editInPlace-editor-bg;
+@touch-mode-items-toolbar-icon-margin-top:           -24px;
 
 @list-view-actions-menu-icon-width:             16px;
 
@@ -862,7 +876,8 @@
 // ----------------------- //
 
 @controls-OperationsPanelButton-width:             24px;
-@controls-OperationsPanelButton-hor-height:        30px;
+@controls-OperationsPanelButton-hor-height:        29px;
+@controls-OperationsPanelButton-hor-line-height:   30px;
 @controls-OperationsPanelButton-vert-height:       24px;
 @controls-OperationsPanelButton-font:              18px 'TensorFont Regular', 'TensorFont';
 @controls-OperationsPanelButton-icon-left:         6px;
@@ -914,6 +929,7 @@
 
 @controls-filterButton-area-text-size:            24px;
 @controls-filterButton-area-text-color:           @primary-color;
+@controls-filterButton-clear-margin-right:        16px;
 
 @controls-filterButton-area-content-margin:       0 16px 12px 16px;
 @controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
@@ -948,10 +964,12 @@
 @controls-FieldLink-linkItem-cross-right:          -4px;
 @controls-FieldLink-linkItem-cross-top:            -3px;
 
-@controls-FieldLink-afterField-padding:            0 4px;
+@controls-FieldLink-afterField-padding:            0 4px 0 0;
 @controls-FieldLink-afterField-height:             22px;
 
 @controls-FieldLink-afterField-background:         @white-color;
+@controls-FieldLink-link-color:                    #8991A9;
+@controls-FieldLink-link-color-hover:              #313E78;
 
 //SelectorButton
 @controls-SelectorButton-align:                    middle;

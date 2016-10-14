@@ -1,27 +1,46 @@
 define('js!SBIS3.CONTROLS.DateRangeMixin', [
-   'js!SBIS3.CONTROLS.Utils.DateUtil'
-], function (DateUtil) {
+   'js!SBIS3.CONTROLS.Utils.DateUtil',
+   'Core/core-instance',
+   'Core/helpers/date-helpers'
+], function (DateUtil, cInstance, dateHelpers) {
    /**
     * Миксин, добавляющий поведение хранения начального и конечного значений диапазона типа Date.
-    * Используется только совместно с SBIS3.CONTROLS.DateRange.
+    * Реализует логику которая приводит значения диапазона к типу Date, а так же общие методы для работы
+    * с этим типом диапазона.
+    * Используется только совместно с SBIS3.CONTROLS.RangeMixin.
     * @mixin SBIS3.CONTROLS.DateRangeMixin
     * @public
     * @author Миронов Александр Юрьевич
     */
-
    var DateRangeMixin = /**@lends SBIS3.CONTROLS.DateRangeMixin.prototype  */{
       $protected: {
+         _options: {
+            /**
+             * @cfg {String} Режим серализации даты при отправке в бизнес логику.
+             * В 140 версии значение по умолчанию datetime.
+             * В последующих версиях опция будет убрана, а поведение будет соответствовать datetime.
+             * @variant 'time'
+             * @variant 'date'
+             * @variant 'datetime'
+             * @noShow
+             * @deprecated
+             */
+            serializationMode: 'date'
+         }
       },
 
       $constructor: function() {
-         if(!$ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.RangeMixin')) {
+         if(!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.RangeMixin')) {
             throw new Error('RangeMixin mixin is required');
          }
-         this._options.startValue = this._normalizeDate(this._options.startValue);
-         this._options.endValue = this._normalizeDate(this._options.endValue);
       },
 
       around : {
+         _modifyOptions: function (parentFnc, opts) {
+            opts.startValue = this._normalizeDate(opts.startValue);
+            opts.endValue = this._normalizeDate(opts.endValue);
+            return parentFnc.call(this, opts)
+         },
          setStartValue: function (parentFnc, value, silent) {
             value = this._normalizeDate(value);
             return parentFnc.call(this, value, silent);
@@ -31,7 +50,32 @@ define('js!SBIS3.CONTROLS.DateRangeMixin', [
          setEndValue: function (parentFnc, value, silent) {
             value = this._normalizeDate(value);
             return parentFnc.call(this, value, silent);
+         },
+
+         getStartValue: function (parentFnc) {
+            value = parentFnc.apply(this);
+            if (value) {
+               value.setSQLSerializationMode(this._getSQLSerializationMode());
+            }
+            return value;
+         },
+
+         getEndValue: function (parentFnc) {
+            value = parentFnc.call(this);
+            if (value) {
+               value.setSQLSerializationMode(this._getSQLSerializationMode());
+            }
+            return value;
          }
+      },
+
+      _getSQLSerializationMode: function () {
+         var modeMap = {
+            'datetime': Date.SQL_SERIALIZE_MODE_DATETIME,
+            'date': Date.SQL_SERIALIZE_MODE_DATE,
+            'time': Date.SQL_SERIALIZE_MODE_TIME
+         };
+         return modeMap[this._options.serializationMode];
       },
 
       /**
@@ -40,7 +84,7 @@ define('js!SBIS3.CONTROLS.DateRangeMixin', [
        * @private
        */
       _getPeriodLengthInMonth: function (start, end) {
-         var periodType = $ws.helpers.getPeriodType(start, end);
+         var periodType = dateHelpers.getPeriodType(start, end);
          if(periodType === 'month') {
             return 1;
          } else if(periodType === 'quarter') {

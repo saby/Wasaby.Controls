@@ -1,9 +1,13 @@
 define('js!SBIS3.CONTROLS.EditAtPlaceMixin', 
-   ['js!SBIS3.CONTROLS.IconButton', 
-    'js!SBIS3.CORE.Dialog', 
-    'js!SBIS3.CONTROLS.ControlHierarchyManager',
-    'js!SBIS3.CORE.ModalOverlay'
-    ], function(IconButton, Dialog, ControlHierarchyManager, ModalOverlay) {
+   [
+   "js!SBIS3.CORE.ModalOverlay",
+   "Core/constants",
+   "Core/Deferred",
+   "js!SBIS3.CONTROLS.IconButton",
+   "js!SBIS3.CORE.Dialog",
+   "js!SBIS3.CONTROLS.ControlHierarchyManager",
+   "js!SBIS3.CORE.ModalOverlay"
+], function( cModalOverlay, constants, Deferred,IconButton, Dialog, ControlHierarchyManager, ModalOverlay) {
       /**
        * @mixin SBIS3.CONTROLS.EditAtPlaceMixin
        * @public
@@ -59,19 +63,19 @@ define('js!SBIS3.CONTROLS.EditAtPlaceMixin',
          _deactivateActiveChildControl: function() {
             var activeControl = this.getActiveChildControl();
             //метод getActiveControl определен у compoundControl, поэтому у контролов унаследованных от Control его нет
-            while (activeControl.getActiveChildControl && activeControl.getActiveChildControl()) {
+            while (activeControl && activeControl.getActiveChildControl && activeControl.getActiveChildControl()) {
                activeControl = activeControl.getActiveChildControl();
             }
             activeControl && activeControl.setActive(false);
          },
          /**
           * Открывает диалог подтверждения при отмене радактирования.
-          * @returns {$ws.proto.Deferred} deferred на закрытие модального диалога подтверждения.
+          * @returns {Deferred} deferred на закрытие модального диалога подтверждения.
           * @private
           */
          _openConfirmDialog: function () {
             var result,
-               deferred = new $ws.proto.Deferred();
+               deferred = new Deferred();
             this._dialogConfirm = new Dialog({
                parent: this._options.editInPopup ? this._picker : this,
                opener: this._options.editInPopup ? this._picker : this,
@@ -92,7 +96,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceMixin',
                      }
                   },
                   onKeyPressed: function (event, result) {
-                     if (result.keyCode === $ws._const.key.esc) {
+                     if (result.keyCode === constants.key.esc) {
                         this.getLinkedContext().setValue('result', 'cancelButton');
                      }
                   },
@@ -127,7 +131,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceMixin',
             _initializePicker: function(){
                var self = this;
                this.subscribeTo(ModalOverlay, 'onClick', function(event) {
-                  if (this.isVisible() && this._picker._zIndex - $ws.single.ModalOverlay.getZIndex() === 1) {
+                  if (this.isVisible() && this._picker._zIndex - cModalOverlay.getZIndex() === 1) {
                      if (self._requireDialog) {
                         self._openConfirmDialog().addCallback(function (result) {
                            switch (result) {

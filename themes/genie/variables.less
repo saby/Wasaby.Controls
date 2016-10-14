@@ -56,6 +56,7 @@
 @link-text-alignment:                     center;
 @link-line-height:                        normal;
 @link-padding:                            0;
+@link-font-size:                          @font-basic-size;
 
 @link-hover-text-color:                   @primary-color;
 @link-hover-text-decoration:              underline;
@@ -100,12 +101,14 @@
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
 
-@FilterPanelButtonRight: url('img/FilterPanelButton.png') -70px 0;
-@FilterPanelButtonLeft: url('img/FilterPanelButton.png') -35px 0;
-@FilterPanelButtonHide: url('img/FilterPanelButton.png') 0 0;
-@FilterPanelButtonHoverRight: url('img/FilterPanelButton.png') -70px 24px;
-@FilterPanelButtonHoverLeft: url('img/FilterPanelButton.png') -35px 24px;
-@FilterPanelButtonHoverHide: url('img/FilterPanelButton.png') 0 -24px;
+@FilterPanelButtonRightClose: url('img/FilterPanelButton.png') 0 0;
+@FilterPanelButtonLeftClose: url('img/FilterPanelButton.png') -35px 0;
+@FilterPanelButtonRightOpen: url('img/FilterPanelButton.png') -70px 0;
+@FilterPanelButtonLeftOpen: url('img/FilterPanelButton.png') -105px 0;
+@FilterPanelButtonHoverRightClose: url('img/FilterPanelButton.png') 0 24px;
+@FilterPanelButtonHoverLeftClose: url('img/FilterPanelButton.png') -35px 24px;
+@FilterPanelButtonHoverRightOpen: url('img/FilterPanelButton.png') -70px -24px;
+@FilterPanelButtonHoverLeftOpen: url('img/FilterPanelButton.png') -105px -24px;
 
 // Normal default button
 @button-text-color:                       @gray-color;
@@ -583,7 +586,7 @@
 
 @switcher-do-horizontal-line-width:             @switcher-line-width;
 @switcher-do-vertical-line-width:               38px;
-@switcher-do-horizontal-line-color:             @gray-color;
+@switcher-do-horizontal-line-background-color:  @gray-color;
 @switcher-do-horizontal-disabled-line-color:    @gray-light-color;
 
 @switcher-do-horizontal-btn-color:              @switcher-btn-color;
@@ -1196,7 +1199,8 @@
 @suggest-list-empty-color:                      @gray-ccc-color;
 @suggest-list-empty-font:                       @suggest-list-item-font;
 @suggest-list-empty-padding:                    16px 0 16px 0;
-
+@suggest-list-footer-height:                    30px;
+@suggest-list-footer-padding:                   0 8px;
 
 
 // ----------- //
@@ -1543,12 +1547,14 @@
 @list-view-actions-active-bg:                   @data-grid-row-hover-bg !important;
 @list-view-actions-bg:                          @data-grid-row-hover-bg;
 
-@list-view-items-toolbar-margin:                     0 0 1px 0;
+@list-view-items-toolbar-bottom:                     1px;
+@list-view-items-toolbar-right:                      0;
 @list-view-items-toolbar-zindex:                     10;
 @list-view-items-toolbar-box-shadow:                 -2px -2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-locked-box-shadow:          none;
 @list-view-items-toolbar-vertical-box-shadow:        -2px  2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-vertical-locked-box-shadow: -2px  2px 5px @default-itemSelected-color;
+@list-view-items-toolbar-line-height:                16px;
 @list-view-items-toolbar-vertical-line-height:       24px;
 @list-view-items-toolbar-bg:                         @data-grid-row-hover-bg;
 @list-view-items-toolbar-locked-bg:                  @default-itemSelected-color;
@@ -1556,7 +1562,8 @@
 @list-view-items-toolbar-elements-margin:            0 4px;
 @list-view-items-toolbar-float:                      right;
 @list-view-items-toolbar-ipad-minHeight:             30px;
-@list-view-items-toolbar-margin-right-tile:          1px;
+@touch-mode-items-toolbar-icon-margin-top:           -24px;
+@list-view-items-toolbar-right-tile:                 1px;
 
 @list-view-actions-verAlign-margin:             8px 3px 0 0;
 @list-view-actions-verAlign-width:              20px;
@@ -1802,7 +1809,8 @@
 // ----------------------- //
 
 @controls-OperationsPanelButton-width:             24px;
-@controls-OperationsPanelButton-hor-height:        30px;
+@controls-OperationsPanelButton-hor-height:        29px;
+@controls-OperationsPanelButton-hor-line-height:   30px;
 @controls-OperationsPanelButton-vert-height:       24px;
 @controls-OperationsPanelButton-vert-border-radius: 7px;
 @controls-OperationsPanelButton-font:              18px 'TensorFont Regular', 'TensorFont';
@@ -1898,6 +1906,11 @@
 @DropdownList-shadow-hover:                   0 0 0 1px @DropdownList-border-color;
 
 @DropdownList-picker-bg:                              @white-color;
+@DropdownList-header-bg:                              @DropdownList-picker-bg;
+@DropdownList-picker-margin-top:                      -2px;
+@DropdownList-picker-head-margin:                     0;
+@DropdownList-picker-hor-revert-head-margin:          @DropdownList-picker-head-margin;
+@DropdownList-picker-padding:                         4px 0;
 @DropdownList-picker-border:                          2px solid @DropdownList-border-color;
 @DropdownList-picker-head-border-radius:              4px 4px 0 0;
 @DropdownList-picker-list-border-radius:              0 0 4px 4px;
@@ -1959,6 +1972,8 @@
 @controls-filterButton-area-text-color:           @blue-dark-color;
 @controls-filterButton-area-text-margin:          0 12px 0 0;
 
+@controls-filterButton-clear-margin-right:        0;
+
 @controls-filterButton-title-fontSize:            15px;
 @controls-filterButton-title-text-color:          #313e78;
 
@@ -1973,7 +1988,7 @@
 @controls-filterButton-history-maxHeight-overflow:hidden;
 @controls-filterButton-history-actions-right:     auto !important;
 @controls-filterButton-history-actions-left:      -4px !important;
-@controls-filterButton-history-actions-margin:    0;
+@controls-filterButton-history-actions-bottom:    0;
 
 @controls-filterButton-history-item-min-height:   24px;
 
@@ -2071,10 +2086,12 @@
 @controls-FieldLink-linkItem-cross-padding:        3px 5px 3px 0;
 
 @controls-FieldLink-disabled-item-padding:         0 4px;
-@controls-FieldLink-afterField-padding:            0 4px;
+@controls-FieldLink-afterField-padding:            0 4px 0 0;
 @controls-FieldLink-afterField-height:             22px;
 
 @controls-FieldLink-afterField-background:         @white-color;
+@controls-FieldLink-link-color:                    #8991A9;
+@controls-FieldLink-link-color-hover:              #313E78;
 
 //SelectorButton
 @controls-SelectorButton-height:                   24px;

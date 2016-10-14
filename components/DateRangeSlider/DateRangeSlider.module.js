@@ -5,11 +5,29 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
    'js!SBIS3.CONTROLS.DateRangeMixin',
    'js!SBIS3.CONTROLS.DateRangeChoosePickerMixin',
    'js!SBIS3.CONTROLS.PickerMixin',
+   'js!SBIS3.CONTROLS.Utils.DateUtil',
+   'Core/helpers/date-helpers',
    'js!SBIS3.CONTROLS.Link'
-], function (CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, DateRangeChoosePickerMixin, PickerMixin) {
+], function (CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, DateRangeChoosePickerMixin, PickerMixin, DateUtil, dateHelpers) {
    'use strict';
 
-   var DateRangeSlider = CompoundControl.extend([PickerMixin, RangeMixin, DateRangeMixin, DateRangeChoosePickerMixin], {
+   /**
+    * Контрол позволяющий выбирать диапазон дат равный месяцу, кварталу, полугодию или году.
+    * SBIS3.CONTROLS.DateRangeSlider
+    * @class SBIS3.CONTROLS.DateRangeSlider
+    * @extends $ws.proto.CompoundControl
+    * @mixes SBIS3.CONTROLS.PickerMixin
+    * @mixes SBIS3.CONTROLS.RangeMixin
+    * @mixes SBIS3.CONTROLS.DateRangeMixin
+    * @mixes SBIS3.CONTROLS.DateRangeChoosePickerMixin
+    * @author Миронов Александр Юрьевич
+    * @demo SBIS3.CONTROLS.Demo.MyDateRangeSlider
+    *
+    * @control
+    * @public
+    * @category Date/Time
+    */
+   var DateRangeSlider = CompoundControl.extend([PickerMixin, RangeMixin, DateRangeMixin, DateRangeChoosePickerMixin], /** @lends SBIS3.CONTROLS.DateRangeSlider.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
@@ -74,6 +92,26 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
          this._updateValueView();
       },
 
+      _modifyOptions: function (opts) {
+         var start;
+         opts = DateRangeSlider.superclass._modifyOptions.apply(this, arguments);
+         // Поскольку контрол работает только с фиксированными диапазонами, позволим разработчикам
+         // не конфигурировать конечную дату. Сделаем это за них если они этого не сделали.
+         start = opts.startValue;
+         if (start && !opts.endValue) {
+            if (opts.showMonths && DateUtil.isStartOfMonth(start)) {
+               opts.endValue = DateUtil.getEndOfMonth(start);
+            } else if (opts.showQuarters && DateUtil.isStartOfQuarter(start)) {
+               opts.endValue = DateUtil.getEndOfQuarter(start);
+            } else if (opts.showHalfyears && DateUtil.isStartOfHalfyear(start)) {
+               opts.endValue = DateUtil.getEndOfHalfyear(start);
+            } else if (DateUtil.isStartOfYear(start)) {
+               opts.endValue = DateUtil.getEndOfYear(start);
+            }
+         }
+         return opts;
+      },
+
       _onPrevBtnClick: function () {
          this.setPrev();
          this._updateValueView();
@@ -85,7 +123,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
       },
 
       _updateValueView: function () {
-         var caption = $ws.helpers.getFormattedDateRange(this.getStartValue(), this.getEndValue(), {shortYear: true, contractToHalfYear: true, contractToQuarter: true});
+         var caption = dateHelpers.getFormattedDateRange(this.getStartValue(), this.getEndValue(), {shortYear: true, contractToHalfYear: true, contractToQuarter: true});
          if (this._options.type === 'normal') {
             this.getContainer().find(['.', this._cssRangeSlider.value].join('')).text(caption);
          } else {

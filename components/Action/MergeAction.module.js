@@ -2,9 +2,10 @@
  * Created by as.suhoruchkin on 02.04.2015.
  */
 define('js!SBIS3.CONTROLS.MergeAction', [
-    'js!SBIS3.CONTROLS.DialogActionBase',
-    'js!SBIS3.CONTROLS.MergeDialogTemplate'
-], function(OpenDialogAction) {
+   "Core/core-merge",
+   "js!SBIS3.CONTROLS.DialogActionBase",
+   "js!SBIS3.CONTROLS.MergeDialogTemplate"
+], function( cMerge,OpenDialogAction) {
    /**
     * Действие открытия окна, в котором производится выбор записей для их объединения.
     * Пример использования класса можно найти в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/panel/basic-operations/merge/ Операция объединения записей реестра}.
@@ -81,7 +82,8 @@ define('js!SBIS3.CONTROLS.MergeAction', [
                  * Шаблон - это XHTML-файл, который создают в директории компонента в подпапке resources.
                  * @see dialogComponent
                  */
-                titleCellTemplate: undefined
+                titleCellTemplate: undefined,
+                initializingWay: 'local'
             }
         },
 
@@ -97,7 +99,7 @@ define('js!SBIS3.CONTROLS.MergeAction', [
             this._options.dataSource = ds;
         },
        _buildComponentConfig: function(meta) {
-          return $ws.core.merge(meta, {
+          return cMerge(meta, {
              //Прокидываем необходимые опции в шаблон
              displayField: this._options.displayField,
              queryMethodName: this._options.queryMethodName,
