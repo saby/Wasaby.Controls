@@ -10,8 +10,8 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Carry', function () {
                 this.box = '[sbisname="TextBox 1"] input';
 				this.input = '.controls-TextBox__field';
                 this.open_menu = '[sbisname="fieldLinkMenu"]';
-				this.caption = '.controls-FieldLink__linkItem-caption';
-				this.cross = '.controls-FieldLink__linkItem-cross';
+				this.caption = '.controls-FieldLink__item-caption';
+				this.cross = '.controls-FieldLink__item-cross';
 				
                 actions.waitForElementToShow(this.fl, 40000);
 				actions.waitForElementToShow(this.box, 5000);
@@ -58,7 +58,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Carry', function () {
                 this.box = '[sbisname="TextBox 1"] input';
 				this.input = '.controls-TextBox__field';
                 this.more = '.controls-FieldLink__showAllLinks';
-				this.clear_all = '.controls-FieldLink__showAllLinks ~ span .controls-Link-link';
+				this.clear_all = '.controls-FieldLink__dropAllLinks';
 				
                 actions.waitForElementToShow(this.fl, 40000);
 				actions.waitForElementToShow(this.box, 5000);
@@ -106,7 +106,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Carry', function () {
 				this.fl = '[sbisname="FieldLinkSingleSelect"]';
                 this.box = '[sbisname="TextBox 1"] input';
 				this.input = '.controls-TextBox__field';
-				this.caption = '.controls-FieldLink__linkItem-caption';
+				this.caption = '.controls-FieldLink__item-caption';
 				
                 actions.waitForElementToShow(this.fl, 40000);
 				actions.waitForElementToShow(this.box, 5000);
