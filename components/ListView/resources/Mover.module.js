@@ -161,7 +161,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          if (target === undefined) {
             return false;
          }
-         if (target !== null && cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.TreeMixin')) {
+         if (target !== null && this._options.hierField) {
             toMap = this._getParentsMap(target.getId());
             for (var i = 0; i < movedItems.length; i++) {
                key = '' + (cInstance.instanceOfModule(movedItems[i], 'WS.Data/Entity/Model') ? movedItems[i].getId() : movedItems[i]);
