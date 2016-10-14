@@ -185,7 +185,6 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       _getParentsMap: function(parentKey) {
          var
             recordSet = this.getItems(),
-            hierField = this.getHierField(),
          /*
           TODO: проверяем, что не перемещаем папку саму в себя, либо в одного из своих детей.
           В текущей реализации мы можем всего-лишь из метаданных вытащить путь от корня до текущего открытого раздела.
@@ -196,17 +195,20 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
           3. это не исключает ситуации, когда БЛ не возвращает иерархию до корня, либо пользователь самостоятельно пытается что-то переместить с помощью интерфейса IDataSource.move. В таком случае мы считаем, что БЛ вне зависимости от возможности проверки на клиенте, всегда должна проверять входные значения при перемещении. В противном случае это приводит к зависанию запроса.
           */
             path = recordSet.getMetaData().path,
-            toMap = path ? $.map(path.getChildItems(), function(elem) {
+            toMap = [];
+         if (recordSet.getMetaData().path) {
+            toMap = $.map(path.getChildItems(), function (elem) {
                return '' + elem;
-            }) : [];
-         var record = recordSet.getRecordById(parentKey);
-         while (record) {
-            parentKey = '' + record.getId();
-            if ($.inArray(parentKey, toMap) === -1) {
-               toMap.push(parentKey);
+            });
+            var record = recordSet.getRecordById(parentKey);
+            while (record) {
+               parentKey = '' + record.getId();
+               if ($.inArray(parentKey, toMap) === -1) {
+                  toMap.push(parentKey);
+               }
+               parentKey = recordSet.getParentKey(record, this._options.hierField);
+               record = recordSet.getRecordById(parentKey);
             }
-            parentKey = recordSet.getParentKey(record, hierField);
-            record = recordSet.getRecordById(parentKey);
          }
          return toMap;
       }
