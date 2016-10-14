@@ -616,11 +616,20 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          this._listReversed = false;
 
          if(this._showAllButton) {
-            var list = this.getList();
+            var list = this.getList(),
+                items = dataSet || list.getItems(),
+                showButton;
 
-            /* Изменяем видимость кнопки в зависимости от, того, есть ли ещё записи */
-            this._showAllButton.getContainer()
-                .toggleClass('ws-hidden', !list._hasNextPage((dataSet || list.getItems()).getMetaData().more));
+            /* Изменяем видимость кнопки в зависимости от:
+             1) Записей не найдено вовсе - показываем (по стандарту).
+             2) Записи найдены, но есть ещё. */
+            if(!items.getCount()) {
+               showButton = true;
+            } else {
+               showButton = list._hasNextPage(items.getMetaData().more);
+            }
+
+            this._showAllButton.getContainer().toggleClass('ws-hidden', !showButton);
          }
       },
 
