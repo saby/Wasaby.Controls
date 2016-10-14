@@ -108,7 +108,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController', ['js!SBIS3.StickyHeaderManage
             pageHeight = 0,
             lastPageStart = 0,
             self = this,
-            listItems = $('> .controls-ListView__item', view._getItemsContainer()),
+            //Учитываем все что есть в itemsContainer (группировка и тд)
+            listItems = $('> *', view._getItemsContainer()).filter(':visible'),
             stickyHeaderHeight = StickyHeaderManager.getStickyHeaderHeight(view.getContainer()) || 0;
 
             //Если элементов в верстке то нечего и считать
