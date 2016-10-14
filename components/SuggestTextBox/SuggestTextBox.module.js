@@ -6,8 +6,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
    'js!SBIS3.CONTROLS.SuggestTextBoxMixin',
    'js!SBIS3.CONTROLS.SearchMixin',
    'js!SBIS3.CONTROLS.ComponentBinder',
+   'html!SBIS3.CONTROLS.SuggestTextBox/resources/afterFieldWrapper',
    'Core/core-functions'
-], function (TextBox, PickerMixin, SuggestMixin, ChooserMixin, SuggestTextBoxMixin, SearchMixin, ComponentBinder, cFunctions) {
+], function (TextBox, PickerMixin, SuggestMixin, ChooserMixin, SuggestTextBoxMixin, SearchMixin, ComponentBinder, afterFieldWrapper, cFunctions) {
    'use strict';
 
    /**
@@ -23,6 +24,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
     * @control
     * @public
     * @category Inputs
+    * @cssModifier controls-SuggestTextBox__withoutCross Скрыть крестик удаления значения.
     */
    var SuggestTextBox = TextBox.extend([PickerMixin, SuggestMixin, ChooserMixin, SuggestTextBoxMixin, SearchMixin], {
       $protected: {
@@ -30,10 +32,26 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
             /**
              * @cfg {String} Имя параметр фильтрации для поиска
              */
-            searchParam : ''
-         }
+            searchParam : '',
+            afterFieldWrapper: afterFieldWrapper
+         },
+         _crossContainer: undefined
       },
       $constructor: function() {
+         var self = this;
+
+         this.getContainer().addClass('controls-SuggestTextBox');
+         this._crossContainer =  $('.js-controls-SuggestTextBox__reset', self.getContainer().get(0));
+
+
+         this.subscribe('onTextChange', function(e, text) {
+            this._crossContainer.toggleClass('ws-hidden', text == '');
+         });
+
+         this._crossContainer.click(function() {
+            self.setText('');
+         });
+         
          /* Если передали параметр поиска, то поиск производим через ComponentBinder */
          if(this._options.searchParam) {
             this.subscribe('onSearch', function() {
@@ -78,6 +96,12 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
       showPicker: function() {
          SuggestTextBox.superclass.showPicker.apply(this, arguments);
          this._setEqualPickerWidth();
+      },
+
+      destroy: function(){
+         SuggestTextBox.superclass.destroy.apply(this, arguments);
+         this._crossContainer.unbind('click');
+         this._crossContainer = null;
       },
 
       _setEqualPickerWidth: function() {
