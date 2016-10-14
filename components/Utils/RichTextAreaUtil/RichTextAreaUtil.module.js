@@ -2,8 +2,10 @@
  * Created by ps.borisov on 03.12.2015.
  */
 define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
-   "Core/constants"
-], function( constants) {
+   'tmpl!SBIS3.CONTROLS.Utils.RichTextAreaUtil/DecoratedLink',
+   'js!WS.Data/Source/SbisService',
+   'Core/constants'
+], function (DecoratedLink, SbisService, constants) {
    'use strict';
    /**
     * Утилиты для работы с контентом полученным из Богатого текстового редактора
@@ -62,6 +64,31 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
          setTimeout(function() {
             event.target.style.orphans = oldOrphans;
          });
+      },
+
+      generateDecoratedLink: function(adress) {
+         return this._getDecorateRecord(adress)
+            .addCallback(function(result){
+               if (result.getRow().get('url_type') !== 0) {
+                  return $(DecoratedLink({record: result.getRow()}))[0];
+               }
+               return false;
+            });
+      },
+
+      _getDecorateRecord: function(address) {
+         var dataSource = new SbisService({
+            endpoint: {
+               address: '/linkdecorator/service/sbis-rpc-service300.dll',
+               contract: 'LinkDecorator'
+            }
+         });
+
+         return dataSource.call(
+            'GetJson', {
+               SourceLink: address
+            }
+         );
       }
    };
 
