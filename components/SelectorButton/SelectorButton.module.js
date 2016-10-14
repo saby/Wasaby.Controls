@@ -3,19 +3,22 @@
  */
 define('js!SBIS3.CONTROLS.SelectorButton',
     [
-       'html!SBIS3.CONTROLS.SelectorButton',
-       'js!SBIS3.CONTROLS.ButtonBase',
-       'js!SBIS3.CONTROLS.DSMixin',
-       'js!SBIS3.CONTROLS.MultiSelectable',
-       'js!SBIS3.CONTROLS.ActiveMultiSelectable',
-       'js!SBIS3.CONTROLS.Selectable',
-       'js!SBIS3.CONTROLS.ActiveSelectable',
-       'js!SBIS3.CONTROLS.SyncSelectionMixin',
-       'js!SBIS3.CONTROLS.ChooserMixin',
-       'js!SBIS3.CONTROLS.IconMixin',
-       'Core/Sanitize'
-    ],
-    function(dotTplFn, ButtonBase, DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin, Sanitize) {
+   "Core/constants",
+   "html!SBIS3.CONTROLS.SelectorButton",
+   "js!SBIS3.CONTROLS.ButtonBase",
+   "js!SBIS3.CONTROLS.DSMixin",
+   "js!SBIS3.CONTROLS.MultiSelectable",
+   "js!SBIS3.CONTROLS.ActiveMultiSelectable",
+   "js!SBIS3.CONTROLS.Selectable",
+   "js!SBIS3.CONTROLS.ActiveSelectable",
+   "js!SBIS3.CONTROLS.SyncSelectionMixin",
+   "js!SBIS3.CONTROLS.ChooserMixin",
+   "js!SBIS3.CONTROLS.IconMixin",
+   "Core/Sanitize",
+   "Core/core-instance",
+   "Core/helpers/functional-helpers"
+],
+    function( constants,dotTplFn, ButtonBase, DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin, Sanitize, cInstance, fHelpers) {
 
    'use strict';
 
@@ -106,7 +109,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
 
       _checkWidth: function() {
          // Хак для старых ие
-         if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9 || $ws._const.browser.isIE10) {
+         if (constants.browser.isIE8 || constants.browser.isIE9 || constants.browser.isIE10) {
             if(!this.isVisibleWithParents()) {
                return;
             }
@@ -165,7 +168,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
 
       _chooseCallback: function(result) {
          if(result && result.length) {
-            $ws.helpers.instanceOfModule(result[0], 'WS.Data/Entity/Model') ?
+            cInstance.instanceOfModule(result[0], 'WS.Data/Entity/Model') ?
                 this.addSelectedItems(result) :
                 this.addItemsSelection(result);
          }
@@ -177,7 +180,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          }
       },
 
-      _redraw: $ws.helpers.nop
+      _redraw: fHelpers.nop
    });
 
    return SelectorButton;

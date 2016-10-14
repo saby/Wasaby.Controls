@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 26.10.2015.
  */
-define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!WS.Data/Entity/Model'], function(Model) {
+define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!WS.Data/Entity/Model', 'Core/core-instance'], function(Model, cInstance) {
 
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!WS.Data/Entity/Model'], f
       },
 
       $constructor: function() {
-         if(!$ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.MultiSelectable')) {
+         if(!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.MultiSelectable')) {
             throw new Error('MultiSelectable mixin is required');
          }
       },
@@ -92,14 +92,14 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!WS.Data/Entity/Model'], f
          if(items instanceof Array) {
             selectedItems = this.getSelectedItems();
 
-            if($ws.helpers.instanceOfModule(selectedItems, 'WS.Data/Collection/RecordSet')) {
+            if(cInstance.instanceOfModule(selectedItems, 'WS.Data/Collection/RecordSet')) {
                preparedItems = this._makeList(this._convertRecordsFormat(items, selectedItems));
             } else {
                preparedItems = this._makeList(items);
             }
          } else if (items === null) {
             preparedItems = this._makeList();
-         } else if(!$ws.helpers.instanceOfModule(items, 'WS.Data/Collection/List')) {
+         } else if(!cInstance.instanceOfModule(items, 'WS.Data/Collection/List')) {
             throw new Error('ActiveMultiSelectable::setSelectedItems called with invalid argument');
          } else {
             preparedItems = items;

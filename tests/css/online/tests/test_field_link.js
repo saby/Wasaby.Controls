@@ -30,11 +30,11 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
             })
 
             .capture('hovered_text', function (actions) {
-                actions.mouseMove('.controls-FieldLink__linkItem-caption');
+                actions.mouseMove('.controls-FieldLink__item-caption');
             })
 
             .capture('hovered_close_icon', function (actions) {
-                actions.mouseMove('.controls-FieldLink__linkItem-cross');
+                actions.mouseMove('.controls-FieldLink__item-cross');
             })
 			
 			.capture('disabled', function (actions) {
@@ -73,11 +73,11 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
             })
 
             .capture('hovered_text_2', function (actions) {
-                actions.mouseMove('[data-id="2"] .controls-FieldLink__linkItem-caption');
+                actions.mouseMove('[data-id="2"] .controls-FieldLink__item-caption');
             })
 
             .capture('hovered_close_icon_2', function (actions) {
-                actions.mouseMove('[data-id="2"] .controls-FieldLink__linkItem-cross');
+                actions.mouseMove('[data-id="2"] .controls-FieldLink__item-cross');
             })
 
             .capture('hovered_more', function (actions) {
@@ -89,7 +89,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
             })
 
             .capture('hovered_clear_all', function (actions) {
-                actions.mouseMove('.controls-FieldLink__showAllLinks ~ span .controls-Link-link');
+                actions.mouseMove('.controls-FieldLink__dropAllLinks');
             })
     });
 	
@@ -121,11 +121,11 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
             })
 
             .capture('hovered_text', function (actions) {
-                actions.mouseMove('.controls-FieldLink__linkItem-caption');
+                actions.mouseMove('.controls-FieldLink__item-caption');
             })
 
             .capture('hovered_close_icon', function (actions) {
-                actions.mouseMove('.controls-FieldLink__linkItem-cross');
+                actions.mouseMove('.controls-FieldLink__item-cross');
             })
     });
 	
@@ -157,11 +157,11 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
             })
 
             .capture('hovered_text', function (actions) {
-                actions.mouseMove('.controls-FieldLink__linkItem-caption');
+                actions.mouseMove('.controls-FieldLink__item-caption');
             })
 
             .capture('hovered_close_icon', function (actions) {
-                actions.mouseMove('.controls-FieldLink__linkItem-cross');
+                actions.mouseMove('.controls-FieldLink__item-cross');
             })
     });
 	

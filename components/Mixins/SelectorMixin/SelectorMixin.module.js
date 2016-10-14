@@ -2,8 +2,11 @@
  * Created by am.gerasimov on 19.10.2015.
  */
 
-define('js!SBIS3.CONTROLS.SelectorMixin', [],
-   function () {
+define('js!SBIS3.CONTROLS.SelectorMixin', [
+   "Core/Deferred",
+   "Core/core-instance"
+],
+   function ( Deferred,cInstance) {
 
       'use strict';
 
@@ -55,8 +58,8 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
             var self = this;
 
             /* Подпишемся на готовность диалога/всплывающей панели */
-            if (!(self._dRender instanceof $ws.proto.Deferred)) {
-               self._dRender = new $ws.proto.Deferred();
+            if (!(self._dRender instanceof Deferred)) {
+               self._dRender = new Deferred();
                self.subscribe('onAfterLoad', function () {
                   self._dRender.callback();
                });
@@ -77,7 +80,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
 
                /* При выборе в иерархических представлених, нельзя реагировать на событие onItemActivate вызваное
                   кликом по узлу / нажатии на >> . Выбор узлов в иерархических представлениях обрабатывается прикладной логикой */
-               if($ws.helpers.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.TreeMixin') && item.get(linkedView.getHierField() + '@')) {
+               if(cInstance.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.TreeMixin') && item.get(linkedView.getHierField() + '@')) {
                   return;
                }
 
@@ -90,7 +93,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
                for(var i = 0, l = childControls.length; i < l; i++){
                   var childControl = childControls[i];
 
-                  if($ws.helpers.instanceOfModule(childControl, 'SBIS3.CONTROLS.ListView')){
+                  if(cInstance.instanceOfModule(childControl, 'SBIS3.CONTROLS.ListView')){
                      self.setLinkedView(childControl);
                      break;
                   }
