@@ -228,6 +228,29 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
             })
     });
 	
+	gemini.suite('have_all_titles_and_height_25', function (test) {
+
+        test.setUrl('/regression_engine_browser_online_11.html').setCaptureElements('.capture')
+
+            .before(function (actions) {
+				
+				this.view = '[sbisname="browserView"]';
+                this.input = '[sbisname="TextBox 1"] input';
+				this.caption = '[sbisname="BackButton-caption"]';
+                
+				actions.waitForElementToShow(this.view, 40000);
+				actions.waitForElementToShow(this.input, 5000);
+            })
+
+            .capture('into_folder', function (actions) {
+                actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('browserView').setCurrentRoot(33);
+					window.$ws.single.ControlStorage.getByName('browserView').reload();
+                });
+				actions.waitForElementToShow(this.caption, 5000);
+            })
+    });
+	
 	gemini.suite('have_no_titles', function (test) {
 
         test.setUrl('/regression_engine_browser_online_5.html').setCaptureElements('.capture')
