@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
                3) В onDataLoad приклданые программисты могу менять загруженный рекордсет.
                Поэтому в этом событии просто одинарно подпишемся на событие отрисовки данных и покажем автодополнение (если требуется). */
             this.subscribeOnceTo(this.getList(), 'onDrawItems', function() {
-               if(this._checkPickerState(false)) {
+               if(this._checkPickerState(!this._options.showEmptyList)) {
                   this.showPicker();
                }
             }.bind(this));
