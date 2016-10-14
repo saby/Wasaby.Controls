@@ -1,10 +1,17 @@
 define('js!SBIS3.CONTROLS.TextBox', [
-   "Core/constants",
-   "js!SBIS3.CONTROLS.TextBoxBase",
-   "html!SBIS3.CONTROLS.TextBox",
-   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
+   'Core/constants',
+   'js!SBIS3.CONTROLS.TextBoxBase',
+   'html!SBIS3.CONTROLS.TextBox',
+   'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+   'Core/Sanitize',
    "Core/helpers/dom&controls-helpers"
-], function( constants,TextBoxBase, dotTplFn, TemplateUtil, dcHelpers) {
+], function(
+    constants,
+    TextBoxBase,
+    dotTplFn,
+    TemplateUtil,
+    Sanitize,
+    dcHelpers) {
 
    'use strict';
 
@@ -180,7 +187,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._inputField.bind('focusin', this._inputFocusInHandler.bind(this))
                          .bind('focusout', this._inputFocusOutHandler.bind(this));
 
-         if (this._options.placeholder && !constants.compatibility.placeholder) {
+         if (this._options.placeholder && !this._useNativePlaceHolder()) {
             this._createCompatPlaceholder();
          }
 
@@ -202,6 +209,10 @@ define('js!SBIS3.CONTROLS.TextBox', [
          TextBox.superclass.init.apply(this, arguments);
          /* Надо проверить значение input'a, т.к. при дублировании вкладки там уже может быть что-то написано */
          this._checkInputVal();
+      },
+
+      _useNativePlaceHolder: function() {
+         return constants.compatibility.placeholder;
       },
 
       _checkInputVal: function() {
@@ -277,11 +288,11 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
       _setPlaceholder: function(text){
          text = text ? text : text == 0 ? text : '';
-         if (!constants.compatibility.placeholder) {
+         if (!this._useNativePlaceHolder()) {
             if (!this._compatPlaceholder) {
                this._createCompatPlaceholder();
             }
-            this._compatPlaceholder.text(text);
+            this._compatPlaceholder.html(text);
          }
          else {
             this._inputField.attr('placeholder', text);

@@ -1,10 +1,12 @@
-<div class="controls-FieldLink__linkItem {{?it.className}}{{=it.className}}{{?}}">
-    <span class="controls-FieldLink__linkItem-caption">
+<div class="controls-FieldLink__item controls-ListView__item {{?it.className}}{{=it.className}}{{?}}"
+     data-id="{{=it.item.getId()}}"
+     data-hash="{{=it.item.getHash()}}">
+    <span class="controls-FieldLink__item-caption">
         {{? it.itemTemplate}}
             {{=it.itemTemplate(it.item)}}
         {{??}}
             {{=it.Sanitize(it.itemContent(it))}}
         {{?}}
     </span>
-    <span class="controls-FieldLink__linkItem-cross icon-16 icon-size icon-Close icon-disabled action-hover"/>
+    <span class="controls-FieldLink__item-cross icon-16 icon-size icon-Close icon-disabled"/>
 </div>

@@ -1099,10 +1099,10 @@
 @suggest-loading-right:                         3px;
 @suggest-loading-top:                           3px;
 
-@suggest-picker-border:                         1px solid #eaeaea;
+@suggest-picker-border:                         1px solid #СССССС;
 @suggest-picker-border-radius:                  0;
 @suggest-picker-box-shadow:                     0 4px 8px rgba(0, 0, 0, 0.2);
-@suggest-picker-margin:                         -1px 0 0 0;
+@suggest-picker-margin:                         -1px 0 0 0 !important;
 @suggest-picker-standard-width:                 500px;
 
 @suggest-picker-item-font:                      @suggest-field-font;
@@ -1127,6 +1127,8 @@
 @suggest-list-empty-color:                      @gray-ccc-color;
 @suggest-list-empty-font:                       @suggest-list-item-font;
 @suggest-list-empty-padding:                    16px 0 16px 0;
+@suggest-list-footer-height:                    30px;
+@suggest-list-footer-padding:                   0 8px;
 
 
 
@@ -2061,8 +2063,8 @@
 @controls-FieldLink-showAllLinks-top:              2px;
 @controls-FieldLink-showAllLinks-lineHeight:       22px;
 @controls-FieldLink-linkItem-line-height:          18px;
-@controls-FieldLink-showAllLinks-padding:          0 4px;
-@controls-FieldLink-linkContainer-padding:         4px 0;
+@controls-FieldLink-showAllLinks-padding:          0 0 0 4px;
+@controls-FieldLink-linkContainer-padding:         4px;
 
 @controls-FieldLink-picker-max-height:             500px;
 @controls-FieldLink-picker-min-height:             16px;
@@ -2079,10 +2081,12 @@
 @controls-FieldLink-linkItem-cross-padding:        3px 5px 3px 0;
 
 @controls-FieldLink-disabled-item-padding:         0 4px;
-@controls-FieldLink-afterField-padding:            0 4px;
+@controls-FieldLink-afterField-padding:            0 4px 0 0;
 @controls-FieldLink-afterField-height:             22px;
 
 @controls-FieldLink-afterField-background:         @white-color;
+@controls-FieldLink-link-color:                    #8991A9;
+@controls-FieldLink-link-color-hover:              #313E78;
 
 //SelectorButton
 @controls-SelectorButton-height:                   24px;
