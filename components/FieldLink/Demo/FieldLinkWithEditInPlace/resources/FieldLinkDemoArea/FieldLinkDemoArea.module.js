@@ -7,7 +7,8 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoArea', [
    "js!WS.Data/Entity/Model",
    "js!WS.Data/Adapter/Sbis",
    "css!SBIS3.CONTROLS.Demo.FieldLinkDemoArea",
-   "js!SBIS3.CONTROLS.FieldLink"
+   "js!SBIS3.CONTROLS.FieldLink",
+   "SBIS3.CONTROLS.Link"
 ], function( CommandDispatcher,CompoundControl, dotTplFn, DataGridView, FieldLinkDemoMemory, Model, SbisAdapter) {
    /**
     * SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace
