@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.CommandsButton', [
       },
       _setPickerContent: function() {
          CommandsButton.superclass._setPickerContent.apply(this, arguments);
-         $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-LessButton icon-primary action-hover');
+         $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-LessButton icon-primary');
       }
    });
    return CommandsButton;

@@ -4,13 +4,15 @@
 
 define('js!SBIS3.CONTROLS.EditInPlace',
    [
-      'js!SBIS3.CORE.CompoundControl',
-      'html!SBIS3.CONTROLS.EditInPlace',
-      'js!SBIS3.CORE.CompoundActiveFixMixin',
-      'js!SBIS3.CONTROLS.CompoundFocusMixin',
-      'js!WS.Data/Di'
-   ],
-   function(Control, dotTplFn, CompoundActiveFixMixin, CompoundFocusMixin, Di) {
+   "Core/Deferred",
+   "js!SBIS3.CORE.CompoundControl",
+   "html!SBIS3.CONTROLS.EditInPlace",
+   "js!SBIS3.CONTROLS.CompoundFocusMixin",
+   "js!WS.Data/Di",
+   "Core/core-instance",
+   "Core/helpers/fast-control-helpers"
+],
+   function( Deferred,Control, dotTplFn, CompoundFocusMixin, Di, cInstance, fcHelpers) {
       'use strict';
 
       /**
@@ -22,7 +24,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
 
       var
          CONTEXT_RECORD_FIELD = 'sbis3-controls-edit-in-place',
-         EditInPlace = Control.extend([CompoundActiveFixMixin, CompoundFocusMixin], /** @lends SBIS3.CONTROLS.EditInPlace.prototype */ {
+         EditInPlace = Control.extend([CompoundFocusMixin], /** @lends SBIS3.CONTROLS.EditInPlace.prototype */ {
             _dotTplFn: dotTplFn,
             $protected: {
                _options: {
@@ -65,14 +67,14 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   if (difference.length) { //Если есть разница, то нотифицируем об этом в событии
                      result = this._notify('onItemValueChanged', difference, this._editingModel);
                      //Результат может быть деферредом (потребуется обработка на бизнес логике)
-                     if (result instanceof $ws.proto.Deferred) {
+                     if (result instanceof Deferred) {
                         loadingIndicator = setTimeout(function () { //Если обработка изменения значения поля длится более 100мс, то показываем индикатор
-                           $ws.helpers.toggleIndicator(true);
+                           fcHelpers.toggleIndicator(true);
                         }, 100);
                         this._editingDeferred = result.addBoth(function () {
                            clearTimeout(loadingIndicator);
                            this._previousModelState = this._cloneWithFormat(this._editingModel);
-                           $ws.helpers.toggleIndicator(false);
+                           fcHelpers.toggleIndicator(false);
                         }.bind(this));
                      } else {
                         this._previousModelState = this._cloneWithFormat(this._editingModel);
@@ -88,7 +90,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                var
                    raw1, raw2,
                    result = [];
-               if ($ws.helpers.instanceOfModule(this._editingModel, 'WS.Data/Entity/Model')) {
+               if (cInstance.instanceOfModule(this._editingModel, 'WS.Data/Entity/Model')) {
                   this._editingModel.each(function(field, value) {
                      if (value != this._previousModelState.get(field)) {
                         result.push(field);
@@ -126,15 +128,12 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._editingModel = this._cloneWithFormat(model);
                this.getContext().setValue(CONTEXT_RECORD_FIELD, this._editingModel);
             },
-            canAcceptFocus: function () {
-               return false;
-            },
             /**
              * Сохранить значения полей области редактирования по месту
              */
             acceptChanges: function() {
                this._deactivateActiveChildControl();
-               return (this._editingDeferred || $ws.proto.Deferred.success()).addCallback(function() {
+               return (this._editingDeferred || Deferred.success()).addCallback(function() {
                   this._model.merge(this._editingModel);
                }.bind(this))
             },
@@ -182,8 +181,6 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             hide: function() {
                EditInPlace.superclass.hide.apply(this, arguments);
                this.getContainer().removeAttr('data-id');
-               this._deactivateActiveChildControl();
-               this.setActive(false);
             },
             edit: function(model, itemProj, withoutActivateFirstControl) {
                if (!this.isVisible()) {
@@ -192,19 +189,10 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._beginTrackHeight();
                this._editing = true;
                this.getTarget().addClass('controls-editInPlace__editing');
-               if (!withoutActivateFirstControl && !this._hasActiveChildControl()) {
+               if (!withoutActivateFirstControl && !this.hasActiveChildControl()) {
                   this.activateFirstControl();
                }
                this._notify('onBeginEdit');
-            },
-            //TODO: метод hasActiveChildControl у AreaAbstract возвращает true, даже если активных дочерних контролов нет.
-            //Так что сами посмотрим на контрол, который AreaAbstract считает активным, и проверим isActive.
-            //Выписал задачу, на то, чтобы разобраться с данной ситуацией.
-            //https://inside.tensor.ru/opendoc.html?guid=e9a6150e-e310-47b2-80e7-b932d67ffc8e&description=
-            //Ошибка в разработку 06.09.2016 Метод hasActiveChildControl у AreaAbstract возвращает true, даже если активных контролов нет. При...
-            _hasActiveChildControl: function() {
-               var activeChildControl = this.getActiveChildControl();
-               return activeChildControl && activeChildControl.isActive();
             },
             isEdit: function() {
                return this._editing;
@@ -250,7 +238,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                return this._options.itemsContainer.find('.js-controls-ListView__item[data-id="' + (id === undefined ? '' : id) + '"]:not(".controls-editInPlace")');
             },
             _deactivateActiveChildControl: function() {
-               var activeChild = this.getActiveChildControl();
+               var activeChild = this.getActiveChildControl(undefined, true);
                activeChild && activeChild.setActive(false);
             },
             focusCatch: function(event) {

@@ -1,4 +1,11 @@
-define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.ContextMenu', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin'], function(Button, ContextMenu, PickerMixin, DSMixin, MenuButtonMixin) {
+define('js!SBIS3.CONTROLS.MenuButton', [
+   'js!SBIS3.CONTROLS.Button',
+   'js!SBIS3.CONTROLS.ContextMenu',
+   'js!SBIS3.CONTROLS.PickerMixin',
+   'js!SBIS3.CONTROLS.DSMixin',
+   'js!SBIS3.CONTROLS.MenuButtonMixin',
+   'Core/helpers/dom&controls-helpers'
+], function(Button, ContextMenu, PickerMixin, DSMixin, MenuButtonMixin, dcHelpers) {
 
    'use strict';
 
@@ -115,7 +122,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       },
 
       _toggleTrackHeader: function(state){
-      	var track = $ws.helpers.trackElement(this._container);
+      	var track = dcHelpers.trackElement(this._container);
       	if (state){
       		track.subscribe('onMove', this._moveHandler, this);
       	} else {

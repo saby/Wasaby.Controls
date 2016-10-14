@@ -3,18 +3,22 @@
  */
 define('js!SBIS3.CONTROLS.FastDataFilter',
    [
-      'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.DSMixin',
-      'js!SBIS3.CONTROLS.FilterMixin',
-      'js!SBIS3.CONTROLS.DropdownList',
-      'html!SBIS3.CONTROLS.FastDataFilter'
-   ],
+   "Core/constants",
+   "js!SBIS3.CORE.CompoundControl",
+   "js!SBIS3.CONTROLS.DSMixin",
+   "js!SBIS3.CONTROLS.FilterMixin",
+   "js!SBIS3.CONTROLS.DropdownList",
+   "html!SBIS3.CONTROLS.FastDataFilter",
+   "Core/helpers/collection-helpers",
+   "Core/helpers/markup-helpers"
+],
 
-   function(CompoundControl, DSMixin, FilterMixin, DropdownList, dotTplFn) {
+   function( constants,CompoundControl, DSMixin, FilterMixin, DropdownList, dotTplFn, colHelpers, mkpHelpers) {
 
       'use strict';
       /**
        * Контрол, отображающий набор выпадающих списков SBIS3.CONTROLS.DropdownList и работающий с фильтром в контексте
+       * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterfast/">Быстрые фильтры</a>.
        * @class SBIS3.CONTROLS.FastDataFilter
        * @extends $ws.proto.CompoundControl
        * @author Крайнов Дмитрий Олегович
@@ -102,20 +106,21 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                    keyField: item.get('keyField'),
                    mode: this._options.mode,
                    multiselect : !!item.get('multiselect'),
-                   showSelectedInList : !!item.get('showSelectedInList'),
                    displayField: item.get('displayField'),
-                   className: (item.get('className') || 'controls-DropdownList__linkStyle') + ' controls-DropdownList-text-overflow',
-                   pickerClassName: (item.get('pickerClassName') + ' controls-DropdownList__picker controls-DropdownList__fastDataFilter') || 'controls-DropdownList__picker controls-DropdownList__fastDataFilter',
+                   className: item.get('className'),
+                   pickerClassName: (item.get('pickerClassName') + ' controls-DropdownList__picker') || 'controls-DropdownList__picker',
                    dataSource: item.get('dataSource'),
                    filter: item.get('filter'),
                    allowDblClick: !!item.get('allowDblClick'),
+                   name: item.get('name'),
+                   type: 'fastDataFilter',
                    pickerConfig: {
                       handlers: {
                          onShow: function () {
                             /* По стандарту: в быстрых фильтрах может одновременно отображаться лишь одна выпадашка,
                                особенно актуально это для выпадашек с множественным выбором, т.к. они не скрываются
                                при уведении мыши, если там отметить запись чекбоксом */
-                            var hasVisibleDDList = $ws.helpers.find(self.getItemsInstances(), function (instance) {
+                            var hasVisibleDDList = colHelpers.find(self.getItemsInstances(), function (instance) {
                                return instance !== this.getParent() && instance.isPickerVisible()
                             }.bind(this));
 
@@ -135,7 +140,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             if(item.has('includedTemplates')){
                cfg.includedTemplates = item.get('includedTemplates');
             }
-            return '<component data-component="SBIS3.CONTROLS.DropdownList" config="' + $ws.helpers.encodeCfgAttr(cfg) + '"></component>';
+            return '<component data-component="SBIS3.CONTROLS.DropdownList" config="' + mkpHelpers.encodeCfgAttr(cfg) + '"></component>';
          },
          _drawItemsCallback: function(){
             var instances = this.getItemsInstances();
@@ -185,7 +190,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          },
          _recalcDropdownWidth: function(){
             this._resetMaxWidth();
-            if ($ws._const.browser.isIE && $ws._const.browser.IEVersion <= 10){
+            if (constants.browser.isIE && constants.browser.IEVersion <= 10){
                var ddlText = $('.controls-DropdownList__textWrapper', this.getContainer()),
                    ieWidth = 2, //Отступ, чтобы ie правильно уместил содержимое в контейнер,
                    containerWidth = this.getContainer().width() + ieWidth;
@@ -205,11 +210,11 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          _resetMaxWidth: function(){
             var dropdownContainer = $('.controls-DropdownList', this.getContainer()),
                dropdownLimitProperty = 'flex-shrink';
-            if ($ws._const.browser.isIE && $ws._const.browser.IEVersion <= 10){
+            if (constants.browser.isIE && constants.browser.IEVersion <= 10){
                dropdownContainer = $('.controls-DropdownList__textWrapper', this.getContainer());
                dropdownLimitProperty = 'max-width';
             }
-            $ws.helpers.forEach(dropdownContainer, function(elem){
+            colHelpers.forEach(dropdownContainer, function(elem){
                $(elem).css(dropdownLimitProperty, '');
             });
          },
@@ -254,7 +259,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
 
          _recalcInternalContext: function() {
             var
-                  changed = $ws.helpers.reduce(this._filterStructure, function(result, element) {
+                  changed = colHelpers.reduce(this._filterStructure, function(result, element) {
                      return result || element.resetValue !== element.value;
                   }, false);
 

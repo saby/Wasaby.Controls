@@ -2,7 +2,12 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.ContextMenu', ['js!SBIS3.CONTROLS.Menu', 'js!SBIS3.CONTROLS.PopupMixin', 'html!SBIS3.CONTROLS.ContextMenu'], function(Menu, PopupMixin, dotTplFn) {
+define('js!SBIS3.CONTROLS.ContextMenu', [
+   'js!SBIS3.CONTROLS.Menu',
+   'js!SBIS3.CONTROLS.PopupMixin',
+   'html!SBIS3.CONTROLS.ContextMenu',
+   'Core/helpers/functional-helpers'
+], function(Menu, PopupMixin, dotTplFn, fHelpers) {
 
    'use strict';
 
@@ -42,7 +47,7 @@ define('js!SBIS3.CONTROLS.ContextMenu', ['js!SBIS3.CONTROLS.Menu', 'js!SBIS3.CON
       },
 
       /* Заглушка, ContextMenu не должно вызывать расчёты авторазмеров, т.к. создаётся абсолютом в body */
-      _notifyOnSizeChanged: $ws.helpers.nop
+      _notifyOnSizeChanged: fHelpers.nop
    });
 
    return ContextMenu;

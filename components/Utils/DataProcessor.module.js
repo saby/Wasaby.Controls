@@ -2,24 +2,31 @@
  * Created by ad.chistyakova on 14.04.2015.
  */
 define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
-   'js!WS.Data/Source/SbisService',
-   'js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer',
-   'js!SBIS3.CORE.LoadingIndicator',
-   'js!WS.Data/Source/SbisService',
-   'i18n!SBIS3.CONTROLS.Utils.DataProcessor'
-], function(Source, Serializer, LoadingIndicator, SbisService) {
+   "Core/core-extend",
+   "Core/core-functions",
+   "Core/EventBus",
+   "Core/IoC",
+   "Core/ConsoleLogger",
+   "js!WS.Data/Source/SbisService",
+   "js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer",
+   "js!SBIS3.CORE.LoadingIndicator",
+   "js!WS.Data/Source/SbisService",
+   "Core/helpers/transport-helpers",
+   "Core/helpers/fast-control-helpers",
+   "i18n!SBIS3.CONTROLS.Utils.DataProcessor"
+], function( cExtend, cFunctions, EventBus, IoC, ConsoleLogger,Source, Serializer, LoadingIndicator, SbisService, transHelpers, fcHelpers) {
    /**
-    * Обработчик данных для печати и выгрузки(экспорта) в Excel, PDF.
-    * Печать осуществляется по готову xsl шаблону через xslt-преобразование
+    * Обработчик данных для печати и выгрузки(экспорта) в Excel, PDF. Печать осуществляется по готову XSL-шаблону через XSLT-преобразование.
     * Экспорт в Excel и PDF можно выполнить несколькими способами:
-    * 1) подготовить данные на клиенте и через xslt преобразовать в HTML, а дальше отправить на сервер
-    * 2) Подготовить либо данные, либо просто фильтр для списочного метода и отправить на сервер, где будет происходить
-    * обработка данных и их преобразование в Excel или PDF. В данном случае будет использован сервис file-transfer
+    * <ul>
+    *    <li>подготовить данные на клиенте и через xslt преобразовать в HTML, а дальше отправить на сервер.</li>
+    *    <li>Подготовить либо данные, либо просто фильтр для списочного метода и отправить на сервер, где будет происходить обработка данных и их преобразование в Excel или PDF. В данном случае будет использован сервис file-transfer.</li>
+    * </ul>
     * @class SBIS3.CONTROLS.Utils.DataProcessor
     * @author Крайнов Дмитрий Олегович
     * @public
     */
-   return $ws.core.extend(/** @lends SBIS3.CONTROLS.Utils.DataProcessor.prototype */{}, {
+   return cExtend({},/** @lends SBIS3.CONTROLS.Utils.DataProcessor.prototype */ {
 
       $protected: {
          _options: {
@@ -40,7 +47,8 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
              */
             columns: [],
             /**
-             * @cfg {String} Поле иерархии для обработки иерархических списков
+             * @cfg {String} Поле иерархии для обработки иерархических списков.
+             * @see root
              */
             hierField: undefined,
             /**
@@ -49,6 +57,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             openedPath : {},
             /**
              * @cfg {String} Корень иерархии
+             * @see hierField
              */
             root : undefined,
             /**
@@ -79,7 +88,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          var self = this;
          this._createLoadIndicator(rk('Печать записей...'));
          this._prepareSerializer().addCallback(function(reportText){
-            $ws.helpers.showHTMLForPrint({
+            fcHelpers.showHTMLForPrint({
                htmlText: reportText,
                minWidth : self._options.minWidth,
                //opener: self,
@@ -92,34 +101,6 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                self._destroyLoadIndicator();
             });
          });
-      },
-      /**
-       * Выгрузить данные, создав HTML на клиенте через xslt-преобразоование
-       * @param fileType - Имя объекта выгрузки (Например Excel)
-       * @param methodName - Име метода объекта выгрцзки (например Сохранить)
-       * @param fileName - Имя файла
-       * @param [cfg] Если задана конфигурация выгрузки, то в метод уйдет только заданная конфигурация (она же фильтр)
-       * @param useGET
-       * @deprecated используйте exportList или exportDataSet
-       */
-      exportData: function (fileType, methodName, fileName, cfg, useGET) {
-         var self = this;
-         //fileName = idReport ? idReport : (isSaveColumns ? 'Выбранные столбцы' : 'Как на экране'), ??
-         if (!cfg) {
-            this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + fileType);
-            this._prepareSerializer().addCallback(function(reportText){
-               self._destroyLoadIndicator();
-               $ws.helpers.saveToFile(fileType, methodName, {
-                  'html': reportText,
-                  'Название': fileName//idReport || Standart
-               }, undefined, useGET, fileType === "Excel");
-            });
-         } else {
-            //TODO: В iOS не работает выгрузка с помощью POST запроса.
-            //Возможно у нас что-то неверно сконфигурировано. Выписал задачу чтобы разобраться в этой ситуации:
-            //https://inside.tensor.ru/opendoc.html?guid=03308a7c-ae3b-47c5-9c57-02a79adaf64b&description=
-            $ws.helpers.saveToFile(fileType, methodName, cfg, undefined, useGET || $ws._const.browser.isMobileIOS, fileType === "Excel");
-         }
       },
       /**
        * Выгрузить данные с помощью готовой HTML-верстки
@@ -169,7 +150,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        */
       exportDataSet: function(fileName, fileType, cfg, pageOrientation, methodName){
          var
-            columns  = $ws.core.clone(this._options.columns),
+            columns  = cFunctions.clone(this._options.columns),
             records,
             rawData  = {s : [], d : []},
             fields = [], titles = [];
@@ -216,7 +197,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                 endpoint: object
             });
          exportDeferred = source.call(methodName, cfg).addErrback(function(error) {
-            $ws.single.ioc.resolve('ILogger').log(rk('DataProcessor. Ошибка выгрузки данных'), error.details);
+            IoC.resolve('ILogger').log(rk('DataProcessor. Ошибка выгрузки данных'), error.details);
             return error;
          });
          if (object !== "Excel") {
@@ -230,7 +211,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          else {
             exportDeferred.addCallback(function(){
                //TODO Не совсем хорошо, что контролы знают о LongOperations. Но пока не понятно, как сделать иначе.
-               $ws.single.EventBus.channel('LongOperations').notify('onOperationStarted');
+               EventBus.channel('LongOperations').notify('onOperationStarted');
             });
          }
          return exportDeferred;
@@ -240,7 +221,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        * @param id - уникальный идентификатор файла на сервисе file-transfer
        */
       downloadFile : function(id){
-         window.open($ws.helpers.prepareGetRPCInvocationURL( 'File','Download', {'id': id}, undefined, '/file-transfer/service/'), '_self');
+         window.open(transHelpers.prepareGetRPCInvocationURL( 'File','Download', {'id': id}, undefined, '/file-transfer/service/'), '_self');
       },
       /**
        * Метод для формирования параметров фильтрации выгружаемого на сервере файла.
@@ -263,7 +244,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        */
       getFullFilter : function(selectedNumRecords, eng){
          var dataSource = this._options.dataSource,
-            columns = $ws.core.clone(this._options.columns),
+            columns = cFunctions.clone(this._options.columns),
             fields = [],
             titles = [],
             filter,
@@ -277,7 +258,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             titles.push(columns[i].title || columns[i].field);
          }
          //openedPath[key] = true;
-         filter = $ws.core.clone(this._options.filter || {});
+         filter = cFunctions.clone(this._options.filter || {});
          if (this._options.hierField !== undefined){
             hierField = this._options.hierField;
             cfg[eng ? 'HierarchyField' : 'Иерархия'] = hierField;
@@ -286,7 +267,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             if (openedPath && !Object.isEmpty(openedPath)) {
 
                filter[hierField] = filter[hierField] === undefined ? [this._options.root] : filter[hierField];
-               filter[hierField] = filter[hierField] instanceof Array ? $ws.core.clone(filter[hierField]) : [filter[hierField]];
+               filter[hierField] = filter[hierField] instanceof Array ? cFunctions.clone(filter[hierField]) : [filter[hierField]];
                for (i in openedPath) {
                   if (openedPath.hasOwnProperty(i) && Array.indexOf( filter[hierField], i) < 0) {
                      filter[hierField].push(i);

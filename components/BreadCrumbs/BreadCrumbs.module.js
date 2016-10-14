@@ -3,9 +3,10 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'js!SBIS3.CONTROLS.DSMixin',
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.DecorableMixin',
-   'html!SBIS3.CONTROLS.BreadCrumbs',
-   'html!SBIS3.CONTROLS.BreadCrumbs/resources/pointTpl'
-], function(CompoundControl, DSMixin, PickerMixin, DecorableMixin, dotTpl, pointTpl) {
+   'tmpl!SBIS3.CONTROLS.BreadCrumbs',
+   'html!SBIS3.CONTROLS.BreadCrumbs/resources/pointTpl',
+   'Core/helpers/string-helpers'
+], function(CompoundControl, DSMixin, PickerMixin, DecorableMixin, dotTpl, pointTpl, strHelpers) {
    /**
     * Контрол рисующий "Хлебные крошки"
     * Пример использования - иерархические реестры
@@ -107,6 +108,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                this._dotsClickHandler(crumb)
             } else if (crumb.length) {
                this._notify('onItemClick', crumb.data(this._options.keyField));
+               this.sendCommand('BreadCrumbsItemClick', crumb.data(this._options.keyField));
             }
             if (this._picker && this._picker.isVisible() && fromDropdown){
                this._picker.hide();
@@ -186,7 +188,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                if (record.get(self._options.keyField)){
                   var point = $('<div class="controls-MenuItem js-controls-BreadCrumbs__crumb"></div>');
                      point.html(self._options._decorators.apply(
-                           $ws.helpers.escapeHtml(record.get(self._options.displayField))
+                           strHelpers.escapeHtml(record.get(self._options.displayField))
                      ))
                      .attr('style', self._options._decorators.apply(
                         self._options.colorField ? record.get(self._options.colorField) : '', 'color'
@@ -261,7 +263,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          crumbs = $('.controls-BreadCrumbs__crumb', targetContainer).not('.ws-hidden').not('.controls-BreadCrumbs__dots');
 
          //Минимум остается первая и последняя хлебная крошка
-         if (targetContainer.width() + this._homeIconWidth >= containerWidth) {
+         if (targetContainer.outerWidth(true) + this._homeIconWidth >= containerWidth) {
             //ширина декоротивных элементов -  блок с домиком, троеточие, стрелки 
             var dotsWidth = $('.controls-BreadCrumbs__dots', this._container).outerWidth(true) || 0,
                width = this._homeIconWidth + dotsWidth + this._arrowWidth * 2,

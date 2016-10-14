@@ -1,7 +1,16 @@
 /**
  * Created by as.suhoruchkin on 21.07.2015.
  */
-define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/MoveStrategy/Sbis', 'js!WS.Data/MoveStrategy/Base', 'i18n!SBIS3.CONTROLS.MoveHandlers'], function(Dialog, SbisMoveStrategy, BaseMoveStrategy) {
+define('js!SBIS3.CONTROLS.MoveHandlers', [
+   "Core/core-functions",
+   "Core/Deferred",
+   "js!SBIS3.CORE.Dialog",
+   "js!WS.Data/MoveStrategy/Sbis",
+   "js!WS.Data/MoveStrategy/Base",
+   "Core/core-instance",
+   "Core/helpers/string-helpers",
+   "i18n!SBIS3.CONTROLS.MoveHandlers"
+], function( cFunctions, Deferred,Dialog, SbisMoveStrategy, BaseMoveStrategy, cInstance, strHelpers) {
    var MoveHandlers = {
       $protected: {
         _moveStrategy: undefined
@@ -12,7 +21,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
          if (records.length) {
             new Dialog({
                template: 'js!SBIS3.CONTROLS.MoveDialogTemplate',
-               title: rk('Перенести') + ' ' + records.length + $ws.helpers.wordCaseByNumber(records.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в', 'направление'),
+               title: rk('Перенести') + ' ' + records.length + strHelpers.wordCaseByNumber(records.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в', 'направление'),
                cssClassName: 'controls-moveDialog',
                componentOptions: {
                   linkedView: this,
@@ -56,7 +65,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
             isChangeOrder = insertAfter !== undefined;
 
          if (moveTo !== null) {
-            if ($ws.helpers.instanceOfModule(moveTo, 'WS.Data/Entity/Model')) {
+            if (cInstance.instanceOfModule(moveTo, 'WS.Data/Entity/Model')) {
                recordTo = moveTo;
                moveTo = recordTo.getId();
             } else {
@@ -72,7 +81,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
          if (this._checkRecordsForMove(records, recordTo, isChangeOrder)) {
             for (var i = 0; i < records.length; i++) {
                var record = records[i];
-               if ($ws.helpers.instanceOfModule(record, 'WS.Data/Entity/Model')) {
+               if (cInstance.instanceOfModule(record, 'WS.Data/Entity/Model')) {
                   if (this.getItems().getIndex(record) === -1) {
                      var itemsRecord =  this.getItems().getRecordById(record.getId());
                      if (itemsRecord) {
@@ -92,15 +101,10 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
             } else {
                return;
             }
-            deferred = deferred === true ? new $ws.proto.Deferred().callback(true) : deferred;
-            if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
+            deferred = deferred === true ? new Deferred().callback(true) : deferred;
+            if (deferred instanceof Deferred) {//обновляем view если вернули true либо deferred
                deferred.addCallback(function() {
-                  if (isChangeOrder) {
-                     self.moveInItems(records, recordTo, !insertAfter);
-                  } else {
-                     //TODO: пока дерево не перевели на проекции, нужно пересчитывать дерево индексов, т.к. после set
-                     //в поле иерархии он сам этого не сделает
-                     self._options._items._reindexTree(self._options.hierField);
+                  if (!isChangeOrder) {
                      self.removeItemsSelectionAll();
                   }
                }).addBoth(function() {
@@ -118,10 +122,10 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
          if (recordTo === undefined) {
             return false;
          }
-         if (recordTo !== null && $ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.TreeMixin')) {
+         if (recordTo !== null && cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.TreeMixin')) {
             toMap = this._getParentsMap(recordTo.getId());
             for (var i = 0; i < records.length; i++) {
-               key = '' + (($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record')||$ws.helpers.instanceOfModule(records[i], 'WS.Data/Entity/Model')) ? records[i].getId() : records[i]);
+               key = '' + ((cInstance.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record')||cInstance.instanceOfModule(records[i], 'WS.Data/Entity/Model')) ? records[i].getId() : records[i]);
                if ($.inArray(key, toMap) !== -1) {
                   return false;
                }
@@ -147,16 +151,20 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
                3. это не исключает ситуации, когда БЛ не возвращает иерархию до корня, либо пользователь самостоятельно пытается что-то переместить с помощью интерфейса IDataSource.move. В таком случае мы считаем, что БЛ вне зависимости от возможности проверки на клиенте, всегда должна проверять входные значения при перемещении. В противном случае это приводит к зависанию запроса.
             */
             path = dataSet.getMetaData().path,
-            toMap = path ? $.map(path.getChildItems(), function(elem) {
-               return '' + elem;
-            }) : [];
+            toMap = [];
+
+         if (path) {
+            path.each(function(item) {
+               toMap.push('' + item.getId());
+            });
+         }
          var record = dataSet.getRecordById(parentKey);
          while (record) {
             parentKey = '' + record.getId();
             if ($.inArray(parentKey, toMap) === -1) {
                toMap.push(parentKey);
             }
-            parentKey = dataSet.getParentKey(record, hierField);
+            parentKey = record.get(hierField);
             record = dataSet.getRecordById(parentKey);
          }
          return toMap;
@@ -175,8 +183,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
        * @private
        */
       _makeMoveStrategy: function () {
-         if($ws.helpers.instanceOfModule(this._dataSource,'WS.Data/Source/SbisService') ||
-            $ws.helpers.instanceOfModule(this._dataSource,'SBIS3.CONTROLS.SbisServiceSource')
+         if(cInstance.instanceOfModule(this._dataSource,'WS.Data/Source/SbisService') ||
+            cInstance.instanceOfModule(this._dataSource,'SBIS3.CONTROLS.SbisServiceSource')
          ) {
             return new SbisMoveStrategy({
                dataSource: this._dataSource,
@@ -196,7 +204,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
        * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
        */
       setMoveStrategy: function (strategy){
-         if(!$ws.helpers.instanceOfMixin(strategy,'WS.Data/MoveStrategy/IMoveStrategy')){
+         if(!cInstance.instanceOfMixin(strategy,'WS.Data/MoveStrategy/IMoveStrategy')){
             throw new Error('The strategy must implemented interfaces the WS.Data/MoveStrategy/IMoveStrategy.')
          }
          this._moveStrategy = strategy;
@@ -218,80 +226,9 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!WS.Data/Mov
       _moveRecord: function(item, moveToId, current, up) {
          var self = this,
              moveToItem = this._options._items.getRecordById(moveToId);
-         this.getMoveStrategy().move([item], moveToItem, !up).addCallback(function() {
-            self.moveInItems([item], moveToItem, up);
-         }).addErrback(function(e) {
-            $ws.core.alert(e.message);
+         this.getMoveStrategy().move([item], moveToItem, !up).addErrback(function(e) {
+            cFunctions.alert(e.message);
          });
-      },
-
-      moveInItems: function(moveItems, moveToItem, up) {
-         var moveToIndex,
-            items = this.getItems(),
-            projection = this._getItemsProjection(),
-            orderPropery = this.getDataSource().getOrderProperty(),
-            orderValue = this._getOrderValue(moveToItem, moveItems[0], up);
-
-         $ws.helpers.forEach(moveItems, function(item) {
-            var projectionItem =  projection.getItemBySourceItem(item);
-            if (this._options.hierField) {
-               //если перемещение было по порядку и иерархии одновременно, то надо обновить hierField
-               item.set(this._options.hierField, moveToItem.get(this._options.hierField));
-            }
-            if(up) { //Если перемещаем вверх то надо вставить перемещаемую запись перед записью к которой перемещаем.
-               moveToIndex = items.getIndex(moveToItem);
-               moveToIndex = moveToIndex > -1 ?  moveToIndex : 0;//если не нашли то всталяем вначало
-            } else {
-               //Если перемещаем вниз то нужно найти следующий элемент в проекции потом его индекс в рекордсете
-               //и вставить запись после него, потомучто может быть перемещение через dragndrop а оно может вставить куда угодно.
-               var nextProjectionItem = projection.getNext(
-                  projection.getItemBySourceItem(moveToItem)
-               );
-               if(nextProjectionItem) {
-                  moveToIndex = projection.getSourceIndexByIndex(
-                     projection.getIndex(nextProjectionItem)
-                  );
-               } else { //если не найден то вставляем в конец
-                  moveToIndex = items.getCount();
-               }
-            }
-            if (items.getIndex(item) < moveToIndex ) {
-               moveToIndex--; //если запись по списку сдвигается вниз то после ее удаления индексы сдвинутся
-            }
-            items.setEventRaising(false, true);
-            items.remove(item);
-            items.add(
-               item,
-               moveToIndex < items.getCount() ? moveToIndex : undefined
-            );
-            if (orderPropery && orderValue && item.has(orderPropery)) {
-               item.set(orderPropery, orderValue);
-            }
-            items.setEventRaising(true, true);
-         }.bind(this));
-      },
-      /**
-       * вычисляет значение порномера, нужно если есть сортировка по порномеру на проекции
-       * @private
-       */
-      _getOrderValue: function(moveToItem, moveItem, up) {
-         var projection = this._getItemsProjection(),
-            nearbyItemprojItem = projection[up ? 'getPrevious' : 'getNext'](
-               projection.getItemBySourceItem(moveToItem)
-            ),
-            nearbyItem =  nearbyItemprojItem ? nearbyItemprojItem.getContents() : undefined,
-            orderPropery = this.getDataSource().getOrderProperty();
-
-         if (moveToItem.has(orderPropery)) {
-            var nearbyVal = nearbyItem ? nearbyItem.get(orderPropery) : undefined,
-               moveToVal = moveToItem.get(orderPropery);
-
-            if (nearbyVal && moveToVal) {
-               return Math.floor((moveToVal+nearbyVal)/2);
-            }
-            return moveToVal;
-         }
-         return undefined;
       }
    };
 

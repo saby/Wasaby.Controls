@@ -3,17 +3,27 @@
  */
 
 define('js!SBIS3.CONTROLS.PopupMixin', [
-      'js!SBIS3.CONTROLS.ControlHierarchyManager',
-      'js!SBIS3.CORE.ModalOverlay',
-      'js!SBIS3.CONTROLS.TouchKeyboardHelper',
-      'Core/helpers/helpers'
-   ], function (ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers) {
+   "Core/WindowManager",
+   "Core/EventBus",
+   "Core/Deferred",
+   "js!SBIS3.CONTROLS.ControlHierarchyManager",
+   "js!SBIS3.CORE.ModalOverlay",
+   "js!SBIS3.CONTROLS.TouchKeyboardHelper",
+   "Core/helpers/helpers",
+   "Core/helpers/dom&controls-helpers"
+], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers, dcHelpers) {
    'use strict';
    if (typeof window !== 'undefined') {
-      var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
+      var eventsChannel = EventBus.channel('WindowChangeChannel');
 
       $(document).bind('mousedown touchstart', function (e) {
          eventsChannel.notify('onDocumentClick', e);
+      });
+
+      $(window).blur(function(e) {
+         if(document.activeElement.tagName == "IFRAME"){
+            eventsChannel.notify('onDocumentClick', e);
+         }
       });
 
       $(document).bind('mouseover', function (e) {
@@ -115,8 +125,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              * @cfg {Boolean} модальный или нет
              */
             isModal: false,
-            //Ограничить размеры только высотой экрана, в противном случае они ограничены границами экрана и расположением тагрета
-            fullHeight: false
+            /**
+             * Разрешить всплывающему окну перекрывать target 
+             * Например нужно для меню, которое может перекрывать target без потери функцианальности, 
+             * но не подходит для поля связи, так как может перекрывать вводимый текст 
+             * @type {Boolean}
+             */
+            allowOverlapTarget: false
          }
       },
 
@@ -137,13 +152,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          this._initOppositeCorners();
 
          //Скрываем попап если при скролле таргет скрылся
-         $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowScroll', this._onResizeHandler, this);
+         EventBus.channel('WindowChangeChannel').subscribe('onWindowScroll', this._onResizeHandler, this);
 
          if (this._options.closeByExternalOver) {
-            $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentMouseOver', this._clickHandler, this);
+            EventBus.channel('WindowChangeChannel').subscribe('onDocumentMouseOver', this._clickHandler, this);
          }
          else if (this._options.closeByExternalClick) {
-            $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
+            EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
 
          if (this._options.closeButton) {
@@ -156,7 +171,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                self.hide();
             });
          }
-         container.appendTo('body');
+
+         this._attachContainer();
 
          this._saveDefault();
          this._resetToDefault();
@@ -169,9 +185,19 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          }
       },
 
+      _attachContainer: function(){
+         var container = this._container,
+            parentToAttach = container.parents('.ws-body-scrolling-content');
+         if (parentToAttach.length){
+            container.appendTo(parentToAttach);
+         } else {
+            container.appendTo('body');
+         }
+      },
+
       //Подписка на изменение состояния таргета
       _subscribeTargetMove: function(){
-         this._targetChanges = $ws.helpers.trackElement(this._options.target, true);
+         this._targetChanges = dcHelpers.trackElement(this._options.target, true);
          //перемещаем вслед за таргетом
          this._targetChanges.subscribe('onMove', this._onTargetMove, this);
          //скрываем если таргет скрылся
@@ -356,13 +382,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             ModalOverlay.adjust();
             var self = this;
             ModalOverlay._overlay.bind('mousedown', function(){
-               if (self._options.closeByExternalClick && self.getId() == $ws.single.WindowManager.getMaxZWindow().getId()) {
+               if (self._options.closeByExternalClick && self.getId() == cWindowManager.getMaxZWindow().getId()) {
                   ControlHierarchyManager.getTopWindow().hide();
                }
             });
          }
          else {
-            $ws.single.WindowManager.releaseZIndex(this._zIndex);
+            cWindowManager.releaseZIndex(this._zIndex);
             ModalOverlay.adjust();
          }
       },
@@ -373,7 +399,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
       moveToTop: function(){
          if (this.isVisible()) {
-            $ws.single.WindowManager.releaseZIndex(this._zIndex);
+            cWindowManager.releaseZIndex(this._zIndex);
 
             this._getZIndex();
             this._container.css('z-index', this._zIndex);
@@ -720,24 +746,26 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if (offset.top < 0 && this._options.verticalAlign.side !== 'top') {
                this._overflowedV = true;
                this._container.css('overflow-y', 'auto');
+               var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
                if (spaces.top < spaces.bottom) {
-                  if (this._options.fullHeight){
-                     var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
+                  if (this._options.allowOverlapTarget){
                      this._container.css('height', height);
                      offset.top = this._windowSizes.height - this._container.get(0).scrollHeight - this._containerSizes.border * 2;
                   } else {
                      this._isMovedV = !this._isMovedV;
                      oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
                      spaces = this._getSpaces(this._options.corner);
-                     this._container.css('height', spaces.bottom - vOffset - this._margins.top + this._margins.bottom);
+                     height = spaces.bottom - vOffset - this._margins.top + this._margins.bottom;
                      offset.top = this._targetSizes.offset.top + oppositeOffset.top;
                   }
                } else {
                   offset.top = 0;
                   //Если места снизу меньше чем сверху покажемся во весь размер (возможно поверх таргета), или в высоту окна если в него не влезаем
-                  var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
-                  this._container.css('height', height);
+                  if (!this._options.allowOverlapTarget){
+                     height = spaces.top - vOffset - this._margins.top + this._margins.bottom;
+                  }
                }
+               this._container.css('height', height);
             }
             if (this._containerSizes.originHeight + vOffset + this._margins.top - this._margins.bottom < spaces.bottom && this._overflowedV) {
                this._container.css('overflow-y', 'visible');
@@ -848,8 +876,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       },
 
       _getZIndex: function(){
-         this._zIndex = $ws.single.WindowManager.acquireZIndex(this._options.isModal, false, true);
-         $ws.single.WindowManager.setVisible(this._zIndex);
+         this._zIndex = cWindowManager.acquireZIndex(this._options.isModal, false, true);
+         cWindowManager.setVisible(this._zIndex);
       },
 
       /**
@@ -920,17 +948,17 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          },
          destroy: function () {
             //ControlHierarchyManager.zIndexManager.setFree(this._zIndex);
-            $ws.helpers.trackElement(this._options.target, false);
-            $ws.single.WindowManager.setHidden(this._zIndex);
-            $ws.single.WindowManager.releaseZIndex(this._zIndex);
+            dcHelpers.trackElement(this._options.target, false);
+            cWindowManager.setHidden(this._zIndex);
+            cWindowManager.releaseZIndex(this._zIndex);
             ControlHierarchyManager.removeNode(this);
             this._unsubscribeTargetMove();
-            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._onResizeHandler, this);
+            EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._onResizeHandler, this);
             if (this._options.closeByExternalOver) {
-               $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentMouseOver', this._clickHandler, this);
+               EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentMouseOver', this._clickHandler, this);
             }
             else if (this._options.closeByExternalClick) {
-               $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentClick', this._clickHandler, this);
+               EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentClick', this._clickHandler, this);
             }
             // Освобождаем оверлей если забирали его
             if (this._options.isModal){
@@ -938,7 +966,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             }
          },
          hide: function() {
-            $ws.helpers.trackElement(this._options.target, false);
+            dcHelpers.trackElement(this._options.target, false);
          }
       },
 
@@ -951,11 +979,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             var self = this,
                 result = this._notify('onClose'),
                 clearZIndex = function() {
-                   $ws.single.WindowManager.setHidden(self._zIndex);
-                   $ws.single.WindowManager.releaseZIndex(self._zIndex);
+                   cWindowManager.setHidden(self._zIndex);
+                   cWindowManager.releaseZIndex(self._zIndex);
                    self._zIndex = null;
                 };
-            if (result instanceof $ws.proto.Deferred) {
+            if (result instanceof Deferred) {
                result.addCallback(function (res) {
                   if (res !== false) {
                      parentHide.call(self);

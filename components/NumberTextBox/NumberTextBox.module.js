@@ -2,7 +2,12 @@
  * Created by iv.cheremushkin on 28.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SBIS3.CONTROLS.NumberTextBox/resources/NumberTextBoxArrows'], function (TextBox, arrowTpl) {
+define('js!SBIS3.CONTROLS.NumberTextBox', [
+   "Core/defaultRenders",
+   "Core/constants",
+   "js!SBIS3.CONTROLS.TextBox",
+   "html!SBIS3.CONTROLS.NumberTextBox/resources/NumberTextBoxArrows"
+], function ( cDefaultRenders, constants,TextBox, arrowTpl) {
 
    'use strict';
    /**
@@ -25,14 +30,13 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol textTransform
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
     *
-    * @ignoreMethods applyEmptyState applyState findParent getAlignment getEventHandlers getEvents getExtendedTooltip
+    * @ignoreMethods applyEmptyState applyState findParent getAlignment getEventHandlers getEvents
     * @ignoreMethods getId getLinkedContext getMinHeight getMinSize getMinWidth getOwner getOwnerId getParentByClass
     * @ignoreMethods getParentByName getParentByWindow getStateKey getTopParent getUserData hasEvent hasEventHandlers
     * @ignoreMethods isDestroyed isSubControl makeOwnerName once sendCommand setOwner setStateKey setUserData setValue
     * @ignoreMethods subscribe unbind unsubscribe
     *
-    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
-    * @ignoreEvents onReady
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onChange onReady
     *
     * @cssModifier controls-NumberTextBox__text-align-right Выравнивает содержимое поля ввода по правому краю.
     *
@@ -144,8 +148,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
              * </pre>
              * @see text
              */
-            numericValue: null,
-            formatNumericValue: false
+            numericValue: null
          }
       },
 
@@ -198,9 +201,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _setText: function(text){
-         if (!this._options.formatNumericValue){
-            this._setNumericValue(text);
-         }
          if (text !== '-' && text !== '.' && text !== ''){
             text = this._formatText(text);
             if (text.indexOf('.') === text.length - 1) {
@@ -209,9 +209,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
                return;
             }
          }
-         if (this._options.formatNumericValue){
-            this._setNumericValue(text);
-         }
+         this._setNumericValue(text);
          this._inputField.val(text);
          this._setCaretPosition(this._caretPosition[0], this._caretPosition[1]);
       },
@@ -305,7 +303,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          if (value == '-') {
             return value;
          }
-         value = $ws.render.defaultColumn.numeric(
+         value = cDefaultRenders.numeric(
             value,
             this._options.integers,
             this._options.delimiters,
@@ -345,12 +343,12 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          if (event.ctrlKey){
             this._CTRL_KEY = true;
          }
-         if (event.which == $ws._const.key.f5   || // F5, не отменяем действие по-умолчанию
-            event.which == $ws._const.key.f12   || // F12,не отменяем действие по-умолчанию
-            event.which == $ws._const.key.left  || // не отменяем arrow keys (влево, вправо)
-            event.which == $ws._const.key.right ||
-            event.which == $ws._const.key.end   || // не отменяем home, end
-            event.which == $ws._const.key.home
+         if (event.which == constants.key.f5   || // F5, не отменяем действие по-умолчанию
+            event.which == constants.key.f12   || // F12,не отменяем действие по-умолчанию
+            event.which == constants.key.left  || // не отменяем arrow keys (влево, вправо)
+            event.which == constants.key.right ||
+            event.which == constants.key.end   || // не отменяем home, end
+            event.which == constants.key.home
          ) {
             return true;
          }
@@ -576,7 +574,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             b,
             e,
             l;
-         if ($ws._const.browser.isIE && $ws._const.browser.IEVersion < 9) { //IE
+         if (constants.browser.isIE && constants.browser.IEVersion < 9) { //IE
             var range = document.selection.createRange();
             l = range.text.length;
             range.moveStart('textedit', -1);
@@ -599,7 +597,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       _setCaretPosition : function(pos, pos2){
          pos2 = pos2 || pos;
          var obj = this._inputField.get(0);
-         if ($ws._const.browser.isIE && $ws._const.browser.IEVersion < 9) { //IE
+         if (constants.browser.isIE && constants.browser.IEVersion < 9) { //IE
             var r = obj.createTextRange();
             r.collapse(true);
             r.moveStart("character", pos);

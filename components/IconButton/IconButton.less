@@ -2,25 +2,35 @@
    border: 1px solid @border-color;
    border-radius: 14px;
    text-align: center;
-   &:hover{
-      border-color: @default-color;
-      &.controls-IconButton__errorBorder {
-         border-color: #ef463a;
-         &.ws-disabled {
-            border-color: @gray-ccc-color;
-         }
-      }
-      &.controls-IconButton__doneBorder {
-         border-color: #72be44;
-         &.ws-disabled {
-            border-color: @gray-ccc-color;
-         }
-      }
-   }
+
    &.ws-disabled {
       border-color: @gray-ccc-color;
+      color: @gray-ccc-color !important;
    }
    box-sizing: border-box;
+}
+
+.round-button-hover-mixin() {
+  &:hover {
+    border-color: @default-color;
+    color: @default-color !important;
+    &.controls-IconButton__errorBorder {
+      border-color: @button-icon-error-color;
+      color: @button-icon-error-color !important;
+      &.ws-disabled {
+        border-color: @gray-ccc-color;
+        color: @gray-ccc-color !important;
+      }
+    }
+    &.controls-IconButton__doneBorder {
+      border-color: @button-icon-done-color;
+      color: @button-icon-done-color !important;
+      &.ws-disabled {
+        border-color: @gray-ccc-color;
+        color: @gray-ccc-color !important;
+      }
+    }
+  }
 }
 
 .controls-IconButton {
@@ -29,6 +39,13 @@
    &.controls-Button {
       padding: 0;
       cursor: pointer;
+   }
+
+   &.controls-IconButton__doneBorder {
+     color: @button-icon-done-color !important;
+   }
+   &.controls-IconButton__errorBorder {
+     color: @button-icon-error-color !important;
    }
    &.controls-IconButton__round-border{
       .round-button-mixin(@gray-ccc-color);
@@ -57,6 +74,7 @@
    }
    &.ws-disabled {
       cursor: default;
+      color: @icon-color-disabled !important;
    }
    &.ws-area{
       height: auto;
@@ -94,57 +112,15 @@
       }
    }
 }
-
-.ws-enabled,
-.ws-disabled,
-.ws-disabled .ws-enabled,
-.ws-enabled .ws-disabled .ws-enabled,
-.ws-disabled .ws-enabled .ws-disabled .ws-enabled,
-.ws-enabled .ws-disabled .ws-enabled .ws-disabled .ws-enabled,
-.ws-disabled .ws-enabled .ws-disabled .ws-enabled .ws-disabled .ws-enabled
-{
-   .icon-primary{
-      &.controls-IconButton {
-         color: #587ab0 !important;
-         &.ws-disabled, &.ws-disabled.action-hover:hover{
-            color: #ccc!important;
-         }
-         &.action-hover:hover{
-            color: #ff7033 !important;
-         }
+.ws-is-desktop-platform {
+  .controls-IconButton:not(.ws-disabled) {
+    &:hover {
+      &.icon-primary {
+        color: @blue-dark-color !important;
       }
-   }
-   .icon-error{
-      &.controls-IconButton {
-         color: #ef463a !important;
-         &.ws-disabled, &.ws-disabled.action-hover:hover{
-            color: #ccc!important;
-         }
-         &.action-hover:hover {
-            color: #ff7033 !important;
-         }
-      }
-   }
-   .icon-done{
-      &.controls-IconButton {
-         color: #72be44 !important;
-         &.ws-disabled, &.ws-disabled.action-hover:hover{
-            color: #ccc!important;
-         }
-         &.action-hover:hover {
-            color: #ff7033 !important;
-         }
-      }
-   }
-   .icon-attention{
-      &.controls-IconButton {
-         color: #FEC63F !important;
-         &.ws-disabled, &.ws-disabled.action-hover:hover{
-            color: #ccc!important;
-         }
-         &.action-hover:hover {
-            color: #ff7033 !important;
-         }
-      }
-   }
+    }
+    &.controls-IconButton__round-border, &.controls-IconButton__round-border-24, &.controls-IconButton__round-border-32{
+      .round-button-hover-mixin();
+    }
+  }
 }

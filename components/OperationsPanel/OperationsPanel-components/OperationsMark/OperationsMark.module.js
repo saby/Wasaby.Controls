@@ -4,8 +4,9 @@
 define('js!SBIS3.CONTROLS.OperationsMark', [
    'js!SBIS3.CONTROLS.MenuLink',
    'js!SBIS3.CONTROLS.CheckBox',
+   'Core/core-instance',
    'i18n!SBIS3.CONTROLS.OperationsMark'
-], function(MenuLink, CheckBox, rk) {
+], function(MenuLink, CheckBox, cInstance) {
    /**
     * Операции выделения.
     *
@@ -94,7 +95,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
        * @param {SBIS3.CONTROLS.ListView} linkedView
        */
       setLinkedView: function(linkedView) {
-         if (linkedView && $ws.helpers.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.MultiSelectable')) {
+         if (linkedView && cInstance.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.MultiSelectable')) {
             this._options.linkedView = linkedView;
             this.getItemInstance('selectCurrentPage').toggle(!linkedView._options.infiniteScroll);
             this._bindEvents();

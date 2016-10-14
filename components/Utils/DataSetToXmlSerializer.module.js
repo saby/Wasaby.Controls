@@ -2,10 +2,23 @@
  * Created by ad.chistyakova on 22.04.2015.
  */
 define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
-         'js!SBIS3.CORE.XSLT',
-         'i18n!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer'
-      ], function() {
-   return $ws.core.extend({}, {
+   "Core/core-structure",
+   "Core/xslt",
+   "Transport/ReportPrinter",
+   "Transport/Record",
+   "Transport/RecordSet",
+   "Core/helpers/helpers",
+   "Core/core-extend",
+   "Core/constants",
+   "Core/IoC",
+   "Core/ConsoleLogger",
+   "Core/core-instance",
+   "Core/helpers/fast-control-helpers",
+   "Core/helpers/string-helpers",
+   "js!SBIS3.CORE.XSLT",
+   "i18n!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer"
+], function( $ws, cXSLT, cReportPrinter, Record, RecordSet, cHelpers, cExtend, constants, IoC, ConsoleLogger,cInstance, fcHelpers, strHelpers) {
+   return cExtend({}, {
 
       _complexFields: {
          "Связь" : true,
@@ -40,7 +53,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
       },
       //TODO Перенести обратно в Source.js, потому что получилась копипаста, хотя хотели как лучше
       $constructor: function() {
-         this._reportPrinter = new $ws.proto.ReportPrinter({
+         this._reportPrinter = new cReportPrinter({
             columns: this._options.columns
          });
          //TODO возможно кнопка печати может стать кнопкой меню, в зависимости от набора отчетов на печать
@@ -59,12 +72,12 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                xslDoc = new $ws.proto.XMLDocument({ name: xsl }).getDocument(),
                xmlDoc = this.serialize(dataSet, rp.getColumns());
          return rp.prepareReport(dataSet, xslDoc, undefined, xmlDoc).addErrback(function(error){
-            $ws.helpers.alert(error, { checkAlreadyProcessed: true }, self);
+            fcHelpers.alert(error, { checkAlreadyProcessed: true }, self);
             return error;
          });
       },
       _getTransform: function(idReport, object, xsl) {
-         return ( typeof idReport === 'undefined' ?  $ws._const.wsRoot + 'res/xsl/' :  $ws._const.resourceRoot ) + xsl;
+         return ( typeof idReport === 'undefined' ?  constants.wsRoot + 'res/xsl/' :  constants.resourceRoot ) + xsl;
       },
       /**
        * Сериализует контейнер в XML-документ
@@ -94,7 +107,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                recordElement,
                currentElement,
                pkColumnName;
-         if ($ws.helpers.instanceOfModule( object , 'WS.Data/Collection/RecordSet')){
+         if (cInstance.instanceOfModule( object , 'WS.Data/Collection/RecordSet')){
             var self = this;
             parentElement.appendChild(currentElement = document.createElement('RecordSet'));
             object.each(function(record){
@@ -129,7 +142,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
          fieldElement.setAttribute('Name', column.field);
          var fieldValue = record.get(column.field) === null ? "" : record.get(column.field),
             format;
-         if ($ws.helpers.instanceOfMixin(record, 'WS.Data/Entity/FormattableMixin')) {
+         if (cInstance.instanceOfMixin(record, 'WS.Data/Entity/FormattableMixin')) {
             var recordFormat = record.getFormat(),
                index = recordFormat.getFieldIndex(column.field);
             format = index > -1 ? recordFormat.at(index) : undefined;
@@ -141,7 +154,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             tagName = this._wordsToTranslate[tagName] || tagName;
             var resultTest = cyrillicTest.test(tagName);
             if(resultTest) {
-               $ws.single.ioc.resolve('ILogger').error('XSLT', rk('Внимание! Кирилический тэг без замены') + ': ' + tagName);
+               IoC.resolve('ILogger').error('XSLT', rk('Внимание! Кирилический тэг без замены') + ': ' + tagName);
             }
             element = document.createElement(tagName);
             if(fieldValue instanceof Date){
@@ -152,7 +165,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                if(typeName === 'Время' || typeName === 'Time')
                   fieldValue = fieldValue.toTimeString().replace(" GMT", "").replace(/\s[\w\W]*/, "");
             }
-            fieldValue = $ws.helpers.removeInvalidXMLChars(fieldValue + "");
+            fieldValue = strHelpers.removeInvalidXMLChars(fieldValue + "");
             element.appendChild(document.createTextNode(fieldValue));
             fieldElement.appendChild(element);
          } else if(typeName == 'Связь'){
@@ -214,9 +227,9 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             for(var i = 0, l = fieldValue.length; i < l; i++){
                element.appendChild(elem = document.createElement('Value'));
                //для элементов массива всегда добавляем их значение как текст, ведь там может быть null
-               elem.appendChild(document.createTextNode($ws.helpers.removeInvalidXMLChars(fieldValue[i] + '')));
+               elem.appendChild(document.createTextNode(strHelpers.removeInvalidXMLChars(fieldValue[i] + '')));
             }
-         } else if(fieldValue instanceof $ws.proto.RecordSet || fieldValue instanceof $ws.proto.Record){
+         } else if(fieldValue instanceof RecordSet || fieldValue instanceof Record){
             this._serializeObject(fieldValue, fieldElement, document);
          }
       },
@@ -226,8 +239,8 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
          if (document.implementation && document.implementation.createDocument)
             doc = document.implementation.createDocument("", "", null);
          // IE
-         if($ws.helpers.axo) {
-            doc = $ws.helpers.axo('Microsoft.XmlDom');
+         if(cHelpers.axo) {
+            doc = cHelpers.axo(constants.IE_ACTIVEOBJECT_XML_PRINT_TYPE);
          }
          return doc;
       }

@@ -1,4 +1,11 @@
-define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBIS3.CONTROLS.TextArea', 'browser!js!SBIS3.CORE.FieldText/resources/Autosize-plugin'], function(TextBoxBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.TextArea', [
+   "Core/constants",
+   "js!SBIS3.CONTROLS.TextBoxBase",
+   "html!SBIS3.CONTROLS.TextArea",
+   "Core/helpers/string-helpers",
+   "Core/helpers/dom&controls-helpers",
+   "browser!js!SBIS3.CORE.FieldText/resources/Autosize-plugin"
+], function( constants,TextBoxBase, dotTplFn, strHelpers, dcHelpers) {
 
    'use strict';
 
@@ -35,8 +42,8 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
     */
 
    var TextArea = TextBoxBase.extend( /** @lends SBIS3.CONTROLS.TextArea.prototype */ {
+      _dotTplFn: dotTplFn,
       $protected: {
-         _dotTplFn: dotTplFn,
          _inputField: null,
          _cachedW: null,
          _cachedH: null,
@@ -106,9 +113,6 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          var self = this;
          this._inputField = $('.controls-TextArea__inputField', this._container);
          this._disabledWrapper = $('.controls-TextArea__disabled-wrapper', this._container);
-         this._inputField.bind('focus', function() {
-            $ws.single.EventBus.globalChannel().notify('MobileInputFocus');
-         });
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
          this._inputField.bind('focusout', function () {
@@ -120,7 +124,6 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
             if (text !== self._options.text && !(self._isEmptyValue(self._options.text) && !text.length)){
                self.setText(text);
             }
-            $ws.single.EventBus.globalChannel().notify('MobileInputFocusOut');
          });
 
          this._container.bind('keyup',function(e){
@@ -130,7 +133,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          this._inputField.bind('keydown', function(event){
             // Если тебя посетило желание добавить ниже в исключения кнопку "shift" - то напиши зачем тебе это и будь готов к тому, что
             // благодаря keyboardHover-у где то перестанут нажиматься клавиши!
-            if (!self._processNewLine(event) && !event.altKey && !event.ctrlKey && event.which !== $ws._const.key.esc && event.which !== $ws._const.key.tab) {
+            if (!self._processNewLine(event) && !event.altKey && !event.ctrlKey && event.which !== constants.key.esc && event.which !== constants.key.tab) {
                event.stopPropagation();
             }
          });
@@ -150,7 +153,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
       init :function(){
          TextArea.superclass.init.call(this);
          var self = this;
-         if (this._options.placeholder && !$ws._const.compatibility.placeholder) {
+         if (this._options.placeholder && !constants.compatibility.placeholder) {
             this._createCompatPlaceholder();
          }
          if (this._options.autoResize.state) {
@@ -168,7 +171,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
             this._cachedW = this._inputField.width();
             this._cachedH = this._inputField.height();
 
-            var trg = $ws.helpers.trackElement(this._container, true);
+            var trg = dcHelpers.trackElement(this._container, true);
 
             this._autosizeTextArea();
 
@@ -216,12 +219,12 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
 
       setText: function(text){
          TextArea.superclass.setText.call(this, text);
-         var newText = $ws.helpers.escapeHtml(text);
-         this._disabledWrapper.html($ws.helpers.wrapURLs(newText));
+         var newText = strHelpers.escapeHtml(text);
+         this._disabledWrapper.html(strHelpers.wrapURLs(newText));
       },
 
       _processNewLine: function(event) {
-         if (this._options.newLineMode === 'shiftEnter' && event.which === $ws._const.key.enter) {
+         if (this._options.newLineMode === 'shiftEnter' && event.which === constants.key.enter) {
             if (event.shiftKey) {
                event.stopPropagation();
             } else {
@@ -238,8 +241,8 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          if (newText != this._options.text) {
             this.setText.call(this, newText);
          }
-         if (!this._processNewLine(event) && ((key === $ws._const.key.enter && !event.ctrlKey) ||
-             Array.indexOf([$ws._const.key.up, $ws._const.key.down], key) >= 0)) {
+         if (!this._processNewLine(event) && ((key === constants.key.enter && !event.ctrlKey) ||
+             Array.indexOf([constants.key.up, constants.key.down], key) >= 0)) {
             event.stopPropagation();
          }
       },
@@ -256,7 +259,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
         * @see placeholder
         */
       setPlaceholder: function(text){
-          if (!$ws._const.compatibility.placeholder) {
+          if (!constants.compatibility.placeholder) {
              if (!this._compatPlaceholder) {
                 this._createCompatPlaceholder();
              }

@@ -1,6 +1,15 @@
-define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
-   'js!SBIS3.CONTROLS.BreadCrumbs',
-   'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!WS.Data/Display/Tree'], function (Control, BreadCrumbs, groupByTpl, TreeProjection) {
+define('js!SBIS3.CONTROLS.TreeMixinDS', [
+   "Core/core-functions",
+   "Core/core-merge",
+   "Core/constants",
+   "js!SBIS3.CORE.Control",
+   "js!SBIS3.CONTROLS.BreadCrumbs",
+   "html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
+   "js!WS.Data/Display/Tree",
+   "js!WS.Data/Relation/Hierarchy",
+   "Core/helpers/collection-helpers",
+   "Core/helpers/functional-helpers"
+], function ( cFunctions, cMerge, constants,Control, BreadCrumbs, groupByTpl, TreeProjection, HierarchyRelation, colHelpers, fHelpers) {
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeMixinDS
@@ -141,7 +150,16 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             idProperty: this._options.keyField || (this._dataSource ? this._dataSource.getIdProperty() : ''),
             parentProperty: this._options.hierField,
             nodeProperty: this._options.hierField + '@',
+            unique: true,
             root: root
+         });
+      },
+
+      _getHierarchyRelation: function(idProperty) {
+         return new HierarchyRelation({
+            idProperty: idProperty || (this._items ? this._items.getIdProperty() : ''),
+            parentProperty: this._options.hierField,
+            nodeProperty: this._options.hierField + '@'
          });
       },
 
@@ -195,12 +213,15 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
 
       //Рекурсивно удаляем из индекса открытых узлов все дочерние узлы закрываемого узла
       _collapseChilds: function(key){
-         var tree = this._items._indexTree;
-         if (tree[key]){
-            for (var i = 0; i < tree[key].length; i++){
-               this._collapseChilds(tree[key][i]);
-               delete(this._options.openedPath[tree[key][i]]);
-            }
+         var idProperty =  this._options.keyField || (this._dataSource ? this._dataSource.getIdProperty() : ''),
+            hierarchy = this._getHierarchyRelation(idProperty),
+            children = hierarchy.getChildren(key, this._items),
+            childId;
+
+         for (var i = 0; i < children.length; i++){
+            childId = children[i].get(idProperty);
+            this._collapseChilds(childId);
+            delete(this._options.openedPath[childId]);
          }
       },
 
@@ -229,12 +250,12 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
       },
       _createTreeFilter: function(key) {
          var
-            filter = $ws.core.clone(this.getFilter()) || {};
+            filter = cFunctions.clone(this.getFilter()) || {};
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
          }
-         this.setFilter($ws.core.clone(filter), true);
+         this.setFilter(cFunctions.clone(filter), true);
          filter[this._options.hierField] = key;
          return filter;
       },
@@ -242,8 +263,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
       expandNode: function (key) {
 
          if(!this._options.openedPath[key]) {
-            var self = this,
-               tree = this._items.getTreeIndex(this._options.hierField, true);
+            var self = this;
 
             this._folderOffsets[key || 'null'] = 0;
             this._options.openedPath[key] = true;
@@ -262,13 +282,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
                   self._notify('onNodeExpand', key);
                });
             } else {
-               var child = tree[key];
-               var records = [];
-               if (child) {
-                  for (var i = 0; i < child.length; i++) {
-                     records.push(this._items.getRecordById(child[i]));
-                  }
-               }
+               var hierarchy = this._getHierarchyRelation(),
+                  records = hierarchy.getChildren(key, this._items);
                this._drawLoadedNode(key, records, this._folderHasMore[key]);
                this._notify('onNodeExpand', key);
             }
@@ -320,7 +335,6 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          this._needToRedraw = false;
          this._items.merge(dataSet, {remove: false});
          this._needToRedraw = true;
-         this._items.getTreeIndex(this._options.hierField, true);
          var records = [];
          dataSet.each(function (record) {
             records.push(record);
@@ -377,7 +391,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             self = this,
             filter = id ? this._createTreeFilter(id) : this.getFilter();
          this._notify('onBeforeDataLoad', filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit);
-         this._loader = this._callQuery(filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
+         this._loader = this._callQuery(filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
             self._notify('onDataMerge', dataSet);
@@ -403,7 +417,6 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             if (dataSet.getCount()) {
                var records = dataSet.toArray();
                self._items.merge(dataSet, {remove: false});
-               self._items.getTreeIndex(self._options.hierField, true);
                self._drawItemsFolderLoad(records, id);
                self._dataLoadedCallback();
             }
@@ -467,7 +480,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          var
             controls,
             self = this;
-         $ws.helpers.forEach(items, function(item) {
+         colHelpers.forEach(items, function(item) {
             if (self._foldersFooters[item]) {
                controls = self._foldersFooters[item].find('.ws-component');
                for (var i = 0; i < controls.length; i++) {
@@ -489,7 +502,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          },
          _keyboardHover: function(e) {
             switch(e.which) {
-               case $ws._const.key.m:
+               case constants.key.m:
                   e.ctrlKey && this.moveRecordsWithDialog();
                   break;
             }
@@ -497,12 +510,16 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          _dataLoadedCallback: function () {
             //this._options.openedPath = {};
             if (this._options.expand) {
-               var tree = this._items.getTreeIndex(this._options.hierField);
-               for (var i in tree) {
-                  if (tree.hasOwnProperty(i) && i != 'null' && i != this._curRoot) {
-                     this._options.openedPath[i] = true;
+               var hierarchy = this._getHierarchyRelation(),
+                  items = this._items,
+                  openedPath = this._options.openedPath;
+               items.each(function(item) {
+                  var id = item.getId(),
+                     children = hierarchy.getChildren(item, items);
+                  if (children.length && id != 'null' && id != this._curRoot) {
+                     openedPath[id] = true;
                   }
-               }
+               });
             }
          },
          destroy : function() {
@@ -517,7 +534,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
                this._lastDrawn = undefined;
                this._lastPath = [];
                this._destroySearchBreadCrumbs();
-               $ws.helpers.forEach(this._foldersFooters, function(val, key) {
+               colHelpers.forEach(this._foldersFooters, function(val, key) {
                   self._destroyFolderFooter([key]);
                });
             }
@@ -675,7 +692,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
                if (this.isEnabled() && self._notify('onSearchPathClick', id) !== false ) {
                   //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
                   /*TODO для Алены. Временный фикс, потому что так удалось починить*/
-                  var filter = $ws.core.merge(self.getFilter(), {
+                  var filter = cMerge(self.getFilter(), {
                      'Разворот' : 'Без разворота'
                   });
                   if (self._options.groupBy.field) {

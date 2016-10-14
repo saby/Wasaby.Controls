@@ -1,8 +1,10 @@
 /*global define, $ws*/
 define('js!SBIS3.CONTROLS.Action.List.HierarchicalMoveMixin',[
-      'js!WS.Data/Collection/RecordSet'
-   ],
-   function (RecordSet) {
+   "Core/ParallelDeferred",
+   "js!WS.Data/Collection/RecordSet",
+   "Core/helpers/helpers"
+],
+   function ( ParallelDeferred,RecordSet, cHelpers) {
       'use strict';
       /**
        * Действие перемещения
@@ -26,13 +28,13 @@ define('js!SBIS3.CONTROLS.Action.List.HierarchicalMoveMixin',[
           * @returns {$ws.proto.Deferred}
           */
          _move: function (from, to) {
-            var def = new $ws.proto.ParallelDeferred(),
+            var def = new ParallelDeferred(),
                self = this,
                updateItems;
 
             this._setParent(from, to);
 
-            if ($ws.helpers.type(from) === 'array') {
+            if (cHelpers.type(from) === 'array') {
                if (from.length > 1) {
                   updateItems = new RecordSet({
                      adapter: from[0].getAdapter()
@@ -50,14 +52,11 @@ define('js!SBIS3.CONTROLS.Action.List.HierarchicalMoveMixin',[
 
          _setParent: function(from, to) {
             var newParent = to ? to.getId() : null,
-               records = $ws.helpers.type(from) !== 'array' ? [from] : from;
+               records = cHelpers.type(from) !== 'array' ? [from] : from;
 
             for (var i = 0, len = records.length; i < len; i++) {
                var record = records[i];
                record.set(this._options.hierField, newParent);
-               if (record.getOwner()) {
-                  record.getOwner()._reindexTree(this._options.hierField);
-               }
             }
          }
       };

@@ -1,7 +1,7 @@
 /**
  * Created by iv.cheremushkin on 23.01.2015.
  */
-define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], function(ContextMenu) {
+define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'Core/helpers/collection-helpers'], function(ContextMenu, colHelpers) {
    /**
     * Миксин, добавляющий поведение работы с выподающим меню
     * @mixin SBIS3.CONTROLS.MenuButtonMixin
@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             footerTpl: this._options.footerTpl
          };
          if (this._options.pickerConfig){
-            $ws.helpers.forEach(this._options.pickerConfig, function(val, key) {
+            colHelpers.forEach(this._options.pickerConfig, function(val, key) {
                menuconfig[key] = val;
             });
          }
@@ -112,11 +112,14 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
       },
 
       _getHeader: function(){
-         var header = $('<div class="controls-Menu__header">');
+         var header = $('<div class="controls-Menu__header">'),
+             headerWrapper = $('<div class="controls-Menu-headWrapper">');
+
          if (this._options.icon) {
-            header.append('<i class="controls-Menu__header-icon ' + this._iconTemplate(this._options) + '"></i>');
+            headerWrapper.append('<i class="controls-Menu__header-icon ' + this._iconTemplate(this._options) + '"></i>');
          }
-         header.append('<span class="controls-Menu__header-caption">' + (this._options.caption || '')  + '</span>');
+         headerWrapper.append('<span class="controls-Menu__header-caption">' + (this._options.caption || '')  + '</span>');
+         header.append(headerWrapper);
          return header;
       },
 

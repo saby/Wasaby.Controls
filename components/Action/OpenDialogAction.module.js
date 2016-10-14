@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBase'], function(DialogActionBase){
+define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBase', 'Core/core-instance', 'Core/core-merge'], function(DialogActionBase, cInstance, cMerge){
    'use strict';
 
    /**
@@ -37,14 +37,16 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBas
     */
    var OpenDialogAction = DialogActionBase.extend(/** @lends SBIS3.CONTROLS.OpenDialogAction.prototype */{
       _buildComponentConfig: function(meta) {
+         var baseResult = OpenDialogAction.superclass._buildComponentConfig.apply(this, arguments);
          //Если запись в meta-информации отсутствует, то передаем null. Это нужно для правильной работы DataBoundMixin с контекстом и привязкой значений по имени компонента
-         var record = ($ws.helpers.instanceOfModule(meta.item, 'WS.Data/Entity/Record') ? meta.item.clone() : meta.item) || null,
+         var record = (cInstance.instanceOfModule(meta.item, 'WS.Data/Entity/Record') ? meta.item.clone() : meta.item) || null,
              result = {
                source: meta.source,
                key : meta.id,
                initValues : meta.filter,
                record: record
             };
+         cMerge(result, baseResult);
          //в дальнейшем будем мержить опции на этот конфиг и если в мете явно не передали dataSource
          //то в объекте не нужно создавать свойство, иначе мы затрем опции на FormController.
          if(meta.dataSource)
@@ -52,5 +54,13 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBas
          return result;
       }
    });
+   OpenDialogAction.ACTION_CUSTOM = DialogActionBase.ACTION_CUSTOM;
+   OpenDialogAction.ACTION_MERGE = DialogActionBase.ACTION_MERGE;
+   OpenDialogAction.ACTION_ADD = DialogActionBase.ACTION_ADD;
+   OpenDialogAction.ACTION_RELOAD = DialogActionBase.ACTION_RELOAD;
+   OpenDialogAction.ACTION_DELETE = DialogActionBase.ACTION_DELETE;
+   OpenDialogAction.INITIALIZING_WAY_LOCAL = DialogActionBase.INITIALIZING_WAY_LOCAL;
+   OpenDialogAction.INITIALIZING_WAY_REMOTE = DialogActionBase.INITIALIZING_WAY_REMOTE;
+   OpenDialogAction.INITIALIZING_WAY_DELAYED_REMOTE = DialogActionBase.INITIALIZING_WAY_DELAYED_REMOTE;
    return OpenDialogAction;
 });

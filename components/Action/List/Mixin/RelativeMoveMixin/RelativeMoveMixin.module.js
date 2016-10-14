@@ -1,7 +1,10 @@
 /*global define, $ws*/
 define('js!SBIS3.CONTROLS.Action.List.RelativeMoveMixin',[
-   ],
-   function () {
+   "Core/ParallelDeferred",
+   "Core/helpers/collection-helpers",
+   "Core/core-instance",
+   "Core/helpers/helpers"
+], function ( ParallelDeferred,colHelpers, cInstance, cHelpers) {
       'use strict';
       /**
        * Действие перемещения
@@ -28,11 +31,11 @@ define('js!SBIS3.CONTROLS.Action.List.RelativeMoveMixin',[
           */
          _move: function (from, to, up) {
             var self = this,
-               def = new $ws.proto.ParallelDeferred();
-            if ($ws.helpers.type(from) !== 'array') {
+               def = new ParallelDeferred();
+            if (cHelpers.type(from) !== 'array') {
                from = [from];
             }
-            $ws.helpers.forEach(from, function(record) {
+            colHelpers.forEach(from, function(record) {
                def.push(self.getDataSource().move(record.getId(), to.getId(), {before: up}));
             });
             return  def.done().getResult().addCallback(function() {
@@ -41,7 +44,7 @@ define('js!SBIS3.CONTROLS.Action.List.RelativeMoveMixin',[
          },
 
          moveInItems: function (from, to, up) {
-            if ($ws.helpers.instanceOfModule(this.getLinkedObject(), 'js!SBIS3.CONTROLS.ListView')) {
+            if (cInstance.instanceOfModule(this.getLinkedObject(), 'SBIS3.CONTROLS.ListView')) {
                this.getLinkedObject().moveInItems(from, to, up);
             }
          }

@@ -1,7 +1,10 @@
 /**
  * Утилита рассчета высоты клавиатуры на тач устройствах
  */
-define('js!SBIS3.CONTROLS.TouchKeyboardHelper', ['Core/EventBus'], function(EventBus) {
+define('js!SBIS3.CONTROLS.TouchKeyboardHelper', [
+   "Core/constants",
+   "Core/EventBus"
+], function( constants, EventBus) {
    /*Коэфицент Борисова*/
    var ipadCoefficient = {
       portrait: 0.3,
@@ -25,7 +28,7 @@ define('js!SBIS3.CONTROLS.TouchKeyboardHelper', ['Core/EventBus'], function(Even
 
       getKeyboardHeight: function(){
          if (this.isKeyboardVisible()){
-            if ($ws._const.browser.isMobileIOS){
+            if (constants.browser.isMobileIOS){
                return window.innerHeight * (this.isPortrait() ? ipadCoefficient.portrait : ipadCoefficient.landscape);
             }
          } else {
@@ -38,7 +41,7 @@ define('js!SBIS3.CONTROLS.TouchKeyboardHelper', ['Core/EventBus'], function(Even
       }
    };
 
-   if ($ws._const.compatibility.touch){
+   if (constants.compatibility.touch){
       EventBus.globalChannel().subscribe('MobileInputFocus', TouchKeyboardHelper._keyboardShowHandler.bind(TouchKeyboardHelper));
       EventBus.globalChannel().subscribe('MobileInputFocusOut', TouchKeyboardHelper._keyboardHideHandler.bind(TouchKeyboardHelper));
    }

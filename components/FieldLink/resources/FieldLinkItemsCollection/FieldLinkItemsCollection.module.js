@@ -3,12 +3,15 @@
  */
 define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
       'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.DSMixin',
+      'js!SBIS3.CONTROLS.ItemsControlMixin',
       'js!SBIS3.CONTROLS.PickerMixin',
       'html!SBIS3.CONTROLS.FieldLinkItemsCollection',
-      'html!SBIS3.CONTROLS.FieldLinkItemsCollection/itemTpl'
-   ],
-   function(CompoundControl, DSMixin, PickerMixin, dotTplFn, itemTpl) {
+      'html!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemTemplate',
+      'html!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemContentTemplate',
+      'Core/helpers/collection-helpers',
+      'Core/core-instance',
+      'Core/helpers/functional-helpers'
+   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, colHelpers, cInstance, fHelpers) {
 
       var PICKER_BORDER_WIDTH = 2;
 
@@ -22,23 +25,22 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
 
       function itemTemplateRender(opts) {
          var items = [],
-             tplArgs = {
-                itemTpl: opts.itemTemplate,
-                displayField: opts.displayField,
-                className: 'controls-ListView__item'
-             },
+             tplArgs ={},
              res = [];
 
-         if(opts._preRenderValues.selectedItem && $ws.helpers.instanceOfModule(opts._preRenderValues.selectedItem, 'WS.Data/Entity/Model')) {
-            items = [opts._preRenderValues.selectedItem]
-         } else if(opts._preRenderValues.selectedItems) {
+         if(opts._preRenderValues.selectedItem && cInstance.instanceOfModule(opts._preRenderValues.selectedItem, 'WS.Data/Entity/Model')) {
+            items = [opts._preRenderValues.selectedItem];
+         } else if (opts._preRenderValues.selectedItems) {
             items = opts._preRenderValues.selectedItems.toArray();
          }
 
          if(items.length) {
-            $ws.helpers.forEach(items, function(item) {
+            tplArgs = opts._buildTplArgs(opts);
+            tplArgs.className = 'controls-ListView__item';
+            tplArgs.itemTemplate = opts.itemTemplate;
+            colHelpers.forEach(items, function(item) {
                tplArgs.item = item;
-               res.push(itemTpl(tplArgs));
+               res.push(tplArgs.defaultItemTpl(tplArgs));
             })
          }
 
@@ -49,6 +51,8 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
+               _defaultItemContentTemplate: defaultItemContentTemplate,
+               _defaultItemTemplate: defaultItemTemplate,
                _preRenderFunction: itemTemplateRender,
                _preRenderValues: {}
             },
@@ -116,16 +120,9 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
           * Аргументы для шаблона
           */
          _buildTplArgs: function(item) {
-            return {
-               item: item,
-               itemTpl: this._options.itemTemplate,
-               displayField: this._options.displayField,
-               className: ''
-            }
-         },
-
-         _getItemTemplate: function() {
-            return itemTpl;
+            var args = FieldLinkItemsCollection.superclass._buildTplArgs.apply(this, arguments);
+            args.itemTemplate = this._options.itemTemplate;
+            return args;
          },
 
          _setEnabled: function () {
@@ -144,7 +141,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             if(list) {
                /* RecordSet клонировать нельзя, иначе записи склонируются с ключевым полем
                   рекордсета, хотя оно могло быть изменено */
-               if(!$ws.helpers.instanceOfModule(list, 'WS.Data/Collection/RecordSet')) {
+               if(!cInstance.instanceOfModule(list, 'WS.Data/Collection/RecordSet')) {
                   list = list.clone();
                }
             } else {
@@ -160,8 +157,8 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          /* Контрол не должен принимать фокус ни по клику, ни по табу */
-         _initFocusCatch: $ws.helpers.nop,
-         canAcceptFocus: $ws.helpers.nop,
+         _initFocusCatch: fHelpers.nop,
+         canAcceptFocus: fHelpers.nop,
 
          _drawItemsCallback: function() {
             if(this.isPickerVisible() && !this.getItems().getCount()) {
@@ -195,7 +192,16 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             /* Зачем сделано:
                Не надо, чтобы пикер поля связи вызывал перерасчёт размеров,
                т.к. никаких расчётов при его показе не происходит, а просто отрисовываются элементы */
-            this._picker._notifyOnSizeChanged = $ws.helpers.nop;
+            this._picker._notifyOnSizeChanged = fHelpers.nop;
+         },
+
+         /**
+          * Т.к. полю связи нужно высчитывать размеры элементов,
+          * то включаем медленный режим отрисовки
+          * @private
+          */
+         _isSlowDrawing: function() {
+            return true;
          },
 
          _setPickerConfig: function () {

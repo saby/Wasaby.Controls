@@ -1,7 +1,10 @@
 /**
  * Created by am.gerasimov on 28.01.2016.
  */
-define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], function(Model) {
+define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
+   'js!WS.Data/Entity/Model',
+   'Core/core-instance'
+], function(Model, cInstace) {
 
    /**
     * Миксин, добавляющий синхронизацию выбранных элементов
@@ -55,7 +58,9 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], func
                 */
                switch (propName) {
                   case 'selectedItem':
-                     if($ws.helpers.instanceOfModule(propValue, 'WS.Data/Entity/Model')) {
+                      /* При синхронизации selectedItem -> selectedItems, так же проверяем наличие ключевых поле у selectedItem */
+                     if(cInstace.instanceOfModule(propValue, 'WS.Data/Entity/Model') &&
+                        !isEmptyItem(propValue, this._options.displayField, this._options.keyField)) {
                         this.setSelectedItems([propValue]);
                      } else {
                         this.clearSelectedItems();
@@ -100,22 +105,14 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], func
       around: {
          setSelectedItem: function (parentFunc, item) {
             var hasRequiredFields,
-                isModel = item && $ws.helpers.instanceOfModule(item, 'WS.Data/Entity/Model'),
+                isModel = item && cInstace.instanceOfModule(item, 'WS.Data/Entity/Model'),
                 currentSelItem = this._options.selectedItem,
-                self = this;
-
-            /* Т.к. ключ может быть как 0, а ключевое поле как '', то надо проверять на null/undefined */
-            function isEmpty(val) {
-               return val === null || val === undefined;
-            }
-
-            function isEmptyItem(item) {
-               return isEmpty(item.get(self._options.displayField)) || isEmpty(item.get(self._options.keyField));
-            }
+                keyField = this._options.keyField,
+                displayField = this._options.displayField;
 
             if (isModel) {
                /* Проверяем запись на наличие ключевых полей */
-               hasRequiredFields = !isEmptyItem(item);
+               hasRequiredFields = !isEmptyItem(item, displayField, keyField);
 
                if (hasRequiredFields) {
                   /* Если запись собралась из контекста, в ней может не быть поля с первичным ключем */
@@ -123,7 +120,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], func
                      item.setIdProperty(this._options.keyField);
                   }
                   /* Если передали пустую запись и текущая запись тоже пустая, то не устанавливаем её */
-               } else if(currentSelItem && isEmptyItem(currentSelItem) && this._isEmptySelection()) {
+               } else if(currentSelItem && isEmptyItem(currentSelItem, displayField, keyField) && this._isEmptySelection()) {
                   return false;
                }
             }
@@ -141,6 +138,14 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!WS.Data/Entity/Model'], func
          }
       }
    };
+
+   function isEmptyItem(item, keyField, displayField) {
+      var isEmpty = function(val) {
+         return val === null || val === undefined;
+      };
+
+      return isEmpty(item.get(displayField)) || isEmpty(item.get(keyField));
+   }
 
    return SyncSelectionMixin;
 

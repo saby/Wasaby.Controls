@@ -47,7 +47,9 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Online', function () {
                 actions.waitForElementToShow('[sbisname="FastDataFilter"]', 40000);
                 this.title = find('[sbisname="FastDataFilter"] .controls-DropdownList__text');
                 this.item2 = find('.controls-DropdownList__item[data-id="2"]');
+				this.item2_box = '.controls-DropdownList__item[data-id="2"] .controls-DropdownList__itemCheckBox';
                 this.item3 = find('.controls-DropdownList__item[data-id="3"]');
+				this.item3_box = '.controls-DropdownList__item[data-id="3"] .controls-DropdownList__itemCheckBox';
                 this.close_icon = find('[sbisname="FastDataFilter"] .controls-DropdownList__crossIcon');
                 this.accept = find('[sbisname="DropdownList_buttonChoose"]');
                 this.box = find('[sbisname="TextBox 1"] input');
@@ -67,9 +69,11 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Online', function () {
             })
 
             .capture('selected_item', function (actions) {
-                actions.click(this.item2);
+                actions.mouseMove(this.item2);
+				actions.waitForElementToShow(this.item2_box, 2000);
+				actions.click(this.item2_box);
                 actions.wait(100);
-                actions.click(this.item3);
+                actions.click(this.item3_box);
                 actions.wait(100);
                 actions.click(this.accept);
                 actions.wait(100);
@@ -101,13 +105,13 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Online', function () {
 
             .capture('opened_one', function (actions) {
                 actions.mouseMove(this.first_title)
-				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 40000);
+				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 4000);
             })
 
             .capture('opened_two', function (actions) {
                 actions.click(this.box);
 				actions.mouseMove(this.second_title)
-				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 40000);
+				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 4000);
             })
     });
 });

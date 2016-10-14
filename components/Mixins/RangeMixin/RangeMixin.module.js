@@ -6,16 +6,63 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
     * @author Миронов Александр Юрьевич
     * @public
     */
-
    var RangeMixin = /**@lends SBIS3.CONTROLS.RangeMixin.prototype  */{
+      /**
+       * @event onStartValueChange После изменения начального значения диапазона
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {*} startValue Новое значение начала диапазона.
+       * @example
+       * <pre>
+       *     myDateRange.subscribe('onStartValueChange', function(eventObject, newStartValue) {
+       *        TextBox.setText(newStartValue.toString());
+       *     });
+       * </pre>
+       * @see startValue
+       * @see setStartValue
+       * @see getStartValue
+       */
+      /**
+       * @event onEndValueChange После изменения конечного значения диапазона
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {*} startValue Новое значение конца диапазона.
+       * @example
+       * <pre>
+       *     myDateRange.subscribe('onEndValueChange', function(eventObject, newEndValue) {
+       *        TextBox.setText(newEndValue.toString());
+       *     });
+       * </pre>
+       * @see endValue
+       * @see setEndValue
+       * @see getEndValue
+       */
+      /**
+       * @event onRangeChange После изменения диапазона
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {*} startValue Начало измененного диапазона.
+       * @param {*} endValue Конец измененного диапазона.
+       * @example
+       * <pre>
+       *     myDateRange.subscribe('onEndValueChange', function(eventObject, startValue, endValue) {
+       *        TextBox.setText(startValue.toString() + '-' + endValue.toString());
+       *     });
+       * </pre>
+       * @see startValue
+       * @see setStartValue
+       * @see getStartValue
+       * @see endValue
+       * @see setEndValue
+       * @see getEndValue
+       * @see setRange
+       * @see getRange
+       */
       $protected: {
          _options: {
             /**
-             * @cfg {Number|Date} Начальное значение диапазона
+             * @cfg {*} Начальное значение диапазона
              */
             startValue: null,
             /**
-             * @cfg {Number|Date} Конечное значение диапазона
+             * @cfg {*} Конечное значение диапазона
              */
             endValue: null
          }

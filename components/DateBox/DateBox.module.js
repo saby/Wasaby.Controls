@@ -4,13 +4,16 @@
 define(
    'js!SBIS3.CONTROLS.DateBox',
    [
+      'Core/IoC',
+      'Core/ConsoleLogger',
+      'Core/constants',
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'html!SBIS3.CONTROLS.DateBox',
       'js!SBIS3.CONTROLS.FormWidgetMixin'
       // 'i18n!SBIS3.CONTROLS.DateBox'
    ],
-   function (FormattedTextBoxBase, DateUtil, dotTplFn, FormWidgetMixin) {
+   function (IoC, ConsoleLogger, constants, FormattedTextBoxBase, DateUtil, dotTplFn, FormWidgetMixin) {
 
    'use strict';
 
@@ -34,6 +37,7 @@ define(
     */
 
    var DateBox = FormattedTextBoxBase.extend([FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateBox.prototype */{
+      _dotTplFn: dotTplFn,
        /**
         * @event onDateChange Происходит при изменении даты.
         * @remark
@@ -55,27 +59,6 @@ define(
         * </pre>
         */
       $protected: {
-         _dotTplFn: dotTplFn,
-         /**
-          * Допустимые управляющие символы в маске.
-          * Условные обозначения:
-          *     1. D(day) -  Календарный день
-          *     2. M(month) - Месяц
-          *     3. Y(year) - Год
-          *     4. H(hour) - Час
-          *     5. I - Минута
-          *     6. S(second) - Секунда
-          *     7. U - Доля секунды
-          */
-         _controlCharactersSet: {
-            'D' : 'd',
-            'M' : 'd',
-            'Y' : 'd',
-            'H' : 'd',
-            'I' : 'd',
-            'S' : 'd',
-            'U' : 'd'
-         },
          /**
           * Допустимые при создании контролла маски.
           */
@@ -114,6 +97,27 @@ define(
           * Опции создаваемого контролла
           */
          _options: {
+            /**
+             * Допустимые управляющие символы в маске.
+             * Условные обозначения:
+             *     1. D(day) -  Календарный день
+             *     2. M(month) - Месяц
+             *     3. Y(year) - Год
+             *     4. H(hour) - Час
+             *     5. I - Минута
+             *     6. S(second) - Секунда
+             *     7. U - Доля секунды
+             * @noShow
+             */
+            _controlCharactersSet: {
+               'D' : 'd',
+               'M' : 'd',
+               'Y' : 'd',
+               'H' : 'd',
+               'I' : 'd',
+               'S' : 'd',
+               'U' : 'd'
+            },
             /**
              * @cfg {String} Формат отображения данных
              * @remark
@@ -196,7 +200,7 @@ define(
              * @noShow
              * @deprecated
              */
-            serializationMode: 'datetime'
+            serializationMode: 'auto'
          }
       },
 
@@ -220,11 +224,11 @@ define(
              curDate = this.getDate(),
              key = event.which || event.keyCode;
 
-         if (key == $ws._const.key.insert) {
+         if (key == constants.key.insert) {
             this.setDate(new Date());
-         } else if (key == $ws._const.key.plus || key == $ws._const.key.minus) {
+         } else if (key == constants.key.plus || key == constants.key.minus) {
             if (curDate) {
-               curDate.setDate(curDate.getDate() + (key == $ws._const.key.plus ? 1 : -1));
+               curDate.setDate(curDate.getDate() + (key == constants.key.plus ? 1 : -1));
                this.setDate(curDate);
             }
          } else {
@@ -234,13 +238,18 @@ define(
       },
 
       _addDefaultValidator: function() {
-         var self = this;
+         var self = this,
+            _validationErrors = {
+               time: rk('Время заполнено некорректно'),
+               date: rk('Дата заполнена некорректно'),
+               datetime: rk('Дата или время заполнены некорректно')
+            };
          //Добавляем к прикладным валидаторам стандартный, который проверяет что дата заполнена корректно.
          this._options.validators.push({
             validator: function() {
-               return self.formatModel.isEmpty(this._maskReplacer) ? true : self._options.date instanceof Date;
+               return self._getFormatModel().isEmpty(this._getMaskReplacer()) ? true : self._options.date instanceof Date;
             },
-            errorMessage: rk('Дата заполнена некорректно')
+            errorMessage: _validationErrors[this.getType()]
          });
       },
 
@@ -255,8 +264,10 @@ define(
       },
 
       /**
-       * Метод установки/замены даты.
+       * Производит установки даты.
        * @param {Date} date Новая дата.
+       * @remark
+       * При использовании с контролом {@link SBIS3.CONTROLS.DatePicker} существует следующее поведение: если в методе устанавливают несуществующую календарную дату, то в качестве значения контрола будет установлен null.
        * @example
        * <pre>
        *    //Зададим март 2016
@@ -283,7 +294,7 @@ define(
              oldText   = this._options.text;
          if (date === null || typeof date === 'undefined') {
             this._options.date = date;
-            this._options.text = this.formatModel.getStrMask(this._maskReplacer);
+            this._options.text = this._getFormatModel().getStrMask(this._getMaskReplacer());
             isCorrect = true;
          }
          if (date instanceof Date) {
@@ -322,7 +333,7 @@ define(
          else {
             throw new Error('Аргументом должна являться строка или дата');
          }
-         $ws.single.ioc.resolve('ILogger').log('DateBox', 'метод "setValue" будет удален в 3.7.3.20. Используйте "setDate" или "setText".');
+         IoC.resolve('ILogger').log('DateBox', 'метод "setValue" будет удален в 3.7.3.20. Используйте "setDate" или "setText".');
       },
 
       /**
@@ -407,7 +418,7 @@ define(
       _drawDate: function(){
          var newText = this._options.date == null ? '' : this._getTextByDate( this._options.date );
          //записываем текст в модель
-         this.formatModel.setText(newText, this._maskReplacer);
+         this._getFormatModel().setText(newText, this._getMaskReplacer());
          this._inputField.html( this._getHtmlMask() );
       },
 
@@ -430,12 +441,6 @@ define(
             if (!DateUtil.isValidDate(this._options.date)) {
                this._options.date = null;
             }
-            if (oldDate !== this._options.date && this._options.notificationMode === 'change') {
-               this._notifyOnDateChanged();
-            }
-            if (this._options.notificationMode === 'change') {
-               this._notifyOnTextChange();
-            }
             this._onTextChanged();
          }
       },
@@ -454,16 +459,14 @@ define(
          var date;
 
          if (!active) {
-            if (!this.formatModel.isFilled()) {
+            if (!this._getFormatModel().isFilled()) {
                date = this._getDateByText(this._options.text, this._options.date, true);
                if (date) {
                   this.setDate(date);
                }
             }
-            if (this._options.notificationMode === 'complete') {
-               this._notifyOnDateChanged();
-               this._notifyOnTextChange();
-            }
+            this._notifyOnDateChanged();
+            this._notifyOnTextChange();
          }
          DateBox.superclass.setActive.apply(this, arguments);
       },
@@ -494,16 +497,16 @@ define(
             ii   = date ? date.getMinutes() : 0,
             ss   = date ? date.getSeconds() : 0,
             uuu  = date ? date.getMilliseconds() : 0;
-         for (var i = 0; i < this.formatModel.model.length; i++) {
-            item = this.formatModel.model[i];
+         for (var i = 0; i < this._getFormatModel().model.length; i++) {
+            item = this._getFormatModel().model[i];
             if ( !item.isGroup) {
                continue;
             }
             value = '';
             for (var j = 0; j < item.mask.length; j++) {
-               value += (typeof item.value[j] === "undefined") ? this._maskReplacer : item.value[j];
+               value += (typeof item.value[j] === "undefined") ? this._getMaskReplacer() : item.value[j];
             }
-            if (value.indexOf(this._maskReplacer) === -1) {
+            if (value.indexOf(this._getMaskReplacer()) === -1) {
                switch (item.mask) {
                   case 'YY' :
                      value = Number(value);
@@ -538,7 +541,7 @@ define(
             }
          }
          if (this._dateIsValid(yyyy, mm, dd, hh, ii, ss)) {
-            if (this.formatModel.isFilled()) {
+            if (this._getFormatModel().isFilled()) {
                return new Date(yyyy, mm, dd, hh, ii, ss, uuu);
             } else if (autoComplete) {
                //TODO: На данный момент по требованиям данной задачи: (https://inside.tensor.ru/opendoc.html?guid=a46626d6-abed-453f-92fe-c66f345863ef&description=)
@@ -552,7 +555,7 @@ define(
                      return new Date(now.getFullYear(), mm, dd, hh, ii, ss, uuu);
                   }
                } else if (Array.indexOf(filled, "HH") !== -1 && Array.indexOf(notFilled, "II") !== -1) {
-                  ii = this.formatModel.getGroupValueByMask("II", '0');
+                  ii = this._getFormatModel().getGroupValueByMask("II", '0');
                   return new Date(yyyy, mm, dd, hh, ii, ss, uuu);
                }
             }
@@ -575,8 +578,8 @@ define(
             text = '',
             item;
 
-         for (var i = 0; i < this.formatModel.model.length; i++) {
-            item = this.formatModel.model[i];
+         for (var i = 0; i < this._getFormatModel().model.length; i++) {
+            item = this._getFormatModel().model[i];
             if (item.isGroup) {
                switch ( item.mask ){
                   case 'YY'   : text += ( '000' + date.getFullYear() ).slice(-2);     break;

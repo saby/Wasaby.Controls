@@ -2,12 +2,14 @@
  * Created by ad.chistyakova on 08.04.2015.
  */
 define('js!SBIS3.CONTROLS.OperationUnload', [
-   'js!SBIS3.CONTROLS.PrintUnloadBase',
-   'js!SBIS3.CONTROLS.Utils.DataProcessor',
-   'js!WS.Data/Entity/Record',
-   'js!WS.Data/Adapter/Sbis',
-   'i18n!SBIS3.CONTROLS.OperationUnload'
-], function(PrintUnloadBase, Exporter, Record, SbisAdapter, rk) {
+   "Core/constants",
+   "Core/core-instance",
+   "js!SBIS3.CONTROLS.PrintUnloadBase",
+   "js!SBIS3.CONTROLS.Utils.DataProcessor",
+   "js!WS.Data/Entity/Record",
+   "js!WS.Data/Adapter/Sbis",
+   "i18n!SBIS3.CONTROLS.OperationUnload"
+], function( constants, cInstance, PrintUnloadBase, Exporter, Record, SbisAdapter) {
    //TODO Идея! нужно просто вызвать у view.export, он в свою очередь поднимает событие onUnload, а событие подхыватит выгрузчик. тогда в кнопке вообще только визуализация будет
    /**
     * Контрол для экспорта в Excel, PDF  подготовленных данных
@@ -48,7 +50,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
              */
             /**
              * @typedef {Object} Items
-             * @property {String} Путь к файлу, отвечающий за xslt-преобразование.
+             * @property {String} path Путь к файлу, отвечающего за xslt-преобразование.
              * @property {Binding} binding Имена методов БЛ, которые будут использованы при сохранении.
              * @property {Boolean} serverSideExport Использовать серверную выгрузку.
              */
@@ -131,8 +133,8 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
        * @param columns
        * @private
        */
-      _notifyOnApply : function(columns){
-         return this._notify('onApplyOperation', 'export', columns);
+      _notifyOnApply : function(columns, data){
+         return this._notify('onApplyOperation', 'export', columns, data);
       },
       _applyMassOperation : function(ds){
          if (this._isClientUnload()) {
@@ -192,7 +194,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                filter : view.getFilter(),
                offset: view._offset
             };
-         if ($ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin')) {
+         if (cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin')) {
             cfg.hierField = view.getHierField();
             cfg.openedPath = view.getOpenedPath();
             cfg.root = view.getCurrentRoot();
@@ -254,7 +256,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       },
       _isClientUnload : function() {
          //Для IOS всегда будем выгружать через сервер. Android прекрасно умеет выгружать
-         return !(this._getCurrentItem().get('serverSideExport') || $ws._const.browser.isMobileSafari);
+         return !(this._getCurrentItem().get('serverSideExport') || constants.browser.isMobileSafari);
       }
    });
 

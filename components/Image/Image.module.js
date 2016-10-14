@@ -3,15 +3,24 @@
  */
 define('js!SBIS3.CONTROLS.Image',
    [
-      'js!SBIS3.CORE.CompoundControl',
-      'js!WS.Data/Source/SbisService',
-      'html!SBIS3.CONTROLS.Image',
-      'js!SBIS3.CORE.FileLoader',
-      'js!SBIS3.CORE.Dialog',
-      'js!SBIS3.CORE.LoadingIndicator',
-      'js!SBIS3.CONTROLS.Link',
-      'i18n!SBIS3.CONTROLS.Image'
-   ], function(CompoundControl, SbisService, dotTplFn, FileLoader, Dialog, LoadingIndicator) {
+   "Transport/BLObject",
+   "Core/helpers/helpers",
+   "Core/Indicator",
+   "Core/core-merge",
+   "Core/CommandDispatcher",
+   "Core/Deferred",
+   "js!SBIS3.CORE.CompoundControl",
+   "js!WS.Data/Source/SbisService",
+   "html!SBIS3.CONTROLS.Image",
+   "js!SBIS3.CORE.FileLoader",
+   "js!SBIS3.CORE.Dialog",
+   "js!SBIS3.CORE.LoadingIndicator",
+   "Core/core-instance",
+   "Core/helpers/fast-control-helpers",
+   "Core/helpers/transport-helpers",
+   "js!SBIS3.CONTROLS.Link",
+   "i18n!SBIS3.CONTROLS.Image"
+], function( BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred,CompoundControl, SbisService, dotTplFn, FileLoader, Dialog, LoadingIndicator, cInstance, fcHelpers, transHelpers) {
       'use strict';
       var
          //Продолжительность анимации при отображения панели изображения
@@ -99,7 +108,7 @@ define('js!SBIS3.CONTROLS.Image',
              * <pre>
              *    Image.subscribe('onResetImage', function(event) {
              *       var
-             *          deferred = new $ws.proto.Deferred();
+             *          deferred = new Deferred();
              *       $ws.core.attachInstance('SBIS3.CORE.DialogConfirm', {
              *          message: 'Действительно удалить изображение?',
              *          handlers: {
@@ -217,7 +226,7 @@ define('js!SBIS3.CONTROLS.Image',
                    *     <option name="defaultImage">/resources/SBIS3.CONTROLS/components/Image/resources/default-image.png</option>
                    * </pre>
                    */
-                  defaultImage: $ws.helpers.processImagePath('js!SBIS3.CONTROLS.Image/resources/default-image.png'),
+                  defaultImage: cHelpers.processImagePath('js!SBIS3.CONTROLS.Image/resources/default-image.png'),
                   /**
                    * @cfg {Object} Связанный источник данных
                    */
@@ -246,9 +255,12 @@ define('js!SBIS3.CONTROLS.Image',
             },
             $constructor: function() {
                this._publish('onBeginLoad', 'onEndLoad', 'onErrorLoad', 'onChangeImage', 'onResetImage', 'onShowEdit', 'onBeginSave', 'onEndSave', 'onDataLoaded');
-               $ws.single.CommandDispatcher.declareCommand(this, 'uploadImage', this._uploadImage);
-               $ws.single.CommandDispatcher.declareCommand(this, 'editImage', this._editImage);
-               $ws.single.CommandDispatcher.declareCommand(this, 'resetImage', this._resetImage);
+               //Debounce перебиваем в конструкторе, чтобы не было debounce на прототипе, тк если несколько инстансов сработает только для одного
+               //Оборачиваем именно в debounce, т.к. могут последовательно задать filter, dataSource и тогда изображения загрузка произойдет дважды.
+               this._setImage = this._setImage.debounce(0);
+               CommandDispatcher.declareCommand(this, 'uploadImage', this._uploadImage);
+               CommandDispatcher.declareCommand(this, 'editImage', this._editImage);
+               CommandDispatcher.declareCommand(this, 'resetImage', this._resetImage);
                if (this._options.imageBar) {
                   this._imageBar = this._container.find('.controls-image__image-bar');
                }
@@ -262,7 +274,6 @@ define('js!SBIS3.CONTROLS.Image',
                   dataSource = this.getDataSource(),
                   width = this._container.width();
                Image.superclass.init.call(this);
-               this._bindEvens();
                //Находим компоненты, необходимые для работы (если нужно)
                if (this._options.imageBar) {
                   this._buttonEdit = this.getChildControlByName('ButtonEdit');
@@ -321,7 +332,7 @@ define('js!SBIS3.CONTROLS.Image',
                      result = sourceOpt.call(this);
                      break;
                   case 'object':
-                     if ($ws.helpers.instanceOfMixin(sourceOpt, 'WS.Data/Source/ISource')) {
+                     if (cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ISource')) {
                         result = sourceOpt;
                      }
                      if ('module' in sourceOpt) {
@@ -336,23 +347,17 @@ define('js!SBIS3.CONTROLS.Image',
                var
                   dataSource = this.getDataSource();
                if (dataSource) {
-                  return $ws.helpers.prepareGetRPCInvocationURL(dataSource.getEndpoint().contract,
-                     dataSource.getBinding().read, this._options.filter, $ws.proto.BLObject.RETURN_TYPE_ASIS);
+                  return transHelpers.prepareGetRPCInvocationURL(dataSource.getEndpoint().contract,
+                     dataSource.getBinding().read, this._options.filter, BLObject.RETURN_TYPE_ASIS);
                } else {
                   return this._options.defaultImage;
                }
             },
-            _bindEvens: function() {
-               this._boundEvents = {
-                  onChangeImage: this._onChangeImage.bind(this),
-                  onErrorLoad: this._onErrorLoad.bind(this)
-               };
-               this._image.load(this._boundEvents.onChangeImage);
-               this._image.error(this._boundEvents.onErrorLoad);
-            },
             _bindToolbarEvents: function(){
-               this._boundEvents.onImageMouseEnter = this._onImageMouseEnter.bind(this);
-               this._boundEvents.onImageMouseLeave = this._onImageMouseLeave.bind(this);
+               this._boundEvents = {
+                  onImageMouseEnter: this._onImageMouseEnter.bind(this),
+                  onImageMouseLeave: this._onImageMouseLeave.bind(this)
+               };
                this._container.mouseenter(this._boundEvents.onImageMouseEnter);
                this._container.mouseleave(this._boundEvents.onImageMouseLeave);
             },
@@ -360,25 +365,28 @@ define('js!SBIS3.CONTROLS.Image',
                var
                   imageInstance = this.getParent(),
                   result = imageInstance._notify('onBeginLoad', this);
+               this._showIndicator();
                event.setResult(result);
                if (result !== false) {
-                  $ws.helpers.toggleLocalIndicator(imageInstance._container, true);
+                  fcHelpers.toggleLocalIndicator(imageInstance._container, true);
                }
             },
             _onEndLoad: function(event, response) {
                var
                   imageInstance = this.getParent();
                if (response.hasOwnProperty('error')) {
-                  $ws.helpers.toggleLocalIndicator(imageInstance._container, false);
-                  imageInstance._boundEvents.onErrorLoad(response.error, true);
-                  $ws.helpers.alert('При загрузке изображения возникла ошибка: ' + response.error.message);
+                  fcHelpers.toggleLocalIndicator(imageInstance._container, false);
+                  this._hideIndicator();
+                  imageInstance._onErrorLoad(response.error, true);
+                  fcHelpers.alert('При загрузке изображения возникла ошибка: ' + response.error.message);
                } else {
                   imageInstance._notify('onEndLoad', response);
                   if (imageInstance._options.edit) {
                      imageInstance._showEditDialog('new');
                   } else {
                      imageInstance._setImage(imageInstance._getSourceUrl());
-                     $ws.helpers.toggleLocalIndicator(imageInstance._container, false);
+                     fcHelpers.toggleLocalIndicator(imageInstance._container, false);
+                     this._hideIndicator();
                   }
                }
             },
@@ -424,17 +432,18 @@ define('js!SBIS3.CONTROLS.Image',
                   this._loadImage(url);
                   this._imageUrl = url;
                }
-            }.debounce(0), //Оборачиваем именно в debounce, т.к. могут последовательно задать filter, dataSource и тогда изображения загрузка произойдет дважды.
+            },
             _loadImage: function(url) {
                var
                   self = this;
                //Из-за проблем, связанных с кэшированием - перезагружаем картинку специальным хелпером
-               $ws.helpers.reloadImage(this._image, url)
+               cHelpers.reloadImage(this._image, url)
                   .addCallback(function(){
                      self._image.hasClass('ws-hidden') && self._image.removeClass('ws-hidden');
+                     self._onChangeImage();
                   })
                   .addErrback(function(){
-                     self._boundEvents.onErrorLoad();
+                     self._onErrorLoad();
                   });
             },
             _showEditDialog: function(imageType) {
@@ -457,7 +466,7 @@ define('js!SBIS3.CONTROLS.Image',
                   visible: false,
                   minWidth: 390,
                   cssClassName: 'controls-EditDialog__template',
-                  componentOptions: $ws.core.merge({
+                  componentOptions: cMerge({
                      dataSource: dataSource,
                      filter: filter,
                      cropAspectRatio: this._options.cropAspectRatio,
@@ -474,23 +483,22 @@ define('js!SBIS3.CONTROLS.Image',
                            self._setImage(self._getSourceUrl());
                         },
                         onOpenError: function(event){
-                           $ws.helpers.toggleLocalIndicator(self._container, false);
-                           $ws.single.Indicator.hide();
-                           $ws.helpers.alert('При открытии изображения возникла ошибка');
-                           self._boundEvents.onErrorLoad(event, true);
+                           fcHelpers.toggleLocalIndicator(self._container, false);
+                           cIndicator.hide();
+                           fcHelpers.alert('При открытии изображения возникла ошибка');
+                           self._onErrorLoad(event, true);
                         }
                      }
                   }, this._options.editConfig),
                   handlers: {
                      onAfterClose: function() {
-                        $ws.helpers.toggleLocalIndicator(self._container, false);
+                        fcHelpers.toggleLocalIndicator(self._container, false);
                      },
                      onBeforeControlsLoad: function() {
-                        $ws.single.Indicator.setMessage('Открытие диалога редактирования...');
-                        $ws.single.Indicator.show();
+                        cIndicator.setMessage('Открытие диалога редактирования...');
                      },
                      onAfterShow: function() {
-                        $ws.single.Indicator.hide();
+                        cIndicator.hide();
                      }
                   }
                });
@@ -521,7 +529,7 @@ define('js!SBIS3.CONTROLS.Image',
                }
             },
             _editImage: function() {
-               $ws.helpers.toggleLocalIndicator(this.getContainer(), true);
+               fcHelpers.toggleLocalIndicator(this.getContainer(), true);
                this._showEditDialog('current');
             },
             _resetImage: function() {
@@ -532,8 +540,8 @@ define('js!SBIS3.CONTROLS.Image',
                      var
                         dataSource = self.getDataSource(),
                         sendFilter = filter && Object.prototype.toString.call(filter) === '[object Object]' ? filter : self.getFilter();
-                     new $ws.proto.BLObject(dataSource.getEndpoint().contract)
-                        .call(dataSource.getBinding().destroy, sendFilter, $ws.proto.BLObject.RETURN_TYPE_ASIS)
+                     new BLObject(dataSource.getEndpoint().contract)
+                        .call(dataSource.getBinding().destroy, sendFilter, BLObject.RETURN_TYPE_ASIS)
                         .addBoth(function() {
                            self._setImage(self._options.defaultImage);
                            if (self._options.defaultImage === '') {
@@ -542,7 +550,7 @@ define('js!SBIS3.CONTROLS.Image',
                         });
                   };
                if (imageResetResult !== false) {
-                  if (imageResetResult instanceof $ws.proto.Deferred) {
+                  if (imageResetResult instanceof Deferred) {
                      imageResetResult.addCallback(function(result) {
                         if (result !== false) {
                            callDestroy(result);
@@ -627,6 +635,7 @@ define('js!SBIS3.CONTROLS.Image',
                   element: cont,
                   name: 'FileLoader',
                   parent: self,
+                  showIndicator: false,
                   handlers: {
                      onLoadStarted: self._onBeginLoad,
                      onLoaded: self._onEndLoad

@@ -1,4 +1,7 @@
-define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
+define('js!SBIS3.CONTROLS.hierarchyMixin', [
+   "Core/core-functions",
+   "js!WS.Data/Relation/Hierarchy"
+], function ( cFunctions,Hierarchy) {
 
    /**
     * Миксин, добавляющий только работу с иерархией и методы для отображения.
@@ -107,25 +110,28 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          return this._options.hierField;
       },
       hierIterate: function (DataSet, iterateCallback, status) {
-         var
-            indexTree = DataSet.getTreeIndex(this._options.hierField, true),
-            self = this,
-            curParentId = (typeof this._curRoot != 'undefined') ? this._curRoot : null,
-            curLvl = 0;
+         var hierField = this._options.hierField,
+            hierarchy = new Hierarchy({
+               idProperty: DataSet.getIdProperty(),
+               parentProperty: hierField,
+               nodeProperty: hierField + '@'
+            });
 
-         var hierIterate = function(root) {
-            var
-               childKeys = indexTree[root] || [];
-            for (var i = 0; i < childKeys.length; i++) {
-               var record = self._items.getRecordById(childKeys[i]);
-               iterateCallback.call(this, record, root, curLvl);
-               if (indexTree[childKeys[i]]) {
+         var
+            curParentId = (typeof this._curRoot != 'undefined') ? this._curRoot : null,
+            curLvl = 0,
+            hierIterate = function(root) {
+               var children = hierarchy.getChildren(root, DataSet);
+               for (var i = 0; i < children.length; i++) {
+                  var record = children[i];
+                  iterateCallback.call(this, record, root, curLvl);
+
                   curLvl++;
-                  hierIterate(childKeys[i]);
+                  hierIterate(record.getId());
                   curLvl--;
                }
-            }
-         };
+            };
+
          hierIterate(curParentId);
       },
 
@@ -146,7 +152,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          var path = this._options.openedPath;
          this.hierIterate(this._items , function(record) {
             //Рисуем рекорд если он принадлежит текущей папке или если его родитель есть в openedPath
-            var parentKey = self._items.getParentKey(record, self._options.hierField);
+            var parentKey = record.get(self._options.hierField);
             if (parentKey == self._curRoot || path[parentKey]) {
                if (self._options.displayType == 'folders') {
                   if (record.get(self._options.hierField + '@')) {
@@ -167,7 +173,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        * @returns {*|{d: Array, s: Array}|String|Number}
        */
       getParentKey: function (DataSet, record) {
-         return this._items.getParentKey(record, this._options.hierField);
+         return record.get(this._options.hierField);
       },
       /**
        * Установить корень выборки.
@@ -221,7 +227,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       after : {
          _dataLoadedCallback: function () {
             var path = this._items.getMetaData().path,
-               hierarchy = $ws.core.clone(this._hier),
+               hierarchy = cFunctions.clone(this._hier),
                item;
             if (path) {
                hierarchy = this._getHierarchy(path, this._curRoot);
@@ -260,7 +266,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          if (dataSet){
             do {
                record = dataSet.getRecordById(key);
-               parentKey = record ? dataSet.getParentKey(record, this._options.hierField) : null;
+               parentKey = record ? record.get(this._options.hierField) : null;
                if (record) {
                   hierarchy.push({
                      'id': key || null,

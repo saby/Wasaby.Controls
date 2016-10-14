@@ -2,7 +2,11 @@
  * Created by iv.cheremushkin on 14.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collection/IBind'], function(Utils, IBindCollection) {
+define('js!SBIS3.CONTROLS.Selectable', [
+   'js!WS.Data/Utils',
+   'js!WS.Data/Collection/IBind',
+   'Core/core-instance'
+], function(Utils, IBindCollection, cInstance) {
 
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного.
@@ -32,7 +36,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
           /*не различаются события move и remove/add при смене пор номеров, поэтому используем этот флаг, см ниже*/
           _isMove: false,
           _isMoveKey: null,
-          _selectMode: 'index',
+          _curHash: undefined,
           _options: {
              /**
               * @cfg {String} Устанавливает выбранным элемент коллекции по переданному индексу (порядковому номеру).
@@ -95,49 +99,39 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
 
 
       _prepareSelectedConfig: function(index, key) {
-
-
-
-
-         // FIXME key !== null && index === -1 - проверка для выпуска 3.7.3.100
-         // иначе, если сначала установить ключ, а потом сорс не будет отрисовываться выбранный эелемент
-         if ((typeof index == 'undefined') || (index === null) || (key !== null && index === -1)) {
-            if (typeof key != 'undefined') {
-               this._selectMode = 'key';
+         if (this._isEmptyIndex(index)) {
+            if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet') && typeof key != 'undefined') {
                this._options.selectedIndex = this._getItemIndexByKey(key);
-            }
-            else {
-               this._options.selectedIndex = undefined;
             }
          }
          else {
-            this._selectMode = 'index';
-            if (this._getItemsProjection().getCount()) {
-               this._options.selectedIndex = index;
-               this._setKeyByIndex();
-            }
-            else {
-               this._options.selectedIndex = undefined;
+            if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet')) {
+               this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
             }
          }
-         if (!this._options.allowEmptySelection && this._isEmptyIndex()) {
+         if (!this._options.allowEmptySelection && this._isEmptyIndex(this._options.selectedIndex)) {
             if (this._getItemsProjection().getCount()) {
-               this._selectMode = 'index';
                this._options.selectedIndex = 0;
-               this._setKeyByIndex();
+               this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
             }
          }
+         if (this._getItemsProjection()) {
+            var curItem = this._getItemsProjection().at(this._options.selectedIndex);
+            if (curItem) {
+               this._curHash = curItem.getHash();
+            }
+         }
+
       },
 
       before : {
          setDataSource: function() {
             this._options.selectedIndex = -1;
+            this._curHash = undefined;
          },
          setItems: function() {
             this._options.selectedIndex = -1;
-         },
-         destroy: function () {
-            this._resetUtilityEnumerator();
+            this._curHash = undefined;
          }
       },
 
@@ -157,12 +151,6 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
             this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex, lightVer);
          },
          _unsetItemsEventHandlers : function() {
-            if (this._utilityEnumerator) {
-               this._utilityEnumerator.unsetObservableCollection(
-                  this._getItemsProjection()
-               );
-            }
-            this._utilityEnumerator = undefined;
             if (this._getItemsProjection() && this._onProjectionCurrentChange) {
                this.unsubscribeFrom(this._getItemsProjection(), 'onCurrentChange', this._onProjectionCurrentChange);
             }
@@ -171,39 +159,16 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
             }
          },
          _itemsReadyCallback: function() {
-            this._prepareSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
-            this._selectInProjection();
-         },
-         /**
-          * todo Удалить, когда будет выполнена указанная ниже задача
-          * Задача в разработку от 28.04.2016 №1172779597
-          * В деревянной проекции необходима возможность определять, какие элементы создаются развернутыми. Т...
-          * https://inside.tensor.ru/opendoc.html?guid=6f1758f0-f45d-496b-a8fe-fde7390c92c7
-          * @private
-          */
-         redraw: function() {
-            if (this._utilityEnumerator) {
-               this._utilityEnumerator.reIndex();
+            if (this._isEmptyIndex(this._options.selectedIndex)){
+               var projPos = this._getItemsProjection().getCurrentPosition();
+               if (!this._isEmptyIndex(projPos)) {
+                  this._options.selectedIndex = projPos;
+               }
             }
+            this._prepareSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
          }
       },
 
-      _getUtilityEnumerator: function() {
-         if (!this._utilityEnumerator) {
-            this._utilityEnumerator = this._getItemsProjection().getEnumerator();
-            this._utilityEnumerator.setObservableCollection(this._getItemsProjection());
-         }
-         return this._utilityEnumerator;
-      },
-
-      _resetUtilityEnumerator: function(){
-         if (this._utilityEnumerator) {
-            this._utilityEnumerator.unsetObservableCollection(
-               this._getItemsProjection()
-            );
-         }
-         this._utilityEnumerator = undefined;
-      },
 
       //TODO переписать метод
       _setSelectedIndex: function(index, id) {
@@ -230,11 +195,9 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
        */
       setSelectedKey : function(id) {
          this._options.selectedKey = id;
+         this._prepareSelectedConfig(undefined, id);
          if (this._getItemsProjection()) {
-            this._prepareSelectedConfig(undefined, id);
             this._selectInProjection();
-         } else {
-            this._setSelectedIndex(null, id);
          }
       },
 
@@ -251,9 +214,10 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
        * @see getSelectedIndex
        */
       setSelectedIndex: function(index) {
+         this._options.selectedIndex = index;
+         this._prepareSelectedConfig(this._options.selectedIndex);
          if (this._getItemsProjection()) {
-            this._prepareSelectedConfig(index);
-            this._getItemsProjection().setCurrentPosition(index);
+            this._selectInProjection();
          }
       },
       /**
@@ -294,6 +258,27 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
          return this._options.selectedIndex;
       },
 
+      /**
+       * Возвращает выбранный элемент коллекции.
+       * @returns {WS.Data|Entity|Model}
+       * @example
+       * <pre>
+       *     var myItem = this.getChildControlByName('MyControl').getSelectedItem();
+       * </pre>
+       */
+       /*
+        TODO в отличие от multiselectable при хождении по папкам/фильтрации запоминания элемента не будет
+        но это вроде и правильно, а в мультиселекте неправильно хранить выдление при хождении по папкам, это логика
+        TreeView
+       */
+      getSelectedItem : function() {
+         var
+             selKey = this.getSelectedKey(),
+             items = this.getItems();
+
+         return selKey && items ? items.getRecordById(selKey) : null;
+      },
+
       _drawSelectedItem : function() {
          /*Method must be implemented*/
       },
@@ -306,20 +291,8 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
       },
 
       _getItemIndexByKey: function(id) {
-         if(this._options.keyField) {
-            return this._getUtilityEnumerator().getIndexByValue(
-               this._options.keyField,
-               id
-            );
-         } else {
-            var index;
-            this._getItemsProjection().each(function(value, i){
-               if(value.getContents() === id){
-                  index = i;
-               }
-            });
-            return index;
-         }
+         var projItem = this._getItemProjectionByItemId(id);
+         return this._getItemsProjection().getIndex(projItem);
       },
 
       _notifySelectedItem : function(id, index) {
@@ -328,23 +301,25 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
          this._notify('onSelectedItemChange', id, index);
       },
 
-      _setKeyByIndex: function() {
-         if(this._hasItemByIndex()) {
-            var item = this._getItemsProjection().at(this._options.selectedIndex);
-            this._options.selectedKey = item.getContents().getId();
+      _getKeyByIndex: function(index) {
+         if(this._hasItemByIndex(index)) {
+            var itemContents = this._getItemsProjection().at(index).getContents();
+            if (cInstance.instanceOfModule(itemContents, 'WS.Data/Entity/Model')) {
+               return itemContents.getId();
+            }
          }
       },
 
-      _hasItemByIndex: function() {
-         return (typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null) && (typeof this._getItemsProjection().at(this._options.selectedIndex) != 'undefined');
+      _hasItemByIndex: function(index) {
+         return (typeof index != 'undefined') && (index !== null) && (typeof this._getItemsProjection().at(index) != 'undefined');
       },
 
-      _isEmptyIndex: function() {
-         return this._options.selectedIndex === null || typeof this._options.selectedIndex == 'undefined' || this._options.selectedIndex == -1;
+      _isEmptyIndex: function(index) {
+         return index === null || typeof index == 'undefined' || index == -1;
       },
 
       _selectInProjection: function (){
-         if (this._hasItemByIndex()) {
+         if (this._hasItemByIndex(this._options.selectedIndex)) {
             this._getItemsProjection().setCurrentPosition(this._options.selectedIndex);
          } else {
             this._getItemsProjection().setCurrentPosition(-1);
@@ -359,12 +334,8 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
          case IBindCollection.ACTION_MOVE:
          case IBindCollection.ACTION_REPLACE:
          case IBindCollection.ACTION_RESET:
-            this._resetUtilityEnumerator();
-
             var indexByKey = this._getItemIndexByKey(this._options.selectedKey),
                 itemsProjection = this._getItemsProjection(),
-                oldIndex = this._options.selectedIndex,
-                oldKey = this._options.selectedKey,
                 count;
 
             //В начале проверим наш хак на перемещение, а потом все остальное
@@ -386,18 +357,18 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
 
                   count = itemsProjection.getCount();
                   if (count > 0) {
-                     if (!this._isEmptyIndex()) {
+                     if (!this._isEmptyIndex(this._options.selectedIndex)) {
                         if (this._options.selectedIndex > count - 1) {
-                           this._options.selectedIndex = 0;
+                           this._options.selectedIndex = count - 1;
                         }
                         if (oldItems.length == 1 && action == IBindCollection.ACTION_REMOVE && oldItems[0].getContents().getId() == this._options.selectedKey) {
                            this._isMove = true;
                            this._isMoveKey = this._options.selectedKey;
                         }
-                        this._setKeyByIndex();
+                        this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
                      } else if (!this._options.allowEmptySelection) {
                         this._options.selectedIndex = 0;
-                        this._setKeyByIndex();
+                        this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
                      }
                   } else {
                      this._options.selectedIndex = -1;
@@ -406,15 +377,17 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
 
                }
             }
-            //TODO защита от логики деревянной проекции: добавил проверку на изменение selectedIndex и selectedKey, т.к. при вызове toggleNode
-            //в узле стреляет либо action_remove, либо action_add листьев и мы всегда попадали сюда. и всегда делали _setSelectedIndex,
-            //что приводило к лишнему событию onSelectedItemChanged, чего быть не должно.
-            //Ошибка остается актуальной для rightNavigationPanel, где мы сначала делаем toggleNode, у нас меняется индекс и нижеописанная проверка проходит(хотя
-            //по факту активный элемент не изменился) => стреляет onSelectedItemChanged, после из listView стреляет setSelectedKey из которого так же стреляет onSelectedItemChanged
-            //выписал на это ошибку в 373.200
+            var newHash;
+            if (this._getItemsProjection()) {
+               var curItem = this._getItemsProjection().at(this._options.selectedIndex);
+               if (curItem) {
+                  newHash = curItem.getHash();
+               }
+            }
 
-            if (action !== IBindCollection.ACTION_REPLACE && (this._options.selectedIndex !== oldIndex || this._options.selectedKey !== oldKey)) {
+            if (action !== IBindCollection.ACTION_REPLACE && (newHash !== this._curHash)) {
                this._setSelectedIndex(this._options.selectedIndex, this._options.selectedKey);
+               this._curHash = newHash;
             }
       }
    };
@@ -422,7 +395,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!WS.Data/Utils', 'js!WS.Data/Collecti
    var onProjectionCurrentChange = function (event, newCurrent, oldCurrent, newPosition) {
       this._setSelectedIndex(
          newPosition,
-         this._getItemValue(newCurrent ? newCurrent.getContents() : null, this._options.keyField)
+         this._getKeyByIndex(newPosition)
       );
    };
 

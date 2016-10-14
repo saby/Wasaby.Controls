@@ -1,21 +1,31 @@
 define('js!SBIS3.CONTROLS.ItemsControlMixin', [
-   'js!WS.Data/Source/Memory',
-   'js!WS.Data/Source/SbisService',
-   'js!WS.Data/Collection/RecordSet',
-   'js!WS.Data/Query/Query',
-   'js!SBIS3.CORE.MarkupTransformer',
-   'js!WS.Data/Collection/ObservableList',
-   'js!WS.Data/Display/Display',
-   'js!WS.Data/Collection/IBind',
-   'js!WS.Data/Display/Collection',
-   'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'tmpl!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
-   'js!WS.Data/Utils',
-   'js!WS.Data/Entity/Model',
-   'Core/ParserUtilities',
-   'Core/Sanitize',
-   'js!SBIS3.CORE.LayoutManager'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize, LayoutManager) {
+   "Core/core-functions",
+   "Core/constants",
+   "Core/Deferred",
+   "Core/IoC",
+   "Core/ConsoleLogger",
+   "js!WS.Data/Source/Memory",
+   "js!WS.Data/Source/SbisService",
+   "js!WS.Data/Collection/RecordSet",
+   "js!WS.Data/Query/Query",
+   "js!SBIS3.CORE.MarkupTransformer",
+   "js!WS.Data/Collection/ObservableList",
+   "js!WS.Data/Display/Display",
+   "js!WS.Data/Collection/IBind",
+   "js!WS.Data/Display/Collection",
+   "js!WS.Data/Display/Enum",
+   "js!WS.Data/Display/Flags",
+   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
+   "html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate",
+   "js!WS.Data/Utils",
+   "js!WS.Data/Entity/Model",
+   "Core/ParserUtilities",
+   "Core/Sanitize",
+   "js!SBIS3.CORE.LayoutManager",
+   "Core/core-instance",
+   "Core/helpers/fast-control-helpers",
+   "Core/helpers/functional-helpers"
+], function ( cFunctions, constants, Deferred, IoC, ConsoleLogger,MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, CollectionDisplay, EnumDisplay, FlagsDisplay, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize, LayoutManager, cInstance, fcHelpers, fHelpers) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -30,38 +40,59 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       return proj;
    },
 
-   _oldGroupByDefaultMethod = function (record, at, last, item, CFG) {
-      var curField = record.get(CFG.groupBy.field),
-         result = curField !== CFG._previousGroupBy;
-      CFG._previousGroupBy = curField;
+   applyGroupingToProjection = function(projection, cfg) {
+      if (cfg.groupBy && cfg.easyGroup) {
+         if (!cfg.groupBy.method) {
+            var field = cfg.groupBy.field;
+            projection.setGroup(function(item, index, projItem){
+               return item.get(field);
+            });
+         }
+      }
+      return projection;
+   },
+
+   _oldGroupByDefaultMethod = function (record, at, last, item) {
+      var curField = record.get(this._options.groupBy.field),
+         result = curField !== this._previousGroupBy;
+      this._previousGroupBy = curField;
       return result;
    },
 
-   canApplyGrouping = function(projItem, cfg) {
-      var
+   /*TODO метод нужен потому, что Лехина утилита не умеет работать с перечисляемым где contents имеет тип string*/
+   getPropertyValue = function(itemContents, field) {
+      if (typeof itemContents == 'string') {
+         return itemContents;
+      }
+      else {
+         return Utils.getItemPropertyValue(itemContents, field);
+      }
+   },
+      
+   canApplyGrouping = function(projItem, cfg) {      var
          itemParent = projItem.getParent && projItem.getParent();
       return !Object.isEmpty(cfg.groupBy) && (!itemParent || itemParent.isRoot());
    },
 
-   groupItemProcessing = function(records, item, cfg) {
+   groupItemProcessing = function(groupId, records, item, cfg) {
       if (cfg._canApplyGrouping(item, cfg)) {
          var groupBy = cfg.groupBy;
-         var resultGroup = groupBy.method.apply(this, [item.getContents(), undefined, undefined, item, cfg]);
-         var drawGroup = typeof resultGroup === 'boolean' ? resultGroup : (resultGroup instanceof Object && resultGroup.hasOwnProperty('drawGroup') ? !!resultGroup.drawGroup : false);
-         var drawItem = resultGroup instanceof Object && resultGroup.hasOwnProperty('drawItem') ? !!resultGroup.drawItem : true;
 
-         if (drawGroup){
+         if (cfg._groupTemplate) {
             var
                tplOptions = {
-                  columns : $ws.core.clone(cfg.columns || []),
+                  columns : cFunctions.clone(cfg.columns || []),
                   multiselect : cfg.multiselect,
-                  hierField: cfg.hierField + '@'
+                  hierField: cfg.hierField + '@',
+                  item: item.getContents(),
+                  groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.template),
+                  groupId: groupId
                },
-               itemInstance, groupTemplateFnc;
-            tplOptions.item = item.getContents();
+               groupTemplateFnc;
             tplOptions.colspan = tplOptions.columns.length + cfg.multiselect;
 
-            groupTemplateFnc = TemplateUtil.prepareTemplate(groupBy.template);
+
+            groupTemplateFnc = TemplateUtil.prepareTemplate(cfg._groupTemplate);
 
             records.push({
                tpl: groupTemplateFnc,
@@ -75,10 +106,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       var
          records = [];
       if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
-         cfg._previousGroupBy = undefined;
-         projection.each(function (item) {
-            if (cfg.groupBy && cfg.easyGroup) {
-               cfg._groupItemProcessing(records, item, cfg);
+         var prevGroupId = undefined;
+         projection.each(function (item, index, group) {
+            if (!Object.isEmpty(cfg.groupBy) && cfg.easyGroup) {
+               if (prevGroupId != group) {
+                  cfg._groupItemProcessing(group, records, item,  cfg);
+                  prevGroupId = group;
+               }
             }
             records.push(item);
          });
@@ -91,6 +125,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       tplOptions.Sanitize = Sanitize;
       tplOptions.displayField = cfg.displayField;
       tplOptions.templateBinding = cfg.templateBinding;
+      tplOptions.getPropertyValue = getPropertyValue;
 
       if (cfg.itemContentTpl) {
          itemContentTpl = cfg.itemContentTpl;
@@ -225,6 +260,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _dataSource: undefined,
          _dataSet: null,
          _dotItemTpl: null,
+         _propertyValueGetter: getPropertyValue,
          _options: {
 
             _canServerRender: false,
@@ -236,10 +272,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _buildTplArgs : buildTplArgs,
             _getRecordsForRedrawSt: getRecordsForRedraw,
             _getRecordsForRedraw: getRecordsForRedraw,
-            /*TODO ременные переменные для группировки*/
+            _applyGroupingToProjection: applyGroupingToProjection,
+
             _groupItemProcessing: groupItemProcessing,
+            /*TODO ременные переменные для группировки*/
             _canApplyGrouping: canApplyGrouping,
-            _previousGroupBy: undefined,
+
             /**
              * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
              * @remark
@@ -256,11 +294,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @see SBIS3.CONTROLS.Selectable#getSelectedKey
              */
             keyField : null,
-            /**
-             * @noShow
-             * @deprecated На текущий момент отрисовка изменившихся данных осуществляется автматически. Опция будет удалена в 3.7.4.100.
-             */
-            autoRedraw: true,
             /**
              * @cfg {String} Поле элемента коллекции, из которого отображать данные
              * @example
@@ -420,12 +453,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             groupBy : {},
             /**
-             * @cfg {Function} Пользовательский метод добавления атрибутов на элементы коллекции
-             * @noShow
-             * @deprecated На текущий момент для быстрой отрисовки атрибуты задаются непосредственно в шаблоне. Опция будет удалена в 3.7.4.100.
-             */
-            userItemAttributes : null,
-            /**
              * @cfg {String|HTMLElement|jQuery} Отображаемый контент при отсутствии данных
              * @example
              * <pre class="brush:xml">
@@ -559,14 +586,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      parsedCfg._items = newCfg.items;
                   }
                   proj = newCfg._createDefaultProjection(newCfg._items, newCfg);
+                  proj = newCfg._applyGroupingToProjection(proj, newCfg);
                   newCfg._itemsProjection = proj;
                   parsedCfg._itemsProjection = proj;
                }
 
-               if (cfg._canServerRender && !cfg.userItemAttributes && !cfg.itemTemplate && Object.isEmpty(cfg.groupBy)) {
-                  newCfg._serverRender = true;
-                  newCfg._itemData = cfg._buildTplArgs(cfg);
-                  newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection, cfg);
+               if (cfg._canServerRender && !cfg.itemTemplate) {
+                  if (Object.isEmpty(cfg.groupBy) || (cfg.easyGroup)) {
+                     newCfg._serverRender = true;
+                     newCfg._itemData = cfg._buildTplArgs(cfg);
+                     newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection, cfg);
+                  }
                }
             }
 
@@ -577,7 +607,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       $constructor: function () {
          this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady', 'onPageSizeChange');
 
-         var debouncedDrawItemsCallback = $ws.helpers.forAliveOnly(this._drawItemsCallback, this).debounce(0);
+         var debouncedDrawItemsCallback = fHelpers.forAliveOnly(this._drawItemsCallback, this).debounce(0);
          // FIXME сделано для правильной работы медленной отрисовки
          this._drawItemsCallbackDebounce = function() {
             debouncedDrawItemsCallback();
@@ -588,13 +618,19 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._options.pageSize = this._options.pageSize * 1;
          }
          if (!this._options.keyField) {
-            $ws.single.ioc.resolve('ILogger').log('Option keyField is undefined in control ' + this.getName());
+            IoC.resolve('ILogger').log('Option keyField is undefined in control ' + this.getName());
          }
          this._bindHandlers();
          this._prepareItemsConfig();
 
-         if (this._options.itemTemplate || this._options.userItemAttributes) {
-            $ws.single.ioc.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Заданы itemTemplate или userItemAttributes');
+         if (this._options.itemTemplate) {
+            IoC.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан itemTemplate');
+         }
+         if (!Object.isEmpty(this._options.groupBy) && !this._options.easyGroup) {
+            IoC.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Используется GroupBy без easyGroup: true');
+         }
+         if (this._options.userItemAttributes) {
+            IoC.resolve('ILogger').error('userItemAttributes', 'Option is no longer available since version 3.7.4.200. Use ItemTpl');
          }
 
       },
@@ -613,7 +649,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          /*TODO Поддержка совместимости. Раньше если были заданы items массивом создавался сорс, осталась куча завязок на это*/
          if (this._options.items instanceof Array) {
             if (this._options.pageSize && (this._options.items.length > this._options.pageSize)) {
-               $ws.single.ioc.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
+               IoC.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
             }
             if (!this._options.keyField) {
                this._options.keyField = findKeyField(this._options.items)
@@ -630,7 +666,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var keyField = this._options.keyField;
 
          if (!keyField) {
-            $ws.single.ioc.resolve('ILogger').log('Option keyField is undefined in control ' + this.getName());
+            IoC.resolve('ILogger').log('Option keyField is undefined in control ' + this.getName());
          }
 
          if (sourceOpt) {
@@ -648,6 +684,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._options._items = itemsOpt;
             }
             this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
+            this._options._itemsProjection = this._options._applyGroupingToProjection(this._options._itemsProjection, this._options);
             this._setItemsEventHandlers();
             this._notify('onItemsReady');
             this._itemsReadyCallback();
@@ -658,7 +695,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * Метод получения проекции по ID итема
        */
       _getItemProjectionByItemId: function(id) {
-         return this._getItemsProjection() ? this._getItemsProjection().getItemBySourceItem(this._options._items.getRecordById(id)) : null;
+         return this._getItemsProjection() ? this._getItemsProjection().getItemBySourceItem(this.getItems().getRecordById(id)) : null;
       },
 
       /**
@@ -712,7 +749,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             buildArgsMethod = this._buildTplArgs;
          }
          if (!this._itemData) {
-            this._itemData = $ws.core.clone(buildArgsMethod.call(this, this._options));
+            this._itemData = cFunctions.clone(buildArgsMethod.call(this, this._options));
          }
          return this._itemData;
       },
@@ -720,44 +757,49 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _redrawItems : function() {
          this._groupHash = {};
          var
-            $itemsContainer = this._getItemsContainer(),
-            itemsContainer = $itemsContainer.get(0),
-            data = this._prepareItemsData(),
-            markup;
+            $itemsContainer = this._getItemsContainer();
+         //в контролах типа комбобокса этого контейнера может не быть, пока пикер не создан
+         if ($itemsContainer) {
+            var
+               itemsContainer = $itemsContainer.get(0),
+               data = this._prepareItemsData(),
+               markup;
 
-         data.tplData = this._prepareItemData();
-         //TODO опять же, перед полной перерисовкой данные лесенки достаточно сбросить, чтобы она правильно отработала
-         //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
-         var ladder = this._options._decorators && this._options._decorators.getByName('ladder');
-         ladder && ladder.setIgnoreEnabled(true);
-         ladder && ladder.reset();
-         markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
-         ladder && ladder.setIgnoreEnabled(false);
-         //TODO это может вызвать тормоза
-         var comps = this._destroyInnerComponents($itemsContainer, this._options.easyGroup);
-         if (markup.length) {
-            if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
-               $itemsContainer.append(markup);
-            } else {
-               itemsContainer.innerHTML = markup;
-            }
-         }
-         else {
-            //TODO это временное решение для группировки в контактах до 200й версии
-            if (this._options.easyGroup) {
-               if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
-                  $itemsContainer.empty();
+            data.tplData = this._prepareItemData();
+            //TODO опять же, перед полной перерисовкой данные лесенки достаточно сбросить, чтобы она правильно отработала
+            //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
+            var ladder = this._options._decorators && this._options._decorators.getByName('ladder');
+            ladder && ladder.setIgnoreEnabled(true);
+            ladder && ladder.reset();
+            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
+            ladder && ladder.setIgnoreEnabled(false);
+            //TODO это может вызвать тормоза
+            var comps = this._destroyInnerComponents($itemsContainer, this._options.easyGroup);
+            if (markup.length) {
+               if (constants.browser.isIE8 || constants.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
+                  $itemsContainer.append(markup);
                } else {
-                  itemsContainer.innerHTML = '';
+                  itemsContainer.innerHTML = markup;
                }
             }
-         }
-         for (i = 0; i < comps.length; i++) {
-            if (comps[i]) {
-               comps[i].destroy();
+            else {
+               if (this._options.easyGroup) {
+                  if (constants.browser.isIE8 || constants.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
+                     $itemsContainer.empty();
+                  } else {
+                     itemsContainer.innerHTML = '';
+                  }
+               }
             }
+            for (i = 0; i < comps.length; i++) {
+               if (comps[i]) {
+                  comps[i].destroy();
+               }
+
+            }
+            this._toggleEmptyData(!(data.records && data.records.length) && this._options.emptyHTML);
+
          }
-         this._toggleEmptyData(!(data.records && data.records.length) && this._options.emptyHTML);
          this._reviveItems();
          this._container.addClass('controls-ListView__dataLoaded');
       },
@@ -780,7 +822,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                dot = data.defaultItemTpl;
             }
 
-               var ladder = this._options._decorators.getByName('ladder');
+               var ladder = this._options._decorators && this._options._decorators.getByName('ladder');
                ladder && ladder.setMarkLadderColumn(true);
 
             markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this._options);
@@ -796,7 +838,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
-      _removeItems: function (items) {
+      _removeItems: function (items, groupId) {
          var removedElements = $([]);
          for (var i = 0; i < items.length; i++) {
             var item = items[i];
@@ -807,39 +849,58 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
                this._ladderCompare([targetElement.prev(), targetElement.next()]);
 
-               /*TODO Особое поведение при группировке*/
                if (!Object.isEmpty(this._options.groupBy)) {
-                  var prev = targetElement.prev();
-                  if (prev.length && prev.hasClass('controls-GroupBy')) {
-                     var next = targetElement.next();
-                     if (!next.length || next.hasClass('controls-GroupBy')) {
-                        prev.remove();
+                  /*TODO косяк Лехи - не присылает группу при удалении*/
+                  /*if (this._options.easyGroup) {
+                     if (this._getItemsProjection().getGroupItems(groupId).length < 1) {
+                        $('[data-group="' + groupId + '"]', this._container.get(0)).remove();
                      }
                   }
+                  else {*/
+                     var prev = targetElement.prev();
+                     if (prev.length && prev.hasClass('controls-GroupBy')) {
+                        var next = targetElement.next();
+                        if (!next.length || next.hasClass('controls-GroupBy')) {
+                           prev.remove();
+                        }
+                     }
+                  /*}*/
                }
+
                removedElements.push(targetElement.get(0));
             }
          }
          removedElements.remove();
       },
 
-      _getItemsForRedrawOnAdd: function(items) {
-         return items;
+      _getItemsForRedrawOnAdd: function(items, groupId) {
+         var itemsToAdd = items;
+         if (!Object.isEmpty(this._options.groupBy) && this._options.easyGroup) {
+
+            //Если в группе один элемент (или меньше), то это значит что добавился элемент в группу, которая еще не отрисована
+            //и надо ее отрисовать
+            itemsToAdd = [];
+            if (this._getItemsProjection().getGroupItems(groupId).length <= 1) {
+               this._options._groupItemProcessing(groupId, itemsToAdd, items[0], this._options);
+            }
+            itemsToAdd.concat(items);
+         }
+         return itemsToAdd;
       },
 
       _optimizedInsertMarkup: function(container, markup, prepend) {
-         if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // В IE8-9 insertAdjacentHTML ломает верстку при вставке
+         if (constants.browser.isIE8 || constants.browser.isIE9) { // В IE8-9 insertAdjacentHTML ломает верстку при вставке
             container[prepend ? 'prepend' : 'append'](markup);
          } else {
             container.get(0).insertAdjacentHTML(prepend ? 'afterBegin' : 'beforeEnd', markup);
          }
       },
 
-      _addItems: function(newItems, newItemsIndex) {
+      _addItems: function(newItems, newItemsIndex, groupId) {
          this._itemData = null;
          var i;
          if (newItems && newItems.length) {
-            if (this._isSlowDrawing()) {
+            if (this._isSlowDrawing(this._options.easyGroup)) {
                for (i = 0; i < newItems.length; i++) {
                   this._addItem(
                      newItems[i],
@@ -865,7 +926,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                }
                /*TODO Лесенка*/
 
-               itemsToDraw = this._getItemsForRedrawOnAdd(newItems);
+               itemsToDraw = this._getItemsForRedrawOnAdd(newItems, groupId);
                if (itemsToDraw.length) {
                   data = {
                      records: itemsToDraw,
@@ -1016,7 +1077,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _destroyInnerComponents: function(container, easy) {
          var compsArray = this._destroyControls(container, easy);
-         if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
+         if (constants.browser.isIE8 || constants.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
             container.empty();
          } else {
             if (!easy) {
@@ -1046,9 +1107,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return compsArray;
       },
 
+      //TODO проверка для режима совместимости со старой отрисовкой
       /*TODO easy параметр для временной поддержки группировки в быстрой отрисовке*/
-      _isSlowDrawing: function() {
-         return !!this._options.itemTemplate || !!this._options.userItemAttributes || !Object.isEmpty(this._options.groupBy);
+      _isSlowDrawing: function(easy) {
+         var result = !!this._options.itemTemplate;
+         if (easy) {
+            return result;
+         }
+         else {
+            return result || !Object.isEmpty(this._options.groupBy);
+         }
       },
 
       before : {
@@ -1098,7 +1166,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                result = sourceOpt.call(this);
                break;
             case 'object':
-               if ($ws.helpers.instanceOfMixin(sourceOpt, 'WS.Data/Source/ISource')) {
+               if (cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ISource')) {
                   result = sourceOpt;
                }
                if ('module' in sourceOpt) {
@@ -1213,8 +1281,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
       /**
        * Перевычитывает модель из источника данных, мержит изменения к текущим данным и перерисовывает запись
-       * @param id Идентификатор модели
-       * @param id Мета информация
+       * @param {Number} id Идентификатор модели
+       * @param {Object|WS.Data/Entity/Model} meta Мета информация
        * @returns {*}
        */
       reloadItem: function(id, meta) {
@@ -1226,17 +1294,33 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                currentItem.merge(newItem);
             });
          } else {
-            return $ws.proto.deferred.success();
+            return Deferred.success();
          }
       },
-       /**
-        * Метод перезагрузки данных.
-        * Можно задать фильтрацию, сортировку.
-        * @param {String} filter Параметры фильтрации.
-        * @param {String} sorting Параметры сортировки.
-        * @param offset Элемент, с которого перезагружать данные.
-        * @param {Number} limit Ограничение количества перезагружаемых элементов.
-        */
+      /**
+       * Перезагружает набор записей представления данных с последующим обновлением отображения.
+       * @param {Object} filter Параметры фильтрации.
+       * @param {String|Array.<Object.<String,Boolean>>} sorting Параметры сортировки.
+       * @param {Number} offset Смещение первого элемента выборки.
+       * @param {Number} limit Максимальное количество элементов выборки.
+       * @example
+       * <pre>
+       *    myDataGridView.reload(
+       *       { // Устанавливаем параметры фильтрации: требуются записи, в которых поля принимают следующие значения
+       *          iata: 'SVO',
+       *          direction: 'Arrivals',
+       *          state: 'Landed',
+       *          fromCity: ['New York', 'Los Angeles']
+       *       },
+       *       [ // Устанавливаем параметры сортировки: сначала производится сортировка по полю direction, а потом - по полю state
+       *          {direction: false}, // Поле direction сортируется по возрастанию
+       *          {state: true} // Поле state сортируется по убыванию
+       *       ],
+       *       50, // Устанавливаем смещение: из всех подходящих записей отбор результатов начнём с 50-ой записи
+       *       20 // Требуется вернуть только 20 записей
+       *    );
+       * </pre>
+       */
       reload: propertyUpdateWrapper(function (filter, sorting, offset, limit) {
          var
             def,
@@ -1260,7 +1344,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              this._toggleIndicator(true);
              this._notify('onBeforeDataLoad', this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit);
              def = this._callQuery(this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit)
-                .addCallback($ws.helpers.forAliveOnly(function (list) {
+                .addCallback(fHelpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
                    self._notify('onDataLoad', list);
                    if (
@@ -1271,11 +1355,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    ) {
                       this._options._items.setMetaData(list.getMetaData());
                       this._options._items.assign(list);
-                      if(!self._options.autoRedraw) {
-                         self.redraw();
-                      } else {
-                         self._drawItemsCallbackDebounce();
-                      }
+                      self._drawItemsCallbackDebounce();
                    } else {
                       this._unsetItemsEventHandlers();
                       this._options._items = list;
@@ -1290,12 +1370,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
-                .addErrback($ws.helpers.forAliveOnly(function (error) {
+                .addErrback(fHelpers.forAliveOnly(function (error) {
                    if (!error.canceled) {
                       self._toggleIndicator(false);
                       if (self._notify('onDataLoadError', error) !== true) {
                          error.message = error.message.toString().replace('Error: ', '');
-                         $ws.helpers.alert(error);
+                         fcHelpers.alert(error);
                          error.processed = true;
                       }
                    }
@@ -1306,7 +1386,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              if (this._options._itemsProjection) {
                 this._redraw();
              }
-             def = new $ws.proto.Deferred();
+             def = new Deferred();
              def.callback();
           }
 
@@ -1332,10 +1412,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             if (this._options.keyField && this._options.keyField !== dataSet.getIdProperty()) {
                dataSet.setIdProperty(this._options.keyField);
             }
-            var recordSet = dataSet.getAll();
-            // Задаем meta, помержив текущие meta-данные с meta-данными в формате SBIS
-            recordSet.setMetaData($ws.core.merge(recordSet.getMetaData(), this._prepareMetaData(dataSet)));
-            return recordSet;
+            return dataSet.getAll();
          }).bind(this));
       },
 
@@ -1346,27 +1423,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             .limit(limit)
             .orderBy(sorting);
          return query;
-      },
-
-      _prepareMetaData: function(dataSet) {
-         /*  надо создавать дефолтную модель, а не внедренную, т.к. в модели recordSet'a
-             могут быть расчитываемые поля, которые ожидают что в модели будут гарантированно какие-то данные */
-         var meta = dataSet.hasProperty('m') ?
-             (new Model({
-                rawData: dataSet.getProperty('m'),
-                adapter: dataSet.getAdapter()
-             })).toObject() :
-             {};
-
-         if (dataSet.hasProperty('r')) {
-            meta.results = dataSet.getProperty('r');
-         }
-         meta.more = dataSet.getTotal();
-         if (dataSet.hasProperty('p')) {
-            meta.path = dataSet.getProperty('p');
-         }
-
-         return meta;
       },
 
       _toggleIndicator:function(){
@@ -1472,7 +1528,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @private
        */
       _isLoading: function () {
-         $ws.single.ioc.resolve('ILogger').log('ListView', 'Метод _isLoading() будет удален в 3.7.4 используйте isLoading()');
+         IoC.resolve('ILogger').log('ListView', 'Метод _isLoading() будет удален в 3.7.4 используйте isLoading()');
          return this.isLoading();
       },
       isLoading: function(){
@@ -1534,7 +1590,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
           if (items instanceof Array) {
              if (this._options.pageSize && (items.length > this._options.pageSize)) {
-                $ws.single.ioc.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
+                IoC.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
              }
              if (!this._options.keyField) {
                 this._options.keyField = findKeyField(this._options.items)
@@ -1593,7 +1649,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       redrawItem: function(item, projItem) {
          projItem = projItem || this._getItemProjectionByItemId(item.getId());
-         var ladder = this._options._decorators.getByName('ladder');
+         var ladder = this._options._decorators && this._options._decorators.getByName('ladder');
          ladder && ladder.setMarkLadderColumn(true);
          var
             targetElement = this._getElementByModel(item),
@@ -1628,7 +1684,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                resultGroup,
                drawGroup,
                drawItem = true;
-         if (this._canApplyGrouping(item)) {
+         if (!Object.isEmpty(groupBy) && this._canApplyGrouping(item)) {
             resultGroup = groupBy.method.apply(this, [item.getContents(), at, last, item, this._options]);
             drawGroup = typeof resultGroup === 'boolean' ? resultGroup : (resultGroup instanceof Object && resultGroup.hasOwnProperty('drawGroup') ? !!resultGroup.drawGroup : false);
             drawItem = resultGroup instanceof Object && resultGroup.hasOwnProperty('drawItem') ? !!resultGroup.drawItem : true;
@@ -1642,7 +1698,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var
                groupBy = this._options.groupBy,
                tplOptions = {
-                  columns : $ws.core.clone(this._options.columns || []),
+                  columns : cFunctions.clone(this._options.columns || []),
                   multiselect : this._options.multiselect,
                   hierField: this._options.hierField + '@'
                },
@@ -1708,8 +1764,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var childControls = this.getChildControls();
          for (var i = 0; i < childControls.length; i++) {
             if (childControls[i].getContainer().hasClass('controls-ListView__item')) {
-               var id = childControls[i].getContainer().attr('data-id');
-               this._itemsInstances[id] = childControls[i];
+               var hash = childControls[i].getContainer().attr('data-hash');
+               this._itemsInstances[hash] = childControls[i];
             }
          }
 
@@ -1750,8 +1806,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see getItemInstances
         */
       getItemInstance: function (id) {
+         var projItem = this._getItemProjectionByItemId(id);
          var instances = this.getItemsInstances();
-         return instances[id];
+         return instances[projItem.getHash()];
       },
       //TODO Сделать публичным? И перенести в другое место
       _hasNextPage: function (hasMore, offset) {
@@ -1807,8 +1864,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _ladderCompare: function(rows){
-         var ladderDecorator = this._options._decorators.getByName('ladder');
-         if (ladderDecorator && ladderDecorator.isIgnoreEnabled()){
+         var ladderDecorator;
+         if (this._options._decorators){
+            ladderDecorator = this._options._decorators.getByName('ladder');
+            if (ladderDecorator && ladderDecorator.isIgnoreEnabled()){
+               return;
+            }
+         }
+         else {
             return;
          }
          //TODO придрот - метод нужен только для адекватной работы лесенки при перемещении элементов местами
@@ -1832,11 +1895,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _isNeedToRedraw: function(){
          // Проверяем _needToRedraw для поддержки старой медленной отрисовки
          // Если быстрая отрисовка - считаем, что перерисовка необходима
-         return !!this._getItemsContainer() && (!this._isSlowDrawing() || this._needToRedraw);
+         return !!this._getItemsContainer() && (!this._isSlowDrawing(this._options.easyGroup) || this._needToRedraw);
       },
 
       _changeItemProperties: function(item, property) {
-         if (this._isSlowDrawing()) {
+         if (this._isSlowDrawing(this._options.easyGroup)) {
             this.redrawItem(item.getContents(), item);
          }
          else {
@@ -1963,7 +2026,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _addItem: function (projItem, at, withoutNotify) {
          var
             item = projItem.getContents(),
-            ladderDecorator = this._options._decorators.getByName('ladder'),
+            ladderDecorator = this._options._decorators && this._options._decorators.getByName('ladder'),
             canApplyGrouping = this._canApplyGrouping(projItem),
             previousGroupBy = this._previousGroupBy;//После добавления записи восстанавливаем это значение, чтобы не сломалась группировка
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
@@ -2022,9 +2085,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          container.attr('data-id', strKey).addClass('controls-ListView__item');
          container.attr('data-hash', item.getHash());
-         if (this._options.userItemAttributes && this._options.userItemAttributes instanceof Function) {
-            this._options.userItemAttributes(container, item.getContents());
-         }
       },
 
       _createItemInstance: function (item) {
@@ -2065,22 +2125,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
       _onCollectionRemove: function(items, notCollapsed) {
          if (items.length) {
-            this._removeItems(items);
+            this._removeItems(items)
          }
       },
-      _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems) {
-         this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);
-         var ladderDecorator = this._options._decorators.getByName('ladder');
-         //todo опять неверно вызывается ladderCompare, используем костыль, чтобы этого не было
-//         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
-//            ladderDecorator.setIgnoreEnabled(true);
-//         }
+      _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
+         this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE, groupId);
          if (newItems.length) {
-            this._addItems(newItems, newItemsIndex)
+            this._addItems(newItems, newItemsIndex, groupId)
          }
-//         if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
-//            ladderDecorator.setIgnoreEnabled(false);
-//         }
          this._toggleEmptyData(!this._options._itemsProjection.getCount());
          //this._view.checkEmpty(); toggleEmtyData
          this.reviveComponents(); //надо?
@@ -2134,13 +2186,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
        * @private
        */
-      onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems) {
+      onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
          if (this._isNeedToRedraw()) {
 	         switch (action) {
 	            case IBindCollection.ACTION_ADD:
                case IBindCollection.ACTION_MOVE:
                case IBindCollection.ACTION_REMOVE:
-                  if (action === IBindCollection.ACTION_MOVE && !Object.isEmpty(this._options.groupBy)) {
+                  if (action === IBindCollection.ACTION_MOVE && (!Object.isEmpty(this._options.groupBy) || this._isSearchMode())) {
                      this.redraw(); //TODO костыль, пока не будет группировки на стороне проекции.
                   } else {
                      this._onCollectionAddMoveRemove.apply(this, arguments);

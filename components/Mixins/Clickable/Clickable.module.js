@@ -1,4 +1,6 @@
-define('js!SBIS3.CONTROLS.Clickable', [], function() {
+define('js!SBIS3.CONTROLS.Clickable', [
+   "Core/constants"
+], function( constants) {
 
    if (typeof window !== 'undefined') {
       $(document).mouseup(function () {
@@ -36,8 +38,8 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
             commandArgs: []
          },
          _keysWeHandle: [
-            $ws._const.key.enter,
-            $ws._const.key.space
+            constants.key.enter,
+            constants.key.space
          ]
       },
 
@@ -50,7 +52,7 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
                self._container.addClass('controls-Click__active');
             }
             //В IE предотвратим нативное смещение текста в правый нижний угол внутри кнопки
-            if ($ws._const.browser.isIE) {
+            if (constants.browser.isIE) {
                e.preventDefault();
             }
             //return false;

@@ -1,10 +1,13 @@
 /*global define, $ws*/
 define('js!SBIS3.CONTROLS.Action.DialogMixin', [
-   'js!SBIS3.CORE.Dialog',
-   'js!SBIS3.CORE.FloatArea',
-   'js!WS.Data/Entity/Model',
-   'js!WS.Data/Utils'
-], function(Dialog, FloatArea, Model, Utils){
+   "Core/core-merge",
+   "Core/Deferred",
+   "js!SBIS3.CORE.Dialog",
+   "js!SBIS3.CORE.FloatArea",
+   "js!WS.Data/Entity/Model",
+   "js!WS.Data/Utils",
+   "Core/helpers/collection-helpers"
+], function( cMerge, Deferred,Dialog, FloatArea, Model, Utils, colHelpers){
    'use strict';
 
    /**
@@ -102,7 +105,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
 
          var self = this,
             compOptions = this._buildComponentConfig(meta),
-            editDeferred = new $ws.proto.Deferred(),
+            editDeferred = new Deferred(),
             config = {
                opener: this,
                template: template||this._options.template,
@@ -133,13 +136,13 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          if (mode == 'floatArea') {
             Component = FloatArea;
             floatAreaCfg = this._getFloatAreaConfig(meta);
-            $ws.core.merge(config, floatAreaCfg);
+            cMerge(config, floatAreaCfg);
          } else if (mode == 'dialog') {
             Component = Dialog;
          }
 
          if (this._dialog && !this._dialog.isAutoHide()){
-            $ws.core.merge(this._dialog._options, config);
+            cMerge(this._dialog._options, config);
             this._dialog.reload();
          }
          else{
@@ -160,15 +163,15 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             },
             floatAreaCfg = {};
 
-         $ws.helpers.forEach(defaultConfig, function(value, prop){
+         colHelpers.forEach(defaultConfig, function(value, prop){
             floatAreaCfg[prop] = meta[prop] !== undefined ? meta[prop] : defaultConfig[prop];
          });
 
          return floatAreaCfg;
       },
 
-      _buildComponentConfig: function() {
-         return {};
+      _buildComponentConfig: function(meta) {
+         return meta && meta.componentOptions ? meta.componentOptions : {};
       },
 
       setDialogComponent: function(val) {

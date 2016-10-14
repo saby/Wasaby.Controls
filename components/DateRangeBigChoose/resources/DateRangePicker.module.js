@@ -1,18 +1,24 @@
 define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
-   'js!SBIS3.CONTROLS.ListView',
-   'html!SBIS3.CONTROLS.DateRangeBigChoose/resources/DateRangePickerItem',
-   'js!SBIS3.CONTROLS.RangeMixin',
-   'js!WS.Data/Source/Base',
-   'js!SBIS3.CONTROLS.Utils.DateUtil',
-   'js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView'
-], function (ListView, ItemTmpl, RangeMixin, Base, DateUtil) {
+   "Core/Deferred",
+   "js!SBIS3.CONTROLS.ListView",
+   "html!SBIS3.CONTROLS.DateRangeBigChoose/resources/DateRangePickerItem",
+   "js!SBIS3.CONTROLS.RangeMixin",
+   "js!WS.Data/Source/Base",
+   "js!SBIS3.CONTROLS.Utils.DateUtil",
+   "Core/helpers/collection-helpers",
+   "Core/core-instance",
+   "js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView"
+], function ( Deferred,ListView, ItemTmpl, RangeMixin, Base, DateUtil, colHelpers, cInstance) {
    'use strict';
 
    var _startingOffset = 1000000;
 
    var MonthSource = Base.extend(/** @lends SBIS3.CONTROLS.DateRangeBig.DateRangePicker.MonthSource.prototype */{
       _moduleName: 'SBIS3.CONTROLS.DateRangeBigChoose.MonthSource',
-
+      $protected: {
+         _dataSetItemsProperty: 'items',
+         _dataSetTotalProperty: 'total'
+      },
 
       query: function (query) {
          // throw new Error('Method must be implemented');
@@ -34,10 +40,9 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
             }
          );
          items = this._prepareQueryResult(
-            {items: adapter.getData(), total: 1000000000000},
-            'items', 'total'
+            {items: adapter.getData(), total: 1000000000000}
          );
-         return $ws.proto.Deferred.success(items);
+         return Deferred.success(items);
       }
    });
 
@@ -253,12 +258,12 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
       },
 
       _isMonthView: function (control) {
-         return $ws.helpers.instanceOfModule(control, 'SBIS3.CONTROLS.DateRangeBigChoose.MonthView');
+         return cInstance.instanceOfModule(control, 'SBIS3.CONTROLS.DateRangeBigChoose.MonthView');
       },
 
       forEachMonthView: function (func) {
          var self = this;
-         $ws.helpers.forEach(this.getChildControls(), function(control) {
+         colHelpers.forEach(this.getChildControls(), function(control) {
             if (self._isMonthView(control)) {
                func(control);
             }

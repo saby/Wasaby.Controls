@@ -1,13 +1,19 @@
 define('js!SBIS3.CONTROLS.TreeDataGridView', [
-   'js!SBIS3.CONTROLS.DataGridView',
-   'html!SBIS3.CONTROLS.TreeDataGridView',
-   'js!SBIS3.CONTROLS.TreeMixin',
-   'js!SBIS3.CONTROLS.TreeViewMixin',
-   'js!SBIS3.CONTROLS.IconButton',
-   'html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate',
-   'html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate',
-   'html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate'
-], function(DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate) {
+   "Core/IoC",
+   "Core/core-merge",
+   "Core/constants",
+   "js!SBIS3.CONTROLS.DataGridView",
+   "html!SBIS3.CONTROLS.TreeDataGridView",
+   "js!SBIS3.CONTROLS.TreeMixin",
+   "js!SBIS3.CONTROLS.TreeViewMixin",
+   "js!SBIS3.CONTROLS.IconButton",
+   "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate",
+   "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate",
+   "html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate",
+   "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender",
+   "Core/ConsoleLogger"
+], function( IoC, cMerge, constants,DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
+
 
    var HIER_WRAPPER_WIDTH = 16,
        //Число 19 это сумма padding'ов, margin'ов элементов которые составляют отступ у первого поля, по которому строится лесенка отступов в дереве
@@ -16,32 +22,43 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var tplOptions, tvOptions;
          tplOptions = cfg._buildTplArgsDG.call(this, cfg);
          tvOptions = cfg._buildTplArgsTV.call(this, cfg);
-         $ws.core.merge(tplOptions, tvOptions);
+         cMerge(tplOptions, tvOptions);
          tplOptions.arrowActivatedHandler = cfg.arrowActivatedHandler;
          tplOptions.editArrow = cfg.editArrow;
          return tplOptions;
+      },
+      getSearchCfg = function(cfg) {
+         return {
+            keyField: cfg.keyField,
+            displayField: cfg.displayField,
+            highlightEnabled: cfg.highlightEnabled,
+            highlightText: cfg.highlightText,
+            colorMarkEnabled: cfg.colorMarkEnabled,
+            colorField: cfg.colorField,
+            allowEnterToFolder: cfg.allowEnterToFolder,
+            colspan: cfg.columns.length + (cfg.multiselect ? 1 : 0)
+         }
       };
 
    'use strict';
 
    /**
-    * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
+    * Контрол, отображающий набор данных с иерархической структурой в виде в таблицы с несколькими колонками. Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
     *
     * @class SBIS3.CONTROLS.TreeDataGridView
     * @extends SBIS3.CONTROLS.DataGridView
     * @mixes SBIS3.CONTROLS.TreeMixin
     * @author Крайнов Дмитрий Олегович
     *
-    * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView
-    * @demo SBIS3.CONTROLS.Demo.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
+    * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView Пример 1. Простое иерархическое представление данных в режиме множественного выбора записей.
+    * @demo SBIS3.CONTROLS.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
     * Инициировать добавление можно как по нажатию кнопок в футерах, так и по кнопке Enter из режима редактирования последней записи.
-    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
-    *
-    * @public
+    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/"> Добавление по месту в иерархическом списке</a>.
     *
     * @author Крайнов Дмитрий Олегович
     *
     * @control
+    * @public
     * @category Lists
     * @initial
     * <component data-component='SBIS3.CONTROLS.TreeDataGridView'>
@@ -91,6 +108,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             _canServerRender: true,
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
+            _defaultSearchRender: searchRender,
+            _getSearchCfg: getSearchCfg,
             /**
              * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике по кнопке справа от названия узла (папки) или скрытого узла.
              * @remark
@@ -220,10 +239,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              isBranch = rec && rec.get(this._options.hierField + '@');
 
          switch(e.which) {
-            case $ws._const.key.right:
+            case constants.key.right:
                isBranch && this.expandNode(selectedKey);
                break;
-            case $ws._const.key.left:
+            case constants.key.left:
                isBranch && this.collapseNode(selectedKey);
                break;
          }
@@ -267,7 +286,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
                      // TODO для обратной совместимости - удалить позже
                      if(self._options.arrowActivatedHandler) {
-                        $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.TreeDataGridView', 'Опция arrowActivatedHandler помечена как deprecated и будет удалена в 3.7.4.200.');
+                        IoC.resolve('ILogger').log('SBIS3.CONTROLS.TreeDataGridView', 'Опция arrowActivatedHandler помечена как deprecated и будет удалена в 3.7.4.200.');
                         self._options.arrowActivatedHandler.call(this,
                             hoveredItem.record,
                             id,
@@ -404,13 +423,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          container.addClass('controls-ListView__item-type-' + itemType);
          var
             key = item.getId(),
-            parentKey = this._options._items.getParentKey(item, this._options.hierField),
+            parentKey = item.get(this._options.hierField),
          	parentContainer = $('.controls-ListView__item[data-id="' + parentKey + '"]', this._getItemsContainer().get(0)).get(0);
          container.attr('data-parent', parentKey);
 
          if (this._options.openedPath[key]) {
-            var tree = this._options._items.getTreeIndex(this._options.hierField);
-            if (tree[key]) {
+            var hierarchy = this._getHierarchyRelation(),
+               children = hierarchy.getChildren(key, this._options._items);
+
+            if (children.length) {
                $('.js-controls-TreeView__expand', container).addClass('controls-TreeView__expand__open');
             } else {
                /*TODO:
@@ -428,12 +449,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (typeof parentKey != 'undefined' && parentKey !== null && parentContainer) {
             var parentMargin = parseInt($('.controls-TreeView__expand', parentContainer).parent().css('padding-left'));
             $('.controls-TreeView__expand', container).parent().css('padding-left', parentMargin + this._options.paddingSize);
-         }
-      },
-
-      _notifyOnItemClick: function(id, data, target, e) {
-         if(!$(target).hasClass('js-controls-TreeView__expand')) {
-            return TreeDataGridView.superclass._notifyOnItemClick.apply(this, arguments);
          }
       },
 

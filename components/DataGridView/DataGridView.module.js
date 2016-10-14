@@ -1,28 +1,34 @@
 define('js!SBIS3.CONTROLS.DataGridView',
    [
-      'js!SBIS3.CONTROLS.ListView',
-      'html!SBIS3.CONTROLS.DataGridView',
-      'html!SBIS3.CONTROLS.DataGridView/resources/rowTpl',
-      'html!SBIS3.CONTROLS.DataGridView/resources/colgroupTpl',
-      'html!SBIS3.CONTROLS.DataGridView/resources/headTpl',
-      'html!SBIS3.CONTROLS.DataGridView/resources/ResultsTpl',
-      'js!SBIS3.CORE.MarkupTransformer',
-      'js!SBIS3.CONTROLS.DragAndDropMixin',
-      'js!SBIS3.CONTROLS.ImitateEvents',
-      'html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
-      'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
-      'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-      'html!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate',
-      'html!SBIS3.CONTROLS.DataGridView/resources/ItemContentTemplate',
-      'html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate',
-      'html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate'
-   ],
-   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, LadderDecorator, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate) {
+   "Core/core-functions",
+   "Core/core-merge",
+   "Core/constants",
+   "Core/Deferred",
+   "js!SBIS3.CONTROLS.ListView",
+   "html!SBIS3.CONTROLS.DataGridView",
+   "html!SBIS3.CONTROLS.DataGridView/resources/rowTpl",
+   "html!SBIS3.CONTROLS.DataGridView/resources/colgroupTpl",
+   "html!SBIS3.CONTROLS.DataGridView/resources/headTpl",
+   "html!SBIS3.CONTROLS.DataGridView/resources/ResultsTpl",
+   "js!SBIS3.CORE.MarkupTransformer",
+   "js!SBIS3.CONTROLS.DragAndDropMixin",
+   "js!SBIS3.CONTROLS.ImitateEvents",
+   "html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
+   "js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator",
+   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
+   "html!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate",
+   "html!SBIS3.CONTROLS.DataGridView/resources/ItemContentTemplate",
+   "html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate",
+   "html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
+   "Core/helpers/collection-helpers",
+   "Core/helpers/string-helpers"
+],
+   function( cFunctions, cMerge, constants, Deferred,ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, LadderDecorator, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate, colHelpers, strHelpers) {
    'use strict';
 
       var ANIMATION_DURATION = 500, //Продолжительность анимации скролла заголовков
          _prepareColumns = function(columns, cfg) {
-            var columnsNew = $ws.core.clone(columns);
+            var columnsNew = cFunctions.clone(columns);
             for (var i = 0; i < columnsNew.length; i++) {
                if (columnsNew[i].cellTemplate) {
                   columnsNew[i].contentTpl = TemplateUtil.prepareTemplate(columnsNew[i].cellTemplate);
@@ -88,8 +94,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          prepareHeadColumns = function(cfg){
             var
                rowData = {},
-               columns = $ws.core.clone(cfg.columns),
-               supportUnion = $ws.core.clone(columns[0]),
+               columns = cFunctions.clone(cfg.columns),
+               supportUnion,
                supportDouble,
                curCol,
                nextCol,
@@ -111,7 +117,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                nextColSplitTitle = nextCol && nextCol.title.split('.');
 
                if (!supportDouble){
-                  supportDouble = $ws.core.clone(curCol);
+                  supportDouble = cFunctions.clone(curCol);
                }
                else {
                   curColSplitTitle = [supportDouble.value, curColSplitTitle];
@@ -129,7 +135,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                }
 
                if (!supportUnion){
-                  supportUnion = $ws.core.clone(curCol);
+                  supportUnion = cFunctions.clone(curCol);
                }
                if (nextCol && (supportUnion.title == nextCol.title)){
                   supportUnion.colspan = ++supportUnion.colspan || 2;
@@ -144,7 +150,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          prepareHeadData = function(cfg) {
             var
                headData = {
-                  columns: $ws.core.clone(cfg.columns),
+                  columns: cFunctions.clone(cfg.columns),
                   multiselect : cfg.multiselect,
                   startScrollColumn: cfg.startScrollColumn,
                   showHead: cfg.showHead
@@ -152,7 +158,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                value,
                column,
                headColumns = prepareHeadColumns(cfg);
-            $ws.core.merge(headData, headColumns);
+            cMerge(headData, headColumns);
             for (var i = 0; i < headData.content[0].length; i++) {
                column = headData.content[0][i];
 
@@ -161,7 +167,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                      column: column
                   }));
                } else {
-                  value = '<div class="controls-DataGridView__th-content">' + ($ws.helpers.escapeHtml(column.title) || '') + '</div>';
+                  value = '<div class="controls-DataGridView__th-content">' + (strHelpers.escapeHtml(column.title) || '') + '</div>';
                }
                column.value = value;
             }
@@ -174,15 +180,19 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
          };
    /**
-    * Контрол, отображающий набор данных в виде таблицы с несколькими колонками.
+    * Контрол, отображающий набор данных в виде таблицы с несколькими колонками. Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
+    *
     * @class SBIS3.CONTROLS.DataGridView
     * @extends SBIS3.CONTROLS.ListView
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyDataGridView
     *
-    * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
-    * @cssModifier controls-DataGridView__markerRight Маркер отображается не слева строки, а справа.
-    * @cssModifier controls-DataGridView__hasSeparator Включает линии разделители между строками
+    * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
+    * @cssModifier controls-DataGridView__markerRight Устанавливает отображение маркера активной строки справа от записи. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
+    * @cssModifier controls-DataGridView__hasSeparator Устанавливает отображение линий-разделителей между строками.
+    * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
+    * @cssModifier controls-DataGridView__overflow-ellipsis Устанавливает обрезание троеточием текста во всех колонках таблицы.
+    *
     * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
     *
     * @control
@@ -201,12 +211,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
     *       </options>
     *    </options>
     * </component>
-    * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
-    * @cssModifier controls-DataGridView__markerRight Маркер отображается не слева строки, а справа.
-    * @cssModifier controls-DataGridView__hasSeparator Включает отображение линий-разделителей между строками.
-    * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
-    * @cssModifier controls-DataGridView__overflow-ellipsis Включить обрезание троеточием текста во ВСЕХ колонках таблицы
-    * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
     */
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
       _dotTplFn : dotTplFn,
@@ -244,6 +248,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             _canServerRender: true,
             _buildTplArgs: buildTplArgsDG,
             _buildTplArgsDG: buildTplArgsDG,
+            _groupTemplate: GroupTemplate,
             /**
              * @typedef {Object} Columns
              * @property {String} title Заголовок колонки. Отображение заголовков можно изменять с помощью опции {@link showHead}. Также с помощью опции {@link allowToggleHead} можно скрывать заголовки при отсутствии в списке данных.
@@ -313,7 +318,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              */
             columns: [],
             /**
-             * @cfg {Boolean} Отображать заголовки колонок
+             * @cfg {Boolean} Устанавливает отображение заголовков колонок списка.
              * @example
              * <pre>
              *     <option name="showHead">false</option>
@@ -321,10 +326,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
              */
             showHead : true,
             /**
-             * @cfg {Number} Количество столбцов слева, которые будут не скроллируемы
+             * @cfg {Number} Устанавливает количество столбцов слева, которые будут не скроллируемы.
              * @remark
-             * Для появления частичного скролла, надо установить такую ширину колонок,
-             * чтобы сумма ширин всех столбцов была больше чем ширина контейнера таблицы
+             * Для отображения частичного скролла, нужно установить такую ширину колонок, чтобы суммарная ширина всех столбцов была больше чем ширина контейнера таблицы.
+             * Подробнее об использовании опции вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/columns/horizontal-scroll/">Горизонтальный скролл колонок</a>.
              * @example
              * <pre>
              *     <option name="startScrollColumn">3</option>
@@ -333,8 +338,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
              */
             startScrollColumn: undefined,
             /**
-             * @cfg {Array} Лесенка
-             * Массив имен столбцов, по которым строится лесенка
+             * @cfg {Array.<String>} Устанавливает набор столбцов для режима отображения "Лесенка".
+             * @remark
+             * Подробнее о данном режиме списка вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/ladder/">Отображение записей лесенкой</a>.
              * @example
              * <pre>
              *    <option name="ladder" type="array">
@@ -377,13 +383,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
              */
             resultsTpl: resultsTpl,
             /**
-             * @cfg {Boolean} Производить ли преобразование колонок в шапке
-             * Если опция включена, то колонки в шапке будут преобразованы следующим образом:
+             * @cfg {Boolean} Устанавливает преобразование колонок в "шапке" списка.
+             * @remark
+             * Если опция включена, то колонки в "шапке" списка будут преобразованы следующим образом:
              *  <ul>
-             *    <li>Колонки с одинаковым title будут объединены</li>
-             *    <li>Для колонок, title которых задан через разделитель "точка", т.е. вида выводимоеОбщееИмя.выводимоеИмяДаннойКолонки,
-             *        будет отрисован двустрочный заголовок
+             *    <li>Колонки с одинаковым title будут объединены;</li>
+             *    <li>Для колонок, title которых задан через разделитель "точка", т.е. вида выводимоеОбщееИмя.выводимоеИмяДаннойКолонки, будет отрисован двустрочный заголовок.</li>
              * </ul>
+             * Пример использования опции вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/columns/head-merge/">Объединение заголовков</a>.
              * @example
              * <pre>
              *     <option name="transformHead">true</option>
@@ -391,8 +398,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              */
             transformHead: false,
             /**
-             * @cfg {Boolean} Скрывать шапку, если данных нет
-             * Нужно ли скрывать шапку, если данных нет
+             * @cfg {Boolean} Устанавливает поведение, при котором "шапка" списка будет скрыта, если данные отсутствуют.
              * @example
              * <pre>
              *     <option name="allowToggleHead">false</option>
@@ -400,7 +406,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
              */
             allowToggleHead: true,
             /**
-             * @cfg {Boolean} Включает фиксацию / прилипание заголовков таблицы к шапке страницы / всплывающей панели.
+             * @cfg {Boolean} Устанавливает фиксацию/прилипание заголовков списка к "шапке" страницы/всплывающей панели.
+             * @remark
+             * Подробнее об этом механизме вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/fixed-header/">Фиксация шапки страниц и всплывающих панелей</a>.
              * @example
              * <pre>
              *     <option name="stickyHeader">true</option>
@@ -471,7 +479,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   }
                }
 
-
                hoveredColumn.cells = $(cells).addClass('controls-DataGridView__hoveredColumn__cell');
             }
          }
@@ -541,29 +548,24 @@ define('js!SBIS3.CONTROLS.DataGridView',
          headMarkup = MarkupTransformer(headTpl(headData));
          var body = $('.controls-DataGridView__tbody', this._container);
 
-         this._removeHead();
-         this._thead = $(headMarkup).insertBefore(body);
+         var newTHead = $(headMarkup);
+         if (this._thead && this._thead.length){
+            this._destroyControls(this._thead);
+            this._thead.replaceWith(newTHead);
+            this._thead = newTHead;
+         } else {
+            this._thead = newTHead.insertBefore(body);
+         }
+         this.reviveComponents(this._thead);
 
          this._drawResults();
          this._redrawColgroup();
-         this.reviveComponents();
          this._bindHead();
          this._notify('onDrawHead');
       },
 
-      _removeHead: function(){
-         var stickyThead;
-         if (this._thead) {
-            this._clearItems(this._thead);
-            this._thead.remove();
-         }
-         //ws-sticky-header__thead-copy удаляется в stikyManager после отрисовки шапки на событие onDrawHead
-         //получается что после выполнения метода redrawHead в теле таблицы 2 тега thead ( наш и sticky-header'a)
-         //в этом случае ipad криво рендерит верстку
-         if (this._options.stickyHeader){
-            stickyThead = $('.ws-sticky-header__thead-copy', this.getContainer());
-            stickyThead.remove();
-         }
+      _redrawResults: function(){
+         //Не перерисовываем строку итогов на redraw, сделаем это при перерисовке шапки.
       },
 
       _bindHead: function() {
@@ -591,15 +593,41 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
 
+      /**
+       * Метод возвращает текущий thead табличного представления (он может быть в таблице, или вынесен в фиксированную шапку)
+       * @returns {jQuery} - текущий thead табличного представления
+       * @noShow
+       */
+      getTHead: function(){
+         return this._thead;
+      },
+
+      /**
+       * Изменяет значение опции, фиксирующей заголовки табличного представления в шапке.
+       * Возимеет эффект только если фиксация ещё не прошла (на этапе инициилизации).
+       * @param isSticky
+       * @noShow
+       */
+      setStickyHeader: function(isSticky){
+         if (this._options.stickyHeader !== isSticky){
+            this._options.stickyHeader = isSticky;
+            this.getContainer().find('.controls-DataGridView__table').toggleClass('ws-sticky-header__table', isSticky);
+         }
+      },
+
       _redrawColgroup : function() {
          var markup, data, body;
          data = prepareColGroupData(this._options);
          markup = colgroupTpl(data);
          body = $('.controls-DataGridView__tbody', this._container);
-         if(this._colgroup) {
-            this._colgroup.remove();
+         var newColGroup = $(markup);
+         if(this._colgroup && this._colgroup.length) {
+            this._colgroup.replaceWith(newColGroup);
+            this._colgroup = newColGroup;
          }
-         this._colgroup = $(markup).insertBefore(this._thead || body);
+         else {
+            this._colgroup = newColGroup.insertBefore(this._thead || body);
+         }
       },
 
       _drawItemsCallback: function () {
@@ -663,7 +691,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                targetColumnIndex = targetColumn.index();
             }
          }
-         event.setResult(this.showEip(record, { isEdit: true }, targetColumnIndex)
+         event.setResult(this.showEip(record, { isEdit: true }, false, targetColumnIndex)
             .addCallback(function(result) {
                if (originalEvent.type === 'click') {
                   ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
@@ -674,8 +702,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
                return true;
             }));
       },
-      showEip: function(model, options, targetColumnIndex) {
-         return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().showEip(model, options) : $ws.proto.Deferred.fail();
+      showEip: function(model, options, withoutActivateFirstControl, targetColumnIndex) {
+         return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().showEip(model, options, withoutActivateFirstControl) : Deferred.fail();
       },
       _canShowEip: function(targetColumnIndex) {
          var
@@ -705,12 +733,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
             self = this,
             columns = this._options.enabled ? this._options.columns : [];
          if (!this._options.enabled) {
-            $ws.helpers.forEach(this._options.columns, function(item) {
+            colHelpers.forEach(this._options.columns, function(item) {
                columns.push(item.allowChangeEnable === false ? item : {});
             });
          }
 
-         return $ws.core.merge(DataGridView.superclass._getEditInPlaceConfig.apply(this, arguments), {
+         return cMerge(DataGridView.superclass._getEditInPlaceConfig.apply(this, arguments), {
             columns: columns,
             getCellTemplate: function(item, column) {
                return this._getCellTemplate(item, column);
@@ -810,7 +838,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _dragStart: function(e) {
-         $ws._const.$body.addClass('ws-unSelectable');
+         constants.$body.addClass('ws-unSelectable');
 
          /* Если скролл происходит перетаскиванием заголовков
             то выставим соответствующие флаги */
@@ -847,7 +875,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          /* Навешиваем класс на body,
             это самый оптимальный способ избавиться от выделения */
-         $ws._const.$body.removeClass('ws-unSelectable');
+         constants.$body.removeClass('ws-unSelectable');
          if(this._isHeaderScrolling) {
             this.getContainer().removeClass('controls-DataGridView__scrollingNow');
          }
@@ -1079,7 +1107,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _toggleEmptyData: function(show) {
          DataGridView.superclass._toggleEmptyData.apply(this, arguments);
-         if(this._emptyData && this._options.allowToggleHead) {
+         if (this._options.emptyHTML && this._options.allowToggleHead) {
             this._thead.toggleClass('ws-hidden', !!show);
          }
       },
@@ -1104,13 +1132,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (!resultsRecord){
             return;
          }
-         data = $ws.helpers.map(this.getColumns(), function(col, index){
+         data = colHelpers.map(this.getColumns(), function(col, index){
             value = resultsRecord.get(col.field);
             if (value == undefined){
                value = index == 0 ? self._options.resultsText : '';
-            }
-            else{
-               value = $ws.render.defaultColumn.integer(value);
             }
             return self._getColumnResultTemplate(col, index, value, resultsRecord);
          });
@@ -1179,7 +1204,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             value = MarkupTransformer((cellTpl)(tplOptions));
          } else {
             value = this._options._decorators.applyOnly(
-                  value === undefined || value === null ? '' : $ws.helpers.escapeHtml(value), {
+                  value === undefined || value === null ? '' : strHelpers.escapeHtml(value), {
                   highlight: column.highlight,
                   ladder: {
                      column: column.field,
@@ -1197,7 +1222,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             return item.get(colName);
          }
          var colNameParts = colName.slice(2, -2).split('.'),
-            curItem = $ws.core.clone(item),
+            curItem = cFunctions.clone(item),
             value;
          for (var i = 0; i < colNameParts.length; i++){
             if (i !== colNameParts.length - 1){

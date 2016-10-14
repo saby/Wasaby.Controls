@@ -4,14 +4,19 @@
 
 define('js!SBIS3.CONTROLS.ItemActionsGroup',
    [
-      'js!SBIS3.CONTROLS.ButtonGroupBaseDS',
-      'js!SBIS3.CONTROLS.IconButton',
-      'js!SBIS3.CONTROLS.Link',
-      'js!SBIS3.CONTROLS.ContextMenu',
-      'html!SBIS3.CONTROLS.ItemActionsGroup',
-      'html!SBIS3.CONTROLS.ItemActionsGroup/ItemTpl'
-   ],
-   function(ButtonGroupBaseDS, IconButton, Link, ContextMenu, dotTplFn, dotTplFnForItem) {
+   "Core/CommandDispatcher",
+   "Core/IoC",
+   "Core/ConsoleLogger",
+   "js!SBIS3.CONTROLS.ButtonGroupBaseDS",
+   "js!SBIS3.CONTROLS.IconButton",
+   "js!SBIS3.CONTROLS.Link",
+   "js!SBIS3.CONTROLS.ContextMenu",
+   "html!SBIS3.CONTROLS.ItemActionsGroup",
+   "html!SBIS3.CONTROLS.ItemActionsGroup/ItemTpl",
+   "Core/helpers/collection-helpers",
+   "Core/helpers/markup-helpers"
+],
+   function( CommandDispatcher, IoC, ConsoleLogger,ButtonGroupBaseDS, IconButton, Link, ContextMenu, dotTplFn, dotTplFnForItem, colHelpers, mkpHelpers) {
 
       'use strict';
 
@@ -36,7 +41,13 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             offset: 4
          }
       };
-
+      /**
+       * Класс для работы с операциями над записями, которые появляются при наведении курсора мыши.
+       * @class SBIS3.CONTROLS.ItemActionsGroup
+       * @extends SBIS3.CONTROLS.ButtonGroupBaseDS
+       * @author Герасимов Александр Максимович
+       * @public
+       */
       var ItemActionsGroup = ButtonGroupBaseDS.extend( /** @lends SBIS3.CONTROLS.ItemActionsGroup.prototype */ {
          $protected: {
             _dotTplFn: dotTplFn,
@@ -54,14 +65,14 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
          $constructor: function() {
             this._publish('onShowMenu', 'onHideMenu', 'onActionActivated');
-            $ws.single.CommandDispatcher.declareCommand(this, 'showMenu', this.showItemActionsMenu);
+            CommandDispatcher.declareCommand(this, 'showMenu', this.showItemActionsMenu);
 
             this.once('onInit', function() {
                this._itemActionsMenuButton = this._container.find('.controls-ItemActions__menu-button');
             }.bind(this));
 
             if(this._options.items.length && this._options.items[0].title) {
-               $ws.single.ioc.resolve('ILogger').log('title', 'C 3.7.3.140 свойство операции над записью title перестанет работать. Используйте свойство caption');
+               IoC.resolve('ILogger').log('title', 'C 3.7.3.140 свойство операции над записью title перестанет работать. Используйте свойство caption');
             }
          },
          /**
@@ -186,7 +197,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._activeItem.container.addClass(this._activeCls);
             this._itemActionsMenu.recalcPosition(true);
             /*TODO фикс теста, для операций над записью должна быть особая иконка*/
-            $('.controls-PopupMixin__closeButton', this._itemActionsMenu.getContainer()).addClass('icon-16 icon-size icon-ExpandUp icon-primary action-hover');
+            $('.controls-PopupMixin__closeButton', this._itemActionsMenu.getContainer()).addClass('icon-16 icon-size icon-ExpandUp icon-primary');
          },
 
          /**
@@ -210,7 +221,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          },
 
          hasVisibleActions: function() {
-            return $ws.helpers.find(this.getItemsInstances(), function(instance) {
+            return colHelpers.find(this.getItemsInstances(), function(instance) {
                /* Вызвать этот метод могут раньше, чем скроются выключенные операции,
                   и он вернёт неверный результат, поэтому проверяем и на isEnabled */
                return instance.isVisible() && instance.isEnabled();
@@ -318,7 +329,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             // поэтому требуется вернуть её в исходное состояние
             if(typeof onActivated === "string") {
                if( onActivated.beginsWith('wsFuncDecl::')) {
-                  action.handler = $ws.helpers.getFuncFromDeclaration(onActivated.replace('wsFuncDecl::', ''));
+                  action.handler = mkpHelpers.getFuncFromDeclaration(onActivated.replace('wsFuncDecl::', ''));
                }
             }else{
                action.handler = onActivated;

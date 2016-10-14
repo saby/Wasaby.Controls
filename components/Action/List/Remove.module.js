@@ -1,9 +1,11 @@
 /*global $ws, define*/
-define('js!SBIS3.CONTROLS.List.Remove',
-   ['js!SBIS3.CONTROLS.Action.Action',
-      'js!SBIS3.CONTROLS.Action.List.ListMixin'
+define('js!SBIS3.CONTROLS.List.Remove', [
+      'js!SBIS3.CONTROLS.Action.Action',
+      'js!SBIS3.CONTROLS.Action.List.ListMixin',
+      'Core/helpers/fast-control-helpers',
+      'Core/core-instance'
    ],
-   function (ActionBase, ListMixin) {
+   function (ActionBase, ListMixin, fcHelpers, cInstance) {
       'use strict';
       /**
        * Акшен удаления записей
@@ -84,7 +86,7 @@ define('js!SBIS3.CONTROLS.List.Remove',
                   confirmText = confirmText.call(this, items);
                }
                var self = this;
-               return $ws.helpers.question(confirmText).addCallback(function (res) {
+               return fcHelpers.question(confirmText).addCallback(function (res) {
                   if (!res) {
                      return;
                   }
@@ -107,15 +109,28 @@ define('js!SBIS3.CONTROLS.List.Remove',
             return this.getDataSource().destroy(keys).addCallback(function() {
                var list = self._getItems();
                for (var i = 0; i < items.length; i++) {
-                  list.remove(items[i]);
+                  var item = items[i];
+                  list.remove(item);
                }
+               self._removeSelection(items);
             });
          },
          _handleError: function (error) {
-            $ws.helpers.alert(error);
+            fcHelpers.alert(error);
          },
          _getDefaultConfirmText: function(items) {
             return items.length > 1 ? 'Удалить записи?' : 'Удалить текущую запись?';
+         },
+
+         _removeSelection: function(items) {
+            var linkedObject = this.getLinkedObject();
+            if (cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.MultiSelectable')) {
+               var ids = [];
+               for (var i = 0; i < items.length; i++) {
+                  ids.push(items[i].getId());
+               }
+               linkedObject.removeItemsSelection(ids);
+            }
          }
       });
       return Remove;

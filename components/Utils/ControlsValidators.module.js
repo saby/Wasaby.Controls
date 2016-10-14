@@ -1,7 +1,12 @@
 /**
  * Created by am.gerasimov on 01.02.2016.
  */
-define('js!SBIS3.CONTROLS.ControlsValidators', ['js!SBIS3.CORE.CoreValidators', 'i18n!SBIS3.CONTROLS.ControlsValidators'],function(CoreValidators) {
+define('js!SBIS3.CONTROLS.ControlsValidators', [
+   'js!SBIS3.CORE.CoreValidators',
+   'Core/core-instance',
+   'Core/Enum',
+   'i18n!SBIS3.CONTROLS.ControlsValidators'
+],function(CoreValidators, cInstace, cEnum) {
 
    'use strict';
 
@@ -44,9 +49,9 @@ define('js!SBIS3.CONTROLS.ControlsValidators', ['js!SBIS3.CORE.CoreValidators', 
                isEmpty = isNaN(option);
                break;
             case 'object' :
-               if(option instanceof $ws.proto.Enum) {
+               if(option instanceof cEnum) {
                   isEmpty = option.getCurrentValue() === null;
-               } else if($ws.helpers.instanceOfModule(option, 'WS.Data/Collection/List')) {
+               } else if(cInstace.instanceOfModule(option, 'WS.Data/Collection/List')) {
                   isEmpty = !Boolean(option.getCount());
                } else if(option instanceof Array) {
                   isEmpty = !Boolean(option.length);
@@ -70,7 +75,28 @@ define('js!SBIS3.CONTROLS.ControlsValidators', ['js!SBIS3.CORE.CoreValidators', 
       },
 
       /**
+       * Проверяет введённое число на соответствие допустимому диапазону значений.
+       * @param {Number|String} min Нижняя граница диапазона.
+       * @param {Number|String} max Верхняя граница диапазона.
+       * @returns {Boolean|String}
+       * <ol>
+       *    <li>В случае прохождения валидации возвращает true.</li>
+       *    <li>В случае не прохождения валидации возвращает сообщение "Значение должно попадать в диапазон ...".</li>
+       * </ol>
+       */
+      inRange: function (min, max, value) {
+         var obj = {
+            getValue: function() {
+               return value;
+            }
+         };
+
+         return CoreValidators.inRange.call(obj, min, max);
+      },
+
+      /**
        * Проверяет ИНН (допустимая длина ИНН - 10 или 12 символов).
+       * @function
        * @param {String} value Значение валидируемой опции.
        * @returns {Boolean|String}
        * <ol>
@@ -82,6 +108,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', ['js!SBIS3.CORE.CoreValidators', 
 
       /**
        * Проверяет ИНН (допустимая длина ИНН - 10 символов).
+       * @function
        * @param {String} value Значение валидируемой опции.
        * @returns {Boolean|String}
        * <ol>
@@ -93,6 +120,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', ['js!SBIS3.CORE.CoreValidators', 
 
       /**
        * Проверяет ИНН (допустимая длина ИНН - 12 символов).
+       * @function
        * @param {String} value Значение валидируемой опции.
        * @returns {Boolean|String}
        * <ol>
@@ -101,7 +129,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', ['js!SBIS3.CORE.CoreValidators', 
        * </ol>
        */
       inn12: checkInn.bind(undefined, 12),
-
+      
       /**
        * Проверяет корректность введеного e-mail.
        * @remark Предпочтительно использовать с флагом noFailOnError, т.к. есть исключительный ситуации.
@@ -113,18 +141,12 @@ define('js!SBIS3.CONTROLS.ControlsValidators', ['js!SBIS3.CORE.CoreValidators', 
        * </ol>
        */
       email: function(value) {
+         //Регулярное выражение для проверки email отсюда http://stackoverflow.com/a/46181/6729520
          var
-            login = '(([a-z0-9+_][-a-z0-9+_]*(\\.[-a-z0-9+_]+)*)|([-а-яё0-9+_]+(\\.[-а-яё0-9+_]+)*))',
-            domain = '(([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\\.)|([а-яё0-9]([-а-яё0-9]{0,61}[а-яё0-9])?\\.))',
-            topDomain = '(([а-яё]{1,10})|([a-z]{1,10}))',
-            regExp = new RegExp(login + '@' + domain + '+' + topDomain, 'i'),
-            isGoodValue = true;
+            regExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            isGoodValue = value ? regExp.test(value) : true;
 
-         if (value) {
-            isGoodValue = regExp.test(value);
-         }
-
-         return isGoodValue ?
+         return isGoodValue ? 
             true :
             rk('В поле требуется ввести адрес электронной почты');
       }

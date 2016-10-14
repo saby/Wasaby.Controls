@@ -1,8 +1,10 @@
 define('js!SBIS3.CONTROLS.SubmitPopup', [
-      'js!SBIS3.CONTROLS.InformationPopup',
-      'html!SBIS3.CONTROLS.SubmitPopup/resources/template',
-      'js!SBIS3.CONTROLS.Button'
-   ],
+   "Core/constants",
+   "js!SBIS3.CONTROLS.InformationPopup",
+   "html!SBIS3.CONTROLS.SubmitPopup/resources/template",
+   "js!SBIS3.CONTROLS.Button",
+   "js!SBIS3.CONTROLS.Link"
+],
 
    /**
     * Информационное окно.
@@ -11,9 +13,10 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
     * @class SBIS3.CONTROLS.SubmitPopup
     * @extends SBIS3.CONTROLS.InformationPopup
     * @control
+    * @public
     * @author Степин П.В.
     */
-   function(InformationPopup, template){
+   function( constants,InformationPopup, template){
       'use strict';
 
       var SubmitPopup = InformationPopup.extend(/** @lends SBIS3.CONTROLS.SubmitPopup.prototype */ {
@@ -38,6 +41,12 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
           * @param {ChosenStatus} Вариант диалога, выбранный нажатием соответствующей кнопки
           * @variant
           */
+
+         /**
+          * @typedef {Object} ButtonConfig
+          * @property {Boolean} isLink Показать кнопку ссылку вместо обычной кнопки
+          * @property {String} caption Текст кнопки.
+          */
          $protected: {
             _options: {
 
@@ -54,11 +63,53 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                 * @cfg {String} Детали сообщения, отображаются под основным сообщением.
                 */
                details: '',
+               
+               /**
+                * @cfg {ButtonConfig} Настройки кнопки подтверждения. Применяется для диалогов со статусом confirm.
+                */
+               positiveButton: {
+                  caption: rk('Да'),
+                  isLink: false
+               },
+
+               /**
+                * @cfg {ButtonConfig} Настройки кнопки отрицания. Применяется для диалогов со статусом confirm.
+                */
+               negativeButton: {
+                  caption: rk('Нет'),
+                  isLink: false
+               },
+
+               /**
+                * @cfg {ButtonConfig} Настройки кнопки отмены. Применяется для диалогов со статусом confirm.
+                */
+               cancelButton: {
+                  caption: rk('Отмена'),
+                  isLink: false
+               },
+
+               /**
+                * @cfg {ButtonConfig} Настройки кнопки подтверждения. Применяется для диалогов со статусом default, success, error и warning.
+                */
+               submitButton: {
+                  caption: rk('ОК'),
+                  isLink: false
+               },
 
                /**
                 * @cfg {Boolean} Использовать ли кнопку Отмена. Опция актуальна только для окна подтверждения.
                 */
                hasCancelButton: false,
+
+               /**
+                * @cfg {Function} Шаблон для сообщения
+                */
+               messageTemplate: null,
+
+               /**
+                * @cfg {Function} Шаблон для деталей, отображается под основным сообщением
+                */
+               detailsTemplate: null,
 
                /*
                 * @noShow
@@ -93,7 +144,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
 
             //По esc закрываем диалог. Кидаем событие со значением undefined.
             this.subscribe('onKeyPressed', function(e, event){
-               if(event.which === $ws._const.key.esc){
+               if(event.which === constants.key.esc){
                   self._choose();
                }
             });
@@ -124,8 +175,8 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
 
             this.subscribeTo(inst, 'onKeyPressed', function(e, event){
                switch(event.which){
-                  case $ws._const.key.left: self._switchButton(index, false); break;
-                  case $ws._const.key.right: self._switchButton(index, true); break;
+                  case constants.key.left: self._switchButton(index, false); break;
+                  case constants.key.right: self._switchButton(index, true); break;
                }
             });
          }

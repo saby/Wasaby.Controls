@@ -15,6 +15,13 @@
 @primary-color:                           #ff7033;
 @secondary-color:                         transparent;
 
+@icon-color-attention:                    #FEC63F;
+@icon-color-done:                         #72be44;
+@icon-color-error:                        #ef463a;
+@icon-color-primary:                      @default-color;
+@icon-color-hover:                        #ff7033;
+@icon-color-disabled:                     #CCC;
+
 @bg:                                      transparent;
 @text-color:                              @black-color;
 
@@ -47,7 +54,7 @@
 @link-padding:                            0;
 @link-font-size:                          @font-basic-size;
 
-@link-hover-text-color:                   @primary-color;
+@link-hover-text-color:                   @blue-dark-color;
 @link-hover-text-decoration:              underline;
 
 @link-active-text-color:                  @link-hover-text-color;
@@ -74,6 +81,8 @@
 @button-padding:                          0 12px;
 @button-margin:                           auto;
 @button-border-radius:                    16px;
+@button-icon-color-hover:                 @blue-dark-color;
+@button-icon-color:                       @icon-color-primary;
 @button-icon-top-offset:                  4px;                      // top offset of 16x16 icon
 @button-icon-left-offset:                 12px;
 @button-icon-gap:                         4px;                      // gap between icon and text
@@ -111,11 +120,11 @@
 @button-active-text-color:                @button-text-color;
 @button-active-border:                    @button-border;
 @button-active-shadow:                    @button-shadow;
-@button-active-bg:                        #cbd5e5;
+@button-active-bg:                        #E1ECF6;
 
 // Normal primary button
 @button-primary-text-color:               @button-text-color;
-@button-primary-border:                   1px solid @link-hover-text-color;
+@button-primary-border:                   1px solid @primary-color;
 @button-primary-shadow:                   @button-shadow;
 @button-primary-bg:                       @button-bg;
 
@@ -209,7 +218,12 @@
 @button-group-horizontal-item-margin:     0;
 @button-group-vertical-item-margin:       0 0 0 0;
 
+// ------------ //
+//  Icon Button //
+// ------------ //
 
+@button-icon-done-color: #72BE44;
+@button-icon-error-color: #EF463A;
 
 // ------------- //
 // Toggle button //
@@ -231,7 +245,7 @@
 
 // Normal primary button
 @button-primary-checked-text-color:       @button-primary-active-text-color;
-@button-primary-checked-border:           2px solid @link-hover-text-color;
+@button-primary-checked-border:           2px solid @primary-color;
 @button-primary-checked-shadow:           @button-primary-active-shadow;
 @button-primary-checked-bg:               @button-primary-hover-bg;
 
@@ -284,7 +298,7 @@
 @tab-button-height:                             28px;
 @tab-button-position:                           relative;
 @tab-button-overflow:                           hidden;
-@tab-button-color:                              #313E78;
+@tab-button-color:                              @blue-dark-color;
 @tab-button-font:                               14px 'TensorFont Regular', 'TensorFont';
 @tab-button-margin-top:                         0;
 @tab-button-border:                             1px solid transparent;
@@ -306,7 +320,7 @@
 @tab-button-bottomLine-display:                 block;
 
 @tab-button-checked-height:                     28px;
-@tab-button-checked-border-top:                 1px solid #313E78;
+@tab-button-checked-border-top:                 1px solid @blue-dark-color;
 @tab-button-checked-border-bottom:              1px solid #FFF;
 @tab-button-checked-border-left:                transparent;
 @tab-button-checked-border-right:               transparent;
@@ -381,6 +395,14 @@
 @tab-button-disabled-bg:                        transparent;
 @tab-button-disabled-inner-color:               #CCCCCC;
 @tab-button-disabled-inner-after-display:       none;
+
+// -----------  //
+// Tab control //
+// -----------  //
+@tab-control-background-color:                  #fff;
+@tab-control-padding-top:                       30px;
+@tab-control-box-sizing:                        border-box;
+
 // ------------ //
 // Radio button //
 // ------------ //
@@ -564,7 +586,7 @@
 
 @switcher-do-horizontal-line-width:             @switcher-line-width;
 @switcher-do-vertical-line-width:               38px;
-@switcher-do-horizontal-line-color:             @gray-color;
+@switcher-do-horizontal-line-background-color:  @gray-color;
 @switcher-do-horizontal-disabled-line-color:    @gray-light-color;
 
 @switcher-do-horizontal-btn-color:              @switcher-btn-color;
@@ -628,7 +650,7 @@
 
 @menu-item-hover-text-color:              @menu-item-text-color;
 @menu-item-hover-bg:                      @default-itemHover-color;
-@menu-item-hover-icon-color:              @primary-color!important;
+@menu-item-hover-icon-color:              @default-color !important;
 
 @menu-item-icon-top-offset:               8px;
 @menu-item-icon-top-offset-big:           0px;
@@ -677,6 +699,7 @@
 @menu-button-header-right-width:                        28px;
 @menu-button-header-right-height:                       30px;
 @menu-button-header-right-margin:                       0 0 0 -6px;
+@menu-button-header-right-margin-revert-horizontal:     @menu-button-header-right-margin;
 @menu-button-header-right-bg:                           transparent url(@menu-button-header-spritesheet) 0 -4px;
 @menu-button-header-left-bg-revert-horizontal:          transparent url(@menu-button-header-spritesheet) 0 182px;
 @menu-button-header-left-bg-revert-vertical:            transparent url(@menu-button-header-spritesheet) 0 89px;
@@ -710,8 +733,9 @@
 // Menu
 @menu-link-menu-margin:                   -6px 0 0 -10px;
 @menu-link-menu-padding:                  0 0 4px 0;
+@menu-link-menu-item-container-padding:   4px 0 0 0;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
-@menu-link-header-bg-color:               @menu-button-menu-bg;
+@menu-link-header-bg-color:               #F4F4F4;
 @menu-link-menu-border-width:             @menu-border-width;
 @menu-link-icon-24-top:                   -4px;
 
@@ -1516,7 +1540,8 @@
 @list-view-actions-active-bg:                   @data-grid-row-hover-bg !important;
 @list-view-actions-bg:                          @data-grid-row-hover-bg;
 
-@list-view-items-toolbar-margin:                     0 0 1px 0;
+@list-view-items-toolbar-bottom:                     1px;
+@list-view-items-toolbar-right:                      0;
 @list-view-items-toolbar-zindex:                     10;
 @list-view-items-toolbar-box-shadow:                 -2px -2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-locked-box-shadow:          none;
@@ -1530,8 +1555,8 @@
 @list-view-items-toolbar-elements-margin:            0 4px;
 @list-view-items-toolbar-float:                      right;
 @list-view-items-toolbar-ipad-minHeight:             30px;
-@list-view-items-toolbar-margin-right-tile:          1px;
 @touch-mode-items-toolbar-icon-margin-top:           -24px;
+@list-view-items-toolbar-right-tile:                 1px;
 
 @list-view-actions-verAlign-margin:             8px 3px 0 0;
 @list-view-actions-verAlign-width:              20px;
@@ -1553,11 +1578,9 @@
 @list-view-actions-touch-padding:               5px 0 0 0;
 
 @list-view-actions-menu-close-top:              12px;
-@list-view-actions-menu-close-right:            3px;
+@list-view-actions-menu-close-right:            2px;
 @list-view-actions-menu-close-height:           16px;
 @list-view-actions-menu-close-width:            16px;
-@list-view-actions-menu-close-revVert-bottom:   12px;
-@list-view-actions-menu-close-revVert-top:      auto;
 @list-view-actions-menu-item-padding-right:     24px;
 @list-view-actions-menu-padding:                @menu-padding;
 
@@ -1591,6 +1614,8 @@
 @tree-view-expand-width:                        16px;
 @tree-view-expand-height:                       21px;
 @tree-view-expand-margin:                       0 4px 0 -2px;
+
+@tree-view-value-left-margin:                   @tree-view-expand-width;
 
 @tree-view-first-td-padding-left:               6px;
 
@@ -1674,7 +1699,7 @@
 @data-grid-header-cell-border-color:            transparent;
 @data-grid-header-cell-border-bottom: 				1px solid #F5F5F5;
 
-@data-grid-header-cell-text-color:              @gray-color;
+@data-grid-header-cell-text-color:              #8991a9;
 @data-grid-header-cell-bg:                      transparent;
 
 @data-grid-header-cell-hover-text-color:        @data-grid-header-cell-text-color;
@@ -1814,7 +1839,8 @@
 // ----------------------- //
 
 @controls-OperationsPanelButton-width:             24px;
-@controls-OperationsPanelButton-hor-height:        30px;
+@controls-OperationsPanelButton-hor-height:        29px;
+@controls-OperationsPanelButton-hor-line-height:   30px;
 @controls-OperationsPanelButton-vert-height:       24px;
 @controls-OperationsPanelButton-vert-border-radius: 7px;
 @controls-OperationsPanelButton-font:              18px 'TensorFont Regular', 'TensorFont';
@@ -1879,10 +1905,10 @@
 @DropdownList-picker-padding:                         4px 0;
 @DropdownList-picker-head-margin:                     0;
 @DropdownList-picker-border:                          2px solid @DropdownList-border-color;
-@DropdownList-picker-head-border-radius:              5px 5px 0 0;
-@DropdownList-picker-list-border-radius:              0 0 5px 5px;
-@DropdownList-picker-list-right-border-radius:        0 5px 5px 5px;
-@DropdownList-picker-list-left-border-radius:         5px 0 5px 5px;
+@DropdownList-picker-head-border-radius:              4px 4px 0 0;
+@DropdownList-picker-list-border-radius:              0 0 4px 4px;
+@DropdownList-picker-list-right-border-radius:        0 4px 4px 4px;
+@DropdownList-picker-list-left-border-radius:         4px 0 4px 4px;
 @DropdownList-picker-menu-font-size:                  15px;
 @DropdownList-picker-menu-white-space:                nowrap;
 @DropdownList-picker-menu-item-padding:               4px 16px 4px 16px;
@@ -1891,7 +1917,7 @@
 @DropdownList-picker-menu-item-color:                 @white-color;
 @DropdownList-picker-menu-item-hover:                 #F0F5FB;
 @DropdownList-linkStyleColor:                         #0055bb;
-@DropdownList-linkStyleHoverColor:                    #ff7033;
+@DropdownList-linkStyleHoverColor:                    #313E78;
 @DropdownList-footer-buttonsBlock-position:           relative;
 @DropdownList-footer-buttonsBlock-height:             24px;
 @DropdownList-footer-buttons-position:                absolute;
@@ -1955,7 +1981,7 @@
 @controls-filterButton-history-maxHeight-overflow:hidden;
 @controls-filterButton-history-actions-right:     auto !important;
 @controls-filterButton-history-actions-left:      -4px !important;
-@controls-filterButton-history-actions-margin:    0;
+@controls-filterButton-history-actions-bottom:    0;
 
 @controls-filterButton-history-item-min-height:   24px;
 
@@ -2115,14 +2141,14 @@
 @controls-NotificationPopup-header-icon-margin:                              12px 12px 0 0;
 
 //SubmitPopup
-@controls-SubmitPopup-width:                       351px;
-@controls-SubmitPopup-body-margin:                 32px;
+@controls-SubmitPopup-min-width:                   351px;
+@controls-SubmitPopup-body-padding:                32px;
 @controls-SubmitPopup-message-font-size:           18px;
 @controls-SubmitPopup-message-margin-bottom:       8px;
 @controls-SubmitPopup-footer-bg:                   #F5F5F5;
 @controls-SubmitPopup-footer-border-top:           1px solid #EAEAEA;
-@controls-SubmitPopup-button-container-padding:    16px 0;
-@controls-SubmitPopup-button-width:                86px;
+@controls-SubmitPopup-footer-padding:              16px;
+@controls-SubmitPopup-button-min-width:            86px;
 @controls-SubmitPopup-button-height:               24px;@controls-movedialog-min-width:                    auto;
 
 //ListView AjaxIndicator
