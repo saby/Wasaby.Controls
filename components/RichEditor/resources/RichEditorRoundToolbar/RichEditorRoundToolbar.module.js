@@ -7,10 +7,11 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
    'html!SBIS3.CONTROLS.RichEditorRoundToolbar',
    'js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
    'js!SBIS3.CONTROLS.FloatArea',
+   'Core/helpers/string-helpers',
    'js!SBIS3.CONTROLS.MenuIcon',
    'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS.StylesPanel'
-], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea) {
+], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea, strHelpers) {
 
    'use strict';
    var
@@ -155,7 +156,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                      var smileName = $(this).attr('title');
                      $(this).replaceWith('[' + (smileName ? smileName : rk('смайл')) +']');
                   });
-                  stripText = title = $ws.helpers.escapeHtml($tmpDiv.text());
+                  stripText = title = strHelpers.escapeHtml($tmpDiv.text());
                   stripText = stripText.replace('/\n/gi', '');
                   if (!stripText && value) {
                      stripText = rk('Контент содержит только html-разметку, без текста.');
@@ -169,11 +170,13 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                   items= [],
                   history = this.getItemInstance('history');
                for ( var i in arrBL) {
-                  items.push({
-                     key: items.length,
-                     title: prepareHistory(arrBL[i]),
-                     value: arrBL[i]
-                  })
+                  if (arrBL.hasOwnProperty(i)) {
+                     items.push({
+                        key: items.length,
+                        title: prepareHistory(arrBL[i]),
+                        value: arrBL[i]
+                     })
+                  }
                }
                if (!arrBL.length) {
                   history.setEnabled(false);
@@ -250,8 +253,10 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                this._options.linkedEditor.setFontColor(formats.color);
                this._options.linkedEditor.setFontSize(formats.fontsize);
                for ( var button in this._buttons) {
-                  if (this._buttons[button] !== formats.buttons[button]) {
-                     this._options.linkedEditor.execCommand(button);
+                  if (this._buttons.hasOwnProperty(button)) {
+                     if (this._buttons[button] !== formats.buttons[button]) {
+                        this._options.linkedEditor.execCommand(button);
+                     }
                   }
                }
             }

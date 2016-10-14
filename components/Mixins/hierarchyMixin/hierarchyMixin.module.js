@@ -1,4 +1,7 @@
-define('js!SBIS3.CONTROLS.hierarchyMixin', ['js!WS.Data/Relation/Hierarchy'], function (Hierarchy) {
+define('js!SBIS3.CONTROLS.hierarchyMixin', [
+   "Core/core-functions",
+   "js!WS.Data/Relation/Hierarchy"
+], function ( cFunctions,Hierarchy) {
 
    /**
     * Миксин, добавляющий только работу с иерархией и методы для отображения.
@@ -224,7 +227,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', ['js!WS.Data/Relation/Hierarchy'], fu
       after : {
          _dataLoadedCallback: function () {
             var path = this._items.getMetaData().path,
-               hierarchy = $ws.core.clone(this._hier),
+               hierarchy = cFunctions.clone(this._hier),
                item;
             if (path) {
                hierarchy = this._getHierarchy(path, this._curRoot);

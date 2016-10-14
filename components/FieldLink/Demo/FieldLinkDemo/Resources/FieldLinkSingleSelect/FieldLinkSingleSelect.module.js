@@ -6,6 +6,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkSingleSelect', // Устанавлива
       'js!SBIS3.CORE.CompoundControl', // Подключаем базовый класс, от которого далее будем наследоваться
       'html!SBIS3.CONTROLS.Demo.FieldLinkSingleSelect', // Подключаем вёрстку демо-компонента
       'js!WS.Data/Source/Memory', // Подключаем класс для работы со статическим источником данных
+      'Core/helpers/fast-control-helpers',
       'css!SBIS3.CONTROLS.Demo.FieldLinkSingleSelect', // Подключаем CSS-файл демо-компонента
       'js!SBIS3.CONTROLS.FieldLink', // Подключаем контрол поля связи
       'js!SBIS3.CONTROLS.DataGridView' // Подключаем контрол табличного представления данных, используется для построения автодополнения
@@ -13,7 +14,8 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkSingleSelect', // Устанавлива
    function( // Подключенные в массиве зависимостей файлы будут доступны в следующих переменных
       CompoundControl, // В эту переменную импортируется класс CompoundControl из файла CompoundControl.module.js
       dotTplFn, // В эту переменную импортируется вёрстка демо-компонента из файла FieldLinkSingleSelect.xhtml
-      Memory // В эту переменную импортируется класс для работы со статическим источником данных
+      Memory, // В эту переменную импортируется класс для работы со статическим источником данных
+      fcHelpers
    ){
       var moduleClass = CompoundControl.extend({ // Наследуемся от базового компонента
          _dotTplFn: dotTplFn, // Устанавливаем шаблон, по которому будет построен демо-компонент
@@ -32,7 +34,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkSingleSelect', // Устанавлива
                    idProperty: 'Ид' // Устанавливаем поле первичного ключа
                 });
             this.getChildControlByName('FieldLinkSingleSelect').setDataSource(dataSource); // Устанавливаем источник данных для контрола
-            $ws.helpers.message('Поле связи в режиме единичного выбора значения. <br/>Выбор можно производить как через диалог, так и через автодополнение.');
+            fcHelpers.message('Поле связи в режиме единичного выбора значения. <br/>Выбор можно производить как через диалог, так и через автодополнение.');
          }
       });
       return moduleClass;

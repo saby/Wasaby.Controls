@@ -3,26 +3,32 @@
  */
 define('js!SBIS3.CONTROLS.DropdownList',
    [
-      'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.PickerMixin',
-      'js!SBIS3.CONTROLS.DSMixin',
-      'js!SBIS3.CONTROLS.MultiSelectable',
-      'js!SBIS3.CONTROLS.DataBindMixin',
-      'js!SBIS3.CONTROLS.DropdownListMixin',
-      'js!SBIS3.CONTROLS.Button',
-      'js!SBIS3.CONTROLS.IconButton',
-      'js!SBIS3.CONTROLS.Link',
-      'js!SBIS3.CORE.MarkupTransformer',
-      'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-      'html!SBIS3.CONTROLS.DropdownList',
-      'html!SBIS3.CONTROLS.DropdownList/DropdownListHead',
-      'html!SBIS3.CONTROLS.DropdownList/DropdownListPickerHead',
-      'html!SBIS3.CONTROLS.DropdownList/DropdownListItem',
-      'html!SBIS3.CONTROLS.DropdownList/DropdownListPicker',
-      'i18n!SBIS3.CONTROLS.DropdownList'
-   ],
+   "Core/constants",
+   "Core/Deferred",
+   "Core/IoC",
+   "Core/ConsoleLogger",
+   "js!SBIS3.CORE.CompoundControl",
+   "js!SBIS3.CONTROLS.PickerMixin",
+   "js!SBIS3.CONTROLS.DSMixin",
+   "js!SBIS3.CONTROLS.MultiSelectable",
+   "js!SBIS3.CONTROLS.DataBindMixin",
+   "js!SBIS3.CONTROLS.DropdownListMixin",
+   "js!SBIS3.CONTROLS.Button",
+   "js!SBIS3.CONTROLS.IconButton",
+   "js!SBIS3.CONTROLS.Link",
+   "js!SBIS3.CORE.MarkupTransformer",
+   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
+   "html!SBIS3.CONTROLS.DropdownList",
+   "html!SBIS3.CONTROLS.DropdownList/DropdownListHead",
+   "html!SBIS3.CONTROLS.DropdownList/DropdownListPickerHead",
+   "html!SBIS3.CONTROLS.DropdownList/DropdownListItem",
+   "html!SBIS3.CONTROLS.DropdownList/DropdownListPicker",
+   "Core/core-instance",
+   "Core/helpers/dom&controls-helpers",
+   "i18n!SBIS3.CONTROLS.DropdownList"
+],
 
-   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker) {
+   function( constants, Deferred, IoC, ConsoleLogger,Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker, cInstance, dcHelpers) {
 
       'use strict';
       /**
@@ -314,7 +320,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                  selectedKeys = this.getSelectedKeys(),
                  isCheckBoxClick = !!$(e.target).closest('.js-controls-DropdownList__itemCheckBox').length,
                  selected;
-            if (row.length && (e.button === ($ws._const.browser.isIE8 ? 1 : 0))) {
+            if (row.length && (e.button === (constants.browser.isIE8 ? 1 : 0))) {
 
                //Если множественный выбор, то после клика скрыть менюшку можно только по кнопке отобрать
                this._hideAllowed = !this._options.multiselect;
@@ -340,7 +346,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _dblClickItemHandler : function(e){
             e.stopImmediatePropagation();
             var  row = $(e.target).closest('.' + this._getItemClass());
-            if (row.length && (e.button === ($ws._const.browser.isIE8 ? 1 : 0))) {
+            if (row.length && (e.button === (constants.browser.isIE8 ? 1 : 0))) {
                if (this._options.multiselect) {
                   this._hideAllowed = true;
                   this.setSelectedKeys([row.data('id')]);
@@ -394,7 +400,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             } else if(fromHeader === null) {
                containerToCheck = pickerContainer;
             } else {
-               containerToCheck = $ws.helpers.hasScrollbar(pickerContainer) ? pickerContainer : this._pickerHeadContainer;
+               containerToCheck = dcHelpers.hasScrollbar(pickerContainer) ? pickerContainer : this._pickerHeadContainer;
             }
 
             if(this._hideAllowed && !toElement.closest(containerToCheck, pickerContainer).length) {
@@ -486,7 +492,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 item, pickerContainer, def;
 
             if(len) {
-               def = new $ws.proto.Deferred();
+               def = new Deferred();
 
                if(!this._picker) {
                   this._initializePicker();
@@ -520,6 +526,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   self._setText(self._prepareText(textValue));
                   self._redrawHead(isDefaultIdSelected);
                   self._resizeFastDataFilter();
+                  self._pickerBodyContainer.css('max-width', '');
+                  if (self._pickerHeadContainer.width() > self._pickerBodyContainer.width()){
+                     self._pickerBodyContainer.css('max-width', self._pickerHeadContainer.width());
+                  }
                });
             }
          },
@@ -532,7 +542,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _resizeFastDataFilter: function(){
             var parent = this.getParent();
             this._notifyOnSizeChanged();
-            if ($ws.helpers.instanceOfModule(parent, 'SBIS3.CONTROLS.FastDataFilter')){
+            if (cInstance.instanceOfModule(parent, 'SBIS3.CONTROLS.FastDataFilter')){
                parent._recalcDropdownWidth();
             }
          },
@@ -569,7 +579,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
           * @param text
           */
          setText: function(text) {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.DropdownList', 'Метод setText в скором времени будет удален. Значения должны отрисовываться на наборе данных');
+            IoC.resolve('ILogger').error('SBIS3.CONTROLS.DropdownList', 'Метод setText в скором времени будет удален. Значения должны отрисовываться на наборе данных');
             this._setText(text);
          },
          _setText: function(text){

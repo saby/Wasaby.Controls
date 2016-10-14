@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLS.CompoundFocusMixin', function() {
+define('js!SBIS3.CONTROLS.CompoundFocusMixin', ['Core/EventBus'], function(EventBus) {
    /**
     * @class $ws.mixins.CompoundFocusMixin
     */
    var CompoundFocusMixin = /** @lends $ws.mixins.CompoundFocusMixin.prototype */{
       $constructor: function () {
          this._publish('onChildControlFocusOut', 'onChildControlFocusIn');
-         var channel = $ws.single.EventBusGlobalChannel;
+         var channel = EventBus.globalChannel();
          var onFocusIn = function (event) {
             var control = event.getTarget(), parent, newActive;
             if (control.isActive() && control !== this) {
