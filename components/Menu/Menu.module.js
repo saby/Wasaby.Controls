@@ -9,9 +9,10 @@ define('js!SBIS3.CONTROLS.Menu', [
    'js!SBIS3.CONTROLS.TreeMixinDS',
    'js!SBIS3.CONTROLS.FloatArea',
    'js!SBIS3.CONTROLS.MenuItem',
-   'js!WS.Data/Relation/Hierarchy'
+   'js!WS.Data/Relation/Hierarchy',
+   'Core/helpers/markup-helpers'
 
-], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, MenuItem, Hierarchy) {
+], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, MenuItem, Hierarchy, mkpHelpers) {
 
    'use strict';
 
@@ -127,7 +128,7 @@ define('js!SBIS3.CONTROLS.Menu', [
                tooltip: item.get('tooltip'),
                allowChangeEnable: item.get('allowChangeEnable') !== undefined ? item.get('allowChangeEnable') : this._options.allowChangeEnable
             };
-         return '<component data-component="SBIS3.CONTROLS.MenuItem" config="' + $ws.helpers.encodeCfgAttr(options) + '">' +
+         return '<component data-component="SBIS3.CONTROLS.MenuItem" config="' + mkpHelpers.encodeCfgAttr(options) + '">' +
                '<option name="caption" type="string">' + item.get(this._options.displayField) + '</option>' +
              '</component>';
       },

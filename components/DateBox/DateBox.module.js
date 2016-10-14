@@ -4,13 +4,16 @@
 define(
    'js!SBIS3.CONTROLS.DateBox',
    [
+      'Core/IoC',
+      'Core/ConsoleLogger',
+      'Core/constants',
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'html!SBIS3.CONTROLS.DateBox',
       'js!SBIS3.CONTROLS.FormWidgetMixin'
       // 'i18n!SBIS3.CONTROLS.DateBox'
    ],
-   function (FormattedTextBoxBase, DateUtil, dotTplFn, FormWidgetMixin) {
+   function (IoC, ConsoleLogger, constants, FormattedTextBoxBase, DateUtil, dotTplFn, FormWidgetMixin) {
 
    'use strict';
 
@@ -186,7 +189,18 @@ define(
              * @noShow
              * @deprecated
              */
-            notificationMode: 'change'
+            notificationMode: 'change',
+
+            /**
+             * @cfg {String} Режим серализации даты при отправке в бизнес логику. В 140 версии значение по умолчанию datetime. В последующих опция будет убрана, а поведение будет соответствовать auto.
+             * @variant 'auto' дата будет сериализоваться в зависимости от маски контрола, т.е. если установлена маска в которой присутствует только время, то дата будет сериализоваться как Время, если происутствует дата и время, то как ДатаВремя, если присутствует только дата, то как Дата.
+             * @variant 'time'
+             * @variant 'date'
+             * @variant 'datetime'
+             * @noShow
+             * @deprecated
+             */
+            serializationMode: 'auto'
          }
       },
 
@@ -210,11 +224,11 @@ define(
              curDate = this.getDate(),
              key = event.which || event.keyCode;
 
-         if (key == $ws._const.key.insert) {
+         if (key == constants.key.insert) {
             this.setDate(new Date());
-         } else if (key == $ws._const.key.plus || key == $ws._const.key.minus) {
+         } else if (key == constants.key.plus || key == constants.key.minus) {
             if (curDate) {
-               curDate.setDate(curDate.getDate() + (key == $ws._const.key.plus ? 1 : -1));
+               curDate.setDate(curDate.getDate() + (key == constants.key.plus ? 1 : -1));
                this.setDate(curDate);
             }
          } else {
@@ -319,7 +333,7 @@ define(
          else {
             throw new Error('Аргументом должна являться строка или дата');
          }
-         $ws.single.ioc.resolve('ILogger').log('DateBox', 'метод "setValue" будет удален в 3.7.3.20. Используйте "setDate" или "setText".');
+         IoC.resolve('ILogger').log('DateBox', 'метод "setValue" будет удален в 3.7.3.20. Используйте "setDate" или "setText".');
       },
 
       /**
@@ -347,11 +361,13 @@ define(
             result = '',
             s = 0;
          for (var dateType in dateTypes){
-            for (var j = 0, l = dateTypes[dateType].length; j < l; j++){
-               if (mask.indexOf(dateTypes[dateType][j]) != -1){
-                  s++;
-                  result = dateType;
-                  break;
+            if (dateTypes.hasOwnProperty(dateType)) {
+               for (var j = 0, l = dateTypes[dateType].length; j < l; j++) {
+                  if (mask.indexOf(dateTypes[dateType][j]) != -1) {
+                     s++;
+                     result = dateType;
+                     break;
+                  }
                }
             }
          }
@@ -371,7 +387,21 @@ define(
        * @see onDateChange
        */
       getDate: function() {
-        return this._options.date;
+         var modeMap = {
+               'datetime': Date.SQL_SERIALIZE_MODE_DATETIME,
+               'date': Date.SQL_SERIALIZE_MODE_DATE,
+               'time': Date.SQL_SERIALIZE_MODE_TIME
+            },
+            mode;
+         if (this._options.serializationMode === 'auto') {
+            mode = modeMap[this.getType()];
+         } else {
+            mode = modeMap[this._options.serializationMode];
+         }
+         if (this._options.date) {
+            this._options.date.setSQLSerializationMode(mode);
+         }
+         return this._options.date;
       },
 
       /**

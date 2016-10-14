@@ -1,5 +1,7 @@
 /*global define, $ws, $*/
-define('js!SBIS3.CONTROLS.DragEntity.Entity', [], function() {
+define('js!SBIS3.CONTROLS.DragEntity.Entity', [
+   "Core/Abstract"
+], function( cAbstract) {
    'use strict';
    /**
     * Базовый класс сущности Drag'n'drop, он не предназначен для создания самостоятельных экземпляров.
@@ -14,7 +16,7 @@ define('js!SBIS3.CONTROLS.DragEntity.Entity', [], function() {
     * @see SBIS3.CONTROLS.DragObject#getSource
     * @see SBIS3.CONTROLS.DragObject#getTarget
     */
-   var Entity = $ws.proto.Abstract.extend(/**@lends SBIS3.CONTROLS.DragEntity.Entity.prototype*/ {
+   var Entity = cAbstract.extend(/**@lends SBIS3.CONTROLS.DragEntity.Entity.prototype*/ {
       $protected: {
          _options: {
             /**

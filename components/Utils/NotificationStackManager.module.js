@@ -1,15 +1,17 @@
 define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
    [
-      'js!SBIS3.CORE.Control',
-      'js!SBIS3.CORE.LayoutManager'
-   ],
+   "Core/WindowManager",
+   "Core/EventBus",
+   "js!SBIS3.CORE.Control",
+   "js!SBIS3.CORE.LayoutManager"
+],
 
    /**
     * Синглтон для работы со стеком нотификационных окон.
     * @class SBIS3.CONTROLS.Utils.NotificationStackManager
     * @author Степин П.В.
     */
-   function(Control, LayoutManager){
+   function( cWindowManager, EventBus,Control, LayoutManager){
       'use strict';
 
       //Расстояние между блоками
@@ -45,13 +47,13 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
 
             var self = this;
 
-            this._zIndex =  Math.max($ws.single.WindowManager.getMaxZIndex() + 1, 100);
+            this._zIndex =  Math.max(cWindowManager.getMaxZIndex() + 1, 100);
 
             $(window).on('resize', function(){
                self._checkCapacity();
             });
 
-            this.subscribeTo($ws.single.EventBus.globalChannel(), 'FloatAreaZIndexChanged', function(e, zIndex){
+            this.subscribeTo(EventBus.globalChannel(), 'FloatAreaZIndexChanged', function(e, zIndex){
                self._zIndex = Math.max(zIndex + 1, 100);
                self._updatePositions();
             });

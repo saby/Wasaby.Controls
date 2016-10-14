@@ -1,14 +1,16 @@
 define('js!SBIS3.CONTROLS.Demo.DataGridView.EditInPlace',
     [
-        'js!SBIS3.CORE.CompoundControl',
-        'html!SBIS3.CONTROLS.Demo.DataGridView.EditInPlace',
-        'css!SBIS3.CONTROLS.Demo.DataGridView.EditInPlace',
-        'js!SBIS3.CONTROLS.DataGridView',
-        'js!SBIS3.CONTROLS.NumberTextBox',
-        'js!SBIS3.CONTROLS.TextBox',
-        'js!SBIS3.CONTROLS.Button',
-        'js!SBIS3.CORE.CoreValidators'
-    ], function(CompoundControl, dotTplFn) {
+   "Core/core-functions",
+   "Core/CommandDispatcher",
+   "js!SBIS3.CORE.CompoundControl",
+   "html!SBIS3.CONTROLS.Demo.DataGridView.EditInPlace",
+   "css!SBIS3.CONTROLS.Demo.DataGridView.EditInPlace",
+   "js!SBIS3.CONTROLS.DataGridView",
+   "js!SBIS3.CONTROLS.NumberTextBox",
+   "js!SBIS3.CONTROLS.TextBox",
+   "js!SBIS3.CONTROLS.Button",
+   "js!SBIS3.CORE.CoreValidators"
+], function( cFunctions, CommandDispatcher,CompoundControl, dotTplFn) {
    /**
     * SBIS3.CONTROLS.Demo.MyDataGridView
     * @class SBIS3.CONTROLS.Demo.MyDataGridView
@@ -18,7 +20,7 @@ define('js!SBIS3.CONTROLS.Demo.DataGridView.EditInPlace',
    var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Demo.DataGridView.EditInPlace.prototype */{
       _dotTplFn: dotTplFn,
       $constructor: function() {
-         $ws.single.CommandDispatcher.declareCommand(this, 'save', this._saveFn);
+         CommandDispatcher.declareCommand(this, 'save', this._saveFn);
       },
       _saveFn: function() {
          var
@@ -28,7 +30,7 @@ define('js!SBIS3.CONTROLS.Demo.DataGridView.EditInPlace',
                self.sendCommand('close');
             }).
             addErrback(function() {
-               $ws.core.alert('Произошла ошибка!')
+               cFunctions.alert('Произошла ошибка!')
             });
       }
    });

@@ -33,7 +33,7 @@
 
 @link-text-color:                         #A8ACC3;
 @link-line-height:                        normal;
-
+@link-font-size:                          24px;
 @link-hover-text-color:                   #FFA34F;
 @link-icon-hover-icon:                    @link-hover-text-color;
 
@@ -46,7 +46,6 @@
 // ------ //
 
 // Normal button
-
 @button-font-size:                        24px;
 @button-font:                             @button-font-size @font-basic-name;
 @button-text-alignment:                   center;
@@ -257,16 +256,15 @@
 // -------- //
 // Switcher //
 // -------- //
-
-@switcher-width:                                46px;
-@switcher-height:                               24px;
-@switcher-line-height:                          @switcher-height;
-@switcher-line-width:                           36px;
 @switcher-line-color-disabled:                  @gray-light-color;
 @switcher-btn-color-disabled:                   @gray-light-color;
-@switcher-btn-radius:                           6px;
-@switcher-btn-size:                             12px;
-@switcher-btn-margin:                           5px;
+@switcher-btn-bg-color:                         #202835;
+
+@switcher-border:                               1px solid #293543;
+@switcher-btn-color:                            #FF7033;
+@switcher-do-horizontal-line-background-color:  @switcher-btn-color;
+@switcher-do-text-color:                        @white-color;
+@switcher-do-unselected-text-color:             #999999;
 
 // ---- //
 // Menu //
@@ -597,6 +595,8 @@
 
 @suggest-list-item-hover-bg:                    #f3f3f3;
 @suggest-list-item-selected-bg:                 darken(@suggest-list-item-hover-bg, 5%);
+@suggest-list-footer-height:                    30px;
+@suggest-list-footer-padding:                   0 8px;
 
 // ----------- //
 // Date picker //
@@ -729,6 +729,7 @@
 @date-range-choose-current-value-font-size:     @date-range-choose-font-size;
 @date-range-choose-current-value-font-weight:   bold;
 @date-range-choose-current-value-height:        54px;
+@date-range-choose-current-value-line-height:   52px;
 
 @date-range-choose-year-font-size:              @date-range-choose-font-size;
 @date-range-choose-year-prev-next-btns-font-size:     @date-range-choose-font-size;
@@ -775,6 +776,7 @@
 @list-view-items-toolbar-line-height:                16px;
 @list-view-items-toolbar-vertical-line-height:       24px;
 @list-view-items-toolbar-locked-bg:                  @controls-editInPlace-editor-bg;
+@touch-mode-items-toolbar-icon-margin-top:           -24px;
 
 @list-view-actions-menu-icon-width:             16px;
 
@@ -927,6 +929,7 @@
 
 @controls-filterButton-area-text-size:            24px;
 @controls-filterButton-area-text-color:           @primary-color;
+@controls-filterButton-clear-margin-right:        16px;
 
 @controls-filterButton-area-content-margin:       0 16px 12px 16px;
 @controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
@@ -961,10 +964,12 @@
 @controls-FieldLink-linkItem-cross-right:          -4px;
 @controls-FieldLink-linkItem-cross-top:            -3px;
 
-@controls-FieldLink-afterField-padding:            0 4px;
+@controls-FieldLink-afterField-padding:            0 4px 0 0;
 @controls-FieldLink-afterField-height:             22px;
 
 @controls-FieldLink-afterField-background:         @white-color;
+@controls-FieldLink-link-color:                    #8991A9;
+@controls-FieldLink-link-color-hover:              #313E78;
 
 //SelectorButton
 @controls-SelectorButton-align:                    middle;

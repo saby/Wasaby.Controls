@@ -2,8 +2,7 @@
    display: inline-block;
    min-height: @DropdownList-min-height;
    box-sizing: @DropdownList-box-sizing;
-   line-height: 24px;
-   cursor: pointer;
+   line-height: @DropdownList-min-height;
    .controls-DropdownList__selectedItem {
       display: block; /* ie8/9 */
       display: flex;
@@ -136,9 +135,12 @@
    &.controls-popup-revert-horizontal{
       .controls-DropdownList__header{
          float: right;
+        .controls-DropdownList{
+          margin: @DropdownList-picker-hor-revert-head-margin !important;
+        }
       }
       .controls-DropdownList__body{
-         margin-top: 24px;
+         margin-top: @DropdownList-min-height;
          border-radius: @DropdownList-picker-list-left-border-radius;
       }
    }
@@ -150,7 +152,7 @@
       border-bottom: 0;
       z-index: 2;
       .controls-DropdownList{
-        margin: 0!important;
+        margin: @DropdownList-picker-head-margin !important;
         position: relative!important;
         padding: 0px!important;
       }
@@ -213,8 +215,8 @@
       border: @DropdownList-picker-border;
       border-radius: @DropdownList-picker-list-right-border-radius;
       background: @DropdownList-picker-bg;
-      margin-top: -2px;
-      padding: 4px 0;
+      margin-top: @DropdownList-picker-margin-top;
+      padding: @DropdownList-picker-padding;
    }
    &.controls-FloatArea {
       background: transparent;

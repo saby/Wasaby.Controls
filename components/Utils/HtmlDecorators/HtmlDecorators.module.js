@@ -1,7 +1,8 @@
 define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
-   'js!SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator',
-   'js!WS.Data/Utils'
-], function (AbstractDecorator, Utils) {
+   "Core/core-extend",
+   "js!SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator",
+   "js!WS.Data/Utils"
+], function ( cExtend,AbstractDecorator, Utils) {
    'use strict';
 
    /** @constant {Object} Вид области декорирования: текст*/
@@ -15,7 +16,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var HtmlDecorators = $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Utils.HtmlDecorators.prototype */{
+   var HtmlDecorators = cExtend({}, /** @lends SBIS3.CONTROLS.Utils.HtmlDecorators.prototype */{
       $protected: {
          /**
           * @var {Object} Типы зон декорирования

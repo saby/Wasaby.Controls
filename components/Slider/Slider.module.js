@@ -47,6 +47,12 @@ define('js!SBIS3.CONTROLS.Slider',
                if (options.single) {
                   options.startValue  = options.minValue;
                }
+               if (options.minValue === undefined) {
+                  options.minValue = options.startValue;
+               }
+               if (options.maxValue === undefined) {
+                  options.maxValue = options.endValue;
+               }
                return options;
             },
 

@@ -18,7 +18,7 @@
       }
 
       &.controls-ItemsToolbar__vertical {
-         margin: 1px 1px 0 0;
+         right: 1px;
          top: 1px;
          bottom: auto;
 
@@ -61,13 +61,13 @@
                   line-height: @list-view-items-toolbar-vertical-line-height !important;
                }
             }
-            .controls-ItemActions__menu-button {
-               margin-top: 4px;
-            }
 
             &.controls-ItemsToolbar__withEditActions {
                .controls-ItemActions__item {
                   line-height: @list-view-items-toolbar-vertical-line-height !important;
+               }
+               .controls-ItemActions__menu-button {
+                  margin-top: 4px;
                }
             }
          }
@@ -178,7 +178,7 @@
                .controls-IconButton {
                   position: relative;
                   top: 50%;
-                  margin-top: -24px;
+                  margin-top: @touch-mode-items-toolbar-icon-margin-top;
                }
             }
          }

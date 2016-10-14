@@ -5,11 +5,13 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.OperationsPanel',
    'js!SBIS3.CONTROLS.DSMixin',
+   'Core/helpers/collection-helpers',
+   'Core/helpers/markup-helpers',
    /*TODO это должна подключать не панель а прекладники, потом убрать*/
    'js!SBIS3.CONTROLS.OperationDelete',
    'js!SBIS3.CONTROLS.OperationsMark',
    'js!SBIS3.CONTROLS.OperationMove'
-], function(Control, dotTplFn, DSMixin) {
+], function(Control, dotTplFn, DSMixin, colHelpers, mkpHelpers) {
    /**
     * Компонент "Панель действий" используют совместно с представлениями данных ({@link SBIS3.CONTROLS.ListView} или любой его контрол-наследник),
     * с записями которых требуется производить манипуляции. Он состоит из всплывающей панели, скрытой по умолчанию, и
@@ -175,7 +177,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                 options = item.get('options') || {},
                 type = self._getItemType(item.get('type'));
             options.className = 'controls-operationsPanel__actionType-' + type;
-            return '<component data-component="' + item.get('componentType').substr(3) + '" config="' + $ws.helpers.encodeCfgAttr(options) + '"></component>';
+            return '<component data-component="' + item.get('componentType').substr(3) + '" config="' + mkpHelpers.encodeCfgAttr(options) + '"></component>';
          };
       },
       _getItemType: function (type) {
@@ -194,7 +196,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
       _onSelectedItemsChange: function(idArray) {
          //Прокидываем сигнал onSelectedItemsChange из браузера в кнопки
-         $ws.helpers.forEach(this.getItemsInstances(), function(instance) {
+         colHelpers.forEach(this.getItemsInstances(), function(instance) {
             if (typeof instance.onSelectedItemsChange === 'function') {
                instance.onSelectedItemsChange(idArray);
             }

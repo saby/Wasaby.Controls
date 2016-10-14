@@ -1,23 +1,31 @@
 define('js!SBIS3.CONTROLS.ItemsControlMixin', [
-   'js!WS.Data/Source/Memory',
-   'js!WS.Data/Source/SbisService',
-   'js!WS.Data/Collection/RecordSet',
-   'js!WS.Data/Query/Query',
-   'js!SBIS3.CORE.MarkupTransformer',
-   'js!WS.Data/Collection/ObservableList',
-   'js!WS.Data/Display/Display',
-   'js!WS.Data/Collection/IBind',
-   'js!WS.Data/Display/Collection',
-   'js!WS.Data/Display/Enum',
-   'js!WS.Data/Display/Flags',
-   'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
-   'js!WS.Data/Utils',
-   'js!WS.Data/Entity/Model',
-   'Core/ParserUtilities',
-   'Core/Sanitize',
-   'js!SBIS3.CORE.LayoutManager'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, CollectionDisplay, EnumDisplay, FlagsDisplay, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize, LayoutManager) {
+   "Core/core-functions",
+   "Core/constants",
+   "Core/Deferred",
+   "Core/IoC",
+   "Core/ConsoleLogger",
+   "js!WS.Data/Source/Memory",
+   "js!WS.Data/Source/SbisService",
+   "js!WS.Data/Collection/RecordSet",
+   "js!WS.Data/Query/Query",
+   "js!SBIS3.CORE.MarkupTransformer",
+   "js!WS.Data/Collection/ObservableList",
+   "js!WS.Data/Display/Display",
+   "js!WS.Data/Collection/IBind",
+   "js!WS.Data/Display/Collection",
+   "js!WS.Data/Display/Enum",
+   "js!WS.Data/Display/Flags",
+   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
+   "html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate",
+   "js!WS.Data/Utils",
+   "js!WS.Data/Entity/Model",
+   "Core/ParserUtilities",
+   "Core/Sanitize",
+   "js!SBIS3.CORE.LayoutManager",
+   "Core/core-instance",
+   "Core/helpers/fast-control-helpers",
+   "Core/helpers/functional-helpers"
+], function ( cFunctions, constants, Deferred, IoC, ConsoleLogger,MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, CollectionDisplay, EnumDisplay, FlagsDisplay, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize, LayoutManager, cInstance, fcHelpers, fHelpers) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -73,7 +81,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (cfg._groupTemplate) {
             var
                tplOptions = {
-                  columns : $ws.core.clone(cfg.columns || []),
+                  columns : cFunctions.clone(cfg.columns || []),
                   multiselect : cfg.multiselect,
                   hierField: cfg.hierField + '@',
                   item: item.getContents(),
@@ -599,7 +607,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       $constructor: function () {
          this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady', 'onPageSizeChange');
 
-         var debouncedDrawItemsCallback = $ws.helpers.forAliveOnly(this._drawItemsCallback, this).debounce(0);
+         var debouncedDrawItemsCallback = fHelpers.forAliveOnly(this._drawItemsCallback, this).debounce(0);
          // FIXME сделано для правильной работы медленной отрисовки
          this._drawItemsCallbackDebounce = function() {
             debouncedDrawItemsCallback();
@@ -610,19 +618,19 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._options.pageSize = this._options.pageSize * 1;
          }
          if (!this._options.keyField) {
-            $ws.single.ioc.resolve('ILogger').log('Option keyField is undefined in control ' + this.getName());
+            IoC.resolve('ILogger').log('Option keyField is undefined in control ' + this.getName());
          }
          this._bindHandlers();
          this._prepareItemsConfig();
 
          if (this._options.itemTemplate) {
-            $ws.single.ioc.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан itemTemplate');
+            IoC.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан itemTemplate');
          }
          if (!Object.isEmpty(this._options.groupBy) && !this._options.easyGroup) {
-            $ws.single.ioc.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Используется GroupBy без easyGroup: true');
+            IoC.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Используется GroupBy без easyGroup: true');
          }
          if (this._options.userItemAttributes) {
-            $ws.single.ioc.resolve('ILogger').error('userItemAttributes', 'Option is no longer available since version 3.7.4.200. Use ItemTpl');
+            IoC.resolve('ILogger').error('userItemAttributes', 'Option is no longer available since version 3.7.4.200. Use ItemTpl');
          }
 
       },
@@ -641,7 +649,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          /*TODO Поддержка совместимости. Раньше если были заданы items массивом создавался сорс, осталась куча завязок на это*/
          if (this._options.items instanceof Array) {
             if (this._options.pageSize && (this._options.items.length > this._options.pageSize)) {
-               $ws.single.ioc.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
+               IoC.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
             }
             if (!this._options.keyField) {
                this._options.keyField = findKeyField(this._options.items)
@@ -658,7 +666,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var keyField = this._options.keyField;
 
          if (!keyField) {
-            $ws.single.ioc.resolve('ILogger').log('Option keyField is undefined in control ' + this.getName());
+            IoC.resolve('ILogger').log('Option keyField is undefined in control ' + this.getName());
          }
 
          if (sourceOpt) {
@@ -741,7 +749,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             buildArgsMethod = this._buildTplArgs;
          }
          if (!this._itemData) {
-            this._itemData = $ws.core.clone(buildArgsMethod.call(this, this._options));
+            this._itemData = cFunctions.clone(buildArgsMethod.call(this, this._options));
          }
          return this._itemData;
       },
@@ -768,7 +776,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             //TODO это может вызвать тормоза
             var comps = this._destroyInnerComponents($itemsContainer, this._options.easyGroup);
             if (markup.length) {
-               if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
+               if (constants.browser.isIE8 || constants.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
                   $itemsContainer.append(markup);
                } else {
                   itemsContainer.innerHTML = markup;
@@ -776,7 +784,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             else {
                if (this._options.easyGroup) {
-                  if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
+                  if (constants.browser.isIE8 || constants.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
                      $itemsContainer.empty();
                   } else {
                      itemsContainer.innerHTML = '';
@@ -830,33 +838,39 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
-      _removeItem: function (item, groupId) {
-         var targetElement = this._getDomElementByItem(item);
-         if (targetElement.length) {
-            this._clearItems(targetElement);
-            /*TODO С этим отдельно разобраться*/
+      _removeItems: function (items, groupId) {
+         var removedElements = $([]);
+         for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var targetElement = this._getDomElementByItem(item);
+            if (targetElement.length) {
+               this._clearItems(targetElement);
+               /*TODO С этим отдельно разобраться*/
 
-            this._ladderCompare([targetElement.prev(), targetElement.next()]);
+               this._ladderCompare([targetElement.prev(), targetElement.next()]);
 
-            if (!Object.isEmpty(this._options.groupBy)) {
-               if (false /*this._options.easyGroup*/ /*TODO косяк Лехи - не присылает группу при удалении*/) {
-                  if (this._getItemsProjection().getGroupItems(groupId).length < 1) {
-                     $('[data-group="' + groupId + '"]', this._container.get(0)).remove();
-                  }
-               }
-               else {
-                  var prev = targetElement.prev();
-                  if (prev.length && prev.hasClass('controls-GroupBy')) {
-                     var next = targetElement.next();
-                     if (!next.length || next.hasClass('controls-GroupBy')) {
-                        prev.remove();
+               if (!Object.isEmpty(this._options.groupBy)) {
+                  /*TODO косяк Лехи - не присылает группу при удалении*/
+                  /*if (this._options.easyGroup) {
+                     if (this._getItemsProjection().getGroupItems(groupId).length < 1) {
+                        $('[data-group="' + groupId + '"]', this._container.get(0)).remove();
                      }
                   }
+                  else {*/
+                     var prev = targetElement.prev();
+                     if (prev.length && prev.hasClass('controls-GroupBy')) {
+                        var next = targetElement.next();
+                        if (!next.length || next.hasClass('controls-GroupBy')) {
+                           prev.remove();
+                        }
+                     }
+                  /*}*/
                }
-            }
 
-            targetElement.remove();
+               removedElements.push(targetElement.get(0));
+            }
          }
+         removedElements.remove();
       },
 
       _getItemsForRedrawOnAdd: function(items, groupId) {
@@ -875,7 +889,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _optimizedInsertMarkup: function(container, markup, prepend) {
-         if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // В IE8-9 insertAdjacentHTML ломает верстку при вставке
+         if (constants.browser.isIE8 || constants.browser.isIE9) { // В IE8-9 insertAdjacentHTML ломает верстку при вставке
             container[prepend ? 'prepend' : 'append'](markup);
          } else {
             container.get(0).insertAdjacentHTML(prepend ? 'afterBegin' : 'beforeEnd', markup);
@@ -1063,7 +1077,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _destroyInnerComponents: function(container, easy) {
          var compsArray = this._destroyControls(container, easy);
-         if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
+         if (constants.browser.isIE8 || constants.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
             container.empty();
          } else {
             if (!easy) {
@@ -1152,7 +1166,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                result = sourceOpt.call(this);
                break;
             case 'object':
-               if ($ws.helpers.instanceOfMixin(sourceOpt, 'WS.Data/Source/ISource')) {
+               if (cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ISource')) {
                   result = sourceOpt;
                }
                if ('module' in sourceOpt) {
@@ -1280,7 +1294,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                currentItem.merge(newItem);
             });
          } else {
-            return $ws.proto.deferred.success();
+            return Deferred.success();
          }
       },
       /**
@@ -1330,7 +1344,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              this._toggleIndicator(true);
              this._notify('onBeforeDataLoad', this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit);
              def = this._callQuery(this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit)
-                .addCallback($ws.helpers.forAliveOnly(function (list) {
+                .addCallback(fHelpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
                    self._notify('onDataLoad', list);
                    if (
@@ -1356,12 +1370,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
-                .addErrback($ws.helpers.forAliveOnly(function (error) {
+                .addErrback(fHelpers.forAliveOnly(function (error) {
                    if (!error.canceled) {
                       self._toggleIndicator(false);
                       if (self._notify('onDataLoadError', error) !== true) {
                          error.message = error.message.toString().replace('Error: ', '');
-                         $ws.helpers.alert(error);
+                         fcHelpers.alert(error);
                          error.processed = true;
                       }
                    }
@@ -1372,7 +1386,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              if (this._options._itemsProjection) {
                 this._redraw();
              }
-             def = new $ws.proto.Deferred();
+             def = new Deferred();
              def.callback();
           }
 
@@ -1514,7 +1528,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @private
        */
       _isLoading: function () {
-         $ws.single.ioc.resolve('ILogger').log('ListView', 'Метод _isLoading() будет удален в 3.7.4 используйте isLoading()');
+         IoC.resolve('ILogger').log('ListView', 'Метод _isLoading() будет удален в 3.7.4 используйте isLoading()');
          return this.isLoading();
       },
       isLoading: function(){
@@ -1576,7 +1590,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
           if (items instanceof Array) {
              if (this._options.pageSize && (items.length > this._options.pageSize)) {
-                $ws.single.ioc.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
+                IoC.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
              }
              if (!this._options.keyField) {
                 this._options.keyField = findKeyField(this._options.items)
@@ -1684,7 +1698,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var
                groupBy = this._options.groupBy,
                tplOptions = {
-                  columns : $ws.core.clone(this._options.columns || []),
+                  columns : cFunctions.clone(this._options.columns || []),
                   multiselect : this._options.multiselect,
                   hierField: this._options.hierField + '@'
                },
@@ -2109,12 +2123,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             );*/
          }
       },
-      _onCollectionRemove: function(items, notCollapsed, groupId) {
-         var i;
-         for (i = 0; i < items.length; i++) {
-            this._removeItem(
-               items[i], groupId
-            );
+      _onCollectionRemove: function(items, notCollapsed) {
+         if (items.length) {
+            this._removeItems(items)
          }
       },
       _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {

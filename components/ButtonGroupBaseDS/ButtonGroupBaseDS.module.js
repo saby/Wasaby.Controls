@@ -2,7 +2,13 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.DSMixin',   'js!SBIS3.CONTROLS.DataBindMixin'], function(CompoundControl, DSMixin, DataBindMixin) {
+define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', [
+   "Core/IoC",
+   "Core/ConsoleLogger",
+   "js!SBIS3.CORE.CompoundControl",
+   "js!SBIS3.CONTROLS.DSMixin",
+   "js!SBIS3.CONTROLS.DataBindMixin"
+], function( IoC, ConsoleLogger,CompoundControl, DSMixin, DataBindMixin) {
 
    'use strict';
 
@@ -32,7 +38,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
 
          if (this._options.captionField) {
             this._options.displayField = this._options.captionField;
-            $ws.single.ioc.resolve('ILogger').log('ButtonGroupBase', 'Опция "captionField" устарела. Используйте опцию "displayField".');
+            IoC.resolve('ILogger').log('ButtonGroupBase', 'Опция "captionField" устарела. Используйте опцию "displayField".');
          }
 
          this._hasItems = this._container.hasClass('hasItems');
