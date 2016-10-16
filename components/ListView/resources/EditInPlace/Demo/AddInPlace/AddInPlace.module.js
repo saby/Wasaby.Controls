@@ -7,7 +7,8 @@ define('js!SBIS3.CONTROLS.DEMO.AddInPlace',
       'js!SBIS3.CONTROLS.Button',
       'js!SBIS3.CONTROLS.TextBox',
       'js!SBIS3.CONTROLS.NumberTextBox',
-      'html!SBIS3.CONTROLS.DEMO.AddInPlace/resources/AddButtonsTpl'
+      'html!SBIS3.CONTROLS.DEMO.AddInPlace/resources/AddButtonsTpl',
+      'js!SBIS3.CONTROLS.Link'
    ], 
    function(CompoundControl, dotTplFn, SbisService) {
    /**
