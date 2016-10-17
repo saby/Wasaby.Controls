@@ -730,7 +730,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              /* Требуется делать клон т.к. :
                 запись передаётся по ссылке и любые действия с ней будут отображаться и в списке.
                 Особенно актуально это когда зибниден selectedItem в добавлении по месту. */
-             this.addSelectedItems(this._options.cloneSuggestItem ? [item.clone()] : [item]);
+             this.addSelectedItems([item.clone()]);
              this.setText('');
              /* При выборе скрываем саггест, если он попадает под условия,
                 когда его не надо показывать см. _needShowSuggest */
