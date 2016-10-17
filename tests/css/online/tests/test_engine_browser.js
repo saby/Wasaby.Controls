@@ -1,5 +1,5 @@
 gemini.suite('SBIS3.ENGINE.Browser Online', function () {
-	
+
     gemini.suite('base', function (test) {
 
         test.setUrl('/regression_engine_browser_online.html').setCaptureElements('.capture')

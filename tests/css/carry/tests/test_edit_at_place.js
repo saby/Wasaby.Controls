@@ -63,6 +63,8 @@ gemini.suite('SBIS3.CONTROLS.EditAtPlace Carry', function () {
                 this.input = '[sbisname="TextBox 1"] input';
 				this.item1 = '[sbisname="ololo2"]';
 				this.item2 = '[sbisname="ololo3"]';
+				this.ok = '.controls-EditAtPlace__okButton';
+				this.cancel = '.controls-EditAtPlace__cancel';
 				
                 actions.waitForElementToShow(this.poop, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -70,6 +72,8 @@ gemini.suite('SBIS3.CONTROLS.EditAtPlace Carry', function () {
 
 			.capture('open_editor', function (actions) {
                 actions.click(this.item1);
+				actions.waitForElementToShow(this.ok, 5000);
+				actions.waitForElementToShow(this.cancel, 5000);
 				actions.mouseMove(this.input);
             })
     });

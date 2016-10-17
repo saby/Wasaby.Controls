@@ -251,7 +251,7 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
             })
     });
 	
-	gemini.suite('have_atitles_and_height_25_and_part_scroll', function (test) {
+	gemini.suite('have_titles_and_height_25_and_part_scroll', function (test) {
 
         test.setUrl('/regression_engine_browser_online_13.html').setCaptureElements('html')
 
@@ -270,7 +270,10 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
             })
 
             .capture('into_folder', function (actions) {
-                actions.click(this.data2);
+                actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('browserView').setCurrentRoot(2);
+					window.$ws.single.ControlStorage.getByName('browserView').reload();
+                });
 				actions.waitForElementToShow(this.data4, 5000);
 				actions.waitForElementToShow(this.data31, 5000);
 				actions.waitForElementToShow(this.thumb, 5000);
@@ -437,21 +440,18 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 				actions.waitForElementToShow(this.input, 5000);
             })
 
-            .capture('plain', function (actions) {
+            .capture('with_head_25', function (actions) {
 				actions.click(this.data3);
 				actions.waitForElementToShow(this.caption, 5000);
             })
 
-            .capture('without_table_head', function (actions) {
+            .capture('with_head_24', function (actions) {
                 actions.executeJS(function (window) {
                     $ws.single.ControlStorage.getByName('browserView')._options.transformHead = false
 					$ws.single.ControlStorage.getByName('browserView')._redrawHead();
                 });
 				actions.waitForElementToShow(this.caption, 5000);
-            })
-
-			.capture('into_folder', function (actions) {
-                actions.click(this.data5);
+				actions.click(this.data5);
 				actions.waitForElementToShow(this.caption, 5000);
             })
     });

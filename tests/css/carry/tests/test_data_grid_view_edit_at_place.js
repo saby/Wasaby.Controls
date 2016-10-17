@@ -282,6 +282,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Carry', function () {
 				this.dgv = '[sbisname="Nomenclature"]';
                 this.item4 = '[sbisname="Nomenclature"] [data-id="4"]';
                 this.input = '[name="TextBox 1"] input';
+				this.edit = '[data-id="edit"]';
 				this.editor_input = '[sbisname="withoutNDS_bind"] input';
 				
 				actions.waitForElementToShow(this.dgv, 40000);
@@ -290,6 +291,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Carry', function () {
 
             .capture('hovered_row', function (actions) {
                 actions.mouseMove(this.item4);
+				actions.waitForElementToShow(this.edit, 5000);
             })
 
             .capture('opened_editor', function (actions) {
