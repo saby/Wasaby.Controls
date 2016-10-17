@@ -156,4 +156,38 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 				actions.mouseMove(this.caption);
             })
     });
+	
+	gemini.suite('float_panels', function (test) {
+
+        test.setUrl('/regression_engine_browser_online_12.html').setCaptureElements('html')
+
+            .before(function (actions) {
+
+                this.view = '[name="browserView"]';
+                this.input = '[sbisname="TextBox 1"] input';
+                this.fast_filter = '[name="browserFastDataFilter"] .controls-DropdownList__textWrapper .controls-DropdownList__text';
+                this.filter = '[name="filterLine"] .controls__filterButton__filterLine-items span';
+				this.data5 = '[data-id="5"]';
+				this.data7 = '[data-id="7"]';
+				this.data10 = '[data-id="10 заметка"]';
+				this.apply = '.controls__filter-button__apply-filter .controls-Button__text';
+				this.open_menu = '[sbisname="FieldLinkMultiSelect"] [sbisname="fieldLinkMenu"]';
+
+				actions.waitForElementToShow(this.view, 40000);
+            })
+
+            .capture('plain', function (actions) {
+                actions.executeJS(function (window) {
+                    window.$('.controls-Browser__fastDataFilter').attr('style', 'margin-right:250px;')
+                });
+				actions.click(this.filter);
+				actions.waitForElementToShow(this.apply, 5000);
+				actions.waitForElementToShow(this.open_menu, 5000);
+				actions.mouseMove(this.fast_filter);
+				actions.waitForElementToShow(this.data10, 5000);
+				actions.click(this.open_menu);
+				actions.waitForElementToShow(this.data5, 5000);
+				actions.waitForElementToShow(this.data7, 5000);
+            })
+    });
 });
