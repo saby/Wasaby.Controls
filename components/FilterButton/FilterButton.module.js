@@ -184,10 +184,11 @@ define('js!SBIS3.CONTROLS.FilterButton',
           },
 
           applyFilter: function() {
-             if(this._picker && this._picker.validate()) {
-                this.hidePicker();
-                FilterButton.superclass.applyFilter.call(this);
+             if(this._picker && !this._picker.validate()) {
+                return false;
              }
+             FilterButton.superclass.applyFilter.call(this);
+             this._picker && this.hidePicker();
           },
 
           _changeFieldInternal: function(field, val) {
@@ -331,6 +332,10 @@ define('js!SBIS3.CONTROLS.FilterButton',
                  filterPath = internalName + '/filter',
                  descriptionPath = internalName + '/visibility',
                  toSet;
+
+             if(!this._picker){
+                return false;
+             }
 
              if (fromContext) {
                 this._updateFilterStructure(
