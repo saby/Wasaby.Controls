@@ -727,7 +727,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           _onListItemSelect: function(id, item) {
              /* Чтобы не было лишнего запроса на БЛ, добавим рекорд в набор выбранных */
-             this.addSelectedItems(item instanceof Array ? item : [item]);
+             /* Требуется делать клон т.к. :
+                запись передаётся по ссылке и любые действия с ней будут отображаться и в списке.
+                Особенно актуально это когда зибниден selectedItem в добавлении по месту. */
+             this.addSelectedItems(this._options.cloneSuggestItem ? [item.clone()] : [item]);
              this.setText('');
              /* При выборе скрываем саггест, если он попадает под условия,
                 когда его не надо показывать см. _needShowSuggest */
