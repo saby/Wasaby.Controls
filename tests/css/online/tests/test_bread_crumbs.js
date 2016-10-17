@@ -420,4 +420,39 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 				actions.waitForElementToShow(this.caption, 5000);
             })
     });
+	
+	gemini.suite('table_head_from_25_to_24', function (test) {
+
+        test.setUrl('/regression_engine_browser_online_14.html').setCaptureElements('.capture')
+
+            .before(function (actions) {
+
+				this.view = '[sbisname="browserView"]';
+                this.input = '[sbisname="TextBox 1"] input';
+				this.data3 = '[data-id="3"]';
+				this.data5 = '[data-id="5"]';
+				this.caption = '[sbisname="BackButton-caption"]';
+                
+				actions.waitForElementToShow(this.view, 40000);
+				actions.waitForElementToShow(this.input, 5000);
+            })
+
+            .capture('plain', function (actions) {
+				actions.click(this.data3);
+				actions.waitForElementToShow(this.caption, 5000);
+            })
+
+            .capture('without_table_head', function (actions) {
+                actions.executeJS(function (window) {
+                    $ws.single.ControlStorage.getByName('browserView')._options.transformHead = false
+					$ws.single.ControlStorage.getByName('browserView')._redrawHead();
+                });
+				actions.waitForElementToShow(this.caption, 5000);
+            })
+
+			.capture('into_folder', function (actions) {
+                actions.click(this.data5);
+				actions.waitForElementToShow(this.caption, 5000);
+            })
+    });
 });
