@@ -432,8 +432,8 @@ gemini.suite('SBIS3.CONTROLS.BreadCrumbs Online', function () {
 
 				this.view = '[sbisname="browserView"]';
                 this.input = '[sbisname="TextBox 1"] input';
-				this.data3 = '[data-id="3"]';
-				this.data5 = '[data-id="5"]';
+				this.data3 = '[data-id="2"]';
+				this.data5 = '[data-id="4"]';
 				this.caption = '[sbisname="BackButton-caption"]';
                 
 				actions.waitForElementToShow(this.view, 40000);
