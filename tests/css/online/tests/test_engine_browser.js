@@ -5,7 +5,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
         test.setUrl('/regression_engine_browser_online.html').setCaptureElements('.capture')
 
             .before(function (actions) {
-                
+
 				this.view = '[name="browserView"]';
                 this.search_input = '[name="browserSearch"] input';
                 this.open_panel = '[name="OperationsPanelButton1"]';
@@ -26,7 +26,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 				this.apply = '.controls__filter-button__apply-filter .controls-Button__text';
 				this.box = '.controls-OperationsMark-checkBox';
 				this.item34_box = '[data-id="34"] .controls-ListView__itemCheckBox';
-                
+
 				actions.waitForElementToShow(this.view, 40000);
             })
 
@@ -48,7 +48,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 				actions.waitForElementToShow(this.a4, 5000);
             })
 
-            .capture('opened_fast_filter', function (actions) {				
+            .capture('opened_fast_filter', function (actions) {
 				actions.click(this.dots);
 				actions.mouseMove(this.fast_filter);
 				actions.waitForElementToShow(this.item20, 5000);
@@ -69,8 +69,8 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 			
 			.capture('filtred', function (actions) {
                 actions.waitForElementToShow(this.no_nds, 5000);
-				actions.waitForElementToShow(this.yes_nds, 5000);				
-				actions.click(this.no_nds)				
+				actions.waitForElementToShow(this.yes_nds, 5000);
+				actions.click(this.no_nds)
 				actions.click(this.apply)
             })
 			
@@ -80,7 +80,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
             })
 			
 			.capture('selected_items', function (actions) {
-				
+
 				actions.click(this.box)
             })
 			
@@ -97,13 +97,13 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 				actions.click(this.box)
             })
     });
-	
+
 	gemini.suite('lonf_filter_text', function (test) {
 
         test.setUrl('/regression_engine_browser_online_8.html').setCaptureElements('.controls-Browser__table-fullFilterBlock')
 
             .before(function (actions) {
-                
+
 				this.view = '[name="browserView"]';
                 this.search_input = '[name="browserSearch"] input';
                 this.input = '[sbisname="TextBox 1"] input';
@@ -111,7 +111,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
                 this.fast_filter = '[name="browserFastDataFilter"] .controls-DropdownList__textWrapper .controls-DropdownList__text';
                 this.filter = '[name="filterLine"] .controls__filterButton__filterLine-items span';
 				this.caption = '[name="BackButton-caption"]';
-                
+
 				actions.waitForElementToShow(this.view, 40000);
             })
 
@@ -132,7 +132,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
         test.setUrl('/regression_engine_browser_online_8.html').setCaptureElements('html')
 
             .before(function (actions) {
-                
+
                 this.view = '[name="browserView"]';
 				this.search_input = '[name="browserSearch"] input';
                 this.input = '[sbisname="TextBox 1"] input';
@@ -142,7 +142,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 				this.data2 = '[data-id="2"]';
 				this.data4 = '[data-id="31"]';
 				this.caption = '.controls-BackButton__caption';
-                
+
 				actions.waitForElementToShow(this.view, 40000);
             })
 
