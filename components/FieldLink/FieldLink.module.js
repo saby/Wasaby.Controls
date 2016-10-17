@@ -317,6 +317,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    то надо позвать метод searchMixin'a, который сбросит текст и поднимет событие */
                   self.resetSearch();
                }
+
+               /* Если после изменения выбранных элементов фокус остался в поле связи,
+                  но инпут скрылся, надо ещё раз позвать setActive, чтобы браузерный фокус не улетел на body */
+               if(this.isActive() && !this._isInputVisible()) {
+                  this.setActive(true);
+               }
                /* При добавлении элементов надо запустить валидацию,
                   если же элементы были удалены,
                   то валидация будет запущена либо эрией, либо по уходу фокуса из поля связи (По стандарту). */
@@ -600,14 +606,20 @@ define('js!SBIS3.CONTROLS.FieldLink',
              /* Не надо обрабатывать приход фокуса, если у нас есть выбрынные
               элементы при единичном выборе, в противном случае, автодополнение будет посылать лишний запрос,
               хотя ему отображаться не надо. */
-             if(!this._needShowSuggest()) {
+             if(!this._isInputVisible()) {
                 return false;
              }
              FieldLink.superclass._observableControlFocusHandler.apply(this, arguments);
           },
 
-          _needShowSuggest: function() {
+          _isInputVisible: function() {
              return !(!this._isEmptySelection() && !this._options.multiselect);
+          },
+
+          _getElementToFocus: function() {
+             /* Если инпут в поле связи скрыт (если одиночный выбор) то фокус на него переводить нельзя,
+                иначе он улетит на body, поэтому в качестве элемента для фокуса отдаём само поле связи */
+             return this._isInputVisible() ? FieldLink.superclass._getElementToFocus.apply(this, arguments) : this._container;
           },
 
           /**
@@ -734,11 +746,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this.setText('');
              /* При выборе скрываем саггест, если он попадает под условия,
                 когда его не надо показывать см. _needShowSuggest */
-             if(!this._needShowSuggest()) {
+             if(!this._isInputVisible()) {
                 this.hidePicker();
-             /* При выборе фокус могу перевести, надо проверить это */
-             } else if(this.isActive()) {
-                this._observableControlFocusHandler();
              }
           },
 
@@ -845,9 +854,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           setListFilter: function() {
              /* Если единичный выбор в поле связи, но textBox всё равно показывается(включена опция), запрещаем работу suggest'a */
-             if(!this._options.multiselect &&
-                 !this._isEmptySelection() &&
-                 this._options.alwaysShowTextBox) {
+             if(!this._isInputVisible() && this._options.alwaysShowTextBox) {
                 return;
              }
              FieldLink.superclass.setListFilter.apply(this, arguments);
