@@ -66,16 +66,17 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBas
        * @param {WS.Data/Entity/Record} record Запись, полученная из источника данных диалога.
        */
       _buildComponentConfig: function(meta) {
-         var baseResult = OpenDialogAction.superclass._buildComponentConfig.apply(this, arguments);
          //Если запись в meta-информации отсутствует, то передаем null. Это нужно для правильной работы DataBoundMixin с контекстом и привязкой значений по имени компонента
          var record = (cInstance.instanceOfModule(meta.item, 'WS.Data/Entity/Record') ? meta.item.clone() : meta.item) || null,
              result = {
                source: meta.source,
                key : meta.id,
                initValues : meta.filter,
-               record: record
+               record: record,
+               handlers: this._getFormControllerHandlers(),
+               initializingWay: meta.initializingWay || this._options.initializingWay
             };
-         cMerge(result, baseResult);
+         cMerge(result, meta.componentOptions);
          //Мы передаем клон записи из списка. После того, как мы изменим ее поля и сохраним, запись из связного списка будет помечена измененной,
          //т.к. при синхронизации мы изменили ее поля. При повторном открытии этой записи на редактирование, она уже будет помечена как измененная =>
          //ненужный вопрос о сохранении, если пользователь сразу нажмет на крест.
