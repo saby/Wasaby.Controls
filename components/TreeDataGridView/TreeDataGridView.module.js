@@ -227,7 +227,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var width = this._container.width();
          //Если в браузере присутствует колонка с checkbox'ом, то нужно вычесть его ширину из общей ширины футера
          if (this._options.multiselect) {
-            width = width - this._colgroup.find('col:first').width();
+            //Нельзя смотреть ширину первой колонки, позвав метод width у элемента col (дочерний элемент colgroup)
+            //т.к. в 8 и 10 ie это приводит к тому, что начинает ехать ширина у остальных колонок
+            width = width - this._container.find('.controls-DataGridView__td__checkBox').first().width();
          }
          footers.outerWidth(width);
       },
