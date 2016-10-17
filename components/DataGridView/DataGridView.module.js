@@ -445,7 +445,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
             newCfg.stickyHeader = false;
          }
 
-         cfg._ladderInstance.setCollection(cfg._itemsProjection);
+         if (cfg._itemsProjection) {
+            cfg._ladderInstance.setCollection(cfg._itemsProjection);
+         }
          if (!newCfg.ladder) {
             newCfg.ladder = [];
          }
@@ -552,6 +554,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
          buildTplArgsLadder(args.cellData, cfg);
 
          return args;
+      },
+
+      _itemsReadyCallback: function() {
+         var proj = this._getItemsProjection();
+         if (proj) {
+            this._options._ladderInstance.setCollection(proj);
+         }
+
+         return DataGridView.superclass._itemsReadyCallback.apply(this, arguments);
       },
 
       _redrawHead : function() {
