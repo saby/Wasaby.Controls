@@ -95,11 +95,25 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
       /**
        * @typedef {Object} ExecuteMetaConfig
        * @property {String|Number} id Первичный ключ записи, которую нужно открыть на диалоге редактирования. Если свойство не задано, то нужно передать запись свойством record.
-       * @property {Boolean} newModel Признак: true - в диалоге редактирования открыта новая запись, которой не существует в источнике данных.
        * @property {Object} filter Объект, данные которого будут использованы в качестве инициализирующих данных при создании новой записи.
        * Название свойства - это название поля записи, а значение свойства - это значение для инициализации.
-       * @property {WS.Data/Entity/Record} record Редактируемая запись. Если передаётся ключ свойством key, то запись передавать необязательно.
-       * @property {$ws.proto.Context} ctx Контекст, который нужно установить для диалога редактирования записи.
+       * @property {WS.Data/Entity/Record} item Редактируемая запись. Если передаётся ключ свойством id, то запись передавать необязательно.
+       * @property {String} initializingWay Устанавливает поведение для чтения записи и её установки в контекст диалога редактирования. {@link initializingWay}
+       * @property {Object} componentOptions Пользовательские опции, передаваемые в диалог редактирования
+       * @property {Object} dialogOptions Опции, передаваемые в диалог {@link mode}
+       * Свойства, которые можно указать для диалога:
+       * <ul>
+       *    <li><b>isStack</b> - по умолчанию true</li>
+       *    <li><b>autoHide</b> - по умолчанию true</li>
+       *    <li><b>buildMarkupWithContext</b> - по умолчанию true</li>
+       *    <li><b>showOnControlsReady</b> - по умолчанию false</li>
+       *    <li><b>autoCloseOnHide</b> - по умолчанию true</li>
+       *    <li><b>border</b> - по умолчанию true</li>
+       *    <li><b>target</b> - по умолчанию ''</li>
+       *    <li><b>title</b> - по умолчанию ''</li>
+       *    <li><b>side</b> - по умолчанию 'left'</li>
+       *    <li><b>animation</b> - по умолчанию 'slide'</li>
+       * </ul>
        */
       /**
        * Открывает диалог редактирования записи.
@@ -316,18 +330,28 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
          var defaultConfig = {
                isStack: true,
                autoHide: true,
-               buildMarkupWithContext: false,
-               showOnControlsReady: true,
+               buildMarkupWithContext: true,
+               showOnControlsReady: false,
                autoCloseOnHide: true,
+               border: true,
                target: '',
                title: '',
                side: 'left',
                animation: 'slide'
             },
             floatAreaCfg = {};
+         if (!meta.dialogOptions){
+            meta.dialogOptions = {};
+         }
 
-         colHelpers.forEach(defaultConfig, function(value, prop){
-            floatAreaCfg[prop] = meta[prop] !== undefined ? meta[prop] : defaultConfig[prop];
+         colHelpers.forEach(defaultConfig, function(defaultValue, key){
+            if (meta.hasOwnProperty(key)){
+               IoC.resolve('ILogger').log('OpenDialogAction', 'Опция ' + key + ' для диалога редактирования должна задаваться через meta.dialogOptions');
+               floatAreaCfg[key] = meta[key];
+            }
+            else {
+               floatAreaCfg[key] = meta.dialogOptions[key] || defaultValue;
+            }
          });
 
          return floatAreaCfg;
@@ -561,13 +585,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
             collection = collection.getItems();
          }
          return collection;
-      },
-
-      _buildComponentConfig: function(meta) {
-         return {
-            handlers: this._getFormControllerHandlers(),
-            initializingWay: meta.initializingWay || this._options.initializingWay
-         };
       }
    });
 

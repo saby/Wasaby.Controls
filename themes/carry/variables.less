@@ -49,12 +49,13 @@
 @combo-box-arrow-height:                        32px;
 @combo-box-arrow-margin:                        -8px -8px 0 0;
 @combo-box-arrow-right-offset:                  8px;
-@compo-box-fieldWrapper-margin:                 0 40px 0 0;
+@compo-box-fieldWrapper-margin-right:           40px;
 @combo-box-after-width:                         40px;
 
 @combo-box-picker-item-hover-bg:                #F0F5FB;
 @combo-box-picker-item-bg:                      #E1ECF6;
-
+@combo-box-picker-item-font-size:               24px;
+@combo-box-picker-item-padding:                 5px 8px;
 // ---------- //
 // Data Range //
 // ---------- //
@@ -481,9 +482,14 @@
 @editdialog-template-minwidth:                  460px;
 
 //MoveDialog
-@controls-movedialog-activate-right:            65px;
+@controls-movedialog-activate-right:            76px;
 @controls-movedialog-activate-top:              10px;
-@controls-movedialog-min-width:                 525px;
+@controls-movedialog-min-width:                 536px;
+
+// PrintDialog
+@controls-printdialog-activate-right:           @controls-movedialog-activate-right;
+@controls-printdialog-activate-margin-top:      @controls-movedialog-activate-top;
+@controls-printdialog-min-width:                450px;
 
 // Big button
 @button-big-font:                               @globalDefaultFontSize;
@@ -500,6 +506,7 @@
 @controls-OperationsPanel-actions-margin:       0 8px;
 @controls-OperationsPanel-actions-padding-left: 8px;
 @controls-OperationsMark-checkBox-margin:       0 8px 0 8px;
+@controls-OperationsPanel-bg:                   #E5ECF5;
 
 // ----------------------- //
 // OperationsPanelButton  //
@@ -528,6 +535,13 @@
 
 @date-range-line-height:                        40px;
 @date-range-text-line-height:                   @date-range-line-height;
+
+// --------------- //
+// SuggestTextBox //
+// -------------- //
+
+@suggest-text-box-reset-margin:              @search-form-icon-padding;
+@suggest-text-box-wrapper-width:              32px;
 
 // ----------------------- //
 //      EditInPlace        //

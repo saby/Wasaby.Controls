@@ -3,7 +3,8 @@ define('js!SBIS3.CONTROLS.Demo.MySuggestTextBox', [
    'html!SBIS3.CONTROLS.Demo.MySuggestTextBox',
    'js!SBIS3.CONTROLS.DEMO.DemoSuggestMemory',
    'css!SBIS3.CONTROLS.Demo.MySuggestTextBox',
-   'js!SBIS3.CONTROLS.SuggestTextBox'
+   'js!SBIS3.CONTROLS.SuggestTextBox',
+   'js!SBIS3.CONTROLS.Link'
 ], function (CompoundControl, dotTplFn, DemoSuggestMemory) {
    /**
     * SBIS3.CONTROLS.Demo.MySuggestTextBox

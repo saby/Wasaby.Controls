@@ -21,7 +21,6 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          var self = this;
 
          this._options.observableControls.unshift(this);
-         this.getContainer().addClass('controls-SuggestTextBox');
 
          /* Проверяем на изменение раскладки */
          this.once('onListReady', function(e, list) {

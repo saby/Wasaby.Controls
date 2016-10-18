@@ -1662,6 +1662,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      onAfterEndEdit: function(event, model, target, withSaving) {
                         this.setSelectedKey(model.getId());
                         event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
+                        this._toggleEmptyData(!this.getItems().getCount());
                         this._hideToolbar();
                      }.bind(this),
                      onDestroy: function() {
@@ -1894,9 +1895,13 @@ define('js!SBIS3.CONTROLS.ListView',
 
                   }
                });
-               this._itemsToolbar.getItemsActions().subscribe('onHideMenu', function() {
-                  self.setActive(true);
-               });
+               //Когда массив action's пустой getItemsAction вернет null
+               var actions = this._itemsToolbar.getItemsActions();
+               if (actions) {
+                  actions.subscribe('onHideMenu', function () {
+                     self.setActive(true);
+                  });
+               }
             }
             return this._itemsToolbar;
          },
@@ -2809,6 +2814,9 @@ define('js!SBIS3.CONTROLS.ListView',
             //пустой массив. В .150 править этот метод опасно, потому что он много где используется. В .200 переписать метод
             //_findItemByElement, без завязки на _items.
             if (target.length) {
+               if (target.hasClass('controls-DragNDropMixin__notDraggable')) {
+                  return false;
+               }
                id = target.data('id');
                var items = this._getDragItems(id),
                   source = [];
