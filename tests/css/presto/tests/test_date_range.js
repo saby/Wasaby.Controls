@@ -1,18 +1,40 @@
-/*
-var gemini = require('gemini');
-
-gemini.suite('SBIS3.CONTROLS.DateRange Online', function () {
+gemini.suite('SBIS3.CONTROLS.DateRange Presto', function () {
 
     gemini.suite('base', function (test) {
 
-        test.setUrl('/regression_date_range_online.html').setCaptureElements('.capture')
+        test.setUrl('/regression_date_range_presto.html').setCaptureElements('html')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="DateRange 1"]', 40000);
-				actions.waitForElementToShow('[name="DateRange__Button"] .controls-Button__text', 40000);
-				this.open_chooser = find('[name="DateRange__Button"] .controls-Button__text');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
+            .before(function (actions) {
+
+				this.dr = '[sbisname="DateRange 1"]';
+                this.input = '[name="TextBox 1"] input';
+				this.open_chooser = '[name="DateRange__Button"]';
+				this.quarter = '[sbisname="QuarterRangeBtn0"]';
+				this.halfyear = '[sbisname="HalfyearRangeBtn0"]';
+				this.nextyear = '[sbisname="NextYearButton"]';
+				this.prevyear = '[sbisname="PrevYearButton"]';
+				this.chooseyear = '[sbisname="ToggleChooseYearButton"]';
+				this.first = '.controls-DateRangeBigChoose__yearsRange .controls-DateRangeBigChoose__years-yearsRange-btn:nth-child(1)';
+				this.third = '.controls-DateRangeBigChoose__yearsRange .controls-DateRangeBigChoose__years-yearsRange-btn:nth-child(3)';
+				this.current = '[sbisname="CurrentYearButton"]';
+				this.second = '.controls-DateRangeBigChoose__months-month .controls-DateRangeBigChoose-MonthView:nth-child(2) .controls-MonthView__caption-text';
+				this.seven = '.controls-DateRangeBigChoose__months-month .controls-DateRangeBigChoose-MonthView:nth-child(7) .controls-MonthView__caption-text';
+				this.month = '.controls-DateRangeBigChoose__months-month .controls-DateRangeBigChoose-MonthView:nth-child(1) .controls-MonthView__tableBody';
+				this.november = '[sbisname="MonthRangeBtn10"]';
+				this.calendar = '[sbisname="BackToYearButton"]';
+				this.apply = '[sbisname="ApplyButton"]';
+				this.close = '[sbisname="CloseButton"]';
+				this.icon = '.controls-DateRangeBigChoose__homeBtn';
+				this.m3 = '.controls-RangeSelectable__item.controls-DateRangeBigChoose-MonthView:nth-child(3)';
+				this.m6 = '.controls-RangeSelectable__item.controls-DateRangeBigChoose-MonthView:nth-child(6)';
+				this.m9 = '.controls-RangeSelectable__item.controls-DateRangeBigChoose-MonthView:nth-child(9)';
+				this.m12 = '.controls-RangeSelectable__item.controls-DateRangeBigChoose-MonthView:nth-child(12)';
+				this.a1 = '.controls-DateRangeBigChoose__yearsRange .controls-DateRangeBigChoose__years-yearsRange-btn:nth-child(1)';
+				this.a3 = '.controls-DateRangeBigChoose__yearsRange .controls-DateRangeBigChoose__years-yearsRange-btn:nth-child(3)';
+				this.a5 = '.controls-DateRangeBigChoose__yearsRange .controls-DateRangeBigChoose__years-yearsRange-btn:nth-child(5)';
+				
+				actions.waitForElementToShow(this.dr, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('plain', function (actions) {
@@ -21,41 +43,115 @@ gemini.suite('SBIS3.CONTROLS.DateRange Online', function () {
 
             .capture('opened_chooser', function (actions) {
                 actions.click(this.open_chooser);
-				actions.waitForElementToShow('table.ws-date-range-choose-table', 1000);
-				actions.waitForElementToShow('[sbisname="apply"] .ws-button-caption', 1000);
-				actions.waitForElementToShow('.ws-window-titlebar-action.close', 1000);
+				actions.waitForElementToShow(this.m3, 5000);
+				actions.waitForElementToShow(this.m6, 5000);
+				actions.waitForElementToShow(this.m9, 5000);
+				actions.waitForElementToShow(this.m12, 5000);
+				actions.waitForElementToShow(this.apply, 5000);
+				actions.waitForElementToShow(this.close, 5000);
             })
 			
-			.capture('selected_week', function (actions, find) {
-				actions.waitForElementToShow('[id="ws-date-range-choose-month-3"]', 1000);
-				this.april = find('[id="ws-date-range-choose-month-3"]');
-				actions.mouseMove(this.april);
-				this.day = find('table tr[week="4"] td:nth-child(3)');
-				actions.click(this.day);
+			.capture('hovered_quarter', function (actions) {
+                actions.mouseMove(this.quarter);
             })
 			
-			.capture('selected_range', function (actions, find) {
-				this.check_range = find('[sbisname="date-range-choose-TypeSelection"] div.box');
-				actions.click(this.check_range);
-				this.day1 = find('table tr[week="2"] td:nth-child(2)');
-				actions.click(this.day1);
-				this.day2 = find('table tr[week="4"] td:nth-child(5)');
-				actions.click(this.day2);
+			.capture('selected_quarter', function (actions) {
+                actions.click(this.quarter);
             })
 			
-			.capture('hovered_to_current_date', function (actions, find) {
-				this.to_current_date = find('[sbisname="ws-navigationButton"] a');
-				actions.mouseMove(this.to_current_date);
+			.capture('hovered_halfyear', function (actions) {
+                actions.mouseMove(this.halfyear);
             })
 			
-			.capture('hovered_select_button', function (actions, find) {
-				this.apply = find('[sbisname="apply"] .ws-button-caption');
-				actions.mouseMove(this.apply);
+			.capture('selected_halfyear', function (actions) {
+                actions.click(this.halfyear);
             })
 			
-			.capture('hovered_close', function (actions, find) {
-				this.close = find('.ws-window-titlebar-action.close');
-				actions.mouseMove(this.close);
+			.capture('hovered_nextyear', function (actions) {
+                actions.mouseMove(this.nextyear);
             })
+			
+			.capture('hovered_prevyear', function (actions) {
+                actions.mouseMove(this.prevyear);
+            })
+			
+			.capture('hovered_chooseyear', function (actions) {
+                actions.mouseMove(this.chooseyear);
+            })
+			
+			.capture('opened_chooseyear', function (actions) {
+                actions.click(this.chooseyear);
+				actions.waitForElementToShow(this.a1, 5000);
+				actions.waitForElementToShow(this.a3, 5000);
+				actions.waitForElementToShow(this.a5, 5000);
+            })
+			
+			.capture('hovered_first_year', function (actions) {
+                actions.mouseMove(this.first);
+            })
+			
+			.capture('selected_first_year', function (actions) {
+                actions.click(this.first);
+            })
+			
+			.capture('hovered_third_year', function (actions) {
+                actions.mouseMove(this.third);
+            })
+			
+			.capture('selected_third_year', function (actions) {
+                actions.click(this.third);
+				actions.mouseMove(this.nextyear);
+            })
+			
+			.capture('hovered_current_year', function (actions) {
+                actions.click(this.current);
+            })
+			
+			.capture('hovered_second_month', function (actions) {
+                actions.mouseMove(this.second);
+            })
+			
+			.capture('selected_second_month', function (actions) {
+                actions.click(this.second);
+            })
+			
+			.capture('hovered_seven_month', function (actions) {
+                actions.mouseMove(this.seven);
+            })
+			
+			.capture('selected_seven_month', function (actions) {
+                actions.click(this.seven);
+            })
+			
+			.capture('opened_month_picker', function (actions) {
+                actions.click(this.month);
+				actions.mouseMove(this.november);
+            })
+			
+			.capture('selected_november', function (actions) {
+				actions.click(this.november);
+            })
+			
+			.capture('hovered_calendar', function (actions) {
+                actions.mouseMove(this.calendar);
+            })
+			
+			.capture('hovered_close', function (actions) {
+                actions.mouseMove(this.close);
+            })
+			
+			.capture('hovered_apply', function (actions) {
+                actions.mouseMove(this.apply);
+            })
+			
+						
+			.capture('hovered_icon', function (actions) {
+                actions.mouseMove(this.icon);
+            })
+			
+			.capture('choosed_range', function (actions) {
+                actions.click(this.apply);
+				actions.mouseMove(this.input);
+            })			
     });
-});*/
+});

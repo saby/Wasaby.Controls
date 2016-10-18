@@ -1,17 +1,19 @@
-var gemini = require('gemini');
-
 gemini.suite('SBIS3.CONTROLS.FastDataFilter Online', function () {
 
     gemini.suite('base', function (test) {
 
         test.setUrl('/regression_fast_data_filter_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="FastDataFilter"]', 40000);
-                this.title = find('[sbisname="FastDataFilter"] .controls-DropdownList__text');
-                this.item2 = find('.controls-DropdownList__item[data-id="2"]');
-                this.close_icon = find('[sbisname="FastDataFilter"] .controls-DropdownList__crossIcon');
-                this.box = find('[sbisname="TextBox 1"] input');
+            .before(function (actions) {
+				
+				this.fdf = '[sbisname="FastDataFilter"]';
+                this.box = '[sbisname="TextBox 1"] input';
+				this.title = '[sbisname="FastDataFilter"] .controls-DropdownList__text';
+                this.item2 = '.controls-DropdownList__item[data-id="2"]';
+                this.close_icon = '[sbisname="FastDataFilter"] .controls-DropdownList__crossIcon';
+				
+                actions.waitForElementToShow(this.fdf, 40000);
+				actions.waitForElementToShow(this.box, 5000);
             })
 
             .capture('plain', function (actions) {
@@ -20,7 +22,7 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Online', function () {
 
             .capture('opened', function (actions) {
                 actions.mouseMove(this.title);
-				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 1000);
+				actions.waitForElementToShow(this.item2, 5000);
             })
 
             .capture('hovered_item', function (actions) {
@@ -43,25 +45,25 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Online', function () {
 
         test.setUrl('/regression_fast_data_filter_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="FastDataFilter"]', 40000);
-                this.title = find('[sbisname="FastDataFilter"] .controls-DropdownList__text');
-                this.item2 = find('.controls-DropdownList__item[data-id="2"]');
+            .before(function (actions) {
+				
+				this.fdf = '[sbisname="FastDataFilter"]';
+                this.box = '[sbisname="TextBox 1"] input';
+                this.title = '[sbisname="FastDataFilter"] .controls-DropdownList__text';
+                this.item2 = '.controls-DropdownList__item[data-id="2"]';
 				this.item2_box = '.controls-DropdownList__item[data-id="2"] .controls-DropdownList__itemCheckBox';
-                this.item3 = find('.controls-DropdownList__item[data-id="3"]');
+                this.item3 = '.controls-DropdownList__item[data-id="3"]';
 				this.item3_box = '.controls-DropdownList__item[data-id="3"] .controls-DropdownList__itemCheckBox';
-                this.close_icon = find('[sbisname="FastDataFilter"] .controls-DropdownList__crossIcon');
-                this.accept = find('[sbisname="DropdownList_buttonChoose"]');
-                this.box = find('[sbisname="TextBox 1"] input');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.box);
+                this.close_icon = '[sbisname="FastDataFilter"] .controls-DropdownList__crossIcon';
+                this.accept = '[sbisname="DropdownList_buttonChoose"]';
+				
+                actions.waitForElementToShow(this.fdf, 40000);
+				actions.waitForElementToShow(this.box, 5000);
             })
 
             .capture('opened', function (actions) {
                 actions.mouseMove(this.title);
-				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 40000);
+				actions.waitForElementToShow(this.item2, 5000);
             })
 
             .capture('hovered_item', function (actions) {
@@ -70,15 +72,13 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Online', function () {
 
             .capture('selected_item', function (actions) {
                 actions.mouseMove(this.item2);
-				actions.waitForElementToShow(this.item2_box, 2000);
+				actions.waitForElementToShow(this.item2_box, 5000);
 				actions.click(this.item2_box);
-                actions.wait(100);
-                actions.click(this.item3_box);
-                actions.wait(100);
+                actions.mouseMove(this.item3);
+				actions.waitForElementToShow(this.item3_box, 5000);
+				actions.click(this.item3_box);
                 actions.click(this.accept);
-                actions.wait(100);
                 actions.click(this.box);
-                actions.wait(100);
             })
 			
 			.capture('disabled', function (actions) {
@@ -92,26 +92,27 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Online', function () {
 
         test.setUrl('/regression_fast_data_filter_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="FastDataFilter"]', 40000);
-                this.box = find('[sbisname="TextBox 1"] input');
-                this.first_title = find('[sbisname="FastDataFilter"] [data-id="first"] .controls-DropdownList__text');
-                this.second_title = find('[sbisname="FastDataFilter"] [data-id="second"] .controls-DropdownList__text')
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.box);
+            .before(function (actions) {
+				
+				this.fdf = '[sbisname="FastDataFilter"]';
+                this.box = '[sbisname="TextBox 1"] input';
+                this.first_title = '[sbisname="FastDataFilter"] [data-id="first"] .controls-DropdownList__text';
+                this.second_title = '[sbisname="FastDataFilter"] [data-id="second"] .controls-DropdownList__text';
+				this.item2 = '.controls-DropdownList__item[data-id="2"]';
+				
+                actions.waitForElementToShow(this.fdf, 40000);
+				actions.waitForElementToShow(this.box, 5000);
             })
 
             .capture('opened_one', function (actions) {
                 actions.mouseMove(this.first_title)
-				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 4000);
+				actions.waitForElementToShow(this.item2, 5000);
             })
 
             .capture('opened_two', function (actions) {
                 actions.click(this.box);
 				actions.mouseMove(this.second_title)
-				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 4000);
+				actions.waitForElementToShow(this.item2, 5000);
             })
     });
 });

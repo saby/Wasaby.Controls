@@ -1,16 +1,19 @@
-var gemini = require('gemini');
-
 gemini.suite('SBIS3.CONTROLS.Image Online', function () {
 
     gemini.suite('base', function (test) {
 
-        test.setUrl('/regression_image_online.html').setCaptureElements('[sbisname="Image 1"]')
+        test.setUrl('/regression_image_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="Image 1"]', 40000);
-                this.image = find('[name="Image 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
+            .before(function (actions) {
+                
+				this.image = '[name="Image 1"]';
+                this.input = '[sbisname="TextBox 1"] input';
+				this.edit = '[sbisname="ButtonEdit"]';
+				this.reset = '[sbisname="ButtonReset"]';
+				this.upload = '[sbisname="ButtonUpload"]';
+                
+				actions.waitForElementToShow(this.image, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('plain', function (actions) {
@@ -23,7 +26,10 @@ gemini.suite('SBIS3.CONTROLS.Image Online', function () {
 					window.$('[sbisname="ButtonReset"]').removeClass('ws-hidden');
                 });
 				actions.mouseMove(this.image);
-				actions.wait(1000);
+				actions.wait(500);
+				actions.waitForElementToShow(this.edit, 5000);
+				actions.waitForElementToShow(this.reset, 5000);
+				actions.waitForElementToShow(this.upload, 5000);
 			})
     });
 	
@@ -31,46 +37,52 @@ gemini.suite('SBIS3.CONTROLS.Image Online', function () {
 
         test.setUrl('/regression_image_online_2.html').setCaptureElements('html')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="Image 1"]', 40000);
-                this.image = find('[name="Image 1"] .controls-image__image');
-				this.edit = find('.controls-image__image-bar .icon-Edit');
+            .before(function (actions) {
+				
+				this.image = '[name="Image 1"]';
+                this.input = '[sbisname="TextBox 1"] input';
+				this.edit = '[sbisname="ButtonEdit"] i';
+				this.reset = '[sbisname="ButtonReset"] i';
+				this.upload = '[sbisname="ButtonUpload"] i';
+				this.apply = '[sbisname="applyButton"]';
+				this.close = '.ws-window-title.controls-EditDialog__title'
+                
+				actions.waitForElementToShow(this.image, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 									
             .capture('plain', function (actions) {
-				actions.executeJS(function (window) {
-                    window.$('[name="Image 1"] .controls-image__image').mouseenter();					
-                });
-				actions.wait(1000);
-				actions.waitForElementToShow('.controls-image__image-bar', 2000);	
-				actions.waitForElementToShow('.controls-image__image-bar .icon-Edit', 1000);
-				
-				actions.executeJS(function (window) {
-                    window.$('.controls-image__image-bar .icon-Edit').click();					
-                });	
-				actions.wait(1000);
-				actions.waitForElementToShow('[sbisname="applyButton"]', 2000);
-				actions.waitForElementToShow('.ws-window-title.controls-EditDialog__title', 2000);
+				actions.mouseMove(this.image)
+				actions.wait(500);
+				actions.waitForElementToShow(this.edit, 5000);				
+				actions.click(this.edit);
+				actions.wait(500);
+				actions.waitForElementToShow(this.apply, 5000);
+				actions.waitForElementToShow(this.close, 5000);
                 actions.executeJS(function (window) {
                     window.$('.controls-image__image-bar').addClass('ws-hidden');					
                     window.$('.ws-browser-ajax-loader').addClass('ws-hidden');					
 					window.$('.jcrop-hline').removeClass('jcrop-hline');
 					window.$('.jcrop-vline').removeClass('jcrop-vline');
                 });			
-				actions.waitForElementToHide('.controls-image__image-bar', 2000);	
-				actions.waitForElementToHide('.controls-image__image-bar .icon-Edit', 1000);
+				actions.waitForElementToHide(this.edit, 5000);
 			})
     });
-	
+
 	gemini.suite('small_image', function (test) {
 
-        test.setUrl('/regression_image_online_3.html').setCaptureElements('[sbisname="Image 1"]')
+        test.setUrl('/regression_image_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="Image 1"]', 40000);
-                this.image = find('[name="Image 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
+            .before(function (actions) {
+				
+				this.image = '[name="Image 1"]';
+                this.input = '[sbisname="TextBox 1"] input';
+				this.edit = '[sbisname="ButtonEdit"]';
+				this.reset = '[sbisname="ButtonReset"]';
+				this.upload = '[sbisname="ButtonUpload"]';
+                
+				actions.waitForElementToShow(this.image, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('plain', function (actions) {
@@ -83,7 +95,10 @@ gemini.suite('SBIS3.CONTROLS.Image Online', function () {
 					window.$('[sbisname="ButtonReset"]').removeClass('ws-hidden');
                 });
 				actions.mouseMove(this.image);
-				actions.wait(1000);
+				actions.wait(500);
+				actions.waitForElementToShow(this.edit, 5000);
+				actions.waitForElementToShow(this.reset, 5000);
+				actions.waitForElementToShow(this.upload, 5000);
 			})
     });
 });

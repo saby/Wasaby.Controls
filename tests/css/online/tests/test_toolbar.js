@@ -1,21 +1,24 @@
-var gemini = require('gemini');
-
 gemini.suite('SBIS3.CONTROLS.Toolbar Online', function () {
 
     gemini.suite('base', function (test) {
 
         test.setUrl('/regression_toolbar_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="MyToolbar"]', 40000);
-                this.data = find('[sbisname="MyToolbar"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-				this.item_1 = find('.controls-ToolBar__itemsContainer [data-id="3"]');
-				this.menu = find('.controls-ToolBar__menuIcon');
-				this.menu_close = find('.controls-PopupMixin__closeButton');
-				this.menu_item = find('.controls-MenuItem[data-id="9"] .controls-MenuItem__text');
-				this.menu_item2 = find('.controls-MenuItem[data-id="6"] .controls-MenuItem__text');
+            .before(function (actions) {
+                
+                this.data = '[sbisname="MyToolbar"]';
+                this.input = '[sbisname="TextBox 1"] input';
+				this.item_1 = '.controls-ToolBar__itemsContainer [data-id="3"]';
+				this.menu = '.controls-ToolBar__menuIcon';
+				this.menu_close = '.controls-PopupMixin__closeButton';
+				this.menu_item2 = '.controls-MenuItem[data-id="2"]';
+				this.menu_item3 = '.controls-MenuItem[data-id="3"]';
+				this.menu_item10 = '.controls-MenuItem[data-id="10"]';
+				this.menu_item9 = '.controls-MenuItem[data-id="9"] .controls-MenuItem__text';
+				this.menu_item6 = '.controls-MenuItem[data-id="6"] .controls-MenuItem__text';
+				
+				actions.waitForElementToShow(this.data, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('plain', function (actions) {
@@ -32,8 +35,8 @@ gemini.suite('SBIS3.CONTROLS.Toolbar Online', function () {
 			
 			.capture('opened_menu', function (actions) {
                 actions.click(this.menu);
-				actions.waitForElementToShow('.controls-MenuItem[data-id="2"]', 2000);
-				actions.waitForElementToShow('.controls-MenuItem[data-id="3"]', 2000);
+				actions.waitForElementToShow(this.menu_item2, 5000);
+				actions.waitForElementToShow(this.menu_item3, 5000);
 				actions.mouseMove(this.input);
             })
 			
@@ -41,14 +44,13 @@ gemini.suite('SBIS3.CONTROLS.Toolbar Online', function () {
                 actions.mouseMove(this.menu_close);
             })
 			
-			.capture('hovered_menu_item', function (actions) {
-                actions.mouseMove(this.menu_item);
-				actions.waitForElementToShow('.controls-MenuItem[data-id="10"]', 2000);
+			.capture('hovered_menu_item9', function (actions) {
+                actions.mouseMove(this.menu_item9);
+				actions.waitForElementToShow(this.menu_item10, 5000);
             })
 			
-			.capture('hovered_menu_item_2', function (actions) {
-                actions.mouseMove(this.menu_item2);
-				actions.wait(500);
+			.capture('hovered_menu_item9_2', function (actions) {
+                actions.mouseMove(this.menu_item6);
             })
 			
 			.capture('disabled', function (actions) {
@@ -71,12 +73,31 @@ gemini.suite('SBIS3.CONTROLS.Toolbar Online', function () {
 
         test.setUrl('/regression_toolbar_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="Toolbar 1"]', 40000);
-                this.data = find('[sbisname="Toolbar 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-				this.item_1 = find('.controls-ToolBar__itemsContainer [data-id="3"]');
+            .before(function (actions) {
+                
+				this.data = '[sbisname="Toolbar 1"]';
+                this.input = '[sbisname="TextBox 1"] input';
+                
+				actions.waitForElementToShow(this.data, 40000);
+				actions.waitForElementToShow(this.input, 5000);
+            })
+
+            .capture('plain', function (actions) {
+				actions.click(this.input);
+            })
+    });
+	
+	gemini.suite('not_menu_button', function (test) {
+
+        test.setUrl('/regression_toolbar_online_3.html').setCaptureElements('.capture')
+
+            .before(function (actions) {
+                
+				this.data = '[sbisname="Toolbar 1"]';
+                this.input = '[sbisname="TextBox 1"] input';
+                
+				actions.waitForElementToShow(this.data, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('plain', function (actions) {
