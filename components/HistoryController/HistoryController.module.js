@@ -41,7 +41,15 @@ define('js!SBIS3.CONTROLS.HistoryController', [], function() {
       },
 
       $constructor: function() {
-         this._history = this._options.serialize(false, $ws.single.SessionStorage.get(this._options.historyId));
+         var serializedHistory;
+
+         try {
+            serializedHistory = this._options.serialize(false, $ws.single.SessionStorage.get(this._options.historyId));
+         } catch (e) {
+            $ws.single.ioc.resolve('ILogger').error('HistoryController', e.message, e);
+            serializedHistory = null;
+         }
+         this._history = serializedHistory;
       },
 
       /**
