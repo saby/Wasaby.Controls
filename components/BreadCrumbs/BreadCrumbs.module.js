@@ -226,12 +226,13 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          if (dots.length){
             dots.detach();
          } else {
+            var item = {
+               dots: true,
+               get: function(field) {return this[field];}
+            };
+            item[this._options.displayField] = '...';
             dots = $(pointTpl({
-                  item: {
-                     title: '...',
-                     dots: true,
-                     get: function(field) {return this[field];}
-                  },
+                  item: item;
                   decorators: this._options._decorators,
                   displayField: this._options.displayField
                }));
