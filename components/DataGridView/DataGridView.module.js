@@ -545,7 +545,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._bindHead();
          }
          headData = prepareHeadData(this._options);
-         headMarkup = MarkupTransformer(headTpl(headData));
+         headMarkup = MarkupTransformer(this._options._headTpl(headData));
          var body = $('.controls-DataGridView__tbody', this._container);
 
          var newTHead = $(headMarkup);
