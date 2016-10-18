@@ -1895,9 +1895,13 @@ define('js!SBIS3.CONTROLS.ListView',
 
                   }
                });
-               this._itemsToolbar.getItemsActions().subscribe('onHideMenu', function() {
-                  self.setActive(true);
-               });
+               //Когда массив action's пустой getItemsAction вернет null
+               var actions = this._itemsToolbar.getItemsActions();
+               if (actions) {
+                  actions.subscribe('onHideMenu', function () {
+                     self.setActive(true);
+                  });
+               }
             }
             return this._itemsToolbar;
          },
