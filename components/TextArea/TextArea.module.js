@@ -184,6 +184,11 @@ define('js!SBIS3.CONTROLS.TextArea', [
                      self._cachedH = h;
                      self._autosizeTextArea(true);
                   }
+                  var wrapper = $('.controls-TextArea__disabled-wrapper', self._container.get(0));
+                  wrapper.css('overflow', '');
+                  setTimeout(function(){
+                     wrapper.css('overflow', 'auto');
+                  }, 0)
                }
             });
 
