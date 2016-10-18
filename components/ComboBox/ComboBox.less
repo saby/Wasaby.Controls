@@ -73,8 +73,9 @@
      &.ws-disabled,
      &.ws-disabled:hover {
        cursor: @combo-box-disabled-cursor;
-       border-width: 0 0 1px 0;
-       border-bottom-color: #E4E4E4;
+       border-width: @combo-box-disabled-border-width;
+       border-bottom-color: @combo-box-disabled-border-color;
+       color: @combo-box-disabled-color;
        .controls-TextBox__afterFieldWrapper {
          .controls-ComboBox__arrowDown {
            display: none;
