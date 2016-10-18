@@ -971,9 +971,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       },
 
       getParentKey: function (DataSet, item) {
-         var
-            itemParent = this._options._itemsProjection.getItemBySourceItem(item).getParent().getContents();
-         return $ws.helpers.instanceOfModule(itemParent, 'WS.Data/Entity/Record') ? itemParent.getId() : itemParent;
+         var itemProjection = this._options._itemsProjection.getItemBySourceItem(item);
+         if( itemProjection !== undefined ) {
+            var itemParent = itemProjection.getParent().getContents();
+            return $ws.helpers.instanceOfModule(itemParent, 'WS.Data/Entity/Record') ? itemParent.getId() : itemParent;
+         }
+         return undefined;
       },
 
       _dropPageSave: function(){
