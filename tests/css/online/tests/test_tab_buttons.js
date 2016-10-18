@@ -1,19 +1,18 @@
+var gemini = require('gemini');
+
 gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
-	
+
     gemini.suite('base', function (test) {
 
         test.setUrl('/regression_tab_buttons_online.html').setCaptureElements('.capture')
 
-            .before(function (actions) {
-                
-				this.buttons = '#buttons';
-				this.tab2 = '[data-id="2"]';
-				this.tab3 = '[data-id="3"]';
-                this.tab4 = '[data-id="4"]';
-                this.add1 = '.controls-TabButton__additionalText1';
-                this.add2 = '.controls-TabButton__additionalText2';
-                
-				actions.waitForElementToShow(this.buttons, 40000);
+            .before(function (actions, find) {
+                actions.waitForElementToShow('#buttons', 40000);
+                this.tab2 = find('[data-id="2"]');
+				this.tab3 = find('[data-id="3"]');
+                this.tab4 = find('[data-id="4"]');
+                this.add1 = find('.controls-TabButton__additionalText1');
+                this.add2 = find('.controls-TabButton__additionalText2');
             })
 
             .capture('plain')
@@ -46,18 +45,15 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 	
 	gemini.suite('with_items_in_free_place', function (test) {
 
-        test.setUrl('/regression_tab_buttons_online_7.html').setCaptureElements('.capture')
+        test.setUrl('/regression_tab_buttons_online_7.html').skip('chrome').setCaptureElements('.capture')
 
-            .before(function (actions) {
-                
-				this.buttons = '[sbisname="TabButtons"]';
-                this.tab3 = '[data-id="id3"]';
-                this.tab5 = '[data-id="id5"]';
-                this.add1 = '.controls-TabButton__additionalText1';
-                this.add2 = '.controls-TabButton__additionalText2';
-				this.button = '[sbisname="Button 1"]';
-				
-				actions.waitForElementToShow(this.buttons, 40000);
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="TabButtons"]', 40000);
+                this.tab3 = find('[data-id="id3"]');
+                this.tab5 = find('[data-id="id5"]');
+                this.add1 = find('.controls-TabButton__additionalText1');
+                this.add2 = find('.controls-TabButton__additionalText2');
+				this.button = find('[sbisname="Button 1"]');
             })
 
             .capture('plain', function (actions) {
@@ -86,21 +82,17 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions) {
-                
-				this.buttons = '#buttons';
-				this.tab2 = '[data-id="2"]';
-				this.tab3 = '[data-id="3"]';
-                this.tab4 = '[data-id="4"]';
-
-				actions.waitForElementToShow(this.buttons, 40000);
-            })
-
-            .capture('plain', function (actions) {
+            .before(function (actions, find) {
+                actions.waitForElementToShow('#buttons', 40000);
+                this.tab2 = find('[data-id="2"]');
+				this.tab3 = find('[data-id="3"]');
+                this.tab4 = find('[data-id="4"]');
 				actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('TabButton 1').setEnabled(true);
                 });
-			})
+            })
+
+            .capture('plain')
 
 			.capture('hovered_snd_tab', function (actions) {
                 actions.mouseMove(this.tab2);
@@ -119,20 +111,16 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online_5.html').setCaptureElements('.capture')
 
-            .before(function (actions) {
-                
-				this.bittons = '#buttons';
-                this.tab3 = '[data-id="3"]';
-                this.tab4 = '[data-id="4"]';
-				
-				actions.waitForElementToShow('#buttons', 40000);
-            })
-
-            .capture('plain', function (actions) {
+            .before(function (actions, find) {
+                actions.waitForElementToShow('#buttons', 40000);
+                this.tab3 = find('[data-id="3"]');
+                this.tab4 = find('[data-id="4"]');
 				actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('TabButton 1').setEnabled(true);
                 });
-			})
+            })
+
+            .capture('plain')
 
             .capture('hovered_tab', function (actions) {
                 actions.mouseMove(this.tab3);
@@ -147,13 +135,10 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions) {
-                
-				this.buttons = '#buttons';
-                this.tab3 = '[data-id="3"]';
-                this.tab4 = '[data-id="4"]';
-				
-				actions.waitForElementToShow(this.buttons, 40000);
+            .before(function (actions, find) {
+                actions.waitForElementToShow('#buttons', 40000);
+                this.tab3 = find('[data-id="3"]');
+                this.tab4 = find('[data-id="4"]');
             })
 
             .capture('plain')
@@ -171,20 +156,16 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions) {
-                
-				this.buttons = '#buttons';
-                this.tab3 = '[data-id="3"]';
-                this.tab4 = '[data-id="4"]';
-				this.menu = '[sbisname="MenuLink 1"]';				
-				
-				actions.waitForElementToShow('#buttons', 40000);
-            })
-
-            .capture('plain', function (actions) {
+            .before(function (actions, find) {
+                actions.waitForElementToShow('#buttons', 40000);
+                this.tab3 = find('[data-id="3"]');
+                this.tab4 = find('[data-id="4"]');
+				this.menu = find('[sbisname="MenuLink 1"]');
 				actions.click(this.tab4);
 				actions.mouseMove(this.tab3);
-			})
+            })
+
+            .capture('plain')
 			
 			.capture('hovered_menu_link', function (actions) {
 				actions.mouseMove(this.menu);
@@ -199,15 +180,12 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online_6.html').setCaptureElements('.capture')
 
-            .before(function (actions) {
-                
-				this.buttons = '#buttons';
-                this.tab3 = '[data-id="3"]';
-                this.tab4 = '[data-id="4"]';
-                this.add1 = '.controls-TabButton__additionalText1';
-                this.add2 = '.controls-TabButton__additionalText2';
-				
-				actions.waitForElementToShow(this.buttons, 40000);
+            .before(function (actions, find) {
+                actions.waitForElementToShow('#buttons', 40000);
+                this.tab3 = find('[data-id="3"]');
+                this.tab4 = find('[data-id="4"]');
+                this.add1 = find('.controls-TabButton__additionalText1');
+                this.add2 = find('.controls-TabButton__additionalText2');
             })
 
 			.capture('hovered_add_text_1', function (actions) {
@@ -246,15 +224,12 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online_8.html').setCaptureElements('.capture')
 
-            .before(function (actions) {
-                
-				this.buttons = '#buttons';
-                this.tab3 = '[data-id="3"]';
-                this.tab4 = '[data-id="4"]';
-                this.add1 = '.controls-TabButton__additionalText1';
-                this.add2 = '.controls-TabButton__additionalText2';
-				
-				actions.waitForElementToShow(this.buttons, 40000);
+            .before(function (actions, find) {
+                actions.waitForElementToShow('#buttons', 40000);
+                this.tab3 = find('[data-id="3"]');
+                this.tab4 = find('[data-id="4"]');
+                this.add1 = find('.controls-TabButton__additionalText1');
+                this.add2 = find('.controls-TabButton__additionalText2');
             })
 
 			.capture('plain')
@@ -268,15 +243,12 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online_9.html').setCaptureElements('.capture')
 
-            .before(function (actions) {
-				
-				this.buttons = '#buttons';
-                this.tab3 = '[data-id="3"]';
-                this.tab4 = '[data-id="4"]';
-                this.add1 = '.controls-TabButton__additionalText1';
-                this.add2 = '.controls-TabButton__additionalText2';
-				
-				actions.waitForElementToShow(this.buttons, 40000);
+            .before(function (actions, find) {
+                actions.waitForElementToShow('#buttons', 40000);
+                this.tab3 = find('[data-id="3"]');
+                this.tab4 = find('[data-id="4"]');
+                this.add1 = find('.controls-TabButton__additionalText1');
+                this.add2 = find('.controls-TabButton__additionalText2');
             })
 
 			.capture('plain')
@@ -286,13 +258,10 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online_10.html').setCaptureElements('.capture')
 
-            .before(function (actions) {
-                
-				this.buttons = '#buttons';
-                this.tab1 = '[data-id="1"] .controls-TabButton__caption';
-                this.tab3 = '[data-id="3"]';
-				
-				actions.waitForElementToShow(this.buttons, 40000);
+            .before(function (actions, find) {
+                actions.waitForElementToShow('#buttons', 40000);
+                this.tab3 = find('[data-id="3"]');
+                this.tab1 = find('[data-id="1"] .controls-TabButton__caption');
             })
 
 			.capture('plain', function (actions) {
@@ -309,13 +278,10 @@ gemini.suite('SBIS3.CONTROLS.TabButtons Online', function () {
 
         test.setUrl('/regression_tab_buttons_online_11.html').setCaptureElements('.capture')
 
-            .before(function (actions) {
-				
-				this.buttons = '#buttons';
-                this.tab1 = '[data-id="1"] .controls-TabButton__caption';
-                this.tab3 = '[data-id="3"]';
-				
-				actions.waitForElementToShow(this.buttons, 40000);
+            .before(function (actions, find) {
+                actions.waitForElementToShow('#buttons', 40000);
+                this.tab3 = find('[data-id="3"]');
+                this.tab1 = find('[data-id="1"] .controls-TabButton__caption');
             })
 
 			.capture('plain')
