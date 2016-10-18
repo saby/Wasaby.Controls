@@ -1663,6 +1663,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      onAfterEndEdit: function(event, model, target, withSaving) {
                         this.setSelectedKey(model.getId());
                         event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
+                        this._toggleEmptyData(!this.getItems().getCount());
                         this._hideToolbar();
                      }.bind(this),
                      onDestroy: function() {
