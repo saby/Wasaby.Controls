@@ -699,7 +699,6 @@ define('js!SBIS3.CONTROLS.ListView',
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
-            _searchParamName: undefined, //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
             _componentBinder: null,
             _touchSupport: false,
             _dragInitHandler: undefined //метод который инициализирует dragNdrop
