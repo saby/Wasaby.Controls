@@ -98,8 +98,6 @@ define('js!SBIS3.CONTROLS.MoveHandlers', [
                deferred = this.getMoveStrategy().hierarhyMove(records, recordTo);
             } else if(isChangeOrder) {
                deferred = this.getMoveStrategy().move(records, recordTo, insertAfter);
-            } else {
-               return;
             }
             deferred = deferred === true ? new Deferred().callback(true) : deferred;
             if (deferred instanceof Deferred) {//обновляем view если вернули true либо deferred
