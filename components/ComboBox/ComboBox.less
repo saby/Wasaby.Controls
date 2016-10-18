@@ -70,6 +70,17 @@
          }
        }
      }
+     &.ws-disabled,
+     &.ws-disabled:hover {
+       cursor: @combo-box-disabled-cursor;
+       border-width: 0 0 1px 0;
+       border-bottom-color: #E4E4E4;
+       .controls-TextBox__afterFieldWrapper {
+         .controls-ComboBox__arrowDown {
+           display: none;
+         }
+       }
+     }
    }
    &.controls-ComboBox__editable-false {
       .controls-TextBox__fieldWrapper {
@@ -117,15 +128,6 @@
                border-style: @combo-box-arrow-active-hover-border-style;
                border-color: @combo-box-arrow-active-hover-border-color;
             }
-         }
-      }
-   }
-   &.ws-disabled,
-   &.ws-disabled:hover {
-      cursor: @combo-box-disabled-cursor;
-      .controls-TextBox__afterFieldWrapper {
-         .controls-ComboBox__arrowDown {
-            display: none;
          }
       }
    }
