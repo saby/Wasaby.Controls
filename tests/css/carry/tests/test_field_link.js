@@ -220,9 +220,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Carry', function () {
                 actions.sendKeys(this.input, 'ене');
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.SHIFT+gemini.CONTROL+gemini.HOME);
-				actions.waitForElementToShow(this.data0, 5000);
-				actions.waitForElementToShow(this.data2, 5000);
-				actions.waitForElementToShow(this.data3, 5000);
+				actions.wait(1000);
             })
 			
 			.capture('with_max_width', function (actions) {
@@ -233,9 +231,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Carry', function () {
 				actions.sendKeys(this.input, 'р');
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.SHIFT+gemini.CONTROL+gemini.HOME);
-				actions.waitForElementToShow(this.data0, 5000);
-				actions.waitForElementToShow(this.data3, 5000);
-				actions.wait(500);
+				actions.wait(1000);
             })
 			
 			.capture('not_found', function (actions) {
@@ -243,7 +239,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Carry', function () {
 				actions.sendKeys(this.input, 'lsd');
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.SHIFT+gemini.CONTROL+gemini.HOME);
-				actions.wait(500);
+				actions.wait(1000);
             })
     });
 });
