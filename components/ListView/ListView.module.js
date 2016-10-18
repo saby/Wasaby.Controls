@@ -2786,12 +2786,21 @@ define('js!SBIS3.CONTROLS.ListView',
          _findDragDropContainer: function() {
             return this._getItemsContainer();
          },
-         _getDragItems: function(key) {
-            var keys = this._options.multiselect ? cFunctions.clone(this.getSelectedKeys()) : [];
-            if (Array.indexOf(keys, key) == -1 && Array.indexOf(keys, String(key)) == -1) {
-               keys.push(key);
+         _getDragItems: function(hash) {
+            var item = this._getItemProjectionByHash(hash).getContents();
+            if (this._options.multiselect) {
+               var items = this.getSelectedItems();
+               if (items.getIndex(item) < 0) {
+                  items.add(item);
+               }
+               var array = [];
+               items.each(function(item){
+                  array.push(item);
+               });
+               return array;
+            } else {
+               return [item];
             }
-            return keys;
          },
          _canDragStart: function(e) {
             //TODO: При попытке выделить текст в поле ввода, вместо выделения начинается перемещения элемента.
@@ -2813,12 +2822,11 @@ define('js!SBIS3.CONTROLS.ListView',
                if (target.hasClass('controls-DragNDropMixin__notDraggable')) {
                   return false;
                }
-               id = target.data('id');
+               id = target.data('hash');
                var items = this._getDragItems(id),
                   source = [];
-               colHelpers.forEach(items, function (id) {
-                  var item = this.getItems().getRecordById(id),
-                     projItem = this._getItemsProjection().getItemBySourceItem(item);
+               colHelpers.forEach(items, function (item) {
+                  var projItem = this._getItemsProjection().getItemBySourceItem(item);
                   source.push(this._makeDragEntity({
                      owner: this,
                      model: item,
