@@ -753,7 +753,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              /* Если в поле связи есть выбранные ключи, то после установки сорса надо
                 загрузить записи и отрисовать их */
-             if(!this._isEmptySelection) {
+             if(!this._isEmptySelection()) {
                 this._loadAndDrawItems();
              }
           },
