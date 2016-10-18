@@ -72,7 +72,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
             })
     });
-
+	/*
     gemini.suite('rich_editor_in_editor', function (test) {
 
         test.setUrl('/regression_data_grid_view_edit_at_place_online_15.html').setCaptureElements('.capture')
@@ -96,7 +96,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 				actions.sendKeys(this.editor_input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
             })
-    });
+    });*/
 	
 	gemini.suite('add_new_data_in_folder', function (test) {
 
