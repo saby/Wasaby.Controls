@@ -20,7 +20,4 @@
 /tests/css/presto/node_modules
 /tests/css/presto/gemini-report
 /tests/css/presto/gemini-coverage
-/tests/css/carry/node_modules
-/tests/css/carry/gemini-report
-/tests/css/carry/gemini-coverage
 /__pycache__

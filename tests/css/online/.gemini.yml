@@ -15,3 +15,4 @@ browsers:
 
 system:
   diffColor: '#018def'
+  referenceImageAbsence: 'error'

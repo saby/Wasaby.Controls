@@ -1,28 +1,24 @@
+var gemini = require('gemini');
+
 gemini.suite('SBIS3.CONTROLS.MoveDialog Online', function () {
 
     gemini.suite('base', function (test) {
 
         test.setUrl('/regression_move_dialog_online.html').setCaptureElements('body')
 
-            .before(function (actions) {
-                
-				this.tdgv = '[name="TreeDataGridView 1"]';
-                this.item1_box = '[data-id="1"] .controls-ListView__itemCheckBox';
-                this.move = '[data-id="move"] i';
-				this.ok = '[sbisname="MoveDialogTemplate-moveButton"]';
-				this.close = '.ws-window-titlebar-action.close';
-                
-				actions.waitForElementToShow(this.tdgv, 40000);
-				actions.waitForElementToShow(this.item1_box, 5000);
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
+                this.open_button = find('.controls-OperationsPanelButton__icon');
+                this.item1 = find('[data-id="1"] .controls-ListView__itemCheckBox');
+                this.move = find('[data-id="move"]')
             })
 
             .capture('plain', function (actions) {
-                actions.click(this.item1_box);
-				actions.wait(500);
-				actions.waitForElementToShow(this.move, 5000);
+                actions.click(this.item1);
+				//actions.click(this.open_button);
+				actions.wait(1000);
                 actions.click(this.move);
-                actions.waitForElementToShow(this.ok, 5000);
-				actions.waitForElementToShow(this.close, 5000);
+                actions.wait(1000);
             })
     });
 
@@ -30,25 +26,19 @@ gemini.suite('SBIS3.CONTROLS.MoveDialog Online', function () {
 
         test.setUrl('/regression_move_dialog_online_2.html').setCaptureElements('body')
 
-            .before(function (actions) {
-                
-				this.tdgv = '[name="TreeDataGridView 1"]';
-                this.item1_box = '[data-id="1"] .controls-ListView__itemCheckBox';
-                this.move = '[data-id="move"] i';
-				this.ok = '[sbisname="MoveDialogTemplate-moveButton"]';
-				this.close = '.ws-window-titlebar-action.close';
-                
-				actions.waitForElementToShow(this.tdgv, 40000);
-				actions.waitForElementToShow(this.item1_box, 5000);
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
+                this.open_button = find('.controls-OperationsPanelButton__icon');
+                this.item1 = find('[data-id="1"] .controls-ListView__itemCheckBox');
+                this.move = find('[data-id="move"]')
             })
 
             .capture('plain', function (actions) {
-                actions.click(this.item1_box);
-				actions.wait(500);
-				actions.waitForElementToShow(this.move, 5000);
+                actions.click(this.item1);
+				//actions.click(this.open_button);
+				actions.wait(1000);
                 actions.click(this.move);
-                actions.waitForElementToShow(this.ok, 5000);
-				actions.waitForElementToShow(this.close, 5000);
+                actions.wait(1000);
             })
     });
 
@@ -56,25 +46,19 @@ gemini.suite('SBIS3.CONTROLS.MoveDialog Online', function () {
 
         test.setUrl('/regression_move_dialog_online_3.html').setCaptureElements('body')
 
-            .before(function (actions) {
-                
-				this.tdgv = '[name="TreeDataGridView 1"]';
-                this.item1_box = '[data-id="1"] .controls-ListView__itemCheckBox';
-                this.move = '[data-id="move"] i';
-				this.ok = '[sbisname="MoveDialogTemplate-moveButton"]';
-				this.close = '.ws-window-titlebar-action.close';
-                
-				actions.waitForElementToShow(this.tdgv, 40000);
-				actions.waitForElementToShow(this.item1_box, 5000);
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
+                this.open_button = find('.controls-OperationsPanelButton__icon');
+                this.item1 = find('[data-id="1"] .controls-ListView__itemCheckBox');
+                this.move = find('[data-id="move"]')
             })
 
             .capture('plain', function (actions) {
-                actions.click(this.item1_box);
-				actions.wait(500);
-				actions.waitForElementToShow(this.move, 5000);
+                actions.click(this.item1);
+				//actions.click(this.open_button);
+				actions.wait(1000);
                 actions.click(this.move);
-                actions.waitForElementToShow(this.ok, 5000);
-				actions.waitForElementToShow(this.close, 5000);
+                actions.wait(1000);
             })
     });
 });

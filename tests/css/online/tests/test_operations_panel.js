@@ -1,21 +1,20 @@
+var gemini = require('gemini');
+
 gemini.suite('SBIS3.CONTROLS.OperationsPanel Online', function () {
 
     gemini.suite('base', function (test) {
 
         test.setUrl('/regression_operations_panel_online.html').setCaptureElements('.capture')
 
-            .before(function (actions) {
-                
-				this.dgv = '[name="DataGridView 1"]';
-                this.open_button = '.controls-OperationsPanelButton__icon';
-                this.select_all = '.controls-OperationsMark-checkBox > .controls-CheckBox__icon';
-				this.data4 = '[data-id="4"] .controls-ListView__itemCheckBox';
-				this.data6 = '[data-id="6"] .controls-ListView__itemCheckBox';
-				this.mark = '[data-id="markOperations"]';
-				this.print = '.controls-operationsPanel__actionType-mass';
-				this.invert = '[data-id="invertSelection"]';
-				
-				actions.waitForElementToShow(this.dgv, 40000);
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="DataGridView 1"]', 40000);
+                this.open_button = find('.controls-OperationsPanelButton__icon');
+                this.select_all = find('.controls-OperationsMark-checkBox > .controls-CheckBox__icon')
+				this.data4 = find('[data-id="4"] .controls-ListView__itemCheckBox');
+				this.data6 = find('[data-id="6"] .controls-ListView__itemCheckBox');
+				this.mark = find('[data-id="markOperations"]');
+				this.print = find('.controls-operationsPanel__actionType-mass');
+				this.invert = find('[data-id="invertSelection"]');
             })
 
             .capture('plain')
@@ -26,8 +25,7 @@ gemini.suite('SBIS3.CONTROLS.OperationsPanel Online', function () {
 
             .capture('opened', function (actions) {
                 actions.click(this.open_button);
-                actions.wait(500);
-				actions.waitForElementToShow(this.mark, 5000);
+                actions.wait(1000);
             })
 			
 			.capture('hovered_custom_operation', function (actions) {
@@ -50,7 +48,6 @@ gemini.suite('SBIS3.CONTROLS.OperationsPanel Online', function () {
 			
 			.capture('opened_mark_operations_menu', function (actions) {
                 actions.click(this.mark);
-				actions.waitForElementToShow(this.invert, 5000);
             })
 			
 			.capture('hovered_mark_operations_menu_item', function (actions) {
