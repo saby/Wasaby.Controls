@@ -13,6 +13,8 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 				this.data6 = '[data-id="6"]';
 				this.delete_btn = '[data-id="delete"]';
 				this.selected = '.controls-ListView__item__selected';
+				this.data2_box = '[data-id="2"] .controls-ListView__itemCheckBox';
+				this.data6_box = '[data-id="6"] .controls-ListView__itemCheckBox';
                 
 				actions.waitForElementToShow(this.dgv, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -25,11 +27,13 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
             .capture('hovered_row', function (actions) {
                 actions.mouseMove(this.data2);
 				actions.waitForElementToShow(this.delete_btn, 5000);
+				actions.waitForElementToShow(this.data2_box, 5000);
             })
 
             .capture('selected_row', function (actions) {
                 actions.click(this.data6);
 				actions.waitForElementToShow(this.selected, 5000);
+				actions.waitForElementToShow(this.data6_box, 5000);
             })
 			
 			.capture('disabled', function (actions) {
@@ -186,6 +190,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 				this.input = '[sbisname="TextBox 1"] input';
 				this.data2 = '[data-id="2"]';
 				this.delete_btn = '[data-id="delete"]';
+				this.data1_box = '[data-id="1"] .controls-ListView__itemCheckBox';
                 
 				actions.waitForElementToShow(this.dgv, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -194,6 +199,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
             .capture('hovered_row', function (actions) {
                 actions.mouseMove(this.data2);
 				actions.waitForElementToShow(this.delete_btn, 5000);
+				actions.waitForElementToShow(this.data1_box, 5000);
             })
     });
 	
@@ -225,6 +231,8 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 				this.input = '[sbisname="TextBox 1"] input';
 				this.data6 = '[data-id="6"]';
 				this.selected = '.controls-ListView__item__selected';
+				this.data2_box = '[data-id="2"] .controls-ListView__itemCheckBox';
+				this.data6_box = '[data-id="6"] .controls-ListView__itemCheckBox';
                 
 				actions.waitForElementToShow(this.dgv, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -233,6 +241,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
             .capture('selected_row', function (actions) {
                 actions.click(this.data6);
 				actions.waitForElementToShow(this.selected, 5000);
+				actions.waitForElementToShow(this.data6_box, 5000);
             })
     });
 	
@@ -246,6 +255,8 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
 				this.input = '[sbisname="TextBox 1"] input';
 				this.data6 = '[data-id="6"]';
 				this.selected = '.controls-ListView__item__selected';
+				this.data2_box = '[data-id="2"] .controls-ListView__itemCheckBox';
+				this.data6_box = '[data-id="6"] .controls-ListView__itemCheckBox';
                 
 				actions.waitForElementToShow(this.dgv, 40000);
 				actions.waitForElementToShow(this.input, 5000);
@@ -254,6 +265,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridView Online', function () {
             .capture('selected_row', function (actions) {
                 actions.click(this.data6);
 				actions.waitForElementToShow(this.selected, 5000);
+				actions.waitForElementToShow(this.data6_box, 5000);
             })
     });
 

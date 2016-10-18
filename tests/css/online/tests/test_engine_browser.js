@@ -156,7 +156,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 				actions.mouseMove(this.caption);
             })
     });
-	
+	/*
 	gemini.suite('float_panels', function (test) {
 
         test.setUrl('/regression_engine_browser_online_12.html').setCaptureElements('html')
@@ -189,5 +189,5 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 				actions.waitForElementToShow(this.data5, 5000);
 				actions.waitForElementToShow(this.data7, 5000);
             })
-    });
+    });*/
 });

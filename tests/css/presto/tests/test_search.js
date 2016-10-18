@@ -14,6 +14,7 @@ gemini.suite('SBIS3.CONTROLS.Search Presto', function () {
 				this.item6 = '[data-id="6"]';
 				this.item10 = '[data-id="10"]';
 				this.item11 = '[data-id="11"]';
+				this.highlight = '.controls-HtmlDecorators-highlight';
 				
                 actions.waitForElementToShow(this.tdgv, 40000);
 				actions.waitForElementToShow(this.search, 5000);
@@ -22,6 +23,7 @@ gemini.suite('SBIS3.CONTROLS.Search Presto', function () {
 
             .capture('with_text', function (actions) {
                 actions.sendKeys(this.search, 'DataGridView');
+				actions.waitForElementToShow(this.highlight, 5000);
 				actions.waitForElementToShow(this.item6, 5000);
 				actions.waitForElementToShow(this.item10, 5000);
 				actions.waitForElementToShow(this.item11, 5000);
@@ -61,6 +63,7 @@ gemini.suite('SBIS3.CONTROLS.Search Presto', function () {
 				this.item6 = '[data-id="6"]';
 				this.item10 = '[data-id="10"]';
 				this.item11 = '[data-id="11"]';
+				this.highlight = '.controls-HtmlDecorators-highlight';
 				
                 actions.waitForElementToShow(this.tdgv, 40000);
 				actions.waitForElementToShow(this.search, 5000);
@@ -73,6 +76,7 @@ gemini.suite('SBIS3.CONTROLS.Search Presto', function () {
 
             .capture('with_text', function (actions) {
                 actions.sendKeys(this.search, 'DataGridView');
+				actions.waitForElementToShow(this.highlight, 5000);
 				actions.waitForElementToShow(this.item6, 5000);
 				actions.waitForElementToShow(this.item10, 5000);
 				actions.waitForElementToShow(this.item11, 5000);
