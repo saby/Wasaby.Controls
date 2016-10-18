@@ -2242,9 +2242,15 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          isScrollOnBottom: function(noOffset){
+            if (!this._scrollWatcher){
+               this._createScrollWatcher();
+            }
             return this._scrollWatcher.isScrollOnBottom(noOffset);
          },
          isScrollOnTop: function(){
+            if (!this._scrollWatcher){
+               this._createScrollWatcher();
+            }
             return this._scrollWatcher.isScrollOnTop();
          },
          _showLoadingIndicator: function () {
