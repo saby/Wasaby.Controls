@@ -3,8 +3,9 @@
  */
 
 define('js!SBIS3.CONTROLS.ViewSourceMixin', [
-   'js!WS.Data/Query/Query'
-], function(Query) {
+   'js!WS.Data/Query/Query',
+   'js!SBIS3.CONTROLS.HistoryController'
+], function(Query, HistoryController) {
 
    var ViewSourceMixin = /**@lends SBIS3.CONTROLS.ViewSourceMixin.prototype  */{
 
@@ -38,16 +39,13 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
 
          /* Если есть historyId и разрешёно применение из истории, то попытаемся достать фильтр из истории */
          if(applyFilterOnLoad) {
-            history = $ws.single.SessionStorage.get(historyId);
+            history = (new HistoryController({historyId: historyId})).getHistory();
 
             if (history) {
-               serializedHistory = $ws.helpers.deserializeURLData(history);
-               if (serializedHistory) {
-                  for(var i = 0, len = serializedHistory.length; i < len; i++) {
-                     if(serializedHistory[i].isActiveFilter) {
-                        historyFilter = serializedHistory[i].viewFilter;
-                        break;
-                     }
+               for(var i = 0, len = history.length; i < len; i++) {
+                  if(history[i].isActiveFilter) {
+                     historyFilter = history[i].viewFilter;
+                     break;
                   }
                }
             }
