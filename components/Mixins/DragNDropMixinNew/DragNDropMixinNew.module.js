@@ -382,6 +382,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
                //touchend всегда срабатывает не над droppable контейнером, так что для него запускаем всегда
                this._updateDragTarget(DragObject, e);
             }
+            DragObject.setDragging(false);
             var res = this._notify('onEndDrag', DragObject, e);
             if (res !== false) {
                this._endDragHandler(DragObject, droppable, e);
@@ -389,7 +390,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
 
             DragObject.reset();
             this._position = null;
-            DragObject.setDragging(false);
             $('body').removeClass('dragdropBody cantDragDrop ws-unSelectable');
          },
 
