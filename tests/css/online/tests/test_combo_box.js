@@ -1,19 +1,17 @@
+var gemini = require('gemini');
+
 gemini.suite('SBIS3.CONTROLS.ComboBox Online', function () {
 
     gemini.suite('base', function (test) {
 
         test.setUrl('/regression_combo_box_online.html').setCaptureElements('.capture')
 
-            .before(function (actions) {
-                
-				this.cb = '[name="ComboBox 1"]';
-				this.arrow = '.controls-ComboBox__arrowDown';
-                this.item1 = '[data-id="1"]';
-				this.item2 = '[data-id="2"]';
-                this.input = '[sbisname="TextBox 1"] input';
-                
-				actions.waitForElementToShow(this.cb, 40000);
-                actions.waitForElementToShow(this.input, 5000);
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="ComboBox 1"]', 40000);
+                this.arrow = find('.controls-ComboBox__arrowDown');
+                this.item1 = find('[data-id="1"]');
+                actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[sbisname="TextBox 1"] input');
             })
 
             .capture('plain', function (actions) {
@@ -26,8 +24,8 @@ gemini.suite('SBIS3.CONTROLS.ComboBox Online', function () {
 
             .capture('opened', function (actions) {
                 actions.click(this.arrow);
-				actions.waitForElementToShow(this.item1, 5000);
-				actions.waitForElementToShow(this.item2, 5000);
+				actions.waitForElementToShow('[data-id="1"]', 1000);
+				actions.waitForElementToShow('[data-id="2"]', 1000);
 				actions.sendKeys(this.input, 'test');
             })
 
@@ -38,12 +36,55 @@ gemini.suite('SBIS3.CONTROLS.ComboBox Online', function () {
             .capture('checked_item', function (actions) {
                 actions.click(this.item1);
             })
-			
-			.capture('disabled', function (actions) {
+    });
+	
+	gemini.suite('max_width', function (test) {
+
+        test.setUrl('/regression_combo_box_online.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="ComboBox 1"]', 40000);
+                this.arrow = find('.controls-ComboBox__arrowDown');
+                this.item1 = find('[data-id="1"]');
+                actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[sbisname="TextBox 1"] input');
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.arrow);
+				actions.executeJS(function (window) {
+                    window.$('.controls-FloatArea.controls-ComboBox__picker').css('max-width', 18000);
+                });
+				actions.click(this.input);
+            })
+
+            .capture('opened_with_max_width', function (actions) {
+                actions.click(this.arrow);
+				actions.waitForElementToShow('[data-id="1"]', 1000);
+				actions.waitForElementToShow('[data-id="2"]', 1000);
+				actions.sendKeys(this.input, 'test');
+            })
+
+            .capture('hovered_item', function (actions) {
+                actions.mouseMove(this.item1)
+            })
+    });
+
+    gemini.suite('disabled_base', function (test) {
+
+        test.setUrl('/regression_combo_box_online.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="ComboBox 1"]', 40000);
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[sbisname="TextBox 1"] input');
                 actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('ComboBox 1').setEnabled(false);
                 });
-				actions.click(this.input);
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.input);
             })
     });
 
@@ -51,37 +92,52 @@ gemini.suite('SBIS3.CONTROLS.ComboBox Online', function () {
 
         test.setUrl('/regression_combo_box_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions) {
-				
-				this.cb = '[name="ComboBox 1"]';
-				this.arrow = '.controls-ComboBox__arrowDown';
-                this.item1 = '[data-id="1"]';
-				this.item2 = '[data-id="2"]';
-                this.input = '[sbisname="TextBox 1"] input';
-                
-				actions.waitForElementToShow(this.cb, 40000);
-                actions.waitForElementToShow(this.input, 5000);
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="ComboBox 1"]', 40000);
+                this.arrow = find('.controls-ComboBox__arrowDown');
+                this.item1 = find('[data-id="1"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[sbisname="TextBox 1"] input');
             })
 
             .capture('plain', function (actions) {
                 actions.click(this.input);
             })
 
+            .capture('hovered_arrow', function (actions) {
+                actions.mouseMove(this.arrow)
+            })
+
             .capture('opened', function (actions) {
                 actions.click(this.arrow);
-				actions.waitForElementToShow(this.item1, 5000);
-				actions.waitForElementToShow(this.item2, 5000);
+				actions.waitForElementToShow('[data-id="1"]', 1000);
+				actions.waitForElementToShow('[data-id="2"]', 1000);
+            })
+
+            .capture('hovered_item', function (actions) {
+                actions.mouseMove(this.item1)
             })
 
             .capture('checked_item', function (actions) {
                 actions.click(this.item1);
             })
-			
-			.capture('disabled', function (actions) {
+    });
+
+    gemini.suite('disabled_not_editable', function (test) {
+
+        test.setUrl('/regression_combo_box_online_2.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="ComboBox 1"]', 40000);
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[sbisname="TextBox 1"] input');
                 actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('ComboBox 1').setEnabled(false);
                 });
-				actions.click(this.input);
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.input);
             })
     });
 	
@@ -89,19 +145,13 @@ gemini.suite('SBIS3.CONTROLS.ComboBox Online', function () {
 
         test.setUrl('/regression_combo_box_online_4.html').setCaptureElements('html')
 
-            .before(function (actions) {
-				
-				this.cb = '[name="ComboBox 1"]';
-				this.box_input = '[name="ComboBox 1"] input';
-				this.arrow = '.controls-ComboBox__arrowDown';
-                this.item1 = '[data-id="1"]';
-				this.item5 = '[data-id="5"]';
-				this.item10 = '[data-id="10"]';
-				this.item15 = '[data-id="15"]';
-                this.input = '[sbisname="TextBox 1"] input';
-                
-				actions.waitForElementToShow(this.cb, 40000);
-                actions.waitForElementToShow(this.input, 5000);
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="ComboBox 1"]', 40000);
+                this.arrow = find('.controls-ComboBox__arrowDown');
+                this.item1 = find('[data-id="1"]');
+                actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[sbisname="TextBox 1"] input');
+				this.box_input = find('[sbisname="ComboBox 1"] input');
             })
 
             .capture('plain', function (actions) {
@@ -112,16 +162,15 @@ gemini.suite('SBIS3.CONTROLS.ComboBox Online', function () {
 
             .capture('opened', function (actions) {
                 actions.click(this.arrow);
-				actions.waitForElementToShow(this.item1, 5000);
-				actions.waitForElementToShow(this.item5, 5000);
-				actions.waitForElementToShow(this.item10, 5000);
-				actions.waitForElementToShow(this.item15, 5000);
+				actions.waitForElementToShow('[data-id="1"]', 1000);
+				actions.waitForElementToShow('[data-id="10"]', 1000);
+				actions.waitForElementToShow('[data-id="5"]', 1000);
+				actions.waitForElementToShow('[data-id="15"]', 1000);
             })
 
             .capture('with_autocomplete', function (actions) {
 				actions.sendKeys(this.box_input, 'dev');
-                actions.waitForElementToShow(this.item10, 5000);
-				actions.waitForElementToShow(this.item15, 5000);
+                actions.wait(1000);
             })
     });
 });

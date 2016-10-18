@@ -1,16 +1,16 @@
-gemini.suite('SBIS3.CONTROLS.CheckBox Presto', function () {
+var gemini = require('gemini');
+
+gemini.suite('SBIS3.CONTROLS.CheckBox Online', function () {
 
     gemini.suite('base', function (test) {
 
-        test.setUrl('/regression_check_box_presto.html').setCaptureElements('.capture')
+        test.setUrl('/regression_check_box_online.html').setCaptureElements('.capture')
 
-            .before(function (actions) {
-                
-				this.box = '[name="CheckBox 1"]';
-                this.input = '[sbisname="TextBox 1"] input';
-                
-				actions.waitForElementToShow(this.box, 40000);
-				actions.waitForElementToShow(this.input, 5000);
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="CheckBox 1"]', 40000);
+                this.box = find('[name="CheckBox 1"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[sbisname="TextBox 1"] input');
             })
 
             .capture('plain', function (actions) {
@@ -24,14 +24,31 @@ gemini.suite('SBIS3.CONTROLS.CheckBox Presto', function () {
             .capture('checked', function (actions) {
                 actions.click(this.box);
             })
-			
-			.capture('disabled_and_checked', function (actions) {
-				actions.executeJS(function (window) {
+    });
+
+    gemini.suite('disabled_base', function (test) {
+
+        test.setUrl('/regression_check_box_online.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="CheckBox 1"]', 40000);
+                this.box = find('[name="CheckBox 1"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[sbisname="TextBox 1"] input');
+                actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('CheckBox 1').setEnabled(false);
                 });
             })
 
-            .capture('disabled_and_not_checked', function (actions) {
+            .capture('plain', function (actions) {
+                actions.click(this.input);
+            })
+
+            .capture('hovered', function (actions) {
+                actions.mouseMove(this.box);
+            })
+
+            .capture('checked', function (actions) {
                 actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('CheckBox 1').setEnabled(true);
                 });
@@ -44,24 +61,70 @@ gemini.suite('SBIS3.CONTROLS.CheckBox Presto', function () {
 
     gemini.suite('three_state', function (test) {
 
-        test.setUrl('/regression_check_box_presto_2.html').setCaptureElements('.capture')
+        test.setUrl('/regression_check_box_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions) {
-                
-				this.box = '[name="CheckBox 1"]';
-                this.input = '[sbisname="TextBox 1"] input';
-                
-				actions.waitForElementToShow(this.box, 40000);
-				actions.waitForElementToShow(this.input, 5000);
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="CheckBox 1"]', 40000);
+                this.box = find('[name="CheckBox 1"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[sbisname="TextBox 1"] input');
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.input);
+            })
+
+            .capture('hovered', function (actions) {
+                actions.mouseMove(this.box);
+            })
+
+            .capture('checked', function (actions) {
+                actions.click(this.box);
             })
 
             .capture('checked_null', function (actions) {
                 actions.click(this.box);
-				actions.click(this.box);
             })
-			
-			.capture('disabled_and_checked_null', function (actions) {
-				actions.executeJS(function (window) {
+    });
+
+    gemini.suite('disabled_three_state', function (test) {
+
+        test.setUrl('/regression_check_box_online_2.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="CheckBox 1"]', 40000);
+                this.box = find('[name="CheckBox 1"]');
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[sbisname="TextBox 1"] input');
+                actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('CheckBox 1').setEnabled(false);
+                });
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.input);
+            })
+
+            .capture('hovered', function (actions) {
+                actions.mouseMove(this.box);
+            })
+
+            .capture('checked', function (actions) {
+                actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('CheckBox 1').setEnabled(true);
+                });
+                actions.click(this.box);
+                actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('CheckBox 1').setEnabled(false);
+                });
+            })
+
+            .capture('checked_null', function (actions) {
+                actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('CheckBox 1').setEnabled(true);
+                });
+                actions.click(this.box);
+                actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('CheckBox 1').setEnabled(false);
                 });
             })

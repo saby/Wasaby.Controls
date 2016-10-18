@@ -2,7 +2,8 @@ rootUrl: http://test-autotest67:37535
 gridUrl: http://10.76.159.209:4444/wd/hub
 screenshotsDir: './screenshots'
 windowSize: 1024x768
-sessionsPerBrowser: 16
+sessionsPerBrowser: 8
+tolerance: 100
 
 browsers:
   chrome:
@@ -12,6 +13,7 @@ browsers:
   firefox:
     desiredCapabilities:
       browserName: firefox
-
+	
 system:
   diffColor: '#018def'
+  referenceImageAbsence: 'error'
