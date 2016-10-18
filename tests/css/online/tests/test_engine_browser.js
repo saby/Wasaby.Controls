@@ -1,148 +1,118 @@
-var gemini = require('gemini');
-
 gemini.suite('SBIS3.ENGINE.Browser Online', function () {
-	
+
     gemini.suite('base', function (test) {
 
-        test.setUrl('/regression_engine_browser_online.html').skip('chrome').setCaptureElements('.capture')
+        test.setUrl('/regression_engine_browser_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="browserView"]', 40000);
-                this.view = find('[name="browserView"]');
-				actions.waitForElementToShow('[name="browserSearch"]', 40000);
-                this.search_input = find('[name="browserSearch"] input');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-				actions.waitForElementToShow('[name="OperationsPanelButton1"]', 40000);
-                this.open_panel = find('[name="OperationsPanelButton1"]');
-				actions.waitForElementToShow('[name="browserFastDataFilter"]', 40000);
-                this.fast_filter = find('[name="browserFastDataFilter"] .controls-DropdownList__textWrapper .controls-DropdownList__text');
-				actions.waitForElementToShow('[name="filterLine"]', 40000);
-                this.filter = find('[name="filterLine"] .controls__filterButton__filterLine-items span');
+            .before(function (actions) {
+
+				this.view = '[name="browserView"]';
+                this.search_input = '[name="browserSearch"] input';
+                this.open_panel = '[name="OperationsPanelButton1"]';
+                this.fast_filter = '[name="browserFastDataFilter"] .controls-DropdownList__textWrapper .controls-DropdownList__text';
+                this.filter = '[name="filterLine"] .controls__filterButton__filterLine-items span';
+				this.caption = '[name="BackButton-caption"]';
+				this.dots = '.controls-BreadCrumbs__dots';
+				this.a1 = 'div.js-controls-BreadCrumbs__crumb:nth-child(1)';
+				this.a2 = 'div.js-controls-BreadCrumbs__crumb:nth-child(2)';
+				this.a3 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3)';
+				this.a4 = 'div.js-controls-BreadCrumbs__crumb:nth-child(3) .controls-BreadCrumbs__hierWrapper:nth-child(2)';
+				this.item34 = '.controls-DropdownList__item[data-id="34"]';
+				this.item20 = '.controls-DropdownList__item[data-id="20"]'
+				this.close_button = '.controls-PopupMixin__closeButton';
+				this.arrow_down = '.controls-ComboBox__arrowDown';
+				this.no_nds = '.controls-ComboBox__itemRow[data-id="1"]';
+				this.yes_nds = '.controls-ComboBox__itemRow[data-id="2"]';
+				this.apply = '.controls__filter-button__apply-filter .controls-Button__text';
+				this.box = '.controls-OperationsMark-checkBox';
+				this.item34_box = '[data-id="34"] .controls-ListView__itemCheckBox';
+
+				actions.waitForElementToShow(this.view, 40000);
             })
 
-            .capture('plain', function (actions) {
-                actions.click(this.input);
-            })
+            .capture('plain')
 
             .capture('into_folder', function (actions) {
                 actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('browserView').setCurrentRoot(33);
 					window.$ws.single.ControlStorage.getByName('browserView').reload();
                 });
-				actions.waitForElementToShow('[name="BackButton-caption"]', 1000);
+				actions.waitForElementToShow(this.caption, 5000);
             })
 			
-			.capture('opened_dots', function (actions, find) {
-                this.dots = find('.controls-BreadCrumbs__dots');
+			.capture('opened_dots', function (actions) {
 				actions.click(this.dots);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(1)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(2)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(3)', 1000);
-				actions.waitForElementToShow('div.js-controls-BreadCrumbs__crumb:nth-child(3) .controls-BreadCrumbs__hierWrapper:nth-child(2)', 1000);
+				actions.waitForElementToShow(this.a1, 5000);
+				actions.waitForElementToShow(this.a2, 5000);
+				actions.waitForElementToShow(this.a3, 5000);
+				actions.waitForElementToShow(this.a4, 5000);
             })
 
-            .capture('opened_fast_filter', function (actions, find) {
-				this.dots = find('.controls-BreadCrumbs__dots');
+            .capture('opened_fast_filter', function (actions) {
 				actions.click(this.dots);
 				actions.mouseMove(this.fast_filter);
-				actions.waitForElementToShow('.controls-DropdownList__item[data-id="34"]', 1000);
-				actions.waitForElementToShow('.controls-DropdownList__item[data-id="20"]', 1000);
+				actions.waitForElementToShow(this.item20, 5000);
+				actions.waitForElementToShow(this.item34, 5000);
             })
 			
-			.capture('opened_filter', function (actions, find) {
-                this.item1 = find('.controls-DropdownList__item[data-id="34"]');
-				actions.click(this.item1)
+			.capture('opened_filter', function (actions) {
+				actions.click(this.item34)
 				actions.click(this.filter)
-				actions.waitForElementToShow('.controls__filter-button__apply-filter', 1000);
-				actions.waitForElementToShow('.controls-PopupMixin__closeButton', 1000);
-				actions.waitForElementToShow('.controls-ComboBox__arrowDown', 1000);
-				actions.mouseMove(this.input);
+				actions.waitForElementToShow(this.apply, 5000);
+				actions.waitForElementToShow(this.close_button, 5000);
+				actions.waitForElementToShow(this.arrow_down, 5000);
             })
 			
-			.capture('opened_combobox_in_filter', function (actions, find) {
-                this.arrow = find('.controls-ComboBox__arrowDown');
-				actions.click(this.arrow)
-				actions.mouseMove(this.input);
+			.capture('opened_combobox_in_filter', function (actions) {
+				actions.click(this.arrow_down)
             })
 			
-			.capture('filtred', function (actions, find) {
-                actions.waitForElementToShow('.controls-ComboBox__itemRow[data-id="1"]', 1000);
-				actions.waitForElementToShow('.controls-ComboBox__itemRow[data-id="2"]', 1000);
-				this.no_nds = find('.controls-ComboBox__itemRow[data-id="1"]');
+			.capture('filtred', function (actions) {
+                actions.waitForElementToShow(this.no_nds, 5000);
+				actions.waitForElementToShow(this.yes_nds, 5000);
 				actions.click(this.no_nds)
-				this.apply = find('.controls__filter-button__apply-filter .controls-Button__text');
 				actions.click(this.apply)
-				actions.mouseMove(this.input);
             })
 			
 			.capture('opened_operations_panel', function (actions) {
 				actions.click(this.open_panel)
-                actions.wait(1000);
-				actions.mouseMove(this.input);
+				actions.wait(500)
             })
 			
-			.capture('selected_items', function (actions, find) {
-				this.box = find('.controls-OperationsMark-checkBox');
+			.capture('selected_items', function (actions) {
+
 				actions.click(this.box)
-				actions.mouseMove(this.input);
             })
 			
-			.capture('with_search_string', function (actions, find) {
+			.capture('with_search_string', function (actions) {
 				actions.sendKeys(this.search_input, 'за')
-				actions.click(this.input);
             })
 			
-			.capture('disabled_and_clicked_check_box', function (actions, find) {
-				this.box = find('.controls-OperationsMark-checkBox');
+			.capture('disabled_and_clicked_check_box', function (actions) {
 				actions.click(this.box)
 				actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('brows').setEnabled(false);
                 });
-				actions.waitForElementToShow('[data-id="34"] .controls-ListView__itemCheckBox', 2000);
+				actions.waitForElementToShow(this.item34_box, 5000);
 				actions.click(this.box)
             })
     });
-	/*
-	 gemini.suite('with_dialogs', function (test) {
 
-        test.setUrl('/regression_browser_online.html').skip('firefox').setCaptureElements('html')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="browserView"]', 40000);
-                this.view = find('[name="browserView"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-				actions.wait(10000);				
-            })
-			
-			.capture('plain', function (actions, find) {
-				actions.click(this.input);
-				this.dialogs = find('[name="Диалоги"] .controls-Button__text')
-				actions.click(this.dialogs);
-				actions.waitForElementToShow('.ws-float-area-show-complete', 40000);
-				actions.waitForElementToShow('.ws-window.ws-modal', 40000);
-				actions.wait(1000);
-            })
-    });*/
-	
 	gemini.suite('lonf_filter_text', function (test) {
 
-        test.setUrl('/regression_engine_browser_online_8.html').skip('chrome').setCaptureElements('.controls-Browser__table-fullFilterBlock')
+        test.setUrl('/regression_engine_browser_online_8.html').setCaptureElements('.controls-Browser__table-fullFilterBlock')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="browserView"]', 40000);
-                this.view = find('[name="browserView"]');
-				actions.waitForElementToShow('[name="browserSearch"]', 40000);
-                this.search_input = find('[name="browserSearch"] input');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-				actions.waitForElementToShow('[name="OperationsPanelButton1"]', 40000);
-                this.open_panel = find('[name="OperationsPanelButton1"]');
-				actions.waitForElementToShow('[name="browserFastDataFilter"]', 40000);
-                this.fast_filter = find('[name="browserFastDataFilter"] .controls-DropdownList__textWrapper .controls-DropdownList__text');
-				actions.waitForElementToShow('[name="filterLine"]', 40000);
-                this.filter = find('[name="filterLine"] .controls__filterButton__filterLine-items span');
+            .before(function (actions) {
+
+				this.view = '[name="browserView"]';
+                this.search_input = '[name="browserSearch"] input';
+                this.input = '[sbisname="TextBox 1"] input';
+                this.open_panel = '[name="OperationsPanelButton1"]';
+                this.fast_filter = '[name="browserFastDataFilter"] .controls-DropdownList__textWrapper .controls-DropdownList__text';
+                this.filter = '[name="filterLine"] .controls__filterButton__filterLine-items span';
+				this.caption = '[name="BackButton-caption"]';
+
+				actions.waitForElementToShow(this.view, 40000);
             })
 
             .capture('long_text', function (actions) {
@@ -150,10 +120,9 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
                     window.$ws.single.ControlStorage.getByName('browserView').setCurrentRoot(33);
 					window.$ws.single.ControlStorage.getByName('browserView').reload();
                 });
-				actions.waitForElementToShow('[name="BackButton-caption"]', 1000);
+				actions.waitForElementToShow(this.caption, 5000);
 				actions.executeJS(function (window) {
                     window.$('[sbisname="filterLine"] .controls__filterButton__filterLine-items span').text('Точно точно точно точно точно точно точно точно точно точно точно точно  точно точно точно точно точно точно точно точно  точно точно точно точно точно точно точно точно  точно точно точно точно точно точно точно точно  точно точно точно точно точно точно точно точно нужно  точно точно точно точно точно точно точно точно точно точно  точно точно точно точно точно точно точно точно  точно точно точно точно точно точно точно точно  точно точно точно точно точно точно точно точно  точно точно точно точно точно точно точно точно  точно точно точно точно точно точно точно точно точно точно  точно точно точно точно точно точно точно точно  точно точно точно точно точно точно точно точно  точно точно точно точно точно точно точно точно  точно точно точно точно точно точно точно точно отобрать?');
-					window.$('[name="brows"]').wsControl()._fullFilterBlockResize();
                 });
             })			
     });
@@ -162,31 +131,63 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 
         test.setUrl('/regression_engine_browser_online_8.html').setCaptureElements('html')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="browserView"]', 40000);
-                this.view = find('[name="browserView"]');
-				actions.waitForElementToShow('[name="browserSearch"]', 40000);
-                this.search_input = find('[name="browserSearch"] input');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-				actions.waitForElementToShow('[name="OperationsPanelButton1"]', 40000);
-                this.open_panel = find('[name="OperationsPanelButton1"]');
-				actions.waitForElementToShow('[name="browserFastDataFilter"]', 40000);
-                this.fast_filter = find('[name="browserFastDataFilter"] .controls-DropdownList__textWrapper .controls-DropdownList__text');
-				actions.waitForElementToShow('[name="filterLine"]', 40000);
-                this.filter = find('[name="filterLine"] .controls__filterButton__filterLine-items span');
-				this.data2 = find('[data-id="2"]');
-				this.data4 = find('[data-id="31"]');
+            .before(function (actions) {
+
+                this.view = '[name="browserView"]';
+				this.search_input = '[name="browserSearch"] input';
+                this.input = '[sbisname="TextBox 1"] input';
+                this.open_panel = '[name="OperationsPanelButton1"]';
+                this.fast_filter = '[name="browserFastDataFilter"] .controls-DropdownList__textWrapper .controls-DropdownList__text';
+                this.filter = '[name="filterLine"] .controls__filterButton__filterLine-items span';
+				this.data2 = '[data-id="2"]';
+				this.data4 = '[data-id="31"]';
+				this.caption = '.controls-BackButton__caption';
+
+				actions.waitForElementToShow(this.view, 40000);
             })
 
-            .capture('first_level', function (actions, find) {
+            .capture('first_level', function (actions) {
                 actions.click(this.data2);
-				actions.mouseMove('.controls-BackButton__caption');
+				actions.mouseMove(this.caption);
             })
 
             .capture('second_level', function (actions) {
                 actions.click(this.data4);
-				actions.mouseMove('.controls-BackButton__caption');
+				actions.mouseMove(this.caption);
+            })
+    });
+	
+	gemini.suite('float_panels', function (test) {
+
+        test.setUrl('/regression_engine_browser_online_12.html').setCaptureElements('html')
+
+            .before(function (actions) {
+
+                this.view = '[name="browserView"]';
+                this.input = '[sbisname="TextBox 1"] input';
+                this.fast_filter = '[name="browserFastDataFilter"] .controls-DropdownList__textWrapper .controls-DropdownList__text';
+                this.filter = '[name="filterLine"] .controls__filterButton__filterLine-items span';
+				this.data5 = '[data-id="5"]';
+				this.data7 = '[data-id="7"]';
+				this.data10 = '[data-id="10 заметка"]';
+				this.apply = '.controls__filter-button__apply-filter .controls-Button__text';
+				this.open_menu = '[sbisname="FieldLinkMultiSelect"] [sbisname="fieldLinkMenu"]';
+
+				actions.waitForElementToShow(this.view, 40000);
+            })
+
+            .capture('plain', function (actions) {
+                actions.executeJS(function (window) {
+                    window.$('.controls-Browser__fastDataFilter').attr('style', 'margin-right:250px;')
+                });
+				actions.click(this.filter);
+				actions.waitForElementToShow(this.apply, 5000);
+				actions.waitForElementToShow(this.open_menu, 5000);
+				actions.mouseMove(this.fast_filter);
+				actions.waitForElementToShow(this.data10, 5000);
+				actions.click(this.open_menu);
+				actions.waitForElementToShow(this.data5, 5000);
+				actions.waitForElementToShow(this.data7, 5000);
             })
     });
 });

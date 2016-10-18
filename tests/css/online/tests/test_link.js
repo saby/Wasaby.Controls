@@ -1,53 +1,20 @@
-var gemini = require('gemini');
-
 gemini.suite('SBIS3.CONTROLS.Link Online', function () {
 
     gemini.suite('base', function (test) {
 
         test.setUrl('/regression_link_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="Link 1"]', 40000);
-                this.link = find('[name="Link 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
+            .before(function (actions) {
+                
+				this.link = '[name="Link 1"]';
+                this.input = '[sbisname="TextBox 1"] input';
+                
+				actions.waitForElementToShow(this.link, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('plain', function (actions) {
                 actions.click(this.input);
-            })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.link);
-            })
-
-            .capture('actived', function (actions) {
-                actions.mouseDown(this.link);
-            })
-
-            .after(function (actions) {
-                actions.mouseUp(this.link);
-            })
-    });
-
-    gemini.suite('disabled_base', function (test) {
-
-        test.setUrl('/regression_link_online.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="Link 1"]', 40000);
-                this.link = find('[name="Link 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('Link 1').setEnabled(false);
-                });
-            })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.link);
             })
     });
 
@@ -55,48 +22,17 @@ gemini.suite('SBIS3.CONTROLS.Link Online', function () {
 
         test.setUrl('/regression_link_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="Link 1"]', 40000);
-                this.link = find('[name="Link 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
+            .before(function (actions) {
+                
+				this.link = '[name="Link 1"]';
+                this.input = '[sbisname="TextBox 1"] input';
+                
+				actions.waitForElementToShow(this.link, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('plain', function (actions) {
                 actions.click(this.input);
-            })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.link);
-            })
-
-            .capture('actived', function (actions) {
-                actions.mouseDown(this.link);
-            })
-
-            .after(function (actions) {
-                actions.mouseUp(this.link);
-            })
-    });
-
-    gemini.suite('disabled_with_icon16', function (test) {
-
-        test.setUrl('/regression_link_online_2.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="Link 1"]', 40000);
-                this.link = find('[name="Link 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('Link 1').setEnabled(false);
-                });
-            })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.link);
             })
     });
 
@@ -104,11 +40,13 @@ gemini.suite('SBIS3.CONTROLS.Link Online', function () {
 
         test.setUrl('/regression_link_online_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="Link 1"]', 40000);
-                this.link = find('[name="Link 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
+            .before(function (actions) {
+				
+				this.link = '[name="Link 1"]';
+                this.input = '[sbisname="TextBox 1"] input';
+                
+				actions.waitForElementToShow(this.link, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('plain', function (actions) {
@@ -123,28 +61,14 @@ gemini.suite('SBIS3.CONTROLS.Link Online', function () {
                 actions.mouseDown(this.link);
             })
 
-            .after(function (actions) {
+            .capture('disable', function (actions) {
                 actions.mouseUp(this.link);
-            })
-    });
-
-    gemini.suite('disabled_with_icon24', function (test) {
-
-        test.setUrl('/regression_link_online_4.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="Link 1"]', 40000);
-                this.link = find('[name="Link 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-                actions.executeJS(function (window) {
+				actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('Link 1').setEnabled(false);
                 });
             })
 
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
+            .capture('disable_and_hovered', function (actions) {
                 actions.mouseMove(this.link);
             })
     });
@@ -153,48 +77,23 @@ gemini.suite('SBIS3.CONTROLS.Link Online', function () {
 
         test.setUrl('/regression_link_online_3.html').setCaptureElements('[name="Link 1"]')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="Link 1"]', 40000);
-                this.link = find('[name="Link 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
+            .before(function (actions) {
+				
+				this.link = '[name="Link 1"]';
+                this.input = '[sbisname="TextBox 1"] input';
+                
+				actions.waitForElementToShow(this.link, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('plain', function (actions) {
                 actions.click(this.input);
             })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.link);
-            })
-
-            .capture('actived', function (actions) {
-                actions.mouseDown(this.link);
-            })
-
-            .after(function (actions) {
-                actions.mouseUp(this.link);
-            })
-    });
-
-    gemini.suite('disabled_ellipsis', function (test) {
-
-        test.setUrl('/regression_link_online_3.html').setCaptureElements('[name="Link 1"]')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="Link 1"]', 40000);
-                this.link = find('[name="Link 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
+			
+			.capture('disabled', function (actions) {
                 actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('Link 1').setEnabled(false);
                 });
-            })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.link);
             })
     });
 });

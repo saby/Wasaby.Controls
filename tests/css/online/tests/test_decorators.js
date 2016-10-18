@@ -1,21 +1,23 @@
-var gemini = require('gemini');
-
 gemini.suite('SBIS3.CONTROLS.Decorators Online', function () {
 
     gemini.suite('HighlightDecorator', function (test) {
 
         test.setUrl('/regression_decorators_online.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="TreeCompositeView 1"]', 40000);
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-				this.input = find('[sbisname="TextBox 1"] input')
+            .before(function (actions) {
+				
+				this.tcv = '[sbisname="TreeCompositeView 1"]';
+                this.input = '[name="TextBox 1"] input';
+				this.highlight = '.controls-HtmlDecorators-highlight';
+				
+				actions.waitForElementToShow(this.tcv, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('plain', function (actions) {
                 actions.click(this.input);
 				actions.sendKeys(this.input, 'er');
-				actions.wait(500);
+				actions.waitForElementToShow(this.highlight, 5000);
             })
     });
 	
@@ -23,15 +25,17 @@ gemini.suite('SBIS3.CONTROLS.Decorators Online', function () {
 
         test.setUrl('/regression_decorators_online_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="TreeCompositeView 1"]', 40000);
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-				this.input = find('[sbisname="TextBox 1"] input')
+            .before(function (actions) {
+				
+				this.tcv = '[sbisname="TreeCompositeView 1"]';
+                this.input = '[name="TextBox 1"] input';
+				
+				actions.waitForElementToShow(this.tcv, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('plain', function (actions) {
                 actions.click(this.input);
-				actions.wait(500);
             })
     });
 	
@@ -39,15 +43,17 @@ gemini.suite('SBIS3.CONTROLS.Decorators Online', function () {
 
         test.setUrl('/regression_decorators_online_3.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="TreeCompositeView 1"]', 40000);
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-				this.input = find('[sbisname="TextBox 1"] input')
+            .before(function (actions) {
+				
+				this.tcv = '[sbisname="TreeCompositeView 1"]';
+                this.input = '[name="TextBox 1"] input';
+				
+				actions.waitForElementToShow(this.tcv, 40000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('plain', function (actions) {
                 actions.click(this.input);
-				actions.wait(500);
             })
     });
 });

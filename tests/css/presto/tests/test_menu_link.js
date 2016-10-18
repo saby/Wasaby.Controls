@@ -1,18 +1,18 @@
-/*
-var gemini = require('gemini');
-
-gemini.suite('SBIS3.CONTROLS.MenuLink Online', function () {
+gemini.suite('SBIS3.CONTROLS.MenuLink Presto', function () {
 	
 	gemini.suite('base', function (test) {
 
-        test.setUrl('/regression_menu_link_online.html').setCaptureElements('.capture')
+        test.setUrl('/regression_menu_link_presto.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
-				this.item_1 = find('[data-id="1"]');
+            .before(function (actions) {
+                
+				this.button = '[name="MenuLink 1"]';
+                this.text_box = '[sbisname="TextBox 1"] input';
+				this.item_1 = '[data-id="1"]';
+				this.item_2 = '[data-id="2"]';
+                
+				actions.waitForElementToShow(this.button, 40000);
+				actions.waitForElementToShow(this.text_box, 5000);
             })
 
             .capture('plain', function (actions) {
@@ -25,1028 +25,370 @@ gemini.suite('SBIS3.CONTROLS.MenuLink Online', function () {
 			
 			.capture('menu_opened', function (actions) {
                 actions.click(this.button);
-				actions.waitForElementToShow('[data-id="1"]', 1000);
-				actions.waitForElementToShow('[data-id="2"]', 1000);
-				actions.wait(1000);
+				actions.waitForElementToShow(this.item_1, 5000);
+				actions.waitForElementToShow(this.item_2, 5000);
             })
 			
 			.capture('hovered_item', function (actions) {
                 actions.mouseMove(this.item_1);
             })
-    });
-
-    gemini.suite('disabled_base', function (test) {
-
-        test.setUrl('/regression_menu_link_online.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                actions.executeJS(function (window) {
+			
+			.capture('disabled', function (actions) {
+                actions.click(this.text_box);
+				actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
                 });
             })
+    });
+	
+	gemini.suite('right_side', function (test) {
 
-            .capture('plain')
+        test.setUrl('/regression_menu_link_presto.html').setCaptureElements('html')
 
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
+            .before(function (actions) {
+                
+				this.button = '[name="MenuLink 1"]';
+                this.text_box = '[sbisname="TextBox 1"] input';
+				this.item_1 = '[data-id="1"]';
+				this.item_2 = '[data-id="2"]';
+                
+				actions.waitForElementToShow(this.button, 40000);
+				actions.waitForElementToShow(this.text_box, 5000);
+            })
+
+            .capture('right_side', function (actions) {
+                actions.executeJS(function (window) {
+					var offset = document.body.clientWidth - $('[sbisname="MenuLink 1"]').width()
+                    window.$('[sbisname="MenuLink 1"]').offset({'left': offset});
+                });
+				actions.mouseMove(this.text_box);
+            })
+			
+			.capture('right_side_and_opened_menu', function (actions) {
+                actions.click(this.button);
+				actions.waitForElementToShow(this.item_1, 5000);
+				actions.waitForElementToShow(this.item_2, 5000);
+            })
+			
+			.capture('bottom_right_side', function (actions) {
+                actions.click(this.text_box);
+				actions.executeJS(function (window) {
+                    window.$('[sbisname="MenuLink 1"]').offset({'top': 630});
+                });
+				actions.mouseMove(this.text_box);
+            })
+			
+			.capture('bottom_right_side_and_opened_menu', function (actions) {
+                actions.click(this.button);
+				actions.waitForElementToShow(this.item_1, 5000);
+				actions.waitForElementToShow(this.item_2, 5000);
+            })
+			
+			.capture('bottom_side', function (actions) {
+                actions.click(this.text_box);
+                actions.executeJS(function (window) {
+					var offset = document.body.clientWidth - $('[sbisname="MenuLink 1"]').width()
+                    window.$('[sbisname="MenuLink 1"]').offset({'left': 10});
+                });
+				actions.mouseMove(this.text_box);
+            })
+			
+			.capture('bottom_side_and_opened_menu', function (actions) {
+                actions.click(this.button);
+				actions.waitForElementToShow(this.item_1, 5000);
+				actions.waitForElementToShow(this.item_2, 5000);
             })
     });
 	
-	gemini.suite('base_with_item_icon16_and_half', function (test) {
+	gemini.suite('base_and_half_items_have_icon16', function (test) {
 
-        test.setUrl('/regression_menu_link_online_2.html').setCaptureElements('.capture')
+        test.setUrl('/regression_menu_link_presto_2.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
-				this.item_1 = find('[data-id="1"]');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.text_box);
-            })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
+            .before(function (actions) {
+				
+				this.button = '[name="MenuLink 1"]';
+                this.text_box = '[sbisname="TextBox 1"] input';
+				this.item_1 = '[data-id="1"]';
+				this.item_2 = '[data-id="2"]';
+                
+				actions.waitForElementToShow(this.button, 40000);
+				actions.waitForElementToShow(this.text_box, 5000);
             })
 			
 			.capture('menu_opened', function (actions) {
                 actions.click(this.button);
-				actions.waitForElementToShow('[data-id="1"]', 1000);
-				actions.waitForElementToShow('[data-id="2"]', 1000);
-				actions.wait(1000);
-            })
-			
-			.capture('hovered_item', function (actions) {
-                actions.mouseMove(this.item_1);
+				actions.waitForElementToShow(this.item_1, 5000);
+				actions.waitForElementToShow(this.item_2, 5000);
             })
     });
 
-    gemini.suite('disabled_base_with_item_icon16_and_half', function (test) {
+	gemini.suite('base_and_half_items_have_icon24', function (test) {
 
-        test.setUrl('/regression_menu_link_online_2.html').setCaptureElements('.capture')
+        test.setUrl('/regression_menu_link_presto_4.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
-                });
-            })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-    });
-	
-	gemini.suite('base_with_item_icon16_and_full', function (test) {
-
-        test.setUrl('/regression_menu_link_online_3.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
-				this.item_1 = find('[data-id="1"]');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.text_box);
-            })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
+            .before(function (actions) {
+				
+				this.button = '[name="MenuLink 1"]';
+                this.text_box = '[sbisname="TextBox 1"] input';
+				this.item_1 = '[data-id="1"]';
+				this.item_2 = '[data-id="2"]';
+                
+				actions.waitForElementToShow(this.button, 40000);
+				actions.waitForElementToShow(this.text_box, 5000);
             })
 			
 			.capture('menu_opened', function (actions) {
                 actions.click(this.button);
-				actions.waitForElementToShow('[data-id="1"]', 1000);
-				actions.waitForElementToShow('[data-id="2"]', 1000);
-				actions.wait(1000);
-            })
-			
-			.capture('hovered_item', function (actions) {
-                actions.mouseMove(this.item_1);
+				actions.waitForElementToShow(this.item_1, 5000);
+				actions.waitForElementToShow(this.item_2, 5000);
             })
     });
 
-    gemini.suite('disabled_base_with_item_icon16_and_full', function (test) {
-
-        test.setUrl('/regression_menu_link_online_3.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
-                });
-            })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-    });
-	
-	gemini.suite('base_with_item_icon24_and_half', function (test) {
-
-        test.setUrl('/regression_menu_link_online_4.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
-				this.item_1 = find('[data-id="1"]');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.text_box);
-            })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-			
-			.capture('menu_opened', function (actions) {
-                actions.click(this.button);
-				actions.waitForElementToShow('[data-id="1"]', 1000);
-				actions.waitForElementToShow('[data-id="2"]', 1000);
-				actions.wait(1000);
-            })
-			
-			.capture('hovered_item', function (actions) {
-                actions.mouseMove(this.item_1);
-            })
-    });
-
-    gemini.suite('disabled_base_with_item_icon24_and_half', function (test) {
-
-        test.setUrl('/regression_menu_link_online_4.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
-                });
-            })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-    });
-	
-	gemini.suite('base_with_item_icon24_and_full', function (test) {
-
-        test.setUrl('/regression_menu_link_online_5.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
-				this.item_1 = find('[data-id="1"]');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.text_box);
-            })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-			
-			.capture('menu_opened', function (actions) {
-                actions.click(this.button);
-				actions.waitForElementToShow('[data-id="1"]', 1000);
-				actions.waitForElementToShow('[data-id="2"]', 1000);
-				actions.wait(1000);
-            })
-			
-			.capture('hovered_item', function (actions) {
-                actions.mouseMove(this.item_1);
-            })
-    });
-
-    gemini.suite('disabled_base_with_item_icon24_and_full', function (test) {
-
-        test.setUrl('/regression_menu_link_online_5.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
-                });
-            })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-    });
-	
-	gemini.suite('base_without_menu', function (test) {
-
-        test.setUrl('/regression_menu_link_online_12.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.text_box);
-            })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-    });
-
-    gemini.suite('disabled_base_without_menu', function (test) {
-
-        test.setUrl('/regression_menu_link_online_12.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
-                });
-            })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-    });
-	
 	gemini.suite('with_icon16', function (test) {
 
-        test.setUrl('/regression_menu_link_online_6.html').setCaptureElements('.capture')
+        test.setUrl('/regression_menu_link_presto_6.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
-				this.item_1 = find('[data-id="1"]');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.text_box);
-            })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-			
-			.capture('menu_opened', function (actions) {
-                actions.click(this.button);
-				actions.waitForElementToShow('[data-id="1"]', 1000);
-				actions.waitForElementToShow('[data-id="2"]', 1000);
-				actions.wait(1000);
-            })
-			
-			.capture('hovered_item', function (actions) {
-                actions.mouseMove(this.item_1);
-            })
-    });
-
-    gemini.suite('disabled_with_icon16', function (test) {
-
-        test.setUrl('/regression_menu_link_online_6.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
-                });
-            })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-    });
-	
-	gemini.suite('with_icon16_with_item_icon16_and_half', function (test) {
-
-        test.setUrl('/regression_menu_link_online_7.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
-				this.item_1 = find('[data-id="1"]');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.text_box);
-            })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-			
-			.capture('menu_opened', function (actions) {
-                actions.click(this.button);
-				actions.waitForElementToShow('[data-id="1"]', 1000);
-				actions.waitForElementToShow('[data-id="2"]', 1000);
-				actions.wait(1000);
-            })
-			
-			.capture('hovered_item', function (actions) {
-                actions.mouseMove(this.item_1);
-            })
-    });
-
-    gemini.suite('disabled_with_icon16_with_item_icon16_and_half', function (test) {
-
-        test.setUrl('/regression_menu_link_online_7.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
-                });
-            })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-    });
-	
-	gemini.suite('with_icon16_with_item_icon16_and_full', function (test) {
-
-        test.setUrl('/regression_menu_link_online_8.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
-				this.item_1 = find('[data-id="1"]');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.text_box);
-            })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-			
-			.capture('menu_opened', function (actions) {
-                actions.click(this.button);
-				actions.waitForElementToShow('[data-id="1"]', 1000);
-				actions.waitForElementToShow('[data-id="2"]', 1000);
-				actions.wait(1000);
+            .before(function (actions) {
 				
-				
-            })
-			
-			.capture('hovered_item', function (actions) {
-                actions.mouseMove(this.item_1);
-            })
-    });
-
-    gemini.suite('disabled_with_icon16_with_item_icon16_and_full', function (test) {
-
-        test.setUrl('/regression_menu_link_online_8.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
-                });
-            })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-    });
-	
-	gemini.suite('with_icon16_without_menu', function (test) {
-
-        test.setUrl('/regression_menu_link_online_13.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
+				this.button = '[name="MenuLink 1"]';
+                this.text_box = '[sbisname="TextBox 1"] input';
+				this.item_1 = '[data-id="1"]';
+				this.item_2 = '[data-id="2"]';
+                
+				actions.waitForElementToShow(this.button, 40000);
+				actions.waitForElementToShow(this.text_box, 5000);
             })
 
             .capture('plain', function (actions) {
                 actions.click(this.text_box);
             })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
+			
+			.capture('menu_opened', function (actions) {
+                actions.click(this.button);
+				actions.waitForElementToShow(this.item_1, 5000);
+				actions.waitForElementToShow(this.item_2, 5000);
             })
-    });
-
-    gemini.suite('disabled_with_icon16_without_menu', function (test) {
-
-        test.setUrl('/regression_menu_link_online_13.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                actions.executeJS(function (window) {
+			
+			.capture('disabled', function (actions) {
+                actions.click(this.text_box);
+				actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
                 });
             })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
     });
-	
+		
 	gemini.suite('with_icon24', function (test) {
 
-        test.setUrl('/regression_menu_link_online_9.html').setCaptureElements('.capture')
+        test.setUrl('/regression_menu_link_presto_9.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
-				this.item_1 = find('[data-id="1"]');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.text_box);
-            })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-			
-			.capture('menu_opened', function (actions) {
-                actions.click(this.button);
-				actions.waitForElementToShow('[data-id="1"]', 1000);
-				actions.waitForElementToShow('[data-id="2"]', 1000);
-				actions.wait(1000);
-            })
-			
-			.capture('hovered_item', function (actions) {
-                actions.mouseMove(this.item_1);
-            })
-    });
-
-    gemini.suite('disabled_with_icon24', function (test) {
-
-        test.setUrl('/regression_menu_link_online_9.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
-                });
-            })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-    });
-	
-	gemini.suite('with_icon24_with_item_icon24_and_half', function (test) {
-
-        test.setUrl('/regression_menu_link_online_10.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
-				this.item_1 = find('[data-id="1"]');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.text_box);
-            })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-			
-			.capture('menu_opened', function (actions) {
-                actions.click(this.button);
-				actions.waitForElementToShow('[data-id="1"]', 1000);
-				actions.waitForElementToShow('[data-id="2"]', 1000);
-				actions.wait(1000);
-            })
-			
-			.capture('hovered_item', function (actions) {
-                actions.mouseMove(this.item_1);
-            })
-    });
-
-    gemini.suite('disabled_with_icon24_with_item_icon24_and_half', function (test) {
-
-        test.setUrl('/regression_menu_link_online_10.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
-                });
-            })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-    });
-	
-	gemini.suite('with_icon24_with_item_icon24_and_full', function (test) {
-
-        test.setUrl('/regression_menu_link_online_11.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
-				this.item_1 = find('[data-id="1"]');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.text_box);
-            })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-			
-			.capture('menu_opened', function (actions) {
-                actions.click(this.button);
-				actions.waitForElementToShow('[data-id="1"]', 1000);
-				actions.waitForElementToShow('[data-id="2"]', 1000);
-				actions.wait(1000);
+            .before(function (actions) {
 				
-				
-            })
-			
-			.capture('hovered_item', function (actions) {
-                actions.mouseMove(this.item_1);
-            })
-    });
-
-    gemini.suite('disabled_with_icon24_with_item_icon24_and_full', function (test) {
-
-        test.setUrl('/regression_menu_link_online_11.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
-                });
-            })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-    });
-	
-	gemini.suite('with_icon24_without_menu', function (test) {
-
-        test.setUrl('/regression_menu_link_online_14.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
+				this.button = '[name="MenuLink 1"]';
+                this.text_box = '[sbisname="TextBox 1"] input';
+				this.item_1 = '[data-id="1"]';
+				this.item_2 = '[data-id="2"]';
+                
+				actions.waitForElementToShow(this.button, 40000);
+				actions.waitForElementToShow(this.text_box, 5000);
             })
 
             .capture('plain', function (actions) {
                 actions.click(this.text_box);
             })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
+			
+			.capture('menu_opened', function (actions) {
+                actions.click(this.button);
+				actions.waitForElementToShow(this.item_1, 5000);
+				actions.waitForElementToShow(this.item_2, 5000);
             })
-    });
-
-    gemini.suite('disabled_with_icon24_without_menu', function (test) {
-
-        test.setUrl('/regression_menu_link_online_14.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                actions.executeJS(function (window) {
+			
+			.capture('disabled', function (actions) {
+                actions.click(this.text_box);
+				actions.executeJS(function (window) {
                     window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
                 });
             })
+    });
+	
+	gemini.suite('with_icon24_and_half_itemt_have_icon24', function (test) {
 
-            .capture('plain')
+        test.setUrl('/regression_menu_link_presto_10.html').setCaptureElements('.capture')
 
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
+            .before(function (actions) {
+				
+				this.button = '[name="MenuLink 1"]';
+                this.text_box = '[sbisname="TextBox 1"] input';
+				this.item_1 = '[data-id="1"]';
+				this.item_2 = '[data-id="2"]';
+                
+				actions.waitForElementToShow(this.button, 40000);
+				actions.waitForElementToShow(this.text_box, 5000);
+            })
+			
+			.capture('menu_opened', function (actions) {
+                actions.click(this.button);
+				actions.waitForElementToShow(this.item_1, 5000);
+				actions.waitForElementToShow(this.item_2, 5000);
             })
     });
 	
 	gemini.suite('with_base_with_submenu', function (test) {
 
-        test.setUrl('/regression_menu_link_online_15.html').setCaptureElements('.capture')
+        test.setUrl('/regression_menu_link_presto_15.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
-				this.item_1 = find('[data-id="1"]');
-				this.item_3 = find('[data-id="3"]');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.text_box);
-            })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-			
-			.capture('menu_opened', function (actions) {
-                actions.click(this.button);
-				actions.waitForElementToShow('[data-id="1"]', 1000);
-				actions.waitForElementToShow('[data-id="2"]', 1000);
-				actions.wait(1000);
-            })
-			
-			.capture('submenu_opened', function (actions) {
-                actions.mouseMove(this.item_1);
-				actions.waitForElementToShow('[data-id="3"]', 1000);
-            })
-			
-			.capture('hovered_item', function (actions) {
-                actions.mouseMove(this.item_3);
-            })
-    });
-
-    gemini.suite('disabled_base_with_submenu', function (test) {
-
-        test.setUrl('/regression_menu_link_online_15.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
-                });
-            })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-    });
-	
-	gemini.suite('with_submenu_icon16_and_item_icon16_full', function (test) {
-
-        test.setUrl('/regression_menu_link_online_16.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
-				this.item_1 = find('[data-id="1"]');
-				this.item_3 = find('[data-id="3"]');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.text_box);
-            })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-			
-			.capture('menu_opened', function (actions) {
-                actions.click(this.button);
-				actions.waitForElementToShow('[data-id="1"]', 1000);
-				actions.waitForElementToShow('[data-id="2"]', 1000);
-				actions.wait(1000);
+            .before(function (actions) {
 				
+				this.button = '[name="MenuLink 1"]';               
+				this.text_box = '[sbisname="TextBox 1"] input';
+				this.item_1 = '[data-id="1"]';
+				this.item_2 = '[data-id="2"]';
+				this.item_3 = '[data-id="3"]';
+				this.child_arrow = '.controls-Menu__hasChild';
+                
+				actions.waitForElementToShow(this.button, 40000);
+				actions.waitForElementToShow(this.text_box, 5000);
+            })
+			
+			.capture('menu_opened', function (actions) {
+                actions.click(this.button);
+				actions.waitForElementToShow(this.item_1, 5000);
+				actions.waitForElementToShow(this.item_2, 5000);
+				actions.waitForElementToShow(this.child_arrow, 5000);
+            })
+			
+			.capture('submenu_opened', function (actions) {
+                actions.mouseMove(this.item_1);
+				actions.waitForElementToShow(this.item_3, 5000);
+            })
+    });
+	
+	gemini.suite('right_side_with_submenu', function (test) {
+
+        test.setUrl('/regression_menu_link_presto_15.html').setCaptureElements('html')
+
+            .before(function (actions) {
 				
+				this.button = '[name="MenuLink 1"]';               
+				this.text_box = '[sbisname="TextBox 1"] input';
+				this.item_1 = '[data-id="1"]';
+				this.item_2 = '[data-id="2"]';
+				this.item_3 = '[data-id="3"]';
+				this.child_arrow = '.controls-Menu__hasChild';
+                
+				actions.waitForElementToShow(this.button, 40000);
+				actions.waitForElementToShow(this.text_box, 5000);
             })
-			
-			.capture('submenu_opened', function (actions) {
-                actions.mouseMove(this.item_1);
-				actions.waitForElementToShow('[data-id="3"]', 1000);
-            })
-			
-			.capture('hovered_item', function (actions) {
-                actions.mouseMove(this.item_3);
-            })
-    });
 
-    gemini.suite('disabled_with_submenu_icon16_and_item_icon16_full', function (test) {
-
-        test.setUrl('/regression_menu_link_online_16.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+            .capture('right_side', function (actions) {
                 actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
+					var offset = document.body.clientWidth - $('[sbisname="MenuLink 1"]').width()
+                    window.$('[sbisname="MenuLink 1"]').offset({'left': offset});
                 });
+				actions.mouseMove(this.text_box);
             })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
+			
+			.capture('right_side_and_opened_menu', function (actions) {
+                actions.click(this.button);
+				actions.waitForElementToShow(this.item_1, 5000);
+				actions.waitForElementToShow(this.item_2, 5000);
+				actions.waitForElementToShow(this.child_arrow, 5000);
+				actions.mouseMove(this.item_1);
+				actions.waitForElementToShow(this.item_3, 5000);
+            })
+			
+			.capture('bottom_right_side', function (actions) {
+                actions.click(this.text_box);
+				actions.executeJS(function (window) {
+                    window.$('[sbisname="MenuButton 1"]').offset({'top': 630});
+                });
+				actions.mouseMove(this.text_box);
+            })
+			
+			.capture('bottom_right_side_and_opened_menu', function (actions) {
+                actions.click(this.button);
+				actions.waitForElementToShow(this.item_1, 5000);
+				actions.waitForElementToShow(this.item_2, 5000);
+				actions.waitForElementToShow(this.child_arrow, 5000);
+				actions.mouseMove(this.item_1);
+				actions.waitForElementToShow(this.item_3, 5000);
+            })
+			
+			.capture('bottom_side', function (actions) {
+                actions.click(this.text_box);
+                actions.executeJS(function (window) {
+					var offset = document.body.clientWidth - $('[sbisname="MenuButton 1"]').width()
+                    window.$('[sbisname="MenuButton 1"]').offset({'left': 10});
+                });
+				actions.mouseMove(this.text_box);
+            })
+			
+			.capture('bottom_side_and_opened_menu', function (actions) {
+                actions.click(this.button);
+				actions.waitForElementToShow(this.item_1, 5000);
+				actions.waitForElementToShow(this.item_2, 5000);
+				actions.waitForElementToShow(this.child_arrow, 5000);
+				actions.mouseMove(this.item_1);
+				actions.waitForElementToShow(this.item_3, 5000);
             })
     });
-	
-	gemini.suite('with_submenu_icon16_and_item_icon16_half', function (test) {
 
-        test.setUrl('/regression_menu_link_online_17.html').setCaptureElements('.capture')
+	gemini.suite('with_submenu_icon16_and_half_items_have_icon16', function (test) {
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
-				this.item_1 = find('[data-id="1"]');
-				this.item_3 = find('[data-id="3"]');
-            })
+        test.setUrl('/regression_menu_link_presto_17.html').setCaptureElements('.capture')
 
-            .capture('plain', function (actions) {
-                actions.click(this.text_box);
-            })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
+            .before(function (actions) {
+				
+				this.button = '[name="MenuLink 1"]';               
+				this.text_box = '[sbisname="TextBox 1"] input';
+				this.item_1 = '[data-id="1"]';
+				this.item_2 = '[data-id="2"]';
+				this.item_3 = '[data-id="3"]';
+				this.child_arrow = '.controls-Menu__hasChild';
+                
+				actions.waitForElementToShow(this.button, 40000);
+				actions.waitForElementToShow(this.text_box, 5000);
             })
 			
 			.capture('menu_opened', function (actions) {
                 actions.click(this.button);
-				actions.waitForElementToShow('[data-id="1"]', 1000);
-				actions.waitForElementToShow('[data-id="2"]', 1000);
-				actions.wait(1000);
+				actions.waitForElementToShow(this.item_1, 5000);
+				actions.waitForElementToShow(this.item_2, 5000);
+				actions.waitForElementToShow(this.child_arrow, 5000);
             })
 			
 			.capture('submenu_opened', function (actions) {
                 actions.mouseMove(this.item_1);
-				actions.waitForElementToShow('[data-id="3"]', 1000);
-            })
-			
-			.capture('hovered_item', function (actions) {
-                actions.mouseMove(this.item_3);
-            })
-    });
-
-    gemini.suite('disabled_with_submenu_icon16_and_item_icon16_half', function (test) {
-
-        test.setUrl('/regression_menu_link_online_17.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
-                });
-            })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-    });
-	
-	
-	gemini.suite('with_submenu_icon24_and_item_icon24_full', function (test) {
-
-        test.setUrl('/regression_menu_link_online_18.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
-				this.item_1 = find('[data-id="1"]');
-				this.item_3 = find('[data-id="3"]');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.text_box);
-            })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-			
-			.capture('menu_opened', function (actions) {
-                actions.click(this.button);
-				actions.waitForElementToShow('[data-id="1"]', 1000);
-				actions.waitForElementToShow('[data-id="2"]', 1000);
-				actions.wait(1000);
-            })
-			
-			.capture('submenu_opened', function (actions) {
-                actions.mouseMove(this.item_1);
-				actions.waitForElementToShow('[data-id="3"]', 1000);
-            })
-			
-			.capture('hovered_item', function (actions) {
-                actions.mouseMove(this.item_3);
-            })
-    });
-
-    gemini.suite('disabled_with_submenu_icon24_and_item_icon24_full', function (test) {
-
-        test.setUrl('/regression_menu_link_online_18.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
-                });
-            })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-    });
-	
-	gemini.suite('with_submenu_icon24_and_item_icon24_half', function (test) {
-
-        test.setUrl('/regression_menu_link_online_19.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
-				this.item_1 = find('[data-id="1"]');
-				this.item_3 = find('[data-id="3"]');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.text_box);
-            })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-			
-			.capture('menu_opened', function (actions) {
-                actions.click(this.button);
-				actions.waitForElementToShow('[data-id="1"]', 1000);
-				actions.waitForElementToShow('[data-id="2"]', 1000);
-				actions.wait(1000);
-            })
-			
-			.capture('submenu_opened', function (actions) {
-                actions.mouseMove(this.item_1);
-				actions.waitForElementToShow('[data-id="3"]', 1000);
-            })
-			
-			.capture('hovered_item', function (actions) {
-                actions.mouseMove(this.item_3);
-            })
-    });
-
-    gemini.suite('disabled_with_submenu_icon24_and_item_icon24_half', function (test) {
-
-        test.setUrl('/regression_menu_link_online_19.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
-                });
-            })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
+				actions.waitForElementToShow(this.item_3, 5000);
             })
     });
 	
 	gemini.suite('with_submenu_and_item_icon24_half', function (test) {
 
-        test.setUrl('/regression_menu_link_online_20.html').setCaptureElements('.capture')
+        test.setUrl('/regression_menu_link_presto_20.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.text_box = find('[sbisname="TextBox 1"] input');
-				this.item_1 = find('[data-id="1"]');
-				this.item_3 = find('[data-id="3"]');
-            })
-
-            .capture('plain', function (actions) {
-                actions.click(this.text_box);
-            })
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
+            .before(function (actions) {
+				
+				this.button = '[name="MenuLink 1"]';               
+				this.text_box = '[sbisname="TextBox 1"] input';
+				this.item_1 = '[data-id="1"]';
+				this.item_2 = '[data-id="2"]';
+				this.item_3 = '[data-id="3"]';
+				this.child_arrow = '.controls-Menu__hasChild';
+                
+				actions.waitForElementToShow(this.button, 40000);
+				actions.waitForElementToShow(this.text_box, 5000);
             })
 			
 			.capture('menu_opened', function (actions) {
                 actions.click(this.button);
-				actions.waitForElementToShow('[data-id="1"]', 1000);
-				actions.waitForElementToShow('[data-id="2"]', 1000);
-				actions.wait(1000);
+				actions.waitForElementToShow(this.item_1, 5000);
+				actions.waitForElementToShow(this.item_2, 5000);
+				actions.waitForElementToShow(this.child_arrow, 5000);
             })
 			
 			.capture('submenu_opened', function (actions) {
                 actions.mouseMove(this.item_1);
-				actions.waitForElementToShow('[data-id="3"]', 1000);
-            })
-			
-			.capture('hovered_item', function (actions) {
-                actions.mouseMove(this.item_3);
+				actions.waitForElementToShow(this.item_3, 5000);
             })
     });
-
-    gemini.suite('disabled_with_submenu_and_item_icon24_half', function (test) {
-
-        test.setUrl('/regression_menu_link_online_20.html').setCaptureElements('.capture')
-
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuLink 1"]', 40000);
-                this.button = find('[name="MenuLink 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('MenuLink 1').setEnabled(false);
-                });
-            })
-
-            .capture('plain')
-
-            .capture('hovered', function (actions) {
-                actions.mouseMove(this.button);
-            })
-    });
-});*/
+});

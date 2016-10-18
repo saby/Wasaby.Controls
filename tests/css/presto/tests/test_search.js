@@ -1,28 +1,31 @@
-/*
-var gemini = require('gemini');
-
-gemini.suite('SBIS3.CONTROLS.Search Online', function () {
+gemini.suite('SBIS3.CONTROLS.Search Presto', function () {
 
     gemini.suite('base', function (test) {
 
-        test.setUrl('/regression_search_online.html').setCaptureElements('.capture')
+        test.setUrl('/regression_search_presto.html').setCaptureElements('.capture')
 
-            .before(function (actions, find) {
-                actions.waitForElementToShow('[name="TreeDataGrid 1"]', 40000);
-                this.data = find('[name="TreeDataGrid 1"]');
-				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
-                this.input = find('[sbisname="TextBox 1"] input');
-				actions.waitForElementToShow('[sbisname="SearchForm 1"]', 40000);
-                this.search = find('[sbisname="SearchForm 1"] input');
-				this.reset = find('.controls-SearchForm__resetIcon');
-				this.send = find('.controls-SearchForm__search');
+            .before(function (actions) {
+                
+				this.tdgv = '[name="TreeDataGrid 1"]';
+                this.input = '[sbisname="TextBox 1"] input';
+                this.search = '[sbisname="SearchForm 1"] input';
+				this.reset = '.controls-SearchForm__reset';
+				this.send = '.controls-SearchForm__search';
+				this.item6 = '[data-id="6"]';
+				this.item10 = '[data-id="10"]';
+				this.item11 = '[data-id="11"]';
+				
+                actions.waitForElementToShow(this.tdgv, 40000);
+				actions.waitForElementToShow(this.search, 5000);
+				actions.waitForElementToShow(this.input, 5000);
             })
 
             .capture('with_text', function (actions) {
                 actions.sendKeys(this.search, 'DataGridView');
-				actions.waitForElementToShow('[data-id="11"]', 5000);
-				actions.waitForElementToShow('.controls-SearchForm__resetIcon', 1000);
-				actions.waitForElementToShow('.controls-SearchForm__search', 1000);
+				actions.waitForElementToShow(this.item6, 5000);
+				actions.waitForElementToShow(this.item10, 5000);
+				actions.waitForElementToShow(this.item11, 5000);
+				actions.waitForElementToShow(this.reset, 5000);
 				actions.click(this.input);
             })
 
@@ -33,5 +36,48 @@ gemini.suite('SBIS3.CONTROLS.Search Online', function () {
 			.capture('hovered_reset', function (actions) {
                 actions.mouseMove(this.reset);
             })
+			
+			.capture('disabled', function (actions) {
+                actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('SearchForm 1').setEnabled(false);
+                });
+            })
+			
+			.capture('disabled_and_hovered_button', function (actions) {
+                actions.mouseMove(this.send);
+            })
     });
-});*/
+	
+	gemini.suite('expanded', function (test) {
+
+        test.setUrl('/regression_search_presto_2.html').setCaptureElements('.capture')
+
+            .before(function (actions) {
+				
+				this.tdgv = '[name="TreeDataGrid 1"]';
+                this.input = '[sbisname="TextBox 1"] input';
+                this.search = '[sbisname="SearchForm 1"] input';
+				this.reset = '.controls-SearchForm__reset';
+				this.item6 = '[data-id="6"]';
+				this.item10 = '[data-id="10"]';
+				this.item11 = '[data-id="11"]';
+				
+                actions.waitForElementToShow(this.tdgv, 40000);
+				actions.waitForElementToShow(this.search, 5000);
+				actions.waitForElementToShow(this.input, 5000);
+            })
+			
+			.capture('plain', function (actions) {
+				actions.click(this.input);
+            })
+
+            .capture('with_text', function (actions) {
+                actions.sendKeys(this.search, 'DataGridView');
+				actions.waitForElementToShow(this.item6, 5000);
+				actions.waitForElementToShow(this.item10, 5000);
+				actions.waitForElementToShow(this.item11, 5000);
+				actions.waitForElementToShow(this.reset, 5000);
+				actions.click(this.input);
+            })
+    });
+});
