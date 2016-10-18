@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
 
 
          this.subscribe('onTextChange', function(e, text) {
-            this._crossContainer.toggleClass('ws-hidden', text == '');
+            this._crossContainer.toggleClass('ws-hidden', !text);
          });
 
          this._crossContainer.click(function() {
