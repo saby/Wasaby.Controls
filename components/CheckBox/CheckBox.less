@@ -3,9 +3,15 @@
   display: inline-block;
 
   .controls-CheckBox__caption {
-     display: inline-block;
+    display: inline-block;
     margin: @check-box-text-margin;
     color: @check-box-text-color;
+  }
+
+  &.control-CheckBox__caption-ellipsis{
+      .controls-CheckBox__caption{
+         .text-overflow();
+      }
   }
 
   .controls-CheckBox__icon {
