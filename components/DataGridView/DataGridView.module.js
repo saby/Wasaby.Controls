@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "js!SBIS3.CONTROLS.ImitateEvents",
    "html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
    'js!WS.Data/Display/Ladder',
+   'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "html!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate",
    "html!SBIS3.CONTROLS.DataGridView/resources/ItemContentTemplate",
@@ -23,7 +24,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "Core/helpers/collection-helpers",
    "Core/helpers/string-helpers"
 ],
-   function( cFunctions, cMerge, constants, Deferred,ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, Ladder, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate, colHelpers, strHelpers) {
+   function( cFunctions, cMerge, constants, Deferred,ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, Ladder, LadderDecorator, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate, colHelpers, strHelpers) {
    'use strict';
 
       var ANIMATION_DURATION = 500, //Продолжительность анимации скролла заголовков
@@ -445,12 +446,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
             newCfg.stickyHeader = false;
          }
 
-         if (cfg._itemsProjection) {
-            cfg._ladderInstance.setCollection(cfg._itemsProjection);
-         }
          if (!newCfg.ladder) {
             newCfg.ladder = [];
          }
+         if (cfg._itemsProjection) {
+            cfg._ladderInstance.setCollection(cfg._itemsProjection);
+         }
+         newCfg._decorators.add(new LadderDecorator());
 
          return newCfg;
       },
