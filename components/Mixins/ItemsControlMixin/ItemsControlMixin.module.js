@@ -1360,6 +1360,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       this._unsetItemsEventHandlers();
                       this._options._items = list;
                       this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
+                      this._options._itemsProjection = this._options._applyGroupingToProjection(this._options._itemsProjection, this._options);
                       this._setItemsEventHandlers();
                       this._notify('onItemsReady');
                       this._itemsReadyCallback();
