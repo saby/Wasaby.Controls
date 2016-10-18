@@ -696,8 +696,7 @@ define('js!SBIS3.CONTROLS.FormController', [
       update: function(config){
          var self = this,
             updateDeferred = new Deferred(),
-            errorMessage = 'updateModel canceled from onBeforeUpdateModel event',
-            onBeforeUpdateResult;
+            onBeforeUpdateData;
          
          if (typeof(config) !== 'object'){
             config = {
@@ -707,22 +706,38 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
          config.hideQuestion = true;
 
-         onBeforeUpdateResult = this._notify('onBeforeUpdateModel', this.getRecord());
-         if (onBeforeUpdateResult instanceof Deferred){
-            onBeforeUpdateResult.addCallback(function(result){
-               if (result !== false){
+         //Обрабатываем событие onBeforeUpdate. В результате получим объект, который вернет флаг,
+         //сообщающий о том, нужно ли начинать сохранение, и сообщение ошибки, если флаг = false.
+         //Если из события вернули deferred - ждем когда он стрельнет и действуем по той же логике.
+         onBeforeUpdateData = this._prepareOnBeforeUpdateResult(this._notify('onBeforeUpdateModel', this.getRecord()));
+         if (onBeforeUpdateData.result instanceof Deferred){
+            onBeforeUpdateData.result.addBoth(function(result){
+               onBeforeUpdateData = self._prepareOnBeforeUpdateResult(result);
+               if (onBeforeUpdateData.result !== false){
                   updateDeferred.dependOn(self._saveRecord(config));
                }
                else{
-                  updateDeferred.errback(errorMessage);
+                  updateDeferred.errback(onBeforeUpdateData.errorMessage);
                }
             });
             return updateDeferred;
          }
-         else if (onBeforeUpdateResult !== false) {
+         else if (onBeforeUpdateData.result !== false) {
             return this._saveRecord(config);
          }
-         return updateDeferred.errback(errorMessage);
+         return updateDeferred.errback(onBeforeUpdateData.errorMessage);
+      },
+      _prepareOnBeforeUpdateResult: function(result){
+         var errorMessage = 'updateModel canceled from onBeforeUpdateModel event';
+         //Если из события вернули ошибку - то запоминаем текст ошибки и говорим, что сохранять дальше не нужно.
+         if (result instanceof Error) {
+            errorMessage = result.message;
+            result = false;
+         }
+         return {
+            errorMessage: errorMessage,
+            result: result
+         };
       },
 
       _saveRecord: function(config){
