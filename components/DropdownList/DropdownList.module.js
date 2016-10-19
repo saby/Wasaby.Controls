@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.PickerMixin",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
+   "js!SBIS3.CONTROLS.Utils.RecordSetUtil",
    "js!SBIS3.CONTROLS.MultiSelectable",
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.DropdownListMixin",
@@ -28,7 +29,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "i18n!SBIS3.CONTROLS.DropdownList"
 ],
 
-   function( constants, Deferred, IoC, ConsoleLogger,Control, PickerMixin, ItemsControlMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker, cInstance, dcHelpers) {
+   function (constants, Deferred, IoC, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker, cInstance, dcHelpers) {
 
       'use strict';
       /**
@@ -185,6 +186,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * </ul>
                 */
                type: 'simple',
+               /**
+                * @cfg {String} Устанавливает поле иерархии.
+                * @remark
+                * Полем иерархии называют поле записи, по значениям которой устанавливаются иерархические отношения между записями набора данных.
+                */
+               hierField: null,
                allowEmptyMultiSelection: false
             },
             _pickerListContainer: null,
@@ -249,6 +256,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                itemTpl: this._options.itemTpl,
                defaultId: this._defaultId,
                displayField: this._options.displayField,
+               hierField: this._options.hierField,
                multiselect: this._options.multiselect
             };
          },
@@ -515,7 +523,17 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this.getSelectedItems(true).addCallback(function(list) {
                   if(list) {
                      list.each(function (rec) {
-                        textValues.push(rec.get(self._options.displayField));
+                        var parentId = rec.get(self._options.hierField),
+                            parentRecord,
+                            text;
+                        if (parentId !== undefined){
+                           parentRecord = self.getItems().getRecordById(parentId);
+                           text = RecordSetUtil.getRecordsValue([parentRecord, rec], self._options.displayField).join(' ');
+                        }
+                        else{
+                           text = rec.get(self._options.displayField);
+                        }
+                        textValues.push(text);
                      });
                   }
 

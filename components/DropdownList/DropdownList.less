@@ -233,6 +233,12 @@
       background: @DropdownList-picker-menu-item-color;
       margin: @DropdownList-picker-menu-item-margin;
       font-size: @DropdownList-picker-menu-font-size;
+      &.controls-DropdownList__child{
+        padding: 3px 8px;
+        .controls-DropdownList__itemTextWrapper{
+          padding-left: 16px;
+        }
+      }
       &:hover {
          background: @DropdownList-picker-menu-item-hover;
          .controls-DropdownList__itemCheckBox {
