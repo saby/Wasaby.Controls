@@ -243,9 +243,12 @@
 
 
    &.controls-DropdownList__hideSelectedInList{
-      .controls-DropdownList__item.controls-DropdownList__item__selected{
-         display: none;
-      }
+     .controls-DropdownList__item.controls-DropdownList__multiselect.controls-DropdownList__item__selected{
+       display: block;
+     }
+     .controls-DropdownList__item.controls-DropdownList__item__selected{
+       display: none;
+     }
    }
    .controls-DropdownList__buttonsBlock {
 
@@ -266,14 +269,14 @@
    .controls-DropdownList__multiselect {
       padding-left: @DropdownList-picker-menu-item-multiselect-padding;
 
-      &.controls-ListView__item {
+      &.controls-DropdownList__item {
          font-size: 0;
          * {
             font-size: @DropdownList-picker-menu-font-size;
          }
       }
 
-      &.controls-DropdownList__item.controls-ListView__item.controls-DropdownList__item__selected {
+      &.controls-DropdownList__item.controls-DropdownList__item__selected {
          display: block;
       }
       &.controls-DropdownList__item__selected .controls-DropdownList__itemCheckBox {

@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
                         icon: 'icon-16 icon-Check icon-primary'
                      },
                      {
-                        key : 5,
+                        key : "5",
                         title : rk('Пять'),
                         icon: 'icon-16 icon-Colorize icon-primary'
                      }
