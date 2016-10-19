@@ -897,15 +897,17 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          },
 
          hide: function () {
-            // Убираем оверлей
-            this._unsubscribeTargetMove();
-            if (this._options.isModal) {
-               this._setModal(false);
-            }
+            cWindowManager.deactivateWindow(this, function() {
+               // Убираем оверлей
+               this._unsubscribeTargetMove();
+               if (this._options.isModal) {
+                  this._setModal(false);
+               }
 
-            if (this._parentFloatArea){
-               this._parentFloatArea.setHasPopupInside(false);
-            }
+               if (this._parentFloatArea){
+                  this._parentFloatArea.setHasPopupInside(false);
+               }
+            }.bind(this));
          },
 
          _onResizeHandler: function(){
