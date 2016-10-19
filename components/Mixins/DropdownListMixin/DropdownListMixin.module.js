@@ -41,6 +41,7 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [
                        item: item.getContents(),
                        title: title,
                        multiselect : this._options.multiselect,
+                       hierField: this._options.hierField,
                        included : this._buildIncluded()
                     })
                 }
