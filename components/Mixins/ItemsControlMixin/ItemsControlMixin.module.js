@@ -2046,7 +2046,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
          }
          /**/
-         var target = this._getTargetContainer(projItem),
+         var target = this._getTargetContainer(item),
             currentItemAt = at > 0 ? this._getItemContainerByIndex(target, at - 1) : null,
             template = this._getItemTemplate(projItem),
             newItemContainer = this._buildTplItem(projItem, template),
