@@ -706,8 +706,9 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
          config.hideQuestion = true;
 
-         //Событие onBeforeUpdateModel необходимо для асинхронной пользовательской валидации.
-         //FormController не продолжает сохранение записи, если пользователь вернул из обработчика события false или Error
+         //Событие onBeforeUpdateModel необходимо для пользовательской валидации.
+         //Из события можно вернуть как Boolean(либо Error, который приравнивается к false), так и Deferred
+         //FormController не продолжает сохранение записи, если пользовательский результат будет равен false (либо Error)
          //В случае, если пользователь вернул Error, текст ошибки будет взят из error.message.
          onBeforeUpdateData = this._prepareOnBeforeUpdateResult(this._notify('onBeforeUpdateModel', this.getRecord()));
          if (onBeforeUpdateData.result instanceof Deferred){
