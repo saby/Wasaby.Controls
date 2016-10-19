@@ -9,12 +9,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        'js!SBIS3.CONTROLS.ScrollPagingController',
        'js!SBIS3.CONTROLS.PagingController',
        'js!SBIS3.CONTROLS.BreadCrumbsController',
-      'js!SBIS3.CONTROLS.FilterHistoryController',
+       'js!SBIS3.CONTROLS.FilterHistoryController',
+       'js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
        "Core/helpers/collection-helpers",
        "Core/core-instance",
        "Core/helpers/functional-helpers"
     ],
-    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, colHelpers, cInstance, fHelpers) {
+    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, colHelpers, cInstance, fHelpers) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
@@ -87,11 +88,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
              */
             paging: undefined
          },
-         _historyController: null, 
-         _searchController: null, 
-         _scrollPagingController: null, 
-         _pagingController: null, 
-         _breadCrumbsController: null, 
+         _historyController: null,
+         _searchController: null,
+         _scrollPagingController: null,
+         _pagingController: null,
+         _breadCrumbsController: null,
          _filterHistoryController: null,
          _pagingHistoryController: null
       },
@@ -132,7 +133,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        * </pre>
        */
       bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, searchMode, doNotRespondOnReset) {
-         if (!this._searchController){ 
+         if (!this._searchController){
             this._searchController = new SearchController({
                view: this._options.view,
                searchForm: searchForm || this._options.searchForm,
@@ -242,7 +243,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
 
             if(filter) {
                /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
-               filterButton.setFilterStructure(this._filterHistoryController._prepareStructureElemForApply(filter.filter));
+               filterButton.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(filter.filter, filterButton.getFilterStructure()));
                /* Это синхронизирует фильтр и структуру, т.к. некоторые фильтры возможно мы не сохраняли,
                   и надо, чтобы это отразилось в структуре */
                view.setFilter(filter.viewFilter, true);
@@ -305,7 +306,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          if (this._historyController){
             this._historyController.destroy();
             this._historyController  = null;
-         } 
+         }
          if (this._searchController){
             this._searchController.destroy();
             this._searchController = null;
