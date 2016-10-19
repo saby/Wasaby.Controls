@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
          },
 
          _modifyOptions: function(options) {
-            options.defaultConfig[0].order = options.side === 'right' ? 1000 : 0;
+            options.defaultConfig[0].order = options.side === 'right' ? 1000 : 1;
             options.defaultConfig[0].icon = options.side === 'right' ? 'sprite:icon-16 icon-View icon-primary' : 'sprite:icon-16 icon-ViewBack icon-primary';
             options = RichEditorRoundToolbar.superclass._modifyOptions.apply(this, arguments);
             return options;
