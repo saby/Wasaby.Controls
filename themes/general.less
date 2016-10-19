@@ -71,3 +71,25 @@ input[type="reset"]::-moz-focus-inner {
     color: @gray-color;
   }
 }
+
+.ws-disabled {
+  .icon-primary, .icon-error, .icon-done, .icon-attention, .icon-hover, .action-hover:hover {
+    color: @icon-color-disabled !important;
+  }
+}
+
+.ws-header {
+  .ws-header-mixin(@header-padding-left, @header-padding-right, @header-font, @header-color);
+}
+
+.ws-bigHeader {
+  .ws-header-mixin(@header-padding-left, @header-padding-right, @bigHeader-font, @bigHeader-color);
+}
+
+.ws-subheader {
+  .ws-header-mixin(@header-padding-left, @header-padding-right, @subheader-font, @subheader-color);
+}
+
+.ws-bigSubheader {
+  .ws-header-mixin(@header-padding-left, @header-padding-right, @bigSubheader-font, @bigSubheader-color);
+}
