@@ -1158,15 +1158,37 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          return this._options.expand;
       },
       getParentKey: function (DataSet, item) {
-         var
-            itemParent = this._options._itemsProjection.getItemBySourceItem(item).getParent().getContents();
-         return cInstance.instanceOfModule(itemParent, 'WS.Data/Entity/Record') ? itemParent.getId() : itemParent;
+         var itemProjection = this._options._itemsProjection.getItemBySourceItem(item);
+         if( itemProjection !== undefined ) {
+            var itemParent = itemProjection.getParent().getContents();
+            return $ws.helpers.instanceOfModule(itemParent, 'WS.Data/Entity/Record') ? itemParent.getId() : itemParent;
+         }
+         return undefined;
       },
 
       _dropPageSave: function(){
          var root = this._options.root;
          this._pageSaver = {};
          this._pageSaver[root] = 0;
+      },
+
+      _onDragCallback: function(dragObject) {
+         var target = dragObject.getTarget();
+         if (target) {
+            var model = target.getModel(),
+               itemsProjection = this._getItemsProjection(),
+               projectionItem = itemsProjection.getItemBySourceItem(model);
+            if (projectionItem && projectionItem.isNode() && !projectionItem.isExpanded()) {//раскрываем папку если зависли над ней на 1 секунду
+               window.setTimeout(function () {
+                  if (dragObject.isDragging() && target == dragObject.getTarget()) {
+                     var projectionItem = itemsProjection.getItemBySourceItem(model);//еще раз проверим есть ли эелемент в проекции
+                     if (projectionItem && !projectionItem.isExpanded()) {
+                        this.expandNode(model.getId());
+                     }
+                  }
+               }.bind(this), 1000);
+            }
+         }
       }
    };
    return TreeMixin;
