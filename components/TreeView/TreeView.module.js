@@ -36,6 +36,11 @@ define('js!SBIS3.CONTROLS.TreeView', [
       init: function () {
          TreeView.superclass.init.apply(this, arguments);
          this._container.addClass('controls-TreeView');
+      },
+
+      _onDragHandler: function (dragObject, e) {
+         TreeView.superclass._onDragHandler.call(this, dragObject, e);
+         this._onDragCallback(dragObject, e);
       }
    });
 

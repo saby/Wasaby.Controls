@@ -699,7 +699,6 @@ define('js!SBIS3.CONTROLS.ListView',
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
-            _searchParamName: undefined, //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
             _componentBinder: null,
             _touchSupport: false,
             _dragInitHandler: undefined //метод который инициализирует dragNdrop
@@ -1663,6 +1662,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      onAfterEndEdit: function(event, model, target, withSaving) {
                         this.setSelectedKey(model.getId());
                         event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
+                        this._toggleEmptyData(!this.getItems().getCount());
                         this._hideToolbar();
                      }.bind(this),
                      onDestroy: function() {
@@ -1895,9 +1895,13 @@ define('js!SBIS3.CONTROLS.ListView',
 
                   }
                });
-               this._itemsToolbar.getItemsActions().subscribe('onHideMenu', function() {
-                  self.setActive(true);
-               });
+               //Когда массив action's пустой getItemsAction вернет null
+               var actions = this._itemsToolbar.getItemsActions();
+               if (actions) {
+                  actions.subscribe('onHideMenu', function () {
+                     self.setActive(true);
+                  });
+               }
             }
             return this._itemsToolbar;
          },
@@ -2232,9 +2236,15 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          isScrollOnBottom: function(noOffset){
+            if (!this._scrollWatcher){
+               this._createScrollWatcher();
+            }
             return this._scrollWatcher.isScrollOnBottom(noOffset);
          },
          isScrollOnTop: function(){
+            if (!this._scrollWatcher){
+               this._createScrollWatcher();
+            }
             return this._scrollWatcher.isScrollOnTop();
          },
          _showLoadingIndicator: function () {

@@ -315,8 +315,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          /* Т.к. у нас в вёрстке две иконки, то позиционируем в зависимости от той, которая показывается,
             в .200 переделаем на маркер */
          if(arrowContainer.length === 2) {
-            /* Для стандартного отображения учитываем паддинги и ширину икноки разворота папки */
-            if ((folderTitle[0].offsetWidth + td.find('.js-controls-TreeView__expand').outerWidth(true) + ADDITIONAL_LEVEL_OFFSET) > td[0].offsetWidth) {
+            /* Считаем, чтобы правая координата названия папки не выходила за ячейку,
+               учитываем возможные отступы иерархии и ширину expander'a*/
+            if ( td[0].getBoundingClientRect().right - parseInt(td.css('padding-right'), 10) < folderTitle[0].getBoundingClientRect().right + HIER_WRAPPER_WIDTH) {
                arrowContainer = arrowContainer[1];
             } else {
                arrowContainer = arrowContainer[0];
@@ -498,6 +499,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          config.getEditorOffset = this._getEditorOffset.bind(this);
          config.hierField = this._options.hierField;
          return config;
+      },
+
+      _onDragHandler: function (dragObject, e) {
+         DataGridView.superclass._onDragHandler.call(this, dragObject, e);
+         this._onDragCallback(dragObject, e);
       }
    });
 

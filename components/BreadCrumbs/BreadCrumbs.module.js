@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
     * </component>
     */
    'use strict';
-   //TODO: Переписать все к чертям 
+   //TODO: Переписать все к чертям
    var BreadCrumbs = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], /** @lends SBIS3.CONTROLS.BreadCrumbs.prototype */{
       _dotTplFn: dotTpl,
       $protected: {
@@ -147,7 +147,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
       setItems: function(items){
          BreadCrumbs.superclass.setItems.call(this, items);
-         this._dataSet._keyField = this._options.keyField; 
+         this._dataSet._keyField = this._options.keyField;
       },
 
       //Переопределяю метод getElementToFocus для того, чтобы не создавался fake focus div
@@ -226,12 +226,13 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          if (dots.length){
             dots.detach();
          } else {
+            var item = {
+               dots: true,
+               get: function(field) {return this[field];}
+            };
+            item[this._options.displayField] = '...';
             dots = $(pointTpl({
-                  item: {
-                     title: '...',
-                     dots: true,
-                     get: function(field) {return this[field];}
-                  },
+                  item: item,
                   decorators: this._options._decorators,
                   displayField: this._options.displayField
                }));
@@ -258,13 +259,13 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                crumbs[i - 1].className += ' ws-hidden';
             }
          }
-         
+
          //Если после всех манипуляций все еще не убираемся в контейнер, будем обрезать текст
          crumbs = $('.controls-BreadCrumbs__crumb', targetContainer).not('.ws-hidden').not('.controls-BreadCrumbs__dots');
 
          //Минимум остается первая и последняя хлебная крошка
          if (targetContainer.outerWidth(true) + this._homeIconWidth >= containerWidth) {
-            //ширина декоротивных элементов -  блок с домиком, троеточие, стрелки 
+            //ширина декоротивных элементов -  блок с домиком, троеточие, стрелки
             var dotsWidth = $('.controls-BreadCrumbs__dots', this._container).outerWidth(true) || 0,
                width = this._homeIconWidth + dotsWidth + this._arrowWidth * 2,
                halfWidth = Math.floor((containerWidth - width) / 2);

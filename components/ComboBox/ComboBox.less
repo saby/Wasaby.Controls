@@ -70,6 +70,18 @@
          }
        }
      }
+     &.ws-disabled,
+     &.ws-disabled:hover {
+       cursor: @combo-box-disabled-cursor;
+       border-width: @combo-box-disabled-border-width;
+       border-bottom-color: @combo-box-disabled-border-color;
+       color: @combo-box-disabled-color;
+       .controls-TextBox__afterFieldWrapper {
+         .controls-ComboBox__arrowDown {
+           display: none;
+         }
+       }
+     }
    }
    &.controls-ComboBox__editable-false {
       .controls-TextBox__fieldWrapper {
@@ -120,15 +132,6 @@
          }
       }
    }
-   &.ws-disabled,
-   &.ws-disabled:hover {
-      cursor: @combo-box-disabled-cursor;
-      .controls-TextBox__afterFieldWrapper {
-         .controls-ComboBox__arrowDown {
-            display: none;
-         }
-      }
-   }
 
    &.controls-ComboBox__ellipsis {
       .controls-TextBox__fieldWrapper {
@@ -148,8 +151,8 @@
    .border-radius(@combo-box-picker-border-radius);
    .controls-ComboBox__itemRow {
       font: @combo-box-picker-item-font;
-      font-size: 15px;
-      padding: 6px 4px;
+      font-size: @combo-box-picker-item-font-size;
+      padding: @combo-box-picker-item-padding;
       cursor: @combo-box-cursor;
       color: @combo-box-picker-item-text-color;
       background: @combo-box-picker-item-bg;
