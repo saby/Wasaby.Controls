@@ -1,6 +1,6 @@
-<div class="controls-DropdownList__item {{?it.multiselect}} controls-DropdownList__multiselect{{?}}">
+<div class="controls-DropdownList__item{{?it.multiselect}} controls-DropdownList__multiselect{{?}}{{debugger;}}{{?(it.item.getId() === it.defaultId)}} controls-ListView__defaultItem{{?}}" data-hash="{{=it.projItem.getHash()}}" data-id="{{=it.item.getId()}}">
    {{?it.multiselect}}
       <span class="controls-DropdownList__itemCheckBox js-controls-DropdownList__itemCheckBox"></span>
    {{?}}
-   <span class="controls-DropdownList__itemTextWrapper">{{=it.title}}</span>
+   <span class="controls-DropdownList__itemTextWrapper">{{=it.item.get(it.displayField)}}</span>
 </div>
