@@ -706,9 +706,9 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
          config.hideQuestion = true;
 
-         //Обрабатываем событие onBeforeUpdate. В результате получим объект, который вернет флаг,
-         //сообщающий о том, нужно ли начинать сохранение, и сообщение ошибки, если флаг = false.
-         //Если из события вернули deferred - ждем когда он стрельнет и действуем по той же логике.
+         //Событие onBeforeUpdateModel необходимо для асинхронной пользовательской валидации.
+         //FormController не продолжает сохранение записи, если пользователь вернул из обработчика события false или Error
+         //В случае, если пользователь вернул Error, текст ошибки будет взят из error.message.
          onBeforeUpdateData = this._prepareOnBeforeUpdateResult(this._notify('onBeforeUpdateModel', this.getRecord()));
          if (onBeforeUpdateData.result instanceof Deferred){
             onBeforeUpdateData.result.addBoth(function(result){
@@ -729,7 +729,6 @@ define('js!SBIS3.CONTROLS.FormController', [
       },
       _prepareOnBeforeUpdateResult: function(result){
          var errorMessage = 'updateModel canceled from onBeforeUpdateModel event';
-         //Если из события вернули ошибку - то запоминаем текст ошибки и говорим, что сохранять дальше не нужно.
          if (result instanceof Error) {
             errorMessage = result.message;
             result = false;
