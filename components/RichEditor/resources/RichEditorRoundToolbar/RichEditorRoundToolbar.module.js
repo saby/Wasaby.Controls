@@ -135,9 +135,6 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
          _prepareItems: function(items, defaultconfig, expanded) {
             var
                items = RichEditorRoundToolbar.superclass._prepareItems.apply(this, arguments);
-            items.sort(function(item1,item2){
-               return (item1.order || 0) - (item2.order || 0)
-            });
             for (var i in items) {
                if (items.hasOwnProperty(i)) {
                   items[i].visible = items[i].basic || expanded;
