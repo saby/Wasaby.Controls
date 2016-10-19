@@ -7,8 +7,9 @@ define('js!SBIS3.CONTROLS.HistoryController', [
    "Core/UserConfig",
    "Core/helpers/string-helpers",
    "Core/Deferred",
-   "Core/helpers/functional-helpers"
-], function( cSessionStorage, cAbstract, UserConfig, strHelpers, Deferred,fHelpers) {
+   "Core/helpers/functional-helpers",
+   "Core/ConsoleLogger"
+], function( cSessionStorage, cAbstract, UserConfig, strHelpers, Deferred, fHelpers, ConsoleLogger) {
 
    'use strict';
 
@@ -48,7 +49,15 @@ define('js!SBIS3.CONTROLS.HistoryController', [
       },
 
       $constructor: function() {
-         this._history = this._options.serialize(false, cSessionStorage.get(this._options.historyId));
+         var serializedHistory;
+
+         try {
+            serializedHistory = this._options.serialize(false, cSessionStorage.get(this._options.historyId));
+         } catch (e) {
+            ConsoleLogger.error('HistoryController', e.message, e);
+            serializedHistory = null;
+         }
+         this._history = serializedHistory;
       },
 
       /**

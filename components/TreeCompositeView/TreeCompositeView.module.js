@@ -306,10 +306,12 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                item = this._options._items.getRecordById(id);
                if (item) {
                   parentBranchId = this.getParentKey(undefined, this._options._items.getRecordById(id));
-                  if (!recordsGroup[parentBranchId]) {
-                     recordsGroup[parentBranchId] = [];
+                  if( parentBranchId !== undefined ) {
+                     if (!recordsGroup[parentBranchId]) {
+                        recordsGroup[parentBranchId] = [];
+                     }
+                     recordsGroup[parentBranchId].push(id);
                   }
-                  recordsGroup[parentBranchId].push(id);
                }
             }, this);
             if (Object.isEmpty(recordsGroup)) {
