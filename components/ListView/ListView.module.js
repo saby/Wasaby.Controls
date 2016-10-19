@@ -2786,21 +2786,18 @@ define('js!SBIS3.CONTROLS.ListView',
          _findDragDropContainer: function() {
             return this._getItemsContainer();
          },
-         _getDragItems: function(hash) {
-            var item = this._getItemProjectionByHash(hash).getContents();
-            if (this._options.multiselect) {
-               var items = this.getSelectedItems();
-               if (items.getIndex(item) < 0) {
-                  items.add(item);
-               }
+         _getDragItems: function(dragItem, selectedItems) {
+            if (selectedItems) {
                var array = [];
-               items.each(function(item){
+               if (selectedItems.getIndex(dragItem) < 0) {
+                  array.push(dragItem);
+               }
+               selectedItems.each(function(item) {
                   array.push(item);
                });
                return array;
-            } else {
-               return [item];
             }
+            return [dragItem];
          },
          _canDragStart: function(e) {
             //TODO: При попытке выделить текст в поле ввода, вместо выделения начинается перемещения элемента.
@@ -2811,7 +2808,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _beginDragHandler: function(dragObject, e) {
             var
-                id,
                 target;
             target = this._findItemByElement(dragObject.getTargetsDomElemet());
             //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
@@ -2822,8 +2818,9 @@ define('js!SBIS3.CONTROLS.ListView',
                if (target.hasClass('controls-DragNDropMixin__notDraggable')) {
                   return false;
                }
-               id = target.data('hash');
-               var items = this._getDragItems(id),
+               var  selectedItems = this.getSelectedItems(),
+                  targetsItem = this._getItemProjectionByHash(target.data('hash')).getContents(),
+                  items = this._getDragItems(targetsItem, selectedItems),
                   source = [];
                colHelpers.forEach(items, function (item) {
                   var projItem = this._getItemsProjection().getItemBySourceItem(item);
