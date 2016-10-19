@@ -177,9 +177,19 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              }
           },
 
+          /* Подготавливает переданную стуктруту для установки в кнопку фильтров,
+           оригинальная структура кнопки фильтров может меняться прикладными разработчиками,
+           и чтобы не нарушать целостность этой структуры, структура из истории аккуртано вмерживается
+           в оригинальную, заменяя лишь value и resetValue, и при необходимости сбрасывает value в resetValue */
           _prepareStructureElemForApply: function(structure) {
              /* Чтобы не портить текущую историю, сделаем копию (иначе не применится фильтр) */
-             var currentStructureCopy = cFunctions.clone(this._options.filterButton.getFilterStructure());
+             var currentStructureCopy = cFunctions.clone(this._options.filterButton.getFilterStructure()),
+                 resValue = function (elem) {
+                    if(elem.hasOwnProperty('value') && elem.hasOwnProperty('resetValue') && !colHelpers.isEqualObject(elem.value, elem.resetValue)) {
+                       elem.value = elem.resetValue;
+                    }
+                 };
+
              prepareNewStructure(currentStructureCopy, structure);
 
              /* Алгоритм следующий:
@@ -195,17 +205,21 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 if(elemFromHistory) {
                    /* Меняем только value и caption, т.к. нам нужны только значения для фильтрации из историии,
                       остальные значения структуры нам не интересны + их могут менять, и портить их неправильно тем, что пришло из истории неправильно */
+
                    if(elemFromHistory.value !== undefined) {
                       elem.value = elemFromHistory.value;
+                   } else {
+                      resValue(elem);
                    }
+
                    if(elemFromHistory.caption !== undefined) {
                       elem.caption = elemFromHistory.caption;
                    }
                    if(elemFromHistory.visibilityValue !== undefined) {
                       elem.visibilityValue = elemFromHistory.visibilityValue;
                    }
-                } else if(elem.value && elem.resetValue && !colHelpers.isEqualObject(elem.value, elem.resetValue)) {
-                   elem.value = elem.resetValue;
+                } else {
+                   resValue(elem);
                 }
              });
              return currentStructureCopy;
