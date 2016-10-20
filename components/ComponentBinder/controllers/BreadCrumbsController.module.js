@@ -130,6 +130,25 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
          backButton.subscribe('onActivated', function(){
             setPreviousRoot();
          });
+      },
+
+      /**
+       * Установить отображение нового пути для хлебных крошек и кнопки назад
+       * @param {Array} path новый путь, последний элемент попадает в BackButton, остальные в хлебные крошки
+       */
+      setPath: function(path){
+         this._path = path;
+         if (path.length){
+            this._currentRoot = this._path.pop();
+         } else {
+            this._currentRoot = {};
+         }
+         this._options.breadCrumbs.setItems(this._path || []);
+         this._options.backButton.setCaption(this._currentRoot.title || '');
+      },
+
+      getCurrentRootRecord: function(){
+         return this._currentRoot ? this._currentRoot.data : null;
       }
 
    });

@@ -102,18 +102,19 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        * @param {Array} path новый путь, последний элемент попадает в BackButton, остальные в хлебные крошки
        */
       setPath: function(path){
-         this._path = path;
-         if (path.length){
-            this._currentRoot = this._path.pop();
-         } else {
-            this._currentRoot = {};
+         if (this._breadCrumbsController) {
+            this._breadCrumbsController.setPath(path);
          }
-         this._options.breadCrumbs.setItems(this._path || []);
-         this._options.backButton.setCaption(this._currentRoot.title || '');
+
       },
 
       getCurrentRootRecord: function(){
-         return this._currentRoot ? this._currentRoot.data : null;
+         if (this._breadCrumbsController) {
+            return this._breadCrumbsController.getCurrentRootRecord();
+         }
+         else {
+            return null
+         }
       },
 
       /**
