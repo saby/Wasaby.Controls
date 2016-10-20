@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.PagingController', ['js!SBIS3.StickyHeaderManager', "C
                }
             }
          })
-      },
+      }
 
    });
 
