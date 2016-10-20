@@ -134,8 +134,11 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             if(item.has('headTemplate')){
                cfg.headTemplate = item.get('headTemplate');
             }
-            if(item.has('itemTemplate') || item.has('itemTpl')){
-               cfg.itemTpl = item.get('itemTemplate') || item.get('itemTpl');
+            if(item.has('itemTpl')){
+               cfg.itemTpl = item.get('itemTpl');
+            }
+            else if(item.has('itemTemplate')){
+               cfg.itemTemplate = item.get('itemTemplate');
             }
             if(item.has('includedTemplates')){
                cfg.includedTemplates = item.get('includedTemplates');
