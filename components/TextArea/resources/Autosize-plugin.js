@@ -177,7 +177,7 @@ define('js!SBIS3.CORE.FieldText/resources/Autosize-plugin', [], function () {
                original = parseInt($(ta).height(), 10);
                var
                   cond = maxHeight && height > maxHeight,
-                  needScroll = cond && ta.style.overflowY !== 'scroll'; //Первый раз отобразили скролл и нужна полная прокрутка текста?
+                  needScroll = false;//отключаю этот скролл, неясно зачем он вообще cond && ta.style.overflowY !== 'scroll'; //Первый раз отобразили скролл и нужна полная прокрутка текста?
                ta.style.overflowY = cond ? 'scroll' : 'hidden';
                $(ta).parent().toggleClass('ws-text-area-no-padding-right', cond);
                height = cond ? maxHeight : height < minHeight ? minHeight : height;
