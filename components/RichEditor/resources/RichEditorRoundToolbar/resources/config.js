@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
                }
             },
             basic: true,
-            order: 0
+            order: 1
          },
          {
             name: 'styles',

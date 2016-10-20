@@ -21,7 +21,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          handlers: {
             onActivated: onButtonClick
          },
-         enabled: false
+         enabled: false,
+         order: 10
       },
 
       {
@@ -32,7 +33,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          handlers: {
             onActivated: onButtonClick
          },
-         enabled: false
+         enabled: false,
+         order: 10
       },
 
       {
@@ -52,7 +54,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             onSelectedItemsChange: function(e, key) {
                this.getParent()._setFontStyle(key[0]);
             }
-         }
+         },
+         order: 20
       },
 
       {
@@ -62,7 +65,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          icon: 'sprite:icon-16 icon-Bold icon-primary',
          handlers: {
             onActivated: onButtonClick
-         }
+         },
+         order: 30
       },
 
       {
@@ -72,7 +76,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          icon: 'sprite:icon-16 icon-Italic icon-primary',
          handlers: {
             onActivated: onButtonClick
-         }
+         },
+         order: 40
       },
 
       {
@@ -82,7 +87,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          icon: 'sprite:icon-16 icon-Underline icon-primary',
          handlers: {
             onActivated: onButtonClick
-         }
+         },
+         order: 50
       },
 
       {
@@ -92,7 +98,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          icon: 'sprite:icon-16 icon-Stroked icon-primary',
          handlers: {
             onActivated: onButtonClick
-         }
+         },
+         order: 60
       },
 
       {
@@ -112,7 +119,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             onSelectedItemsChange: function(event, key) {
                this.getParent()._setTextAlign(key[0]);
             }
-         }
+         },
+         order: 70
       },
 
       {
@@ -135,7 +143,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             onMenuItemActivate: function(event, key) {
                this.getParent()._setFontColor(key);
             }
-         }
+         },
+         order: 80
       },
 
       {
@@ -153,7 +162,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             onMenuItemActivate: function(event, key) {
                this.getParent()._execCommand(key);
             }
-         }
+         },
+         order: 90
       },
 
       {
@@ -169,7 +179,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                }.bind(this), this._container);
             }
          },
-         visible: !constants.browser.isIE8
+         visible: !constants.browser.isIE8,
+         order: 100
       },
 
       {
@@ -181,7 +192,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             onActivated: onButtonClick
          },
          enabled: false,
-         visible: !constants.browser.isIE8
+         visible: !constants.browser.isIE8,
+         order: 110
       },
 
       {
@@ -193,7 +205,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             onActivated: function(event, originalEvent) {
                this.getParent()._selectFile(originalEvent);
             }
-         }
+         },
+         order: 120
       },
 
       {
@@ -208,7 +221,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                this.getParent()._insertSmile(key);
             }
          },
-         visible: false
+         visible: false,
+         order: 130
       },
 
       {
@@ -225,7 +239,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                }, this._container);
             }
          },
-         visible: !constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop
+         visible: !constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop,
+         order: 140
       },
 
       {
@@ -237,7 +252,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             onActivated: function() {
                this.getParent()._toggleContentSource();
             }
-         }
+         },
+         order: 150
       }
    ];
 });
