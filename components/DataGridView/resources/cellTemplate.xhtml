@@ -1,7 +1,10 @@
-{{var val = it.getColumnVal(it.item, it.field);}}
-{{val = Array.indexOf(it.ladderColumns, it.field) > -1 && !it.ladder.isPrimary(it.item, it.field) ? '' : val;}}
-{{?((val !== null) && (val !== undefined))}}{{=it.decorators.applyOnly(
-        $ws.helpers.escapeHtml(val),
-        {highlight: it.column.highlight}
-    )}}
+{{
+   var val = it.getColumnVal(it.item, it.field);
+}}{{
+   val = Array.indexOf(it.ladderColumns, it.field) > -1 && !it.ladder.isPrimary(it.item, it.field) ? '' : val;
+}}{{?((val !== null) && (val !== undefined))
+   }}{{=it.decorators.applyOnly(
+      $ws.helpers.escapeHtml(val),
+      {highlight: it.column.highlight}
+   )}}
 {{?}}
