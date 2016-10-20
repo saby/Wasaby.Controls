@@ -253,7 +253,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _buildTplArgs: function(item) {
             return {
                item: item,
-               itemTpl: this._options.itemTpl,
+               itemTpl: TemplateUtil.prepareTemplate(this._options.itemTpl),
                defaultId: this._defaultId,
                displayField: this._options.displayField,
                hierField: this._options.hierField,
