@@ -20,13 +20,22 @@ var fs = require('fs'),
             }
          }
       }
-   };
+   },
+    testPathFix = function(key ,path) {
+       if(typeof path === 'string' && path.indexOf('/') === 0) {
+          return '/components' + path;
+       }
+       return path;
+    };
 
 dirWalker(baseResources);
 dirWalker(dataResources);
 
 fs.writeFileSync(path.join(__dirname, 'components/contents.json'), JSON.stringify({jsModules: jsModules}, null, 3));
 fs.writeFileSync(path.join(__dirname, 'components/contents.js'), 'contents = ' + JSON.stringify({jsModules: jsModules}, null, 3) + ';');
+
+fs.writeFileSync(path.join(__dirname, 'tests/unit/contents.json'), JSON.stringify({jsModules: jsModules}, testPathFix, 3));
+fs.writeFileSync(path.join(__dirname, 'tests/unit/contents.js'), 'contents = ' + JSON.stringify({jsModules: jsModules}, testPathFix, 3) + ';');
 
 
 
