@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], functi
       },
       /**
        * Возвращает связанный объект с данными
-       * @returns {*}
+       * @returns {WS.Data/Collection/IList|SBIS3.CONTROLS.ListView}
        * @see linkedObject
        */
       getLinkedObject: function () {
@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], functi
       },
       /**
        * Устанавливает связанный объект с данными
-       * @param {*} list
+       * @param {WS.Data/Collection/IList|SBIS3.CONTROLS.ListView} list
        * @see linkedObject
        */
       setLinkedObject: function (list) {
@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], functi
       },
       /**
        * Устанавливает связанный источник данных
-       * @param {*}
+       * @param {WS.Data/Source/ISource}
        * @see dataSource
        */
       setDataSource: function(dataSource) {
@@ -88,11 +88,29 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], functi
             return record ? [record] : undefined;
          }
       },
+      /**
+       * Возвращает связанный список элементов
+       * @returns {WS.Data/Collection/IList}
+       * @protected
+       */
       _getItems: function() {
-         if(cInstance.instanceOfMixin(this.getLinkedObject(), 'SBIS3.CONTROLS.ItemsControlMixin')) {
+         var listView = this.getLinkedObject();
+         if (cInstance.instanceOfModule(listView, 'SBIS3.CONTROLS.ListView')) {
             return this.getLinkedObject().getItems();
          }
          return this.getLinkedObject();
+      },
+      /**
+       * Если связанный объект списочный контрол вернет его, иначе undefined
+       * @returns {SBIS3.CONTROLS.ListView|undefined}
+       * @protected
+       */
+      _getListView: function() {
+         var listView = this.getLinkedObject();
+         if (cInstance.instanceOfModule(listView, 'SBIS3.CONTROLS.ListView')) {
+            return listView;
+         }
+         return undefined;
       }
    };
    return ListMixin;

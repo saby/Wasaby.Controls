@@ -37,9 +37,27 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
                         icon: 'icon-16 icon-Bell icon-primary'
                      },
                      {
+                        key : 21,
+                        title : rk('п.1'),
+                        icon: 'icon-16 icon-Bell icon-primary',
+                        parent: 2
+                     },
+                     {
+                        key : 22,
+                        title : rk('п.2'),
+                        icon: 'icon-16 icon-Bell icon-primary',
+                        parent: 2
+                     },
+                     {
                         key : 3,
                         title : rk('Три'),
                         icon: 'icon-16 icon-Bold icon-primary'
+                     },
+                     {
+                        key : 31,
+                        title : rk('п.100'),
+                        icon: 'icon-16 icon-Bell icon-primary',
+                        parent: 3
                      },
                      {
                         key : 4,
@@ -47,7 +65,7 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
                         icon: 'icon-16 icon-Check icon-primary'
                      },
                      {
-                        key : 5,
+                        key : "5",
                         title : rk('Пять'),
                         icon: 'icon-16 icon-Colorize icon-primary'
                      }

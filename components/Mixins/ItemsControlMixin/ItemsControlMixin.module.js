@@ -768,11 +768,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             data.tplData = this._prepareItemData();
             //TODO опять же, перед полной перерисовкой данные лесенки достаточно сбросить, чтобы она правильно отработала
             //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
-            var ladder = this._options._decorators && this._options._decorators.getByName('ladder');
-            ladder && ladder.setIgnoreEnabled(true);
-            ladder && ladder.reset();
             markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
-            ladder && ladder.setIgnoreEnabled(false);
             //TODO это может вызвать тормоза
             var comps = this._destroyInnerComponents($itemsContainer, this._options.easyGroup);
             if (markup.length) {
@@ -822,18 +818,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                dot = data.defaultItemTpl;
             }
 
-               var ladder = this._options._decorators && this._options._decorators.getByName('ladder');
-               ladder && ladder.setMarkLadderColumn(true);
-
             markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this._options);
             /*TODO посмотреть не вызывает ли это тормоза*/
             this._clearItems(targetElement);
             targetElement.after(markup).remove();
 
-               ladder && ladder.setMarkLadderColumn(false);
-
             itemContainer = this._getDomElementByItem(item);
-            this._ladderCompare([itemContainer.prev(), itemContainer, itemContainer.next()]);
             this._reviveItems(item.getContents().getId() != this._options.selectedKey);
          }
       },
@@ -847,8 +837,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._clearItems(targetElement);
                /*TODO С этим отдельно разобраться*/
 
-               this._ladderCompare([targetElement.prev(), targetElement.next()]);
-
+            /*TODO Особое поведение при группировке*/
                if (!Object.isEmpty(this._options.groupBy)) {
                   /*TODO косяк Лехи - не присылает группу при удалении*/
                   /*if (this._options.easyGroup) {
@@ -912,19 +901,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             else {
                var
-                  ladderDecorator,
                   itemsToDraw,
                   data,
                   markup,
                   item,
                   container, firstHash, lastHash, itemsContainer;
-
-               /*TODO Лесенка*/
-               if (this._options.ladder) {
-                  ladderDecorator = this._options._decorators.getByName('ladder');
-                  ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
-               }
-               /*TODO Лесенка*/
 
                itemsToDraw = this._getItemsForRedrawOnAdd(newItems, groupId);
                if (itemsToDraw.length) {
@@ -936,20 +917,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
                   itemsContainer = this._getItemsContainer();
                   if (newItemsIndex == 0) {
-
-                     /*TODO Лесенка*/
-                     if (this._options.ladder) {
-                        firstHash = itemsToDraw[0].getHash();
-                        var lastElem = $('.js-controls-ListView__item', itemsContainer).first();
-                        if (lastElem.length) {
-                           lastHash = lastElem.attr('data-hash');
-                        }
-                        else {
-                           lastHash = itemsToDraw[itemsToDraw.length - 1].getHash();
-                        }
-                     }
-                     /*TODO Лесенка*/
-
                      // TODO. Костыль для редактирования по месту. Написан тут, т.к. необходимо его убрать (решение не универсальное).
                      // https://inside.tensor.ru/opendoc.html?guid=8fe37872-c08b-4a7b-9c9f-d04f531cc45b
                      this._optimizedInsertMarkup(itemsContainer, markup, this._options._items.getCount() > 1);
@@ -963,66 +930,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                         container = this._getDomElementByItem(item);
                         container.after(markup);
                      }
-
-                     /*TODO Лесенка*/
-                     if (this._options.ladder) {
-                        if (!container){
-                           //Для правильной отрисовки лесенки берем предпоследний итем, т.к. может быть ситуация, что последний итем изменился в результате перемещения
-                           var fItem = this._options._itemsProjection.at((newItemsIndex - 2 < 0) ? 0 : newItemsIndex - 2);
-                           container = this._getDomElementByItem(fItem);
-                        }
-                        firstHash = $(container).attr('data-hash');
-                        var nextCont = $(container).next('.js-controls-ListView__item');
-                        if (nextCont.length) {
-                           lastHash = $(nextCont).attr('data-hash');
-                        }
-                        else {
-                           lastHash = itemsToDraw[itemsToDraw.length - 1].getHash();
-                        }
-                     }
-                     /*TODO Лесенка*/
-
-                  }
-
-                  /*TODO Лесенка суть - надо пробежать по только что добавленным контейнерам и вызвать для них ladderCompare*/
-                  if (this._options.ladder) {
-                     var
-                        rows = $('.js-controls-ListView__item', itemsContainer),
-                        projection = this._options._itemsProjection,
-                        ladderRows = [], start = false;
-
-                     for (i = 0; i < rows.length; i++) {
-                        if ($(rows[i]).attr('data-hash') == firstHash) {
-                           start = true;
-                        }
-                        //Если не можем найти item в проекции, значит эта запись будет удалена
-                        if (start && projection.getByHash($(rows[i]).attr('data-hash'))) {
-                           ladderRows.push($(rows[i]));
-                        }
-                        if ($(rows[i]).attr('data-hash') == lastHash) {
-                           start = false;
-                           //Над i + 1 элементом изменилась запись, для него тоже нужна лесенка
-                           if ($(rows[i + 1]).length){
-                              ladderRows.push($(rows[i + 1]));
-                           }
-                           //На i + 1 позиции, может стоять элемент, который добавили после перемещения. запускаем лесенку для записи, которая находится под ним
-                           if ($(rows[i + 2]).length){
-                              ladderRows.push($(rows[i + 2]));
-                           }
-                           break;
-                        }
-                     }
-                     this._ladderCompare(ladderRows);
-                     /*TODO Лесенка*/
                   }
 
                   this._reviveItems();
-
-                  /*TODO Лесенка*/
-                  if (this._options.ladder) {
-                     ladderDecorator && ladderDecorator.setMarkLadderColumn(false);
-                  }
-                  /*TODO Лесенка*/
                }
             }
          }
@@ -1650,16 +1560,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       redrawItem: function(item, projItem) {
          projItem = projItem || this._getItemProjectionByItemId(item.getId());
-         var ladder = this._options._decorators && this._options._decorators.getByName('ladder');
-         ladder && ladder.setMarkLadderColumn(true);
          var
             targetElement = this._getElementByModel(item),
             newElement = this._createItemInstance(projItem);/*раньше здесь звался _drawItem, но он звал лишнюю группировку, а при перерисовке одного итема она не нужна*/
          this._addItemAttributes(newElement, projItem);
          this._clearItems(targetElement);
          targetElement.after(newElement).remove();
-         ladder && ladder.setMarkLadderColumn(false);
-         this._ladderCompare([newElement.prev(), newElement, newElement.next()]);
          this.reviveComponents();
          this._notifyOnDrawItems(item.getId() != this._options.selectedKey);
       },
@@ -1863,31 +1769,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _itemsReadyCallback: function() {
 
       },
-
-      _ladderCompare: function(rows){
-         var ladderDecorator;
-         if (this._options._decorators){
-            ladderDecorator = this._options._decorators.getByName('ladder');
-            if (ladderDecorator && ladderDecorator.isIgnoreEnabled()){
-               return;
-            }
-         }
-         else {
-            return;
-         }
-         //TODO придрот - метод нужен только для адекватной работы лесенки при перемещении элементов местами
-         for (var i = 1; i < rows.length; i++){
-            var upperRow = $(rows[i - 1]).length ? $('.controls-ladder', rows[i - 1]) : undefined,
-                lowerRow = $(rows[i]).length ? $('.controls-ladder', rows[i]) : undefined,
-               needHide;
-            if (lowerRow && this._isCommonParent($(rows[i-1]), $(rows[i]))) {
-               for (var j = 0; j < lowerRow.length; j++) {
-                  needHide = upperRow ? (upperRow.eq(j).html() == lowerRow.eq(j).html()) : false;
-                  lowerRow.eq(j).toggleClass('ws-invisible', needHide);
-               }
-            }
-         }
-      },
       _isCommonParent: function(upperRow, lowerRow){
          var upperRowParent = upperRow.attr('data-parent-hash'),
              lowerRowParent = lowerRow.attr('data-parent-hash');
@@ -2027,10 +1908,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _addItem: function (projItem, at, withoutNotify) {
          var
             item = projItem.getContents(),
-            ladderDecorator = this._options._decorators && this._options._decorators.getByName('ladder'),
             canApplyGrouping = this._canApplyGrouping(projItem),
             previousGroupBy = this._previousGroupBy;//После добавления записи восстанавливаем это значение, чтобы не сломалась группировка
-         ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
          /*TODO отдельно обрабатываем случай с группировкой*/
          var flagAfter = false;
          if (canApplyGrouping) {
@@ -2046,7 +1925,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
          }
          /**/
-         var target = this._getTargetContainer(projItem),
+         var target = this._getTargetContainer(item),
             currentItemAt = at > 0 ? this._getItemContainerByIndex(target, at - 1) : null,
             template = this._getItemTemplate(projItem),
             newItemContainer = this._buildTplItem(projItem, template),
@@ -2072,8 +1951,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._group(projItem, {at: at});
             this._previousGroupBy = previousGroupBy;
          }
-         ladderDecorator && ladderDecorator.setMarkLadderColumn(false);
-         this._ladderCompare(rows);
          if (!withoutNotify) {
             this._notifyOnDrawItems();
          }

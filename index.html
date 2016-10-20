@@ -184,6 +184,9 @@
                <li>
                   <div id="InformationWindows"></div>
                </li>
+               <li>
+                  <div id="Ladder"></div>
+               </li>
             </ul>
          </td>
          <td>
@@ -595,6 +598,13 @@
                element: "EditInPlacePending",
                caption: 'Edit in place - pending',
                href: '/pages/EditInPlacePending.html'
+            })
+         });
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "Ladder",
+               caption: 'Ladder',
+               href: '/pages/Ladder.html'
             })
          });
       })

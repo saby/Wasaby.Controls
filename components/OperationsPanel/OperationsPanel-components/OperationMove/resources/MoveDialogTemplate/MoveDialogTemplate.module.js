@@ -54,9 +54,7 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
          if (moveTo !== null) {
             moveTo = this._treeView.getItems().getRecordById(moveTo);
          }
-         if (this._treeView._checkRecordsForMove(this._options.records, moveTo)) {
-            this._notify('onMove', this._options.records, moveTo);
-         }
+         this._notify('onMove', this._options.records, moveTo);
          this.sendCommand('close');
       },
 

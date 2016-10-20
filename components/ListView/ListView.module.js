@@ -25,7 +25,6 @@ define('js!SBIS3.CONTROLS.ListView',
    "html!SBIS3.CONTROLS.ListView",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "js!SBIS3.CONTROLS.CommonHandlers",
-   "js!SBIS3.CONTROLS.MoveHandlers",
    "js!SBIS3.CONTROLS.Pager",
    "js!SBIS3.CONTROLS.EditInPlaceHoverController",
    "js!SBIS3.CONTROLS.EditInPlaceClickController",
@@ -52,11 +51,14 @@ define('js!SBIS3.CONTROLS.ListView',
    "browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers",
    "js!SBIS3.CONTROLS.DragEntity.Row",
    "js!WS.Data/Collection/RecordSet",
-   "i18n!SBIS3.CONTROLS.ListView"
+   "i18n!SBIS3.CONTROLS.ListView",
+   "js!SBIS3.CONTROLS.DragEntity.List",
+   "js!WS.Data/MoveStrategy/Base",
+   "js!SBIS3.CONTROLS.ListView.Mover"
 ],
    function ( cFunctions, CommandDispatcher, constants, Deferred,CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
-             TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
+             TemplateUtil, CommonHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
              Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers) {
 
@@ -112,8 +114,8 @@ define('js!SBIS3.CONTROLS.ListView',
        * @category Lists
        */
 
-      /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
-      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DecorableMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
+      /*TODO CommonHandlers тут в наследовании не нужны*/
+      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DecorableMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DragNDropMixin, CommonHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem Происходит при переводе курсора мыши на другой элемент коллекции списка.
@@ -251,7 +253,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {*|Boolean} result Если result равен false то отменяется штатная логика удаления.
           */
          /**
-          * @typedef {String} DragPosition
+          * @typedef {String} MovePosition
           * @variant on Вставить перемещаемые элементы внутрь текущей записи.
           * @variant after Вставить перемещаемые элементы после текущей записи.
           * @variant before Вставить перемещаемые элементы перед текущей записью.
@@ -261,7 +263,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * @property {SBIS3.CONTROLS.Control} owner Контрол, которому принадлежит запись.
           * @property {jQuery} domElement DOM элемент, отображающий запись.
           * @property {WS.Data/Entity/Model} model Модель, соответствующая записи.
-          * @property {DragPosition|undefined} position Позиция элемента после перемещения (определяется только у целевого элемента - того, который находится под курсором мыши).
+          * @property {MovePosition|undefined} position Позиция элемента после перемещения (определяется только у целевого элемента - того, который находится под курсором мыши).
+          */
+          /**
+          * @typedef {Object} DragEntityListOptions
+          * @property {Array} items Массив перемещаемых элементов {@link SBIS3.CONTROLS.DragEntity.Row}.
           */
          $protected: {
             _floatCheckBox: null,
@@ -695,7 +701,19 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see DragEntityOptions
                 * @see SBIS3.CONTROLS.DragEntity.Row
                 */
-               dragEntity: 'dragentity.row'
+               dragEntity: 'dragentity.row',
+               /**
+                * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS.DragEntity.Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS.DragEntity.Row}
+                * @see DragEntityListOptions
+                * @see SBIS3.CONTROLS.DragEntity.List
+                */
+               dragEntityList: 'dragentity.list',
+               /**
+                * @cfg {WS.Data/MoveStrategy/IMoveStrategy) Стратегия перемещения. Класс, который реализует перемещение записей. Подробнее тут {@link WS.Data/MoveStrategy/Base}.
+                * @see {@link WS.Data/MoveStrategy/Base}
+                * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
+                */
+               moveStrategy: 'movestrategy.base'
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
@@ -2166,14 +2184,8 @@ define('js!SBIS3.CONTROLS.ListView',
                var items = dataSet.toArray();
                at = {at: 0};
             }
-            //TODO новый миксин не задействует декоратор лесенки в принципе при любых действиях, кроме первичной отрисовки
-            //это неправильно, т.к. лесенка умеет рисовать и дорисовывать данные, если они добавляются последовательно
-            //здесь мы говорим, чтобы лесенка отработала при отрисовке данных
-            var ladder = this._options._decorators.getByName('ladder');
-            ladder && ladder.setIgnoreEnabled(true);
             //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
             this.getItems().append(dataSet);
-            ladder && ladder.setIgnoreEnabled(false);
 
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this._drawItems(dataSet.toArray(), at);
@@ -2751,7 +2763,6 @@ define('js!SBIS3.CONTROLS.ListView',
                rows = [itemContainer.prev(), anchor, itemContainer, anchor.next()];
                itemContainer.insertAfter(anchor);
             }
-            this._ladderCompare(rows);
          },
          /*DRAG_AND_DROP START*/
          /**
@@ -2762,7 +2773,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
-            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._getDragInitHandler());
+            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item',  this._getDragInitHandler());
          },
 
          /**
@@ -2796,12 +2807,18 @@ define('js!SBIS3.CONTROLS.ListView',
          _findDragDropContainer: function() {
             return this._getItemsContainer();
          },
-         _getDragItems: function(key) {
-            var keys = this._options.multiselect ? cFunctions.clone(this.getSelectedKeys()) : [];
-            if (Array.indexOf(keys, key) == -1 && Array.indexOf(keys, String(key)) == -1) {
-               keys.push(key);
+         _getDragItems: function(dragItem, selectedItems) {
+            if (selectedItems) {
+               var array = [];
+               if (selectedItems.getIndex(dragItem) < 0) {
+                  array.push(dragItem);
+               }
+               selectedItems.each(function(item) {
+                  array.push(item);
+               });
+               return array;
             }
-            return keys;
+            return [dragItem];
          },
          _canDragStart: function(e) {
             //TODO: При попытке выделить текст в поле ввода, вместо выделения начинается перемещения элемента.
@@ -2812,7 +2829,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _beginDragHandler: function(dragObject, e) {
             var
-                id,
                 target;
             target = this._findItemByElement(dragObject.getTargetsDomElemet());
             //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
@@ -2823,12 +2839,12 @@ define('js!SBIS3.CONTROLS.ListView',
                if (target.hasClass('controls-DragNDropMixin__notDraggable')) {
                   return false;
                }
-               id = target.data('id');
-               var items = this._getDragItems(id),
+               var  selectedItems = this.getSelectedItems(),
+                  targetsItem = this._getItemProjectionByHash(target.data('hash')).getContents(),
+                  items = this._getDragItems(targetsItem, selectedItems),
                   source = [];
-               colHelpers.forEach(items, function (id) {
-                  var item = this.getItems().getRecordById(id),
-                     projItem = this._getItemsProjection().getItemBySourceItem(item);
+               colHelpers.forEach(items, function (item) {
+                  var projItem = this._getItemsProjection().getItemBySourceItem(item);
                   source.push(this._makeDragEntity({
                      owner: this,
                      model: item,
@@ -2836,9 +2852,11 @@ define('js!SBIS3.CONTROLS.ListView',
                   }));
                }.bind(this));
 
-               dragObject.setSource(new List({
-                  items: source
-               }));
+               dragObject.setSource(
+                  this._makeDragEntityList({
+                     items: source
+                  })
+               );
                this._hideItemsToolbar();
                return true;
             }
@@ -2956,9 +2974,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                   if (dragObject.getOwner() === this) {
                      var position = target.getPosition();
-                     this._move(models, target.getModel(),
-                        position === DRAG_META_INSERT.on ? undefined : position === DRAG_META_INSERT.after
-                     );
+                     this._getMover().move(models, target.getModel(), position);
+                  } else {
+                     this._getMover().moveFromOutside(dragObject);
                   }
                }
             }
@@ -2967,6 +2985,124 @@ define('js!SBIS3.CONTROLS.ListView',
             this._updateItemsToolbar();
          },
          /*DRAG_AND_DROP END*/
+         //region moveMethods
+         /**
+          * Перемещает записи через диалог. По умолчанию берет все выделенные записи.
+          * @param {Array} MovedItems Массив перемещаемых записей
+          * @deprecated Используйте SBIS3.CONTROLS.Action.List.InteractiveMove.
+          */
+         moveRecordsWithDialog: function(movedItems) {
+            require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove','js!WS.Data/Utils'], function(InteractiveMove, Utils) {
+               Utils.logger.stack(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"', 1);
+               var
+                  action = new InteractiveMove({
+                     linkedObject: this,
+                     parentProperty: this._options.hierField,
+                     moveStrategy: this.getMoveStrategy()
+                  }),
+                  items = this.getItems();
+               $ws.helpers.forEach(movedItems, function(item, i) {
+                  if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
+                     movedItems[i] = items.getRecordById(item);
+                  }
+               }, this);
+               action.execute({movedItems: movedItems});
+            }.bind(this));
+         },
+
+         /**
+          * Перемещает выделенные записи.
+          * @deprecated используйте метод move
+          * @param {WS.Data/Entity/Model|String} target  К какой записи переместить выделенные. Модель либо ее идентификатор.
+          */
+         selectedMoveTo: function(target) {
+            var selectedItems = this.getSelectedItems(false);
+            this._getMover.move(selectedItems, target).addCallback(function(res){
+               if (res !== false) {
+                  this.removeItemsSelectionAll();
+               }
+            });
+         },
+         /**
+          * Переместить на одну запись ввниз.
+          * @param {WS.Data/Entity/Record} record Запись которую надо переместить
+          */
+         moveRecordDown: function(record) {
+            this._getMover().moveRecordDown(arguments[2]||record);//поддерживаем старую сигнатуру
+         },
+         /**
+          * Переместить на одну запись вверх.
+          * @param {WS.Data/Entity/Record} record Запись которую надо переместить
+          */
+         moveRecordUp: function(record) {
+            this._getMover().moveRecordUp(arguments[2]||record);
+         },
+         /**
+          * Возвращает стратегию перемещения
+          * @see WS.Data/MoveStrategy/IMoveStrategy
+          * @returns {WS.Data/MoveStrategy/IMoveStrategy}
+          */
+         getMoveStrategy: function() {
+            return this._moveStrategy || (this._moveStrategy = this._makeMoveStrategy());
+         },
+         /**
+          * Создает стратегию перемещения в зависимости от источника данных
+          * @returns {WS.Data/MoveStrategy/IMoveStrategy}
+          * @private
+          */
+         _makeMoveStrategy: function () {
+            return Di.resolve(this._options.moveStrategy, {
+               dataSource: this.getDataSource(),
+               hierField: this._options.hierField,
+               listView: this
+            });
+         },
+         /**
+          * Устанавливает стратегию перемещения
+          * @see WS.Data/MoveStrategy/IMoveStrategy
+          * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
+          */
+         setMoveStrategy: function (moveStrategy) {
+            if(!cInstance.instanceOfMixin(moveStrategy,'WS.Data/MoveStrategy/IMoveStrategy')){
+               throw new Error('The strategy must implemented interfaces the WS.Data/MoveStrategy/IMoveStrategy.')
+            }
+            this._moveStrategy = moveStrategy;
+         },
+
+         /**
+          * Возвращает перемещатор
+          * @private
+          */
+         _getMover: function() {
+            return this._mover || (this._mover = Di.resolve('listview.mover', {
+               moveStrategy: this.getMoveStrategy(),
+               items: this.getItems(),
+               projection: this._getItemsProjection(),
+               hierField: this._options.hierField
+            }));
+         },
+         /**
+          * Перемещает переданные записи
+          * @param {Array} movedItems  Массив перемещаемых записей.
+          * @param {WS.Data/Entity/Model} target Запись к которой надо преместить..
+          * @param {MovePosition} position Как перемещать записи
+          * @example
+          * <pre>
+          *    new ListView({
+          *       itemsActions: {
+      	 *	         name: 'moveSelected'
+      	 *	         tooltip: 'Переместить выделленые записи внутрь папки'
+      	 *	         onActivated: function(tr, id, record) {
+      	 *             this.move(this.getSelectedItems().toArray(), record, 'on')
+      	 *	         }
+      	 *	      }
+          *    })
+          * </pre>
+          */
+         move: function(movedItems, target, position) {
+            this._getMover().move(models, target.getModel(), position);
+         },
+         //endregion moveMethods
          /**
           * Устанавливает позицию строки итогов
           * @param {String} position Позиция
@@ -3008,7 +3144,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return $(resultsSelector, this.getContainer());
          },
          _makeResultsTemplate: function(resultsData){
-            if (!resultsData){
+            if (!resultsData) {
                return;
             }
             var item = this._getResultsRecord(),

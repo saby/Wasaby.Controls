@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
-   'js!SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator'
-], function (AbstractDecorator) {
+   'js!SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator',
+   'Core/IoC'
+], function (AbstractDecorator, IoC) {
    'use strict';
 
    /**
@@ -8,6 +9,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
     * @class SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator
     * @public
     * @author Крайнов Дмитрий Олегович
+    * @deprecated Модуль будет удален в 3.7.5 используйте {@link WS.Data/Display/Ladder}
     */
    var LadderDecorator = AbstractDecorator.extend(/** @lends SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator.prototype */{
       $protected: {
@@ -56,6 +58,9 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
        * @returns {*}
        */
       apply: function (text) {
+         if (this._columnName) {
+            IoC.resolve('ILogger').info('LadderDecorator', 'Module SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator is deprecated and will be removed in 3.7.5. Use it.ladder.get(it.item, it.field) instead.');
+         }
          if (!this._isCheckCondition){
             return text;
          }
