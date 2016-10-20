@@ -12,6 +12,7 @@ gemini.suite('SBIS3.CONTROLS.DragAndDrop Online', function () {
                 this.input = find('[sbisname="TextBox 1"] input');
 				this.folder = find('[data-id="4"]');
 				this.item = find('[data-id="5"]');
+				this.item14 = '[data-id="14"]';
             })
 
             .capture('mouse_down_item', function (actions) {
@@ -21,10 +22,15 @@ gemini.suite('SBIS3.CONTROLS.DragAndDrop Online', function () {
             .capture('hovered_folder', function (actions) {
                 actions.mouseMove(this.folder);
 				actions.mouseMove(this.folder);
+				actions.wait(500);
+				actions.waitForElementToShow(this.item14, 5000);
             })
 			
-			.capture('thin_blue_line', function (actions) {
-                actions.mouseMove(this.folder, {'x': 400, 'y': -5});
+			.capture('thin_blue_line', function (actions, find) {
+                this.folder = find('[data-id="4"]');
+				actions.mouseMove(this.folder, {'x': 400, 'y': -5});
+				actions.wait(250);
+				actions.mouseMove(this.folder, {'x': 400, 'y': 1});
             })
 			
 			.capture('hovered_item', function (actions) {

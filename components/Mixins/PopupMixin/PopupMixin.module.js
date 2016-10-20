@@ -131,7 +131,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              * но не подходит для поля связи, так как может перекрывать вводимый текст 
              * @type {Boolean}
              */
-            allowOverlapTarget: false
+            targetOverlay: false
          }
       },
 
@@ -171,8 +171,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                self.hide();
             });
          }
-
-         this._attachContainer();
+         container.appendTo('body');
 
          this._saveDefault();
          this._resetToDefault();
@@ -182,16 +181,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             // на iPad при появлении всплывахи над FloatArea при проведении пальцем над всплывахой - скроллится FloatArea (бажное поведение iPad с инетным скроллом)
             // приходится отключать инертный скролл в момент показа всплывахи и включать обратно при скрытии
             this._parentFloatArea = topParent;
-         }
-      },
-
-      _attachContainer: function(){
-         var container = this._container,
-            parentToAttach = container.parents('.ws-body-scrolling-content');
-         if (parentToAttach.length){
-            container.appendTo(parentToAttach);
-         } else {
-            container.appendTo('body');
          }
       },
 
@@ -748,7 +737,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._container.css('overflow-y', 'auto');
                var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
                if (spaces.top < spaces.bottom) {
-                  if (this._options.allowOverlapTarget){
+                  if (this._options.targetOverlay){
                      this._container.css('height', height);
                      offset.top = this._windowSizes.height - this._container.get(0).scrollHeight - this._containerSizes.border * 2;
                   } else {
@@ -761,7 +750,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                } else {
                   offset.top = 0;
                   //Если места снизу меньше чем сверху покажемся во весь размер (возможно поверх таргета), или в высоту окна если в него не влезаем
-                  if (!this._options.allowOverlapTarget){
+                  if (!this._options.targetOverlay){
                      height = spaces.top - vOffset - this._margins.top + this._margins.bottom;
                   }
                }
@@ -908,15 +897,17 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          },
 
          hide: function () {
-            // Убираем оверлей
-            this._unsubscribeTargetMove();
-            if (this._options.isModal) {
-               this._setModal(false);
-            }
+            cWindowManager.deactivateWindow(this, function() {
+               // Убираем оверлей
+               this._unsubscribeTargetMove();
+               if (this._options.isModal) {
+                  this._setModal(false);
+               }
 
-            if (this._parentFloatArea){
-               this._parentFloatArea.setHasPopupInside(false);
-            }
+               if (this._parentFloatArea){
+                  this._parentFloatArea.setHasPopupInside(false);
+               }
+            }.bind(this));
          },
 
          _onResizeHandler: function(){

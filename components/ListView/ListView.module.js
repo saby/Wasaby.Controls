@@ -717,7 +717,6 @@ define('js!SBIS3.CONTROLS.ListView',
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
-            _searchParamName: undefined, //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
             _componentBinder: null,
             _touchSupport: false,
             _dragInitHandler: undefined //метод который инициализирует dragNdrop
@@ -1681,6 +1680,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      onAfterEndEdit: function(event, model, target, withSaving) {
                         this.setSelectedKey(model.getId());
                         event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
+                        this._toggleEmptyData(!this.getItems().getCount());
                         this._hideToolbar();
                      }.bind(this),
                      onDestroy: function() {
@@ -1913,9 +1913,13 @@ define('js!SBIS3.CONTROLS.ListView',
 
                   }
                });
-               this._itemsToolbar.getItemsActions().subscribe('onHideMenu', function() {
-                  self.setActive(true);
-               });
+               //Когда массив action's пустой getItemsAction вернет null
+               var actions = this._itemsToolbar.getItemsActions();
+               if (actions) {
+                  actions.subscribe('onHideMenu', function () {
+                     self.setActive(true);
+                  });
+               }
             }
             return this._itemsToolbar;
          },
@@ -2256,9 +2260,15 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          isScrollOnBottom: function(noOffset){
+            if (!this._scrollWatcher){
+               this._createScrollWatcher();
+            }
             return this._scrollWatcher.isScrollOnBottom(noOffset);
          },
          isScrollOnTop: function(){
+            if (!this._scrollWatcher){
+               this._createScrollWatcher();
+            }
             return this._scrollWatcher.isScrollOnTop();
          },
          _showLoadingIndicator: function () {
@@ -2804,12 +2814,18 @@ define('js!SBIS3.CONTROLS.ListView',
          _findDragDropContainer: function() {
             return this._getItemsContainer();
          },
-         _getDragItems: function(key) {
-            var keys = this._options.multiselect ? cFunctions.clone(this.getSelectedKeys()) : [];
-            if (Array.indexOf(keys, key) == -1 && Array.indexOf(keys, String(key)) == -1) {
-               keys.push(key);
+         _getDragItems: function(dragItem, selectedItems) {
+            if (selectedItems) {
+               var array = [];
+               if (selectedItems.getIndex(dragItem) < 0) {
+                  array.push(dragItem);
+               }
+               selectedItems.each(function(item) {
+                  array.push(item);
+               });
+               return array;
             }
-            return keys;
+            return [dragItem];
          },
          _canDragStart: function(e) {
             //TODO: При попытке выделить текст в поле ввода, вместо выделения начинается перемещения элемента.
@@ -2820,7 +2836,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _beginDragHandler: function(dragObject, e) {
             var
-                id,
                 target;
             target = this._findItemByElement(dragObject.getTargetsDomElemet());
             //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
@@ -2828,12 +2843,15 @@ define('js!SBIS3.CONTROLS.ListView',
             //пустой массив. В .150 править этот метод опасно, потому что он много где используется. В .200 переписать метод
             //_findItemByElement, без завязки на _items.
             if (target.length) {
-               id = target.data('id');
-               var items = this._getDragItems(id),
+               if (target.hasClass('controls-DragNDropMixin__notDraggable')) {
+                  return false;
+               }
+               var  selectedItems = this.getSelectedItems(),
+                  targetsItem = this._getItemProjectionByHash(target.data('hash')).getContents(),
+                  items = this._getDragItems(targetsItem, selectedItems),
                   source = [];
-               colHelpers.forEach(items, function (id) {
-                  var item = this.getItems().getRecordById(id),
-                     projItem = this._getItemsProjection().getItemBySourceItem(item);
+               colHelpers.forEach(items, function (item) {
+                  var projItem = this._getItemsProjection().getItemBySourceItem(item);
                   source.push(this._makeDragEntity({
                      owner: this,
                      model: item,

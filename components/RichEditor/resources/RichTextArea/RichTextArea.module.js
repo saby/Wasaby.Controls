@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                 *
                 */
                editorConfig: {
-                  plugins: 'media,paste,lists',
+                  plugins: 'media,paste,lists,noneditable',
                   inline: true,
                   fixed_toolbar_container: '.controls-RichEditor__fakeArea',
                   relative_urls: false,
@@ -123,7 +123,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   paste_webkit_styles: 'color font-size text-align text-decoration width height max-width padding padding-left padding-right padding-top padding-bottom',
                   paste_retain_style_properties: 'color font-size text-align text-decoration width height max-width padding padding-left padding-right padding-top padding-bottom',
                   paste_as_text: true,
-                  extended_valid_elements: 'div[class|onclick|style],img[unselectable|class|src|alt|title|width|height|align|name|style]',
+                  extended_valid_elements: 'div[class|onclick|style|id],img[unselectable|class|src|alt|title|width|height|align|name|style]',
                   body_class: 'ws-basic-style',
                   invalid_elements: 'script',
                   paste_data_images: false,
@@ -132,7 +132,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   toolbar: false,
                   menubar: false,
                   browser_spellcheck: true,
-                  smart_paste: true
+                  smart_paste: true,
+                  noneditable_noneditable_class: "controls-RichEditor__noneditable"
                },
                /**
                 * @cfg {String} Значение Placeholder`а
@@ -145,7 +146,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                 * @cfg {Boolean} Подсвечивать ссылки
                 * <wiTag group="Управление">
                 */
-               highlightLinks: false
+               highlightLinks: false,
+               /**
+                * Позволяет при вставке контента распознавать ссылки и декорировать их в отдельные блоки
+                * @cfg {Boolean} декорировать ссылки ссылки
+                */
+               decorateLinks: false
             },
             _fakeArea: undefined, //textarea для перехода фкуса по табу
             _tinyEditor: undefined, //экземпляр tinyMCE
@@ -759,6 +765,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                                     } else {
                                        editor.execCommand('mceInsertLink', false, linkAttrs);
                                     }
+                                    editor.selection.collapse(false);
                                     editor.undoManager.add();
                                  }
                                  self.close();
@@ -982,6 +989,32 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }.bind(this));
 
             //БИНДЫ НА ВСТАВКУ КОНТЕНТА И ДРОП
+            editor.on('onBeforePaste', function(e) {
+               var
+                  regexp =  new RegExp('(https?|ftp|file):\/\/[-A-Za-zА-ЯЁа-яё0-9.]+(?::[0-9]+)?(\/[-A-Za-zА-ЯЁа-яё0-9+&@#$/%№=~_{|}!?:,.;()]*)*');
+               if (self.addYouTubeVideo(e.content)) {
+                  return false;
+               }
+               //Смотреть по текстовому формату (self._clipboardText) честнее тк нет кучи вёрстки
+               //TODO: self._clipboardText заменить на e.content и сделать двойную проверку(на оба формата) когда сделаю задачу:
+               // https://inside.tensor.ru/opendoc.html?guid=5dcde224-e3bd-4fcf-9ff4-a810e9ac4be0&description=
+               if (self._options.decorateLinks && regexp.test(self._clipboardText) && regexp.exec(self._clipboardText)[0] == self._clipboardText) {
+                  var
+                     className = 'rta_replace_' + Math.floor(Math.random() * 10000),
+                     tempText = '<a class="' + className + '" href="' + self._clipboardText + '">' + self._clipboardText + '</a>';
+                  self.insertHtml(tempText);
+                  RichUtil.generateDecoratedLink(self._clipboardText).addCallback(function(newNode) {
+                     var
+                        node = editor.getBody().getElementsByClassName(className);
+                     if (newNode) {
+                        editor.dom.replace(newNode, node);
+                        editor.selection.collapse();
+                     }
+                  });
+                  return false;
+               }
+            });
+
             editor.on('Paste', function(e) {
                self._clipboardText = e.clipboardData ?
                   cConstants.browser.isMobileIOS ? e.clipboardData.getData('text/plain') : e.clipboardData.getData('text') :
@@ -992,7 +1025,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             //Обработка вставки контента
             editor.on('BeforePastePreProcess', function(e) {
                var
-                  isYouTubeReady,
                   isRichContent = e.content.indexOf('orphans: 31415;') !== -1,
                   content = e.content;
                e.content =  content.replace('orphans: 31415;','');
@@ -1015,11 +1047,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                }
                e.content = Sanitize(e.content, {validNodes: {img: false}});
-               isYouTubeReady = self.addYouTubeVideo(e.content);
-               if (isYouTubeReady) {
-                  self._tinyEditor.fire('change');
-               }
-               return isYouTubeReady ? false : e;
             });
 
             editor.on('PastePostProcess', function(event){

@@ -67,8 +67,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                   binding: {
                      saveList: undefined,
                      saveDataSet: undefined
-                  },
-                  icon : 'sprite:icon-24 icon-PDF2 icon-multicolor action-hover'
+                  }
                },
                {
                   id : 'Excel',
@@ -78,8 +77,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                   binding: {
                      saveList: undefined,
                      saveDataSet: undefined
-                  },
-                  icon : 'sprite:icon-24 icon-Excel icon-multicolor action-hover'
+                  }
                }
             ]
          },

@@ -1,182 +1,30 @@
 define('js!SBIS3.CONTROLS.ComponentBinder',
     [
-   "Core/Abstract",
-   "Core/core-functions",
-   "Core/core-merge",
-   "Core/constants",
-   "js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver",
-   "js!SBIS3.CONTROLS.HistoryController",
-   "js!SBIS3.StickyHeaderManager",
-   "Core/helpers/collection-helpers",
-   "Core/core-instance",
-   "Core/helpers/functional-helpers"
-],
-    function ( cAbstract, cFunctions, cMerge, constants,KbLayoutRevertObserver, HistoryController, StickyHeaderManager, colHelpers, cInstance, fHelpers) {
+       "Core/Abstract",
+       "Core/core-functions",
+       "Core/core-merge",
+       "Core/constants",
+       'js!SBIS3.CONTROLS.HistoryController',
+       'js!SBIS3.CONTROLS.SearchController',
+       'js!SBIS3.CONTROLS.ScrollPagingController',
+       'js!SBIS3.CONTROLS.PagingController',
+       'js!SBIS3.CONTROLS.BreadCrumbsController',
+       'js!SBIS3.CONTROLS.FilterHistoryController',
+       'js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
+       "Core/helpers/collection-helpers",
+       "Core/core-instance",
+       "Core/helpers/functional-helpers"
+    ],
+    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, colHelpers, cInstance, fHelpers) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
     * @class SBIS3.CONTROLS.ComponentBinder
-    * @extends cAbstract
+    * @extends Core/Abstract
     * @author Крайнов Дмитрий Олегович
     * @public
     */
    /*методы для поиска*/
-   var startHierSearch = function hierSearch(text, searchParamName, searchCrumbsTpl, searchMode, searchForm) {
-          if (needSearch.call(this, text, searchParamName)) {
-             var filter = cMerge(this._options.view.getFilter(), {
-                    'Разворот': 'С разворотом',
-                    'usePages': 'full'
-                 }),
-                 view = this._options.view,
-
-                 args = arguments,
-                 self = this,
-                 mode = searchMode;
-
-             filter[searchParamName] = text;
-             view._options.hierarchyViewMode = true;
-             view.setHighlightText(text, false);
-             view.setHighlightEnabled(true);
-
-             if (self._isInfiniteScroll == undefined) {
-                self._isInfiniteScroll = view.isInfiniteScroll();
-             }
-             view.setInfiniteScroll(true, true);
-
-             if (this._firstSearch) {
-                this._lastRoot = view.getCurrentRoot();
-                //Запомнили путь в хлебных крошках перед тем как их сбросить для режима поиска
-                if (this._options.breadCrumbs && this._options.breadCrumbs.getItems()){
-                   this._pathDSRawData = cFunctions.clone(this._options.breadCrumbs.getItems().getRawData());
-                }
-             }
-             this._firstSearch = false;
-             //Флаг обозначает, что ввод был произведен пользователем
-             this._searchReload = true;
-
-             if (searchMode == 'root'){
-                filter[view.getHierField()] = undefined;
-             }
-
-             view.once('onDataLoad', function(event, data){
-                var root;
-                //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
-                if (self._options.backButton) {
-                   self._options.backButton.getContainer().css({'display': 'none'});
-                }
-                //Это нужно чтобы поиск был от корня, а крошки при этом отображаться не должны
-                if (self._options.breadCrumbs) {
-                   self._options.breadCrumbs.getContainer().css({'display': 'none'});
-                }
-
-                if (mode === 'root') {
-                   root = view._options.root !== undefined ? view._options.root : null;
-                   //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
-                   view._options._itemsProjection.setEventRaising(false);
-                   //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
-                   view._options._itemsProjection.setRoot(root);
-                   view._options._curRoot = root;
-                   view._options._itemsProjection.setEventRaising(true);
-                }
-             });
-
-             view.reload(filter, view.getSorting(), 0).addCallback(function(){
-                view._container.addClass('controls-GridView__searchMode');
-             });
-             this._searchMode = true;
-          }
-       },
-       startSearch = function search(text, searchParamName, searchForm){
-          if (needSearch.call(this, text, searchParamName)){
-             var view = this._options.view,
-                 filter = cMerge(view.getFilter(), {
-                    'usePages': 'full'
-                 }),
-                 args = arguments;
-
-             filter[searchParamName] = text;
-             view.setHighlightText(text, false);
-             view.setHighlightEnabled(true);
-             view.setInfiniteScroll(true, true);
-             view.reload(filter, view.getSorting(), 0);
-          }
-       };
-
-   function resetSearch(searchParamName){
-      var view = this._options.view,
-          filter = view.getFilter();
-
-      delete (filter[searchParamName]);
-      view.setHighlightText('', false);
-      view.setHighlightEnabled(false);
-      view.reload(filter, view.getSorting(), 0);
-   }
-
-   function resetGroup(searchParamName) {
-      var
-         view = this._options.view,
-         filter = cMerge(view.getFilter(), {
-            'Разворот' : 'Без разворота'
-         }),
-         self = this;
-      delete (filter[searchParamName]);
-      //При сбрасывании группировки в иерархии нужно снять класс-можификатор, но сделать это можно
-      //только после релоада, иначе визуально будут прыжки и дерганья (класс меняет паддинги)
-      view.once('onDataLoad', function(){
-         view._container.removeClass('controls-GridView__searchMode');
-         view._options._curRoot = self._lastRoot || null;
-         view._getItemsProjection().setRoot(self._lastRoot || null);
-      });
-      this._searchMode = false;
-      view._options.hierarchyViewMode = false;
-      //Если мы ничего не искали, то и сбрасывать нечего
-      if (this._firstSearch) {
-         return;
-      }
-      view.setInfiniteScroll(this._isInfiniteScroll, true);
-      this._isInfiniteScroll = undefined;
-      view.setHighlightText('', false);
-      view.setHighlightEnabled(false);
-      this._firstSearch = true;
-      if (this._searchReload) {
-         //Нужно поменять фильтр и загрузить нужный корень.
-         //TODO менять фильтр в контексте, когда появятся data-binding'и
-         filter[view.getHierField()] = this._lastRoot;
-         //DataGridView._filter = filter;
-         //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
-         //Релоад сделает то же самое, так как он стреляет onSetRoot даже если корень на самом деле не понменялся
-         view.reload(filter, view.getSorting(), 0);
-         // TODO: Нужно оставить одно поле хранящее путь, сейчас в одно запоминается состояние хлебных крошек
-         // перед тем как их сбросить, а в другом весь путь вместе с кнопкой назад
-
-         //Если сбросили поиск (по крестику) вернем путь в хлебные крошки и покажем кнопку назад
-         view.once('onDataLoad', function() {
-            self._path = self._pathDSRawData || [];
-            if (self._options.breadCrumbs) {
-               self._options.breadCrumbs.getContainer().css({'display': ''});
-            }
-            if (self._options.backButton) {
-               self._options.backButton.getContainer().css({'display': ''});
-            }
-         })
-      } else {
-         //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
-         view.setFilter(filter, true);
-      }
-   }
-
-   function breakSearch(searchForm, withReload){
-      this._searchReload = !!withReload;
-      this._firstSearch = !!withReload;
-      //Если в строке поиска что-то есть, очистим и сбросим Фильтр
-      if (searchForm.getText()) {
-         searchForm.resetSearch();
-      }
-   }
-
-   function needSearch(text, searchParamName) {
-      return text && this._options.view.getFilter()[searchParamName] !== text;
-   }
 
    function toggleCheckBoxes(operationPanel, gridView, hideCheckBoxes) {
       if (gridView._options.multiselect) {
@@ -205,24 +53,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
     * Контроллер, позволяющий связывать компоненты осуществляя базовое взаимодейтсие между ними
     * @author Крайнов Дмитрий
     * @class SBIS3.CONTROLS.ComponentBinder
-    * @extends cAbstract
+    * @extends Core/Abstract
     * @public
     */
    var ComponentBinder = cAbstract.extend(/**@lends SBIS3.CONTROLS.ComponentBinder.prototype*/{
       $protected : {
-         _searchReload : true,
-         _searchMode: false,
-         _searchForm : undefined,
-         _lastRoot : undefined,
-         _lastGroup: undefined,
-         _currentRoot: null,
-         _pathDSRawData : [],
-         _firstSearch: true,
-         _kbLayoutRevertObserver: null,
-         _path: [],
-         _scrollPages: [], // Набор страниц для скролл-пэйджина
-         _pageOffset: 0, // offset последней страницы
-         _currentScrollPage: 1,
          _options: {
             /**
              * @cfg {SBIS3.CONROLS.DataGridView} объект представления данных
@@ -252,7 +87,14 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
              * @cfg {SBIS3.CONROLS.Pagign} объект пэйджинга
              */
             paging: undefined
-         }
+         },
+         _historyController: null,
+         _searchController: null,
+         _scrollPagingController: null,
+         _pagingController: null,
+         _breadCrumbsController: null,
+         _filterHistoryController: null,
+         _pagingHistoryController: null
       },
 
       /**
@@ -291,90 +133,21 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        * </pre>
        */
       bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, searchMode, doNotRespondOnReset) {
-         var self = this,
-            view = this._options.view,
-            isTree = this._isTreeView(view);
-         searchForm = searchForm || this._options.searchForm;
-         //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
-         if(!this._kbLayoutRevertObserver) {
-            this._kbLayoutRevertObserver = new KbLayoutRevertObserver({
-               textBox: searchForm,
-               view: view,
-               param: searchParamName
-            })
-         } else {
-            this._kbLayoutRevertObserver.setParam(searchParamName);
-         }
-         view._searchParamName = searchParamName;
-         if (isTree){
-            this._lastRoot = view.getCurrentRoot();
-            view.subscribe('onBeforeSetRoot', function(ev, newRoot){
-               self._lastRoot = newRoot;
-               if (self._searchMode) {
-                  breakSearch.call(self, searchForm, false);
-               }
-            });
-            view.subscribe('onSetRoot', function(event, curRoot, hierarchy){
-               //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде),
-               //при этом не нужно запоминать текущий корень и делать видимым путь
-               if (!self._searchMode){
-                  self._lastRoot = curRoot;
-                  //Запоминаем путь в хлебных крошках при смене корня
-                  //Похоже на то, что его достаточно запоминать только непосредственно перед началом поиска
-                  if (self._options.breadCrumbs && self._options.breadCrumbs.getItems()){
-                     var crumbsItems = self._options.breadCrumbs.getItems();
-                     self._pathDSRawData = crumbsItems ? crumbsItems.getRawData() : [];
-                     self._options.breadCrumbs.getContainer().css({'display': ''});
-                  }
-                  if (self._options.backButton) {
-                     self._options.backButton.getContainer().css({'display': ''});
-                  }
-               }
-            });
-            //Перед переключением в крошках в режиме поиска сбросим фильтр поиска
-            view.subscribe('onSearchPathClick', function(ev, id){
-               //Теперь весь функционал переключения находится здесь, из HierarchyDGView только оповещение о действии
-               view.setCurrentRoot(id);
-               view.reload();
+         if (!this._searchController){
+            this._searchController = new SearchController({
+               view: this._options.view,
+               searchForm: searchForm || this._options.searchForm,
+               searchParamName: searchParamName,
+               searchCrumbsTpl: searchCrumbsTpl,
+               searchMode: searchMode,
+               doNotRespondOnReset: doNotRespondOnReset,
+               breadCrumbs: this._options.breadCrumbs,
+               backButton: this._options.backButton
             });
          }
-
-         function subscribeOnSearchFormEvents() {
-            if(!doNotRespondOnReset) {
-               searchForm.subscribe('onReset', function (event, text) {
-                  self._kbLayoutRevertObserver.stopObserve();
-                  if (isTree) {
-                     resetGroup.call(self, searchParamName);
-                  } else {
-                     resetSearch.call(self, searchParamName);
-                  }
-               });
-            }
-
-            searchForm.subscribe('onSearch', function (event, text) {
-               self._kbLayoutRevertObserver.startObserve();
-               if (isTree) {
-                  startHierSearch.call(self, text, searchParamName, undefined, searchMode, searchForm);
-               } else {
-                  startSearch.call(self, text, searchParamName, searchForm);
-               }
-            });
-
-            searchForm.subscribe('onKeyPressed', function (eventObject, event) {
-               // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
-               if ((event.which == constants.key.tab || event.which == constants.key.down) && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)) {
-                  view.setSelectedIndex(0);
-                  view.setActive(true);
-                  event.stopPropagation();
-                  event.preventDefault();
-               }
-            });
-         }
-
-         subscribeOnSearchFormEvents();
-         searchForm.applySearch(false);
+         this._searchController.bindSearch();
       },
-      bindSearchComposite: function(searchParamName, searchCrumbsTpl, searchForm) {
+      bindSearchComposite: function() {
          this.bindSearchGrid.apply(this, arguments);
       },
 
@@ -394,100 +167,14 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        * </pre>
        */
       bindBreadCrumbs: function(breadCrumbs, backButton){
-         var self = this,
-            view = this._options.view;
-
-         backButton = backButton || this._options.backButton;
-         breadCrumbs = breadCrumbs || this._options.breadCrumbs;
-
-         function createBreadCrumb(data){
-            var point = {};
-            point[breadCrumbs._options.displayField] = data.title;
-            point[breadCrumbs._options.keyField] = data.id;
-            point[breadCrumbs._options.colorField] = data.color;
-            point.data = data.data;
-            return point;
+         if (!this._breadCrumbsController){
+            this._breadCrumbsController = new BreadCrumbsController({
+               view: this._options.view,
+               breadCrumbs: breadCrumbs || this._options.breadCrumbs,
+               backButton: backButton || this._options.backButton
+            });
          }
-
-         function setPreviousRoot() {
-            var previousRoot = self._path[self._path.length - 1];
-
-            if(self._currentRoot !== null) {
-               self._currentRoot = previousRoot;
-               if (self._path.length) self._path.splice(self._path.length - 1);
-               view.setCurrentRoot(previousRoot ? previousRoot[breadCrumbs._options.keyField] : null);
-            }
-            view.reload();
-         }
-
-         view.subscribe('onSetRoot', function(event, id, hier){
-            //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде),
-            //при этом не нужно пересчитывать хлебные крошки
-            if (!self._searchMode){
-               var i;
-               /*
-                TODO: Хак для того перерисовки хлебных крошек при переносе из папки в папку
-                Проверить совпадение родительского id и текущего единственный способ понять,
-                что в папку не провалились, а попали через перенос.
-                От этого нужно избавиться как только будут новые датасорсы и не нужно будет считать пути для крошек
-                */
-               if (self._currentRoot && hier.length && hier[hier.length - 1].parent != self._currentRoot.id){
-                  self._currentRoot = hier[0];
-                  self._path = hier.reverse();
-               } else {
-                  /* Если root не установлен, и переданный id === null, то считаем, что мы в корне */
-                  if ( (id === view._options.root) || (!view._options.root && id === null) ){
-                      self._currentRoot = null;
-                      self._path = [];
-                  }
-                  for (i = hier.length - 1; i >= 0; i--) {
-                     var rec = hier[i];
-                     if (rec){
-                        var c = createBreadCrumb(rec);
-                        if (self._currentRoot && !Object.isEmpty(self._currentRoot)) {
-                           self._path.push(self._currentRoot);
-                        } else {
-
-                        }
-                        self._currentRoot = c;
-                     }
-                  }
-               }
-
-               for (i = 0; i < self._path.length; i++){
-                  if (self._path[i].id == id) {
-                     self._path.splice(i, self._path.length - i);
-                     break;
-                  }
-               }
-
-               breadCrumbs.setItems(self._path);
-               backButton.setCaption(self._currentRoot ? self._currentRoot.title : '');
-            }
-         });
-
-         view.subscribe('onKeyPressed', function(event, jqEvent) {
-            if(jqEvent.which === constants.key.backspace) {
-               setPreviousRoot();
-               jqEvent.preventDefault();
-            }
-         });
-
-         breadCrumbs.subscribe('onItemClick', function(event, id){
-            self._currentRoot = this._dataSet.getRecordById(id);
-            self._currentRoot = self._currentRoot ? self._currentRoot.getRawData() : null;
-            if (id === null){
-               self._path = [];
-            }
-            this.setItems(self._path);
-            view.setCurrentRoot(id);
-            view.reload();
-            this._toggleHomeIcon(!self._path.length);
-         });
-
-         backButton.subscribe('onActivated', function(){
-            setPreviousRoot();
-         });
+         this._breadCrumbsController.bindBreadCrumbs(breadCrumbs, backButton);
       },
       /**
        * Метод для связывания панели массовых оперций с представлением данных
@@ -525,10 +212,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       /**
        * Метод для связывания истории фильтров с представлением данных
        */
-      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, applyOnLoad, controller, browser) {
-         var view = browser.getView(),
-             noSaveFilters = ['Разворот', 'ВидДерева'],
-             historyController, filter;
+      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, applyOnLoad, browser) {
+         var noSaveFilters = ['Разворот', 'ВидДерева'],
+            view = browser.getView(),
+            filter;
 
          if(searchParam) {
             noSaveFilters.push(searchParam);
@@ -542,7 +229,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             noSaveFilters = noSaveFilters.concat(ignoreFiltersList);
          }
 
-         historyController = new controller({
+         this._filterHistoryController = new FilterHistoryController({
             historyId: historyId,
             filterButton: filterButton,
             fastDataFilter: fastDataFilter,
@@ -550,13 +237,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             noSaveFilters: noSaveFilters
          });
 
-         filterButton.setHistoryController(historyController);
+         filterButton.setHistoryController(this._filterHistoryController);
          if(applyOnLoad) {
-            filter = historyController.getActiveFilter();
+            filter = this._filterHistoryController.getActiveFilter();
 
             if(filter) {
                /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
-               filterButton.setFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
+               filterButton.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(filter.filter, filterButton.getFilterStructure()));
                /* Это синхронизирует фильтр и структуру, т.к. некоторые фильтры возможно мы не сохраняли,
                   и надо, чтобы это отразилось в структуре */
                view.setFilter(filter.viewFilter, true);
@@ -569,219 +256,82 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       },
 
       bindPagingHistory: function(view, id) {
-         var pagingHistoryController = new HistoryController({historyId: id}),
-             historyLimit = pagingHistoryController.getHistory();
+         this._pagingHistoryController = new HistoryController({historyId: id});
+         var historyLimit = this._pagingHistoryController.getHistory();
 
          if(historyLimit) {
             view.setPageSize(historyLimit, true);
          }
 
+         var self = this;
          view.subscribe('onPageSizeChange', function(event, pageSize) {
-            pagingHistoryController.setHistory(pageSize, true);
+            self._pagingHistoryController.setHistory(pageSize, true);
          });
       },
 
       bindPaging: function(paging) {
-         var view = this._options.view, self = this;
-         this._paging = paging;
-         paging.subscribe('onSelectedItemChange', function(e, key){
-            var newPage, curPage;
-            if (key > 0) {
-               newPage = key - 1;
-               curPage = view.getPage();
-               if (curPage != newPage) {
-                  view.setPage(newPage);
-               }
-            }
-         });
-
-         view.subscribe('onPageChange', function(e, page){
-            var newKey, curKey;
-            if (page >= 0) {
-               newKey = page + 1;
-               curKey = parseInt(self._paging.getSelectedKey(), 10);
-               if (curKey != newKey) {
-                  self._paging.setSelectedKey(newKey);
-               }
-            }
-         });
-
-         view.subscribe('onDataLoad', function(e, list) {
-            if ((paging.getMode() == 'part')) {
-               var meta = list.getMetaData && list.getMetaData().more;
-               if  (meta && (paging.getSelectedKey() == paging.getItems().getCount()) && view._hasNextPage(meta)) {
-                  paging.setPagesCount(paging.getPagesCount() + 1);
-               }
-            }
-         })
+         if (!this._pagingController){
+            this._pagingController = new PagingController({
+               view: this._options.view,
+               paging: paging || this._options.paging
+            })
+         }
       },
 
-      _isTreeView: function(view){
-         return cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
+      //TODO: избавиться - зовется из ListView
+      _updateScrollPages: function(){
+         if (this._scrollPagingController){
+            this._scrollPagingController.updateScrollPages();
+         }
+      },
+
+      //TODO: избавиться - зовется из ListView
+      _getScrollPage: function(){
+         if (this._scrollPagingController){
+            return this._scrollPagingController.getScrollPage();
+         }
       },
 
       bindScrollPaging: function(paging) {
-         var view = this._options.view, self = this;
-         paging = paging || this._options.paging;
-         isTree = this._isTreeView(view);
-
-         if (isTree){
-            view.subscribe('onSetRoot', function(){
-               var curRoot = view.getCurrentRoot();
-               if (this._currentRoot !== curRoot){
-                  this._options.paging.setPagesCount(0);
-                  this._updateScrollPages(true);
-                  this._currentRoot = curRoot;
-               }
-            }.bind(this));
-
-            view.subscribe('onNodeExpand', function(){
-               this._updateScrollPages(true);
-            }.bind(this));
+         if (!this._scrollPagingController){
+            this._scrollPagingController = new ScrollPagingController({
+               view: this._options.view,
+               paging: paging || this._options.paging
+            })
          }
-
-         paging.subscribe('onSelectedItemChange', function(e, pageNumber){
-            var scrollToPage = function(page){
-               // Если первая страница - проскролим к самому верху, не считая оффсет
-               var offset = page.offset ? this._offsetTop : 0;
-               view._scrollWatcher.scrollTo(page.offset + offset);
-            }.bind(this);
-            if (pageNumber != this._currentScrollPage && this._scrollPages.length){
-               var view = this._options.view,
-                  page = this._scrollPages[pageNumber - 1];
-                  if (page){
-                     scrollToPage(page);
-                  } else {
-                     view.once('onDrawItems', function(){
-                        this._updateScrollPages();
-                        page = this._scrollPages[pageNumber - 1];
-                        scrollToPage(page);
-                     }.bind(this));
-                     view._scrollLoadNextPage();
-                  }
-               this._currentScrollPage = pageNumber;
-            }
-         }.bind(this));
-
-         view.subscribe('onScrollPageChange', function(e, page){
-            var newKey, curKey,
-               paging = this._options.paging;
-            if (page >= 0 && paging.getItems()) {
-               newKey = page + 1;
-               curKey = parseInt(paging.getSelectedKey(), 10);
-               if (curKey != newKey) {
-                  if (newKey > paging.getItems().getCount()) {
-                     paging.setPagesCount(newKey);
-                  }
-                  this._currentScrollPage = newKey;
-                  paging.setSelectedKey(newKey);
-               }
-            }
-         }.bind(this));
-
-         $(window).on('resize.wsScrollPaging', this._resizeHandler.bind(this));
-      },
-
-      _isPageStartVisisble: function(page){
-         return page.element.offset().top + page.element.outerHeight(true) >= 0
-      },
-
-      _resizeHandler: function(){
-         var windowHeight = $(window).height();
-         clearTimeout(this._windowResizeTimeout);
-         if (this._windowHeight != windowHeight){
-            this._windowHeight = windowHeight;
-            this._windowResizeTimeout = setTimeout(function(){
-               this._updateScrollPages(true);
-            }.bind(this), 200);
-         }
-      },
-
-      _getScrollPage: function(){
-         var view = this._options.view;
-         if (this._options.view.isScrollOnBottom(true)){
-            return this._scrollPages.length - 1;
-         }
-         for (var i = 0; i < this._scrollPages.length; i++){
-            var page = this._scrollPages[i];
-            if (this._isPageStartVisisble(page)){
-               return i;
-            }
-         }
-      },
-
-      _updateScrollPages: function(reset){
-         var view = this._options.view;
-         var viewportHeight = $(view._scrollWatcher.getScrollContainer()).height(),
-            pageHeight = 0,
-            lastPageStart = 0,
-            self = this,
-            listItems = $('> .controls-ListView__item', view._getItemsContainer()),
-            stickyHeaderHeight = StickyHeaderManager.getStickyHeaderHeight(view.getContainer()) || 0;
-
-            //Если элементов в верстке то нечего и считать
-            if (!listItems.length){
-               this._options.paging.setVisible(false);
-               return;
-            }
-
-            // Нужно учитывать отступ от родителя, что бы правильно скроллить к странице
-            if (!this._offsetTop){
-               this._offsetTop = self._options.view._getItemsContainer().get(0).getBoundingClientRect().top; //itemsContainerTop - containerTop + self._options.view.getContainer().get(0).offsetTop;
-            }
-         //Сбрасываем все для пересчета
-         if (reset){
-            this._scrollPages = [];
-            self._pageOffset = 0;
-         }
-         //Берем последнюю посчитаную страницу, если она есть
-         if (this._scrollPages.length){
-            lastPageStart = this._scrollPages[this._scrollPages.length - 1].element.index();
-         } else {
-            //Запушим первый элемент, если он есть
-            var element = listItems.eq(0);
-            if (view.getItems() && view.getItems().getCount() && element.length){
-               this._scrollPages.push({
-                  element: element,
-                  offset: self._pageOffset
-               })
-            }
-         }
-         //Считаем оффсеты страниц начиная с последней (если ее нет - сначала)
-         listItems.slice(lastPageStart ? lastPageStart + 1 : 0).each(function(){
-            var $this = $(this),
-               nextHeight = $this.next('.controls-ListView__item').outerHeight(true);
-            pageHeight += $this.outerHeight(true);
-            // Если набралось записей на выстору viewport'a добавим еще страницу
-            // При этом нужно учесть отступ сверху от view и фиксированую шапку
-            var offsetTop = self._scrollPages.length == 1 ? self._offsetTop : stickyHeaderHeight;
-            if (pageHeight + nextHeight > viewportHeight - offsetTop) {
-               self._pageOffset += pageHeight;
-               self._scrollPages.push({
-                  element: $this,
-                  offset: self._pageOffset - stickyHeaderHeight
-               });
-               pageHeight = 0;
-            }
-         });
-
-         var pagesCount = this._scrollPages.length;
-
-         if (pagesCount > 1){
-            this._options.view.getContainer().css('padding-bottom', '32px');
-         }
-         if (this._options.paging.getSelectedKey() > pagesCount){
-            this._options.paging._options.selectedKey = pagesCount;
-         }
-         this._options.paging.setPagesCount(pagesCount);
-
-         //Если есть страницы - покажем paging
-         this._options.paging.setVisible(pagesCount > 1);
+         this._scrollPagingController.bindScrollPaging();
       },
 
       destroy: function(){
-         $(window).off('resize.wsScrollPaging');
-         ComponentBinder.superclass.destroy.apply(this, arguments);
+         if (this._historyController){
+            this._historyController.destroy();
+            this._historyController  = null;
+         }
+         if (this._searchController){
+            this._searchController.destroy();
+            this._searchController = null;
+         }
+         if (this._scrollPagingController){
+            this._scrollPagingController.destroy();
+            this._scrollPagingController = null;
+         }
+         if (this._pagingController){
+            this._pagingController.destroy();
+            this._pagingController = null;
+         }
+         if (this._breadCrumbsController){
+            this._breadCrumbsController.destroy();
+            this._breadCrumbsController = null;
+         }
+         if (this._filterHistoryController){
+            this._filterHistoryController.destroy();
+            this._filterHistoryController = null;
+         }
+         if (this._pagingHistoryController){
+            this._pagingHistoryController.destroy();
+            this._pagingHistoryController = null;
+         }
+         ComponentBinder.superclass.destroy.call(this);
       }
 
    });

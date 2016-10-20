@@ -45,7 +45,7 @@
      .controls-TextBox__afterFieldWrapper {
        width: @combo-box-after-width;
        + .controls-TextBox__fieldWrapper{
-         margin-right: 16px;
+         margin-right: @compo-box-fieldWrapper-margin-right;
          padding-right: 0;
        }
        .controls-ComboBox__arrowDown {
@@ -67,6 +67,18 @@
            border-width: @combo-box-arrow-hover-border-width;
            border-style: @combo-box-arrow-hover-border-style;
            border-color: @combo-box-arrow-hover-border-color;
+         }
+       }
+     }
+     &.ws-disabled,
+     &.ws-disabled:hover {
+       cursor: @combo-box-disabled-cursor;
+       border-width: @combo-box-disabled-border-width;
+       border-bottom-color: @combo-box-disabled-border-color;
+       color: @combo-box-disabled-color;
+       .controls-TextBox__afterFieldWrapper {
+         .controls-ComboBox__arrowDown {
+           display: none;
          }
        }
      }
@@ -120,15 +132,6 @@
          }
       }
    }
-   &.ws-disabled,
-   &.ws-disabled:hover {
-      cursor: @combo-box-disabled-cursor;
-      .controls-TextBox__afterFieldWrapper {
-         .controls-ComboBox__arrowDown {
-            display: none;
-         }
-      }
-   }
 
    &.controls-ComboBox__ellipsis {
       .controls-TextBox__fieldWrapper {
@@ -148,8 +151,8 @@
    .border-radius(@combo-box-picker-border-radius);
    .controls-ComboBox__itemRow {
       font: @combo-box-picker-item-font;
-      font-size: 15px;
-      padding: 6px 4px;
+      font-size: @combo-box-picker-item-font-size;
+      padding: @combo-box-picker-item-padding;
       cursor: @combo-box-cursor;
       color: @combo-box-picker-item-text-color;
       background: @combo-box-picker-item-bg;

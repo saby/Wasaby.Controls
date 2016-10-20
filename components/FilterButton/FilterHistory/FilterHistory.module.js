@@ -79,8 +79,6 @@ define('js!SBIS3.CONTROLS.FilterHistory',
          /* При клике по строке списка фильтров - применим фильтр из истории */
          self.subscribeTo(self._historyView,'onItemActivate', function(e, itemObj) {
             self._historyController.activateFilterByKey(itemObj.id);
-            self.updateHistoryViewItems();
-            self.toggleHistoryBlock(true);
          });
 
          self.subscribeTo(self._historyView, 'onDrawItems', function(e) {

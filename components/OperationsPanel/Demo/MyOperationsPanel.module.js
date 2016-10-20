@@ -8,7 +8,8 @@ define('js!SBIS3.CONTROLS.Demo.MyOperationsPanel', [
    "js!SBIS3.CONTROLS.OperationsPanel",
    "js!SBIS3.CONTROLS.TreeDataGridView",
    "js!SBIS3.CONTROLS.BackButton",
-   "js!SBIS3.CONTROLS.Action.List.Sum"
+   "js!SBIS3.CONTROLS.Action.List.Sum",
+   "js!SBIS3.CONTROLS.BreadCrumbs"
 ],
     function( CommandDispatcher,CompoundControl, dotTplFn, ComponentBinder) {
     /**

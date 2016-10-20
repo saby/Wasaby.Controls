@@ -10,11 +10,12 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
    "js!SBIS3.CONTROLS.HistoryController",
    "js!WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
+   "js!SBIS3.CONTROLS.FilterHistoryControllerUntil",
    "Core/helpers/collection-helpers",
    "Core/helpers/generate-helpers"
 ],
 
-    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, colHelpers, genHelpers) {
+    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, colHelpers, genHelpers) {
 
        'use strict';
 
@@ -96,7 +97,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              this._saveParamsDeferred = saveDeferred;
 
              if(activeFilter) {
-                filterButton.setFilterStructure(this._prepareStructureElemForApply(activeFilter.filter));
+                filterButton.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(activeFilter.filter, filterButton.getFilterStructure()));
              } else {
                 filterButton.sendCommand('reset-filter');
              }
@@ -123,32 +124,6 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              this.subscribeTo(this._options.fastDataFilter, 'onApplyFilter', this._applyHandlerDebounced);
           },
 
-          _prepareStructureElemToSave: function(structure) {
-             /* Все правки надо делать с копией, чтобы не портить оригинальную структуру */
-             var structureCopy = cFunctions.clone(structure);
-
-             colHelpers.forEach(structureCopy, function(elem) {
-                /* Хак для испрвления даты, при записи на бл история приводится к строке через метод JSON.stringify,
-                  а метод stringify сериализует дату, учитывая сдвиг (GMT/UTC)
-                  и в итоге мы можем получить не ту дату */
-                if(elem.value) {
-                   if(elem.value instanceof Date) {
-                      elem.value = elem.value.toSQL();
-                   }
-                }
-                /* Надо удалить из истории шаблоны, т.к. история сохраняется строкой */
-                if(elem.itemTemplate) {
-                   delete elem.itemTemplate;
-                }
-
-                if(elem.historyItemTemplate) {
-                   delete elem.historyItemTemplate;
-                }
-             });
-
-             return structureCopy;
-          },
-
           /* Структура может меняться динамически,
              этот метод сверяем стуктуру из истории и текущую стуркуру фильтров,
              и, если надо, правит структуру из истории */
@@ -158,7 +133,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                  self = this;
 
              this._listHistory.each(function(historyElem) {
-                prepareNewStructure(currentStructure, historyElem.filter);
+                FilterHistoryControllerUntil.prepareNewStructure(currentStructure, historyElem.filter);
                 var linkText = FilterToStringUtil.string(historyElem.filter, 'historyItemTemplate');
 
                 if(linkText) {
@@ -177,40 +152,6 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              }
           },
 
-          _prepareStructureElemForApply: function(structure) {
-             /* Чтобы не портить текущую историю, сделаем копию (иначе не применится фильтр) */
-             var currentStructureCopy = cFunctions.clone(this._options.filterButton.getFilterStructure());
-             prepareNewStructure(currentStructureCopy, structure);
-
-             /* Алгоритм следующий:
-                  1) Пробегаемся по структуре (она первична, в ней можно менять только фильтры, саму струкруту менять нельзя!!) и ищем
-                     элементы в структуре из истории с таким же internalValueField
-                  2) Если нашли, то смержим эти элементы
-                  3) Если не нашли, и есть значение в value, то сбросим этот фильтр */
-             colHelpers.forEach(currentStructureCopy, function(elem) {
-                var elemFromHistory = colHelpers.find(structure, function(structureElem) {
-                   return elem.internalValueField === structureElem.internalValueField;
-                }, false);
-
-                if(elemFromHistory) {
-                   /* Меняем только value и caption, т.к. нам нужны только значения для фильтрации из историии,
-                      остальные значения структуры нам не интересны + их могут менять, и портить их неправильно тем, что пришло из истории неправильно */
-                   if(elemFromHistory.value !== undefined) {
-                      elem.value = elemFromHistory.value;
-                   }
-                   if(elemFromHistory.caption !== undefined) {
-                      elem.caption = elemFromHistory.caption;
-                   }
-                   if(elemFromHistory.visibilityValue !== undefined) {
-                      elem.visibilityValue = elemFromHistory.visibilityValue;
-                   }
-                } else if(elem.value && elem.resetValue && !colHelpers.isEqualObject(elem.value, elem.resetValue)) {
-                   elem.value = elem.resetValue;
-                }
-             });
-             return currentStructureCopy;
-          },
-
           _onApplyFilterHandler: function() {
              var fb = this._options.filterButton,
                  structure = fb.getFilterStructure(),
@@ -226,7 +167,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
              self.saveToHistory({
                 linkText: FilterToStringUtil.string(structure, 'historyItemTemplate'),
-                filter: this._prepareStructureElemToSave(structure)
+                filter: FilterHistoryControllerUntil.prepareStructureToSave(structure)
              });
 
              self._updateFilterButtonHistoryView();
@@ -248,7 +189,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                  fb = this._options.filterButton;
 
              /* Применим фильтр из истории*/
-             fb.setFilterStructure(this._prepareStructureElemForApply(filter.filter));
+             fb.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(filter.filter, fb.getFilterStructure()));
              fb.getChildControlByName('filterLine').getContext().setValue('linkText', filter.linkText);
              fb.hidePicker();
 
@@ -394,6 +335,10 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              return this._listHistory.toArray();
           },
 
+          getFilterButton: function() {
+             return this._options.filterButton;
+          },
+
           _sortHistory: function() {
              /* Сортирует историю по флагу отмеченности и активности.
               Приоритет: отмеченные > активный > обычные. */
@@ -423,31 +368,6 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              FilterHistoryController.superclass.destroy.apply(this, arguments);
           }
        });
-
-       function prepareNewStructure(currentStructure, newStructure) {
-          var toDelete = [];
-
-          colHelpers.forEach(newStructure, function(newStructureElem, key) {
-             var elemFromCurrentStructure = colHelpers.find(currentStructure, function(elem) {
-                /* По неустановленной причине, в структуре из истории могут появляться null'ы,
-                   скорее всего, это прикладная ошибка, но надо от этого защититься (повторяется только на некоторых фильтрах ЭДО) */
-                if(!newStructureElem) {
-                   IoC.resolve('ILogger').log('FilterHistoryController', 'В стукрутре из истории присутствуют null элементы');
-                   return false;
-                } else {
-                   return newStructureElem.internalValueField === elem.internalValueField;
-                }
-             });
-
-             if(!elemFromCurrentStructure) {
-                toDelete.push(key);
-             }
-          });
-
-          colHelpers.forEach(toDelete, function(elem) {
-             delete newStructure[elem];
-          });
-       }
 
        return FilterHistoryController;
 

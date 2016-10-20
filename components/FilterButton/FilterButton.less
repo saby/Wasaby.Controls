@@ -218,6 +218,18 @@
    &.ws-disabled {
       .controls__filterButton-button {
          cursor: default;
+         color: @icon-color-disabled !important;
+      }
+      .controls__filterButton__filterLine-arrow {
+         color: @icon-color-disabled !important;
+      }
+      .controls__filterButton__filterLine-table {
+         .controls__filterButton__filterLine-table-row {
+            .controls__filterButton__filterLine-cross {
+               cursor: default;
+               color: @icon-color-disabled !important;
+            }
+         }
       }
    }
 
@@ -235,7 +247,9 @@
 
             &:hover {
                color: @link-disabled-text-color;
-               text-decoration: none;
+               .controls__filterButton__filterLine-text {
+                  text-decoration: none;
+               }
             }
          }
       }
@@ -300,11 +314,23 @@
    }
 }
 
+.ws-is-desktop-platform {
+   .controls__filterButton {
+      &.ws-disabled {
+         .controls__filterButton-button {
+            &:hover {
+               color: @icon-color-disabled !important;
+            }
+         }
+      }
+   }
+}
+
 // ФИКС ДЛЯ ФФ
 .ws-is-firefox {
    .controls__filterButton {
       .controls__filterButton__filterLine {
-         margin: 8px 32px 8px 0;
+         margin: @controls-filterButton-button-margin-ff;
          white-space: normal;
 
          .controls__filterButton__filterLine-table {
