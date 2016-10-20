@@ -2184,14 +2184,8 @@ define('js!SBIS3.CONTROLS.ListView',
                var items = dataSet.toArray();
                at = {at: 0};
             }
-            //TODO новый миксин не задействует декоратор лесенки в принципе при любых действиях, кроме первичной отрисовки
-            //это неправильно, т.к. лесенка умеет рисовать и дорисовывать данные, если они добавляются последовательно
-            //здесь мы говорим, чтобы лесенка отработала при отрисовке данных
-            var ladder = this._options._decorators.getByName('ladder');
-            ladder && ladder.setIgnoreEnabled(true);
             //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
             this.getItems().append(dataSet);
-            ladder && ladder.setIgnoreEnabled(false);
 
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this._drawItems(dataSet.toArray(), at);
@@ -2769,7 +2763,6 @@ define('js!SBIS3.CONTROLS.ListView',
                rows = [itemContainer.prev(), anchor, itemContainer, anchor.next()];
                itemContainer.insertAfter(anchor);
             }
-            this._ladderCompare(rows);
          },
          /*DRAG_AND_DROP START*/
          /**
