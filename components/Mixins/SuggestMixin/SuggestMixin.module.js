@@ -333,10 +333,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             }
          });
 
-         if(!changedFields.length) {
-            return;
-         }
-
          this._options.listFilter = filter;
          this._notifyOnPropertyChanged('listFilter');
 
@@ -349,6 +345,10 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             if(this._list) {
                this._list.setFilter(this._options.listFilter, true);
             }
+            return;
+         }
+
+         if(!changedFields.length) {
             return;
          }
 
