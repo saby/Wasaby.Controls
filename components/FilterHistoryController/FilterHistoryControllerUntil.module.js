@@ -5,8 +5,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
     [
        'Core/core-functions',
        'Core/helpers/collection-helpers',
-       'Core/ConsoleLogger'
-    ], function(cFunctions, colHelpers, ConsoleLogger) {
+       'Core/IoC'
+    ], function(cFunctions, colHelpers, IoC) {
 
    'use strict';
 
@@ -84,7 +84,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
                /* По неустановленной причине, в структуре из истории могут появляться null'ы,
                 скорее всего, это прикладная ошибка, но надо от этого защититься (повторяется только на некоторых фильтрах ЭДО) */
                if(!newStructureElem) {
-                  ConsoleLogger.log('FilterHistoryController', 'В стукрутре из истории присутствуют null элементы');
+                  IoC.resolve('ILogger').log('FilterHistoryController', 'В стукрутре из истории присутствуют null элементы');
                   return false;
                } else {
                   return newStructureElem.internalValueField === elem.internalValueField;
