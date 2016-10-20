@@ -2517,7 +2517,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setPage: function (pageNumber, noLoad) {
             pageNumber = parseInt(pageNumber, 10);
             var offset = this._offset;
-            if (this._isPageLoaded(pageNumber)){
+            if (this.isInfiniteScroll() && this._isPageLoaded(pageNumber)){
                if (this._getItemsProjection() && this._getItemsProjection().getCount()){
                   var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
                      itemId = this._getItemsProjection().getItemBySourceIndex(itemIndex).getContents().getId(),
@@ -2534,7 +2534,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this._notify('onPageChange', pageNumber);
          },
-
 
          _isPageLoaded: function(pageNumber) {
             var offset = pageNumber * this._options.pageSize;
