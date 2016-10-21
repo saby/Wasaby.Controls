@@ -1303,7 +1303,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (this._dataReview) {
                if (this._options.autoHeight) {
                   this._dataReview.css({
-                     'max-height': this._options.maximalHeight,
+                     'max-height': this._options.maximalHeight ? this._options.maximalHeight : '',
                      'min-height': this._options.minimalHeight
                   });
                } else {
