@@ -50512,10 +50512,6 @@ tinymce.PluginManager.add('lists', function(editor) {
                   plainTextMode = true;
                }
 
-               if (editor.fire('onBeforePaste', {content: content}).isDefaultPrevented()) {
-                  return;
-               }
-
                // Grab plain text from Clipboard API or convert existing HTML to plain text
                if (plainTextMode) {
                   // Use plain text contents from Clipboard API unless the HTML contains paragraphs then
@@ -50525,6 +50521,9 @@ tinymce.PluginManager.add('lists', function(editor) {
                   } else {
                      content = Utils.innerText(content);
                   }
+               }
+               if (editor.fire('onBeforePaste', {content: content}).isDefaultPrevented()) {
+                  return;
                }
 
                // If the content is the paste bin default HTML then it was
