@@ -16,9 +16,6 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
     * @public
     * @author Степин П.В.
     */
-
-   var MESSAGE_LENGTH_MAX = 100;
-   var DETAILS_LENGTH_MAX = 160;
    function( constants,InformationPopup, template){
       'use strict';
 
@@ -151,11 +148,6 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                   self._choose();
                }
             });
-
-            //Если размер текста сообщения и описания превышаем заданные рамки, то увеличиваем размер окна
-            if(this._options.message.length > MESSAGE_LENGTH_MAX || this._options.details.length > DETAILS_LENGTH_MAX){
-               this.getContainer().find('.controls-SubmitPopup').addClass('controls-SubmitPopup__size-big');
-            }
          },
 
          /*
