@@ -38,12 +38,6 @@ define('js!SBIS3.CONTROLS.ToggleHeader',
             }
          },
 
-         init: function () {
-            this.setCaption(this._options.caption);
-            this.setCount(this._options.count);
-
-            ToggleHeader.superclass.init.call(this);
-         },
          /**
           * Получить текст заголовка
           * @example
@@ -73,7 +67,7 @@ define('js!SBIS3.CONTROLS.ToggleHeader',
          setCaption: function(caption) {
             ToggleHeader.superclass.setCaption.call(this, caption);
 
-            this.getLinkedContext().setValue('caption', caption);
+            this.getLinkedContext().setValueSelf('caption', caption);
          },
 
          /**
@@ -102,7 +96,9 @@ define('js!SBIS3.CONTROLS.ToggleHeader',
           * @see getCount
           */
          setCount: function(count) {
-            var type;
+            var
+               type,
+               context = this.getLinkedContext();
 
             count = Number(count);
             type = Helpers.type(count);
@@ -112,7 +108,7 @@ define('js!SBIS3.CONTROLS.ToggleHeader',
             }
 
             this._options.count = count;
-            this.getLinkedContext().setValue('count', count);
+            context.setValueSelf('count', '' + count);
          }
       });
 

@@ -1,8 +1,7 @@
 define('js!SBIS3.CONTROLS.LinkHeader',
    [
       'js!SBIS3.CONTROLS.ButtonBase',
-      'tmpl!SBIS3.CONTROLS.LinkHeader',
-      'css!SBIS3.CONTROLS.LinkHeader'
+      'tmpl!SBIS3.CONTROLS.LinkHeader'
    ],
    function(ButtonBase, dotTplFn){
 
@@ -38,13 +37,6 @@ define('js!SBIS3.CONTROLS.LinkHeader',
                 */
                href: ''
             }
-         },
-
-         init: function() {
-            this.setCaption(this._options.caption);
-            this.setHref(this._options.href);
-
-            LinkHeader.superclass.init.call(this);
          },
 
          /**
