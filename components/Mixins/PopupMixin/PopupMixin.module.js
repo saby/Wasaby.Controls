@@ -897,8 +897,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          },
 
          hide: function () {
-            /* Если кто-то позвал hide, а контрол уже скрыт, то не будет запускать цепочку кода,
-             могут валиться ошибки */
+            //В конструкторе SBIS3.CORE.Control вызывается hide. Так же hide может позваться, когда контрол уже скрыт.
+            //В данных случаях деактивировать окно не нужно, т.к. оно и так не активно.
             if(!this.isVisible()) return;
             cWindowManager.deactivateWindow(this, function () {
                // Убираем оверлей
