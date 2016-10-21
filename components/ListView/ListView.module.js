@@ -847,7 +847,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if (this.getItems()){
                   this._setLoadMoreCaption(this.getItems());
                }
-               this.subscribeTo(loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
+               this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
             }
          },
 
