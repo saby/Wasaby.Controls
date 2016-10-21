@@ -897,14 +897,17 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          },
 
          hide: function () {
-            cWindowManager.deactivateWindow(this, function() {
+            /* Если кто-то позвал hide, а контрол уже скрыт, то не будет запускать цепочку кода,
+             могут валиться ошибки */
+            if(!this.isVisible()) return;
+            cWindowManager.deactivateWindow(this, function () {
                // Убираем оверлей
                this._unsubscribeTargetMove();
                if (this._options.isModal) {
                   this._setModal(false);
                }
 
-               if (this._parentFloatArea){
+               if (this._parentFloatArea) {
                   this._parentFloatArea.setHasPopupInside(false);
                }
             }.bind(this));
