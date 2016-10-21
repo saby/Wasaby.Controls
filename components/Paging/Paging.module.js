@@ -229,7 +229,7 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
       },
 
       _goToEnd: function() {
-
+         this._notify('onLastPageSet');
       }
    });
 

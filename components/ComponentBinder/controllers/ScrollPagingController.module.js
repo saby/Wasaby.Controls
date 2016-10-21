@@ -32,6 +32,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController', ['js!SBIS3.StickyHeaderManage
             }.bind(this));
          }
 
+         paging.subscribe('onLastPageSet', this._scrollToLastPage.bind(this));
+
          paging.subscribe('onSelectedItemChange', function(e, pageNumber){
             var scrollToPage = function(page){
                // Если первая страница - проскролим к самому верху, не считая оффсет
@@ -72,6 +74,10 @@ define('js!SBIS3.CONTROLS.ScrollPagingController', ['js!SBIS3.StickyHeaderManage
          }.bind(this));
 
          $(window).on('resize.wsScrollPaging', this._resizeHandler.bind(this));
+      },
+
+      _scrollToLastPage: function(){
+         this._options.view.setPage(-1);
       },
 
       _isPageStartVisisble: function(page){
