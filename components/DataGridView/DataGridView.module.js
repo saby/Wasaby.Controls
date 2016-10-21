@@ -640,6 +640,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
        * @noShow
        */
       setStickyHeader: function(isSticky){
+         /* Не даем включить прилипание заголовков при включённом частичном скроле,
+            подробнее проблема описана в методе _modifyOptions */
+         if(isSticky && this._options.startScrollColumn !== undefined) {
+            return;
+         }
          if (this._options.stickyHeader !== isSticky){
             this._options.stickyHeader = isSticky;
             this.getContainer().find('.controls-DataGridView__table').toggleClass('ws-sticky-header__table', isSticky);
