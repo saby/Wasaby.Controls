@@ -897,14 +897,17 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          },
 
          hide: function () {
-            cWindowManager.deactivateWindow(this, function() {
+            //В конструкторе SBIS3.CORE.Control вызывается hide. Так же hide может позваться, когда контрол уже скрыт.
+            //В данных случаях деактивировать окно не нужно, т.к. оно и так не активно.
+            if(!this.isVisible()) return;
+            cWindowManager.deactivateWindow(this, function () {
                // Убираем оверлей
                this._unsubscribeTargetMove();
                if (this._options.isModal) {
                   this._setModal(false);
                }
 
-               if (this._parentFloatArea){
+               if (this._parentFloatArea) {
                   this._parentFloatArea.setHasPopupInside(false);
                }
             }.bind(this));
