@@ -350,7 +350,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
                floatAreaCfg[key] = meta[key];
             }
             else {
-               floatAreaCfg[key] = meta.dialogOptions[key] || defaultValue;
+               floatAreaCfg[key] = (meta.dialogOptions[key] !== undefined) ? meta.dialogOptions[key] : defaultValue;
             }
          });
 
