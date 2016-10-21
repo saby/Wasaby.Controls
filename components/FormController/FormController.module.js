@@ -235,10 +235,12 @@ define('js!SBIS3.CONTROLS.FormController', [
       _processingRecordDeferred: function(){
          var receiptRecordDeferred = this._options._receiptRecordDeferred,
              needUpdateKey = !this._options.key,
+             eventName = needUpdateKey ? 'onCreateModel' : 'onReadModel',
              self = this;
          if (cInstance.instanceOfModule(receiptRecordDeferred, 'Core/Deferred')){
             receiptRecordDeferred.addCallback(function(record){
                self.setRecord(record, needUpdateKey);
+               self._actionNotify(eventName);
             });
          }
       },
