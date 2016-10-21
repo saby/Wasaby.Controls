@@ -2056,11 +2056,33 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _removeItems: function(item, groupId){
+            this._checkDeletedItems(item);
             ListView.superclass._removeItems.call(this, item, groupId);
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
             }
          },
+
+          /*
+           * При удалении записи с открытым меню операций, операции над записью необходимо скрывать
+           * т.к. запись удалена и над ней нельзя проводить действия
+           */
+         _checkDeletedItems: function (items) {
+            var self = this,
+                target, targetHash;
+
+            if(self._itemsToolbar && self._itemsToolbar.isToolbarLocking()){
+               target = self.getItemsActions().getTarget();
+               targetHash = target.container.data('hash');
+               $ws.helpers.forEach(items, function(item){
+                  if(item.getHash() == targetHash){
+                     self._itemsToolbar.unlockToolbar();
+                     self._itemsToolbar.hide();
+                  }
+               });
+            }
+         },
+
          //-----------------------------------infiniteScroll------------------------
          /**
           * Используется ли подгрузка по скроллу.
