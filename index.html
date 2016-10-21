@@ -187,6 +187,9 @@
                <li>
                   <div id="Ladder"></div>
                </li>
+               <li>
+                  <div id="Header"></div>
+               </li>
             </ul>
          </td>
          <td>
@@ -253,6 +256,14 @@
 <script type="text/javascript">
    $ws.core.withComponents('Source').addCallback(function () {
       $(document).ready(function () {
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "Header",
+               caption: 'Header',
+               href: '/pages/Header.html'
+            })
+         });
 
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
