@@ -1260,8 +1260,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    if (
                       this.getItems()
                       && (list.getModel() === this.getItems().getModel())
-                      && (list._moduleName == this.getItems()._moduleName)
-                      && (list.getAdapter() == this.getItems().getAdapter())
+                      && (Object.getPrototypeOf(list).constructor == Object.getPrototypeOf(list).constructor)
+                      && (Object.getPrototypeOf(list.getAdapter()).constructor == Object.getPrototypeOf(this.getItems().getAdapter()).constructor)
                    ) {
                       this._options._items.setMetaData(list.getMetaData());
                       this._options._items.assign(list);
