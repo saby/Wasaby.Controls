@@ -493,6 +493,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   trs.push(this._thead[0].children[0]);
                }
 
+               if(this._checkResults()) {
+                  trs.push(this._thead.find('.controls-DataGridView__results')[0]);
+               }
+
                for(var i = 0, len = trs.length; i < len; i++) {
                   cell = trs[i].children[index];
                   if(cell) {
