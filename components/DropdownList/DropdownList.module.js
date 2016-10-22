@@ -253,7 +253,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _buildTplArgs: function(item) {
             return {
                item: item,
-               itemTpl: this._options.itemTpl,
+               itemTpl: TemplateUtil.prepareTemplate(this._options.itemTpl),
                defaultId: this._defaultId,
                displayField: this._options.displayField,
                hierField: this._options.hierField,
@@ -375,6 +375,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          showPicker: function(ev) {
             if (this.isEnabled()) {
+               var pickerBodyWidth,
+                   pickerHeaderWidth;
                //Если мы не в режиме хоевера, то клик по крестику нужно пропустить до его обработчика
                if (this._options.mode !== 'hover' && $(ev.target).hasClass('controls-DropdownList__crossIcon')) {
                   return true;
@@ -388,7 +390,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   $(items[i]).toggleClass('controls-DropdownList__item__selected', !!this._currentSelection[this._getIdByRow($(items[i]))]);
                }
                DropdownList.superclass.showPicker.apply(this, arguments);
-               this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', this._pickerBodyContainer[0].offsetWidth === this._pickerHeadContainer[0].offsetWidth);
+
+               pickerBodyWidth = this._pickerBodyContainer[0].clientWidth;
+               pickerHeaderWidth = this._pickerHeadContainer[0].clientWidth;
+               this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', pickerBodyWidth === pickerHeaderWidth);
+               if (pickerHeaderWidth > pickerBodyWidth){
+                  this._pickerBodyContainer.css('max-width', pickerHeaderWidth);
+               }
                if (this._buttonChoose) {
                   this._buttonChoose.getContainer().addClass('ws-hidden');
                }
@@ -558,10 +566,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   self._setText(self._prepareText(textValue));
                   self._redrawHead(isDefaultIdSelected);
                   self._resizeFastDataFilter();
-                  self._pickerBodyContainer.css('max-width', '');
-                  if (self._pickerHeadContainer.width() > self._pickerBodyContainer.width()){
-                     self._pickerBodyContainer.css('max-width', self._pickerHeadContainer.width());
-                  }
                });
             }
          },

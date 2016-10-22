@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.Action.List.RelativeMoveMixin',[
 
          moveInItems: function (from, to, up) {
             if (cInstance.instanceOfModule(this.getLinkedObject(), 'SBIS3.CONTROLS.ListView')) {
-               this.getLinkedObject().moveInItems(from, to, up);
+               this.getLinkedObject().getMoveStrategy()._moveInItems(from, to, !up);
             }
          }
 
