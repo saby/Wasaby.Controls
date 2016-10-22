@@ -896,23 +896,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             }
          },
 
-         hide: function () {
-            //В конструкторе SBIS3.CORE.Control вызывается hide. Так же hide может позваться, когда контрол уже скрыт.
-            //В данных случаях деактивировать окно не нужно, т.к. оно и так не активно.
-            if(!this.isVisible()) return;
-            cWindowManager.deactivateWindow(this, function () {
-               // Убираем оверлей
-               this._unsubscribeTargetMove();
-               if (this._options.isModal) {
-                  this._setModal(false);
-               }
-
-               if (this._parentFloatArea) {
-                  this._parentFloatArea.setHasPopupInside(false);
-               }
-            }.bind(this));
-         },
-
          _onResizeHandler: function(){
             this._checkFixed(this._options.target || $('body'));
             if (this.isVisible() && !this._fixed) {
@@ -976,17 +959,32 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                    cWindowManager.setHidden(self._zIndex);
                    cWindowManager.releaseZIndex(self._zIndex);
                    self._zIndex = null;
+                },
+                deactivateWindow = function() {
+                   cWindowManager.deactivateWindow(this, function () {
+                      // Убираем оверлей
+                      this._unsubscribeTargetMove();
+                      if (this._options.isModal) {
+                         this._setModal(false);
+                      }
+
+                      if (this._parentFloatArea) {
+                         this._parentFloatArea.setHasPopupInside(false);
+                      }
+                   }.bind(this));
                 };
             if (result instanceof Deferred) {
                result.addCallback(function (res) {
                   if (res !== false) {
                      parentHide.call(self);
                      clearZIndex();
+                     deactivateWindow.call(this);
                   }
                });
             } else if (result !== false) {
                parentHide.call(this);
                clearZIndex();
+               deactivateWindow.call(this);
             }
          }
       }
