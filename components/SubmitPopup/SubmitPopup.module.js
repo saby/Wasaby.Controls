@@ -116,6 +116,18 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                 */
                template: template,
 
+               /*
+                * Максимальный размер сообщения, превышая который, окно увеличит свой размер.
+                * @noShow
+                */
+               messageLengthMax: 100,
+
+               /*
+                * Максимальный размер описания, превышая который, окно увеличит свой размер.
+                * @noShow
+                */
+               detailsLengthMax: 160,
+
                isModal: true
             },
 
