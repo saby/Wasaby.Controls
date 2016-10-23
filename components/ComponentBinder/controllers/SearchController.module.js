@@ -262,7 +262,16 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
          searchForm.subscribe('onKeyPressed', function(eventObject, event) {
             // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
             if ((event.which == constants.key.tab || event.which == constants.key.down) && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)) {
-               view.setSelectedIndex(0);
+               var selectedIndex = view.getSelectedIndex();
+
+               /* Чтобы не было прыжков маркера:
+                  Нет выделенного элемента - устанавливаем первый
+                  Есть выделенный - устанавливает index + 1 */
+               if(selectedIndex === null) {
+                  view.setSelectedIndex(0);
+               } else {
+                  view.setSelectedIndex(selectedIndex + 1);
+               }
                view.setActive(true);
                event.stopPropagation();
                event.preventDefault();
