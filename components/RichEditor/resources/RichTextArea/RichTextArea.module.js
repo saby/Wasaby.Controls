@@ -1030,10 +1030,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                e.content =  content.replace('orphans: 31415;','');
                //Парсер TinyMCE неправльно распознаёт стили из за - &quot;TensorFont Regular&quot;
                e.content = e. content.replace(/&quot;TensorFont Regular&quot;/gi,'\'TensorFont Regular\'');
+               //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
+               //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
+               if (!self._mouseIsPressed) {
+                  e.content = Sanitize(e.content, {validNodes: {img: false}});
+               }
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
                // и послыаем метку форматной вставки, если метка присутствует не надо обрабатывать событие
                // нашим обработчиком, а просто прокинуть его в дальше
-               e.content = Sanitize(e.content, {validNodes: {img: false}});
                if (e.withStyles) {
                   return e;
                }
@@ -1047,6 +1051,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      }
                   }
                }
+               e.content = Sanitize(e.content, {validNodes: {img: false}});
             });
 
             editor.on('PastePostProcess', function(event){
@@ -1215,6 +1220,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   if (self._mouseIsPressed){
                      editor.editorManager.activeEditor = false;
                   }
+                  self._mouseIsPressed = false;
                });
             }
 
