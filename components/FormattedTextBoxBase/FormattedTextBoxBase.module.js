@@ -846,7 +846,7 @@ define(
       },
 
       _getTextDiff: function(){
-         var oldText = this._options.text.split(':'),
+         var oldText = this._options.text ? this._options.text.split(/:|-/)  : this._getClearText().split(/:|-/),
              newText = this._inputField.text().split(':');
          for (var i = 0, l = newText.length; i < l; i++) {
             if (oldText[i].length !== newText[i].length){
@@ -861,6 +861,10 @@ define(
             }
          }
          return false;
+      },
+
+      _getClearText: function(){
+         return this._getFormatModel().getStrMask(this._getMaskReplacer());
       },
 
       _clearCommandHandler: function(type) {
