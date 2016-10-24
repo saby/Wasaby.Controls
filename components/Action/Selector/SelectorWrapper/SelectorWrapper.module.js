@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
 
             this.subscribeTo(childControl, 'onItemActivate', function(e, meta) {
                /* Для иерархии надо проверить тип выбора */
-               if(cInstance.instanceOfMixin(childControl, 'SBIS3.CONTROLS.hierarchyMixin')) {
+               if(cInstance.instanceOfMixin(childControl, 'SBIS3.CONTROLS.TreeMixin')) {
                   var isBranch = meta.item.get(childControl.getProperty('hierField') + '@');
 
                   if (isBranch && _private.selectionType === 'node' || !isBranch && _private.selectionType === 'leaf') {
