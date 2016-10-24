@@ -119,12 +119,12 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                /*
                 * cfg {Number} Максимальный размер сообщения, превышая который, окно увеличит свой размер.
                 */
-               messageLengthMax: 100,
+               messageMaxLength: 100,
 
                /*
                 * cfg {Number} Максимальный размер описания, превышая который, окно увеличит свой размер.
                 */
-               detailsLengthMax: 160,
+               detailsMaxLength: 160,
 
                isModal: true
             },
