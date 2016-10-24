@@ -41,15 +41,10 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!WS.Data/Entity/Model', 'C
        * @see addSelectedItems
        */
       setSelectedItems: function(list) {
-         var selItems = this._options.selectedItems,
-             newList;
+         var newList;
 
          if(list) {
             list = this._prepareItems(list);
-
-            if ( (selItems && selItems.isEqual(list)) || (!selItems && !list.getCount()) ) {
-               return;
-            }
 
             if (list.getCount() && !this._options.multiselect) {
                newList = this._makeList([list.at(0)]);
