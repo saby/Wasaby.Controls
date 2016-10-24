@@ -1,4 +1,6 @@
-define('js!SBIS3.CONTROLS.ScrollPagingController', ['js!SBIS3.StickyHeaderManager', "Core/Abstract", "Core/core-instance"], function(StickyHeaderManager, cAbstract, cInstance) {
+define('js!SBIS3.CONTROLS.ScrollPagingController', 
+   ['js!SBIS3.StickyHeaderManager', 'Core/Abstract', 'Core/core-instance', 'Core/WindowManager'], 
+   function(StickyHeaderManager, cAbstract, cInstance, WindowManager) {
 
    var ScrollPagingController = cAbstract.extend({
       $protected: {
@@ -9,7 +11,13 @@ define('js!SBIS3.CONTROLS.ScrollPagingController', ['js!SBIS3.StickyHeaderManage
          _scrollPages: [], // Набор страниц для скролл-пэйджина
          _pageOffset: 0, // offset последней страницы
          _currentScrollPage: 1,
-         _windowResizeTimeout: null
+         _windowResizeTimeout: null,
+         _zIndex: null
+      },
+
+      init: function() {
+         this._zIndex = WindowManager.acquireZIndex();
+         this._options.paging.getContainer().css('z-index', this._zIndex);
       },
 
       bindScrollPaging: function(paging) {
@@ -180,6 +188,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController', ['js!SBIS3.StickyHeaderManage
 
       destroy: function(){
          $(window).off('resize.wsScrollPaging');
+         WindowManager.releaseZIndex(this._zIndex);
          ScrollPagingController.superclass.destroy.apply(this, arguments);
       }
 
