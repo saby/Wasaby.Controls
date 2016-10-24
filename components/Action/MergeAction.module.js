@@ -100,6 +100,7 @@ define('js!SBIS3.CONTROLS.MergeAction', [
         },
        _buildComponentConfig: function(meta) {
           return cMerge(meta, {
+             title: rk('Объединение наименований'),
              //Прокидываем необходимые опции в шаблон
              displayField: this._options.displayField,
              queryMethodName: this._options.queryMethodName,
