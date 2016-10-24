@@ -264,9 +264,10 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
             if ((event.which == constants.key.tab || event.which == constants.key.down) && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)) {
                var selectedIndex = view.getSelectedIndex();
 
-               /* Чтобы не было прыжков маркера:
-                  Нет выделенного элемента - устанавливаем первый
-                  Есть выделенный - устанавливает index + 1 */
+               /* При нажатии кнопки вниз в строке поиска ожидается :
+                  что появится маркер на view (если его не было) / перейдёт на следующую строку (если был).
+                  Поэтому обрабатываем две ситуации, когда маркера нет, то устанавливаем selectedIndex на первый элемент,
+                  если он есть, то просто увеличиваем selectedIndex на единицу, чтобы маркер перескочил на следующий элемент. */
                if(selectedIndex === null) {
                   view.setSelectedIndex(0);
                } else {
