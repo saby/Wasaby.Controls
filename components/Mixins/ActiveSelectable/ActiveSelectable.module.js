@@ -145,9 +145,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
 
          /* При синхронизации запись без ключа считаем невыбранной, т.к. с помощью метода set такую запись установить нельзя,
           т.е. она может только проинициализироваться из контекста */
-         if( selItem && selItem.getId() &&
-             /* Ключ может быть строкой или числом, учитываем при проверке */
-             (selKey === null || (selKey !== selItem.getId()) && selKey !== String(selItem.getId())) ) {
+         if(selItem && selItem.getId() && (selKey === null || selKey !== selItem.getId())) {
             this._options.selectedItem = null;
             this._notifyOnPropertyChanged('selectedItem');
          }
