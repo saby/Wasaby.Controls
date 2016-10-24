@@ -3,8 +3,9 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.SelectorWrapper',
    'Core/helpers/collection-helpers',
-   'Core/helpers/functional-helpers'
-], function (CompoundControl, dotTplFn, collectionHelpers, functionalHelpers) {
+   'Core/helpers/functional-helpers',
+   'Core/core-instance'
+], function (CompoundControl, dotTplFn, collectionHelpers, functionalHelpers, cInstance) {
 
 
    /**
@@ -77,10 +78,13 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             });
 
             this.subscribeTo(childControl, 'onItemActivate', function(e, meta) {
-               var isBranch = meta.item.get(childControl.getProperty('hierField') + '@');
+               /* Для иерархии надо проверить тип выбора */
+               if(cInstance.instanceOfMixin(childControl, 'SBIS3.CONTROLS.hierarchyMixin')) {
+                  var isBranch = meta.item.get(childControl.getProperty('hierField') + '@');
 
-               if(isBranch && _private.selectionType === 'node' || !isBranch && _private.selectionType === 'leaf') {
-                  return;
+                  if (isBranch && _private.selectionType === 'node' || !isBranch && _private.selectionType === 'leaf') {
+                     return;
+                  }
                }
 
                if(childControl.getMultiselect() && !childControl._isEmptySelection()) {
