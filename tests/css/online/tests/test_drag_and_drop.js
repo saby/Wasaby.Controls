@@ -27,10 +27,8 @@ gemini.suite('SBIS3.CONTROLS.DragAndDrop Online', function () {
             })
 			
 			.capture('thin_blue_line', function (actions, find) {
-                this.folder = find('[data-id="4"]');
+                this.folder = find('[data-id="11"]');
 				actions.mouseMove(this.folder, {'x': 400, 'y': -5});
-				actions.wait(250);
-				actions.mouseMove(this.folder, {'x': 400, 'y': 1});
             })
 			
 			.capture('hovered_item', function (actions) {

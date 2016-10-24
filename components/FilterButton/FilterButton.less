@@ -149,6 +149,10 @@
                   right: @controls-filterButton-history-actions-right;
                   left: @controls-filterButton-history-actions-left;
                   bottom: @controls-filterButton-history-actions-bottom;
+
+                  .icon-size {
+                     .icon-16();
+                  }
                }
 
                .controls-filterButton__historyView-item {
@@ -299,7 +303,7 @@
    }
 
    .controls__filterButton__filterLine-items:hover {
-      color: @controls-filterLine-link-hover-color;
+      color: @hover-color;
       .controls__filterButton__filterLine-text {
          text-decoration: underline;
       }

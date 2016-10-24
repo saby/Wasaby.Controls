@@ -44,6 +44,8 @@
 @primary-border-color:                    #D1D2D4;
 @secondary-border-color:                  #999B9F;
 
+@hover-color:                             @primary-color;
+
 // ---- //
 // Link //
 // ---- //
@@ -1544,7 +1546,7 @@
 @list-view-actions-cursor:                      pointer;
 @list-view-actions-height:                      20px;
 @list-view-actions-width:                       20px;
-@list-view-actions-item-height:                 16px;
+@list-view-actions-item-height:                 24px;
 @list-view-actions-right-offset:                1px;
 @list-view-actions-margin:                      0 4px;
 @list-view-actions-margin-multiView:            8px 3px 0 0;
@@ -1561,7 +1563,7 @@
 @list-view-items-toolbar-bottom:                     1px;
 @list-view-items-toolbar-right:                      0;
 @list-view-items-toolbar-zindex:                     10;
-@list-view-items-toolbar-box-shadow:                 -2px -2px 5px @data-grid-row-hover-bg;
+@list-view-items-toolbar-box-shadow:                 -2px 1px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-locked-box-shadow:          none;
 @list-view-items-toolbar-vertical-box-shadow:        -2px  2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-vertical-locked-box-shadow: -2px  2px 5px @default-itemSelected-color;
@@ -1576,13 +1578,16 @@
 @touch-mode-items-toolbar-icon-margin-top:           -24px;
 @list-view-items-toolbar-right-tile:                 1px;
 
+@bottomStyle-items-toolbar-margin-top:               2px;
+
 @list-view-actions-verAlign-margin:             8px 3px 0 0;
-@list-view-actions-verAlign-width:              20px;
+@list-view-actions-verAlign-width:              25px;
 @list-view-actions-menu-icon:                   url('img/ItemActions-menu.png') no-repeat;
 @list-view-actions-menu-icon-hover:             @list-view-actions-menu-icon 0 -20px;
 @list-view-actions-menu-icon-close:             @list-view-actions-menu-icon 0 -40px;
 @list-view-actions-menu-icon-close-hover:       @list-view-actions-menu-icon 0 -60px;
-@list-view-actions-menu-icon-width:             16px;
+@list-view-actions-menu-icon-width:             24px;
+@list-view-actions-icon-top:                    @menu-item-icon24-top-offset;
 @list-view-actions-icon-round-height:           26px;
 @list-view-actions-icon-round-top:              1px;
 @list-view-actions-link-top:                    4px;
@@ -1601,6 +1606,7 @@
 @list-view-actions-menu-close-width:            16px;
 @list-view-actions-menu-item-padding-right:     24px;
 @list-view-actions-menu-padding:                @menu-padding;
+@list-view-actions-menu-text-margin:            0 0 0 30px;
 
 @list-view-scroll-spritesheet :                 'img/ajax-loader-indicator.gif';
 @list-view-scroll-bg:                           url(@list-view-scroll-spritesheet) 0 0 no-repeat;
@@ -1612,6 +1618,24 @@
 @listView-empty-data-color:                     @black-color;
 @listView-empty-data-font-size:                 15px;
 @listView-empty-data-padding-top:               46px;
+
+// ItemsToolbar small
+@list-view-small-items-toolbar-box-shadow:          -2px -2px 5px @data-grid-row-hover-bg;
+@list-view-small-items-toolbar-line-height:         16px;
+@list-view-small-actions-item-height:               16px;
+@list-view-small-actions-verAlign-width:            20px;
+@list-view-small-actions-menu-icon-width:           16px;
+@list-view-small-actions-menu-close-top:            12px;
+@list-view-small-actions-menu-close-right:          2px;
+@list-view-small-actions-menu-close-height:         16px;
+@list-view-small-actions-menu-close-width:          16px;
+@list-view-small-actions-menu-close-revVert-bottom: 8px;
+@list-view-small-actions-menu-item-padding-right:   24px;
+@list-view-small-actions-menu-text-margin:          0 0 0 22px;
+@list-view-small-actions-menu-item-icon-top-offset: @menu-item-icon-top-offset;
+@list-view-small-actions-menu-item-icon-left-offset:@menu-item-icon-left-offset;
+
+@bottomStyle-small-items-toolbar-margin-top:        4px;
 
 // --------- //
 //  ToolBar  //
