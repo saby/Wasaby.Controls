@@ -382,12 +382,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                var projItem, index;
                projItem = self._getItemsProjection().getByHash(hash);
                index = self._getItemsProjection().getIndex(projItem);
+               self.setSelectedIndex(index);
+               self.hidePicker();
                if (self._options.autocomplete){
                   self._getItemsProjection().setFilter(null);
                   self.redraw();
                }
-               self.setSelectedIndex(index);
-               self.hidePicker();
                // чтобы не было выделения текста, когда фокус вернули в выпадашку
                self._fromTab = false;
                self.setActive(true);
