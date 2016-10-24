@@ -290,7 +290,6 @@
 @tab-buttons-tabSpace-template-inner-min-width:   100%;
 @tab-buttons-tabSpace-template-overflow:          hidden;
 @tab-buttons-leftItems-float:                   left;
-@tab-buttons-items-padding:                     5px;
 @tab-buttons-side-items-border:                 transparent;
 @tab-buttons-rightItems-float:                  right;
 
@@ -382,8 +381,8 @@
 @tab-button-right-separator-left:               -1px;
 @tab-button-left-margin-left:                   -1px;
 @tab-button-left-separator-right:               -1px;
-@tab-button-side-left-margin-left:              -5px;
-@tab-button-side-right-margin-right:            -5px;
+@tab-button-side-left-margin-left:              0;
+@tab-button-side-right-margin-right:            0;
 @tab-button-side-left-border:                   none;
 
 @tab-button-overlay-position:                   absolute;
@@ -1043,6 +1042,9 @@
 
 @combo-box-cursor:                              pointer;
 @combo-box-disabled-cursor:                     default;
+@combo-box-disabled-border-width:               0 0 1px 0;
+@combo-box-disabled-border-color:               #E4E4E4;
+@combo-box-disabled-color:                      inherit;
 
 @combo-box-field-font:                          inherit;
 @combo-box-field-text-color:                    inherit;
@@ -1083,6 +1085,8 @@
 @combo-box-picker-margin:                       -2px 0 0;
 @combo-box-picker-item-padding:                 2px 7px;
 @combo-box-picker-item-font:                    inherit;
+@combo-box-picker-item-font-size:               15px;
+@combo-box-picker-item-padding:                 6px 4px;
 
 @combo-box-picker-item-text-color:              @combo-box-field-text-color;
 @combo-box-picker-item-bg:                      @white-color;
@@ -1093,7 +1097,7 @@
 @combo-box-picker-item-selected-text-color:     @gray-color;
 @combo-box-picker-item-selected-bg:             @white-color;
 
-@compo-box-fieldWrapper-margin:                 @text-box-field-after-margin;
+@compo-box-fieldWrapper-margin-right:                 16px;
 @combo-box-after-width:                         @text-box-after-width;
 
 @compo-box-picker-show-color:                   @text-color;
@@ -1153,6 +1157,13 @@
 @text-area-compat-placeholder-font:        @text-box-compat-placeholder-font;
 @text-area-compat-placeholder-padding:     @text-box-compat-placeholder-padding;
 @text-area-compat-placeholder-alignment:   @text-box-compat-placeholder-alignment;
+
+// --------------- //
+// SuggestTextBox //
+// -------------- //
+
+@suggest-text-box-reset-margin:              3px 4px;
+@suggest-text-box-wrapper-width:             22px;
 
 // ----------- //
 // Suggest //
@@ -1723,7 +1734,7 @@
 
 @data-grid-cell-border-width:                   1px 0;
 @data-grid-cell-separator-color:                #F5F5F5;
-@data-grid-first-cell-separator-color:          @data-grid-cell-separator-color;
+@data-grid-first-cell-separator-color:          #EAEAEA;
 @data-grid-cell-border-style:                   solid;
 @data-grid-cell-border-color:                   transparent;
 
@@ -1959,6 +1970,7 @@
 @controls-filterButton-button-height:             24px;
 @controls-filterButton-button-width:              24px;
 @controls-filterButton-button-margin:             8px 8px 8px 0;
+@controls-filterButton-button-margin-ff:          8px 32px 8px 0;
 @controls-filterButton-height:                    40px;
 
 @controls-filterButton-button-arrow-margin:       -4px;
@@ -2104,6 +2116,7 @@
 @back-button-font-size:                            18px;
 @back-button-margin-before:                        0;
 @back-button-padding-before:                       0;
+@back-button-arrow-height:                         17px;
 @icon-size:                                        16px;
 @icon-width:                                       16px;
 @icon-height:                                      16px;
@@ -2127,6 +2140,11 @@
 @controls-movedialog-padding:                      0 0 5px 0;
 @controls-movedialog-min-height:                   50px;
 @controls-movedialog-min-width:                    auto;
+
+// PrintDialog
+@controls-printdialog-activate-right:              40px;
+@controls-printdialog-activate-margin-top:         @controls-movedialog-activate-top;
+@controls-printdialog-min-width:                   @controls-movedialog-min-width;
 
 //ListView AjaxIndicator
 @controls-AjaxLoader-background:                   none repeat scroll 0 0 rgba(255, 255, 255, 0.7);

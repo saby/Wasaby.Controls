@@ -727,7 +727,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           _onListItemSelect: function(id, item) {
              /* Чтобы не было лишнего запроса на БЛ, добавим рекорд в набор выбранных */
-             this.addSelectedItems(item instanceof Array ? item : [item]);
+             /* Требуется делать клон т.к. :
+                запись передаётся по ссылке и любые действия с ней будут отображаться и в списке.
+                Особенно актуально это когда зибниден selectedItem в добавлении по месту. */
+             this.addSelectedItems([item.clone()]);
              this.setText('');
              /* При выборе скрываем саггест, если он попадает под условия,
                 когда его не надо показывать см. _needShowSuggest */
@@ -750,7 +753,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              /* Если в поле связи есть выбранные ключи, то после установки сорса надо
                 загрузить записи и отрисовать их */
-             if(!this._isEmptySelection) {
+             if(!this._isEmptySelection()) {
                 this._loadAndDrawItems();
              }
           },
@@ -804,20 +807,24 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  self = this,
                  newRec, dataSource, dataSourceModel, dataSourceModelInstance;
 
+             function getModel(model, config) {
+                return typeof model === 'string' ? Di.resolve(model, config) : new model(config)
+             }
+
              if(items) {
                 dataSource = this.getDataSource();
 
                 if(dataSource) {
                    dataSourceModel = dataSource.getModel();
                    /* Создадим инстанс модели, который указан в dataSource,
-                    чтобы по нему проверять модели которые выбраны в поле связи */
-                   dataSourceModelInstance = typeof dataSourceModel === 'string' ? Di.resolve(dataSourceModel) : new dataSourceModel();
+                      чтобы по нему проверять модели которые выбраны в поле связи */
+                   dataSourceModelInstance = getModel(dataSourceModel, {});
 
                    items.each(function(rec, index) {
-                      /* Если модель сорса и выбранной записи разные, то создадим копию модели сорса,
-                       и заполним её данными из выбранной записи */
+                      /* Создадим модель указанную в сорсе, и перенесём адаптер и формат из добавляемой записи,
+                         чтобы не было конфликтов при мерже полей этих записей */
                       if( dataSourceModelInstance._moduleName !==  rec._moduleName) {
-                         (newRec = dataSourceModelInstance.clone()).merge(rec);
+                         (newRec = getModel(dataSourceModel, { adapter: rec.getAdapter(), format: rec.getFormat() })).merge(rec);
                          rec = newRec;
                          items.replace(rec, index);
                       }

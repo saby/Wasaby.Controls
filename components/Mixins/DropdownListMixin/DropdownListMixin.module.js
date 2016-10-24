@@ -35,12 +35,13 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [
             },
 
             _getItemTemplate: function (item) {
-                var title = item.get(this._options.displayField);
+                var title = item.getContents().get(this._options.displayField);
                 if (this._options.itemTemplate) {
                     return TemplateUtil.prepareTemplate(this._options.itemTemplate).call(this, {
-                       item: item,
+                       item: item.getContents(),
                        title: title,
                        multiselect : this._options.multiselect,
+                       hierField: this._options.hierField,
                        included : this._buildIncluded()
                     })
                 }

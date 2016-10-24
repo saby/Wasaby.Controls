@@ -1432,9 +1432,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _addItem: function (item, at) {
-         var ladderDecorator = this._decorators.getByName('ladder'),
-            previousGroupBy = this._previousGroupBy;//После добавления записи восстанавливаем это значение, чтобы не сломалась группировка
-         ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
+         var previousGroupBy = this._previousGroupBy;//После добавления записи восстанавливаем это значение, чтобы не сломалась группировка
          /*TODO отдельно обрабатываем случай с группировкой*/
          var flagAfter = false;
          if (!Object.isEmpty(this._options.groupBy)) {
@@ -1474,22 +1472,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
          this._group(item, {at: at});
          this._previousGroupBy = previousGroupBy;
-         ladderDecorator && ladderDecorator.setMarkLadderColumn(false);
-         this._ladderCompare(rows);
-      },
-      _ladderCompare: function(rows){
-         //TODO придрот - метод нужен только для адекватной работы лесенки при перемещении элементов местами
-         for (var i = 1; i < rows.length; i++){
-            var upperRow = rows[i - 1].length ? $('.controls-ladder', rows[i - 1]) : undefined,
-                lowerRow = rows[i].length ? $('.controls-ladder', rows[i]) : undefined,
-               needHide;
-            if (lowerRow) {
-               for (var j = 0; j < lowerRow.length; j++) {
-                  needHide = upperRow ? (upperRow.eq(j).html() == lowerRow.eq(j).html()) : false;
-                  lowerRow.eq(j).toggleClass('ws-invisible', needHide);
-               }
-            }
-         }
       },
       _isNeedToRedraw: function(){
       	return this._options.autoRedraw && this._needToRedraw && !!this._getItemsContainer();
@@ -1524,7 +1506,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          /**/
          if (container.length) {
             this._clearItems(container);
-            this._ladderCompare([container.prev(), container.next()]);
             container.remove();
          }
       },
@@ -1544,7 +1525,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             if (lostFocus) {
                this.getContainer().focus();
             }
-            this._ladderCompare([newItemContainer.prev(), newItemContainer, newItemContainer.next()]);
          }
          //TODO: код понадобится для частичной перерисовки после перемещения
          /*else if(this.getItems().getIndex(item) > -1) {

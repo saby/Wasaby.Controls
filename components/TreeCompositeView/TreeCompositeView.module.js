@@ -241,7 +241,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                      currentDataSet.removeAt(indexForRemove);
                   }
                   self._destroyItemsFolderFooter([row.key]);
-                  self._ladderCompare(environment);
                   row.$row.remove();
                   //Если количество записей в текущем DataSet меньше, чем в обновленном, то добавляем в него недостающую запись
                   if (needRedraw && currentDataSet.getCount() < dataSet.getCount()) {
@@ -306,10 +305,12 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                item = this._options._items.getRecordById(id);
                if (item) {
                   parentBranchId = this.getParentKey(undefined, this._options._items.getRecordById(id));
-                  if (!recordsGroup[parentBranchId]) {
-                     recordsGroup[parentBranchId] = [];
+                  if( parentBranchId !== undefined ) {
+                     if (!recordsGroup[parentBranchId]) {
+                        recordsGroup[parentBranchId] = [];
+                     }
+                     recordsGroup[parentBranchId].push(id);
                   }
-                  recordsGroup[parentBranchId].push(id);
                }
             }, this);
             if (Object.isEmpty(recordsGroup)) {

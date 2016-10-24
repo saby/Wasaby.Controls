@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
                }
             },
             basic: true,
-            order: 0
+            order: 1
          },
          {
             name: 'styles',
@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             className: 'controls-IconButton__round-border',
             handlers:{
                onActivated: function(){
-                  this.getParent()._insertLink(false, this._container);
+                  this.getParent()._insertLink();
                }
             },
             order: 30

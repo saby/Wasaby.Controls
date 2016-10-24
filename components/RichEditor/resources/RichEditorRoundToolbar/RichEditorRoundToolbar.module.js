@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
          },
 
          _modifyOptions: function(options) {
-            options.defaultConfig[0].order = options.side === 'right' ? 1000 : 0;
+            options.defaultConfig[0].order = options.side === 'right' ? 1000 : 1;
             options.defaultConfig[0].icon = options.side === 'right' ? 'sprite:icon-16 icon-View icon-primary' : 'sprite:icon-16 icon-ViewBack icon-primary';
             options = RichEditorRoundToolbar.superclass._modifyOptions.apply(this, arguments);
             return options;
@@ -135,9 +135,6 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
          _prepareItems: function(items, defaultconfig, expanded) {
             var
                items = RichEditorRoundToolbar.superclass._prepareItems.apply(this, arguments);
-            items.sort(function(item1,item2){
-               return (item1.order || 0) - (item2.order || 0)
-            });
             for (var i in items) {
                if (items.hasOwnProperty(i)) {
                   items[i].visible = items[i].basic || expanded;

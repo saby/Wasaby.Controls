@@ -9,7 +9,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "Core/ConsoleLogger",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.PickerMixin",
-   "js!SBIS3.CONTROLS.DSMixin",
+   "js!SBIS3.CONTROLS.ItemsControlMixin",
+   "js!SBIS3.CONTROLS.Utils.RecordSetUtil",
    "js!SBIS3.CONTROLS.MultiSelectable",
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.DropdownListMixin",
@@ -28,7 +29,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "i18n!SBIS3.CONTROLS.DropdownList"
 ],
 
-   function( constants, Deferred, IoC, ConsoleLogger,Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker, cInstance, dcHelpers) {
+   function (constants, Deferred, IoC, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker, cInstance, dcHelpers) {
 
       'use strict';
       /**
@@ -50,7 +51,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * @public
        * @category Inputs
        */
-      var DropdownList = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
+      var DropdownList = Control.extend([PickerMixin, ItemsControlMixin, MultiSelectable, DataBindMixin, DropdownListMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
          _dotTplFn: dotTplFn,
          /**
           * @event onClickMore При клике на кнопку "Ещё"
@@ -63,7 +64,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * @remark
                 * Шаблон - это XHTML-файл с вёрсткой заголовка. Этот шаблон должен быть создан в компоненте в подпапке resources.
                 * Так его можно использовать, как и любой другой шаблон, в разных компонентах.
-                * Кроме шаблона отображения заголовка можно установить шаблон отображения элемента коллекции с помощью опции {@link itemTemplate}.
+                * Кроме шаблона отображения заголовка можно установить шаблон отображения элемента коллекции с помощью опции {@link itemTpl}.
                 * @example
                 * Чтобы можно было использовать шаблон в компоненте и передать в опцию headTemplate, нужно выполнить следующее:
                 * <ol>
@@ -101,7 +102,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 *    </div>
                 * </pre>
                 * @editor ExternalComponentChooser
-                * @see itemTemplate
+                * @see itemTpl
                 */
                headTemplate: dotTplFnHead,
                headPickerTemplate: dotTplFnPickerHead,
@@ -113,10 +114,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * Кроме шаблона отображения элемента коллекции можно установить шаблон отображения заголовка с помощью опции {@link headTemplate}.
                 * Из шаблона можно получить доступ к записи с помощью инструкци шаблонизатора:
                 * <pre>
-                *    {{=it.title}} // получить значение поля title
+                *    {{=it.item.get(it.displayField)}}
                 * </pre>
                 * @example
-                * Чтобы можно было использовать шаблон в компоненте и передать в опцию itemTemplate, нужно выполнить следующее:
+                * Чтобы можно было использовать шаблон в компоненте и передать в опцию itemTpl, нужно выполнить следующее:
                 * <ol>
                 *    <li>Подключить шаблон в массив зависимостей компонента.</li>
                 *    <li>Импортировать его в отдельную переменную.</li>
@@ -132,30 +133,30 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 *                $protected: {
                 *                   _options: {
                 *                      ...
-                *                      myItemTemplate: myItemTpl // Создаём новую опцию компонента, в которую передаём шаблон элемента коллекции
+                *                      myitemTpl: myItemTpl // Создаём новую опцию компонента, в которую передаём шаблон элемента коллекции
                 *                   }
                 *                }
                 *                ...
                 *          });
                 *       </pre>
                 *    </li>
-                *    <li>В вёрстке компонента в значение опции itemTemplate передать значение опции с помощью инструкций шаблонизатора.
+                *    <li>В вёрстке компонента в значение опции itemTpl передать значение опции с помощью инструкций шаблонизатора.
                 *       <pre>
-                *          <option name="itemTemplate" type="ref">{{@it.myItemTemplate}}</option>
+                *          <option name="itemTpl" type="ref">{{@it.myitemTpl}}</option>
                 *       </pre>
                 *    </li>
                 * </ol>
                 * Шаблон может быть любым. Например, такой шаблон:
                 * <pre>
-                *    <div class="docs-myItemTemplate">
-                *       {{=it.myField}}
-                *       <span class="docs-myItemTemplate__span">Мой подтекст рядом с записью</span>
+                *    <div class="docs-myItemTpl">
+                *       {{=it.item.get(it.displayField)}}
+                *       <span class="docs-myItemTpl__span">Мой подтекст рядом с записью</span>
                 *    </div>
                 * </pre>
                 * @editor ExternalComponentChooser
                 * @see headTemplate
                 */
-               itemTemplate: dotTplFnForItem,
+               itemTpl: dotTplFnForItem,
                /**
                 * @cfg {String} Режим работы выпадающего списка
                 * @remark
@@ -185,6 +186,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * </ul>
                 */
                type: 'simple',
+               /**
+                * @cfg {String} Устанавливает поле иерархии.
+                * @remark
+                * Полем иерархии называют поле записи, по значениям которой устанавливаются иерархические отношения между записями набора данных.
+                */
+               hierField: null,
                allowEmptyMultiSelection: false
             },
             _pickerListContainer: null,
@@ -201,11 +208,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             _changedSelectedKeys: [] //Массив ключей, которые были выбраны, но еще не сохранены в выпадающем списке
          },
          $constructor: function() {
-            this._container.bind(this._options.mode === 'hover' ? 'mouseenter' : 'mouseup', this.showPicker.bind(this));
             this._publish('onClickMore');
-         },
-         init : function () {
-            DropdownList.superclass.init.apply(this, arguments);
+            this._container.bind(this._options.mode === 'hover' ? 'mouseenter' : 'mouseup', this.showPicker.bind(this));
             if (!this._picker) {
                if (this._container.hasClass('controls-DropdownList__withoutCross')){
                   this._options.pickerClassName += ' controls-DropdownList__withoutCross';
@@ -213,10 +217,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._initializePicker();
             }
          },
-         _modifyOptions: function(opts) {
-            opts.pickerClassName += ' controls-DropdownList__picker';
-            opts.headTemplate = TemplateUtil.prepareTemplate(opts.headTemplate);
-            return DropdownList.superclass._modifyOptions.call(this, opts);
+         _modifyOptions: function(cfg, parsedCfg) {
+            cfg.pickerClassName += ' controls-DropdownList__picker';
+            cfg.headTemplate = TemplateUtil.prepareTemplate(cfg.headTemplate);
+            return DropdownList.superclass._modifyOptions.call(this, cfg, parsedCfg);
          },
          _setPickerContent : function () {
             var self = this,
@@ -249,7 +253,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _buildTplArgs: function(item) {
             return {
                item: item,
+               itemTpl: TemplateUtil.prepareTemplate(this._options.itemTpl),
+               defaultId: this._defaultId,
                displayField: this._options.displayField,
+               hierField: this._options.hierField,
                multiselect: this._options.multiselect
             };
          },
@@ -317,6 +324,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _clickItemHandler : function (e) {
             var  self = this,
                  row = $(e.target).closest('.' + self._getItemClass()),
+                 itemId = this._getIdByRow(row),
                  selectedKeys = this.getSelectedKeys(),
                  isCheckBoxClick = !!$(e.target).closest('.js-controls-DropdownList__itemCheckBox').length,
                  selected;
@@ -326,9 +334,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._hideAllowed = !this._options.multiselect;
                if (this._options.multiselect && !$(e.target).closest('.controls-ListView__defaultItem').length &&
                   (selectedKeys.length > 1 || selectedKeys[0] != this._defaultId) || isCheckBoxClick){
-                  var changedSelectionIndex = Array.indexOf(this._changedSelectedKeys, row.data('id'));
+                  var changedSelectionIndex = Array.indexOf(this._changedSelectedKeys, itemId);
                   if (changedSelectionIndex < 0){
-                     this._changedSelectedKeys.push(row.data('id'));
+                     this._changedSelectedKeys.push(itemId);
                   }
                   else{
                      this._changedSelectedKeys.splice(changedSelectionIndex, 1);
@@ -336,20 +344,30 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   this._buttonChoose.getContainer().removeClass('ws-hidden');
                   selected =  !row.hasClass('controls-DropdownList__item__selected');
                   row.toggleClass('controls-DropdownList__item__selected', selected);
-                  this._currentSelection[row.data('id')] = selected;
+                  this._currentSelection[itemId] = selected;
                } else {
-                  self.setSelectedKeys([row.data('id')]);
+                  self.setSelectedKeys([itemId]);
                   self.hidePicker();
                }
             }
          },
+
+         _getIdByRow: function(row){
+            if (!row.length || !row.data('hash')){
+               return undefined;
+            }
+            var itemProjection = this._getItemsProjection().getByHash(row.data('hash')),
+                item = itemProjection.getContents();
+            return item.getId();
+         },
+
          _dblClickItemHandler : function(e){
             e.stopImmediatePropagation();
             var  row = $(e.target).closest('.' + this._getItemClass());
             if (row.length && (e.button === (constants.browser.isIE8 ? 1 : 0))) {
                if (this._options.multiselect) {
                   this._hideAllowed = true;
-                  this.setSelectedKeys([row.data('id')]);
+                  this.setSelectedKeys([this._getIdByRow(row)]);
                   this.hidePicker();
                }
             }
@@ -357,6 +375,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          showPicker: function(ev) {
             if (this.isEnabled()) {
+               var pickerBodyWidth,
+                   pickerHeaderWidth;
                //Если мы не в режиме хоевера, то клик по крестику нужно пропустить до его обработчика
                if (this._options.mode !== 'hover' && $(ev.target).hasClass('controls-DropdownList__crossIcon')) {
                   return true;
@@ -367,10 +387,16 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._changedSelectedKeys = [];
                //Восстановим выделение по элементам
                for (var i = 0 ; i < items.length; i++) {
-                  $(items[i]).toggleClass('controls-DropdownList__item__selected', !!this._currentSelection[$(items[i]).data('id')]);
+                  $(items[i]).toggleClass('controls-DropdownList__item__selected', !!this._currentSelection[this._getIdByRow($(items[i]))]);
                }
                DropdownList.superclass.showPicker.apply(this, arguments);
-               this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', this._pickerBodyContainer[0].offsetWidth === this._pickerHeadContainer[0].offsetWidth);
+
+               pickerBodyWidth = this._pickerBodyContainer[0].clientWidth;
+               pickerHeaderWidth = this._pickerHeadContainer[0].clientWidth;
+               this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', pickerBodyWidth === pickerHeaderWidth);
+               if (pickerHeaderWidth > pickerBodyWidth){
+                  this._pickerBodyContainer.css('max-width', pickerHeaderWidth);
+               }
                if (this._buttonChoose) {
                   this._buttonChoose.getContainer().addClass('ws-hidden');
                }
@@ -415,11 +441,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _dataLoadedCallback: function() {
             DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
-            var item =  this._dataSet.at(0);
+            var item =  this.getItems().at(0);
             if (item) {
                this._defaultId = item.getId();
+               this._getHtmlItemByItem(item).addClass('controls-ListView__defaultItem');
                if (this._buttonHasMore) {
-                  var needShowHasMoreButton = this._hasNextPage(this._dataSet.getMetaData().more, 0);
+                  var needShowHasMoreButton = this._hasNextPage(this.getItems().getMetaData().more, 0);
                   if (!this._options.multiselect){
                      this._buttonHasMore.getContainer().closest('.controls-DropdownList__buttonsBlock').toggleClass('ws-hidden', !needShowHasMoreButton);
                   }
@@ -428,6 +455,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   }
                }
             }
+         },
+         _getHtmlItemByItem: function (item) {
+            return $('.controls-DropdownList__item[data-id="' + item.getId() + '"]', this._getPickerContainer());
          },
          _setVariables: function() {
             var pickerContainer = this._getPickerContainer(),
@@ -475,7 +505,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             /*implemented from DSMixin*/
             var addClass = 'controls-DropdownList__item';
             DropdownList.superclass._addItemAttributes.apply(this, arguments);
-            if (item.getId() == this.getDefaultId()) {
+            if (item.getContents().getId() == this.getDefaultId()) {
                container.addClass('controls-ListView__defaultItem');
             }
 
@@ -501,7 +531,17 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this.getSelectedItems(true).addCallback(function(list) {
                   if(list) {
                      list.each(function (rec) {
-                        textValues.push(rec.get(self._options.displayField));
+                        var parentId = rec.get(self._options.hierField),
+                            parentRecord,
+                            text;
+                        if (parentId !== undefined){
+                           parentRecord = self.getItems().getRecordById(parentId);
+                           text = RecordSetUtil.getRecordsValue([parentRecord, rec], self._options.displayField).join(' ');
+                        }
+                        else{
+                           text = rec.get(self._options.displayField);
+                        }
+                        textValues.push(text);
                      });
                   }
 
@@ -526,10 +566,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   self._setText(self._prepareText(textValue));
                   self._redrawHead(isDefaultIdSelected);
                   self._resizeFastDataFilter();
-                  self._pickerBodyContainer.css('max-width', '');
-                  if (self._pickerHeadContainer.width() > self._pickerBodyContainer.width()){
-                     self._pickerBodyContainer.css('max-width', self._pickerHeadContainer.width());
-                  }
                });
             }
          },

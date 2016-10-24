@@ -107,6 +107,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                    mode: this._options.mode,
                    multiselect : !!item.get('multiselect'),
                    displayField: item.get('displayField'),
+                   hierField: item.get('hierField'),
                    className: item.get('className'),
                    pickerClassName: (item.get('pickerClassName') + ' controls-DropdownList__picker') || 'controls-DropdownList__picker',
                    dataSource: item.get('dataSource'),
@@ -134,7 +135,10 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             if(item.has('headTemplate')){
                cfg.headTemplate = item.get('headTemplate');
             }
-            if(item.has('itemTemplate')){
+            if(item.has('itemTpl')){
+               cfg.itemTpl = item.get('itemTpl');
+            }
+            else if(item.has('itemTemplate')){
                cfg.itemTemplate = item.get('itemTemplate');
             }
             if(item.has('includedTemplates')){

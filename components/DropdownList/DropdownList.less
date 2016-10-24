@@ -38,7 +38,7 @@
    .controls-DropdownList__beforeCaptionWrapper {
       display: none;
       position: relative;
-      top: 1px;
+      top: 2px;
       flex-shrink: 0;
    }
    .controls-DropdownList__afterCaptionWrapper {
@@ -73,6 +73,13 @@
         cursor: default !important;
         text-decoration: none;
       }
+     .controls-DropdownList__selectedItem {
+       .controls-DropdownList__beforeCaptionWrapper {
+         .controls-DropdownList__arrowIcon {
+           color: #ccc !important;
+         }
+       }
+     }
    }
    &.controls-DropdownList__type-defaultItem{
      .controls-DropdownList__selectedItem .controls-DropdownList__textWrapper{
@@ -226,6 +233,12 @@
       background: @DropdownList-picker-menu-item-color;
       margin: @DropdownList-picker-menu-item-margin;
       font-size: @DropdownList-picker-menu-font-size;
+      &.controls-DropdownList__child{
+        padding: 3px 8px;
+        .controls-DropdownList__itemTextWrapper{
+          padding-left: 16px;
+        }
+      }
       &:hover {
          background: @DropdownList-picker-menu-item-hover;
          .controls-DropdownList__itemCheckBox {
@@ -236,9 +249,12 @@
 
 
    &.controls-DropdownList__hideSelectedInList{
-      .controls-DropdownList__item.controls-DropdownList__item__selected{
-         display: none;
-      }
+     .controls-DropdownList__item.controls-DropdownList__multiselect.controls-DropdownList__item__selected{
+       display: block;
+     }
+     .controls-DropdownList__item.controls-DropdownList__item__selected{
+       display: none;
+     }
    }
    .controls-DropdownList__buttonsBlock {
 
@@ -259,14 +275,14 @@
    .controls-DropdownList__multiselect {
       padding-left: @DropdownList-picker-menu-item-multiselect-padding;
 
-      &.controls-ListView__item {
+      &.controls-DropdownList__item {
          font-size: 0;
          * {
             font-size: @DropdownList-picker-menu-font-size;
          }
       }
 
-      &.controls-DropdownList__item.controls-ListView__item.controls-DropdownList__item__selected {
+      &.controls-DropdownList__item.controls-DropdownList__item__selected {
          display: block;
       }
       &.controls-DropdownList__item__selected .controls-DropdownList__itemCheckBox {

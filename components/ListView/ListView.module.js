@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.ListView',
    "js!SBIS3.CONTROLS.BreakClickBySelectMixin",
    "js!SBIS3.CONTROLS.ItemsToolbar",
    "js!SBIS3.CORE.MarkupTransformer",
-   "html!SBIS3.CONTROLS.ListView",
+   "tmpl!SBIS3.CONTROLS.ListView",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "js!SBIS3.CONTROLS.CommonHandlers",
    "js!SBIS3.CONTROLS.MoveHandlers",
@@ -699,7 +699,6 @@ define('js!SBIS3.CONTROLS.ListView',
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
-            _searchParamName: undefined, //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
             _componentBinder: null,
             _touchSupport: false,
             _dragInitHandler: undefined //метод который инициализирует dragNdrop
@@ -1649,7 +1648,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._toggleEmptyData(false);
                      }.bind(this),
                      onChangeHeight: function(event, model) {
-                        if (this._getItemsToolbar().isToolbarLocking()) {
+                        if (this._options.editMode.indexOf('toolbar') !== -1 && this._getItemsToolbar().isToolbarLocking()) {
                            this._showItemsToolbar(this._getElementData(this._getElementByModel(model)));
                         }
                         this._notifyOnSizeChanged(true);
@@ -1663,6 +1662,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      onAfterEndEdit: function(event, model, target, withSaving) {
                         this.setSelectedKey(model.getId());
                         event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
+                        this._toggleEmptyData(!this.getItems().getCount());
                         this._hideToolbar();
                      }.bind(this),
                      onDestroy: function() {
@@ -1895,9 +1895,13 @@ define('js!SBIS3.CONTROLS.ListView',
 
                   }
                });
-               this._itemsToolbar.getItemsActions().subscribe('onHideMenu', function() {
-                  self.setActive(true);
-               });
+               //Когда массив action's пустой getItemsAction вернет null
+               var actions = this._itemsToolbar.getItemsActions();
+               if (actions) {
+                  actions.subscribe('onHideMenu', function () {
+                     self.setActive(true);
+                  });
+               }
             }
             return this._itemsToolbar;
          },
@@ -2162,14 +2166,8 @@ define('js!SBIS3.CONTROLS.ListView',
                var items = dataSet.toArray();
                at = {at: 0};
             }
-            //TODO новый миксин не задействует декоратор лесенки в принципе при любых действиях, кроме первичной отрисовки
-            //это неправильно, т.к. лесенка умеет рисовать и дорисовывать данные, если они добавляются последовательно
-            //здесь мы говорим, чтобы лесенка отработала при отрисовке данных
-            var ladder = this._options._decorators.getByName('ladder');
-            ladder && ladder.setIgnoreEnabled(true);
             //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
             this.getItems().append(dataSet);
-            ladder && ladder.setIgnoreEnabled(false);
 
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this._drawItems(dataSet.toArray(), at);
@@ -2238,9 +2236,15 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          isScrollOnBottom: function(noOffset){
+            if (!this._scrollWatcher){
+               this._createScrollWatcher();
+            }
             return this._scrollWatcher.isScrollOnBottom(noOffset);
          },
          isScrollOnTop: function(){
+            if (!this._scrollWatcher){
+               this._createScrollWatcher();
+            }
             return this._scrollWatcher.isScrollOnTop();
          },
          _showLoadingIndicator: function () {
@@ -2495,7 +2499,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setPage: function (pageNumber, noLoad) {
             pageNumber = parseInt(pageNumber, 10);
             var offset = this._offset;
-            if (this._isPageLoaded(pageNumber)){
+            if (this.isInfiniteScroll() && this._isPageLoaded(pageNumber)){
                if (this._getItemsProjection() && this._getItemsProjection().getCount()){
                   var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
                      itemId = this._getItemsProjection().getItemBySourceIndex(itemIndex).getContents().getId(),
@@ -2512,7 +2516,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this._notify('onPageChange', pageNumber);
          },
-
 
          _isPageLoaded: function(pageNumber) {
             var offset = pageNumber * this._options.pageSize;
@@ -2741,7 +2744,6 @@ define('js!SBIS3.CONTROLS.ListView',
                rows = [itemContainer.prev(), anchor, itemContainer, anchor.next()];
                itemContainer.insertAfter(anchor);
             }
-            this._ladderCompare(rows);
          },
          /*DRAG_AND_DROP START*/
          /**
@@ -2786,12 +2788,18 @@ define('js!SBIS3.CONTROLS.ListView',
          _findDragDropContainer: function() {
             return this._getItemsContainer();
          },
-         _getDragItems: function(key) {
-            var keys = this._options.multiselect ? cFunctions.clone(this.getSelectedKeys()) : [];
-            if (Array.indexOf(keys, key) == -1 && Array.indexOf(keys, String(key)) == -1) {
-               keys.push(key);
+         _getDragItems: function(dragItem, selectedItems) {
+            if (selectedItems) {
+               var array = [];
+               if (selectedItems.getIndex(dragItem) < 0) {
+                  array.push(dragItem);
+               }
+               selectedItems.each(function(item) {
+                  array.push(item);
+               });
+               return array;
             }
-            return keys;
+            return [dragItem];
          },
          _canDragStart: function(e) {
             //TODO: При попытке выделить текст в поле ввода, вместо выделения начинается перемещения элемента.
@@ -2802,7 +2810,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _beginDragHandler: function(dragObject, e) {
             var
-                id,
                 target;
             target = this._findItemByElement(dragObject.getTargetsDomElemet());
             //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
@@ -2810,12 +2817,15 @@ define('js!SBIS3.CONTROLS.ListView',
             //пустой массив. В .150 править этот метод опасно, потому что он много где используется. В .200 переписать метод
             //_findItemByElement, без завязки на _items.
             if (target.length) {
-               id = target.data('id');
-               var items = this._getDragItems(id),
+               if (target.hasClass('controls-DragNDropMixin__notDraggable')) {
+                  return false;
+               }
+               var  selectedItems = this.getSelectedItems(),
+                  targetsItem = this._getItemProjectionByHash(target.data('hash')).getContents(),
+                  items = this._getDragItems(targetsItem, selectedItems),
                   source = [];
-               colHelpers.forEach(items, function (id) {
-                  var item = this.getItems().getRecordById(id),
-                     projItem = this._getItemsProjection().getItemBySourceItem(item);
+               colHelpers.forEach(items, function (item) {
+                  var projItem = this._getItemsProjection().getItemBySourceItem(item);
                   source.push(this._makeDragEntity({
                      owner: this,
                      model: item,
