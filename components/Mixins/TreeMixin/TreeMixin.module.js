@@ -729,6 +729,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             this._options.openedPath = openedPath;
          }
       },
+      _removeFromLoadedRemoteNodes: function(remoteNodes) {
+         // Удаляем только если запись удалена из items, иначе - это было лишь сворачивание веток.
+         if (remoteNodes.length && !this.getItems().getRecordById(remoteNodes[0].getContents().getId())) {
+            for (var idx = 0; idx < remoteNodes.length; idx++) {
+               delete this._loadedNodes[remoteNodes[idx].getContents().getId()];
+            }
+         }
+      },
       around: {
          _getItemProjectionByItemId: function(parentFn, id) {
             var root;
@@ -774,7 +782,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }.bind(this);
             fillBranchesForRedraw(newItems);
             fillBranchesForRedraw(oldItems);
-            for (idx in branches) {
+            for (var idx in branches) {
                if (branches.hasOwnProperty(idx)) {
                   if (this._isSlowDrawing(this._options.easyGroup)) {
                      this.redrawItem(branches[idx].getContents(), branches[idx]);
@@ -793,7 +801,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          _onCollectionAddMoveRemove: function(parentFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
             parentFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId);
             this._findAndRedrawChangedBranches(newItems, oldItems);
-            this._removeFromLoadedNodesRemoteNodes(oldItems);
+            this._removeFromLoadedRemoteNodes(oldItems);
          },
          //В режиме поиска в дереве, при выборе всех записей, выбираем только листья, т.к. папки в этом режиме не видны.
          setSelectedItemsAll: function(parentFn) {
