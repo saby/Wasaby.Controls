@@ -137,6 +137,9 @@
      }
      .controls-DropdownList__multiselect.controls-DropdownList__item{
        padding: 6px 16px 6px 0;
+       .controls-DropdownList__itemTextWrapper{
+         max-width: calc(~"100% - 16px");/* 16px чекбокс */
+       }
      }
    }
    &.controls-popup-revert-horizontal{
@@ -233,6 +236,16 @@
       background: @DropdownList-picker-menu-item-color;
       margin: @DropdownList-picker-menu-item-margin;
       font-size: @DropdownList-picker-menu-font-size;
+      .controls-DropdownList__itemTextWrapper{
+        display: inline-block;
+        max-width: 100%;
+        vertical-align: top;
+        .controls-DropdownList__item-text{
+          overflow: hidden;
+          white-space: nowrap;
+          width: 100%;
+        }
+      }
       &.controls-DropdownList__child{
         padding: 3px 8px;
         .controls-DropdownList__itemTextWrapper{
@@ -320,6 +333,9 @@
 /* Все ie без поддержки flexBox'a */
 .ws-is-ie8, .ws-is-ie9, .ws-is-ie10 {
   .controls-DropdownList .controls-DropdownList__selectedItem{
+    .controls-DropdownList__textWrapper{
+      display: inline-block;
+    }
     .controls-DropdownList__beforeCaptionWrapper{
        vertical-align: top;
     }

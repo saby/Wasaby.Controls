@@ -468,7 +468,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                },{
                   name: 'move',
-                  icon: 'sprite:icon-16 icon-Move icon-primary action-hover',
+                  icon: 'sprite:icon-16 icon-Move icon-primary',
                   tooltip: rk('Перенести'),
                   caption: rk('Перенести'),
                   isMainAction: false,
@@ -912,7 +912,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onScrollHandler: function(event, scrollTop){
-            var scrollPage = this._scrollBinder._getScrollPage(scrollTop);
+            var scrollPage = this._scrollBinder._getScrollPage(scrollTop),
+                itemActions = this.getItemsActions();
+
+            if(itemActions && itemActions.isItemActionsMenuVisible()){
+               itemActions.hide();
+            }
             this._notify('onScrollPageChange', scrollPage);
          },
          _setScrollPagerPosition: function(){
@@ -2885,13 +2890,13 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onDragHandler: function(dragObject, e) {
+            this._clearDragHighlight(dragObject);
             if (this._canDragMove(dragObject)) {
                var
                   target = dragObject.getTarget(),
                   targetsModel = target.getModel(),
                   source = dragObject.getSource(),
                   sourceModels = [];
-               this._clearDragHighlight(dragObject);
                if (targetsModel) {
                   source.each(function (item) {
                      sourceModels.push(item.getModel());
@@ -2976,10 +2981,10 @@ define('js!SBIS3.CONTROLS.ListView',
                var
                   target = dragObject.getTarget(),
                   models = [],
-                  dropBySelf = false,
-                  targetsModel = target.getModel();
+                  dropBySelf = false;
 
                if (target) {
+                  var  targetsModel = target.getModel();
                   dragObject.getSource().each(function(item){
                      var model = item.getModel();
                      models.push(model);

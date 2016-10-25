@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             for (var i = 0, l = columns.length; i < l; i++){
                curCol = columns[i];
                nextCol = columns[i + 1];
-               curColSplitTitle = curCol.title.split('.');
+               curColSplitTitle = (curCol.title || '').split('.');
                nextColSplitTitle = nextCol && nextCol.title.split('.');
 
                if (!supportDouble){
@@ -644,6 +644,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
        * @noShow
        */
       setStickyHeader: function(isSticky){
+         /* Не даем включить прилипание заголовков при включённом частичном скроле,
+            подробнее проблема описана в методе _modifyOptions */
+         if(isSticky && this._options.startScrollColumn !== undefined) {
+            return;
+         }
          if (this._options.stickyHeader !== isSticky){
             this._options.stickyHeader = isSticky;
             this.getContainer().find('.controls-DataGridView__table').toggleClass('ws-sticky-header__table', isSticky);
