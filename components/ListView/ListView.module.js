@@ -468,7 +468,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                },{
                   name: 'move',
-                  icon: 'sprite:icon-16 icon-Move icon-primary action-hover',
+                  icon: 'sprite:icon-16 icon-Move icon-primary',
                   tooltip: rk('Перенести'),
                   caption: rk('Перенести'),
                   isMainAction: false,
