@@ -199,12 +199,11 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
          }
       },
       _createAllFolderFooters: function() {
-         colHelpers.forEach(this._options.openedPath, function(val, key) {
-            //Рисуем футер, только если узел есть в проекции, иначе он скрыт и футер рисовать не нужно
-            if (this._getItemProjectionByItemId(key)) {
-               this._createFolderFooter(key);
+         this._getItemsProjection().each(function(item) {
+            if (item.isNode() && item.isExpanded()) {
+               this._createFolderFooter(item.getContents().getId());
             }
-         },this);
+         }.bind(this));
       },
       //********************************//
       //        FolderFooter_End        //
