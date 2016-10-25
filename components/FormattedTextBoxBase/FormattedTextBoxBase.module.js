@@ -864,7 +864,7 @@ define(
       },
 
       _getClearText: function(){
-         return this._getFormatModel().getStrMask(this._getMaskReplacer());
+         return this._getFormatModel().getStrMask(this._getMaskReplacer())
       },
 
       _clearCommandHandler: function(type) {
