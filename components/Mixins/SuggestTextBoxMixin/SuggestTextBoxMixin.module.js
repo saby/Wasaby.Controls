@@ -45,9 +45,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
       after: {
          _keyDownBind: function(e) {
-            /* Запрещаем всплытие enter по событию keyDown,
-             т.к. Area тоже его слушает и закрывает floatArea */
-            if(e.which === constants.key.enter && this.isPickerVisible()) {
+            /* Запрещаем всплытие enter и esc по событию keyDown,
+               т.к. Area тоже его слушает и закрывает floatArea */
+            if((e.which === constants.key.enter || e.which === constants.key.esc) && this.isPickerVisible()) {
                stopEvent(e);
             } else {
                this._changedByKeyboard = true;
