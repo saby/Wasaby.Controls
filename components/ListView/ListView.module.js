@@ -912,7 +912,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onScrollHandler: function(event, scrollTop){
-            var scrollPage = this._scrollBinder._getScrollPage(scrollTop);
+            var scrollPage = this._scrollBinder._getScrollPage(scrollTop),
+                itemActions = this.getItemsActions();
+
+            if(itemActions && itemActions.isItemActionsMenuVisible()){
+               itemActions.hide();
+            }
             this._notify('onScrollPageChange', scrollPage);
          },
          _setScrollPagerPosition: function(){
