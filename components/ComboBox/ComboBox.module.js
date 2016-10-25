@@ -499,7 +499,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                });
 
                if (noItems && oldKey !== null) {
-                  self.setSelectedKey(null);
+                  ComboBox.superclass.setSelectedKey.call(self, null);
                   self._drawText(oldText);
                }
             });
