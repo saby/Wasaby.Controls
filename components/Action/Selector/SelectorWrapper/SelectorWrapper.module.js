@@ -78,7 +78,8 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             });
 
             this.subscribeTo(childControl, 'onItemActivate', function(e, meta) {
-               /* Для иерархии надо проверить тип выбора */
+               /* Если в качестве списка лежит иерархия (дерево),
+                  то выбираемые записи надо проверять на выбираемость в зависимости от опции selectionType. */
                if(cInstance.instanceOfMixin(childControl, 'SBIS3.CONTROLS.TreeMixin')) {
                   var isBranch = meta.item.get(childControl.getProperty('hierField') + '@');
 
