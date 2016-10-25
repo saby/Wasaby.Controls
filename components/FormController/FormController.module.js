@@ -502,6 +502,10 @@ define('js!SBIS3.CONTROLS.FormController', [
       setRecord: function(record, updateKey){
          var newKey;
          this._options.record = record;
+         //Запоминаем запись на панели, т.к. при повторном вызове execute, когда уже есть открытая панель,
+         //текущая панель закрывается и открывается новая. В dialogActionBase в подписке на onAfterClose ссылка на панель будет не актуальной,
+         //т.к. ссылается на только что открытую панель. Поэтому берем редактируемую запись с самой панели.
+         this._panel._record = record;
          if (updateKey){
             newKey = record.getId();
             this._options.key = newKey;

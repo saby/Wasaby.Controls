@@ -200,7 +200,9 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
             template: dialogComponent,
             componentOptions: compOptions,
             handlers: {
-               onAfterClose: this._onAfterCloseDialogHandler.bind(this),
+               onAfterClose: function(e, meta){
+                  self._notifyOnExecuted(meta, this._record);
+               },
                onBeforeShow: function(){
                   self._notify('onBeforeShow');
                },
@@ -227,13 +229,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
          else {
             this._showDialog(config, meta, mode);
          }
-      },
-
-      _onAfterCloseDialogHandler: function(e, meta){
-         //В качестве шаблона могут использовать не FormController, проверяем на наличие метода getRecord
-         var record = this._dialog._getTemplateComponent().getRecord && this._dialog._getTemplateComponent().getRecord();
-         this._dialog = undefined;
-         this._notifyOnExecuted(meta, record);
       },
 
       _getRecordDeferred: function(config, meta, mode, templateComponent){
@@ -315,7 +310,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
          }
       },
       _isNeedToRedrawDialog: function(){
-        return this._dialog && !this._dialog.isAutoHide();
+        return this._dialog && !this._dialog.isDestroyed() && !this._dialog.isAutoHide();
       },
       _setNewDialogConfig: function(config){
          cMerge(this._dialog._options, config);
