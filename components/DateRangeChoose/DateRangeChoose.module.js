@@ -165,6 +165,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
       setYear: function (year) {
          this._options.year = year;
          this._updateYearView();
+         this._updateYears();
          this._updateCheckMarks();
       },
       /**
@@ -221,13 +222,11 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
       _onPrevYearBtnClick: function () {
          var year = this.getYear() - 1;
          this.setYear(year);
-         this._updateYears();
       },
 
       _onNextYearBtnClick: function () {
          var year = this.getYear() + 1;
          this.setYear(year);
-         this._updateYears();
       },
 
       _onHalfYearClick: function (e) {
