@@ -2870,13 +2870,13 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onDragHandler: function(dragObject, e) {
+            this._clearDragHighlight(dragObject);
             if (this._canDragMove(dragObject)) {
                var
                   target = dragObject.getTarget(),
                   targetsModel = target.getModel(),
                   source = dragObject.getSource(),
                   sourceModels = [];
-               this._clearDragHighlight(dragObject);
                if (targetsModel) {
                   source.each(function (item) {
                      sourceModels.push(item.getModel());
@@ -2961,10 +2961,10 @@ define('js!SBIS3.CONTROLS.ListView',
                var
                   target = dragObject.getTarget(),
                   models = [],
-                  dropBySelf = false,
-                  targetsModel = target.getModel();
+                  dropBySelf = false;
 
                if (target) {
+                  var  targetsModel = target.getModel();
                   dragObject.getSource().each(function(item){
                      var model = item.getModel();
                      models.push(model);
