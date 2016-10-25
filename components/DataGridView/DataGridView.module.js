@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             for (var i = 0, l = columns.length; i < l; i++){
                curCol = columns[i];
                nextCol = columns[i + 1];
-               curColSplitTitle = curCol.title.split('.');
+               curColSplitTitle = (curCol.title || '').split('.');
                nextColSplitTitle = nextCol && nextCol.title.split('.');
 
                if (!supportDouble){
