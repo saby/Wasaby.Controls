@@ -131,7 +131,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              * но не подходит для поля связи, так как может перекрывать вводимый текст 
              * @type {Boolean}
              */
-            targetOverlay: false
+            targetOverlay: false,
+            /**
+             * Способ подстраивания всплывающей панели под свободное рядом с таргетом пространство
+             * @typedef {Object} loacationStrategyEnum
+             * @variant dontMove всплывающая панель не двигается относительно таргета
+             */
+            locationStrategy: null
          }
       },
 
@@ -725,6 +731,20 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       },
 
       _calculateOverflow: function (offset, orientation) {
+         // выбираем способ подстройки всплывашки
+         switch(this._options.locationStrategy){
+            case 'dontMove':
+               return this._calculateOverflow_dontMove(offset, orientation);
+            default:
+               return this._calculateOverflow_allocate(offset, orientation);
+         }
+      },
+
+      _calculateOverflow_dontMove: function (offset, orientation) {
+         return (orientation == 'vertical') ? offset.top : offset.left;
+      },
+
+      _calculateOverflow_allocate: function (offset, orientation) {
          //TODO Избавиться от дублирования
          var vOffset = this._options.verticalAlign.offset || 0,
             hOffset = this._options.verticalAlign.offset || 0,
