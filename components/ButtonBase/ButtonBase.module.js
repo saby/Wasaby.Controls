@@ -99,7 +99,6 @@ define('js!SBIS3.CONTROLS.ButtonBase', [
             caption = strHelpers.escapeHtml(caption);
          }
          this._options.caption = caption || '';
-         this._notifyOnSizeChanged();
       },
       _setEnabled: function() {
          ButtonBase.superclass._setEnabled.apply(this, arguments);
