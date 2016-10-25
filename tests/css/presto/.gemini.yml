@@ -6,6 +6,10 @@ sessionsPerBrowser: 8
 tolerance: 100
 
 browsers:
+  chrome:
+    desiredCapabilities:
+      browserName: chrome
+
   firefox:
     desiredCapabilities:
       browserName: firefox
