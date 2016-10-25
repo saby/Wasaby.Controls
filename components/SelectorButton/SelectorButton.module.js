@@ -105,6 +105,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          /* Скрываем, если текст пустой */
          text.toggleClass('ws-hidden', !resultText);
          this._checkWidth();
+         this._notifyOnSizeChanged();
       },
 
       _checkWidth: function() {
