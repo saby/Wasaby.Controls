@@ -1051,7 +1051,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      }
                   }
                }
-               e.content = Sanitize(e.content, {validNodes: {img: false}});
             });
 
             editor.on('PastePostProcess', function(event){
