@@ -195,7 +195,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              $ws.helpers.forEach(
                  items,
                  function(item){
-                    if(item.hasOwnProperty('icon')){
+                    if(item.hasOwnProperty('icon') && item.icon){
                        item.icon = item.icon.replace('icon-16', 'icon-size');
                     }
                  });

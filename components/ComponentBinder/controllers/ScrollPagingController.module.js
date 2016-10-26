@@ -16,6 +16,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       },
 
       init: function() {
+         ScrollPagingController.superclass.init.apply(this, arguments);
          this._zIndex = WindowManager.acquireZIndex();
          this._options.paging.getContainer().css('z-index', this._zIndex);
       },

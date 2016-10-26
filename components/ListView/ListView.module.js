@@ -469,7 +469,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                },{
                   name: 'move',
-                  icon: 'sprite:icon-16 icon-Move icon-primary action-hover',
+                  icon: 'sprite:icon-16 icon-Move icon-primary',
                   tooltip: rk('Перенести'),
                   caption: rk('Перенести'),
                   isMainAction: false,
@@ -832,7 +832,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onScrollHandler: function(event, scrollTop){
-            var scrollPage = this._scrollBinder._getScrollPage(scrollTop);
+            var scrollPage = this._scrollBinder._getScrollPage(scrollTop),
+                itemActions = this.getItemsActions();
+
+            if(itemActions && itemActions.isItemActionsMenuVisible()){
+               itemActions.hide();
+            }
             this._notify('onScrollPageChange', scrollPage);
          },
          _setScrollPagerPosition: function(){
@@ -1212,17 +1217,23 @@ define('js!SBIS3.CONTROLS.ListView',
             var $target = $(target),
                 self = this,
                 elClickHandler = this._options.elemClickHandler,
-                onItemClickResult,
+                needSelect = true,
                 afterHandleClickResult = fHelpers.forAliveOnly(function(result) {
                    if (result !== false) {
-                      self.setSelectedKey(id);
+                      if(needSelect) {
+                         self.setSelectedKey(id);
+                      }
                       self._elemClickHandlerInternal(data, id, target, e);
                       elClickHandler && elClickHandler.call(self, id, data, target, e);
                    }
-                }, this);
+                }, this),
+                onItemClickResult;
 
             if (this._options.multiselect) {
                if ($target.hasClass('js-controls-ListView__itemCheckBox')) {
+                  if(this._isItemSelected(id)) {
+                     needSelect = false;
+                  }
                   this._onCheckBoxClick($target);
                }
                else {
@@ -1269,10 +1280,21 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                       this.setSelectedItemsAll.call(this);
                      if (dataSet.getCount() == 1000 && dataSet.getMetaData().more){
-                        InformationPopupManager.showMessageDialog({
-                           status: 'default',
-                           message: 'Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.'
-                        });
+                        var message = 'Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.';
+
+                        var windowOptions = ($ws._const.defaultOptions || {})['SBIS3.CORE.Window'] || {};
+                        //TODO В 3.7.4.200 popupMixin не поддерживает анимацию, соответсвенно и информационные окна, сделанные на его основе
+                        //TODO По этой причине проверяем, если включена настройка 'анимированные окна', то покажем старое окно.
+                        //TODO В 3.7.4.220 планируется поддержать анимацию -> выпилить этот костыль!
+                        if(windowOptions.animatedWindows){
+                           $ws.helpers.message(message);
+                        }
+                        else {
+                           InformationPopupManager.showMessageDialog({
+                              status: 'default',
+                              message: message
+                           });
+                        }
                      }
                   }.bind(this));
             } else {
@@ -2936,13 +2958,13 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onDragHandler: function(dragObject, e) {
+            this._clearDragHighlight(dragObject);
             if (this._canDragMove(dragObject)) {
                var
                   target = dragObject.getTarget(),
                   targetsModel = target.getModel(),
                   source = dragObject.getSource(),
                   sourceModels = [];
-               this._clearDragHighlight(dragObject);
                if (targetsModel) {
                   source.each(function (item) {
                      sourceModels.push(item.getModel());
@@ -3027,10 +3049,10 @@ define('js!SBIS3.CONTROLS.ListView',
                var
                   target = dragObject.getTarget(),
                   models = [],
-                  dropBySelf = false,
-                  targetsModel = target.getModel();
+                  dropBySelf = false;
 
                if (target) {
+                  var  targetsModel = target.getModel();
                   dragObject.getSource().each(function(item){
                      var model = item.getModel();
                      models.push(model);

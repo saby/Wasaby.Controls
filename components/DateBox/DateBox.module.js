@@ -94,6 +94,10 @@ define(
             'MM/YYYY'
          ],
          /**
+          * Храним предыдущую дату, даже если пользователь ввел некоректную дату
+          */
+         _lastDate: null,
+         /**
           * Опции создаваемого контролла
           */
          _options: {
@@ -260,7 +264,8 @@ define(
       */
       setText: function (text) {
          DateBox.superclass.setText.call(this, text);
-         this._options.date = text == '' ? null : this._getDateByText(text, this._options.date);
+         this._options.date = text == '' ? null : this._getDateByText(text, this._lastDate);
+         this._setLastDate(this._options.date);
       },
 
       /**
@@ -318,6 +323,7 @@ define(
             throw new Error('DateBox. Неверный формат даты');
          }
 
+         this._setLastDate(this._options.date);
          this._drawDate();
       },
 
@@ -437,10 +443,11 @@ define(
 
          // Если текст изменился -- возможно изменилась и дата.
          if (oldText !== this._options.text) {
-            this._options.date = this._getDateByText(this._options.text, this._options.date);
+            this._options.date = this._getDateByText(this._options.text, this._lastDate);
             if (!DateUtil.isValidDate(this._options.date)) {
                this._options.date = null;
             }
+            this._setLastDate(this._options.date);
             this._onTextChanged();
          }
       },
@@ -460,7 +467,7 @@ define(
 
          if (!active) {
             if (!this._getFormatModel().isFilled()) {
-               date = this._getDateByText(this._options.text, this._options.date, true);
+               date = this._getDateByText(this._options.text, this._lastDate, true);
                if (date) {
                   this.setDate(date);
                }
@@ -597,6 +604,12 @@ define(
          }
 
          return text;
+      },
+
+      _setLastDate: function (date) {
+         if (date) {
+            this._lastDate = date;
+         }
       }
    });
 

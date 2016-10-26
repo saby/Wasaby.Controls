@@ -1033,6 +1033,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
                // и послыаем метку форматной вставки, если метка присутствует не надо обрабатывать событие
                // нашим обработчиком, а просто прокинуть его в дальше
+               e.content = Sanitize(e.content, {validNodes: {img: false}});
                if (e.withStyles) {
                   return e;
                }
@@ -1046,7 +1047,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      }
                   }
                }
-               e.content = Sanitize(e.content, {validNodes: {img: false}});
             });
 
             editor.on('PastePostProcess', function(event){
