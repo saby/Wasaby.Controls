@@ -1456,7 +1456,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isHoverEditMode()) {
                this.subscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
             } else if (this._isClickEditMode()) {
-               this.subscribe('onItemClick', this._onItemClickHandler);
+               this.subscribe('onItemClick', this._startEditOnItemClick);
             }
          },
          beforeNotifyOnItemClick: function() {
@@ -1483,14 +1483,14 @@ define('js!SBIS3.CONTROLS.ListView',
                if (this._isHoverEditMode()) {
                   this.unsubscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
                } else if (this._isClickEditMode()) {
-                  this.unsubscribe('onItemClick', this._onItemClickHandler);
+                  this.unsubscribe('onItemClick', this._startEditOnItemClick);
                }
                this._destroyEditInPlace();
                this._options.editMode = editMode;
                if (this._isHoverEditMode()) {
                   this.subscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
                } else if (this._isClickEditMode()) {
-                  this.subscribe('onItemClick', this._onItemClickHandler);
+                  this.subscribe('onItemClick', this._startEditOnItemClick);
                }
             }
          },
@@ -1543,7 +1543,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._destroyEditInPlace();
          },
 
-         _onItemClickHandler: function(event, id, model, originalEvent) {
+         _startEditOnItemClick: function(event, id, model, originalEvent) {
             var
                result = this.showEip(model, { isEdit: true }, false);
             if (originalEvent.type === 'click') {

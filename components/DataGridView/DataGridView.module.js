@@ -721,7 +721,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._redrawHead();
          DataGridView.superclass._redrawItems.apply(this, arguments);
       },
-      _onItemClickHandler: function(event, id, record, target, originalEvent) {
+      _startEditOnItemClick: function(event, id, record, target, originalEvent) {
          var
             targetColumn,
             targetColumnIndex;
