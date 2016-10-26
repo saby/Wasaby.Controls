@@ -651,7 +651,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var result = [];
          for (var i = 0; i < items.length; i++) {
             if (this._canApplyGrouping(items[i])) {
-               if (this._getItemsProjection().getGroupItems(groupId).length <= 1) {
+               if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
                   this._options._groupItemProcessing(groupId, result, items[i], this._options);
                }
             }
@@ -787,8 +787,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                delete this._loadedNodes[remoteNodes[idx].getContents().getId()];
             }
          },
-         _onCollectionAddMoveRemove: function(parentFn, event, action, newItems, newItemsIndex, oldItems) {
-            parentFn.call(this, event, action, newItems, newItemsIndex, oldItems);
+         _onCollectionAddMoveRemove: function(parentFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
+            parentFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId);
             this._findAndRedrawChangedBranches(newItems, oldItems);
             this._removeFromLoadedNodesRemoteNodes(oldItems);
          },

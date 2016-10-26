@@ -869,7 +869,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             //Если в группе один элемент (или меньше), то это значит что добавился элемент в группу, которая еще не отрисована
             //и надо ее отрисовать
             itemsToAdd = [];
-            if (this._getItemsProjection().getGroupItems(groupId).length <= 1) {
+            if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
                this._options._groupItemProcessing(groupId, itemsToAdd, items[0], this._options);
             }
             itemsToAdd.concat(items);
