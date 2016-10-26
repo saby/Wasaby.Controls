@@ -647,9 +647,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var itemParent = item.getParent();
          return itemParent ? itemParent.isExpanded() ? this._isVisibleItem(itemParent) : false : true;
       },
-      _getItemsForRedrawOnAdd: function(items) {
+      _getItemsForRedrawOnAdd: function(items, groupId) {
          var result = [];
          for (var i = 0; i < items.length; i++) {
+            if (!Object.isEmpty(this._options.groupBy) && this._options.easyGroup) {
+               if (this._canApplyGrouping(items[i])) {
+                  if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
+                     this._options._groupItemProcessing(groupId, result, items[i], this._options);
+                  }
+               }
+            }
             if (this._isVisibleItem(items[i])) {
                result.push(items[i]);
             }
@@ -782,8 +789,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                delete this._loadedNodes[remoteNodes[idx].getContents().getId()];
             }
          },
-         _onCollectionAddMoveRemove: function(parentFn, event, action, newItems, newItemsIndex, oldItems) {
-            parentFn.call(this, event, action, newItems, newItemsIndex, oldItems);
+         _onCollectionAddMoveRemove: function(parentFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
+            parentFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId);
             this._findAndRedrawChangedBranches(newItems, oldItems);
             this._removeFromLoadedNodesRemoteNodes(oldItems);
          },
