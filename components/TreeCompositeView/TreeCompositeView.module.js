@@ -90,8 +90,12 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             TreeCompositeView.superclass._elemClickHandlerInternal.apply(this, arguments);
          }
          else {
-            var nodeID;
-            nodeID = $(target).closest('.controls-ListView__item').data('id');
+            var nodeID, $target =  $(target);
+            /* Не обрабатываем клики по чекбоку и по стрелке редактирования, они обрабатываются в elemClickHandler'e */
+            if ($target.hasClass('js-controls-TreeView__editArrow') || $target.hasClass('js-controls-ListView__itemCheckBox')) {
+               return;
+            }
+            nodeID = $target.closest('.controls-ListView__item').data('id');
             if (this.getItems().getRecordById(nodeID).get(this._options.hierField + '@')) {
                this.setCurrentRoot(nodeID);
                this.reload();
@@ -241,7 +245,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                      currentDataSet.removeAt(indexForRemove);
                   }
                   self._destroyItemsFolderFooter([row.key]);
-                  self._ladderCompare(environment);
                   row.$row.remove();
                   //Если количество записей в текущем DataSet меньше, чем в обновленном, то добавляем в него недостающую запись
                   if (needRedraw && currentDataSet.getCount() < dataSet.getCount()) {

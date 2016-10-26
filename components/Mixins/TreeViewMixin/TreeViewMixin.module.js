@@ -199,12 +199,11 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
          }
       },
       _createAllFolderFooters: function() {
-         colHelpers.forEach(this._options.openedPath, function(val, key) {
-            //Рисуем футер, только если узел есть в проекции, иначе он скрыт и футер рисовать не нужно
-            if (this._getItemProjectionByItemId(key)) {
-               this._createFolderFooter(key);
+         this._getItemsProjection().each(function(item) {
+            if (item.isNode() && item.isExpanded()) {
+               this._createFolderFooter(item.getContents().getId());
             }
-         },this);
+         }.bind(this));
       },
       //********************************//
       //        FolderFooter_End        //
@@ -259,17 +258,10 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
           * @private
           */
          _onUpdateItemProperty: function(parentFunc, item, property) {
-            var ladderDecorator = this._options._decorators.getByName('ladder'),
-                isIgnoreEnabled;
-            if (ladderDecorator){
-               isIgnoreEnabled = ladderDecorator.getIgnoreEnabled();
-               ladderDecorator.setIgnoreEnabled(false);
-            }
             parentFunc.call(this, item, property);
             if (property === 'expanded') {
                this._onChangeItemExpanded(item);
             }
-            ladderDecorator && ladderDecorator.setIgnoreEnabled(isIgnoreEnabled);
          },
          _getDirectionOrderChange: function(parentFunc, e, target) {
             if (this._options.itemsDragNDrop !== 'onlyChangeParent') {

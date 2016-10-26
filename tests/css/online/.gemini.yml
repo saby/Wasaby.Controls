@@ -5,6 +5,7 @@ windowSize: 1024x768
 sessionsPerBrowser: 16
 
 browsers:
+
   chrome:
     desiredCapabilities:
       browserName: chrome

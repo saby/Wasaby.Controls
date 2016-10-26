@@ -301,16 +301,11 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
       },
 
       _showDialog: function(config, meta, mode){
-         var floatAreaCfg,
-            Component;
+         var Component;
+
+         cMerge(config, this._getDialogConfig(meta));
          mode = mode || this._options.mode;
-         if (mode == 'floatArea'){
-            Component = FloatArea;
-            floatAreaCfg = this._getFloatAreaConfig(meta);
-            cMerge(config, floatAreaCfg);
-         } else if (mode == 'dialog') {
-            Component = Dialog;
-         }
+         Component = (mode == 'floatArea') ? FloatArea : Dialog;
 
          if (this._isNeedToRedrawDialog()){
             this._setNewDialogConfig(config);
@@ -326,7 +321,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
          cMerge(this._dialog._options, config);
          this._dialog.reload();
       },
-      _getFloatAreaConfig: function(meta){
+      _getDialogConfig: function(meta){
          var defaultConfig = {
                isStack: true,
                autoHide: true,
@@ -350,7 +345,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
                floatAreaCfg[key] = meta[key];
             }
             else {
-               floatAreaCfg[key] = meta.dialogOptions[key] || defaultValue;
+               floatAreaCfg[key] = (meta.dialogOptions[key] !== undefined) ? meta.dialogOptions[key] : defaultValue;
             }
          });
 

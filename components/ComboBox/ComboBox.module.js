@@ -340,7 +340,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                      ComboBox.superclass.setText.call(self, newText);
                      self._drawNotEditablePlaceholder(newText);
                      $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(newText);
-                     self._container.toggleClass('controls-ComboBox_emptyValue', (key == undefined));
+                     self._container.toggleClass('controls-ComboBox_emptyValue', (key === null));
                   }
                }
                else {
@@ -382,12 +382,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                var projItem, index;
                projItem = self._getItemsProjection().getByHash(hash);
                index = self._getItemsProjection().getIndex(projItem);
+               self.setSelectedIndex(index);
+               self.hidePicker();
                if (self._options.autocomplete){
                   self._getItemsProjection().setFilter(null);
                   self.redraw();
                }
-               self.setSelectedIndex(index);
-               self.hidePicker();
                // чтобы не было выделения текста, когда фокус вернули в выпадашку
                self._fromTab = false;
                self.setActive(true);
@@ -499,7 +499,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                });
 
                if (noItems && oldKey !== null) {
-                  self.setSelectedKey(null);
+                  ComboBox.superclass.setSelectedKey.call(self, null);
                   self._drawText(oldText);
                }
             });

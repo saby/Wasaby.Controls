@@ -20,6 +20,9 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
         * @class SBIS3.CONTROLS.ItemsToolbar
         * @extends SBIS3.CONTROLS.CompoundControl
         * @author Авраменко Алексей Сергеевич
+        *
+        * @cssModifier controls-ItemsToolbar__small устанавливает размер элементов тулбара равным 16px
+        *
         * @public
         */
        var ItemsToolbar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.ItemsToolbar.prototype */ {
@@ -99,6 +102,9 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           _initItemsActions: function() {
              var self = this;
+
+             this._bigIconsFix(this._options.itemsActions);
+
              this._itemsActions = new ItemActionsGroup({
                 items: this._options.itemsActions,
                 element: $('<div class="controls-ListView__itemActions-container"></div>').prependTo(this._getToolbarContent()),
@@ -155,6 +161,8 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           setItemsActions: function(itemsActions) {
              this._options.itemsActions = itemsActions;
 
+             this._bigIconsFix(itemsActions);
+
              if(this._itemsActions) {
                 this._itemsActions.setItems(this._options.itemsActions);
              }
@@ -175,6 +183,22 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              if (this._itemsActions) {
                 this._itemsActions.hide();
              }
+          },
+
+          /**
+           * Убирает жестко заданный размер иконок, т.к. по новым стандартам они должны быть 24px
+           * icon-size определен в стилях компонента и сам определяет правильный размер иконок
+           * @param items
+           * @private
+           */
+          _bigIconsFix: function(items) {
+             $ws.helpers.forEach(
+                 items,
+                 function(item){
+                    if(item.hasOwnProperty('icon') && item.icon){
+                       item.icon = item.icon.replace('icon-16', 'icon-size');
+                    }
+                 });
           },
           /**
            * Проверяет, отображаются ли сейчас опции записи

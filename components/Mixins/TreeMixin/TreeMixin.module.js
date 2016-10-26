@@ -597,14 +597,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             this._options.openedPath[id] = true;
             this._folderOffsets[id] = 0;
             return this._loadNode(id).addCallback(function() {
-               var
-                  ladderDecorator = this._options._decorators.getByName('ladder');
-               if (ladderDecorator){
-                  ladderDecorator.removeNodeData(id);
-                  ladderDecorator.setIgnoreEnabled(true);
-               }
                this._getItemProjectionByItemId(id).setExpanded(true);
-               ladderDecorator && ladderDecorator.setIgnoreEnabled(false);
             }.bind(this));
          }
       },
@@ -835,6 +828,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var
             self = this,
             filter;
+         this._toggleIndicator(true);
          this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit);
          this._loader = this._callQuery(this._createTreeFilter(id), this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
@@ -856,7 +850,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                else {
                   self._treePager.setHasMore(false)
                }
-               self._hideLoadingIndicator();
             }
             //Если данные пришли, нарисуем
             if (dataSet.getCount()) {
@@ -865,6 +858,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                self._dataLoadedCallback();
                self._createFolderFooter(id);
             }
+            self._toggleIndicator(false);
 
          }, self)).addErrback(function (error) {
             //Здесь при .cancel приходит ошибка вида DeferredCanceledError

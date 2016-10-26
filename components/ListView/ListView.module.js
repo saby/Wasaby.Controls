@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.ListView',
    "js!SBIS3.CONTROLS.BreakClickBySelectMixin",
    "js!SBIS3.CONTROLS.ItemsToolbar",
    "js!SBIS3.CORE.MarkupTransformer",
-   "html!SBIS3.CONTROLS.ListView",
+   "tmpl!SBIS3.CONTROLS.ListView",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "js!SBIS3.CONTROLS.CommonHandlers",
    "js!SBIS3.CONTROLS.MoveHandlers",
@@ -462,7 +462,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                },{
                   name: 'move',
-                  icon: 'sprite:icon-16 icon-Move icon-primary action-hover',
+                  icon: 'sprite:icon-16 icon-Move icon-primary',
                   tooltip: rk('Перенести'),
                   caption: rk('Перенести'),
                   isMainAction: false,
@@ -829,7 +829,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if (this.getItems()){
                   this._setLoadMoreCaption(this.getItems());
                }
-               this.subscribeTo(loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
+               this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
             }
          },
 
@@ -894,7 +894,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onScrollHandler: function(event, scrollTop){
-            var scrollPage = this._scrollBinder._getScrollPage(scrollTop);
+            var scrollPage = this._scrollBinder._getScrollPage(scrollTop),
+                itemActions = this.getItemsActions();
+
+            if(itemActions && itemActions.isItemActionsMenuVisible()){
+               itemActions.hide();
+            }
             this._notify('onScrollPageChange', scrollPage);
          },
          _setScrollPagerPosition: function(){
@@ -1331,10 +1336,21 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                       this.setSelectedItemsAll.call(this);
                      if (dataSet.getCount() == 1000 && dataSet.getMetaData().more){
-                        InformationPopupManager.showMessageDialog({
-                           status: 'default',
-                           message: 'Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.'
-                        });
+                        var message = 'Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.';
+
+                        var windowOptions = ($ws._const.defaultOptions || {})['SBIS3.CORE.Window'] || {};
+                        //TODO В 3.7.4.200 popupMixin не поддерживает анимацию, соответсвенно и информационные окна, сделанные на его основе
+                        //TODO По этой причине проверяем, если включена настройка 'анимированные окна', то покажем старое окно.
+                        //TODO В 3.7.4.220 планируется поддержать анимацию -> выпилить этот костыль!
+                        if(windowOptions.animatedWindows){
+                           $ws.helpers.message(message);
+                        }
+                        else {
+                           InformationPopupManager.showMessageDialog({
+                              status: 'default',
+                              message: message
+                           });
+                        }
                      }
                   }.bind(this));
             } else {
@@ -2056,11 +2072,33 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _removeItems: function(item, groupId){
+            this._checkDeletedItems(item);
             ListView.superclass._removeItems.call(this, item, groupId);
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
             }
          },
+
+          /*
+           * При удалении записи с открытым меню операций, операции над записью необходимо скрывать
+           * т.к. запись удалена и над ней нельзя проводить действия
+           */
+         _checkDeletedItems: function (items) {
+            var self = this,
+                target, targetHash;
+
+            if(self._itemsToolbar && self._itemsToolbar.isToolbarLocking()){
+               target = self.getItemsActions().getTarget();
+               targetHash = target.container.data('hash');
+               $ws.helpers.forEach(items, function(item){
+                  if(item.getHash() == targetHash){
+                     self._itemsToolbar.unlockToolbar();
+                     self._itemsToolbar.hide();
+                  }
+               });
+            }
+         },
+
          //-----------------------------------infiniteScroll------------------------
          /**
           * Используется ли подгрузка по скроллу.
@@ -2166,14 +2204,8 @@ define('js!SBIS3.CONTROLS.ListView',
                var items = dataSet.toArray();
                at = {at: 0};
             }
-            //TODO новый миксин не задействует декоратор лесенки в принципе при любых действиях, кроме первичной отрисовки
-            //это неправильно, т.к. лесенка умеет рисовать и дорисовывать данные, если они добавляются последовательно
-            //здесь мы говорим, чтобы лесенка отработала при отрисовке данных
-            var ladder = this._options._decorators.getByName('ladder');
-            ladder && ladder.setIgnoreEnabled(true);
             //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
             this.getItems().append(dataSet);
-            ladder && ladder.setIgnoreEnabled(false);
 
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this._drawItems(dataSet.toArray(), at);
@@ -2505,7 +2537,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setPage: function (pageNumber, noLoad) {
             pageNumber = parseInt(pageNumber, 10);
             var offset = this._offset;
-            if (this._isPageLoaded(pageNumber)){
+            if (this.isInfiniteScroll() && this._isPageLoaded(pageNumber)){
                if (this._getItemsProjection() && this._getItemsProjection().getCount()){
                   var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
                      itemId = this._getItemsProjection().getItemBySourceIndex(itemIndex).getContents().getId(),
@@ -2522,7 +2554,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this._notify('onPageChange', pageNumber);
          },
-
 
          _isPageLoaded: function(pageNumber) {
             var offset = pageNumber * this._options.pageSize;
@@ -2751,7 +2782,6 @@ define('js!SBIS3.CONTROLS.ListView',
                rows = [itemContainer.prev(), anchor, itemContainer, anchor.next()];
                itemContainer.insertAfter(anchor);
             }
-            this._ladderCompare(rows);
          },
          /*DRAG_AND_DROP START*/
          /**
@@ -2851,13 +2881,13 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onDragHandler: function(dragObject, e) {
+            this._clearDragHighlight(dragObject);
             if (this._canDragMove(dragObject)) {
                var
                   target = dragObject.getTarget(),
                   targetsModel = target.getModel(),
                   source = dragObject.getSource(),
                   sourceModels = [];
-               this._clearDragHighlight(dragObject);
                if (targetsModel) {
                   source.each(function (item) {
                      sourceModels.push(item.getModel());
@@ -2942,10 +2972,10 @@ define('js!SBIS3.CONTROLS.ListView',
                var
                   target = dragObject.getTarget(),
                   models = [],
-                  dropBySelf = false,
-                  targetsModel = target.getModel();
+                  dropBySelf = false;
 
                if (target) {
+                  var  targetsModel = target.getModel();
                   dragObject.getSource().each(function(item){
                      var model = item.getModel();
                      models.push(model);

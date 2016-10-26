@@ -145,17 +145,22 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             var self = this,
                 verticalAlign = {},
                 horizontalAlign = {},
-                target;
+                target,
+                menuClassName = '',
+                parentContainer = this.getParent().getContainer();
 
             if(this._options.touchMode) {
                verticalAlign = TOUCH_ALIGN.verticalAlign;
                horizontalAlign = TOUCH_ALIGN.horizontalAlign;
                target = this._container;
+               menuClassName += ' controls-ItemActions__menu-touchMode';
             } else {
                verticalAlign = STANDART_ALIGN.verticalAlign;
                horizontalAlign = STANDART_ALIGN.horizontalAlign;
                target = this._itemActionsMenuButton;
             }
+
+            menuClassName += parentContainer.hasClass('controls-ItemsToolbar__small') ? ' controls-ItemsToolbar__small' : '';
 
             this._itemActionsMenu = new ContextMenu({
                element: $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]).show(),
@@ -166,7 +171,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                parent: this,
                opener: this,
                target:  target,
-               className: this._options.touchMode ? 'controls-ItemActions__menu-touchMode' : '',
+               className: menuClassName,
                corner: 'tr',
                closeButton: true,
                verticalAlign: verticalAlign,
@@ -197,7 +202,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._activeItem.container.addClass(this._activeCls);
             this._itemActionsMenu.recalcPosition(true);
             /*TODO фикс теста, для операций над записью должна быть особая иконка*/
-            $('.controls-PopupMixin__closeButton', this._itemActionsMenu.getContainer()).addClass('icon-16 icon-size icon-ExpandUp icon-primary');
+            $('.controls-PopupMixin__closeButton', this._itemActionsMenu.getContainer()).addClass('icon-size icon-ExpandUp icon-primary');
          },
 
          /**

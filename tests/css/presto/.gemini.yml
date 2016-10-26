@@ -6,6 +6,7 @@ sessionsPerBrowser: 8
 tolerance: 100
 
 browsers:
+
   chrome:
     desiredCapabilities:
       browserName: chrome
@@ -13,7 +14,7 @@ browsers:
   firefox:
     desiredCapabilities:
       browserName: firefox
-	
+
 system:
   diffColor: '#018def'
   referenceImageAbsence: 'error'

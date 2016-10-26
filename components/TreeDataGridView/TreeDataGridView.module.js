@@ -223,15 +223,18 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _resizeFoldersFooters: function() {
-         var footers = $('.controls-TreeView__folderFooterContainer', this._container.get(0));
-         var width = this._container.width();
-         //Если в браузере присутствует колонка с checkbox'ом, то нужно вычесть его ширину из общей ширины футера
-         if (this._options.multiselect) {
-            //Нельзя смотреть ширину первой колонки, позвав метод width у элемента col (дочерний элемент colgroup)
-            //т.к. в 8 и 10 ie это приводит к тому, что начинает ехать ширина у остальных колонок
-            width = width - this._container.find('.controls-DataGridView__td__checkBox').first().width();
+         /*будем ресайзить футеры только в частичном скролле. В остальных случаях они и так норм*/
+         if (this._options.startScrollColumn) {
+            var footers = $('.controls-TreeView__folderFooterContainer', this._container.get(0));
+            var width = this._container.width();
+            //Если в браузере присутствует колонка с checkbox'ом, то нужно вычесть его ширину из общей ширины футера
+            if (this._options.multiselect) {
+               //Нельзя смотреть ширину первой колонки, позвав метод width у элемента col (дочерний элемент colgroup)
+               //т.к. в 8 и 10 ie это приводит к тому, что начинает ехать ширина у остальных колонок
+               width = width - this._container.find('.controls-DataGridView__td__checkBox').first().width();
+            }
+            footers.outerWidth(width);
          }
-         footers.outerWidth(width);
       },
 
       _keyboardHover: function(e) {
@@ -252,21 +255,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       collapseNode: function (key) {
-         this._clearLadderData(key);
          return TreeDataGridView.superclass.collapseNode.apply(this, arguments);
       },
 
       expandNode: function (key) {
-         this._clearLadderData(key);
          return TreeDataGridView.superclass.expandNode.apply(this, arguments);
-      },
-
-
-      _clearLadderData: function(key){
-         var ladderDecorator = this._options._decorators.getByName('ladder');
-         if (ladderDecorator){
-            ladderDecorator.removeNodeData(key);
-         }
       },
 
       /**

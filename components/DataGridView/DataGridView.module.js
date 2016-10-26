@@ -14,7 +14,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "js!SBIS3.CONTROLS.DragAndDropMixin",
    "js!SBIS3.CONTROLS.ImitateEvents",
    "html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
-   "js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator",
+   'js!WS.Data/Display/Ladder',
+   'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "html!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate",
    "html!SBIS3.CONTROLS.DataGridView/resources/ItemContentTemplate",
@@ -23,7 +24,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "Core/helpers/collection-helpers",
    "Core/helpers/string-helpers"
 ],
-   function( cFunctions, cMerge, constants, Deferred,ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, LadderDecorator, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate, colHelpers, strHelpers) {
+   function( cFunctions, cMerge, constants, Deferred,ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, Ladder, LadderDecorator, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate, colHelpers, strHelpers) {
    'use strict';
 
       var ANIMATION_DURATION = 500, //Продолжительность анимации скролла заголовков
@@ -68,7 +69,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
             return value;
          },
-
+         buildTplArgsLadder = function(args, cfg) {
+            args.ladder = cfg._ladderInstance;
+            args.ladderColumns = cfg.ladder || [];
+         },
          buildTplArgsDG = function(cfg) {
             var tplOptions = cfg._buildTplArgsLV.call(this, cfg);
             tplOptions.columns = _prepareColumns.call(this, cfg.columns, cfg);
@@ -80,6 +84,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                displayField : tplOptions.displayField
             };
             tplOptions.startScrollColumn = cfg.startScrollColumn;
+            buildTplArgsLadder(tplOptions.cellData, cfg);
 
             return tplOptions;
          },
@@ -113,7 +118,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             for (var i = 0, l = columns.length; i < l; i++){
                curCol = columns[i];
                nextCol = columns[i + 1];
-               curColSplitTitle = curCol.title.split('.');
+               curColSplitTitle = (curCol.title || '').split('.');
                nextColSplitTitle = nextCol && nextCol.title.split('.');
 
                if (!supportDouble){
@@ -186,6 +191,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @extends SBIS3.CONTROLS.ListView
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyDataGridView
+    * @demo SBIS3.CONTROLS.Demo.LadderDataGridView Лесенка
     *
     * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
     * @cssModifier controls-DataGridView__markerRight Устанавливает отображение маркера активной строки справа от записи. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
@@ -284,13 +290,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *    <li>field - имя поля</li>
              *    <li>highlight - есть ли подсветка</li>
              * </ol>
-             * Необходимо указать настройки декораторов разметки, если требуется
-             * Пример
+             * Следует указать настройки декораторов разметки, если требуется. Используем декоратор подсветки текста:
              * <pre>
              *    {{=it.decorators.applyOnly(it.value, {
-             *      highlight: it.highlight,
-             *      ladder: it.field
+             *       highlight: it.highlight
              *    })}}
+             * </pre>
+             * Также можно использовать лесенку:
+             * <pre>
+             *    {{=it.ladder.get(it.item, it.field)}}
              * </pre>
              * @remark
              * Если в настройке колонки имя поля соответствует шаблону ['Name1.Name2'] то при подготовке полей для рендеринга
@@ -418,9 +426,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
 
-      _modifyOptions: function() {
+      _modifyOptions: function(cfg, parsedCfg) {
+         if (parsedCfg._ladderInstance) {
+            cfg._ladderInstance = parsedCfg._ladderInstance;
+         } else if (!cfg._ladderInstance) {
+            cfg._ladderInstance = parsedCfg._ladderInstance = new Ladder();
+         }
+
          var newCfg = DataGridView.superclass._modifyOptions.apply(this, arguments);
-         newCfg._decorators.add(new LadderDecorator());
          checkColumns(newCfg);
          newCfg._colgroupData = prepareColGroupData(newCfg);
          newCfg._headData = prepareHeadData(newCfg);
@@ -432,6 +445,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if(newCfg.stickyHeader && newCfg.startScrollColumn !== undefined) {
             newCfg.stickyHeader = false;
          }
+
+         if (!newCfg.ladder) {
+            newCfg.ladder = [];
+         }
+         if (cfg._itemsProjection) {
+            cfg._ladderInstance.setCollection(cfg._itemsProjection);
+         }
+         newCfg._decorators.add(new LadderDecorator());
 
          return newCfg;
       },
@@ -470,6 +491,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
                if(this._options.showHead) {
                   trs.push(this._thead[0].children[0]);
+               }
+
+               if(this._checkResults()) {
+                  trs.push(this._thead.find('.controls-DataGridView__results')[0]);
                }
 
                for(var i = 0, len = trs.length; i < len; i++) {
@@ -532,8 +557,18 @@ define('js!SBIS3.CONTROLS.DataGridView',
             isSearch : args.isSearch
          };
          args.startScrollColumn = cfg.startScrollColumn;
+         buildTplArgsLadder(args.cellData, cfg);
 
          return args;
+      },
+
+      _itemsReadyCallback: function() {
+         var proj = this._getItemsProjection();
+         if (proj) {
+            this._options._ladderInstance.setCollection(proj);
+         }
+
+         return DataGridView.superclass._itemsReadyCallback.apply(this, arguments);
       },
 
       _redrawHead : function() {
@@ -609,6 +644,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
        * @noShow
        */
       setStickyHeader: function(isSticky){
+         /* Не даем включить прилипание заголовков при включённом частичном скроле,
+            подробнее проблема описана в методе _modifyOptions */
+         if(isSticky && this._options.startScrollColumn !== undefined) {
+            return;
+         }
          if (this._options.stickyHeader !== isSticky){
             this._options.stickyHeader = isSticky;
             this.getContainer().find('.controls-DataGridView__table').toggleClass('ws-sticky-header__table', isSticky);
@@ -1187,7 +1227,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
                decorators: this._options._decorators,
                field: column.field,
                value: value,
-               highlight: column.highlight
+               highlight: column.highlight,
+               ladderColumns: this._options.ladder
             };
             if (column.templateBinding) {
                tplOptions.templateBinding = column.templateBinding;
@@ -1203,13 +1244,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
             value = MarkupTransformer((cellTpl)(tplOptions));
          } else {
+            if (
+               Array.indexOf(this._options.ladder, column.field) > -1 &&
+               !this._options._ladderInstance.isPrimary(item, column.field)
+            ) {
+               value = null;
+            }
             value = this._options._decorators.applyOnly(
                   value === undefined || value === null ? '' : strHelpers.escapeHtml(value), {
-                  highlight: column.highlight,
-                  ladder: {
-                     column: column.field,
-                     parentId: item.get(this._options.hierField)
-                  }
+                  highlight: column.highlight
                }
             );
          }
@@ -1217,7 +1260,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _getColumnValue: function(item, colName){
-
          if (!colName || !this._isCompositeRecordValue(colName)){
             return item.get(colName);
          }

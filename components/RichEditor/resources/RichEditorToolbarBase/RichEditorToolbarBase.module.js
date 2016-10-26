@@ -168,6 +168,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                   items.splice(deleteIdexes[i] - i, 1);
                }
             }
+            items.sort(function(item1,item2){
+               return (item1.order || 99999) - (item2.order || 99999)
+            });
             return items;
          },
 
