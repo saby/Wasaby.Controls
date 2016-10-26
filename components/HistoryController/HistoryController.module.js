@@ -18,6 +18,14 @@ define('js!SBIS3.CONTROLS.HistoryController', [
       return value ? strHelpers[serialize ? 'serializeURLData' : 'deserializeURLData'](value) : null;
    };
 
+
+   /* Пока нет нормального способа, используя некий интерфейс сохранять параметры,
+      то смотрю на флаг globalConfigSupport (поддерживаются ли пользовательский параметры),
+      и сохраняю? используя UserConfig в пользоватльские параметры, иначе кладу в localStorage.
+      Задача по этому поводу:
+      https://inside.tensor.ru/opendoc.html?guid=5b44aa05-a1c8-4052-9cd7-88b50519588b&description=
+      Задача в разработку 25.10.2016 Нужен платформенный интерфейс, позволяющий работать с параметрами, которые запоминаются в длитель...
+   */
    var setParam = function(key, value, serializer) {
       var serializedValue = serializer(true, value);
 
@@ -41,6 +49,7 @@ define('js!SBIS3.CONTROLS.HistoryController', [
 
       return serializedValue;
    };
+   /**************************************************************/
 
    /**
     * Контроллер, который предоставляет базовые механизмы работы с иторией.
