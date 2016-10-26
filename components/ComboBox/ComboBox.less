@@ -150,6 +150,9 @@
 
    .border-radius(@combo-box-picker-border-radius);
    .controls-ComboBox__itemRow {
+      &.controls-ComboBox__emptyRow, &.controls-ComboBox__emptyRow:hover{
+        color: #ccc;
+      }
       font: @combo-box-picker-item-font;
       font-size: @combo-box-picker-item-font-size;
       padding: @combo-box-picker-item-padding;
