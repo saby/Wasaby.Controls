@@ -152,25 +152,21 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see getItemsActions
           */
           /**
-          * @event onItemClick При клике на запись
-          * @remark
-          * Событие срабатывает при любом клике под курсором мыши.
+          * @event onItemClick Происходит при любом клике по записи.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {String} id Ключ записи
-          * @param {SBIS3.CONTROLS.Record} data запись
-          * @param {jQuery} target html элемент на который кликнули
+          * @param {String} id Первичный ключ записи.
+          * @param {WS.Data/Entity/Model} data Экземпляр класса записи, по которой произвели клик.
+          * @param {jQuery} target DOM-элемент, на который кликнули.
           */
           /**
-          * @event onItemActivate При активации записи (клик с целью например редактирования или выбора)
-          * @remark
-          * Событие срабатывает при смене записи под курсором мыши.
+          * @event onItemActivate Происходит при смене записи (активации) под курсором мыши (например, клик с целью редактирования или выбора).
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Object} meta Объект
-          * @param {String} meta.id ключ элемента представления данных
-          * @param {SBIS3.CONTROLS.Record} meta.item запись
+          * @param {String} meta.id Первичный ключ записи.
+          * @param {WS.Data/Entity/Model} meta.item Экземпляр класса записи.
           */
          /**
-          * @event onDataMerge Перед добавлением загруженных записей в основной dataSet
+          * @event onDataMerge Происходит перед добавлением загруженных записей в основной dataSet.
           * @remark
           * Событие срабатывает при подгрузке по скроллу, при подгрузке в ветку дерева.
           * Т.е. при любой вспомогательной загрузке данных.
@@ -188,69 +184,73 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          /**
-          * @event onItemValueChanged Возникает при смене значения в одном из полей редактирования по месту и потере фокуса этим полем
+          * @event onItemValueChanged Происходит при смене значения в одном из полей редактирования по месту и потере фокуса этим полем.
           * @deprecated Будет удалено в 3.7.3.100. Временное решение
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Array} difference Массив измененных полей
-          * @param {Object} model Модель с измененными данными
+          * @param {Array} difference Массив измененных полей.
+          * @param {WS.Data/Entity/Model} model Модель с измененными данными.
           */
          /**
-          * @event onBeginEdit Возникает перед началом редактирования
+          * @event onBeginEdit Происходит перед началом редактирования.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} model Редактируемая модель
+          * @param {WS.Data/Entity/Model} model Редактируемая запись.
           * @returns {*} Возможные значения:
           * <ol>
-          *    <li>Deferred - запуск редактирования по завершению работы возвращенного Deferred;</li>
+          *    <li>Deferred - запуск редактирования по месту будет произведён, когда произойдёт завершение возвращенного Deferred;</li>
           *    <li>false - прервать редактирование;</li>
           *    <li>* - продолжить редактирование в штатном режиме.</li>
           * </ol>
           */
          /**
-          * @event onBeginAdd Возникает перед началом добавления записи по месту
+          * @event onBeginAdd Происходит перед началом добавления записи по месту.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @returns {Object|WS.Data/Entity/Model} Данные которые попадут в поля созданного элемента.
+          * @returns {Object|WS.Data/Entity/Model} Инициализирующе данные для создаваемой записи.
           */
          /**
-          * @event onAfterBeginEdit Возникает после начала редактирования (при непосредственном его начале)
+          * @event onAfterBeginEdit Происходит после начала редактирования.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} model Редактируемая модель
+          * @param {WS.Data/Entity/Model} model Редактируемая запись.
           */
          /**
-          * @typedef {String} EndEditResult
-          * @variant Cancel Отменить завершение редактирования.
-          * @variant Save Завершить редактирование с сохранением изменений.
-          * @variant NotSave Завершить редактирование без сохранения изменений.
-          */
-         /**
-          * @event onEndEdit Возникает перед окончанием редактирования (и перед валидацией области редактирования).
+          * @event onEndEdit Происходит перед окончанием редактирования (и перед валидацией области редактирования).
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {WS.Data/Entity/Model} model Редактируемая модель.
+          * @param {WS.Data/Entity/Model} model Редактируемая запись.
           * @param {Boolean} withSaving Признак, по которому определяют тип завершения редактирования.
-          * true - редактирование завершается сохранением изменений; false - отмена сохранения изменений путём нажатия клавиши Esc или переводом фокуса на другой контрол.
-          * @returns {EndEditResult}
+          * <ul>
+          *    <li>true - редактирование завершается сохранением изменений;</li>
+          *    <li>false - отмена сохранения изменений путём нажатия клавиши Esc или переводом фокуса на другой контрол.</li>
+          * </ul>
+          * @returns {EndEditResult} Из события можно вернуть одну из констант, список которых приведён по ссылке.
+          * Если из события вернуть любое другое значение, то оно будет проигнорировано, и проихойдёт сохранение изменений редактирования/добавления по месту.
           */
          /**
-          * @event onAfterEndEdit Возникает после окончания редактирования по месту
+          * @event onAfterEndEdit Происходит после окончания редактирования по месту.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} model Отредактированная модель
+          * @param {WS.Data/Entity/Model} model Отредактированная запись.
+          * @param {jQuery} target DOM-элемент, отображающий запись.
+          * @param {Boolean} withSaving Признак, по которому определяют тип завершения редактирования.
+          * <ul>
+          *    <li>true - редактирование завершается сохранением изменений;</li>
+          *    <li>false - была нажата клавиша Esc или перевели фокуса на другой контрол, чтобы отменить сохранение изменений.</li>
+          * </ul>
           */
          /**
-          * @event onPrepareFilterOnMove При определении фильтра, с которым будет показан диалог перемещения.
+          * @event onPrepareFilterOnMove Происходит при определении фильтра, с которым будет показан диалог перемещения.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Array} records Список перемещаемых записей.
-          * @returns {Object} filter Фильтр который будет помещёт в диалог перемещения.
+          * @returns {Object} filter Фильтр, который будет помещён в диалог перемещения.
           */
          /**
-          * @event onEndDelete После удаления записей.
+          * @event onEndDelete Происходит после удаления записей.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Array} idArray Ключи удаляемых записей.
+          * @param {Array.<String>|Array.<Number>} idArray Массив ключей удаляемых записей.
           * @param {*} result Результат удаления.
           */
          /**
-          * @event onBeginDelete Перед удалением записей.
+          * @event onBeginDelete Происходит перед удалением записей.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Array} idArray Ключи удаляемых записей.
-          * @returns {*|Boolean} result Если result равен false то отменяется штатная логика удаления.
+          * @param {Array.<String>|Array.<Number>} idArray Массив ключей удаляемых записей.
+          * @returns {*|Boolean} result Если result=false, то отменяется логика удаления записи, установленная по умолчанию.
           */
          /**
           * @typedef {String} MovePosition
@@ -261,13 +261,20 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * @typedef {Object} DragEntityOptions
           * @property {SBIS3.CONTROLS.Control} owner Контрол, которому принадлежит запись.
-          * @property {jQuery} domElement DOM элемент, отображающий запись.
+          * @property {jQuery} domElement DOM-элемент, отображающий запись.
           * @property {WS.Data/Entity/Model} model Модель, соответствующая записи.
           * @property {MovePosition|undefined} position Позиция элемента после перемещения (определяется только у целевого элемента - того, который находится под курсором мыши).
           */
           /**
           * @typedef {Object} DragEntityListOptions
           * @property {Array} items Массив перемещаемых элементов {@link SBIS3.CONTROLS.DragEntity.Row}.
+          */
+         /**
+          * @typedef {String} EndEditResult
+          * @variant Cancel Отменить завершение редактирования/добавления.
+          * @variant Save Завершить редактирование/добавление с сохранением изменений логике, которая установленной по умолчанию.
+          * @variant NotSave Завершить редактирование/добавление без сохранения изменений. Использование данной константы в режиме добавления по месту приводит к автоудалению созданной записи.
+          * @variant CustomLogic Завершить редактирование/добавление с сохранением изменений по пользовательской логике. Используется, например, при добавлении по месту, когда разработчику необходимо самостоятельно обработать добавляемую запись.
           */
          $protected: {
             _floatCheckBox: null,
