@@ -844,10 +844,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   //Делаем через subscribeTo, а не once, что бы нормально отписываться при destroy FloatArea
                   this.subscribeTo(topParent, 'onAfterShow', afterFloatAreaShow);
                }
-
-               if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
-                  this._createScrollPager();
-               }
                this._scrollWatcher.subscribe('onTotalScroll', this._onTotalScrollHandler.bind(this));
             } else if (this._options.infiniteScroll == 'demand'){
                this._loadMoreButton = this.getChildControlByName('loadMoreButton');
@@ -915,7 +911,9 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onVisibleChange: function(event, visible){
-            this._scrollPager.setVisible(visible);
+            if (this._scrollPager) {
+               this._scrollPager.setVisible(visible);
+            }
          },
 
          _onScrollHandler: function(event, scrollTop){
@@ -2077,8 +2075,9 @@ define('js!SBIS3.CONTROLS.ListView',
             //FixMe: Из за этого при каждой подгрузке по скроллу пэйджинг пересчитывается полностью
             if (this._scrollBinder){
                this._scrollBinder._updateScrollPages(true);
+            } else if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
+               this._createScrollPager();
             }
-
             this._notifyOnSizeChanged(true);
          },
          _drawItemsCallbackSync: function(){
