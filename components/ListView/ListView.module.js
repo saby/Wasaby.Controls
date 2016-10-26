@@ -1279,17 +1279,23 @@ define('js!SBIS3.CONTROLS.ListView',
             var $target = $(target),
                 self = this,
                 elClickHandler = this._options.elemClickHandler,
-                onItemClickResult,
+                needSelect = true,
                 afterHandleClickResult = fHelpers.forAliveOnly(function(result) {
                    if (result !== false) {
-                      self.setSelectedKey(id);
+                      if(needSelect) {
+                         self.setSelectedKey(id);
+                      }
                       self._elemClickHandlerInternal(data, id, target, e);
                       elClickHandler && elClickHandler.call(self, id, data, target, e);
                    }
-                }, this);
+                }, this),
+                onItemClickResult;
 
             if (this._options.multiselect) {
                if ($target.hasClass('js-controls-ListView__itemCheckBox')) {
+                  if(this._isItemSelected(id)) {
+                     needSelect = false;
+                  }
                   this._onCheckBoxClick($target);
                }
                else {
