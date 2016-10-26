@@ -173,7 +173,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
       redraw: function() {
          TreeDataGridView.superclass.redraw.apply(this, arguments);
-         this._createAllFolderFooters();
+         /*redraw может позваться, когда данных еще нет*/
+         if (this._getItemsProjection()) {
+            this._createAllFolderFooters();
+         }
       },
 
       _drawItemsCallback: function() {
