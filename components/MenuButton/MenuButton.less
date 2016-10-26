@@ -56,6 +56,7 @@
         height: @menu-button-header-left-height;
         background: @menu-button-header-right-bg-revert-vertical-horizontal;
         margin: @menu-button-header-right-margin;
+        float: right;
       }
       .controls-MenuButton__headerCenter{
         vertical-align: top;
@@ -78,15 +79,19 @@
     .controls-MenuButton__headerCenter{
       vertical-align: top;
       height: @menu-button-header-center-height - 1px;
+      top: 0;
     }
   }
 
   .controls-MenuButton__headerCenter {
     display: inline-block;
-    width: @menu-button-header-center-width;
+    width: calc(~"100% - 40px");
     height: @menu-button-header-center-height;
     margin: @menu-button-header-center-margin;
     background: @menu-button-header-center-bg;
+    position: relative;
+    top: 16px;
+
   }
 
   .controls-MenuButton__headerRight {
@@ -95,6 +100,7 @@
     height: @menu-button-header-right-height;
     margin: @menu-button-header-right-margin;
     background: @menu-button-header-right-bg;
+    float: right;
   }
 }
 
