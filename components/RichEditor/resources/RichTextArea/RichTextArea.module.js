@@ -547,7 +547,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @public
           */
          getHistory: function() {
-            return UserConfig.getParamValues(this._getNameForHistory());
+            return UserConfig.getParamValues(this._getNameForHistory()).addCallback(function(arrBL) {
+               if( typeof arrBL  === 'string') {
+                  arrBL = [arrBL];
+               }
+               return arrBL;
+            })
          },
 
          /**
