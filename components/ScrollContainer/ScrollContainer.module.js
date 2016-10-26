@@ -156,6 +156,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
             return this._scroll && this.hasScroll() && this._container.height() === (scroll.height() + this.getScrollTop());
          },
 
+         getScrollHeight: function(){
+            return this._content.height();
+         },
+
          /**
           * Сдвигает скролл на указанную величину
           * @param option величина сдвига скролла
