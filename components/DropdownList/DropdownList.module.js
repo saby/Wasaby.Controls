@@ -81,15 +81,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * Подключение, импорт в переменную и передача шаблона в переменную:
                 * <pre>
                 * define('js!SBIS3.MyArea.MyComponent',
-                *    [ // Массив зависимостей компонента
-                *       ...
-                *       'html!SBIS3.MyArea.MyComponent/resources/myHeadTpl' // Подключаем шаблон в массив зависимостей компонента
-                *    ],
-                *    function(..., myHeadTpl){ // Импортируем шаблон в отдельную переменную
+                *    [ ... , 'html!SBIS3.MyArea.MyComponent/resources/myHeadTpl' ],
+                *    function(..., myHeadTpl){
                 *       ...
                 *       $protected: {
                 *          _options: {
-                *             myHeadTemplate: myHeadTpl // Создаём новую опцию компонента, в которую передаём шаблон заголовка
+                *             myHeadTemplate: myHeadTpl
                 *          }
                 *       }
                 *       ...
