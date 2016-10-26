@@ -647,9 +647,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var itemParent = item.getParent();
          return itemParent ? itemParent.isExpanded() ? this._isVisibleItem(itemParent) : false : true;
       },
-      _getItemsForRedrawOnAdd: function(items) {
+      _getItemsForRedrawOnAdd: function(items, groupId) {
          var result = [];
          for (var i = 0; i < items.length; i++) {
+            if (this._canApplyGrouping(items[i])) {
+               if (this._getItemsProjection().getGroupItems(groupId).length <= 1) {
+                  this._options._groupItemProcessing(groupId, result, items[i], this._options);
+               }
+            }
             if (this._isVisibleItem(items[i])) {
                result.push(items[i]);
             }
