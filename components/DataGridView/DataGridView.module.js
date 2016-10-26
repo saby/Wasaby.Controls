@@ -584,9 +584,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
          var body = $('.controls-DataGridView__tbody', this._container);
 
          var newTHead = $(headMarkup);
+
+         /* Если шапка зафиксирована, то она находится вне контейнера компонента.
+            По этой причине обработчики событий надо вешать для неё отдельно. */
+         if(this._options.stickyHeader) {
+            this._bindEventHandlers(newTHead);
+         }
+
          if (this._thead && this._thead.length){
             this._destroyControls(this._thead);
-            this._thead.replaceWith(newTHead);
+            this._thead.off().replaceWith(newTHead);
             this._thead = newTHead;
          } else {
             this._thead = newTHead.insertBefore(body);
