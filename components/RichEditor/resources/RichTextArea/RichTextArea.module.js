@@ -761,7 +761,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                                     linkAttrs.href = href;
                                     editor.selection.setRng(range);
                                     if (editor.selection.getContent() === '' || fre._isOnlyTextSelected()) {
-                                       editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(href)));
+                                       var
+                                          linkText = selection.getContent({format: 'text'}) || href;
+                                       editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(linkText)));
                                     } else {
                                        editor.execCommand('mceInsertLink', false, linkAttrs);
                                     }
