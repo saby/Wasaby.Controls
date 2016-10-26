@@ -78,8 +78,10 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             });
 
             this.subscribeTo(childControl, 'onItemActivate', function(e, meta) {
-               /* Если в качестве списка лежит иерархия (дерево),
-                  то выбираемые записи надо проверять на выбираемость в зависимости от опции selectionType. */
+               /* Если в качестве списка для выбора записей используется дерево,
+                  то при обработке выбранной записи надо проверять папка это, или лист.
+                  Если опция selectionType установлена как 'node' (выбор только папок), то обработку листьев производить не надо.
+                  Если опция selectionType установлена как 'leaf' (только листьев), то обработку папок производить не надо. */
                if(cInstance.instanceOfMixin(childControl, 'SBIS3.CONTROLS.TreeMixin')) {
                   var isBranch = meta.item.get(childControl.getProperty('hierField') + '@');
 
