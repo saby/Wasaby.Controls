@@ -767,7 +767,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                                     } else {
                                        editor.execCommand('mceInsertLink', false, linkAttrs);
                                     }
-                                    editor.selection.collapse(false);
                                     editor.undoManager.add();
                                  }
                                  self.close();
