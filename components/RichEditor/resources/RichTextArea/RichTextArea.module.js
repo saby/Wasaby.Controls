@@ -760,7 +760,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                                  } else if (href) {
                                     linkAttrs.href = href;
                                     editor.selection.setRng(range);
-                                    if (editor.selection.getContent() === '' || fre._isOnlyTextSelected()) {
+                                    if (editor.selection.getContent() === '' || (fre._isOnlyTextSelected()) && cConstants.browser.firefox) {
                                        var
                                           linkText = selection.getContent({format: 'text'}) || href;
                                        editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(linkText)));
