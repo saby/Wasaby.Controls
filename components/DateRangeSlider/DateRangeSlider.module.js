@@ -13,6 +13,11 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
 
    /**
     * Контрол позволяющий выбирать диапазон дат равный месяцу, кварталу, полугодию или году.
+    *
+    * Контрол работает только с фиксированными диапазонами, поэтому можно задавть в опциях либо начальную,
+    * либо конечную дату периода. Вторая дата вычислится автоматически исходя из типа минимального диапазона
+    * который можно выбрать. Это позволяет привязывать одну из дат к контексту не заботясь о второй.
+    *
     * SBIS3.CONTROLS.DateRangeSlider
     * @class SBIS3.CONTROLS.DateRangeSlider
     * @extends $ws.proto.CompoundControl
@@ -93,12 +98,13 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
       },
 
       _modifyOptions: function (opts) {
-         var start;
+         var start, end;
          opts = DateRangeSlider.superclass._modifyOptions.apply(this, arguments);
          // Поскольку контрол работает только с фиксированными диапазонами, позволим разработчикам
          // не конфигурировать конечную дату. Сделаем это за них если они этого не сделали.
          start = opts.startValue;
-         if (start && !opts.endValue) {
+         end = opts.endValue;
+         if (start && !end) {
             if (opts.showMonths && DateUtil.isStartOfMonth(start)) {
                opts.endValue = DateUtil.getEndOfMonth(start);
             } else if (opts.showQuarters && DateUtil.isStartOfQuarter(start)) {
@@ -107,6 +113,16 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                opts.endValue = DateUtil.getEndOfHalfyear(start);
             } else if (DateUtil.isStartOfYear(start)) {
                opts.endValue = DateUtil.getEndOfYear(start);
+            }
+         } else if (end && !start) {
+            if (opts.showMonths && DateUtil.isEndOfMonth(end)) {
+               opts.startValue = DateUtil.getStartOfMonth(end);
+            } else if (opts.showQuarters && DateUtil.isEndOfQuarter(end)) {
+               opts.startValue = DateUtil.getStartOfQuarter(end);
+            } else if (opts.showHalfyears && DateUtil.isEndOfHalfyear(end)) {
+               opts.startValue = DateUtil.getStartOfHalfyear(end);
+            } else if (DateUtil.isEndOfYear(end)) {
+               opts.startValue = DateUtil.getStartOfYear(end);
             }
          }
          return opts;
