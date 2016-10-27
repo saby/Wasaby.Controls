@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.CommandsButton', [
    var CommandsButton = MenuIcon.extend({
       _modifyOptions: function(opts) {
          opts.className += ' controls-Menu__hide-menu-header';
-         opts.icon = 'sprite:icon-24 icon-MoreButton icon-primary';
+         opts.icon = 'sprite:icon-24 icon-ExpandDown icon-primary';
          opts.pickerClassName += ' controls-CommandsButton__picker controls-MenuIcon__Menu';
          return CommandsButton.superclass._modifyOptions.call(this, opts);
       },
@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.CommandsButton', [
       },
       _setPickerContent: function() {
          CommandsButton.superclass._setPickerContent.apply(this, arguments);
-         $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-LessButton icon-primary');
+         $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-ExpandUp icon-primary');
       }
    });
    return CommandsButton;
