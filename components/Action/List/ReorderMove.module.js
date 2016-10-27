@@ -1,17 +1,15 @@
 /*global define, $ws*/
 define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
    "Core/Deferred",
-   "js!SBIS3.CONTROLS.Action.List.Move",
-   "js!SBIS3.CONTROLS.Action.List.RelativeMoveMixin"
+   "js!SBIS3.CONTROLS.Action.List.Move"
 ],
-   function ( Deferred,ListMove, RelativeMoveMixin) {
+   function ( Deferred, ListMove) {
       'use strict';
       /**
        * Действие перемещения в низ/верх на одну запись
        * @class SBIS3.CONTROLS.Action.List.ReorderMove
        * @public
        * @extends SBIS3.CONTROLS.Action.List.Move
-       * @mixes SBIS3.CONTROLS.Action.List.RelativeMoveMixin
        * @author Крайнов Дмитрий Олегович
        * @example
        * Пример использования ReorderMove:
@@ -67,7 +65,7 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
        * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
        * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
        */
-      var ReorderMove = ListMove.extend([RelativeMoveMixin],/** @lends SBIS3.CONTROLS.Action.List.ReorderMove.prototype */{
+      var ReorderMove = ListMove.extend(/** @lends SBIS3.CONTROLS.Action.List.ReorderMove.prototype */{
          $protected: {
             _options: {
                /**

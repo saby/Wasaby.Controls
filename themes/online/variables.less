@@ -633,7 +633,7 @@
 @menu-header-height:                      32px;
 @menu-header-box-sizing:                  border-box;
 @menu-header-padding:                     8px;
-
+@menu-header-icon-padding:                6px;
 
 // --------- //
 // Menu item //
@@ -699,7 +699,7 @@
 
 @menu-button-header-right-width:                        28px;
 @menu-button-header-right-height:                       30px;
-@menu-button-header-right-margin:                       0 0 0 -6px;
+@menu-button-header-right-margin:                       0;
 @menu-button-header-right-margin-revert-horizontal:     @menu-button-header-right-margin;
 @menu-button-header-right-bg:                           transparent url(@menu-button-header-spritesheet) 0 -4px;
 @menu-button-header-left-bg-revert-horizontal:          transparent url(@menu-button-header-spritesheet) 0 182px;
@@ -2174,9 +2174,10 @@
 @controls-InformationPopup-border-left:                       @controls-InformationPopup-border !important;
 @controls-InformationPopup-border-right:                      @controls-InformationPopup-border !important;
 @controls-InformationPopup-border-bottom:                     @controls-InformationPopup-border !important;
+@controls-InformationPopup-closeButton-top:                   8px;
 
 //NotificationPopup
-@controls-NotificationPopup-header-height:                                   48px;
+@controls-NotificationPopup-header-height:                                   40px;
 @controls-NotificationPopup-header-padding:                                  0 12px 0 12px;
 @controls-NotificationPopup-header-padding-with-close-button:                0 48px 0 12px;
 
@@ -2186,7 +2187,8 @@
 @controls-NotificationPopup-header-icon-height:                              24px;
 
 //SubmitPopup
-@controls-SubmitPopup-min-width:                   351px;
+@controls-SubmitPopup-size-standart-width:         351px;
+@controls-SubmitPopup-size-big-width:              440px;
 @controls-SubmitPopup-body-padding:                32px;
 @controls-SubmitPopup-message-font-size:           18px;
 @controls-SubmitPopup-message-margin-bottom:       8px;

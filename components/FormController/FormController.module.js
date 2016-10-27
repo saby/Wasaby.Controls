@@ -134,20 +134,18 @@ define('js!SBIS3.CONTROLS.FormController', [
          _overlay: undefined,
          _options: {
             /**
-             * @cfg {String} Устанавливает первичный ключ записи, редактируемой на диалоге.
+             * @cfg {String} Устанавливает первичный ключ, который может быть использован для получения записи {@link record}.
              * @remark
-             * По данному ключу будет подгружена запись из источника данных, установленного опцией {@link dataSource}.
-             * Если ключ не передан (null), то этот сценарий означает создание новой записи. Для новой записи можно предустановить значения в опции {@link initValues}.
-             * </pre>
+             * Использование первичного ключа для получения записи зависит от установленного <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/initializing-way/">способа инициализации данных</a>.
              * @see record
              * @see dataSource
              */
             key: null,
             /**
-             * @cfg {WS.Data/Entity/Record} Устанавливает в контекст диалога редактируемую на диалоге запись.
+             * @cfg {WS.Data/Entity/Record} Устанавливает экземпляр записи, по данным которой может быть инициализирован диалог.
              * @remark
-             * Опция используется в том случае, когда не установлен источник данных диалога в опции {@link dataSource}.
-             * Чтобы установить запись, используют метод {@link setRecord}, а чтобы получить - метод {@link getRecord}.
+             * Запись, по данным которой будет инициализирован диалог, определяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/initializing-way/">способом инициализации данных</a>.
+             * Значение опции можно переопределить при <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/open-dialog/">открытии диалога</a>.
              * @see setRecord
              * @see getRecord
              * @see dataSource
@@ -162,23 +160,7 @@ define('js!SBIS3.CONTROLS.FormController', [
              * @cfg {Object} Устанавливает ассоциативный массив, который используют только при создании новой записи для инициализации её начальными значениями.
              * @remark
              * При редактировании существующей записи (первичный ключ не задан) опция будет проигнорирована.
-             * Данные для инициализации могут быть переданы со стороны {@link SBIS3.CONTROLS.DialogActionBase} при вызове диалога редактирования.
-             * Подробнее об этом вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component-control/">Управление диалогом редактирования списка</a>.
-             * @example
-             * Дополним создаваемую карточку товаров информация, что это новинка:
-             * <pre>
-             * _options: {
-             *    initValue: {
-             *       'Новинка': true
-             *    }
-             * }
-             * </pre>
-             * Или через вёрстку
-             * <pre>
-             * <options name="columns" type="array">
-             *    <option name="Новинка" type="boolean">true</option>
-             * </options>
-             * </pre>
+             * Данные для инициализации могут быть переданы при вызове диалога в методе {@link SBIS3.CONTROLS.DialogActionBase#execute}.
              */
             initValues: null,
              /**
@@ -192,7 +174,24 @@ define('js!SBIS3.CONTROLS.FormController', [
              */
             indicatorSavingMessage:  rk('Подождите, идёт сохранение'),
             /**
-             * @cfg {dataSource} Соответствие методов CRUD+ методам БЛ.
+             * @cfg {dataSource} Устанавливает конфигурацию источника данных диалога.
+             * @remark
+             * В общем случае можно использовать <a href="">любой источник данных</a>.
+             * @example
+             * <pre>
+             * _options: {
+             *    dataSource: {
+             *       endpoint: 'Склад',
+             *       binding: {
+             *          read: 'ПрочитатьТовар',
+             *          query: 'СписокТоваров'
+             *       },
+             *       idProperty: '@Товар'
+             *    }
+             * }
+             * </pre>
+             * @see getDataSource
+             * @see setDataSource
              */
             dataSource: {
             }
@@ -503,6 +502,10 @@ define('js!SBIS3.CONTROLS.FormController', [
       setRecord: function(record, updateKey){
          var newKey;
          this._options.record = record;
+         //Запоминаем запись на панели, т.к. при повторном вызове execute, когда уже есть открытая панель,
+         //текущая панель закрывается и открывается новая. В dialogActionBase в подписке на onAfterClose ссылка на панель будет не актуальной,
+         //т.к. ссылается на только что открытую панель. Поэтому берем редактируемую запись с самой панели.
+         this._panel._record = record;
          if (updateKey){
             newKey = record.getId();
             this._options.key = newKey;

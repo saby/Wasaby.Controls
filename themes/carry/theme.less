@@ -45,6 +45,26 @@
    }
 }
 
+// поменял позиционирование Строки фильтров и иконки стрелки
+// чтобы онлайн и оффлайн версии Розницы отображались одинаково
+// это происходит потому что оффлайн версия собрана на движке WebKit
+// и движок имеет свои особенности реализации
+.controls__filterButton {
+   .controls__filterButton__filterLine-arrow {
+      height: 24px;
+      vertical-align: initial;
+      position: relative;
+      top: 2px;
+   }
+   .controls__filterButton__filterLine {
+      .controls__filterButton__filterLine-text {
+         height: 40px;
+      }
+   }
+}
+
+.controls-Browser__filterButton
+
 .ws-button-classic {
    background-color: @button-bg  !important;
    background-size: 100% 100%;

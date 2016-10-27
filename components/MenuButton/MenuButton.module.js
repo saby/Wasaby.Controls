@@ -183,9 +183,8 @@ define('js!SBIS3.CONTROLS.MenuButton', [
 
       _setHeaderSizes: function(){
          if (this._header) {
-            $('.controls-MenuButton__headerCenter', this._header).width(this._container.outerWidth() - 26);
             this._header.css({
-               width: this._container.outerWidth() + 18,  //ширина выступающей части обводки
+               width: this._container.outerWidth() + 12,  //ширина выступающей части обводки
                height: this._container.outerHeight()
             });
          }
