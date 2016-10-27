@@ -190,7 +190,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
          },
 
          _buttonSetEnabled: function(buttonName,enabled ) {
-            this.getItemInstance(buttonName).setEnabled(enabled);
+            if (this.getItems().getRecordById(buttonName)) {
+               this.getItemInstance(buttonName).setEnabled(enabled);
+            }
          },
 
          _toggleContentSourceHandler: function(event, state) {
