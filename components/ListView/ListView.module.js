@@ -733,7 +733,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var dispatcher = CommandDispatcher;
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete');
-            this._container.on('swipe tap mousemove mouseleave', this._eventProxyHandler.bind(this));
+            this._bindEventHandlers(this._container);
 
             this.initEditInPlace();
             this.setItemsDragNDrop(this._options.itemsDragNDrop);
@@ -754,6 +754,11 @@ define('js!SBIS3.CONTROLS.ListView',
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
          },
+
+         _bindEventHandlers: function(container) {
+            container.on('swipe tap mousemove mouseleave', this._eventProxyHandler.bind(this));
+         },
+
          _modifyOptions : function(opts){
             var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
             //Если нам задали бесконечный скролл в виде Bool, то если true, то 'down' иначе null
