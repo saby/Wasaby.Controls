@@ -43,9 +43,35 @@ define('js!SBIS3.CONTROLS.Action.List.RelativeMoveMixin',[
             });
          },
 
-         moveInItems: function (from, to, up) {
+         moveInItems: function (movedItems, target, up) {
+            //в 3.7.4.220 этот файл удален а код переехал в стратегию перемещения, в 3.7.4.200 тут будет копипаста
             if (cInstance.instanceOfModule(this.getLinkedObject(), 'SBIS3.CONTROLS.ListView')) {
-               this.getLinkedObject().getMoveStrategy()._moveInItems(from, to, !up);
+               var linkedObject =  this.getLinkedObject(),
+                  items = this.getLinkedObject().getItems();
+               if (items) {
+                  cHelpers.forEach(movedItems, function (movedItem) {
+                     var movedItemIndex = items.getIndex(target);
+                     if (linkedObject.getHierField && linkedObject.getHierField()) {
+                        //если перемещение было по порядку и иерархии одновременно, то надо обновить hierField
+                        movedItem.set(linkedObject.getHierField(), target.get(linkedObject.getHierField()));
+                     }
+                     if (!up) {
+                        movedItemIndex = (movedItemIndex + 1) < items.getCount() ? ++movedItemIndex : items.getCount();
+                     } else {
+                        movedItemIndex = (movedItemIndex - 1) > -1 ? movedItemIndex : 0;
+                     }
+                     if (items.getIndex(movedItem) < movedItemIndex && movedItemIndex > 0) {
+                        movedItemIndex--; //если запись по списку сдвигается вниз то после ее удаления индексы сдвинутся
+                     }
+                     items.setEventRaising(false, true);
+                     items.remove(movedItem);
+                     items.add(
+                        movedItem,
+                        movedItemIndex < items.getCount() ? movedItemIndex : undefined
+                     );
+                     items.setEventRaising(true, true);
+                  }.bind(this));
+               }
             }
          }
 
