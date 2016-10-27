@@ -766,12 +766,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                                  } else if (href) {
                                     linkAttrs.href = href;
                                     editor.selection.setRng(range);
-                                    if (editor.selection.getContent() === '') {
-                                       editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(href)));
+                                    if (editor.selection.getContent() === '' || (fre._isOnlyTextSelected()) && cConstants.browser.firefox) {
+                                       var
+                                          linkText = selection.getContent({format: 'text'}) || href;
+                                       editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(linkText)));
                                     } else {
                                        editor.execCommand('mceInsertLink', false, linkAttrs);
                                     }
-                                    editor.selection.collapse(false);
                                     editor.undoManager.add();
                                  }
                                  self.close();
@@ -1590,10 +1591,19 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             RichTextArea.superclass._focusOutHandler.apply(this, arguments);
          },
 
-         _initInputHeight: function(){
+         _initInputHeight: function() {
             if (!this._options.autoHeight) {
-               this._inputControl.css('height',  this._container.height());
+               this._inputControl.css('height', this._container.height());
             }
+         },
+         //метод взят из link плагина тини
+         _isOnlyTextSelected: function() {
+            var
+               html = this._tinyEditor.selection.getContent();
+            if (/</.test(html) && (!/^<a [^>]+>[^<]+<\/a>$/.test(html) || html.indexOf('href=') == -1)) {
+               return false;
+            }
+            return true;
          }
       });
 
