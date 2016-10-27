@@ -15,10 +15,11 @@ define('js!SBIS3.CONTROLS.FormController', [
    "js!WS.Data/Entity/Record",
    "js!WS.Data/Entity/Model",
    "js!WS.Data/Source/SbisService",
+   "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
    "js!SBIS3.CONTROLS.OpenDialogAction",
    "i18n!SBIS3.CONTROLS.FormController"
 ],
-   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, fcHelpers, cInstance, fHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService) {
+   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, fcHelpers, cInstance, fHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager) {
    /**
     * Компонент, на основе которого создают диалоги редактирования записей.
     * Подробнее о создании диалогов вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/">Диалоги редактирования</a>.
@@ -133,20 +134,18 @@ define('js!SBIS3.CONTROLS.FormController', [
          _overlay: undefined,
          _options: {
             /**
-             * @cfg {String} Устанавливает первичный ключ записи, редактируемой на диалоге.
+             * @cfg {String} Устанавливает первичный ключ, который может быть использован для получения записи {@link record}.
              * @remark
-             * По данному ключу будет подгружена запись из источника данных, установленного опцией {@link dataSource}.
-             * Если ключ не передан (null), то этот сценарий означает создание новой записи. Для новой записи можно предустановить значения в опции {@link initValues}.
-             * </pre>
+             * Использование первичного ключа для получения записи зависит от установленного <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/initializing-way/">способа инициализации данных</a>.
              * @see record
              * @see dataSource
              */
             key: null,
             /**
-             * @cfg {WS.Data/Entity/Record} Устанавливает в контекст диалога редактируемую на диалоге запись.
+             * @cfg {WS.Data/Entity/Record} Устанавливает экземпляр записи, по данным которой может быть инициализирован диалог.
              * @remark
-             * Опция используется в том случае, когда не установлен источник данных диалога в опции {@link dataSource}.
-             * Чтобы установить запись, используют метод {@link setRecord}, а чтобы получить - метод {@link getRecord}.
+             * Запись, по данным которой будет инициализирован диалог, определяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/initializing-way/">способом инициализации данных</a>.
+             * Значение опции можно переопределить при <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/open-dialog/">открытии диалога</a>.
              * @see setRecord
              * @see getRecord
              * @see dataSource
@@ -161,23 +160,7 @@ define('js!SBIS3.CONTROLS.FormController', [
              * @cfg {Object} Устанавливает ассоциативный массив, который используют только при создании новой записи для инициализации её начальными значениями.
              * @remark
              * При редактировании существующей записи (первичный ключ не задан) опция будет проигнорирована.
-             * Данные для инициализации могут быть переданы со стороны {@link SBIS3.CONTROLS.DialogActionBase} при вызове диалога редактирования.
-             * Подробнее об этом вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component-control/">Управление диалогом редактирования списка</a>.
-             * @example
-             * Дополним создаваемую карточку товаров информация, что это новинка:
-             * <pre>
-             * _options: {
-             *    initValue: {
-             *       'Новинка': true
-             *    }
-             * }
-             * </pre>
-             * Или через вёрстку
-             * <pre>
-             * <options name="columns" type="array">
-             *    <option name="Новинка" type="boolean">true</option>
-             * </options>
-             * </pre>
+             * Данные для инициализации могут быть переданы при вызове диалога в методе {@link SBIS3.CONTROLS.DialogActionBase#execute}.
              */
             initValues: null,
              /**
@@ -191,7 +174,24 @@ define('js!SBIS3.CONTROLS.FormController', [
              */
             indicatorSavingMessage:  rk('Подождите, идёт сохранение'),
             /**
-             * @cfg {dataSource} Соответствие методов CRUD+ методам БЛ.
+             * @cfg {dataSource} Устанавливает конфигурацию источника данных диалога.
+             * @remark
+             * В общем случае можно использовать <a href="">любой источник данных</a>.
+             * @example
+             * <pre>
+             * _options: {
+             *    dataSource: {
+             *       endpoint: 'Склад',
+             *       binding: {
+             *          read: 'ПрочитатьТовар',
+             *          query: 'СписокТоваров'
+             *       },
+             *       idProperty: '@Товар'
+             *    }
+             * }
+             * </pre>
+             * @see getDataSource
+             * @see setDataSource
              */
             dataSource: {
             }
@@ -287,7 +287,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          if (!record || (record.getState() === Record.RecordState.DELETED)){
             return;
          }
-         //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
+         //Если попали сюда из метода _showConfirmDialog, то this._saving = true и мы просто закрываем панель
          if (self._saving || !record.isChanged() && !self._panel.getChildPendingOperations().length){
             //Дестроим запись, когда выполнены три условия
             //1. если это было создание
@@ -304,7 +304,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             return;
          }
          event.setResult(false);
-         self._saveRecord({});
+         self._showConfirmDialog();
       },
 
       _onBeforeNavigate: function(event, activeElement, isIconClick){
@@ -502,6 +502,10 @@ define('js!SBIS3.CONTROLS.FormController', [
       setRecord: function(record, updateKey){
          var newKey;
          this._options.record = record;
+         //Запоминаем запись на панели, т.к. при повторном вызове execute, когда уже есть открытая панель,
+         //текущая панель закрывается и открывается новая. В dialogActionBase в подписке на onAfterClose ссылка на панель будет не актуальной,
+         //т.к. ссылается на только что открытую панель. Поэтому берем редактируемую запись с самой панели.
+         this._panel._record = record;
          if (updateKey){
             newKey = record.getId();
             this._options.key = newKey;
@@ -696,125 +700,58 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @see dataSource
        */
       update: function(config){
-         var self = this,
-            updateDeferred = new Deferred(),
-            onBeforeUpdateData;
-         
          if (typeof(config) !== 'object'){
             config = {
                closePanelAfterSubmit: config
             };
             IoC.resolve('ILogger').log('FormController', 'команда update в качестве аргумента принимает объект');
          }
-         config.hideQuestion = true;
-
-         //Событие onBeforeUpdateModel необходимо для пользовательской валидации.
-         //Из события можно вернуть как Boolean(либо Error, который приравнивается к false), так и Deferred
-         //FormController не продолжает сохранение записи, если пользовательский результат будет равен false (либо Error)
-         //В случае, если пользователь вернул Error, текст ошибки будет взят из error.message.
-         onBeforeUpdateData = this._prepareOnBeforeUpdateResult(this._notify('onBeforeUpdateModel', this.getRecord()));
-         if (onBeforeUpdateData.result instanceof Deferred){
-            onBeforeUpdateData.result.addBoth(function(result){
-               onBeforeUpdateData = self._prepareOnBeforeUpdateResult(result);
-               if (onBeforeUpdateData.result !== false){
-                  updateDeferred.dependOn(self._saveRecord(config));
-               }
-               else{
-                  updateDeferred.errback(onBeforeUpdateData.errorMessage);
-               }
-            });
-            return updateDeferred;
-         }
-         else if (onBeforeUpdateData.result !== false) {
-            return this._saveRecord(config);
-         }
-         return updateDeferred.errback(onBeforeUpdateData.errorMessage);
-      },
-      _prepareOnBeforeUpdateResult: function(result){
-         var errorMessage = 'updateModel canceled from onBeforeUpdateModel event';
-         if (result instanceof Error) {
-            errorMessage = result.message;
-            result = false;
-         }
-         return {
-            errorMessage: errorMessage,
-            result: result
-         };
+         return this._prepareUpdatingRecord(config);
       },
 
-      _saveRecord: function(config){
-         var self = this,
-            dResult = new Deferred(),
-            questionConfig;
-
-         questionConfig = {
-            useCancelButton: true,
-            invertDefaultButton: true,
-            detail: rk('Чтобы продолжить редактирование, нажмите "Отмена".')
-         };
+      _showConfirmDialog: function(){
          this._saving = true;
-
-         //Если пришли из update
-         if (config.hideQuestion){
-            return this._updateRecord(dResult, config);
-         }
-         else{
-            this._isConfirmDialogShowed = true;
-            fcHelpers.question(rk('Сохранить изменения?'), questionConfig, this).addCallback(function(result){
-               self._isConfirmDialogShowed = false;
-               if (typeof result === 'string'){
-                  self._saving = false;
-                  return;
-               }
-               if (result){
-                  config.closePanelAfterSubmit = true;
-                  self._updateRecord(dResult, config);
-               }
-               else{
-                  dResult.callback();
-                  self._closePanel(false);
-               }
-            });
-         }
-         return dResult;
+         this._isConfirmDialogShowed = true;
+         InformationPopupManager.showConfirmDialog({
+               message: rk('Сохранить изменения?'),
+               details: rk('Чтобы продолжить редактирование, нажмите "Отмена".'),
+               hasCancelButton: true
+            },
+            this._positiveConfirmDialogHandler.bind(this),
+            this._negativeConfirmDialogHandler.bind(this),
+            this._cancelConfirmDialogHandler.bind(this)
+         );
       },
 
-      _updateRecord: function(dResult, config){
+      _prepareUpdatingRecord: function(config){
          var errorMessage = rk('Некорректно заполнены обязательные поля!'),
-            additionalData = {
-               isNewRecord: this._newRecord
-            },
-            updateConfig = {
-               indicatorText: this._options.indicatorSavingMessage,
-               eventName: 'onUpdateModel',
-               additionalData: additionalData
-            },
-            self = this,
-            updateDeferred;
+             self = this,
+             updateDeferred = new Deferred(),
+             dResult = new Deferred(),
+             onBeforeUpdateData;
 
          if (this.validate()) {
-            if (this._options.record.isChanged() || self._newRecord) {
-               updateDeferred = this._dataSource.update(this._getRecordForUpdate()).addCallback(function(key){
-                  updateConfig.additionalData.key = key;
-                  self._newRecord = false;
-                  return key;
-               }).addErrback(function (error) {
-                  self._saving = false;
-                  return error;
+            //Событие onBeforeUpdateModel необходимо для пользовательской валидации.
+            //Из события можно вернуть как Boolean(либо Error, который приравнивается к false), так и Deferred
+            //FormController не продолжает сохранение записи, если пользовательский результат будет равен false (либо Error)
+            //В случае, если пользователь вернул Error, текст ошибки будет взят из error.message.
+            onBeforeUpdateData = this._prepareOnBeforeUpdateResult(this._notify('onBeforeUpdateModel', this.getRecord()));
+            if (onBeforeUpdateData.result instanceof Deferred){
+               onBeforeUpdateData.result.addBoth(function(result){
+                  onBeforeUpdateData = self._prepareOnBeforeUpdateResult(result);
+                  if (onBeforeUpdateData.result !== false){
+                     updateDeferred.dependOn(self._updateRecord(dResult, config));
+                  }
+                  else{
+                     updateDeferred.errback(onBeforeUpdateData.errorMessage);
+                  }
                });
-               dResult.dependOn(this._prepareSyncOperation(updateDeferred, config, updateConfig));
-            } else {
-               dResult.callback();
+               return updateDeferred;
             }
-            dResult.addCallback(function(result){
-               if (config.closePanelAfterSubmit) {
-                  self._closePanel(true);
-               }
-               else {
-                  self._saving = false;
-               }
-               return result;
-            });
+            else if (onBeforeUpdateData.result === false) {
+               return updateDeferred.errback(onBeforeUpdateData.errorMessage);
+            }
+            return this._updateRecord(dResult, config);
          }
          else {
             if (!config.hideErrorDialog) {
@@ -825,6 +762,71 @@ define('js!SBIS3.CONTROLS.FormController', [
             this._saving = false;
          }
          return dResult;
+      },
+
+      _updateRecord: function(dResult, config){
+         var updateConfig = {
+               indicatorText: this._options.indicatorSavingMessage,
+               eventName: 'onUpdateModel',
+               additionalData: {
+                  isNewRecord: this._newRecord
+               }
+            },
+            self = this,
+            updateDeferred;
+
+         if (this._options.record.isChanged() || self._newRecord) {
+            updateDeferred = this._dataSource.update(this._getRecordForUpdate()).addCallback(function (key) {
+               updateConfig.additionalData.key = key;
+               self._newRecord = false;
+               return key;
+            }).addErrback(function (error) {
+                  self._saving = false;
+                  return error;
+               });
+            dResult.dependOn(this._prepareSyncOperation(updateDeferred, config, updateConfig));
+         } else {
+            dResult.callback();
+         }
+         dResult.addCallback(function (result) {
+            if (config.closePanelAfterSubmit) {
+               self._closePanel(true);
+            }
+            else {
+               self._saving = false;
+            }
+            return result;
+         });
+         return dResult;
+      },
+
+      _positiveConfirmDialogHandler: function(){
+         this._isConfirmDialogShowed = false;
+         this._prepareUpdatingRecord({
+            closePanelAfterSubmit: true
+         });
+      },
+
+      _negativeConfirmDialogHandler: function(){
+         this._isConfirmDialogShowed = false;
+         this._closePanel(false);
+      },
+
+      _cancelConfirmDialogHandler: function(){
+         this._isConfirmDialogShowed = false;
+         this._saving = false;
+      },
+
+      _prepareOnBeforeUpdateResult: function(result){
+         var errorMessage = 'updateModel canceled from onBeforeUpdateModel event';
+         if (result instanceof Error) {
+            errorMessage = result.message;
+            result = false;
+         }
+         return {
+            errorMessage: errorMessage,
+            result: result
+         };
       },
 
       _prepareSyncOperation: function(operation, commonConfig, operationConfig){

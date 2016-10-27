@@ -317,6 +317,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    то надо позвать метод searchMixin'a, который сбросит текст и поднимет событие */
                   self.resetSearch();
                }
+
+               /* После добавления записи в поле связи с единичным выбором скрывается поле ввода(input), и если до
+                  этого компонент был активен, то нативный браузерный фокус с поля ввода (input), улетит на body. После этого
+                  становится невозможно обрабатывать клавиатурные события, поэтому вернём фокус обратно на компонент. */
+               if(this.isActive() && !this._isInputVisible()) {
+                  this._getElementToFocus().focus();
+               }
                /* При добавлении элементов надо запустить валидацию,
                   если же элементы были удалены,
                   то валидация будет запущена либо эрией, либо по уходу фокуса из поля связи (По стандарту). */
@@ -542,8 +549,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    additionalWidth = isEnabled ? this._afterFieldWrapper.outerWidth() : 0;
                    itemsCount = items.length;
 
-                   /* Для multiselect'a добавляем минимальную ширину поля ввода */
-                   if (this._options.multiselect) {
+                   /* Для multiselect'a и включённой опции alwaysShowTextBox
+                      добавляем минимальную ширину поля ввода (т.к. оно не скрывается при выборе */
+                   if (this._options.multiselect || this._options.alwaysShowTextBox) {
                       /* Если поле звязи задизейблено, то учитываем ширину кнопки отображения всех запией */
                       additionalWidth += (this.isEnabled() ? INPUT_MIN_WIDTH : SHOW_ALL_LINK_WIDTH);
                    }
@@ -600,14 +608,22 @@ define('js!SBIS3.CONTROLS.FieldLink',
              /* Не надо обрабатывать приход фокуса, если у нас есть выбрынные
               элементы при единичном выборе, в противном случае, автодополнение будет посылать лишний запрос,
               хотя ему отображаться не надо. */
-             if(!this._needShowSuggest()) {
+             if(!this._isInputVisible()) {
                 return false;
              }
              FieldLink.superclass._observableControlFocusHandler.apply(this, arguments);
           },
 
-          _needShowSuggest: function() {
+          _isInputVisible: function() {
              return !(!this._isEmptySelection() && !this._options.multiselect);
+          },
+
+          _getElementToFocus: function() {
+             /* Поле ввода в поле связи может быть скрыто (при выборе записи с режимом единичного выбор),
+                поэтому нельзя отдавать поле ввода в качестве элемента для фокуса, т.к. браузер не может проставить
+                фокус на скрытый элемент, и он улетит на body. Но оставить фокус на компоненте необходимо для обработки событий,
+                для этого переводим фокус на контейнер поля связи */
+             return this._isInputVisible() ? FieldLink.superclass._getElementToFocus.apply(this, arguments) : this._container;
           },
 
           /**
@@ -734,11 +750,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this.setText('');
              /* При выборе скрываем саггест, если он попадает под условия,
                 когда его не надо показывать см. _needShowSuggest */
-             if(!this._needShowSuggest()) {
+             if(!this._isInputVisible()) {
                 this.hidePicker();
-             /* При выборе фокус могу перевести, надо проверить это */
-             } else if(this.isActive()) {
-                this._observableControlFocusHandler();
              }
           },
 
@@ -845,9 +858,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           setListFilter: function() {
              /* Если единичный выбор в поле связи, но textBox всё равно показывается(включена опция), запрещаем работу suggest'a */
-             if(!this._options.multiselect &&
-                 !this._isEmptySelection() &&
-                 this._options.alwaysShowTextBox) {
+             if(!this._isInputVisible() && this._options.alwaysShowTextBox) {
                 return;
              }
              FieldLink.superclass.setListFilter.apply(this, arguments);

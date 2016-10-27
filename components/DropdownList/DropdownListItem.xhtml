@@ -1,6 +1,8 @@
 <div class="controls-DropdownList__item{{?it.multiselect}} controls-DropdownList__multiselect{{?}}{{?it.item.get(it.hierField)}} controls-DropdownList__child{{?}}{{?(it.item.getId() === it.defaultId)}} controls-ListView__defaultItem{{?}}" data-hash="{{=it.projItem.getHash()}}" data-id="{{=it.item.getId()}}">
    {{?it.multiselect}}
-      <span class="controls-DropdownList__itemCheckBox js-controls-DropdownList__itemCheckBox"></span>
+      <div class="controls-DropdownList__itemCheckBox js-controls-DropdownList__itemCheckBox"></div>
    {{?}}
-   <span class="controls-DropdownList__itemTextWrapper">{{=it.item.get(it.displayField)}}</span>
+   <div class="controls-DropdownList__itemTextWrapper">
+       <div class="controls-DropdownList__item-text">{{=it.item.get(it.displayField)}}</div>
+   </div>
 </div>

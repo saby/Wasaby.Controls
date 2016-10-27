@@ -124,6 +124,9 @@ define('js!SBIS3.CONTROLS.DateRange', [
 
       setStartValue: function(value, silent, _dontUpdatePicker) {
          var changed = DateRange.superclass.setStartValue.call(this, value, silent);
+         // Валидация работает через options, а свойство startDate дублирует и хранит значение в startValue.
+         // По этому сохраняем значения в this._options.startDate что бы иметь возможность валидировать свойство startDate.
+         this._options.startDate = this.getStartDate();
          if (!_dontUpdatePicker) {
             this._updateDatePicker(this._datePickerStart, this.getStartValue());
          }
@@ -132,6 +135,9 @@ define('js!SBIS3.CONTROLS.DateRange', [
 
       setEndValue: function(value, silent, _dontUpdatePicker) {
          var changed = DateRange.superclass.setEndValue.call(this, value, silent);
+         // Валидация работает через options, а свойство endDate дублирует и хранит значение в endValue.
+         // По этому сохраняем значения в this._options.endDate что бы иметь возможность валидировать свойство endDate.
+         this._options.endDate = this.getEndDate();
          if (!_dontUpdatePicker) {
             this._updateDatePicker(this._datePickerEnd, this.getEndValue());
          }
