@@ -256,7 +256,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             if (this.getItems().getRecordById('unlink')) {
                editor.subscribe('onNodeChange', this._handlersInstances.node);
             }
-            editor.subscribe('onToggleContentSource', this._handlersInstances.source);
+            if (this.getItems().getRecordById('source')) {
+               editor.subscribe('onToggleContentSource', this._handlersInstances.source);
+            }
          },
 
          /*БЛОК ФУНКЦИЙ ОБЁРТОК ДЛЯ ОТПРАВКИ КОМАНД РЕДАКТОРУ*/
