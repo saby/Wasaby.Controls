@@ -708,7 +708,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var dispatcher = CommandDispatcher;
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete');
-            this._container.on('swipe tap mousemove mouseleave', this._eventProxyHandler.bind(this));
+            this._bindEventHandlers(this._container);
 
             this.initEditInPlace();
             this.setItemsDragNDrop(this._options.itemsDragNDrop);
@@ -729,6 +729,11 @@ define('js!SBIS3.CONTROLS.ListView',
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
          },
+
+         _bindEventHandlers: function(container) {
+            container.on('swipe tap mousemove mouseleave', this._eventProxyHandler.bind(this));
+         },
+
          _modifyOptions : function(opts){
             var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
             //Если нам задали бесконечный скролл в виде Bool, то если true, то 'down' иначе null
@@ -819,10 +824,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   //Делаем через subscribeTo, а не once, что бы нормально отписываться при destroy FloatArea
                   this.subscribeTo(topParent, 'onAfterShow', afterFloatAreaShow);
                }
-
-               if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
-                  this._createScrollPager();
-               }
                this._scrollWatcher.subscribe('onTotalScroll', this._onTotalScrollHandler.bind(this));
             } else if (this._options.infiniteScroll == 'demand'){
                this._loadMoreButton = this.getChildControlByName('loadMoreButton');
@@ -890,7 +891,9 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onVisibleChange: function(event, visible){
-            this._scrollPager.setVisible(visible);
+            if (this._scrollPager) {
+               this._scrollPager.setVisible(visible);
+            }
          },
 
          _onScrollHandler: function(event, scrollTop){
@@ -2052,8 +2055,9 @@ define('js!SBIS3.CONTROLS.ListView',
             //FixMe: Из за этого при каждой подгрузке по скроллу пэйджинг пересчитывается полностью
             if (this._scrollBinder){
                this._scrollBinder._updateScrollPages(true);
+            } else if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
+               this._createScrollPager();
             }
-
             this._notifyOnSizeChanged(true);
          },
          _drawItemsCallbackSync: function(){

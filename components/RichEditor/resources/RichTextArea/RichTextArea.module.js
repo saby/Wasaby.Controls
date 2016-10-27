@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
       var
          constants = {
-            blankImgPath: 'https://cdn.sbis.ru/richeditor/26-01-2015/blank.png',
+            blankImgPath: '/cdn/richeditor/26-01-2015/blank.png',
             maximalPictureSize: 120,
             imageOffset: 40, //16 слева +  24 справа
             defaultYoutubeHeight: 300,
@@ -547,7 +547,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @public
           */
          getHistory: function() {
-            return UserConfig.getParamValues(this._getNameForHistory());
+            return UserConfig.getParamValues(this._getNameForHistory()).addCallback(function(arrBL) {
+               if( typeof arrBL  === 'string') {
+                  arrBL = [arrBL];
+               }
+               return arrBL;
+            })
          },
 
          /**
@@ -995,24 +1000,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (self.addYouTubeVideo(e.content)) {
                   return false;
                }
-               //Смотреть по текстовому формату (self._clipboardText) честнее тк нет кучи вёрстки
-               //TODO: self._clipboardText заменить на e.content и сделать двойную проверку(на оба формата) когда сделаю задачу:
-               // https://inside.tensor.ru/opendoc.html?guid=5dcde224-e3bd-4fcf-9ff4-a810e9ac4be0&description=
-               if (self._options.decorateLinks && regexp.test(self._clipboardText) && regexp.exec(self._clipboardText)[0] == self._clipboardText) {
-                  var
-                     className = 'rta_replace_' + Math.floor(Math.random() * 10000),
-                     tempText = '<a class="' + className + '" href="' + self._clipboardText + '">' + self._clipboardText + '</a>';
-                  self.insertHtml(tempText);
-                  RichUtil.generateDecoratedLink(self._clipboardText).addCallback(function(newNode) {
-                     var
-                        node = editor.getBody().getElementsByClassName(className);
-                     if (newNode) {
-                        editor.dom.replace(newNode, node);
-                        editor.selection.collapse();
-                     }
-                  });
-                  return false;
-               }
             });
 
             editor.on('Paste', function(e) {
@@ -1030,10 +1017,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                e.content =  content.replace('orphans: 31415;','');
                //Парсер TinyMCE неправльно распознаёт стили из за - &quot;TensorFont Regular&quot;
                e.content = e. content.replace(/&quot;TensorFont Regular&quot;/gi,'\'TensorFont Regular\'');
+               //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
+               //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
+               if (!self._mouseIsPressed) {
+                  e.content = Sanitize(e.content, {validNodes: {img: false}});
+               }
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
                // и послыаем метку форматной вставки, если метка присутствует не надо обрабатывать событие
                // нашим обработчиком, а просто прокинуть его в дальше
-               e.content = Sanitize(e.content, {validNodes: {img: false}});
                if (e.withStyles) {
                   return e;
                }
@@ -1215,6 +1206,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   if (self._mouseIsPressed){
                      editor.editorManager.activeEditor = false;
                   }
+                  self._mouseIsPressed = false;
                });
             }
 
