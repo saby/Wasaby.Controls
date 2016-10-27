@@ -117,7 +117,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
 
          if(selKey !== null) {
             if (!selItem) {
-               var item = this.getItems().getRecordById(selKey);
+               var item = this.getItems() && this.getItems().getRecordById(selKey);
 
                if (item) {
                   dResult.callback(this._options.selectedItem = item);
