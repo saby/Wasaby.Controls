@@ -654,10 +654,23 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             if (!this._options.keyField) {
                this._options.keyField = findKeyField(this._options.items)
             }
-            this._dataSource = new MemorySource({
-               data: this._options.items,
-               idProperty: this._options.keyField
-            });
+
+            /*TODO опасная правка. Суть: Некоторые вместе с массивом задают сорс, а мы затираем переданный сорс
+            * смотрим если сорс уже задан, то итемы просто превращаем в рекордсет, а сорс оставляем*/
+            if (this._dataSource) {
+               this._options._items = JSONToRecordset(this._options.items, this._options.keyField);
+               this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
+               this._options._itemsProjection = this._options._applyGroupingToProjection(this._options._itemsProjection, this._options);
+               this._setItemsEventHandlers();
+               this._notify('onItemsReady');
+               this._itemsReadyCallback();
+            }
+            else {
+               this._dataSource = new MemorySource({
+                  data: this._options.items,
+                  idProperty: this._options.keyField
+               });
+            }
          }
       },
 
