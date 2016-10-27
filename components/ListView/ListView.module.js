@@ -817,8 +817,7 @@ define('js!SBIS3.CONTROLS.ListView',
                visible: false,
                showPages: false,
                keyField: 'id',
-               parent: this,
-               mode: 'full'
+               parent: this
             });
             if (constants.browser.isMobilePlatform){
                $('.controls-ListView__scrollPager', this._container).appendTo(this._scrollWatcher.getScrollContainer());
@@ -2207,7 +2206,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._infiniteScrollState.mode == 'up'){
                return this._scrollOffset.top > 0;
             } else {
-               return !this._lastPageLoaded && more === true && ListView.superclass._hasNextPage.call(this, more, offset);
+               return !this._lastPageLoaded && ListView.superclass._hasNextPage.call(this, more, offset);
             }
          },
 
