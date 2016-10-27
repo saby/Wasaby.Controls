@@ -1156,7 +1156,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                // </проблема>
                if (!editor.selection.isCollapsed()) {
                   if (editor.selection.getContent() == self._getTinyEditorValue()) {
-                     if (!e.ctrlKey && e.charCode !== 0) {
+                     if (!e.ctrlKey && !(e.metaKey && cConstants.browser.isMacOSDesktop) && e.charCode !== 0) {
                         editor.bodyElement.innerHTML = '';
                      }
                   }
