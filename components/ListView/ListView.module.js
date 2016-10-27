@@ -879,7 +879,7 @@ define('js!SBIS3.CONTROLS.ListView',
                parent: this
             });
             if (constants.browser.isMobilePlatform){
-               $('.controls-ListView__scrollPager', this._container).appendTo(this._scrollWatcher.getScrollContainer());
+               $('> .controls-ListView__scrollPager', this._container).appendTo(this._scrollWatcher.getScrollContainer());
             }
             this._setScrollPagerPosition();
             this._scrollBinder = new ComponentBinder({
