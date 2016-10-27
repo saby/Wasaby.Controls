@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.HistoryController', [
    var setParam = function(key, value, serializer) {
       var serializedValue = serializer(true, value);
 
-      if(constants.globalConfigSupport) {
+      if(constants.userConfigSupport) {
          return UserConfig.setParam(key, serializedValue, true);
       } else {
          fHelpers.setLocalStorageValue(key, serializedValue);
@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.HistoryController', [
       var serializedValue;
 
       try {
-         serializedValue = serializer(false, constants.globalConfigSupport ? cSessionStorage.get(key) :  fHelpers.getLocalStorageValue(key));
+         serializedValue = serializer(false, constants.userConfigSupport ? cSessionStorage.get(key) :  fHelpers.getLocalStorageValue(key));
       } catch (e) {
          ConsoleLogger.error('HistoryController', e.message, e);
          serializedValue = null;
