@@ -19,6 +19,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "js!SBIS3.CONTROLS.Link",
    "js!SBIS3.CORE.MarkupTransformer",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
+   "js!WS.Data/Collection/RecordSet",
+   "js!WS.Data/Display/Display",
    "html!SBIS3.CONTROLS.DropdownList",
    "html!SBIS3.CONTROLS.DropdownList/DropdownListHead",
    "html!SBIS3.CONTROLS.DropdownList/DropdownListPickerHead",
@@ -29,7 +31,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "i18n!SBIS3.CONTROLS.DropdownList"
 ],
 
-   function (constants, Deferred, IoC, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker, cInstance, dcHelpers) {
+   function (constants, Deferred, IoC, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker, cInstance, dcHelpers) {
 
       'use strict';
       /**
@@ -56,6 +58,34 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * @public
        * @category Inputs
        */
+
+      function getRecordsForRedrawDDL(projection, cfg){
+         var itemsProjection;
+
+         itemsProjection = cfg._getRecordsForRedrawSt.apply(this, arguments);
+         if (cfg.emptyText){
+            itemsProjection.unshift(getEmptyProjection(cfg));
+         }
+         return itemsProjection;
+      }
+
+      function getEmptyProjection(cfg) {
+         var rawData = {},
+             emptyItemProjection,
+             rs;
+         rawData[cfg.keyField] = null;
+         rawData[cfg.displayField] = cfg.emptyText;
+         rawData.isEmptyValue = true;
+
+         rs = new RecordSet({
+            rawData: [rawData],
+            idProperty: cfg.keyField
+         });
+
+         emptyItemProjection = Projection.getDefaultDisplay(rs);
+         return emptyItemProjection.at(0);
+      }
+
       var DropdownList = Control.extend([PickerMixin, ItemsControlMixin, MultiSelectable, DataBindMixin, DropdownListMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
          _dotTplFn: dotTplFn,
          /**
@@ -64,6 +94,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
           */
          $protected: {
             _options: {
+               _getRecordsForRedraw: getRecordsForRedrawDDL,
                /**
                 * @cfg {String} Устанавливает шаблон отображения шапки.
                 * @remark
@@ -174,7 +205,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * По значениям поля иерархии иерархические отношения между элементами коллекции выпадающего списка.
                 */
                hierField: null,
-               allowEmptyMultiSelection: false
+               allowEmptyMultiSelection: false,
+               /**
+                * @cfg {Boolean} Добавить пустое значение в выпадающий список с заданным текстом
+                * @remark
+                * Пустое значение имеет ключ null
+                */
+               emptyText: null
             },
             _pickerListContainer: null,
             _pickerHeadContainer: null,
@@ -204,9 +241,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             cfg.headTemplate = TemplateUtil.prepareTemplate(cfg.headTemplate);
             return DropdownList.superclass._modifyOptions.call(this, cfg, parsedCfg);
          },
+
          _setPickerContent : function () {
-            var self = this,
-                pickerContainer = this._getPickerContainer(),
+            var pickerContainer = this._getPickerContainer(),
                 header = pickerContainer.find('.controls-DropdownList__header'),
                 cssModificators = ['controls-DropdownList__withoutArrow',
                                    'controls-DropdownList__withoutCross',
@@ -249,7 +286,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._options.selectedKeys = [];
             DropdownList.superclass.setItems.apply(this, arguments)
          },
-         setSelectedKeys : function(idArray){
+         setSelectedKeys: function(idArray){
+            if (this._options.emptyText && idArray[0] == this._defaultId){
+               this._setSelectedEmptyRecord();
+               return;
+            }
             //Если у нас есть выбранные элементы, нцжно убрать DefaultId из набора
             //Т.к. ключи могут отличаться по типу (0 !== '0'), то придется перебирать массив самостоятельно.
             if (idArray.length > 1) {
@@ -262,6 +303,15 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             DropdownList.superclass.setSelectedKeys.call(this, idArray);
             this._updateCurrentSelection();
+         },
+         _setSelectedEmptyRecord: function(){
+            var oldKeys = this.getSelectedKeys();
+            this._drawSelectedValue(null, [this._options.emptyText]);
+            this._options.selectedKeys = [null];
+            this._notifySelectedItems(this._options.selectedKeys,{
+               added : [null],
+               removed : oldKeys
+            });
          },
          _updateCurrentSelection: function(){
             var keys;
@@ -338,9 +388,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (!row.length || !row.data('hash')){
                return undefined;
             }
-            var itemProjection = this._getItemsProjection().getByHash(row.data('hash')),
-                item = itemProjection.getContents();
-            return item.getId();
+            var itemProjection = this._getItemsProjection().getByHash(row.data('hash'));
+            //Если запись в проекции не найдена - значит выбрали пустую запись(добавляется опцией emptyText), у которой ключ null
+            return itemProjection ? itemProjection.getContents().getId() : null;
          },
 
          _dblClickItemHandler : function(e){
@@ -416,8 +466,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _drawItemsCallback: function() {
+            if (this._options.emptyText){
+               this._options.selectedKeys = [null];
+               this._drawSelectedValue(null, [this._options.emptyText]);
+            }
+            else{
+               this._drawSelectedItems(this._options.selectedKeys); //Надо вызвать просто для того, чтобы отрисовалось выбранное значение/значения
+            }
             this._setSelectedItems(); //Обновим selectedItems, если пришел другой набор данных
-            this._drawSelectedItems(this._options.selectedKeys); //Надо вызвать просто для того, чтобы отрисовалось выбранное значение/значения
             this._needToRedraw = true;
 
          },
@@ -425,7 +481,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
             var item =  this.getItems().at(0);
             if (item) {
-               this._defaultId = item.getId();
+               if (!this._options.emptyText){
+                  this._defaultId = item.getId();
+               }
                this._getHtmlItemByItem(item).addClass('controls-ListView__defaultItem');
                if (this._buttonHasMore) {
                   var needShowHasMoreButton = this._hasNextPage(this.getItems().getMetaData().more, 0);
@@ -538,19 +596,22 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   return list;
                });
 
-               def.addCallback(function(textValue) {
-                  var isDefaultIdSelected = id[0] == self._defaultId;
-                  pickerContainer = self._getPickerContainer();
-                  if (!self._options.multiselect) {
-                     pickerContainer.find('.controls-DropdownList__item__selected').removeClass('controls-DropdownList__item__selected');
-                     pickerContainer.find('[data-id="' + id[0] + '"]').addClass('controls-DropdownList__item__selected');
-                  }
-                  self._setText(self._prepareText(textValue));
-                  self._redrawHead(isDefaultIdSelected);
-                  self._resizeFastDataFilter();
-               });
+               def.addCallback(this._drawSelectedValue.bind(this, id[0]));
             }
          },
+
+         _drawSelectedValue: function(id, textValue){
+            var isDefaultIdSelected = id == this._defaultId,
+                pickerContainer = this._getPickerContainer();
+            if (!this._options.multiselect) {
+               pickerContainer.find('.controls-DropdownList__item__selected').removeClass('controls-DropdownList__item__selected');
+               pickerContainer.find('[data-id="' + id + '"]').addClass('controls-DropdownList__item__selected');
+            }
+            this._setText(this._prepareText(textValue));
+            this._redrawHead(isDefaultIdSelected);
+            this._resizeFastDataFilter();
+         },
+
          _prepareText: function(textValue){
             if (textValue.length > 1){
                return textValue[0] + ' и еще ' + (textValue.length - 1);
@@ -580,8 +641,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._selectedItemContainer.html(headTpl);
             this.getContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
             this._getPickerContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
-            if (this._options.type == 'markedDefaultItem'){
-               this.getContainer().toggleClass('controls-DropdownList__type-defaultItem', isDefaultIdSelected);
+            if (this._options.emptyText){
+               this.getContainer().toggleClass('controls-DropdownList__defaultItem', isDefaultIdSelected);
             }
             this._setHeadVariables();
          },
