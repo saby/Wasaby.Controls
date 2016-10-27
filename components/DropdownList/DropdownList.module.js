@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          var itemsProjection;
 
          itemsProjection = cfg._getRecordsForRedrawSt.apply(this, arguments);
-         if (cfg.emptyText){
+         if (cfg.emptyValue){
             itemsProjection.unshift(getEmptyProjection(cfg));
          }
          return itemsProjection;
@@ -74,7 +74,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
              emptyItemProjection,
              rs;
          rawData[cfg.keyField] = null;
-         rawData[cfg.displayField] = cfg.emptyText;
+         rawData[cfg.displayField] = 'Не выбрано';
          rawData.isEmptyValue = true;
 
          rs = new RecordSet({
@@ -207,11 +207,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
                hierField: null,
                allowEmptyMultiSelection: false,
                /**
-                * @cfg {Boolean} Добавить пустое значение в выпадающий список с заданным текстом
+                * @cfg {Boolean} Добавить пустое значение в выпадающий список с текстом "Не выбрано"
                 * @remark
                 * Пустое значение имеет ключ null
                 */
-               emptyText: null
+               emptyValue: null
             },
             _pickerListContainer: null,
             _pickerHeadContainer: null,
@@ -223,6 +223,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             _buttonChoose : null,
             _buttonHasMore: null,
             _currentSelection: {},
+            _emptyText: 'Не выбрано',
             _hideAllowed : true,
             _changedSelectedKeys: [] //Массив ключей, которые были выбраны, но еще не сохранены в выпадающем списке
          },
@@ -287,7 +288,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             DropdownList.superclass.setItems.apply(this, arguments)
          },
          setSelectedKeys: function(idArray){
-            if (this._options.emptyText && idArray[0] == this._defaultId){
+            if (this._options.emptyValue && idArray[0] == this._defaultId){
                this._setSelectedEmptyRecord();
                return;
             }
@@ -306,7 +307,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _setSelectedEmptyRecord: function(){
             var oldKeys = this.getSelectedKeys();
-            this._drawSelectedValue(null, [this._options.emptyText]);
+            this._drawSelectedValue(null, [this._emptyText]);
             this._options.selectedKeys = [null];
             this._notifySelectedItems(this._options.selectedKeys,{
                added : [null],
@@ -389,7 +390,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                return undefined;
             }
             var itemProjection = this._getItemsProjection().getByHash(row.data('hash'));
-            //Если запись в проекции не найдена - значит выбрали пустую запись(добавляется опцией emptyText), у которой ключ null
+            //Если запись в проекции не найдена - значит выбрали пустую запись(добавляется опцией emptyValue), у которой ключ null
             return itemProjection ? itemProjection.getContents().getId() : null;
          },
 
@@ -466,9 +467,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _drawItemsCallback: function() {
-            if (this._options.emptyText){
+            if (this._options.emptyValue){
                this._options.selectedKeys = [null];
-               this._drawSelectedValue(null, [this._options.emptyText]);
+               this._drawSelectedValue(null, [this._emptyText]);
             }
             else{
                this._drawSelectedItems(this._options.selectedKeys); //Надо вызвать просто для того, чтобы отрисовалось выбранное значение/значения
@@ -481,7 +482,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
             var item =  this.getItems().at(0);
             if (item) {
-               if (!this._options.emptyText){
+               if (!this._options.emptyValue){
                   this._defaultId = item.getId();
                }
                this._getHtmlItemByItem(item).addClass('controls-ListView__defaultItem');
@@ -641,7 +642,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._selectedItemContainer.html(headTpl);
             this.getContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
             this._getPickerContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
-            if (this._options.emptyText){
+            if (this._options.emptyValue){
                this.getContainer().toggleClass('controls-DropdownList__defaultItem', isDefaultIdSelected);
             }
             this._setHeadVariables();
