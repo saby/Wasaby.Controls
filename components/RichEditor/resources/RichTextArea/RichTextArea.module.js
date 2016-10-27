@@ -360,7 +360,17 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (active && this._needFocusOnActivated() && this.isEnabled()) {
                this._performByReady(function() {
                   this._tinyEditor.focus();
-                  this._scrollTo(this._inputControl[0], 'top');
+                  if (cConstants.browser.isMobileAndroid) {
+                     var
+                        resizeHandler = function(){
+                           this._inputControl[0].scrollIntoView(false);
+                           $(window).off('resize', resizeHandler)
+                        }.bind(this);
+                     $(window).on('resize', resizeHandler);
+                  } else if (cConstants.browser.isMobileIOS) {
+                     this._scrollTo(this._inputControl[0], 'top');
+                  }
+
                   RichTextArea.superclass.setActive.apply(this, args);
                }.bind(this));
             } else {
