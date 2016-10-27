@@ -361,6 +361,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this._performByReady(function() {
                   this._tinyEditor.focus();
                   if (cConstants.browser.isMobileAndroid) {
+                     // на android устройствах не происходит подскролла нативного
+                     // наш функционал тестируется на планшете фирмы MI на котором клавиатура появляется долго ввиду анимации =>
+                     // => сразу сделать подсролл нельзя
+                     // появление клавиатуры стрельнет resize у window в этот момент можно осуществить подсролл до элемента ввода текста
                      var
                         resizeHandler = function(){
                            this._inputControl[0].scrollIntoView(false);
