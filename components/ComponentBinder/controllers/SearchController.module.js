@@ -262,17 +262,31 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
          searchForm.subscribe('onKeyPressed', function(eventObject, event) {
             // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
             if ((event.which == constants.key.tab || event.which == constants.key.down) && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)) {
-               var selectedIndex = view.getSelectedIndex();
+               var selectedIndex = null,
+                   itemsProjection = view._getItemsProjection();
+               /* При поиске по дереву папки отображаются, как Хлебные крошки
+                  поэтому маркер нужно установить на первый элемент проекции, который не является папкой */
+               if(self._searchMode && itemsProjection.at(0).isNode) {
+                  itemsProjection.each(function (item, index) {
+                     if (!selectedIndex && !item.isNode()) {
+                        selectedIndex = index;
+                     }
+                  });
 
-               /* При нажатии кнопки вниз в строке поиска ожидается :
-                  что появится маркер на view (если его не было) / перейдёт на следующую строку (если был).
-                  Поэтому обрабатываем две ситуации, когда маркера нет, то устанавливаем selectedIndex на первый элемент,
-                  если он есть, то просто увеличиваем selectedIndex на единицу, чтобы маркер перескочил на следующий элемент. */
-               if(selectedIndex === null) {
-                  view.setSelectedIndex(0);
-               } else {
-                  view.setSelectedIndex(selectedIndex + 1);
+                  view.setSelectedIndex(selectedIndex);
+               }else {
+                  selectedIndex = view.getSelectedIndex();
+                  /* При нажатии кнопки вниз в строке поиска ожидается :
+                   что появится маркер на view (если его не было) / перейдёт на следующую строку (если был).
+                   Поэтому обрабатываем две ситуации, когда маркера нет, то устанавливаем selectedIndex на первый элемент,
+                   если он есть, то просто увеличиваем selectedIndex на единицу, чтобы маркер перескочил на следующий элемент. */
+                  if(selectedIndex === null) {
+                     view.setSelectedIndex(0);
+                  } else {
+                     view.setSelectedIndex(selectedIndex + 1);
+                  }
                }
+
                view.setActive(true);
                event.stopPropagation();
                event.preventDefault();

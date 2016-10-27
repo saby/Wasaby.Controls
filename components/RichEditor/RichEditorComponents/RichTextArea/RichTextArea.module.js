@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
       var
          constants = {
-            blankImgPath: 'https://cdn.sbis.ru/richeditor/26-01-2015/blank.png',
+            blankImgPath: '/cdn/richeditor/26-01-2015/blank.png',
             maximalPictureSize: 120,
             imageOffset: 40, //16 слева +  24 справа
             defaultYoutubeHeight: 300,
@@ -56,9 +56,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
          },
          /**
+          * Поле ввода для богатого текстового редактора. Чтобы связать с ним тулбар {@link SBIS3.CONTROLS.RichEditorToolbar}, используйте метод {@link SBIS3.CONTROLS.RichEditorToolbarBase#setLinkedEditor}.
           * @class SBIS3.CONTROLS.RichTextArea
           * @extends SBIS3.CONTROLS.TextBoxBase
-          * @author Борисов П.С.
+          * @author Борисов Петр Сергеевич
           * @public
           * @control
           */
