@@ -222,12 +222,6 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
                   }
                }
             });
-
-            //Перед переключением в крошках в режиме поиска сбросим фильтр поиска
-            view.subscribe('onSearchPathClick', function(ev, id) {
-               view.setCurrentRoot(id);
-               view.reload();
-            });
          }
 
          this._subscribeOnSearchFormEvents();
