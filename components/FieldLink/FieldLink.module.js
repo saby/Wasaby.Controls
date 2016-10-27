@@ -549,8 +549,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    additionalWidth = isEnabled ? this._afterFieldWrapper.outerWidth() : 0;
                    itemsCount = items.length;
 
-                   /* Для multiselect'a добавляем минимальную ширину поля ввода */
-                   if (this._options.multiselect) {
+                   /* Для multiselect'a и включённой опции alwaysShowTextBox
+                      добавляем минимальную ширину поля ввода (т.к. оно не скрывается при выборе */
+                   if (this._options.multiselect || this._options.alwaysShowTextBox) {
                       /* Если поле звязи задизейблено, то учитываем ширину кнопки отображения всех запией */
                       additionalWidth += (this.isEnabled() ? INPUT_MIN_WIDTH : SHOW_ALL_LINK_WIDTH);
                    }
