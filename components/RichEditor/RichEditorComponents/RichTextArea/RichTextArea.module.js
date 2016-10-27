@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
       var
          constants = {
-            blankImgPath: 'https://cdn.sbis.ru/richeditor/26-01-2015/blank.png',
+            blankImgPath: '/cdn/richeditor/26-01-2015/blank.png',
             maximalPictureSize: 120,
             imageOffset: 40, //16 слева +  24 справа
             defaultYoutubeHeight: 300,
