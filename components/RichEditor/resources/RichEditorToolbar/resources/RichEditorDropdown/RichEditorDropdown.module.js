@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown',
                multiselect: false,
                type: 'fastDataFilter',
                headTemplate: headerTemplate,
-               itemTemplate: itemTemplate,
+               itemTpl: itemTemplate,
                mode: 'click'
             }
          },
