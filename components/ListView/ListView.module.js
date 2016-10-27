@@ -1382,7 +1382,8 @@ define('js!SBIS3.CONTROLS.ListView',
                         else {
                            InformationPopupManager.showMessageDialog({
                               status: 'default',
-                              message: message
+                              message: message,
+                              parent: this
                            });
                         }
                      }
