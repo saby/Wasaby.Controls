@@ -452,7 +452,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (cfg._itemsProjection) {
             cfg._ladderInstance.setCollection(cfg._itemsProjection);
          }
-         newCfg._decorators.add(new LadderDecorator());
+
+         //TODO: выпилить вместе декоратором лесенки
+         newCfg._decorators.ladder = new LadderDecorator({
+            ladderInstance: cfg._ladderInstance
+         });
+         newCfg._decorators.add(newCfg._decorators.ladder);
 
          return newCfg;
       },
