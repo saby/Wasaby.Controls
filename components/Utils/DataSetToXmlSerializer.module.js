@@ -27,7 +27,9 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
          "Флаги" : true,
          "Массив" : true,
          "Запись" : true,
-         "Выборка" : true
+         "Выборка" : true,
+         "RecordSet" : true,
+         "Record" : true
       },
       _wordsToTranslate: {
          "Дата" : "Date",
@@ -230,6 +232,8 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                elem.appendChild(document.createTextNode(strHelpers.removeInvalidXMLChars(fieldValue[i] + '')));
             }
          } else if(fieldValue instanceof RecordSet || fieldValue instanceof Record){
+            this._serializeObject(fieldValue, fieldElement, document);
+         } else if (typeName == 'RecordSet' || typeName == 'Record') {
             this._serializeObject(fieldValue, fieldElement, document);
          }
       },
