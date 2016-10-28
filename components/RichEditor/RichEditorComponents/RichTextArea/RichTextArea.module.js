@@ -361,7 +361,21 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (active && this._needFocusOnActivated() && this.isEnabled()) {
                this._performByReady(function() {
                   this._tinyEditor.focus();
-                  this._scrollTo(this._inputControl[0], 'top');
+                  if (cConstants.browser.isMobileAndroid) {
+                     // на android устройствах не происходит подскролла нативного
+                     // наш функционал тестируется на планшете фирмы MI на котором клавиатура появляется долго ввиду анимации =>
+                     // => сразу сделать подсролл нельзя
+                     // появление клавиатуры стрельнет resize у window в этот момент можно осуществить подсролл до элемента ввода текста
+                     var
+                        resizeHandler = function(){
+                           this._inputControl[0].scrollIntoView(false);
+                           $(window).off('resize', resizeHandler)
+                        }.bind(this);
+                     $(window).on('resize', resizeHandler);
+                  } else if (cConstants.browser.isMobileIOS) {
+                     this._scrollTo(this._inputControl[0], 'top');
+                  }
+
                   RichTextArea.superclass.setActive.apply(this, args);
                }.bind(this));
             } else {
