@@ -617,9 +617,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (typeof this._options.pageSize === 'string') {
             this._options.pageSize = this._options.pageSize * 1;
          }
-         if (!this._options.keyField) {
-            IoC.resolve('ILogger').log('Option keyField is undefined in control ' + this.getName());
-         }
+         this._checkKeyField();
          this._bindHandlers();
          this._prepareItemsConfig();
 
@@ -676,12 +674,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
 
       _prepareConfig : function(sourceOpt, itemsOpt) {
-         var keyField = this._options.keyField;
-
-         if (!keyField) {
-            IoC.resolve('ILogger').log('Option keyField is undefined in control ' + this.getName());
-         }
-
          if (sourceOpt) {
             this._dataSource = this._prepareSource(sourceOpt);
          }
@@ -701,6 +693,22 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._setItemsEventHandlers();
             this._notify('onItemsReady');
             this._itemsReadyCallback();
+         }
+
+         this._checkKeyField();
+      },
+
+      _checkKeyField: function() {
+         if (this._options.keyField) {
+            return;
+         }
+
+         var items = this.getItems(),
+            source = this.getDataSource(),
+            required = source || (items && items.getIdProperty);
+
+         if (required) {
+            IoC.resolve('ILogger').info('ItemsControl', 'Option keyField is undefined in control ' + this.getName());
          }
       },
 
