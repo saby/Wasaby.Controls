@@ -266,7 +266,7 @@ define('js!SBIS3.CONTROLS.SearchController',
             /* Нет смысла обрабатывать клавиши и устанавливать фокус, если
                view с которой работает searchForm скрыта.
                (актуально для поля связи / suggestTextBox'a / строки поиска с саггестом ) */
-            if(domHelpers.isElementVisible(view.getContainer())) {
+            if(!domHelpers.isElementVisible(view.getContainer())) {
                return;
             }
 
