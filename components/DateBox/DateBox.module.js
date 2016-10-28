@@ -233,7 +233,10 @@ define(
          } else if (key == constants.key.plus || key == constants.key.minus) {
             if (curDate) {
                curDate.setDate(curDate.getDate() + (key == constants.key.plus ? 1 : -1));
-               this.setDate(curDate);
+               // При обновлении даты создаем новый экземпляр, чтобы корректно работало определение того,
+               // что свойство изменилось во внешнем коде. oldValue === newValue.
+               // Плюс мы не хотим менять когда то возвращенное значение.
+               this.setDate(new Date(curDate));
             }
          } else {
             return DateBox.superclass._keyDownBind.apply(this, arguments);
