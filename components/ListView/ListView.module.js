@@ -282,7 +282,6 @@ define('js!SBIS3.CONTROLS.ListView',
             _pager : undefined,
             _pagerContainer: undefined,
             _previousGroupBy : undefined,
-            _checkClickByTap: true,
             _keysWeHandle: [
                constants.key.up,
                constants.key.down,
