@@ -47,6 +47,21 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
 
          this.prepareNewStructure(currentStructureCopy, structure);
 
+         /* Сбрасывает поле в структуре к reset значению,
+            или удаляет, если нет reset значения */
+         function resetField(fieldName, structElem) {
+            var resetFieldName = 'reset' + fieldName.ucFirst(),
+                resVal = structElem[resetFieldName];
+
+            if(structElem.hasOwnProperty(fieldName)) {
+               if(structElem.hasOwnProperty(resetFieldName) && !colHelpers.isEqualObject(structElem[fieldName], resVal)) {
+                  structElem[fieldName] = resVal;
+               } else {
+                  delete structElem[fieldName];
+               }
+            }
+         }
+
          /* Алгоритм следующий:
           1) Пробегаемся по структуре (она первична, в ней можно менять только фильтры, саму струкруту менять нельзя!!) и ищем
           элементы в структуре из истории с таким же internalValueField
@@ -62,15 +77,24 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
                 остальные значения структуры нам не интересны + их могут менять, и портить их неправильно тем, что пришло из истории неправильно */
                if(elemFromHistory.value !== undefined) {
                   elem.value = elemFromHistory.value;
+               } else {
+                  /* Если при мерже структур возникла ситуация, когда в структуре из истории значения нет,
+                     а в исходной структуре значение есть, то в исходной структуре его надо сбросить в resetValue или удалить.
+                     Иначе применение истории может не заменить некоторые фильтры. */
+                  resetField('value', elem);
                }
+
                if(elemFromHistory.caption !== undefined) {
                   elem.caption = elemFromHistory.caption;
+               } else {
+                  resetField('caption', elem);
                }
+
                if(elemFromHistory.visibilityValue !== undefined) {
                   elem.visibilityValue = elemFromHistory.visibilityValue;
                }
             } else if(elem.value && elem.resetValue && !colHelpers.isEqualObject(elem.value, elem.resetValue)) {
-               elem.value = elem.resetValue;
+               resetField('value', elem);
             }
          });
          return currentStructureCopy;
