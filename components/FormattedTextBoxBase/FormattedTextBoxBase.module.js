@@ -800,6 +800,8 @@ define(
             this._clearCommandHandler('delete');
          } else if (key == constants.key.backspace) {
             this._clearCommandHandler('backspace');
+         } else if (key == constants.key.pageUp || key == constants.key.pageDown) {
+            // предотвращаем проскроливание страницы по нажатию на pageUp и pageDown
          } else if (key == 88 && isCtrl) {
             //предотвращаем вырезание Ctrl+X
          } else if (key == constants.key.enter && constants.browser.firefox) {
