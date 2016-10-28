@@ -648,16 +648,21 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       },
       _getItemsForRedrawOnAdd: function(items, groupId) {
          var result = [];
-         for (var i = 0; i < items.length; i++) {
-            if (!Object.isEmpty(this._options.groupBy) && this._options.easyGroup) {
-               if (this._canApplyGrouping(items[i])) {
-                  if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
-                     this._options._groupItemProcessing(groupId, result, items[i], this._options);
+         if (this._options.hierarchyViewMode) {
+            result = searchProcessing(this._getItemsProjection(), this._options);
+         }
+         else {
+            for (var i = 0; i < items.length; i++) {
+               if (!Object.isEmpty(this._options.groupBy) && this._options.easyGroup) {
+                  if (this._canApplyGrouping(items[i])) {
+                     if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
+                        this._options._groupItemProcessing(groupId, result, items[i], this._options);
+                     }
                   }
                }
-            }
-            if (this._isVisibleItem(items[i])) {
-               result.push(items[i]);
+               if (this._isVisibleItem(items[i])) {
+                  result.push(items[i]);
+               }
             }
          }
          return result;
