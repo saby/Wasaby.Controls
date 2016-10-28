@@ -25,10 +25,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
             },
             _itemsContainer:  undefined,
             _handlersInstances: {
-               undoRedo: undefined,
-               node: undefined,
-               format: undefined,
-               source: undefined
+               format: undefined
             }
          },
 
@@ -89,34 +86,18 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
             var
                editor = this._options.linkedEditor;
             if (editor) {
-               editor.unsubscribe('onUndoRedoChange', this._handlersInstances.undoRedo);
-               editor.unsubscribe('onNodeChange', this._handlersInstances.node);
                editor.unsubscribe('onFormatChange', this._handlersInstances.format);
-               editor.unsubscribe('onToggleContentSource', this._handlersInstances.source);
             }
          },
 
          _bindEditor: function() {
             var
                editor = this._options.linkedEditor;
-            this._handlersInstances = {
-               undoRedo: this._undoRedoChangeHandler.bind(this),
-               node: this._nodeChangeHandler.bind(this),
-               format: this._formatChangeHandler.bind(this),
-               source: this._toggleContentSourceHandler.bind(this)
-            };
-            editor.subscribe('onUndoRedoChange', this._handlersInstances.undoRedo);
-            editor.subscribe('onNodeChange', this._handlersInstances.node);
+            this._handlersInstances.format = this._formatChangeHandler.bind(this);
             editor.subscribe('onFormatChange', this._handlersInstances.format);
-            editor.subscribe('onToggleContentSource', this._handlersInstances.source);
          },
-         _undoRedoChangeHandler : function() {},
-
-         _nodeChangeHandler : function() {},
 
          _formatChangeHandler : function() {},
-
-         _toggleContentSourceHandler: function() {},
 
          _blockFocusEvents: function(event) {
             var eventsChannel = EventBus.channel('WindowChangeChannel');

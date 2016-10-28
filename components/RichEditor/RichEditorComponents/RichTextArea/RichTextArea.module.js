@@ -361,7 +361,21 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (active && this._needFocusOnActivated() && this.isEnabled()) {
                this._performByReady(function() {
                   this._tinyEditor.focus();
-                  this._scrollTo(this._inputControl[0], 'top');
+                  if (cConstants.browser.isMobileAndroid) {
+                     // на android устройствах не происходит подскролла нативного
+                     // наш функционал тестируется на планшете фирмы MI на котором клавиатура появляется долго ввиду анимации =>
+                     // => сразу сделать подсролл нельзя
+                     // появление клавиатуры стрельнет resize у window в этот момент можно осуществить подсролл до элемента ввода текста
+                     var
+                        resizeHandler = function(){
+                           this._inputControl[0].scrollIntoView(false);
+                           $(window).off('resize', resizeHandler)
+                        }.bind(this);
+                     $(window).on('resize', resizeHandler);
+                  } else if (cConstants.browser.isMobileIOS) {
+                     this._scrollTo(this._inputControl[0], 'top');
+                  }
+
                   RichTextArea.superclass.setActive.apply(this, args);
                }.bind(this));
             } else {
@@ -766,12 +780,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                                  } else if (href) {
                                     linkAttrs.href = href;
                                     editor.selection.setRng(range);
-                                    if (editor.selection.getContent() === '') {
-                                       editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(href)));
+                                    if (editor.selection.getContent() === '' || (fre._isOnlyTextSelected()) && cConstants.browser.firefox) {
+                                       var
+                                          linkText = selection.getContent({format: 'text'}) || href;
+                                       editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(linkText)));
                                     } else {
                                        editor.execCommand('mceInsertLink', false, linkAttrs);
                                     }
-                                    editor.selection.collapse(false);
                                     editor.undoManager.add();
                                  }
                                  self.close();
@@ -1155,7 +1170,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                // </проблема>
                if (!editor.selection.isCollapsed()) {
                   if (editor.selection.getContent() == self._getTinyEditorValue()) {
-                     if (!e.ctrlKey && e.charCode !== 0) {
+                     if (!e.ctrlKey && !(e.metaKey && cConstants.browser.isMacOSDesktop) && e.charCode !== 0) {
                         editor.bodyElement.innerHTML = '';
                      }
                   }
@@ -1590,10 +1605,19 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             RichTextArea.superclass._focusOutHandler.apply(this, arguments);
          },
 
-         _initInputHeight: function(){
+         _initInputHeight: function() {
             if (!this._options.autoHeight) {
-               this._inputControl.css('height',  this._container.height());
+               this._inputControl.css('height', this._container.height());
             }
+         },
+         //метод взят из link плагина тини
+         _isOnlyTextSelected: function() {
+            var
+               html = this._tinyEditor.selection.getContent();
+            if (/</.test(html) && (!/^<a [^>]+>[^<]+<\/a>$/.test(html) || html.indexOf('href=') == -1)) {
+               return false;
+            }
+            return true;
          }
       });
 
