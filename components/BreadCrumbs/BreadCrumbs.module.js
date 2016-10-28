@@ -25,6 +25,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
     * </component>
     */
    'use strict';
+   var BREAD_CRUMB_MIN_WIDTH = 36;
    //TODO: Переписать все к чертям
    var BreadCrumbs = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], /** @lends SBIS3.CONTROLS.BreadCrumbs.prototype */{
       _dotTplFn: dotTpl,
@@ -285,6 +286,19 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                }
             } else {
                $('.controls-BreadCrumbs__title', crumbs).css('max-width', containerWidth - width);
+            }
+         }
+
+         var hiddenCrumbs = $('.controls-BreadCrumbs__crumb.ws-hidden', targetContainer),
+            firstHidden = hiddenCrumbs.first(),
+            emptyWidth = containerWidth - targetContainer.outerWidth(true) - this._homeIconWidth - this._arrowWidth - 20;
+         if (hiddenCrumbs.length && emptyWidth > BREAD_CRUMB_MIN_WIDTH){
+            $('.controls-BreadCrumbs__title', firstHidden).css('max-width', emptyWidth);
+            firstHidden.removeClass('ws-hidden');
+            if (hiddenCrumbs.length > 1){
+               dots.insertAfter(firstHidden);
+            } else {
+               dots.detach();
             }
          }
       },
