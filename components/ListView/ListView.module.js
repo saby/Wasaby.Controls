@@ -278,10 +278,6 @@ define('js!SBIS3.CONTROLS.ListView',
             },
             _loadingIndicator: undefined,
             _editInPlace: null,
-            _scrollOffset: {
-               top: null,
-               bottom: null
-            },
             _pageChangeDeferred : undefined,
             _pager : undefined,
             _pagerContainer: undefined,
@@ -300,12 +296,23 @@ define('js!SBIS3.CONTROLS.ListView',
             ],
             _itemsToolbar: null,
             _notEndEditClassName: 'controls-ListView__onFocusNotEndEdit',
+            _addResultsMethod: undefined,
             _containerScrollHeight: undefined,
             // указывает на необходимость компенсации скрола при подгрузке данных вверх
             // необходим, так как компенсацию можно произвести только после отрисовки - в drawItemsCallback
             // безусловно это делать нельзя, так как drawItemsCallback срабатывает и при перерисовке одной записи
             _needScrollCompensation : null,
-            _addResultsMethod: undefined,
+            // Состояние подгрузки по скроллу
+            // mode: null - выключена; up - грузим предыдущую страницу; down - грузим следующую страницу
+            // reverse: false - верхняя страница вставляется вверх, нижняя вниз; true - нижняя страница вставляется вверх; 
+            _infiniteScrollState: {
+               mode: null,
+               reverse: false
+            },
+            _scrollOffset: {
+               top: null,
+               bottom: null
+            },
             _options: {
                _canServerRender: true,
                _buildTplArgs: buildTplArgsLV,
@@ -803,72 +810,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _prepareInfiniteScroll: function(){
-            var topParent = this.getTopParent(),
-                self = this;
-
-            if (this.isInfiniteScroll()) {
-               this._createLoadingIndicator();
-               this._createScrollWatcher();
-               /**TODO Это специфическое решение из-за того, что нам нужно догружать данные пока не появится скролл
-                * Если мы находися на панельке, то пока она скрыта все данные уже могут загрузиться, но новая пачка не загрузится
-                * потому что контейнер невидимый*/
-               if (cInstance.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
-                  var afterFloatAreaShow = function(){
-                     if (self.getItems()) {
-                        self._needScrollCompensation = self._options.infiniteScroll == 'up';
-                        self._preScrollLoading();
-                     }
-                     topParent.unsubscribe('onAfterShow', afterFloatAreaShow);
-                  };
-                  //Делаем через subscribeTo, а не once, что бы нормально отписываться при destroy FloatArea
-                  this.subscribeTo(topParent, 'onAfterShow', afterFloatAreaShow);
-               }
-               this._scrollWatcher.subscribe('onTotalScroll', this._onTotalScrollHandler.bind(this));
-            } else if (this._options.infiniteScroll == 'demand'){
-               this._loadMoreButton = this.getChildControlByName('loadMoreButton');
-               if (this.getItems()){
-                  this._setLoadMoreCaption(this.getItems());
-               }
-               this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
-            }
-         },
-
-         _setLoadMoreCaption: function(dataSet){
-            var more = dataSet.getMetaData().more;
-            if (typeof more == 'number'){
-               this._loadMoreButton.setCaption('Еще ' + more);
-            } else {
-               if (more === false){
-                  this._loadMoreButton.setVisible(false);
-               } else {
-                  this._loadMoreButton.setCaption('Еще...');
-               }
-            }
-         },
-
-         _onLoadMoreButtonActivated: function(event){
-            this._loadNextPage('down');
-         },
-
-         _createScrollWatcher: function(){
-            var scrollWatcherConfig = {
-               totalScrollOffset: START_NEXT_LOAD_OFFSET,
-               opener: this,
-               element: this.getContainer().closest(this._options.infiniteScrollContainer)
-            };
-            this._scrollWatcher = new ScrollWatcher(scrollWatcherConfig);
-         },
-
-         _onTotalScrollHandler: function(event, type){
-            var scrollOnEdge = (this._options.infiniteScroll === 'up' && type === 'top') || // скролл вверх и доскролили до верхнего края
-                               (this._options.infiniteScroll === 'down' && type === 'bottom') || // скролл вниз и доскролили до нижнего края
-                               (this._options.infiniteScroll === 'both'); //скролл в обе стороны и доскролили до любого края
-
-            if (scrollOnEdge && this.getItems()) {
-               this._scrollLoadNextPage(type == 'top' ? 'up' : 'down');
-            }
-         },
          _createScrollPager: function(){
             this._scrollWatcher.subscribe('onScroll', this._onScrollHandler.bind(this));
             this._scrollPager = new Paging({
@@ -1333,7 +1274,7 @@ define('js!SBIS3.CONTROLS.ListView',
          //TODO: Временное решение для выделения "всех" (на самом деле первой тысячи) записей
          setSelectedAll: function() {
             var selectedItems = this.getSelectedItems();
-            if (this._options.infiniteScroll && this.getItems().getCount() < 1000){
+            if (this.isInfiniteScroll() && this.getItems().getCount() < 1000){
                this.reload(this.getFilter(), this.getSorting(), 0, 1000)
                   .addCallback(function(dataSet) {
                      //Ввостановим значение _limit, т.к. после вызова reload _limit стал равен 1000,
@@ -1416,18 +1357,9 @@ define('js!SBIS3.CONTROLS.ListView',
          reload: function () {
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
-            this._containerScrollHeight = 0;
-            this._needScrollCompensation = this._options.infiniteScroll == 'up';
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
             return ListView.superclass.reload.apply(this, arguments);
-         },
-
-         _reloadInfiniteScrollParams : function(){
-            if (this.isInfiniteScroll()) {
-               this._scrollOffset.top = this._offset;
-               this._scrollOffset.bottom = this._offset;
-            }
          },
          /**
           * Метод установки/замены обработчика клика по строке.
@@ -2089,6 +2021,12 @@ define('js!SBIS3.CONTROLS.ListView',
                this._preScrollLoading();
             }
          },
+         _cancelLoading: function(){
+            ListView.superclass._cancelLoading.apply(this, arguments);
+            if (this.isInfiniteScroll()){
+               this._hideLoadingIndicator();
+            }
+         },
 
           /*
            * При удалении записи с открытым меню операций, операции над записью необходимо скрывать
@@ -2126,14 +2064,122 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see infiniteScroll
           * @see setInfiniteScroll
           */
+         
+         _prepareInfiniteScroll: function(){
+            var topParent = this.getTopParent(),
+                self = this;
+
+            if (this.isInfiniteScroll()) {
+               this._createLoadingIndicator();
+               this._createScrollWatcher();
+               // Пока по умолчанию считаем что везде подгрузка вниз, и если указана 'up' - значит она просто перевернута
+               this._setInfiniteScrollState('down', this._options.infiniteScroll == 'up');
+               /**TODO Это специфическое решение из-за того, что нам нужно догружать данные пока не появится скролл
+                * Если мы находися на панельке, то пока она скрыта все данные уже могут загрузиться, но новая пачка не загрузится
+                * потому что контейнер невидимый*/
+               if (cInstance.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
+                  var afterFloatAreaShow = function(){
+                     if (self.getItems()) {
+                        self._needScrollCompensation = self._options.infiniteScroll == 'up';
+                        self._preScrollLoading();
+                     }
+                     topParent.unsubscribe('onAfterShow', afterFloatAreaShow);
+                  };
+                  //Делаем через subscribeTo, а не once, что бы нормально отписываться при destroy FloatArea
+                  this.subscribeTo(topParent, 'onAfterShow', afterFloatAreaShow);
+               }
+               this._scrollWatcher.subscribe('onTotalScroll', this._onTotalScrollHandler.bind(this));
+            } else if (this._options.infiniteScroll == 'demand'){
+               this._loadMoreButton = this.getChildControlByName('loadMoreButton');
+               if (this.getItems()){
+                  this._setLoadMoreCaption(this.getItems());
+               }
+               this.subscribeTo(loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
+            }
+         },
+
+         _setInfiniteScrollState: function(mode, reverse){
+            if (mode) {
+               this._infiniteScrollState.mode = mode;
+            }
+            if (reverse){
+               this._infiniteScrollState.reverse = reverse;
+            }
+         },
+
+         /**
+          * Если скролл находится в самом верху и добавляются записи вверх - скролл не останнется на месте,
+          * а будет все так же вверху. Поэтому после отрисовки записей вверх, подвинем скролл на прежнее место -
+          * конец предпоследней страницы
+          * @private
+          */
+         _moveTopScroll: function() {
+            var scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
+            //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
+            //разницы величины скролла (т.е. на сколько добавилось высоты, на столько и опустили). Получается плавно
+            if (scrollAmount) {
+               this._scrollWatcher.scrollTo(scrollAmount);
+            }
+         },
+
+         _createScrollWatcher: function(){
+            var scrollWatcherConfig = {
+               totalScrollOffset: START_NEXT_LOAD_OFFSET,
+               opener: this,
+               element: this.getContainer().closest(this._options.infiniteScrollContainer)
+            };
+            this._scrollWatcher = new ScrollWatcher(scrollWatcherConfig);
+         },
+
+         _onTotalScrollHandler: function(event, type){
+            var mode = this._infiniteScrollState.mode,
+               scrollOnEdge =  (mode === 'up' && type === 'top') ||   // скролл вверх и доскролили до верхнего края
+                               (mode === 'down' && type === 'bottom' && !this._infiniteScrollState.reverse) || // скролл вниз и доскролили до нижнего края
+                               (mode === 'down' && type === 'top' && this._infiniteScrollState.reverse); // скролл верх с запросом данных вниз и доскролили верхнего края
+
+            if (scrollOnEdge && this.getItems()) { 
+               // Досткролили вверх, но на самом деле подгружаем данные как обычно, а рисуем вверх
+               if (type == 'top' && this._infiniteScrollState.reverse) {
+                  this._setInfiniteScrollState('down');
+               } else {
+                  this._setInfiniteScrollState(type == 'top' ? 'up' : 'down');
+               }
+               this._scrollLoadNextPage();
+            }
+         },
+
+         /**
+          * Функция догрузки данных пока не появится скролл.Если появился и мы грузили и дорисовывали вверх, нужно поуправлять скроллом.
+          * @private
+          * 
+          */
+         _preScrollLoading: function(){
+            var hasScroll = (function() {
+                  return this._scrollWatcher.hasScroll();
+               }).bind(this),
+               scrollDown = this._infiniteScrollState.mode == 'down' && !this._infiniteScrollState.reverse;
+            // Если нет скролла или скролл внизу (при загрузке вниз), значит нужно догружать еще записи
+            if ((this.isScrollOnBottom() && scrollDown) || !hasScroll()) {
+               this._scrollLoadNextPage();
+            } else  {
+               if (this._needScrollCompensation) {
+                  this._moveTopScroll();
+                  this._needScrollCompensation = false;
+               }
+            }
+         },
+
          isInfiniteScroll: function () {
-            var scrollLoad = this._options.infiniteScroll == 'down' || this._options.infiniteScroll == 'up';
+            var scrollLoad = this._options.infiniteScroll !== null;
             return this._allowInfiniteScroll && scrollLoad;
          },
-         _cancelLoading: function(){
-            ListView.superclass._cancelLoading.apply(this, arguments);
-            if (this.isInfiniteScroll()){
-               this._hideLoadingIndicator();
+
+         _reloadInfiniteScrollParams : function(){
+            this._containerScrollHeight = 0;
+            this._needScrollCompensation = this._options.infiniteScroll == 'up';
+            if (this.isInfiniteScroll()) {
+               this._scrollOffset.top = this._offset;
+               this._scrollOffset.bottom = this._offset;
             }
          },
 
@@ -2142,25 +2188,31 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param  {String} direction в какую сторону грузим
           */
          _scrollLoadNextPage: function (direction) {
-            direction = direction || this._options.infiniteScroll;
             var loadAllowed  = this.isInfiniteScroll(),
                more = this.getItems().getMetaData().more,
                isContainerVisible = dcHelpers.isElementVisible(this.getContainer()),
                hasScroll = this._scrollWatcher.hasScroll(),
-               hasNextPage = (direction == 'up' && this._options.infiniteScroll == 'both') ? this._scrollOffset.top > 0 : this._hasNextPage(more, this._scrollOffset.bottom);
+               hasNextPage = this._hasNextPage(more, this._scrollOffset.bottom);
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
             this._container.toggleClass('controls-ListView__outside-scroll-loader', !hasScroll);
 
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && isContainerVisible && hasNextPage && !this.isLoading()) {
-               this._loadNextPage(direction);
+               this._loadNextPage();
             }
          },
 
-         _loadNextPage: function(direction) {
-            direction = direction || this._options.infiniteScroll;
-            var offset = (direction == 'up' && this._options.infiniteScroll == 'both') ? this._scrollOffset.top - this._limit : this._scrollOffset.bottom + this._limit;
+         _hasNextPage: function(more, offset) {
+            if (this._infiniteScrollState.mode == 'up'){
+               return this._scrollOffset.top > 0;
+            } else {
+               return !this._lastPageLoaded && ListView.superclass._hasNextPage.call(this, more, offset);
+            }
+         },
+
+         _loadNextPage: function() {
+            var offset = this._getNextOffset();
             this._showLoadingIndicator();
             this._toggleEmptyData(false);
             this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
@@ -2171,7 +2223,7 @@ define('js!SBIS3.CONTROLS.ListView',
                //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
 
-               this._updateScrolOffset(direction);
+               this._updateScrolOffset();
                //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                this.getItems().setMetaData(dataSet.getMetaData());
                this._hideLoadingIndicator();
@@ -2186,7 +2238,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   if (this._isSlowDrawing(this._options.easyGroup)) {
                      this._needToRedraw = false;
                   }
-                  this._drawPage(dataSet, direction);
+                  this._drawPage(dataSet);
                   //И выключаем после отрисовки
                   if (this._isSlowDrawing(this._options.easyGroup)) {
                      this._needToRedraw = true;
@@ -2206,17 +2258,28 @@ define('js!SBIS3.CONTROLS.ListView',
             });
          },
 
-         _drawPage: function(dataSet, direction){
+         _getNextOffset: function(){
+            if (this._infiniteScrollState.mode == 'down'){
+               return this._scrollOffset.bottom + this._limit;
+            } else {
+               return this._scrollOffset.top - this._limit;
+            }
+         },
+
+         _drawPage: function(dataSet){
             var at = null;
             //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
-            if (direction === 'up') {
+            if (this._infiniteScrollState.mode === 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse)) {
                this._needScrollCompensation = true;
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight();
-               var items = dataSet.toArray();
                at = {at: 0};
             }
             //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
-            this.getItems().append(dataSet);
+            if (this._infiniteScrollState.mode == 'down') {
+               this.getItems().append(dataSet);
+            } else {
+               this.getItems().prepend(dataSet);
+            }
 
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this._drawItems(dataSet.toArray(), at);
@@ -2226,8 +2289,8 @@ define('js!SBIS3.CONTROLS.ListView',
             this._toggleEmptyData();
          },
 
-         _updateScrolOffset: function(direction){
-            if (direction === 'down') {
+         _updateScrolOffset: function(){
+            if (this._infiniteScrollState.mode === 'down') {
                this._scrollOffset.bottom += this._limit;
             } else {
                if (this._scrollOffset.top >= this._limit){
@@ -2235,46 +2298,26 @@ define('js!SBIS3.CONTROLS.ListView',
                } else {
                   this._scrollOffset.top = 0;
                }
-               //FixMe: увеличиваем нижний оффсет для контактов - их скролл верх на самом деле скролл вниз + reverse
-               if (this._options.infiniteScroll == 'up'){
-                  this._scrollOffset.bottom += this._limit;
+            }
+         },
+
+         _setLoadMoreCaption: function(dataSet){
+            var more = dataSet.getMetaData().more;
+            if (typeof more == 'number'){
+               this._loadMoreButton.setCaption('Еще ' + more);
+            } else {
+               if (more === false){
+                  this._loadMoreButton.setVisible(false);
+               } else {
+                  this._loadMoreButton.setCaption('Еще...');
                }
             }
          },
 
-         /**
-          * Функция догрузки данных пока не появится скролл.Если появился и мы грузили и дорисовывали вверх, нужно поуправлять скроллом.
-          * @private
-          */
-         _preScrollLoading: function(){
-            var hasScroll = (function() {
-                  return this._scrollWatcher.hasScroll();
-               }).bind(this),
-               scrollDown = this._options.infiniteScroll == 'down' || this._options.infiniteScroll == 'both';
-            // Если нет скролла или скролл внизу (при загрузке вниз), значит нужно догружать еще записи
-            if ((this.isScrollOnBottom() && scrollDown) || !hasScroll()) {
-               this._scrollLoadNextPage();
-            } else  {
-               if (this._needScrollCompensation) {
-                  this._moveTopScroll();
-                  this._needScrollCompensation = false;
-               }
-            }
+         _onLoadMoreButtonActivated: function(event){
+            this._loadNextPage('down');
          },
-         /**
-          * Если скролл находится в самом верху и добавляются записи вверх - скролл не останнется на месте,
-          * а будет все так же вверху. Поэтому после отрисовки записей вверх, подвинем скролл на прежнее место -
-          * конец предпоследней страницы
-          * @private
-          */
-         _moveTopScroll: function(){
-            var scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
-            //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
-            //разницы величины скролла (т.е. на сколько добавилось высоты, на столько и опустили). Получается плавно
-            if(scrollAmount) {
-               this._scrollWatcher.scrollTo(scrollAmount);
-            }
-         },
+
          /**
           * Скролит табличное представление к указанному элементу
           * @param item Элемент, к которому осуществляется скролл
@@ -2336,6 +2379,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (typeof type === 'boolean'){
                this._allowInfiniteScroll = type;
             } else {
+               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', type == 'up');
                this._options.infiniteScroll = type;
                this._allowInfiniteScroll = true;
             }
@@ -2548,6 +2592,10 @@ define('js!SBIS3.CONTROLS.ListView',
          setPage: function (pageNumber, noLoad) {
             pageNumber = parseInt(pageNumber, 10);
             var offset = this._offset;
+            if(pageNumber == -1){
+               this._setLastPage();
+               return;
+            }
             if (this.isInfiniteScroll() && this._isPageLoaded(pageNumber)){
                if (this._getItemsProjection() && this._getItemsProjection().getCount()){
                   var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
@@ -2564,6 +2612,28 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             this._notify('onPageChange', pageNumber);
+         },
+
+         _setLastPage: function(){
+            var more = this.getItems().getMetaData().more,
+               pageNumber;
+            if (typeof more == 'number'){
+               pageNumber = more / this._options.pageSize;
+            } else {
+               this._lastPageLoaded = true;
+               this._setInfiniteScrollState('up');
+               this.reload(undefined, undefined, -1).addCallback(function(items){
+                  more = items.getMetaData().more;
+                  if (typeof more == 'number'){
+                     pageNumber = Math.floor(more / this._options.pageSize);
+                     this._scrollOffset.bottom = more;
+                     this.getFilter()['СлужебныйКоличествоЗаписей'] = items.getCount();
+                     this._scrollOffset.top = more - items.getCount();
+                     this.setPage(pageNumber, true);
+                     this._scrollWatcher.scrollTo('bottom');
+                  }
+               }.bind(this));
+            }
          },
 
          _isPageLoaded: function(pageNumber) {

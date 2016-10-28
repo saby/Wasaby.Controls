@@ -136,7 +136,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
             return element[0].wsControl.isScrollOnTop();
          }
          else {
-            return element.scrollTop() == 0;
+            return element.scrollTop() === 0;
          }
       },
 
