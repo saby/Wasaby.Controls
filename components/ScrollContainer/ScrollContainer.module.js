@@ -2,11 +2,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
       'html!SBIS3.CONTROLS.ScrollContainer',
+      'Core/core-functions',
       'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar.min',
       'is!browser?css!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar.min',
       'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mousewheel-3.0.6.min'
    ],
-   function(CompoundControl, dotTplFn) {
+   function(CompoundControl, dotTplFn, cFunctions) {
 
       'use strict';
 
@@ -56,7 +57,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
                 * </pre>
                 * @see getContent
                 */
-               content: ''
+               content: '',
+               /**
+                * Опции для m.CustomScrollbar
+                * @type {Object}
+                */
+               scrollOptions: {}
             },
 
             /**
@@ -83,7 +89,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
             Scroll.superclass.init.call(this);
 
             //Подписка на события (наведение курсора на контейнер) при которых нужно инициализировать скролл.
-            this.getContainer().bind('mousemove touchstart', this._create.bind(this));
+            this.getContainer().on('mousemove touchstart', this._create.bind(this));
          },
 
          /**
@@ -99,37 +105,43 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
           * @private
           */
          _create: function() {
-            var self = this;
+            var self = this,
+               defaultOptions = {
+                  theme: 'minimal-dark',
+                  scrollInertia: 0,
+                  updateOnContentResize: false,
+                  alwaysTriggerOffsets: false,
+                  callbacks: {
+                     onInit: function(){
+                        self._scroll = this;
+                     },
+                     onOverflowY: function(){
+                        self._hasScroll = true;
+                     },
+                     onOverflowYNone: function(){
+                        self._hasScroll = false;
+                     },
+                     onTotalScrollOffset: 30,
+                     onTotalScrollBackOffset: 30,
+                     onTotalScroll: function(){
+                        self._notify('onTotalScroll', 'bottom', self.getScrollTop());
+                     },
+                     onTotalScrollBack: function(){
+                        self._notify('onTotalScroll', 'top', self.getScrollTop());
+                     }
+                  }
+               },
+               options = defaultOptions;
 
             //Инициализируем кастомный скролл
-            this.getContainer().mCustomScrollbar({
-               theme: 'minimal-dark',
-               scrollInertia: 0,
-               updateOnContentResize: false,
-               alwaysTriggerOffsets: false,
-               callbacks: {
-                  onInit: function(){
-                     self._scroll = this;
-                  },
-                  onOverflowY: function(){
-                     self._hasScroll = true;
-                  },
-                  onOverflowYNone: function(){
-                     self._hasScroll = false;
-                  },
-                  onTotalScrollOffset: 30,
-                  onTotalScrollBackOffset: 30,
-                  onTotalScroll: function(){
-                     self._notify('onTotalScroll', 'bottom', self.getScrollTop());
-                  },
-                  onTotalScrollBack: function(){
-                     self._notify('onTotalScroll', 'top', self.getScrollTop());
-                  }
-               }
-            });
+            if (this._options.scrollOptions instanceof Object){
+               options = cFunctions.merge(defaultOptions, this._options.scrollOptions);
+            }
+
+            this.getContainer().mCustomScrollbar(options);
 
             //Отписываемся от событий инициализации
-            this._container.unbind('mousemove touchstart');
+            this._container.off('mousemove touchstart', this._create);
          },
 
          /**
