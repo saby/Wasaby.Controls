@@ -1584,7 +1584,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       redrawItem: function(item, projItem) {
          this._oldRedrawItemInner(item, projItem);
-         this._reviveItems(item.getContents().getId() != this._options.selectedKey);
+         this._reviveItems(item.getId() != this._options.selectedKey);
       },
 
       _oldRedrawItemInner: function(item, projItem, callback) {
