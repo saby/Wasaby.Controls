@@ -779,7 +779,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                markup;
 
             data.tplData = this._prepareItemData();
-            //TODO опять же, перед полной перерисовкой данные лесенки достаточно сбросить, чтобы она правильно отработала
             //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
             markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
             //TODO это может вызвать тормоза
@@ -823,6 +822,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             data = this._prepareItemData();
             data.projItem = item;
             data.item = item.getContents();
+
+            //TODO: выпилить вместе декоратором лесенки
+            if (data.decorators && data.decorators.ladder) {
+               data.decorators.ladder.setRecord(data['item']);
+            }
+
             var dot;
             if (data.itemTpl) {
                dot = data.itemTpl;
