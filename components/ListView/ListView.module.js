@@ -2379,9 +2379,11 @@ define('js!SBIS3.CONTROLS.ListView',
             if (typeof type === 'boolean'){
                this._allowInfiniteScroll = type;
             } else {
-               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', type == 'up');
-               this._options.infiniteScroll = type;
-               this._allowInfiniteScroll = true;
+               if (type) {
+                  this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', type == 'up');
+                  this._options.infiniteScroll = type;
+                  this._allowInfiniteScroll = true;
+               }
             }
             if (type && !noLoad) {
                this._scrollLoadNextPage();
