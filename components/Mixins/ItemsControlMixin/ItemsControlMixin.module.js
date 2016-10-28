@@ -814,10 +814,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _redrawItem: function(item) {
+         var result = this._redrawItemInner(item);
+         if (result) {
+            this._reviveItems(item.getContents().getId() != this._options.selectedKey);
+         }
+      },
+
+      _redrawItemInner: function(item) {
          var
+            result = false,
             markup,
             targetElement = this._getDomElementByItem(item),
-            itemContainer,
             data;
          if (targetElement.length) {
             data = this._prepareItemData();
@@ -834,11 +841,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this._options);
             /*TODO посмотреть не вызывает ли это тормоза*/
             this._clearItems(targetElement);
-            targetElement.after(markup).remove();
-
-            itemContainer = this._getDomElementByItem(item);
-            this._reviveItems(item.getContents().getId() != this._options.selectedKey);
+            if (constants.browser.isIE8 || constants.browser.isIE9) {
+               targetElement.after(markup).remove();
+            }
+            else {
+               targetElement.get(0).outerHTML = markup;
+            }
+            result = true;
          }
+         return result;
       },
 
       _removeItems: function (items, groupId) {
@@ -1572,6 +1583,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @param {Object} item Запись, которую необходимо перерисовать
        */
       redrawItem: function(item, projItem) {
+         this._oldRedrawItemInner(item, projItem);
+         this._reviveItems(item.getId() != this._options.selectedKey);
+      },
+
+      _oldRedrawItemInner: function(item, projItem, callback) {
          projItem = projItem || this._getItemProjectionByItemId(item.getId());
          var
             targetElement = this._getElementByModel(item),
@@ -1579,8 +1595,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._addItemAttributes(newElement, projItem);
          this._clearItems(targetElement);
          targetElement.after(newElement).remove();
-         this.reviveComponents();
-         this._notifyOnDrawItems(item.getId() != this._options.selectedKey);
       },
 
       _getElementByModel: function(item) {
@@ -1795,10 +1809,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _changeItemProperties: function(item, property) {
          if (this._isSlowDrawing(this._options.easyGroup)) {
-            this.redrawItem(item.getContents(), item);
+            this._oldRedrawItemInner(item.getContents(), item);
          }
          else {
-            this._redrawItem(item);
+            this._redrawItemInner(item);
          }
       },
 
@@ -2012,10 +2026,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var i;
          for (i = 0; i < items.length; i++) {
             this._changeItemProperties(items[i]);
-            /*this._redrawItem(
-               items[i]
-            );*/
          }
+         this._reviveItems(item.getContents().getId() != this._options.selectedKey);
       },
       _onCollectionRemove: function(items, notCollapsed) {
          if (items.length) {
@@ -2061,6 +2073,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _onUpdateItemProperty: function(item, property) {
          if (this._isNeedToRedraw()) {
             this._changeItemProperties(item, property);
+            this._reviveItems(item.getContents().getId() != this._options.selectedKey);
          }
       }
    };
@@ -2095,8 +2108,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
 	            case IBindCollection.ACTION_REPLACE:
 	               this._onCollectionReplace(newItems);
-	               this.reviveComponents();
-                  this._drawItemsCallbackDebounce();
 	               break;
 
 	            case IBindCollection.ACTION_RESET:
