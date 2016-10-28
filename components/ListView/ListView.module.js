@@ -304,7 +304,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _needScrollCompensation : null,
             // Состояние подгрузки по скроллу
             // mode: null - выключена; up - грузим предыдущую страницу; down - грузим следующую страницу
-            // reverse: false - верхняя страница вставляется вверх, нижняя вниз; true - нижняя страница вставляется вверх; 
+            // reverse: false - верхняя страница вставляется вверх, нижняя вниз; true - нижняя страница вставляется вверх;
             _infiniteScrollState: {
                mode: null,
                reverse: false
@@ -738,7 +738,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _bindEventHandlers: function(container) {
-            container.on('swipe tap mousemove mouseleave', this._eventProxyHandler.bind(this));
+            container.on('swipe tap mousemove mouseleave touchend', this._eventProxyHandler.bind(this));
          },
 
          _modifyOptions : function(opts){
@@ -787,7 +787,8 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _eventProxyHandler: function(e) {
-            var originalEvent = e.originalEvent;
+            var originalEvent = e.originalEvent,
+                mobFix = 'controls-ListView__mobileSelected-fix';
             /* Надо проверять mousemove на срабатывание на touch устройствах,
                т.к. оно стреляет после тапа. После тапа событие mousemove имеет нулевой сдвиг, поэтому обрабатываем его как touch событие
                 + добавляю проверку, что до этого мы были в touch режиме,
@@ -802,11 +803,18 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._swipeHandler(e);
                   break;
                case 'tap':
+                  this._container.removeClass(mobFix);
                   this._tapHandler(e);
                   break;
                case 'mouseleave':
                   this._mouseLeaveHandler(e);
                   break;
+               case 'touchend':
+                   /* Ipad пакетирует измененния, и не применяет их к дому, пока не закончит работу синхронный код.
+                      Для того, чтобы сэмулировать мновенную обработку клика, надо сделать изменения в DOM'e
+                      раньше события click. Поэтому на touchEnd (срабатывает раньше клика) вешаем специальный класс,
+                      который показывает по :hover оранжевый маркер и по событию tap его снимаем. */
+                  this._container.addClass(mobFix);
             }
          },
 
@@ -2064,7 +2072,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see infiniteScroll
           * @see setInfiniteScroll
           */
-         
+
          _prepareInfiniteScroll: function(){
             var topParent = this.getTopParent(),
                 self = this;
@@ -2137,7 +2145,7 @@ define('js!SBIS3.CONTROLS.ListView',
                                (mode === 'down' && type === 'bottom' && !this._infiniteScrollState.reverse) || // скролл вниз и доскролили до нижнего края
                                (mode === 'down' && type === 'top' && this._infiniteScrollState.reverse); // скролл верх с запросом данных вниз и доскролили верхнего края
 
-            if (scrollOnEdge && this.getItems()) { 
+            if (scrollOnEdge && this.getItems()) {
                // Досткролили вверх, но на самом деле подгружаем данные как обычно, а рисуем вверх
                if (type == 'top' && this._infiniteScrollState.reverse) {
                   this._setInfiniteScrollState('down');
@@ -2151,7 +2159,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Функция догрузки данных пока не появится скролл.Если появился и мы грузили и дорисовывали вверх, нужно поуправлять скроллом.
           * @private
-          * 
+          *
           */
          _preScrollLoading: function(){
             var hasScroll = (function() {
