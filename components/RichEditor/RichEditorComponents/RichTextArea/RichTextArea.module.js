@@ -56,9 +56,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
          },
          /**
+          * Поле ввода для богатого текстового редактора. Чтобы связать с ним тулбар {@link SBIS3.CONTROLS.RichEditorToolbar}, используйте метод {@link SBIS3.CONTROLS.RichEditorToolbarBase#setLinkedEditor}.
           * @class SBIS3.CONTROLS.RichTextArea
           * @extends SBIS3.CONTROLS.TextBoxBase
-          * @author Борисов П.С.
+          * @author Борисов Петр Сергеевич
           * @public
           * @control
           */
@@ -1155,7 +1156,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                // </проблема>
                if (!editor.selection.isCollapsed()) {
                   if (editor.selection.getContent() == self._getTinyEditorValue()) {
-                     if (!e.ctrlKey && e.charCode !== 0) {
+                     if (!e.ctrlKey && !(e.metaKey && cConstants.browser.isMacOSDesktop) && e.charCode !== 0) {
                         editor.bodyElement.innerHTML = '';
                      }
                   }

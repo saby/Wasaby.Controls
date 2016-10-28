@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             def = dragObject.getSource().getAction().execute();
          } else {
             var dragOwnerSource = dragObject.getOwner().getDataSource(),
-               dataSource = this.getDataSource();
+               dataSource = dragObject.getTargetsControl().getDataSource();
             var def;
             if (dataSource === dragOwnerSource || dragOwnerSource.getEndpoint().contract == dataSource.getEndpoint().contract) {
                var movedItems = [];

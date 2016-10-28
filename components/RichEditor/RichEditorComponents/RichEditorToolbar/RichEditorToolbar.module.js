@@ -231,6 +231,36 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             return items;
          },
 
+         _unbindEditor: function() {
+            var
+               editor = this._options.linkedEditor;
+            RichEditorToolbar.superclass._unbindEditor.apply(this, arguments);
+            if (editor) {
+               editor.unsubscribe('onUndoRedoChange', this._handlersInstances.undoRedo);
+               editor.unsubscribe('onNodeChange', this._handlersInstances.node);
+               editor.unsubscribe('onToggleContentSource', this._handlersInstances.source);
+            }
+         },
+
+         _bindEditor: function() {
+            var
+               editor = this._options.linkedEditor;
+            RichEditorToolbar.superclass._bindEditor.apply(this, arguments);
+
+            this._handlersInstances.undoRedo = this._undoRedoChangeHandler.bind(this);
+            this._handlersInstances.node = this._nodeChangeHandler.bind(this);
+            this._handlersInstances.source = this._toggleContentSourceHandler.bind(this);
+            if (this.getItems().getRecordById('undo') && this.getItems().getRecordById('redo')) {
+               editor.subscribe('onUndoRedoChange', this._handlersInstances.undoRedo);
+            }
+            if (this.getItems().getRecordById('unlink')) {
+               editor.subscribe('onNodeChange', this._handlersInstances.node);
+            }
+            if (this.getItems().getRecordById('source')) {
+               editor.subscribe('onToggleContentSource', this._handlersInstances.source);
+            }
+         },
+
          /*БЛОК ФУНКЦИЙ ОБЁРТОК ДЛЯ ОТПРАВКИ КОМАНД РЕДАКТОРУ*/
          _execCommand : function(name) {
             if (this._options.linkedEditor) {

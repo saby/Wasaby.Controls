@@ -897,14 +897,14 @@ define('js!SBIS3.CONTROLS.ListView',
          _createScrollPager: function(){
             this._scrollWatcher.subscribe('onScroll', this._onScrollHandler.bind(this));
             this._scrollPager = new Paging({
-               element: $('.controls-ListView__scrollPager', this._container),
+               element: $('> .controls-ListView__scrollPager', this._container),
                visible: false,
                showPages: false,
                keyField: 'id',
                parent: this
             });
             if (constants.browser.isMobilePlatform){
-               $('.controls-ListView__scrollPager', this._container).appendTo(this._scrollWatcher.getScrollContainer());
+               $('> .controls-ListView__scrollPager', this._container).appendTo(this._scrollWatcher.getScrollContainer());
             }
             this._setScrollPagerPosition();
             this._scrollBinder = new ComponentBinder({
@@ -1382,7 +1382,8 @@ define('js!SBIS3.CONTROLS.ListView',
                         else {
                            InformationPopupManager.showMessageDialog({
                               status: 'default',
-                              message: message
+                              message: message,
+                              parent: this
                            });
                         }
                      }
@@ -1501,7 +1502,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isHoverEditMode()) {
                this.subscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
             } else if (this._isClickEditMode()) {
-               this.subscribe('onItemClick', this._onItemClickHandler);
+               this.subscribe('onItemClick', this._startEditOnItemClick);
             }
          },
          beforeNotifyOnItemClick: function() {
@@ -1528,14 +1529,14 @@ define('js!SBIS3.CONTROLS.ListView',
                if (this._isHoverEditMode()) {
                   this.unsubscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
                } else if (this._isClickEditMode()) {
-                  this.unsubscribe('onItemClick', this._onItemClickHandler);
+                  this.unsubscribe('onItemClick', this._startEditOnItemClick);
                }
                this._destroyEditInPlace();
                this._options.editMode = editMode;
                if (this._isHoverEditMode()) {
                   this.subscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
                } else if (this._isClickEditMode()) {
-                  this.subscribe('onItemClick', this._onItemClickHandler);
+                  this.subscribe('onItemClick', this._startEditOnItemClick);
                }
             }
          },
@@ -1588,7 +1589,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._destroyEditInPlace();
          },
 
-         _onItemClickHandler: function(event, id, model, originalEvent) {
+         _startEditOnItemClick: function(event, id, model, originalEvent) {
             var
                result = this.showEip(model, { isEdit: true }, false);
             if (originalEvent.type === 'click') {
