@@ -1,5 +1,5 @@
 <!--Если размер текста сообщения и описания превышает заданные рамки, то увеличиваем размер окна-->
-<div class="controls-SubmitPopup {{? it.message.length > it.messagehMaxLengt || it.details.length > it.detailsMaxLength }}controls-SubmitPopup__size-big{{?}}">
+<div class="controls-SubmitPopup {{? it.message.length > it.messageMaxLength || it.details.length > it.detailsMaxLength }}controls-SubmitPopup__size-big{{?}}">
 
    <div class="controls-SubmitPopup__body">
       {{? it.messageTemplate || it.message }}<div class="controls-SubmitPopup__message">{{=(it.messageTemplate ? it.messageTemplate.apply(this, [it]) : it.message)}}</div>{{?}}
