@@ -1944,6 +1944,11 @@ define('js!SBIS3.CONTROLS.ListView',
                 containsHoveredItem;
 
             ListView.superclass._drawItemsCallback.apply(this, arguments);
+
+            if (this.isInfiniteScroll()) {
+               this._preScrollLoading();
+            }
+
             this._drawSelectedItems(this._options.selectedKeys);
 
             hoveredItem = this.getHoveredItem();
@@ -1996,7 +2001,10 @@ define('js!SBIS3.CONTROLS.ListView',
          _drawItemsCallbackSync: function(){
             ListView.superclass._drawItemsCallbackSync.call(this);
             if (this.isInfiniteScroll()) {
-               this._preScrollLoading();
+               if (this._needScrollCompensation) {
+                  this._moveTopScroll();
+                  this._needScrollCompensation = false;
+               }
             }
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
@@ -2154,18 +2162,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * 
           */
          _preScrollLoading: function(){
-            var hasScroll = (function() {
-                  return this._scrollWatcher.hasScroll();
-               }).bind(this),
-               scrollDown = this._infiniteScrollState.mode == 'down' && !this._infiniteScrollState.reverse;
+            var scrollDown = this._infiniteScrollState.mode == 'down' && !this._infiniteScrollState.reverse;
+
             // Если нет скролла или скролл внизу (при загрузке вниз), значит нужно догружать еще записи
-            if ((this.isScrollOnBottom() && scrollDown) || !hasScroll()) {
+            if ((this.isScrollOnBottom() && scrollDown) || !this._scrollWatcher.hasScroll()) {
                this._scrollLoadNextPage();
-            } else  {
-               if (this._needScrollCompensation) {
-                  this._moveTopScroll();
-                  this._needScrollCompensation = false;
-               }
             }
          },
 
