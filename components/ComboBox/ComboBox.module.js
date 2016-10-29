@@ -5,13 +5,15 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "html!SBIS3.CONTROLS.ComboBox",
    "js!SBIS3.CONTROLS.PickerMixin",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
+   "js!WS.Data/Collection/RecordSet",
+   "js!WS.Data/Display/Display",
    "js!SBIS3.CONTROLS.Selectable",
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.SearchMixin",
    "html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown",
    "html!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate",
    "html!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate"
-], function ( constants, Deferred,TextBox, dotTplFn, PickerMixin, ItemsControlMixin, Selectable, DataBindMixin, SearchMixin, arrowTpl, ItemTemplate, ItemContentTemplate) {
+], function ( constants, Deferred,TextBox, dotTplFn, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, arrowTpl, ItemTemplate, ItemContentTemplate) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора.
@@ -51,6 +53,34 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     *      <option name="keyField">key</option>
     * </component>
     */
+
+   function getRecordsForRedrawCB(projection, cfg){
+      var itemsProjection;
+
+      itemsProjection = cfg._getRecordsForRedrawSt.apply(this, arguments);
+      if (cfg.emptyValue){
+         itemsProjection.unshift(getEmptyProjection(cfg));
+      }
+      return itemsProjection;
+   }
+
+   function getEmptyProjection(cfg) {
+      var rawData = {},
+         emptyItemProjection,
+         rs;
+      rawData[cfg.keyField] = null;
+      rawData[cfg.displayField] = 'Не выбрано';
+      rawData.isEmptyValue = true;
+
+      rs = new RecordSet({
+         rawData: [rawData],
+         idProperty: cfg.keyField
+      });
+
+      emptyItemProjection = Projection.getDefaultDisplay(rs).at(0);
+      cfg._emptyRecord = emptyItemProjection.getContents();
+      return emptyItemProjection;
+   }
 
    var ComboBox = TextBox.extend([PickerMixin, ItemsControlMixin, Selectable, DataBindMixin, SearchMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       _dotTplFn: dotTplFn,
@@ -97,6 +127,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          _isClearing: false,
          _keysWeHandle: [constants.key.up, constants.key.down, constants.key.enter, constants.key.esc],
          _options: {
+            _emptyRecord: undefined,
+            _getRecordsForRedraw: getRecordsForRedrawCB,
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
             searchDelay: 0,
@@ -305,16 +337,17 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).toggleClass('controls-ComboBox__fieldNotEditable__placeholder', !text);
       },
 
-      _drawSelectedItem: function (key, index) {
-         function clearSelection() {
-            ComboBox.superclass.setText.call(this, '');
-            this._drawNotEditablePlaceholder('');
-            $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text('');
-            if (this._picker) {
-               $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
-            }
-            this._container.addClass('controls-ComboBox_emptyValue');
+      _clearSelection: function(){
+         ComboBox.superclass.setText.call(this, '');
+         this._drawNotEditablePlaceholder('');
+         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text('');
+         if (this._picker) {
+            $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
          }
+         this._container.addClass('controls-ComboBox_emptyValue');
+      },
+
+      _drawSelectedItem: function (key, index) {
          var def;
          def = new Deferred();
 
@@ -332,32 +365,38 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   }
                }
             }
-            var self = this;
-            def.addCallback(function (item) {
-               if (item) {
-                  var newText = self._propertyValueGetter(item, self._options.displayField);
-                  if (newText != self._options.text) {
-                     ComboBox.superclass.setText.call(self, newText);
-                     self._drawNotEditablePlaceholder(newText);
-                     $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(newText);
-                     self._container.toggleClass('controls-ComboBox_emptyValue', (key == undefined));
-                  }
-               }
-               else {
-                  clearSelection.call(self);
-               }
-               if (self._picker) {
-                  $('.controls-ComboBox__itemRow__selected', self._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
-                  $('.controls-ComboBox__itemRow[data-id=\'' + key + '\']', self._picker.getContainer().get(0)).addClass('controls-ComboBox__itemRow__selected');
-               }
-            });
+            def.addCallback(this._drawSelectedItemText.bind(this, key));
          }
          if (this._isClearing) {
-            clearSelection.call(this);
+            this._clearSelection();
             this._isClearing = false;
          }
+      },
 
+      _drawSelectedItemText: function(key, item){
+         if (item) {
+            var newText = this._propertyValueGetter(item, this._options.displayField);
+            if (newText != this._options.text) {
+               ComboBox.superclass.setText.call(this, newText);
+               this._drawNotEditablePlaceholder(newText);
+               $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(newText);
+               this._container.toggleClass('controls-ComboBox_emptyValue', (key === null));
+            }
+         }
+         else {
+            this._clearSelection();
+         }
+         if (this._picker) {
+            $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
+            $('.controls-ComboBox__itemRow[data-id=\'' + key + '\']', this._picker.getContainer().get(0)).addClass('controls-ComboBox__itemRow__selected');
+         }
+      },
 
+      _drawSelectedEmptyRecord: function(){
+         this._drawSelectedItemText(null, this._options._emptyRecord);
+         this._options.selectedKey = null;
+         this.setSelectedIndex(-1);
+         this.hidePicker();
       },
 
       _addItemAttributes : function(container, item) {
@@ -381,13 +420,17 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                var hash = $(row).attr('data-hash');
                var projItem, index;
                projItem = self._getItemsProjection().getByHash(hash);
+               if (!projItem && self._options.emptyValue){
+                  self._drawSelectedEmptyRecord();
+                  return;
+               }
                index = self._getItemsProjection().getIndex(projItem);
+               self.setSelectedIndex(index);
+               self.hidePicker();
                if (self._options.autocomplete){
                   self._getItemsProjection().setFilter(null);
                   self.redraw();
                }
-               self.setSelectedIndex(index);
-               self.hidePicker();
                // чтобы не было выделения текста, когда фокус вернули в выпадашку
                self._fromTab = false;
                self.setActive(true);
@@ -499,7 +542,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                });
 
                if (noItems && oldKey !== null) {
-                  self.setSelectedKey(null);
+                  ComboBox.superclass.setSelectedKey.call(self, null);
                   self._drawText(oldText);
                }
             });
@@ -629,7 +672,19 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          def.callback();
          return def;
       },
+
+      _getKeyByIndex: function(index){
+         if (this._options.emptyValue && index === -1){
+            return null;
+         }
+         return ComboBox.superclass._getKeyByIndex.apply(this, arguments);
+      },
+
       setSelectedKey : function(key) {
+         if (this._options.emptyValue && key === null){
+            this._drawSelectedEmptyRecord();
+            return;
+         }
          if (key == null && !(this.getItems() && this.getItems().getRecordById(key))) {
             this._isClearing = true;
          }

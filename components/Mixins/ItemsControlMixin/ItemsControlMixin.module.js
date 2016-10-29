@@ -654,10 +654,23 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             if (!this._options.keyField) {
                this._options.keyField = findKeyField(this._options.items)
             }
-            this._dataSource = new MemorySource({
-               data: this._options.items,
-               idProperty: this._options.keyField
-            });
+
+            /*TODO опасная правка. Суть: Некоторые вместе с массивом задают сорс, а мы затираем переданный сорс
+            * смотрим если сорс уже задан, то итемы просто превращаем в рекордсет, а сорс оставляем*/
+            if (this._dataSource) {
+               this._options._items = JSONToRecordset(this._options.items, this._options.keyField);
+               this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
+               this._options._itemsProjection = this._options._applyGroupingToProjection(this._options._itemsProjection, this._options);
+               this._setItemsEventHandlers();
+               this._notify('onItemsReady');
+               this._itemsReadyCallback();
+            }
+            else {
+               this._dataSource = new MemorySource({
+                  data: this._options.items,
+                  idProperty: this._options.keyField
+               });
+            }
          }
       },
 
@@ -766,7 +779,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                markup;
 
             data.tplData = this._prepareItemData();
-            //TODO опять же, перед полной перерисовкой данные лесенки достаточно сбросить, чтобы она правильно отработала
             //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
             markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
             //TODO это может вызвать тормоза
@@ -801,15 +813,28 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _redrawItem: function(item) {
+         var result = this._redrawItemInner(item);
+         if (result) {
+            this._reviveItems(item.getContents().getId() != this._options.selectedKey);
+         }
+      },
+
+      _redrawItemInner: function(item) {
          var
+            result = false,
             markup,
             targetElement = this._getDomElementByItem(item),
-            itemContainer,
             data;
          if (targetElement.length) {
             data = this._prepareItemData();
             data.projItem = item;
             data.item = item.getContents();
+
+            //TODO: выпилить вместе декоратором лесенки
+            if (data.decorators && data.decorators.ladder) {
+               data.decorators.ladder.setRecord(data['item']);
+            }
+
             var dot;
             if (data.itemTpl) {
                dot = data.itemTpl;
@@ -821,11 +846,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this._options);
             /*TODO посмотреть не вызывает ли это тормоза*/
             this._clearItems(targetElement);
-            targetElement.after(markup).remove();
-
-            itemContainer = this._getDomElementByItem(item);
-            this._reviveItems(item.getContents().getId() != this._options.selectedKey);
+            if (constants.browser.isIE8 || constants.browser.isIE9) {
+               targetElement.after(markup).remove();
+            }
+            else {
+               targetElement.get(0).outerHTML = markup;
+            }
+            result = true;
          }
+         return result;
       },
 
       _removeItems: function (items, groupId) {
@@ -869,7 +898,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             //Если в группе один элемент (или меньше), то это значит что добавился элемент в группу, которая еще не отрисована
             //и надо ее отрисовать
             itemsToAdd = [];
-            if (this._getItemsProjection().getGroupItems(groupId).length <= 1) {
+            if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
                this._options._groupItemProcessing(groupId, itemsToAdd, items[0], this._options);
             }
             itemsToAdd.concat(items);
@@ -1559,6 +1588,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @param {Object} item Запись, которую необходимо перерисовать
        */
       redrawItem: function(item, projItem) {
+         this._oldRedrawItemInner(item, projItem);
+         this._reviveItems(item.getId() != this._options.selectedKey);
+      },
+
+      _oldRedrawItemInner: function(item, projItem, callback) {
          projItem = projItem || this._getItemProjectionByItemId(item.getId());
          var
             targetElement = this._getElementByModel(item),
@@ -1566,8 +1600,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._addItemAttributes(newElement, projItem);
          this._clearItems(targetElement);
          targetElement.after(newElement).remove();
-         this.reviveComponents();
-         this._notifyOnDrawItems(item.getId() != this._options.selectedKey);
       },
 
       _getElementByModel: function(item) {
@@ -1782,10 +1814,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _changeItemProperties: function(item, property) {
          if (this._isSlowDrawing(this._options.easyGroup)) {
-            this.redrawItem(item.getContents(), item);
+            this._oldRedrawItemInner(item.getContents(), item);
          }
          else {
-            this._redrawItem(item);
+            this._redrawItemInner(item);
          }
       },
 
@@ -1917,8 +1949,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                meth = this._options.groupBy.method,
                prev = this._options._itemsProjection.getPrevious(projItem),
                next = this._options._itemsProjection.getNext(projItem);
-            if(prev)
+            if (prev) {
                meth.call(this, prev.getContents(), undefined, undefined, prev, this._options);
+            }
             meth.call(this, item, undefined, undefined, projItem, this._options);
             if (next && !meth.call(this, next.getContents(), undefined, undefined, next, this._options)) {
                flagAfter = true;
@@ -1926,33 +1959,35 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          /**/
          var target = this._getTargetContainer(item),
-            currentItemAt = at > 0 ? this._getItemContainerByIndex(target, at - 1) : null,
             template = this._getItemTemplate(projItem),
-            newItemContainer = this._buildTplItem(projItem, template),
-            rows;
+            newItemContainer = this._buildTplItem(projItem, template);
          this._addItemAttributes(newItemContainer, projItem);
-         if (flagAfter) {
-            newItemContainer.insertBefore(this._getItemContainerByIndex(target, at));
-            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
-         } else if (currentItemAt && currentItemAt.length) {
-            if (prev)
-               meth && meth.call(this, prev.getContents(), undefined, undefined, prev, this._options);
-            newItemContainer.insertAfter(currentItemAt);
-            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
-         } else if(at === 0) {
-            this._previousGroupBy = undefined;
-            newItemContainer.prependTo(target);
-            rows = [newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
-         } else {
-            newItemContainer.appendTo(target);
-            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next()];
-         }
+         this._insertItemContainer(item, newItemContainer, target, at, prev, flagAfter);
          if (canApplyGrouping) {
             this._group(projItem, {at: at});
             this._previousGroupBy = previousGroupBy;
          }
          if (!withoutNotify) {
             this._notifyOnDrawItems();
+         }
+      },
+
+      _insertItemContainer: function(item, itemContainer, target, at, prev, flagAfter) {
+         var
+             meth = this._options.groupBy.method,
+             currentItemAt = at > 0 ? this._getItemContainerByIndex(target, at - 1) : null;
+         if (flagAfter) {
+            itemContainer.insertBefore(this._getItemContainerByIndex(target, at));
+         } else if (currentItemAt && currentItemAt.length) {
+            if (prev) {
+               meth && meth.call(this, prev.getContents(), undefined, undefined, prev, this._options);
+            }
+            itemContainer.insertAfter(currentItemAt);
+         } else if(at === 0) {
+            this._previousGroupBy = undefined;
+            itemContainer.prependTo(target);
+         } else {
+            itemContainer.appendTo(target);
          }
       },
 
@@ -1996,10 +2031,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var i;
          for (i = 0; i < items.length; i++) {
             this._changeItemProperties(items[i]);
-            /*this._redrawItem(
-               items[i]
-            );*/
          }
+         this._reviveItems(item.getContents().getId() != this._options.selectedKey);
       },
       _onCollectionRemove: function(items, notCollapsed) {
          if (items.length) {
@@ -2045,6 +2078,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _onUpdateItemProperty: function(item, property) {
          if (this._isNeedToRedraw()) {
             this._changeItemProperties(item, property);
+            this._reviveItems(item.getContents().getId() != this._options.selectedKey);
          }
       }
    };
@@ -2079,8 +2113,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
 	            case IBindCollection.ACTION_REPLACE:
 	               this._onCollectionReplace(newItems);
-	               this.reviveComponents();
-                  this._drawItemsCallbackDebounce();
 	               break;
 
 	            case IBindCollection.ACTION_RESET:

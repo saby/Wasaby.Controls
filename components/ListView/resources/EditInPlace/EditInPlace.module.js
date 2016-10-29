@@ -144,12 +144,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   this.getContainer().attr('data-hash', itemProj.getHash());
                }
                this.setOffset(model);
-               this.updatePosition();
-               //Строка с редакторами всегда должна быть первой в таблице, иначе если перед ней вставятся другие строки,
-               //редакторы будут неверно позиционироваться, т.к. у строки с редакторами position absolute и top у неё
-               //всегда равен 0, даже если она не первая. Просто перед показом, пододвинем строчку с редакторами на первое место.
-               this._container.prependTo(this._options.itemsContainer);
                EditInPlace.superclass.show.apply(this, arguments);
+               this.updatePosition();
             },
             _beginTrackHeight: function() {
                this._lastHeight = 0;
@@ -220,9 +216,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }
             },
             updatePosition: function() {
-               var editorTop;
-               //позиционируем редакторы
-               editorTop = this.getTarget().position().top - this._options.itemsContainer.position().top;
+               var editorTop = this.getTarget().position().top - this.getContainer().position().top;
                $.each(this._editors, function(id, editor) {
                   $(editor).css('top', editorTop);
                });

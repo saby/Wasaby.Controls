@@ -115,10 +115,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
              * Обработчик события по приходу фокуса на контрол в области редактирования по месту
              * @private
              */
-            _onChildFocusIn: function() {
+            _onChildFocusIn: function(event) {
                var
                   editingEip = this._getEditingEip();
-               if (!editingEip || editingEip.getContainer().get(0) !== this.getContainer().get(0)) {
+               if (!editingEip || editingEip.getContainer().get(0) !== event.getTarget().getContainer().get(0)) {
                   this.edit(this._hoveredEip.getEditingRecord());
                }
             },

@@ -136,7 +136,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
             return element[0].wsControl.isScrollOnTop();
          }
          else {
-            return element.scrollTop() == 0;
+            return element.scrollTop() === 0;
          }
       },
 
@@ -163,6 +163,9 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
        */
       getScrollHeight: function(element) {
          element = element || this.getScrollContainer()[0];
+         if (this._customScroll){
+            return element.wsControl.getScrollHeight();
+         }
          if (element.scrollHeight){
             return element.scrollHeight;
          } else {
@@ -173,7 +176,6 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
                return Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
             }
          }
-         return this._customScroll ? $('.mCSB_container').height() : element.scrollHeight;
       },
 
       /**

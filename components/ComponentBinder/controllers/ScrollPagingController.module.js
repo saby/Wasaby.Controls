@@ -1,4 +1,6 @@
-define('js!SBIS3.CONTROLS.ScrollPagingController', ['js!SBIS3.StickyHeaderManager', "Core/Abstract", "Core/core-instance"], function(StickyHeaderManager, cAbstract, cInstance) {
+define('js!SBIS3.CONTROLS.ScrollPagingController', 
+   ['js!SBIS3.StickyHeaderManager', 'Core/Abstract', 'Core/core-instance', 'Core/WindowManager'], 
+   function(StickyHeaderManager, cAbstract, cInstance, WindowManager) {
 
    var ScrollPagingController = cAbstract.extend({
       $protected: {
@@ -9,7 +11,14 @@ define('js!SBIS3.CONTROLS.ScrollPagingController', ['js!SBIS3.StickyHeaderManage
          _scrollPages: [], // Набор страниц для скролл-пэйджина
          _pageOffset: 0, // offset последней страницы
          _currentScrollPage: 1,
-         _windowResizeTimeout: null
+         _windowResizeTimeout: null,
+         _zIndex: null
+      },
+
+      init: function() {
+         ScrollPagingController.superclass.init.apply(this, arguments);
+         this._zIndex = WindowManager.acquireZIndex();
+         this._options.paging.getContainer().css('z-index', this._zIndex);
       },
 
       bindScrollPaging: function(paging) {
@@ -31,6 +40,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController', ['js!SBIS3.StickyHeaderManage
                this.updateScrollPages(true);
             }.bind(this));
          }
+
+         paging.subscribe('onLastPageSet', this._scrollToLastPage.bind(this));
 
          paging.subscribe('onSelectedItemChange', function(e, pageNumber){
             var scrollToPage = function(page){
@@ -72,6 +83,10 @@ define('js!SBIS3.CONTROLS.ScrollPagingController', ['js!SBIS3.StickyHeaderManage
          }.bind(this));
 
          $(window).on('resize.wsScrollPaging', this._resizeHandler.bind(this));
+      },
+
+      _scrollToLastPage: function(){
+         this._options.view.setPage(-1);
       },
 
       _isPageStartVisisble: function(page){
@@ -174,6 +189,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController', ['js!SBIS3.StickyHeaderManage
 
       destroy: function(){
          $(window).off('resize.wsScrollPaging');
+         WindowManager.releaseZIndex(this._zIndex);
          ScrollPagingController.superclass.destroy.apply(this, arguments);
       }
 

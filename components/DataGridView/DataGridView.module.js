@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             for (var i = 0, l = columns.length; i < l; i++){
                curCol = columns[i];
                nextCol = columns[i + 1];
-               curColSplitTitle = curCol.title.split('.');
+               curColSplitTitle = (curCol.title || '').split('.');
                nextColSplitTitle = nextCol && nextCol.title.split('.');
 
                if (!supportDouble){
@@ -452,7 +452,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (cfg._itemsProjection) {
             cfg._ladderInstance.setCollection(cfg._itemsProjection);
          }
-         newCfg._decorators.add(new LadderDecorator());
+
+         //TODO: выпилить вместе декоратором лесенки
+         newCfg._decorators.ladder = new LadderDecorator({
+            ladderInstance: cfg._ladderInstance
+         });
+         newCfg._decorators.add(newCfg._decorators.ladder);
 
          return newCfg;
       },
@@ -491,6 +496,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
                if(this._options.showHead) {
                   trs.push(this._thead[0].children[0]);
+               }
+
+               if(this._checkResults()) {
+                  trs.push(this._thead.find('.controls-DataGridView__results')[0]);
                }
 
                for(var i = 0, len = trs.length; i < len; i++) {
@@ -580,6 +589,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
          var body = $('.controls-DataGridView__tbody', this._container);
 
          var newTHead = $(headMarkup);
+
+         /* Если шапка зафиксирована, то она находится вне контейнера компонента.
+            По этой причине обработчики событий надо вешать для неё отдельно. */
+         if(this._options.stickyHeader) {
+            this._bindEventHandlers(newTHead);
+         }
+
          if (this._thead && this._thead.length){
             this._destroyControls(this._thead);
             this._thead.replaceWith(newTHead);
@@ -640,6 +656,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
        * @noShow
        */
       setStickyHeader: function(isSticky){
+         /* Не даем включить прилипание заголовков при включённом частичном скроле,
+            подробнее проблема описана в методе _modifyOptions */
+         if(isSticky && this._options.startScrollColumn !== undefined) {
+            return;
+         }
          if (this._options.stickyHeader !== isSticky){
             this._options.stickyHeader = isSticky;
             this.getContainer().find('.controls-DataGridView__table').toggleClass('ws-sticky-header__table', isSticky);
@@ -712,7 +733,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._redrawHead();
          DataGridView.superclass._redrawItems.apply(this, arguments);
       },
-      _onItemClickHandler: function(event, id, record, target, originalEvent) {
+      _startEditOnItemClick: function(event, id, record, target, originalEvent) {
          var
             targetColumn,
             targetColumnIndex;

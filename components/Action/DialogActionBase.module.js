@@ -200,7 +200,9 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
             template: dialogComponent,
             componentOptions: compOptions,
             handlers: {
-               onAfterClose: this._onAfterCloseDialogHandler.bind(this),
+               onAfterClose: function(e, meta){
+                  self._notifyOnExecuted(meta, this._record);
+               },
                onBeforeShow: function(){
                   self._notify('onBeforeShow');
                },
@@ -227,13 +229,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
          else {
             this._showDialog(config, meta, mode);
          }
-      },
-
-      _onAfterCloseDialogHandler: function(e, meta){
-         //В качестве шаблона могут использовать не FormController, проверяем на наличие метода getRecord
-         var record = this._dialog._getTemplateComponent().getRecord && this._dialog._getTemplateComponent().getRecord();
-         this._dialog = undefined;
-         this._notifyOnExecuted(meta, record);
       },
 
       _getRecordDeferred: function(config, meta, mode, templateComponent){
@@ -301,16 +296,11 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
       },
 
       _showDialog: function(config, meta, mode){
-         var floatAreaCfg,
-            Component;
+         var Component;
+
+         cMerge(config, this._getDialogConfig(meta));
          mode = mode || this._options.mode;
-         if (mode == 'floatArea'){
-            Component = FloatArea;
-            floatAreaCfg = this._getFloatAreaConfig(meta);
-            cMerge(config, floatAreaCfg);
-         } else if (mode == 'dialog') {
-            Component = Dialog;
-         }
+         Component = (mode == 'floatArea') ? FloatArea : Dialog;
 
          if (this._isNeedToRedrawDialog()){
             this._setNewDialogConfig(config);
@@ -320,13 +310,13 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
          }
       },
       _isNeedToRedrawDialog: function(){
-        return this._dialog && !this._dialog.isAutoHide();
+        return this._dialog && !this._dialog.isDestroyed() && !this._dialog.isAutoHide();
       },
       _setNewDialogConfig: function(config){
          cMerge(this._dialog._options, config);
          this._dialog.reload();
       },
-      _getFloatAreaConfig: function(meta){
+      _getDialogConfig: function(meta){
          var defaultConfig = {
                isStack: true,
                autoHide: true,

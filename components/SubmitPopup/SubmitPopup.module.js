@@ -26,7 +26,6 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
           * @variant default  "По умолчанию". Имеет кнопку "ОК". Цвет диалога - синий.
           * @variant success  "Успешно". Имеет кнопку "ОК". Цвет диалога - зеленый.
           * @variant error    "Ошибка". Имеет кнопку "ОК". Цвет диалога - красный.
-          * @variant warning  "Предупреждение". Имеет кнопку "ОК". Цвет диалога - оранжевый.
           */
 
          /**
@@ -89,7 +88,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                },
 
                /**
-                * @cfg {ButtonConfig} Настройки кнопки подтверждения. Применяется для диалогов со статусом default, success, error и warning.
+                * @cfg {ButtonConfig} Настройки кнопки подтверждения. Применяется для диалогов со статусом default, success  и error.
                 */
                submitButton: {
                   caption: rk('ОК'),
@@ -115,6 +114,16 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                 * @noShow
                 */
                template: template,
+
+               /*
+                * cfg {Number} Максимальный размер сообщения, превышая который, окно увеличит свой размер.
+                */
+               messageMaxLength: 100,
+
+               /*
+                * cfg {Number} Максимальный размер описания, превышая который, окно увеличит свой размер.
+                */
+               detailsMaxLength: 160,
 
                isModal: true
             },

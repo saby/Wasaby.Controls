@@ -173,7 +173,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
       redraw: function() {
          TreeDataGridView.superclass.redraw.apply(this, arguments);
-         this._createAllFolderFooters();
+         /*redraw может позваться, когда данных еще нет*/
+         if (this._getItemsProjection()) {
+            this._createAllFolderFooters();
+         }
       },
 
       _drawItemsCallback: function() {
@@ -502,6 +505,13 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          config.getEditorOffset = this._getEditorOffset.bind(this);
          config.hierField = this._options.hierField;
          return config;
+      },
+
+      _startEditOnItemClick: function(event, id, record, target, originalEvent) {
+         //При клике на треугольник раскрытия папки начинать редактирование записи не нужно
+         if (!$(target).hasClass('js-controls-TreeView__expand')) {
+            TreeDataGridView.superclass._startEditOnItemClick.apply(this, arguments);
+         }
       },
 
       _onDragHandler: function (dragObject, e) {

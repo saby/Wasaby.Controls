@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          this._crossContainer.click(function() {
             self.setText('');
          });
-         
+
          /* Если передали параметр поиска, то поиск производим через ComponentBinder */
          if(this._options.searchParam) {
             this.subscribe('onSearch', function() {
@@ -109,6 +109,15 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
              pickerContainer = this._picker.getContainer()[0];
 
          if (this._picker && textBoxWidth !== pickerContainer.clientWidth) {
+            /* Почему установлен maxWidth и width ?
+               popup в текущей реализации не понимает, что ему размер кто-то установил извне и
+               при пересчётах может спокойно перетирать эти размеры. Поэтому, для того чтобы зафиксировать ширину,
+               устанавливаем maxWidth (maxWidth не стирается при пересчётах popup'a).
+               Но учитываем, что maxWidth не будет учитываться, если автодополнение меньше поля ввода, и поэтому после
+               расчётов позиции устанавливаем width - чтобы гаррантировать одинаковую ширину поля ввода и автодополнения.
+               Прикладной программист может увеличить ширину автодополнения установив min-width. */
+            pickerContainer.style.maxWidth = textBoxWidth + 'px';
+            this._picker.recalcPosition(true);
             pickerContainer.style.width = textBoxWidth + 'px';
          }
       },

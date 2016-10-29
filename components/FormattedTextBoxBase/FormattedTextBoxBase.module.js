@@ -800,6 +800,8 @@ define(
             this._clearCommandHandler('delete');
          } else if (key == constants.key.backspace) {
             this._clearCommandHandler('backspace');
+         } else if (key == constants.key.pageUp || key == constants.key.pageDown) {
+            // предотвращаем проскроливание страницы по нажатию на pageUp и pageDown
          } else if (key == 88 && isCtrl) {
             //предотвращаем вырезание Ctrl+X
          } else if (key == constants.key.enter && constants.browser.firefox) {
@@ -846,7 +848,7 @@ define(
       },
 
       _getTextDiff: function(){
-         var oldText = this._options.text.split(':'),
+         var oldText = this._options.text ? this._options.text.split(/:|-/)  : this._getClearText().split(/:|-/),
              newText = this._inputField.text().split(':');
          for (var i = 0, l = newText.length; i < l; i++) {
             if (oldText[i].length !== newText[i].length){
@@ -861,6 +863,10 @@ define(
             }
          }
          return false;
+      },
+
+      _getClearText: function(){
+         return this._getFormatModel().getStrMask(this._getMaskReplacer())
       },
 
       _clearCommandHandler: function(type) {

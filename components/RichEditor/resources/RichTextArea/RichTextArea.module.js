@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
       var
          constants = {
-            blankImgPath: 'https://cdn.sbis.ru/richeditor/26-01-2015/blank.png',
+            blankImgPath: '/cdn/richeditor/26-01-2015/blank.png',
             maximalPictureSize: 120,
             imageOffset: 40, //16 слева +  24 справа
             defaultYoutubeHeight: 300,
@@ -360,7 +360,21 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (active && this._needFocusOnActivated() && this.isEnabled()) {
                this._performByReady(function() {
                   this._tinyEditor.focus();
-                  this._scrollTo(this._inputControl[0], 'top');
+                  if (cConstants.browser.isMobileAndroid) {
+                     // на android устройствах не происходит подскролла нативного
+                     // наш функционал тестируется на планшете фирмы MI на котором клавиатура появляется долго ввиду анимации =>
+                     // => сразу сделать подсролл нельзя
+                     // появление клавиатуры стрельнет resize у window в этот момент можно осуществить подсролл до элемента ввода текста
+                     var
+                        resizeHandler = function(){
+                           this._inputControl[0].scrollIntoView(false);
+                           $(window).off('resize', resizeHandler)
+                        }.bind(this);
+                     $(window).on('resize', resizeHandler);
+                  } else if (cConstants.browser.isMobileIOS) {
+                     this._scrollTo(this._inputControl[0], 'top');
+                  }
+
                   RichTextArea.superclass.setActive.apply(this, args);
                }.bind(this));
             } else {
@@ -547,7 +561,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @public
           */
          getHistory: function() {
-            return UserConfig.getParamValues(this._getNameForHistory());
+            return UserConfig.getParamValues(this._getNameForHistory()).addCallback(function(arrBL) {
+               if( typeof arrBL  === 'string') {
+                  arrBL = [arrBL];
+               }
+               return arrBL;
+            })
          },
 
          /**
@@ -760,12 +779,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                                  } else if (href) {
                                     linkAttrs.href = href;
                                     editor.selection.setRng(range);
-                                    if (editor.selection.getContent() === '') {
-                                       editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(href)));
+                                    if (editor.selection.getContent() === '' || (fre._isOnlyTextSelected()) && cConstants.browser.firefox) {
+                                       var
+                                          linkText = selection.getContent({format: 'text'}) || href;
+                                       editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(linkText)));
                                     } else {
                                        editor.execCommand('mceInsertLink', false, linkAttrs);
                                     }
-                                    editor.selection.collapse(false);
                                     editor.undoManager.add();
                                  }
                                  self.close();
@@ -995,24 +1015,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (self.addYouTubeVideo(e.content)) {
                   return false;
                }
-               //Смотреть по текстовому формату (self._clipboardText) честнее тк нет кучи вёрстки
-               //TODO: self._clipboardText заменить на e.content и сделать двойную проверку(на оба формата) когда сделаю задачу:
-               // https://inside.tensor.ru/opendoc.html?guid=5dcde224-e3bd-4fcf-9ff4-a810e9ac4be0&description=
-               if (self._options.decorateLinks && regexp.test(self._clipboardText) && regexp.exec(self._clipboardText)[0] == self._clipboardText) {
-                  var
-                     className = 'rta_replace_' + Math.floor(Math.random() * 10000),
-                     tempText = '<a class="' + className + '" href="' + self._clipboardText + '">' + self._clipboardText + '</a>';
-                  self.insertHtml(tempText);
-                  RichUtil.generateDecoratedLink(self._clipboardText).addCallback(function(newNode) {
-                     var
-                        node = editor.getBody().getElementsByClassName(className);
-                     if (newNode) {
-                        editor.dom.replace(newNode, node);
-                        editor.selection.collapse();
-                     }
-                  });
-                  return false;
-               }
             });
 
             editor.on('Paste', function(e) {
@@ -1030,6 +1032,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                e.content =  content.replace('orphans: 31415;','');
                //Парсер TinyMCE неправльно распознаёт стили из за - &quot;TensorFont Regular&quot;
                e.content = e. content.replace(/&quot;TensorFont Regular&quot;/gi,'\'TensorFont Regular\'');
+               //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
+               //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
+               if (!self._mouseIsPressed) {
+                  e.content = Sanitize(e.content, {validNodes: {img: false}});
+               }
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
                // и послыаем метку форматной вставки, если метка присутствует не надо обрабатывать событие
                // нашим обработчиком, а просто прокинуть его в дальше
@@ -1046,7 +1053,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      }
                   }
                }
-               e.content = Sanitize(e.content, {validNodes: {img: false}});
             });
 
             editor.on('PastePostProcess', function(event){
@@ -1163,7 +1169,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                // </проблема>
                if (!editor.selection.isCollapsed()) {
                   if (editor.selection.getContent() == self._getTinyEditorValue()) {
-                     if (!e.ctrlKey && e.charCode !== 0) {
+                     if (!e.ctrlKey && !(e.metaKey && cConstants.browser.isMacOSDesktop) && e.charCode !== 0) {
                         editor.bodyElement.innerHTML = '';
                      }
                   }
@@ -1215,6 +1221,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   if (self._mouseIsPressed){
                      editor.editorManager.activeEditor = false;
                   }
+                  self._mouseIsPressed = false;
                });
             }
 
@@ -1597,10 +1604,19 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             RichTextArea.superclass._focusOutHandler.apply(this, arguments);
          },
 
-         _initInputHeight: function(){
+         _initInputHeight: function() {
             if (!this._options.autoHeight) {
-               this._inputControl.css('height',  this._container.height());
+               this._inputControl.css('height', this._container.height());
             }
+         },
+         //метод взят из link плагина тини
+         _isOnlyTextSelected: function() {
+            var
+               html = this._tinyEditor.selection.getContent();
+            if (/</.test(html) && (!/^<a [^>]+>[^<]+<\/a>$/.test(html) || html.indexOf('href=') == -1)) {
+               return false;
+            }
+            return true;
          }
       });
 

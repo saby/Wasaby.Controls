@@ -39,6 +39,8 @@
 @default-itemHover-color:                 #F0F5FB;
 @default-itemSelected-color:              #F3F3F3;
 
+@hover-color:                             @blue-dark-color;
+
 
 // ---- //
 // Link //
@@ -54,7 +56,7 @@
 @link-padding:                            0;
 @link-font-size:                          @font-basic-size;
 
-@link-hover-text-color:                   @blue-dark-color;
+@link-hover-text-color:                   @hover-color;
 @link-hover-text-decoration:              underline;
 
 @link-active-text-color:                  @link-hover-text-color;
@@ -81,7 +83,7 @@
 @button-padding:                          0 12px;
 @button-margin:                           auto;
 @button-border-radius:                    16px;
-@button-icon-color-hover:                 @blue-dark-color;
+@button-icon-color-hover:                 @hover-color;
 @button-icon-color:                       @icon-color-primary;
 @button-icon-top-offset:                  4px;                      // top offset of 16x16 icon
 @button-icon-left-offset:                 12px;
@@ -631,7 +633,7 @@
 @menu-header-height:                      32px;
 @menu-header-box-sizing:                  border-box;
 @menu-header-padding:                     8px;
-
+@menu-header-icon-padding:                6px;
 
 // --------- //
 // Menu item //
@@ -697,7 +699,7 @@
 
 @menu-button-header-right-width:                        28px;
 @menu-button-header-right-height:                       30px;
-@menu-button-header-right-margin:                       0 0 0 -6px;
+@menu-button-header-right-margin:                       0;
 @menu-button-header-right-margin-revert-horizontal:     @menu-button-header-right-margin;
 @menu-button-header-right-bg:                           transparent url(@menu-button-header-spritesheet) 0 -4px;
 @menu-button-header-left-bg-revert-horizontal:          transparent url(@menu-button-header-spritesheet) 0 182px;
@@ -822,7 +824,7 @@
 @text-box-disabled-border-style:          @text-box-border-style;
 @text-box-disabled-border-color:          transparent;
 @text-box-disabled-bg:                    transparent;
-@text-box-disabled-border-bottom:         1px solid #ccc;
+@text-box-disabled-border-bottom:         1px solid #E4E4E4;
 
 @text-box-after-width:                    16px;
 @text-box-after-min-height:               @text-box-field-min-height;
@@ -1309,7 +1311,7 @@
 @date-range-text-line-height:                   normal;
 @date-range-icon-button-size:                   18px;
 @date-range-icon-button-margin:                 0 0 3px 8px;
-@date-range-icon-button-hover-color:            @blue-dark-color !important;
+@date-range-icon-button-hover-color:            @hover-color !important;
 @date-range-dash-width:                         2px;
 @date-range-dash-color:                         @black-color;
 @date-range-dash-margin:                        0 3px 4px 3px;
@@ -1645,7 +1647,7 @@
 @tree-view-expand-cursor:                       pointer;
 
 @tree-view-expand-width:                        16px;
-@tree-view-expand-height:                       21px;
+@tree-view-expand-height:                       20px;
 @tree-view-expand-margin:                       0 4px 0 -2px;
 
 @tree-view-value-left-margin:                   @tree-view-expand-width;
@@ -2002,7 +2004,7 @@
 @controls-filterButton-clear-margin-right:        0;
 
 @controls-filterButton-title-fontSize:            15px;
-@controls-filterButton-title-text-color:          #313e78;
+@controls-filterButton-title-text-color:          @blue-dark-color;
 
 @controls-filterButton-area-content-margin:       0 12px 12px 26px;
 @controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
@@ -2030,13 +2032,13 @@
 @controls-filterButton-history-title-display:     inline-block;
 @controls-filterButton-history-title-height:      24px;
 @controls-filterButton-history-title-verAlign:    top;
-@controls-filterButton-history-title-color:       #313e78;
+@controls-filterButton-history-title-color:       @blue-dark-color !important;
 @controls-filterButton-history-title-width:       100%;
 
 //FilterButtonToggleButton
 @controls-filterButton-toggleButton-lineHeight:   20px !important;
 @controls-filterButton-toggleButton-fontSize:     26px !important;
-@controls-filterButton-toggleButton-fontFamily:   acordion-font!important;
+@controls-filterButton-toggleButton-fontFamily:   acordion-font !important;
 @controls-filterButton-toggleButton-height:       24px;
 
 @controls-filterButton-toggleButton-icon-width:   24px;
@@ -2047,6 +2049,7 @@
 @controls-filterButton-toggleButton-icon-style:   normal;
 @controls-filterButton-toggleButton-icon-down:    "\e902";
 @controls-filterButton-toggleButton-icon-up:      "\e904";
+@controls-filterButton-toggleButton-color:        #CCCCCC !important;
 
 @controls-filterButton-toggleButton-border:       none;
 @controls-filterButton-toggleButton-bgColor:      transparent;
@@ -2164,34 +2167,42 @@
 //InformationPopup
 @controls-InformationPopup-bg:                                white;
 @controls-InformationPopup-default-status-border-color:       #0055BB;
-@controls-InformationPopup-success-status-border-color:       #7ACB49;
+@controls-InformationPopup-success-status-border-color:       #72BE44;
 @controls-InformationPopup-error-status-border-color:         #EF463A;
 @controls-InformationPopup-warning-status-border-color:       #FEC63F;
-@controls-InformationPopup-border:                            1px solid #CCCCCC;
+@controls-InformationPopup-border:                            1px solid #E4E4E4;
 @controls-InformationPopup-border-top:                        3px solid;
 @controls-InformationPopup-border-left:                       @controls-InformationPopup-border !important;
 @controls-InformationPopup-border-right:                      @controls-InformationPopup-border !important;
 @controls-InformationPopup-border-bottom:                     @controls-InformationPopup-border !important;
+@controls-InformationPopup-closeButton-top:                   8px;
 
 //NotificationPopup
-@controls-NotificationPopup-header-height:                                   48px;
+@controls-NotificationPopup-header-height:                                   40px;
 @controls-NotificationPopup-header-padding:                                  0 12px 0 12px;
 @controls-NotificationPopup-header-padding-with-close-button:                0 48px 0 12px;
 
 @controls-NotificationPopup-header-caption-margin-right:                     12px;
 @controls-NotificationPopup-header-caption-font-size:                        15px;
-@controls-NotificationPopup-header-icon-margin:                              12px 12px 0 0;
+@controls-NotificationPopup-header-icon-right-margin:                        12px;
+@controls-NotificationPopup-header-icon-height:                              24px;
 
 //SubmitPopup
-@controls-SubmitPopup-min-width:                   351px;
+@controls-SubmitPopup-size-standart-width:         351px;
+@controls-SubmitPopup-size-big-width:              440px;
 @controls-SubmitPopup-body-padding:                32px;
 @controls-SubmitPopup-message-font-size:           18px;
 @controls-SubmitPopup-message-margin-bottom:       8px;
 @controls-SubmitPopup-footer-bg:                   #F5F5F5;
 @controls-SubmitPopup-footer-border-top:           1px solid #EAEAEA;
 @controls-SubmitPopup-footer-padding:              16px;
-@controls-SubmitPopup-button-min-width:            86px;
-@controls-SubmitPopup-button-height:               24px;@controls-movedialog-min-width:                    auto;
+@controls-SubmitPopup-button-width:                86px;
+@controls-SubmitPopup-button-mini-width:           80px;
+@controls-SubmitPopup-button-height:               24px;
+@controls-SubmitPopup-border-top:                  none;
+@controls-SubmitPopup-border-left:                 @controls-InformationPopup-border;
+@controls-SubmitPopup-border-right:                @controls-InformationPopup-border;
+@controls-SubmitPopup-border-bottom:               @controls-InformationPopup-border;
 
 //ListView AjaxIndicator
 @controls-AjaxLoader-background:                   none repeat scroll 0 0 rgba(255, 255, 255, 0.7);

@@ -91,6 +91,20 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          }
       },
 
+      /**
+       * Для кнопки выбора требуется своя реализация метода setSelectedKey, т.к.
+       * Selectable расчитывает на наличие проекции и items, которых в кнопке выбора нет.
+       * + кнопке выбора не требуется единичная отрисовка item'a, т.к. при синхронизации selectedKey и selectedKeys,
+       * всегда будет вызываться метод drawSelectedItems
+       *
+       * Когда сделаем контроллеры и интерфесы, этот метод просто будет звать метод контроллера
+       * @param key
+       */
+      setSelectedKey: function(key) {
+         this._options.selectedKey = key;
+         this._notifySelectedItem(this._options.selectedKey);
+      },
+
       setCaption: function(caption) {
          throw new Error('SelectorButton::setCaption св-во caption работает только на чтение');
       },
@@ -105,6 +119,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          /* Скрываем, если текст пустой */
          text.toggleClass('ws-hidden', !resultText);
          this._checkWidth();
+         this._notifyOnSizeChanged();
       },
 
       _checkWidth: function() {
