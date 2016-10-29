@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          allowEnterToFolder: cfg.allowEnterToFolder
       }
    },
-   searchProcessing = function(projection, cfg) {
+   searchProcessing = function(src, cfg) {
       var resRecords = [], lastNode, lastPushedNode, curPath = [], pathElem, curParentContents;
 
       function pushPath(records, path, cfg) {
@@ -87,7 +87,17 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          }
       }
 
-      projection.each(function (item) {
+      var iterator;
+      //может прийти массив или проекция
+      if (src instanceof Array) {
+         iterator = colHelpers.forEach;
+      }
+      else {
+         iterator = src.each.bind(src);
+      }
+
+
+      iterator(function (item) {
          if ((item.getParent() != lastNode) && curPath.length) {
             if (lastNode != lastPushedNode) {
                pushPath(resRecords, curPath, cfg);
