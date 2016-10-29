@@ -1,4 +1,13 @@
-define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver', "Core/constants", "Core/core-functions", "Core/core-merge", "Core/Abstract", "Core/core-instance"], function(KbLayoutRevertObserver, constants, cFunctions, cMerge, cAbstract, cInstance) {
+define('js!SBIS3.CONTROLS.SearchController',
+    [
+       'js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
+       "Core/constants",
+       "Core/core-functions",
+       "Core/core-merge",
+       "Core/Abstract",
+       "Core/core-instance",
+       'Core/helpers/dom&controls-helpers'
+    ], function(KbLayoutRevertObserver, constants, cFunctions, cMerge, cAbstract, cInstance, domHelpers) {
 
    var SearchController = cAbstract.extend({
       $protected: {
@@ -254,6 +263,13 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
          });
 
          searchForm.subscribe('onKeyPressed', function(eventObject, event) {
+            /* Нет смысла обрабатывать клавиши и устанавливать фокус, если
+               view с которой работает searchForm скрыта.
+               (актуально для поля связи / suggestTextBox'a / строки поиска с саггестом ) */
+            if(!domHelpers.isElementVisible(view.getContainer())) {
+               return;
+            }
+
             // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
             if ((event.which == constants.key.tab || event.which == constants.key.down) && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)) {
                var selectedIndex = null,
