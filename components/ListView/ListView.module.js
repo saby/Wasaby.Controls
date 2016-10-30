@@ -2089,12 +2089,13 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.subscribeTo(topParent, 'onAfterShow', afterFloatAreaShow);
                }
                this._scrollWatcher.subscribe('onTotalScroll', this._onTotalScrollHandler.bind(this));
-            } else if (this._options.infiniteScroll == 'demand'){
+            }
+            if (this._options.infiniteScroll == 'demand'){
                this._loadMoreButton = this.getChildControlByName('loadMoreButton');
                if (this.getItems()){
                   this._setLoadMoreCaption(this.getItems());
                }
-               this.subscribeTo(loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
+               this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
             }
          },
 
