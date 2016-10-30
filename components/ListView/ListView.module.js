@@ -281,6 +281,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _dotItemTpl: null,
             _itemsContainer: null,
             _actsContainer: null,
+            _onMetaDataResultsChange: null,
             _allowInfiniteScroll: true,
             _hoveredItem: {
                target: null,
@@ -758,6 +759,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this.setGroupBy(this._options.groupBy, false);
             }
+            this._onMetaDataResultsChange = this._drawResults.bind(this);
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
          },
@@ -1396,6 +1398,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._previousGroupBy = undefined;
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
+            this._observeResultsRecord(false);
             return ListView.superclass.reload.apply(this, arguments);
          },
          /**
@@ -2538,6 +2541,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._hideLoadingIndicator();
                }
             }
+            this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
          },
          _toggleIndicator: function(show){
@@ -3313,6 +3317,14 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _redrawResults: function(){
            this._drawResults();
+         },
+
+         _observeResultsRecord: function(needObserve){
+            var methodName = needObserve ? 'subscribeTo' : 'unsubscribeFrom',
+                resultsRecord = this._getResultsRecord();
+            if (resultsRecord){
+               this[methodName](resultsRecord, 'onPropertyChange', this._onMetaDataResultsChange);
+            }
          },
 
          _drawResults: function(){
