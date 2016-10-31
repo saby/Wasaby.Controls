@@ -452,6 +452,7 @@ define(
             }
             this._setLastDate(this._options.date);
             this._onTextChanged();
+            this._notifyOnTextChange();
          }
       },
       //TODO: логика валидации находится на уровне TextBoxBase, но сейчас форматные поля не вызывают функции базового контрола поэтому
@@ -476,7 +477,6 @@ define(
                }
             }
             this._notifyOnDateChanged();
-            this._notifyOnTextChange();
          }
          DateBox.superclass.setActive.apply(this, arguments);
       },
