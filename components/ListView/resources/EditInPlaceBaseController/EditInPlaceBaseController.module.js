@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "Core/Deferred",
    "Core/IoC",
    "Core/ConsoleLogger",
+   'js!WS.Data/Builder',
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CORE.PendingOperationProducerMixin",
    "html!SBIS3.CONTROLS.EditInPlaceBaseController/AddRowTpl",
@@ -18,7 +19,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "Core/core-instance",
    "Core/helpers/fast-control-helpers"
 ],
-   function ( cContext, constants, Deferred, IoC, ConsoleLogger,CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Record, cInstance, fcHelpers) {
+   function ( cContext, constants, Deferred, IoC, ConsoleLogger, DataBuilder, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Record, cInstance, fcHelpers) {
 
       'use strict';
 
@@ -385,7 +386,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         self._editingRecord = undefined;
                      }
                      if (self._isAdd) {
-                        self._options.items.add(eip._cloneWithFormat(eipRecord, self._options.items));
+                        self._options.items.add(DataBuilder.reduceTo(eipRecord, self._options.items.getFormat(), self._options.items.getModel()));
                      }
                   }).addErrback(function(error) {
                      fcHelpers.alert(error);
