@@ -72,7 +72,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
             /**
              * {jQuery} Контент
              */
-            _content: undefined
+            _content: undefined,
+            _createOnMove: undefined
          },
 
          $constructor: function() {
@@ -83,7 +84,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
             Scroll.superclass.init.call(this);
 
             //Подписка на события (наведение курсора на контейнер) при которых нужно инициализировать скролл.
-            this.getContainer().one('mousemove touchstart', this._create.bind(this));
+            this._createOnMove = this._create.bind(this);
+            this.getContainer().on('mousemove touchstart', this._createOnMove);
          },
 
          /**
@@ -127,6 +129,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
                   }
                }
             });
+            this.getContainer().off('mousemove touchstart', this._createOnMove);
          },
 
          /**
@@ -213,7 +216,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
           */
          destroy: function() {
             this.getContainer().mCustomScrollbar('destroy');
-
+            this.getContainer().off('mousemove touchstart', this._createOnMove);
+            this._createOnMove = undefined;
             this._scroll = undefined;
             this._hasScroll = undefined;
             this._content = undefined;
