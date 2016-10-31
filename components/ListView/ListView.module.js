@@ -282,6 +282,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _pager : undefined,
             _pagerContainer: undefined,
             _previousGroupBy : undefined,
+            _checkClickByTap: true,
             _keysWeHandle: [
                constants.key.up,
                constants.key.down,
@@ -737,7 +738,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _bindEventHandlers: function(container) {
-            container.on('swipe tap mousemove mouseleave touchend', this._eventProxyHandler.bind(this));
+            container.on('swipe tap mousemove mouseleave touchend taphold', this._eventProxyHandler.bind(this));
          },
 
          _modifyOptions : function(opts){
@@ -802,7 +803,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._swipeHandler(e);
                   break;
                case 'tap':
-                  this._container.removeClass(mobFix);
                   this._tapHandler(e);
                   break;
                case 'mouseleave':
@@ -814,6 +814,11 @@ define('js!SBIS3.CONTROLS.ListView',
                       раньше события click. Поэтому на touchEnd (срабатывает раньше клика) вешаем специальный класс,
                       который показывает по :hover оранжевый маркер и по событию tap его снимаем. */
                   this._container.addClass(mobFix);
+                  break;
+               case 'taphold':
+                  this._container.removeClass(mobFix);
+                  break;
+
             }
          },
 
