@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
             Scroll.superclass.init.call(this);
 
             //Подписка на события (наведение курсора на контейнер) при которых нужно инициализировать скролл.
-            this.getContainer().on('mousemove touchstart', this._create.bind(this));
+            this.getContainer().one('mousemove touchstart', this._create.bind(this));
          },
 
          /**
@@ -127,9 +127,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
                   }
                }
             });
-
-            //Отписываемся от событий инициализации
-            this._container.off('mousemove touchstart', this._create);
          },
 
          /**
