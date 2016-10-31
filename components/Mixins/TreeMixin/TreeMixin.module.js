@@ -571,7 +571,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             item.setExpanded(false);
             return Deferred.success();
          } else {
-            return Deferred.failed();
+            return Deferred.fail();
          }
       },
       /**
@@ -586,7 +586,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          if (item) {
             return this[item.isExpanded() ? 'collapseNode' : 'expandNode'](id);
          } else {
-            return Deferred.failed();
+            return Deferred.fail();
          }
       },
       /**
@@ -613,7 +613,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }.bind(this));
             }
          } else {
-            return Deferred.failed();
+            return Deferred.fail();
          }
       },
       _loadNode: function(id) {
