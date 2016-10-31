@@ -2084,17 +2084,20 @@ define('js!SBIS3.CONTROLS.ListView',
            */
          _checkDeletedItems: function (items) {
             var self = this,
-                target, targetHash;
+                itemsActions, target, targetHash;
 
             if(self._itemsToolbar && self._itemsToolbar.isToolbarLocking()){
-               target = self.getItemsActions().getTarget();
-               targetHash = target.container.data('hash');
-               $ws.helpers.forEach(items, function(item){
-                  if(item.getHash() == targetHash){
-                     self._itemsToolbar.unlockToolbar();
-                     self._itemsToolbar.hide();
-                  }
-               });
+               itemsActions = self.getItemsActions();
+               if(itemsActions) {
+                  target = self.getItemsActions().getTarget();
+                  targetHash = target.container.data('hash');
+                  $ws.helpers.forEach(items, function (item) {
+                     if (item.getHash() == targetHash) {
+                        self._itemsToolbar.unlockToolbar();
+                        self._itemsToolbar.hide();
+                     }
+                  });
+               }
             }
          },
 
