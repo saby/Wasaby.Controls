@@ -190,10 +190,10 @@ define('js!SBIS3.CONTROLS.TextArea', [
                    * может не хватать ширины => строки переносятся и высоты тоже не хватает - появляется скролл
                    * если добавить и убрать стиль overflow-y то все пересчитывается правильно*/
                   var wrapper = $('.controls-TextArea__disabled-wrapper', self._container.get(0));
-                  wrapper.css('overflow', '');
+                  wrapper.css('overflow', 'visible');
                   setTimeout(function(){
                      wrapper.css('overflow', 'auto');
-                  }, 10)
+                  }, 50)
                }
             });
 
