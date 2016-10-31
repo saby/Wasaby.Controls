@@ -90,7 +90,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       var iterator;
       //может прийти массив или проекция
       if (src instanceof Array) {
-         iterator = colHelpers.forEach;
+         iterator = function(func){
+            colHelpers.forEach(src, func);
+         };
       }
       else {
          iterator = src.each.bind(src);
