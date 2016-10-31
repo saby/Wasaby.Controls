@@ -12,7 +12,8 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
    var FILTER_STRUCTURE_DEFAULT_ELEMENT = {
       internalValueField: null,
       internalCaptionField: null,
-      internalVisibilityField: null
+      internalVisibilityField: null,
+      partialReset: false
       /* По умолчанию их нет
        value: NonExistentValue,
        resetValue: NonExistentValue,
@@ -54,7 +55,11 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
              * @property {null|Object|String|Boolean|Number} value Текущее значение элемента. Может быть не определено.
              * @property {null|Object|String|Boolean|Number} resetValue Значение поля при сбрасывании фильтра, или при пустом значении в value. Может быть не определено.
              * @property {Boolean} resetVisibilityValue Значение поля при сбрасывании фильтра, или при пустом значении в value. Может быть не определено.
-             * @property {String} resetCaption Текст по умолчанию. Если задали, то при пустом (или заданном в resetValue) значении будет отображаться заданный здесь текст. Может быть не определено.
+             * @property {String} resetCaption Текст по умолчанию. Если задали, то при пустом (или заданном в resetValue) значении будет
+             * отображаться заданный здесь текст. Может быть не определено.
+             * @property {Boolean} partialReset Сбрасывать ли данный элемент структуры при нажатии на крестик в панели фильтрации.
+             * Если выставить данный флаг, то получится частичный сбор параметров фильтрации. При клике на кнопку "По-учполчанию" на панели фильтрации сбрасываются все фильтры,
+             * несмотря на этот флаг.
              * @translatable caption resetCaption
              */
             /**
@@ -220,9 +225,9 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          });
       },
 
-      _resetFilter: function(internalOnly) {
+      _resetFilter: function(internalOnly, partial) {
          var context = this._getCurrentContext(),
-             resetFilter = this.getResetFilter(),
+             resetFilter = this.getResetFilter(partial),
              toSet = {};
 
          /* Синхронизация св-в должна происходить один раз, поэтому делаю обёртку */
@@ -281,6 +286,27 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          }, {});
       },
 
+      /**
+       * Собиарет значения для сброса фильтра
+       * @param partial частичный сброс, если у элемента структуры выставлен флаг partialReset, то он не будет сброшен
+       * @returns {*}
+       * @private
+       */
+      _mapFilterStructureByResetValue: function(partial) {
+         return colHelpers.reduce(this.getFilterStructure(), function(result, element) {
+            if(element.hasOwnProperty('resetValue')) {
+               if(partial && element.partialReset) {
+                  if(element.hasOwnProperty('value')) {
+                     result[element.internalValueField] = element['value'];
+                  }
+               } else {
+                  result[element.internalValueField] = element['resetValue'];
+               }
+            }
+            return result;
+         }, {});
+      },
+
 
       getFilter: function() {
          return this._mapFilterStructureByProp('value');
@@ -294,8 +320,8 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          return this._filterStructure;
       },
 
-      getResetFilter: function() {
-         return this._mapFilterStructureByProp('resetValue');
+      getResetFilter: function(partial) {
+         return this._mapFilterStructureByResetValue(partial);
       }
    };
 
