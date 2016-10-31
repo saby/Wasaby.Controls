@@ -520,7 +520,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var keyField = this._options.keyField;
 
          if (!keyField) {
-            IoC.resolve('ILogger').log('Option keyField is required');
+            IoC.resolve('ILogger').log('ListView', 'Option keyField is required');
          }
 
          if (sourceOpt) {
