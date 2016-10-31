@@ -304,7 +304,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _needScrollCompensation : null,
             // Состояние подгрузки по скроллу
             // mode: null - выключена; up - грузим предыдущую страницу; down - грузим следующую страницу
-            // reverse: false - верхняя страница вставляется вверх, нижняя вниз; true - нижняя страница вставляется вверх; 
+            // reverse: false - верхняя страница вставляется вверх, нижняя вниз; true - нижняя страница вставляется вверх;
             _infiniteScrollState: {
                mode: null,
                reverse: false
@@ -1945,6 +1945,9 @@ define('js!SBIS3.CONTROLS.ListView',
 
             ListView.superclass._drawItemsCallback.apply(this, arguments);
 
+            /* Проверяем, нужно ли ещё подгружать данные в асинхронном _drawItemsCallback'e,
+               чтобы минимизировать обращения к DOM'у
+               т.к. синхронный может стрелять много раз. */
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
             }
@@ -1998,8 +2001,10 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this._notifyOnSizeChanged(true);
          },
-         _drawItemsCallbackSync: function(){
+         _drawItemsCallbackSync: function() {
             ListView.superclass._drawItemsCallbackSync.call(this);
+            /* Подскролл после подгрузки вверх надо производить после отрисовки синхронно,
+               иначе скролл будет дёргаться */
             if (this.isInfiniteScroll()) {
                if (this._needScrollCompensation) {
                   this._moveTopScroll();
@@ -2072,7 +2077,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see infiniteScroll
           * @see setInfiniteScroll
           */
-         
+
          _prepareInfiniteScroll: function(){
             var topParent = this.getTopParent(),
                 self = this;
@@ -2145,7 +2150,7 @@ define('js!SBIS3.CONTROLS.ListView',
                                (mode === 'down' && type === 'bottom' && !this._infiniteScrollState.reverse) || // скролл вниз и доскролили до нижнего края
                                (mode === 'down' && type === 'top' && this._infiniteScrollState.reverse); // скролл верх с запросом данных вниз и доскролили верхнего края
 
-            if (scrollOnEdge && this.getItems()) { 
+            if (scrollOnEdge && this.getItems()) {
                // Досткролили вверх, но на самом деле подгружаем данные как обычно, а рисуем вверх
                if (type == 'top' && this._infiniteScrollState.reverse) {
                   this._setInfiniteScrollState('down');
@@ -2159,7 +2164,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Функция догрузки данных пока не появится скролл.Если появился и мы грузили и дорисовывали вверх, нужно поуправлять скроллом.
           * @private
-          * 
+          *
           */
          _preScrollLoading: function(){
             var scrollDown = this._infiniteScrollState.mode == 'down' && !this._infiniteScrollState.reverse;
