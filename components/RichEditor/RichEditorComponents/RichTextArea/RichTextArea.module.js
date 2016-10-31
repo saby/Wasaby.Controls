@@ -1586,6 +1586,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this._tinyEditor.focus();
             this._tinyEditor.formatter.apply(format, {value: value});
             this._tinyEditor.nodeChanged();
+            //тк на кнопках не случается focusout не происходит добавления состояния в историю
+            this._tinyEditor.undoManager.add();
          },
          /**
           * Убрать формат выделенного текста
