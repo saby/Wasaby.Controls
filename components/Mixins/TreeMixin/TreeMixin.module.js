@@ -793,11 +793,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }
             }
          },
-         _removeFromLoadedNodesRemoteNodes: function(remoteNodes) {
-            for (var idx = 0; idx < remoteNodes.length; idx++) {
-               delete this._loadedNodes[remoteNodes[idx].getContents().getId()];
-            }
-         },
          _onCollectionAddMoveRemove: function(parentFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
             parentFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId);
             this._findAndRedrawChangedBranches(newItems, oldItems);
