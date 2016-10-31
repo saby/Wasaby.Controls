@@ -763,7 +763,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _bindEventHandlers: function(container) {
-            container.on('swipe tap mousemove mouseleave', this._eventProxyHandler.bind(this));
+            container.on('swipe tap mousemove mouseleave touchend taphold', this._eventProxyHandler.bind(this));
          },
 
          _modifyOptions : function(opts){
@@ -812,7 +812,8 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _eventProxyHandler: function(e) {
-            var originalEvent = e.originalEvent;
+            var originalEvent = e.originalEvent,
+                mobFix = 'controls-ListView__mobileSelected-fix';
             /* Надо проверять mousemove на срабатывание на touch устройствах,
                т.к. оно стреляет после тапа. После тапа событие mousemove имеет нулевой сдвиг, поэтому обрабатываем его как touch событие
                 + добавляю проверку, что до этого мы были в touch режиме,
@@ -832,6 +833,17 @@ define('js!SBIS3.CONTROLS.ListView',
                case 'mouseleave':
                   this._mouseLeaveHandler(e);
                   break;
+               case 'touchend':
+                   /* Ipad пакетирует измененния, и не применяет их к дому, пока не закончит работу синхронный код.
+                      Для того, чтобы сэмулировать мновенную обработку клика, надо сделать изменения в DOM'e
+                      раньше события click. Поэтому на touchEnd (срабатывает раньше клика) вешаем специальный класс,
+                      который показывает по :hover оранжевый маркер и по событию tap его снимаем. */
+                  this._container.addClass(mobFix);
+                  break;
+               case 'taphold':
+                  this._container.removeClass(mobFix);
+                  break;
+
             }
          },
 
