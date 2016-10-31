@@ -166,6 +166,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                if (this._lastHeight !== newHeight) {
                   this._lastHeight = newHeight;
                   this.getTarget().height(newHeight);
+                  this.updatePosition();
                   this._notify('onChangeHeight', this._model);
                }
             },
