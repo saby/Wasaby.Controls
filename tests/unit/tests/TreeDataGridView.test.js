@@ -37,12 +37,15 @@ define(['js!SBIS3.CONTROLS.TreeDataGridView'], function (TreeDataGridView) {
                 assert.deepEqual(TestTDGV._loadedNodes, { 2: true });
             });
             it('Collapse "Item 2". Loaded nodes equal { 2: true }.', function () {
+                TestTDGV.expandNode(2);
                 TestTDGV.collapseNode(2);
                 assert.deepEqual(TestTDGV._loadedNodes, { 2: true });
             });
             it('Remove "Item 2" from items. Loaded nodes equal {}.', function () {
                 var
                    items = TestTDGV.getItems();
+                TestTDGV.expandNode(2);
+                TestTDGV.collapseNode(2);
                 items.remove(items.getRecordById(2));
                 assert.deepEqual(TestTDGV._loadedNodes, {});
             });
