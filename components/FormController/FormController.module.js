@@ -205,7 +205,6 @@ define('js!SBIS3.CONTROLS.FormController', [
 
          this._updateDocumentTitle();
          this._setDefaultContextRecord();
-         this._processingRecordDeferred();
 
          this._newRecord = this._options.isNewRecord;
          this._panelReadyDeferred = new Deferred();
@@ -213,6 +212,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          this._panel.subscribe('onBeforeClose', this._onBeforeCloseHandler);
          this._panel.subscribe('onAfterShow', this._onAfterShowHandler);
          this._setPanelRecord(this.getRecord());
+         this._processingRecordDeferred();
 
          //TODO в рамках совместимости
          this._dataSource = this._options.source;
