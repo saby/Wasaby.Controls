@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          allowEnterToFolder: cfg.allowEnterToFolder
       }
    },
-   searchProcessing = function(projection, cfg) {
+   searchProcessing = function(src, cfg) {
       var resRecords = [], lastNode, lastPushedNode, curPath = [], pathElem, curParentContents;
 
       function pushPath(records, path, cfg) {
@@ -87,7 +87,19 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          }
       }
 
-      projection.each(function (item) {
+      var iterator;
+      //может прийти массив или проекция
+      if (src instanceof Array) {
+         iterator = function(func){
+            colHelpers.forEach(src, func);
+         };
+      }
+      else {
+         iterator = src.each.bind(src);
+      }
+
+
+      iterator(function (item) {
          if ((item.getParent() != lastNode) && curPath.length) {
             if (lastNode != lastPushedNode) {
                pushPath(resRecords, curPath, cfg);
@@ -648,18 +660,23 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       },
       _getItemsForRedrawOnAdd: function(items, groupId) {
          var result = [];
-         var prevGroupId = undefined;  //тут groupId одинаковый для пачки данных, но группу надо вставить один раз, используем пермеенную как флаг
-         for (var i = 0; i < items.length; i++) {
-            if (!Object.isEmpty(this._options.groupBy) && this._options.easyGroup) {
-               if (this._canApplyGrouping(items[i]) && prevGroupId != groupId) {
-                  prevGroupId = groupId;
-                  if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
-                     this._options._groupItemProcessing(groupId, result, items[i], this._options);
+         if (this._options.hierarchyViewMode) {
+            result = searchProcessing(items, this._options);
+         }
+         else {
+            var prevGroupId = undefined;  //тут groupId одинаковый для пачки данных, но группу надо вставить один раз, используем пермеенную как флаг
+            for (var i = 0; i < items.length; i++) {
+               if (!Object.isEmpty(this._options.groupBy) && this._options.easyGroup) {
+                  if (this._canApplyGrouping(items[i]) && prevGroupId != groupId) {
+                     prevGroupId = groupId;
+                     if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
+                        this._options._groupItemProcessing(groupId, result, items[i], this._options);
+                     }
                   }
                }
-            }
-            if (this._isVisibleItem(items[i])) {
-               result.push(items[i]);
+               if (this._isVisibleItem(items[i])) {
+                  result.push(items[i]);
+               }
             }
          }
          return result;
