@@ -495,11 +495,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
                trs = $(this._tbody[0].children);
 
                if(this._options.showHead) {
-                  trs.push(this._thead[0].children[0]);
+                  trs.push(this.getTHead()[0].children[0]);
                }
 
                if(this._checkResults()) {
-                  trs.push(this._thead.find('.controls-DataGridView__results')[0]);
+                  trs.push(this._getResultsContainer().find('.controls-DataGridView__results')[0]);
                }
 
                for(var i = 0, len = trs.length; i < len; i++) {
