@@ -214,7 +214,7 @@ define(
              * @variant 'onTextEnter' событие стреляет по мере ввода текста.
              * @deprecated
              */
-            onTextChangeMode: 'onActiveChange'
+            onTextChangeMode: 'onTextEnter'
          }
       },
 
