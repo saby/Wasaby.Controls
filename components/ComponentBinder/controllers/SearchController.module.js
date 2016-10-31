@@ -203,7 +203,7 @@ define('js!SBIS3.CONTROLS.SearchController',
             })
          }
          else {
-            this._kbLayoutRevertObserver.setParam(searchParamName);
+            this._kbLayoutRevertObserver.setParam(this._options.searchParamName);
          }
          if (isTree) {
             this._lastRoot = view.getCurrentRoot();
