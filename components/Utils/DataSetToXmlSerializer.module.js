@@ -127,8 +127,19 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
 
             recordElement.setAttribute('RecordKey', key);
             recordElement.setAttribute('KeyField', pkColumnName);
-            for(var k = 0, cnt = columns.length; k < cnt; k++) {
-               this._serializeField(columns[k], object, recordElement, document);
+            if (columns) {
+               for (var k = 0, cnt = columns.length; k < cnt; k++) {
+                  this._serializeField(columns[k], object, recordElement, document);
+               }
+            } else {
+               //Если у нас нет набора колонок, которые нужно сериализовать, значит мы работаем со вложенным рекордсетом.
+               //В таком случае сериализуем все колонки рекордсета, т.к. нам сказали сериализовать этот рекордсет.
+               object.each(function(field) {
+                  this._serializeField({
+                     field: field,
+                     title: field
+                  }, object, recordElement, document);
+               }, this);
             }
          }
       },
