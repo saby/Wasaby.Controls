@@ -452,7 +452,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (cfg._itemsProjection) {
             cfg._ladderInstance.setCollection(cfg._itemsProjection);
          }
-         newCfg._decorators.add(new LadderDecorator());
+
+         //TODO: выпилить вместе декоратором лесенки
+         newCfg._decorators.ladder = new LadderDecorator({
+            ladderInstance: cfg._ladderInstance
+         });
+         newCfg._decorators.add(newCfg._decorators.ladder);
 
          return newCfg;
       },
@@ -490,11 +495,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
                trs = $(this._tbody[0].children);
 
                if(this._options.showHead) {
-                  trs.push(this._thead[0].children[0]);
+                  trs.push(this.getTHead()[0].children[0]);
                }
 
                if(this._checkResults()) {
-                  trs.push(this._thead.find('.controls-DataGridView__results')[0]);
+                  trs.push(this._getResultsContainer().find('.controls-DataGridView__results')[0]);
                }
 
                for(var i = 0, len = trs.length; i < len; i++) {

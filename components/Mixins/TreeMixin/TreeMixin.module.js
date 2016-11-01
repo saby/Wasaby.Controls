@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          allowEnterToFolder: cfg.allowEnterToFolder
       }
    },
-   searchProcessing = function(projection, cfg) {
+   searchProcessing = function(src, cfg) {
       var resRecords = [], lastNode, lastPushedNode, curPath = [], pathElem, curParentContents;
 
       function pushPath(records, path, cfg) {
@@ -87,7 +87,19 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          }
       }
 
-      projection.each(function (item) {
+      var iterator;
+      //может прийти массив или проекция
+      if (src instanceof Array) {
+         iterator = function(func){
+            colHelpers.forEach(src, func);
+         };
+      }
+      else {
+         iterator = src.each.bind(src);
+      }
+
+
+      iterator(function (item) {
          if ((item.getParent() != lastNode) && curPath.length) {
             if (lastNode != lastPushedNode) {
                pushPath(resRecords, curPath, cfg);
@@ -648,16 +660,23 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       },
       _getItemsForRedrawOnAdd: function(items, groupId) {
          var result = [];
-         for (var i = 0; i < items.length; i++) {
-            if (!Object.isEmpty(this._options.groupBy) && this._options.easyGroup) {
-               if (this._canApplyGrouping(items[i])) {
-                  if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
-                     this._options._groupItemProcessing(groupId, result, items[i], this._options);
+         if (this._options.hierarchyViewMode) {
+            result = searchProcessing(items, this._options);
+         }
+         else {
+            var prevGroupId = undefined;  //тут groupId одинаковый для пачки данных, но группу надо вставить один раз, используем пермеенную как флаг
+            for (var i = 0; i < items.length; i++) {
+               if (!Object.isEmpty(this._options.groupBy) && this._options.easyGroup) {
+                  if (this._canApplyGrouping(items[i]) && prevGroupId != groupId) {
+                     prevGroupId = groupId;
+                     if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
+                        this._options._groupItemProcessing(groupId, result, items[i], this._options);
+                     }
                   }
                }
-            }
-            if (this._isVisibleItem(items[i])) {
-               result.push(items[i]);
+               if (this._isVisibleItem(items[i])) {
+                  result.push(items[i]);
+               }
             }
          }
          return result;
@@ -727,6 +746,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             this._options.openedPath = openedPath;
          }
       },
+      _removeFromLoadedRemoteNodes: function(remoteNodes) {
+         // Удаляем только если запись удалена из items, иначе - это было лишь сворачивание веток.
+         if (remoteNodes.length && !this.getItems().getRecordById(remoteNodes[0].getContents().getId())) {
+            for (var idx = 0; idx < remoteNodes.length; idx++) {
+               delete this._loadedNodes[remoteNodes[idx].getContents().getId()];
+            }
+         }
+      },
       around: {
          _getItemProjectionByItemId: function(parentFn, id) {
             var root;
@@ -772,7 +799,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }.bind(this);
             fillBranchesForRedraw(newItems);
             fillBranchesForRedraw(oldItems);
-            for (idx in branches) {
+            for (var idx in branches) {
                if (branches.hasOwnProperty(idx)) {
                   if (this._isSlowDrawing(this._options.easyGroup)) {
                      this.redrawItem(branches[idx].getContents(), branches[idx]);
@@ -783,15 +810,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }
             }
          },
-         _removeFromLoadedNodesRemoteNodes: function(remoteNodes) {
-            for (var idx = 0; idx < remoteNodes.length; idx++) {
-               delete this._loadedNodes[remoteNodes[idx].getContents().getId()];
-            }
-         },
          _onCollectionAddMoveRemove: function(parentFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
             parentFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId);
             this._findAndRedrawChangedBranches(newItems, oldItems);
-            this._removeFromLoadedNodesRemoteNodes(oldItems);
+            this._removeFromLoadedRemoteNodes(oldItems);
          },
          //В режиме поиска в дереве, при выборе всех записей, выбираем только листья, т.к. папки в этом режиме не видны.
          setSelectedItemsAll: function(parentFn) {

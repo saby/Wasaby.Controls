@@ -205,13 +205,14 @@ define('js!SBIS3.CONTROLS.FormController', [
 
          this._updateDocumentTitle();
          this._setDefaultContextRecord();
-         this._processingRecordDeferred();
 
          this._newRecord = this._options.isNewRecord;
          this._panelReadyDeferred = new Deferred();
          this._panel = this.getTopParent();
          this._panel.subscribe('onBeforeClose', this._onBeforeCloseHandler);
          this._panel.subscribe('onAfterShow', this._onAfterShowHandler);
+         this._setPanelRecord(this.getRecord());
+         this._processingRecordDeferred();
 
          //TODO в рамках совместимости
          this._dataSource = this._options.source;
@@ -502,10 +503,7 @@ define('js!SBIS3.CONTROLS.FormController', [
       setRecord: function(record, updateKey){
          var newKey;
          this._options.record = record;
-         //Запоминаем запись на панели, т.к. при повторном вызове execute, когда уже есть открытая панель,
-         //текущая панель закрывается и открывается новая. В dialogActionBase в подписке на onAfterClose ссылка на панель будет не актуальной,
-         //т.к. ссылается на только что открытую панель. Поэтому берем редактируемую запись с самой панели.
-         this._panel._record = record;
+         this._setPanelRecord(record);
          if (updateKey){
             newKey = record.getId();
             this._options.key = newKey;
@@ -517,6 +515,12 @@ define('js!SBIS3.CONTROLS.FormController', [
          this._panelReadyDeferred.addCallback(function(){
             self._actionNotify('onAfterFormLoad');
          });
+      },
+      _setPanelRecord: function(record){
+         //Запоминаем запись на панели, т.к. при повторном вызове execute, когда уже есть открытая панель,
+         //текущая панель закрывается и открывается новая. В dialogActionBase в подписке на onAfterClose ссылка на панель будет не актуальной,
+         //т.к. ссылается на только что открытую панель. Поэтому берем редактируемую запись с самой панели.
+         this._panel._record = record;
       },
       /**
        * Возвращает запись, установленную в контекст диалога редактирования.

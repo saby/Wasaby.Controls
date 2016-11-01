@@ -130,6 +130,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @cssModifier controls-FieldLink__itemsEdited В поле связи при наведении курсора на выбранные значения применяется подчеркивание текста.
         * @cssModifier controls-FieldLink__itemsBold В поле связи для текста выбранных значений применяется полужирное начертание.
         * @cssModifier controls-FieldLink__hideSelector Скрывает кнопку открытия диалога/панели выбора
+        * @cssModifier controls-FieldLink__dynamicInputWidth Устанавливает динамическу ширину инпута. ВНИМАНИЕ! Ломает базовую линию.
         *
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings footerTpl emptyHTML groupBy
@@ -165,7 +166,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              _linksWrapper: null,     /* Контейнер для контрола выбранных элементов */
              _linkCollection: null,   /* Контрол отображающий выбранные элементы */
              _selectorAction: null,   /* Action выбора */
-             _checkWidth: true,
+             _isDynamicInputWidth: false,
              _lastFieldLinkWidth: null,
              _afterFieldWrapper: null,
              _beforeFieldWrapper: null,
@@ -301,6 +302,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
              /* Проиницализируем переменные */
              this._setVariables();
              this._inputField.attr('placeholder', '');
+
+             /* Флаг, как с css модификатор удалится в 3.7.5, т.к. сделаем ширину везде динамической,
+                а базовую линию меток будем выставлять через line-height */
+             this._isDynamicInputWidth = this.getContainer().hasClass('controls-FieldLink__dynamicInputWidth');
 
              commandDispatcher.declareCommand(this, 'clearAllItems', this._dropAllItems);
              commandDispatcher.declareCommand(this, 'showAllItems', this._showAllItems);
@@ -586,8 +591,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 }
              }
 
-             this._inputField[0].style.width = 0;
-             this._updateInputWidth();
+             if(!this._isDynamicInputWidth) {
+                this._inputField[0].style.width = 0;
+                this._updateInputWidth();
+             }
           },
           _onCrossClickItemsCollection: function(key) {
              this.removeItemsSelection([key]);
@@ -901,6 +908,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 },
                 handlers: {
                    onShow: function() {
+                      if(!this._options.reverseItemsOnListRevert) {
+                         return;
+                      }
+
                       var revertedVertical = this._picker.getContainer().hasClass('controls-popup-revert-vertical');
 
                       if(constants.browser.isMobileIOS) {
