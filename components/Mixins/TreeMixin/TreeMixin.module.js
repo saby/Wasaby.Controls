@@ -577,8 +577,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see toggleNode
        */
       collapseNode: function(id) {
-         this._getItemProjectionByItemId(id).setExpanded(false);
-         return new Deferred.success();
+         var
+            item = this._getItemProjectionByItemId(id);
+         if (item) {
+            item.setExpanded(false);
+            return Deferred.success();
+         } else {
+            return Deferred.fail();
+         }
       },
       /**
        * Закрыть или открыть узел.
@@ -587,7 +593,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see expandNode
        */
       toggleNode: function(id) {
-         return this[this._getItemProjectionByItemId(id).isExpanded() ? 'collapseNode' : 'expandNode'](id);
+         var
+            item = this._getItemProjectionByItemId(id);
+         if (item) {
+            return this[item.isExpanded() ? 'collapseNode' : 'expandNode'](id);
+         } else {
+            return Deferred.fail();
+         }
       },
       /**
        * Раскрывает узел.
@@ -599,17 +611,21 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       expandNode: function(id) {
          var
             item = this._getItemProjectionByItemId(id);
-         if (item.isExpanded()) {
-            return Deferred.success();
-         } else {
-            if (this._options.singleExpand) {
-               this._collapseNodes(this.getOpenedPath(), id);
+         if (item) {
+            if (item.isExpanded()) {
+               return Deferred.success();
+            } else {
+               if (this._options.singleExpand) {
+                  this._collapseNodes(this.getOpenedPath(), id);
+               }
+               this._options.openedPath[id] = true;
+               this._folderOffsets[id] = 0;
+               return this._loadNode(id).addCallback(function() {
+                  this._getItemProjectionByItemId(id).setExpanded(true);
+               }.bind(this));
             }
-            this._options.openedPath[id] = true;
-            this._folderOffsets[id] = 0;
-            return this._loadNode(id).addCallback(function() {
-               this._getItemProjectionByItemId(id).setExpanded(true);
-            }.bind(this));
+         } else {
+            return Deferred.fail();
          }
       },
       _loadNode: function(id) {
