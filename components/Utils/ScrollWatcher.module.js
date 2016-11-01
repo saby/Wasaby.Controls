@@ -55,7 +55,9 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
 
          // Подписываемся либо на событие скролла у CustomScroll, либо на скролл у контейнера
          if (this._customScroll) {
-            element[0].wsControl.subscribe('onTotalScroll', this._processCustomScrollEvent.bind(this));
+            var scrollContainer = element[0].wsControl;
+            scrollContainer.setInitOnBottom(true);
+            scrollContainer.subscribe('onTotalScroll', this._processCustomScrollEvent.bind(this));
          } else {
             element.bind('scroll.wsScrollWatcher', this._onContainerScroll.bind(this));
          }
