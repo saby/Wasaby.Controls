@@ -2180,7 +2180,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var scrollWatcherConfig = {
                totalScrollOffset: START_NEXT_LOAD_OFFSET,
                opener: this,
-               element: this.getContainer().closest(this._options.infiniteScrollContainer)
+               element: this.getContainer().closest(this._options.infiniteScrollContainer),
+               initOnBottom: this._options.infiniteScroll == 'up'
             };
             this._scrollWatcher = new ScrollWatcher(scrollWatcherConfig);
          },
