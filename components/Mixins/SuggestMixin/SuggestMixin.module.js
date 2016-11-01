@@ -255,7 +255,12 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @variant true Показывать выпадающий блок при пустом списке.
              * @variant false Не показывать выпадающий блок при пустом списке.
              */
-            showEmptyList: true
+            showEmptyList: true,
+            /**
+             * @noshow
+             * @deprecated
+             */
+            reverseItemsOnListRevert: true
          },
          _resultBindings: {},                   /* {Object} Соответствие полей для подстановки в контекст */
          _delayTimer: null,                     /* {Object|null} Таймер задержки загрузки picker-а */

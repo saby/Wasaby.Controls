@@ -2040,7 +2040,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          for (i = 0; i < items.length; i++) {
             this._changeItemProperties(items[i]);
          }
-         this._reviveItems(item.getContents().getId() != this._options.selectedKey);
+         this._reviveItems();
       },
       _onCollectionRemove: function(items, notCollapsed) {
          if (items.length) {

@@ -150,7 +150,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
       scrollTo:function(offset){
          var element = this.getScrollContainer();
          if (this._customScroll){
-            element[0].wsControl.scrollTo(typeof offset === 'string' ? (offset === 'top' ? 0 : 'bottom') : strHelpers.format({offset: offset}, '-=$offset$s$'));
+            element[0].wsControl.scrollTo(typeof offset === 'string' ? (offset === 'top' ? 0 : 'bottom') : offset);
             this._lastScrollTop = element[0].wsControl.getScrollTop();
             return;
          }
