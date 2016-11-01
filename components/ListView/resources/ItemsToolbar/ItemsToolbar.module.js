@@ -291,14 +291,13 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * @private
            */
           _setPosition: function(position) {
-             var container = this.getContainer()[0],
-                 styles = '';
-             for (var key in position) {
+             var container = this.getContainer()[0];
+
+             for(var key in position) {
                 if (position.hasOwnProperty(key)) {
-                   styles += key + ':' + (position[key] + (typeof position[key] === 'number' ? 'px' : '')) + '; ';
+                   container.style[key] = position[key] + (typeof position[key] === 'number' ? 'px' : '');
                 }
              }
-             container.setAttribute('style', styles);
           },
           /**
            * Возвращает координаты для отображения тулбара
@@ -321,9 +320,9 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
 
              this.getContainer()[isVertical ? 'addClass' : 'removeClass']('controls-ItemsToolbar__vertical');
              return {
-                'margin-right' : marginRight,
-                'margin-top' : marginTop,
-                'margin-bottom': marginBottom
+                'marginRight' : marginRight,
+                'marginTop' : marginTop,
+                'marginBottom': marginBottom
              };
           },
           /**
