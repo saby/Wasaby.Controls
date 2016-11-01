@@ -5,8 +5,6 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
    "Core/core-structure",
    "Core/xslt",
    "Transport/ReportPrinter",
-   "Transport/Record",
-   "Transport/RecordSet",
    "Core/helpers/helpers",
    "Core/core-extend",
    "Core/constants",
@@ -17,7 +15,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
    "Core/helpers/string-helpers",
    "js!SBIS3.CORE.XSLT",
    "i18n!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer"
-], function( $ws, cXSLT, cReportPrinter, Record, RecordSet, cHelpers, cExtend, constants, IoC, ConsoleLogger,cInstance, fcHelpers, strHelpers) {
+], function( $ws, cXSLT, cReportPrinter, cHelpers, cExtend, constants, IoC, ConsoleLogger,cInstance, fcHelpers, strHelpers) {
    return cExtend({}, {
 
       _complexFields: {
@@ -127,19 +125,8 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
 
             recordElement.setAttribute('RecordKey', key);
             recordElement.setAttribute('KeyField', pkColumnName);
-            if (columns) {
-               for (var k = 0, cnt = columns.length; k < cnt; k++) {
-                  this._serializeField(columns[k], object, recordElement, document);
-               }
-            } else {
-               //Если у нас нет набора колонок, которые нужно сериализовать, значит мы работаем со вложенным рекордсетом.
-               //В таком случае сериализуем все колонки рекордсета, т.к. нам сказали сериализовать этот рекордсет.
-               object.each(function(field) {
-                  this._serializeField({
-                     field: field,
-                     title: field
-                  }, object, recordElement, document);
-               }, this);
+            for (var k = 0, cnt = columns.length; k < cnt; k++) {
+               this._serializeField(columns[k], object, recordElement, document);
             }
          }
       },
@@ -242,11 +229,18 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                //для элементов массива всегда добавляем их значение как текст, ведь там может быть null
                elem.appendChild(document.createTextNode(strHelpers.removeInvalidXMLChars(fieldValue[i] + '')));
             }
-         } else if(fieldValue instanceof RecordSet || fieldValue instanceof Record){
-            this._serializeObject(fieldValue, fieldElement, document);
          } else if (typeName == 'RecordSet' || typeName == 'Record') {
-            this._serializeObject(fieldValue, fieldElement, document);
+            this._serializeObject(fieldValue, fieldElement, document, this._getColumns(fieldValue));
          }
+      },
+      _getColumns: function(object) {
+         var
+            columns = [],
+            format = object.getFormat();
+         format.each(function(field) {
+            columns.push({ field: field.getName() });
+         });
+         return columns;
       },
       _createXMLDocument: function(){
          var doc;
