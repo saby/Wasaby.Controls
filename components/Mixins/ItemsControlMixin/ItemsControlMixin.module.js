@@ -805,7 +805,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                }
 
             }
-            this._toggleEmptyData(!(data.records && data.records.length) && this._options.emptyHTML);
+            this._toggleEmptyData(!(data.records && data.records.length));
 
          }
          this._reviveItems();
@@ -1871,7 +1871,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._clearItems();
             this._needToRedraw = false;
             records = this._options._getRecordsForRedraw.call(this, this._options._itemsProjection, this._options);
-            this._toggleEmptyData(!records.length && this._options.emptyHTML);
+            this._toggleEmptyData(!records.length);
             this._drawItems(records);
          }
          /*класс для автотестов*/
