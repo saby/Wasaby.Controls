@@ -304,7 +304,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _needScrollCompensation : null,
             // Состояние подгрузки по скроллу
             // mode: null - выключена; up - грузим предыдущую страницу; down - грузим следующую страницу
-            // reverse: false - верхняя страница вставляется вверх, нижняя вниз; true - нижняя страница вставляется вверх; 
+            // reverse: false - верхняя страница вставляется вверх, нижняя вниз; true - нижняя страница вставляется вверх;
             _infiniteScrollState: {
                mode: null,
                reverse: false
@@ -2064,7 +2064,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see infiniteScroll
           * @see setInfiniteScroll
           */
-         
+
          _prepareInfiniteScroll: function(){
             var topParent = this.getTopParent(),
                 self = this;
@@ -2138,7 +2138,7 @@ define('js!SBIS3.CONTROLS.ListView',
                                (mode === 'down' && type === 'bottom' && !this._infiniteScrollState.reverse) || // скролл вниз и доскролили до нижнего края
                                (mode === 'down' && type === 'top' && this._infiniteScrollState.reverse); // скролл верх с запросом данных вниз и доскролили верхнего края
 
-            if (scrollOnEdge && this.getItems()) { 
+            if (scrollOnEdge && this.getItems()) {
                // Досткролили вверх, но на самом деле подгружаем данные как обычно, а рисуем вверх
                if (type == 'top' && this._infiniteScrollState.reverse) {
                   this._setInfiniteScrollState('down');
@@ -2152,7 +2152,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Функция догрузки данных пока не появится скролл.Если появился и мы грузили и дорисовывали вверх, нужно поуправлять скроллом.
           * @private
-          * 
+          *
           */
          _preScrollLoading: function(){
             var hasScroll = (function() {
@@ -2328,18 +2328,50 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollToItem(item.getId());
             }
          },
+
+         /**
+          * Возвращает scrollWatcher, при необходимости создаёт его
+          * @returns {*|SBIS3.CONTROLS.ListView.$protected._scrollWatcher|ScrollWatcher|SBIS3.CONTROLS.ListView._scrollWatcher}
+          * @private
+          */
+         _getScrollWatcher: function() {
+            if (!this._scrollWatcher) {
+               this._createScrollWatcher();
+            }
+            return this._scrollWatcher;
+         },
+
+         /**
+          * Переопределённый метод itemsControlMixin'a
+          * Необходим, т.к. itemsControlMixin не знает, что может быть кастомный скролл
+          * @param target
+          * @private
+          */
+         _scrollTo: function(target) {
+            if(this.isInfiniteScroll()) {
+               this._getScrollWatcher().scrollToElement(target);
+            } else {
+               ListView.superclass._scrollTo.apply(this, arguments);
+            }
+         },
+
+         /**
+          * Проверяет, нахдится ли скролл внизу
+          * @param noOffset
+          * @returns {*|*|boolean|Boolean}
+          */
          isScrollOnBottom: function(noOffset){
-            if (!this._scrollWatcher){
-               this._createScrollWatcher();
-            }
-            return this._scrollWatcher.isScrollOnBottom(noOffset);
+            return this._getScrollWatcher().isScrollOnBottom(noOffset);
          },
+
+         /**
+          * Проверяет, нахдится ли скролл вверху
+          * @returns {*|*|boolean|Boolean}
+          */
          isScrollOnTop: function(){
-            if (!this._scrollWatcher){
-               this._createScrollWatcher();
-            }
-            return this._scrollWatcher.isScrollOnTop();
+            return this._getScrollWatcher().isScrollOnTop();
          },
+
          _showLoadingIndicator: function () {
             if (!this._loadingIndicator) {
                this._createLoadingIndicator();

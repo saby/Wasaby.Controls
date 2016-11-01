@@ -169,6 +169,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
          },
 
          /**
+          * Скролит к переданному jQuery элементу
+          * @param {jQuery} target
+          */
+         scrollToElement: function(target) {
+            this.getContainer().mCustomScrollbar('scrollTo', target, {scrollInertia: 0});
+         },
+
+         /**
           * Должен ли быть скролл на контенте
           * @returns {boolean|*}
           */
