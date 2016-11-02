@@ -906,11 +906,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return itemsToAdd;
       },
 
-      _optimizedInsertMarkup: function(container, markup, prepend) {
-         if (constants.browser.isIE8 || constants.browser.isIE9) { // В IE8-9 insertAdjacentHTML ломает верстку при вставке
-            container[prepend ? 'prepend' : 'append'](markup);
+      _optimizedInsertMarkup: function(markup, config) {
+         var container = config.container;
+         if (config.inside) {
+            if (constants.browser.isIE8 || constants.browser.isIE9) { // В IE8-9 insertAdjacentHTML ломает верстку при вставке
+               container[config.prepend ? 'prepend' : 'append'](markup);
+            } else {
+               container.get(0).insertAdjacentHTML(config.prepend ? 'afterBegin' : 'beforeEnd', markup);
+            }
          } else {
-            container.get(0).insertAdjacentHTML(prepend ? 'afterBegin' : 'beforeEnd', markup);
+            container[config.prepend ? 'before' : 'after'](markup);
          }
       },
 
@@ -930,12 +935,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             else {
                var
-                  itemsToDraw,
                   data,
                   markup,
-                  prevItem,
-                  nextItem,
-                  container, itemsContainer, prevGroup, nextGroup, beforeFlag;
+                  itemsToDraw;
 
                itemsToDraw = this._getItemsForRedrawOnAdd(newItems, groupId);
                if (itemsToDraw.length) {
@@ -944,52 +946,56 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      tplData: this._prepareItemData()
                   };
                   markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
-
-                  itemsContainer = this._getItemsContainer();
-
-                  prevItem = this._getItemsProjection().at(newItemsIndex - 1);
-
-                  if (this._options.groupBy && this._options.easyGroup) {
-                     //в случае наличия группировки надо проверять соседние элементы, потому что
-                     //на месте вставки может быть разделитель, надо понимать, когда вставлять до разделителя, а когда после
-                     //на выходе получим beforeFlag = true, если надо вставлять ДО какого то элемента, иначе действуем по стандартному алгоритму
-                     if (this._canApplyGrouping(newItems[0])) {
-                        prevGroup = this._canApplyGrouping(prevItem) ? this._getItemsProjection().getGroupByIndex(newItemsIndex - 1) : null;
-                        nextItem = this._getItemsProjection().at(newItemsIndex + newItems.length);
-                        nextGroup = this._canApplyGrouping(nextItem) ? this._getItemsProjection().getGroupByIndex(newItemsIndex + newItems.length) : null;
-                        if ((prevGroup === undefined) || (prevGroup === null) || prevGroup != groupId) {
-                           if (nextGroup !== undefined && nextGroup !== null && nextGroup == groupId) {
-                              beforeFlag = true
-                           }
-                        }
-                     }
-
-                  }
-
-
-                  if (beforeFlag) {
-                     container = this._getDomElementByItem(nextItem);
-                     container.before(markup);
-                  }
-                  else {
-                     if (newItemsIndex == 0) {
-                        // TODO. Костыль для редактирования по месту. Написан тут, т.к. необходимо его убрать (решение не универсальное).
-                        // https://inside.tensor.ru/opendoc.html?guid=8fe37872-c08b-4a7b-9c9f-d04f531cc45b
-                        this._optimizedInsertMarkup(itemsContainer, markup, this._options._items.getCount() > 1);
-                     }
-                     else {
-                        if ((newItemsIndex) == (this._getItemsProjection().getCount() - newItems.length)) {
-                           this._optimizedInsertMarkup(itemsContainer, markup, false);
-                        }
-                        else {
-                           container = this._getDomElementByItem(prevItem);
-                           container.after(markup);
-                        }
-                     }
-                  }
+                  this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
                   this._reviveItems();
                }
             }
+         }
+      },
+
+      _getInsertMarkupConfig: function(newItemsIndex, newItems, groupId) {
+         var
+             nextItem,
+             prevGroup,
+             nextGroup,
+             beforeFlag,
+             inside = true,
+             prepend = false,
+             container = this._getItemsContainer(),
+             projection = this._getItemsProjection(),
+             prevItem = projection.at(newItemsIndex - 1),
+             lastItemsIndex = projection.getCount() - newItems.length;
+
+         if (this._options.groupBy && this._options.easyGroup) {
+            //в случае наличия группировки надо проверять соседние элементы, потому что
+            //на месте вставки может быть разделитель, надо понимать, когда вставлять до разделителя, а когда после
+            //на выходе получим beforeFlag = true, если надо вставлять ДО какого то элемента, иначе действуем по стандартному алгоритму
+            if (this._canApplyGrouping(newItems[0])) {
+               prevGroup = this._canApplyGrouping(prevItem) ? projection.getGroupByIndex(newItemsIndex - 1) : null;
+               nextItem = projection.at(newItemsIndex + newItems.length);
+               nextGroup = this._canApplyGrouping(nextItem) ? projection.getGroupByIndex(newItemsIndex + newItems.length) : null;
+               if ((prevGroup === undefined) || (prevGroup === null) || prevGroup != groupId) {
+                  if (nextGroup !== undefined && nextGroup !== null && nextGroup == groupId) {
+                     beforeFlag = true
+                  }
+               }
+            }
+         }
+
+         if (beforeFlag) {
+            container = this._getDomElementByItem(nextItem);
+            inside = false;
+            prepend = true;
+         } else if (newItemsIndex == 0 || newItemsIndex == lastItemsIndex) {
+            prepend = newItemsIndex == 0;
+         } else {
+            inside = false;
+            container = this._getDomElementByItem(prevItem);
+         }
+         return {
+            inside: inside,
+            prepend: prepend,
+            container: container
          }
       },
 
