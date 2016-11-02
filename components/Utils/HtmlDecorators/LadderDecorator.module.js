@@ -20,6 +20,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
          },
          _record: null,
          _columnName: undefined,
+         _isCheckCondition: false,
          _markLadderColumn: false,
          _ignoreEnabled: false
       },
@@ -44,6 +45,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
          else if (ladderDataType == 'string'){
             this._columnName = ladderData;
          }
+         this._isCheckCondition = true;
          return true;
       },
 
@@ -53,9 +55,10 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
        * @returns {*}
        */
       apply: function (text) {
-         if (!this._columnName) {
+         if (!this._isCheckCondition || !this._columnName) {
             return text;
          }
+         this._isCheckCondition = false;
          this._notifyDeprecated();
          return this.setLadder(text);
       },
