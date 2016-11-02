@@ -20,6 +20,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
          },
          _record: null,
          _columnName: undefined,
+         _isCheckCondition: false,
          _markLadderColumn: false,
          _ignoreEnabled: false
       },
@@ -44,6 +45,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
          else if (ladderDataType == 'string'){
             this._columnName = ladderData;
          }
+         this._isCheckCondition = true;
          return true;
       },
 
@@ -53,9 +55,10 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
        * @returns {*}
        */
       apply: function (text) {
-         if (!this._columnName) {
+         if (!this._isCheckCondition || !this._columnName) {
             return text;
          }
+         this._isCheckCondition = false;
          this._notifyDeprecated();
          return this.setLadder(text);
       },
@@ -119,7 +122,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
       },
 
       _notifyDeprecated: function() {
-         IoC.resolve('ILogger').info('LadderDecorator:', 'module SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator is deprecated and will be removed in 3.7.5. Use "it.ladder.get(it.item, it.field)" in your template instead. See https://wi.sbis.ru/docs/WS/Data/Display/Ladder/ for more.');
+         IoC.resolve('ILogger').info('LadderDecorator:', 'module SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator is deprecated and will be removed in 3.7.5. Use "it.ladder.get(it.item, it.field)" in your template instead. See https://wi.sbis.ru/docs/WS/Data/Display/Ladder/ for details.');
          this._notifyDeprecated = function(){};
       }
    });
