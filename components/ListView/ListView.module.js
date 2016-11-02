@@ -1216,7 +1216,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
             this._getEmptyDataContainer().empty().html(html);
-            this._toggleEmptyData(!(this._getItemsProjection() && this._getItemsProjection().getCount()) && !!html);
+            this._toggleEmptyData(!(this._getItemsProjection() && this._getItemsProjection().getCount()));
          },
 
          _getEmptyDataContainer: function() {
@@ -2180,7 +2180,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var scrollWatcherConfig = {
                totalScrollOffset: START_NEXT_LOAD_OFFSET,
                opener: this,
-               element: this.getContainer().closest(this._options.infiniteScrollContainer)
+               element: this.getContainer().closest(this._options.infiniteScrollContainer),
+               initOnBottom: this._options.infiniteScroll == 'up'
             };
             this._scrollWatcher = new ScrollWatcher(scrollWatcherConfig);
          },
@@ -2568,6 +2569,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _toggleEmptyData: function(show) {
+            show = show && this._options.emptyHTML;
             this._getEmptyDataContainer().toggleClass('ws-hidden', !show);
             if(this._pagerContainer) {
                this._pagerContainer.toggleClass('ws-hidden', show);

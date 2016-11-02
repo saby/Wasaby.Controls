@@ -204,6 +204,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
             handlers: {
                onAfterClose: function(e, meta){
                   self._notifyOnExecuted(meta, this._record);
+                  self._dialog = undefined;
                },
                onBeforeShow: function(){
                   self._notify('onBeforeShow');
@@ -248,7 +249,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
 
       _initTemplateComponentCallback: function (config, meta, mode, templateComponent) {
          var self = this,
-             isNewRecord = !config.componentOptions.key,
+             isNewRecord = (meta.isNewRecord !== undefined) ? meta.isNewRecord : !config.componentOptions.key,
              def;
          var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource;
          if (getRecordProtoMethod){

@@ -497,8 +497,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   // его и так завершат через finishChildPendingOperation (и туда попадет правильный аргумент - с сохранением
                   // или без завершать редактирование по месту)
                   endEdit = !cInstance.instanceOfModule(focusedControl, 'SBIS3.CORE.CloseButton') && !focusedControl ||
-                     (this._allowEndEdit(focusedControl) &&
-                     (this._isAnotherTarget(focusedControl, this) || !focusedControl._container.closest('.controls-ListView').length));
+                     (this._allowEndEdit(focusedControl) && this._isAnotherTarget(focusedControl, this));
                if (endEdit) {
                   eip = this._getEditingEip();
                   if (eip) {
