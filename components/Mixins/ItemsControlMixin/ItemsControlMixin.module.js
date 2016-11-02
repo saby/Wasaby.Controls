@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   multiselect : cfg.multiselect,
                   hierField: cfg.hierField + '@',
                   item: item.getContents(),
-                  groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.template),
+                  groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.contentTemplate || ''),
                   groupId: groupId
                },
                groupTemplateFnc;
