@@ -103,6 +103,11 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             EventBus.channel('DragAndDropChannel').subscribe('onMousemove', this._onMousemove, this);
          },
 
+         destroy: function() {
+            EventBus.channel('DragAndDropChannel').unsubscribe('onMouseup', this._onMouseupOutside);
+            EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', this._onMousemove);
+         },
+
          after: {
             init: function () {
                //touchend всегда срабатывает над тем контейнером с которого начали тащить, поэтому его тут нет
