@@ -381,7 +381,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                ComboBox.superclass.setText.call(this, newText);
                this._drawNotEditablePlaceholder(newText);
                $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(newText);
-               /*управлять этим классом надо только когда имеем дело с рекордами*/
+               /*управлять этим классом надо только когда имеем дело с рекордами
+               * потому что только в этом случае может прийти рекорд с пустым ключом null, в случае ENUM это не нужно
+               * вообще этот участок кода нехороший, помечу его TODO
+               * планирую избавиться от него по задаче https://inside.tensor.ru/opendoc.html?guid=fb9b0a49-6829-4f06-aa27-7d276a1c9e84&description*/
                if (cInstance.instanceOfModule('js!WS.Data/Entity/Model', item)) {
                   this._container.toggleClass('controls-ComboBox_emptyValue', (key === null));
                }
