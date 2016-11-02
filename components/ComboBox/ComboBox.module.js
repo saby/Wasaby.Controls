@@ -385,7 +385,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                * потому что только в этом случае может прийти рекорд с пустым ключом null, в случае ENUM это не нужно
                * вообще этот участок кода нехороший, помечу его TODO
                * планирую избавиться от него по задаче https://inside.tensor.ru/opendoc.html?guid=fb9b0a49-6829-4f06-aa27-7d276a1c9e84&description*/
-               if (cInstance.instanceOfModule('js!WS.Data/Entity/Model', item)) {
+               if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
                   this._container.toggleClass('controls-ComboBox_emptyValue', (key === null));
                }
                else {
