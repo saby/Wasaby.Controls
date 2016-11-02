@@ -941,8 +941,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   itemsToDraw,
                   data,
                   markup,
-                  item,
-                  container, firstHash, lastHash, itemsContainer;
+                  prevItem,
+                  nextItem,
+                  container, itemsContainer, prevGroup, nextGroup, beforeFlag;
 
                itemsToDraw = this._getItemsForRedrawOnAdd(newItems, groupId);
                if (itemsToDraw.length) {
@@ -953,22 +954,47 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
 
                   itemsContainer = this._getItemsContainer();
-                  if (newItemsIndex == 0) {
-                     // TODO. Костыль для редактирования по месту. Написан тут, т.к. необходимо его убрать (решение не универсальное).
-                     // https://inside.tensor.ru/opendoc.html?guid=8fe37872-c08b-4a7b-9c9f-d04f531cc45b
-                     this._optimizedInsertMarkup(itemsContainer, markup, this._options._items.getCount() > 1);
-                  }
-                  else {
-                     if ((newItemsIndex) == (this._options._itemsProjection.getCount() - newItems.length)) {
-                        this._optimizedInsertMarkup(itemsContainer, markup, false);
+
+                  prevItem = this._getItemsProjection().at(newItemsIndex - 1);
+
+                  if (this._options.groupBy && this._options.easyGroup) {
+                     //в случае наличия группировки надо проверять соседние элементы, потому что
+                     //на месте вставки может быть разделитель, надо понимать, когда вставлять до разделителя, а когда после
+                     //на выходе получим beforeFlag = true, если надо вставлять ДО какого то элемента, иначе действуем по стандартному алгоритму
+                     if (this._canApplyGrouping(newItems[0])) {
+                        prevGroup = this._canApplyGrouping(prevItem) ? this._getItemsProjection().getGroupByIndex(newItemsIndex - 1) : null;
+                        nextItem = this._getItemsProjection().at(newItemsIndex + newItems.length);
+                        nextGroup = this._canApplyGrouping(nextItem) ? this._getItemsProjection().getGroupByIndex(newItemsIndex + newItems.length) : null;
+                        if ((prevGroup === undefined) || (prevGroup === null) || prevGroup != groupId) {
+                           if (nextGroup !== undefined && nextGroup !== null && nextGroup == groupId) {
+                              beforeFlag = true
+                           }
+                        }
                      }
-                     else {
-                        item = this._options._itemsProjection.at(newItemsIndex - 1);
-                        container = this._getDomElementByItem(item);
-                        container.after(markup);
-                     }
+
                   }
 
+
+                  if (beforeFlag) {
+                     container = this._getDomElementByItem(nextItem);
+                     container.before(markup);
+                  }
+                  else {
+                     if (newItemsIndex == 0) {
+                        // TODO. Костыль для редактирования по месту. Написан тут, т.к. необходимо его убрать (решение не универсальное).
+                        // https://inside.tensor.ru/opendoc.html?guid=8fe37872-c08b-4a7b-9c9f-d04f531cc45b
+                        this._optimizedInsertMarkup(itemsContainer, markup, this._options._items.getCount() > 1);
+                     }
+                     else {
+                        if ((newItemsIndex) == (this._getItemsProjection().getCount() - newItems.length)) {
+                           this._optimizedInsertMarkup(itemsContainer, markup, false);
+                        }
+                        else {
+                           container = this._getDomElementByItem(prevItem);
+                           container.after(markup);
+                        }
+                     }
+                  }
                   this._reviveItems();
                }
             }
