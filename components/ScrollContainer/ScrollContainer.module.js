@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
             //Инициализируем кастомный скролл
             this.getContainer().mCustomScrollbar({
                theme: 'minimal-dark',
-               scrollInertia: 0,
+               scrollInertia: 200,
                updateOnContentResize: false,
                alwaysTriggerOffsets: false,
                callbacks: {
