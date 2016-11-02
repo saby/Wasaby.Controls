@@ -3,6 +3,11 @@ define('js!SBIS3.CONTROLS.DateRangeMixin', [
    'Core/core-instance',
    'Core/helpers/date-helpers'
 ], function (DateUtil, cInstance, dateHelpers) {
+   var setSQLSerializationMode = function (date, mode) {
+      if (date) {
+         date.setSQLSerializationMode(mode);
+      }
+   };
    /**
     * Миксин, добавляющий поведение хранения начального и конечного значений диапазона типа Date.
     * Реализует логику которая приводит значения диапазона к типу Date, а так же общие методы для работы
@@ -43,28 +48,25 @@ define('js!SBIS3.CONTROLS.DateRangeMixin', [
          },
          setStartValue: function (parentFnc, value, silent) {
             value = this._normalizeDate(value);
+            setSQLSerializationMode(value, this._getSQLSerializationMode());
             return parentFnc.call(this, value, silent);
-         }
-         ,
+         },
 
          setEndValue: function (parentFnc, value, silent) {
             value = this._normalizeDate(value);
+            setSQLSerializationMode(value, this._getSQLSerializationMode());
             return parentFnc.call(this, value, silent);
          },
 
          getStartValue: function (parentFnc) {
             value = parentFnc.apply(this);
-            if (value) {
-               value.setSQLSerializationMode(this._getSQLSerializationMode());
-            }
+            setSQLSerializationMode(value, this._getSQLSerializationMode());
             return value;
          },
 
          getEndValue: function (parentFnc) {
             value = parentFnc.call(this);
-            if (value) {
-               value.setSQLSerializationMode(this._getSQLSerializationMode());
-            }
+            setSQLSerializationMode(value, this._getSQLSerializationMode());
             return value;
          }
       },
