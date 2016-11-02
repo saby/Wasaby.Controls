@@ -12,8 +12,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "js!SBIS3.CONTROLS.SearchMixin",
    "html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown",
    "html!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate",
-   "html!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate"
-], function ( constants, Deferred,TextBox, dotTplFn, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, arrowTpl, ItemTemplate, ItemContentTemplate) {
+   "html!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
+   "Core/core-instance"
+], function ( constants, Deferred,TextBox, dotTplFn, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора.
@@ -348,7 +349,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _drawSelectedItem: function (key, index) {
-         var def;
+         var def, cKey = key;
          def = new Deferred();
 
          if (this._getItemsProjection()) {
@@ -358,14 +359,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
             else {
                if (this._dataSource) {
-                  if ((key != undefined) && (key !== null)) {
-                     this._dataSource.read(key).addCallback(function (item) {
+                  if ((cKey != undefined) && (cKey !== null)) {
+                     this._dataSource.read(cKey).addCallback(function (item) {
                         def.callback(item);
                      });
                   }
                }
             }
-            def.addCallback(this._drawSelectedItemText.bind(this, key));
+            def.addCallback(this._drawSelectedItemText.bind(this, cKey));
          }
          if (this._isClearing) {
             this._clearSelection();
@@ -380,7 +381,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                ComboBox.superclass.setText.call(this, newText);
                this._drawNotEditablePlaceholder(newText);
                $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(newText);
-               this._container.toggleClass('controls-ComboBox_emptyValue', (key === null));
+               /*управлять этим классом надо только когда имеем дело с рекордами*/
+               if (cInstance.instanceOfModule('js!WS.Data/Entity/Model', item)) {
+                  this._container.toggleClass('controls-ComboBox_emptyValue', (key === null));
+               }
+               else {
+                  this._container.removeClass('controls-ComboBox_emptyValue');
+               }
             }
          }
          else {
