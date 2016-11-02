@@ -355,7 +355,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   withSaving = endEditResult === EndEditResult.SAVE;
                }
 
-               if (endEditResult === EndEditResult.CANCEL || !eip.validate() && withSaving) {
+               if (endEditResult === EndEditResult.CANCEL || withSaving && !eip.validate()) {
                   this._savingDeferred.errback();
                   return Deferred.fail();
                } else {
