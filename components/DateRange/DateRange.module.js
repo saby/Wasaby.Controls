@@ -78,7 +78,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
 
          this.subscribe('onEndValueChange', function (event, value) {
             // Временно делаем, что бы возвращаемая конечная дата содержала время 23:59:59.999
-            value = value? new Date(value.getFullYear(), value.getMonth(), value.getDate(), 23, 59, 59, 999): null;
+            value = this._normalizeEndDate(value);
             self._notify('onEndDateChange', value);
          });
 
@@ -215,7 +215,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
        * @see startDate
        */
       getStartDate: function() {
-         return this._options.startValue;
+         return this.getStartValue();
       },
 
       /**
@@ -237,13 +237,16 @@ define('js!SBIS3.CONTROLS.DateRange', [
        * @see endDate
        */
       getEndDate: function() {
+         return this._normalizeEndDate(this.getEndValue());
+      },
+
+      _normalizeEndDate: function (date) {
          // Временно делаем, что бы возвращаемая конечная дата содержала время 23:59:59.999
-         var d = this._options.endValue;
-         if (d) {
-            d = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
-            d.setSQLSerializationMode(this._getSQLSerializationMode());
+         if (date) {
+            date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
+            date.setSQLSerializationMode(this._getSQLSerializationMode());
          }
-         return d;
+         return date;
       }
    });
    return DateRange;
