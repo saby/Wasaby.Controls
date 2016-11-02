@@ -885,7 +885,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       },
 
       _getZIndex: function(){
-         this._zIndex = cWindowManager.acquireZIndex(this._options.isModal, false, true);
+         this._zIndex = cWindowManager.acquireZIndex(this._options.isModal, false, false);
          cWindowManager.setVisible(this._zIndex);
       },
 
