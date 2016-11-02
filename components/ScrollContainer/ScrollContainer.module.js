@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
 
          init: function() {
             Scroll.superclass.init.call(this);
-
+            this._content = $('.controls-ScrollContainer__content', this.getContainer());
             //Подписка на события (наведение курсора на контейнер) при которых нужно инициализировать скролл.
             this._createOnMove = this._create.bind(this);
             this.getContainer().on('mousemove touchstart', this._createOnMove);
@@ -204,10 +204,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
              * а уже потом при наведении на контрол скролл инициализируется.
              */
             if (!this._scroll) {
-               if (!this._content) {
-                  this._content = this._container.children();
-               }
-
                return this._content.height() > this._container.height();
             }
 
