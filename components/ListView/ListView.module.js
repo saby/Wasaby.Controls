@@ -2155,7 +2155,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var scrollWatcherConfig = {
                totalScrollOffset: START_NEXT_LOAD_OFFSET,
                opener: this,
-               element: this.getContainer().closest(this._options.infiniteScrollContainer)
+               element: this.getContainer().closest(this._options.infiniteScrollContainer),
+               initOnBottom: this._options.infiniteScroll == 'up'
             };
             this._scrollWatcher = new ScrollWatcher(scrollWatcherConfig);
          },
@@ -2349,18 +2350,50 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollToItem(item.getId());
             }
          },
+
+         /**
+          * Возвращает scrollWatcher, при необходимости создаёт его
+          * @returns {*|SBIS3.CONTROLS.ListView.$protected._scrollWatcher|ScrollWatcher|SBIS3.CONTROLS.ListView._scrollWatcher}
+          * @private
+          */
+         _getScrollWatcher: function() {
+            if (!this._scrollWatcher) {
+               this._createScrollWatcher();
+            }
+            return this._scrollWatcher;
+         },
+
+         /**
+          * Переопределённый метод itemsControlMixin'a
+          * Необходим, т.к. itemsControlMixin не знает, что может быть кастомный скролл
+          * @param target
+          * @private
+          */
+         _scrollTo: function(target) {
+            if(this.isInfiniteScroll()) {
+               this._getScrollWatcher().scrollToElement(target);
+            } else {
+               ListView.superclass._scrollTo.apply(this, arguments);
+            }
+         },
+
+         /**
+          * Проверяет, нахдится ли скролл внизу
+          * @param noOffset
+          * @returns {*|*|boolean|Boolean}
+          */
          isScrollOnBottom: function(noOffset){
-            if (!this._scrollWatcher){
-               this._createScrollWatcher();
-            }
-            return this._scrollWatcher.isScrollOnBottom(noOffset);
+            return this._getScrollWatcher().isScrollOnBottom(noOffset);
          },
+
+         /**
+          * Проверяет, нахдится ли скролл вверху
+          * @returns {*|*|boolean|Boolean}
+          */
          isScrollOnTop: function(){
-            if (!this._scrollWatcher){
-               this._createScrollWatcher();
-            }
-            return this._scrollWatcher.isScrollOnTop();
+            return this._getScrollWatcher().isScrollOnTop();
          },
+
          _showLoadingIndicator: function () {
             if (!this._loadingIndicator) {
                this._createLoadingIndicator();
