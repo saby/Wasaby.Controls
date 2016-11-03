@@ -183,6 +183,23 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          this._updateEditArrow();
          TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
+
+      //Переопределяем метод, потому что в дереве могут присутствовать футеры папок, и если записи добавляются в конец,
+      //то они добавятся после футера папки, чего быть не должно. Проверим что записи добавляются в конец и добавим их после
+      //последнего элемента, иначе будет выполнена штатная логика.
+      _getInsertMarkupConfig: function(newItemsIndex, newItems) {
+         var
+             lastItem,
+             cfg = TreeDataGridView.superclass._getInsertMarkupConfig.apply(this, arguments);
+
+         if (cfg.inside && !cfg.prepend) {
+            lastItem = this._options._itemsProjection.at(newItemsIndex - 1);
+            cfg.inside = false;
+            cfg.container = this._getDomElementByItem(lastItem);
+         }
+         return cfg;
+      },
+
       _createFolderFooter: function(key) {
          TreeDataGridView.superclass._createFolderFooter.apply(this, arguments);
          var
