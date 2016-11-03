@@ -137,7 +137,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              * @typedef {Object} loacationStrategyEnum
              * @variant dontMove всплывающая панель не двигается относительно таргета
              */
-            locationStrategy: null
+            locationStrategy: null,
+
+            isHint: true
          }
       },
 
@@ -885,7 +887,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       },
 
       _getZIndex: function(){
-         this._zIndex = cWindowManager.acquireZIndex(this._options.isModal, false, false);
+         this._zIndex = cWindowManager.acquireZIndex(this._options.isModal, false, this._options.isHint);
          cWindowManager.setVisible(this._zIndex);
       },
 
