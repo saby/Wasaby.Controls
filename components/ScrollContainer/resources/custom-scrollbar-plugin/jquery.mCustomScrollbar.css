@@ -1304,3 +1304,15 @@
 .controls-ScrollContainer__overflow-hidden {
     overflow: hidden
 }
+
+.controls-ScrollContainer:hover .mCSB_dragger_bar {
+    margin-right: 2px !important;
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    border-radius: 2px !important;
+    width: 4px !important;
+}
+
+.controls-ScrollContainer:active .mCSB_dragger_bar {
+    background-color: rgba(0, 0, 0, 0.15) !important;
+    border-radius: 2px !important;
+}

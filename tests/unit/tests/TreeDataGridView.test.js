@@ -28,7 +28,6 @@ define(['js!SBIS3.CONTROLS.TreeDataGridView'], function (TreeDataGridView) {
         });
 
         describe('Check loaded nodes', function () {
-            //mocha.setup({ignoreLeaks: true});
             it('First check loaded nodes. They empty.', function () {
                 assert.deepEqual(TestTDGV._loadedNodes, {});
             });
@@ -48,6 +47,17 @@ define(['js!SBIS3.CONTROLS.TreeDataGridView'], function (TreeDataGridView) {
                 TestTDGV.collapseNode(2);
                 items.remove(items.getRecordById(2));
                 assert.deepEqual(TestTDGV._loadedNodes, {});
+            });
+        });
+        describe('Check toggle nodes', function () {
+            it('Expand nonexistent node.', function () {
+                TestTDGV.expandNode('nonexistent_key');
+            });
+            it('Collapse nonexistent node.', function () {
+                TestTDGV.collapseNode('nonexistent_key');
+            });
+            it('Toggle nonexistent node.', function () {
+                TestTDGV.toggleNode('nonexistent_key');
             });
         });
     });

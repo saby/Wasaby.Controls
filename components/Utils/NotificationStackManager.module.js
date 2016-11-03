@@ -33,9 +33,6 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
             _items: [],
             _hiddenItems: [],
 
-            //Минимальный z-index сделаем 100
-            _zIndex: 100,
-
             //Отступ справа может меняться в зависимости от наличия скролла
             _right: RIGHT
          },
@@ -47,16 +44,16 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
 
             var self = this;
 
-            this._zIndex =  Math.max(cWindowManager.getMaxZIndex() + 1, 100);
+            this._zIndex =  cWindowManager.getMaxZIndex() + 1;
 
             $(window).on('resize', function(){
                self._checkCapacity();
             });
 
             this.subscribeTo(EventBus.globalChannel(), 'FloatAreaZIndexChanged', function(e, zIndex){
-               self._zIndex = Math.max(zIndex + 1, 100);
-               self._updatePositions();
+               self._updateZIndex(zIndex);
             });
+            this.subscribeTo(cWindowManager, 'zIndexChanged', this._updateZIndex.bind(this));
 
             var offset = LayoutManager.getScrollingContainerFixedOffsets();
 
@@ -121,6 +118,11 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
 
             this._updatePositions();
             this._checkCapacity();
+         },
+
+         _updateZIndex: function(zIndex){
+            this._zIndex = Math.max(zIndex, cWindowManager.getMaxZIndex()) + 1;
+            this._updatePositions();
          },
 
          /**

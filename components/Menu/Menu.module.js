@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.Menu', [
          var
              isEnabled = item.get('enabled'),
              visible = item.get('visible'),
-             caption = item.get(this._options.displayField),
+             caption = Sanitize(item.get(this._options.displayField), {validNodes: {component: true}}),
              options = {
                className: item.get('className'),
                activableByClick: false,

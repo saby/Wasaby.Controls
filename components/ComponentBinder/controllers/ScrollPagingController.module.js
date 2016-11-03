@@ -19,6 +19,9 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          ScrollPagingController.superclass.init.apply(this, arguments);
          this._zIndex = WindowManager.acquireZIndex();
          this._options.paging.getContainer().css('z-index', this._zIndex);
+         this._options.paging._zIndex = this._zIndex;
+         //Говорим, что элемент видимый, чтобы WindowManager учитывал его при нахождении максимального zIndex
+         WindowManager.setVisible(this._zIndex);
       },
 
       bindScrollPaging: function(paging) {

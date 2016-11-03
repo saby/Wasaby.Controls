@@ -8,11 +8,11 @@ define('js!SBIS3.CONTROLS.EditInPlace',
    "js!SBIS3.CORE.CompoundControl",
    "html!SBIS3.CONTROLS.EditInPlace",
    "js!SBIS3.CONTROLS.CompoundFocusMixin",
-   "js!WS.Data/Di",
+   'js!WS.Data/Builder',
    "Core/core-instance",
    "Core/helpers/fast-control-helpers"
 ],
-   function( Deferred,Control, dotTplFn, CompoundFocusMixin, Di, cInstance, fcHelpers) {
+   function(Deferred, Control, dotTplFn, CompoundFocusMixin, DataBuilder, cInstance, fcHelpers) {
       'use strict';
 
       /**
@@ -166,6 +166,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                if (this._lastHeight !== newHeight) {
                   this._lastHeight = newHeight;
                   this.getTarget().height(newHeight);
+                  this.updatePosition();
                   this._notify('onChangeHeight', this._model);
                }
             },
@@ -248,27 +249,15 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             //TODO: метод нужен для того, чтобы подогнать формат рекорда под формат рекордсета.
             //Выписана задача Мальцеву, который должен убрать этот метод отсюда, и предаставить механизм выполняющий необходимую задачу.
             //https://inside.tensor.ru/opendoc.html?guid=85d18197-2094-4797-b823-5406424881e5&description=
-            _cloneWithFormat: function(record, recordSet) {
-               recordSet = recordSet || this.getParent()._options.items;
+            _cloneWithFormat: function(record) {
                var
-                  fieldName,
-                  format,
-                  clone = Di.resolve(recordSet.getModel(), {
-                     'adapter': record.getAdapter(),
-                     'idProperty': record.getIdProperty(),
-                     'format': []
-                  });
-               format = record.getFormat();
+                  recordSet = this.getParent()._options.items,
+                  format = record.getFormat(),
+                  clone;
                if (!format.getCount() && recordSet && recordSet.getFormat().getCount()) {
                   format = recordSet.getFormat();
                }
-               format.each(function(field) {
-                  fieldName = field.getName();
-                  clone.addField(field, undefined, record.get(fieldName));
-               });
-               if (!record.isChanged()) {
-                  clone.acceptChanges();
-               }
+               clone = DataBuilder.reduceTo(record, format);
                clone.setState(record.getState());
                return clone;
             }

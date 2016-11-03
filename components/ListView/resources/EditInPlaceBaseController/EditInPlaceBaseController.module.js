@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "Core/Deferred",
    "Core/IoC",
    "Core/ConsoleLogger",
+   'js!WS.Data/Builder',
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CORE.PendingOperationProducerMixin",
    "html!SBIS3.CONTROLS.EditInPlaceBaseController/AddRowTpl",
@@ -18,7 +19,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "Core/core-instance",
    "Core/helpers/fast-control-helpers"
 ],
-   function ( cContext, constants, Deferred, IoC, ConsoleLogger,CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Record, cInstance, fcHelpers) {
+   function ( cContext, constants, Deferred, IoC, ConsoleLogger, DataBuilder, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Record, cInstance, fcHelpers) {
 
       'use strict';
 
@@ -354,7 +355,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   withSaving = endEditResult === EndEditResult.SAVE;
                }
 
-               if (endEditResult === EndEditResult.CANCEL || !eip.validate() && withSaving) {
+               if (endEditResult === EndEditResult.CANCEL || withSaving && !eip.validate()) {
                   this._savingDeferred.errback();
                   return Deferred.fail();
                } else {
@@ -385,7 +386,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         self._editingRecord = undefined;
                      }
                      if (self._isAdd) {
-                        self._options.items.add(eip._cloneWithFormat(eipRecord, self._options.items));
+                        self._options.items.add(DataBuilder.reduceTo(eipRecord, self._options.items.getFormat(), self._options.items.getModel()));
                      }
                   }).addErrback(function(error) {
                      fcHelpers.alert(error);
@@ -497,8 +498,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   // его и так завершат через finishChildPendingOperation (и туда попадет правильный аргумент - с сохранением
                   // или без завершать редактирование по месту)
                   endEdit = !cInstance.instanceOfModule(focusedControl, 'SBIS3.CORE.CloseButton') && !focusedControl ||
-                     (this._allowEndEdit(focusedControl) &&
-                     (this._isAnotherTarget(focusedControl, this) || !focusedControl._container.closest('.controls-ListView').length));
+                     (this._allowEndEdit(focusedControl) && this._isAnotherTarget(focusedControl, this));
                if (endEdit) {
                   eip = this._getEditingEip();
                   if (eip) {

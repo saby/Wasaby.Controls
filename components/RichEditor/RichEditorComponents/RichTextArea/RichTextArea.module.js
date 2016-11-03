@@ -1120,7 +1120,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             //Запрещаем всплытие Enter, Up и Down
             this._container.bind('keyup', function(e) {
-               if (e.which === cConstants.key.enter || e.which === cConstants.key.up || e.which === cConstants.key.down) {
+               if ((e.which === cConstants.key.enter && !e.ctrlKey)|| e.which === cConstants.key.up || e.which === cConstants.key.down) {
                   e.stopPropagation();
                   e.preventDefault();
                }

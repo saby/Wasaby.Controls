@@ -3,8 +3,9 @@
  */
 define('js!SBIS3.CONTROLS.ScrollWatcher', [
    "Core/Abstract",
-   "Core/helpers/string-helpers"
-], function( cAbstract,strHelpers) {
+   "Core/helpers/string-helpers",
+   "js!SBIS3.CORE.LayoutManager"
+], function( cAbstract, strHelpers, LayoutManager ) {
    'use strict';
    var ScrollWatcher = cAbstract.extend(/** @lends SBIS3.CONTROLS.ScrollWatcher.prototype */{
       /**
@@ -55,7 +56,9 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
 
          // Подписываемся либо на событие скролла у CustomScroll, либо на скролл у контейнера
          if (this._customScroll) {
-            element[0].wsControl.subscribe('onTotalScroll', this._processCustomScrollEvent.bind(this));
+            var scrollContainer = element[0].wsControl;
+            scrollContainer.setInitOnBottom(true);
+            scrollContainer.subscribe('onTotalScroll', this._processCustomScrollEvent.bind(this));
          } else {
             element.bind('scroll.wsScrollWatcher', this._onContainerScroll.bind(this));
          }
@@ -158,6 +161,18 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
       },
 
       /**
+       * Скролит к переданному jQuery элементу
+       * @param {jQuery} target
+       */
+      scrollToElement: function(target) {
+         if(this._customScroll) {
+            this.getScrollContainer().wsControl().scrollToElement(target)
+         } else {
+            LayoutManager.scrollToElement(target);
+         }
+      },
+
+      /**
        * Получить текущую высоту скролла отслеживаемого элемента или element
        * @returns {*}
        */
@@ -192,7 +207,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
        */
       hasScroll: function(offset){
          // FixMe: Считем, что если есть скролл в 10 пикселей, то его нет
-         // вынужденная мера для айпада, из за хака с height: calc(100% + 1px) 
+         // вынужденная мера для айпада, из за хака с height: calc(100% + 1px)
          offset = offset || 10;
          var element = this.getScrollContainer();
          if (this._customScroll) {

@@ -73,7 +73,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
              * {jQuery} Контент
              */
             _content: undefined,
-            _createOnMove: undefined
+            _createOnMove: undefined,
+            _initScrollOnBottom: false
          },
 
          $constructor: function() {
@@ -82,7 +83,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
 
          init: function() {
             Scroll.superclass.init.call(this);
-
+            this._content = $('.controls-ScrollContainer__content', this.getContainer());
             //Подписка на события (наведение курсора на контейнер) при которых нужно инициализировать скролл.
             this._createOnMove = this._create.bind(this);
             this.getContainer().on('mousemove touchstart', this._createOnMove);
@@ -106,7 +107,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
             //Инициализируем кастомный скролл
             this.getContainer().mCustomScrollbar({
                theme: 'minimal-dark',
-               scrollInertia: 0,
+               scrollInertia: 200,
                updateOnContentResize: false,
                alwaysTriggerOffsets: false,
                callbacks: {
@@ -127,9 +128,17 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
                   onTotalScrollBack: function(){
                      self._notify('onTotalScroll', 'top', self.getScrollTop());
                   }
-               }
+               },
+               setTop: this._initScrollOnBottom ? "-999999px" : 0
             });
             this.getContainer().off('mousemove touchstart', this._createOnMove);
+         },
+
+         setInitOnBottom: function(state){
+            if (state && !this._scroll){
+               this.getContainer()[0].scrollTop = this.getContainer()[0].scrollHeight;
+            }
+            this._initScrollOnBottom = state;
          },
 
          /**
@@ -162,10 +171,22 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
 
          /**
           * Сдвигает скролл на указанную величину
-          * @param option величина сдвига скролла
+          * @param offset величина сдвига скролла
           */
-         scrollTo: function(option) {
-            this.getContainer().mCustomScrollbar('scrollTo', option, {scrollInertia: 0});
+         scrollTo: function(offset) {
+            if (this._scroll){
+               this.getContainer().mCustomScrollbar('scrollTo', offset, {scrollInertia: 0});
+            } else {
+               this.getContainer()[0].scrollTop = typeof offset === 'string' ? (offset === 'top' ? 0 : this.getContainer()[0].scrollHeight) : offset
+            }
+         },
+
+         /**
+          * Скролит к переданному jQuery элементу
+          * @param {jQuery} target
+          */
+         scrollToElement: function(target) {
+            this.getContainer().mCustomScrollbar('scrollTo', target, {scrollInertia: 0});
          },
 
          /**
@@ -183,10 +204,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
              * а уже потом при наведении на контрол скролл инициализируется.
              */
             if (!this._scroll) {
-               if (!this._content) {
-                  this._content = this._container.children();
-               }
-
                return this._content.height() > this._container.height();
             }
 
