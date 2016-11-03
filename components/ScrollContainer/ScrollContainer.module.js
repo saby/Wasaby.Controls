@@ -2,11 +2,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
       'html!SBIS3.CONTROLS.ScrollContainer',
+      'Core/detection',
       'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar',
       'is!browser?css!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar',
       'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mousewheel-3.1.13'
    ],
-   function(CompoundControl, dotTplFn) {
+   function(CompoundControl, dotTplFn, cDetection) {
 
       'use strict';
 
@@ -103,35 +104,36 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
           */
          _create: function() {
             var self = this;
-
-            //Инициализируем кастомный скролл
-            this.getContainer().mCustomScrollbar({
-               theme: 'minimal-dark',
-               scrollInertia: 200,
-               updateOnContentResize: false,
-               alwaysTriggerOffsets: false,
-               callbacks: {
-                  onInit: function(){
-                     self._scroll = this;
+            if (!cDetection.isMobileIOS && !cDetection.isAndroidMobilePlatform ) {
+               //Инициализируем кастомный скролл
+               this.getContainer().mCustomScrollbar({
+                  theme: 'minimal-dark',
+                  scrollInertia: 200,
+                  updateOnContentResize: false,
+                  alwaysTriggerOffsets: false,
+                  callbacks: {
+                     onInit: function(){
+                        self._scroll = this;
+                     },
+                     onOverflowY: function(){
+                        self._hasScroll = true;
+                     },
+                     onOverflowYNone: function(){
+                        self._hasScroll = false;
+                     },
+                     onTotalScrollOffset: 30,
+                     onTotalScrollBackOffset: 30,
+                     onTotalScroll: function(){
+                        self._notify('onTotalScroll', 'bottom', self.getScrollTop());
+                     },
+                     onTotalScrollBack: function(){
+                        self._notify('onTotalScroll', 'top', self.getScrollTop());
+                     }
                   },
-                  onOverflowY: function(){
-                     self._hasScroll = true;
-                  },
-                  onOverflowYNone: function(){
-                     self._hasScroll = false;
-                  },
-                  onTotalScrollOffset: 30,
-                  onTotalScrollBackOffset: 30,
-                  onTotalScroll: function(){
-                     self._notify('onTotalScroll', 'bottom', self.getScrollTop());
-                  },
-                  onTotalScrollBack: function(){
-                     self._notify('onTotalScroll', 'top', self.getScrollTop());
-                  }
-               },
-               setTop: this._initScrollOnBottom ? "-999999px" : 0
-            });
-            this.getContainer().off('mousemove touchstart', this._createOnMove);
+                  setTop: this._initScrollOnBottom ? "-999999px" : 0
+               });
+               this.getContainer().off('mousemove touchstart', this._createOnMove);
+            }
          },
 
          setInitOnBottom: function(state){
