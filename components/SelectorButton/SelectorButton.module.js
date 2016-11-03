@@ -16,11 +16,32 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    "js!SBIS3.CONTROLS.IconMixin",
    "Core/Sanitize",
    "Core/core-instance",
-   "Core/helpers/functional-helpers"
+   "Core/helpers/functional-helpers",
+   "Core/helpers/collection-helpers"
 ],
-    function( constants,dotTplFn, ButtonBase, DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin, Sanitize, cInstance, fHelpers) {
+    function( constants, dotTplFn, ButtonBase, DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin, Sanitize, cInstance, fHelpers, colHelpers) {
 
    'use strict';
+
+    /* Функция рендера текста в шаблоне компонента */
+    function itemTemplateRender(opts) {
+       var items = [],
+           res = [];
+
+       if(opts.selectedItem && cInstance.instanceOfModule(opts.selectedItem, 'WS.Data/Entity/Model')) {
+          items = [opts.selectedItem];
+       } else if (opts.selectedItems) {
+          items = opts.selectedItems.toArray();
+       }
+
+       if(items.length) {
+          colHelpers.forEach(items, function(item) {
+             res.push(item.get(opts.displayField));
+          })
+       }
+
+       return res.join('');
+    }
 
    /**
     * Контрол, отображающий выбранные записи в виде текстовых значений через запятую.
@@ -47,6 +68,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
+            _preRender: itemTemplateRender,
             /**
              * @cfg {String}  Текст на кнопке по-умолчанию, проставляется если нет выбранных элементов
              * @example
