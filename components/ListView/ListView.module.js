@@ -2214,7 +2214,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param  {String} direction в какую сторону грузим
           */
          _scrollLoadNextPage: function (direction) {
-            var loadAllowed  = this.isInfiniteScroll(),
+            var loadAllowed  = this.isInfiniteScroll() && this._options.infiniteScroll !== 'demand',
                more = this.getItems().getMetaData().more,
                isContainerVisible = dcHelpers.isElementVisible(this.getContainer()),
                hasScroll = this._scrollWatcher.hasScroll(),
@@ -2285,7 +2285,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getNextOffset: function(){
-            if (this._infiniteScrollState.mode == 'down'){
+            if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
                return this._scrollOffset.bottom + this._limit;
             } else {
                return this._scrollOffset.top - this._limit;
@@ -2316,7 +2316,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _updateScrolOffset: function(){
-            if (this._infiniteScrollState.mode === 'down') {
+            if (this._infiniteScrollState.mode === 'down' || this._infiniteScrollState.mode == 'demand') {
                this._scrollOffset.bottom += this._limit;
             } else {
                if (this._scrollOffset.top >= this._limit){
