@@ -85,13 +85,17 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
        * </ol>
        */
       inRange: function (min, max, value) {
-         var obj = {
-            getValue: function() {
-               return value;
-            }
-         };
+         var isInRange;
 
-         return CoreValidators.inRange.call(obj, min, max);
+         min = parseFloat(min);
+         max = parseFloat(max);
+
+         if(value === '' || isNaN(min) || isNaN(max)){
+            return true;
+         }
+
+         isInRange = !isNaN(parseFloat(value)) && isFinite(value) && value >= min && value <= max;
+         return isInRange ? true : 'Значение должно попадать в диапазон ['+ min +';' + max +']';
       },
 
       /**
