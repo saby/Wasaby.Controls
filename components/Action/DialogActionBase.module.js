@@ -283,10 +283,9 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
 
       _showLoadingIndicator: function(){
          this._showedLoading = true;
-         cIndicator.setMessage('Загрузка...');
          window.setTimeout(function(){
             if (this._showedLoading){
-               cIndicator.show();
+               cIndicator.setMessage('Загрузка...'); //setMessage зовет show у loadingIndicator
             }
          }.bind(this), 750);
       },
