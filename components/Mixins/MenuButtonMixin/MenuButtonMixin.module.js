@@ -170,6 +170,11 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
                this._picker.setEnabled(enabled);
             }
          },
+         setAllowChangeEnable: function (allowChangeEnable) {
+            if (this._picker) {
+               this._picker.setAllowChangeEnable(allowChangeEnable);
+            }
+         },
          _drawIcon: function(icon){
             if (this._picker){
                var $icon = $('.controls-Menu__header-icon', this._picker.getContainer()),
