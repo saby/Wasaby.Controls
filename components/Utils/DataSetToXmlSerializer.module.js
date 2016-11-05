@@ -96,7 +96,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             doc.documentElement.appendChild(cols = doc.createElement('Columns'));
             for(var i = 0, l = columns.length; i < l; i++){
                cols.appendChild(column = doc.createElement('Column'));
-               column.setAttribute('Name', columns[i].title);
+               column.setAttribute('Name', columns[i].title || '');
                column.setAttribute('Field', columns[i].field);
             }
          }
