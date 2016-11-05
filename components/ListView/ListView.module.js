@@ -2125,6 +2125,16 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this.isInfiniteScroll()) {
                this._createLoadingIndicator();
                this._createScrollWatcher();
+
+               if (this._options.infiniteScroll == 'demand'){
+                  this._loadMoreButton = this.getChildControlByName('loadMoreButton');
+                  if (this.getItems()){
+                     this._setLoadMoreCaption(this.getItems());
+                  }
+                  this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
+                  this._setInfiniteScrollState('demand');
+                  return;
+               }
                // Пока по умолчанию считаем что везде подгрузка вниз, и если указана 'up' - значит она просто перевернута
                this._setInfiniteScrollState('down', this._options.infiniteScroll == 'up');
                /**TODO Это специфическое решение из-за того, что нам нужно догружать данные пока не появится скролл
@@ -2142,13 +2152,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.subscribeTo(topParent, 'onAfterShow', afterFloatAreaShow);
                }
                this._scrollWatcher.subscribe('onTotalScroll', this._onTotalScrollHandler.bind(this));
-            }
-            if (this._options.infiniteScroll == 'demand'){
-               this._loadMoreButton = this.getChildControlByName('loadMoreButton');
-               if (this.getItems()){
-                  this._setLoadMoreCaption(this.getItems());
-               }
-               this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
             }
          },
 
@@ -2236,7 +2239,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param  {String} direction в какую сторону грузим
           */
          _scrollLoadNextPage: function (direction) {
-            var loadAllowed  = this.isInfiniteScroll(),
+            var loadAllowed  = this.isInfiniteScroll() && this._options.infiniteScroll !== 'demand',
                more = this.getItems().getMetaData().more,
                isContainerVisible = dcHelpers.isElementVisible(this.getContainer()),
                hasScroll = this._scrollWatcher.hasScroll(),
@@ -2307,7 +2310,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getNextOffset: function(){
-            if (this._infiniteScrollState.mode == 'down'){
+            if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
                return this._scrollOffset.bottom + this._limit;
             } else {
                return this._scrollOffset.top - this._limit;
@@ -2338,7 +2341,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _updateScrolOffset: function(){
-            if (this._infiniteScrollState.mode === 'down') {
+            if (this._infiniteScrollState.mode === 'down' || this._infiniteScrollState.mode == 'demand') {
                this._scrollOffset.bottom += this._limit;
             } else {
                if (this._scrollOffset.top >= this._limit){
