@@ -2668,6 +2668,9 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollOffset.top = this._offset;
                this._scrollOffset.bottom = this._offset;
                if (!noLoad && this._offset !== offset) {
+                  /* При смене страницы (не через подгрузку по скролу),
+                     надо сбросить выделенную запись, иначе на следующей странице неправильно выделится запись */
+                  this.setSelectedIndex(-1);
                   this.reload();
                }
             }
