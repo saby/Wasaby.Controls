@@ -160,9 +160,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
          isScrollOnBottom: function() {
             var
                container = this._container,
-               scroll = container.find('.mCSB_dragger_bar');
+               scroll = container.find('.mCSB_dragger_bar'),
+               scrollTools = container.find('.mCSB_scrollTools_vertical');
 
-            return this._scroll && this.hasScroll() && this._container.height() === (scroll.height() + this.getScrollTop());
+            //Высота скроллбара === высоте скролла (dragger) + проскролленное расстояние
+            return this._scroll && this.hasScroll() && scrollTools.height() === (scroll.height() + this.getScrollTop());
          },
 
          getScrollHeight: function(){
@@ -217,8 +219,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
           */
          getScrollTop: function() {
             var scroll = this._scroll;
-
-            return scroll ? scroll.mcs.draggerTop : 0;
+            return scroll ? parseInt($('.mCSB_dragger', this.getContainer()).css('top')) : 0;
          },
 
          /**
