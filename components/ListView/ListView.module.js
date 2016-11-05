@@ -1220,7 +1220,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getEmptyDataContainer: function() {
-            return $('.controls-ListView__EmptyData', this._container.get(0));
+            return $('> .controls-ListView__EmptyData', this._container.get(0));
          },
 
          setMultiselect: function(flag) {
