@@ -53,7 +53,9 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
             this.subscribeTo(EventBus.globalChannel(), 'FloatAreaZIndexChanged', function(e, zIndex){
                self._updateZIndex(zIndex);
             });
-            this.subscribeTo(cWindowManager, 'zIndexChanged', this._updateZIndex.bind(this));
+            this.subscribeTo(cWindowManager, 'zIndexChanged', function(e, zIndex){
+               self._updateZIndex(zIndex);
+            });
 
             var offset = LayoutManager.getScrollingContainerFixedOffsets();
 
