@@ -818,7 +818,7 @@ define('js!SBIS3.CONTROLS.ListView',
                т.к. оно стреляет после тапа. После тапа событие mousemove имеет нулевой сдвиг, поэтому обрабатываем его как touch событие
                 + добавляю проверку, что до этого мы были в touch режиме,
                это надо например для тестов, в которых эмулирется событие mousemove так же без сдвига, как и на touch устройствах. */
-            this._setTouchSupport(Array.indexOf(['swipe', 'tap'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform)));
+            this._setTouchSupport(Array.indexOf(['swipe', 'tap', 'touchend', 'taphold'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform)));
 
             switch (e.type) {
                case 'mousemove':
@@ -1220,7 +1220,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getEmptyDataContainer: function() {
-            return $('.controls-ListView__EmptyData', this._container.get(0));
+            return $('> .controls-ListView__EmptyData', this._container.get(0));
          },
 
          setMultiselect: function(flag) {
@@ -2694,6 +2694,9 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollOffset.top = this._offset;
                this._scrollOffset.bottom = this._offset;
                if (!noLoad && this._offset !== offset) {
+                  /* При смене страницы (не через подгрузку по скролу),
+                     надо сбросить выделенную запись, иначе на следующей странице неправильно выделится запись */
+                  this.setSelectedIndex(-1);
                   this.reload();
                }
             }

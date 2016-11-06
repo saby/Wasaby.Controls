@@ -32,15 +32,20 @@
 // т.к. он сам по себе неправильный, но сейчас
 // редактирование по месту не переделать
 // класс добавляет круглую границу для иконок в 32px
-.controls-IconButton {
-   &.icon-size {
-      &.controls-IconButton__round {
-         border: 1px solid #cccccc;
-         border-radius: 20px;
-         text-align: center;
-         height: 38px !important;
-         width: 38px !important;
-         line-height: 38px !important;
+.controls-ListView {
+   .controls-ItemsToolbar {
+      .controls-IconButton {
+         &.icon-size {
+            &.controls-IconButton__round {
+               font-size: 32px !important;
+               border: 1px solid #cccccc;
+               border-radius: 20px;
+               text-align: center;
+               height: 38px !important;
+               width: 38px !important;
+               line-height: 38px !important;
+            }
+         }
       }
    }
 }
@@ -174,6 +179,7 @@
    .ws-float-area-title {
       top: @float-area-top-offset !important;
       font-size: 32px !important;
+      position: relative;
    }
 }
 
