@@ -1288,7 +1288,11 @@
 }
 
 .controls-ScrollContainer__overflow-hidden {
-    overflow: hidden
+   overflow: hidden;
+}
+
+.ws-is-mobile-android .controls-ScrollContainer, .ws-is-mobile-safari .controls-ScrollContainer, .ws-is-mobile-chrome-ios .controls-ScrollContainer {
+   overflow: auto;
 }
 
 .controls-ScrollContainer:hover .mCSB_dragger_bar {
