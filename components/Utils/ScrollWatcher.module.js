@@ -4,8 +4,9 @@
 define('js!SBIS3.CONTROLS.ScrollWatcher', [
    "Core/Abstract",
    "Core/helpers/string-helpers",
-   "js!SBIS3.CORE.LayoutManager"
-], function( cAbstract, strHelpers, LayoutManager ) {
+   "js!SBIS3.CORE.LayoutManager",
+   'Core/detection'
+], function( cAbstract, strHelpers, LayoutManager, cDetection) {
    'use strict';
    var ScrollWatcher = cAbstract.extend(/** @lends SBIS3.CONTROLS.ScrollWatcher.prototype */{
       /**
@@ -52,16 +53,21 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
          var topParent;
          this._publish('onTotalScroll', 'onScroll');
          var element = this._findScrollElement() || $(window);
-         this._customScroll = element.hasClass('controls-ScrollContainer');
+         this._customScroll = this._isCustomScroll(element);
 
          // Подписываемся либо на событие скролла у CustomScroll, либо на скролл у контейнера
          if (this._customScroll) {
             var scrollContainer = element[0].wsControl;
-            scrollContainer.setInitOnBottom(true);
+            // Опционально инициализируем customScroll внизу
+            scrollContainer.setInitOnBottom(this._options.initOnBottom);
             scrollContainer.subscribe('onTotalScroll', this._processCustomScrollEvent.bind(this));
          } else {
             element.bind('scroll.wsScrollWatcher', this._onContainerScroll.bind(this));
          }
+      },
+
+      _isCustomScroll: function(element){
+         return element.hasClass('controls-ScrollContainer') && !cDetection.isMobileIOS && !cDetection.isAndroidMobilePlatform;
       },
 
       // Ищем в порядке - пользовательский контейнер -> ws-scrolling-content -> ws-body-scrolling-content -> Window
