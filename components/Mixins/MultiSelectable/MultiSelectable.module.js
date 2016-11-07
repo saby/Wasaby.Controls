@@ -738,7 +738,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
          this._cloneSelectedItems();
          this._notifyOnPropertyChanged('selectedItems');
       },
-      
+
       _cloneSelectedItems: function() {
          this._options.selectedItems = this._options.selectedItems.clone(true);
       },
@@ -906,11 +906,18 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        * @private
        */
       _convertToKeys: function(list) {
-         var keys = [];
+         var keys = [],
+             key;
 
-         if(list) {
+         if (list) {
             list.each(function (rec) {
-               keys.push(rec.get(this._options.keyField));
+               key = rec.get(this._options.keyField);
+
+               if (key === undefined) {
+                  throw new Error(this._moduleName + ': record key is undefined.')
+               }
+
+               keys.push(key);
             }.bind(this));
          }
 
