@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
       },
 
       _isCustomScroll: function(element){
-         return element.hasClass('controls-ScrollContainer') && !cDetection.isMobileIOS && !cDetection.isAndroidMobilePlatform;
+         return element.hasClass('controls-ScrollContainer') && !cDetection.isMobileIOS && !cDetection.isMobileAndroid;
       },
 
       // Ищем в порядке - пользовательский контейнер -> ws-scrolling-content -> ws-body-scrolling-content -> Window
