@@ -25,6 +25,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          cMerge(tplOptions, tvOptions);
          tplOptions.arrowActivatedHandler = cfg.arrowActivatedHandler;
          tplOptions.editArrow = cfg.editArrow;
+         tplOptions.foldersColspan = cfg.foldersColspan;
          return tplOptions;
       },
       getSearchCfg = function(cfg) {
@@ -153,7 +154,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              *     <option name="editArrow" type="boolean">false</option>
              * </pre>
              */
-            editArrow: false
+            editArrow: false,
+            /**
+             * @cfg {Boolean} отображает папки с одной колонкой на всю строку
+             * Значение по умолчанию false
+             * @deprecated
+             */
+            // Добавил опцию для версии 220
+            // с 3.7.5 будет рулиться через пользовательский шаблон
+            foldersColspan: false
          },
          _dragStartHandler: undefined,
          _editArrow: undefined
