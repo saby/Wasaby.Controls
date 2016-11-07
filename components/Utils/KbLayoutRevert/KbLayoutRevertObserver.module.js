@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
             return;
          }
 
-         /* Смену расклади делаем поле проверок,
+         /* Смену раскладки делаем после проверок,
             т.к. значения в фильтре уже может не быть */
          revertedSearchValue = KbLayoutRevertUtil.process(searchValue);
 
