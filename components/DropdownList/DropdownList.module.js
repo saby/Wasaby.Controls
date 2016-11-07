@@ -274,6 +274,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return {
                item: item,
                itemTpl: TemplateUtil.prepareTemplate(this._options.itemTpl),
+               defaultItemTpl: dotTplFnForItem,
                defaultId: this._defaultId,
                displayField: this._options.displayField,
                hierField: this._options.hierField,
