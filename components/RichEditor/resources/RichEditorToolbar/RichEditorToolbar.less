@@ -8,9 +8,6 @@
    &.controls-RichEditorToolbar__hide {
       .controls-RichEditorToolbar__toggleButton {
          background-image: @freToolbarShowButtonPrimary;
-         &:hover {
-            background-image: @freToolbarShowButtonHover;
-         }
       }
       .controls-RichEditorToolbar__itemsContainer {
          height: 0px;
@@ -37,9 +34,6 @@
       background-color: transparent;
       cursor: pointer;
       background-image: @freToolbarHideButtonPrimary;
-      &:hover {
-         background-image: @freToolbarHideButtonHover;
-      }
       .box-shadow(none);
    }
 }
@@ -267,12 +261,12 @@
       }
    }
 }
-.ws-is-mobile-safari {
+.ws-is-desktop-platform {
    .controls-RichEditorToolbar {
       &.controls-RichEditorToolbar__hide {
          .controls-RichEditorToolbar__toggleButton {
             &:hover {
-               background-image: @freToolbarShowButtonPrimary;
+               background-image: @freToolbarShowButtonHover;
             }
          }
 
@@ -280,7 +274,7 @@
    }
    .controls-RichEditorToolbar__toggleButton {
       &:hover {
-         background-image: @freToolbarHideButtonPrimary;
+         background-image: @freToolbarHideButtonHover;
       }
    }
 }
