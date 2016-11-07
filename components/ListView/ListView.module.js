@@ -2118,7 +2118,9 @@ define('js!SBIS3.CONTROLS.ListView',
                if (cInstance.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
                   var afterFloatAreaShow = function(){
                      if (self.getItems()) {
-                        self._needScrollCompensation = self._options.infiniteScroll == 'up';
+                        if (self._options.infiniteScroll == 'up'){
+                           self._moveTopScroll();
+                        }
                         self._preScrollLoading();
                      }
                      topParent.unsubscribe('onAfterShow', afterFloatAreaShow);
