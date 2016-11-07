@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   multiselect : cfg.multiselect,
                   hierField: cfg.hierField + '@',
                   item: item.getContents(),
-                  groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.template),
+                  groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.contentTemplate || ''),
                   groupId: groupId
                },
                groupTemplateFnc;
@@ -979,9 +979,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             //на месте вставки может быть разделитель, надо понимать, когда вставлять до разделителя, а когда после
             //на выходе получим beforeFlag = true, если надо вставлять ДО какого то элемента, иначе действуем по стандартному алгоритму
             if (this._canApplyGrouping(newItems[0])) {
-               prevGroup = this._canApplyGrouping(prevItem) ? projection.getGroupByIndex(newItemsIndex - 1) : null;
+               prevGroup = (prevItem && this._canApplyGrouping(prevItem)) ? projection.getGroupByIndex(newItemsIndex - 1) : null;
                nextItem = projection.at(newItemsIndex + newItems.length);
-               nextGroup = this._canApplyGrouping(nextItem) ? projection.getGroupByIndex(newItemsIndex + newItems.length) : null;
+               nextGroup = (nextItem && this._canApplyGrouping(nextItem)) ? projection.getGroupByIndex(newItemsIndex + newItems.length) : null;
                if ((prevGroup === undefined) || (prevGroup === null) || prevGroup != groupId) {
                   if (nextGroup !== undefined && nextGroup !== null && nextGroup == groupId) {
                      beforeFlag = true

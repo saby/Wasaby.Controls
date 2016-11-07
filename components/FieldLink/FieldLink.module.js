@@ -815,7 +815,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if(!this._options.alwaysShowTextBox) {
 
                 if(!this._options.multiselect) {
-                   this._inputWrapper.toggleClass('ws-hidden', Boolean(keysArrLen));
+                   /* Поле ввода нельзя вырывать из потока (display: none),
+                      иначе ломается базовая линия, поэтому скрываем его через visibility: hidden */
+                   this._inputWrapper.toggleClass('ws-invisible', Boolean(keysArrLen));
                 }
              }
 

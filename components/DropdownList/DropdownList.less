@@ -92,9 +92,9 @@
 }
 
 .controls-DropdownList__picker {
-  cursor: @DropdownList-cursor;
   .controls-DropdownList__item, .controls-DropdownList__selectedItem *{
     font-size: 15px;
+    cursor: @DropdownList-cursor;
   }
 
   &.controls-DropdownList__equalsWidth {
@@ -134,6 +134,31 @@
      }
      .controls-DropdownList__item{
        padding: 6px 16px;
+       .controls-DropdownList__itemTextWrapper{
+         position: relative;
+         //Блок с "размытием" располагается в том месте, где должен быть padding для текста. если текст заезжает на этот паддинг,
+         //то будет скрыт в размытии, кодом, описанном ниже. Так как ограничение ширины установлено через max-width,
+         //мы не знаем, какой именно текст уместился в контейнер, а какой нет.
+         &:after {
+           content: '';
+           position: absolute;
+           top: 0;
+           bottom: 0;
+           right: -4px;
+           width: 4px;
+           background: linear-gradient(to left, @DropdownList-picker-menu-item-color, @DropdownList-picker-menu-item-color-blur);
+         }
+         .controls-DropdownList__item-text{
+           overflow: hidden;
+           white-space: nowrap;
+           width: calc(~"100% + 4px"); //Если текст не влезает, то уйдет в "размытие" на 4px
+         }
+       }
+       &:hover {
+         .controls-DropdownList__itemTextWrapper:after {
+           background: linear-gradient(to left, @DropdownList-picker-menu-item-hover, @DropdownList-picker-menu-item-hover-blur);
+         }
+       }
      }
      .controls-DropdownList__multiselect.controls-DropdownList__item{
        padding: 6px 16px 6px 0;

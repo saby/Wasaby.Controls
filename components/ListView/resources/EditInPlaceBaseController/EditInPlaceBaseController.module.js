@@ -242,7 +242,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                            parentProjItem = itemProjItem.getParent();
                            self._lastTargetAdding = parentProjItem.isRoot() ? null : parentProjItem;
                         }
-                        self._addPendingOperation();
+                        self._subscribeToAddPendingOperation(editingRecord);
                      }
                      return editingRecord;
                   })
@@ -277,15 +277,27 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
             },
             /**
+             * Регистрируем pending лишь при изменении полей редактируемой записи
+             * @param record
+             * @private
+             */
+            _subscribeToAddPendingOperation: function(record) {
+               record.subscribe('onPropertyChange', this._addPendingOperation, this);
+            },
+            _unsubscribeFromAddPendingOperation: function(record) {
+               record.unsubscribe('onPropertyChange', this._addPendingOperation, this);
+            },
+            /**
              * Регистрирует операцию ожидания у родителя, к которому подмешан SBIS3.CORE.PendingOperationParentMixin
              * @private
              */
-            _addPendingOperation: function() {
+            _addPendingOperation: function(event) {
                var
                   opener = this.getOpener();
                if (opener) {
                   this._pendingOperation = this._registerPendingOperation('EditInPlaceController', this._handlePendingOperation.bind(this), opener);
                }
+               this._unsubscribeFromAddPendingOperation(event.getTarget());
             },
             /**
              * Разрегистрирует операцию ожидания у родителя, к которому подмешан SBIS3.CORE.PendingOperationParentMixin
@@ -294,7 +306,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _removePendingOperation: function() {
                var
                   opener = this.getOpener();
-               if (opener) {
+               if (opener && this._pendingOperation) {
                   this._unregisterPendingOperation(this._pendingOperation);
                }
             },
@@ -377,6 +389,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                var
                   self = this,
                   deferred,
+                  format,
                   eipRecord = eip.getEditingRecord();
                if (withSaving) {
                   deferred = this._options.dataSource.update(eipRecord).addCallback(function() {
@@ -386,7 +399,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         self._editingRecord = undefined;
                      }
                      if (self._isAdd) {
-                        self._options.items.add(DataBuilder.reduceTo(eipRecord, self._options.items.getFormat(), self._options.items.getModel()));
+                        format = self._options.items.getFormat();
+                        self._options.items.add(format.getCount() ? DataBuilder.reduceTo(eipRecord, format, self._options.items.getModel()) : eipRecord);
                      }
                   }).addErrback(function(error) {
                      fcHelpers.alert(error);
@@ -435,7 +449,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         self._getEip().edit(model);
                         editingRecord = self._getEip().getEditingRecord();
                         self._notify('onAfterBeginEdit', editingRecord);
-                        self._addPendingOperation();
+                        self._subscribeToAddPendingOperation(editingRecord);
                         return editingRecord;
                      });
                   });

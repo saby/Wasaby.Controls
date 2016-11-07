@@ -118,16 +118,14 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
 
          if (this.setStartValue(startValue, true)) {
             if (!silent) {
-               this._notifyOnPropertyChanged('startValue');
-               this._notify('onStartValueChange', this._options.startValue);
+               this._notifyOnStartValueChanged();
             }
             changed = true;
          }
 
          if (this.setEndValue(endValue, true)) {
             if (!silent) {
-               this._notifyOnPropertyChanged('endValue');
-               this._notify('onEndValueChange', this._options.endValue);
+               this._notifyOnEndValueChanged();
             }
             changed = true;
          }
@@ -142,6 +140,16 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
          if (!silent) {
             this._notifyOnRangeChanged();
          }
+      },
+
+      _notifyOnStartValueChanged: function () {
+         this._notifyOnPropertyChanged('startValue');
+         this._notify('onStartValueChange', this._options.startValue);
+      },
+      
+      _notifyOnEndValueChanged: function () {
+         this._notifyOnPropertyChanged('endValue');
+         this._notify('onEndValueChange', this._options.startEnd);
       },
 
       _notifyOnRangeChanged: function () {
