@@ -1,8 +1,8 @@
 .controls-DropdownList {
    display: inline-block;
-   min-height: @DropdownList-min-height;
+   height: @DropdownList-height;
    box-sizing: @DropdownList-box-sizing;
-   line-height: @DropdownList-min-height;
+   line-height: @DropdownList-height;
    .controls-DropdownList__selectedItem {
       display: block; /* ie8/9 */
       display: flex;
@@ -181,7 +181,7 @@
         }
       }
       .controls-DropdownList__body{
-         margin-top: @DropdownList-min-height;
+         margin-top: @DropdownList-height;
          border-radius: @DropdownList-picker-list-left-border-radius;
       }
    }
