@@ -113,6 +113,11 @@ define('js!SBIS3.CONTROLS.FilterButton',
                  * @noshow
                  */
                 historyController: undefined,
+                /**
+                 * @noshow
+                 * @deprecated
+                 */
+                destroyPickerOnClose: true,
 
                 // TODO ДОКУМЕНТАЦИЯ
                 filterLineComponent: 'SBIS3.CONTROLS.FilterButton.FilterLine',
@@ -296,7 +301,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                    onClose: function() {
                       /* Разрушаем панель при закрытии,
                          надо для: сбрасывания валидации, удаления ненужных значений из контролов */
-                      if(self._picker) {
+                      if(self._picker && self._options.destroyPickerOnClose) {
                          self._picker.destroy();
                          self._picker = null;
                       }
