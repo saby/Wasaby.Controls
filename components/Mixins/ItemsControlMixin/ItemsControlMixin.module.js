@@ -703,11 +703,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             return;
          }
 
-         var items = this.getItems(),
-            source = this.getDataSource(),
-            required = source || (items && items.getIdProperty);
-
-         if (required) {
+         var items = this.getItems();
+         if (items && items.getIdProperty) {
             IoC.resolve('ILogger').info('ItemsControl', 'Option keyField is undefined in control ' + this.getName());
          }
       },
@@ -1345,6 +1342,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       this._itemsReadyCallback();
                       self.redraw();
                    }
+                   
+                   self._checkKeyField();
 
                    this._dataLoadedCallback();
                    //self._notify('onBeforeRedraw');
