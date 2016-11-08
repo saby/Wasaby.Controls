@@ -2,9 +2,16 @@
    line-height: @date-range-line-height;
 
    &.ws-validation-error {
-      outline-width: @formatted-text-box-error-border-width;
-      outline-style: @formatted-text-box-error-border-style;
-      outline-color: @formatted-text-box-error-border-color;
+      .controls-FormattedTextBox {
+         border: none !important;
+         background: transparent !important;
+         .controls-FormattedTextBox__fieldWrapper.controls-DateBox__fieldWrapper {
+            border-width: @date-box-wrapper-error-border-width;
+            border-style: @date-box-wrapper-error-border-style;
+            border-color: @date-box-wrapper-error-border-color;
+            background: @date-box-wrapper-error-bg;
+         }
+      }
    }
 
    .controls-DateRange__DatePickerStart,
