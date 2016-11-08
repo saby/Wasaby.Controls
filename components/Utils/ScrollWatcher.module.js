@@ -60,7 +60,8 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
             var scrollContainer = element[0].wsControl;
             // Опционально инициализируем customScroll внизу
             scrollContainer.setInitOnBottom(this._options.initOnBottom);
-            scrollContainer.subscribe('onTotalScroll', this._processCustomScrollEvent.bind(this));
+            this.subscribeTo(scrollContainer, 'onTotalScroll', this._processCustomTotalScroll.bind(this));
+            this.subscribeTo(scrollContainer, 'onScroll', this._processCustomScrollEvent.bind(this));
          } else {
             element.bind('scroll.wsScrollWatcher', this._onContainerScroll.bind(this));
          }
@@ -104,7 +105,11 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
          }
       },
 
-      _processCustomScrollEvent: function(event, direction, scrollTop){
+      _processCustomScrollEvent: function(curScrollTop){
+         this._notify('onScroll', curScrollTop);
+      },
+
+      _processCustomTotalScroll: function(event, direction, scrollTop){
          this._notify('onTotalScroll', direction, scrollTop);
       },
 
