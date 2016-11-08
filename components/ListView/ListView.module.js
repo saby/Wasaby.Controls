@@ -2199,8 +2199,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var mode = this._infiniteScrollState.mode,
                scrollOnEdge =  (mode === 'up' && type === 'top') ||   // скролл вверх и доскролили до верхнего края
                                (mode === 'down' && type === 'bottom' && !this._infiniteScrollState.reverse) || // скролл вниз и доскролили до нижнего края
-                               (mode === 'down' && type === 'top' && this._infiniteScrollState.reverse); // скролл верх с запросом данных вниз и доскролили верхнего края
-
+                               (mode === 'down' && type === 'top' && this._infiniteScrollState.reverse) || // скролл верх с запросом данных вниз и доскролили верхнего края
+                               (this._options.infiniteScroll === 'both');
             if (scrollOnEdge && this.getItems()) {
                // Досткролили вверх, но на самом деле подгружаем данные как обычно, а рисуем вверх
                if (type == 'top' && this._infiniteScrollState.reverse) {
