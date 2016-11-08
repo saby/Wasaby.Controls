@@ -1,13 +1,10 @@
-define('js!SBIS3.CONTROLS.ScrollContainer',
-   [
+define('js!SBIS3.CONTROLS.ScrollContainer', [
       'js!SBIS3.CONTROLS.CompoundControl',
+      'js!SBIS3.CONTROLS.Scrollbar',
       'html!SBIS3.CONTROLS.ScrollContainer',
-      'Core/detection',
-      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar.full',
-      'is!browser?css!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar',
-      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mousewheel-3.1.13'
+      'Core/detection'
    ],
-   function(CompoundControl, dotTplFn, cDetection) {
+   function(CompoundControl, Scrollbar, dotTplFn, Detection) {
 
       'use strict';
 
@@ -33,7 +30,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
        * </component>
        * @author Крайнов Дмитрий Олегович
        */
-      var Scroll = CompoundControl.extend({
+      
+      var BROWSER_SCROLLBAR_WIDTH = 0;
+      
+      var ScrollContainer = CompoundControl.extend({
 
          _dotTplFn: dotTplFn,
 
@@ -59,35 +59,76 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
                 */
                content: ''
             },
-
-            /**
-             * {jQuery} Кастомный скролл
-             */
-            _scroll: undefined,
-
-            /**
-             * {Boolean} Должен ли быть скролл на контейнере
-             */
-            _hasScroll: false,
-
-            /**
-             * {jQuery} Контент
-             */
-            _content: undefined,
-            _createOnMove: undefined,
-            _initScrollOnBottom: false
+            _content: null
          },
 
-         $constructor: function() {
-            this._publish('onTotalScroll');
-         },
+
+         $constructor: function() {},
 
          init: function() {
-            Scroll.superclass.init.call(this);
+            ScrollContainer.superclass.init.call(this);
+            this._publish('onScroll');
             this._content = $('.controls-ScrollContainer__content', this.getContainer());
-            //Подписка на события (наведение курсора на контейнер) при которых нужно инициализировать скролл.
-            this._createOnMove = this._create.bind(this);
-            this.getContainer().on('mousemove touchstart', this._createOnMove);
+            if (!Detection.isMobileIOS){
+               BROWSER_SCROLLBAR_WIDTH = this._getBrowserScrollbarWidth();
+               this._hideScrollbar();
+               this._subscribeScrollEvents();
+               this._initScrollbar();
+            }
+         },
+
+         _hideScrollbar: function(){
+            var currentPadding = this._content.css('padding-right').replace(/[^0-9.]+/g, ''),
+               style = {
+                  right: -BROWSER_SCROLLBAR_WIDTH  
+               }
+            this._content.css(style);
+         },
+
+         _getBrowserScrollbarWidth: function() {
+            var outer, outerStyle, scrollbarWidth;
+            outer = document.createElement('div');
+            outerStyle = outer.style;
+            outerStyle.position = 'absolute';
+            outerStyle.width = '100px';
+            outerStyle.height = '100px';
+            outerStyle.overflow = 'scroll';
+            outerStyle.top = '-9999px';
+            document.body.appendChild(outer);
+            scrollbarWidth = outer.offsetWidth - outer.clientWidth;
+            document.body.removeChild(outer);
+            return scrollbarWidth;
+         },
+
+         _subscribeScrollEvents: function(){
+            this.getContent().on('scroll', this._scrollHandler.bind(this));
+         },
+
+         _scrollHandler: function(){
+            var scrollTop = this.getScrollTop();
+            this._notify('onScroll', scrollTop);
+            // Положение скролла отличается от scrollTop в viewportRatio раз
+            this._scrollbar.setPosition(scrollTop);
+         },
+
+         _scrollbarDragHandler: function(event, position){
+            if (position != this.getScrollTop()){
+               this.scrollTo(position);
+            }
+         },
+
+         // Отношение видимой части к полной высоте контента
+         _getViewportRatio: function(){
+            if (!this._viewportRatio){
+               this._viewportRatio = this.getContainer().height() / this.getScrollHeight();
+            }
+            return this._viewportRatio;
+         },
+
+         _initScrollbar: function(){
+            this._scrollbar = this.getChildControlByName('scrollbar');
+            this._scrollbar.setContentHeight(this.getScrollHeight());
+            this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
          },
 
          /**
@@ -95,52 +136,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
           * @see content
           */
          getContent: function() {
-            return this._options.content;
-         },
-
-         /**
-          * Инициализация кастомного скролла
-          * @private
-          */
-         _create: function() {
-            var self = this;
-            if (!cDetection.isMobileIOS && !cDetection.isAndroidMobilePlatform ) {
-               //Инициализируем кастомный скролл
-               this.getContainer().mCustomScrollbar({
-                  theme: 'minimal-dark',
-                  scrollInertia: 200,
-                  updateOnContentResize: false,
-                  alwaysTriggerOffsets: false,
-                  callbacks: {
-                     onInit: function(){
-                        self._scroll = this;
-                     },
-                     onOverflowY: function(){
-                        self._hasScroll = true;
-                     },
-                     onOverflowYNone: function(){
-                        self._hasScroll = false;
-                     },
-                     onTotalScrollOffset: 30,
-                     onTotalScrollBackOffset: 30,
-                     onTotalScroll: function(){
-                        self._notify('onTotalScroll', 'bottom', self.getScrollTop());
-                     },
-                     onTotalScrollBack: function(){
-                        self._notify('onTotalScroll', 'top', self.getScrollTop());
-                     }
-                  },
-                  setTop: this._initScrollOnBottom ? "-999999px" : 0
-               });
-               this.getContainer().off('mousemove touchstart', this._createOnMove);
-            }
-         },
-
-         setInitOnBottom: function(state){
-            if (state && !this._scroll){
-               this.getContainer()[0].scrollTop = this.getContainer()[0].scrollHeight;
-            }
-            this._initScrollOnBottom = state;
+            return this._content;
          },
 
          /**
@@ -150,7 +146,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
           * @see hasScroll
           */
          isScrollOnTop: function() {
-            return this._scroll && this.hasScroll() && !this.getScrollTop();
+            return this.getScrollTop() === 0;
          },
 
          /**
@@ -160,59 +156,26 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
           * @see hasScroll
           */
          isScrollOnBottom: function() {
-            var
-               container = this._container,
-               scroll = container.find('.mCSB_dragger_bar'),
-               scrollTools = container.find('.mCSB_scrollTools_vertical');
 
-            //Высота скроллбара === высоте скролла (dragger) + проскролленное расстояние
-            return this._scroll && this.hasScroll() && scrollTools.height() === (scroll.height() + this.getScrollTop());
          },
 
-         getScrollHeight: function(){
-            return this._content.height();
+         getScrollHeight: function() {
+            return this.getContent()[0].scrollHeight;
          },
 
          /**
           * Сдвигает скролл на указанную величину
-          * @param offset величина сдвига скролла
+          * @param option величина сдвига скролла
           */
-         scrollTo: function(offset) {
-            if (this._scroll){
-               this.getContainer().mCustomScrollbar('scrollTo', offset, {scrollInertia: 0});
-            } else {
-               this.getContainer()[0].scrollTop = typeof offset === 'string' ? (offset === 'top' ? 0 : this.getContainer()[0].scrollHeight) : offset
-            }
-         },
-
-         /**
-          * Скролит к переданному jQuery элементу
-          * @param {jQuery} target
-          */
-         scrollToElement: function(target) {
-            this.getContainer().mCustomScrollbar('scrollTo', target, {scrollInertia: 0});
+         scrollTo: function(position) {
+            this._content[0].scrollTop = position;
          },
 
          /**
           * Должен ли быть скролл на контенте
           * @returns {boolean|*}
           */
-         hasScroll: function() {
-            this._updateScroll();
-
-            /**
-             * Из-за ленивой инициализации подгружаются все данные, так как скролла нет,
-             * поэтому нужно смотреть на размер контейнера и контента
-             * и если контейнер переполнен, то сказать что скролл есть,
-             * а если в контейнере есть место, то сказать что скролла нет,
-             * а уже потом при наведении на контрол скролл инициализируется.
-             */
-            if (!this._scroll) {
-               return this._content.height() > this._container.height();
-            }
-
-            return this._hasScroll;
-         },
+         hasScroll: function() {},
 
          /**
           * Вернёт верхнее положение скролла в пискселях
@@ -220,31 +183,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
           * @returns {.mcs.draggerTop|*}
           */
          getScrollTop: function() {
-            var scroll = this._scroll;
-            return scroll ? parseInt($('.mCSB_dragger', this.getContainer()).css('top')) : 0;
+            return this._content[0].scrollTop;
          },
 
-         /**
-          * Обновляет скролл
-          */
-         _updateScroll: function() {
-            this.getContainer().mCustomScrollbar('update');
-         },
-
-         /**
-          * Разрушает скролл
-          */
-         destroy: function() {
-            this.getContainer().mCustomScrollbar('destroy');
-            this.getContainer().off('mousemove touchstart', this._createOnMove);
-            this._createOnMove = undefined;
-            this._scroll = undefined;
-            this._hasScroll = undefined;
-            this._content = undefined;
-
-            Scroll.superclass.destroy.call(this);
-         }
+         destroy: function() {}
       });
 
-      return Scroll;
+      return ScrollContainer;
    });
