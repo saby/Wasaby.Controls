@@ -1,0 +1,30 @@
+<div class="controls-StylesPanel controls-StylesPanelNew {{?it.paletteRenderStyle}}controls-StylesPanel__colorPalette{{?}} controls-FloatArea">
+    {{?!it.paletteRenderStyle}}
+    <div  class="controls-StylesPanel__header">
+        <div class="controls-StylesPanel__title" title="Стиль и цвет">Стиль и цвет</div>
+        <component data-component="SBIS3.CONTROLS.IconButton" class="controls-StylesPanel__applyButton controls-IconButton__round-border-24 controls-IconButton__round icon-size" name="Apply">
+            <option name="icon">sprite:icon-16 icon-Yes icon-done</option>
+            <option name="command">save</option>
+        </component>
+    </div>
+    <component data-component="SBIS3.CONTROLS.FontStyle">
+        <option name="style" type="ref">{{@it.style}}</option>
+    </component>
+    {{?}}
+    <component data-component="SBIS3.CONTROLS.ColorStyle" class="controls-StylesPanel__colors">
+        <option name="name">Pallete</option>
+        <option name="items" type="ref">{{@it.colors}}</option>
+    </component>
+    {{?(!it.paletteRenderStyle && (it.historyId || it.presets))}}
+        <div class="controls-StylesPanel-presetFormats_wrapper">
+            <component data-component="SBIS3.CONTROLS.ListView" class="controls-ListView__withoutMarker controls-StylesPanel__presetView">
+                <option name="name">presetView</option>
+                <option name="itemContentTpl">html!SBIS3.CONTROLS.StylesPanelNew/resources/presetItemContentTpl</option>
+                <option name="itemTpl">html!SBIS3.CONTROLS.StylesPanelNew/resources/presetItemTemplate</option>
+                <options name="itemsActions" type="Array"></options>
+                <option name="itemsDragNDrop" value=""></option>
+            </component>
+        </div>
+    {{?}}
+
+</div>
