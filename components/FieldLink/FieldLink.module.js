@@ -862,7 +862,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    if(rec.getIdProperty() !== self._options.keyField && rec.get(self._options.keyField) !== undefined) {
                       rec.setIdProperty(self._options.keyField);
                    }
-                })
+                });
              }
              return items;
           },

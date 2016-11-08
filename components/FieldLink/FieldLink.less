@@ -263,7 +263,9 @@
 .ws-is-mobile-chrome-ios, .ws-is-mobile-safari {
    .controls-FieldLink__picker {
       &.controls-popup-revert-vertical {
-         border-top: none;
+         &:not(.controls-Suggest__picker) {
+            border-top: none;
+         }
          border-bottom: @controls-FieldLink-border @gray-ccc-color;
       }
    }
