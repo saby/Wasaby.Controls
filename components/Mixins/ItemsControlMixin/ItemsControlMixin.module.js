@@ -622,10 +622,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._prepareItemsConfig();
 
          if (this._options.itemTemplate) {
-            IoC.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан itemTemplate');
+            IoC.resolve('ILogger').error('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан itemTemplate');
          }
          if (!Object.isEmpty(this._options.groupBy) && !this._options.easyGroup) {
-            IoC.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Используется GroupBy без easyGroup: true');
+            IoC.resolve('ILogger').error('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Используется GroupBy без easyGroup: true');
          }
          if (this._options.userItemAttributes) {
             IoC.resolve('ILogger').error('userItemAttributes', 'Option is no longer available since version 3.7.4.200. Use ItemTpl');
