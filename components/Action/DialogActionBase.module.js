@@ -115,6 +115,24 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
        *    <li><b>animation</b> - по умолчанию 'slide'</li>
        * </ul>
        */
+      $constructor: function() {
+         this._publish('onAfterShow', 'onBeforeShow', 'onExecuted', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel');
+      },
+
+      /**
+       * Установить компонент, который будет использован в качестве диалога редактирования записи.
+       * @param dialogComponent компонент, который будет использован в качестве диалога редактирования записи. {@link dialogComponent}.
+       */
+      setDialogComponent: function(dialogComponent){
+         this._options.dialogComponent = dialogComponent;
+      },
+      /**
+       * Установить режим открытия диалога редактирования компонента.
+       * @param {String} mode режим открытия диалога редактирования компонента {@link mode}.
+       */
+      setMode: function(mode){
+         this._options.mode = mode;
+      },
       /**
        * Открывает диалог редактирования записи.
        * @param {ExecuteMetaConfig} meta Параметры, которые будут использованы для конфигурации диалога редактирования.
@@ -131,10 +149,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
        * });
        *
        */
-      $constructor: function() {
-         this._publish('onAfterShow', 'onBeforeShow', 'onExecuted', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel');
-      },
-
       execute : function(meta) {
          this._opendEditComponent(meta, this._options.dialogComponent);
       },
