@@ -1,6 +1,11 @@
 <div class="controls-DropdownList__header"></div>
 <div class="controls-DropdownList__body">
-   <div class="controls-DropdownList__list"></div>
+   <component data-component="SBIS3.CONTROLS.ScrollContainer" name="DropdownScroll">
+       <option name="content">
+           <div class="controls-DropdownList__list"></div>
+       </option>
+       <option name="className" value="controls-DropdownList__scrollContainer"></option>
+   </component>
       <div class="controls-DropdownList__buttonsBlock {{?it.className}} {{=it.className}}{{?}} {{?it.multiselect}}controls-DropdownList__multiselect{{?}}">
           {{?it.multiselect}}
           <component data-component="SBIS3.CONTROLS.IconButton" class="controls-DropdownListFooter_select controls-IconButton__round-border-24">

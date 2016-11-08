@@ -73,9 +73,21 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
                this.getChildControlByName('DropdownList2').setItems(this._options.data);
                this.getChildControlByName('DropdownList3').setItems(this._getDataForHierarchy());
                this.getChildControlByName('DropdownList4').setItems(this._options.data);
-               this.getChildControlByName('DropdownList5').setItems(this._options.data);
+               this.getChildControlByName('DropdownList5').setItems(this._getBigData());
                this.getChildControlByName('DropdownList6').setItems(this._options.data);
                this.getChildControlByName('DropdownList7').setItems(this._options.data);
+            },
+
+            _getBigData: function(){
+               var data = cFunctions.clone(this._options.data);
+               for (var i = 6; i < 100; i++){
+                  data.push({
+                     key : i,
+                     title : 'Текст' + i,
+                     icon: 'icon-16 icon-Colorize icon-primary'
+                  })
+               }
+               return data;
             },
 
             _getDataForHierarchy: function(){
