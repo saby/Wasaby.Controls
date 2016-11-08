@@ -92,7 +92,9 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                    result = [];
                this._editingModel.each(function(field, value) {
                   prevValue = this._previousModelState.get(field);
-                  if (typeof value.isEqual === 'function' && !value.isEqual(prevValue) || value != prevValue) {
+                  //Сложные типы полей(например Enum), нельзя сравнивать поссылочно, иначе будет неверный результат
+                  //Такие типы должны обладать методом isEqual, с помощью которого и будем производить сравнение
+                  if (value && typeof value.isEqual === 'function' && !value.isEqual(prevValue) || value != prevValue) {
                      result.push(field);
                   }
                }, this);
