@@ -415,12 +415,15 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return deferred;
             },
             _afterEndEdit: function(eip, withSaving) {
-               eip.endEdit();
+               //При завершение редактирования, нужно сначала удалять фейковую строку, а потом скрывать редакторы.
+               //Иначе если сначала скрыть редакторы, курсор мыши может оказаться над фейковой строкой и произойдёт
+               //нотификация о смене hoveredItem, которой быть не должно, т.к. у hoveredItem не будет ни рекорда ни контейнера.
                if (this._isAdd) {
                   this._isAdd = false;
                   this._addTarget.remove();
                   this._addTarget = undefined;
                }
+               eip.endEdit();
                this._notify('onAfterEndEdit', eip.getOriginalRecord(), eip.getTarget(), withSaving);
                if (!this._savingDeferred.isReady()) {
                   this._savingDeferred.callback();

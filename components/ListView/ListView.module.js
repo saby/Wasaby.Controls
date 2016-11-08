@@ -2143,7 +2143,9 @@ define('js!SBIS3.CONTROLS.ListView',
                if (cInstance.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
                   var afterFloatAreaShow = function(){
                      if (self.getItems()) {
-                        self._needScrollCompensation = self._options.infiniteScroll == 'up';
+                        if (self._options.infiniteScroll == 'up'){
+                           self._moveTopScroll();
+                        }
                         self._preScrollLoading();
                      }
                      topParent.unsubscribe('onAfterShow', afterFloatAreaShow);
@@ -2300,9 +2302,6 @@ define('js!SBIS3.CONTROLS.ListView',
                      this._scrollLoadNextPage();
                   }
                }
-               if (this._options.infiniteScroll == 'demand'){
-                  this._setLoadMoreCaption(dataSet);
-               }
             }, this)).addErrback(function (error) {
                //Здесь при .cancel приходит ошибка вида DeferredCanceledError
                return error;
@@ -2353,16 +2352,20 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _setLoadMoreCaption: function(dataSet){
-            var more = dataSet.getMetaData().more;
-            if (typeof more == 'number'){
-               this._loadMoreButton.setCaption('Еще ' + more);
+            var more = dataSet.getMetaData().more,
+               caption;
+            // Если число и больше pageSize то "Еще pageSize"
+            if (typeof more === 'number' && more < this._options.pageSize) {
+               caption = more;
             } else {
-               if (more === false){
+               if (more === false) {
                   this._loadMoreButton.setVisible(false);
+                  return;
                } else {
-                  this._loadMoreButton.setCaption('Еще...');
+                  caption = this._options.pageSize;
                }
             }
+            this._loadMoreButton.setCaption('Еще ' + caption);
          },
 
          _onLoadMoreButtonActivated: function(event){
@@ -2536,6 +2539,9 @@ define('js!SBIS3.CONTROLS.ListView',
                //Если нет следующей страницы - скроем индикатор загрузки
                if (!this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.bottom)) {
                   this._hideLoadingIndicator();
+               }
+               if (this._options.infiniteScroll == 'demand'){
+                  this._setLoadMoreCaption(this.getItems());
                }
             }
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
