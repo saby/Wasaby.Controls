@@ -89,26 +89,14 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             _getRecordsDifference: function() {
                var
                    prevValue,
-                   raw1, raw2,
                    result = [];
-               if (cInstance.instanceOfModule(this._editingModel, 'WS.Data/Entity/Model')) {
-                  this._editingModel.each(function(field, value) {
-                     prevValue = this._previousModelState.get(field);
-                     if (typeof value.isEqual === 'function' && !value.isEqual(prevValue) || value != prevValue) {
-                        result.push(field);
-                     }
-                  }, this);
-               } else {
-                  raw1 = this._editingModel.getRawData();
-                  raw2 = this._previousModelState.getRawData();
-                  for (var field in raw1) {
-                     if (raw1.hasOwnProperty(field)) {
-                        if (raw1[field] != raw2[field]) {
-                           result.push(field);
-                        }
-                     }
+               this._editingModel.each(function(field, value) {
+                  prevValue = this._previousModelState.get(field);
+                  if (typeof value.isEqual === 'function' && !value.isEqual(prevValue) || value != prevValue) {
+                     result.push(field);
                   }
-               }
+               }, this);
+
                return result;
             },
             _getElementToFocus: function() {
