@@ -1453,6 +1453,13 @@ define('js!SBIS3.CONTROLS.ListView',
                this.subscribe('onItemClick', this._startEditOnItemClick);
             }
          },
+         _itemsReadyCallback: function() {
+            ListView.superclass._itemsReadyCallback.apply(this, arguments);
+            if (this._hasEditInPlace()) {
+               this._getEditInPlace().setItems(this.getItems());
+               this._getEditInPlace().setItemsProjection(this._getItemsProjection());
+            }
+         },
          beforeNotifyOnItemClick: function() {
             var handler = this._notifyOnItemClick;
             return function() {
