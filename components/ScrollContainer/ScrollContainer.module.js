@@ -128,6 +128,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
                      },
                      onTotalScrollBack: function(){
                         self._notify('onTotalScroll', 'top', self.getScrollTop());
+                     },
+                     whileScrolling: function(){
+                        self._notify('onScroll', self.getScrollTop());
                      }
                   },
                   setTop: this._initScrollOnBottom ? "-999999px" : 0
