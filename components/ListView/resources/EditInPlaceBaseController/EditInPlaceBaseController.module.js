@@ -389,7 +389,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                var
                   self = this,
                   deferred,
-                  format,
                   eipRecord = eip.getEditingRecord();
                if (withSaving) {
                   deferred = this._options.dataSource.update(eipRecord).addCallback(function() {
@@ -399,8 +398,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         self._editingRecord = undefined;
                      }
                      if (self._isAdd) {
-                        format = self._options.items.getFormat();
-                        self._options.items.add(format.getCount() ? DataBuilder.reduceTo(eipRecord, format, self._options.items.getModel()) : eipRecord);
+                        if (self._options.items && self._options.items.getFormat().getCount()) {
+                           self._options.items.add(DataBuilder.reduceTo(eipRecord, self._options.items.getFormat(), self._options.items.getModel()));
+                        } else {
+                           self._options.items.add(eipRecord);
+                        }
                      }
                   }).addErrback(function(error) {
                      fcHelpers.alert(error);
