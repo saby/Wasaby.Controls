@@ -105,7 +105,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _createEip: function() {
                this._eip = new EditInPlace(this._getEditInPlaceConfig());
             },
-
+            setItems: function(items) {
+               this._options.items = items;
+            },
+            setItemsProjection: function(itemsProjection) {
+               this._options.itemsProjection = itemsProjection;
+            },
             setEditingTemplate: function(template) {
                this._destroyEip();
                this._options.editingTemplate = template;
