@@ -289,13 +289,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 /**
                  * @cfg {Boolean} Использовать для выбора {@link SBIS3.CONTROLS.Action.SelectorAction}
                  */
-                useSelectorAction: false,
-                /**
-                 * Для выпуска 200. Откатывается в .220.
-                 * @nowhow
-                 * @deparecated
-                 */
-                useDataSourceModel: true
+                useSelectorAction: false
              }
           },
 
@@ -844,7 +838,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if(items) {
                 dataSource = this.getDataSource();
 
-                if(dataSource && this._options.useDataSourceModel) {
+                if(dataSource) {
                    dataSourceModel = dataSource.getModel();
                    /* Создадим инстанс модели, который указан в dataSource,
                       чтобы по нему проверять модели которые выбраны в поле связи */
