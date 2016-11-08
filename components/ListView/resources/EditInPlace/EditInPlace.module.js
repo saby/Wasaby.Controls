@@ -88,11 +88,13 @@ define('js!SBIS3.CONTROLS.EditInPlace',
              */
             _getRecordsDifference: function() {
                var
+                   prevValue,
                    raw1, raw2,
                    result = [];
                if (cInstance.instanceOfModule(this._editingModel, 'WS.Data/Entity/Model')) {
                   this._editingModel.each(function(field, value) {
-                     if (value != this._previousModelState.get(field)) {
+                     prevValue = this._previousModelState.get(field);
+                     if (typeof value.isEqual === 'function' && !value.isEqual(prevValue) || value != prevValue) {
                         result.push(field);
                      }
                   }, this);
