@@ -59,14 +59,17 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
          var view = this._options.view,
              viewFilter = view.getFilter(),
              searchValue = viewFilter[this.getParam()],
-             revertedSearchValue = KbLayoutRevertUtil.process(searchValue),
-             symbolsDifference;
+             revertedSearchValue, symbolsDifference;
          /* Не производим смену раскладки если:
             1) Нет поискового значения.
             2) После смены раскладки поисковое значения не меняется. */
          if(!searchValue || searchValue === revertedSearchValue) {
             return;
          }
+
+         /* Смену раскладки делаем после проверок,
+            т.к. значения в фильтре уже может не быть */
+         revertedSearchValue = KbLayoutRevertUtil.process(searchValue);
 
          if(data.getCount()) {
             /* Есть данные и раскладка менялась - > просто меняем текст в строке поиска */
