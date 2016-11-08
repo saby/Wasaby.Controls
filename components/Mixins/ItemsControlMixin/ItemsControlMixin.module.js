@@ -42,12 +42,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
    applyGroupingToProjection = function(projection, cfg) {
       if (cfg.groupBy && cfg.easyGroup) {
+         var method;
          if (!cfg.groupBy.method) {
             var field = cfg.groupBy.field;
-            projection.setGroup(function(item, index, projItem){
+            method = function(item, index, projItem){
                return item.get(field);
-            });
+            }
          }
+         else {
+            method = cfg.groupBy.method
+         }
+         projection.setGroup(method);
       }
       return projection;
    },
@@ -906,7 +911,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
                this._options._groupItemProcessing(groupId, itemsToAdd, items[0], this._options);
             }
-            itemsToAdd.concat(items);
+            itemsToAdd = itemsToAdd.concat(items);
          }
          return itemsToAdd;
       },
