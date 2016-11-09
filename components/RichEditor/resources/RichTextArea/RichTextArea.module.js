@@ -1540,7 +1540,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (value && value[0] !== '<') {
                value = '<p>' + value.replace(/\n/gi, '<br/>') + '</p>';
             }
-            value = Sanitize(value, {validNodes: {iframe: false}});
+            value = Sanitize(value);
             return (this._options || it).highlightLinks ? strHelpers.wrapURLs(strHelpers.wrapFiles(value), true) : value;
          },
 
