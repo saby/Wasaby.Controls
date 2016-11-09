@@ -42,12 +42,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
    applyGroupingToProjection = function(projection, cfg) {
       if (cfg.groupBy && cfg.easyGroup) {
+         var method;
          if (!cfg.groupBy.method) {
             var field = cfg.groupBy.field;
-            projection.setGroup(function(item, index, projItem){
+            method = function(item, index, projItem){
                return item.get(field);
-            });
+            }
          }
+         else {
+            method = cfg.groupBy.method
+         }
+         projection.setGroup(method);
       }
       return projection;
    },
@@ -622,10 +627,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._prepareItemsConfig();
 
          if (this._options.itemTemplate) {
-            IoC.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан itemTemplate');
+            IoC.resolve('ILogger').error('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан itemTemplate');
          }
          if (!Object.isEmpty(this._options.groupBy) && !this._options.easyGroup) {
-            IoC.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Используется GroupBy без easyGroup: true');
+            IoC.resolve('ILogger').error('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Используется GroupBy без easyGroup: true');
          }
          if (this._options.userItemAttributes) {
             IoC.resolve('ILogger').error('userItemAttributes', 'Option is no longer available since version 3.7.4.200. Use ItemTpl');
@@ -703,11 +708,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             return;
          }
 
-         var items = this.getItems(),
-            source = this.getDataSource(),
-            required = source || (items && items.getIdProperty);
-
-         if (required) {
+         var items = this.getItems();
+         if (items && items.getIdProperty) {
             IoC.resolve('ILogger').info('ItemsControl', 'Option keyField is undefined in control ' + this.getName());
          }
       },
@@ -909,7 +911,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
                this._options._groupItemProcessing(groupId, itemsToAdd, items[0], this._options);
             }
-            itemsToAdd.concat(items);
+            itemsToAdd = itemsToAdd.concat(items);
          }
          return itemsToAdd;
       },
@@ -1345,6 +1347,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       this._itemsReadyCallback();
                       self.redraw();
                    }
+                   
+                   self._checkKeyField();
 
                    this._dataLoadedCallback();
                    //self._notify('onBeforeRedraw');

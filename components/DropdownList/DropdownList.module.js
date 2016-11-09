@@ -21,6 +21,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "js!WS.Data/Collection/RecordSet",
    "js!WS.Data/Display/Display",
+   "js!SBIS3.CONTROLS.ScrollContainer",
    "html!SBIS3.CONTROLS.DropdownList",
    "html!SBIS3.CONTROLS.DropdownList/DropdownListHead",
    "html!SBIS3.CONTROLS.DropdownList/DropdownListPickerHead",
@@ -31,7 +32,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "i18n!SBIS3.CONTROLS.DropdownList"
 ],
 
-   function (constants, Deferred, IoC, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker, cInstance, dcHelpers) {
+   function (constants, Deferred, IoC, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker, cInstance, dcHelpers) {
 
       'use strict';
       /**
@@ -682,11 +683,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _setPickerConfig: function () {
             var pickerClassName,
                offset = {
-                   top: -8,
+                   top: -10,
                    left: -10
                 };
             if (this._options.type == 'duplicateHeader'){
-               offset.top = -10;
                pickerClassName = 'controls-dropdownlist__showHead controls-DropdownList__type-duplicateHeader';
             }
             else if (this._options.type == 'titleHeader'){
