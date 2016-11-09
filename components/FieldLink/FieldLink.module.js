@@ -495,9 +495,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           setActive: function(active) {
+             var wasActive = this.isActive();
+
              FieldLink.superclass.setActive.apply(this, arguments);
 
-             if (active && this._needFocusOnActivated() && this.isEnabled() && constants.browser.isMobilePlatform) {
+             /* Для Ipad'a надо при setActive устанавливать фокус в поле ввода,
+                иначе не покажется клавиатура, т.к. установка фокуса в setAcitve работает асинхронно,
+                а ipad воспринимает установку фокуса только в потоке кода, который работает после браузерных событий.
+                + добавляю проверку, что компоент был до этого неактивен (такая проверка есть и в контроловском setActive),
+                в противном случае будут лишние установки фокуса в поле ввода, из-за чего будет мограть саггест на Ipad'e */
+             if (active && !wasActive && this._needFocusOnActivated() && this.isEnabled() && constants.browser.isMobilePlatform) {
                 this._getElementToFocus().focus();
              }
           },
