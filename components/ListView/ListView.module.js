@@ -2366,11 +2366,27 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _setLoadMoreCaption: function(dataSet){
             var more = dataSet.getMetaData().more,
-               caption;
+               caption, allCount;
             // Если число и больше pageSize то "Еще pageSize"
-            if (typeof more === 'number' && more < this._options.pageSize) {
-               caption = more;
+            if (typeof more === 'number') {
+               allCount = more;
+               $('.controls-ListView__counterValue', this._container.get(0)).text(allCount);
+               $('.controls-ListView__counter', this._container.get(0)).removeClass('ws-hidden');
+
+               var ost = more - this._scrollOffset.bottom;
+               if (ost < this._options.pageSize) {
+                  caption = ost;
+               }
+               else {
+                  if (ost < 0) {
+                     this._loadMoreButton.setVisible(false);
+                     return;
+                  }
+                  caption = this._options.pageSize
+               }
+
             } else {
+               $('.controls-ListView__counter', this._container.get(0)).addClass('ws-hidden');
                if (more === false) {
                   this._loadMoreButton.setVisible(false);
                   return;
@@ -2378,7 +2394,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   caption = this._options.pageSize;
                }
             }
+
             this._loadMoreButton.setCaption('Еще ' + caption);
+            this._loadMoreButton.setVisible(true);
          },
 
          _onLoadMoreButtonActivated: function(event){
