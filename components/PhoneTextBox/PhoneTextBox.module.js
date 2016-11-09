@@ -43,10 +43,14 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
     *    <option name='number' value='8(800)200-600'></option>
     * </component>
     */
-   var clearNumber = function(number) {
-      var digits = number.replace(/[^0-9]/g, '');
+   var getSrcText = function(fullText) {
+      var digits = fullText.replace(/[^0-9]/g, '');
       digits = '+' + digits;
       return digits;
+   },
+
+   getFullText = function() {
+
    };
 
    var PhoneTextBox = FormattedTextBoxBase.extend( /** @lends SBIS3.CONTROLS.PhoneCall.prototype */ {
@@ -54,11 +58,14 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
       $protected: {
          _options: {
             srcText: undefined,
-            mask: '+d (ddd) ddd-dd-dd'
+            mask: '+d(ddd)ddd-dd-dd'
          }
       },
 
-      _modifyOptions : function() {
+      _modifyOptions : function(cfg) {
+         if (cfg.srcText) {
+            cfg.text = getFullText(cfg.srcText);
+         }
          var newCfg = PhoneTextBox.superclass._modifyOptions.apply(this, arguments);
 
          return newCfg;
@@ -71,7 +78,6 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
       },
 
       _updateText: function() {
-
          PhoneTextBox.superclass._updateText.apply(this, arguments);
          $('.controls-PhoneTextBox__link', this._container.get(0)).text(this.getText());
       }
@@ -79,4 +85,4 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
 
    return PhoneTextBox;
 
-});
+});/
