@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
       /**
        * Контрол представляющий из себя контейнер для контента с кастомным скроллом
-       * Работает с плагином http://manos.malihu.gr/jquery-custom-content-scroller/
+       * Кастомный скролл SBIS3.CONTROLS.Scrollbar
        * @class SBIS3.CONTROLS.ScrollContainer
        * @demo SBIS3.CONTROLS.Demo.MyScrollContainer
        * @extends SBIS3.CONTROLS.CompoundControl

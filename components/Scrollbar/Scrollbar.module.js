@@ -16,10 +16,12 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
                position: 0,
                contentHeight: undefined
             },
-            _scroll: undefined,
-            _beginClientX: undefined,
-            _beginClientY: undefined,
-            _beginPosition: 0
+            _thumb: undefined,
+            _beginClient: undefined,
+            _thumbPosition: 0,
+            _viewportRatio: undefined,
+            _thumbHeight: undefined,
+            _containerHeight: undefined
          },
 
          $constructor: function() {
@@ -30,8 +32,11 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             Scrollbar.superclass.init.call(this);
 
             this._thumb = this._container.find('.js-controls-Scrollbar__thumb');
-            this._container.on('mousedown touchstart', this._scroll, this._initDrag.bind(this));
-            this._calcThumbHeight();
+            this._container.on('mousedown touchstart', '.js-controls-Scrollbar__thumb', this._getDragInitHandler());
+            //this._container.on('mousedown touchstart', this._onClickDragHandler.bind(this));
+
+            this._containerHeight = this._container.height();
+            this._setViewportRatio();
          },
 
          getPosition: function() {
@@ -39,13 +44,11 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          setPosition: function(position) {
-            var thumbHeight = this._thumb.height();
-            position = position * this._getViewportRatio();
-            if (position > this.getContentHeight()){
-               position = containerHeight - thumbHeight;
-            }
+            var maxPosition = this.getContentHeight() - this._containerHeight;
+
+            position = this._calcPosition(position, 0, maxPosition);
             this._options.position = position;
-            this._setThumbPosition(position);
+            this._setViewThumbPosition(this._setThumbPosition(position));
          },
 
          getContentHeight: function() {
@@ -54,59 +57,88 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
          setContentHeight: function(contentHeight) {
             this._options.contentHeight = contentHeight;
+            this._setViewportRatio();
             this._calcThumbHeight();
          },
 
-         _setThumbPosition: function(position) {
-            this._thumb.get(0).style.top = position + 'px';
+         /**
+          * Вернуть положение, требуется для того что бы проверять не превышает ли позиция свои границы.
+          * если да то вернуть позицию как границу за которую мы вышли. bottom - нижняя граница,
+          * top -верхняя граница.
+          */
+         _calcPosition: function(position, bottom, top) {
+            if (position < bottom) {
+               position = bottom;
+            }
+            else if (position > top) {
+               position = top;
+            }
+
+            return position;
          },
 
+         _onClickDragHandler: function(e) {
+            alert('asd');
+         },
+
+         //Вернуть метод который инициализирует DragNDrop
+         _getDragInitHandler: function() {
+            return (function(e) {
+               this._initDrag.call(this, e);
+               e.preventDefault();
+            }).bind(this);
+         },
+
+         //Сдвигаем ползунок на нужную позицию
+         _setViewThumbPosition: function() {
+            this._thumb.get(0).style.top = this._thumbPosition + 'px';
+         },
+
+         //Изменить позицию ползунка относительно позиции контента
+         _setThumbPosition: function() {
+            this._thumbPosition = this.getPosition() * this._viewportRatio;
+         },
+
+         //Высчитываем и задаём высоту ползунка
          _calcThumbHeight: function(){
-            var containerHeight = this._container.height();
-            this._thumb.height(Math.pow(containerHeight, 2) / this.getContentHeight());
+            this._thumbHeight = this._containerHeight * this._viewportRatio;
+            this._thumb.height(this._thumbHeight);
          },
 
          _onResizeHandler: function() {
             this._calcThumbHeight();
          },
 
-         // Отношение видимой части к размеру контента
-         _getViewportRatio: function(){
-            if (!this._viewportRatio){
-               this._viewportRatio = this.getContainer().height() / this.getContentHeight();
-            }
-            return this._viewportRatio;
+         //Изменить отношение видимой части к размеру контента
+         _setViewportRatio: function(){
+            this._viewportRatio = this._containerHeight / this.getContentHeight();
          },
 
          _beginDragHandler: function(dragObject, e) {
-            this._beginClientX = e.clientX;
-            this._beginClientY = e.clientY;
-            this._beginPosition = this._options.position;
+            this._beginClient = e.clientY;
          },
 
          _onDragHandler: function(dragObject, e) {
+            var
+               newPosition = (this._thumbPosition + e.clientY - this._beginClient) / this._viewportRatio,
+               position;
 
-            var y = e.clientY + this._beginPosition - this._beginClientY;
+            this.setPosition(newPosition);
+            position = this.getPosition();
+            this._notify('onScrollbarDrag', position);
 
-            if (y > this._container.height() - this._thumb.height()) {
-               y = this._container.height() - this._thumb.height();
-            } else if (y < 0) {
-               y = 0;
-            }
-            y = y * (1 / this._getViewportRatio());
-            this.setPosition(y);
-            this._notify('onScrollbarDrag', y);
-            e.preventDefault();
+            this._beginClient = e.clientY - newPosition + position;
          },
 
          _endDragHandler: function(dragObject, droppable, e) {
-            var y = this._options.position + e.clientY - this._beginClientY;
-            this._options.position = y;
+
          },
 
          destroy: function() {
             Scrollbar.superclass.destroy.call(this);
+
             this.getContainer().off('mousedown touchstart');
+            this._scroll = undefined;
          }
       });
 
