@@ -676,8 +676,8 @@ and dependencies (minified).
                         var top = Math.abs(parseInt($this.find('.mCSB_container').css('top'))),
                            height = $this.height(),
                            elemHeight = element.height();
-                        if (to[0] + element.height() > height + top){
-                           to[0] = top + element.height();
+                        if (to[0] + elemHeight > height + top){
+                           to[0] = element[0].offsetTop - height + elemHeight;
                            _scrollTo($this,to[0].toString(),methodOptions);
                         } else {
                            if (to[0] < top) {

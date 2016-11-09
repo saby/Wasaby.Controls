@@ -104,8 +104,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
           */
          _create: function() {
             var self = this;
-            if (!cDetection.isMobileIOS && !cDetection.isAndroidMobilePlatform ) {
+            if (!cDetection.isMobileIOS && !cDetection.isMobileAndroid ) {
                //Инициализируем кастомный скролл
+               //onInit не стреляет пока не появится скроллбар, но верстка меняется сразу после инициализации
+               self._scroll = true;
                this.getContainer().mCustomScrollbar({
                   theme: 'minimal-dark',
                   scrollInertia: 200,
@@ -182,6 +184,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
           */
          scrollTo: function(offset) {
             if (this._scroll){
+               this._updateScroll();
                this.getContainer().mCustomScrollbar('scrollTo', offset, {scrollInertia: 0});
             } else {
                this.getContainer()[0].scrollTop = typeof offset === 'string' ? (offset === 'top' ? 0 : this.getContainer()[0].scrollHeight) : offset
@@ -193,6 +196,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
           * @param {jQuery} target
           */
          scrollToElement: function(target) {
+            this._updateScroll();
             this.getContainer().mCustomScrollbar('scrollTo', target, {scrollInertia: 0});
          },
 
@@ -201,8 +205,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer',
           * @returns {boolean|*}
           */
          hasScroll: function() {
-            this._updateScroll();
-
             /**
              * Из-за ленивой инициализации подгружаются все данные, так как скролла нет,
              * поэтому нужно смотреть на размер контейнера и контента
