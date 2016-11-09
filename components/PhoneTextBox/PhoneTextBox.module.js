@@ -62,6 +62,17 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
          }
       },
 
+      $constructor: function() {
+         // Первоначальная установка даты, если передана опция
+         if ( this._options.srcText ) {
+            this._setDate( this._options.date );
+         }
+
+         if (this._options.text  &&  !this._options.date) {
+            this.setText(this._options.text);
+         }
+      },
+
       _modifyOptions : function(cfg) {
          if (cfg.srcText) {
             cfg.text = getFullText(cfg.srcText);
@@ -85,4 +96,4 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
 
    return PhoneTextBox;
 
-});/
+});
