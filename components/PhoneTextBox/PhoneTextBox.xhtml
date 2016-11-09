@@ -1,0 +1,6 @@
+<div class="controls-FormattedTextBox controls-TextBox{{?it.className}} {{=it.className}}{{?}} controls-PhoneTextBox">
+   <div class="controls-FormattedTextBox__fieldWrapper{{?!it.enabled}} ws-hidden{{?}}">
+      <div contenteditable="{{=it.enabled}}"  class="controls-FormattedTextBox__field js-controls-FormattedTextBox__field">{{=it._maskTemplateFn(it._modelForMaskTpl)}}</div>
+   </div>
+   <a class="controls-PhoneTextBox__link controls-Link ws-hover-target{{?it.enabled}} ws-hidden{{?}}">{{=it.text}}</a>
+</div>
