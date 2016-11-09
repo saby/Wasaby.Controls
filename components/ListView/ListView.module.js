@@ -906,7 +906,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   newSelectedItem = this._getNextItemByDOM(selectedKey);
                   break;
                case constants.key.enter:
-                  if(selectedKey) {
+                  if(selectedKey !== undefined && selectedKey !== null) {
                      var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
                      this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem, e);
                   }
