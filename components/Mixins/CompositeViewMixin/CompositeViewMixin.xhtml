@@ -30,9 +30,16 @@
       <div class="controls-TreeView__editArrow-container ws-hidden"></div>
    {{?}}
    {{?it.infiniteScroll == 'demand'}}
-      <component data-component="SBIS3.CONTROLS.Link" name="loadMoreButton" class="controls-ListView__loadMoreButton">
-         <option name="caption">Еще...</option>
-      </component>
+      <div class="controls-ListView__serviceFooter">
+         <component data-component="SBIS3.CONTROLS.Link" name="loadMoreButton" class="controls-ListView__loadMoreButton">
+            <option name="caption">Еще...</option>
+            <option name="visible" type="boolean">false</option>
+         </component>
+         <span class="controls-ListView__counter ws-hidden">
+            Всего:
+            <span class="controls-ListView__counterValue"></span>
+         </span>
+      </div>
    {{?}}
    <div class="controls-ListView-scrollIndicator ws-hidden{{?it.infiniteScroll === 'up'}} controls-ListView-scrollIndicator__up {{?}}"></div>
    <div class="controls-ListView__scrollPager{{?!it.infiniteScroll}} ws-hidden{{?}}"></div>
