@@ -1,12 +1,13 @@
 define('js!SBIS3.CONTROLS.Scrollbar', [
       'js!SBIS3.CONTROLS.CompoundControl',
       'tmpl!SBIS3.CONTROLS.Scrollbar',
-      'js!SBIS3.CONTROLS.DragNDropMixinNew',
-      'Core/helpers/string-helpers'
+      'js!SBIS3.CONTROLS.DragNDropMixinNew'
    ],
-   function(CompoundControl, dotTplFn, DragNDropMixinNew, strHelpers) {
+   function(CompoundControl, dotTplFn, DragNDropMixinNew) {
 
       'use strict';
+
+      var BROWSER_SCROLLBAR_MIN_HEIGHT = 50;
 
       var Scrollbar = CompoundControl.extend([DragNDropMixinNew], {
          _dotTplFn: dotTplFn,
@@ -33,7 +34,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
             this._thumb = this._container.find('.js-controls-Scrollbar__thumb');
             this._container.on('mousedown touchstart', '.js-controls-Scrollbar__thumb', this._getDragInitHandler());
-            //this._container.on('mousedown touchstart', this._onClickDragHandler.bind(this));
+            this._container.on('mousedown touchstart', this._onClickDragHandler.bind(this));
 
             this._containerHeight = this._container.height();
             this._setViewportRatio();
@@ -48,7 +49,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
             position = this._calcPosition(position, 0, maxPosition);
             this._options.position = position;
-            this._setViewThumbPosition(this._setThumbPosition(position));
+            this._setThumbPosition();
          },
 
          getContentHeight: function() {
@@ -78,7 +79,10 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          _onClickDragHandler: function(e) {
-            alert('asd');
+            if (!$(e.target).hasClass('js-controls-Scrollbar__thumb')) {
+               //this._beginClient =
+               this._onDragHandler(null, e);
+            }
          },
 
          //Вернуть метод который инициализирует DragNDrop
@@ -90,13 +94,9 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          //Сдвигаем ползунок на нужную позицию
-         _setViewThumbPosition: function() {
-            this._thumb.get(0).style.top = this._thumbPosition + 'px';
-         },
-
-         //Изменить позицию ползунка относительно позиции контента
          _setThumbPosition: function() {
-            this._thumbPosition = this.getPosition() * this._viewportRatio;
+            this._thumbPosition = this.getPosition() * this._viewportRatio
+            this._thumb.get(0).style.top = this._thumbPosition + 'px';
          },
 
          //Высчитываем и задаём высоту ползунка
@@ -112,6 +112,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          //Изменить отношение видимой части к размеру контента
          _setViewportRatio: function(){
             this._viewportRatio = this._containerHeight / this.getContentHeight();
+            this._viewportRatio = this._viewportRatio < 1 ? this._viewportRatio : 0;
          },
 
          _beginDragHandler: function(dragObject, e) {
@@ -119,15 +120,12 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          _onDragHandler: function(dragObject, e) {
-            var
-               newPosition = (this._thumbPosition + e.clientY - this._beginClient) / this._viewportRatio,
-               position;
+            var newThumbPosition = this._thumbPosition + e.clientY - this._beginClient;
 
-            this.setPosition(newPosition);
-            position = this.getPosition();
-            this._notify('onScrollbarDrag', position);
+            this.setPosition(newThumbPosition / this._viewportRatio);
+            this._notify('onScrollbarDrag', this.getPosition());
 
-            this._beginClient = e.clientY - newPosition + position;
+            this._beginClient = e.clientY - newThumbPosition + this._thumbPosition;
          },
 
          _endDragHandler: function(dragObject, droppable, e) {
@@ -138,7 +136,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             Scrollbar.superclass.destroy.call(this);
 
             this.getContainer().off('mousedown touchstart');
-            this._scroll = undefined;
+            this._thumb = undefined;
          }
       });
 
