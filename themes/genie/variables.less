@@ -619,7 +619,7 @@
 @menu-expand-height:                      16px;
 @menu-expand-top-offset:                  3px;
 @menu-expand-top-offset32:                7px;
-@menu-expand-right-offset:                0;
+@menu-expand-right-offset:                8px;
 @menu-expand-spritesheet:                'img/MenuExpand.png';
 
 @menu-expand-border-width:                0;
@@ -647,7 +647,7 @@
 @menu-big-item-height:                    32px;
 @menu-item-line-height:                   @menu-item-height;
 @menu-item-default-padding:               0 8px;
-@menu-item-expand-padding-right:          16px;
+@menu-item-expand-padding-right:          30px;
 
 @menu-item-text-color:                    @black-color;
 @menu-item-bg:                            @white-color;
@@ -1083,9 +1083,10 @@
 @combo-box-arrow-disabled-border-color:         @combo-box-arrow-border-color;
 @combo-box-arrow-disabled-bg:                   @combo-box-arrow-bg;
 
-@combo-box-picker-border:                       1px solid @gray-light-color;
+@combo-box-picker-border:                       1px solid @gray-ccc-color;
 @combo-box-picker-border-radius:                0 0 2px 2px;
-@combo-box-picker-margin:                       -2px 0 0;
+@combo-box-picker-margin:                       -2px;
+@combo-box-picker-padding:                      0 2px;
 @combo-box-picker-item-padding:                 2px 7px;
 @combo-box-picker-item-font:                    inherit;
 @combo-box-picker-item-font-size:               15px;
@@ -1167,6 +1168,7 @@
 
 @suggest-text-box-reset-margin:              3px 4px;
 @suggest-text-box-wrapper-width:             22px;
+@suggest-text-box-icon-cross-color:          #8991A9;
 
 // ----------- //
 // Suggest //
@@ -1615,6 +1617,9 @@
 @listView-empty-data-color:                     @black-color;
 @listView-empty-data-font-size:                 15px;
 @listView-empty-data-padding-top:               46px;
+@listView-servicefooter-padding:                0 8px;
+@listView-servicefooter-height:                 32px;
+@listView-servicefooter-fontsize:               12px;
 
 // ItemsToolbar small
 @list-view-small-items-toolbar-line-height:         16px;
@@ -1944,9 +1949,10 @@
 @DropdownList-picker-padding:                         4px 0;
 @DropdownList-picker-border:                          2px solid @DropdownList-border-color;
 @DropdownList-picker-head-border-radius:              4px 4px 0 0;
-@DropdownList-picker-list-border-radius:              0 0 4px 4px;
+@DropdownList-picker-list-border-radius-equal:        0 0 4px 4px;
 @DropdownList-picker-list-right-border-radius:        0 4px 4px 4px;
 @DropdownList-picker-list-left-border-radius:         4px 0 4px 4px;
+@DropdownList-picker-list-border-radius:              4px;
 @DropdownList-picker-menu-font-size:                  15px;
 @DropdownList-picker-menu-white-space:                nowrap;
 @DropdownList-picker-menu-item-padding:               4px 16px 4px 16px;

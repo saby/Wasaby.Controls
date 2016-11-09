@@ -489,9 +489,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           setActive: function(active) {
+             var wasActive = this.isActive();
+
              FieldLink.superclass.setActive.apply(this, arguments);
 
-             if (active && this._needFocusOnActivated() && this.isEnabled() && constants.browser.isMobilePlatform) {
+             /* Для Ipad'a надо при setActive устанавливать фокус в поле ввода,
+                иначе не покажется клавиатура, т.к. установка фокуса в setAcitve работает асинхронно,
+                а ipad воспринимает установку фокуса только в потоке кода, который работает после браузерных событий.
+                + добавляю проверку, что компоент был до этого неактивен (такая проверка есть и в контроловском setActive),
+                в противном случае будут лишние установки фокуса в поле ввода, из-за чего будет мограть саггест на Ipad'e */
+             if (active && !wasActive && this._needFocusOnActivated() && this.isEnabled() && constants.browser.isMobilePlatform) {
                 this._getElementToFocus().focus();
              }
           },
@@ -755,11 +762,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 Особенно актуально это когда зибниден selectedItem в добавлении по месту. */
              this.addSelectedItems([item.clone()]);
              this.setText('');
-             /* При выборе скрываем саггест, если он попадает под условия,
-                когда его не надо показывать см. _needShowSuggest */
-             if(!this._isInputVisible()) {
-                this.hidePicker();
-             }
+             /* По задаче:
+                https://inside.tensor.ru/opendoc.html?guid=7ce2bd66-bb6b-4628-b589-0e10e2bb8677&description=
+                Ошибка в разработку 03.11.2016 В полях связи не скрывается список с историей после выбора из него значения. Необходимо закрывать...
+
+                В стандарте не описано поведение автодополнения при выборе из него,
+                поэтому жду как опишут и согласуют. Для выпуска 200 решили, что всегда будем скрывать при выборе */
+             this.hidePicker();
           },
 
 
@@ -860,7 +869,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    if(rec.getIdProperty() !== self._options.keyField && rec.get(self._options.keyField) !== undefined) {
                       rec.setIdProperty(self._options.keyField);
                    }
-                })
+                });
              }
              return items;
           },

@@ -191,15 +191,17 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {WS.Data/Entity/Model} model Модель с измененными данными.
           */
          /**
+          * @typedef {String} BeginEditResult
+          * @variant Cancel Отменить завершение редактирования.
+          * @variant PendingAll В результате редактирования ожидается вся запись, как есть (с текущим набором полей).
+          * @variant PendingModifiedOnly В результате редактирования ожидаются только измененные поля. Это поведение используется по умолчанию.
+          */
+         /**
           * @event onBeginEdit Происходит перед началом редактирования.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {WS.Data/Entity/Model} model Редактируемая запись.
-          * @returns {*} Возможные значения:
-          * <ol>
-          *    <li>Deferred - запуск редактирования по месту будет произведён, когда произойдёт завершение возвращенного Deferred;</li>
-          *    <li>false - прервать редактирование;</li>
-          *    <li>* - продолжить редактирование в штатном режиме.</li>
-          * </ol>
+          * @param {Boolean} isAdd Флаг, означающий что событию предшествовал запуск добавления по месту.
+          * @returns {BeginEditResult|Deferred} Deferred - используется для асинхронной подготовки редактируемой записи. Из Deferred необходимо обязательно возвращать запись, открываемую на редактирование.
           */
          /**
           * @event onBeginAdd Происходит перед началом добавления записи по месту.
@@ -281,6 +283,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _dotItemTpl: null,
             _itemsContainer: null,
             _actsContainer: null,
+            _onMetaDataResultsChange: null,
             _allowInfiniteScroll: true,
             _hoveredItem: {
                target: null,
@@ -351,6 +354,7 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {String} Устанавливает шаблон отображения каждого элемента коллекции.
                 * @remark
+                * @deprecated
                 * Шаблон - это пользовательская вёрстка элемента коллекции.
                 * Для доступа к полям элемента коллекции в шаблоне подразумевается использование конструкций шаблонизатора.
                 * Подробнее о шаблонизаторе вы можете прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/ Шаблонизация вёрстки компонента}.
@@ -758,6 +762,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this.setGroupBy(this._options.groupBy, false);
             }
+            this._onMetaDataResultsChange = this._drawResults.bind(this);
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
          },
@@ -1396,6 +1401,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._previousGroupBy = undefined;
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
+            this._observeResultsRecord(false);
             return ListView.superclass.reload.apply(this, arguments);
          },
          /**
@@ -1447,6 +1453,13 @@ define('js!SBIS3.CONTROLS.ListView',
                this.subscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
             } else if (this._isClickEditMode()) {
                this.subscribe('onItemClick', this._startEditOnItemClick);
+            }
+         },
+         _itemsReadyCallback: function() {
+            ListView.superclass._itemsReadyCallback.apply(this, arguments);
+            if (this._hasEditInPlace()) {
+               this._getEditInPlace().setItems(this.getItems());
+               this._getEditInPlace().setItemsProjection(this._getItemsProjection());
             }
          },
          beforeNotifyOnItemClick: function() {
@@ -2143,7 +2156,9 @@ define('js!SBIS3.CONTROLS.ListView',
                if (cInstance.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
                   var afterFloatAreaShow = function(){
                      if (self.getItems()) {
-                        self._needScrollCompensation = self._options.infiniteScroll == 'up';
+                        if (self._options.infiniteScroll == 'up'){
+                           self._moveTopScroll();
+                        }
                         self._preScrollLoading();
                      }
                      topParent.unsubscribe('onAfterShow', afterFloatAreaShow);
@@ -2193,8 +2208,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var mode = this._infiniteScrollState.mode,
                scrollOnEdge =  (mode === 'up' && type === 'top') ||   // скролл вверх и доскролили до верхнего края
                                (mode === 'down' && type === 'bottom' && !this._infiniteScrollState.reverse) || // скролл вниз и доскролили до нижнего края
-                               (mode === 'down' && type === 'top' && this._infiniteScrollState.reverse); // скролл верх с запросом данных вниз и доскролили верхнего края
-
+                               (mode === 'down' && type === 'top' && this._infiniteScrollState.reverse) || // скролл верх с запросом данных вниз и доскролили верхнего края
+                               (this._options.infiniteScroll === 'both');
             if (scrollOnEdge && this.getItems()) {
                // Досткролили вверх, но на самом деле подгружаем данные как обычно, а рисуем вверх
                if (type == 'top' && this._infiniteScrollState.reverse) {
@@ -2300,9 +2315,6 @@ define('js!SBIS3.CONTROLS.ListView',
                      this._scrollLoadNextPage();
                   }
                }
-               if (this._options.infiniteScroll == 'demand'){
-                  this._setLoadMoreCaption(dataSet);
-               }
             }, this)).addErrback(function (error) {
                //Здесь при .cancel приходит ошибка вида DeferredCanceledError
                return error;
@@ -2353,16 +2365,38 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _setLoadMoreCaption: function(dataSet){
-            var more = dataSet.getMetaData().more;
-            if (typeof more == 'number'){
-               this._loadMoreButton.setCaption('Еще ' + more);
+            var more = dataSet.getMetaData().more,
+               caption, allCount;
+            // Если число и больше pageSize то "Еще pageSize"
+            if (typeof more === 'number') {
+               allCount = more;
+               $('.controls-ListView__counterValue', this._container.get(0)).text(allCount);
+               $('.controls-ListView__counter', this._container.get(0)).removeClass('ws-hidden');
+
+               var ost = more - this._scrollOffset.bottom;
+               if (ost < this._options.pageSize) {
+                  caption = ost;
+               }
+               else {
+                  if (ost < 0) {
+                     this._loadMoreButton.setVisible(false);
+                     return;
+                  }
+                  caption = this._options.pageSize
+               }
+
             } else {
-               if (more === false){
+               $('.controls-ListView__counter', this._container.get(0)).addClass('ws-hidden');
+               if (more === false) {
                   this._loadMoreButton.setVisible(false);
+                  return;
                } else {
-                  this._loadMoreButton.setCaption('Еще...');
+                  caption = this._options.pageSize;
                }
             }
+
+            this._loadMoreButton.setCaption('Еще ' + caption);
+            this._loadMoreButton.setVisible(true);
          },
 
          _onLoadMoreButtonActivated: function(event){
@@ -2537,7 +2571,11 @@ define('js!SBIS3.CONTROLS.ListView',
                if (!this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.bottom)) {
                   this._hideLoadingIndicator();
                }
+               if (this._options.infiniteScroll == 'demand'){
+                  this._setLoadMoreCaption(this.getItems());
+               }
             }
+            this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
          },
          _toggleIndicator: function(show){
@@ -3313,6 +3351,14 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _redrawResults: function(){
            this._drawResults();
+         },
+
+         _observeResultsRecord: function(needObserve){
+            var methodName = needObserve ? 'subscribeTo' : 'unsubscribeFrom',
+                resultsRecord = this._getResultsRecord();
+            if (resultsRecord){
+               this[methodName](resultsRecord, 'onPropertyChange', this._onMetaDataResultsChange);
+            }
          },
 
          _drawResults: function(){

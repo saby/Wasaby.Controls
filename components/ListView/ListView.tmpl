@@ -24,9 +24,12 @@
         <div class="controls-Pager-container"></div>
     </ws:if>
     <ws:if data="{{ infiniteScroll == 'demand'}}">
-      <component data-component="SBIS3.CONTROLS.Link" name="loadMoreButton" class="controls-ListView__loadMoreButton">
-         <option name="caption">Еще...</option>
-      </component>
+       <div class="controls-ListView__serviceFooter">
+         <component data-component="SBIS3.CONTROLS.Link" name="loadMoreButton" class="controls-ListView__loadMoreButton">
+            <option name="caption">Еще...</option>
+            <option name="visible" type="boolean">false</option>
+         </component>
+       </div>
     </ws:if>
     <div class="controls-ListView-scrollIndicator ws-hidden{{ infiniteScroll === 'up' ? ' controls-ListView-scrollIndicator__up'}}"></div>
     <div class="controls-ListView__ItemsToolbar-container ws-hidden"></div>

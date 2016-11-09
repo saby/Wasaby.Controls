@@ -5,8 +5,9 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown',
       'html!SBIS3.CONTROLS.RichEditor.RichEditorDropdown/headerTemplate',
       'html!SBIS3.CONTROLS.RichEditor.RichEditorDropdown/itemTemplate',
       'js!SBIS3.CORE.MarkupTransformer',
-      'js!SBIS3.CONTROLS.Utils.TemplateUtil'
-   ], function(DropdownList, headerTemplate, itemTemplate, MarkupTransformer, TemplateUtil) {
+      'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+      'Core/constants'
+   ], function(DropdownList, headerTemplate, itemTemplate, MarkupTransformer, TemplateUtil, cConstants) {
    'use strict';
    //TODO: избавиться от этого модуля когда будет выполнено:https://inside.tensor.ru/opendoc.html?guid=ecf33863-cfeb-4357-bb37-3fd8a8d17c48&description=
    //Задача в разработку 20.07.2016 DropDownList сделать чтобы в headTemplate в опциях приходил объект с выбранными записями ( те кот...
@@ -18,7 +19,8 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown',
                type: 'fastDataFilter',
                headTemplate: headerTemplate,
                itemTpl: itemTemplate,
-               mode: 'click'
+               //TODO: 1 января 2017 после боя курантов и бокала шампанского подключиться удалённо к рабочему компьютеру и удалить этот код
+               mode: cConstants.browser.isIE8 ? 'hover' : 'click'
             }
          },
          _modifyOptions: function (options) {
