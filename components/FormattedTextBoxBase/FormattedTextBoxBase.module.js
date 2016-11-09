@@ -16,21 +16,6 @@ define(
       var
          createModel = function(controlCharactersSet, mask) {
             return new FormatModel({controlCharactersSet: controlCharactersSet, mask: mask});
-         },
-         getItemsForTemplate = function(formatModel, maskReplacer) {
-            var
-                value,
-                items = [],
-                model = formatModel.model;
-
-            for (var i = 0; i < model.length; i++) {
-               value = '';
-               for (var j = 0; j < model[i].mask.length; j++) {
-                  value += (typeof model[i].value[j] === 'undefined') ? maskReplacer : model[i].value[j];
-               }
-               items.push({isGroup: model[i].isGroup, text: value});
-            }
-            return items;
          };
 
       var
@@ -773,12 +758,15 @@ define(
          }
       },
 
-      _getFormatModel: function() {
-         return this._options._formatModel;
+      _getFormatModel: function(options) {
+         // _formatModel вроде не используется в шаблонах и может быть вынесена из опций
+         options = options || this._options;
+         return options._formatModel;
       },
 
-      _getMaskReplacer: function() {
-         return this._options._maskReplacer;
+      _getMaskReplacer: function(options) {
+         options = options || this._options;
+         return options._maskReplacer;
       },
 
       //Тут обрабатываются управляющие команды
@@ -962,9 +950,33 @@ define(
          }
          options._formatModel = formatModel;
          //записываем модель для шаблона
-         options._modelForMaskTpl = getItemsForTemplate(formatModel, options._maskReplacer);
+         options._modelForMaskTpl = this._getItemsForTemplate(formatModel, options._maskReplacer);
          return options;
       },
+
+      /**
+       * Создает контекст который будет передан в шаблон при отрисовке контрола
+       * @param formatModel
+       * @param maskReplacer
+       * @return {Array}
+       * @private
+       */
+      _getItemsForTemplate: function(formatModel, maskReplacer) {
+         var
+             value,
+             items = [],
+             model = formatModel.model;
+
+         for (var i = 0; i < model.length; i++) {
+            value = '';
+            for (var j = 0; j < model[i].mask.length; j++) {
+               value += (typeof model[i].value[j] === 'undefined') ? maskReplacer : model[i].value[j];
+            }
+            items.push({isGroup: model[i].isGroup, text: value});
+         }
+         return items;
+      },
+
       /**
        * Обновляяет значение this._options.text
        * @protected
@@ -1010,7 +1022,7 @@ define(
        */
       _getHtmlMask: function() {
          //передать в шаблон
-         return maskTemplateFn(getItemsForTemplate(this._getFormatModel(), this._getMaskReplacer()));
+         return maskTemplateFn(this._getItemsForTemplate(this._getFormatModel(), this._getMaskReplacer()));
       },
 
       /**
