@@ -2,9 +2,9 @@
  * Created by ps.borisov on 29.08.2016.
  */
 
-define('js!SBIS3.CONTROLS.ColorRadioButton', [
+define('js!SBIS3.CONTROLS.ColorRadioButtonNew', [
    'js!SBIS3.CONTROLS.RadioButtonBase',
-   'html!SBIS3.CONTROLS.ColorRadioButton'
+   'html!SBIS3.CONTROLS.ColorRadioButtonNew'
 ], function(RadioButtonBase, dotTplFn) {
 
    'use strict';
@@ -17,8 +17,8 @@ define('js!SBIS3.CONTROLS.ColorRadioButton', [
     * @author Борисов П.С.
     */
 
-   var ColorRadioButton = RadioButtonBase.extend(/** @lends SBIS3.CONTROLS.ColorRadioButton.prototype */ {
+   var ColorRadioButtonNew = RadioButtonBase.extend(/** @lends SBIS3.CONTROLS.ColorRadioButton.prototype */ {
       _dotTplFn: dotTplFn
    });
-   return ColorRadioButton;
+   return ColorRadioButtonNew;
 });
