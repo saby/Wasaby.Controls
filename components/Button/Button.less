@@ -42,7 +42,6 @@
   // Button's icon
   .controls-Button__icon {
     position: absolute;
-    color: @default-color !important;
     .button-mixin(@button-icon-top-offset; @button-icon-left-offset; 16px; @button-border-width; @button-text-margin-left; @button-text-margin-right);
 
     &.icon-24 {
@@ -63,10 +62,6 @@
     border: @button-primary-border;
     .box-shadow(@button-primary-shadow);
     background: @button-primary-bg;
-
-    .controls-Button__icon {
-      color: @primary-color !important;
-    }
 
     &.ws-disabled {
       color: @button-disabled-text-color;
@@ -117,9 +112,6 @@
       border: @button-big-primary-border;
       .box-shadow(@button-big-primary-shadow);
       background: @button-big-primary-bg;
-      .controls-Button__icon {
-        color: @primary-color !important;
-      }
       &.ws-disabled {
         color: @button-big-disabled-text-color;
         border: @button-big-disabled-border;
@@ -160,9 +152,6 @@
       border: @button-hover-border;
       .box-shadow(@button-hover-shadow);
       background: @button-hover-bg;
-      .controls-Button__icon {
-        color: @button-icon-color !important;
-      }
     }
     // Normal primary button
     &.controls-Button__primary {
@@ -171,9 +160,6 @@
         border: @button-primary-hover-border;
         .box-shadow(@button-primary-hover-shadow);
         background: @button-primary-hover-bg;
-        .controls-Button__icon {
-          color: @primary-color !important;
-        }
       }
 
     }
