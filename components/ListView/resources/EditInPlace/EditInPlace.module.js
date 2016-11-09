@@ -258,7 +258,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   format = recordSet.getFormat();
                }
                // Нужно передавать модель, чтобы опредлелять в клоне авторасчётные поля
-               clone = DataBuilder.reduceTo(record, format, recordSet.getModel());
+               clone = DataBuilder.reduceTo(record, format, recordSet && recordSet.getModel());
                clone.setState(record.getState());
                return clone;
             }
