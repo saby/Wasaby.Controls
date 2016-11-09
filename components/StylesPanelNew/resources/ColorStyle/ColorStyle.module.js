@@ -5,7 +5,7 @@
 define('js!SBIS3.CONTROLS.ColorStyle', [
    'js!SBIS3.CONTROLS.RadioGroup',
    'html!SBIS3.CONTROLS.ColorStyle/resources/ItemTemplate',
-   'js!SBIS3.CONTROLS.ColorRadioButton'
+   'js!SBIS3.CONTROLS.ColorRadioButtonNew'
 ], function(RadioGroup, ItemTemplate) {
 
    'use strict';
