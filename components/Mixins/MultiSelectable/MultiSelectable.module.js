@@ -674,9 +674,15 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
                   }
 
                   if(loadKeysArr[j] !== null) {
-                     dMultiResult.push(self._dataSource.read(loadKeysArr[j]).addCallback(function (record) {
-                        self._options.selectedItems.add(record);
-                     }));
+                     dMultiResult.push(self._dataSource.read(loadKeysArr[j]).addCallbacks(
+                         function (record) {
+                            self._options.selectedItems.add(record);
+                            return record;
+                         },
+                         function(err) {
+                            throw new Error(err);
+                         }
+                     ));
                   }
                }
 
