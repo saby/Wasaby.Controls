@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
              *    <li>Составная. В рамках диалогового окна с возможностью отменить/применить изменения.</li>
              * </ol>
              */
-            panelRenderStyle: false,
+            palleteRenderStyle: false,
             /**
              * @cfg {Object}
              * Устанавливает начальную настройку панели
