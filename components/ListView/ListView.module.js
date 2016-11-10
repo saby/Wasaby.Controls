@@ -2344,18 +2344,12 @@ define('js!SBIS3.CONTROLS.ListView',
                $('.controls-ListView__counterValue', this._container.get(0)).text(allCount);
                $('.controls-ListView__counter', this._container.get(0)).removeClass('ws-hidden');
 
-               var ost = more - this._scrollOffset.bottom;
-               if (ost < this._options.pageSize) {
-                  caption = ost;
+               var ost = more - (this._scrollOffset.bottom + this._options.pageSize);
+               if (ost < 0) {
+                  this._loadMoreButton.setVisible(false);
+                  return;
                }
-               else {
-                  if (ost < 0) {
-                     this._loadMoreButton.setVisible(false);
-                     return;
-                  }
-                  caption = this._options.pageSize
-               }
-
+               caption = ost < this._options.pageSize ? ost : this._options.pageSize;
             } else {
                $('.controls-ListView__counter', this._container.get(0)).addClass('ws-hidden');
                if (more === false) {
