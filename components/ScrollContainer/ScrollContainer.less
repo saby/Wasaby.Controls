@@ -3,14 +3,16 @@
    position: relative;
    outline: none;
    .controls-Scrollbar{
-      padding: 4px 2px 4px 0;
-      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.1s ease;
+      padding: 4px 2px;
+      height: calc(~"100% - 8px");
    }
 }
 
 .controls-ScrollContainer:hover {
    .controls-Scrollbar {
-      visibility: visible;
+      opacity: 1;
    }
 }
 

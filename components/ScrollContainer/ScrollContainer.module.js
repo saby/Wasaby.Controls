@@ -2,9 +2,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'js!SBIS3.CONTROLS.CompoundControl',
       'js!SBIS3.CONTROLS.Scrollbar',
       'html!SBIS3.CONTROLS.ScrollContainer',
-      'Core/detection'
+      'Core/detection',
+      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar.full',
+      'is!browser?css!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar',
+      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mousewheel-3.1.13'
    ],
-   function(CompoundControl, Scrollbar, dotTplFn, Detection) {
+   function(CompoundControl, Scrollbar, dotTplFn, cDetection) {
 
       'use strict';
 
@@ -69,12 +72,20 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             ScrollContainer.superclass.init.call(this);
             this._publish('onScroll');
             this._content = $('.controls-ScrollContainer__content', this.getContainer());
-            if (!Detection.isMobileIOS){
+            if (!cDetection.isMobileIOS && !cDetection.isMobileAndroid){
                BROWSER_SCROLLBAR_WIDTH = this._getBrowserScrollbarWidth();
                this._hideScrollbar();
-               this._subscribeScrollEvents();
                this._initScrollbar();
+               this._subscribeOnScroll();
             }
+         },
+
+         _subscribeOnScroll: function(){
+            this._content.on('scroll', this._onScroll.bind(this));
+         },
+
+         _onScroll: function(){
+            this._scrollbar.setPosition(this._getScrollTop());
          },
 
          _hideScrollbar: function(){
@@ -100,93 +111,39 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             return scrollbarWidth;
          },
 
-         _subscribeScrollEvents: function(){
-            this.getContent().on('scroll', this._scrollHandler.bind(this));
-         },
-
-         _scrollHandler: function(){
-            var scrollTop = this.getScrollTop();
-            this._notify('onScroll', scrollTop);
-            // Положение скролла отличается от scrollTop в viewportRatio раз
-            this._scrollbar.setPosition(scrollTop);
-         },
-
          _scrollbarDragHandler: function(event, position){
-            if (position != this.getScrollTop()){
-               this.scrollTo(position);
+            if (position != this._getScrollTop()){
+               this._scrollTo(position);
             }
          },
 
-         // Отношение видимой части к полной высоте контента
-         _getViewportRatio: function(){
-            if (!this._viewportRatio){
-               this._viewportRatio = this.getContainer().height() / this.getScrollHeight();
+         _onResizeHandler: function(){
+            if (this._scrollbar){
+               this._scrollbar.setContentHeight(this._getScrollHeight());
             }
-            return this._viewportRatio;
+         },
+
+         _getScrollTop: function(){
+            return this._content[0].scrollTop;
+         },
+
+         _scrollTo: function(value){
+            this._content[0].scrollTop = value;
          },
 
          _initScrollbar: function(){
             this._scrollbar = this.getChildControlByName('scrollbar');
-            this._scrollbar.setContentHeight(this.getScrollHeight());
+            this._scrollbar.setContentHeight(this._getScrollHeight());
             this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
          },
 
-         /**
-          * Возвращает контент находящийся в контейнере
-          * @see content
-          */
-         getContent: function() {
-            return this._content;
+         _getScrollHeight: function(){
+            return this._content[0].scrollHeight;
          },
 
-         /**
-          * Доcтиг ли скролл верха контента
-          * @returns {*|boolean}
-          * @see iScrollOnBottom
-          * @see hasScroll
-          */
-         isScrollOnTop: function() {
-            return this.getScrollTop() === 0;
-         },
-
-         /**
-          * Доcтиг ли скролл низа контента
-          * @returns {*|boolean}
-          * @see isScrollOnTop
-          * @see hasScroll
-          */
-         isScrollOnBottom: function() {
-
-         },
-
-         getScrollHeight: function() {
-            return this.getContent()[0].scrollHeight;
-         },
-
-         /**
-          * Сдвигает скролл на указанную величину
-          * @param option величина сдвига скролла
-          */
-         scrollTo: function(position) {
-            this._content[0].scrollTop = position;
-         },
-
-         /**
-          * Должен ли быть скролл на контенте
-          * @returns {boolean|*}
-          */
-         hasScroll: function() {},
-
-         /**
-          * Вернёт верхнее положение скролла в пискселях
-          * Если скролл на момент вызова не инициализированн вернёт 0
-          * @returns {.mcs.draggerTop|*}
-          */
-         getScrollTop: function() {
-            return this._content[0].scrollTop;
-         },
-
-         destroy: function() {}
+         destroy: function(){
+            this._content.off('scroll', this._onScroll);
+         }
       });
 
       return ScrollContainer;
