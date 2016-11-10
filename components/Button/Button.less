@@ -63,6 +63,13 @@
     .box-shadow(@button-primary-shadow);
     background: @button-primary-bg;
 
+    &.controls-Click__active:active {
+      color: @button-primary-active-text-color;
+      border: @button-primary-active-border;
+      .box-shadow(@button-primary-active-shadow);
+      background: @button-primary-active-bg;
+    }
+
     &.ws-disabled {
       color: @button-disabled-text-color;
       border: @button-disabled-border;
@@ -72,7 +79,7 @@
   }
 
   // Big default button
-    &.controls-Button__big {
+  &.controls-Button__big {
     font: @button-big-font;
     color: @button-big-text-color;
     text-align: @button-big-text-alignment;
@@ -85,6 +92,13 @@
     .border-radius(@button-big-border-radius);
     .box-shadow(@button-big-shadow);
     background: @button-big-bg;
+
+    &.controls-Click__active:active {
+      color: @button-big-active-text-color;
+      border: @button-big-active-border;
+      .box-shadow(@button-big-active-shadow);
+      background: @button-big-active-bg;
+    }
 
     .controls-Button__text {
       margin: @button-big-text-margin;
@@ -112,6 +126,14 @@
       border: @button-big-primary-border;
       .box-shadow(@button-big-primary-shadow);
       background: @button-big-primary-bg;
+
+      &.controls-Click__active:active {
+        color: @button-big-primary-active-text-color;
+        border: @button-big-primary-active-border;
+        .box-shadow(@button-big-primary-active-shadow);
+        background: @button-big-primary-active-bg;
+      }
+
       &.ws-disabled {
         color: @button-big-disabled-text-color;
         border: @button-big-disabled-border;
@@ -129,6 +151,13 @@
       .box-shadow(@button-big-disabled-shadow);
       background: @button-big-disabled-bg;
     }
+  }
+
+  &.controls-Click__active:active {
+    color: @button-active-text-color;
+    border: @button-active-border;
+    .box-shadow(@button-active-shadow);
+    background: @button-active-bg;
   }
 
   &.ws-disabled {
@@ -170,12 +199,7 @@
         .box-shadow(@button-big-hover-shadow);
         background: @button-big-hover-bg;
       }
-      &.controls-Click__active:active {
-        color: @button-big-active-text-color;
-        border: @button-big-active-border;
-        .box-shadow(@button-big-active-shadow);
-        background: @button-big-active-bg;
-      }
+
       &.controls-Button__primary {
         &:hover {
           color: @button-big-primary-hover-text-color;
@@ -183,30 +207,8 @@
           .box-shadow(@button-big-primary-hover-shadow);
           background: @button-big-primary-hover-bg;
         }
-        &.controls-Click__active:active {
-          color: @button-big-primary-active-text-color;
-          border: @button-big-primary-active-border;
-          .box-shadow(@button-big-primary-active-shadow);
-          background: @button-big-primary-active-bg;
-        }
       }
     }
-
-    &.controls-Click__active:active {
-      color: @button-active-text-color;
-      border: @button-active-border;
-      .box-shadow(@button-active-shadow);
-      background: @button-active-bg;
-    }
-    &.controls-Button__primary {
-      &.controls-Click__active:active {
-        color: @button-primary-active-text-color;
-        border: @button-primary-active-border;
-        .box-shadow(@button-primary-active-shadow);
-        background: @button-primary-active-bg;
-      }
-    }
-
   }
 }
 
