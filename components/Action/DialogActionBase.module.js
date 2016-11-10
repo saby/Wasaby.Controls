@@ -89,6 +89,9 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
           */
          _showedLoading: false
       },
+      $constructor: function() {
+         this._publish('onAfterShow', 'onBeforeShow', 'onExecuted', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel');
+      },
       /**
        * @typedef {Object} ExecuteMetaConfig
        * @property {String|Number} id Первичный ключ записи. Передается в конфигурацию диалога в опцию {@link SBIS3.CONTROLS.FormController#key}.
@@ -98,30 +101,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
        * @property {Object} componentOptions Пользовательские опции, которые будут переданы в диалог в секцию _options.
        * @property {Object} dialogOptions Опции, которые переопределяют конфигурацию диалога. Набор опций зависит от типа диалога (см. {@link mode}).
        * <ul>
-       *    <li>Если <i>mode=dialog</i>, то набор опций такой: {@link $ws.proto.Dialog#title}, {@link $ws.proto.Dialog#border} и {@link $ws.proto.Dialog#buildMarkupWithContext}.</li>
-       *    <li>Если <i>mode=floatArea</i>, то набор опций такой: {@link $ws.proto.FloatArea#title}, {@link $ws.proto.FloatArea#border}, {@link $ws.proto.FloatArea#buildMarkupWithContext}, {@link $ws.proto.FloatArea#animation}, {@link $ws.proto.FloatArea#autoCloseOnHide}, {@link $ws.proto.FloatArea#showOnControlsReady}, {@link $ws.proto.FloatArea#autoHide}, {@link $ws.proto.FloatArea#isStack}, {@link $ws.proto.FloatArea#side} и {@link $ws.proto.FloatArea#target}.</li>
+       *    <li>Если <i>mode=dialog</i>, то набор опций такой: {@link $ws.proto.Dialog#title title}, {@link $ws.proto.Dialog#border border} и {@link $ws.proto.Dialog#buildMarkupWithContext buildMarkupWithContext}.</li>
+       *    <li>Если <i>mode=floatArea</i>, то набор опций такой: {@link $ws.proto.FloatArea#title title}, {@link $ws.proto.FloatArea#border border}, {@link $ws.proto.FloatArea#buildMarkupWithContext buildMarkupWithContext}, {@link $ws.proto.FloatArea#animation animation}, {@link $ws.proto.FloatArea#autoCloseOnHide autoCloseOnHide}, {@link $ws.proto.FloatArea#showOnControlsReady showOnControlsReady}, {@link $ws.proto.FloatArea#autoHide autoHide}, {@link $ws.proto.FloatArea#isStack isStack}, {@link $ws.proto.FloatArea#side side} и {@link $ws.proto.FloatArea#target target}.</li>
        * </ul>
        */
-      /**
-       * Производи открытие диалога.
-       * @param {ExecuteMetaConfig} meta Параметры, которые будут использованы для конфигурации диалога.
-       * @example
-       * Открыть диалог создания новой записи, для которой часть полей будет с предустановленными значениями.
-       * <pre>
-       * // myAddFolderButton - экземпляр класса кнопки
-       * // myDialogAction - экземпляр класса SBIS3.CONTROLS.OpenDialogAction
-       * myAddFolderButton.subscribe('onActivated', function() {
-       *    myDialogAction.execute({
-       *       filter: {
-       *          'Раздел': null, // Поле иерархии, папка создаётся в корне иерархической структуры
-       *          'Раздел@': true // Признак папки в иерархической структуре
-       *       }
-       *    });
-       * });
-       */
-      $constructor: function() {
-         this._publish('onAfterShow', 'onBeforeShow', 'onExecuted', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel');
-      },
       /**
        * Производит открытие диалога.
        * @param {ExecuteMetaConfig} meta Параметры, которые переопределяют конфигурацию диалога.
@@ -133,7 +116,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
        * // myButton - экземпляр класса кнопки
        * // myDialogAction - экземпляр класса SBIS3.CONTROLS.OpenDialogAction
        * myButton.subscribe('onActivated', function(){
-       *    myDialogAction.execute({});
+       *    myDialogAction.execute({
+       *       id: myId,
+       *       item: myItem
+       *    });
        * });
        * </pre>
        */

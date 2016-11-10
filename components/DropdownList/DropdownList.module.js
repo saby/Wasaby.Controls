@@ -426,6 +426,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                }
                DropdownList.superclass.showPicker.apply(this, arguments);
 
+               this._pickerBodyContainer.css('max-width', '');
                pickerBodyWidth = this._pickerBodyContainer[0].clientWidth;
                pickerHeaderWidth = this._pickerHeadContainer[0].clientWidth;
                this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', pickerBodyWidth === pickerHeaderWidth);
@@ -488,14 +489,16 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   this._defaultId = item.getId();
                }
                this._getHtmlItemByItem(item).addClass('controls-ListView__defaultItem');
-               if (this._buttonHasMore) {
-                  var needShowHasMoreButton = this._hasNextPage(this.getItems().getMetaData().more, 0);
-                  if (!this._options.multiselect){
-                     this._buttonHasMore.getContainer().closest('.controls-DropdownList__buttonsBlock').toggleClass('ws-hidden', !needShowHasMoreButton);
-                  }
-                  else{
-                     this._buttonHasMore[needShowHasMoreButton ? 'show' : 'hide']();
-                  }
+            }
+         },
+         _setHasMoreButtonVisibility: function(){
+            if (this._buttonHasMore) {
+               var needShowHasMoreButton = this._hasNextPage(this.getItems().getMetaData().more, 0);
+               if (!this._options.multiselect){
+                  this._buttonHasMore.getContainer().closest('.controls-DropdownList__buttonsBlock').toggleClass('ws-hidden', !needShowHasMoreButton);
+               }
+               else{
+                  this._buttonHasMore[needShowHasMoreButton ? 'show' : 'hide']();
                }
             }
          },
@@ -612,6 +615,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             this._setText(this._prepareText(textValue));
             this._redrawHead(isDefaultIdSelected);
+            this._setHasMoreButtonVisibility();
             this._resizeFastDataFilter();
          },
 

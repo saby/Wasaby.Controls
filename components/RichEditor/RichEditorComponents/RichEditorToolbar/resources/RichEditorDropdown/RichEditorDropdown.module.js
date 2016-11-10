@@ -39,6 +39,7 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown',
                var headTpl = MarkupTransformer(TemplateUtil.prepareTemplate(this._options.headTemplate.call(this, record)))();
                this._pickerHeadContainer.html(headTpl);
                this._selectedItemContainer.html(headTpl);
+               this._setHasMoreButtonVisibility();
             }.bind(this))
          }
       });
