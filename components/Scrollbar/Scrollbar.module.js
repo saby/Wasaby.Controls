@@ -116,6 +116,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          _beginDragHandler: function(dragObject, e) {
+            this._container.addClass('controls-Scrollbar__drag');
             this._beginClient = e.clientY;
          },
 
@@ -129,7 +130,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          _endDragHandler: function(dragObject, droppable, e) {
-
+            this._container.removeClass('controls-Scrollbar__drag');
          },
 
          destroy: function() {

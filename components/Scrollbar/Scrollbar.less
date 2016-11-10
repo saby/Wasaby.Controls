@@ -5,6 +5,14 @@
       cursor: pointer;
       position: relative;
       border-radius: @controls-Scrollbar-thumb-border-radius;
-      background-color: @controls-Scrollbar-light-active-thumb-color;
+      background-color: @controls-Scrollbar-light-hover-thumb-color;
+      &:hover {
+         background-color: @controls-Scrollbar-light-active-thumb-color;
+      }
+   }
+   &.controls-Scrollbar__drag {
+      .controls-Scrollbar__thumb {
+         background-color: @controls-Scrollbar-light-active-thumb-color;
+      }
    }
 }

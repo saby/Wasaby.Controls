@@ -10,8 +10,11 @@
    }
 }
 
-.controls-ScrollContainer:hover {
-   .controls-Scrollbar {
+.controls-ScrollContainer {
+   .controls-Scrollbar.controls-Scrollbar__drag {
+      opacity: 1
+   }
+   &:hover .controls-Scrollbar {
       opacity: 1;
    }
 }
