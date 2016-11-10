@@ -141,20 +141,21 @@
        margin-top: @DropdownList-picker-margin-top;
          .controls-DropdownList__item{
             padding: 6px 16px;
+            position: relative;
+            //Блок с "размытием" располагается в том месте, где должен быть padding для текста. если текст заезжает на этот паддинг,
+            //то будет скрыт в размытии, кодом, описанном ниже. Так как ограничение ширины установлено через max-width,
+            //мы не знаем, какой именно текст уместился в контейнер, а какой нет.
+            &:after {
+               content: '';
+               position: absolute;
+               top: 0;
+               bottom: 0;
+               right: -4px;
+               width: 4px;
+               background: linear-gradient(to left, @DropdownList-picker-menu-item-color, @DropdownList-picker-menu-item-color-blur);
+            }
            .controls-DropdownList__itemTextWrapper{
               position: relative;
-              //Блок с "размытием" располагается в том месте, где должен быть padding для текста. если текст заезжает на этот паддинг,
-              //то будет скрыт в размытии, кодом, описанном ниже. Так как ограничение ширины установлено через max-width,
-              //мы не знаем, какой именно текст уместился в контейнер, а какой нет.
-              &:after {
-                 content: '';
-                 position: absolute;
-                 top: 0;
-                 bottom: 0;
-                 right: -4px;
-                 width: 4px;
-                 background: linear-gradient(to left, @DropdownList-picker-menu-item-color, @DropdownList-picker-menu-item-color-blur);
-              }
               .controls-DropdownList__item-text{
                  overflow: hidden;
                  white-space: nowrap;
@@ -162,7 +163,7 @@
               }
            }
            &:hover {
-              .controls-DropdownList__itemTextWrapper:after {
+              &:after {
                  background: linear-gradient(to left, @DropdownList-picker-menu-item-hover, @DropdownList-picker-menu-item-hover-blur);
               }
            }
