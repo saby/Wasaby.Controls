@@ -110,6 +110,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                opener: this._options.linkedObject,
                movedItems: movedItems
             }, this._options.template);
+
          },
 
          _buildComponentConfig: function(meta) {

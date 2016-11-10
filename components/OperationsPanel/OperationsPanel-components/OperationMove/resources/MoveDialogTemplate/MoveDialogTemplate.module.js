@@ -6,11 +6,12 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
    "js!SBIS3.CORE.CompoundControl",
    "html!SBIS3.CONTROLS.MoveDialogTemplate",
    "Core/core-instance",
+   "Core/helpers/collection-helpers",
    "html!SBIS3.CONTROLS.MoveDialogTemplate/resources/FolderTitleTpl",
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.TreeDataGridView",
    "i18n!SBIS3.CONTROLS.MoveDialogTemplate"
-], function( CommandDispatcher,Control, dotTplFn, cInstance) {
+], function( CommandDispatcher,Control, dotTplFn, cInstancem, colHelpers) {
 
    var MoveDialogTemplate = Control.extend({
       _dotTplFn: dotTplFn,
@@ -25,7 +26,10 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
             linkedView: undefined,
             records: undefined,
             cssClassName: 'controls-MoveDialog',
-            dataSource: undefined
+            dataSource: undefined,
+            partialyReload: undefined,
+            displayField: undefined,
+            filter: undefined
          },
          treeView: undefined
       },
@@ -33,14 +37,13 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
          this._publish('onPrepareFilterOnMove', 'onMove');
          this._container.removeClass('ws-area');
          this.subscribe('onReady', this._onReady.bind(this));
+         this._synchProperties();
          CommandDispatcher.declareCommand(this, 'applyMove', this._onMoveButtonActivated.bind(this));
       },
       _onReady: function() {
          var
-             filter;
+             filter = this._options.filter || {};
          this._treeView = this.getChildControlByName('MoveDialogTemplate-TreeDataGridView');
-         //TODO: Избавиться от этого события в .100 версии. Придрот для выпуска .20 чтобы подменить фильтр в диалоге перемещения. Необходимо придумать другой механизм.
-         filter = this._notify('onPrepareFilterOnMove', this._options.records) || {};
          if (cInstance.instanceOfModule(this.getDataSource(), 'SBIS3.CONTROLS.SbisServiceSource') || cInstance.instanceOfModule(this.getDataSource(),'WS.Data/Source/SbisService')) {
             filter['ВидДерева'] = "Только узлы";
             //TODO: костыль написан специально для нуменклатуры, чтобы не возвращалась выборка всех элементов при заходе в пустую папку
@@ -68,6 +71,21 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
          }
 
          throw Error('data sourse is undefined');
+      },
+      /**
+       * Синхронизириует набор опций с листвью
+       * @private
+       */
+      _synchProperties: function() {
+         var properties = ['displayField', 'partialyReload', 'keyField', 'hierField'],
+            listView = this._options.listView;
+         if (listView) {
+            colHelpers.forEach(properties, function (property) {
+               if (!this.getProperty(property)) {
+                  this.setProperty(listView.getProperty(property));
+               }
+            }, this);
+         }
       }
    });
 
