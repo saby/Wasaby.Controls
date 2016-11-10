@@ -426,6 +426,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                }
                DropdownList.superclass.showPicker.apply(this, arguments);
 
+               this._pickerBodyContainer.css('max-width', '');
                pickerBodyWidth = this._pickerBodyContainer[0].clientWidth;
                pickerHeaderWidth = this._pickerHeadContainer[0].clientWidth;
                this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', pickerBodyWidth === pickerHeaderWidth);
