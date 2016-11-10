@@ -58,6 +58,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * @mixes SBIS3.CONTROLS.ChooserMixin
     * @mixes SBIS3.CONTROLS.DSMixin
     * @cssModifier controls-SelectorButton__asLink Отображает текст как ссылку.
+    * @cssModifier controls-SelectorButton__withoutCross Скрывает крестик справа от текста.
     *
     * @category Buttons
     * @control
