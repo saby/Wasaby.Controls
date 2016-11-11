@@ -67,12 +67,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          init: function() {
             ScrollContainer.superclass.init.call(this);
-            this._publish('onScroll');
             this._content = $('.controls-ScrollContainer__content', this.getContainer());
             if (!cDetection.isMobileIOS && !cDetection.isMobileAndroid){
                BROWSER_SCROLLBAR_WIDTH = this._getBrowserScrollbarWidth();
+               this._container.one('touchstart mousemove', this._initScrollbar.bind(this));
                this._hideScrollbar();
-               this._initScrollbar();
                this._subscribeOnScroll();
             }
          },
@@ -129,8 +128,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _initScrollbar: function(){
-            this._scrollbar = this.getChildControlByName('scrollbar');
-            this._scrollbar.setContentHeight(this._getScrollHeight());
+            this._scrollbar = new Scrollbar({
+               element: $('.controls-ScrollContainer__scrollbar', this._container),
+               contentHeight: this._getScrollHeight()
+            });
             this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
          },
 
@@ -139,6 +140,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          destroy: function(){
+            this._container.off('touchstart mousemove');
             this._content.off('scroll', this._onScroll);
          }
       });

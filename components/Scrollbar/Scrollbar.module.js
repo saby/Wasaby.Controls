@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          $protected: {
             _options: {
                position: 0,
-               contentHeight: undefined
+               contentHeight: 1
             },
             _thumb: undefined,
             _beginClient: undefined,
@@ -35,9 +35,9 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             this._thumb = this._container.find('.js-controls-Scrollbar__thumb');
             this._container.on('mousedown touchstart', '.js-controls-Scrollbar__thumb', this._getDragInitHandler());
             this._container.on('mousedown touchstart', this._onClickDragHandler.bind(this));
-
-            this._containerHeight = this._container.height();
+            this._containerHeight = this._container.outerHeight(true);
             this._setViewportRatio();
+            this._calcThumbHeight();
          },
 
          getPosition: function() {
@@ -101,6 +101,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
          //Высчитываем и задаём высоту ползунка
          _calcThumbHeight: function(){
+            this.getContainer().toggleClass('ws-hidden', this._viewportRatio >= 1);
             this._thumbHeight = this._containerHeight * this._viewportRatio;
             this._thumb.height(this._thumbHeight);
          },
@@ -112,11 +113,10 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          //Изменить отношение видимой части к размеру контента
          _setViewportRatio: function(){
             this._viewportRatio = this._containerHeight / this.getContentHeight();
-            this._viewportRatio = this._viewportRatio < 1 ? this._viewportRatio : 0;
          },
 
          _beginDragHandler: function(dragObject, e) {
-            this._container.addClass('controls-Scrollbar__drag');
+            this._container.addClass('controls-Scrollbar__dragging');
             this._beginClient = e.clientY;
          },
 
@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          _endDragHandler: function(dragObject, droppable, e) {
-            this._container.removeClass('controls-Scrollbar__drag');
+            this._container.removeClass('controls-Scrollbar__dragging');
          },
 
          destroy: function() {
