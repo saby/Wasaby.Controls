@@ -60,8 +60,8 @@ define('js!SBIS3.CONTROLS.Slider',
                this._publish('onDrawValueChange');
                this._fullLine = this._container.find('.controls-Slider__line__full');
                this._wrapper = this._container.find('.controls-Slider__wrapper');
-               this._endValue = this._prepareValue(this._options.endValue ? this._options.endValue : this._options.maxValue);
-               this._startValue = this._prepareValue(this._options.startValue);
+               this._endValue = this._prepareValue(this._options.endValue ? this._options.endValue : this._options.maxValue, 'right');
+               this._startValue = this._prepareValue(this._options.startValue, 'left');
                this._pointsContainers = {
                   left: this._container.find('.controls-Slider__point__left'),
                   right: this._container.find('.controls-Slider__point__right')
