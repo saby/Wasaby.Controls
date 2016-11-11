@@ -492,7 +492,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _setHasMoreButtonVisibility: function(){
-            if (this._buttonHasMore) {
+            if (this.getItems()) {
                var needShowHasMoreButton = this._hasNextPage(this.getItems().getMetaData().more, 0);
                if (!this._options.multiselect){
                   this._buttonHasMore.getContainer().closest('.controls-DropdownList__buttonsBlock').toggleClass('ws-hidden', !needShowHasMoreButton);
