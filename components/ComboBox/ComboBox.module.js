@@ -3,6 +3,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "Core/Deferred",
    "js!SBIS3.CONTROLS.TextBox",
    "html!SBIS3.CONTROLS.ComboBox",
+   "html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxPicker",
    "js!SBIS3.CONTROLS.PickerMixin",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
    "js!WS.Data/Collection/RecordSet",
@@ -10,11 +11,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "js!SBIS3.CONTROLS.Selectable",
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.SearchMixin",
+   "js!SBIS3.CONTROLS.ScrollContainer",
+   "js!SBIS3.CORE.MarkupTransformer",
    "html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown",
    "html!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate",
    "html!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
    "Core/core-instance"
-], function ( constants, Deferred,TextBox, dotTplFn, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
+], function ( constants, Deferred,TextBox, dotTplFn, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, MarkupTransformer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора.
@@ -85,6 +88,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
    var ComboBox = TextBox.extend([PickerMixin, ItemsControlMixin, Selectable, DataBindMixin, SearchMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       _dotTplFn: dotTplFn,
+      _dotTplFnPicker: dotTplFnPicker,
       /**
        * @typedef {Object} ItemsComboBox
        * @property {String} title Текст пункта меню.
@@ -380,17 +384,17 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             if (newText != this._options.text) {
                ComboBox.superclass.setText.call(this, newText);
                this._drawNotEditablePlaceholder(newText);
-               $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(newText);
-               /*управлять этим классом надо только когда имеем дело с рекордами
-               * потому что только в этом случае может прийти рекорд с пустым ключом null, в случае ENUM это не нужно
-               * вообще этот участок кода нехороший, помечу его TODO
-               * планирую избавиться от него по задаче https://inside.tensor.ru/opendoc.html?guid=fb9b0a49-6829-4f06-aa27-7d276a1c9e84&description*/
-               if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
-                  this._container.toggleClass('controls-ComboBox_emptyValue', (key === null));
-               }
-               else {
-                  this._container.removeClass('controls-ComboBox_emptyValue');
-               }
+               $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(newText);                              
+            }
+            /*управлять этим классом надо только когда имеем дело с рекордами
+             * потому что только в этом случае может прийти рекорд с пустым ключом null, в случае ENUM это не нужно
+             * вообще этот участок кода нехороший, помечу его TODO
+             * планирую избавиться от него по задаче https://inside.tensor.ru/opendoc.html?guid=fb9b0a49-6829-4f06-aa27-7d276a1c9e84&description*/
+            if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
+               this._container.toggleClass('controls-ComboBox_emptyValue', (key === null));
+            }
+            else {
+               this._container.removeClass('controls-ComboBox_emptyValue');
             }
          }
          else {
@@ -462,13 +466,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             },
             closeByExternalClick: true,
             targetPart: true,
-            activableByClick: false
+            activableByClick: false,
+            template : MarkupTransformer(this._dotTplFnPicker)({})
          };
       },
 
       _getItemsContainer: function () {
          if (this._picker){
-         	return this._picker.getContainer();
+         	return $('.controls-ComboBox__list', this._picker.getContainer()[0]);
          } else {
          	return null;
          }
@@ -544,10 +549,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   noItems = false;
                   selKey = item.getId();
                   self._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
+                  self._options.selectedIndex = self._getItemIndexByKey(self._options.selectedKey);
                   //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
                   if (oldKey !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
-                     self._notifySelectedItem(self._options.selectedKey);
-                     self._drawSelectedItem(self._options.selectedKey);
+                     self._notifySelectedItem(self._options.selectedKey, self._options.selectedIndex);
+                     self._drawSelectedItem(self._options.selectedKey, self._options.selectedIndex);
                   }
                });
 

@@ -92,19 +92,24 @@
 }
 
 .controls-DropdownList__picker {
-  cursor: @DropdownList-cursor;
-  .controls-DropdownList__item, .controls-DropdownList__selectedItem *{
-    font-size: 15px;
+  .controls-DropdownList__scrollContainer{
+    height: 100%;
   }
 
-  &.controls-DropdownList__equalsWidth {
+  .controls-DropdownList__item, .controls-DropdownList__selectedItem *{
+    font-size: 15px;
+    cursor: @DropdownList-cursor;
+  }
+
+  &.controls-DropdownList__equalsWidth.controls-FloatArea {
       .controls-DropdownList__body {
-         border-radius: @DropdownList-picker-list-border-radius;
+         border-radius: @DropdownList-picker-list-border-radius-equal;
       }
    }
    &.controls-DropdownList__type-fastDataFilter {
      .controls-DropdownList__body {
        max-width: 400px;
+       border-radius: @DropdownList-picker-list-right-border-radius;
      }
      .controls-DropdownList__selectedItem{
        .controls-DropdownList__textWrapper{
@@ -132,34 +137,39 @@
          padding-right: 4px;
        }
      }
-     .controls-DropdownList__item{
-       padding: 6px 16px;
-       .controls-DropdownList__itemTextWrapper{
-         position: relative;
-         //Блок с "размытием" располагается в том месте, где должен быть padding для текста. если текст заезжает на этот паддинг,
-         //то будет скрыт в размытии, кодом, описанном ниже. Так как ограничение ширины установлено через max-width,
-         //мы не знаем, какой именно текст уместился в контейнер, а какой нет.
-         &:after {
-           content: '';
-           position: absolute;
-           top: 0;
-           bottom: 0;
-           right: -4px;
-           width: 4px;
-           background: linear-gradient(to left, @DropdownList-picker-menu-item-color, @DropdownList-picker-menu-item-color-blur);
-         }
-         .controls-DropdownList__item-text{
-           overflow: hidden;
-           white-space: nowrap;
-           width: calc(~"100% + 4px"); //Если текст не влезает, то уйдет в "размытие" на 4px
-         }
-       }
-       &:hover {
-         .controls-DropdownList__itemTextWrapper:after {
-           background: linear-gradient(to left, @DropdownList-picker-menu-item-hover, @DropdownList-picker-menu-item-hover-blur);
-         }
-       }
+     .controls-DropdownList__body {
+       margin-top: @DropdownList-picker-margin-top;
+         .controls-DropdownList__item{
+            padding: 6px 16px;
+            position: relative;
+            //Блок с "размытием" располагается в том месте, где должен быть padding для текста. если текст заезжает на этот паддинг,
+            //то будет скрыт в размытии, кодом, описанном ниже. Так как ограничение ширины установлено через max-width,
+            //мы не знаем, какой именно текст уместился в контейнер, а какой нет.
+            &:after {
+               content: '';
+               position: absolute;
+               top: 0;
+               bottom: 0;
+               right: 0;
+               width: 6px;
+               background: linear-gradient(to left, @DropdownList-picker-menu-item-color, @DropdownList-picker-menu-item-color-blur);
+            }
+           .controls-DropdownList__itemTextWrapper{
+              position: relative;
+              .controls-DropdownList__item-text{
+                 overflow: hidden;
+                 white-space: nowrap;
+                 width: calc(~"100% + 4px"); //Если текст не влезает, то уйдет в "размытие" на 4px
+              }
+           }
+           &:hover {
+              &:after {
+                 background: linear-gradient(to left, @DropdownList-picker-menu-item-hover, @DropdownList-picker-menu-item-hover-blur);
+              }
+           }
+        }
      }
+
      .controls-DropdownList__multiselect.controls-DropdownList__item{
        padding: 6px 16px 6px 0;
        .controls-DropdownList__itemTextWrapper{
@@ -168,6 +178,11 @@
      }
    }
    &.controls-popup-revert-horizontal{
+      &.controls-DropdownList__type-fastDataFilter {
+        .controls-DropdownList__body {
+          border-radius: @DropdownList-picker-list-left-border-radius;
+       }
+      }
       .controls-DropdownList__header{
          float: right;
         .controls-DropdownList{
@@ -176,7 +191,6 @@
       }
       .controls-DropdownList__body{
          margin-top: @DropdownList-min-height;
-         border-radius: @DropdownList-picker-list-left-border-radius;
       }
    }
    .controls-DropdownList__header {
@@ -209,6 +223,7 @@
     }
     .controls-DropdownList__body {
       border-radius: @DropdownList-picker-list-border-radius;
+      margin-top: @DropdownList-picker-margin-top;
     }
     .controls-DropdownList__pickerHead {
       font-weight: bold;
@@ -247,11 +262,12 @@
    }
    .controls-DropdownList__body {
       z-index: 1;
+      height: calc(~"100% - 50px"); /* Отступ шапки 40px + 10px от края экрана*/
       border: @DropdownList-picker-border;
-      border-radius: @DropdownList-picker-list-right-border-radius;
+      border-radius: @DropdownList-picker-list-border-radius;
       background: @DropdownList-picker-bg;
-      margin-top: @DropdownList-picker-margin-top;
       padding: @DropdownList-picker-padding;
+      max-height: @DropdownList-picker-max-height;
    }
    &.controls-FloatArea {
       background: transparent;
@@ -383,4 +399,23 @@
   .controls-DropdownList .controls-DropdownList__selectedItem{
     display: inline-flex;
   }
+}
+
+/* Все ie без поддержки flexBox'a
+   TODO: Выпилить 1 января 2017 года
+*/
+.ws-is-ie8, .ws-is-ie9 {
+   .controls-DropdownList__picker.controls-DropdownList__type-fastDataFilter {
+      .controls-DropdownList__header {
+         height: 24px;
+      }
+      .controls-DropdownList__body {
+         margin-top: -6px;
+      }
+      &.controls-popup-revert-horizontal {
+         .controls-DropdownList__body {
+            margin-top: @DropdownList-min-height;
+         }
+      }
+   }
 }

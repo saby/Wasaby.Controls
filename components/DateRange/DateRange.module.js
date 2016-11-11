@@ -14,28 +14,62 @@ define('js!SBIS3.CONTROLS.DateRange', [
 ], function (CompoundControl, PickerMixin, dotTplFn, DateUtil, FormWidgetMixin, RangeMixin, DateRangeMixin, DateRangeBigChoose) {
    'use strict';
    /**
-    * SBIS3.CONTROLS.DateRange
+    * Класс контрола выбора диапазона дат.
     * @class SBIS3.CONTROLS.DateRange
     * @extends $ws.proto.CompoundControl
-    * @author Крайнов Дмитрий Олегович
+    * @author Миронов Александр Юрьевич
+    *
     * @demo SBIS3.CONTROLS.Demo.MyDateRange
+    *
+    * @ignoreEvents onChange
     *
     * @control
     * @public
     * @category Date/Time
     */
    var DateRange = CompoundControl.extend([RangeMixin, DateRangeMixin, PickerMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateRange.prototype */{
+      /**
+       * @event onDateRangeChange При изменении диапазона дат как через поле ввода, так и через календарь.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Date|String} startDate Начальная дата диапазона.
+       * @param {Date|String} endDate Конечная дата диапазона.
+       */
+      /**
+       * @event onStartDateChange При изменении начальной даты диапазона как через поле ввода, так и через календарь.
+       * @remark
+       * Событие также происходит при использовании метода {@link setStartDate}.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Date|String} startDate Начальная дата диапазона.
+       * @see setStartDate
+       */
+      /**
+       * @event onStartDateChange При изменении конечной даты диапазона как через поле ввода, так и через календарь.
+       * @remark
+       * Событие также происходит при использовании метода {@link setEndDate}.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Date|String} endDate Конечная дата диапазона.
+       * @see setEndDate
+       */
+
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
             /**
-             * @cfg {Date|String} Начальная дата диапазона
-             * При задании задается вместе с endDate, либо обе даты остаются не заданными
+             * @cfg {Date|String} Устанавливает начальную дату диапазона.
+             * @remark
+             * Опцию устанавливают вместе с {@link endtDate}, либо обе даты остаются не заданными.
+             * @see endtDate
+             * @see setStartDate
+             * @see getStartDate
              */
             startDate: null,
             /**
-             * @cfg {Date|String} Конечная дата диапазона
-             * При задании задается вместе с startDate, либо обе даты остаются не заданными
+             * @cfg {Date|String} Устанавливает конечную дату диапазона.
+             * @remark
+             * Опцию устанавливают вместе с {@link startDate}, либо обе даты остаются не заданными.
+             * @see startDate
+             * @see setEndDate
+             * @see getEndDate
              */
             endDate: null
          },
@@ -197,9 +231,14 @@ define('js!SBIS3.CONTROLS.DateRange', [
       },
 
       /**
-       * Установить начальную дату.
+       * Установить начальную дату диапазона.
+       * @remark
+       * При выполнении метода происходят события {@link onStartDateChange} и {@link onDateRangeChange}.
        * @param {Date|String} newDate Начальная дата диапазона.
        * @see startDate
+       * @see getStartDate
+       * @see onStartDateChange
+       * @see onDateRangeChange
        */
       setStartDate: function(newDate) {
          if (this.setStartValue(newDate)) {
@@ -210,18 +249,24 @@ define('js!SBIS3.CONTROLS.DateRange', [
       },
 
       /**
-       * Получить начальную дату.
-       * @return {Date} Начальная дата диапазона.
+       * Возвращает начальную дату.
+       * @return {Date|String} Начальная дата диапазона.
        * @see startDate
+       * @see setStartDate
        */
       getStartDate: function() {
          return this.getStartValue();
       },
 
       /**
-       * Установить конечную дату.
-       * @param {String} newDate Конечная дата диапазона.
+       * Установить конечную дату диапазона.
+       * @remark
+       * При выполнении метода происходят события {@link onEndDateChange} и {@link onDateRangeChange}.
+       * @param {Date|String} newDate Конечная дата диапазона.
        * @see endDate
+       * @see getEndDate
+       * @see onEndDateChange
+       * @see onDateRangeChange
        */
       setEndDate: function(newDate) {
          if (this.setEndValue(newDate)) {
@@ -232,9 +277,10 @@ define('js!SBIS3.CONTROLS.DateRange', [
       },
 
       /**
-       * Получить конечную дату.
-       * @return {Date} Конечная дата диапазона.
+       * Возвращает конечную дату диапазона.
+       * @return {Date|String} Конечная дата диапазона.
        * @see endDate
+       * @see setEndDate
        */
       getEndDate: function() {
          return this._normalizeEndDate(this.getEndValue());

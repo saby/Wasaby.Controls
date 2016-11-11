@@ -21,6 +21,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "js!WS.Data/Collection/RecordSet",
    "js!WS.Data/Display/Display",
+   "js!SBIS3.CONTROLS.ScrollContainer",
    "html!SBIS3.CONTROLS.DropdownList",
    "html!SBIS3.CONTROLS.DropdownList/DropdownListHead",
    "html!SBIS3.CONTROLS.DropdownList/DropdownListPickerHead",
@@ -31,24 +32,29 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "i18n!SBIS3.CONTROLS.DropdownList"
 ],
 
-   function (constants, Deferred, IoC, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker, cInstance, dcHelpers) {
+   function (constants, Deferred, IoC, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker, cInstance, dcHelpers) {
 
       'use strict';
       /**
-       * Контрол, отображающий по клику или ховеру список однотипных сущностей.
-       * Выпадающий список с разными вариантами отображения и возможностью задать для сущностей шаблон отображения.
+       * Контрол, который отображает в выпадающем списке список однотипных сущностей.
        * @class SBIS3.CONTROLS.DropdownList
        * @extends $ws.proto.CompoundControl
-       * @author Крайнов Дмитрий Олегович
-       * @mixes SBIS3.CONTROLS.DSMixin
+       * @author Красильников Андрей Сергеевич
+       *
+       * @mixes SBIS3.CONTROLS.ItemsControlMixin
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @mixes SBIS3.CONTROLS.DropdownListMixin
        * @mixes SBIS3.CONTROLS.PickerMixin
-       * @demo SBIS3.CONTROLS.Demo.MyDropdownList Простой пример работы контрола
-       * @demo SBIS3.CONTROLS.Demo.MyDropdownListFilter Выпадающий список с фильтрацией
+       * @mixes SBIS3.CONTROLS.DataBindMixin
+       *
+       * @demo SBIS3.CONTROLS.Demo.MyDropdownList <b>Пример 1.</b> Простой пример работы контрола
+       * @demo SBIS3.CONTROLS.Demo.MyDropdownListFilter <b>Пример 2.</b> Выпадающий список с фильтрацией.
+       *
        * @ignoreOptions emptyHTML
        * @ignoreMethods setEmptyHTML
-       * @cssModifier controls-DropdownList__withoutCross Убрать крестик справа от выбранного текста.
+       *
+       * @cssModifier controls-DropdownList__withoutCross Скрывает крестик справа от выбранного значения.
+       *
        * @control
        * @public
        * @category Inputs
@@ -84,143 +90,120 @@ define('js!SBIS3.CONTROLS.DropdownList',
       var DropdownList = Control.extend([PickerMixin, ItemsControlMixin, MultiSelectable, DataBindMixin, DropdownListMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
          _dotTplFn: dotTplFn,
          /**
-          * @event onClickMore При клике на кнопку "Ещё"
+          * @event onClickMore Происходит при клике на кнопку "Ещё", которая отображается в выпадающем списке.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           */
          $protected: {
             _options: {
                _getRecordsForRedraw: getRecordsForRedrawDDL,
                /**
-                * @cfg {String} Устанавливает шаблон отображения заголовка выпадающего списка.
+                * @cfg {String} Устанавливает шаблон отображения шапки.
                 * @remark
-                * Шаблон - это XHTML-файл с вёрсткой заголовка. Этот шаблон должен быть создан в компоненте в подпапке resources.
-                * Так его можно использовать, как и любой другой шаблон, в разных компонентах.
-                * Кроме шаблона отображения заголовка можно установить шаблон отображения элемента коллекции с помощью опции {@link itemTpl}.
-                * @example
-                * Чтобы можно было использовать шаблон в компоненте и передать в опцию headTemplate, нужно выполнить следующее:
+                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/logicless-template/">logicless-шаблонизатора</a> и <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/">doT.js-шаблонизатора</a>.
+                * Шаблон создают в компоненте в подпапке resources.
+                * Порядок работы с шаблоном:
                 * <ol>
                 *    <li>Подключить шаблон в массив зависимостей компонента.</li>
                 *    <li>Импортировать его в отдельную переменную.</li>
-                *    <li>В сецкии $protected в подсекции _options создать опцию, значением которой передать шаблон (переменная из предыдущего шага).
-                *       <pre>
-                *          define('js!SBIS3.MyArea.MyComponent',
-                *             [ // Массив зависимостей компонента
-                *                ...
-                *                'html!SBIS3.MyArea.MyComponent/resources/myHeadTpl' // Подключаем шаблон в массив зависимостей компонента
-                *             ],
-                *             function(..., myHeadTpl){ // Импортируем шаблон в отдельную переменную
-                *                ...
-                *                $protected: {
-                *                   _options: {
-                *                      ...
-                *                      myHeadTemplate: myHeadTpl // Создаём новую опцию компонента, в которую передаём шаблон заголовка
-                *                   }
-                *                }
-                *                ...
-                *          });
-                *       </pre>
-                *    </li>
+                *    <li>В сецкии $protected в подсекции _options создать опцию, значением которой передать шаблон (переменная из предыдущего шага).</li>
                 *    <li>В вёрстке компонента в значение опции headTemplate передать значение опции с помощью инструкций шаблонизатора.
-                *       <pre>
-                *          <option name="headTemplate" type="ref">{{@it.myHeadTemplate}}</option>
-                *       </pre>
                 *    </li>
                 * </ol>
-                * Шаблон может быть любым. Например, такой шаблон:
+                * @example
+                * Подключение, импорт в переменную и передача шаблона в переменную:
                 * <pre>
-                *    <div class="docs-myHeadTemplate">
-                *       <span class="docs-myHeadTemplate__span">Мой заголовок</span>
-                *    </div>
+                * define('js!SBIS3.MyArea.MyComponent',
+                *    [ ... , 'html!SBIS3.MyArea.MyComponent/resources/myHeadTpl' ],
+                *    function(..., myHeadTpl){
+                *       ...
+                *       $protected: {
+                *          _options: {
+                *             myHeadTemplate: myHeadTpl
+                *          }
+                *       }
+                *       ...
+                * });
+                * </pre>
+                * Передача шаблона в опцию компонента:
+                * <pre>
+                *    <option name="headTemplate" type="ref">{{@it.myHeadTemplate}}</option>
                 * </pre>
                 * @editor ExternalComponentChooser
+                * @see headPickerTemplate
                 * @see itemTpl
                 */
                headTemplate: dotTplFnHead,
+               /**
+                *  @cfg {String} Устанавливает шаблон отображения шапки внутри выпадающего списка.
+                *  @see headTemplate
+                *  @see itemTpl
+                */
                headPickerTemplate: dotTplFnPickerHead,
                /**
-                * @cfg {String} Устанавливает шаблон отображения элемента коллекции.
+                * @cfg {String} Устанавливает шаблон отображения элемента коллекции выпадающего списка.
                 * @remark
-                * Шаблон - это XHTML-файл с вёрсткой элемента коллекции. Этот шаблон должен быть создан в компоненте в подпапке resources.
-                * Так его можно использовать, как и любой другой шаблон, в разных компонентах.
-                * Кроме шаблона отображения элемента коллекции можно установить шаблон отображения заголовка с помощью опции {@link headTemplate}.
-                * Из шаблона можно получить доступ к записи с помощью инструкци шаблонизатора:
-                * <pre>
-                *    {{=it.item.get(it.displayField)}}
-                * </pre>
+                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/logicless-template/">logicless-шаблонизатора</a> и <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/">doT.js-шаблонизатора</a>.
+                * Шаблон создают в компоненте в подпапке resources.
                 * @example
                 * Чтобы можно было использовать шаблон в компоненте и передать в опцию itemTpl, нужно выполнить следующее:
                 * <ol>
                 *    <li>Подключить шаблон в массив зависимостей компонента.</li>
                 *    <li>Импортировать его в отдельную переменную.</li>
-                *    <li>В сецкии $protected в подсекции _options создать опцию, значением которой передать шаблон (переменная из предыдущего шага).
-                *       <pre>
-                *          define('js!SBIS3.MyArea.MyComponent',
-                *             [ // Массив зависимостей компонента
-                *                ...
-                *                'html!SBIS3.MyArea.MyComponent/resources/myItemTpl' // Подключаем шаблон в массив зависимостей компонента
-                *             ],
-                *             function(..., myItemTpl){ // Импортируем шаблон в отдельную переменную
-                *                ...
-                *                $protected: {
-                *                   _options: {
-                *                      ...
-                *                      myitemTpl: myItemTpl // Создаём новую опцию компонента, в которую передаём шаблон элемента коллекции
-                *                   }
-                *                }
-                *                ...
-                *          });
-                *       </pre>
-                *    </li>
-                *    <li>В вёрстке компонента в значение опции itemTpl передать значение опции с помощью инструкций шаблонизатора.
-                *       <pre>
-                *          <option name="itemTpl" type="ref">{{@it.myitemTpl}}</option>
-                *       </pre>
-                *    </li>
+                *    <li>В сецкии $protected в подсекции _options создать опцию, значением которой передать шаблон (переменная из предыдущего шага).</li>
+                *    <li>В вёрстке компонента в значение опции itemTpl передать значение опции с помощью инструкций шаблонизатора.</li>
                 * </ol>
-                * Шаблон может быть любым. Например, такой шаблон:
+                * @example
+                * Подключение, импорт в переменную и передача шаблона в переменную:
                 * <pre>
-                *    <div class="docs-myItemTpl">
-                *       {{=it.item.get(it.displayField)}}
-                *       <span class="docs-myItemTpl__span">Мой подтекст рядом с записью</span>
-                *    </div>
+                * define('js!SBIS3.MyArea.MyComponent',
+                *    [ ..., 'html!SBIS3.MyArea.MyComponent/resources/myItemTpl' ],
+                *    function(..., myItemTpl){
+                *       ...
+                *       $protected: {
+                *          _options: {
+                *             newItemTpl: myItemTpl // Создаём новую опцию компонента, в которую передаём шаблон элемента коллекции
+                *          }
+                *       }
+                *    ...
+                * });
+                * </pre>
+                * Передача шаблона в опцию компонента:
+                * <pre>
+                *     <option name="itemTpl" type="ref">{{@it.newItemTpl}}</option>
                 * </pre>
                 * @editor ExternalComponentChooser
                 * @see headTemplate
+                * @see headPickerTemplate
                 */
                itemTpl: dotTplFnForItem,
                /**
-                * @cfg {String} Режим работы выпадающего списка
-                * @remark
-                * По умолчанию - 'hover'
-                * Если задать 'click', то работа будет по клику
+                * @cfg {String} Устанавливает режим открытия выпадающего списка.
+                * @variant click Открытие клику на заголовок.
+                * @variant hover Открытие по наведению курсора мыши.
                 */
                mode: 'click',
                /**
-                * @cfg {String} Текст заголовка
+                * @cfg {String} Устанавливает текст в заголовке.
                 * @translatable
                 */
                text : '',
                /**
-                * @cfg {String} Текст заголовка в headPickerTemplate
+                * @cfg {String} Устанавливает текст, отображаемый в шапке выпадающего списка используемый (см. {@link headPickerTemplate}).
                 * @remark
-                * Используется только совместно с опцией type = 'titleHeader'
+                * Опция актуальная, если {@link type} = 'titleHeader'.
                 */
                title: '',
                /**
-                * @cfg {String} Стилистическое отображение выпадающего списка
-                * @remark
-                * Возможные значение
-                * <ul>
-                *    <li><b>simple</b> - значение по умолчанию. В выпадающем списке отображаются все доступные записи</li>
-                *    <li><b>duplicateHeader</b> - В выпадающем списке выбранное значение дублируется в шапке</li>
-                *    <li><b>titleHeader</b> - В шапке отображается заголовок, установленный в опции title</li>
-                * </ul>
+                * @cfg {String} Устанавливает режим отображения выпадающего списка.
+                * @variant simple В выпадающем списке отображаются только элементы коллекции.
+                * @variant duplicateHeader В выпадающем списке выбранное значение дублируется в шапке.
+                * @variant titleHeader В шапке отображается текст, установленный в опции {@link title}.
                 */
                type: 'simple',
                /**
                 * @cfg {String} Устанавливает поле иерархии.
                 * @remark
-                * Полем иерархии называют поле записи, по значениям которой устанавливаются иерархические отношения между записями набора данных.
+                * По значениям поля иерархии иерархические отношения между элементами коллекции выпадающего списка.
                 */
                hierField: null,
                allowEmptyMultiSelection: false,
@@ -292,6 +275,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return {
                item: item,
                itemTpl: TemplateUtil.prepareTemplate(this._options.itemTpl),
+               defaultItemTpl: dotTplFnForItem,
                defaultId: this._defaultId,
                displayField: this._options.displayField,
                hierField: this._options.hierField,
@@ -442,6 +426,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                }
                DropdownList.superclass.showPicker.apply(this, arguments);
 
+               this._pickerBodyContainer.css('max-width', '');
                pickerBodyWidth = this._pickerBodyContainer[0].clientWidth;
                pickerHeaderWidth = this._pickerHeadContainer[0].clientWidth;
                this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', pickerBodyWidth === pickerHeaderWidth);
@@ -504,14 +489,16 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   this._defaultId = item.getId();
                }
                this._getHtmlItemByItem(item).addClass('controls-ListView__defaultItem');
-               if (this._buttonHasMore) {
-                  var needShowHasMoreButton = this._hasNextPage(this.getItems().getMetaData().more, 0);
-                  if (!this._options.multiselect){
-                     this._buttonHasMore.getContainer().closest('.controls-DropdownList__buttonsBlock').toggleClass('ws-hidden', !needShowHasMoreButton);
-                  }
-                  else{
-                     this._buttonHasMore[needShowHasMoreButton ? 'show' : 'hide']();
-                  }
+            }
+         },
+         _setHasMoreButtonVisibility: function(){
+            if (this._buttonHasMore) {
+               var needShowHasMoreButton = this._hasNextPage(this.getItems().getMetaData().more, 0);
+               if (!this._options.multiselect){
+                  this._buttonHasMore.getContainer().closest('.controls-DropdownList__buttonsBlock').toggleClass('ws-hidden', !needShowHasMoreButton);
+               }
+               else{
+                  this._buttonHasMore[needShowHasMoreButton ? 'show' : 'hide']();
                }
             }
          },
@@ -628,6 +615,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             this._setText(this._prepareText(textValue));
             this._redrawHead(isDefaultIdSelected);
+            this._setHasMoreButtonVisibility();
             this._resizeFastDataFilter();
          },
 
@@ -699,11 +687,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _setPickerConfig: function () {
             var pickerClassName,
                offset = {
-                   top: -8,
+                   top: -10,
                    left: -10
                 };
             if (this._options.type == 'duplicateHeader'){
-               offset.top = -10;
                pickerClassName = 'controls-dropdownlist__showHead controls-DropdownList__type-duplicateHeader';
             }
             else if (this._options.type == 'titleHeader'){

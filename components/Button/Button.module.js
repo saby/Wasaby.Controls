@@ -201,7 +201,13 @@ define('js!SBIS3.CONTROLS.Button', [
             }
          }
          var self = this;
-         this.sendCommand('registerDefaultButtonAction', defaultAction);
+
+         // регистрироваться имеют права только видимые кнопки. если невидимая кнопка зарегистрируется, мы нажмем enter и произойдет неведомое действие
+         if (this.isVisible()) {
+            // сначала отменяем регистрацию текущего действия по умолчанию, а потом регистрируем новое действие
+            this._unregisterDefaultButton();
+            this.sendCommand('registerDefaultButtonAction', defaultAction, this);
+         }
       },
        /**
         * @noShow

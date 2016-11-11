@@ -134,8 +134,19 @@
       z-index: 10;
    }
 
-   .controls-ListView__loadMoreButton{
+   .controls-ListView__serviceFooter {
+      height: @listView-servicefooter-height;
+      line-height: @listView-servicefooter-height;
+      padding: @listView-servicefooter-padding;
+   }
+
+   .controls-ListView__counter {
       float: right;
+      color: @gray-color;
+      font-size: @listView-servicefooter-fontsize;
+      display: inline-block;
+      height: @listView-servicefooter-height;
+      line-height: @listView-servicefooter-height;
    }
 
    &.controls-ListView__orangeMarker {
