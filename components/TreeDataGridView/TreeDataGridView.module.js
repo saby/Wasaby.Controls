@@ -310,7 +310,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
                      // TODO для обратной совместимости - удалить позже
                      if(self._options.arrowActivatedHandler) {
-                        IoC.resolve('ILogger').log('SBIS3.CONTROLS.TreeDataGridView', 'Опция arrowActivatedHandler помечена как deprecated и будет удалена в 3.7.4.200.');
+                        IoC.resolve('ILogger').error('SBIS3.CONTROLS.TreeDataGridView', 'Опция arrowActivatedHandler помечена как deprecated и будет удалена в 3.7.5');
                         self._options.arrowActivatedHandler.call(this,
                             hoveredItem.record,
                             id,
