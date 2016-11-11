@@ -135,28 +135,33 @@
      .controls-DropdownList__item{
        padding: 6px 16px;
        position: relative;
-       //Блок с "размытием" располагается в том месте, где должен быть padding для текста. если текст заезжает на этот паддинг,
-       //то будет скрыт в размытии, кодом, описанном ниже. Так как ограничение ширины установлено через max-width,
-       //мы не знаем, какой именно текст уместился в контейнер, а какой нет.
-       &:after {
-          content: '';
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          right: 0;
-          width: 6px;
-          background: linear-gradient(to left, @DropdownList-picker-menu-item-color, @DropdownList-picker-menu-item-color-blur);
-        }
        .controls-DropdownList__itemTextWrapper{
          position: relative;
-         .controls-DropdownList__item-text{
-           overflow: hidden;
-           white-space: nowrap;
-           width: calc(~"100% + 4px"); //Если текст не влезает, то уйдет в "размытие" на 4px
+         overflow: hidden;
+         &.controls-DropdownList__itemTextWrapper-height{
+            /*Этот класс для того, чтобы не сломать прикладные шаблоны
+              Для работы затемнения, нужно указать высоту контейнера*/
+            height: 20px;
          }
+         .controls-DropdownList__item-text{
+            overflow: hidden;
+            white-space: nowrap;
+            float: left;
+            display: inline-block;
+         }
+          .controls-DropdownList__item-text-shadow {
+             float: right;
+             width: 24px;
+             margin-left: -24px;
+             display: inline-block;
+             height: 20px;
+             position: relative;
+             top: -20px;
+             background: linear-gradient(to left, @DropdownList-picker-menu-item-color, @DropdownList-picker-menu-item-color-blur);
+          }
        }
        &:hover {
-         &:after {
+         .controls-DropdownList__item-text-shadow {
            background: linear-gradient(to left, @DropdownList-picker-menu-item-hover, @DropdownList-picker-menu-item-hover-blur);
          }
        }
@@ -269,7 +274,6 @@
         .controls-DropdownList__item-text{
           overflow: hidden;
           white-space: nowrap;
-          width: 100%;
         }
       }
       &.controls-DropdownList__child{
