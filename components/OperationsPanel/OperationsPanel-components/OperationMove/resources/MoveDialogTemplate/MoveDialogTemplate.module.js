@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.TreeDataGridView",
    "i18n!SBIS3.CONTROLS.MoveDialogTemplate"
-], function( CommandDispatcher,Control, dotTplFn, cInstancem, colHelpers) {
+], function( CommandDispatcher,Control, dotTplFn, cInstance, colHelpers) {
 
    var MoveDialogTemplate = Control.extend({
       _dotTplFn: dotTplFn,

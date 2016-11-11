@@ -4,9 +4,10 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'js!SBIS3.CONTROLS.Action.DialogMixin',
       'Core/helpers/string-helpers',
       'js!WS.Data/Di',
-      'Core/Indicator'
+      'Core/Indicator',
+      'Core/core-merge'
    ],
-   function (ListMove, DialogMixin, strHelpers, Di, Indicator) {
+   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge) {
       'use strict';
       /**
        * Действие перемещения по иерархии с выбором места перемещения через диалог.
@@ -94,9 +95,19 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
 
       var InteractiveMove = ListMove.extend([DialogMixin],/** @lends SBIS3.CONTROLS.Action.List.InteractiveMove.prototype */{
          $protected:{
+            /**
+             * @typedef {Object} componentOptions
+             * @property {String} displayField Поле элемента коллекции, из которого отображать данные.
+             * @property {Object} filter Фильтр данных.
+             * @property {Boolean} partialyReload Устанавливает поведение загрузки дочерних данных для записей типа "Узел" (папка) и "Скрытый узел".
+             */
             _options : {
                template : 'js!SBIS3.CONTROLS.MoveDialogTemplate',
-               parentProperty: undefined
+               parentProperty: undefined,
+               /**
+                * @cfg {componentOptions} Набор опций для компонента отображающего список.
+                */
+               componentOptions: null
             }
          },
 
@@ -107,27 +118,26 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             this._opendEditComponent({
                title: rk('Перенести') + ' ' + movedItems.length + strHelpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
                cssClassName: 'controls-moveDialog',
-               opener: this._options.linkedObject,
-               movedItems: movedItems
+               opener: this._getListView(),
+               movedItems: movedItems,
+               componentOptions: meta.componentOptions
             }, this._options.template);
-
          },
 
          _buildComponentConfig: function(meta) {
-            var self = this;
-            return {
-               linkedView: this._options.linkedObject,
+            var self = this,
+               options = cMerge(meta.componentOptions||{}, this._options.componentOptions||{});
+            return cMerge(options, {
+               linkedView: this._getListView(),
                dataSource: this.getDataSource(),
+               hierField: this._options.parentProperty,
                records: meta.movedItems,
                handlers: {
-                  onPrepareFilterOnMove: function(event, rec) {
-                     event.setResult(self._options.linkedObject._notify('onPrepareFilterOnMove', rec));
-                  },
                   onMove: function(e, movedItems, target) {
                      self._move(movedItems, target);
                   }
                }
-            };
+            });
          },
 
          _move: function(movedItems, target) {
