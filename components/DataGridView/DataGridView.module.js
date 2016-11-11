@@ -84,6 +84,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                displayField : tplOptions.displayField
             };
             tplOptions.startScrollColumn = cfg.startScrollColumn;
+            tplOptions.columnsScrollPosition = this._currentScrollPosition ? this._getColumnsScrollPosition() : 0;
             buildTplArgsLadder(tplOptions.cellData, cfg);
 
             return tplOptions;
@@ -583,6 +584,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             isSearch : args.isSearch
          };
          args.startScrollColumn = cfg.startScrollColumn;
+         args.currentScrollPosition = this._getColumnsScrollPosition();
          buildTplArgsLadder(args.cellData, cfg);
 
          return args;
@@ -606,6 +608,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._bindHead();
          }
          headData = prepareHeadData(this._options);
+         headData.columnsScrollPosition = this._getColumnsScrollPosition();
+         headData.thumbPosition = this._currentScrollPosition;
          headMarkup = MarkupTransformer(this._options._headTpl(headData));
          var body = $('.controls-DataGridView__tbody', this._container);
 
@@ -1019,12 +1023,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _moveThumbAndColumns: function(cords) {
          this._currentScrollPosition = this._checkThumbPosition(cords);
-         var movePosition = -this._currentScrollPosition*this._partScrollRatio;
+         var movePosition = this._getColumnsScrollPosition();
 
          this._setThumbPosition(this._currentScrollPosition);
          for(var i= 0, len = this._movableElems.length; i < len; i++) {
             this._movableElems[i].style.left = movePosition + 'px';
          }
+      },
+
+      _getColumnsScrollPosition: function() {
+         return -this._currentScrollPosition*this._partScrollRatio;
       },
 
       _setThumbPosition: function(cords) {
@@ -1060,13 +1068,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _findMovableCells: function() {
          this._movableElems = this._container.find('.controls-DataGridView__scrolledCell');
-      },
-
-      _appendResultsContainer: function(container, resultRow){
-         DataGridView.superclass._appendResultsContainer.call(this, container, resultRow);
-         if(this.hasPartScroll()) {
-            this.updateScrollAndColumns();
-         }
       },
 
       _checkThumbPosition: function(cords) {
@@ -1159,6 +1160,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
         */
        setColumns : function(columns) {
           this._options.columns = columns;
+          this._currentScrollPosition = 0;
           checkColumns(this._options);
           this._destroyEditInPlace();
        },
@@ -1215,6 +1217,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
          });
          return data;
       },
+
+      _getResultsTplCfg: function() {
+         var cfg = DataGridView.superclass._getResultsTplCfg.apply(this, arguments);
+         cfg.startScrollColumn = this._options.startScrollColumn;
+         cfg.columnsScrollPosition = this._getColumnsScrollPosition();
+         return cfg;
+      },
+
       _getColumnResultTemplate: function (column, index, result, item) {
          var columnTpl = result;
          if (column.resultTemplate) {

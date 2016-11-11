@@ -4,7 +4,8 @@
       {{=j}}="{{=it.attributes[j]}}"
    {{}}}>
    {{?it.multiselect}}
-   <td class="controls-DataGridView__td controls-DataGridView__td__checkBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
+   {{var isColumnScrolling = it.startScrollColumn !== undefined && it.startScrollColumn === 0;}}
+   <td class="controls-DataGridView__td controls-DataGridView__td__checkBox{{?isColumnScrolling}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}" {{?isColumnScrolling}}style="left:{{=it.columnsScrollPosition}}px;"{{?}}>
       <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"/>
    </td>
    {{?}}

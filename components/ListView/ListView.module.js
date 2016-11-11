@@ -3220,15 +3220,16 @@ define('js!SBIS3.CONTROLS.ListView',
             if (!resultsData){
                return;
             }
-            var item = this._getResultsRecord(),
-               self = this;
-            return MarkupTransformer(TemplateUtil.prepareTemplate(this._options.resultsTpl)({
-               startScrollColumn: self._options.startScrollColumn,
+
+            return MarkupTransformer(TemplateUtil.prepareTemplate(this._options.resultsTpl)(this._getResultsTplCfg(resultsData)));
+         },
+         _getResultsTplCfg: function(resultsData) {
+            return {
                results: resultsData,
-               item: item,
-               columns: cFunctions.clone(self._options.columns),
-               multiselect: self._options.multiselect
-            }));
+               item: this._getResultsRecord(),
+               columns: cFunctions.clone(this._options.columns),
+               multiselect: this._options.multiselect
+            }
          },
          _getResultsData: function(){
             return this._getResultsRecord();
