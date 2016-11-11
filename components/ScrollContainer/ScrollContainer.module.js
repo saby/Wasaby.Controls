@@ -30,9 +30,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        * </component>
        * @author Крайнов Дмитрий Олегович
        */
-      
-      var BROWSER_SCROLLBAR_WIDTH = 0;
-      
+         
       var ScrollContainer = CompoundControl.extend({
 
          _dotTplFn: dotTplFn,
@@ -69,7 +67,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             ScrollContainer.superclass.init.call(this);
             this._content = $('.controls-ScrollContainer__content', this.getContainer());
             if (!cDetection.isMobileIOS && !cDetection.isMobileAndroid){
-               BROWSER_SCROLLBAR_WIDTH = this._getBrowserScrollbarWidth();
                this._container.one('touchstart mousemove', this._initScrollbar.bind(this));
                this._hideScrollbar();
                this._subscribeOnScroll();
@@ -85,9 +82,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _hideScrollbar: function(){
-            var currentPadding = this._content.css('padding-right').replace(/[^0-9.]+/g, ''),
-               style = {
-                  right: -BROWSER_SCROLLBAR_WIDTH  
+            var style = {
+                  right: -this._getBrowserScrollbarWidth()
                }
             this._content.css(style);
          },
