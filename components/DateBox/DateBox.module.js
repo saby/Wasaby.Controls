@@ -204,7 +204,17 @@ define(
              * @noShow
              * @deprecated
              */
-            serializationMode: 'auto'
+            serializationMode: 'auto',
+
+            /**
+             * @cfg {String} Режим работы события onTextChange. В версии 3.7.4.200 значение по умолчанию onActiveChange.
+             * Начиная с версии 3.7.4.220 значение по умолчанию onTextEnter.
+             * Начиная с версии 3.7.5 опция будет убрана, а поведение будет соответствовать значению onTextEnter.
+             * @variant 'onActiveChange' событие стреляет на потере фокуса.
+             * @variant 'onTextEnter' событие стреляет по мере ввода текста.
+             * @deprecated
+             */
+            onTextChangeMode: 'onTextEnter'
          }
       },
 
@@ -232,7 +242,11 @@ define(
             this.setDate(new Date());
          } else if (key == constants.key.plus || key == constants.key.minus) {
             if (curDate) {
+               curDate = new Date(curDate);
                curDate.setDate(curDate.getDate() + (key == constants.key.plus ? 1 : -1));
+               // При обновлении даты создаем новый экземпляр, чтобы корректно работало определение того,
+               // что свойство изменилось во внешнем коде. oldValue === newValue.
+               // Плюс мы не хотим менять когда то возвращенное значение.
                this.setDate(curDate);
             }
          } else {
@@ -449,6 +463,9 @@ define(
             }
             this._setLastDate(this._options.date);
             this._onTextChanged();
+            if (this._options.onTextChangeMode === 'onTextEnter') {
+               this._notifyOnTextChange();
+            }
          }
       },
       //TODO: логика валидации находится на уровне TextBoxBase, но сейчас форматные поля не вызывают функции базового контрола поэтому
@@ -473,7 +490,9 @@ define(
                }
             }
             this._notifyOnDateChanged();
-            this._notifyOnTextChange();
+            if (this._options.onTextChangeMode === 'onActiveChange') {
+               this._notifyOnTextChange();
+            }
          }
          DateBox.superclass.setActive.apply(this, arguments);
       },

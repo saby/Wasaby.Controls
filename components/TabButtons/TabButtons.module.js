@@ -42,6 +42,7 @@ define(
       buildTplArgs = function(cfg) {
          var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
          tplOptions.allowChangeEnable = cfg.allowChangeEnable;
+         tplOptions.selectedKey = cfg.selectedKey;
          return tplOptions;
       },
       getRecordsForRedraw = function(projection) {

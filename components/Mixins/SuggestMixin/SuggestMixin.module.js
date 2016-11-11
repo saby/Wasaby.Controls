@@ -255,7 +255,12 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @variant true Показывать выпадающий блок при пустом списке.
              * @variant false Не показывать выпадающий блок при пустом списке.
              */
-            showEmptyList: true
+            showEmptyList: true,
+            /**
+             * @noshow
+             * @deprecated
+             */
+            reverseItemsOnListRevert: true
          },
          _resultBindings: {},                   /* {Object} Соответствие полей для подстановки в контекст */
          _delayTimer: null,                     /* {Object|null} Таймер задержки загрузки picker-а */
@@ -738,7 +743,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          /* Проверяем, что пикер не отображается,
             т.к. такой проверки на отображение в попапе нет (скорее всего по причине перерасчёта z-index'ов),
             а если позвать show при открытом пикере, то там произойдёт перерасчёт скрола, и становится невозможно выбрать запись. */
-         if (this._options.usePicker && !this.isPickerVisible()) {
+         if (this._options.usePicker && !this.isPickerVisible() && this.isEnabled()) { // Не отображаем автодополнение в задизейбленом состоянии
             PickerMixin.showPicker.apply(this, arguments);
          }
       },

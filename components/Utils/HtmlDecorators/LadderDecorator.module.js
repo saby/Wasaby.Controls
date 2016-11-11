@@ -15,18 +15,16 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
       $protected: {
          _name: 'ladder',
          _options: {
-            ladder: undefined
+            ladder: undefined,
+            ladderInstance: null
          },
-         _ladderLastWords: {},
+         _record: null,
          _columnName: undefined,
-         _parentId: undefined,
          _isCheckCondition: false,
          _markLadderColumn: false,
          _ignoreEnabled: false
       },
 
-      $constructor: function () {
-      },
       /**
        * @param {Object|String} data либо передаем имя колонки, либо объект
        * Структура объекта:
@@ -38,13 +36,11 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
       checkCondition: function(data) {
          var ladderData = data.hasOwnProperty('ladder') && data['ladder'],
             ladderDataType = typeof ladderData;
-         this._parentId = 'null';
          if (!ladderData){
             this._columnName = undefined;
          }
          else if (ladderData && ladderDataType == 'object') {
             this._columnName = ladderData.column;
-            this._parentId = ladderData.parentId || 'null';
          }
          else if (ladderDataType == 'string'){
             this._columnName = ladderData;
@@ -52,28 +48,25 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
          this._isCheckCondition = true;
          return true;
       },
+
       /**
        * Применяет декоратор
        * @param {Object} text Текст для декорирования
        * @returns {*}
        */
       apply: function (text) {
-         if (this._columnName) {
-            IoC.resolve('ILogger').info('LadderDecorator', 'Module SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator is deprecated and will be removed in 3.7.5. Use it.ladder.get(it.item, it.field) instead.');
-         }
-         if (!this._isCheckCondition){
+         if (!this._isCheckCondition || !this._columnName) {
             return text;
          }
          this._isCheckCondition = false;
+         this._notifyDeprecated();
          return this.setLadder(text);
       },
 
-      setMarkLadderColumn: function(enable){
-         this._markLadderColumn = !!enable;
+      setRecord: function (record) {
+         this._record = record;
       },
-      isMarkLadderColumn: function(){
-         return this._markLadderColumn;
-      },
+
       /**
        * Обновляет настройки декоратора
        * @param {Object} control Экземпляр контрола
@@ -81,30 +74,6 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
       update: function (control) {
          LadderDecorator.superclass.update.apply(this, arguments);
          this._options.ladder = control._options.ladder;
-         this._ladderLastWords = {};
-      },
-
-      reset: function(){
-         this._ladderLastWords = {}
-      },
-
-      removeNodeData: function(key){
-         this._ladderLastWords[key] = {};
-      },
-
-      _isLadderColumn: function(){
-         return this._options.ladder && Array.indexOf(this._options.ladder, this._columnName) > -1;
-      },
-
-      isIgnoreEnabled: function(){
-         return this._ignoreEnabled;
-      },
-      setIgnoreEnabled: function(ignore){
-        this._ignoreEnabled = !!ignore;
-      },
-
-      getIgnoreEnabled: function(){
-         return this._ignoreEnabled;
       },
 
       /**
@@ -113,20 +82,48 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
        * @returns {String}
        */
       setLadder: function (text) {
-         if (!this._isLadderColumn()){
-            return text;
-         }
-         if (!this.isMarkLadderColumn() || this.isIgnoreEnabled()){
-            if (!this._ladderLastWords[this._parentId]) {
-               this._ladderLastWords[this._parentId] = {};
-            }
-            else if (this._ladderLastWords[this._parentId][this._columnName] == text) {
-               return '<span class="controls-ladder ws-invisible">' + text + '</span>';
-            }
-            this._ladderLastWords[this._parentId][this._columnName] = text;
-         }
+         var ladder = this._options.ladderInstance,
+            record = this._record,
+            column = this._columnName;
 
-         return '<span class="controls-ladder">' + text + '</span>';
+         if (!record || ladder.isPrimary(record, column)) {
+            return '<span class="controls-ladder">' + text + '</span>';
+         } else {
+            return '<span class="controls-ladder ws-invisible">' + text + '</span>';
+         }
+      },
+
+      reset: function(){},
+
+      setMarkLadderColumn: function(enable){
+         this._markLadderColumn = !!enable;
+      },
+
+      isMarkLadderColumn: function(){
+         return this._markLadderColumn;
+      },
+
+      removeNodeData: function(key){},
+
+      isIgnoreEnabled: function(){
+         return this._ignoreEnabled;
+      },
+
+      setIgnoreEnabled: function(ignore){
+        this._ignoreEnabled = !!ignore;
+      },
+
+      getIgnoreEnabled: function(){
+         return this._ignoreEnabled;
+      },
+
+      _isLadderColumn: function(){
+         return this._options.ladder && Array.indexOf(this._options.ladder, this._columnName) > -1;
+      },
+
+      _notifyDeprecated: function() {
+         IoC.resolve('ILogger').info('LadderDecorator:', 'module SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator is deprecated and will be removed in 3.7.5. Use "it.ladder.get(it.item, it.field)" in your template instead. See https://wi.sbis.ru/docs/WS/Data/Display/Ladder/ for details.');
+         this._notifyDeprecated = function(){};
       }
    });
 

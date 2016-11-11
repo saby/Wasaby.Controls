@@ -74,12 +74,6 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
          if (!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.PickerMixin')) {
             throw new Error('PickerMixin mixin is required');
          }
-         if (!this._options.startValue) {
-            throw new Error('Failed to create the control. startValue option is not specified.');
-         }
-         if (!this._options.endValue) {
-            throw new Error('Failed to create the control. endValue option is not specified.');
-         }
       },
 
       before: {

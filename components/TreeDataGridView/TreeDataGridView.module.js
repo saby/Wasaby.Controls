@@ -25,6 +25,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          cMerge(tplOptions, tvOptions);
          tplOptions.arrowActivatedHandler = cfg.arrowActivatedHandler;
          tplOptions.editArrow = cfg.editArrow;
+         tplOptions.foldersColspan = cfg.foldersColspan;
          return tplOptions;
       },
       getSearchCfg = function(cfg) {
@@ -153,7 +154,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              *     <option name="editArrow" type="boolean">false</option>
              * </pre>
              */
-            editArrow: false
+            editArrow: false,
+            /**
+             * @cfg {Boolean} отображает папки с одной колонкой на всю строку
+             * Значение по умолчанию false
+             * @deprecated
+             */
+            // Добавил опцию для версии 220
+            // с 3.7.5 будет рулиться через пользовательский шаблон
+            foldersColspan: false
          },
          _dragStartHandler: undefined,
          _editArrow: undefined
@@ -183,6 +192,23 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          this._updateEditArrow();
          TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
+
+      //Переопределяем метод, потому что в дереве могут присутствовать футеры папок, и если записи добавляются в конец,
+      //то они добавятся после футера папки, чего быть не должно. Проверим что записи добавляются в конец и добавим их после
+      //последнего элемента, иначе будет выполнена штатная логика.
+      _getInsertMarkupConfig: function(newItemsIndex, newItems) {
+         var
+             lastItem,
+             cfg = TreeDataGridView.superclass._getInsertMarkupConfig.apply(this, arguments);
+
+         if (cfg.inside && !cfg.prepend) {
+            lastItem = this._options._itemsProjection.at(newItemsIndex - 1);
+            cfg.inside = false;
+            cfg.container = this._getDomElementByItem(lastItem);
+         }
+         return cfg;
+      },
+
       _createFolderFooter: function(key) {
          TreeDataGridView.superclass._createFolderFooter.apply(this, arguments);
          var
@@ -453,8 +479,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
       _elemClickHandlerInternal: function(data, id, target, e) {
          var $target =  $(target),
-             closestExpand = this._findExpandByElement($target),
-             nodeID = this._getItemsProjection().getByHash($target.closest('.controls-ListView__item').data('hash')).getContents().getId();
+             closestExpand = this._findExpandByElement($target);
 
          /* Не обрабатываем клики по чекбоку и по стрелке редактирования, они обрабатываются в elemClickHandler'e */
          if ($target.hasClass('js-controls-TreeView__editArrow') || $target.hasClass('js-controls-ListView__itemCheckBox')) {
@@ -463,7 +488,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
          /* При клике по треугольнику надо просто раскрыть ветку */
          if (closestExpand.hasClass('js-controls-TreeView__expand') && closestExpand.hasClass('has-child')) {
-            this.toggleNode(nodeID);
+            this.toggleNode(id);
             return;
          }
 
@@ -472,7 +497,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             if ($target.hasClass('js-controls-TreeView__editArrow') || $target.hasClass('js-controls-ListView__itemCheckBox')) {
                return false;
             } else if (data.get(this._options.hierField + '@')) {
-               this.setCurrentRoot(nodeID);
+               this.setCurrentRoot(id);
                this.reload();
             }
             else {
@@ -481,7 +506,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
          else {
             if (data.get(this._options.hierField + '@')) {
-               this.toggleNode(nodeID);
+               this.toggleNode(id);
             }
             else {
                this._activateItem(id);
@@ -505,6 +530,13 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          config.getEditorOffset = this._getEditorOffset.bind(this);
          config.hierField = this._options.hierField;
          return config;
+      },
+
+      _startEditOnItemClick: function(event, id, record, target, originalEvent) {
+         //При клике на треугольник раскрытия папки начинать редактирование записи не нужно
+         if (!$(target).hasClass('js-controls-TreeView__expand')) {
+            TreeDataGridView.superclass._startEditOnItemClick.apply(this, arguments);
+         }
       },
 
       _onDragHandler: function (dragObject, e) {

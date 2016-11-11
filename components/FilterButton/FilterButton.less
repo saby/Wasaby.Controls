@@ -41,7 +41,9 @@
 
 
       /* Стили для кнопки раскрытия списка в кнопке фильтров */
-      .controls-filterButton__toggleButton {
+      .controls-filterButton__toggleButton,
+      .controls-filterButton__toggleButton.controls-Checked__checked,
+      .controls-filterButton__toggleButton.controls-Click__active {
          border: @controls-filterButton-toggleButton-border;
          background-color: @controls-filterButton-toggleButton-bgColor;
 
@@ -56,6 +58,8 @@
          text-align: center;
 
          &:hover {
+            background-color: @controls-filterButton-toggleButton-bgColor;
+            border: @controls-filterButton-toggleButton-border;
             .controls-filterButton__toggleButton-icon {
                color: @controls-filterButton-history-title-color;
             }
@@ -63,6 +67,7 @@
 
          .controls-filterButton__toggleButton-icon {
             display: inline-block;
+            color: @controls-filterButton-toggleButton-color;
             width: @controls-filterButton-toggleButton-icon-width;
             height: @controls-filterButton-toggleButton-icon-height;
             position: relative;
@@ -73,7 +78,6 @@
          .controls-filterButton__toggleButton-icon:before {
             content: @controls-filterButton-toggleButton-icon-down;
             font-style: @controls-filterButton-toggleButton-icon-style;
-            font-size: @controls-filterButton-toggleButton-icon-fontSize;
             position: absolute;
             top: @controls-filterButton-toggleButton-icon-top;
             left: @controls-filterButton-toggleButton-icon-left;
@@ -358,5 +362,11 @@
             top: 1px;
          }
       }
+   }
+}
+
+.ws-is-ie8 {
+   .controls__filterButton .controls__filterButton__filterLine {
+      margin: @controls-filterButton-button-margin-ff;
    }
 }

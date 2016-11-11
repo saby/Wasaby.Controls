@@ -650,8 +650,12 @@ and dependencies (minified).
                      to=_arr.call(this,val),dur=methodOptions.scrollInertia>0 && methodOptions.scrollInertia<17 ? 17 : methodOptions.scrollInertia;
                   
                   /* translate yx values to actual scroll-to positions */
+                  var toElement = typeof to[0] == 'object',
+                     element = to[0];
                   to[0]=_to.call(this,to[0],"y");
                   to[1]=_to.call(this,to[1],"x");
+
+                  
                   
                   /* 
                   check if scroll-to value moves the dragger instead of content. 
@@ -668,7 +672,21 @@ and dependencies (minified).
                   if(to[0]!==null && typeof to[0]!=="undefined" && o.axis!=="x" && d.overflowed[0]){ /* scroll y */
                      methodOptions.dir="y";
                      methodOptions.overwrite="all";
-                     _scrollTo($this,to[0].toString(),methodOptions);
+                     if (toElement) {
+                        var top = Math.abs(parseInt($this.find('.mCSB_container').css('top'))),
+                           height = $this.height(),
+                           elemHeight = element.height();
+                        if (to[0] + elemHeight > height + top){
+                           to[0] = element[0].offsetTop - height + elemHeight;
+                           _scrollTo($this,to[0].toString(),methodOptions);
+                        } else {
+                           if (to[0] < top) {
+                              _scrollTo($this,to[0].toString(),methodOptions);
+                           }
+                        }
+                     } else {
+                        _scrollTo($this,to[0].toString(),methodOptions);
+                     }
                   }
                   if(to[1]!==null && typeof to[1]!=="undefined" && o.axis!=="y" && d.overflowed[1]){ /* scroll x */
                      methodOptions.dir="x";

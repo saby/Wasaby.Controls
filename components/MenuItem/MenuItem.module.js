@@ -1,5 +1,5 @@
 
-define('js!SBIS3.CONTROLS.MenuItem', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CONTROLS.MenuItem'], function(ButtonBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.MenuItem', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CONTROLS.MenuItem', 'Core/Sanitize'], function(ButtonBase, dotTplFn, Sanitize) {
 
    'use strict';
    /**
@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.MenuItem', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {
-
+            sanitize: Sanitize
          },
          _iconContainer: undefined
       },

@@ -211,29 +211,13 @@
       }
    }
 
-   &.ws-disabled {
+   &.controls-FieldLink__dynamicInputWidth {
+      .controls-TextBox__fieldWrapper {
+         display: flex;
 
-      &.controls-TextBox {
-         border-color: @text-box-border-color;
-      }
-
-      .controls-TextBox__afterFieldWrapper {
-         display: none;
-      }
-
-      .controls-TextBox__beforeFieldWrapper {
-         max-width: 100%;
-      }
-
-      .controls-TextBox__field {
-         &::-webkit-input-placeholder { opacity: 0 }
-         &:-moz-placeholder {  opacity: 0 }
-         &::-moz-placeholder {  opacity: 0 }
-         &:-ms-input-placeholder {  opacity: 0 }
-      }
-
-      .controls-FieldLink__item {
-         padding: @controls-FieldLink-disabled-item-padding;
+         .controls-TextBox__field {
+            width: 100%;
+         }
       }
    }
 
@@ -279,7 +263,9 @@
 .ws-is-mobile-chrome-ios, .ws-is-mobile-safari {
    .controls-FieldLink__picker {
       &.controls-popup-revert-vertical {
-         border-top: none;
+         &:not(.controls-Suggest__picker) {
+            border-top: none;
+         }
          border-bottom: @controls-FieldLink-border @gray-ccc-color;
       }
    }

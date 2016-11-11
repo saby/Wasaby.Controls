@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "Core/Deferred",
    "Core/IoC",
    "Core/ConsoleLogger",
+   'js!WS.Data/Builder',
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CORE.PendingOperationProducerMixin",
    "html!SBIS3.CONTROLS.EditInPlaceBaseController/AddRowTpl",
@@ -18,7 +19,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "Core/core-instance",
    "Core/helpers/fast-control-helpers"
 ],
-   function ( cContext, constants, Deferred, IoC, ConsoleLogger,CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Record, cInstance, fcHelpers) {
+   function ( cContext, constants, Deferred, IoC, ConsoleLogger, DataBuilder, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Record, cInstance, fcHelpers) {
 
       'use strict';
 
@@ -28,14 +29,19 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
        * @control
        * @public
        */
-      var EndEditResult = { // Возможные результаты события "onEndEdit"
-         CANCEL: 'Cancel', // Отменить завершение редактирования/добавления
-         SAVE: 'Save', // Завершать с штатным сохранением результатов редактирования/добавления.
-         NOT_SAVE: 'NotSave', // Завершать без сохранения результатов. ВНИМАНИЕ! Использование данной константы в добавлении по месту приводит к автоудалению созданной записи
-         CUSTOM_LOGIC: 'CustomLogic' // Завершать с кастомной логика сохранения. Используется, например, при добавлении по месту, когда разработчику необходимо самостоятельно обработать добавляемую запись
-      };
-
       var
+         BeginEditResult = { // Возможные результаты события "BeginEditResult"
+            CANCEL: 'Cancel', // Отменить запуск редактирования
+            PENDING_ALL: 'PendingAll', // В результате редактирования ожидается вся запись, как есть (с текущим набором полей)
+            PENDING_MODIFIED_ONLY: 'PendingModifiedOnly' // В результате редактирования ожидаются только измененные поля
+         },
+         EndEditResult = { // Возможные результаты события "onEndEdit"
+            CANCEL: 'Cancel', // Отменить завершение редактирования/добавления
+            SAVE: 'Save', // Завершать с штатным сохранением результатов редактирования/добавления.
+            NOT_SAVE: 'NotSave', // Завершать без сохранения результатов. ВНИМАНИЕ! Использование данной константы в добавлении по месту приводит к автоудалению созданной записи
+            CUSTOM_LOGIC: 'CustomLogic' // Завершать с кастомной логика сохранения. Используется, например, при добавлении по месту, когда разработчику необходимо самостоятельно обработать добавляемую запись
+         },
+
          CONTEXT_RECORD_FIELD = 'sbis3-controls-edit-in-place',
          EditInPlaceBaseController = CompoundControl.extend([PendingOperationProducerMixin],/** @lends SBIS3.CONTROLS.EditInPlaceBaseController.prototype */ {
             $protected: {
@@ -104,7 +110,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _createEip: function() {
                this._eip = new EditInPlace(this._getEditInPlaceConfig());
             },
-
+            setItems: function(items) {
+               this._options.items = items;
+            },
+            setItemsProjection: function(itemsProjection) {
+               this._options.itemsProjection = itemsProjection;
+            },
             setEditingTemplate: function(template) {
                this._destroyEip();
                this._options.editingTemplate = template;
@@ -241,7 +252,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                            parentProjItem = itemProjItem.getParent();
                            self._lastTargetAdding = parentProjItem.isRoot() ? null : parentProjItem;
                         }
-                        self._addPendingOperation();
+                        if (!self._pendingOperation) {
+                           self._subscribeToAddPendingOperation(editingRecord);
+                        }
                      }
                      return editingRecord;
                   })
@@ -254,7 +267,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   beginEditResult,
                   loadingIndicator;
                //Если необходимо перечитывать запись перед редактированием, то делаем это
-               beginEditResult = this._notify('onBeginEdit', record);
+               beginEditResult = this._notify('onBeginEdit', record, this._isAdd);
                if (beginEditResult instanceof Deferred) {
                   loadingIndicator = setTimeout(function () {
                      fcHelpers.toggleIndicator(true);
@@ -271,9 +284,23 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   //Запрет на редактирование может быть только у существующих элементов. Если происходит добавление по месту,
                   //то не логично запрещать его. Например почти все кто использует редактирование, запрещают редактирование папок,
                   //но не нужно запрещать редактирование только что добавленных папок.
-                  allowEdit = record.getState() === Record.RecordState.DETACHED || beginEditResult !== false;
+                  allowEdit = record.getState() === Record.RecordState.DETACHED || (beginEditResult !== false && beginEditResult !== BeginEditResult.CANCEL);
+                  if (beginEditResult === BeginEditResult.PENDING_ALL) {
+                     this._addPendingOperation();
+                  }
                   return Deferred.success(allowEdit ? record : false);
                }
+            },
+            /**
+             * Регистрируем pending лишь при изменении полей редактируемой записи
+             * @param record
+             * @private
+             */
+            _subscribeToAddPendingOperation: function(record) {
+               record.subscribe('onPropertyChange', this._addPendingOperationByChange, this);
+            },
+            _unsubscribeFromAddPendingOperation: function(record) {
+               record.unsubscribe('onPropertyChange', this._addPendingOperationByChange, this);
             },
             /**
              * Регистрирует операцию ожидания у родителя, к которому подмешан SBIS3.CORE.PendingOperationParentMixin
@@ -287,13 +314,22 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
             },
             /**
+             * Регистрирует операцию ожидания по событию изменения
+             * @param event
+             * @private
+             */
+            _addPendingOperationByChange: function(event) {
+               this._addPendingOperation();
+               this._unsubscribeFromAddPendingOperation(event.getTarget());
+            },
+            /**
              * Разрегистрирует операцию ожидания у родителя, к которому подмешан SBIS3.CORE.PendingOperationParentMixin
              * @private
              */
             _removePendingOperation: function() {
                var
                   opener = this.getOpener();
-               if (opener) {
+               if (opener && this._pendingOperation) {
                   this._unregisterPendingOperation(this._pendingOperation);
                }
             },
@@ -354,7 +390,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   withSaving = endEditResult === EndEditResult.SAVE;
                }
 
-               if (endEditResult === EndEditResult.CANCEL || !eip.validate() && withSaving) {
+               if (endEditResult === EndEditResult.CANCEL || withSaving && !eip.validate()) {
                   this._savingDeferred.errback();
                   return Deferred.fail();
                } else {
@@ -385,7 +421,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         self._editingRecord = undefined;
                      }
                      if (self._isAdd) {
-                        self._options.items.add(eip._cloneWithFormat(eipRecord, self._options.items));
+                        if (self._options.items && self._options.items.getFormat().getCount()) {
+                           self._options.items.add(DataBuilder.reduceTo(eipRecord, self._options.items.getFormat(), self._options.items.getModel()));
+                        } else {
+                           self._options.items.add(eipRecord);
+                        }
                      }
                   }).addErrback(function(error) {
                      fcHelpers.alert(error);
@@ -400,12 +440,15 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return deferred;
             },
             _afterEndEdit: function(eip, withSaving) {
-               eip.endEdit();
+               //При завершение редактирования, нужно сначала удалять фейковую строку, а потом скрывать редакторы.
+               //Иначе если сначала скрыть редакторы, курсор мыши может оказаться над фейковой строкой и произойдёт
+               //нотификация о смене hoveredItem, которой быть не должно, т.к. у hoveredItem не будет ни рекорда ни контейнера.
                if (this._isAdd) {
                   this._isAdd = false;
                   this._addTarget.remove();
                   this._addTarget = undefined;
                }
+               eip.endEdit();
                this._notify('onAfterEndEdit', eip.getOriginalRecord(), eip.getTarget(), withSaving);
                if (!this._savingDeferred.isReady()) {
                   this._savingDeferred.callback();
@@ -434,7 +477,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         self._getEip().edit(model);
                         editingRecord = self._getEip().getEditingRecord();
                         self._notify('onAfterBeginEdit', editingRecord);
-                        self._addPendingOperation();
+                        if (!self._pendingOperation) {
+                           self._subscribeToAddPendingOperation(editingRecord);
+                        }
                         return editingRecord;
                      });
                   });
@@ -497,8 +542,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   // его и так завершат через finishChildPendingOperation (и туда попадет правильный аргумент - с сохранением
                   // или без завершать редактирование по месту)
                   endEdit = !cInstance.instanceOfModule(focusedControl, 'SBIS3.CORE.CloseButton') && !focusedControl ||
-                     (this._allowEndEdit(focusedControl) &&
-                     (this._isAnotherTarget(focusedControl, this) || !focusedControl._container.closest('.controls-ListView').length));
+                     (this._allowEndEdit(focusedControl) && this._isAnotherTarget(focusedControl, this));
                if (endEdit) {
                   eip = this._getEditingEip();
                   if (eip) {
@@ -543,6 +587,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
          });
 
       EditInPlaceBaseController.EndEditResult = EndEditResult;
+      EditInPlaceBaseController.BeginEditResult = BeginEditResult;
 
       return EditInPlaceBaseController;
    });

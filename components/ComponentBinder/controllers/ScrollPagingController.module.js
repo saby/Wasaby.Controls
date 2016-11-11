@@ -19,6 +19,9 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          ScrollPagingController.superclass.init.apply(this, arguments);
          this._zIndex = WindowManager.acquireZIndex();
          this._options.paging.getContainer().css('z-index', this._zIndex);
+         this._options.paging._zIndex = this._zIndex;
+         //Говорим, что элемент видимый, чтобы WindowManager учитывал его при нахождении максимального zIndex
+         WindowManager.setVisible(this._zIndex);
       },
 
       bindScrollPaging: function(paging) {
@@ -40,6 +43,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
                this.updateScrollPages(true);
             }.bind(this));
          }
+
+         paging.subscribe('onLastPageSet', this._scrollToLastPage.bind(this));
 
          paging.subscribe('onSelectedItemChange', function(e, pageNumber){
             var scrollToPage = function(page){
@@ -81,6 +86,10 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          }.bind(this));
 
          $(window).on('resize.wsScrollPaging', this._resizeHandler.bind(this));
+      },
+
+      _scrollToLastPage: function(){
+         this._options.view.setPage(-1);
       },
 
       _isPageStartVisisble: function(page){

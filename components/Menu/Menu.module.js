@@ -10,9 +10,10 @@ define('js!SBIS3.CONTROLS.Menu', [
    'js!SBIS3.CONTROLS.FloatArea',
    'js!SBIS3.CONTROLS.MenuItem',
    'js!WS.Data/Relation/Hierarchy',
-   'Core/helpers/markup-helpers'
+   'Core/helpers/markup-helpers',
+   'Core/Sanitize'
 
-], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, MenuItem, Hierarchy, mkpHelpers) {
+], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, MenuItem, Hierarchy, mkpHelpers, Sanitize) {
 
    'use strict';
 
@@ -117,6 +118,7 @@ define('js!SBIS3.CONTROLS.Menu', [
          var
              isEnabled = item.get('enabled'),
              visible = item.get('visible'),
+             caption = Sanitize(item.get(this._options.displayField), {validNodes: {component: true}}),
              options = {
                className: item.get('className'),
                activableByClick: false,
@@ -129,7 +131,7 @@ define('js!SBIS3.CONTROLS.Menu', [
                allowChangeEnable: item.get('allowChangeEnable') !== undefined ? item.get('allowChangeEnable') : this._options.allowChangeEnable
             };
          return '<component data-component="SBIS3.CONTROLS.MenuItem" config="' + mkpHelpers.encodeCfgAttr(options) + '">' +
-               '<option name="caption" type="string">' + item.get(this._options.displayField) + '</option>' +
+               '<option name="caption" type="string">' + caption + '</option>' +
              '</component>';
       },
 

@@ -7,5 +7,6 @@
    <option name="icon" value="{{=it.item.get('icon')}}"></option>
    <option name="enabled" value="{{=it.item.get('enabled') !== false}}"></option>
    <option name="visible" value="{{=it.item.get('visible') !== false}}"></option>
+   <option name="checked" type="boolean" value="{{?it.item.getId() === it.selectedKey}}true{{??}}false{{?}}"></option>
    <option name="allowChangeEnable">{{= !!it.allowChangeEnable}}</option>
 </component>

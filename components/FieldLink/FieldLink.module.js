@@ -22,6 +22,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.ITextValue",
        "js!SBIS3.CONTROLS.Utils.TemplateUtil",
        "js!WS.Data/Di",
+       "Core/core-functions",
        "js!SBIS3.CONTROLS.MenuIcon",
        "js!SBIS3.CONTROLS.Action.SelectorAction",
        'js!SBIS3.CONTROLS.FieldLink.Link',
@@ -60,7 +61,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         DialogOpener,
         ITextValue,
         TemplateUtil,
-        Di
+        Di,
+        cFunc
     ) {
 
        'use strict';
@@ -130,6 +132,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @cssModifier controls-FieldLink__itemsEdited В поле связи при наведении курсора на выбранные значения применяется подчеркивание текста.
         * @cssModifier controls-FieldLink__itemsBold В поле связи для текста выбранных значений применяется полужирное начертание.
         * @cssModifier controls-FieldLink__hideSelector Скрывает кнопку открытия диалога/панели выбора
+        * @cssModifier controls-FieldLink__dynamicInputWidth Устанавливает динамическу ширину инпута. ВНИМАНИЕ! Ломает базовую линию.
         *
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings footerTpl emptyHTML groupBy
@@ -165,7 +168,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              _linksWrapper: null,     /* Контейнер для контрола выбранных элементов */
              _linkCollection: null,   /* Контрол отображающий выбранные элементы */
              _selectorAction: null,   /* Action выбора */
-             _checkWidth: true,
+             _isDynamicInputWidth: false,
              _lastFieldLinkWidth: null,
              _afterFieldWrapper: null,
              _beforeFieldWrapper: null,
@@ -288,7 +291,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 /**
                  * @cfg {Boolean} Использовать для выбора {@link SBIS3.CONTROLS.Action.SelectorAction}
                  */
-                useSelectorAction: false
+                useSelectorAction: false,
+                /**
+                 * @noshow
+                 * @depreacted
+                 */
+                saveParentRecordChanges: false
              }
           },
 
@@ -301,6 +309,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
              /* Проиницализируем переменные */
              this._setVariables();
              this._inputField.attr('placeholder', '');
+
+             /* Флаг, как с css модификатор удалится в 3.7.5, т.к. сделаем ширину везде динамической,
+                а базовую линию меток будем выставлять через line-height */
+             this._isDynamicInputWidth = this.getContainer().hasClass('controls-FieldLink__dynamicInputWidth');
 
              commandDispatcher.declareCommand(this, 'clearAllItems', this._dropAllItems);
              commandDispatcher.declareCommand(this, 'showAllItems', this._showAllItems);
@@ -484,9 +496,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           setActive: function(active) {
+             var wasActive = this.isActive();
+
              FieldLink.superclass.setActive.apply(this, arguments);
 
-             if (active && this._needFocusOnActivated() && this.isEnabled() && constants.browser.isMobilePlatform) {
+             /* Для Ipad'a надо при setActive устанавливать фокус в поле ввода,
+                иначе не покажется клавиатура, т.к. установка фокуса в setAcitve работает асинхронно,
+                а ipad воспринимает установку фокуса только в потоке кода, который работает после браузерных событий.
+                + добавляю проверку, что компоент был до этого неактивен (такая проверка есть и в контроловском setActive),
+                в противном случае будут лишние установки фокуса в поле ввода, из-за чего будет мограть саггест на Ipad'e */
+             if (active && !wasActive && this._needFocusOnActivated() && this.isEnabled() && constants.browser.isMobilePlatform) {
                 this._getElementToFocus().focus();
              }
           },
@@ -586,8 +605,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 }
              }
 
-             this._inputField[0].style.width = 0;
-             this._updateInputWidth();
+             if(!this._isDynamicInputWidth) {
+                this._inputField[0].style.width = 0;
+                this._updateInputWidth();
+             }
           },
           _onCrossClickItemsCollection: function(key) {
              this.removeItemsSelection([key]);
@@ -748,11 +769,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 Особенно актуально это когда зибниден selectedItem в добавлении по месту. */
              this.addSelectedItems([item.clone()]);
              this.setText('');
-             /* При выборе скрываем саггест, если он попадает под условия,
-                когда его не надо показывать см. _needShowSuggest */
-             if(!this._isInputVisible()) {
-                this.hidePicker();
-             }
+             /* По задаче:
+                https://inside.tensor.ru/opendoc.html?guid=7ce2bd66-bb6b-4628-b589-0e10e2bb8677&description=
+                Ошибка в разработку 03.11.2016 В полях связи не скрывается список с историей после выбора из него значения. Необходимо закрывать...
+
+                В стандарте не описано поведение автодополнения при выборе из него,
+                поэтому жду как опишут и согласуют. Для выпуска 200 решили, что всегда будем скрывать при выборе */
+             this.hidePicker();
           },
 
 
@@ -808,7 +831,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if(!this._options.alwaysShowTextBox) {
 
                 if(!this._options.multiselect) {
-                   this._inputWrapper.toggleClass('ws-hidden', Boolean(keysArrLen));
+                   /* Поле ввода нельзя вырывать из потока (display: none),
+                      иначе ломается базовая линия, поэтому скрываем его через visibility: hidden */
+                   this._inputWrapper.toggleClass('ws-invisible', Boolean(keysArrLen));
                 }
              }
 
@@ -818,7 +843,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _prepareItems: function() {
              var items = FieldLink.superclass._prepareItems.apply(this, arguments),
                  self = this,
-                 newRec, dataSource, dataSourceModel, dataSourceModelInstance;
+                 newRec, dataSource, dataSourceModel, dataSourceModelInstance,
+                 parent, changedFields;
 
              function getModel(model, config) {
                 return typeof model === 'string' ? Di.resolve(model, config) : new model(config)
@@ -833,6 +859,18 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       чтобы по нему проверять модели которые выбраны в поле связи */
                    dataSourceModelInstance = getModel(dataSourceModel, {});
 
+                   /* FIXME гразный хак, чтобы изменение рекордсета не влекло за собой изменение родительского рекорда
+                      Удалить, как Леха Мальцев будет позволять описывать более гибко поля записи, и указывать в качестве типа прикладную модель.
+                      Задача:
+                      https://inside.tensor.ru/opendoc.html?guid=045b9c9e-f31f-455d-80ce-af18dccb54cf&description= */
+                   if(this._options.saveParentRecordChanges) {
+                      parent = items._getMediator().getParent(items);
+
+                      if (parent && cInstance.instanceOfModule(parent, 'WS.Data/Entity/Model')) {
+                         changedFields = cFunc.clone(parent._changedFields);
+                      }
+                   }
+
                    items.each(function(rec, index) {
                       /* Создадим модель указанную в сорсе, и перенесём адаптер и формат из добавляемой записи,
                          чтобы не было конфликтов при мерже полей этих записей */
@@ -842,6 +880,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                          items.replace(rec, index);
                       }
                    });
+
+                   if(changedFields) {
+                      parent._changedFields = changedFields;
+                   }
                 }
 
                 /* Элементы, установленные из дилогов выбора / автодополнения могут иметь другой первичный ключ,
@@ -851,7 +893,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    if(rec.getIdProperty() !== self._options.keyField && rec.get(self._options.keyField) !== undefined) {
                       rec.setIdProperty(self._options.keyField);
                    }
-                })
+                });
              }
              return items;
           },
@@ -901,6 +943,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 },
                 handlers: {
                    onShow: function() {
+                      if(!this._options.reverseItemsOnListRevert) {
+                         return;
+                      }
+
                       var revertedVertical = this._picker.getContainer().hasClass('controls-popup-revert-vertical');
 
                       if(constants.browser.isMobileIOS) {

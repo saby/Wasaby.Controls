@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          allowEnterToFolder: cfg.allowEnterToFolder
       }
    },
-   searchProcessing = function(projection, cfg) {
+   searchProcessing = function(src, cfg) {
       var resRecords = [], lastNode, lastPushedNode, curPath = [], pathElem, curParentContents;
 
       function pushPath(records, path, cfg) {
@@ -87,7 +87,19 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          }
       }
 
-      projection.each(function (item) {
+      var iterator;
+      //может прийти массив или проекция
+      if (src instanceof Array) {
+         iterator = function(func){
+            colHelpers.forEach(src, func);
+         };
+      }
+      else {
+         iterator = src.each.bind(src);
+      }
+
+
+      iterator(function (item) {
          if ((item.getParent() != lastNode) && curPath.length) {
             if (lastNode != lastPushedNode) {
                pushPath(resRecords, curPath, cfg);
@@ -511,7 +523,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             hierarchyViewMode: false
          },
          _foldersFooters: {},
-         _breadCrumbs : [],
          _lastParent : undefined,
          _lastDrawn : undefined,
          _lastPath : [],
@@ -566,8 +577,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see toggleNode
        */
       collapseNode: function(id) {
-         this._getItemProjectionByItemId(id).setExpanded(false);
-         return new Deferred.success();
+         var
+            item = this._getItemProjectionByItemId(id);
+         if (item) {
+            item.setExpanded(false);
+            return Deferred.success();
+         } else {
+            return Deferred.fail();
+         }
       },
       /**
        * Закрыть или открыть узел.
@@ -576,7 +593,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see expandNode
        */
       toggleNode: function(id) {
-         return this[this._getItemProjectionByItemId(id).isExpanded() ? 'collapseNode' : 'expandNode'](id);
+         var
+            item = this._getItemProjectionByItemId(id);
+         if (item) {
+            return this[item.isExpanded() ? 'collapseNode' : 'expandNode'](id);
+         } else {
+            return Deferred.fail();
+         }
       },
       /**
        * Раскрывает узел.
@@ -588,17 +611,21 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       expandNode: function(id) {
          var
             item = this._getItemProjectionByItemId(id);
-         if (item.isExpanded()) {
-            return Deferred.success();
-         } else {
-            if (this._options.singleExpand) {
-               this._collapseNodes(this.getOpenedPath(), id);
+         if (item) {
+            if (item.isExpanded()) {
+               return Deferred.success();
+            } else {
+               if (this._options.singleExpand) {
+                  this._collapseNodes(this.getOpenedPath(), id);
+               }
+               this._options.openedPath[id] = true;
+               this._folderOffsets[id] = 0;
+               return this._loadNode(id).addCallback(function() {
+                  this._getItemProjectionByItemId(id).setExpanded(true);
+               }.bind(this));
             }
-            this._options.openedPath[id] = true;
-            this._folderOffsets[id] = 0;
-            return this._loadNode(id).addCallback(function() {
-               this._getItemProjectionByItemId(id).setExpanded(true);
-            }.bind(this));
+         } else {
+            return Deferred.fail();
          }
       },
       _loadNode: function(id) {
@@ -649,16 +676,23 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       },
       _getItemsForRedrawOnAdd: function(items, groupId) {
          var result = [];
-         for (var i = 0; i < items.length; i++) {
-            if (!Object.isEmpty(this._options.groupBy) && this._options.easyGroup) {
-               if (this._canApplyGrouping(items[i])) {
-                  if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
-                     this._options._groupItemProcessing(groupId, result, items[i], this._options);
+         if (this._options.hierarchyViewMode) {
+            result = searchProcessing(items, this._options);
+         }
+         else {
+            var prevGroupId = undefined;  //тут groupId одинаковый для пачки данных, но группу надо вставить один раз, используем пермеенную как флаг
+            for (var i = 0; i < items.length; i++) {
+               if (!Object.isEmpty(this._options.groupBy) && this._options.easyGroup) {
+                  if (this._canApplyGrouping(items[i]) && prevGroupId != groupId) {
+                     prevGroupId = groupId;
+                     if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
+                        this._options._groupItemProcessing(groupId, result, items[i], this._options);
+                     }
                   }
                }
-            }
-            if (this._isVisibleItem(items[i])) {
-               result.push(items[i]);
+               if (this._isVisibleItem(items[i])) {
+                  result.push(items[i]);
+               }
             }
          }
          return result;
@@ -728,6 +762,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             this._options.openedPath = openedPath;
          }
       },
+      _removeFromLoadedRemoteNodes: function(remoteNodes) {
+         // Удаляем только если запись удалена из items, иначе - это было лишь сворачивание веток.
+         if (remoteNodes.length && !this.getItems().getRecordById(remoteNodes[0].getContents().getId())) {
+            for (var idx = 0; idx < remoteNodes.length; idx++) {
+               delete this._loadedNodes[remoteNodes[idx].getContents().getId()];
+            }
+         }
+      },
       around: {
          _getItemProjectionByItemId: function(parentFn, id) {
             var root;
@@ -773,7 +815,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }.bind(this);
             fillBranchesForRedraw(newItems);
             fillBranchesForRedraw(oldItems);
-            for (idx in branches) {
+            for (var idx in branches) {
                if (branches.hasOwnProperty(idx)) {
                   if (this._isSlowDrawing(this._options.easyGroup)) {
                      this.redrawItem(branches[idx].getContents(), branches[idx]);
@@ -784,15 +826,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }
             }
          },
-         _removeFromLoadedNodesRemoteNodes: function(remoteNodes) {
-            for (var idx = 0; idx < remoteNodes.length; idx++) {
-               delete this._loadedNodes[remoteNodes[idx].getContents().getId()];
-            }
-         },
          _onCollectionAddMoveRemove: function(parentFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
             parentFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId);
             this._findAndRedrawChangedBranches(newItems, oldItems);
-            this._removeFromLoadedNodesRemoteNodes(oldItems);
+            this._removeFromLoadedRemoteNodes(oldItems);
          },
          //В режиме поиска в дереве, при выборе всех записей, выбираем только листья, т.к. папки в этом режиме не видны.
          setSelectedItemsAll: function(parentFn) {
@@ -986,81 +1023,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       setRoot: function(root){
          this._options.root = root;
       },
-      _searchRender: function(item, container){
-         this._drawBreadCrumbs(this._lastPath, item, container);
-         return container;
-      },
-      _drawBreadCrumbs:function(path, record, container){
-         if (path.length) {
-            var self = this,
-               elem,
-               groupBy = this._options.groupBy,
-               cfg,
-               td = container.find('td');
-            td.append(elem = $('<div style="width:'+ td.width() +'px"></div>'));
-            cfg = {
-               element : elem,
-               items: this._createPathItemsDS(path),
-               parent: this,
-               highlightEnabled: this._options.highlightEnabled,
-               highlightText: this._options.highlightText,
-               colorMarkEnabled: this._options.colorMarkEnabled,
-               colorField: this._options.colorField,
-               className : 'controls-BreadCrumbs__smallItems',
-               enable: this._options.allowEnterToFolder
-            };
-            if (groupBy.hasOwnProperty('breadCrumbsTpl')){
-               cfg.itemTemplate = groupBy.breadCrumbsTpl
-            }
-            var ps = new BreadCrumbs(cfg);
-            ps.once('onItemClick', function(event, id){
-               //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onBreadCrumbClick'), а вотом выполняется setCurrentRoot
-               event.setResult(false);
-               //TODO Выпилить в .100 проверку на задизабленность, ибо событие вообще не должно стрелять и мы сюда не попадем, если крошки задизаблены
-               if (this.isEnabled() && self._notify('onSearchPathClick', id) !== false ) {
-                  //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
-                  /*TODO для Алены. Временный фикс, потому что так удалось починить*/
-                  var filter = cMerge(self.getFilter(), {
-                     'Разворот' : 'Без разворота'
-                  });
-                  if (self._options.groupBy.field) {
-                     filter[self._options.groupBy.field] = undefined;
-                  }
-                  //Если бесконечный скролл был установлен в опции - вернем его
-                  self.setInfiniteScroll(self._options.infiniteScroll, true);
-                  self.setGroupBy({});
-                  self.setHighlightText('', false);
-                  self.setFilter(filter, true);
-                  self.setCurrentRoot(id);
-                  self.reload();
-               }
-            });
-            this._breadCrumbs.push(ps);
-         } else{
-            //если пути нет, то группировку надо бы убить...
-            container.remove();
-         }
 
-      },
-      _createPathItemsDS: function(pathRecords){
-         var dsItems = [],
-            parentID;
-         for (var i = 0; i < pathRecords.length; i++){
-            //TODO для SBISServiceSource в ключе находится массив
-            parentID = pathRecords[i].get(this._options.hierField);
-            dsItems.push({
-               id: pathRecords[i].getId(),
-               title: pathRecords[i].get(this._options.displayField)
-            });
-         }
-         return dsItems;
-      },
-      _destroySearchBreadCrumbs: function(){
-         for (var i =0; i < this._breadCrumbs.length; i++){
-            this._breadCrumbs[i].destroy();
-         }
-         this._breadCrumbs = [];
-      },
+
       /**
        * Возвращает узел, относительно которого будет производиться выборка данных списочным методом.
        * @return {String, Number} Идентификатор корня.

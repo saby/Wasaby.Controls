@@ -106,9 +106,10 @@
       .controls-DataGridView__tr {
          background: @data-grid-row-bg;
 
-         &.controls-ListView__item__multiSelected {
-            background-color: @data-grid-row-selected-bg;
-
+         &.controls-ListView__item__multiSelected:not(.controls-ListView__hoveredItem) {
+            &.controls-ListView__item {
+               background-color: @data-grid-row-selected-bg;
+            }
             .controls-DataGridView__td {
                color: @data-grid-row-selected-cell-text-color;
             }

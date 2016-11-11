@@ -14,6 +14,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "Core/ParallelDeferred",
    "Core/helpers/collection-helpers",
+   "Core/IoC",
+   "js!SBIS3.CORE.MarkupTransformer",
    "js!SBIS3.CONTROLS.Link",
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.FilterButton.FilterLine",
@@ -21,7 +23,11 @@ define('js!SBIS3.CONTROLS.FilterButton',
    "js!SBIS3.CONTROLS.AdditionalFilterParams",
    "i18n!SBIS3.CONTROLS.FilterButton"
 ],
-    function( mStubs, cContext, CommandDispatcher, constants,
+    function(
+        mStubs,
+        cContext,
+        CommandDispatcher,
+        constants,
         CompoundControl,
         dotTplFn,
         dotTplForPicker,
@@ -31,7 +37,9 @@ define('js!SBIS3.CONTROLS.FilterButton',
         FilterToStringUtil,
         TemplateUtil,
         ParallelDeferred,
-        colHelpers
+        colHelpers,
+        IoC,
+        MarkupTransformer
     ) {
 
        'use strict';
@@ -137,6 +145,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
              declareCmd('show-filter', showPicker);
              declareCmd('change-field-internal', this._changeFieldInternal.bind(this));
 
+             this._checkPickerContent = this._checkPickerContent.once();
              this.getContainer().removeClass('ws-area')
                                 .on('click', '.controls__filterButton__filterLine-items, .controls__filterButton-button', showPicker);
           },
@@ -199,8 +208,22 @@ define('js!SBIS3.CONTROLS.FilterButton',
              }
           },
 
+          _checkPickerContent: function() {
+             var controls = this._picker.getChildControls(false, true);
+
+             for(var i = 0; i < controls.length; i++) {
+                if(/SBIS3.CORE.*/.test(controls[i]._moduleName)) {
+                   IoC.resolve('ILogger').info(
+                       'Компонент SBIS3.CONTOLS.FilterButton не поддерживает работу с компонентами из пространства имён SBIS3.CORE.' +
+                       'Просьба не использовать компонент ' + controls[i]._moduleName + ' с именем ' + controls[i].getName() + ' на панели фильтрации.'
+                   )
+                }
+             }
+          },
+
           _setPickerContent: function() {
              this._picker.getContainer().addClass('controls__filterButton-' + this._options.filterAlign);
+             this._checkPickerContent();
              if(this._historyController) {
                 this._picker.getChildControlByName('filterHistory').setHistoryController(this._historyController);
              }
@@ -284,12 +307,12 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 closeByExternalClick: true,
                 context: context,
                 className: 'controls__filterButton__picker',
-                template: prepTpl(dotTplForPicker)({
+                template: MarkupTransformer(prepTpl(dotTplForPicker)({
                    template: prepTpl(tpls.filterArea ? dotTplForComp({component: self._options.template}) : self._options.template),
                    additionalFilterParamsTemplate: prepTpl(tpls.additionalFilterArea ? dotTplForComp({component: self._options.additionalFilterParamsTemplate}) : self._options.additionalFilterParamsTemplate),
                    historyController: this._historyController,
                    internalContextFilterName: this._options.internalContextFilterName
-                }),
+                })),
                 handlers: {
                    onClose: function() {
                       /* Разрушаем панель при закрытии,

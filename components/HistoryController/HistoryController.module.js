@@ -8,14 +8,48 @@ define('js!SBIS3.CONTROLS.HistoryController', [
    "Core/helpers/string-helpers",
    "Core/Deferred",
    "Core/helpers/functional-helpers",
-   "Core/ConsoleLogger"
-], function( cSessionStorage, cAbstract, UserConfig, strHelpers, Deferred, fHelpers, ConsoleLogger) {
+   "Core/ConsoleLogger",
+   "Core/constants"
+], function( cSessionStorage, cAbstract, UserConfig, strHelpers, Deferred, fHelpers, ConsoleLogger, constants) {
 
    'use strict';
 
    var serializeFnc = function(serialize, value) {
       return value ? strHelpers[serialize ? 'serializeURLData' : 'deserializeURLData'](value) : null;
    };
+
+
+   /* Пока нет нормального способа, используя некий интерфейс сохранять параметры,
+      то смотрю на флаг globalConfigSupport (поддерживаются ли пользовательский параметры),
+      и сохраняю? используя UserConfig в пользоватльские параметры, иначе кладу в localStorage.
+      Задача по этому поводу:
+      https://inside.tensor.ru/opendoc.html?guid=5b44aa05-a1c8-4052-9cd7-88b50519588b&description=
+      Задача в разработку 25.10.2016 Нужен платформенный интерфейс, позволяющий работать с параметрами, которые запоминаются в длитель...
+   */
+   var setParam = function(key, value, serializer) {
+      var serializedValue = serializer(true, value);
+
+      if(constants.userConfigSupport) {
+         return UserConfig.setParam(key, serializedValue, true);
+      } else {
+         fHelpers.setLocalStorageValue(key, serializedValue);
+         return Deferred.success();
+      }
+   };
+
+   var getParam = function(key, serializer) {
+      var serializedValue;
+
+      try {
+         serializedValue = serializer(false, constants.userConfigSupport ? cSessionStorage.get(key) :  fHelpers.getLocalStorageValue(key));
+      } catch (e) {
+         ConsoleLogger.error('HistoryController', e.message, e);
+         serializedValue = null;
+      }
+
+      return serializedValue;
+   };
+   /**************************************************************/
 
    /**
     * Контроллер, который предоставляет базовые механизмы работы с иторией.
@@ -49,15 +83,7 @@ define('js!SBIS3.CONTROLS.HistoryController', [
       },
 
       $constructor: function() {
-         var serializedHistory;
-
-         try {
-            serializedHistory = this._options.serialize(false, cSessionStorage.get(this._options.historyId));
-         } catch (e) {
-            ConsoleLogger.error('HistoryController', e.message, e);
-            serializedHistory = null;
-         }
-         this._history = serializedHistory;
+         this._history = getParam(this._options.historyId, this._options.serialize);
       },
 
       /**
@@ -91,7 +117,7 @@ define('js!SBIS3.CONTROLS.HistoryController', [
          if(!this.isNowSaving()) {
             this._saveParamsDeferred = new Deferred();
 
-            UserConfig.setParam(this._options.historyId, this._options.serialize(true, this._history), true).addCallback(fHelpers.forAliveOnly(function() {
+            setParam(this._options.historyId, this._history, this._options.serialize).addCallback(fHelpers.forAliveOnly(function() {
                self._saveParamsDeferred.callback();
             }, self));
          }
