@@ -174,7 +174,7 @@ define('js!SBIS3.CONTROLS.Slider',
                   side = $(DragObject.getTarget()).hasClass('controls-Slider__point__left') ? 'left' : 'right',
                   percent = (event.pageX - instance._shift - instance._wrapper[0].getBoundingClientRect().left - pageXOffset) / (width - constants.pointWidth[instance._options.bigPoint ? 'big' : 'small']), //дробная часть от того что надо выделить
                   value = instance._options.minValue + percent * rangeLength;
-               if (instance._dragInProcess) {
+               if (instance._dragInProcess && instance.isEnabled()) {
                   instance[side === 'left' ? '_drawStartValue' : '_drawEndValue'](value);
                   this._notify('onDrawValueChange', this._startValue, this._endValue)
                }
@@ -183,10 +183,12 @@ define('js!SBIS3.CONTROLS.Slider',
             _endDragHandler: function(DragObject, event) {
                var
                   instance = DragObject.getOwner();
-               if ($(DragObject.getTarget()).hasClass('controls-Slider__point__left')) {
-                  instance.setStartValue(instance._startValue);
-               } else {
-                  instance.setEndValue(instance._endValue);
+               if (instance.isEnabled()) {
+                  if ($(DragObject.getTarget()).hasClass('controls-Slider__point__left')) {
+                     instance.setStartValue(instance._startValue);
+                  } else {
+                     instance.setEndValue(instance._endValue);
+                  }
                }
                instance._dragInProcess = false;
             }
