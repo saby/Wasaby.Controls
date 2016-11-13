@@ -91,7 +91,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          _hideScrollbar: function(){
             var currentPadding = this._content.css('padding-right').replace(/[^0-9.]+/g, ''),
                style = {
-                  right: -this._getBrowserScrollbarWidth()
+                  marginRight: -this._getBrowserScrollbarWidth()
                }
             this._content.css(style);
          },
