@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _hideScrollbar: function(){
             var style = {
-                  right: -this._getBrowserScrollbarWidth()
+                  marginRight: -this._getBrowserScrollbarWidth()
                }
             this._content.css(style);
          },
