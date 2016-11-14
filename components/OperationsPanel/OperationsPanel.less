@@ -1,3 +1,16 @@
+.controls-operationsPanel-modes() {
+   &.controls-operationsPanel__massMode {
+      .controls-operationsPanel__actionType-selection {
+         display: none;
+      }
+   }
+   &.controls-operationsPanel__selectionMode {
+      .controls-operationsPanel__actionType-mass {
+         display: none;
+      }
+   }
+}
+
 .controls-operationsPanel {
    .user-select();
    overflow: hidden;
@@ -33,20 +46,74 @@
          }
       }
 
-      &.controls-operationsPanel__massMode {
-         .controls-operationsPanel__actionType-selection {
-            display: none;
-         }
-      }
-      &.controls-operationsPanel__selectionMode {
-         .controls-operationsPanel__actionType-mass {
-            display: none;
-         }
-      }
+      .controls-operationsPanel-modes();
       .controls-operationsPanel__actionType-mass,
       .controls-operationsPanel__actionType-selection,
       .controls-operationsPanel__actionType-all {
          margin: @controls-OperationsPanel-actions-margin;
+         line-height: @controls-OperationsPanel-height !important;
       }
    }
+
+   &.controls-operationsPanel_withItemsMenu {
+      .controls-operationsPanel__wrapper {
+         .controls-operationsPanel__container {
+            position: relative;
+            display: inline;
+         }
+
+         .controls-operationsPanel__itemsMenu {
+            display: inline-block;
+            margin-bottom: 3px;
+         }
+
+         .controls-operationsPanel__actions {
+            margin-right: 26px;
+         }
+
+         .controls-operationsPanel__actionMark,
+         .controls-operationsPanel__actionType-mass,
+         .controls-operationsPanel__actionType-selection,
+         .controls-operationsPanel__actionType-all {
+            float: left;
+         }
+
+         .controls-operationsPanel__actionMark, .controls-operationsPanel__actions {
+            display: block;
+         }
+      }
+   }
+
+   .controls-operationsPanel__wrapper {
+      .controls-operationsPanel__container {
+         position: relative;
+         display: inline;
+      }
+
+      .controls-operationsPanel__actionMark,
+      .controls-operationsPanel__actionType-mass,
+      .controls-operationsPanel__actionType-selection,
+      .controls-operationsPanel__actionType-all {
+         float: left;
+      }
+
+      .controls-operationsPanel__actionMark, .controls-operationsPanel__actions {
+         display: block;
+      }
+   }
+}
+
+.controls-operationsPanel__itemsMenu_picker .controls-PopupMixin__closeButton,
+.controls-operationsPanel__itemsMenu_picker .controls-PopupMixin__closeButton:hover{
+   background: none;
+   top: 7px;
+   right: -6px;
+}
+
+.controls-operationsPanel__itemsMenu_picker.controls-MenuIcon__Menu .controls-MenuItem {
+   padding-right: 36px;
+}
+
+.controls-operationsPanel__itemsMenu_picker {
+   .controls-operationsPanel-modes();
 }

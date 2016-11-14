@@ -10,7 +10,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    /*TODO это должна подключать не панель а прекладники, потом убрать*/
    'js!SBIS3.CONTROLS.OperationDelete',
    'js!SBIS3.CONTROLS.OperationsMark',
-   'js!SBIS3.CONTROLS.OperationMove'
+   'js!SBIS3.CONTROLS.OperationMove',
+   'js!SBIS3.CONTROLS.MenuIcon'
 ], function(Control, dotTplFn, DSMixin, colHelpers, mkpHelpers) {
    /**
     * Компонент "Панель действий" используют совместно с представлениями данных ({@link SBIS3.CONTROLS.ListView} или любой его контрол-наследник),
@@ -108,7 +109,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
              * @variant horizontal ПМО выехжает слева направо
              */
             panelFloatDirection: 'vertical',
-            visible: false
+            visible: false,
+            /**
+             * @cfg {Boolean} Показывать ли кнопку с операциями, если операции не помещаются
+             */
+            hasItemsMenu: false
          },
          _blocks: undefined,
          _itemsDrawn: false
@@ -120,6 +125,30 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
       init: function() {
          OperationsPanel.superclass.init.call(this);
+
+
+         if(this._options.hasItemsMenu){
+            //TODO
+            this._itemsMenu = this.getChildControlByName('itemsMenu');
+            this._itemsMenu._setPickerContent = function() {
+               $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-size icon-ExpandUp icon-primary action-hover');
+            };
+            //TODO Конец
+
+            this.subscribeTo(this._itemsMenu, 'onMenuItemActivate', function(e, id){
+               this.getItems().getRawData().forEach(function(item){
+                  if(item.id === id){
+                     if($ws.helpers.instanceOfModule(item.instance, 'SBIS3.CONTROLS.MenuLink') && item.instance.getItems().getRawData().length > 1){
+                        item.instance._notify('onMenuItemActivate', item.id);
+                     }
+                     else {
+                        item.instance._clickHandler();
+                     }
+                     return false;
+                  }
+               });
+            });
+         }
 
          //Отрисуем элементы если панель изначально показана
          if (this.isVisible()) {
@@ -140,7 +169,52 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
 
       _drawItemsCallback: function() {
          this._itemsDrawn = true;
+         if(this._options.hasItemsMenu){
+            this._updateActionsMenuButtonItems();
+         }
       },
+
+      _updateActionsMenuButtonItems: function(){
+         var self = this;
+         var buttonItems = [];
+
+         var addItems = function(items, parentName, instance){
+            items.forEach(function(item){
+               if(parentName || self._getItemType(item.type) !== 'mark'){
+                  var obj = {
+                     parent: parentName || null
+                  };
+                  if(!parentName){
+                     instance = self.getItemInstance(item.name);
+                     obj.id = item.name;
+                     obj.icon = instance.getIcon();
+                     obj.caption = instance.getCaption();
+                     obj.instance = instance;
+                     obj.className = 'controls-operationsPanel__actionType-' + self._getItemType(item.type);
+
+                     if(typeof instance.getItems === 'function'){
+                        var rawData = instance.getItems().getRawData();
+                        if(rawData.length > 1){
+                           addItems(rawData, item.name, instance);
+                        }
+                     }
+                  }
+                  else {
+                     obj.id = item.id || item.title;
+                     obj.icon = item.icon;
+                     obj.caption = item.title;
+                     obj.instance = instance;
+                  }
+
+                  buttonItems.push(obj);
+               }
+            });
+         };
+
+         addItems(this.getItems().getRawData());
+         this._itemsMenu.setItems(buttonItems);
+      },
+
       _setVisibility: function(show) {
          var self = this;
          this._initBlocks();
@@ -205,6 +279,14 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                this._onSelectedItemsChange(idArray);
             }.bind(this));
          }
+
+         if(this._options.hasItemsMenu){
+            var pickerContainer = $('.controls-operationsPanel__itemsMenu_picker');
+            pickerContainer.toggleClass('controls-operationsPanel__massMode', !idArray.length);
+            pickerContainer.toggleClass('controls-operationsPanel__selectionMode', !!idArray.length);
+
+            this._checkCapacity();
+         }
       },
       _onSelectedItemsChange: function(idArray) {
          //Прокидываем сигнал onSelectedItemsChange из браузера в кнопки
@@ -213,6 +295,15 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                instance.onSelectedItemsChange(idArray);
             }
          });
+      },
+      _onResizeHandler: function(){
+         if(this._options.hasItemsMenu && this._itemsDrawn){
+            this._checkCapacity();
+         }
+      },
+
+      _checkCapacity: function(){
+         this._itemsMenu.getContainer().toggleClass('ws-hidden', !(this._blocks.wrapper.height() < this._blocks.wrapper.children().height()));
       },
       /**
        * @cfg {String} Установка направления выезжания панели массовых операций
