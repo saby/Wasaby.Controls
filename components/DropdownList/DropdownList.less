@@ -363,8 +363,10 @@
 /* Все ie без поддержки flexBox'a */
 .ws-is-ie8, .ws-is-ie9, .ws-is-ie10 {
   .controls-DropdownList .controls-DropdownList__selectedItem{
+     vertical-align: top;
     .controls-DropdownList__textWrapper{
       display: inline-block;
+      vertical-align: top;
     }
     .controls-DropdownList__beforeCaptionWrapper{
        vertical-align: top;
@@ -386,7 +388,8 @@
 
 .ws-is-ie, .ws-is-firefox {
   .controls-DropdownList .controls-DropdownList__selectedItem{
-    display: inline-flex;
+     display: inline-block;
+     display: inline-flex;
   }
 }
 
