@@ -152,7 +152,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                 * Позволяет при вставке контента распознавать ссылки и декорировать их в отдельные блоки
                 * @cfg {Boolean} декорировать ссылки ссылки
                 */
-               decorateLinks: true,
+               decorateLinks: false,
                /**
                 * Имя декоратора, ккоторый зарегистирован в системе, с помощью которого декорировать ссылки
                 * @cfg {String} имя декоратора
@@ -1540,7 +1540,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          _updateDataReview: function(text) {
             if (this._dataReview && !this.isEnabled()) {
                //если никто не зарегистрировал декоратор то просто оборачиваем ссылки в <a>
-               //di options
                if (this._options.decorateLinks && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
                   var
                      self = this;
