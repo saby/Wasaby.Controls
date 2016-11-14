@@ -473,6 +473,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._updateHeadAfterInit();
       },
 
+      _prepareConfig: function() {
+         DataGridView.superclass._prepareConfig.apply(this, arguments);
+         if (this._options._ladderInstance) {
+            var projection = this._getItemsProjection();
+            if (projection) {
+               this._options._ladderInstance.setCollection(projection);
+            }
+         }
+      },
+
       _updateHeadAfterInit: function() {
          this._bindHead();
       },
