@@ -136,13 +136,14 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             //TODO Конец
 
             this.subscribeTo(this._itemsMenu, 'onMenuItemActivate', function(e, id){
-               this.getItems().getRawData().forEach(function(item){
-                  if(item.id === id){
-                     if($ws.helpers.instanceOfModule(item.instance, 'SBIS3.CONTROLS.MenuLink') && item.instance.getItems().getRawData().length > 1){
-                        item.instance._notify('onMenuItemActivate', item.id);
+               this.getItems().each(function(item){
+                  if(item.get('id') === id){
+                     var instance = item.get('instance');
+                     if($ws.helpers.instanceOfModule(instance, 'SBIS3.CONTROLS.MenuLink') && instance.getItems().getCount() > 1){
+                        instance._notify('onMenuItemActivate', id);
                      }
                      else {
-                        item.instance._clickHandler();
+                        instance._clickHandler();
                      }
                      return false;
                   }
@@ -178,32 +179,34 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          var self = this;
          var buttonItems = [];
 
-         var addItems = function(items, parentName, instance){
-            items.forEach(function(item){
-               if(parentName || self._getItemType(item.type) !== 'mark'){
+         //TODO ГОВНОКОДИЩЕ!!! Собираем мета описание операций через инстансы. При первой же возможности выпилить.
+         var addItems = function(items, parentKey, instance){
+            items.each(function(item){
+               if(parentKey || self._getItemType(item.get('type')) !== 'mark'){
                   var obj = {
-                     parent: parentName || null
+                     parent: parentKey || null
                   };
-                  if(!parentName){
-                     instance = self.getItemInstance(item.name);
-                     obj.id = item.name;
+                  if(parentKey){
+                     obj.id = item.get('id') || item.get('title');
+                     obj.icon = item.get('icon');
+                     obj.caption = item.get('title');
+                     obj.instance = instance;
+                  }
+                  else {
+                     var name = item.get('name');
+                     instance = self.getItemInstance(name);
+                     obj.id = name;
                      obj.icon = instance.getIcon();
                      obj.caption = instance.getCaption();
                      obj.instance = instance;
-                     obj.className = 'controls-operationsPanel__actionType-' + self._getItemType(item.type);
+                     obj.className = 'controls-operationsPanel__actionType-' + self._getItemType(item.get('type'));
 
                      if(typeof instance.getItems === 'function'){
-                        var rawData = instance.getItems().getRawData();
-                        if(rawData.length > 1){
-                           addItems(rawData, item.name, instance);
+                        var childItems = instance.getItems();
+                        if(childItems.getCount() > 1){
+                           addItems(childItems, name, instance);
                         }
                      }
-                  }
-                  else {
-                     obj.id = item.id || item.title;
-                     obj.icon = item.icon;
-                     obj.caption = item.title;
-                     obj.instance = instance;
                   }
 
                   buttonItems.push(obj);
@@ -211,7 +214,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             });
          };
 
-         addItems(this.getItems().getRawData());
+         addItems(this.getItems());
          this._itemsMenu.setItems(buttonItems);
       },
 
