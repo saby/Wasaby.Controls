@@ -144,7 +144,9 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                /**
                 * cfg {Boolean} Устанавливает тип диалога: модальный или немодальный.
                 */
-               isModal: true
+               isModal: true,
+
+               additionalClass: 'controls-SubmitPopup_popup'
             },
 
             _buttons: []
