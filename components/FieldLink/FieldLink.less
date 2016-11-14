@@ -9,6 +9,8 @@
 .controls-FieldLink__picker:not(.controls-Suggest__picker) {
    padding: @controls-FieldLink-linkContainer-padding;
    border-top: none;
+   .flexbox();
+   flex-wrap: wrap;
 
    .controls-FieldLink__item {
       /* Учитываем бордер пикера */
@@ -143,8 +145,6 @@
          float: right;
 
          .controls-FieldLinkItemsCollection {
-            display: inline-flex;
-
             .controls-FieldLink__item {
                .text-overflow();
             }
