@@ -210,6 +210,17 @@ define('js!SBIS3.CONTROLS.TextArea', [
             callback: self._notifyOnSizeChanged(self, self),
             hard: hard
          });
+         //Автовысота считается на клиенте отложенно. А высота контрола стоит авто именно по размерам текстареи
+         //поэтому на момент, когда она еще не посчиталась абсолютное позиционирование дизаблед враппера снято и высота считается исходя из размеров враппера
+         //controls-TextArea__heightInit навешивает абсолютное позиционирование после расчета высоты и высота начинает считаться исходя из размеров area
+
+         //так же при отключенном абсолютном позиционировании если на text-area ws-invisible, то еще добавляется ее высота
+         //поэтому изначально скрываем ws-hidden, а потом уже делаем ws-invisible
+
+         if (!this.isEnabled()) {
+            this._inputField.removeClass('ws-hidden').addClass('ws-invivsible');
+         }
+         this._container.addClass('controls-TextArea__heightInit');
       },
 
       _getElementToFocus: function() {
