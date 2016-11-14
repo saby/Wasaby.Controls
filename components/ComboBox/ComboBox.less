@@ -32,16 +32,11 @@
    }
 
    &.controls-TextBox {
-     &.controls-ComboBox_emptyValue{
-       border-color: #EAEAEA #EAEAEA #CCCCCC #EAEAEA;
-     }
-     &.ws-has-focus, &:hover{
-       border-color: #ccc;
+      &.ws-has-focus, &:hover{
        .controls-ComboBox__arrowDown{
          color: #313E78!important;
        }
      }
-     border-color: #ccc;
      .controls-TextBox__afterFieldWrapper {
        width: @combo-box-after-width;
        + .controls-TextBox__fieldWrapper{
@@ -73,10 +68,6 @@
      &.ws-disabled,
      &.ws-disabled:hover {
        cursor: @combo-box-disabled-cursor;
-       border-width: @combo-box-disabled-border-width;
-       border-color: @combo-box-disabled-border-color;
-       border-bottom-color: @combo-box-disabled-border-bottom-color;
-       color: @combo-box-disabled-color;
        .controls-TextBox__afterFieldWrapper {
          .controls-ComboBox__arrowDown {
            display: none;
