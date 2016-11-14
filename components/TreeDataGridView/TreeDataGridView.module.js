@@ -172,6 +172,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       redraw: function() {
+         /* Перед перерисовкой скроем стрелки редактирования, иначе будет мограние,
+            т.к. после отрисовки данные полностью могу измениться */
+         this._hideEditArrow();
          TreeDataGridView.superclass.redraw.apply(this, arguments);
          /*redraw может позваться, когда данных еще нет*/
          if (this._getItemsProjection()) {
