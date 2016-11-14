@@ -2145,7 +2145,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      this._setLoadMoreCaption(this.getItems());
                   }
                   this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
-                  this._setInfiniteScrollState('demand');
+                  this._setInfiniteScrollState('down');
                   return;
                }
                // Пока по умолчанию считаем что везде подгрузка вниз, и если указана 'up' - значит она просто перевернута
