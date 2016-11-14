@@ -8,8 +8,9 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
    "Core/Deferred",
    "js!WS.Data/Query/Query",
    "Core/helpers/string-helpers",
-   "js!SBIS3.CONTROLS.HistoryController"
-], function( cSessionStorage, cMerge, Deferred,Query, strHelpers, HistoryController) {
+   "js!SBIS3.CONTROLS.HistoryController",
+   "Core/helpers/collection-helpers"
+], function( cSessionStorage, cMerge, Deferred,Query, strHelpers, HistoryController, cHelpers) {
 
    var ViewSourceMixin = /**@lends SBIS3.CONTROLS.ViewSourceMixin.prototype  */{
 
@@ -53,6 +54,17 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
                   }
                }
             }
+         }
+
+         /* Фильтр перед сохранением в историю специально обрабатывается, и оттуда удаляются ключи, которые лежат в опции
+            ignoreFiltersList. Но опцию ignoreFiltersList могут менять динамически, поэтому перед запросом надо
+            удалить ключи из фильтра, которые указаны в ignoreFiltersList. */
+         if(this._options.ignoreFiltersList && this._options.ignoreFiltersList.length) {
+            cHelpers.forEach(this._options.ignoreFiltersList, function(key) {
+               if(historyFilter.hasOwnProperty(key)) {
+                  delete historyFilter[key];
+               }
+            })
          }
 
          /* Подготавливаем фильтр */
