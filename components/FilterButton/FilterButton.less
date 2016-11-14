@@ -366,7 +366,12 @@
 }
 
 .ws-is-ie8 {
-   .controls__filterButton .controls__filterButton__filterLine {
-      margin: @controls-filterButton-button-margin-ff;
+   .controls__filterButton {
+      .controls__filterButton__filterLine {
+         margin: @controls-filterButton-button-margin-ff;
+         .controls__filterButton__filterLine-copyCross {
+            margin-left: -15px;
+         }
+      }
    }
 }
