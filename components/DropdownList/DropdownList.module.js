@@ -346,8 +346,16 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._picker.getContainer().on('mousedown focus', this._blockFocusEvents);
          },
          _blockFocusEvents: function(event) {
+            var eventsChannel = EventBus.channel('WindowChangeChannel');
             event.preventDefault();
             event.stopPropagation();
+            // Если случился mousedown то нужно нотифицировать о клике, перебив дефолтное событие перехода фокуса.
+            // Это нужно для корректного закрытия PopupMixin. Подумать как избавится от размазывания логики закрытия
+            // PopupMixin по нескольким компонентам.
+            // Эта логика дублируется в SBIS3.CONTROLS.RichEditorToolbarBase.
+            if(event.type === 'mousedown') {
+               eventsChannel.notify('onDocumentClick', event);
+            }
          },
          _getCurrentSelection: function(){
             var keys = [];
