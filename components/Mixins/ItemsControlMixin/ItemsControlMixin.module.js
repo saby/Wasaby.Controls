@@ -693,6 +693,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else {
                this._options._items = itemsOpt;
             }
+            if (this._options._itemsProjection) {
+               this._unsetItemsEventHandlers();
+               this._options._itemsProjection.destroy();
+            }
             this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
             this._options._itemsProjection = this._options._applyGroupingToProjection(this._options._itemsProjection, this._options);
             this._setItemsEventHandlers();
