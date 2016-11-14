@@ -197,8 +197,8 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             path = recordSet.getMetaData().path,
             toMap = [];
          if (recordSet.getMetaData().path) {
-            toMap = $.map(path.getChildItems(), function (elem) {
-               return '' + elem;
+            path.each(function (elem) {
+               toMap.push('' + elem.getId());
             });
          }
          var record = recordSet.getRecordById(parentKey);
