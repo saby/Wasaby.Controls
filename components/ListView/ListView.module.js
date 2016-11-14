@@ -1193,7 +1193,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
             this._getEmptyDataContainer().empty().html(html);
-            this._toggleEmptyData(!(this._getItemsProjection() && this._getItemsProjection().getCount()));
+            this._toggleEmptyData(this._getItemsProjection() && !this._getItemsProjection().getCount());
          },
 
          _getEmptyDataContainer: function() {
