@@ -69,7 +69,7 @@
       margin-top: 5px;
 
       &__empty {
-         background-color: #999999;
+         background-color: #cccccc;
          padding-right: 12px;
       }
 
@@ -82,7 +82,7 @@
    &__labels {
       position: relative;
       min-height: 14px;
-      color:#999999;
+      color:#cccccc;
       padding-top: 3px;
    }
 
@@ -99,4 +99,13 @@
       }
    }
 
+   &.ws-disabled {
+      .controls-Slider__point {
+         border: 2px solid #cccccc;
+         cursor: auto;
+      }
+      .controls-Slider__line__full {
+         background-color: #cccccc;
+      }
+   }
 }
