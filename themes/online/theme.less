@@ -74,9 +74,20 @@
    }
 }
 
-.controls-ListView__mobileSelected-fix .controls-ListView__item__selected:hover {
-   .controls-DataGridView__td:first-child {
-      .marker()
+.controls-ListView__mobileSelected-fix {
+   &.controls-DataGridView__markerRight {
+      .controls-ListView__item__selected:hover {
+         .controls-DataGridView__td:last-child {
+            .marker(right top);
+         }
+      }
+   }
+   &:not(.controls-DataGridView__markerRight) {
+      .controls-ListView__item__selected:hover {
+         .controls-DataGridView__td:first-child {
+            .marker();
+         }
+      }
    }
 }
 

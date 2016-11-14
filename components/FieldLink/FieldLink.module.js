@@ -22,6 +22,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.ITextValue",
        "js!SBIS3.CONTROLS.Utils.TemplateUtil",
        "js!WS.Data/Di",
+       "Core/core-functions",
        "js!SBIS3.CONTROLS.MenuIcon",
        "js!SBIS3.CONTROLS.Action.SelectorAction",
        'js!SBIS3.CONTROLS.FieldLink.Link',
@@ -60,7 +61,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         DialogOpener,
         ITextValue,
         TemplateUtil,
-        Di
+        Di,
+        cFunc
     ) {
 
        'use strict';
@@ -289,7 +291,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 /**
                  * @cfg {Boolean} Использовать для выбора {@link SBIS3.CONTROLS.Action.SelectorAction}
                  */
-                useSelectorAction: false
+                useSelectorAction: false,
+                /**
+                 * @noshow
+                 * @depreacted
+                 */
+                saveParentRecordChanges: false
              }
           },
 
@@ -836,7 +843,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _prepareItems: function() {
              var items = FieldLink.superclass._prepareItems.apply(this, arguments),
                  self = this,
-                 newRec, dataSource, dataSourceModel, dataSourceModelInstance;
+                 newRec, dataSource, dataSourceModel, dataSourceModelInstance,
+                 parent, changedFields;
 
              function getModel(model, config) {
                 return typeof model === 'string' ? Di.resolve(model, config) : new model(config)
@@ -851,6 +859,18 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       чтобы по нему проверять модели которые выбраны в поле связи */
                    dataSourceModelInstance = getModel(dataSourceModel, {});
 
+                   /* FIXME гразный хак, чтобы изменение рекордсета не влекло за собой изменение родительского рекорда
+                      Удалить, как Леха Мальцев будет позволять описывать более гибко поля записи, и указывать в качестве типа прикладную модель.
+                      Задача:
+                      https://inside.tensor.ru/opendoc.html?guid=045b9c9e-f31f-455d-80ce-af18dccb54cf&description= */
+                   if(this._options.saveParentRecordChanges) {
+                      parent = items._getMediator().getParent(items);
+
+                      if (parent && cInstance.instanceOfModule(parent, 'WS.Data/Entity/Model')) {
+                         changedFields = cFunc.clone(parent._changedFields);
+                      }
+                   }
+
                    items.each(function(rec, index) {
                       /* Создадим модель указанную в сорсе, и перенесём адаптер и формат из добавляемой записи,
                          чтобы не было конфликтов при мерже полей этих записей */
@@ -860,6 +880,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                          items.replace(rec, index);
                       }
                    });
+
+                   if(changedFields) {
+                      parent._changedFields = changedFields;
+                   }
                 }
 
                 /* Элементы, установленные из дилогов выбора / автодополнения могут иметь другой первичный ключ,

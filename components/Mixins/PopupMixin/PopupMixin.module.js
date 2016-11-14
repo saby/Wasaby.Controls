@@ -22,7 +22,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
       $(window).blur(function(e) {
          if(document.activeElement.tagName == "IFRAME"){
-            eventsChannel.notify('onDocumentClick', e);
+            if(! $(document.activeElement).hasClass('ws-popup-mixin-ignore-iframe')){
+               eventsChannel.notify('onDocumentClick', e);
+            }
          }
       });
 
