@@ -30,7 +30,7 @@
         </ws:SBIS3.CONTROLS.Link>
         <ws:SBIS3.CONTROLS.Link name="controls-FilterPanelChooser__allButton"
             className="controls-FilterPanelChooser__allButton"
-            caption="{{ viewMode === 'dictionary' ? ('Ещё' + ' ' + (_itemsCount - 3)) : captionFullList }}"
+            caption="{{ viewMode !== 'list' ? ('Ещё' + ' ' + (_itemsCount - 3)) : captionFullList }}"
             command="showAll"
             visible="{{ _itemsCount > 3 }}">
         </ws:SBIS3.CONTROLS.Link>
