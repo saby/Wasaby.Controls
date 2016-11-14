@@ -231,7 +231,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             footerTpl: this._options.folderFooterTpl,
             multiselect: this._options.multiselect,
             colspan: this._options.columns.length,
-            padding: this._options._paddingSize * level
+            padding: this._options._paddingSize * level + this._options._originallPadding
          }
       },
       _getFolderFooterWrapper: function() {
@@ -245,25 +245,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             treeLevel = parentProj.getLevel();
          }
          return treeLevel * HIER_WRAPPER_WIDTH + ADDITIONAL_LEVEL_OFFSET;
-      },
-      _onResizeHandler: function() {
-         TreeDataGridView.superclass._onResizeHandler.apply(this, arguments);
-         this._resizeFoldersFooters();
-      },
-
-      _resizeFoldersFooters: function() {
-         /*будем ресайзить футеры только в частичном скролле. В остальных случаях они и так норм*/
-         if (this._options.startScrollColumn) {
-            var footers = $('.controls-TreeView__folderFooterContainer', this._container.get(0));
-            var width = this._container.width();
-            //Если в браузере присутствует колонка с checkbox'ом, то нужно вычесть его ширину из общей ширины футера
-            if (this._options.multiselect) {
-               //Нельзя смотреть ширину первой колонки, позвав метод width у элемента col (дочерний элемент colgroup)
-               //т.к. в 8 и 10 ie это приводит к тому, что начинает ехать ширина у остальных колонок
-               width = width - this._container.find('.controls-DataGridView__td__checkBox').first().width();
-            }
-            footers.outerWidth(width);
-         }
       },
 
       _keyboardHover: function(e) {
