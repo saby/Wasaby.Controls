@@ -943,13 +943,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 },
                 handlers: {
                    onShow: function() {
-                      var revertedVertical = this._picker.getContainer().hasClass('controls-popup-revert-vertical');
-
-                      if(constants.browser.isMobileIOS) {
-                         revertedVertical = !revertedVertical;
-                      }
-
-                      if (revertedVertical) {
+                      if (this._isSuggestPickerRevertedVertical()) {
                          if (!this._listReversed) {
                             this._reverseList();
                          }
@@ -958,6 +952,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                             this._reverseList();
                          }
                       }
+
+                      this._processSuggestPicker();
                    }.bind(this)
                 }
              };
@@ -967,6 +963,33 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 cfg.verticalAlign.side = 'bottom';
              }
              return cfg;
+          },
+
+          _isSuggestPickerRevertedVertical: function() {
+             var revertedVertical = this._picker.getContainer().hasClass('controls-popup-revert-vertical');
+
+             if(constants.browser.isMobileIOS) {
+                revertedVertical = !revertedVertical;
+             }
+
+             return revertedVertical;
+          },
+
+          /* После отображения автодополнение поля связи может быть перевёрнуто (не влезло на экран вниз),
+             при этом необходимо, чтобы самый нижний элемент в автодополнении был виден, а он может находить за скролом,
+             поэтому при перевороте проскролим вниз автодополнение */
+          _processSuggestPicker: function() {
+             if(this._picker && this._isSuggestPickerRevertedVertical()) {
+                var pickerContainer = this._picker.getContainer();
+                pickerContainer[0].scrollTop = pickerContainer[0].scrollHeight;
+             }
+          },
+          /* После перерисовки списка автодополнения, пикер может менять своё положение,
+             а перерисовка может вызываться не только платформенным кодом, но и прикладным, поэтому
+             после перерисовки надо вызвать метод, обрабатывающий положение автодополнение */
+          _onListDrawItems: function() {
+             FieldLink.superclass._onListDrawItems.apply(this, arguments);
+             this._processSuggestPicker();
           },
           /**
            * Обрабатывает нажатие клавиш, специфичных для поля связи
