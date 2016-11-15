@@ -239,8 +239,10 @@ define('js!SBIS3.CONTROLS.FormController', [
              eventName = needUpdateKey ? 'onCreateModel' : 'onReadModel',
              self = this;
          if (cInstance.instanceOfModule(receiptRecordDeferred, 'Core/Deferred')){
+            this._toggleOverlay(true);
             receiptRecordDeferred.addCallback(function(record){
                self.setRecord(record, needUpdateKey);
+               self._toggleOverlay(false);
                self._actionNotify(eventName);
             });
          }

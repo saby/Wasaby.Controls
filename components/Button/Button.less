@@ -42,7 +42,6 @@
   // Button's icon
   .controls-Button__icon {
     position: absolute;
-    color: @default-color !important;
     .button-mixin(@button-icon-top-offset; @button-icon-left-offset; 16px; @button-border-width; @button-text-margin-left; @button-text-margin-right);
 
     &.icon-24 {
@@ -64,8 +63,11 @@
     .box-shadow(@button-primary-shadow);
     background: @button-primary-bg;
 
-    .controls-Button__icon {
-      color: @primary-color !important;
+    &.controls-Click__active:active {
+      color: @button-primary-active-text-color;
+      border: @button-primary-active-border;
+      .box-shadow(@button-primary-active-shadow);
+      background: @button-primary-active-bg;
     }
 
     &.ws-disabled {
@@ -77,7 +79,7 @@
   }
 
   // Big default button
-    &.controls-Button__big {
+  &.controls-Button__big {
     font: @button-big-font;
     color: @button-big-text-color;
     text-align: @button-big-text-alignment;
@@ -90,6 +92,13 @@
     .border-radius(@button-big-border-radius);
     .box-shadow(@button-big-shadow);
     background: @button-big-bg;
+
+    &.controls-Click__active:active {
+      color: @button-big-active-text-color;
+      border: @button-big-active-border;
+      .box-shadow(@button-big-active-shadow);
+      background: @button-big-active-bg;
+    }
 
     .controls-Button__text {
       margin: @button-big-text-margin;
@@ -117,9 +126,14 @@
       border: @button-big-primary-border;
       .box-shadow(@button-big-primary-shadow);
       background: @button-big-primary-bg;
-      .controls-Button__icon {
-        color: @primary-color !important;
+
+      &.controls-Click__active:active {
+        color: @button-big-primary-active-text-color;
+        border: @button-big-primary-active-border;
+        .box-shadow(@button-big-primary-active-shadow);
+        background: @button-big-primary-active-bg;
       }
+
       &.ws-disabled {
         color: @button-big-disabled-text-color;
         border: @button-big-disabled-border;
@@ -137,6 +151,13 @@
       .box-shadow(@button-big-disabled-shadow);
       background: @button-big-disabled-bg;
     }
+  }
+
+  &.controls-Click__active:active {
+    color: @button-active-text-color;
+    border: @button-active-border;
+    .box-shadow(@button-active-shadow);
+    background: @button-active-bg;
   }
 
   &.ws-disabled {
@@ -160,9 +181,6 @@
       border: @button-hover-border;
       .box-shadow(@button-hover-shadow);
       background: @button-hover-bg;
-      .controls-Button__icon {
-        color: @button-icon-color !important;
-      }
     }
     // Normal primary button
     &.controls-Button__primary {
@@ -171,9 +189,6 @@
         border: @button-primary-hover-border;
         .box-shadow(@button-primary-hover-shadow);
         background: @button-primary-hover-bg;
-        .controls-Button__icon {
-          color: @primary-color !important;
-        }
       }
 
     }
@@ -184,12 +199,7 @@
         .box-shadow(@button-big-hover-shadow);
         background: @button-big-hover-bg;
       }
-      &.controls-Click__active:active {
-        color: @button-big-active-text-color;
-        border: @button-big-active-border;
-        .box-shadow(@button-big-active-shadow);
-        background: @button-big-active-bg;
-      }
+
       &.controls-Button__primary {
         &:hover {
           color: @button-big-primary-hover-text-color;
@@ -197,30 +207,8 @@
           .box-shadow(@button-big-primary-hover-shadow);
           background: @button-big-primary-hover-bg;
         }
-        &.controls-Click__active:active {
-          color: @button-big-primary-active-text-color;
-          border: @button-big-primary-active-border;
-          .box-shadow(@button-big-primary-active-shadow);
-          background: @button-big-primary-active-bg;
-        }
       }
     }
-
-    &.controls-Click__active:active {
-      color: @button-active-text-color;
-      border: @button-active-border;
-      .box-shadow(@button-active-shadow);
-      background: @button-active-bg;
-    }
-    &.controls-Button__primary {
-      &.controls-Click__active:active {
-        color: @button-primary-active-text-color;
-        border: @button-primary-active-border;
-        .box-shadow(@button-primary-active-shadow);
-        background: @button-primary-active-bg;
-      }
-    }
-
   }
 }
 

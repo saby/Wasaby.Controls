@@ -507,7 +507,7 @@ define(
             if (!this._getFormatModel().isFilled()) {
                date = this._getDateByText(this._options.text, this._lastDate, true);
                if (date) {
-                  this.setDate(date);
+                  this._setDate(date);
                }
             }
             this._notifyOnDateChanged();

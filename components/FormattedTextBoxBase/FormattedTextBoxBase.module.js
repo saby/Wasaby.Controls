@@ -836,8 +836,9 @@ define(
       },
 
       _getTextDiff: function(){
-         var oldText = this._options.text ? this._options.text.split(/:|-/)  : this._getClearText().split(/:|-/),
-             newText = this._inputField.text().split(':');
+         var splitRegExp = this._getSplitterRegExp(),
+             oldText = this._options.text ? this._options.text.split(splitRegExp)  : this._getClearText().split(splitRegExp),
+             newText = this._inputField.text().split(splitRegExp);
          for (var i = 0, l = newText.length; i < l; i++) {
             if (oldText[i].length !== newText[i].length){
                for (var j = 0; j < newText[i].length; j++){
@@ -851,6 +852,10 @@ define(
             }
          }
          return false;
+      },
+
+      _getSplitterRegExp: function(){
+         return /[.,\/\- :=]/;
       },
 
       _getClearText: function(){

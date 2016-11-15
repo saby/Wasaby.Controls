@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.Clickable', [
 ], function( constants) {
 
    if (typeof window !== 'undefined') {
-      $(document).mouseup(function () {
+      $(document).on("touchend  mouseup", function () {
          $('.controls-Click__active').removeClass('controls-Click__active');
       });
    }
@@ -47,8 +47,8 @@ define('js!SBIS3.CONTROLS.Clickable', [
          this._publish('onActivated');
          var self = this;
 
-         this._container.mousedown(function (e) {
-            if (e.which == 1 && self.isEnabled()) {
+         this._container.on("touchstart  mousedown", function (e) {
+            if ((e.which == 1 || e.type == 'touchstart') && self.isEnabled()) {
                self._container.addClass('controls-Click__active');
             }
             //В IE предотвратим нативное смещение текста в правый нижний угол внутри кнопки
