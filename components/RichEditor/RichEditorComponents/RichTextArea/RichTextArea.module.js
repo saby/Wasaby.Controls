@@ -1074,7 +1074,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      naturalSizes = ImageUtil.getNaturalSizes($images[i]);
                      currentWidth = $($images[i]).width();
                      width = currentWidth > maximalWidth ? maximalWidth : currentWidth === 0 ? naturalSizes.width > maximalWidth ? maximalWidth : naturalSizes.width : currentWidth;
-                     if (!$images[i].style || !$images[i].style.width || $images[i].style.width.indexOf('%') < 0) {
+                     if (!$images[i].style || ((!$images[i].style.width || $images[i].style.width.indexOf('%') < 0)) && (naturalSizes.width > naturalSizes.height) ) {
                         $($images[i]).css({
                            'width': width,
                            'height': 'auto'
