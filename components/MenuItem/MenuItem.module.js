@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.MenuItem', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS
       $constructor: function() {
          this._iconContainer = $('.js-controls-MenuItem__icon',this.getContainer());
          // Предотвращаем всплытие focus и mousedown с контейнера меню, т.к. это приводит к потере фокуса
-         // при потере фокуса в богатом редакторе теряется текущее выделение текста
+         // при потере фокуса в богатом редакторе теряется текущее выделение текста  в IE8
          this._container.on('mousedown focus', this._blockFocusEvents);
       },
       _blockFocusEvents: function(event) {
