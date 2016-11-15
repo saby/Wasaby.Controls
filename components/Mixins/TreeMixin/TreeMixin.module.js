@@ -650,7 +650,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        */
       _breadCrumbsItemClick : function(id) {
          //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onBreadCrumbClick'), а вотом выполняется setCurrentRoot
-         if (this.isEnabled() && this._notify('onSearchPathClick', id) !== false ) {
+         if (this._notify('onSearchPathClick', id) !== false ) {
 
 
             var filter = cMerge(this.getFilter(), {

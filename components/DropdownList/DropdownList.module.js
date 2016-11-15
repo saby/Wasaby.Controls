@@ -5,6 +5,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    [
    "Core/constants",
    "Core/Deferred",
+   "Core/EventBus",
    "Core/IoC",
    "Core/ConsoleLogger",
    "js!SBIS3.CORE.CompoundControl",
@@ -31,7 +32,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "i18n!SBIS3.CONTROLS.DropdownList"
 ],
 
-   function (constants, Deferred, IoC, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker, cInstance, dcHelpers) {
+   function (constants, Deferred, EventBus, IoC, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker, cInstance, dcHelpers) {
 
       'use strict';
       /**
@@ -346,8 +347,16 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._picker.getContainer().on('mousedown focus', this._blockFocusEvents);
          },
          _blockFocusEvents: function(event) {
+            var eventsChannel = EventBus.channel('WindowChangeChannel');
             event.preventDefault();
             event.stopPropagation();
+            // Если случился mousedown то нужно нотифицировать о клике, перебив дефолтное событие перехода фокуса.
+            // Это нужно для корректного закрытия PopupMixin. Подумать как избавится от размазывания логики закрытия
+            // PopupMixin по нескольким компонентам.
+            // Эта логика дублируется в SBIS3.CONTROLS.RichEditorToolbarBase.
+            if(event.type === 'mousedown') {
+               eventsChannel.notify('onDocumentClick', event);
+            }
          },
          _getCurrentSelection: function(){
             var keys = [];
@@ -442,6 +451,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                }
                DropdownList.superclass.showPicker.apply(this, arguments);
 
+               this._pickerBodyContainer.css('max-width', '');
                pickerBodyWidth = this._pickerBodyContainer[0].clientWidth;
                pickerHeaderWidth = this._pickerHeadContainer[0].clientWidth;
                this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', pickerBodyWidth === pickerHeaderWidth);
@@ -504,14 +514,16 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   this._defaultId = item.getId();
                }
                this._getHtmlItemByItem(item).addClass('controls-ListView__defaultItem');
-               if (this._buttonHasMore) {
-                  var needShowHasMoreButton = this._hasNextPage(this.getItems().getMetaData().more, 0);
-                  if (!this._options.multiselect){
-                     this._buttonHasMore.getContainer().closest('.controls-DropdownList__buttonsBlock').toggleClass('ws-hidden', !needShowHasMoreButton);
-                  }
-                  else{
-                     this._buttonHasMore[needShowHasMoreButton ? 'show' : 'hide']();
-                  }
+            }
+         },
+         _setHasMoreButtonVisibility: function(){
+            if (this.getItems()) {
+               var needShowHasMoreButton = this._hasNextPage(this.getItems().getMetaData().more, 0);
+               if (!this._options.multiselect){
+                  this._buttonHasMore.getContainer().closest('.controls-DropdownList__buttonsBlock').toggleClass('ws-hidden', !needShowHasMoreButton);
+               }
+               else{
+                  this._buttonHasMore[needShowHasMoreButton ? 'show' : 'hide']();
                }
             }
          },
@@ -628,6 +640,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             this._setText(this._prepareText(textValue));
             this._redrawHead(isDefaultIdSelected);
+            this._setHasMoreButtonVisibility();
             this._resizeFastDataFilter();
          },
 

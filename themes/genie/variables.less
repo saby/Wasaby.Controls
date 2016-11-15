@@ -1046,7 +1046,8 @@
 @combo-box-cursor:                              pointer;
 @combo-box-disabled-cursor:                     default;
 @combo-box-disabled-border-width:               0 0 1px 0;
-@combo-box-disabled-border-color:               #E4E4E4;
+@combo-box-disabled-border-bottom-color:        #E4E4E4;
+@combo-box-disabled-border-color:               transparent;
 @combo-box-disabled-color:                      inherit;
 
 @combo-box-field-font:                          inherit;
@@ -1561,7 +1562,7 @@
 @list-view-actions-active-bg:                   @data-grid-row-hover-bg !important;
 @list-view-actions-bg:                          @data-grid-row-hover-bg;
 
-@list-view-items-toolbar-bottom:                     1px;
+@list-view-items-toolbar-bottom:                     3px;
 @list-view-items-toolbar-right:                      0;
 @list-view-items-toolbar-zindex:                     10;
 @list-view-items-toolbar-line-height:                16px;
@@ -1574,6 +1575,7 @@
 @list-view-items-toolbar-ipad-minHeight:             30px;
 @touch-mode-items-toolbar-icon-margin-top:           -24px;
 @list-view-items-toolbar-right-tile:                 1px;
+@list-view-items-toolbar-bottom-tile:                2px;
 
 @bottomStyle-items-toolbar-margin-top:               2px;
 
@@ -1615,6 +1617,9 @@
 @listView-empty-data-color:                     @black-color;
 @listView-empty-data-font-size:                 15px;
 @listView-empty-data-padding-top:               46px;
+@listView-servicefooter-padding:                0 8px;
+@listView-servicefooter-height:                 32px;
+@listView-servicefooter-fontsize:               12px;
 
 // ItemsToolbar small
 @list-view-small-items-toolbar-line-height:         16px;
@@ -1933,7 +1938,7 @@
 
 
 @DropdownList-captionWrapper-margin:          0 19px 0 19px;
-@DropdownList-min-height:                     24px;
+@DropdownList-height:                         24px;
 @DropdownList-shadow-hover:                   0 0 0 1px @DropdownList-border-color;
 
 @DropdownList-picker-bg:                              @white-color;
@@ -1944,18 +1949,19 @@
 @DropdownList-picker-padding:                         4px 0;
 @DropdownList-picker-border:                          2px solid @DropdownList-border-color;
 @DropdownList-picker-head-border-radius:              4px 4px 0 0;
-@DropdownList-picker-list-border-radius:              0 0 4px 4px;
+@DropdownList-picker-list-border-radius-equal:        0 0 4px 4px;
 @DropdownList-picker-list-right-border-radius:        0 4px 4px 4px;
 @DropdownList-picker-list-left-border-radius:         4px 0 4px 4px;
+@DropdownList-picker-list-border-radius:              4px;
 @DropdownList-picker-menu-font-size:                  15px;
 @DropdownList-picker-menu-white-space:                nowrap;
 @DropdownList-picker-menu-item-padding:               4px 16px 4px 16px;
 @DropdownList-picker-menu-item-margin:                0;
 @DropdownList-picker-menu-item-multiselect-padding:   0;
 @DropdownList-picker-menu-item-color:                 @white-color;
-@DropdownList-picker-menu-item-color-blur:            rgba(255, 255, 255, 0.8);
+@DropdownList-picker-menu-item-color-blur:            rgba(255, 255, 255, 0);
 @DropdownList-picker-menu-item-hover:                 #F0F5FB;
-@DropdownList-picker-menu-item-hover-blur:            rgba(240, 245, 251, 0.8);
+@DropdownList-picker-menu-item-hover-blur:            rgba(240, 245, 251, 0);
 @DropdownList-linkStyleColor:                         #0055bb;
 @DropdownList-linkStyleHoverColor:                    #313E78;
 @DropdownList-footer-buttonsBlock-position:           relative;

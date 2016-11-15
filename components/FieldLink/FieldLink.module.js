@@ -22,6 +22,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.ITextValue",
        "js!SBIS3.CONTROLS.Utils.TemplateUtil",
        "js!WS.Data/Di",
+       "Core/core-functions",
        "js!SBIS3.CONTROLS.MenuIcon",
        "js!SBIS3.CONTROLS.Action.SelectorAction",
        'js!SBIS3.CONTROLS.FieldLink.Link',
@@ -60,7 +61,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         DialogOpener,
         ITextValue,
         TemplateUtil,
-        Di
+        Di,
+        cFunc
     ) {
 
        'use strict';
@@ -289,7 +291,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 /**
                  * @cfg {Boolean} Использовать для выбора {@link SBIS3.CONTROLS.Action.SelectorAction}
                  */
-                useSelectorAction: false
+                useSelectorAction: false,
+                /**
+                 * @noshow
+                 * @depreacted
+                 */
+                saveParentRecordChanges: false
              }
           },
 
@@ -489,9 +496,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           setActive: function(active) {
+             var wasActive = this.isActive();
+
              FieldLink.superclass.setActive.apply(this, arguments);
 
-             if (active && this._needFocusOnActivated() && this.isEnabled() && constants.browser.isMobilePlatform) {
+             /* Для Ipad'a надо при setActive устанавливать фокус в поле ввода,
+                иначе не покажется клавиатура, т.к. установка фокуса в setAcitve работает асинхронно,
+                а ipad воспринимает установку фокуса только в потоке кода, который работает после браузерных событий.
+                + добавляю проверку, что компоент был до этого неактивен (такая проверка есть и в контроловском setActive),
+                в противном случае будут лишние установки фокуса в поле ввода, из-за чего будет мограть саггест на Ipad'e */
+             if (active && !wasActive && this._needFocusOnActivated() && this.isEnabled() && constants.browser.isMobilePlatform) {
                 this._getElementToFocus().focus();
              }
           },
@@ -829,7 +843,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _prepareItems: function() {
              var items = FieldLink.superclass._prepareItems.apply(this, arguments),
                  self = this,
-                 newRec, dataSource, dataSourceModel, dataSourceModelInstance;
+                 newRec, dataSource, dataSourceModel, dataSourceModelInstance,
+                 parent, changedFields;
 
              function getModel(model, config) {
                 return typeof model === 'string' ? Di.resolve(model, config) : new model(config)
@@ -844,6 +859,18 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       чтобы по нему проверять модели которые выбраны в поле связи */
                    dataSourceModelInstance = getModel(dataSourceModel, {});
 
+                   /* FIXME гразный хак, чтобы изменение рекордсета не влекло за собой изменение родительского рекорда
+                      Удалить, как Леха Мальцев будет позволять описывать более гибко поля записи, и указывать в качестве типа прикладную модель.
+                      Задача:
+                      https://inside.tensor.ru/opendoc.html?guid=045b9c9e-f31f-455d-80ce-af18dccb54cf&description= */
+                   if(this._options.saveParentRecordChanges) {
+                      parent = items._getMediator().getParent(items);
+
+                      if (parent && cInstance.instanceOfModule(parent, 'WS.Data/Entity/Model')) {
+                         changedFields = cFunc.clone(parent._changedFields);
+                      }
+                   }
+
                    items.each(function(rec, index) {
                       /* Создадим модель указанную в сорсе, и перенесём адаптер и формат из добавляемой записи,
                          чтобы не было конфликтов при мерже полей этих записей */
@@ -853,6 +880,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                          items.replace(rec, index);
                       }
                    });
+
+                   if(changedFields) {
+                      parent._changedFields = changedFields;
+                   }
                 }
 
                 /* Элементы, установленные из дилогов выбора / автодополнения могут иметь другой первичный ключ,
@@ -862,7 +893,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    if(rec.getIdProperty() !== self._options.keyField && rec.get(self._options.keyField) !== undefined) {
                       rec.setIdProperty(self._options.keyField);
                    }
-                })
+                });
              }
              return items;
           },
@@ -916,13 +947,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                          return;
                       }
 
-                      var revertedVertical = this._picker.getContainer().hasClass('controls-popup-revert-vertical');
-
-                      if(constants.browser.isMobileIOS) {
-                         revertedVertical = !revertedVertical;
-                      }
-
-                      if (revertedVertical) {
+                      if (this._isSuggestPickerRevertedVertical()) {
                          if (!this._listReversed) {
                             this._reverseList();
                          }
@@ -931,6 +956,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                             this._reverseList();
                          }
                       }
+
+                      this._processSuggestPicker();
                    }.bind(this)
                 }
              };
@@ -940,6 +967,33 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 cfg.verticalAlign.side = 'bottom';
              }
              return cfg;
+          },
+
+          _isSuggestPickerRevertedVertical: function() {
+             var revertedVertical = this._picker.getContainer().hasClass('controls-popup-revert-vertical');
+
+             if(constants.browser.isMobileIOS) {
+                revertedVertical = !revertedVertical;
+             }
+
+             return revertedVertical;
+          },
+
+          /* После отображения автодополнение поля связи может быть перевёрнуто (не влезло на экран вниз),
+             при этом необходимо, чтобы самый нижний элемент в автодополнении был виден, а он может находить за скролом,
+             поэтому при перевороте проскролим вниз автодополнение */
+          _processSuggestPicker: function() {
+             if(this._picker && this._isSuggestPickerRevertedVertical()) {
+                var pickerContainer = this._picker.getContainer();
+                pickerContainer[0].scrollTop = pickerContainer[0].scrollHeight;
+             }
+          },
+          /* После перерисовки списка автодополнения, пикер может менять своё положение,
+             а перерисовка может вызываться не только платформенным кодом, но и прикладным, поэтому
+             после перерисовки надо вызвать метод, обрабатывающий положение автодополнение */
+          _onListDrawItems: function() {
+             FieldLink.superclass._onListDrawItems.apply(this, arguments);
+             this._processSuggestPicker();
           },
           /**
            * Обрабатывает нажатие клавиш, специфичных для поля связи

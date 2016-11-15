@@ -193,15 +193,17 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {Object} model Модель с измененными данными
           */
          /**
+          * @typedef {String} BeginEditResult
+          * @variant Cancel Отменить завершение редактирования.
+          * @variant PendingAll В результате редактирования ожидается вся запись, как есть (с текущим набором полей).
+          * @variant PendingModifiedOnly В результате редактирования ожидаются только измененные поля. Это поведение используется по умолчанию.
+          */
+         /**
           * @event onBeginEdit Возникает перед началом редактирования
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Object} model Редактируемая модель
-          * @returns {*} Возможные значения:
-          * <ol>
-          *    <li>Deferred - запуск редактирования по завершению работы возвращенного Deferred;</li>
-          *    <li>false - прервать редактирование;</li>
-          *    <li>* - продолжить редактирование в штатном режиме.</li>
-          * </ol>
+          * @param {Boolean} isAdd Флаг, означающий что событию предшествовал запуск добавления по месту.
+          * @returns {BeginEditResult|Deferred} Deferred - используется для асинхронной подготовки редактируемой записи. Из Deferred необходимо обязательно возвращать запись, открываемую на редактирование.
           */
          /**
           * @event onBeginAdd Возникает перед началом добавления записи по месту
@@ -1191,7 +1193,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
             this._getEmptyDataContainer().empty().html(html);
-            this._toggleEmptyData(!(this._getItemsProjection() && this._getItemsProjection().getCount()) && !!html);
+            this._toggleEmptyData(this._getItemsProjection() && !this._getItemsProjection().getCount());
          },
 
          _getEmptyDataContainer: function() {
@@ -1422,6 +1424,13 @@ define('js!SBIS3.CONTROLS.ListView',
                this.subscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
             } else if (this._isClickEditMode()) {
                this.subscribe('onItemClick', this._startEditOnItemClick);
+            }
+         },
+         _itemsReadyCallback: function() {
+            ListView.superclass._itemsReadyCallback.apply(this, arguments);
+            if (this._hasEditInPlace()) {
+               this._getEditInPlace().setItems(this.getItems());
+               this._getEditInPlace().setItemsProjection(this._getItemsProjection());
             }
          },
          beforeNotifyOnItemClick: function() {
@@ -2107,7 +2116,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      this._setLoadMoreCaption(this.getItems());
                   }
                   this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
-                  this._setInfiniteScrollState('demand');
+                  this._setInfiniteScrollState('down');
                   return;
                }
                // Пока по умолчанию считаем что везде подгрузка вниз, и если указана 'up' - значит она просто перевернута
@@ -2328,11 +2337,21 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _setLoadMoreCaption: function(dataSet){
             var more = dataSet.getMetaData().more,
-               caption;
+               caption, allCount;
             // Если число и больше pageSize то "Еще pageSize"
-            if (typeof more === 'number' && more < this._options.pageSize) {
-               caption = more;
+            if (typeof more === 'number') {
+               allCount = more;
+               $('.controls-ListView__counterValue', this._container.get(0)).text(allCount);
+               $('.controls-ListView__counter', this._container.get(0)).removeClass('ws-hidden');
+
+               var ost = more - (this._scrollOffset.bottom + this._options.pageSize);
+               if (ost < 0) {
+                  this._loadMoreButton.setVisible(false);
+                  return;
+               }
+               caption = ost < this._options.pageSize ? ost : this._options.pageSize;
             } else {
+               $('.controls-ListView__counter', this._container.get(0)).addClass('ws-hidden');
                if (more === false) {
                   this._loadMoreButton.setVisible(false);
                   return;
@@ -2340,7 +2359,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   caption = this._options.pageSize;
                }
             }
+
             this._loadMoreButton.setCaption('Еще ' + caption);
+            this._loadMoreButton.setVisible(true);
          },
 
          _onLoadMoreButtonActivated: function(event){
@@ -2553,6 +2574,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _toggleEmptyData: function(show) {
+            show = show && this._options.emptyHTML;
             this._getEmptyDataContainer().toggleClass('ws-hidden', !show);
             if(this._pagerContainer) {
                this._pagerContainer.toggleClass('ws-hidden', show);

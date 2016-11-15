@@ -242,11 +242,12 @@ define(
             this.setDate(new Date());
          } else if (key == constants.key.plus || key == constants.key.minus) {
             if (curDate) {
+               curDate = new Date(curDate);
                curDate.setDate(curDate.getDate() + (key == constants.key.plus ? 1 : -1));
                // При обновлении даты создаем новый экземпляр, чтобы корректно работало определение того,
                // что свойство изменилось во внешнем коде. oldValue === newValue.
                // Плюс мы не хотим менять когда то возвращенное значение.
-               this.setDate(new Date(curDate));
+               this.setDate(curDate);
             }
          } else {
             return DateBox.superclass._keyDownBind.apply(this, arguments);
@@ -485,7 +486,7 @@ define(
             if (!this._getFormatModel().isFilled()) {
                date = this._getDateByText(this._options.text, this._lastDate, true);
                if (date) {
-                  this.setDate(date);
+                  this._setDate(date);
                }
             }
             this._notifyOnDateChanged();

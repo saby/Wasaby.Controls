@@ -1059,7 +1059,7 @@
 
 .mCS-minimal-dark.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar, .mCS-minimal-dark.mCSB_scrollTools .mCSB_dragger:active .mCSB_dragger_bar {
     background-color: #000;
-    background-color: rgba(0, 0, 0, .5);
+    background-color: rgba(0, 0, 0, .1);
     filter: "alpha(opacity=50)";
     -ms-filter: "alpha(opacity=50)"
 }

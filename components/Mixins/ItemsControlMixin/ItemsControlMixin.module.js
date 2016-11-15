@@ -696,6 +696,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else {
                this._options._items = itemsOpt;
             }
+            if (this._options._itemsProjection) {
+               this._unsetItemsEventHandlers();
+               this._options._itemsProjection.destroy();
+            }
             this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
             this._options._itemsProjection = this._options._applyGroupingToProjection(this._options._itemsProjection, this._options);
             this._setItemsEventHandlers();
@@ -805,7 +809,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                }
 
             }
-            this._toggleEmptyData(!(data.records && data.records.length) && this._options.emptyHTML);
+            this._toggleEmptyData(!(data.records && data.records.length));
 
          }
          this._reviveItems();
@@ -868,13 +872,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             /*TODO Особое поведение при группировке*/
                if (!Object.isEmpty(this._options.groupBy)) {
-                  /*TODO косяк Лехи - не присылает группу при удалении*/
-                  /*if (this._options.easyGroup) {
+
+                  if (this._options.easyGroup) {
                      if (this._getItemsProjection().getGroupItems(groupId).length < 1) {
                         $('[data-group="' + groupId + '"]', this._container.get(0)).remove();
                      }
                   }
-                  else {*/
+                  else {
                      var prev = targetElement.prev();
                      if (prev.length && prev.hasClass('controls-GroupBy')) {
                         var next = targetElement.next();
@@ -882,7 +886,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                            prev.remove();
                         }
                      }
-                  /*}*/
+                  }
                }
 
                removedElements.push(targetElement.get(0));
@@ -1871,7 +1875,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._clearItems();
             this._needToRedraw = false;
             records = this._options._getRecordsForRedraw.call(this, this._options._itemsProjection, this._options);
-            this._toggleEmptyData(!records.length && this._options.emptyHTML);
+            this._toggleEmptyData(!records.length);
             this._drawItems(records);
          }
          /*класс для автотестов*/
@@ -2066,9 +2070,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          this._reviveItems();
       },
-      _onCollectionRemove: function(items, notCollapsed) {
+      _onCollectionRemove: function(items, notCollapsed, groupId) {
          if (items.length) {
-            this._removeItems(items)
+            this._removeItems(items, groupId)
          }
       },
       _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {

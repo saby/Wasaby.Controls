@@ -11,8 +11,10 @@ define('js!SBIS3.CONTROLS.BreakClickBySelectMixin', [
     var BreakClickBySelectMixin = /**@lends SBIS3.CONTROLS.BreakClickBySelect.prototype  */{
         $constructor: function () {
             var self = this;
-            this._container.bind('mousedown', function () {
-                if (self._hasSelectionInContainer()) {
+            this._container.bind('mousedown', function (e) {
+                //Снимаем выделение только по нажатию левой кнопки мыши. Т.к. должна быть возможность
+                //при нажатие правой кнопки мыши скопировать текст с помощью контекстного меню.
+                if (e.which === 1 && self._hasSelectionInContainer()) {
                     self._getSelection().removeAllRanges();
                 }
             });
