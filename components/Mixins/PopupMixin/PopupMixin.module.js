@@ -169,8 +169,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
 
-         EventBus.globalChannel().subscribe('MobileInputFocus', this._touchKeyboardMoveHandler.bind(this));
-         EventBus.globalChannel().subscribe('MobileInputFocusOut', this._touchKeyboardMoveHandler.bind(this));
+         this._touchKeyboardMoveHandler = this._touchKeyboardMoveHandler.bind(this);
+         EventBus.globalChannel().subscribe('MobileInputFocus', this._touchKeyboardMoveHandler);
+         EventBus.globalChannel().subscribe('MobileInputFocusOut', this._touchKeyboardMoveHandler);
 
          if (this._options.closeButton) {
             container.append('<div class="controls-PopupMixin__closeButton"></div>');
