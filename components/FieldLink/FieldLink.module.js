@@ -318,6 +318,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
              commandDispatcher.declareCommand(this, 'showAllItems', this._showAllItems);
              commandDispatcher.declareCommand(this, 'showSelector', this._showSelector);
 
+             this.subscribe('onListItemSelect', function (event, item) {
+                /* Чтобы не было лишнего запроса на БЛ, добавим рекорд в набор выбранных */
+                /* Требуется делать клон т.к. :
+                   запись передаётся по ссылке и любые действия с ней будут отображаться и в списке.
+                   Особенно актуально это когда зибниден selectedItem в добавлении по месту. */
+                this.addSelectedItems([item.clone()]);
+                this.setText('');
+             });
+
             /* При изменении выбранных элементов в поле связи - сотрём текст.
                Достаточно отслеживать изменение массива ключей,
                т.к. это событие гарантирует изменение выбранных элементов
@@ -757,27 +766,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this._inputField.focus();
              this._observableControlFocusHandler();
           },
-
-          /**
-           * Обработчик на выбор записи в автодополнении
-           * @private
-           */
-          _onListItemSelect: function(id, item) {
-             /* Чтобы не было лишнего запроса на БЛ, добавим рекорд в набор выбранных */
-             /* Требуется делать клон т.к. :
-                запись передаётся по ссылке и любые действия с ней будут отображаться и в списке.
-                Особенно актуально это когда зибниден selectedItem в добавлении по месту. */
-             this.addSelectedItems([item.clone()]);
-             this.setText('');
-             /* По задаче:
-                https://inside.tensor.ru/opendoc.html?guid=7ce2bd66-bb6b-4628-b589-0e10e2bb8677&description=
-                Ошибка в разработку 03.11.2016 В полях связи не скрывается список с историей после выбора из него значения. Необходимо закрывать...
-
-                В стандарте не описано поведение автодополнения при выборе из него,
-                поэтому жду как опишут и согласуют. Для выпуска 200 решили, что всегда будем скрывать при выборе */
-             this.hidePicker();
-          },
-
 
           setDataSource: function(ds, noLoad) {
              this.once('onListReady', function(event, list) {
