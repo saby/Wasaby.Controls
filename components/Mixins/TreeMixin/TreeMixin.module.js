@@ -144,12 +144,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          records = [],
          projectionFilter,
          prevGroupId = undefined;
+      projectionFilter = resetFilterAndStopEventRaising.call(this, projection, false);
       if (cfg.expand || cfg.hierarchyViewMode) {
-         projection.setEventRaising(false);
          expandAllItems(projection, cfg);
-         projection.setEventRaising(true);
-
-
+         restoreFilterAndRunEventRaising.call(this, projection, projectionFilter, true);
       }
       else {
          /**
@@ -159,7 +157,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
           * https://inside.tensor.ru/opendoc.html?guid=6f1758f0-f45d-496b-a8fe-fde7390c92c7
           * @private
           */
-         projectionFilter = resetFilterAndStopEventRaising.call(this, projection, false);
          applyExpandToItemsProjection.call(this, projection, cfg);
          restoreFilterAndRunEventRaising.call(this, projection, projectionFilter, false);
       }
