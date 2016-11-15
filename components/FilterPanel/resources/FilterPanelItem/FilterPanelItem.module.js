@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.FilterPanelItem', [
    "Core/Context",
    "js!SBIS3.CONTROLS.CompoundControl",
    "tmpl!SBIS3.CONTROLS.FilterPanelItem"
-], function ( cContext,CompoundControl, dotTplFn) {
+], function (cContext, CompoundControl, dotTplFn) {
    /**
     * Миксин, задающий любому контролу поведение работы с набором фильтров.
     * @mixin SBIS3.CONTROLS.FilterPanelItem
@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.FilterPanelItem', [
       CONTEXT_ITEM_FIELD = 'sbis3-controls-filter-item',
       ITEM_FILTER_ID = 'id',
       ITEM_FILTER_VALUE = 'value',
+      ITEM_FILTER_TEXT_VALUE = 'textValue',
 
       FilterPanelItem = CompoundControl.extend(/**@lends SBIS3.CONTROLS.FilterPanelItem.prototype  */{
       _dotTplFn: dotTplFn,
@@ -36,8 +37,8 @@ define('js!SBIS3.CONTROLS.FilterPanelItem', [
                path = fieldName.split(cContext.STRUCTURE_SEPARATOR);
             if (path[0] !== CONTEXT_ITEM_FIELD) {
                item = this.getValue(CONTEXT_ITEM_FIELD);
-               if (item.get(ITEM_FILTER_ID)) {
-                  event.setResult(CONTEXT_ITEM_FIELD  + cContext.STRUCTURE_SEPARATOR + ITEM_FILTER_VALUE);
+               if (item.get(ITEM_FILTER_ID) && (fieldName === ITEM_FILTER_VALUE || fieldName === ITEM_FILTER_TEXT_VALUE)) {
+                  event.setResult(CONTEXT_ITEM_FIELD  + cContext.STRUCTURE_SEPARATOR + fieldName);
                }
             }
          });
