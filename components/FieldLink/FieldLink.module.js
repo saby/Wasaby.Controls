@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!WS.Data/Di",
        "Core/core-functions",
        "js!SBIS3.CONTROLS.MenuIcon",
+       "js!SBIS3.CONTROLS.IconButton",
        "js!SBIS3.CONTROLS.Action.SelectorAction",
        'js!SBIS3.CONTROLS.FieldLink.Link',
        "i18n!SBIS3.CONTROLS.FieldLink"
