@@ -460,11 +460,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   beginAddResult = this._notify('onBeginAdd'),
                   modelOptions = options.model || beginAddResult,
                   preparedModel = options.preparedModel,
-                  editingRecord;
+                  editingRecord, eip;
                this._lastTargetAdding = options.target;
                return this.endEdit(true).addCallback(function() {
                   return self._createModel(modelOptions, preparedModel).addCallback(function (createdModel) {
                      return self._prepareEdit(createdModel).addCallback(function(model) {
+                        eip = self._getEip();
                         if (self._options.hierField) {
                            model.set(self._options.hierField, options.target ? options.target.getContents().getId() : options.target);
                         }
@@ -474,8 +475,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         //завершение редактирования, но записи уже может не быть в рекордсете.
                         self._isAdd = true;
                         self._createAddTarget(model, options);
-                        self._getEip().edit(model);
-                        editingRecord = self._getEip().getEditingRecord();
+                        eip.edit(model);
+                        /* Почему делаеться rebuildMarkup:
+                           Добавление по месту как и редактирование, не пересоздаёт компоненты при повторном добавлении/редактировании,
+                           поэтому у компонентов при переиспользовании могут появляться дефекты(текст, введённый в прошлый раз, который ни на что не завбиден /
+                           валидация ). В редактировании по месту это сейчас не внедрить, т.к. там есть режим по ховеру. */
+                        eip.rebuildMarkup();
+                        editingRecord = eip.getEditingRecord();
                         self._notify('onAfterBeginEdit', editingRecord);
                         if (!self._pendingOperation) {
                            self._subscribeToAddPendingOperation(editingRecord);
