@@ -334,6 +334,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
                title: '',
                side: 'left',
                animation: 'slide'
+               /* временнное решение проблемы описанной в надзадаче */
+               , block_by_task_1173286428: false
             },
             floatAreaCfg = {};
          if (!meta.dialogOptions){
