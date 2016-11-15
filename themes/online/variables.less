@@ -799,15 +799,15 @@
 
 @text-box-border-width:                   1px;
 @text-box-border-style:                   solid;
-@text-box-border-color:                   transparent transparent #eaeaea transparent;
-@text-box-bottom-border-color:            #eaeaea;
+@text-box-border-color:                   #eaeaea #eaeaea #ccc #eaeaea;
+@text-box-bottom-border-color:            #ccc;
 @text-box-bg:                             @white-color;
 @text-box-editor-bg:                      @white-color;
 @text-box-editor-text-color:              inherit;
 
 @text-box-focus-border-width:             @text-box-border-width;
 @text-box-focus-border-style:             @text-box-border-style;
-@text-box-focus-border-color:             #eaeaea #eaeaea @gray-light-color;
+@text-box-focus-border-color:             #ccc;
 @text-box-focus-bg:                       @text-box-bg;
 
 @text-box-error-border-width:             @text-box-border-width;
@@ -822,7 +822,7 @@
 
 @text-box-disabled-border-width:          @text-box-border-width;
 @text-box-disabled-border-style:          @text-box-border-style;
-@text-box-disabled-border-color:          transparent;
+@text-box-disabled-border-color:          transparent transparent #e4e4e4 transparent;
 @text-box-disabled-bg:                    transparent;
 @text-box-disabled-border-bottom:         1px solid #E4E4E4;
 
@@ -971,7 +971,8 @@
 @combo-box-cursor:                              pointer;
 @combo-box-disabled-cursor:                     default;
 @combo-box-disabled-border-width:               0 0 1px 0;
-@combo-box-disabled-border-color:               #E4E4E4;
+@combo-box-disabled-border-bottom-color:        #E4E4E4;
+@combo-box-disabled-border-color:               transparent;
 @combo-box-disabled-color:                      inherit;
 
 @combo-box-field-font:                          inherit;
@@ -1555,7 +1556,7 @@
 @list-view-actions-active-bg:                   @data-grid-row-hover-bg !important;
 @list-view-actions-bg:                          @data-grid-row-hover-bg;
 
-@list-view-items-toolbar-bottom:                     0;
+@list-view-items-toolbar-bottom:                     3px;
 @list-view-items-toolbar-right:                      0;
 @list-view-items-toolbar-zindex:                     10;
 @list-view-items-toolbar-line-height:                24px;
@@ -1568,6 +1569,7 @@
 @list-view-items-toolbar-ipad-minHeight:             30px;
 @touch-mode-items-toolbar-icon-margin-top:           -24px;
 @list-view-items-toolbar-right-tile:                 1px;
+@list-view-items-toolbar-bottom-tile:                2px;
 
 @bottomStyle-items-toolbar-margin-top:               2px;
 
@@ -1929,7 +1931,7 @@
 
 
 @DropdownList-captionWrapper-margin:          0 19px 0 19px;
-@DropdownList-min-height:                     24px;
+@DropdownList-height:                     24px;
 @DropdownList-shadow-hover:                   0 0 0 1px @DropdownList-border-color;
 
 @DropdownList-picker-bg:                              @white-color;

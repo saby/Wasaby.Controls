@@ -1221,7 +1221,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
             this._getEmptyDataContainer().empty().html(html);
-            this._toggleEmptyData(!(this._getItemsProjection() && this._getItemsProjection().getCount()));
+            this._toggleEmptyData(this._getItemsProjection() && !this._getItemsProjection().getCount());
          },
 
          _getEmptyDataContainer: function() {
@@ -2145,7 +2145,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      this._setLoadMoreCaption(this.getItems());
                   }
                   this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
-                  this._setInfiniteScrollState('demand');
+                  this._setInfiniteScrollState('down');
                   return;
                }
                // Пока по умолчанию считаем что везде подгрузка вниз, и если указана 'up' - значит она просто перевернута
