@@ -138,6 +138,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          destroy: function(){
             this._container.off('touchstart mousemove');
             this._content.off('scroll', this._onScroll);
+            ScrollContainer.superclass.destroy.call(this);
          }
       });
 
