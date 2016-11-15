@@ -720,7 +720,6 @@ define('js!SBIS3.CONTROLS.FormController', [
          var errorMessage = rk('Некорректно заполнены обязательные поля!'),
              self = this,
              updateDeferred = new Deferred(),
-             dResult = new Deferred(),
              onBeforeUpdateData;
 
          if (this.validate()) {
@@ -733,7 +732,7 @@ define('js!SBIS3.CONTROLS.FormController', [
                onBeforeUpdateData.result.addBoth(function(result){
                   onBeforeUpdateData = self._prepareOnBeforeUpdateResult(result);
                   if (onBeforeUpdateData.result !== false){
-                     updateDeferred.dependOn(self._updateRecord(dResult, config));
+                     updateDeferred.dependOn(self._updateRecord(config));
                   }
                   else{
                      updateDeferred.errback(onBeforeUpdateData.errorMessage);
@@ -742,23 +741,23 @@ define('js!SBIS3.CONTROLS.FormController', [
                return updateDeferred;
             }
             else if (onBeforeUpdateData.result === false) {
-               return updateDeferred.errback(onBeforeUpdateData.errorMessage);
+               return Deferred.fail(onBeforeUpdateData.errorMessage);
             }
-            return this._updateRecord(dResult, config);
+            return this._updateRecord(config);
          }
-         else {
-            if (!config.hideErrorDialog) {
-               var error = new Error(errorMessage);
-               this._processError(error);
-            }
-            dResult.errback(errorMessage);
-            this._saving = false;
+
+         //Если валидация не прошла
+         if (!config.hideErrorDialog) {
+            var error = new Error(errorMessage);
+            this._processError(error);
          }
-         return dResult;
+         this._saving = false;
+         return Deferred.fail(errorMessage);
       },
 
-      _updateRecord: function(dResult, config){
-         var updateConfig = {
+      _updateRecord: function(config){
+         var dResult = new Deferred(),
+             updateConfig = {
                indicatorText: this._options.indicatorSavingMessage,
                eventName: 'onUpdateModel',
                additionalData: {
