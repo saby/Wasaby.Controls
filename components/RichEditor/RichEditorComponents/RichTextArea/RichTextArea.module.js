@@ -156,6 +156,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                decorateLinks: false,
                /**
                 * Имя декоратора, ккоторый зарегистирован в системе, с помощью которого декорировать ссылки
+                * Если декоратор не укзан, то сыылки будут оборачиваться в <a>
                 * @cfg {String} имя декоратора
                 */
                decoratorName: '' // engine - 'linkDecorator'
@@ -1538,6 +1539,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this._scrollTo(target, 'bottom');
             },
 
+         //Метод обновляющий значение редактора в задизабленом состоянии
+         //В данном методе происходит оборачивание ссылок в <a> или их декорирование, если указана декоратор
          _updateDataReview: function(text) {
             if (this._dataReview && !this.isEnabled()) {
                //если никто не зарегистрировал декоратор то просто оборачиваем ссылки в <a>
