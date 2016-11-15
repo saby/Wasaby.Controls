@@ -84,7 +84,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
                displayField : tplOptions.displayField
             };
             tplOptions.startScrollColumn = cfg.startScrollColumn;
-            tplOptions.columnsScrollPosition = this._currentScrollPosition ? this._getColumnsScrollPosition() : 0;
             buildTplArgsLadder(tplOptions.cellData, cfg);
 
             return tplOptions;
