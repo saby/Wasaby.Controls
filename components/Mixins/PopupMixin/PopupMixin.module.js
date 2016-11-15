@@ -169,6 +169,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
 
+         EventBus.globalChannel().subscribe('MobileInputFocus', this._touchKeyboardMoveHandler.bind(this));
+         EventBus.globalChannel().subscribe('MobileInputFocusOut', this._touchKeyboardMoveHandler.bind(this));
+
          if (this._options.closeButton) {
             container.append('<div class="controls-PopupMixin__closeButton"></div>');
             $('.controls-PopupMixin__closeButton', this.getContainer().get(0)).click(function() {
@@ -190,6 +193,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             // приходится отключать инертный скролл в момент показа всплывахи и включать обратно при скрытии
             this._parentFloatArea = topParent;
          }
+      },
+
+
+      _touchKeyboardMoveHandler: function(){
+         this.recalcPosition();
       },
 
       //Подписка на изменение состояния таргета
