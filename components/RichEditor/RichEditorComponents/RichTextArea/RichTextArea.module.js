@@ -1507,7 +1507,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
             }
          },
-
+         //Метод проверяет положение элемента отпосительно клавитуры на ipad (true - под клавитурой, false - над)
          _elementIsUnderKeyboard: function(target, side){
             var
                targetOffset = target.getBoundingClientRect(),
@@ -1520,7 +1520,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                target.scrollIntoView(true);
             }
          },
-
+         //метод осушествляет подрутку до места ввода ( параграфа) если его нижний край находится под клавитурой
          _backspinForIpad: function() {
             if (this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this._textChanged && (this._inputControl[0] === document.activeElement)) {
                var
