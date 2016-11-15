@@ -155,6 +155,10 @@ define('js!SBIS3.CONTROLS.FormController', [
              * @cfg {Object} Устанавливает ассоциативный массив, который используют только при создании новой записи для инициализации её начальными значениями.
              */
             initValues: null,
+            /**
+             * @cfg {Object} Дополнительные мета-данные, которые будут переданы в метод прочитать
+             */
+            readMetaData: null,
              /**
              * @cfg {String} Устанавливает текст, отображаемый рядом с индикатором при сохранении записи командной {@link update}.
              * @translatable
@@ -649,7 +653,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             key = config.key;
          }
          key = key || this._options.key;
-         readDeferred = this._dataSource.read(key).addCallback(function(record){
+         readDeferred = this._dataSource.read(key, this._options.readMetaData).addCallback(function(record){
             self.setRecord(record);
             return record;
          }).addBoth(function(data){
@@ -935,7 +939,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          options.source = this.createDataSource(options);
 
          if (options.key){
-            result = options.source.read(options.key);
+            result = options.source.read(options.key, options.readMetaData);
          }
          else{
             result = options.source.create(options.initValues);
