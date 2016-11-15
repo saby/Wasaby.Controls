@@ -288,7 +288,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       /**
        * @name SBIS3.CONTROLS.TreeMixin#reload
        * @function
-       * Перезагружает набор записей представления данных с последующим обновлением отображения.
+       * @description Перезагружает набор записей представления данных с последующим обновлением отображения.
        * @param {Object} filter Параметры фильтрации.
        * @param {String|Array.<Object.<String,Boolean>>} sorting Параметры сортировки.
        * @param {Number} offset Смещение первого элемента выборки.
