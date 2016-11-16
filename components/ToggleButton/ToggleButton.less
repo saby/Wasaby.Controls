@@ -6,6 +6,19 @@
       font-weight: @button-checked-font-weight;
       .box-shadow(@button-checked-shadow);
       background: @button-checked-bg;
+
+      &.controls-Button__header {
+        border: none;
+        background-color: #fff;
+
+        .controls-Button__text {
+          margin: 0;
+
+          &:before {
+            content: '\E000';
+          }
+        }
+      }
     }
 
     &.controls-Button__primary {
@@ -75,6 +88,9 @@
           &.controls-Button__primary {
             border: @button-big-primary-checked-border;
           }
+        }
+        &.controls-Button__header {
+          border: none;
         }
       }
     }
