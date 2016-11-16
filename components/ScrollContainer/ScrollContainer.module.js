@@ -2,7 +2,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'js!SBIS3.CONTROLS.CompoundControl',
       'js!SBIS3.CONTROLS.Scrollbar',
       'html!SBIS3.CONTROLS.ScrollContainer',
-      'Core/detection'
+      'Core/detection',
+      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar.full',
+      'is!browser?css!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar',
+      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mousewheel-3.1.13'
    ],
    function(CompoundControl, Scrollbar, dotTplFn, cDetection) {
 
@@ -74,6 +77,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._hideScrollbar();
                this._subscribeOnScroll();
             }
+
          },
 
          _subscribeOnScroll: function(){
@@ -116,6 +120,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          _onResizeHandler: function(){
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
+               this._scrollbar.setPosition(this._getScrollTop());
             }
          },
 
