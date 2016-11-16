@@ -987,8 +987,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             
             // хак для ipad, чтобы клавиатура закрывалась когда дестроится панель
             if (detection.isMobileIOS) {
-               //$(document.activeElement).trigger('blur');
-               $(this._options.target).focus();
+               if(this.getContainer().find(':focus').length > 0){
+                  $(document.activeElement).trigger('blur');
+               };
             }
             
             var self = this,
