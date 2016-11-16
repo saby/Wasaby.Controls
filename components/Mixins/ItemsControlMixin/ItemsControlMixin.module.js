@@ -742,6 +742,32 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return curField != prevField;
       },
 
+      _getGroupContainers: function(groupId) {
+         var containers = $([]);
+         if (this._getItemsProjection()) {
+            var items = this._getItemsProjection().getGroupItems(groupId);
+            for (var i = 0; i < items.length; i++) {
+               containers.push(this._getDomElementByItem(items[i]).get(0))
+            }
+         }
+
+         return containers;
+      },
+
+      expandGroup: function(groupId) {
+         var containers = this._getGroupContainers(groupId);
+         containers.removeClass('ws-hidden');
+         this._drawItemsCallbackDebounce();
+      },
+      collapseGroup: function(groupId) {
+         var containers = this._getGroupContainers(groupId);
+         containers.addClass('ws-hidden');
+         this._drawItemsCallbackDebounce();
+      },
+      toggleGroup: function(groupId, state) {
+         this[state ? 'expandGroup' : 'collapseGroup'].call(this, groupId);
+      },
+
       _prepareItemsData : function() {
          return {
             records : this._options._getRecordsForRedraw.call(this, this._options._itemsProjection, this._options)
