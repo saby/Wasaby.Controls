@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.SearchController',
 
       _startHierSearch: function(text) {
          var searchParamName = this._options.searchParamName;
-         if (this._needSearch(this, text, searchParamName)) {
+         if (this._needSearch(text, searchParamName)) {
             var filter = cMerge(this._options.view.getFilter(), {
                   'Разворот': 'С разворотом',
                   'usePages': 'full'
@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.SearchController',
 
       _startSearch: function(text) {
          var searchParamName = this._options.searchParamName;
-         if (this._needSearch(this, text, searchParamName)) {
+         if (this._needSearch(text, searchParamName)) {
             var view = this._options.view,
                filter = cMerge(view.getFilter(), {
                   'usePages': 'full'
