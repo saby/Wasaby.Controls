@@ -382,10 +382,12 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _inputFocusOutHandler: function(e) {
+         $ws.single.EventBus.globalChannel().notify('MobileInputFocusOut');
          this._checkInputVal();
       },
 
       _inputFocusInHandler: function(e) {
+         $ws.single.EventBus.globalChannel().notify('MobileInputFocus');
          if (this._options.selectOnClick || this._fromTab){
             this._inputField.select();
          }
