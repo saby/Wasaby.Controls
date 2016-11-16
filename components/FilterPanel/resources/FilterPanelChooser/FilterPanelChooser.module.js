@@ -55,7 +55,10 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
                 keyField: 'id',
                 countField: 'count',
                 displayField: 'title',
-                dictionaryTemplate: undefined
+                /**
+                 * @cfg {Object} Набор опций, которые будут переданы в качестве мета-информации в SelectorAction
+                 */
+                selectorMeta: {}
             },
             //Происходил выбор из справочника
             _isSelected: false
@@ -161,7 +164,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
         },
 
         _showDictionary: function(meta) {
-            meta = meta || {};
+            meta = cFunctions.merge(this._options.dictionaryProperties, meta || {});
             meta.selectedItems = this._getListView().getSelectedItems();
             this._getSelector().execute(meta);
         },
@@ -206,7 +209,6 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
         _getSelector: fHelpers.memoize(function() {
             return new SelectorAction({
                 mode: 'floatArea',
-                template: this._options.dictionaryTemplate,
                 handlers: {
                     onExecuted: this._onExecutedHandler.bind(this)
                 }
