@@ -1,6 +1,6 @@
 <div class="controls-FilterPanelItem{{item.template === 'js!SBIS3.CONTROLS.FilterPanelBoolean' ? ' controls-FilterPanelItem__boolean'}}">
    <ws:if data="{{item.template === 'js!SBIS3.CONTROLS.FilterPanelBoolean'}}">
-      <ws:SBIS3.CONTROLS.FilterPanelBoolean hasMarkup="{{ true }}" caption="{{item.caption}}" filter="{{'filter'|mutable}}"/>
+      <ws:SBIS3.CONTROLS.FilterPanelBoolean hasMarkup="{{ true }}" caption="{{ item.caption }}" checked="{{ 'value'|mutable }}" value="{{ 'value'|mutable }}" textValue="{{ 'textValue'|mutable }}" name="{{ item.id }}" />
    </ws:if>
    <ws:else>
       <ws:SBIS3.CONTROLS.Spoiler

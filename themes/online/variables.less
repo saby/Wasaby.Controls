@@ -799,15 +799,15 @@
 
 @text-box-border-width:                   1px;
 @text-box-border-style:                   solid;
-@text-box-border-color:                   transparent transparent #eaeaea transparent;
-@text-box-bottom-border-color:            #eaeaea;
+@text-box-border-color:                   #eaeaea #eaeaea #ccc #eaeaea;
+@text-box-bottom-border-color:            #ccc;
 @text-box-bg:                             @white-color;
 @text-box-editor-bg:                      @white-color;
 @text-box-editor-text-color:              inherit;
 
 @text-box-focus-border-width:             @text-box-border-width;
 @text-box-focus-border-style:             @text-box-border-style;
-@text-box-focus-border-color:             #eaeaea #eaeaea @gray-light-color;
+@text-box-focus-border-color:             #ccc;
 @text-box-focus-bg:                       @text-box-bg;
 
 @text-box-error-border-width:             @text-box-border-width;
@@ -822,7 +822,7 @@
 
 @text-box-disabled-border-width:          @text-box-border-width;
 @text-box-disabled-border-style:          @text-box-border-style;
-@text-box-disabled-border-color:          transparent;
+@text-box-disabled-border-color:          transparent transparent #e4e4e4 transparent;
 @text-box-disabled-bg:                    transparent;
 @text-box-disabled-border-bottom:         1px solid #E4E4E4;
 
@@ -971,7 +971,8 @@
 @combo-box-cursor:                              pointer;
 @combo-box-disabled-cursor:                     default;
 @combo-box-disabled-border-width:               0 0 1px 0;
-@combo-box-disabled-border-color:               #E4E4E4;
+@combo-box-disabled-border-bottom-color:        #E4E4E4;
+@combo-box-disabled-border-color:               transparent;
 @combo-box-disabled-color:                      inherit;
 
 @combo-box-field-font:                          inherit;
@@ -1517,7 +1518,7 @@
 @edit-at-place-text-area-editor-font:           @edit-at-place-text-box-editor-font;
 
 @edit-at-place-editor-overlay-margin:           -5px 0 0 -5px;
-@edit-at-place-editor-overlay-padding:          4px;
+@edit-at-place-editor-overlay-padding:          4px 0 4px 4px;
 @edit-at-place-editor-overlay-border:           1px solid #e4e4e4;
 @edit-at-place-editor-overlay-border-radius:    4px;
 @edit-at-place-editor-overlay-bg:               #f3f3f3 !important;
@@ -1525,12 +1526,11 @@
 @edit-at-place-control-margin:                  0 0 0 8px;
 @edit-at-place-group-control-margin:            4px;
 
-@edit-at-place-cancel-button-width:             16px;
-@edit-at-place-cancel-button-height:            16px;
+@edit-at-place-cancel-button-width:             @closeButtonWidth;
+@edit-at-place-cancel-button-height:            @closeButtonHeight;
 @edit-at-place-cancel-button-margin:            0 0 0 4px;
-@edit-at-place-cancel-button-spritesheet:       'img/cancelIcon-sprite.png';
-@edit-at-place-cancel-button-bg:                url(@edit-at-place-cancel-button-spritesheet) 0 -32px no-repeat;
-@edit-at-place-cancel-button-hover-bg:          url(@edit-at-place-cancel-button-spritesheet) 0 -16px no-repeat;
+@edit-at-place-cancel-button-bg:                @closeButtonImage;
+@edit-at-place-cancel-button-hover-bg:          @closeButtonImageHover;
 
 
 
@@ -1555,7 +1555,7 @@
 @list-view-actions-active-bg:                   @data-grid-row-hover-bg !important;
 @list-view-actions-bg:                          @data-grid-row-hover-bg;
 
-@list-view-items-toolbar-bottom:                     0;
+@list-view-items-toolbar-bottom:                     3px;
 @list-view-items-toolbar-right:                      0;
 @list-view-items-toolbar-zindex:                     10;
 @list-view-items-toolbar-line-height:                24px;
@@ -1568,6 +1568,7 @@
 @list-view-items-toolbar-ipad-minHeight:             30px;
 @touch-mode-items-toolbar-icon-margin-top:           -24px;
 @list-view-items-toolbar-right-tile:                 1px;
+@list-view-items-toolbar-bottom-tile:                2px;
 
 @bottomStyle-items-toolbar-margin-top:               2px;
 
@@ -1936,7 +1937,7 @@
 
 
 @DropdownList-captionWrapper-margin:          0 19px 0 19px;
-@DropdownList-min-height:                     24px;
+@DropdownList-height:                     24px;
 @DropdownList-shadow-hover:                   0 0 0 1px @DropdownList-border-color;
 
 @DropdownList-picker-bg:                              @white-color;
@@ -2028,7 +2029,7 @@
 @controls-filterButton-history-maxHeight-overflow:hidden;
 @controls-filterButton-history-actions-right:     auto !important;
 @controls-filterButton-history-actions-left:      -4px !important;
-@controls-filterButton-history-actions-bottom:    0;
+@controls-filterButton-history-actions-bottom:    3px;
 
 @controls-filterButton-history-item-min-height:   24px;
 
@@ -2243,3 +2244,12 @@
 @controls-Paging-btn-margin:                       0;
 @controls-Paging-btn-padding:                      8px 10px;
 @controls-Paging-btn-sprite:                       url('img/PagingArrows.png');
+
+//Scrollbar
+@controls-Scrollbar-width:                         4px;
+@controls-Scrollbar-thumb-border-radius:           2px;
+@controls-Scrollbar-dark-hover-thumb-color:        rgba(255, 255, 255, 0.20);
+@controls-Scrollbar-dark-active-thumb-color:       rgba(255, 255, 255, 0.50);
+
+@controls-Scrollbar-light-hover-thumb-color:       rgba(0, 0, 0, 0.10);
+@controls-Scrollbar-light-active-thumb-color:      rgba(0, 0, 0, 0.15);

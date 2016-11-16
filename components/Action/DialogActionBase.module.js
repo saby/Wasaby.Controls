@@ -89,13 +89,11 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
           */
          _showedLoading: false
       },
-      $constructor: function() {
-         this._publish('onAfterShow', 'onBeforeShow', 'onExecuted', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel');
-      },
       /**
        * @typedef {Object} ExecuteMetaConfig
        * @property {String|Number} id Первичный ключ записи. Передается в конфигурацию диалога в опцию {@link SBIS3.CONTROLS.FormController#key}.
        * @property {Object} filter Объект, свойства которого могут быть использованы для установки инициализирующих данных при создании новой записи. Передается в конфигурацию диалога в опцию {@link SBIS3.CONTROLS.FormController#initValues}.
+       * @property {Object} readMetaData Дополнительные мета-данные, которые будут переданы в метод прочитать. Передается в конфигурацию диалога в опцию {@link SBIS3.CONTROLS.FormController#readMetaData}.
        * @property {WS.Data/Entity/Record} item Экземпляр класса записи. Передается в конфигурацию диалога в опцию {@link SBIS3.CONTROLS.FormController#record}.
        * @property {String} initializingWay Способ инициализации данных диалога, подробнее о котором вы можете прочитать <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/initializing-way/">здесь</a>.
        * @property {Object} componentOptions Пользовательские опции, которые будут переданы в диалог в секцию _options.
@@ -105,6 +103,24 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
        *    <li>Если <i>mode=floatArea</i>, то набор опций такой: {@link $ws.proto.FloatArea#title title}, {@link $ws.proto.FloatArea#border border}, {@link $ws.proto.FloatArea#buildMarkupWithContext buildMarkupWithContext}, {@link $ws.proto.FloatArea#animation animation}, {@link $ws.proto.FloatArea#autoCloseOnHide autoCloseOnHide}, {@link $ws.proto.FloatArea#showOnControlsReady showOnControlsReady}, {@link $ws.proto.FloatArea#autoHide autoHide}, {@link $ws.proto.FloatArea#isStack isStack}, {@link $ws.proto.FloatArea#side side} и {@link $ws.proto.FloatArea#target target}.</li>
        * </ul>
        */
+      $constructor: function() {
+         this._publish('onAfterShow', 'onBeforeShow', 'onExecuted', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel');
+      },
+
+      /**
+       * Установить компонент, который будет использован в качестве диалога редактирования записи.
+       * @param dialogComponent компонент, который будет использован в качестве диалога редактирования записи. {@link dialogComponent}.
+       */
+      setDialogComponent: function(dialogComponent){
+         this._options.dialogComponent = dialogComponent;
+      },
+      /**
+       * Установить режим открытия диалога редактирования компонента.
+       * @param {String} mode режим открытия диалога редактирования компонента {@link mode}.
+       */
+      setMode: function(mode){
+         this._options.mode = mode;
+      },
       /**
        * Производит открытие диалога.
        * @param {ExecuteMetaConfig} meta Параметры, которые переопределяют конфигурацию диалога.
@@ -316,6 +332,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
                title: '',
                side: 'left',
                animation: 'slide'
+               /* временнное решение проблемы описанной в надзадаче */
+               , block_by_task_1173286428: false
             },
             floatAreaCfg = {};
          if (!meta.dialogOptions){
