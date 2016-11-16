@@ -6,12 +6,11 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
    "js!SBIS3.CORE.CompoundControl",
    "html!SBIS3.CONTROLS.MoveDialogTemplate",
    "Core/core-instance",
-   "Core/helpers/collection-helpers",
    "html!SBIS3.CONTROLS.MoveDialogTemplate/resources/FolderTitleTpl",
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.TreeDataGridView",
    "i18n!SBIS3.CONTROLS.MoveDialogTemplate"
-], function( CommandDispatcher,Control, dotTplFn, cInstance, colHelpers) {
+], function( CommandDispatcher,Control, dotTplFn, cInstance) {
 
    var MoveDialogTemplate = Control.extend({
       _dotTplFn: dotTplFn,
@@ -62,31 +61,9 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
       },
 
       getDataSource: function() {
-         if (this._options.linkedView) {
-            return this._options.linkedView.getDataSource();
-         }
-
-         if (this._options.dataSource) {
-            return this._options.dataSource;
-         }
-
-         throw Error('data sourse is undefined');
-      },
-      /**
-       * Синхронизириует набор опций с листвью
-       * @private
-       */
-      _synchProperties: function() {
-         var properties = ['displayField', 'partialyReload', 'keyField', 'hierField'],
-            listView = this._options.listView;
-         if (listView) {
-            colHelpers.forEach(properties, function (property) {
-               if (!this.getProperty(property)) {
-                  this.setProperty(listView.getProperty(property));
-               }
-            }, this);
-         }
+         return this._options.dataSource;
       }
+
    });
 
    return MoveDialogTemplate;

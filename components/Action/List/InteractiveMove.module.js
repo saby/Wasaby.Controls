@@ -5,9 +5,10 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'Core/helpers/string-helpers',
       'js!WS.Data/Di',
       'Core/Indicator',
-      'Core/core-merge'
+      'Core/core-merge',
+      "Core/helpers/collection-helpers"
    ],
-   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge) {
+   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, colHelpers) {
       'use strict';
       /**
        * Действие перемещения по иерархии с выбором места перемещения через диалог.
@@ -126,7 +127,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
 
          _buildComponentConfig: function(meta) {
             var self = this,
-               options = cMerge(meta.componentOptions||{}, this._options.componentOptions||{});
+               options = cMerge(meta.componentOptions||{}, this._getComponentOptions());
             return cMerge(options, {
                linkedView: this._getListView(),
                dataSource: this.getDataSource(),
@@ -157,7 +158,26 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                hierField: this._options.parentProperty,
                listView: this._getListView()
             });
+         },
+
+         _getComponentOptions: function() {
+            var options = ['displayField', 'partialyReload', 'keyField', 'hierField'],
+               listView = this._getListView(),
+               result = this._options.componentOptions || {};
+            if (listView) {
+               colHelpers.forEach(options, function (name) {
+                  if (!result.hasOwnProperty(name)) {
+                     try {
+                        result[name] = listView.getProperty(name);
+                     } catch (e) {
+                        result[name] = undefined;
+                     }
+                  }
+               }, this);
+            }
+            return result;
          }
+
       });
       return InteractiveMove;
    }
