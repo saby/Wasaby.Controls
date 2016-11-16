@@ -164,7 +164,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
         },
 
         _showDictionary: function(meta) {
-            meta = cFunctions.merge(this._options.dictionaryProperties, meta || {});
+            meta = cFunctions.merge(this._options.selectorMeta, meta || {});
             meta.selectedItems = this._getListView().getSelectedItems();
             this._getSelector().execute(meta);
         },
