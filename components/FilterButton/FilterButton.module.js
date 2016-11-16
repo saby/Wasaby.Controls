@@ -81,6 +81,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 /**
                  * @сfg {String} Устанавливает шаблон всплывающей панели кнопки фильтров.
                  * @remark
+                 * При каждом открытии/закрытии панели происходят события {@link SBIS3.CONTROLS.PopupMixin#onShow} и {@link SBIS3.CONTROLS.PopupMixin#onClose}.
                  * Подробнее о создании шаблона читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/fbpanel/'>Панель фильтрации</a>.
                  * @example
                  * <pre>
