@@ -79,8 +79,14 @@ input[type="reset"]::-moz-focus-inner {
       &, &:hover, &.controls-Click__active:active {
         border: @toggle-header-border;
         background: @toggle-header-background;
-        color: @toggle-header-hover-color;
         font: @toggle-header-font;
+      }
+      & {
+        color: @toggle-header-color;
+      }
+
+      &:hover, &.controls-Click__active:active {
+        color: @toggle-header-hover-color;
       }
     }
   }
