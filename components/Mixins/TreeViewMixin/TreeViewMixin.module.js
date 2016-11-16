@@ -173,6 +173,10 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             return typeof (more) !== 'boolean' ? more > (this._folderOffsets[id] + this._options.pageSize) : !!more;
          }
       },
+
+      _loadFullData: function(deepReload) {
+         return this.reload(this.getFilter(), this.getSorting(), 0, 1000, deepReload);
+      },
       //********************************//
       //       FolderFooter_Start       //
       //********************************//
