@@ -863,6 +863,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          }
          return filter;
       },
+
+      _loadFullData: function(deepReload) {
+         return this.reload(this.getFilter(), this.getSorting(), 0, 1000, deepReload);
+      },
       /**
        * Обработка загрузки ветки
        * @param id
