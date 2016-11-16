@@ -221,7 +221,9 @@ define(
       _modifyOptions: function(options) {
          var options = DateBox.superclass._modifyOptions.apply(this, arguments);
          // Нормализуем опцию date и обновляем опцию text
-         this._updateOptionsByDate(options.date, options);
+         if (options.date) {
+            this._updateOptionsByDate(options.date, options);
+         }
          // Обновляем опции нужные для отрисовки данных шаблонами
          if (options.text) {
             options._formatModel.setText(options.text, options._maskReplacer);
