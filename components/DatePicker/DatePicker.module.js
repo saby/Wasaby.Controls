@@ -11,7 +11,8 @@ define(
       'js!SBIS3.CONTROLS.DateRangeBigChoose',
       'html!SBIS3.CONTROLS.DatePicker',
       'Core/helpers/dom&controls-helpers',
-      'i18n!SBIS3.CONTROLS.DatePicker'
+      'i18n!SBIS3.CONTROLS.DatePicker',
+      'js!SBIS3.CONTROLS.IconButton'
    ],
    function (EventBus, DateBox, PickerMixin, DateUtil, DateRangeBigChoose, dotTplFn, dcHelpers) {
 
