@@ -135,7 +135,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          _initScrollbar: function(){
             this._scrollbar = new Scrollbar({
                element: $('.controls-ScrollContainer__scrollbar', this._container),
-               contentHeight: this._getScrollHeight()
+               contentHeight: this._getScrollHeight(),
+               parent: this
             });
             this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
          },
