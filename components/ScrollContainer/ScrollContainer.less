@@ -1,0 +1,47 @@
+.controls-ScrollContainer {
+   overflow: hidden;
+   position: relative;
+   outline: none;
+   .controls-Scrollbar{
+      opacity: 0;
+      transition: opacity 0.1s ease;
+      padding: 4px 2px;
+      height: calc(~"100% - 8px");
+   }
+}
+
+.controls-ScrollContainer {
+   .controls-Scrollbar.controls-Scrollbar__drag {
+      opacity: 1
+   }
+   &:hover .controls-Scrollbar {
+      opacity: 1;
+   }
+}
+
+.controls-ScrollContainer__content {
+   position: absolute;
+   overflow: scroll;
+   overflow-x: hidden;
+   top: 0;
+   right: 0;
+   bottom: 0;
+   left: 0;
+}
+
+.ws-is-mobile-safari {
+   .controls-ScrollContainer {
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+   }
+   .controls-ScrollContainer__content {
+      position: relative;
+      overflow: auto;
+   }
+}
+
+.controls-ScrollContainer .controls-ScrollContainer__scrollbar {
+   position: absolute;
+   right: 0;
+   top: 0;
+}
