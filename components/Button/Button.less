@@ -218,11 +218,6 @@
             color: @toggle-header-hover-count-before-color;
           }
         }
-
-        &.controls-Click__active:active {
-          border: none;
-          background: none;
-        }
       }
     }
     // Normal primary button
@@ -272,6 +267,11 @@
       border: @button-active-border;
       .box-shadow(@button-active-shadow);
       background: @button-active-bg;
+
+      &.controls-Button__header {
+        border: none;
+        background: none;
+      }
     }
     &.controls-Button__primary {
       &.controls-Click__active:active {
