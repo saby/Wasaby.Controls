@@ -2214,41 +2214,42 @@
 @header-padding-right:                             12px;
 @header-height:                                    32px;
 
-@header-font:                                      18px escape('/') @header-height 'TensorFont Bold';
+@header-font:                                      700 18px escape('/') @header-height 'TensorFont';
 @header-color:                                     #D94700;
 
-@bigHeader-font:                                   20px escape('/') @header-height 'TensorFont Bold';
+@bigHeader-font:                                   700 20px escape('/') @header-height 'TensorFont';
 @bigHeader-color:                                  @header-color;
 
-@subheader-font:                                   15px escape('/') @header-height 'TensorFont Bold';
+@subheader-font:                                   700 15px escape('/') @header-height 'TensorFont';
 @subheader-color:                                  #313E78;
 
-@bigSubheader-font:                                18px escape('/') @header-height 'TensorFont Bold';
+@bigSubheader-font:                                700 18px escape('/') @header-height 'TensorFont';
 @bigSubheader-color:                               @subheader-color;
 
 //--------------//
 //  LinkHeader  //
 //--------------//
 
-@link-header-padding-left:                         8px;
-@link-header-padding-right:                        12px;
-@link-header-height:                               32px;
+@link-header-padding-left:                         @header-padding-left;
+@link-header-padding-right:                        @header-padding-right;
+@link-header-height:                               @header-height;
 
-@link-header-caption-font:                         18px 'TensorFont Bold';
-@link-header-caption-color:                        #D94700;
+@link-header-font:                                 700 18px escape('/') @header-height 'TensorFont';
+@link-header-color:                                #D94700;
+@link-header-text-decoration:                      none;
 
-@link-header-caption-after-font:                   18px 'TensorFont';
-@link-header-caption-after-color:                  #313E78;
-@link-header-caption-after-width:                  8px;
-@link-header-caption-after-margin-left:            4px;
+@link-header-after-content:                        '\E002';
+@link-header-after-font:                           18px 'TensorFont';
+@link-header-after-color:                          #313E78;
+@link-header-after-margin-left:                    4px;
 
-@link-header-hover-caption-color:                  #FF7033;
-@link-header-hover-caption-after-color:            @link-header-hover-caption-color;
+@link-header-hover-color:                          #FF7033;
+@link-header-hover-after-color:                    @link-header-hover-color;
 
 @link-header-separator-height:                     16px;
 @link-header-separator-width:                      2px;
 @link-header-separator-background-color:           #F4F4F4;
-@link-header-separator-margin:                     auto 0 auto -4px;
+@link-header-separator-margin:                     0 0 0 8px;
 
 //----------------//
 //  ToggleHeader  //
@@ -2257,16 +2258,22 @@
 @toggle-header-padding-right:                      8px;
 @toggle-header-height:                             24px;
 
-@toggle-header-caption-margin-left:                4px;
-@toggle-header-caption-font:                       15px 'TensorFont Bold';
-@toggle-header-caption-color:                      #313E78;
+@toggle-header-font:                               700 15px escape('/') @toggle-header-height 'TensorFont';
+@toggle-header-color:                              #313E78;
+@toggle-header-border:                             none;
+@toggle-header-background:                         none;
 
-@toggle-header-count-before-font:                 18px 'TensorFont';
-@toggle-header-count-before-color:                #D94700;
+@toggle-header-before-content:                     '\E013';
+@toggle-header-before-font:                        18px 'TensorFont';
+@toggle-header-before-color:                       #D94700;
+@toggle-header-before-width:                       24px;
 
 @toggle-header-count-font:                         15px 'TensorFont';
 @toggle-header-count-color:                        #D94700;
 
-@toggle-header-hover-caption-color:                #FF7033;
-@toggle-header-hover-count-before-color:           @toggle-header-hover-caption-color;
-@toggle-header-hover-count-color:                  @toggle-header-hover-caption-color;
+
+@toggle-header-hover-color:                        #FF7033;
+@toggle-header-hover-before-color:                 @toggle-header-hover-color;
+@toggle-header-hover-count-color:                  @toggle-header-hover-color;
+
+@toggle-header-checked-before-content:             '\E000';

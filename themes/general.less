@@ -70,6 +70,20 @@ input[type="reset"]::-moz-focus-inner {
   .gray-color:not(.ws-disabled):hover {
     color: @gray-color;
   }
+  .controls-Link.ws-linkHeader:hover {
+    text-decoration: @link-header-text-decoration;
+    color: @link-header-hover-color
+  }
+  .controls-Button.ws-toggleHeader {
+    &, &.controls-Checked__checked {
+      &, &:hover, &.controls-Click__active:active {
+        border: @toggle-header-border;
+        background: @toggle-header-background;
+        color: @toggle-header-hover-color;
+        font: @toggle-header-font;
+      }
+    }
+  }
 }
 
 .ws-disabled {
@@ -92,4 +106,59 @@ input[type="reset"]::-moz-focus-inner {
 
 .ws-bigSubheader {
   .ws-header-mixin(@header-padding-left, @header-padding-right, @bigSubheader-font, @bigSubheader-color);
+}
+
+.ws-linkHeader {
+  .ws-header-mixin(@link-header-padding-left, @link-header-padding-right, @link-header-font, @link-header-color);
+  text-decoration: @link-header-text-decoration;
+
+  &:after {
+    .ws-header-content-mixin(@link-header-after-content, @link-header-after-font, @link-header-after-color);
+    margin-left: @link-header-after-margin-left;
+  }
+
+  &:hover {
+    color: @link-header-hover-color;
+    &:after {
+      color: @link-header-hover-after-color;
+    }
+  }
+}
+
+.ws-toggleHeader {
+  &, &.controls-Checked__checked {
+    .ws-header-mixin(0, @toggle-header-padding-right, @toggle-header-font, @toggle-header-color);
+    border: @toggle-header-border;
+    background: @toggle-header-background;
+
+    &.controls-Click__active:active {
+      border: @toggle-header-border;
+      background: @toggle-header-background;
+    }
+
+    &:hover {
+      color: @toggle-header-hover-color;
+      &:before {
+        color: @toggle-header-hover-before-color;
+      }
+    }
+
+    .controls-Button__text {
+      display: inline-block;
+      margin: 0;
+    }
+  }
+
+  &:before {
+    .ws-header-content-mixin(@toggle-header-before-content, @toggle-header-before-font, @toggle-header-before-color);
+    width: @toggle-header-before-width;
+  }
+
+  &.controls-Checked__checked:before {
+    content: @toggle-header-checked-before-content;
+  }
+}
+
+.ws-countHeader {
+
 }

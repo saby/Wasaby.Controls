@@ -33,45 +33,6 @@
   .box-shadow(@button-shadow);
   background: @button-bg;
 
-  &:hover {
-    &.controls-Button__header {
-      border: none;
-      background: none;
-
-      &:before {
-        color: @toggle-header-hover-count-before-color;
-      }
-
-      .controls-Button__text {
-        color: @toggle-header-hover-caption-color;
-
-        &:before {
-          color: @toggle-header-hover-count-before-color;
-        }
-      }
-    }
-  }
-
-  &.controls-Button__header {
-    padding-right: @toggle-header-padding-right;
-    height: @toggle-header-height;
-    line-height: @toggle-header-height;
-    border: none;
-
-    .controls-Button__text {
-      font: @toggle-header-caption-font;
-      color: @toggle-header-caption-color;
-      margin: 0;
-
-      &:before {
-        content: '\E013';
-        width: 24px;
-        font: @toggle-header-count-before-font;
-        color: @toggle-header-count-before-color;
-      }
-    }
-  }
-
   .controls-Button__text {
     &.controls-Button__emptyCaption {
       margin: @button-empty-text-margin;
@@ -202,23 +163,6 @@
       .controls-Button__icon {
         color: @button-icon-color !important;
       }
-
-      &.controls-Button__header {
-        border: none;
-        background: none;
-
-        &:before {
-          color: @toggle-header-hover-count-before-color;
-        }
-
-        .controls-Button__text {
-          color: @toggle-header-hover-caption-color;
-
-          &:before {
-            color: @toggle-header-hover-count-before-color;
-          }
-        }
-      }
     }
     // Normal primary button
     &.controls-Button__primary {
@@ -267,11 +211,6 @@
       border: @button-active-border;
       .box-shadow(@button-active-shadow);
       background: @button-active-bg;
-
-      &.controls-Button__header {
-        border: none;
-        background: none;
-      }
     }
     &.controls-Button__primary {
       &.controls-Click__active:active {

@@ -33,8 +33,6 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
     * @cssModifier controls-Button__ellipsis При нехватке ширины текст на кнопке оборвётся многоточием.
     * !Важно: при добавлении этого класса сломается "Базовая линия".
     *
-    * @cssModifier controls-Link__header Делает ссылку в виде заголовка.
-    *
     * @css controls-Link__icon Класс для изменения отображения иконки кнопки.
     *
     * @control
