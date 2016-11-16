@@ -73,6 +73,7 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBas
                source: meta.source,
                key : meta.id,
                initValues : meta.filter,
+               readMetaData: meta.readMetaData,
                record: record,
                handlers: this._getFormControllerHandlers(),
                initializingWay: meta.initializingWay || this._options.initializingWay

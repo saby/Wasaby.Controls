@@ -318,6 +318,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
              commandDispatcher.declareCommand(this, 'showAllItems', this._showAllItems);
              commandDispatcher.declareCommand(this, 'showSelector', this._showSelector);
 
+             this.subscribe('onListItemSelect', function (event, item) {
+                /* Чтобы не было лишнего запроса на БЛ, добавим рекорд в набор выбранных */
+                /* Требуется делать клон т.к. :
+                   запись передаётся по ссылке и любые действия с ней будут отображаться и в списке.
+                   Особенно актуально это когда зибниден selectedItem в добавлении по месту. */
+                this.addSelectedItems([item.clone()]);
+                this.setText('');
+             });
+
             /* При изменении выбранных элементов в поле связи - сотрём текст.
                Достаточно отслеживать изменение массива ключей,
                т.к. это событие гарантирует изменение выбранных элементов
@@ -758,27 +767,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this._observableControlFocusHandler();
           },
 
-          /**
-           * Обработчик на выбор записи в автодополнении
-           * @private
-           */
-          _onListItemSelect: function(id, item) {
-             /* Чтобы не было лишнего запроса на БЛ, добавим рекорд в набор выбранных */
-             /* Требуется делать клон т.к. :
-                запись передаётся по ссылке и любые действия с ней будут отображаться и в списке.
-                Особенно актуально это когда зибниден selectedItem в добавлении по месту. */
-             this.addSelectedItems([item.clone()]);
-             this.setText('');
-             /* По задаче:
-                https://inside.tensor.ru/opendoc.html?guid=7ce2bd66-bb6b-4628-b589-0e10e2bb8677&description=
-                Ошибка в разработку 03.11.2016 В полях связи не скрывается список с историей после выбора из него значения. Необходимо закрывать...
-
-                В стандарте не описано поведение автодополнения при выборе из него,
-                поэтому жду как опишут и согласуют. Для выпуска 200 решили, что всегда будем скрывать при выборе */
-             this.hidePicker();
-          },
-
-
           setDataSource: function(ds, noLoad) {
              this.once('onListReady', function(event, list) {
                 if(!list.getDataSource()) {
@@ -947,13 +935,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                          return;
                       }
 
-                      var revertedVertical = this._picker.getContainer().hasClass('controls-popup-revert-vertical');
-
-                      if(constants.browser.isMobileIOS) {
-                         revertedVertical = !revertedVertical;
-                      }
-
-                      if (revertedVertical) {
+                      if (this._isSuggestPickerRevertedVertical()) {
                          if (!this._listReversed) {
                             this._reverseList();
                          }
@@ -962,6 +944,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                             this._reverseList();
                          }
                       }
+
+                      this._processSuggestPicker();
                    }.bind(this)
                 }
              };
@@ -971,6 +955,33 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 cfg.verticalAlign.side = 'bottom';
              }
              return cfg;
+          },
+
+          _isSuggestPickerRevertedVertical: function() {
+             var revertedVertical = this._picker.getContainer().hasClass('controls-popup-revert-vertical');
+
+             if(constants.browser.isMobileIOS) {
+                revertedVertical = !revertedVertical;
+             }
+
+             return revertedVertical;
+          },
+
+          /* После отображения автодополнение поля связи может быть перевёрнуто (не влезло на экран вниз),
+             при этом необходимо, чтобы самый нижний элемент в автодополнении был виден, а он может находить за скролом,
+             поэтому при перевороте проскролим вниз автодополнение */
+          _processSuggestPicker: function() {
+             if(this._picker && this._isSuggestPickerRevertedVertical()) {
+                var pickerContainer = this._picker.getContainer();
+                pickerContainer[0].scrollTop = pickerContainer[0].scrollHeight;
+             }
+          },
+          /* После перерисовки списка автодополнения, пикер может менять своё положение,
+             а перерисовка может вызываться не только платформенным кодом, но и прикладным, поэтому
+             после перерисовки надо вызвать метод, обрабатывающий положение автодополнение */
+          _onListDrawItems: function() {
+             FieldLink.superclass._onListDrawItems.apply(this, arguments);
+             this._processSuggestPicker();
           },
           /**
            * Обрабатывает нажатие клавиш, специфичных для поля связи
