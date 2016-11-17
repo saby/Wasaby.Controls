@@ -2781,10 +2781,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {Number} [offset] - если передать, то номер страницы рассчитается от него
           */
          getPage: function (offset) {
-            var offset = offset || this._offset,
-                more = this.getItems().getMetaData().more;
-            //Если offset отрицательный, значит запросили последнюю страницу.
-            return Math.ceil((offset < 0 ? more + offset : offset) / this._options.pageSize);
+            if (this.getItems()) {
+               var offset = offset || this._offset,
+                  more = this.getItems().getMetaData().more;
+               //Если offset отрицательный, значит запросили последнюю страницу.
+               return Math.ceil((offset < 0 ? more + offset : offset) / this._options.pageSize);
+            }
          },
          _updateOffset: function () {
             var more = this.getItems().getMetaData().more,
