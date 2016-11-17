@@ -58,6 +58,11 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
              * @cfg {Boolean} Использовать функционал выбора всех записей
              */
             useSelectAll: true,
+            /**
+             * @cfg {Boolean} При отметке всех записей, выделять записи из открытых папок
+             * @deprecated
+             */
+            deepReload: false,
             keyField: 'name'
          },
          _markCheckBox: undefined
@@ -157,7 +162,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
        */
       selectAll: function() {
          if (this._options.useSelectAll) {
-            this._options.linkedView.setSelectedAll();
+            this._options.linkedView.setSelectedAll(this._options.deepReload);
          } else {
             this._options.linkedView.setSelectedItemsAll();
          }

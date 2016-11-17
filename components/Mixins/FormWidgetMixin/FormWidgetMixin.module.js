@@ -56,9 +56,13 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
              * <pre class="brush: xml">
              *     <options name="validators" type="array">
              *        <options>
-             *           <option name="validator" type="function" value="js!SBIS3.CONTROLS.ControlsValidators:required"></option> <!-- Устанавливаем функцию валидации -->
+             *           <option name="validator" type="function" value="js!SBIS3.CONTROLS.ControlsValidators:inRange"></option>  <!-- Устанавливаем функцию валидации -->
              *           <option name="option">text</option>                                                                      <!-- Устанавливаем опцию контрола, значение которой нужно валидировать -->
              *           <option name="errorMessage">Пожалуйста, введите в данное поле ваше имя!</option>                         <!-- Устанавливаем текст сообщение об ошибке валидации -->
+             *           <options name="params" type="array">                                                                     <!-- Устанавливаем аргументы, которые будут переданны в функцию валидации -->
+             *              <option>10</option>                                                                                   <!-- Первый аргумент -->
+             *              <option>100</option>                                                                                  <!-- Второй аргмуент -->
+             *           </options>
              *        </options>
              *     </options>
              * </pre>
@@ -133,11 +137,14 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
          for (var i = 0, l = this._options.validators.length; i < l; i++) {
             var
                currValidator = this._options.validators[i],
+               validatorValue = this._options[currValidator.option],
+               validatorParams = currValidator.params || [],
                failOnError = !(currValidator.noFailOnError || false),
                res = false;
 
+            validatorParams.push(validatorValue);
             try {
-               res = currValidator.validator.apply(this, [this._options[currValidator.option]]);
+               res = currValidator.validator.apply(this, validatorParams);
             } catch (e) {
                IoC.resolve('ILogger').log('FieldAbstract', 'Exception while validating ' + e.message);
             }

@@ -75,10 +75,8 @@
 
 // Normal default button
 @button-border:                           @button-border-width none;
-@button-bg:                               @default-color;
 
 @button-hover-border:                     0 none;
-@button-hover-bg:                         @default-color;
 
 @button-active-text-color:                @secondary-color;
 @button-active-border:                    0 none;
@@ -436,10 +434,8 @@
 
 @text-box-wrapper-padding:                0 4px;
 
-@text-box-field-font-size:                inherit;
 @text-box-field-min-height:               38px;
 @text-box-field-padding:                  0;
-@text-box-field-after-margin:             0 21px 0 0;
 
 @text-box-field-text-color:               #666666;
 @text-box-field-focus-text-color:         @white-color;
@@ -547,7 +543,8 @@
 @combo-box-arrow-disabled-border-width:         0;
 @combo-box-arrow-disabled-border-color:         transparent;
 @combo-box-disabled-border-width:               0;
-@combo-box-disabled-border-color:               #E4E4E4;
+@combo-box-disabled-border-bottom-color:        #E4E4E4;
+@combo-box-disabled-border-color:               transparent;
 @combo-box-disabled-color:                      #38495B;
 
 @combo-box-picker-border:                       1px solid @gray-dark-color;
@@ -1001,3 +998,12 @@
 @controls-Paging-btn-height:                       16px;
 @controls-Paging-btn-margin:                       8px 0;
 @controls-Paging-btn-padding:                      8px;
+
+//Scrollbar
+@controls-Scrollbar-width:                         4px;
+@controls-Scrollbar-thumb-border-radius:           2px;
+@controls-Scrollbar-dark-hover-thumb-color:        rgba(255, 255, 255, 0.20);
+@controls-Scrollbar-dark-active-thumb-color:       rgba(255, 255, 255, 0.50);
+
+@controls-Scrollbar-light-hover-thumb-color:       rgba(0, 0, 0, 0.10);
+@controls-Scrollbar-light-active-thumb-color:      rgba(0, 0, 0, 0.15);

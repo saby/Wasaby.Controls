@@ -16,21 +16,6 @@ define(
       var
          createModel = function(controlCharactersSet, mask) {
             return new FormatModel({controlCharactersSet: controlCharactersSet, mask: mask});
-         },
-         getItemsForTemplate = function(formatModel, maskReplacer) {
-            var
-                value,
-                items = [],
-                model = formatModel.model;
-
-            for (var i = 0; i < model.length; i++) {
-               value = '';
-               for (var j = 0; j < model[i].mask.length; j++) {
-                  value += (typeof model[i].value[j] === 'undefined') ? maskReplacer : model[i].value[j];
-               }
-               items.push({isGroup: model[i].isGroup, text: value});
-            }
-            return items;
          };
 
       var
@@ -773,12 +758,15 @@ define(
          }
       },
 
-      _getFormatModel: function() {
-         return this._options._formatModel;
+      _getFormatModel: function(options) {
+         // _formatModel вроде не используется в шаблонах и может быть вынесена из опций
+         options = options || this._options;
+         return options._formatModel;
       },
 
-      _getMaskReplacer: function() {
-         return this._options._maskReplacer;
+      _getMaskReplacer: function(options) {
+         options = options || this._options;
+         return options._maskReplacer;
       },
 
       //Тут обрабатываются управляющие команды
@@ -848,8 +836,9 @@ define(
       },
 
       _getTextDiff: function(){
-         var oldText = this._options.text ? this._options.text.split(/:|-/)  : this._getClearText().split(/:|-/),
-             newText = this._inputField.text().split(':');
+         var splitRegExp = this._getSplitterRegExp(),
+             oldText = this._options.text ? this._options.text.split(splitRegExp)  : this._getClearText().split(splitRegExp),
+             newText = this._inputField.text().split(splitRegExp);
          for (var i = 0, l = newText.length; i < l; i++) {
             if (oldText[i].length !== newText[i].length){
                for (var j = 0; j < newText[i].length; j++){
@@ -863,6 +852,10 @@ define(
             }
          }
          return false;
+      },
+
+      _getSplitterRegExp: function(){
+         return /[.,\/\- :=]/;
       },
 
       _getClearText: function(){
@@ -962,9 +955,33 @@ define(
          }
          options._formatModel = formatModel;
          //записываем модель для шаблона
-         options._modelForMaskTpl = getItemsForTemplate(formatModel, options._maskReplacer);
+         options._modelForMaskTpl = this._getItemsForTemplate(formatModel, options._maskReplacer);
          return options;
       },
+
+      /**
+       * Создает контекст который будет передан в шаблон при отрисовке контрола
+       * @param formatModel
+       * @param maskReplacer
+       * @return {Array}
+       * @private
+       */
+      _getItemsForTemplate: function(formatModel, maskReplacer) {
+         var
+             value,
+             items = [],
+             model = formatModel.model;
+
+         for (var i = 0; i < model.length; i++) {
+            value = '';
+            for (var j = 0; j < model[i].mask.length; j++) {
+               value += (typeof model[i].value[j] === 'undefined') ? maskReplacer : model[i].value[j];
+            }
+            items.push({isGroup: model[i].isGroup, text: value});
+         }
+         return items;
+      },
+
       /**
        * Обновляяет значение this._options.text
        * @protected
@@ -1010,7 +1027,7 @@ define(
        */
       _getHtmlMask: function() {
          //передать в шаблон
-         return maskTemplateFn(getItemsForTemplate(this._getFormatModel(), this._getMaskReplacer()));
+         return maskTemplateFn(this._getItemsForTemplate(this._getFormatModel(), this._getMaskReplacer()));
       },
 
       /**

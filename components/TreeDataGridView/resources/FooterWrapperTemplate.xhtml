@@ -1,9 +1,9 @@
 <tr class="controls-TreeDataGridView__folderFooter" data-parent="{{=it.key}}">
     {{?it.multiselect}}<td></td>{{?}}
     <td colspan="{{=it.colspan}}">
-        <div class="controls-TreeView__folderFooterContainer">
+        <div class="controls-TreeView__folderFooterContainer" style="padding-left: {{=(it.padding)}}px">
             {{?it.footerTpl}}
-                <div class="controls-TreeDataGridView__folderFooterTmpl" style="padding-left: {{=(it.padding)}}px">
+                <div class="controls-TreeDataGridView__folderFooterTmpl">
                     {{=it.footerTpl(it)}}
                 </div>
             {{?}}

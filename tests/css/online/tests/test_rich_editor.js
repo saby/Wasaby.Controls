@@ -743,7 +743,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.smile_menu);
 			})
     });
-	
+
 	gemini.suite('decorate_link', function (test) {
 
         test.setUrl('/IntRichFieldEditor47.html').setCaptureElements('html')
@@ -752,7 +752,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
                 actions.waitForElementToShow('[id="1"]', 40000);
 				actions.waitForElementToShow('[id="5"]', 5000);
 				actions.waitForElementToShow('[id="6"]', 5000);
-				actions.waitForElementToShow('[id="10"]', 5000);
+				actions.waitForElementToShow('[id="9"]', 5000);
             })
 
 			.capture('plain')

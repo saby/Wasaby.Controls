@@ -10,8 +10,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
    "js!SBIS3.CORE.ModalOverlay",
    "js!SBIS3.CONTROLS.TouchKeyboardHelper",
    "Core/helpers/helpers",
-   "Core/helpers/dom&controls-helpers"
-], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers, dcHelpers) {
+   "Core/helpers/dom&controls-helpers",
+   "Core/detection"
+], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers, dcHelpers, detection) {
    'use strict';
    if (typeof window !== 'undefined') {
       var eventsChannel = EventBus.channel('WindowChangeChannel');
@@ -171,6 +172,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
 
+         this._touchKeyboardMoveHandler = this._touchKeyboardMoveHandler.bind(this);
+         EventBus.globalChannel().subscribe('MobileInputFocus', this._touchKeyboardMoveHandler);
+         EventBus.globalChannel().subscribe('MobileInputFocusOut', this._touchKeyboardMoveHandler);
+
          if (this._options.closeButton) {
             container.append('<div class="controls-PopupMixin__closeButton"></div>');
             $('.controls-PopupMixin__closeButton', this.getContainer().get(0)).click(function() {
@@ -192,6 +197,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             // приходится отключать инертный скролл в момент показа всплывахи и включать обратно при скрытии
             this._parentFloatArea = topParent;
          }
+      },
+
+
+      _touchKeyboardMoveHandler: function(){
+         this.recalcPosition();
       },
 
       //Подписка на изменение состояния таргета
@@ -963,6 +973,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             cWindowManager.releaseZIndex(this._zIndex);
             ControlHierarchyManager.removeNode(this);
             this._unsubscribeTargetMove();
+            EventBus.globalChannel().unsubscribe('MobileInputFocus', this._touchKeyboardMoveHandler);
+            EventBus.globalChannel().unsubscribe('MobileInputFocusOut', this._touchKeyboardMoveHandler);
             EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._onResizeHandler, this);
             if (this._options.closeByExternalOver) {
                EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentMouseOver', this._clickHandler, this);
@@ -985,7 +997,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             /* Если кто-то позвал hide, а контрол уже скрыт, то не будет запускать цепочку кода,
              могут валиться ошибки */
             if(!this.isVisible()) return;
-
+            
+            // хак для ipad, чтобы клавиатура закрывалась когда дестроится панель
+            if (detection.isMobileIOS) {
+               if(this.getContainer().find(document.activeElement).length > 0){
+                  $(document.activeElement).trigger('blur');
+               };
+            }
+            
             var self = this,
                 result = this._notify('onClose'),
                 clearZIndex = function() {
