@@ -191,15 +191,17 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {WS.Data/Entity/Model} model Модель с измененными данными.
           */
          /**
+          * @typedef {String} BeginEditResult
+          * @variant Cancel Отменить завершение редактирования.
+          * @variant PendingAll В результате редактирования ожидается вся запись, как есть (с текущим набором полей).
+          * @variant PendingModifiedOnly В результате редактирования ожидаются только измененные поля. Это поведение используется по умолчанию.
+          */
+         /**
           * @event onBeginEdit Происходит перед началом редактирования.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {WS.Data/Entity/Model} model Редактируемая запись.
-          * @returns {*} Возможные значения:
-          * <ol>
-          *    <li>Deferred - запуск редактирования по месту будет произведён, когда произойдёт завершение возвращенного Deferred;</li>
-          *    <li>false - прервать редактирование;</li>
-          *    <li>* - продолжить редактирование в штатном режиме.</li>
-          * </ol>
+          * @param {Boolean} isAdd Флаг, означающий что событию предшествовал запуск добавления по месту.
+          * @returns {BeginEditResult|Deferred} Deferred - используется для асинхронной подготовки редактируемой записи. Из Deferred необходимо обязательно возвращать запись, открываемую на редактирование.
           */
          /**
           * @event onBeginAdd Происходит перед началом добавления записи по месту.
@@ -221,7 +223,7 @@ define('js!SBIS3.CONTROLS.ListView',
           *    <li>false - отмена сохранения изменений путём нажатия клавиши Esc или переводом фокуса на другой контрол.</li>
           * </ul>
           * @returns {EndEditResult} Из события можно вернуть одну из констант, список которых приведён по ссылке.
-          * Если из события вернуть любое другое значение, то оно будет проигнорировано, и проихойдёт сохранение изменений редактирования/добавления по месту.
+          * Если из события вернуть любое другое значение, то оно будет проигнорировано, и произойдёт сохранение изменений редактирования/добавления по месту.
           */
          /**
           * @event onAfterEndEdit Происходит после окончания редактирования по месту.
@@ -281,6 +283,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _dotItemTpl: null,
             _itemsContainer: null,
             _actsContainer: null,
+            _onMetaDataResultsChange: null,
             _allowInfiniteScroll: true,
             _hoveredItem: {
                target: null,
@@ -351,6 +354,7 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {String} Устанавливает шаблон отображения каждого элемента коллекции.
                 * @remark
+                * @deprecated
                 * Шаблон - это пользовательская вёрстка элемента коллекции.
                 * Для доступа к полям элемента коллекции в шаблоне подразумевается использование конструкций шаблонизатора.
                 * Подробнее о шаблонизаторе вы можете прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/ Шаблонизация вёрстки компонента}.
@@ -758,6 +762,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this.setGroupBy(this._options.groupBy, false);
             }
+            this._onMetaDataResultsChange = this._drawResults.bind(this);
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
          },
@@ -818,7 +823,7 @@ define('js!SBIS3.CONTROLS.ListView',
                т.к. оно стреляет после тапа. После тапа событие mousemove имеет нулевой сдвиг, поэтому обрабатываем его как touch событие
                 + добавляю проверку, что до этого мы были в touch режиме,
                это надо например для тестов, в которых эмулирется событие mousemove так же без сдвига, как и на touch устройствах. */
-            this._setTouchSupport(Array.indexOf(['swipe', 'tap'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform)));
+            this._setTouchSupport(Array.indexOf(['swipe', 'tap', 'touchend', 'taphold'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform)));
 
             switch (e.type) {
                case 'mousemove':
@@ -901,7 +906,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   newSelectedItem = this._getNextItemByDOM(selectedKey);
                   break;
                case constants.key.enter:
-                  if(selectedKey) {
+                  if(selectedKey !== undefined && selectedKey !== null) {
                      var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
                      this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem, e);
                   }
@@ -1216,11 +1221,11 @@ define('js!SBIS3.CONTROLS.ListView',
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
             this._getEmptyDataContainer().empty().html(html);
-            this._toggleEmptyData(!(this._getItemsProjection() && this._getItemsProjection().getCount()));
+            this._toggleEmptyData(this._getItemsProjection() && !this._getItemsProjection().getCount());
          },
 
          _getEmptyDataContainer: function() {
-            return $('.controls-ListView__EmptyData', this._container.get(0));
+            return $('> .controls-ListView__EmptyData', this._container.get(0));
          },
 
          setMultiselect: function(flag) {
@@ -1312,7 +1317,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setSelectedAll: function() {
             var selectedItems = this.getSelectedItems();
             if (this.isInfiniteScroll() && this.getItems().getCount() < 1000){
-               this.reload(this.getFilter(), this.getSorting(), 0, 1000)
+               this._loadFullData.apply(this, arguments)
                   .addCallback(function(dataSet) {
                      //Ввостановим значение _limit, т.к. после вызова reload _limit стал равен 1000,
                      //и следующие страницы будут грузиться тоже по 1000 записей
@@ -1345,6 +1350,11 @@ define('js!SBIS3.CONTROLS.ListView',
                this.setSelectedItemsAll.call(this);
             }
          },
+
+         _loadFullData: function() {
+            return this.reload(this.getFilter(), this.getSorting(), 0, 1000);
+         },
+
          _drawSelectedItems: function (idArray) {
             /* Запоминаем элементы, чтобы не делать лишний раз выборку по DOM'у,
                это дорого */
@@ -1396,6 +1406,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._previousGroupBy = undefined;
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
+            this._observeResultsRecord(false);
             return ListView.superclass.reload.apply(this, arguments);
          },
          /**
@@ -1447,6 +1458,13 @@ define('js!SBIS3.CONTROLS.ListView',
                this.subscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
             } else if (this._isClickEditMode()) {
                this.subscribe('onItemClick', this._startEditOnItemClick);
+            }
+         },
+         _itemsReadyCallback: function() {
+            ListView.superclass._itemsReadyCallback.apply(this, arguments);
+            if (this._hasEditInPlace()) {
+               this._getEditInPlace().setItems(this.getItems());
+               this._getEditInPlace().setItemsProjection(this._getItemsProjection());
             }
          },
          beforeNotifyOnItemClick: function() {
@@ -2125,6 +2143,16 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this.isInfiniteScroll()) {
                this._createLoadingIndicator();
                this._createScrollWatcher();
+
+               if (this._options.infiniteScroll == 'demand'){
+                  this._loadMoreButton = this.getChildControlByName('loadMoreButton');
+                  if (this.getItems()){
+                     this._setLoadMoreCaption(this.getItems());
+                  }
+                  this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
+                  this._setInfiniteScrollState('down');
+                  return;
+               }
                // Пока по умолчанию считаем что везде подгрузка вниз, и если указана 'up' - значит она просто перевернута
                this._setInfiniteScrollState('down', this._options.infiniteScroll == 'up');
                /**TODO Это специфическое решение из-за того, что нам нужно догружать данные пока не появится скролл
@@ -2133,7 +2161,9 @@ define('js!SBIS3.CONTROLS.ListView',
                if (cInstance.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
                   var afterFloatAreaShow = function(){
                      if (self.getItems()) {
-                        self._needScrollCompensation = self._options.infiniteScroll == 'up';
+                        if (self._options.infiniteScroll == 'up'){
+                           self._moveTopScroll();
+                        }
                         self._preScrollLoading();
                      }
                      topParent.unsubscribe('onAfterShow', afterFloatAreaShow);
@@ -2142,13 +2172,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.subscribeTo(topParent, 'onAfterShow', afterFloatAreaShow);
                }
                this._scrollWatcher.subscribe('onTotalScroll', this._onTotalScrollHandler.bind(this));
-            }
-            if (this._options.infiniteScroll == 'demand'){
-               this._loadMoreButton = this.getChildControlByName('loadMoreButton');
-               if (this.getItems()){
-                  this._setLoadMoreCaption(this.getItems());
-               }
-               this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
             }
          },
 
@@ -2190,8 +2213,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var mode = this._infiniteScrollState.mode,
                scrollOnEdge =  (mode === 'up' && type === 'top') ||   // скролл вверх и доскролили до верхнего края
                                (mode === 'down' && type === 'bottom' && !this._infiniteScrollState.reverse) || // скролл вниз и доскролили до нижнего края
-                               (mode === 'down' && type === 'top' && this._infiniteScrollState.reverse); // скролл верх с запросом данных вниз и доскролили верхнего края
-
+                               (mode === 'down' && type === 'top' && this._infiniteScrollState.reverse) || // скролл верх с запросом данных вниз и доскролили верхнего края
+                               (this._options.infiniteScroll === 'both');
             if (scrollOnEdge && this.getItems()) {
                // Досткролили вверх, но на самом деле подгружаем данные как обычно, а рисуем вверх
                if (type == 'top' && this._infiniteScrollState.reverse) {
@@ -2236,7 +2259,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param  {String} direction в какую сторону грузим
           */
          _scrollLoadNextPage: function (direction) {
-            var loadAllowed  = this.isInfiniteScroll(),
+            var loadAllowed  = this.isInfiniteScroll() && this._options.infiniteScroll !== 'demand',
                more = this.getItems().getMetaData().more,
                isContainerVisible = dcHelpers.isElementVisible(this.getContainer()),
                hasScroll = this._scrollWatcher.hasScroll(),
@@ -2297,9 +2320,6 @@ define('js!SBIS3.CONTROLS.ListView',
                      this._scrollLoadNextPage();
                   }
                }
-               if (this._options.infiniteScroll == 'demand'){
-                  this._setLoadMoreCaption(dataSet);
-               }
             }, this)).addErrback(function (error) {
                //Здесь при .cancel приходит ошибка вида DeferredCanceledError
                return error;
@@ -2307,7 +2327,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getNextOffset: function(){
-            if (this._infiniteScrollState.mode == 'down'){
+            if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
                return this._scrollOffset.bottom + this._limit;
             } else {
                return this._scrollOffset.top - this._limit;
@@ -2338,7 +2358,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _updateScrolOffset: function(){
-            if (this._infiniteScrollState.mode === 'down') {
+            if (this._infiniteScrollState.mode === 'down' || this._infiniteScrollState.mode == 'demand') {
                this._scrollOffset.bottom += this._limit;
             } else {
                if (this._scrollOffset.top >= this._limit){
@@ -2350,16 +2370,32 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _setLoadMoreCaption: function(dataSet){
-            var more = dataSet.getMetaData().more;
-            if (typeof more == 'number'){
-               this._loadMoreButton.setCaption('Еще ' + more);
-            } else {
-               if (more === false){
+            var more = dataSet.getMetaData().more,
+               caption, allCount;
+            // Если число и больше pageSize то "Еще pageSize"
+            if (typeof more === 'number') {
+               allCount = more;
+               $('.controls-ListView__counterValue', this._container.get(0)).text(allCount);
+               $('.controls-ListView__counter', this._container.get(0)).removeClass('ws-hidden');
+
+               var ost = more - (this._scrollOffset.bottom + this._options.pageSize);
+               if (ost < 0) {
                   this._loadMoreButton.setVisible(false);
+                  return;
+               }
+               caption = ost < this._options.pageSize ? ost : this._options.pageSize;
+            } else {
+               $('.controls-ListView__counter', this._container.get(0)).addClass('ws-hidden');
+               if (more === false) {
+                  this._loadMoreButton.setVisible(false);
+                  return;
                } else {
-                  this._loadMoreButton.setCaption('Еще...');
+                  caption = this._options.pageSize;
                }
             }
+
+            this._loadMoreButton.setCaption('Еще ' + caption);
+            this._loadMoreButton.setVisible(true);
          },
 
          _onLoadMoreButtonActivated: function(event){
@@ -2534,7 +2570,11 @@ define('js!SBIS3.CONTROLS.ListView',
                if (!this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.bottom)) {
                   this._hideLoadingIndicator();
                }
+               if (this._options.infiniteScroll == 'demand'){
+                  this._setLoadMoreCaption(this.getItems());
+               }
             }
+            this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
          },
          _toggleIndicator: function(show){
@@ -2691,6 +2731,9 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollOffset.top = this._offset;
                this._scrollOffset.bottom = this._offset;
                if (!noLoad && this._offset !== offset) {
+                  /* При смене страницы (не через подгрузку по скролу),
+                     надо сбросить выделенную запись, иначе на следующей странице неправильно выделится запись */
+                  this.setSelectedIndex(-1);
                   this.reload();
                }
             }
@@ -3307,6 +3350,14 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _redrawResults: function(){
            this._drawResults();
+         },
+
+         _observeResultsRecord: function(needObserve){
+            var methodName = needObserve ? 'subscribeTo' : 'unsubscribeFrom',
+                resultsRecord = this._getResultsRecord();
+            if (resultsRecord){
+               this[methodName](resultsRecord, 'onPropertyChange', this._onMetaDataResultsChange);
+            }
          },
 
          _drawResults: function(){

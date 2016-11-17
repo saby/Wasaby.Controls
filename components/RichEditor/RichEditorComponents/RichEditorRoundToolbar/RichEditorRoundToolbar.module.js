@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
       },
       /**
        * @class SBIS3.CONTROLS.RichEditorRoundToolbar
-       * @extends SBIS3.CONTROLS.RichEditorRoundToolbar
+       * @extends SBIS3.CONTROLS.RichEditorToolbarBase
        * @author Борисов П.С.
        * @public
        * @control

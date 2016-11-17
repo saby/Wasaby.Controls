@@ -42,6 +42,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    var TreeCompositeView = TreeDataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.TreeCompositeView.prototype*/ {
 
       $protected: {
+         _prevMode: null,
          _options: {
             /**
              * @cfg {String} Устанавливает шаблон, который используется для отрисовки папки в режимах "Список" и "Плитка"
@@ -200,6 +201,22 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
        */
       setListFolderTemplate : function(tpl) {
          this._options.listFolderTemplate = tpl;
+      },
+
+      redraw: function() {
+         if (this._options.hierarchyViewMode) {
+            if (!this._prevMode) {
+               this._prevMode = this._options.viewMode;
+               this.setViewMode('table');
+            }
+         }
+         else {
+            if (this._prevMode) {
+               this.setViewMode(this._prevMode);
+            }
+            this._prevMode = null;
+         }
+         TreeCompositeView.superclass.redraw.apply(this, arguments);
       },
       /*
        TODO НЕ ИСПОЛЬЗОВАТЬ БЕЗ САМОЙ КРАЙНЕЙ НЕОБХОДИМОСТИ!

@@ -93,34 +93,33 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
        * @typedef {Object} ExecuteMetaConfig
        * @property {String|Number} id Первичный ключ записи. Передается в конфигурацию диалога в опцию {@link SBIS3.CONTROLS.FormController#key}.
        * @property {Object} filter Объект, свойства которого могут быть использованы для установки инициализирующих данных при создании новой записи. Передается в конфигурацию диалога в опцию {@link SBIS3.CONTROLS.FormController#initValues}.
+       * @property {Object} readMetaData Дополнительные мета-данные, которые будут переданы в метод прочитать. Передается в конфигурацию диалога в опцию {@link SBIS3.CONTROLS.FormController#readMetaData}.
        * @property {WS.Data/Entity/Record} item Экземпляр класса записи. Передается в конфигурацию диалога в опцию {@link SBIS3.CONTROLS.FormController#record}.
        * @property {String} initializingWay Способ инициализации данных диалога, подробнее о котором вы можете прочитать <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/initializing-way/">здесь</a>.
        * @property {Object} componentOptions Пользовательские опции, которые будут переданы в диалог в секцию _options.
        * @property {Object} dialogOptions Опции, которые переопределяют конфигурацию диалога. Набор опций зависит от типа диалога (см. {@link mode}).
        * <ul>
-       *    <li>Если <i>mode=dialog</i>, то набор опций такой: {@link $ws.proto.Dialog#title}, {@link $ws.proto.Dialog#border} и {@link $ws.proto.Dialog#buildMarkupWithContext}.</li>
-       *    <li>Если <i>mode=floatArea</i>, то набор опций такой: {@link $ws.proto.FloatArea#title}, {@link $ws.proto.FloatArea#border}, {@link $ws.proto.FloatArea#buildMarkupWithContext}, {@link $ws.proto.FloatArea#animation}, {@link $ws.proto.FloatArea#autoCloseOnHide}, {@link $ws.proto.FloatArea#showOnControlsReady}, {@link $ws.proto.FloatArea#autoHide}, {@link $ws.proto.FloatArea#isStack}, {@link $ws.proto.FloatArea#side} и {@link $ws.proto.FloatArea#target}.</li>
+       *    <li>Если <i>mode=dialog</i>, то набор опций такой: {@link $ws.proto.Dialog#title title}, {@link $ws.proto.Dialog#border border} и {@link $ws.proto.Dialog#buildMarkupWithContext buildMarkupWithContext}.</li>
+       *    <li>Если <i>mode=floatArea</i>, то набор опций такой: {@link $ws.proto.FloatArea#title title}, {@link $ws.proto.FloatArea#border border}, {@link $ws.proto.FloatArea#buildMarkupWithContext buildMarkupWithContext}, {@link $ws.proto.FloatArea#animation animation}, {@link $ws.proto.FloatArea#autoCloseOnHide autoCloseOnHide}, {@link $ws.proto.FloatArea#showOnControlsReady showOnControlsReady}, {@link $ws.proto.FloatArea#autoHide autoHide}, {@link $ws.proto.FloatArea#isStack isStack}, {@link $ws.proto.FloatArea#side side} и {@link $ws.proto.FloatArea#target target}.</li>
        * </ul>
-       */
-      /**
-       * Производи открытие диалога.
-       * @param {ExecuteMetaConfig} meta Параметры, которые будут использованы для конфигурации диалога.
-       * @example
-       * Открыть диалог создания новой записи, для которой часть полей будет с предустановленными значениями.
-       * <pre>
-       * // myAddFolderButton - экземпляр класса кнопки
-       * // myDialogAction - экземпляр класса SBIS3.CONTROLS.OpenDialogAction
-       * myAddFolderButton.subscribe('onActivated', function() {
-       *    myDialogAction.execute({
-       *       filter: {
-       *          'Раздел': null, // Поле иерархии, папка создаётся в корне иерархической структуры
-       *          'Раздел@': true // Признак папки в иерархической структуре
-       *       }
-       *    });
-       * });
        */
       $constructor: function() {
          this._publish('onAfterShow', 'onBeforeShow', 'onExecuted', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel');
+      },
+
+      /**
+       * Установить компонент, который будет использован в качестве диалога редактирования записи.
+       * @param dialogComponent компонент, который будет использован в качестве диалога редактирования записи. {@link dialogComponent}.
+       */
+      setDialogComponent: function(dialogComponent){
+         this._options.dialogComponent = dialogComponent;
+      },
+      /**
+       * Установить режим открытия диалога редактирования компонента.
+       * @param {String} mode режим открытия диалога редактирования компонента {@link mode}.
+       */
+      setMode: function(mode){
+         this._options.mode = mode;
       },
       /**
        * Производит открытие диалога.
@@ -133,7 +132,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
        * // myButton - экземпляр класса кнопки
        * // myDialogAction - экземпляр класса SBIS3.CONTROLS.OpenDialogAction
        * myButton.subscribe('onActivated', function(){
-       *    myDialogAction.execute({});
+       *    myDialogAction.execute({
+       *       id: myId,
+       *       item: myItem
+       *    });
        * });
        * </pre>
        */
@@ -285,10 +287,9 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
 
       _showLoadingIndicator: function(){
          this._showedLoading = true;
-         cIndicator.setMessage('Загрузка...');
          window.setTimeout(function(){
             if (this._showedLoading){
-               cIndicator.show();
+               cIndicator.setMessage('Загрузка...'); //setMessage зовет show у loadingIndicator
             }
          }.bind(this), 750);
       },
@@ -331,6 +332,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
                title: '',
                side: 'left',
                animation: 'slide'
+               /* временнное решение проблемы описанной в надзадаче */
+               , block_by_task_1173286428: false
             },
             floatAreaCfg = {};
          if (!meta.dialogOptions){

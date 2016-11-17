@@ -1,10 +1,29 @@
-<div class="controls-operationsPanel {{?!it.visible}}ws-hidden{{?}}">
+<div class="controls-operationsPanel {{?!it.visible}}ws-hidden{{?}} {{?it.hasItemsMenu}}controls-operationsPanel_withItemsMenu{{?}}">
    <div class="controls-operationsPanel__wrapper controls-operationsPanel__massMode">
       <div class="controls-operationsPanel__wrapper-background">
-         {{?it.hasMarkBlock}}
+         <div class="controls-operationsPanel__container">
+            {{?it.hasMarkBlock}}
             <div class="controls-operationsPanel__actionMark"></div>
-         {{?}}
-         <div class="controls-operationsPanel__actions"></div>
+            {{?}}
+            <div class="controls-operationsPanel__actions"></div>
+            {{?it.hasItemsMenu}}
+            <component data-component="SBIS3.CONTROLS.MenuIcon" name="itemsMenu">
+               <option name="className">controls-Menu__hide-menu-header controls-operationsPanel__itemsMenu</option>
+               <option name="keyField">id</option>
+               <option name="hierField">parent</option>
+               <option name="displayField">caption</option>
+               <option name="icon">sprite:icon-24 icon-ExpandDown icon-primary action-hover</option>
+               <options name="pickerConfig">
+                  <option name="closeButton">true</option>
+                  <option name="className">controls-operationsPanel__itemsMenu_picker controls-operationsPanel__massMode</option>
+                  <options name="horizontalAlign">
+                     <option name="side">right</option>
+                     <option name="offset">48</option>
+                  </options>
+               </options>
+            </component>
+            {{?}}
+         </div>
       </div>
    </div>
 </div>

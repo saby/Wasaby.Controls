@@ -42,12 +42,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
    applyGroupingToProjection = function(projection, cfg) {
       if (cfg.groupBy && cfg.easyGroup) {
+         var method;
          if (!cfg.groupBy.method) {
             var field = cfg.groupBy.field;
-            projection.setGroup(function(item, index, projItem){
+            method = function(item, index, projItem){
                return item.get(field);
-            });
+            }
          }
+         else {
+            method = cfg.groupBy.method
+         }
+         projection.setGroup(method);
       }
       return projection;
    },
@@ -622,10 +627,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._prepareItemsConfig();
 
          if (this._options.itemTemplate) {
-            IoC.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан itemTemplate');
+            IoC.resolve('ILogger').error('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан itemTemplate');
          }
          if (!Object.isEmpty(this._options.groupBy) && !this._options.easyGroup) {
-            IoC.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Используется GroupBy без easyGroup: true');
+            IoC.resolve('ILogger').error('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Используется GroupBy без easyGroup: true');
          }
          if (this._options.userItemAttributes) {
             IoC.resolve('ILogger').error('userItemAttributes', 'Option is no longer available since version 3.7.4.200. Use ItemTpl');
@@ -688,6 +693,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else {
                this._options._items = itemsOpt;
             }
+            if (this._options._itemsProjection) {
+               this._unsetItemsEventHandlers();
+               this._options._itemsProjection.destroy();
+            }
             this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
             this._options._itemsProjection = this._options._applyGroupingToProjection(this._options._itemsProjection, this._options);
             this._setItemsEventHandlers();
@@ -703,11 +712,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             return;
          }
 
-         var items = this.getItems(),
-            source = this.getDataSource(),
-            required = source || (items && items.getIdProperty);
-
-         if (required) {
+         var items = this.getItems();
+         if (items && items.getIdProperty) {
             IoC.resolve('ILogger').info('ItemsControl', 'Option keyField is undefined in control ' + this.getName());
          }
       },
@@ -876,13 +882,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             /*TODO Особое поведение при группировке*/
                if (!Object.isEmpty(this._options.groupBy)) {
-                  /*TODO косяк Лехи - не присылает группу при удалении*/
-                  /*if (this._options.easyGroup) {
+
+                  if (this._options.easyGroup) {
                      if (this._getItemsProjection().getGroupItems(groupId).length < 1) {
                         $('[data-group="' + groupId + '"]', this._container.get(0)).remove();
                      }
                   }
-                  else {*/
+                  else {
                      var prev = targetElement.prev();
                      if (prev.length && prev.hasClass('controls-GroupBy')) {
                         var next = targetElement.next();
@@ -890,7 +896,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                            prev.remove();
                         }
                      }
-                  /*}*/
+                  }
                }
 
                removedElements.push(targetElement.get(0));
@@ -909,7 +915,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
                this._options._groupItemProcessing(groupId, itemsToAdd, items[0], this._options);
             }
-            itemsToAdd.concat(items);
+            itemsToAdd = itemsToAdd.concat(items);
          }
          return itemsToAdd;
       },
@@ -979,9 +985,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             //на месте вставки может быть разделитель, надо понимать, когда вставлять до разделителя, а когда после
             //на выходе получим beforeFlag = true, если надо вставлять ДО какого то элемента, иначе действуем по стандартному алгоритму
             if (this._canApplyGrouping(newItems[0])) {
-               prevGroup = this._canApplyGrouping(prevItem) ? projection.getGroupByIndex(newItemsIndex - 1) : null;
+               prevGroup = (prevItem && this._canApplyGrouping(prevItem)) ? projection.getGroupByIndex(newItemsIndex - 1) : null;
                nextItem = projection.at(newItemsIndex + newItems.length);
-               nextGroup = this._canApplyGrouping(nextItem) ? projection.getGroupByIndex(newItemsIndex + newItems.length) : null;
+               nextGroup = (nextItem && this._canApplyGrouping(nextItem)) ? projection.getGroupByIndex(newItemsIndex + newItems.length) : null;
                if ((prevGroup === undefined) || (prevGroup === null) || prevGroup != groupId) {
                   if (nextGroup !== undefined && nextGroup !== null && nextGroup == groupId) {
                      beforeFlag = true
@@ -1345,6 +1351,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       this._itemsReadyCallback();
                       self.redraw();
                    }
+                   
+                   self._checkKeyField();
 
                    this._dataLoadedCallback();
                    //self._notify('onBeforeRedraw');
@@ -2074,9 +2082,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          this._reviveItems();
       },
-      _onCollectionRemove: function(items, notCollapsed) {
+      _onCollectionRemove: function(items, notCollapsed, groupId) {
          if (items.length) {
-            this._removeItems(items)
+            this._removeItems(items, groupId)
          }
       },
       _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {

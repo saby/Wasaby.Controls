@@ -9,7 +9,7 @@
    }
 
    &__label {
-      color:#999999;
+      color:#cccccc;
       &__start {
          padding: 0 4px 0 0;
       }
@@ -20,5 +20,13 @@
          padding: 0 0 0 4px;
       }
    }
-
+   &.ws-disabled {
+      .controls-Slider__point {
+         border: 2px solid #cccccc;
+         cursor: auto;
+      }
+      .controls-Slider__line__full {
+         background-color: #cccccc;
+      }
+   }
 }

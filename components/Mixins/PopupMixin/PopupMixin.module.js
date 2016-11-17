@@ -10,8 +10,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
    "js!SBIS3.CORE.ModalOverlay",
    "js!SBIS3.CONTROLS.TouchKeyboardHelper",
    "Core/helpers/helpers",
-   "Core/helpers/dom&controls-helpers"
-], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers, dcHelpers) {
+   "Core/helpers/dom&controls-helpers",
+   "Core/detection"
+], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers, dcHelpers, detection) {
    'use strict';
    if (typeof window !== 'undefined') {
       var eventsChannel = EventBus.channel('WindowChangeChannel');
@@ -22,7 +23,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
       $(window).blur(function(e) {
          if(document.activeElement.tagName == "IFRAME"){
-            eventsChannel.notify('onDocumentClick', e);
+            if(! $(document.activeElement).hasClass('ws-popup-mixin-ignore-iframe')){
+               eventsChannel.notify('onDocumentClick', e);
+            }
          }
       });
 
@@ -137,7 +140,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              * @typedef {Object} loacationStrategyEnum
              * @variant dontMove всплывающая панель не двигается относительно таргета
              */
-            locationStrategy: null
+            locationStrategy: null,
+
+            isHint: true
          }
       },
 
@@ -167,6 +172,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
 
+         this._touchKeyboardMoveHandler = this._touchKeyboardMoveHandler.bind(this);
+         EventBus.globalChannel().subscribe('MobileInputFocus', this._touchKeyboardMoveHandler);
+         EventBus.globalChannel().subscribe('MobileInputFocusOut', this._touchKeyboardMoveHandler);
+
          if (this._options.closeButton) {
             container.append('<div class="controls-PopupMixin__closeButton"></div>');
             $('.controls-PopupMixin__closeButton', this.getContainer().get(0)).click(function() {
@@ -188,6 +197,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             // приходится отключать инертный скролл в момент показа всплывахи и включать обратно при скрытии
             this._parentFloatArea = topParent;
          }
+      },
+
+
+      _touchKeyboardMoveHandler: function(){
+         this.recalcPosition();
       },
 
       //Подписка на изменение состояния таргета
@@ -695,39 +709,48 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          return this._options.corner;
       },
 
+      /* проксирующий метод, изменяющий офсет в зависимости от свободного места на экране */
       _getOffsetByWindowSize: function (offset) {
-         var buf = this._targetSizes.offset,
-            scrollY = this._fixed ? 0 : $(window).scrollTop(),
-            scrollX = this._fixed ? 0 : $(window).scrollLeft();
-         //Проверяем убираемся ли в экран снизу. Если позиционируем нижней стороной, не нужно менять положение если не влезаем снизу
-         if (this._containerSizes.requiredOffset.top > this._windowSizes.height + scrollY && !this._isMovedV && this._options.verticalAlign.side !== 'bottom') {
-            this._isMovedV = true;
-            offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
-            offset.top = this._addOffset(offset, buf).top;
-         }
+         switch(this._options.locationStrategy){
+            /* в режиме донт мув мы донт мув */
+            case 'dontMove':
+                 return offset;
 
-         //Возможно уже меняли положение и теперь хватает места что бы вернуться на нужную позицию по вертикали
-         if (this._containerSizes.requiredOffset.top < this._windowSizes.height + scrollY && this._isMovedV) {
-            this._isMovedV = false;
-            offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
-            offset.top = this._addOffset(offset, buf).top;
-         }
+            /* по умаолчанию учитываем свободное место на экране */
+            default:
+               var buf = this._targetSizes.offset,
+                   scrollY = this._fixed ? 0 : $(window).scrollTop(),
+                   scrollX = this._fixed ? 0 : $(window).scrollLeft();
+               //Проверяем убираемся ли в экран снизу. Если позиционируем нижней стороной, не нужно менять положение если не влезаем снизу
+               if (this._containerSizes.requiredOffset.top > this._windowSizes.height + scrollY && !this._isMovedV && this._options.verticalAlign.side !== 'bottom') {
+                  this._isMovedV = true;
+                  offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
+                  offset.top = this._addOffset(offset, buf).top;
+               }
 
-         //TODO Избавиться от дублирования
-         //Проверяем убираемся ли в экран справа. Если позиционируем правой стороной, не нужно менять положение если не влезаем справа
-         if (this._containerSizes.requiredOffset.left > this._windowSizes.width + scrollX && !this._isMovedH && this._options.horizontalAlign.side !== 'right') {
-            this._isMovedH = true;
-            offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
-            offset.left = this._addOffset(offset, buf).left;
-         }
+               //Возможно уже меняли положение и теперь хватает места что бы вернуться на нужную позицию по вертикали
+               if (this._containerSizes.requiredOffset.top < this._windowSizes.height + scrollY && this._isMovedV) {
+                  this._isMovedV = false;
+                  offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
+                  offset.top = this._addOffset(offset, buf).top;
+               }
 
-         //Возможно уже меняли положение и теперь хватает места что бы вернуться на нужную позицию по горизонтали
-         if (this._containerSizes.requiredOffset.left < this._windowSizes.width + scrollX && this._isMovedH) {
-            this._isMovedH = false;
-            offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
-            offset.left = this._addOffset(offset, buf).left;
+               //TODO Избавиться от дублирования
+               //Проверяем убираемся ли в экран справа. Если позиционируем правой стороной, не нужно менять положение если не влезаем справа
+               if (this._containerSizes.requiredOffset.left > this._windowSizes.width + scrollX && !this._isMovedH && this._options.horizontalAlign.side !== 'right') {
+                  this._isMovedH = true;
+                  offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
+                  offset.left = this._addOffset(offset, buf).left;
+               }
+
+               //Возможно уже меняли положение и теперь хватает места что бы вернуться на нужную позицию по горизонтали
+               if (this._containerSizes.requiredOffset.left < this._windowSizes.width + scrollX && this._isMovedH) {
+                  this._isMovedH = false;
+                  offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
+                  offset.left = this._addOffset(offset, buf).left;
+               }
+               return offset;
          }
-         return offset;
       },
 
       _calculateOverflow: function (offset, orientation) {
@@ -885,7 +908,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       },
 
       _getZIndex: function(){
-         this._zIndex = cWindowManager.acquireZIndex(this._options.isModal, false, true);
+         this._zIndex = cWindowManager.acquireZIndex(this._options.isModal, false, this._options.isHint);
          cWindowManager.setVisible(this._zIndex);
       },
 
@@ -950,6 +973,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             cWindowManager.releaseZIndex(this._zIndex);
             ControlHierarchyManager.removeNode(this);
             this._unsubscribeTargetMove();
+            EventBus.globalChannel().unsubscribe('MobileInputFocus', this._touchKeyboardMoveHandler);
+            EventBus.globalChannel().unsubscribe('MobileInputFocusOut', this._touchKeyboardMoveHandler);
             EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._onResizeHandler, this);
             if (this._options.closeByExternalOver) {
                EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentMouseOver', this._clickHandler, this);
@@ -972,7 +997,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             /* Если кто-то позвал hide, а контрол уже скрыт, то не будет запускать цепочку кода,
              могут валиться ошибки */
             if(!this.isVisible()) return;
-
+            
+            // хак для ipad, чтобы клавиатура закрывалась когда дестроится панель
+            if (detection.isMobileIOS) {
+               if(this.getContainer().find(document.activeElement).length > 0){
+                  $(document.activeElement).trigger('blur');
+               };
+            }
+            
             var self = this,
                 result = this._notify('onClose'),
                 clearZIndex = function() {

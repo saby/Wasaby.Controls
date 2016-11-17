@@ -155,6 +155,10 @@ define('js!SBIS3.CONTROLS.FormController', [
              * @cfg {Object} Устанавливает ассоциативный массив, который используют только при создании новой записи для инициализации её начальными значениями.
              */
             initValues: null,
+            /**
+             * @cfg {Object} Дополнительные мета-данные, которые будут переданы в метод прочитать
+             */
+            readMetaData: null,
              /**
              * @cfg {String} Устанавливает текст, отображаемый рядом с индикатором при сохранении записи командной {@link update}.
              * @translatable
@@ -228,8 +232,10 @@ define('js!SBIS3.CONTROLS.FormController', [
              eventName = needUpdateKey ? 'onCreateModel' : 'onReadModel',
              self = this;
          if (cInstance.instanceOfModule(receiptRecordDeferred, 'Core/Deferred')){
+            this._toggleOverlay(true);
             receiptRecordDeferred.addCallback(function(record){
                self.setRecord(record, needUpdateKey);
+               self._toggleOverlay(false);
                self._actionNotify(eventName);
             });
          }
@@ -647,7 +653,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             key = config.key;
          }
          key = key || this._options.key;
-         readDeferred = this._dataSource.read(key).addCallback(function(record){
+         readDeferred = this._dataSource.read(key, this._options.readMetaData).addCallback(function(record){
             self.setRecord(record);
             return record;
          }).addBoth(function(data){
@@ -714,7 +720,6 @@ define('js!SBIS3.CONTROLS.FormController', [
          var errorMessage = rk('Некорректно заполнены обязательные поля!'),
              self = this,
              updateDeferred = new Deferred(),
-             dResult = new Deferred(),
              onBeforeUpdateData;
 
          if (this.validate()) {
@@ -727,7 +732,7 @@ define('js!SBIS3.CONTROLS.FormController', [
                onBeforeUpdateData.result.addBoth(function(result){
                   onBeforeUpdateData = self._prepareOnBeforeUpdateResult(result);
                   if (onBeforeUpdateData.result !== false){
-                     updateDeferred.dependOn(self._updateRecord(dResult, config));
+                     updateDeferred.dependOn(self._updateRecord(config));
                   }
                   else{
                      updateDeferred.errback(onBeforeUpdateData.errorMessage);
@@ -736,23 +741,23 @@ define('js!SBIS3.CONTROLS.FormController', [
                return updateDeferred;
             }
             else if (onBeforeUpdateData.result === false) {
-               return updateDeferred.errback(onBeforeUpdateData.errorMessage);
+               return Deferred.fail(onBeforeUpdateData.errorMessage);
             }
-            return this._updateRecord(dResult, config);
+            return this._updateRecord(config);
          }
-         else {
-            if (!config.hideErrorDialog) {
-               var error = new Error(errorMessage);
-               this._processError(error);
-            }
-            dResult.errback(errorMessage);
-            this._saving = false;
+
+         //Если валидация не прошла
+         if (!config.hideErrorDialog) {
+            var error = new Error(errorMessage);
+            this._processError(error);
          }
-         return dResult;
+         this._saving = false;
+         return Deferred.fail(errorMessage);
       },
 
-      _updateRecord: function(dResult, config){
-         var updateConfig = {
+      _updateRecord: function(config){
+         var dResult = new Deferred(),
+             updateConfig = {
                indicatorText: this._options.indicatorSavingMessage,
                eventName: 'onUpdateModel',
                additionalData: {
@@ -933,7 +938,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          options.source = this.createDataSource(options);
 
          if (options.key){
-            result = options.source.read(options.key);
+            result = options.source.read(options.key, options.readMetaData);
          }
          else{
             result = options.source.create(options.initValues);

@@ -45,9 +45,6 @@
       margin: @controls-Paging-btn-margin;
       font-size: 18px!important;
    }
-   .control-Paging__btn:not(.ws-disabled):hover {
-      background-color: @default-itemHover-color;
-   }
    .control-Paging__next, .control-Paging__begin, .control-Paging__end, .control-Paging__prev{
       width: @controls-Paging-item-width;
       padding: @controls-Paging-btn-padding;
@@ -66,5 +63,13 @@
    .control-Paging__end {
       float: right;
 
+   }
+}
+
+.ws-is-desktop-platform {
+   .controls-Paging {
+      .control-Paging__btn:not(.ws-disabled):hover {
+         background-color: @default-itemHover-color;
+      }
    }
 }

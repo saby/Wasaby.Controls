@@ -112,8 +112,18 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
           * Аргументы для шаблона
           */
          _buildTplArgs: function(item) {
-            var args = FieldLinkItemsCollection.superclass._buildTplArgs.apply(this, arguments);
+            var args = FieldLinkItemsCollection.superclass._buildTplArgs.apply(this, arguments),
+                projection = this._getItemsProjection();
+
             args.itemTemplate = this._options.itemTemplate;
+            args.projection = projection;
+            args.itemsCount = projection.getCount();
+            /* При отображении выбранных элементов в выпадающем списке надо их сортировать,
+               чтобы визуально казалось, что последние выбранные будут вверху,
+               делается это с помощью аттрибута order (на css), чтобы ускорить отрисовку,
+               order навешивается в шаблоне. Для отображения в самом поле связи это не требуется,
+               поэтому добавляю проверку на видимость выпадающего списка */
+            args.needSort = this.isPickerVisible();
             return args;
          },
 
