@@ -41,7 +41,7 @@ gemini.suite('SBIS3.CONTROLS.MergeDialogs Online', function () {
 	
 	gemini.suite('with_custom_template', function (test) {
 
-        test.setUrl('/regression_merge_dialog_online_2.html').setCaptureElements('html')
+        test.setUrl('/regression_merge_dialog_online_2.html').skip('chrome').setCaptureElements('html')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="browserView"]', 40000);
