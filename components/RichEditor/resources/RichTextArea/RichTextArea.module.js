@@ -23,9 +23,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "Core/helpers/fast-control-helpers",
    "Core/helpers/string-helpers",
    "Core/helpers/dom&controls-helpers",
+   'js!WS.Data/Di',
    "css!SBIS3.CORE.RichContentStyles",
    "i18n!SBIS3.CONTROLS.RichEditor"
-], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, FileLoader, smiles, PluginManager, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers) {
+], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, FileLoader, smiles, PluginManager, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers, Di) {
       'use strict';
 
       var
@@ -151,7 +152,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                 * Позволяет при вставке контента распознавать ссылки и декорировать их в отдельные блоки
                 * @cfg {Boolean} декорировать ссылки ссылки
                 */
-               decorateLinks: false
+               decorateLinks: false,
+               /**
+                * Имя декоратора, ккоторый зарегистирован в системе, с помощью которого декорировать ссылки
+                * Если декоратор не укзан, то сыылки будут оборачиваться в <a>
+                * @cfg {String} имя декоратора
+                */
+               decoratorName: '' // engine - 'linkDecorator'
             },
             _fakeArea: undefined, //textarea для перехода фкуса по табу
             _tinyEditor: undefined, //экземпляр tinyMCE
@@ -1316,6 +1323,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                } else {
                   this._dataReview.height(this._container.height()  - constants.dataReviewPaddings);//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
                }
+               this._updateDataReview(this.getText());
                this._dataReview.toggleClass('ws-hidden', enabled);
             }
 
@@ -1530,18 +1538,29 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this._scrollTo(target, 'bottom');
             },
 
-         _updateDataReview: function(value) {
-            if (this._dataReview) {
-               this._dataReview.html(this._prepareReviewContent(value));
+         //Метод обновляющий значение редактора в задизабленом состоянии
+         //В данном методе происходит оборачивание ссылок в <a> или их декорирование, если указана декоратор
+         _updateDataReview: function(text) {
+            if (this._dataReview && !this.isEnabled()) {
+               //если никто не зарегистрировал декоратор то просто оборачиваем ссылки в <a>
+               if (this._options.decorateLinks && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
+                  var
+                     self = this;
+                  Di.resolve(this._options.decoratorName).decorateLinks(text).addCallback(function(text){
+                     self._dataReview.html(strHelpers.wrapFiles(text));
+                  });
+               } else {
+                  this._dataReview.html(this._prepareReviewContent(text));
+               }
             }
          },
 
-         _prepareReviewContent: function(value, it) {
-            if (value && value[0] !== '<') {
-               value = '<p>' + value.replace(/\n/gi, '<br/>') + '</p>';
+         _prepareReviewContent: function(text, it) {
+            if (text && text[0] !== '<') {
+               text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
             }
-            value = Sanitize(value);
-            return (this._options || it).highlightLinks ? strHelpers.wrapURLs(strHelpers.wrapFiles(value), true) : value;
+            text = Sanitize(text);
+            return (this._options || it).highlightLinks ? strHelpers.wrapURLs(strHelpers.wrapFiles(text), true) : text;
          },
 
          //установка значения в редактор

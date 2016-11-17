@@ -1289,7 +1289,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setSelectedAll: function() {
             var selectedItems = this.getSelectedItems();
             if (this.isInfiniteScroll() && this.getItems().getCount() < 1000){
-               this.reload(this.getFilter(), this.getSorting(), 0, 1000)
+               this._loadFullData.apply(this, arguments)
                   .addCallback(function(dataSet) {
                      //Ввостановим значение _limit, т.к. после вызова reload _limit стал равен 1000,
                      //и следующие страницы будут грузиться тоже по 1000 записей
@@ -1322,6 +1322,11 @@ define('js!SBIS3.CONTROLS.ListView',
                this.setSelectedItemsAll.call(this);
             }
          },
+
+         _loadFullData: function() {
+            return this.reload(this.getFilter(), this.getSorting(), 0, 1000);
+         },
+
          _drawSelectedItems: function (idArray) {
             /* Запоминаем элементы, чтобы не делать лишний раз выборку по DOM'у,
                это дорого */

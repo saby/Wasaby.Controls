@@ -97,6 +97,10 @@ define(
           * Храним предыдущую дату, даже если пользователь ввел некоректную дату
           */
          _lastDate: null,
+          /**
+           * Последняя дата о которой отправляли генерировали событие
+           */
+         _lastNotifiedDate: null,
          /**
           * Опции создаваемого контролла
           */
@@ -240,6 +244,7 @@ define(
             this.setText(this._options.text);
          }
 
+         this._lastNotifiedDate = this._options.date;
          this._addDefaultValidator();
       },
 
@@ -499,8 +504,12 @@ define(
       },
 
       _notifyOnDateChanged: function() {
-         this._notifyOnPropertyChanged('date', this._options.date);
-         this._notify('onDateChange', this._options.date);
+         var date = this._options.date;
+         if (this._lastNotifiedDate !== date || (this._lastNotifiedDate && date && this._lastNotifiedDate.getTime() !== date.getTime())) {
+            this._notifyOnPropertyChanged('date', date);
+            this._notify('onDateChange', date);
+            this._lastNotifiedDate = date;
+         }
       },
       setActive: function(active, shiftKey, noFocus, focusedControl) {
          var date;
