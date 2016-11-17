@@ -24,7 +24,7 @@
     cursor: default;
     text-decoration: none;
     .controls-Link__icon{
-      color: #CCC!important;
+      color: @icon-color-disabled !important;
     }
   }
 
@@ -69,6 +69,14 @@
   }
 }
 
+.ws-is-mobile-platform {
+   .controls-Link__withoutCaptionOnMobile {
+      .controls-Link__field {
+         display: none;
+      }
+   }
+}
+
 .staff-CardButtons__right{
    .controls-Link{
       line-height: 24px;
@@ -81,12 +89,8 @@
          cursor: @link-cursor;
          text-decoration: @link-hover-text-decoration;
          .controls-Link__icon {
-           color: @button-icon-color-hover !important;
-           &.icon-done {
-             color: @icon-color-done !important;
-           }
-           &.icon-error {
-             color: @icon-color-error !important;
+           &.icon-primary {
+             color: @button-icon-color-hover !important;
            }
          }
       }

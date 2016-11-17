@@ -1,5 +1,5 @@
 <!--WS-EXPERT
-<div class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow controls-ListView__item js-controls-ListView__item{{?it.className}} {{=it.className}}{{?}}{{?it.item.get('isEmptyValue')}} controls-ComboBox__emptyRow{{?}}"
+<div class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow controls-ListView__item js-controls-ListView__item{{?it.className}} {{=it.className}}{{?}}{{?it.item.get && it.item.get('isEmptyValue')}} controls-ComboBox__emptyRow{{?}}"
      data-hash="{{=it.projItem.getHash()}}"
      data-id="{{?it.item.getId}}{{=it.item.getId()}}{{?}}"
       {{for(var j in it.attributes){}}

@@ -7,13 +7,14 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
          'js!SBIS3.CONTROLS.DropdownList',
          'html!SBIS3.CONTROLS.Demo.MyDropdownList',
          'html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownListItem',
+         'Core/core-functions',
          'i18n!SBIS3.CONTROLS.Demo.MyDropdownList',
          'css!SBIS3.CONTROLS.Demo.MyDropdownList',
          'html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownList_IconHead',
          'html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownList_IconItem'
       ],
 
-      function(CompoundControl, DropdownList, dotTplFn, itemTpl) {
+      function(CompoundControl, DropdownList, dotTplFn, itemTpl, cFunctions) {
          'use strict';
          var MyDropdownList = CompoundControl.extend([],{
             $protected: {
@@ -36,28 +37,11 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
                         title : rk('Два'),
                         icon: 'icon-16 icon-Bell icon-primary'
                      },
-                     {
-                        key : 21,
-                        title : rk('п.1'),
-                        icon: 'icon-16 icon-Bell icon-primary',
-                        parent: 2
-                     },
-                     {
-                        key : 22,
-                        title : rk('п.2'),
-                        icon: 'icon-16 icon-Bell icon-primary',
-                        parent: 2
-                     },
+
                      {
                         key : 3,
                         title : rk('Три'),
                         icon: 'icon-16 icon-Bold icon-primary'
-                     },
-                     {
-                        key : 31,
-                        title : rk('п.100'),
-                        icon: 'icon-16 icon-Bell icon-primary',
-                        parent: 3
                      },
                      {
                         key : 4,
@@ -87,11 +71,48 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
                MyDropdownList.superclass.init.apply(this, arguments);
                this.getChildControlByName('DropdownList1').setItems(this._options.data);
                this.getChildControlByName('DropdownList2').setItems(this._options.data);
-               this.getChildControlByName('DropdownList3').setItems(this._options.data);
+               this.getChildControlByName('DropdownList3').setItems(this._getDataForHierarchy());
                this.getChildControlByName('DropdownList4').setItems(this._options.data);
-//               this.getChildControlByName('DropdownList5').setItems(this._options.data);
-//               this.getChildControlByName('DropdownList6').setItems(this._options.data);
+               this.getChildControlByName('DropdownList5').setItems(this._getBigData());
+               this.getChildControlByName('DropdownList6').setItems(this._options.data);
                this.getChildControlByName('DropdownList7').setItems(this._options.data);
+            },
+
+            _getBigData: function(){
+               var data = cFunctions.clone(this._options.data);
+               for (var i = 6; i < 100; i++){
+                  data.push({
+                     key : i,
+                     title : 'Текст' + i,
+                     icon: 'icon-16 icon-Colorize icon-primary'
+                  })
+               }
+               return data;
+            },
+
+            _getDataForHierarchy: function(){
+               var data = cFunctions.clone(this._options.data);
+               data.splice(3, 0, {
+                     key: 21,
+                     title: rk('п.1'),
+                     icon: 'icon-16 icon-Bell icon-primary',
+                     parent: 2
+                  },
+                  {
+                     key: 22,
+                     title: rk('п.2'),
+                     icon: 'icon-16 icon-Bell icon-primary',
+                     parent: 2
+                  }
+               );
+               data.splice(6, 0, {
+                     key: 31,
+                     title: rk('п.100'),
+                     icon: 'icon-16 icon-Bell icon-primary',
+                     parent: 3
+                  }
+               );
+               return data;
             }
          });
          return MyDropdownList;

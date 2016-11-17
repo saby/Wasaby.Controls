@@ -255,7 +255,12 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @variant true Показывать выпадающий блок при пустом списке.
              * @variant false Не показывать выпадающий блок при пустом списке.
              */
-            showEmptyList: true
+            showEmptyList: true,
+            /**
+             * @noshow
+             * @deprecated
+             */
+            reverseItemsOnListRevert: true
          },
          _resultBindings: {},                   /* {Object} Соответствие полей для подстановки в контекст */
          _delayTimer: null,                     /* {Object|null} Таймер задержки загрузки picker-а */
@@ -550,9 +555,17 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              .subscribeTo(this._list, 'onDataLoadError', this._hideLoadingIndicator.bind(this))
              .subscribeTo(this._list, 'onDrawItems', this._onListDrawItems.bind(this))
              .subscribeTo(this._list, 'onItemActivate', (function (eventObject, itemObj) {
-                self.hidePicker();
+                self.setActive(true);
                 self._onListItemSelect(itemObj.id, itemObj.item);
-             }));
+                /* По задаче:
+                   https://inside.tensor.ru/opendoc.html?guid=7ce2bd66-bb6b-4628-b589-0e10e2bb8677&description=
+                   Ошибка в разработку 03.11.2016 В полях связи не скрывается список с историей после выбора из него значения. Необходимо закрывать...
+
+                   В стандарте не описано поведение автодополнения при выборе из него,
+                   поэтому жду как опишут и согласуют. Для выпуска 200 решили, что всегда будем скрывать при выборе */
+                self.hidePicker();
+
+            }));
 
          /* Найдём и подпишемся на клик кнопки показа всех записей (если она есть) */
          if(this._list.hasChildControlByName('showAllButton')) {
@@ -738,7 +751,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          /* Проверяем, что пикер не отображается,
             т.к. такой проверки на отображение в попапе нет (скорее всего по причине перерасчёта z-index'ов),
             а если позвать show при открытом пикере, то там произойдёт перерасчёт скрола, и становится невозможно выбрать запись. */
-         if (this._options.usePicker && !this.isPickerVisible()) {
+         if (this._options.usePicker && !this.isPickerVisible() && this.isEnabled()) { // Не отображаем автодополнение в задизейбленом состоянии
             PickerMixin.showPicker.apply(this, arguments);
          }
       },

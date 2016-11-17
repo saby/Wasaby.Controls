@@ -3,8 +3,10 @@
  */
 define('js!SBIS3.CONTROLS.ScrollWatcher', [
    "Core/Abstract",
-   "Core/helpers/string-helpers"
-], function( cAbstract,strHelpers) {
+   "Core/helpers/string-helpers",
+   "js!SBIS3.CORE.LayoutManager",
+   'Core/detection'
+], function( cAbstract, strHelpers, LayoutManager, cDetection) {
    'use strict';
    var ScrollWatcher = cAbstract.extend(/** @lends SBIS3.CONTROLS.ScrollWatcher.prototype */{
       /**
@@ -51,14 +53,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
          var topParent;
          this._publish('onTotalScroll', 'onScroll');
          var element = this._findScrollElement() || $(window);
-         this._customScroll = element.hasClass('controls-ScrollContainer');
-
-         // Подписываемся либо на событие скролла у CustomScroll, либо на скролл у контейнера
-         if (this._customScroll) {
-            element[0].wsControl.subscribe('onTotalScroll', this._processCustomScrollEvent.bind(this));
-         } else {
-            element.bind('scroll.wsScrollWatcher', this._onContainerScroll.bind(this));
-         }
+         element.bind('scroll.wsScrollWatcher', this._onContainerScroll.bind(this));
       },
 
       // Ищем в порядке - пользовательский контейнер -> ws-scrolling-content -> ws-body-scrolling-content -> Window
@@ -76,6 +71,9 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
             }
             return element;
          } else {
+            if (this._options.element.hasClass('controls-ScrollContainer')){
+               this._options.element = $('.controls-ScrollContainer__content', this._options.element);
+            }
             return this._options.element;
          }
       },
@@ -93,10 +91,6 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
          } else if (this.isScrollOnBottom()) {
             this._notify('onTotalScroll', 'bottom', curScrollTop);
          }
-      },
-
-      _processCustomScrollEvent: function(event, direction, scrollTop){
-         this._notify('onTotalScroll', direction, scrollTop);
       },
 
       _onContainerScroll: function (event) {
@@ -122,22 +116,17 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
       isScrollOnBottom: function(noOffset){
          var element = this.getScrollContainer(),
          offset = noOffset ? 0 : this._options.totalScrollOffset;
-         //customScroll
-         if (this._customScroll)
-            return element[0].wsControl.isScrollOnBottom();
-         else {
-            return element.scrollTop() + element.outerHeight() >= this.getScrollHeight(element[0]) - offset;
-         }
+         return this._isScrollOnBottom(element, offset)
+      },
+
+      _isScrollOnBottom: function(element, offset){
+         offset = offset || 0;
+         return element.scrollTop() + element.outerHeight() >= this.getScrollHeight(element[0]) - offset;
       },
 
       isScrollOnTop: function(){
          var element = this.getScrollContainer();
-         if (this._customScroll){
-            return element[0].wsControl.isScrollOnTop();
-         }
-         else {
-            return element.scrollTop() == 0;
-         }
+         return element.scrollTop() === 0;
       },
 
       /**
@@ -149,12 +138,15 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
        */
       scrollTo:function(offset){
          var element = this.getScrollContainer();
-         if (this._customScroll){
-            element[0].wsControl.scrollTo(typeof offset === 'string' ? (offset === 'top' ? 0 : 'bottom') : strHelpers.format({offset: offset}, '-=$offset$s$'));
-            this._lastScrollTop = element[0].wsControl.getScrollTop();
-            return;
-         }
          element.scrollTop(typeof offset === 'string' ? (offset === 'top' ? 0 : this.getScrollHeight(element[0])) : offset);
+      },
+
+      /**
+       * Скролит к переданному jQuery элементу
+       * @param {jQuery} target
+       */
+      scrollToElement: function(target) {
+         LayoutManager.scrollToElement(target);
       },
 
       /**
@@ -163,13 +155,10 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
        */
       getScrollHeight: function(element) {
          element = element || this.getScrollContainer()[0];
-         if (this._customScroll){
-            return element.wsControl.getScrollHeight();
-         }
          if (element.scrollHeight){
             return element.scrollHeight;
          } else {
-            // Единственный способ получить высоту документа кроссбраузерно
+            // Get document height (cross-browser)
             if (element == window){
                var body = document.body,
                   html = document.documentElement;
@@ -192,12 +181,20 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
        */
       hasScroll: function(offset){
          // FixMe: Считем, что если есть скролл в 10 пикселей, то его нет
-         // вынужденная мера для айпада, из за хака с height: calc(100% + 1px) 
+         // вынужденная мера для айпада, из за хака с height: calc(100% + 1px)
          offset = offset || 10;
          var element = this.getScrollContainer();
-         if (this._customScroll) {
-            return element[0].wsControl.hasScroll();
-         }
+         return this._hasScroll(element, offset);
+      },
+
+       /**
+       * Есть ли у элемента скролл
+       * @param  {DOMElement}  element [description]
+       * @param  {Number} offset если высота скролла меньше offset вернет false
+       * @return {Boolean} есть ли у элемента скролл высотой меньше offset
+       */
+      _hasScroll: function(element, offset){
+         offset = offset || 0;
          var scrollHeight = this.getScrollHeight();
          return scrollHeight > this.getContainerHeight() + offset || scrollHeight > $(window).height() + offset;
       },

@@ -1,0 +1,76 @@
+.controls-StylesPanelNew {
+  width: auto;
+  border: 1px solid #CCCCCC;
+  border-radius: 4px;
+  max-width: 200px;
+
+  .controls-StylesPanel__header {
+    width: auto;
+    padding: 12px 0 0 0;
+    min-height: 24px;
+
+    .controls-StylesPanel__title {
+      font-weight: bold;
+      font-size: 16px;
+      width: auto;
+      padding: 0 8px;
+      display: inline-block;
+      color: @blue-dark-color;
+    }
+    .controls-StylesPanel__applyButton {
+      position: relative;
+      top: -2px;
+      right: auto;
+      float: right;
+      margin-right: 48px;
+    }
+  }
+
+  .controls-StylesPanel__buttons {
+    padding: 12px 4px 6px 4px;
+    border-bottom: 1px solid #E4E4E4;
+
+    .inline-block-bug-fix(@font-basic-size);
+
+    .controls-TextBox {
+      margin-right: 5px;
+    }
+
+    .controls-Button {
+      padding: 0 2px;
+      border-radius: 2px;
+      border: 1px solid transparent;
+      margin: 0 0 0 8px;
+
+      &:hover {
+        border: 1px solid transparent;
+        .controls-Button__icon {
+          color: @blue-dark-color !important;
+        }
+      }
+
+      &.controls-Checked__checked {
+        border: 1px solid #587AB0;
+        background: #F3F3F3;
+        &:hover {
+          border: 1px solid #587AB0;
+          .controls-Button__icon {
+            color: #587AB0 !important;
+          }
+        }
+      }
+    }
+  }
+
+  .controls-StylesPanel__colors {
+    padding: 6px 4px 6px 4px;
+
+    .inline-block-bug-fix(@font-basic-size);
+  }
+  .controls-StylesPanel-presetFormats_wrapper {
+    border-top: 1px solid #E4E4E4;
+    .controls-StylesPanel__presetView {
+      padding: 6px 0 4px 0;
+    }
+  }
+}

@@ -8,7 +8,6 @@
       display: block;
       z-index: @list-view-items-toolbar-zindex;
       background-color: @list-view-items-toolbar-bg;
-      box-shadow: @list-view-items-toolbar-box-shadow;
       bottom: @list-view-items-toolbar-bottom;
       right: @list-view-items-toolbar-right;
 
@@ -27,7 +26,6 @@
 
       &.controls-ItemsToolbar__edit {
          background-color: @list-view-items-toolbar-locked-bg;
-         box-shadow: @list-view-items-toolbar-locked-box-shadow;
       }
 
       &.controls-ItemsToolbar__vertical {
@@ -56,8 +54,6 @@
          margin-right: 0;
       }
       &.controls-ItemsToolbar__small {
-         box-shadow: @list-view-small-items-toolbar-box-shadow;
-
          .icon-size {
             .icon-16();
          }
@@ -75,13 +71,8 @@
    &.controls-TreeView {
       .controls-ItemsToolbar {
          background-color: @list-view-items-toolbar-bg;
-         box-shadow: @list-view-items-toolbar-box-shadow;
          &.controls-ItemsToolbar__edit {
             background-color: @list-view-items-toolbar-locked-bg;
-            box-shadow: @list-view-items-toolbar-locked-box-shadow;
-            &.controls-ItemsToolbar__vertical {
-               box-shadow: @list-view-items-toolbar-vertical-locked-box-shadow;
-            }
             .controls-ItemActions__item {
                line-height: @list-view-items-toolbar-line-height !important;
                &.controls-IconButton__round-border-24 {
@@ -93,9 +84,6 @@
                   line-height: @list-view-items-toolbar-vertical-line-height !important;
                }
             }
-         }
-         &.controls-ItemsToolbar__vertical {
-            box-shadow: @list-view-items-toolbar-vertical-box-shadow;
          }
          &.controls-ItemsToolbar__small {
             &.controls-ItemsToolbar__edit {
@@ -123,7 +111,6 @@
       padding-bottom: @bottomStyle-items-toolbar-height;
       .controls-ItemsToolbar {
          background-color: @list-view-items-toolbar-bg;
-         box-shadow: none;
          &.controls-ItemsToolbar__edit {
             background-color: @list-view-items-toolbar-locked-bg;
             &:before {
@@ -196,7 +183,6 @@
          overflow: hidden;
          top: auto;
          bottom: 0;
-         box-shadow: none;
          background-color: transparent;
 
          .controls-ItemsToolbar__container {

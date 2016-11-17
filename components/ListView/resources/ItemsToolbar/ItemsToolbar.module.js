@@ -292,8 +292,9 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           _setPosition: function(position) {
              var container = this.getContainer()[0];
+
              for(var key in position) {
-                if(position.hasOwnProperty(key)) {
+                if (position.hasOwnProperty(key)) {
                    container.style[key] = position[key] + (typeof position[key] === 'number' ? 'px' : '');
                 }
              }
@@ -319,9 +320,9 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
 
              this.getContainer()[isVertical ? 'addClass' : 'removeClass']('controls-ItemsToolbar__vertical');
              return {
-                'margin-right' : marginRight,
-                'margin-top' : marginTop,
-                'margin-bottom': marginBottom
+                'marginRight' : marginRight,
+                'marginTop' : marginTop,
+                'marginBottom': marginBottom
              };
           },
           /**

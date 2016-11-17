@@ -8,11 +8,11 @@ define('js!SBIS3.CONTROLS.EditInPlace',
    "js!SBIS3.CORE.CompoundControl",
    "html!SBIS3.CONTROLS.EditInPlace",
    "js!SBIS3.CONTROLS.CompoundFocusMixin",
-   "js!WS.Data/Di",
+   'js!WS.Data/Builder',
    "Core/core-instance",
    "Core/helpers/fast-control-helpers"
 ],
-   function( Deferred,Control, dotTplFn, CompoundFocusMixin, Di, cInstance, fcHelpers) {
+   function(Deferred, Control, dotTplFn, CompoundFocusMixin, DataBuilder, cInstance, fcHelpers) {
       'use strict';
 
       /**
@@ -88,25 +88,17 @@ define('js!SBIS3.CONTROLS.EditInPlace',
              */
             _getRecordsDifference: function() {
                var
-                   raw1, raw2,
+                   prevValue,
                    result = [];
-               if (cInstance.instanceOfModule(this._editingModel, 'WS.Data/Entity/Model')) {
-                  this._editingModel.each(function(field, value) {
-                     if (value != this._previousModelState.get(field)) {
-                        result.push(field);
-                     }
-                  }, this);
-               } else {
-                  raw1 = this._editingModel.getRawData();
-                  raw2 = this._previousModelState.getRawData();
-                  for (var field in raw1) {
-                     if (raw1.hasOwnProperty(field)) {
-                        if (raw1[field] != raw2[field]) {
-                           result.push(field);
-                        }
-                     }
+               this._editingModel.each(function(field, value) {
+                  prevValue = this._previousModelState.get(field);
+                  //Сложные типы полей(например Enum), нельзя сравнивать поссылочно, иначе будет неверный результат
+                  //Такие типы должны обладать методом isEqual, с помощью которого и будем производить сравнение
+                  if (value && typeof value.isEqual === 'function' && !value.isEqual(prevValue) || value != prevValue) {
+                     result.push(field);
                   }
-               }
+               }, this);
+
                return result;
             },
             _getElementToFocus: function() {
@@ -144,12 +136,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   this.getContainer().attr('data-hash', itemProj.getHash());
                }
                this.setOffset(model);
-               this.updatePosition();
-               //Строка с редакторами всегда должна быть первой в таблице, иначе если перед ней вставятся другие строки,
-               //редакторы будут неверно позиционироваться, т.к. у строки с редакторами position absolute и top у неё
-               //всегда равен 0, даже если она не первая. Просто перед показом, пододвинем строчку с редакторами на первое место.
-               this._container.prependTo(this._options.itemsContainer);
                EditInPlace.superclass.show.apply(this, arguments);
+               this.updatePosition();
             },
             _beginTrackHeight: function() {
                this._lastHeight = 0;
@@ -170,6 +158,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                if (this._lastHeight !== newHeight) {
                   this._lastHeight = newHeight;
                   this.getTarget().height(newHeight);
+                  this.updatePosition();
                   this._notify('onChangeHeight', this._model);
                }
             },
@@ -203,6 +192,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this.getTarget().removeClass('controls-editInPlace__editing');
                this._editing = false;
                this.hide();
+               this._deactivateActiveChildControl();
                //Возможен такой сценарий: начали добавление по месту, не заполнив данные, подтверждают добавление
                //и срабатывает валидация. Валидация помечает невалидные поля. После этого происходит отмена добавления,
                //и редакторы скрываются. При следующем начале добавления по месту редакторы будут показаны, как невалидные.
@@ -220,12 +210,26 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }
             },
             updatePosition: function() {
-               var editorTop;
-               //позиционируем редакторы
-               editorTop = this.getTarget().position().top - this._options.itemsContainer.position().top;
-               $.each(this._editors, function(id, editor) {
-                  $(editor).css('top', editorTop);
-               });
+               var
+                   editorTop,
+                   target = this.getTarget();
+
+               //TODO: Тут необходима проверка на target. При добалении по месту, мы создаём фейковую строку, которая является таргетом.
+               //При завршение добавления, мы фейковую строку из DOM удаляем. Для корректной работы редактирования необходимо
+               //выполнить по порядку 3 действия: отписаться от изменения высоты, удалить фейковую строку, скрыть редактирование.
+               //Такой порядок обязателен т.к. в ховер режиме если сначала скрыть редактирование, то курсор попадёт на фейковую
+               //строку и начнётся редактирование для фейковой строки, у которой нет рекорда, что приведёт к ошибкам.
+               //Отписка и скрытие происходит внутри метода endEdit у редактирования. А фейковой строкой занимается контроллер,
+               //т.к. он её создаёт, а само редактирование разницы между редактированием и добавлением не знает.
+               //Получается для корректной работы нужно метод endEdit разбивать на 2 и между вызовами удалять фейковую строку.
+               //Но т.к. в скором времени планируется отказаться от hover режима, добавим проверку на наличие таргета,
+               //которую можно будет удалить после отказа от hover режима.
+               if (target && target.length) {
+                  editorTop = target.position().top - this.getContainer().position().top;
+                  $.each(this._editors, function (id, editor) {
+                     $(editor).css('top', editorTop);
+                  });
+               }
             },
             getEditingRecord: function() {
                return this._editingModel;
@@ -253,27 +257,16 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             //TODO: метод нужен для того, чтобы подогнать формат рекорда под формат рекордсета.
             //Выписана задача Мальцеву, который должен убрать этот метод отсюда, и предаставить механизм выполняющий необходимую задачу.
             //https://inside.tensor.ru/opendoc.html?guid=85d18197-2094-4797-b823-5406424881e5&description=
-            _cloneWithFormat: function(record, recordSet) {
-               recordSet = recordSet || this.getParent()._options.items;
+            _cloneWithFormat: function(record) {
                var
-                  fieldName,
-                  format,
-                  clone = Di.resolve(recordSet.getModel(), {
-                     'adapter': record.getAdapter(),
-                     'idProperty': record.getIdProperty(),
-                     'format': []
-                  });
-               format = record.getFormat();
+                  recordSet = this.getParent()._options.items,
+                  format = record.getFormat(),
+                  clone;
                if (!format.getCount() && recordSet && recordSet.getFormat().getCount()) {
                   format = recordSet.getFormat();
                }
-               format.each(function(field) {
-                  fieldName = field.getName();
-                  clone.addField(field, undefined, record.get(fieldName));
-               });
-               if (!record.isChanged()) {
-                  clone.acceptChanges();
-               }
+               // Нужно передавать модель, чтобы опредлелять в клоне авторасчётные поля
+               clone = DataBuilder.reduceTo(record, format, recordSet && recordSet.getModel());
                clone.setState(record.getState());
                return clone;
             }

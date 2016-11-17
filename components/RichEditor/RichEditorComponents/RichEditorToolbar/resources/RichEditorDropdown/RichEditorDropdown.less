@@ -1,0 +1,46 @@
+.controls-RichEditorDropdown {
+   &__head {
+      height:24px;
+      position:relative;
+      cursor: pointer;
+      .controls-RichEditorDropdown__headArrow{
+         background-image:@RichEditorDropdownArrow;
+         width: 16px;
+         height: 24px;
+         position: absolute;
+         right: 4px;
+         left: auto;
+         top:-1px;
+      }
+      .controls-RichEditorDropdown__headText, .controls-RichEditorDropdown__headIcon {
+         height:24px;
+         line-height: 24px !important;
+         vertical-align: middle;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         padding: 0px 12px 0px 2px;
+         display: inline-block;
+         white-space: nowrap;
+
+      }
+      .controls-RichEditorDropdown__headIcon {
+         &:hover {
+            color: #313E78 !important;
+         }
+      }
+   }
+   &__item {
+      padding: 4px 9px 4px 2px !important;
+   }
+   &__picker {
+      padding-top:2px;
+      .controls-RichEditorDropdown__head{
+         margin-top:-2px;
+      }
+      &.controls-DropdownList__picker.controls-DropdownList__hideSelectedInList {
+         .controls-DropdownList__item.controls-DropdownList__item__selected {
+            display: block;
+         }
+      }
+   }
+}

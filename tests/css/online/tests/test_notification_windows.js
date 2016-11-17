@@ -29,87 +29,87 @@ gemini.suite('SBIS3.CONTROLS.NotificationWindows Online', function () {
 
             .capture('success_dialog', function (actions) {
 				actions.click(this.success)
-				actions.waitForElementToShow('.controls-NotificationPopup__header_caption', 2000)
+				actions.waitForElementToShow('.controls-NotificationPopup__header_caption', 5000)
 				actions.wait(500);
             })
 			
 			.capture('error_dialog', function (actions) {
 				actions.wait(5000);
 				actions.click(this.error)
-				actions.waitForElementToShow('.controls-NotificationPopup__header_caption', 2000)
+				actions.waitForElementToShow('.controls-NotificationPopup__header_caption', 5000)
 				actions.wait(500);
             })
 			
 			.capture('custom_icon_dialog', function (actions) {
 				actions.wait(5000);
 				actions.click(this.custom)
-				actions.waitForElementToShow('.controls-NotificationPopup__header_caption', 2000)
+				actions.waitForElementToShow('.controls-NotificationPopup__header_caption', 5000)
 				actions.wait(500);
             })
 			
 			.capture('message_dialog', function (actions) {
 				actions.wait(5000);
 				actions.click(this.message)
-				actions.waitForElementToShow('.message img', 2000)
+				actions.waitForElementToShow('.message img', 5000)
 				actions.wait(500);
             })
 			
 			.capture('green_dialog', function (actions) {
 				actions.wait(5000);
 				actions.click(this.green)
-				actions.waitForElementToShow('[sbisname="okButton"]', 2000)
+				actions.waitForElementToShow('[sbisname="okButton"]', 5000)
 				actions.wait(500);
             })
 			
 			.capture('green_dialog_message', function (actions) {
 				actions.click('[sbisname="okButton"]')
-				actions.waitForElementToShow('.controls-NotificationPopup__header_caption', 2000)
+				actions.waitForElementToShow('.controls-NotificationPopup__header_caption', 5000)
 				actions.wait(500);
             })
 
 			.capture('red_dialog', function (actions) {
 				actions.wait(5000);
 				actions.click(this.red)
-				actions.waitForElementToShow('[sbisname="okButton"]', 2000)
+				actions.waitForElementToShow('[sbisname="okButton"]', 5000)
 				actions.wait(500);
             })
 			
 			.capture('red_dialog_message', function (actions) {
 				actions.click('[sbisname="okButton"]')
-				actions.waitForElementToShow('.controls-NotificationPopup__header_caption', 2000)
+				actions.waitForElementToShow('.controls-NotificationPopup__header_caption', 5000)
 				actions.wait(500);
             })
 
 			.capture('yes_no_dialog', function (actions) {
 				actions.wait(5000);
 				actions.click(this.yes_no)
-				actions.waitForElementToShow('[sbisname="positiveButton"]', 2000)
+				actions.waitForElementToShow('[sbisname="positiveButton"]', 5000)
 				actions.wait(500);
             })
 
 			.capture('yes_no_dialog_message', function (actions) {
 				actions.click('[sbisname="positiveButton"]')
-				actions.waitForElementToShow('.controls-NotificationPopup__header_caption', 2000)
+				actions.waitForElementToShow('.controls-NotificationPopup__header_caption', 5000)
 				actions.wait(500);
             })
 
 			.capture('yes_no_cancel_dialog', function (actions) {
 				actions.wait(5000);
 				actions.click(this.yes_no_cancel)
-				actions.waitForElementToShow('[sbisname="positiveButton"]', 2000)
+				actions.waitForElementToShow('[sbisname="positiveButton"]', 5000)
 				actions.wait(500);
             })
 
 			.capture('yes_no_cancel_dialog_message', function (actions) {
 				actions.click('[sbisname="positiveButton"]')
-				actions.waitForElementToShow('.controls-NotificationPopup__header_caption', 2000)
+				actions.waitForElementToShow('.controls-NotificationPopup__header_caption', 5000)
 				actions.wait(500);
             })
 
 			.capture('long_message_dialog', function (actions) {
 				actions.wait(5000);
 				actions.click(this.longops)
-				actions.waitForElementToShow('.longops img', 2000)
+				actions.waitForElementToShow('.longops img', 5000)
 				actions.wait(500);
             })			
     });	

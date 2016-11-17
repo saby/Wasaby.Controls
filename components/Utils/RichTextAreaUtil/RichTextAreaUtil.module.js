@@ -18,9 +18,8 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
        */
       markRichContentOnCopy: function(target){
          target = target.get(0);
-         //На ipad`e нет аозможности задать clipboardData, форматное копирование с меткой не поддерживаем
-         //Firefox не поддерживает копирование со стилями
-         if (!constants.browser.isMobileIOS && !constants.browser.firefox) {
+         //поддерживаем форматное копирование только в chrome
+         if (constants.browser.chrome) {
             if (target.addEventListener) {
                target.addEventListener('copy', this._markingRichContent, true);
                target.addEventListener('cut', this._markingRichContent, true);
@@ -32,7 +31,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
       },
       unmarkRichContentOnCopy: function(target){
          target = target.get(0);
-         if (!constants.browser.isMobileIOS && !constants.browser.firefox) {
+         if (constants.browser.chrome) {
             //в webkit в бтре идёт подписка на cut и удаляется лишний символ, поэтому нужно подписываться на capture фазе
             if (target.removeEventListener) {
                target.removeEventListener('copy', this._markingRichContent, true);
@@ -58,10 +57,15 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
          var
             event =  e.originalEvent ? e.originalEvent : e,
             oldOrphans = event.target.style.orphans;
-         event.target.style.orphans = '31415'; //Pi
-         setTimeout(function() {
-            event.target.style.orphans = oldOrphans;
-         });
+         //согласно документации https://developer.mozilla.org/ru/docs/Web/API/Selection/focusNode
+         //focusNode является узлом на котором закончилось выделение
+         if (document.getSelection() && $.contains(event.currentTarget , document.getSelection().focusNode)) {
+            //orphans = '31415' - метка показывающая что содержимое было скопировано из богатого редактора
+            event.target.style.orphans = '31415'; //Pi
+            setTimeout(function() {
+               event.target.style.orphans = oldOrphans;
+            });
+         }
       }
    };
 

@@ -42,12 +42,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
    applyGroupingToProjection = function(projection, cfg) {
       if (cfg.groupBy && cfg.easyGroup) {
+         var method;
          if (!cfg.groupBy.method) {
             var field = cfg.groupBy.field;
-            projection.setGroup(function(item, index, projItem){
+            method = function(item, index, projItem){
                return item.get(field);
-            });
+            }
          }
+         else {
+            method = cfg.groupBy.method
+         }
+         projection.setGroup(method);
       }
       return projection;
    },
@@ -85,7 +90,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   multiselect : cfg.multiselect,
                   hierField: cfg.hierField + '@',
                   item: item.getContents(),
-                  groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.template),
+                  groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.contentTemplate || ''),
                   groupId: groupId
                },
                groupTemplateFnc;
@@ -617,17 +622,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (typeof this._options.pageSize === 'string') {
             this._options.pageSize = this._options.pageSize * 1;
          }
-         if (!this._options.keyField) {
-            IoC.resolve('ILogger').log('Option keyField is undefined in control ' + this.getName());
-         }
+         this._checkKeyField();
          this._bindHandlers();
          this._prepareItemsConfig();
 
          if (this._options.itemTemplate) {
-            IoC.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан itemTemplate');
+            IoC.resolve('ILogger').error('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан itemTemplate');
          }
          if (!Object.isEmpty(this._options.groupBy) && !this._options.easyGroup) {
-            IoC.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Используется GroupBy без easyGroup: true');
+            IoC.resolve('ILogger').error('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Используется GroupBy без easyGroup: true');
          }
          if (this._options.userItemAttributes) {
             IoC.resolve('ILogger').error('userItemAttributes', 'Option is no longer available since version 3.7.4.200. Use ItemTpl');
@@ -654,21 +657,28 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             if (!this._options.keyField) {
                this._options.keyField = findKeyField(this._options.items)
             }
-            this._dataSource = new MemorySource({
-               data: this._options.items,
-               idProperty: this._options.keyField
-            });
+
+            /*TODO опасная правка. Суть: Некоторые вместе с массивом задают сорс, а мы затираем переданный сорс
+            * смотрим если сорс уже задан, то итемы просто превращаем в рекордсет, а сорс оставляем*/
+            if (this._dataSource) {
+               this._options._items = JSONToRecordset(this._options.items, this._options.keyField);
+               this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
+               this._options._itemsProjection = this._options._applyGroupingToProjection(this._options._itemsProjection, this._options);
+               this._setItemsEventHandlers();
+               this._notify('onItemsReady');
+               this._itemsReadyCallback();
+            }
+            else {
+               this._dataSource = new MemorySource({
+                  data: this._options.items,
+                  idProperty: this._options.keyField
+               });
+            }
          }
       },
 
 
       _prepareConfig : function(sourceOpt, itemsOpt) {
-         var keyField = this._options.keyField;
-
-         if (!keyField) {
-            IoC.resolve('ILogger').log('Option keyField is undefined in control ' + this.getName());
-         }
-
          if (sourceOpt) {
             this._dataSource = this._prepareSource(sourceOpt);
          }
@@ -683,11 +693,28 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else {
                this._options._items = itemsOpt;
             }
+            if (this._options._itemsProjection) {
+               this._unsetItemsEventHandlers();
+               this._options._itemsProjection.destroy();
+            }
             this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
             this._options._itemsProjection = this._options._applyGroupingToProjection(this._options._itemsProjection, this._options);
             this._setItemsEventHandlers();
             this._notify('onItemsReady');
             this._itemsReadyCallback();
+         }
+
+         this._checkKeyField();
+      },
+
+      _checkKeyField: function() {
+         if (this._options.keyField) {
+            return;
+         }
+
+         var items = this.getItems();
+         if (items && items.getIdProperty) {
+            IoC.resolve('ILogger').info('ItemsControl', 'Option keyField is undefined in control ' + this.getName());
          }
       },
 
@@ -766,7 +793,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                markup;
 
             data.tplData = this._prepareItemData();
-            //TODO опять же, перед полной перерисовкой данные лесенки достаточно сбросить, чтобы она правильно отработала
             //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
             markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
             //TODO это может вызвать тормоза
@@ -793,7 +819,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                }
 
             }
-            this._toggleEmptyData(!(data.records && data.records.length) && this._options.emptyHTML);
+            this._toggleEmptyData(!(data.records && data.records.length));
 
          }
          this._reviveItems();
@@ -801,15 +827,28 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _redrawItem: function(item) {
+         var result = this._redrawItemInner(item);
+         if (result) {
+            this._reviveItems(item.getContents().getId() != this._options.selectedKey);
+         }
+      },
+
+      _redrawItemInner: function(item) {
          var
+            result = false,
             markup,
             targetElement = this._getDomElementByItem(item),
-            itemContainer,
             data;
          if (targetElement.length) {
             data = this._prepareItemData();
             data.projItem = item;
             data.item = item.getContents();
+
+            //TODO: выпилить вместе декоратором лесенки
+            if (data.decorators && data.decorators.ladder) {
+               data.decorators.ladder.setRecord(data['item']);
+            }
+
             var dot;
             if (data.itemTpl) {
                dot = data.itemTpl;
@@ -821,11 +860,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this._options);
             /*TODO посмотреть не вызывает ли это тормоза*/
             this._clearItems(targetElement);
-            targetElement.after(markup).remove();
-
-            itemContainer = this._getDomElementByItem(item);
-            this._reviveItems(item.getContents().getId() != this._options.selectedKey);
+            if (constants.browser.isIE8 || constants.browser.isIE9) {
+               targetElement.after(markup).remove();
+            }
+            else {
+               targetElement.get(0).outerHTML = markup;
+            }
+            result = true;
          }
+         return result;
       },
 
       _removeItems: function (items, groupId) {
@@ -839,13 +882,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             /*TODO Особое поведение при группировке*/
                if (!Object.isEmpty(this._options.groupBy)) {
-                  /*TODO косяк Лехи - не присылает группу при удалении*/
-                  /*if (this._options.easyGroup) {
+
+                  if (this._options.easyGroup) {
                      if (this._getItemsProjection().getGroupItems(groupId).length < 1) {
                         $('[data-group="' + groupId + '"]', this._container.get(0)).remove();
                      }
                   }
-                  else {*/
+                  else {
                      var prev = targetElement.prev();
                      if (prev.length && prev.hasClass('controls-GroupBy')) {
                         var next = targetElement.next();
@@ -853,7 +896,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                            prev.remove();
                         }
                      }
-                  /*}*/
+                  }
                }
 
                removedElements.push(targetElement.get(0));
@@ -872,16 +915,21 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
                this._options._groupItemProcessing(groupId, itemsToAdd, items[0], this._options);
             }
-            itemsToAdd.concat(items);
+            itemsToAdd = itemsToAdd.concat(items);
          }
          return itemsToAdd;
       },
 
-      _optimizedInsertMarkup: function(container, markup, prepend) {
-         if (constants.browser.isIE8 || constants.browser.isIE9) { // В IE8-9 insertAdjacentHTML ломает верстку при вставке
-            container[prepend ? 'prepend' : 'append'](markup);
+      _optimizedInsertMarkup: function(markup, config) {
+         var container = config.container;
+         if (config.inside) {
+            if (constants.browser.isIE8 || constants.browser.isIE9) { // В IE8-9 insertAdjacentHTML ломает верстку при вставке
+               container[config.prepend ? 'prepend' : 'append'](markup);
+            } else {
+               container.get(0).insertAdjacentHTML(config.prepend ? 'afterBegin' : 'beforeEnd', markup);
+            }
          } else {
-            container.get(0).insertAdjacentHTML(prepend ? 'afterBegin' : 'beforeEnd', markup);
+            container[config.prepend ? 'before' : 'after'](markup);
          }
       },
 
@@ -901,11 +949,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             else {
                var
-                  itemsToDraw,
                   data,
                   markup,
-                  item,
-                  container, firstHash, lastHash, itemsContainer;
+                  itemsToDraw;
 
                itemsToDraw = this._getItemsForRedrawOnAdd(newItems, groupId);
                if (itemsToDraw.length) {
@@ -914,27 +960,56 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      tplData: this._prepareItemData()
                   };
                   markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
-
-                  itemsContainer = this._getItemsContainer();
-                  if (newItemsIndex == 0) {
-                     // TODO. Костыль для редактирования по месту. Написан тут, т.к. необходимо его убрать (решение не универсальное).
-                     // https://inside.tensor.ru/opendoc.html?guid=8fe37872-c08b-4a7b-9c9f-d04f531cc45b
-                     this._optimizedInsertMarkup(itemsContainer, markup, this._options._items.getCount() > 1);
-                  }
-                  else {
-                     if ((newItemsIndex) == (this._options._itemsProjection.getCount() - newItems.length)) {
-                        this._optimizedInsertMarkup(itemsContainer, markup, false);
-                     }
-                     else {
-                        item = this._options._itemsProjection.at(newItemsIndex - 1);
-                        container = this._getDomElementByItem(item);
-                        container.after(markup);
-                     }
-                  }
-
+                  this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
                   this._reviveItems();
                }
             }
+         }
+      },
+
+      _getInsertMarkupConfig: function(newItemsIndex, newItems, groupId) {
+         var
+             nextItem,
+             prevGroup,
+             nextGroup,
+             beforeFlag,
+             inside = true,
+             prepend = false,
+             container = this._getItemsContainer(),
+             projection = this._getItemsProjection(),
+             prevItem = projection.at(newItemsIndex - 1),
+             lastItemsIndex = projection.getCount() - newItems.length;
+
+         if (this._options.groupBy && this._options.easyGroup) {
+            //в случае наличия группировки надо проверять соседние элементы, потому что
+            //на месте вставки может быть разделитель, надо понимать, когда вставлять до разделителя, а когда после
+            //на выходе получим beforeFlag = true, если надо вставлять ДО какого то элемента, иначе действуем по стандартному алгоритму
+            if (this._canApplyGrouping(newItems[0])) {
+               prevGroup = (prevItem && this._canApplyGrouping(prevItem)) ? projection.getGroupByIndex(newItemsIndex - 1) : null;
+               nextItem = projection.at(newItemsIndex + newItems.length);
+               nextGroup = (nextItem && this._canApplyGrouping(nextItem)) ? projection.getGroupByIndex(newItemsIndex + newItems.length) : null;
+               if ((prevGroup === undefined) || (prevGroup === null) || prevGroup != groupId) {
+                  if (nextGroup !== undefined && nextGroup !== null && nextGroup == groupId) {
+                     beforeFlag = true
+                  }
+               }
+            }
+         }
+
+         if (beforeFlag) {
+            container = this._getDomElementByItem(nextItem);
+            inside = false;
+            prepend = true;
+         } else if (newItemsIndex == 0 || newItemsIndex == lastItemsIndex) {
+            prepend = newItemsIndex == 0;
+         } else {
+            inside = false;
+            container = this._getDomElementByItem(prevItem);
+         }
+         return {
+            inside: inside,
+            prepend: prepend,
+            container: container
          }
       },
 
@@ -1276,6 +1351,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       this._itemsReadyCallback();
                       self.redraw();
                    }
+                   
+                   self._checkKeyField();
 
                    this._dataLoadedCallback();
                    //self._notify('onBeforeRedraw');
@@ -1559,6 +1636,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @param {Object} item Запись, которую необходимо перерисовать
        */
       redrawItem: function(item, projItem) {
+         this._oldRedrawItemInner(item, projItem);
+         this._reviveItems(item.getId() != this._options.selectedKey);
+      },
+
+      _oldRedrawItemInner: function(item, projItem, callback) {
          projItem = projItem || this._getItemProjectionByItemId(item.getId());
          var
             targetElement = this._getElementByModel(item),
@@ -1566,8 +1648,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._addItemAttributes(newElement, projItem);
          this._clearItems(targetElement);
          targetElement.after(newElement).remove();
-         this.reviveComponents();
-         this._notifyOnDrawItems(item.getId() != this._options.selectedKey);
       },
 
       _getElementByModel: function(item) {
@@ -1782,10 +1862,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _changeItemProperties: function(item, property) {
          if (this._isSlowDrawing(this._options.easyGroup)) {
-            this.redrawItem(item.getContents(), item);
+            this._oldRedrawItemInner(item.getContents(), item);
          }
          else {
-            this._redrawItem(item);
+            this._redrawItemInner(item);
          }
       },
 
@@ -1807,7 +1887,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._clearItems();
             this._needToRedraw = false;
             records = this._options._getRecordsForRedraw.call(this, this._options._itemsProjection, this._options);
-            this._toggleEmptyData(!records.length && this._options.emptyHTML);
+            this._toggleEmptyData(!records.length);
             this._drawItems(records);
          }
          /*класс для автотестов*/
@@ -1917,8 +1997,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                meth = this._options.groupBy.method,
                prev = this._options._itemsProjection.getPrevious(projItem),
                next = this._options._itemsProjection.getNext(projItem);
-            if(prev)
+            if (prev) {
                meth.call(this, prev.getContents(), undefined, undefined, prev, this._options);
+            }
             meth.call(this, item, undefined, undefined, projItem, this._options);
             if (next && !meth.call(this, next.getContents(), undefined, undefined, next, this._options)) {
                flagAfter = true;
@@ -1926,33 +2007,35 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          /**/
          var target = this._getTargetContainer(item),
-            currentItemAt = at > 0 ? this._getItemContainerByIndex(target, at - 1) : null,
             template = this._getItemTemplate(projItem),
-            newItemContainer = this._buildTplItem(projItem, template),
-            rows;
+            newItemContainer = this._buildTplItem(projItem, template);
          this._addItemAttributes(newItemContainer, projItem);
-         if (flagAfter) {
-            newItemContainer.insertBefore(this._getItemContainerByIndex(target, at));
-            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
-         } else if (currentItemAt && currentItemAt.length) {
-            if (prev)
-               meth && meth.call(this, prev.getContents(), undefined, undefined, prev, this._options);
-            newItemContainer.insertAfter(currentItemAt);
-            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
-         } else if(at === 0) {
-            this._previousGroupBy = undefined;
-            newItemContainer.prependTo(target);
-            rows = [newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
-         } else {
-            newItemContainer.appendTo(target);
-            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next()];
-         }
+         this._insertItemContainer(item, newItemContainer, target, at, prev, flagAfter);
          if (canApplyGrouping) {
             this._group(projItem, {at: at});
             this._previousGroupBy = previousGroupBy;
          }
          if (!withoutNotify) {
             this._notifyOnDrawItems();
+         }
+      },
+
+      _insertItemContainer: function(item, itemContainer, target, at, prev, flagAfter) {
+         var
+             meth = this._options.groupBy.method,
+             currentItemAt = at > 0 ? this._getItemContainerByIndex(target, at - 1) : null;
+         if (flagAfter) {
+            itemContainer.insertBefore(this._getItemContainerByIndex(target, at));
+         } else if (currentItemAt && currentItemAt.length) {
+            if (prev) {
+               meth && meth.call(this, prev.getContents(), undefined, undefined, prev, this._options);
+            }
+            itemContainer.insertAfter(currentItemAt);
+         } else if(at === 0) {
+            this._previousGroupBy = undefined;
+            itemContainer.prependTo(target);
+         } else {
+            itemContainer.appendTo(target);
          }
       },
 
@@ -1996,14 +2079,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var i;
          for (i = 0; i < items.length; i++) {
             this._changeItemProperties(items[i]);
-            /*this._redrawItem(
-               items[i]
-            );*/
          }
+         this._reviveItems();
       },
-      _onCollectionRemove: function(items, notCollapsed) {
+      _onCollectionRemove: function(items, notCollapsed, groupId) {
          if (items.length) {
-            this._removeItems(items)
+            this._removeItems(items, groupId)
          }
       },
       _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
@@ -2045,6 +2126,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _onUpdateItemProperty: function(item, property) {
          if (this._isNeedToRedraw()) {
             this._changeItemProperties(item, property);
+            this._reviveItems(item.getContents().getId() != this._options.selectedKey);
          }
       }
    };
@@ -2079,8 +2161,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
 	            case IBindCollection.ACTION_REPLACE:
 	               this._onCollectionReplace(newItems);
-	               this.reviveComponents();
-                  this._drawItemsCallbackDebounce();
 	               break;
 
 	            case IBindCollection.ACTION_RESET:

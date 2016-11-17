@@ -1,0 +1,8 @@
+<div class="controls-RichEditorDropdown__item controls-DropdownList__item" data-hash="{{=it.projItem.getHash()}}" data-id="{{=it.item.getId()}}">
+   {{? it.item.get('icon')}}
+   <i class="controls-RichEditorDropdown__itemIcon {{=it.item.getRawData().icon}}"></i>
+   {{??}}
+   <div class="controls-RichEditorDropdown__itemText controls-RichEditorDropdown__itemText__{{=it.item.get('key')}}">{{=it.item.get('title')}}</div>
+   {{?}}
+
+</div>

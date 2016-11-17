@@ -38,10 +38,36 @@
          cursor: default;
       }
 
+      .blue-color {
+         &.controls-Link {
+            &.controls-FieldLink__Link {
+               color: @darkcyan-color;
+            }
+         }
+      }
+      .blue-dark-color {
+         &.controls-DropdownList {
+            &.ws-enabled {
+               .controls-DropdownList__selectedItem {
+                  .controls-DropdownList__textWrapper {
+                        color: @blue-dark-color;
+                  }
+               }
+            }
+         }
 
+         &.controls-Link {
+            &.ws-enabled {
+               color: @blue-dark-color;
+               text-decoration: none;
+            }
+         }
+      }
 
       /* Стили для кнопки раскрытия списка в кнопке фильтров */
-      .controls-filterButton__toggleButton {
+      .controls-filterButton__toggleButton,
+      .controls-filterButton__toggleButton.controls-Checked__checked,
+      .controls-filterButton__toggleButton.controls-Click__active {
          border: @controls-filterButton-toggleButton-border;
          background-color: @controls-filterButton-toggleButton-bgColor;
 
@@ -56,6 +82,8 @@
          text-align: center;
 
          &:hover {
+            background-color: @controls-filterButton-toggleButton-bgColor;
+            border: @controls-filterButton-toggleButton-border;
             .controls-filterButton__toggleButton-icon {
                color: @controls-filterButton-history-title-color;
             }
@@ -63,6 +91,7 @@
 
          .controls-filterButton__toggleButton-icon {
             display: inline-block;
+            color: @controls-filterButton-toggleButton-color;
             width: @controls-filterButton-toggleButton-icon-width;
             height: @controls-filterButton-toggleButton-icon-height;
             position: relative;
@@ -73,7 +102,6 @@
          .controls-filterButton__toggleButton-icon:before {
             content: @controls-filterButton-toggleButton-icon-down;
             font-style: @controls-filterButton-toggleButton-icon-style;
-            font-size: @controls-filterButton-toggleButton-icon-fontSize;
             position: absolute;
             top: @controls-filterButton-toggleButton-icon-top;
             left: @controls-filterButton-toggleButton-icon-left;
@@ -82,14 +110,6 @@
             .controls-filterButton__toggleButton-icon:before {
                content: @controls-filterButton-toggleButton-icon-up;
             }
-         }
-      }
-
-      .controls__filterButton__filterLink {
-         color: @controls-filterButton-title-text-color;
-
-         &:hover {
-            color: @controls-filterButton-title-text-color;
          }
       }
 
@@ -327,6 +347,38 @@
          }
       }
    }
+   .controls__filterButton__picker {
+      .blue-color {
+         &.controls-Link {
+            &.ws-enabled {
+               &:hover {
+                  color: @darkcyan-color;
+               }
+            }
+         }
+
+         &.controls-DropdownList {
+            &.ws-enabled {
+               .controls-DropdownList__selectedItem {
+                  .controls-DropdownList__textWrapper {
+                     &:hover {
+                        color: @darkcyan-color;
+                     }
+                  }
+               }
+            }
+         }
+      }
+      .blue-dark-color {
+         &.controls-Link {
+            &.ws-enabled {
+               &:hover {
+                  text-decoration: underline;
+               }
+            }
+         }
+      }
+   }
 }
 
 // ФИКС ДЛЯ ФФ
@@ -356,6 +408,17 @@
          }
          .controls__filterButton__filterLine-cross {
             top: 1px;
+         }
+      }
+   }
+}
+
+.ws-is-ie8 {
+   .controls__filterButton {
+      .controls__filterButton__filterLine {
+         margin: @controls-filterButton-button-margin-ff;
+         .controls__filterButton__filterLine-copyCross {
+            margin-left: -15px;
          }
       }
    }

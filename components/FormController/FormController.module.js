@@ -21,8 +21,8 @@ define('js!SBIS3.CONTROLS.FormController', [
 ],
    function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, fcHelpers, cInstance, fHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager) {
    /**
-    * Компонент, на основе которого создают диалоги редактирования записей.
-    * Подробнее о создании диалогов вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/">Диалоги редактирования</a>.
+    * Компонент, на основе которого создают диалог, данные которого инициализируются по записи.
+    * В частном случае компонент применяется для создания <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/'>диалогов редактирования записи</a>.
     *
     * @class SBIS3.CONTROLS.FormController
     * @extends $ws.proto.CompoundControl
@@ -39,9 +39,9 @@ define('js!SBIS3.CONTROLS.FormController', [
    var FormController = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.FormController.prototype */ {
       /**
        * @typedef {Object} dataSource
-       * @property {WS.Data/Source/ISource/Binding/typedef[]} [Binding] Соответствие методов CRUD+ контракту
-       * @property {WS.Data/Source/ISource/Endpoint/typedef[]} [endpoint] Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных
-       * @property {String} [model=source.sbis-service] Название зависимости, или конструктор объекта или инстанс объекта
+       * @property {WS.Data/Source/ISource/Binding/typedef[]} [Binding] Соответствие методов CRUD+ контракту.
+       * @property {WS.Data/Source/ISource/Endpoint/typedef[]} [endpoint] Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных.
+       * @property {String} [model=source.sbis-service] Название зависимости, или конструктор объекта или инстанс объекта.
        */
       /**
        * @event onFail Происходит в случае ошибки при сохранении или чтении записи из источника данных.
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.FormController', [
       /**
        * @event onReadModel Происходит при чтении записи из источника данных диалога редактирования.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Запись, прочитанная из источника данных (см. {@link dataSource}).
+       * @param {WS.Data/Entity/Model} record Запись, прочитанная из источника данных (см. {@link dataSource}).
        * @see read
        * @see dataSource
        * @see onCreateModel
@@ -66,7 +66,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @see onFail
        */
       /**
-       * @event onAfterFormLoad Происходит при показе панели с построеной версткой по установленной записи
+       * @event onAfterFormLoad Происходит при показе панели с построеной версткой по установленной записи.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @see read
        * @see dataSource
@@ -76,9 +76,9 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @see onFail
        */
       /**
-       * @event onBeforeUpdateModel Происходит перед сохранением записи в источнике данных диалога редактирования.
+       * @event onBeforeUpdateModel Происходит перед сохранением записи в источнике данных диалога.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Сохраняемая запись.
+       * @param {WS.Data/Entity/Model} record Сохраняемая запись.
        * @see submit
        * @see update
        * @see onCreateModel
@@ -87,9 +87,9 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @see onFail
        */
       /**
-       * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога редактирования.
+       * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Сохраняемая запись.
+       * @param {WS.Data/Entity/Model} record Сохраняемая запись.
        * @param {String} key Первичный ключ сохраняемой записи.
        * @see submit
        * @see update
@@ -99,9 +99,9 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @see onFail
        */
       /**
-       * @event onDestroyModel Происходит при удалении записи из источника данных диалога редактирования.
+       * @event onDestroyModel Происходит при удалении записи из источника данных диалога.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Запись, которая была удалена из источника данных (см. {@link dataSource}).
+       * @param {WS.Data/Entity/Model} record Запись, которая была удалена из источника данных (см. {@link dataSource}).
        * @see destroy
        * @see dataSource
        * @see onCreateModel
@@ -112,7 +112,7 @@ define('js!SBIS3.CONTROLS.FormController', [
       /**
        * @event onCreateModel Происходит при создании записи в источнике данных диалога редактирования.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Запись, которая была создана в источнике данных.
+       * @param {WS.Data/Entity/Model} record Запись, которая была создана в источнике данных.
        * При создании часть полей может быть предустановлена с помощью опции {@link initValues}.
        * @see create
        * @see onDestroyModel
@@ -134,18 +134,13 @@ define('js!SBIS3.CONTROLS.FormController', [
          _overlay: undefined,
          _options: {
             /**
-             * @cfg {String} Устанавливает первичный ключ, который может быть использован для получения записи {@link record}.
-             * @remark
-             * Использование первичного ключа для получения записи зависит от установленного <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/initializing-way/">способа инициализации данных</a>.
+             * @cfg {String} Устанавливает первичный ключ записи {@link record}.
              * @see record
              * @see dataSource
              */
             key: null,
             /**
-             * @cfg {WS.Data/Entity/Record} Устанавливает экземпляр записи, по данным которой может быть инициализирован диалог.
-             * @remark
-             * Запись, по данным которой будет инициализирован диалог, определяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/initializing-way/">способом инициализации данных</a>.
-             * Значение опции можно переопределить при <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/open-dialog/">открытии диалога</a>.
+             * @cfg {WS.Data/Entity/Model} Устанавливает запись, по которой произведена инициализация данных диалога.
              * @see setRecord
              * @see getRecord
              * @see dataSource
@@ -158,15 +153,14 @@ define('js!SBIS3.CONTROLS.FormController', [
             diffOnly: false,
             /**
              * @cfg {Object} Устанавливает ассоциативный массив, который используют только при создании новой записи для инициализации её начальными значениями.
-             * @remark
-             * При редактировании существующей записи (первичный ключ не задан) опция будет проигнорирована.
-             * Данные для инициализации могут быть переданы при вызове диалога в методе {@link SBIS3.CONTROLS.DialogActionBase#execute}.
              */
             initValues: null,
+            /**
+             * @cfg {Object} Дополнительные мета-данные, которые будут переданы в метод прочитать
+             */
+            readMetaData: null,
              /**
-             * @cfg {String} Устанавливает текст, отображаемый рядом с индикатором при сохранении записи.
-             * @remark
-             * Опция актуальна для события {@link onUpdateModel}.
+             * @cfg {String} Устанавливает текст, отображаемый рядом с индикатором при сохранении записи командной {@link update}.
              * @translatable
              * @see update
              * @see submit
@@ -176,17 +170,16 @@ define('js!SBIS3.CONTROLS.FormController', [
             /**
              * @cfg {dataSource} Устанавливает конфигурацию источника данных диалога.
              * @remark
-             * В общем случае можно использовать <a href="">любой источник данных</a>.
+             * Сейчас допускается установить конфигурацию класса {@link WS.Data/Source/SbisService}. Однако в общем случае это может быть любой источник данных.
              * @example
              * <pre>
              * _options: {
              *    dataSource: {
-             *       endpoint: 'Склад',
-             *       binding: {
+             *       endpoint: 'Склад', // Объект бизнес-логики
+             *       binding: { // CRUD-методы
              *          read: 'ПрочитатьТовар',
              *          query: 'СписокТоваров'
-             *       },
-             *       idProperty: '@Товар'
+             *       }
              *    }
              * }
              * </pre>
@@ -205,13 +198,14 @@ define('js!SBIS3.CONTROLS.FormController', [
 
          this._updateDocumentTitle();
          this._setDefaultContextRecord();
-         this._processingRecordDeferred();
 
          this._newRecord = this._options.isNewRecord;
          this._panelReadyDeferred = new Deferred();
          this._panel = this.getTopParent();
          this._panel.subscribe('onBeforeClose', this._onBeforeCloseHandler);
          this._panel.subscribe('onAfterShow', this._onAfterShowHandler);
+         this._setPanelRecord(this.getRecord());
+         this._processingRecordDeferred();
 
          //TODO в рамках совместимости
          this._dataSource = this._options.source;
@@ -238,8 +232,10 @@ define('js!SBIS3.CONTROLS.FormController', [
              eventName = needUpdateKey ? 'onCreateModel' : 'onReadModel',
              self = this;
          if (cInstance.instanceOfModule(receiptRecordDeferred, 'Core/Deferred')){
+            this._toggleOverlay(true);
             receiptRecordDeferred.addCallback(function(record){
                self.setRecord(record, needUpdateKey);
+               self._toggleOverlay(false);
                self._actionNotify(eventName);
             });
          }
@@ -440,6 +436,8 @@ define('js!SBIS3.CONTROLS.FormController', [
       },
       /**
        * Возвращает источник данных диалога редактирования.
+       * @deprecated
+       * @return {Object} Объект с конфигурацией источника данных.
        * @remark
        * Чтобы установить источник данных, используют метод {@link setDataSource}.
        * Также для диалога редактирования может быть по умолчанию установлен источник данных. Это происходит при его вызове через {@link SBIS3.CONTROLS.DialogActionBase}.
@@ -450,17 +448,23 @@ define('js!SBIS3.CONTROLS.FormController', [
        * dataSource.setBindings({ // Устанавливаем метод чтения записи
        *    read: 'ПрочитатьКарточкуСотрудника'
        * });
+       * </pre>
        * @see dataSource
        * @see getDataSource
        */
       getDataSource: function(){
          return this._dataSource;
       },
+      /**
+       * Возвращает признак: новая запись или нет.
+       * @returns {Boolean} true - запись создана, но не сохранена в источнике данных диалога.
+       */
       isNewRecord: function(){
          return this._newRecord;
       },
       /**
        * Устанавливает источник данных диалогу редактирования.
+       * @deprecated
        * @remark
        * Для диалога редактирования может быть по умолчанию установлен источник данных. Это происходит при вызове диалога через {@link SBIS3.CONTROLS.DialogActionBase}.
        * Чтобы получить объект источника данных, используют метод {@link getDataSource}.
@@ -490,11 +494,11 @@ define('js!SBIS3.CONTROLS.FormController', [
          this._dataSource = source;
       },
       /**
-       * Устанавливает запись диалогу редактирования.
+       * Устанавливает запись, по данным которой производится инициализация данных диалога.
        * @remark
-       * Новая запись будет добавление в контекст диалога редактирования в свойство "record".
-       * @param {WS.Data/Entity/Model} record Запись источника данных.
-       * @param {Boolean} [updateKey=false] Признак, по которому устанавливают необходимость обновления значения опции {@link key}.
+       * Запись будет добавлена в контекст диалога в свойство "record".
+       * @param {WS.Data/Entity/Model} record Экземпляр записи.
+       * @param {Boolean} [updateKey=false] Нужно ли обновить значение опции {@link key} при изменении записи.
        * @see record
        * @see key
        * @see getRecord
@@ -502,10 +506,7 @@ define('js!SBIS3.CONTROLS.FormController', [
       setRecord: function(record, updateKey){
          var newKey;
          this._options.record = record;
-         //Запоминаем запись на панели, т.к. при повторном вызове execute, когда уже есть открытая панель,
-         //текущая панель закрывается и открывается новая. В dialogActionBase в подписке на onAfterClose ссылка на панель будет не актуальной,
-         //т.к. ссылается на только что открытую панель. Поэтому берем редактируемую запись с самой панели.
-         this._panel._record = record;
+         this._setPanelRecord(record);
          if (updateKey){
             newKey = record.getId();
             this._options.key = newKey;
@@ -518,8 +519,15 @@ define('js!SBIS3.CONTROLS.FormController', [
             self._actionNotify('onAfterFormLoad');
          });
       },
+      _setPanelRecord: function(record){
+         //Запоминаем запись на панели, т.к. при повторном вызове execute, когда уже есть открытая панель,
+         //текущая панель закрывается и открывается новая. В dialogActionBase в подписке на onAfterClose ссылка на панель будет не актуальной,
+         //т.к. ссылается на только что открытую панель. Поэтому берем редактируемую запись с самой панели.
+         this._panel._record = record;
+      },
       /**
-       * Возвращает запись, установленную в контекст диалога редактирования.
+       * Возвращает запись, по данным которой произведена инициализация данных диалога.
+       * @reaturn {WS.Data/Entity/Model}
        * @see record
        * @see key
        * @see setRecord
@@ -535,29 +543,23 @@ define('js!SBIS3.CONTROLS.FormController', [
          return this._create(config);
       },
       /**
-       * Создать новую запись в источнике данных диалога редактирования.
-       * @param {Object} config
-       *    Структура конфига:
-       *    {
-       *      hideErrorDialog: Boolean,            //Не показывать сообещние при ошибке
-       *      hideIndicator: Boolean               //Не показывать индикатор
-       *     }
+       * Создаёт новую запись в источнике данных диалога.
+       * @param {Object} [config] Конфигурация команды.
+       * @param {Boolean} [config.hideErrorDialog=false] Не показывать сообщение при ошибке.
+       * @param {Boolean} [config.hideIndicator=false] Не показывать индикатор.
        * @remark
-       * В новой записи часть полей может быть предустановлена с помощью опции {@link initValues}.
-       * <br/>
-       * В случае успешного создания записи в источнике данных происходит событие {@link onCreateModel}. Созданная запись устанавливается в контекст диалога редактирования.
-       * <br/>
-       * После создания новой записи фокус будет установлен на первый дочерний контрол диалога редактирования.
-       * <br/>
-       * Источник данных для диалога редактирования устанавливают с помощью опции {@link dataSource}.
+       * При создании записи часть полей могут быть инициализированы значениями, которые установлены в опции {@link initValues}.
+       * При успешном создании записи происходит событие {@link onCreateModel}, а при ошибке - событие {@link onFail}.
+       * После создания записи фокус будет установлен на первый дочерний контрол диалога.
+       * Созданная запись будет помещена в контекст диалога в поле "record".
+       * Источник данных диалога устанавливают с помощью опции {@link dataSource}.
        * @returns {WS.Data/Entity/Record|Deferred} Созданная запись либо результат выполнения команды.
-       * @command
+       * @command create
        * @see read
        * @see update
        * @see destroy
        * @see notify
        * @see onCreateModel
-       * @see onFail
        * @see dataSource
        */
       _create: function(config){
@@ -578,11 +580,12 @@ define('js!SBIS3.CONTROLS.FormController', [
          return this._prepareSyncOperation(createDeferred, config, createConfig);
       },
       /**
-       * Удалить запись из источника данных диалога редактирования.
+       * Удаляет запись из источника данных диалога.
+       * @param {Object} [config] Конфигурация команды.
+       * @param {Boolean} [config.hideIndicator=false] Не показывать индикатор.
        * @remark
        * При удалении происходит событие {@link onDestroyModel}.
-       * <br/>
-       * Источник данных для диалога редактирования устанавливают с помощью опции {@link dataSource}.
+       * Источник данных диалога устанавливают с помощью опции {@link dataSource}.
        * @command destroy
        * @see update
        * @see read
@@ -610,22 +613,19 @@ define('js!SBIS3.CONTROLS.FormController', [
       },
 
       /**
-       * Прочитать запись по первичному ключу из источника данных диалога редактирования.
-       * @param {Object} config
-       *    Структура конфига:
-       *    {
-       *      key: String,                         //Ключ записи
-       *      hideErrorDialog: Boolean,            //Не показывать сообещние при ошибке
-       *      hideIndicator: Boolean               //Не показывать индикатор
-       *     }
+       * Производит чтение записи из источника данных диалога.
+       * @param {Object} config Параметры команды.
+       * @param {Number|String} config.key Первичный ключ, по которому производится чтение записи.
+       * @param {Boolean} [config.hideErrorDialog=false] Не показывать сообещние при ошибке.
+       * @param {Boolean} [config.hideIndicator=false] Не показывать индикатор.
        * @remark
-       * В случае успешного чтения записи из источника происходит событие {@link onReadModel}, а в случае ошибки - {@link onFail}. Прочитанная запись устанавливается в контекст диалога редактирования.
-       * <br/>
-       * Вне зависимости от результата прочтения записи из источника, фокус будет установлен на первый дочерний контрол диалога редактирования.
-       * <br/>
-       * Источник данных для диалога редактирования устанавливают с помощью опции {@link dataSource}.
+       * В случае успешного чтения записи происходит событие {@link onReadModel}, а в случае ошибки - {@link onFail}.
+       * Прочитанная запись будет установлена в контекст диалога.
+       * При успешном чтении записи фокус будет установлен на первый дочерний контрол диалога.
+       * Прочитанная запись будет помещена в контекст диалога в поле "record".
+       * Источник данных диалога устанавливают с помощью опции {@link dataSource}.
        * @returns {Deferred} Объект deferred, который возвращает результат чтения записи из источника.
-       * @command
+       * @command read
        * @see update
        * @see destroy
        * @see create
@@ -653,7 +653,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             key = config.key;
          }
          key = key || this._options.key;
-         readDeferred = this._dataSource.read(key).addCallback(function(record){
+         readDeferred = this._dataSource.read(key, this._options.readMetaData).addCallback(function(record){
             self.setRecord(record);
             return record;
          }).addBoth(function(data){
@@ -665,32 +665,25 @@ define('js!SBIS3.CONTROLS.FormController', [
 
       /**
        * Сохранить запись в источнике данных диалога редактирования.
-       * @param {Object} config
-       *    Структура конфига:
-       *    {
-       *      closePanelAfterSubmit: Boolean,      //Закрывать панель после сохранения
-       *      hideErrorDialog: Boolean,            //Не показывать сообещние при ошибке
-       *      hideIndicator: Boolean               //Не показывать индикатор
-       *     }
+       * @param {Object} [config] Параметры команды.
+       * @param {Boolean} [config.closePanelAfterSubmit=false] Закрывать диалог после сохранения.
+       * @param {Boolean} [config.hideErrorDialog=false] Не показывать сообщение при ошибке.
+       * @param {Boolean} [config.hideIndicator=false] Не показывать индикатор сохранения.
        * @remark
-       * При сохранении записи происходит проверка всех валидаторов диалога редактирования.
+       * При сохранении записи происходит проверка всех <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/'>валидаторов</a> диалога.
        * Если на одном из полей ввода валидация будет не пройдена, то сохранение записи отменяется, и пользователь увидит сообщение "Некорректно заполнены обязательные поля!".
-       * Подробнее о настройке валидаторов для полей ввода диалога редактирования вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/">Валидация вводимых данных</a>.
-       * <br/>
        * Если процесс сохранения записи происходит длительное время, то в пользовательском интерфейсе будет выведено сообщение "Подождите, идёт сохранение". Текст сообщения можно конфигурировать с помощью опции {@link indicatorSavingMessage}.
-       * <br/>
        * При успешном сохранении записи происходит событие {@link onUpdateModel}, а в случае ошибки - {@link onFail}.
-       * <br/>
        * Источник данных для диалога редактирования устанавливают с помощью опции {@link dataSource}.
        * @returns {WS.Data/Entity/Record|Deferred} Созданная запись либо результат выполнения команды.
        * @example
        * В следующем примере организовано сохранение редактируемой записи по нажатию на кнопку:
        * <pre>
-       * this.getChildControlByName('Сохранить').subscribe('onActivated', function() { // Создаём обработчик нажатися на кнопку сохранения на кнопку
-       *    this.sendCommand('update'); // Отправляем команду для сохранения диалога редактирования
+       * this.getChildControlByName('Сохранить').subscribe('onActivated', function() {
+       *    this.sendCommand('update', {closePanelAfterSubmit: true});
        * });
        * </pre>
-       * @command
+       * @command update
        * @see read
        * @see destroy
        * @see create
@@ -727,7 +720,6 @@ define('js!SBIS3.CONTROLS.FormController', [
          var errorMessage = rk('Некорректно заполнены обязательные поля!'),
              self = this,
              updateDeferred = new Deferred(),
-             dResult = new Deferred(),
              onBeforeUpdateData;
 
          if (this.validate()) {
@@ -740,7 +732,7 @@ define('js!SBIS3.CONTROLS.FormController', [
                onBeforeUpdateData.result.addBoth(function(result){
                   onBeforeUpdateData = self._prepareOnBeforeUpdateResult(result);
                   if (onBeforeUpdateData.result !== false){
-                     updateDeferred.dependOn(self._updateRecord(dResult, config));
+                     updateDeferred.dependOn(self._updateRecord(config));
                   }
                   else{
                      updateDeferred.errback(onBeforeUpdateData.errorMessage);
@@ -749,23 +741,23 @@ define('js!SBIS3.CONTROLS.FormController', [
                return updateDeferred;
             }
             else if (onBeforeUpdateData.result === false) {
-               return updateDeferred.errback(onBeforeUpdateData.errorMessage);
+               return Deferred.fail(onBeforeUpdateData.errorMessage);
             }
-            return this._updateRecord(dResult, config);
+            return this._updateRecord(config);
          }
-         else {
-            if (!config.hideErrorDialog) {
-               var error = new Error(errorMessage);
-               this._processError(error);
-            }
-            dResult.errback(errorMessage);
-            this._saving = false;
+
+         //Если валидация не прошла
+         if (!config.hideErrorDialog) {
+            var error = new Error(errorMessage);
+            this._processError(error);
          }
-         return dResult;
+         this._saving = false;
+         return Deferred.fail(errorMessage);
       },
 
-      _updateRecord: function(dResult, config){
-         var updateConfig = {
+      _updateRecord: function(config){
+         var dResult = new Deferred(),
+             updateConfig = {
                indicatorText: this._options.indicatorSavingMessage,
                eventName: 'onUpdateModel',
                additionalData: {
@@ -874,11 +866,11 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
       },
       /**
-       * Инициировать событие без выполнения базовой логики диалога редактирования.
+       * Производит оповещение о том, что произошло событие диалога. Логика обработки события будет произведена на стороне {@link SBIS3.CONTROLS.OpenDialogAction}, а не в диалоге.
        * @remark
-       * Команда применяется для того, чтобы логика обработки события производилась на стороне {@link SBIS3.CONTROLS.DialogActionBase}.
-       * @param {String} eventName Имя события, о котором нужно оповестить {@link SBIS3.CONTROLS.DialogActionBase}.
-       * @param {*} additionalData Данные, которые должны быть проброшены в событие {@link SBIS3.CONTROLS.DialogActionBase}.
+       * Подрообнее об этом вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/synchronization/#event-processing'>Обработка события диалога редактирования в SBIS3.CONTROLS.OpenDialogAction</a>.
+       * @param {String} eventName Имя события.
+       * @param {*} additionalData Данные, которые должны быть переданы в качестве аргументов события.
        * @command notify
        * @see read
        * @see create
@@ -889,19 +881,20 @@ define('js!SBIS3.CONTROLS.FormController', [
          this._notify(eventName, this._options.record, additionalData);
       },
       /**
-       * Выставить активность дочернего контрола после загрузки
-       * @returns {Deferred} Окончание чтения/создания модели
+       * Устанавливает фокус на дочерний контрол диалога при окончании чтения/создания записи в источнике данных диалога.
+       * @returns {Deferred}
        * @remark
-       * <br>
-       * Для выставления активности нужному контролу вызываем команду activateChildControl, которая вернет deferred, на который надо подписаться, чтобы выполнить необходимую логику
+       * По умолчанию после создания или чтения записи (из источника данных диалога) фокус будет установлен на первый дочерний контрол диалога.
+       * Вы можете изменить контрол, на который будет установлен фокус.
        * @example
        * В следующем примере организован переход фокуса после загрузки диалога на компонент textBox:
        * <pre>
-       *    component.sendCommand('activateChildControl').addCallback(function(){
+       *    this.sendCommand('activateChildControl').addCallback(function(){
        *       textBox.getContainer().focus();
        *    });
        * </pre>
        * @command activateChildControl
+       * @see dataSource
        */
       _createChildControlActivatedDeferred: function(){
          this._activateChildControlDeferred = (new Deferred()).addCallback(function(){
@@ -945,7 +938,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          options.source = this.createDataSource(options);
 
          if (options.key){
-            result = options.source.read(options.key);
+            result = options.source.read(options.key, options.readMetaData);
          }
          else{
             result = options.source.create(options.initValues);

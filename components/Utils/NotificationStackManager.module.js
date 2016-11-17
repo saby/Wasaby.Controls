@@ -2,8 +2,7 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
    [
    "Core/WindowManager",
    "Core/EventBus",
-   "js!SBIS3.CORE.Control",
-   "js!SBIS3.CORE.LayoutManager"
+   "js!SBIS3.CORE.Control"
 ],
 
    /**
@@ -11,7 +10,7 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
     * @class SBIS3.CONTROLS.Utils.NotificationStackManager
     * @author Степин П.В.
     */
-   function( cWindowManager, EventBus,Control, LayoutManager){
+   function( cWindowManager, EventBus, Control){
       'use strict';
 
       //Расстояние между блоками
@@ -31,13 +30,7 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
 
             },
             _items: [],
-            _hiddenItems: [],
-
-            //Минимальный z-index сделаем 100
-            _zIndex: 100,
-
-            //Отступ справа может меняться в зависимости от наличия скролла
-            _right: RIGHT
+            _hiddenItems: []
          },
          $constructor : function(){
          },
@@ -47,22 +40,18 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
 
             var self = this;
 
-            this._zIndex =  Math.max(cWindowManager.getMaxZIndex() + 1, 100);
+            this._zIndex =  cWindowManager.getMaxZIndex() + 1;
 
             $(window).on('resize', function(){
                self._checkCapacity();
             });
 
             this.subscribeTo(EventBus.globalChannel(), 'FloatAreaZIndexChanged', function(e, zIndex){
-               self._zIndex = Math.max(zIndex + 1, 100);
-               self._updatePositions();
+               self._updateZIndex(zIndex);
             });
-
-            var offset = LayoutManager.getScrollingContainerFixedOffsets();
-
-            if(offset && offset.hasOwnProperty('right')){
-               this._right += offset.right
-            }
+            this.subscribeTo(cWindowManager, 'zIndexChanged', function(e, zIndex){
+               self._updateZIndex(zIndex);
+            });
          },
 
          /**
@@ -121,6 +110,11 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
 
             this._updatePositions();
             this._checkCapacity();
+         },
+
+         _updateZIndex: function(zIndex){
+            this._zIndex = Math.max(zIndex, cWindowManager.getMaxZIndex()) + 1;
+            this._updatePositions();
          },
 
          /**
@@ -189,7 +183,7 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
 
                controlContainer.css({
                   bottom: bottom,
-                  right: this._right,
+                  right: RIGHT,
                   'z-index': this._zIndex
                });
 

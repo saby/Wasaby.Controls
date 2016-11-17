@@ -134,6 +134,10 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
          return this._options.pagesCount;
       },
 
+      getZIndex: function(){
+        return this._zIndex;
+      },
+
       setPagesCount: function(count) {
          this._options.pagesCount = count;
          this._options.items = null;
@@ -229,7 +233,7 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
       },
 
       _goToEnd: function() {
-
+         this._notify('onLastPageSet');
       }
    });
 

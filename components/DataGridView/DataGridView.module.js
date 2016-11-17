@@ -452,13 +452,21 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (cfg._itemsProjection) {
             cfg._ladderInstance.setCollection(cfg._itemsProjection);
          }
-         newCfg._decorators.add(new LadderDecorator());
+
+         //TODO: выпилить вместе декоратором лесенки
+         newCfg._decorators.ladder = new LadderDecorator({
+            ladderInstance: cfg._ladderInstance
+         });
+         newCfg._decorators.add(newCfg._decorators.ladder);
 
          return newCfg;
       },
 
       $constructor: function() {
-         this._publish('onDrawHead');
+         // Событие onChangeHeadVisibility используется в стики хедере.
+         // Внешнюю документацию не обновлял, т.к. без метода получения состояния видимости хедера это событие
+         // практически не представляет ценности.
+         this._publish('onDrawHead', 'onChangeHeadVisibility');
          this._tfoot = $('.controls-DataGridView__tfoot', this._container[0]);
          this._tbody = $('.controls-DataGridView__tbody', this._container[0]);
       },
@@ -466,6 +474,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
       init: function() {
          DataGridView.superclass.init.call(this);
          this._updateHeadAfterInit();
+      },
+
+      _prepareConfig: function() {
+         DataGridView.superclass._prepareConfig.apply(this, arguments);
+         if (this._options._ladderInstance) {
+            var projection = this._getItemsProjection();
+            if (projection) {
+               this._options._ladderInstance.setCollection(projection);
+            }
+         }
       },
 
       _updateHeadAfterInit: function() {
@@ -490,11 +508,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
                trs = $(this._tbody[0].children);
 
                if(this._options.showHead) {
-                  trs.push(this._thead[0].children[0]);
+                  trs.push(this.getTHead()[0].children[0]);
                }
 
                if(this._checkResults()) {
-                  trs.push(this._thead.find('.controls-DataGridView__results')[0]);
+                  trs.push(this._getResultsContainer().find('.controls-DataGridView__results')[0]);
                }
 
                for(var i = 0, len = trs.length; i < len; i++) {
@@ -584,6 +602,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
          var body = $('.controls-DataGridView__tbody', this._container);
 
          var newTHead = $(headMarkup);
+
+         /* Если шапка зафиксирована, то она находится вне контейнера компонента.
+            По этой причине обработчики событий надо вешать для неё отдельно. */
+         if(this._options.stickyHeader) {
+            this._bindEventHandlers(newTHead);
+         }
+
          if (this._thead && this._thead.length){
             this._destroyControls(this._thead);
             this._thead.replaceWith(newTHead);
@@ -721,7 +746,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._redrawHead();
          DataGridView.superclass._redrawItems.apply(this, arguments);
       },
-      _onItemClickHandler: function(event, id, record, target, originalEvent) {
+      _startEditOnItemClick: function(event, id, record, target, originalEvent) {
          var
             targetColumn,
             targetColumnIndex;
@@ -1149,6 +1174,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          DataGridView.superclass._toggleEmptyData.apply(this, arguments);
          if (this._options.emptyHTML && this._options.allowToggleHead) {
             this._thead.toggleClass('ws-hidden', !!show);
+            this._notify('onChangeHeadVisibility');
          }
       },
       _showItemsToolbar: function(item) {

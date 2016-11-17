@@ -1,4 +1,13 @@
-define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver', "Core/constants", "Core/core-functions", "Core/core-merge", "Core/Abstract", "Core/core-instance"], function(KbLayoutRevertObserver, constants, cFunctions, cMerge, cAbstract, cInstance) {
+define('js!SBIS3.CONTROLS.SearchController',
+    [
+       'js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
+       "Core/constants",
+       "Core/core-functions",
+       "Core/core-merge",
+       "Core/Abstract",
+       "Core/core-instance",
+       'Core/helpers/dom&controls-helpers'
+    ], function(KbLayoutRevertObserver, constants, cFunctions, cMerge, cAbstract, cInstance, domHelpers) {
 
    var SearchController = cAbstract.extend({
       $protected: {
@@ -36,7 +45,7 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
 
       _startHierSearch: function(text) {
          var searchParamName = this._options.searchParamName;
-         if (this._needSearch(this, text, searchParamName)) {
+         if (this._needSearch(text, searchParamName)) {
             var filter = cMerge(this._options.view.getFilter(), {
                   'Разворот': 'С разворотом',
                   'usePages': 'full'
@@ -101,7 +110,7 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
 
       _startSearch: function(text) {
          var searchParamName = this._options.searchParamName;
-         if (this._needSearch(this, text, searchParamName)) {
+         if (this._needSearch(text, searchParamName)) {
             var view = this._options.view,
                filter = cMerge(view.getFilter(), {
                   'usePages': 'full'
@@ -194,7 +203,7 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
             })
          }
          else {
-            this._kbLayoutRevertObserver.setParam(searchParamName);
+            this._kbLayoutRevertObserver.setParam(this._options.searchParamName);
          }
          if (isTree) {
             this._lastRoot = view.getCurrentRoot();
@@ -221,12 +230,6 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
                      self._options.backButton.getContainer().css({'display': ''});
                   }
                }
-            });
-
-            //Перед переключением в крошках в режиме поиска сбросим фильтр поиска
-            view.subscribe('onSearchPathClick', function(ev, id) {
-               view.setCurrentRoot(id);
-               view.reload();
             });
          }
 
@@ -260,19 +263,40 @@ define('js!SBIS3.CONTROLS.SearchController', ['js!SBIS3.CONTROLS.Utils.KbLayoutR
          });
 
          searchForm.subscribe('onKeyPressed', function(eventObject, event) {
+            /* Нет смысла обрабатывать клавиши и устанавливать фокус, если
+               view с которой работает searchForm скрыта.
+               (актуально для поля связи / suggestTextBox'a / строки поиска с саггестом ) */
+            if(!domHelpers.isElementVisible(view.getContainer())) {
+               return;
+            }
+
             // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
             if ((event.which == constants.key.tab || event.which == constants.key.down) && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)) {
-               var selectedIndex = view.getSelectedIndex();
+               var selectedIndex = null,
+                   itemsProjection = view._getItemsProjection();
+               /* При поиске по дереву папки отображаются, как Хлебные крошки
+                  поэтому маркер нужно установить на первый элемент проекции, который не является папкой */
+               if(self._searchMode && itemsProjection.at(0).isNode) {
+                  itemsProjection.each(function (item, index) {
+                     if (!selectedIndex && !item.isNode()) {
+                        selectedIndex = index;
+                     }
+                  });
 
-               /* При нажатии кнопки вниз в строке поиска ожидается :
-                  что появится маркер на view (если его не было) / перейдёт на следующую строку (если был).
-                  Поэтому обрабатываем две ситуации, когда маркера нет, то устанавливаем selectedIndex на первый элемент,
-                  если он есть, то просто увеличиваем selectedIndex на единицу, чтобы маркер перескочил на следующий элемент. */
-               if(selectedIndex === null) {
-                  view.setSelectedIndex(0);
-               } else {
-                  view.setSelectedIndex(selectedIndex + 1);
+                  view.setSelectedIndex(selectedIndex);
+               }else {
+                  selectedIndex = view.getSelectedIndex();
+                  /* При нажатии кнопки вниз в строке поиска ожидается :
+                   что появится маркер на view (если его не было) / перейдёт на следующую строку (если был).
+                   Поэтому обрабатываем две ситуации, когда маркера нет, то устанавливаем selectedIndex на первый элемент,
+                   если он есть, то просто увеличиваем selectedIndex на единицу, чтобы маркер перескочил на следующий элемент. */
+                  if(selectedIndex === null) {
+                     view.setSelectedIndex(0);
+                  } else {
+                     view.setSelectedIndex(selectedIndex + 1);
+                  }
                }
+
                view.setActive(true);
                event.stopPropagation();
                event.preventDefault();

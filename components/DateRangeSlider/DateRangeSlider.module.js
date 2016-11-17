@@ -14,9 +14,10 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
    /**
     * Контрол позволяющий выбирать диапазон дат равный месяцу, кварталу, полугодию или году.
     *
-    * Контрол работает только с фиксированными диапазонами, поэтому можно задавть в опциях либо начальную,
-    * либо конечную дату периода. Вторая дата вычислится автоматически исходя из типа минимального диапазона
-    * который можно выбрать. Это позволяет привязывать одну из дат к контексту не заботясь о второй.
+    * Если контрол работает с одним типом диапазона(например можно выбрать только месяца, или только кварталы),
+    * то можно задавать в опциях и свойствах либо начальную, либо конечную дату периода.
+    * Вторая дата вычислится автоматически исходя из типа диапазона который можно выбрать.
+    * Это позволяет привязывать одну из дат к контексту не заботясь о второй.
     *
     * SBIS3.CONTROLS.DateRangeSlider
     * @class SBIS3.CONTROLS.DateRangeSlider
@@ -52,6 +53,17 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
              * @cfg {Boolean} отобразить управляющую стрелку для переключения на предыдущий период
              */
             showPrevArrow: true,
+
+            /**
+             * @cfg {Boolean} автоподстановка второго значения
+             * Значение по умолчанию true
+             * @deprecated
+             */
+            // Добавил опцию что бы исключить ошибки при переходе к автоизменению второго значения в текущей версии.
+            // Пока что не уверен стоит ли выпиливать ее в будущих версиях.
+            // Этот функционал скорее всего будет пересен с миксин DateRangeChoosePickerMixin, и тогда опция будет
+            // полезна что бы можно было отключить это поведдение по умолчанию для некоторых компонентов.
+            autoValue: true,
 
             pickerConfig: {
                corner: 'tl',
@@ -101,7 +113,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
          var start, end;
          opts = DateRangeSlider.superclass._modifyOptions.apply(this, arguments);
          // Поскольку контрол работает только с фиксированными диапазонами, позволим разработчикам
-         // не конфигурировать конечную дату. Сделаем это за них если они этого не сделали.
+         // не конфигурировать одну из дат. Сделаем это за них если они этого не сделали.
          start = opts.startValue;
          end = opts.endValue;
          if (start && !end) {
@@ -126,6 +138,89 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
             }
          }
          return opts;
+      },
+
+      _getRangeTypeIfSingle: function () {
+         var opts = {'showMonths': 'month', 'showQuarters': 'quarter', 'showHalfyears': 'halfyear', 'showYears': 'year'},
+            rTypes = 0,
+            rType, lastType;
+         for (rType in opts) {
+            if (opts.hasOwnProperty(rType)) {
+               if (this._options[rType]) {
+                  rTypes += 1;
+                  lastType = opts[rType];
+               }
+            }
+         }
+         return rTypes === 1 && lastType;
+      },
+
+      _getStartValueByControlPeriodType: function (end, periodType) {
+         if (periodType === 'month' && DateUtil.isEndOfMonth(end)) {
+            return DateUtil.getStartOfMonth(end);
+         } else if (periodType === 'quarter' && DateUtil.isEndOfQuarter(end)) {
+            return DateUtil.getStartOfQuarter(end);
+         } else if (periodType === 'halfyear' && DateUtil.isEndOfHalfyear(end)) {
+            return DateUtil.getStartOfHalfyear(end);
+         } else if (periodType === 'year' && DateUtil.isEndOfYear(end)) {
+           return DateUtil.getStartOfYear(end);
+         }
+      },
+
+      _getEndValueByControlPeriodType: function (start, periodType) {
+         if (periodType === 'month' && DateUtil.isStartOfMonth(start)) {
+            return DateUtil.getEndOfMonth(start);
+         } else if (periodType === 'quarter' && DateUtil.isStartOfQuarter(start)) {
+            return DateUtil.getEndOfQuarter(start);
+         } else if (periodType === 'halfyear' && DateUtil.isStartOfHalfyear(start)) {
+            return DateUtil.getEndOfHalfyear(start);
+         } else if (periodType === 'year' && DateUtil.isStartOfYear(start)) {
+            return DateUtil.getEndOfYear(start);
+         }
+      },
+
+      setStartValue: function (value, silent) {
+         var sType = this._getRangeTypeIfSingle(),
+            changed;
+         if (this._options.autoValue && sType) {
+            changed = DateRangeSlider.superclass.setStartValue.call(this, value, true);
+            if (changed) {
+               if (!silent) {
+                  this._notifyOnStartValueChanged();
+               }
+               if (this.setEndValue(this._getEndValueByControlPeriodType(value, sType), true)) {
+                  if (!silent) {
+                     this._notifyOnEndValueChanged();
+                  }
+               }
+               this._notifyOnRangeChanged()
+            }
+         } else {
+            changed = DateRangeSlider.superclass.setStartValue.apply(this, arguments);
+         }
+         return changed
+      },
+
+      setEndValue: function (value, silent) {
+         var sType = this._getRangeTypeIfSingle(),
+            changed;
+         if (this._options.autoValue && sType) {
+            changed = DateRangeSlider.superclass.setEndValue.call(this, value, true);
+            if (changed) {
+               if (!silent) {
+                  this._notifyOnEndValueChanged();
+               }
+               if (this.setStartValue(this._getStartValueByControlPeriodType(value, sType), true)) {
+                  if (!silent) {
+                     this._notifyOnStartValueChanged();
+                  }
+               }
+               this._notifyOnRangeChanged()
+            }
+         } else {
+            changed = DateRangeSlider.superclass.setEndValue.apply(this, arguments);
+         }
+         return changed
       },
 
       _onPrevBtnClick: function () {

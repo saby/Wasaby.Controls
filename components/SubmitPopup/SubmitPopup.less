@@ -26,6 +26,8 @@
 
 .controls-SubmitPopup__message, .controls-SubmitPopup__details{
    text-align: center;
+   white-space: pre-wrap;
+   word-wrap: break-word;
 }
 
 .controls-SubmitPopup__footer {
@@ -40,11 +42,11 @@
 }
 
 .controls-SubmitPopup__button {
-   width: @controls-SubmitPopup-button-width;
+   min-width: @controls-SubmitPopup-button-min-width;
    height: @controls-SubmitPopup-button-height;
    margin: 0 4px;
 }
 
 .controls-SubmitPopup__button.controls-SubmitPopup__button-mini {
-   width: @controls-SubmitPopup-button-mini-width;
+   min-width: @controls-SubmitPopup-button-mini-min-width;
 }

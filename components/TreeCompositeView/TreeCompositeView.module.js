@@ -42,6 +42,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    var TreeCompositeView = TreeDataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.TreeCompositeView.prototype*/ {
 
       $protected: {
+         _prevMode: null,
          _options: {
             /**
              * @cfg {String} Устанавливает шаблон, который используется для отрисовки папки в режимах "Список" и "Плитка"
@@ -161,10 +162,28 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
 
       _getTargetContainer: function (item) {
          if (this.getViewMode() != 'table' && item.get(this._options.hierField + '@')) {
-            return  $('.controls-CompositeView__foldersContainer',this._container);
+            return this._getFoldersContainer();
          }
          return this._getItemsContainer();
       },
+
+      _getFoldersContainer: function() {
+         return $('.controls-CompositeView__foldersContainer', this._container);
+      },
+
+      //Пеереопределяем метод добавления элемента в DOM т.к. в TreeCompositeView в режиме table для папок есть отдельный
+      //контейнер который лежит перед всем листьями, и если происходит добавление элемента на 0 позицую, он вставляется
+      //перед контейнером для папок, чего быть не должно. Для этого посмотрим, если вставляется лист в 0 позицую, вставим
+      //его сразу после контейнера для папок, иначе выполняем штатную логику, которая в остальных случаях отрабатывает верно.
+      _insertItemContainer: function(item, itemContainer, target, at, currentItemAt, flagAfter) {
+         if (at === 0 && this.getViewMode() != 'table' && !item.get(this._options.hierField + '@')) {
+            this._previousGroupBy = undefined;
+            itemContainer.insertAfter(this._getFoldersContainer());
+         } else {
+            TreeCompositeView.superclass._insertItemContainer.apply(this, arguments);
+         }
+      },
+
       _processPaging: function() {
          TreeCompositeView.superclass._processPaging.call(this);
          this._processPagingStandart();
@@ -182,6 +201,22 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
        */
       setListFolderTemplate : function(tpl) {
          this._options.listFolderTemplate = tpl;
+      },
+
+      redraw: function() {
+         if (this._options.hierarchyViewMode) {
+            if (!this._prevMode) {
+               this._prevMode = this._options.viewMode;
+               this.setViewMode('table');
+            }
+         }
+         else {
+            if (this._prevMode) {
+               this.setViewMode(this._prevMode);
+            }
+            this._prevMode = null;
+         }
+         TreeCompositeView.superclass.redraw.apply(this, arguments);
       },
       /*
        TODO НЕ ИСПОЛЬЗОВАТЬ БЕЗ САМОЙ КРАЙНЕЙ НЕОБХОДИМОСТИ!

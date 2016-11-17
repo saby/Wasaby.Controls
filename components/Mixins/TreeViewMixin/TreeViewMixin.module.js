@@ -51,6 +51,32 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
          }
       },
       /**
+       * Возвращает id текущей активной ноды по следующему алогоритму:
+       * - Если активна открытая папка - возвращает ее id
+       * - Если активен элемент, внутри открытой папки, id этой папки
+       * - В остальных случаях вернет id текущей папки
+       * @returns {Boolean} Возвращает признак является ли кнопкой по умолчанию.*/
+      getActiveNodeKey: function() {
+         var
+            result,
+            selProjItem = this._getItemsProjection().at(this._options.selectedIndex);
+         if (this._options.selectedIndex >= 0) {
+            if (selProjItem.isNode() && selProjItem.isExpanded() && cInstance.instanceOfModule(selProjItem.getContents(), 'WS.Data/Entity/Model')) {
+               result = selProjItem.getContents().getId();
+            }
+            else {
+               var selParentItem = selProjItem.getParent();
+               if (selParentItem && selParentItem.getContents() && cInstance.instanceOfModule(selParentItem.getContents(), 'WS.Data/Entity/Model')) {
+                  result = selParentItem.getContents().getId();
+               }
+            }
+         }
+         if (!result) {
+            result = this.getCurrentRoot();
+         }
+         return result;
+      },
+      /**
        * Разворачиваем элемент
        * @param expandedItem
        * @private
@@ -147,6 +173,10 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             return typeof (more) !== 'boolean' ? more > (this._folderOffsets[id] + this._options.pageSize) : !!more;
          }
       },
+
+      _loadFullData: function(deepReload) {
+         return this.reload(this.getFilter(), this.getSorting(), 0, 1000, deepReload);
+      },
       //********************************//
       //       FolderFooter_Start       //
       //********************************//
@@ -200,10 +230,17 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
       },
       _createAllFolderFooters: function() {
          this._getItemsProjection().each(function(item) {
-            if (item.isNode() && item.isExpanded()) {
+            if (this._needCreateFolderFooter(item)) {
                this._createFolderFooter(item.getContents().getId());
             }
          }.bind(this));
+      },
+
+      _needCreateFolderFooter: function(item) {
+         var
+             model = item.getContents(),
+             id = model && model.get(this._options.keyField);
+         return item.isNode() && item.isExpanded() && (this._options.folderFooterTpl || this._folderHasMore[id]);
       },
       //********************************//
       //        FolderFooter_End        //

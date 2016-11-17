@@ -20,6 +20,7 @@
 .controls-TreeView__expand {
    float: left;
    .box-sizing(border-box);
+   .user-select();
    cursor: @tree-view-expand-cursor;
    width: @tree-view-expand-width;
    height: @tree-view-expand-height;
@@ -27,6 +28,7 @@
    border-width: @tree-view-expand-border-width;
    border-style: @tree-view-expand-border-style;
    border-color: @tree-view-expand-border-color;
+   overflow: hidden;
 
    font-family: 'cbuc-icons' !important;
    font-size: 29px;

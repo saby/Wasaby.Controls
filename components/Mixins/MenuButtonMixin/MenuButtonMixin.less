@@ -42,3 +42,18 @@
       }
    }
 }
+
+.ws-is-mobile-platform {
+// в заголовке меню на айпаде текст и иконка съезжают на пиксель вниз
+   .controls-Menu {
+      .controls-Menu__header {
+         .controls-Menu__header-icon{
+            top: -1px;
+            position: relative;
+         }
+         .controls-Menu__header-caption {
+            top: -2px;
+         }
+      }
+   }
+}
