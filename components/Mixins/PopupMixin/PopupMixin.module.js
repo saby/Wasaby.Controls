@@ -10,8 +10,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
    "js!SBIS3.CORE.ModalOverlay",
    "js!SBIS3.CONTROLS.TouchKeyboardHelper",
    "Core/helpers/helpers",
-   "Core/helpers/dom&controls-helpers"
-], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers, dcHelpers) {
+   "Core/helpers/dom&controls-helpers",
+   "Core/detection"
+], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers, dcHelpers, detection) {
    'use strict';
    if (typeof window !== 'undefined') {
       var eventsChannel = EventBus.channel('WindowChangeChannel');
@@ -983,6 +984,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             /* Если кто-то позвал hide, а контрол уже скрыт, то не будет запускать цепочку кода,
              могут валиться ошибки */
             if(!this.isVisible()) return;
+
+            // хак для ipad, чтобы клавиатура закрывалась когда дестроится панель
+            if (detection.isMobileIOS) {
+                if(this.getContainer().find(document.activeElement).length > 0){
+                   $(document.activeElement).trigger('blur');
+                };
+            }
 
             var self = this,
                 result = this._notify('onClose'),
