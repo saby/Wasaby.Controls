@@ -279,4 +279,23 @@
    background: #fff;
    color: @list-view-separator-content-color;
    font-size: @list-view-separator-content-size;
+   &.controls-GroupBy__separatorCollapse{
+      cursor: pointer;
+      &:before {
+         width: @list-view-separator-expander-size;
+         height: @list-view-separator-expander-size;
+         content: '\e000';
+         color: @list-view-separator-content-color;
+         font-size: @list-view-separator-expander-size;
+         display: inline-block;
+         float: left;
+         margin-right: 6px;
+      }
+      &.controls-GroupBy__separatorCollapse__collapsed {
+         &:before {
+            content: '\e013';
+         }
+      }
+   }
+
 }

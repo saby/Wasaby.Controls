@@ -266,8 +266,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _dataSet: null,
          _dotItemTpl: null,
          _propertyValueGetter: getPropertyValue,
+         _groupCollapsing: {},
          _options: {
-
             _canServerRender: false,
             _serverRender: false,
             _defaultItemTemplate: '',
@@ -755,16 +755,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       expandGroup: function(groupId) {
+         this._groupCollapsing[groupId] = false;
          var containers = this._getGroupContainers(groupId);
          containers.removeClass('ws-hidden');
          this._drawItemsCallbackDebounce();
       },
       collapseGroup: function(groupId) {
+         this._groupCollapsing[groupId] = true;
          var containers = this._getGroupContainers(groupId);
          containers.addClass('ws-hidden');
          this._drawItemsCallbackDebounce();
       },
-      toggleGroup: function(groupId, state) {
+      toggleGroup: function(groupId) {
          this[state ? 'expandGroup' : 'collapseGroup'].call(this, groupId);
       },
 
