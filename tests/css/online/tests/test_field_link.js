@@ -214,7 +214,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
 	
 	gemini.suite('disabled_multiselect', function (test) {
 
-        test.setUrl('/regression_field_link_online_6.html').setCaptureElements('.capture')
+        test.setUrl('/regression_field_link_online_6.html').skip('chrome').setCaptureElements('.capture')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="FieldLinkMultiSelect"]', 40000);
@@ -251,7 +251,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
 	
 	gemini.suite('hide_and_show_multiselect', function (test) {
 
-        test.setUrl('/regression_field_link_online_6.html').setCaptureElements('.capture')
+        test.setUrl('/regression_field_link_online_6.html').skip('chrome').setCaptureElements('.capture')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="FieldLinkMultiSelect"]', 40000);
