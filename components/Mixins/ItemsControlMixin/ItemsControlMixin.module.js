@@ -758,15 +758,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._groupCollapsing[groupId] = false;
          var containers = this._getGroupContainers(groupId);
          containers.removeClass('ws-hidden');
+         $('.controls-GroupBy[data-group="' + groupId + '"] .controls-GroupBy__separatorCollapse', this._container).removeClass('controls-GroupBy__separatorCollapse__collapsed');
          this._drawItemsCallbackDebounce();
       },
       collapseGroup: function(groupId) {
          this._groupCollapsing[groupId] = true;
          var containers = this._getGroupContainers(groupId);
          containers.addClass('ws-hidden');
+         $('.controls-GroupBy[data-group="' + groupId + '"] .controls-GroupBy__separatorCollapse', this._container).addClass('controls-GroupBy__separatorCollapse__collapsed');
          this._drawItemsCallbackDebounce();
       },
       toggleGroup: function(groupId) {
+         var state = this._groupCollapsing[groupId];
          this[state ? 'expandGroup' : 'collapseGroup'].call(this, groupId);
       },
 
