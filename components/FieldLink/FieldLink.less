@@ -105,9 +105,9 @@
    position: relative;
    white-space: nowrap;
 
-   &.controls-Picker__show,
-   &.ws-has-focus,
-   &:hover {
+   &.controls-Picker__show:not(.ws-disabled),
+   &.ws-has-focus:not(.ws-disabled),
+   &:hover:not(.ws-disabled) {
       border: @controls-FieldLink-border;
       border-color: @controls-FieldLink-border-color-focus-hover;
    }
@@ -186,10 +186,6 @@
    }
 
    &.ws-disabled {
-
-      &.controls-TextBox {
-         border-color: @text-box-border-color;
-      }
 
       .controls-TextBox__afterFieldWrapper {
          display: none;
