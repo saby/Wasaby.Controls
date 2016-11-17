@@ -222,14 +222,24 @@ define(
          }
       },
 
+      _modifyOptions: function(options) {
+         var options = DateBox.superclass._modifyOptions.apply(this, arguments);
+         // Нормализуем опцию date и обновляем опцию text
+         if (options.date) {
+            this._updateOptionsByDate(options.date, options);
+         }
+         // Обновляем опции нужные для отрисовки данных шаблонами
+         if (options.text) {
+            options._formatModel.setText(options.text, options._maskReplacer);
+         }
+         options._modelForMaskTpl = this._getItemsForTemplate(options._formatModel, options._maskReplacer);
+         return options;
+      },
+
       $constructor: function () {
          this._publish('onDateChange');
 
-         // Первоначальная установка даты, если передана опция
-         if ( this._options.date ) {
-            this._setDate( this._options.date );
-         }
-
+         // Если установлен текст, но не установлена дата, то обновим дату
          if (this._options.text  &&  !this._options.date) {
             this.setText(this._options.text);
          }
@@ -314,36 +324,49 @@ define(
        * @param date новое значение даты, объект типа Date
        */
       _setDate: function (date) {
-         var isCorrect = false,
-             oldText   = this._options.text;
-         if (date === null || typeof date === 'undefined') {
-            this._options.date = date;
-            this._options.text = this._getFormatModel().getStrMask(this._getMaskReplacer());
-            isCorrect = true;
-         }
-         if (date instanceof Date) {
-            this._options.date = date;
-            this._options.text = this._getTextByDate(date);
-            isCorrect = true;
-         } else if (typeof date == 'string') {
-            //convert ISO-date to Date
-            this._options.date = DateUtil.dateFromIsoString(date);
-            if (DateUtil.isValidDate(this._options.date)) {
-               this._options.text = this._getTextByDate( this._options.date );
-               isCorrect = true;
-            }
-         }
+         var oldText   = this._options.text;
+         this._updateOptionsByDate(date);
          if (oldText !== this._options.text) {
             this._notify('onTextChange', this._options.text);
          }
+         this._drawDate();
+      },
+
+      /**
+       * Обновить опции по переданной дате
+       * @param date {String|Date}
+       * @param options объект опций, необязательный параметр, передается явно там где this._options недоступен, например из _modifyOptions)
+       * @private
+       */
+      _updateOptionsByDate: function (date, options) {
+         options = options || this._options;
+
+         var isCorrect = false,
+             oldText   = options.text;
+
+         if (date === null || typeof date === 'undefined') {
+            options.date = date;
+            options.text = this._getFormatModel(options).getStrMask(this._getMaskReplacer(options));
+            isCorrect = true;
+         }
+         if (date instanceof Date) {
+            options.date = date;
+            options.text = this._getTextByDate(date, options);
+            isCorrect = true;
+         } else if (typeof date == 'string') {
+            //convert ISO-date to Date
+            options.date = DateUtil.dateFromIsoString(date);
+            if (DateUtil.isValidDate(options.date)) {
+               options.text = this._getTextByDate(options.date, options);
+               isCorrect = true;
+            }
+         }
          if ( ! isCorrect) {
-            this._options.date = null;
-            this._options.text = '';
+            options.date = null;
+            options.text = '';
             throw new Error('DateBox. Неверный формат даты');
          }
-
-         this._setLastDate(this._options.date);
-         this._drawDate();
+         this._setLastDate(options.date);
       },
 
       setValue: function (value) {
@@ -608,13 +631,14 @@ define(
        * @returns {string} Строка
        * @private
        */
-      _getTextByDate: function( date ) {
+      _getTextByDate: function(date, options) {
          var
             text = '',
-            item;
+            item,
+            model = this._getFormatModel(options).model;
 
-         for (var i = 0; i < this._getFormatModel().model.length; i++) {
-            item = this._getFormatModel().model[i];
+         for (var i = 0; i < model.length; i++) {
+            item = model[i];
             if (item.isGroup) {
                switch ( item.mask ){
                   case 'YY'   : text += ( '000' + date.getFullYear() ).slice(-2);     break;
