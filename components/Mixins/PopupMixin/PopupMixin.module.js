@@ -538,7 +538,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
       _initWindowSizes: function () {
          this._windowSizes = {
-            height: $(window).height() - TouchKeyboardHelper.getKeyboardHeight(),
+            height: $(window).height(),
             width: $(window).width()
          };
       },
@@ -826,7 +826,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       _getSpaces: function (corner) {
          var offset = this._targetSizes.offset,
             width = this._targetSizes.width,
-            height = this._targetSizes.height,
+            height = this._targetSizes.height - TouchKeyboardHelper.getKeyboardHeight(),
             windowHeight = this._windowSizes.height,
             windowWidth = this._windowSizes.width,
             spaces = {
