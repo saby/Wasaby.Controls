@@ -152,12 +152,21 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see getItemsActions
           */
           /**
-          * @event onItemClick Происходит при любом клике по записи.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {String} id Первичный ключ записи.
-          * @param {WS.Data/Entity/Model} data Экземпляр класса записи, по которой произвели клик.
-          * @param {jQuery} target DOM-элемент, на который кликнули.
-          */
+           * @event onItemClick Происходит при любом клике по записи.
+           * @remark
+           * При работе с иерархическими списками при клике по папке (узлу) по умолчанию происходит проваливание в узел или его развертывание.
+           * Чтобы отменить поведение, установленное по умолчанию, в обработчике события установите результат false.
+           * <pre>
+           *    myListView.subscribe('onItemClick', function(eventObject) {
+           *        eventObject.setResult(false);
+           *        ... // пользовательская логика клика по записи.
+           *    });
+           * </pre>
+           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+           * @param {String} id Первичный ключ записи.
+           * @param {WS.Data/Entity/Model} data Экземпляр класса записи, по которой произвели клик.
+           * @param {jQuery} target DOM-элемент, на который кликнули.
+           */
           /**
           * @event onItemActivate Происходит при смене записи (активации) под курсором мыши (например, клик с целью редактирования или выбора).
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -3330,13 +3339,15 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          //endregion moveMethods
          /**
-          * Устанавливает позицию строки итогов
-          * @param {String} position Позиция
+          * Устанавливает позицию строки итогов.
+          * @param {String} position Позиция.
           * <ul>
-          *    <li>none - Строка итогов не будет отображаться</li>
-          *    <li>top - Строка итогов будет расположена вверху</li>
-          *    <li>bottom - Строка итогов будет расположена внизу</li>
+          *    <li>none - строка итогов не будет отображаться;</li>
+          *    <li>top - строка итогов будет расположена вверху;</li>
+          *    <li>bottom - строка итогов будет расположена внизу.</li>
           * </ul>
+          * @remark
+          * После установки требуется произвести перерисовку связанного списка.
           * @example
           * <pre>
           *     DataGridView.setResultsPosition('none');
