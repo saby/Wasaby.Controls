@@ -58,9 +58,9 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
        * @returns {Boolean} Возвращает признак является ли кнопкой по умолчанию.*/
       getActiveNodeKey: function() {
          var
-            result,
+            result, selProjItem;
+         if (this._options.selectedIndex !== null && this._options.selectedIndex !== undefined && this._options.selectedIndex >= 0) {
             selProjItem = this._getItemsProjection().at(this._options.selectedIndex);
-         if (this._options.selectedIndex >= 0) {
             if (selProjItem.isNode() && selProjItem.isExpanded() && cInstance.instanceOfModule(selProjItem.getContents(), 'WS.Data/Entity/Model')) {
                result = selProjItem.getContents().getId();
             }
