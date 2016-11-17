@@ -151,7 +151,7 @@ gemini.suite('SBIS3.CONTROLS.Link Online', function () {
 
     gemini.suite('ellipsis', function (test) {
 
-        test.setUrl('/regression_link_online_3.html').setCaptureElements('[name="Link 1"]')
+        test.setUrl('/regression_link_online_3.html').skip('chrome').setCaptureElements('[name="Link 1"]')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="Link 1"]', 40000);

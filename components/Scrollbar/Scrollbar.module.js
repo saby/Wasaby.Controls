@@ -57,6 +57,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          setContentHeight: function(contentHeight) {
+            this._containerHeight = this._container.outerHeight(true);
             this._options.contentHeight = contentHeight;
             this._setViewportRatio();
             this._calcThumbHeight();
@@ -107,6 +108,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          _onResizeHandler: function() {
+            this._containerHeight = this._container.outerHeight(true);
             this._calcThumbHeight();
          },
 
