@@ -230,10 +230,17 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
       },
       _createAllFolderFooters: function() {
          this._getItemsProjection().each(function(item) {
-            if (item.isNode() && item.isExpanded()) {
+            if (this._needCreateFolderFooter(item)) {
                this._createFolderFooter(item.getContents().getId());
             }
          }.bind(this));
+      },
+
+      _needCreateFolderFooter: function(item) {
+         var
+             model = item.getContents(),
+             id = model && model.get(this._options.keyField);
+         return item.isNode() && item.isExpanded() && (this._options.folderFooterTpl || this._folderHasMore[id]);
       },
       //********************************//
       //        FolderFooter_End        //
