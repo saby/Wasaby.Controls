@@ -105,7 +105,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
        */
       move: function(movedItems, target, position) {
          var
-            result,
+            result = false,
             isNodeTo = true,
             isChangeOrder = position !== 'on';
 
@@ -119,7 +119,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
 
          if (this._checkRecordsForMove(movedItems, target, isChangeOrder)) {
             if (isNodeTo && !isChangeOrder) {
-               result = this.getMoveStrategy().hierarhyMove(movedItems, target);
+               result = this.getMoveStrategy().hierarсhyMove(movedItems, target);
             } else if(isChangeOrder)  {
                result = this.getMoveStrategy().move(movedItems, target, position == 'after');
             }
