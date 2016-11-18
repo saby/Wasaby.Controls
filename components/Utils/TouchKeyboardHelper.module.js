@@ -31,9 +31,8 @@ define('js!SBIS3.CONTROLS.TouchKeyboardHelper', [
             if (constants.browser.isMobileIOS){
                return window.innerHeight * (this.isPortrait() ? ipadCoefficient.portrait : ipadCoefficient.landscape);
             }
-         } else {
-            return 0;
          }
+         return 0;
       },
 
       isKeyboardVisible: function(){
