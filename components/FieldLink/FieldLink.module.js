@@ -138,6 +138,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings footerTpl emptyHTML groupBy
         * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip setEmptyHTML setGroupBy itemTpl
+        * @ignoreEvents onListItemSelect
         *
         * ignoreEvents onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
         *
