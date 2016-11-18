@@ -12,22 +12,28 @@ define('js!SBIS3.CONTROLS.Spoiler', [
    'use strict';
 
    /**
-    * Контрол, отображающий переключаемую область (спойлер)
+    * Контрол, отображающий переключаемую область (спойлер).
+    * @remark
+    * Длинный заголовок спойлера по умолчанию обрезается.
     * @class SBIS3.CONTROLS.Spoiler
     * @extends SBIS3.CONTROLS.ButtonBase
-    * @control
+    * @mixes SBIS3.CONTROLS.Expandable
+    *
 	 * @demo SBIS3.CONTROLS.Demo.MySpoiler
+    *
+    * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.Spoiler'>
     *    <option name='caption' value='Спойлер'></option>
     * </component>
     * @public
     * @category Buttons
+    *
     * @author Авраменко Алексей Сергеевич
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
-    * @ignoreOptions subcontrol verticalAlignment
+    * @ignoreOptions subcontrol verticalAlignment activateByClick
     *
     * @ignoreMethods activateFirstControl activateLastControl addPendingOperation applyEmptyState applyState clearMark
     * @ignoreMethods changeControlTabIndex destroyChild detectNextActiveChildControl disableActiveCtrl findParent
@@ -49,11 +55,51 @@ define('js!SBIS3.CONTROLS.Spoiler', [
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {
+            /**
+             * @noShow
+             */
             expandedClassName: 'controls-Spoiler_expanded',
+            /**
+             * @cfg {String} Шаблон переключаемой области.
+             * @remark
+             * В контексте шаблона доступны все опции, которые переданые в объекте {@link properties}.
+             * @see leftPartTitleTpl
+             * @see middlePartTitleTpl
+             * @see rightPartTitleTpl
+             */
             contentTpl: '',
+            /**
+             * @cfg {String} Шаблон левой части заголовка спойлера.
+             * @remark
+             * В контексте шаблона доступны все опции класса {@link SBIS3.CONTROLS.Spoiler}.
+             * @see contentTpl
+             * @see middlePartTitleTpl
+             * @see rightPartTitleTpl
+             */
             leftPartTitleTpl: '',
+            /**
+             * @cfg {String} Шаблон центральной части заголовка спойлера.
+             * @remark
+             * В контексте шаблона доступны все опции класса {@link SBIS3.CONTROLS.Spoiler}.
+             * По умолчанию в этом шаблоне описана кнопка, клик по которой открывает/закрывает переключаемую область спойлера.
+             * @see contentTpl
+             * @see leftPartTitleTpl
+             * @see rightPartTitleTpl
+             */
             middlePartTitleTpl: '',
+            /**
+             * @cfg {String} Шаблон правой части заголовка спойлера.
+             * @remark
+             * В контексте шаблона доступны все опции класса {@link SBIS3.CONTROLS.Spoiler}.
+             * @see contentTpl
+             * @see leftPartTitleTpl
+             * @see middlePartTitleTpl
+             */
             rightPartTitleTpl: '',
+            /**
+             * @cfg {Object} Набор опций, которые будут переданы в контекст шаблона {@link contentTpl}.
+             * @see contentTpl
+             */
             properties: null
          },
          _checkClickByTap: false,
@@ -104,7 +150,7 @@ define('js!SBIS3.CONTROLS.Spoiler', [
          }
       },
       _initializeContent: function() {
-         this._getContentContainer().html(MarkupTransformer(this._options._contentTpl(this._options.properties)));
+         this._getContentContainer().html(MarkupTransformer(this._options._contentTpl(this._options)));
          this.reviveComponents();
          this._contentInitialized = true;
       },

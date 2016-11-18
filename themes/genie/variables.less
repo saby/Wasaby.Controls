@@ -65,7 +65,7 @@
 @link-icon-hover-icon:                    @primary-color;
 
 @link-active-text-color:                  @link-hover-text-color;
-@link-active-text-decoration:             none;
+@link-active-text-decoration:             @link-hover-text-decoration;
 
 @link-icon-vertical-alignment:            middle;
 @link-icon-margin:                        -2px 0 0;
@@ -619,7 +619,7 @@
 @menu-expand-height:                      16px;
 @menu-expand-top-offset:                  3px;
 @menu-expand-top-offset32:                7px;
-@menu-expand-right-offset:                0;
+@menu-expand-right-offset:                8px;
 @menu-expand-spritesheet:                'img/MenuExpand.png';
 
 @menu-expand-border-width:                0;
@@ -647,7 +647,7 @@
 @menu-big-item-height:                    32px;
 @menu-item-line-height:                   @menu-item-height;
 @menu-item-default-padding:               0 8px;
-@menu-item-expand-padding-right:          16px;
+@menu-item-expand-padding-right:          30px;
 
 @menu-item-text-color:                    @black-color;
 @menu-item-bg:                            @white-color;
@@ -1085,9 +1085,10 @@
 @combo-box-arrow-disabled-border-color:         @combo-box-arrow-border-color;
 @combo-box-arrow-disabled-bg:                   @combo-box-arrow-bg;
 
-@combo-box-picker-border:                       1px solid @gray-light-color;
+@combo-box-picker-border:                       1px solid @gray-ccc-color;
 @combo-box-picker-border-radius:                0 0 2px 2px;
-@combo-box-picker-margin:                       -2px 0 0;
+@combo-box-picker-margin:                       -2px;
+@combo-box-picker-padding:                      0 2px;
 @combo-box-picker-item-padding:                 2px 7px;
 @combo-box-picker-item-font:                    inherit;
 @combo-box-picker-item-font-size:               15px;
@@ -1169,6 +1170,7 @@
 
 @suggest-text-box-reset-margin:              3px 4px;
 @suggest-text-box-wrapper-width:             22px;
+@suggest-text-box-icon-cross-color:          #8991A9;
 
 // ----------- //
 // Suggest //
@@ -1910,6 +1912,7 @@
 @listView-check-box-top:                            5px;
 @listView-check-box-width:                          16px;
 @listView-check-box-height:                         16px;
+@listView-check-box-border:                         none;
 @multiView-tile-item-border:                        1px solid @gray-light-color;
 @multiView-tile-item-min-width:                     128px;
 @multiView-tile-item-min-height:                    128px;
@@ -1944,10 +1947,15 @@
 
 @DropdownList-picker-bg:                              @white-color;
 @DropdownList-header-bg:                              @DropdownList-picker-bg;
+@DropdownList-picker-offset:                          0;
+@DropdownList-picker-fastdatafilter-offset:           0;
 @DropdownList-picker-margin-top:                      -2px;
 @DropdownList-picker-head-margin:                     0;
+@DropdownList-picker-head-padding:                    4px 8px;
+@DropdownList-picker-head-duplicate-type-top-padding: 4px;
 @DropdownList-picker-hor-revert-head-margin:          @DropdownList-picker-head-margin;
 @DropdownList-picker-padding:                         4px 0;
+@DropdownList-picker-max-height:                      400px;
 @DropdownList-picker-border:                          2px solid @DropdownList-border-color;
 @DropdownList-picker-head-border-radius:              4px 4px 0 0;
 @DropdownList-picker-list-border-radius-equal:        0 0 4px 4px;
@@ -1956,8 +1964,9 @@
 @DropdownList-picker-list-border-radius:              4px;
 @DropdownList-picker-menu-font-size:                  15px;
 @DropdownList-picker-menu-white-space:                nowrap;
-@DropdownList-picker-menu-item-padding:               4px 16px 4px 16px;
+@DropdownList-picker-menu-item-padding:               6px 8px;
 @DropdownList-picker-menu-item-margin:                0;
+@DropdownList-picker-menu-item-height:                20px;
 @DropdownList-picker-menu-item-multiselect-padding:   0;
 @DropdownList-picker-menu-item-color:                 @white-color;
 @DropdownList-picker-menu-item-color-blur:            rgba(255, 255, 255, 0);

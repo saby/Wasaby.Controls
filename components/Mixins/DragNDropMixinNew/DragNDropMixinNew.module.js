@@ -30,17 +30,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
       });
 
    }
-   var
-
-      buildTplArgsLV = function (cfg) {
-         var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
-         tplOptions.multiselect = cfg.multiselect;
-         tplOptions.decorators = this._decorators;
-         tplOptions.colorField = cfg.colorField;
-
-         return tplOptions;
-      },
-      DragAndDropMixin = /**@lends SBIS3.CONTROLS.DragNDropMixinNew.prototype*/{
+   var DragAndDropMixin = /**@lends SBIS3.CONTROLS.DragNDropMixinNew.prototype*/{
          $protected: {
             /**
              * @event onBeginDrag При начале перемещения элемента. Если из события вернуть false, то перемещение будет отменено.
@@ -95,7 +85,11 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
                 * </pre>
                 * @see setDragEntity
                 */
-               dragEntity: undefined
+               dragEntity: undefined,
+               /**
+                * @cfg {String|Function(): WS.Data/Collection/List}  Конструктор списка перемещаемых сущностей по умолчанию {@link WS.Data/Collection/List}
+                */
+               dragEntityList: 'collection.list'
             },
             /**
              * @member {Number} Константа, показывающая на сколько пикселей надо сдвинуть мышь, чтобы началось перемещение.
@@ -113,6 +107,11 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             init: function () {
                //touchend всегда срабатывает над тем контейнером с которого начали тащить, поэтому его тут нет
                $(this.getContainer()).bind('mouseup', this._onMouseupInside.bind(this));
+            },
+
+            destroy: function() {
+               EventBus.channel('DragAndDropChannel').unsubscribe('onMouseup', this._onMouseupOutside);
+               EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', this._onMousemove);
             }
          },
 
@@ -401,6 +400,15 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           */
          _makeDragEntity: function(options) {
             return  Di.resolve(this._options.dragEntity, options);
+         },
+         /**
+          *
+          * @param options
+          * @returns {*|Object|Array}
+          * @private
+          */
+         _makeDragEntityList: function(options) {
+            return Di.resolve(this._options.dragEntityList, options)
          },
          //endregion protected
          //region mouseHandler

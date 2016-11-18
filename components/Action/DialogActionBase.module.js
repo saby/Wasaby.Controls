@@ -47,33 +47,30 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
       $protected : {
          _options : {
             /**
-             * @cfg {String} Устанавливает компонент, который будет использован в качестве диалога редактирования записи.
+             * @cfg {String} Устанавливает компонент, который будет открыт на диалоге.
              * @remark
-             * Компонент должен быть наследником класса {@link SBIS3.CONTROLS.FormController}.
-             * Подробнее о создании таких компонентов вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component/">Создание компонента для диалога редактирования</a>.
-             * Режим отображения диалога редактирования устанавливают с помощью опции {@link mode}.
-             * @see mode
+             * К компоненту установлены требования - он должен быть наследником класса {@link SBIS3.CONTROLS.FormController}.
+             * Подробнее о создании такого компонента и его конфигурации вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/create-and-config/">Создание компонента диалога и его конфигурация</a>.
              */
             dialogComponent : '',
             /**
-             * @cfg {String} Устанавливает режим открытия диалога редактирования компонента.
-             * @variant dialog Открытие производится в новом диалоговом окне.
-             * @variant floatArea Открытие производится на всплывающей панели.
-             * @remark
-             * Диалог редактирования устанавливают с помощью опции {@link dialogComponent}.
-             * @see dialogComponent
+             * @cfg {String} Устанавливает тип диалога.
+             * @variant dialog Открытие диалога производится в модальном окне, которое создаётся на основе контрола {@link SBIS3.CORE.Dialog}.
+             * @variant floatArea Открытие диалога производится на всплывающей панели, которая создаётся на основе контрола {@link SBIS3.CORE.FloatArea}.
              */
             mode: 'dialog',
             /**
-             * @cfg {*} Устанавливает связанный список, для которого будет открываться диалог редактирования записей.
+             * @cfg {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} Устанавливает связанный с диалогом список.
              * @remark
-             * Список должен быть с примесью миксинов ({@link SBIS3.CONTROLS.DSMixin} или {@link WS.Data/Collection/IList}) для работы с однотипными элементами.
-             * Подробнее о базовых платформенных списках вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-types/">Виды списков</a>.
+             * Опция применятся при работе со <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/">списками</a>, чтобы производить <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/synchronization/">синхронизацию изменений</a>.
+             * Для списка, с которым производится связывание, устанавливается ограничение: в класс списка должы быть добавлены миксины ({@link SBIS3.CONTROLS.DSMixin} или {@link WS.Data/Collection/IList}).
+             * @see setLinkedObject
              */
             linkedObject: undefined,
             /**
-             * @cfg {String} Устанавливает поведение для чтения записи и её установки в контекст диалога редактирования.
-             * Подробнее о данной опции можно прочитать по <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/strategy/'>ссылке</a>
+             * @cfg {String} Устанавливает способ инициализации данных диалога.
+             * @remark
+             * Описание значений опции вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/initializing-way/">Способы инициализации данных диалога</a>.
              * @variant local
              * @variant remote
              * @variant delayedRemote
@@ -94,25 +91,16 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
       },
       /**
        * @typedef {Object} ExecuteMetaConfig
-       * @property {String|Number} id Первичный ключ записи, которую нужно открыть на диалоге редактирования. Если свойство не задано, то нужно передать запись свойством record.
-       * @property {Object} filter Объект, данные которого будут использованы в качестве инициализирующих данных при создании новой записи.
-       * Название свойства - это название поля записи, а значение свойства - это значение для инициализации.
-       * @property {WS.Data/Entity/Record} item Редактируемая запись. Если передаётся ключ свойством id, то запись передавать необязательно.
-       * @property {String} initializingWay Устанавливает поведение для чтения записи и её установки в контекст диалога редактирования. {@link initializingWay}
-       * @property {Object} componentOptions Пользовательские опции, передаваемые в диалог редактирования
-       * @property {Object} dialogOptions Опции, передаваемые в диалог {@link mode}
-       * Свойства, которые можно указать для диалога:
+       * @property {String|Number} id Первичный ключ записи. Передается в конфигурацию диалога в опцию {@link SBIS3.CONTROLS.FormController#key}.
+       * @property {Object} filter Объект, свойства которого могут быть использованы для установки инициализирующих данных при создании новой записи. Передается в конфигурацию диалога в опцию {@link SBIS3.CONTROLS.FormController#initValues}.
+       * @property {Object} readMetaData Дополнительные мета-данные, которые будут переданы в метод прочитать. Передается в конфигурацию диалога в опцию {@link SBIS3.CONTROLS.FormController#readMetaData}.
+       * @property {WS.Data/Entity/Record} item Экземпляр класса записи. Передается в конфигурацию диалога в опцию {@link SBIS3.CONTROLS.FormController#record}.
+       * @property {String} initializingWay Способ инициализации данных диалога, подробнее о котором вы можете прочитать <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/initializing-way/">здесь</a>.
+       * @property {Object} componentOptions Пользовательские опции, которые будут переданы в диалог в секцию _options.
+       * @property {Object} dialogOptions Опции, которые переопределяют конфигурацию диалога. Набор опций зависит от типа диалога (см. {@link mode}).
        * <ul>
-       *    <li><b>isStack</b> - по умолчанию true</li>
-       *    <li><b>autoHide</b> - по умолчанию true</li>
-       *    <li><b>buildMarkupWithContext</b> - по умолчанию true</li>
-       *    <li><b>showOnControlsReady</b> - по умолчанию false</li>
-       *    <li><b>autoCloseOnHide</b> - по умолчанию true</li>
-       *    <li><b>border</b> - по умолчанию true</li>
-       *    <li><b>target</b> - по умолчанию ''</li>
-       *    <li><b>title</b> - по умолчанию ''</li>
-       *    <li><b>side</b> - по умолчанию 'left'</li>
-       *    <li><b>animation</b> - по умолчанию 'slide'</li>
+       *    <li>Если <i>mode=dialog</i>, то набор опций такой: {@link $ws.proto.Dialog#title title}, {@link $ws.proto.Dialog#border border} и {@link $ws.proto.Dialog#buildMarkupWithContext buildMarkupWithContext}.</li>
+       *    <li>Если <i>mode=floatArea</i>, то набор опций такой: {@link $ws.proto.FloatArea#title title}, {@link $ws.proto.FloatArea#border border}, {@link $ws.proto.FloatArea#buildMarkupWithContext buildMarkupWithContext}, {@link $ws.proto.FloatArea#animation animation}, {@link $ws.proto.FloatArea#autoCloseOnHide autoCloseOnHide}, {@link $ws.proto.FloatArea#showOnControlsReady showOnControlsReady}, {@link $ws.proto.FloatArea#autoHide autoHide}, {@link $ws.proto.FloatArea#isStack isStack}, {@link $ws.proto.FloatArea#side side} и {@link $ws.proto.FloatArea#target target}.</li>
        * </ul>
        */
       $constructor: function() {
@@ -134,20 +122,22 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
          this._options.mode = mode;
       },
       /**
-       * Открывает диалог редактирования записи.
-       * @param {ExecuteMetaConfig} meta Параметры, которые будут использованы для конфигурации диалога редактирования.
+       * Производит открытие диалога.
+       * @param {ExecuteMetaConfig} meta Параметры, которые переопределяют конфигурацию диалога.
+       * @remark
+       * Подробнее об использовании параметров вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/open-dialog/#_2">Изменение конфигурации данных диалога</a>.
        * @example
-       * Произведём открытие диалога с предустановленными полями для создаваемой папки:
+       * Открытие диалога при нажатии на кнопку.
        * <pre>
-       * myAddFolderButton.subscribe('onActivated', function() { // Создаём обработчик нажатия кнопки
-       *    myDialogAction.execute({ // Инициируем вызов диалога для создания новой папки
-       *       filter: {
-       *          'Раздел': null, // Поле иерархии, папка создаётся в корне иерархической структуры
-       *          'Раздел@': true // Признак папки в иерархической структуре
-       *       }
+       * // myButton - экземпляр класса кнопки
+       * // myDialogAction - экземпляр класса SBIS3.CONTROLS.OpenDialogAction
+       * myButton.subscribe('onActivated', function(){
+       *    myDialogAction.execute({
+       *       id: myId,
+       *       item: myItem
        *    });
        * });
-       *
+       * </pre>
        */
       execute : function(meta) {
          this._opendEditComponent(meta, this._options.dialogComponent);
@@ -364,8 +354,9 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
       },
 
       /**
-       * Устанавливает связанный список, для которого будет открываться диалог редактирования записей.
-       * @param linkedObject связанный список
+       * Устанавливает связанный список, с которым будет производиться синхронизация изменений диалога.
+       * @param {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} linkedObject Экземпляр класса <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">списка</a>.
+       * @see linkedObject
        */
       setLinkedObject: function(linkedObject){
          this._options.linkedObject = linkedObject;

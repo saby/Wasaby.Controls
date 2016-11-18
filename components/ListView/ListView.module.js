@@ -25,7 +25,6 @@ define('js!SBIS3.CONTROLS.ListView',
    "tmpl!SBIS3.CONTROLS.ListView",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "js!SBIS3.CONTROLS.CommonHandlers",
-   "js!SBIS3.CONTROLS.MoveHandlers",
    "js!SBIS3.CONTROLS.Pager",
    "js!SBIS3.CONTROLS.EditInPlaceHoverController",
    "js!SBIS3.CONTROLS.EditInPlaceClickController",
@@ -52,11 +51,14 @@ define('js!SBIS3.CONTROLS.ListView',
    "browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers",
    "js!SBIS3.CONTROLS.DragEntity.Row",
    "js!WS.Data/Collection/RecordSet",
-   "i18n!SBIS3.CONTROLS.ListView"
+   "i18n!SBIS3.CONTROLS.ListView",
+   "js!SBIS3.CONTROLS.DragEntity.List",
+   "js!WS.Data/MoveStrategy/Base",
+   "js!SBIS3.CONTROLS.ListView.Mover"
 ],
    function ( cFunctions, CommandDispatcher, constants, Deferred,CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
-             TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
+             TemplateUtil, CommonHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
              Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers) {
 
@@ -112,8 +114,8 @@ define('js!SBIS3.CONTROLS.ListView',
        * @category Lists
        */
 
-      /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
-      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DecorableMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
+      /*TODO CommonHandlers тут в наследовании не нужны*/
+      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DecorableMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DragNDropMixin, CommonHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem Происходит при переводе курсора мыши на другой элемент коллекции списка.
@@ -150,25 +152,21 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see getItemsActions
           */
           /**
-          * @event onItemClick При клике на запись
-          * @remark
-          * Событие срабатывает при любом клике под курсором мыши.
+          * @event onItemClick Происходит при любом клике по записи.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {String} id Ключ записи
-          * @param {SBIS3.CONTROLS.Record} data запись
-          * @param {jQuery} target html элемент на который кликнули
+          * @param {String} id Первичный ключ записи.
+          * @param {WS.Data/Entity/Model} data Экземпляр класса записи, по которой произвели клик.
+          * @param {jQuery} target DOM-элемент, на который кликнули.
           */
           /**
-          * @event onItemActivate При активации записи (клик с целью например редактирования или выбора)
-          * @remark
-          * Событие срабатывает при смене записи под курсором мыши.
+          * @event onItemActivate Происходит при смене записи (активации) под курсором мыши (например, клик с целью редактирования или выбора).
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Object} meta Объект
-          * @param {String} meta.id ключ элемента представления данных
-          * @param {SBIS3.CONTROLS.Record} meta.item запись
+          * @param {String} meta.id Первичный ключ записи.
+          * @param {WS.Data/Entity/Model} meta.item Экземпляр класса записи.
           */
          /**
-          * @event onDataMerge Перед добавлением загруженных записей в основной dataSet
+          * @event onDataMerge Происходит перед добавлением загруженных записей в основной dataSet.
           * @remark
           * Событие срабатывает при подгрузке по скроллу, при подгрузке в ветку дерева.
           * Т.е. при любой вспомогательной загрузке данных.
@@ -186,11 +184,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          /**
-          * @event onItemValueChanged Возникает при смене значения в одном из полей редактирования по месту и потере фокуса этим полем
+          * @event onItemValueChanged Происходит при смене значения в одном из полей редактирования по месту и потере фокуса этим полем.
           * @deprecated Будет удалено в 3.7.3.100. Временное решение
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Array} difference Массив измененных полей
-          * @param {Object} model Модель с измененными данными
+          * @param {Array} difference Массив измененных полей.
+          * @param {WS.Data/Entity/Model} model Модель с измененными данными.
           */
          /**
           * @typedef {String} BeginEditResult
@@ -199,61 +197,65 @@ define('js!SBIS3.CONTROLS.ListView',
           * @variant PendingModifiedOnly В результате редактирования ожидаются только измененные поля. Это поведение используется по умолчанию.
           */
          /**
-          * @event onBeginEdit Возникает перед началом редактирования
+          * @event onBeginEdit Происходит перед началом редактирования.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} model Редактируемая модель
+          * @param {WS.Data/Entity/Model} model Редактируемая запись.
           * @param {Boolean} isAdd Флаг, означающий что событию предшествовал запуск добавления по месту.
           * @returns {BeginEditResult|Deferred} Deferred - используется для асинхронной подготовки редактируемой записи. Из Deferred необходимо обязательно возвращать запись, открываемую на редактирование.
           */
          /**
-          * @event onBeginAdd Возникает перед началом добавления записи по месту
+          * @event onBeginAdd Происходит перед началом добавления записи по месту.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @returns {Object|WS.Data/Entity/Model} Данные которые попадут в поля созданного элемента.
+          * @returns {Object|WS.Data/Entity/Model} Инициализирующе данные для создаваемой записи.
           */
          /**
-          * @event onAfterBeginEdit Возникает после начала редактирования (при непосредственном его начале)
+          * @event onAfterBeginEdit Происходит после начала редактирования.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} model Редактируемая модель
+          * @param {WS.Data/Entity/Model} model Редактируемая запись.
           */
          /**
-          * @typedef {String} EndEditResult
-          * @variant Cancel Отменить завершение редактирования.
-          * @variant Save Завершить редактирование с сохранением изменений.
-          * @variant NotSave Завершить редактирование без сохранения изменений.
-          */
-         /**
-          * @event onEndEdit Возникает перед окончанием редактирования (и перед валидацией области редактирования).
+          * @event onEndEdit Происходит перед окончанием редактирования (и перед валидацией области редактирования).
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {WS.Data/Entity/Model} model Редактируемая модель.
+          * @param {WS.Data/Entity/Model} model Редактируемая запись.
           * @param {Boolean} withSaving Признак, по которому определяют тип завершения редактирования.
-          * true - редактирование завершается сохранением изменений; false - отмена сохранения изменений путём нажатия клавиши Esc или переводом фокуса на другой контрол.
-          * @returns {EndEditResult}
+          * <ul>
+          *    <li>true - редактирование завершается сохранением изменений;</li>
+          *    <li>false - отмена сохранения изменений путём нажатия клавиши Esc или переводом фокуса на другой контрол.</li>
+          * </ul>
+          * @returns {EndEditResult} Из события можно вернуть одну из констант, список которых приведён по ссылке.
+          * Если из события вернуть любое другое значение, то оно будет проигнорировано, и произойдёт сохранение изменений редактирования/добавления по месту.
           */
          /**
-          * @event onAfterEndEdit Возникает после окончания редактирования по месту
+          * @event onAfterEndEdit Происходит после окончания редактирования по месту.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} model Отредактированная модель
+          * @param {WS.Data/Entity/Model} model Отредактированная запись.
+          * @param {jQuery} target DOM-элемент, отображающий запись.
+          * @param {Boolean} withSaving Признак, по которому определяют тип завершения редактирования.
+          * <ul>
+          *    <li>true - редактирование завершается сохранением изменений;</li>
+          *    <li>false - была нажата клавиша Esc или перевели фокуса на другой контрол, чтобы отменить сохранение изменений.</li>
+          * </ul>
           */
          /**
-          * @event onPrepareFilterOnMove При определении фильтра, с которым будет показан диалог перемещения.
+          * @event onPrepareFilterOnMove Происходит при определении фильтра, с которым будет показан диалог перемещения.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Array} records Список перемещаемых записей.
-          * @returns {Object} filter Фильтр который будет помещёт в диалог перемещения.
+          * @returns {Object} filter Фильтр, который будет помещён в диалог перемещения.
           */
          /**
-          * @event onEndDelete После удаления записей.
+          * @event onEndDelete Происходит после удаления записей.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Array} idArray Ключи удаляемых записей.
+          * @param {Array.<String>|Array.<Number>} idArray Массив ключей удаляемых записей.
           * @param {*} result Результат удаления.
           */
          /**
-          * @event onBeginDelete Перед удалением записей.
+          * @event onBeginDelete Происходит перед удалением записей.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Array} idArray Ключи удаляемых записей.
-          * @returns {*|Boolean} result Если result равен false то отменяется штатная логика удаления.
+          * @param {Array.<String>|Array.<Number>} idArray Массив ключей удаляемых записей.
+          * @returns {*|Boolean} result Если result=false, то отменяется логика удаления записи, установленная по умолчанию.
           */
          /**
-          * @typedef {String} DragPosition
+          * @typedef {String} MovePosition
           * @variant on Вставить перемещаемые элементы внутрь текущей записи.
           * @variant after Вставить перемещаемые элементы после текущей записи.
           * @variant before Вставить перемещаемые элементы перед текущей записью.
@@ -261,15 +263,27 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * @typedef {Object} DragEntityOptions
           * @property {SBIS3.CONTROLS.Control} owner Контрол, которому принадлежит запись.
-          * @property {jQuery} domElement DOM элемент, отображающий запись.
+          * @property {jQuery} domElement DOM-элемент, отображающий запись.
           * @property {WS.Data/Entity/Model} model Модель, соответствующая записи.
-          * @property {DragPosition|undefined} position Позиция элемента после перемещения (определяется только у целевого элемента - того, который находится под курсором мыши).
+          * @property {MovePosition|undefined} position Позиция элемента после перемещения (определяется только у целевого элемента - того, который находится под курсором мыши).
+          */
+          /**
+          * @typedef {Object} DragEntityListOptions
+          * @property {Array} items Массив перемещаемых элементов {@link SBIS3.CONTROLS.DragEntity.Row}.
+          */
+         /**
+          * @typedef {String} EndEditResult
+          * @variant Cancel Отменить завершение редактирования/добавления.
+          * @variant Save Завершить редактирование/добавление с сохранением изменений логике, которая установленной по умолчанию.
+          * @variant NotSave Завершить редактирование/добавление без сохранения изменений. Использование данной константы в режиме добавления по месту приводит к автоудалению созданной записи.
+          * @variant CustomLogic Завершить редактирование/добавление с сохранением изменений по пользовательской логике. Используется, например, при добавлении по месту, когда разработчику необходимо самостоятельно обработать добавляемую запись.
           */
          $protected: {
             _floatCheckBox: null,
             _dotItemTpl: null,
             _itemsContainer: null,
             _actsContainer: null,
+            _onMetaDataResultsChange: null,
             _allowInfiniteScroll: true,
             _hoveredItem: {
                target: null,
@@ -340,6 +354,7 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {String} Устанавливает шаблон отображения каждого элемента коллекции.
                 * @remark
+                * @deprecated
                 * Шаблон - это пользовательская вёрстка элемента коллекции.
                 * Для доступа к полям элемента коллекции в шаблоне подразумевается использование конструкций шаблонизатора.
                 * Подробнее о шаблонизаторе вы можете прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/ Шаблонизация вёрстки компонента}.
@@ -704,7 +719,19 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see DragEntityOptions
                 * @see SBIS3.CONTROLS.DragEntity.Row
                 */
-               dragEntity: 'dragentity.row'
+               dragEntity: 'dragentity.row',
+               /**
+                * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS.DragEntity.Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS.DragEntity.Row}
+                * @see DragEntityListOptions
+                * @see SBIS3.CONTROLS.DragEntity.List
+                */
+               dragEntityList: 'dragentity.list',
+               /**
+                * @cfg {WS.Data/MoveStrategy/IMoveStrategy) Стратегия перемещения. Класс, который реализует перемещение записей. Подробнее тут {@link WS.Data/MoveStrategy/Base}.
+                * @see {@link WS.Data/MoveStrategy/Base}
+                * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
+                */
+               moveStrategy: 'movestrategy.base'
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
@@ -735,6 +762,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this.setGroupBy(this._options.groupBy, false);
             }
+            this._onMetaDataResultsChange = this._drawResults.bind(this);
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
          },
@@ -878,7 +906,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   newSelectedItem = this._getNextItemByDOM(selectedKey);
                   break;
                case constants.key.enter:
-                  if(selectedKey) {
+                  if(selectedKey !== undefined && selectedKey !== null) {
                      var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
                      this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem, e);
                   }
@@ -1378,6 +1406,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._previousGroupBy = undefined;
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
+            this._observeResultsRecord(false);
             return ListView.superclass.reload.apply(this, arguments);
          },
          /**
@@ -2184,8 +2213,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var mode = this._infiniteScrollState.mode,
                scrollOnEdge =  (mode === 'up' && type === 'top') ||   // скролл вверх и доскролили до верхнего края
                                (mode === 'down' && type === 'bottom' && !this._infiniteScrollState.reverse) || // скролл вниз и доскролили до нижнего края
-                               (mode === 'down' && type === 'top' && this._infiniteScrollState.reverse); // скролл верх с запросом данных вниз и доскролили верхнего края
-
+                               (mode === 'down' && type === 'top' && this._infiniteScrollState.reverse) || // скролл верх с запросом данных вниз и доскролили верхнего края
+                               (this._options.infiniteScroll === 'both');
             if (scrollOnEdge && this.getItems()) {
                // Досткролили вверх, но на самом деле подгружаем данные как обычно, а рисуем вверх
                if (type == 'top' && this._infiniteScrollState.reverse) {
@@ -2545,6 +2574,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._setLoadMoreCaption(this.getItems());
                }
             }
+            this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
          },
          _toggleIndicator: function(show){
@@ -2969,7 +2999,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
-            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._getDragInitHandler());
+            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item',  this._getDragInitHandler());
          },
 
          /**
@@ -3048,9 +3078,11 @@ define('js!SBIS3.CONTROLS.ListView',
                   }));
                }.bind(this));
 
-               dragObject.setSource(new List({
-                  items: source
-               }));
+               dragObject.setSource(
+                  this._makeDragEntityList({
+                     items: source
+                  })
+               );
                this._hideItemsToolbar();
                return true;
             }
@@ -3168,9 +3200,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                   if (dragObject.getOwner() === this) {
                      var position = target.getPosition();
-                     this._move(models, target.getModel(),
-                        position === DRAG_META_INSERT.on ? undefined : position === DRAG_META_INSERT.after
-                     );
+                     this._getMover().move(models, target.getModel(), position);
+                  } else {
+                     this._getMover().moveFromOutside(dragObject);
                   }
                }
             }
@@ -3179,6 +3211,124 @@ define('js!SBIS3.CONTROLS.ListView',
             this._updateItemsToolbar();
          },
          /*DRAG_AND_DROP END*/
+         //region moveMethods
+         /**
+          * Перемещает записи через диалог. По умолчанию берет все выделенные записи.
+          * @param {Array} MovedItems Массив перемещаемых записей
+          * @deprecated Используйте SBIS3.CONTROLS.Action.List.InteractiveMove.
+          */
+         moveRecordsWithDialog: function(movedItems) {
+            require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove','js!WS.Data/Utils'], function(InteractiveMove, Utils) {
+               Utils.logger.stack(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"', 1);
+               var
+                  action = new InteractiveMove({
+                     linkedObject: this,
+                     parentProperty: this._options.hierField,
+                     moveStrategy: this.getMoveStrategy()
+                  }),
+                  items = this.getItems();
+               $ws.helpers.forEach(movedItems, function(item, i) {
+                  if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
+                     movedItems[i] = items.getRecordById(item);
+                  }
+               }, this);
+               action.execute({movedItems: movedItems});
+            }.bind(this));
+         },
+
+         /**
+          * Перемещает выделенные записи.
+          * @deprecated используйте метод move
+          * @param {WS.Data/Entity/Model|String} target  К какой записи переместить выделенные. Модель либо ее идентификатор.
+          */
+         selectedMoveTo: function(target) {
+            var selectedItems = this.getSelectedItems(false);
+            this._getMover.move(selectedItems, target).addCallback(function(res){
+               if (res !== false) {
+                  this.removeItemsSelectionAll();
+               }
+            });
+         },
+         /**
+          * Переместить на одну запись ввниз.
+          * @param {WS.Data/Entity/Record} record Запись которую надо переместить
+          */
+         moveRecordDown: function(record) {
+            this._getMover().moveRecordDown(arguments[2]||record);//поддерживаем старую сигнатуру
+         },
+         /**
+          * Переместить на одну запись вверх.
+          * @param {WS.Data/Entity/Record} record Запись которую надо переместить
+          */
+         moveRecordUp: function(record) {
+            this._getMover().moveRecordUp(arguments[2]||record);
+         },
+         /**
+          * Возвращает стратегию перемещения
+          * @see WS.Data/MoveStrategy/IMoveStrategy
+          * @returns {WS.Data/MoveStrategy/IMoveStrategy}
+          */
+         getMoveStrategy: function() {
+            return this._moveStrategy || (this._moveStrategy = this._makeMoveStrategy());
+         },
+         /**
+          * Создает стратегию перемещения в зависимости от источника данных
+          * @returns {WS.Data/MoveStrategy/IMoveStrategy}
+          * @private
+          */
+         _makeMoveStrategy: function () {
+            return Di.resolve(this._options.moveStrategy, {
+               dataSource: this.getDataSource(),
+               hierField: this._options.hierField,
+               listView: this
+            });
+         },
+         /**
+          * Устанавливает стратегию перемещения
+          * @see WS.Data/MoveStrategy/IMoveStrategy
+          * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
+          */
+         setMoveStrategy: function (moveStrategy) {
+            if(!cInstance.instanceOfMixin(moveStrategy,'WS.Data/MoveStrategy/IMoveStrategy')){
+               throw new Error('The strategy must implemented interfaces the WS.Data/MoveStrategy/IMoveStrategy.')
+            }
+            this._moveStrategy = moveStrategy;
+         },
+
+         /**
+          * Возвращает перемещатор
+          * @private
+          */
+         _getMover: function() {
+            return this._mover || (this._mover = Di.resolve('listview.mover', {
+               moveStrategy: this.getMoveStrategy(),
+               items: this.getItems(),
+               projection: this._getItemsProjection(),
+               hierField: this._options.hierField
+            }));
+         },
+         /**
+          * Перемещает переданные записи
+          * @param {Array} movedItems  Массив перемещаемых записей.
+          * @param {WS.Data/Entity/Model} target Запись к которой надо преместить..
+          * @param {MovePosition} position Как перемещать записи
+          * @example
+          * <pre>
+          *    new ListView({
+          *       itemsActions: {
+      	 *	         name: 'moveSelected'
+      	 *	         tooltip: 'Переместить выделленые записи внутрь папки'
+      	 *	         onActivated: function(tr, id, record) {
+      	 *             this.move(this.getSelectedItems().toArray(), record, 'on')
+      	 *	         }
+      	 *	      }
+          *    })
+          * </pre>
+          */
+         move: function(movedItems, target, position) {
+            this._getMover().move(models, target.getModel(), position);
+         },
+         //endregion moveMethods
          /**
           * Устанавливает позицию строки итогов
           * @param {String} position Позиция
@@ -3202,6 +3352,14 @@ define('js!SBIS3.CONTROLS.ListView',
            this._drawResults();
          },
 
+         _observeResultsRecord: function(needObserve){
+            var methodName = needObserve ? 'subscribeTo' : 'unsubscribeFrom',
+                resultsRecord = this._getResultsRecord();
+            if (resultsRecord){
+               this[methodName](resultsRecord, 'onPropertyChange', this._onMetaDataResultsChange);
+            }
+         },
+
          _drawResults: function(){
             if (!this._checkResults()){
                this._removeDrawnResults();
@@ -3220,7 +3378,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return $(resultsSelector, this.getContainer());
          },
          _makeResultsTemplate: function(resultsData){
-            if (!resultsData){
+            if (!resultsData) {
                return;
             }
             var item = this._getResultsRecord(),

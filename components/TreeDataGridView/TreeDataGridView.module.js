@@ -11,7 +11,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate",
    "html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender",
-   "Core/ConsoleLogger"
+   "Core/ConsoleLogger",
+   'js!SBIS3.CONTROLS.Link'
 ], function( IoC, cMerge, constants,DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
 
 
@@ -25,6 +26,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          cMerge(tplOptions, tvOptions);
          tplOptions.arrowActivatedHandler = cfg.arrowActivatedHandler;
          tplOptions.editArrow = cfg.editArrow;
+         tplOptions.foldersColspan = cfg.foldersColspan;
          return tplOptions;
       },
       getSearchCfg = function(cfg) {
@@ -153,7 +155,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              *     <option name="editArrow" type="boolean">false</option>
              * </pre>
              */
-            editArrow: false
+            editArrow: false,
+            /**
+             * @cfg {Boolean} отображает папки с одной колонкой на всю строку
+             * Значение по умолчанию false
+             * @deprecated
+             */
+            // Добавил опцию для версии 220
+            // с 3.7.5 будет рулиться через пользовательский шаблон
+            foldersColspan: false
          },
          _dragStartHandler: undefined,
          _editArrow: undefined
@@ -285,7 +295,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
                      // TODO для обратной совместимости - удалить позже
                      if(self._options.arrowActivatedHandler) {
-                        IoC.resolve('ILogger').log('SBIS3.CONTROLS.TreeDataGridView', 'Опция arrowActivatedHandler помечена как deprecated и будет удалена в 3.7.4.200.');
+                        IoC.resolve('ILogger').error('SBIS3.CONTROLS.TreeDataGridView', 'Опция arrowActivatedHandler помечена как deprecated и будет удалена в 3.7.5');
                         self._options.arrowActivatedHandler.call(this,
                             hoveredItem.record,
                             id,

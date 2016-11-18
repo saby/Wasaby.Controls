@@ -23,7 +23,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
       $(window).blur(function(e) {
          if(document.activeElement.tagName == "IFRAME"){
-            eventsChannel.notify('onDocumentClick', e);
+            if(! $(document.activeElement).hasClass('ws-popup-mixin-ignore-iframe')){
+               eventsChannel.notify('onDocumentClick', e);
+            }
          }
       });
 
@@ -547,7 +549,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
       _initWindowSizes: function () {
          this._windowSizes = {
-            height: $(window).height() - TouchKeyboardHelper.getKeyboardHeight(),
+            height: $(window).height(),
             width: $(window).width()
          };
       },
@@ -835,7 +837,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       _getSpaces: function (corner) {
          var offset = this._targetSizes.offset,
             width = this._targetSizes.width,
-            height = this._targetSizes.height,
+            height = this._targetSizes.height - TouchKeyboardHelper.getKeyboardHeight(),
             windowHeight = this._windowSizes.height,
             windowWidth = this._windowSizes.width,
             spaces = {
@@ -995,14 +997,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             /* Если кто-то позвал hide, а контрол уже скрыт, то не будет запускать цепочку кода,
              могут валиться ошибки */
             if(!this.isVisible()) return;
-            
+
             // хак для ipad, чтобы клавиатура закрывалась когда дестроится панель
             if (detection.isMobileIOS) {
-               if(this.getContainer().find(document.activeElement).length > 0){
-                  $(document.activeElement).trigger('blur');
-               };
+                if(this.getContainer().find(document.activeElement).length > 0){
+                   $(document.activeElement).trigger('blur');
+                };
             }
-            
+
             var self = this,
                 result = this._notify('onClose'),
                 clearZIndex = function() {

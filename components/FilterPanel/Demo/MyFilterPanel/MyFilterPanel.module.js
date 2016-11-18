@@ -33,6 +33,7 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanel', [
       },
       _toggleFilter: function() {
          this.getChildControlByName('MyFilterPanel').toggleExpanded();
+         this.getChildControlByName('ToggleFilterButton').toggle();
       },
       init: function() {
          this.getLinkedContext().subscribe('onFieldChange', function(event, field, value) {

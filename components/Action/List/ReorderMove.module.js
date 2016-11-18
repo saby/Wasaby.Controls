@@ -1,17 +1,15 @@
 /*global define, $ws*/
 define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
    "Core/Deferred",
-   "js!SBIS3.CONTROLS.Action.List.Move",
-   "js!SBIS3.CONTROLS.Action.List.RelativeMoveMixin"
+   "js!SBIS3.CONTROLS.Action.List.Move"
 ],
-   function ( Deferred,ListMove, RelativeMoveMixin) {
+   function ( Deferred, ListMove) {
       'use strict';
       /**
        * Действие перемещения в низ/верх на одну запись
        * @class SBIS3.CONTROLS.Action.List.ReorderMove
        * @public
        * @extends SBIS3.CONTROLS.Action.List.Move
-       * @mixes SBIS3.CONTROLS.Action.List.RelativeMoveMixin
        * @author Крайнов Дмитрий Олегович
        * @example
        * Пример использования ReorderMove:
@@ -28,7 +26,7 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
        *             });
        *          },
        *          moveUp: function(el, key, record) {
-       *             move.execute({from:record});
+       *             move.execute({movedItems:record});
        *          }
        *       }
        *    })
@@ -67,7 +65,7 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
        * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
        * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
        */
-      var ReorderMove = ListMove.extend([RelativeMoveMixin],/** @lends SBIS3.CONTROLS.Action.List.ReorderMove.prototype */{
+      var ReorderMove = ListMove.extend(/** @lends SBIS3.CONTROLS.Action.List.ReorderMove.prototype */{
          $protected: {
             _options: {
                /**
@@ -91,23 +89,25 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
                throw new Error('move direction must be equal Up or Down');
             }
          },
-
+         _doExecute: function(meta) {
+            this._move(meta.movedItems || meta.from);
+         },
          /**
-          * метод выполнящий перемещение
-          * @param {WS.Data/Entity/Model} from элемент который будет перемещен
+          * Метод выполнящий перемещение
+          * @param {WS.Data/Entity/Model} movedItems Элемент который будет перемещен
           * @returns {Deferred}
           * @private
           */
-         _move: function (from) {
-            var to = this._getNearestItem(from);
+         _move: function (movedItems) {
+            var to = this._getNearestItem(movedItems);
             if (to) {
-               return ReorderMove.superclass._move.call(this, from, to, (this._options.moveDirection === 'up'));
+               return this.getMoveStrategy().move(movedItems, to, (this._options.moveDirection === 'down'));
             }
             return (new Deferred()).callback(true);
          },
          /**
-          * возвращает соседий элемент
-          * @param {WS.Data/Entity/Model} item
+          * Возвращает соседий элемент
+          * @param {WS.Data/Entity/Model} item Элемент у которого надо определить соседний
           * @returns {WS.Data/Entity/Model}
           * @private
           */
