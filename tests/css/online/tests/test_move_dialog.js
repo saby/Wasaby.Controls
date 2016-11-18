@@ -44,7 +44,7 @@ gemini.suite('SBIS3.CONTROLS.MoveDialog Online', function () {
 
     gemini.suite('with_ellipsis', function (test) {
 
-        test.setUrl('/regression_move_dialog_online_3.html').setCaptureElements('body')
+        test.setUrl('/regression_move_dialog_online_3.html').skip('chrome').setCaptureElements('body')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);

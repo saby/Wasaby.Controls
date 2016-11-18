@@ -44,10 +44,10 @@
 // --------- //
 // Combo box //
 // --------- //
-
-@combo-box-arrow-width:                         32px;
-@combo-box-arrow-height:                        32px;
-@combo-box-arrow-margin:                        -8px -8px 0 0;
+@combo-box-right-padding:                       0;
+@combo-box-arrow-width:                         24px;
+@combo-box-arrow-height:                        24px;
+@combo-box-arrow-margin:                        -8px 0 0 0;
 @combo-box-arrow-right-offset:                  8px;
 @compo-box-fieldWrapper-margin-right:           40px;
 @combo-box-after-width:                         40px;
@@ -96,6 +96,7 @@
 @date-range-choose-current-value-bg-hover-color:   @date-range-choose-current-value-bg-color;
 @date-range-choose-current-value-border-bottom: none;
 @date-range-choose-current-value-margin-bottom: 0;
+@date-range-choose-current-value-padding-left-right: 0;
 
 @date-range-choose-year-font-size:              @globalDefaultFontSize;
 @date-range-choose-year-height:                 40px;
@@ -359,19 +360,26 @@
 // DropdownList//
 // --------------- //
 
-@DropdownList-min-height:                       40px;
+
+@DropdownList-height:                           40px;
 @DropdownList-picker-menu-font-size:            @font-basic-size;
+@DropdownList-picker-offset:                    8px 0 0 2px;
+@DropdownList-picker-fastdatafilter-offset:     0 0 0 2px;
 @DropdownList-picker-margin-top:                0;
 @DropdownList-picker-padding:                   0;
 @DropdownList-picker-max-height:                400px;
 @DropdownList-picker-head-border-radius:        0;
-@DropdownList-picker-head-margin:               2px 0 0 2px;
+@DropdownList-picker-head-margin:               2px 0 0 0;
+@DropdownList-picker-head-padding:              0 8px;
+@DropdownList-picker-head-duplicate-type-top-padding: 0;
 @DropdownList-picker-hor-revert-head-margin:    2px 2px 0 0;
 @DropdownList-picker-border:                    0;
 @DropdownList-picker-list-right-border-radius:  @DropdownList-picker-head-border-radius;
 @DropdownList-picker-list-border-radius:        @DropdownList-picker-head-border-radius;
 @DropdownList-border-color:                     transparent;
 @DropdownList-picker-menu-item-color:           #E1ECF6;
+@DropdownList-picker-menu-item-height:          30px;
+@DropdownList-picker-menu-item-padding:         4px 8px;
 @DropdownList-picker-bg:                        transparent;
 @DropdownList-header-bg:                        #C1D7F0;
 @DropdownList-linkStyleHoverColor:              @blue-dark-color;
@@ -582,3 +590,12 @@
 @controls-InformationPopup-border:              1px solid #E4E4E4;
 @controls-InformationPopup-border-bottom:       3px solid;
 @controls-InformationPopup-border-top:          @controls-InformationPopup-border !important;
+
+//Scrollbar
+@controls-Scrollbar-width:                         4px;
+@controls-Scrollbar-thumb-border-radius:           2px;
+@controls-Scrollbar-dark-hover-thumb-color:        rgba(255, 255, 255, 0.20);
+@controls-Scrollbar-dark-active-thumb-color:       rgba(255, 255, 255, 0.50);
+
+@controls-Scrollbar-light-hover-thumb-color:       rgba(0, 0, 0, 0.10);
+@controls-Scrollbar-light-active-thumb-color:      rgba(0, 0, 0, 0.15);

@@ -9,6 +9,8 @@
 .controls-FieldLink__picker:not(.controls-Suggest__picker) {
    padding: @controls-FieldLink-linkContainer-padding;
    border-top: none;
+   .flexbox();
+   flex-wrap: wrap;
 
    .controls-FieldLink__item {
       /* Учитываем бордер пикера */
@@ -103,9 +105,9 @@
    position: relative;
    white-space: nowrap;
 
-   &.controls-Picker__show,
-   &.ws-has-focus,
-   &:hover {
+   &.controls-Picker__show:not(.ws-disabled),
+   &.ws-has-focus:not(.ws-disabled),
+   &:hover:not(.ws-disabled) {
       border: @controls-FieldLink-border;
       border-color: @controls-FieldLink-border-color-focus-hover;
    }
@@ -143,8 +145,6 @@
          float: right;
 
          .controls-FieldLinkItemsCollection {
-            display: inline-flex;
-
             .controls-FieldLink__item {
                .text-overflow();
             }
@@ -186,10 +186,6 @@
    }
 
    &.ws-disabled {
-
-      &.controls-TextBox {
-         border-color: @text-box-border-color;
-      }
 
       .controls-TextBox__afterFieldWrapper {
          display: none;

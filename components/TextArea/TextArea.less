@@ -75,7 +75,6 @@
       height: auto !important;
    }
    .controls-TextArea__disabled-wrapper{
-      position: absolute;
       top: @text-area-top-padding;
       left: @text-area-left-padding;
       right: @text-area-right-padding;
@@ -97,4 +96,9 @@
     padding: @text-area-compat-placeholder-padding;
     text-align: @text-area-compat-placeholder-alignment;
   }
+}
+.controls-TextArea__heightInit {
+   .controls-TextArea__disabled-wrapper {
+      position: absolute;
+   }
 }

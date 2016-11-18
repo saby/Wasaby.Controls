@@ -1,0 +1,18 @@
+.controls-Scrollbar {
+   width: @controls-Scrollbar-width;
+   outline: none;
+   .controls-Scrollbar__thumb {
+      cursor: pointer;
+      position: relative;
+      border-radius: @controls-Scrollbar-thumb-border-radius;
+      background-color: @controls-Scrollbar-light-hover-thumb-color;
+      &:hover {
+         background-color: @controls-Scrollbar-light-active-thumb-color;
+      }
+   }
+   &.controls-Scrollbar__dragging {
+      .controls-Scrollbar__thumb {
+         background-color: @controls-Scrollbar-light-active-thumb-color;
+      }
+   }
+}

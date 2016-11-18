@@ -150,7 +150,7 @@ define('js!SBIS3.CONTROLS.Spoiler', [
          }
       },
       _initializeContent: function() {
-         this._getContentContainer().html(MarkupTransformer(this._options._contentTpl(this._options.properties)));
+         this._getContentContainer().html(MarkupTransformer(this._options._contentTpl(this._options)));
          this.reviveComponents();
          this._contentInitialized = true;
       },

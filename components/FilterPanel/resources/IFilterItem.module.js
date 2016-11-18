@@ -4,14 +4,21 @@ define('js!SBIS3.CONTROLS.IFilterItem', function () {
 
       $protected: {
          _options: {
-            filter: null
+            value: null,
+            textValue: ''
          }
       },
 
-      setFilter: function() {
+      setValue: function() {
          throw new Error('Method must be implemented');
       },
-      getFilter: function() {
+      getValue: function() {
+         throw new Error('Method must be implemented');
+      },
+      setTextValue: function() {
+         throw new Error('Method must be implemented');
+      },
+      getTextValue: function() {
          throw new Error('Method must be implemented');
       }
    };

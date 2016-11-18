@@ -1221,7 +1221,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
             this._getEmptyDataContainer().empty().html(html);
-            this._toggleEmptyData(!(this._getItemsProjection() && this._getItemsProjection().getCount()));
+            this._toggleEmptyData(this._getItemsProjection() && !this._getItemsProjection().getCount());
          },
 
          _getEmptyDataContainer: function() {
@@ -1317,7 +1317,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setSelectedAll: function() {
             var selectedItems = this.getSelectedItems();
             if (this.isInfiniteScroll() && this.getItems().getCount() < 1000){
-               this.reload(this.getFilter(), this.getSorting(), 0, 1000)
+               this._loadFullData.apply(this, arguments)
                   .addCallback(function(dataSet) {
                      //Ввостановим значение _limit, т.к. после вызова reload _limit стал равен 1000,
                      //и следующие страницы будут грузиться тоже по 1000 записей
@@ -1350,6 +1350,11 @@ define('js!SBIS3.CONTROLS.ListView',
                this.setSelectedItemsAll.call(this);
             }
          },
+
+         _loadFullData: function() {
+            return this.reload(this.getFilter(), this.getSorting(), 0, 1000);
+         },
+
          _drawSelectedItems: function (idArray) {
             /* Запоминаем элементы, чтобы не делать лишний раз выборку по DOM'у,
                это дорого */
@@ -2145,7 +2150,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      this._setLoadMoreCaption(this.getItems());
                   }
                   this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
-                  this._setInfiniteScrollState('demand');
+                  this._setInfiniteScrollState('down');
                   return;
                }
                // Пока по умолчанию считаем что везде подгрузка вниз, и если указана 'up' - значит она просто перевернута
@@ -2257,7 +2262,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var loadAllowed  = this.isInfiniteScroll() && this._options.infiniteScroll !== 'demand',
                more = this.getItems().getMetaData().more,
                isContainerVisible = dcHelpers.isElementVisible(this.getContainer()),
-               hasScroll = this._scrollWatcher.hasScroll(),
+               // отступ с учетом высоты loading-indicator
+               hasScroll = this._scrollWatcher.hasScroll(this._loadingIndicator.height()),
                hasNextPage = this._hasNextPage(more, this._scrollOffset.bottom);
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
@@ -2374,7 +2380,7 @@ define('js!SBIS3.CONTROLS.ListView',
                $('.controls-ListView__counter', this._container.get(0)).removeClass('ws-hidden');
 
                var ost = more - (this._scrollOffset.bottom + this._options.pageSize);
-               if (ost < 0) {
+               if (ost <= 0) {
                   this._loadMoreButton.setVisible(false);
                   return;
                }

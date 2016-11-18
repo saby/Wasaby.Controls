@@ -17,8 +17,11 @@ define('js!SBIS3.CONTROLS.DateRange', [
     * Класс контрола выбора диапазона дат.
     * @class SBIS3.CONTROLS.DateRange
     * @extends $ws.proto.CompoundControl
+    * @mixes SBIS3.CONTROLS.RangeMixin
+    * @mixes SBIS3.CONTROLS.DateRangeMixin
+    * @mixes SBIS3.CONTROLS.PickerMixin
+    * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @author Миронов Александр Юрьевич
-    *
     * @demo SBIS3.CONTROLS.Demo.MyDateRange
     *
     * @ignoreEvents onChange
@@ -80,6 +83,15 @@ define('js!SBIS3.CONTROLS.DateRange', [
          _calendarIsShow: false,
          _chooseControlClass: DateRangeBigChoose
       },
+
+      _modifyOptions: function(options) {
+         options.startDate = this._normalizeDate(options.startDate);
+         options.endDate = this._normalizeDate(options.endDate);
+         options.startValue = this._normalizeDate(options.startValue) || options.startDate;
+         options.endValue = this._normalizeDate(options.endValue) || options.endDate;
+         return options;
+      },
+
       $constructor: function () {
          this._publish('onDateRangeChange', 'onStartDateChange', 'onEndDateChange');
       },
@@ -122,12 +134,6 @@ define('js!SBIS3.CONTROLS.DateRange', [
             //    self._dateRangeChooseControl.setRange(startValue, endValue);
             // }
          });
-
-         // приводим даты к Date-типу и устанавливаем их в DatePicker-ах
-         this.setStartValue(this._options.startValue || this._options.startDate, true);
-         this.setEndValue(this._options.endValue || this._options.endDate, true);
-         this._updateDatePicker(self._datePickerStart, this.getStartValue());
-         this._updateDatePicker(self._datePickerEnd, this.getEndValue());
 
          this._addDefaultValidator();
       },
