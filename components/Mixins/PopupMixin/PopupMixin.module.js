@@ -538,7 +538,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
       _initWindowSizes: function () {
          this._windowSizes = {
-            height: $(window).height(),
+            height: $(window).height() - TouchKeyboardHelper.getKeyboardHeight(),
             width: $(window).width()
          };
       },
@@ -826,8 +826,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       _getSpaces: function (corner) {
          var offset = this._targetSizes.offset,
             width = this._targetSizes.width,
-            height = this._targetSizes.height - TouchKeyboardHelper.getKeyboardHeight(),
-            windowHeight = this._windowSizes.height,
+            height = this._targetSizes.height,
+            //При рсчете свободного места, учитываем весь экран, не глядя на клавиатуру
+            windowHeight = this._windowSizes.height + TouchKeyboardHelper.getKeyboardHeight(),
             windowWidth = this._windowSizes.width,
             spaces = {
                top: 0,
