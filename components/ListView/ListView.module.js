@@ -2379,7 +2379,7 @@ define('js!SBIS3.CONTROLS.ListView',
                $('.controls-ListView__counter', this._container.get(0)).removeClass('ws-hidden');
 
                var ost = more - (this._scrollOffset.bottom + this._options.pageSize);
-               if (ost < 0) {
+               if (ost <= 0) {
                   this._loadMoreButton.setVisible(false);
                   return;
                }
