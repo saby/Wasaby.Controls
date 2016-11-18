@@ -245,6 +245,8 @@
 @check-box-icon-disabled-checked-bg:            transparent url(@check-box-icon-spritesheet) -2px -5px;
 @check-box-icon-disabled-third-state-bg:        lighten(@secondary-color, 10%) url(@check-box-icon-spritesheet) -2px -5px;
 
+
+
 // -------- //
 // Switcher //
 // -------- //
@@ -436,7 +438,6 @@
 
 @text-box-field-min-height:               38px;
 @text-box-field-padding:                  0;
-@text-box-field-after-margin:             0 21px 0 0;
 
 @text-box-field-text-color:               #666666;
 @text-box-field-focus-text-color:         @white-color;
@@ -843,7 +844,7 @@
 
 @data-grid-td-checkbox-width:                   16px;
 @data-grid-td-visible-checkbox-width:           24px;
-@data-grid-checkbox-margin:                     0;
+@data-grid-checkbox-margin:                     6px 0 0 -6px;
 @data-grid-folder-font-size: 							15px;
 
 @data-grid-table-layot: 								fixed;
@@ -890,8 +891,9 @@
 //    MultiView    //
 // --------------- //
 @listView-check-box-top:                            5px;
-@listView-check-box-width:                          16px;
-@listView-check-box-height:                         16px;
+@listView-check-box-border:                         1px solid;
+@listView-check-box-width:                          18px;
+@listView-check-box-height:                         18px;
 @multiView-tile-item-border:                        1px solid @gray-light-color;
 @multiView-tile-item-min-width:                     128px;
 @multiView-tile-item-image-margin:                  10px 40px;
@@ -999,3 +1001,12 @@
 @controls-Paging-btn-height:                       16px;
 @controls-Paging-btn-margin:                       8px 0;
 @controls-Paging-btn-padding:                      8px;
+
+//Scrollbar
+@controls-Scrollbar-width:                         4px;
+@controls-Scrollbar-thumb-border-radius:           2px;
+@controls-Scrollbar-dark-hover-thumb-color:        rgba(255, 255, 255, 0.20);
+@controls-Scrollbar-dark-active-thumb-color:       rgba(255, 255, 255, 0.50);
+
+@controls-Scrollbar-light-hover-thumb-color:       rgba(0, 0, 0, 0.10);
+@controls-Scrollbar-light-active-thumb-color:      rgba(0, 0, 0, 0.15);

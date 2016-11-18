@@ -8,7 +8,10 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilter',
       'js!SBIS3.CONTROLS.Demo.FilterButtonMain',
       'html!SBIS3.CONTROLS.Demo.MyFastDataFilter',
       'i18n!SBIS3.CONTROLS.Demo.MyFastDataFilter',
-      'css!SBIS3.CONTROLS.Demo.MyFastDataFilter'
+      'css!SBIS3.CONTROLS.Demo.MyFastDataFilter',
+      'js!SBIS3.CONTROLS.FilterButton',
+      'js!SBIS3.CONTROLS.Demo.FilterButtonFilterContent',
+      'js!SBIS3.CONTROLS.DataGridView'
    ],
 
    function(CompoundControl, FastDataFilter, FilterButtonMainDemo, dotTplFn) {

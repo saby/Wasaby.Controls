@@ -2,8 +2,8 @@
  * Created by as.suhoruchkin on 02.04.2015.
  */
 define('js!SBIS3.CONTROLS.OperationSum', [
-    'js!SBIS3.CONTROLS.Link'
-], function(Link) {
+    'js!SBIS3.CONTROLS.IconButton'
+], function(IconButton) {
     /**
      * Операция суммирования.
      *
@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.OperationSum', [
      *
      * </component>
      */
-    var OperationSum = Link.extend(/** @lends SBIS3.CONTROLS.OperationDelete.prototype */{
+    var OperationSum = IconButton.extend(/** @lends SBIS3.CONTROLS.OperationDelete.prototype */{
 
         $protected: {
             _options: {
@@ -31,7 +31,8 @@ define('js!SBIS3.CONTROLS.OperationSum', [
                  * @editor icon ImageEditor
                  */
                 icon: 'sprite:icon-24 icon-Sum icon-primary action-hover',
-                command: 'sumItems'
+                command: 'sumItems',
+                caption: rk('Суммировать')
             }
         }
     });
