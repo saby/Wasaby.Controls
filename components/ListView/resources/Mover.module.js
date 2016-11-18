@@ -65,14 +65,19 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
        */
       moveFromOutside: function(dragObject){
          var target = dragObject.getTarget(),
-            dragSource = dragObject.getSource();
+            dragSource = dragObject.getSource(),
+            operation = dragSource.getOperation();
          if(dragObject.getSource().getAction()) {
             def = dragObject.getSource().getAction().execute();
          } else {
             var dragOwnerSource = dragObject.getOwner().getDataSource(),
                dataSource = dragObject.getTargetsControl().getDataSource();
             var def;
-            if (dataSource === dragOwnerSource || dragOwnerSource.getEndpoint().contract == dataSource.getEndpoint().contract) {
+            if ((operation === 'add' || operation === 'move') && (
+                  dataSource === dragOwnerSource ||
+                  dragOwnerSource.getEndpoint().contract == dataSource.getEndpoint().contract
+               )
+            ) {
                var movedItems = [];
                dragSource.each(function (movedItem) {
                   movedItems.push(movedItem.getModel());
@@ -83,13 +88,13 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          def = (def instanceof Deferred) ? def : new Deferred().callback();
          var position = this.getItems().getIndex(target.getModel()),
             ownerItems = dragObject.getOwner().getItems(),
-            self = this,
-            operation = dragSource.getOperation();
+            items = this.getItems(),
+            self = this;
          def.addCallback(function() {
             dragSource.each(function(movedItem) {
                var model = movedItem.getModel();
-               if (operation === 'add' || operation === 'move') {
-                  self.getItems().add(model.clone(), position);
+               if (operation === 'add' || operation === 'move' && items.getIndex(model) === -1) {
+                  items.add(model.clone(), position);
                }
                if (operation === 'delete' || operation === 'move') {
                   ownerItems.remove(model);
