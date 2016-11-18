@@ -932,10 +932,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 },
                 handlers: {
                    onShow: function() {
-                      if(!this._options.reverseItemsOnListRevert) {
-                         return;
-                      }
-
                       if (this._isSuggestPickerRevertedVertical()) {
                          if (!this._listReversed) {
                             this._reverseList();
