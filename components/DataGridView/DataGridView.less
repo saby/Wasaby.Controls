@@ -309,3 +309,17 @@
       }
    }
 }
+/*Для строк идущих после группировки не должно быть верхних бордеров*/
+.controls-DataGridView {
+   &.controls-DataGridView__hasSeparator {
+      .controls-DataGridView__table {
+         .controls-GroupBy {
+            +.controls-DataGridView__tr {
+               .controls-DataGridView__td {
+                  border-top-color: transparent
+               }
+            }
+         }
+      }
+   }
+}
