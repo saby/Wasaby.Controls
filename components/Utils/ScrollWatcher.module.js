@@ -182,7 +182,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
       hasScroll: function(offset){
          // FixMe: Считем, что если есть скролл в 10 пикселей, то его нет
          // вынужденная мера для айпада, из за хака с height: calc(100% + 1px)
-         offset = offset || 10;
+         offset = offset || -10;
          var element = this.getScrollContainer();
          return this._hasScroll(element, offset);
       },
@@ -196,7 +196,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
       _hasScroll: function(element, offset){
          offset = offset || 0;
          var scrollHeight = this.getScrollHeight();
-         return scrollHeight > this.getContainerHeight() + offset || scrollHeight > $(window).height() + offset;
+         return scrollHeight > this.getContainerHeight() - offset || scrollHeight > $(window).height() - offset;
       },
 
       destroy: function(){

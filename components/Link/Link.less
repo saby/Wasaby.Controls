@@ -17,6 +17,12 @@
     cursor: @link-cursor;
     color: @link-active-text-color;
     text-decoration: @link-active-text-decoration;
+
+    .controls-Link__icon {
+      &.icon-primary {
+        color: @link-active-text-color !important;
+      }
+    }
   }
 
   &.ws-disabled {
@@ -75,7 +81,7 @@
    }
 }
 .ws-is-desktop-platform {
-   .controls-Link:not(.ws-disabled) {
+   .controls-Link:not(.ws-disabled):not(.controls-Click__active) {
       &:hover {
          color: @link-hover-text-color;
          cursor: @link-cursor;

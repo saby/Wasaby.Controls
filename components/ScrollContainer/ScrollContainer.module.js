@@ -2,7 +2,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'js!SBIS3.CONTROLS.CompoundControl',
       'js!SBIS3.CONTROLS.Scrollbar',
       'html!SBIS3.CONTROLS.ScrollContainer',
-      'Core/detection'
+      'Core/detection',
+      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar.full',
+      'is!browser?css!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar',
+      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mousewheel-3.1.13'
    ],
    function(CompoundControl, Scrollbar, dotTplFn, cDetection) {
 
@@ -30,7 +33,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        * </component>
        * @author Крайнов Дмитрий Олегович
        */
-         
+            
       var ScrollContainer = CompoundControl.extend({
 
          _dotTplFn: dotTplFn,
@@ -66,11 +69,13 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          init: function() {
             ScrollContainer.superclass.init.call(this);
             this._content = $('.controls-ScrollContainer__content', this.getContainer());
+            //Под ios и android оставляем нативный скролл
             if (!cDetection.isMobileIOS && !cDetection.isMobileAndroid){
                this._container.one('touchstart mousemove', this._initScrollbar.bind(this));
                this._hideScrollbar();
                this._subscribeOnScroll();
             }
+
          },
 
          _subscribeOnScroll: function(){
@@ -78,7 +83,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _onScroll: function(){
-            this._scrollbar.setPosition(this._getScrollTop());
+            if (this._scrollbar){
+               this._scrollbar.setPosition(this._getScrollTop());
+            }
          },
 
          _hideScrollbar: function(){
@@ -112,6 +119,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          _onResizeHandler: function(){
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
+               this._scrollbar.setPosition(this._getScrollTop());
             }
          },
 
@@ -126,7 +134,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          _initScrollbar: function(){
             this._scrollbar = new Scrollbar({
                element: $('.controls-ScrollContainer__scrollbar', this._container),
-               contentHeight: this._getScrollHeight()
+               contentHeight: this._getScrollHeight(),
+               parent: this
             });
             this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
          },
@@ -138,6 +147,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          destroy: function(){
             this._container.off('touchstart mousemove');
             this._content.off('scroll', this._onScroll);
+            ScrollContainer.superclass.destroy.call(this);
          }
       });
 
