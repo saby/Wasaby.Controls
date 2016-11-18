@@ -1543,7 +1543,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          _updateDataReview: function(text) {
             if (this._dataReview && !this.isEnabled()) {
                //если никто не зарегистрировал декоратор то просто оборачиваем ссылки в <a>
-               if (this._options.decorateLinks && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
+               if (text && this._options.decorateLinks && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
                   var
                      self = this;
                   Di.resolve(this._options.decoratorName).decorateLinks(text).addCallback(function(text){
