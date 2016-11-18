@@ -58,9 +58,9 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
        * @returns {Boolean} Возвращает признак является ли кнопкой по умолчанию.*/
       getActiveNodeKey: function() {
          var
-            result,
+            result, selProjItem;
+         if (this._options.selectedIndex !== null && this._options.selectedIndex !== undefined && this._options.selectedIndex >= 0) {
             selProjItem = this._getItemsProjection().at(this._options.selectedIndex);
-         if (this._options.selectedIndex >= 0) {
             if (selProjItem.isNode() && selProjItem.isExpanded() && cInstance.instanceOfModule(selProjItem.getContents(), 'WS.Data/Entity/Model')) {
                result = selProjItem.getContents().getId();
             }
@@ -230,10 +230,17 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
       },
       _createAllFolderFooters: function() {
          this._getItemsProjection().each(function(item) {
-            if (item.isNode() && item.isExpanded()) {
+            if (this._needCreateFolderFooter(item)) {
                this._createFolderFooter(item.getContents().getId());
             }
          }.bind(this));
+      },
+
+      _needCreateFolderFooter: function(item) {
+         var
+             model = item.getContents(),
+             id = model && model.get(this._options.keyField);
+         return item.isNode() && item.isExpanded() && (this._options.folderFooterTpl || this._folderHasMore[id]);
       },
       //********************************//
       //        FolderFooter_End        //

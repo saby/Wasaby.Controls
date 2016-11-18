@@ -60,7 +60,7 @@
 @link-hover-text-decoration:              underline;
 
 @link-active-text-color:                  @link-hover-text-color;
-@link-active-text-decoration:             none;
+@link-active-text-decoration:             @link-hover-text-decoration;
 
 @link-icon-vertical-alignment:            middle;
 @link-icon-margin:                        -3px 0 0;
@@ -1902,6 +1902,7 @@
 @listView-check-box-top:                            5px;
 @listView-check-box-width:                          16px;
 @listView-check-box-height:                         16px;
+@listView-check-box-border:                         none;
 @multiView-tile-item-border:                        1px solid #E7F0F9 ;
 @multiView-tile-item-min-width:                     200px;
 @multiView-tile-item-min-height:                    128px;
@@ -1936,8 +1937,12 @@
 
 @DropdownList-picker-bg:                              @white-color;
 @DropdownList-header-bg:                              @DropdownList-picker-bg;
+@DropdownList-picker-offset:                          0;
+@DropdownList-picker-fastdatafilter-offset:           0;
 @DropdownList-picker-margin-top:                      -2px;
 @DropdownList-picker-head-margin:                     0;
+@DropdownList-picker-head-padding:                    4px 8px;
+@DropdownList-picker-head-duplicate-type-top-padding: 4px;
 @DropdownList-picker-hor-revert-head-margin:          @DropdownList-picker-head-margin;
 @DropdownList-picker-padding:                         4px 0;
 @DropdownList-picker-max-height:                      400px;
@@ -1950,8 +1955,9 @@
 @DropdownList-picker-list-border-radius:              4px;
 @DropdownList-picker-menu-font-size:                  15px;
 @DropdownList-picker-menu-white-space:                nowrap;
-@DropdownList-picker-menu-item-padding:               4px 16px 4px 16px;
+@DropdownList-picker-menu-item-padding:               6px 8px;
 @DropdownList-picker-menu-item-margin:                0;
+@DropdownList-picker-menu-item-height:                20px;
 @DropdownList-picker-menu-item-multiselect-padding:   0;
 @DropdownList-picker-menu-item-color:                 @white-color;
 @DropdownList-picker-menu-item-color-blur:            rgba(255, 255, 255, 0);
@@ -2201,8 +2207,8 @@
 @controls-SubmitPopup-footer-bg:                   #F5F5F5;
 @controls-SubmitPopup-footer-border-top:           1px solid #EAEAEA;
 @controls-SubmitPopup-footer-padding:              16px;
-@controls-SubmitPopup-button-width:                86px;
-@controls-SubmitPopup-button-mini-width:           80px;
+@controls-SubmitPopup-button-min-width:            86px;
+@controls-SubmitPopup-button-mini-min-width:       80px;
 @controls-SubmitPopup-button-height:               24px;
 @controls-SubmitPopup-border-top:                  none;
 @controls-SubmitPopup-border-left:                 @controls-InformationPopup-border;
