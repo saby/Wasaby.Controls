@@ -1323,7 +1323,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                } else {
                   this._dataReview.height(this._container.height()  - constants.dataReviewPaddings);//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
                }
-               this._updateDataReview(this.getText());
+               this._updateDataReview(this.getText() || '');
                this._dataReview.toggleClass('ws-hidden', enabled);
             }
 
