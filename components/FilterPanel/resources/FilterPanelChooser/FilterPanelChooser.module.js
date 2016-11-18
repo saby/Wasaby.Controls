@@ -56,9 +56,21 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
                 countField: 'count',
                 displayField: 'title',
                 /**
-                 * @cfg {Object} Набор опций, которые будут переданы в качестве мета-информации в SelectorAction
-                 */
-                selectorMeta: {}
+                 * @typedef {String} selectionTypeDef Режим выбора.
+                 * @variant node выбираются только узлы
+                 * @variant leaf выбираются только листья
+                 * @variant all выбираются все записи
+                 * @typedef {Object} dictionaryOptions
+                 * @property {String} template Компонент, на основе которого организован справочник.
+                 * @property {selectionTypeDef} selectionType
+                 * @property {Object} componentOptions
+                 * Группа опций, которые передаются в секцию _options компонента из опции template. На его основе строится справочник.
+                 * Значения переданных опций можно использовать в дочерних компонентах справочника через инструкции шаблонизатора.
+                 **/
+                /**
+                 * @cfg {dictionaryOptions} Устанавливает настройки справочника.
+                 **/
+                dictionaryOptions: {}
             },
             //Происходил выбор из справочника
             _isSelected: false
@@ -164,7 +176,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
         },
 
         _showDictionary: function(meta) {
-            meta = cFunctions.merge(this._options.selectorMeta, meta || {});
+            meta = cFunctions.merge(this._options.dictionaryOptions, meta || {});
             meta.selectedItems = this._getListView().getSelectedItems();
             this._getSelector().execute(meta);
         },
