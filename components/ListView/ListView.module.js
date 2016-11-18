@@ -2233,8 +2233,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var loadAllowed  = this.isInfiniteScroll() && this._options.infiniteScroll !== 'demand',
                more = this.getItems().getMetaData().more,
                isContainerVisible = dcHelpers.isElementVisible(this.getContainer()),
-               // 32 - высота индикатора для подгрузки по скролу
-               hasScroll = this._scrollWatcher.hasScroll(32),
+               // отступ с учетом высоты loading-indicator
+               hasScroll = this._scrollWatcher.hasScroll(this._loadingIndicator.height()),
                hasNextPage = this._hasNextPage(more, this._scrollOffset.bottom);
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
