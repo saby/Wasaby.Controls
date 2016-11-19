@@ -1,7 +1,16 @@
-<div class="controls-suggestShowAll">
-    <component data-component="SBIS3.CONTROLS.DataGridView" name="controls-showAllView">
-        <opts name="itemsActions" type="array"></opts>
-        <opt name="pageSize">20</opt>
-        <opt name="infiniteScroll" type="boolean">true</opt>
-    </component>
+<div>
+    <div class="ws-window-titlebar-custom ws-sticky-header__block ws-float-area__close-button-wrapper ws-window-titlebar radius ws-sticky-header__fixed">
+        <component data-component="SBIS3.CONTROLS.Button" name="selectButton" class="controls-suggestShowAll__selectButton">
+            <opt name="visible" type="boolean">false</opt>
+            <opt name="caption">Выбрать</opt>
+            <opt name="primary" type="boolean">true</opt>
+        </component>
+    </div>
+    <div class="controls-suggestShowAll">
+        <component data-component="SBIS3.CONTROLS.DataGridView" name="controls-showAllView">
+            <opts name="itemsActions" type="array"></opts>
+            <opt name="pageSize">20</opt>
+            <opt name="infiniteScroll" type="boolean">true</opt>
+        </component>
+    </div>
 </div>
