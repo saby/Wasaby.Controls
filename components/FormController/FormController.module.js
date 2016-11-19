@@ -184,7 +184,6 @@ define('js!SBIS3.CONTROLS.FormController', [
              * }
              * </pre>
              * @see getDataSource
-             * @see setDataSource
              */
             dataSource: {
             }
@@ -439,7 +438,6 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @deprecated
        * @return {Object} Объект с конфигурацией источника данных.
        * @remark
-       * Чтобы установить источник данных, используют метод {@link setDataSource}.
        * Также для диалога редактирования может быть по умолчанию установлен источник данных. Это происходит при его вызове через {@link SBIS3.CONTROLS.DialogActionBase}.
        * @example
        * В примере продемонстрирована задача изменения списочного метода источника данных
@@ -462,36 +460,8 @@ define('js!SBIS3.CONTROLS.FormController', [
       isNewRecord: function(){
          return this._newRecord;
       },
-      /**
-       * Устанавливает источник данных диалогу редактирования.
-       * @deprecated
-       * @remark
-       * Для диалога редактирования может быть по умолчанию установлен источник данных. Это происходит при вызове диалога через {@link SBIS3.CONTROLS.DialogActionBase}.
-       * Чтобы получить объект источника данных, используют метод {@link getDataSource}.
-       * @param {DataSource} source Источник данных.
-       * @param {Object} config
-       *    Структура конфига:
-       *    {
-       *      hideErrorDialog: Boolean,            //Не показывать сообещние при ошибке
-       *      hideIndicator: Boolean               //Не показывать индикатор
-       *    }
-       * @example
-       * <pre>
-       *    var dataSource = new SbisService({ // Инициализация источника данных
-       *       endpoint: 'Товар' // Устанавливаем объект бизнес-логики
-       *    });
-       *    this.setDataSource(dataSource); // Устанавливаем источник данных диалогу редактирования
-       * </pre>
-       * @see dataSource
-       * @see getDataSource
-       */
-      setDataSource: function(source, config){
-         IoC.resolve('ILogger').error('FormController', 'Метод setDataSource в скором времени будет удален, задать источник данных необходимо через конфигурацию dataSource');
-         this._dataSource = source;
-         return this._getRecordFromSource(config)
-      },
-      _setDataSource: function(source){
-         this._dataSource = source;
+      setDataSource: function (source, config) {
+         throw new Error('FormController: Задавать источник данных необходимо через опцию dataSource. Подробнее https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/create/');
       },
       /**
        * Устанавливает запись, по данным которой производится инициализация данных диалога.
