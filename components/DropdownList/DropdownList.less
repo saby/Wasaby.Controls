@@ -1,6 +1,6 @@
 .controls-DropdownList {
    display: inline-block;
-   height: @DropdownList-height;
+   min-height: @DropdownList-height;
    box-sizing: @DropdownList-box-sizing;
    line-height: @DropdownList-height;
    .controls-DropdownList__selectedItem {
@@ -143,7 +143,7 @@
      .controls-DropdownList__body {
        margin-top: @DropdownList-picker-margin-top;
          .controls-DropdownList__item{
-            padding: 6px 16px;
+            padding: 7px 16px 6px 16px;
             position: relative;
            .controls-DropdownList__itemTextWrapper{
               position: relative;
@@ -179,7 +179,7 @@
      }
 
      .controls-DropdownList__multiselect.controls-DropdownList__item{
-       padding: 6px 16px 6px 0;
+       padding-left: 0;
        .controls-DropdownList__itemTextWrapper{
          max-width: calc(~"100% - 16px");/* 16px чекбокс */
        }
@@ -296,7 +296,7 @@
         }
       }
       &.controls-DropdownList__child{
-        padding: 3px 8px;
+        padding: 3px 8px 2px 8px;
         .controls-DropdownList__itemTextWrapper{
           padding-left: 16px;
         }
