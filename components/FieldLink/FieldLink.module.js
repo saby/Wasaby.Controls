@@ -366,6 +366,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 }.bind(this));
              }
 
+             if(this._options.multiselect) {
+                /* Открывать выпадашку со всеми выбранными записями надо по событию mousedown, т.к. это единственное событие
+                   которое стреляет раньше фокуса. В противном случае автодополнение будет мограть, если включена опиция autoShow,
+                   потому что оно показывается по фокусу. */
+                this.getChildControlByName('showAllButton').getContainer().on('mousedown', function () {
+                      this._showAllItems();
+                   }.bind(this)
+                );
+             }
+
              this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
           },
 
