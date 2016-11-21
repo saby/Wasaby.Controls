@@ -37,9 +37,21 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
       'use strict';
       /**
-       * Контрол, который отображает в выпадающем списке список однотипных сущностей.
+       * Класс контрола "Выпадающий список".
+       *
+       * <br/>
+       * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое {@link WS.Data/Types/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
+       * <pre>
+       *    <component data-component="SBIS3.CONTROLS.DropdownList">
+       *       <options name="items" type="array" bind="record/MyEnumField"></options>
+       *       <option name="keyField">@Идентификатор</option>
+       *       <option name="displayField">Описание</option>
+       *    </component>
+       * </pre>
+       *
        * @class SBIS3.CONTROLS.DropdownList
        * @extends $ws.proto.CompoundControl
+       *
        * @author Красильников Андрей Сергеевич
        *
        * @mixes SBIS3.CONTROLS.ItemsControlMixin
