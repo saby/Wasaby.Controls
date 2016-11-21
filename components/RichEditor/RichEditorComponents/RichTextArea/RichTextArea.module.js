@@ -1324,7 +1324,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                } else {
                   this._dataReview.height(this._container.height()  - constants.dataReviewPaddings);//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
                }
-               this._updateDataReview(this.getText());
+               this._updateDataReview(this.getText() || '');
                this._dataReview.toggleClass('ws-hidden', enabled);
             }
 
@@ -1544,7 +1544,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          _updateDataReview: function(text) {
             if (this._dataReview && !this.isEnabled()) {
                //если никто не зарегистрировал декоратор то просто оборачиваем ссылки в <a>
-               if (this._options.decorateLinks && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
+               if (text && this._options.decorateLinks && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
                   var
                      self = this;
                   Di.resolve(this._options.decoratorName).decorateLinks(text).addCallback(function(text){
