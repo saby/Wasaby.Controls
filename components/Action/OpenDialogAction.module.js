@@ -264,6 +264,9 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
       },
 
       _toggleOverlay: function(show){
+         //При вызове execute, во время начала асинхронных операций при выставленной опции initializingWay = 'remote' || 'delayedRemote',
+         //закрываем оверлеем весь боди, чтобы пользователь не мог взаимодействовать с интерфейсом, пока не загрузится диалог редактирования,
+         //иначе пока не загрузилась одна панель, мы можем позвать открытие другой, что приведет к ошибкам.
          if (!this._overlay) {
             this._overlay = $('<div class="controls-OpenDialogAction-overlay ws-hidden"></div>');
             this._overlay.css({
