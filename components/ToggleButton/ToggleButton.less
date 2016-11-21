@@ -102,12 +102,22 @@
     }
   }
 }
-// хак для ie9, 10, 11 выравнивающий иконки
+// хак для ie9, 10, 11 выравнивающий иконки в залипшей кнопке
 @media screen and (min-width:~"0\0") {
    .controls-Checked__checked {
       .controls-Button__icon {
          &.icon-24 {
-            top: -3px !important;
+            top: @button-icon-big-top-offset - @button-border-width - 2 !important;
+         }
+      }
+   }
+}
+// хак для мозиллы, выравнивающий иконки в залипшей кнопке
+@-moz-document url-prefix() {
+   .controls-Checked__checked {
+      .controls-Button__icon {
+         &.icon-24 {
+            top: @button-icon-big-top-offset - @button-border-width - 2 !important;
          }
       }
    }
