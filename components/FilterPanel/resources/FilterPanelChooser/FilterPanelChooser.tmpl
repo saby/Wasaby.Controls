@@ -2,7 +2,7 @@
     <ws:if data="{{ viewMode === 'favorites' }}">
         <ws:SBIS3.CONTROLS.FilterPanelBoolean name="controls-FilterPanelChooser__favoritesCheckBox"
             caption="{{'Избранные (' + (favorites ? favorites.length : 0) + ')'}}"
-            count="{{ '' + favoritesCount }}"
+            count="{{ favoritesCount }}"
             checked="{{ favoritesIsChecked }}"    >
         </ws:SBIS3.CONTROLS.FilterPanelBoolean>
     </ws:if>
