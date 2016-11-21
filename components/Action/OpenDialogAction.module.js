@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
 
    /**
     * Класс, описывающий действие открытия окна с заданным шаблоном. Применяется для работы с диалогами редактирования списков.
-    * Подробнее об использовании класса вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component-control/">Управление диалогом редактирования списка.</a>.
+    * Подробнее об использовании класса вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/">Управление диалогом редактирования списка.</a>.
     * @class SBIS3.CONTROLS.OpenDialogAction
     * @extends SBIS3.CONTROLS.DialogActionBase
     * @author Крайнов Дмитрий Олегович
@@ -52,32 +52,32 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
    var OpenDialogAction = DialogActionBase.extend(/** @lends SBIS3.CONTROLS.OpenDialogAction.prototype */{
       /**
        * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога.
-       * @remark Событие используется, когда логика взаимодействия с источником диалога должна быть определена на стороне компонента, который инициировал открытие диалога.
-       * При создании обработчика события существуют ограничения. Подробнее об этом вы можете прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/synchronization/">Синхронизация изменений со списком</a>.
+       * @remark
+       * Используется для <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/synchronization/">синхронизации изменений со списком</a>.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Сохраняемая запись.
-       * @param {String} key Первичный ключ сохраняемой записи.
+       * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
+       * @param {String} key Первичный ключ записи.
        */
       /**
        * @event onDestroyModel Происходит при удалении записи из источника данных диалога.
-       * @remark Событие используется, когда логика взаимодействия с источником диалога должна быть определена на стороне компонента, который инициировал открытие диалога.
-       * При создании обработчика события существуют ограничения. Подробнее об этом вы можете прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/synchronization/">Синхронизация изменений со списком</a>.
+       * @remark
+       * Используется для <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/synchronization/">синхронизации изменений со списком</a>.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Запись, которая была удалена из источника данных диалога.
+       * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
       /**
        * @event onCreateModel Происходит при создании записи в источнике данных диалога.
-       * @remark Событие используется, когда логика взаимодействия с источником диалога должна быть определена на стороне компонента, который инициировал открытие диалога.
-       * При создании обработчика события существуют ограничения. Подробнее об этом вы можете прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/synchronization/">Синхронизация изменений со списком</a>.
+       * @remark
+       * Используется для <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/synchronization/">синхронизации изменений со списком</a>.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Запись, которая была создана в источнике данных диалога.
        */
       /**
        * @event onReadModel Происходит при чтении записи из источника данных диалога.
-       * @remark Событие используется, когда логика взаимодействия с источником диалога должна быть определена на стороне компонента, который инициировал открытие диалога.
-       * При создании обработчика события существуют ограничения. Подробнее об этом вы можете прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/synchronization/">Синхронизация изменений со списком</a>.
+       * @remark
+       * Используется для <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/synchronization/">синхронизации изменений со списком</a>.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Запись, полученная из источника данных диалога.
+       * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
       $protected: {
          _options: {
@@ -269,8 +269,14 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
          cMerge(this._dialog._options, config);
          this._dialog.reload();
       },
-
-      _buildComponentConfig: function (meta) {
+       /**
+        * @event onExecuted Происходит при закрытии диалога.
+        * @remark
+        * Когда на диалоге внесены изменения, и пользователь производит его закрытие через кнопку "Закрыть", то отображается окно для сохранения созданных изменений, на котором присутствуют кнопки "Да", "Нет" и "Отмена". Событие также происходит при нажатии кнопок "Да" и "Нет".
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
+        */
+      _buildComponentConfig: function(meta) {
          //Если запись в meta-информации отсутствует, то передаем null. Это нужно для правильной работы DataBoundMixin с контекстом и привязкой значений по имени компонента
          var record = (cInstance.instanceOfModule(meta.item, 'WS.Data/Entity/Record') ? meta.item.clone() : meta.item) || null,
             result = {
