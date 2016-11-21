@@ -348,7 +348,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
               */
             items: null,
             /**
-             * @cfg {DataSource|WS.Data/Source/ISource|Function|Object} Устанавливает набор исходных данных, по которому строится отображение.
+             * @cfg {DataSource|WS.Data/Source/ISource|Function|Object} Устанавливает источник данных контрола.
              * @remark
              * Если установлен источник данных, то значение опции {@link items} будет проигнорировано.
              * @example
@@ -357,8 +357,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              *    // SbisService - это переменная, в которую импортирован класс источника данных из массива зависимостей
              *    var myDataSource = new SbisService({ // Инициализация источника данных
              *        endpoint: {
-             *           contract: 'Отчеты', // Устанавливаем объект БЛ, в котором есть методы для работы с данными таблицы
-             *           address: 'myNewService/service/sbis-rpc-service300.dll' // Устанавливаем точку входа в другой сервис
+             *           contract: 'Отчеты' // Устанавливаем объект БЛ
              *        },
              *        binding: {
              *           query: 'Список' // Устанавливаем списочный метод
@@ -377,11 +376,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * Аналогичная предыдущему примеру конфигурация будет выглядеть следующим образом:
              * <pre>
              *    <options name="dataSource">
-             *       <option name="module" value="js!WS.Data/Source/SbisService"></options>
+             *       <option name="module" value="js!WS.Data/Source/SbisService"></option>
              *       <options name="options">
              *          <options name="endpoint">
              *             <option name="contract" value="Отчеты"></option>
-             *             <option name="address" value="myNewService/service/sbis-rpc-service300.dll"></option>
              *          </options>
              *          <options name="binding">
              *             <option name="query" value="Список"></option>
