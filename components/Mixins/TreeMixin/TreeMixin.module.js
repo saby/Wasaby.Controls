@@ -11,9 +11,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "js!WS.Data/Relation/Hierarchy",
    "Core/helpers/collection-helpers",
    "Core/core-instance",
+   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "Core/helpers/functional-helpers",
    "js!WS.Data/Adapter/Sbis"
-], function ( cFunctions, cMerge, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, colHelpers, cInstance, fHelpers) {
+], function ( cFunctions, cMerge, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, colHelpers, cInstance, TemplateUtil, fHelpers) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -77,12 +78,20 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
       function pushPath(records, path, cfg) {
          if (path.length) {
+            /*Получаем параметры, как будто хотим рисовать просто строку, соответствующую последней папке*/
+            var defaultCfg = cfg._buildTplArgs(cfg);
+            var lastFolder = path[path.length - 1];
+            defaultCfg.projItem = lastFolder.projItem;
+            defaultCfg.item = defaultCfg.projItem.getContents();
+            defaultCfg.itemContent = TemplateUtil.prepareTemplate(cfg._defaultSearchRender);
+            $ws.core.merge(defaultCfg, {
+               path: cFunctions.clone(path),
+               viewCfg: cfg._getSearchCfg(cfg)
+            });
+
             records.push({
-               tpl: cfg._defaultSearchRender,
-               data: {
-                  path: cFunctions.clone(path),
-                  viewCfg: cfg._getSearchCfg(cfg)
-               }
+               tpl: defaultCfg.itemTpl,
+               data: defaultCfg
             });
          }
       }
