@@ -249,16 +249,35 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
 
       _showLoadingIndicator: function(){
          this._showedLoading = true;
+         this._toggleOverlay(true);
          window.setTimeout(function(){
             if (this._showedLoading){
                cIndicator.setMessage('Загрузка...'); //setMessage зовет show у loadingIndicator
             }
-         }.bind(this), 750);
+         }.bind(this), 2000);
       },
 
       _hideLoadingIndicator: function(){
          this._showedLoading = false;
+         this._toggleOverlay(false);
          cIndicator.hide();
+      },
+
+      _toggleOverlay: function(show){
+         if (!this._overlay) {
+            this._overlay = $('<div class="controls-OpenDialogAction-overlay ws-hidden"></div>');
+            this._overlay.css({
+               position: 'absolute',
+               top: 0,
+               left: 0,
+               right: 0,
+               bottom: 0,
+               'z-index': 9999,
+               opacity: 0
+            });
+            this._overlay.appendTo('body');
+         }
+         this._overlay.toggleClass('ws-hidden', !show);
       },
 
       _isNeedToRedrawDialog: function(){
