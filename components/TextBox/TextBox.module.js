@@ -190,6 +190,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
                          .bind('focusout', this._inputFocusOutHandler.bind(this));
 
          if (this._options.placeholder && !this._useNativePlaceHolder()) {
+            this._inputField.attr('placeholder', '');
             this._createCompatPlaceholder();
          }
 
