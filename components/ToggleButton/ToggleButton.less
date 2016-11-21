@@ -102,3 +102,13 @@
     }
   }
 }
+// хак для ie9, 10, 11 выравнивающий иконки
+@media screen and (min-width:~"0\0") {
+   .controls-Checked__checked {
+      .controls-Button__icon {
+         &.icon-24 {
+            top: -3px !important;
+         }
+      }
+   }
+}
