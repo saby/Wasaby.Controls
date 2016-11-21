@@ -58,7 +58,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 * </pre>
                 * @see getContent
                 */
-               content: ''
+               content: '',
+               activableByClick: false
             },
             _content: null
          },
