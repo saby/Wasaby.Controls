@@ -269,13 +269,6 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
          cMerge(this._dialog._options, config);
          this._dialog.reload();
       },
-       /**
-        * @event onExecuted Происходит при закрытии диалога.
-        * @remark
-        * Когда на диалоге внесены изменения, и пользователь производит его закрытие через кнопку "Закрыть", то отображается окно для сохранения созданных изменений, на котором присутствуют кнопки "Да", "Нет" и "Отмена". Событие также происходит при нажатии кнопок "Да" и "Нет".
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-        * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
-        */
       _buildComponentConfig: function(meta) {
          //Если запись в meta-информации отсутствует, то передаем null. Это нужно для правильной работы DataBoundMixin с контекстом и привязкой значений по имени компонента
          var record = (cInstance.instanceOfModule(meta.item, 'WS.Data/Entity/Record') ? meta.item.clone() : meta.item) || null,
