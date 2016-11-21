@@ -4,7 +4,7 @@ gemini.suite('SBIS3.CONTROLS.MergeDialogs Online', function () {
 
     gemini.suite('base', function (test) {
 
-        test.setUrl('/regression_merge_dialog_online.html').setCaptureElements('html')
+        test.setUrl('/regression_merge_dialog_online.html').skip('chrome').setCaptureElements('html')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="browserView"]', 40000);
