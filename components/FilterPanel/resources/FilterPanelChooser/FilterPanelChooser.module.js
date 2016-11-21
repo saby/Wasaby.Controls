@@ -227,7 +227,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
                     selectedKeys.push(items[i][this._options.keyField]);
                 }
                 this._getListView().setSelectedKeys(selectedKeys);
-                this._updateFilter();
+                this._updateValue();
                 this._updateAllButton();
                 this._isSelected = true;
             }
