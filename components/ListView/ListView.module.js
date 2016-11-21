@@ -589,7 +589,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * </ol>
                 * Чтобы установить тип постраничной навигации, используйте опцию {@link partialPaging}.
                 * <br/>
-                * Тип постраничной навигации устанавливается по параметру "n" (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/cooperationservice/json-rpc/#recordset-json-rpc-3'>RecordSet - выборка данных в JSON-RPC для СБиС 3</a>), который возвращает в ответе на запрос к источнику данных (см. {@link dataSource}).
+                * Тип постраничной навигации устанавливается по параметру "n" (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/cooperationservice/json-rpc/#recordset-json-rpc-3'>RecordSet - выборка данных в JSON-RPC для СБиС 3</a>), который возвращается в ответе на запрос к источнику данных (см. {@link dataSource}).
                 * Параметр по умолчанию поддерживается <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/logicworkapl/objects/blmethods/bllist/declr/'>декларативным методом бизнес-логики</a>, его значение будет установлено в соответствии со значением опции <i>partialPaging</i>.
                 * Когда вы применяете другой тип списочного метода, опция <i>partialPaging</i> игнорируется, а значение параметра "n" должно быть установлено внутри метода: true - тип частичной постраничной навигации.
                 * <br/>
