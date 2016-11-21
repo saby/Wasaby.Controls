@@ -187,7 +187,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
 
       _inputFocusInHandler: function() {
          // Показывать нулевую дробную часть при фокусировки не зависимо от опции hideEmptyDecimals
-         if (this._options.hideEmptyDecimals) {
+         if (this._options.hideEmptyDecimals && this._options.enabled) {
             this._options.text = this._formatText(this._options.text);
             this._inputField.val(this._options.text);
          }
