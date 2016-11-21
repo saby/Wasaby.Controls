@@ -156,8 +156,8 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          this._endDatePicker = this.getChildControlByName('DatePickerEnd');
          this._startDatePicker.setDate(self.getStartValue());
          this._endDatePicker.setDate(self.getEndValue());
-         this._startDatePicker.subscribe('onDateChange', this._onDatePickerStartDateChanged.bind(this));
-         this._endDatePicker.subscribe('onDateChange', this._onDatePickerEndDateChanged.bind(this));
+         this._startDatePicker.subscribe('onTextChange', this._onDatePickerStartDateChanged.bind(this));
+         this._endDatePicker.subscribe('onTextChange', this._onDatePickerEndDateChanged.bind(this));
 
          this._startDatePicker.subscribe('onInputFinished', function() {
             self._endDatePicker.setActive(true);
@@ -236,14 +236,13 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          }
       },
 
-      _onDatePickerStartDateChanged: function(e, date) {
+      _onDatePickerStartDateChanged: function(e) {
+         var date = this._startDatePicker.getDate(),
+            oldStartDate = this.getStartValue(),
+            endDate = this._endDatePicker.getDate();
          if (!date) {
             return;
          }
-
-         var oldStartDate = this.getStartValue(),
-            endDate = this._endDatePicker.getDate();
-
          if (oldStartDate && oldStartDate.getTime() === date.getTime()) {
             return;
          }
@@ -269,8 +268,9 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          }
       },
 
-      _onDatePickerEndDateChanged: function(e, date) {
-         var startDate = this._startDatePicker.getDate(),
+      _onDatePickerEndDateChanged: function(e) {
+         var date = this._endDatePicker.getDate(),
+            startDate = this._startDatePicker.getDate(),
             oldEndDate = this.getEndValue();
 
          if (!date || (oldEndDate && date.getTime() === oldEndDate.getTime())) {

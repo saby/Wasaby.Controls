@@ -2,8 +2,8 @@
  * Created by as.suhoruchkin on 02.04.2015.
  */
 define('js!SBIS3.CONTROLS.OperationDelete', [
-      'js!SBIS3.CONTROLS.Link'
-], function(Link) {
+      'js!SBIS3.CONTROLS.IconButton'
+], function(IconButton) {
    /**
     * Операция удаления.
     *
@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.OperationDelete', [
     * @author Сухоручкин Андрей Сергеевич
     * @public
     */
-   var OperationDelete = Link.extend(/** @lends SBIS3.CONTROLS.OperationDelete.prototype */{
+   var OperationDelete = IconButton.extend(/** @lends SBIS3.CONTROLS.OperationDelete.prototype */{
 
       $protected: {
          _options: {
@@ -25,7 +25,8 @@ define('js!SBIS3.CONTROLS.OperationDelete', [
               * @cfg {String} Иконка кнопки удаления
               * @editor icon ImageEditor
               */
-            icon: 'sprite:icon-24 icon-Erase icon-error'
+            icon: 'sprite:icon-24 icon-Erase icon-error',
+            caption: rk('Удалить')
          }
       },
 

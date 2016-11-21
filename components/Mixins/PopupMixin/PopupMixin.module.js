@@ -10,8 +10,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
    "js!SBIS3.CORE.ModalOverlay",
    "js!SBIS3.CONTROLS.TouchKeyboardHelper",
    "Core/helpers/helpers",
-   "Core/helpers/dom&controls-helpers"
-], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers, dcHelpers) {
+   "Core/helpers/dom&controls-helpers",
+   "Core/detection"
+], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers, dcHelpers, detection) {
    'use strict';
    if (typeof window !== 'undefined') {
       var eventsChannel = EventBus.channel('WindowChangeChannel');
@@ -38,15 +39,35 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
    }
 
    /**
-    * Миксин, определяющий поведение контролов, которые отображаются с абсолютным позиционированием поверх всех остальных
-    * компонентов (диалоговые окна, плавающие панели, подсказки).
+    * Миксин, определяющий поведение контролов, которые отображаются с абсолютным позиционированием поверх всех остальных компонентов (диалоговые окна, плавающие панели, подсказки).
     * При подмешивании этого миксина в контрол он вырезается из своего местоположения и вставляется в Body.
     * @mixin SBIS3.CONTROLS.PopupMixin
     * @author Крайнов Дмитрий Олегович
     * @public
     */
    var PopupMixin = /** @lends SBIS3.CONTROLS.PopupMixin.prototype */ {
-      $protected: {
+       /**
+        * @event onShow Происходит при открытии окна.
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        */
+       /**
+        * @event onClose Происходит при закрытии окна.
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        */
+       /**
+        * @event onAlignmentChange Происходит при изменении вертикального {@link verticalAlign} или горизонтального {@link horizontalAlign} выравнивания.
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Object} newAlignment Объект с конфигурацией выравнивания.
+        * @param {Object} [newAlignment.verticalAlign] Вертикальное выравнивание.
+        * @param {Object} [newAlignment.horizontalAlign] Горизонтальное выравнивание.
+        * @param {Object} [newAlignment.corner] Точка построения окна.
+        */
+       /**
+        * @event onChangeFixed Происходит при изменении способа позиционирования окна браузера или других объектов на веб-странице.
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Boolean} fixed В значении true - CSS-свойство position=fixed, иначе position=absolute.
+        */
+       $protected: {
          _targetSizes: {},
          _containerSizes: {},
          _windowSizes: {},
@@ -171,6 +192,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
 
+         this._touchKeyboardMoveHandler = this._touchKeyboardMoveHandler.bind(this);
+         EventBus.globalChannel().subscribe('MobileInputFocus', this._touchKeyboardMoveHandler);
+         EventBus.globalChannel().subscribe('MobileInputFocusOut', this._touchKeyboardMoveHandler);
+
          if (this._options.closeButton) {
             container.append('<div class="controls-PopupMixin__closeButton"></div>');
             $('.controls-PopupMixin__closeButton', this.getContainer().get(0)).click(function() {
@@ -192,6 +217,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             // приходится отключать инертный скролл в момент показа всплывахи и включать обратно при скрытии
             this._parentFloatArea = topParent;
          }
+      },
+
+
+      _touchKeyboardMoveHandler: function(){
+         this.recalcPosition();
       },
 
       //Подписка на изменение состояния таргета
@@ -828,7 +858,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          var offset = this._targetSizes.offset,
             width = this._targetSizes.width,
             height = this._targetSizes.height,
-            windowHeight = this._windowSizes.height,
+            //При расчете свободного места, учитываем весь экран
+            //так как на айпаде нужно открывать окна под клавиатуру что бы скролить не выпадашку, а все окно (для красоты)
+            //на андроиде выезжающая клавиатура уменьшает реальный размер window, поэтому такой херни нет  
+            windowHeight = this._windowSizes.height + TouchKeyboardHelper.getKeyboardHeight(),
             windowWidth = this._windowSizes.width,
             spaces = {
                top: 0,
@@ -963,6 +996,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             cWindowManager.releaseZIndex(this._zIndex);
             ControlHierarchyManager.removeNode(this);
             this._unsubscribeTargetMove();
+            EventBus.globalChannel().unsubscribe('MobileInputFocus', this._touchKeyboardMoveHandler);
+            EventBus.globalChannel().unsubscribe('MobileInputFocusOut', this._touchKeyboardMoveHandler);
             EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._onResizeHandler, this);
             if (this._options.closeByExternalOver) {
                EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentMouseOver', this._clickHandler, this);
@@ -985,6 +1020,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             /* Если кто-то позвал hide, а контрол уже скрыт, то не будет запускать цепочку кода,
              могут валиться ошибки */
             if(!this.isVisible()) return;
+
+            // хак для ipad, чтобы клавиатура закрывалась когда дестроится панель
+            if (detection.isMobileIOS) {
+                if(this.getContainer().find(document.activeElement).length > 0){
+                   $(document.activeElement).trigger('blur');
+                };
+            }
 
             var self = this,
                 result = this._notify('onClose'),

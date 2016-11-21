@@ -757,4 +757,30 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
 			.capture('plain')
     });
+
+	gemini.suite('decorate_link_then_disabled', function (test) {
+
+        test.setUrl('/IntRichFieldEditor48.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="FieldRichEditor 1"]', 40000);
+				this.input = find('[sbisname="FieldRichEditor 1"] .controls-RichEditor__editorFrame');
+				this.focus = find('[sbisname="TextBox 1"] input');
+				actions.wait(500);				
+            })
+			
+			.capture('plain', function (actions) {
+				actions.click(this.focus);
+				actions.sendKeys(this.focus, 'http://ogp.me');
+				actions.sendKeys(this.focus, gemini.ARROW_RIGHT);
+				actions.sendKeys(this.focus, gemini.SHIFT+gemini.HOME);
+				actions.sendKeys(this.focus, gemini.CONTROL+gemini.INSERT);
+				actions.click(this.input);
+				actions.sendKeys(this.input, gemini.SHIFT+gemini.INSERT);
+				actions.executeJS(function (window) {
+                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').setEnabled(false);
+                });
+				actions.waitForElementToShow('.engine-DecoratedLink', 5000);
+			})	
+    });
 });

@@ -127,10 +127,13 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
       init: function() {
          this.subscribe('onExpandedChange', this._onExpandedChange);
          FilterPanel.superclass.init.apply(this, arguments);
-         this._initializeFilter();
-         if (this.isExpanded()) {
-            this._initializeFilterItems();
-            this._contentInitialized = true;
+         // На момент инициализицаии компонента items может вообще не быть (разработчик устанавливает их позже через setItems).
+         if (this._options.items) {
+            this._initializeFilter();
+            if (this.isExpanded()) {
+               this._initializeFilterItems();
+               this._contentInitialized = true;
+            }
          }
       },
       _initializeFilterItems: function() {

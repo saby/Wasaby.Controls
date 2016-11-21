@@ -4,14 +4,16 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'html!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/Sanitize',
-   "Core/helpers/dom&controls-helpers"
+   "Core/helpers/dom&controls-helpers",
+   "Core/detection"
 ], function(
     constants,
     TextBoxBase,
     dotTplFn,
     TemplateUtil,
     Sanitize,
-    dcHelpers) {
+    dcHelpers,
+    cDetection) {
 
    'use strict';
 
@@ -197,6 +199,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
                          .bind('focusout', this._inputFocusOutHandler.bind(this));
 
          if (this._options.placeholder && !this._useNativePlaceHolder()) {
+            this._inputField.attr('placeholder', '');
             this._createCompatPlaceholder();
          }
 
@@ -391,12 +394,16 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _inputFocusOutHandler: function(e) {
-         $ws.single.EventBus.globalChannel().notify('MobileInputFocusOut');
+         if (cDetection.isMobilePlatform){
+            $ws.single.EventBus.globalChannel().notify('MobileInputFocusOut');
+         }
          this._checkInputVal();
       },
 
       _inputFocusInHandler: function(e) {
-         $ws.single.EventBus.globalChannel().notify('MobileInputFocus');
+         if (cDetection.isMobilePlatform){
+            $ws.single.EventBus.globalChannel().notify('MobileInputFocus');
+         }
          if (this._options.selectOnClick || this._fromTab){
             this._inputField.select();
          }

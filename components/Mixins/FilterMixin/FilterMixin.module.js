@@ -9,12 +9,6 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
 ], function ( cFunctions, cMerge,FilterToStringUtil, colHelpers) {
 
 
-   /**
-    * Миксин, задающий любому контролу поведение работы с набором фильтров.
-    * @mixin SBIS3.CONTROLS.FilterMixin
-    * @public
-    * @author Крайнов Дмитрий Олегович
-    */
    var FILTER_STRUCTURE_DEFAULT_ELEMENT = {
       internalValueField: null,
       internalCaptionField: null,
@@ -34,12 +28,19 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          return this.runInPropertiesUpdate(func, arguments);
       };
    }
-
+    /**
+     * Миксин, задающий любому контролу поведение работы с набором фильтров.
+     * @mixin SBIS3.CONTROLS.FilterMixin
+     * @public
+     * @author Крайнов Дмитрий Олегович
+     */
    var FilterMixin = /**@lends SBIS3.CONTROLS.FilterMixin.prototype  */{
       /**
-       * @event onResetFilter Возникает при сбросе фильтра (значения структуры value сбрасываются в resetValue)
+       * @event onResetFilter Происходит при сбросе фильтра.
+       * @remark
+       * Значения структуры value сбрасываются в resetValue.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {Boolean} internal Значения были сброшены только на панели фильтрации
+       * @param {Boolean} internal Значения были сброшены только на панели фильтрации.
        */
       $protected: {
          _options: {
@@ -53,32 +54,19 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
              * @property {null|Object|String|Boolean|Number} value Текущее значение элемента. Может быть не определено.
              * @property {null|Object|String|Boolean|Number} resetValue Значение поля при сбрасывании фильтра, или при пустом значении в value. Может быть не определено.
              * @property {Boolean} resetVisibilityValue Значение поля при сбрасывании фильтра, или при пустом значении в value. Может быть не определено.
-             * @property {String} resetCaption Текст по умолчанию. Если задали, то при пустом (или заданном в resetValue) значении будет
-             * отображаться заданный здесь текст. Может быть не определено.
+             * @property {String} resetCaption Текст по умолчанию. Если задали, то при пустом (или заданном в resetValue) значении будет отображаться заданный здесь текст. Может быть не определено.
              * @translatable caption resetCaption
              */
             /**
-             * @cfg {filterStructure[]} Структура элемента фильтра
-             * @remark Важно! все, что задано в filterStructure влияет на объекты в контексе - filter и filterDescr(строится по полям value у структуры)
-             * @example
-             * <pre class="brush:xml">
-             *     <options name="filterStructure" type="array">
-             *        <options>
-             *            <option name="internalValueField">Поле1</option>
-             *            <option name="internalCaptionField">Поле2</option>
-             *            <option name="caption">Текущее текстовое отображение значения</option>
-             *            <option name="value">100</option>
-             *            <option name="resetValue">10</option>
-             *            <option name="resetCaption">Текст по умолчанию</option>
-             *         </options>
-             *      </options>
-             * </pre>
+             * @cfg {filterStructure[]} Устанавливает структуру элементов фильтра.
+             * @remark
+             * Примеры и подробное описание использования опции вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/fbstructure/'>здесь</a>.
              */
             filterStructure: [ /*filterStructureElementDef*/ ],
             /**
-             * @cfg {String} Поле в контексте, где будет храниться внутренний фильтр компонента
+             * @cfg {String} Устанавливает поле в контексте, в котором будет храниться внутренний фильтр компонента.
              * @remark
-             * !Важно: Если на одной форме, в одном контексте лежит несколько хлебных фильтров, то только в этом случае стоит менять стандартное имя
+             * Если на одной форме, в одном контексте лежит несколько хлебных фильтров, то только в этом случае стоит менять стандартное имя.
              * @example
              * <pre class="brush:xml">
              *     <option name="internalContextFilterName">sbis3-controls-fast-filter</option>

@@ -82,8 +82,7 @@ define('js!SBIS3.CONTROLS.MergeAction', [
                  * Шаблон - это XHTML-файл, который создают в директории компонента в подпапке resources.
                  * @see dialogComponent
                  */
-                titleCellTemplate: undefined,
-                initializingWay: 'local'
+                titleCellTemplate: undefined
             }
         },
 
@@ -98,9 +97,8 @@ define('js!SBIS3.CONTROLS.MergeAction', [
         setDataSource: function(ds) {
             this._options.dataSource = ds;
         },
-       _buildComponentConfig: function(meta) {
+       _buildComponentConfig: function (meta) {
           return cMerge(meta, {
-             title: rk('Объединение наименований'),
              //Прокидываем необходимые опции в шаблон
              displayField: this._options.displayField,
              queryMethodName: this._options.queryMethodName,
@@ -110,6 +108,11 @@ define('js!SBIS3.CONTROLS.MergeAction', [
              testMergeMethodName: this._options.testMergeMethodName,
              titleCellTemplate: this._options.titleCellTemplate
           });
+       },
+       _getDialogConfig: function (meta) {
+          var cfg = MergeAction.superclass._getDialogConfig.apply(this, arguments);
+          cfg.title = rk('Объединение наименований');
+          return cfg;
        }
     });
 

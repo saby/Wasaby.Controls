@@ -57,6 +57,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          setContentHeight: function(contentHeight) {
+            this._containerHeight = this._container.outerHeight(true);
             this._options.contentHeight = contentHeight;
             this._setViewportRatio();
             this._calcThumbHeight();
@@ -101,12 +102,13 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
          //Высчитываем и задаём высоту ползунка
          _calcThumbHeight: function(){
-            this.getContainer().toggleClass('ws-hidden', this._viewportRatio >= 1);
+            this.getContainer().toggleClass('ws-invisible', this._viewportRatio >= 1);
             this._thumbHeight = this._containerHeight * this._viewportRatio;
             this._thumb.height(this._thumbHeight);
          },
 
          _onResizeHandler: function() {
+            this._containerHeight = this._container.outerHeight(true);
             this._calcThumbHeight();
          },
 
