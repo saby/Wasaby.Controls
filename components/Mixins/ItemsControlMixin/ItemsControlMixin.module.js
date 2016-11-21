@@ -754,19 +754,19 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return containers;
       },
 
-      expandGroup: function(groupId) {
-         this._groupCollapsing[groupId] = false;
+      _toggleGroup: function(groupId, flag) {
+         this._groupCollapsing[groupId] = flag;
          var containers = this._getGroupContainers(groupId);
-         containers.removeClass('ws-hidden');
-         $('.controls-GroupBy[data-group="' + groupId + '"] .controls-GroupBy__separatorCollapse', this._container).removeClass('controls-GroupBy__separatorCollapse__collapsed');
+         containers.toggleClass('ws-hidden', flag);
+         $('.controls-GroupBy[data-group="' + groupId + '"] .controls-GroupBy__separatorCollapse', this._container).toggleClass('controls-GroupBy__separatorCollapse__collapsed', flag);
          this._drawItemsCallbackDebounce();
       },
+
+      expandGroup: function(groupId) {
+         this._toggleGroup(groupId, false);
+      },
       collapseGroup: function(groupId) {
-         this._groupCollapsing[groupId] = true;
-         var containers = this._getGroupContainers(groupId);
-         containers.addClass('ws-hidden');
-         $('.controls-GroupBy[data-group="' + groupId + '"] .controls-GroupBy__separatorCollapse', this._container).addClass('controls-GroupBy__separatorCollapse__collapsed');
-         this._drawItemsCallbackDebounce();
+         this._toggleGroup(groupId, true);
       },
       toggleGroup: function(groupId) {
          var state = this._groupCollapsing[groupId];
