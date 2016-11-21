@@ -55,7 +55,22 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
                 keyField: 'id',
                 countField: 'count',
                 displayField: 'title',
-                dictionaryTemplate: undefined
+                /**
+                 * @typedef {String} selectionTypeDef Режим выбора.
+                 * @variant node выбираются только узлы
+                 * @variant leaf выбираются только листья
+                 * @variant all выбираются все записи
+                 * @typedef {Object} dictionaryOptions
+                 * @property {String} template Компонент, на основе которого организован справочник.
+                 * @property {selectionTypeDef} selectionType
+                 * @property {Object} componentOptions
+                 * Группа опций, которые передаются в секцию _options компонента из опции template. На его основе строится справочник.
+                 * Значения переданных опций можно использовать в дочерних компонентах справочника через инструкции шаблонизатора.
+                 **/
+                /**
+                 * @cfg {dictionaryOptions} Устанавливает настройки справочника.
+                 **/
+                dictionaryOptions: {}
             },
             //Происходил выбор из справочника
             _isSelected: false
@@ -161,7 +176,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
         },
 
         _showDictionary: function(meta) {
-            meta = meta || {};
+            meta = cFunctions.merge(cFunctions.clone(this._options.dictionaryOptions), meta || {});
             meta.selectedItems = this._getListView().getSelectedItems();
             this._getSelector().execute(meta);
         },
@@ -206,7 +221,6 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
         _getSelector: fHelpers.memoize(function() {
             return new SelectorAction({
                 mode: 'floatArea',
-                template: this._options.dictionaryTemplate,
                 handlers: {
                     onExecuted: this._onExecutedHandler.bind(this)
                 }
