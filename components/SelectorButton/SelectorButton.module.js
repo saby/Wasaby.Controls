@@ -82,24 +82,34 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          _options: {
             _preRender: itemTemplateRender,
             /**
-             * @cfg {String}  Текст на кнопке по-умолчанию, проставляется если нет выбранных элементов
+             * @cfg {String} Устанавливает текст на кнопке выбора, который будет отображен, если нет выбранных элементов.
              * @example
              * <pre class="brush:xml">
-             *     <option name="defaultCaption">Сохранить</option>
+             *     <option name="defaultCaption">Сотрудники</option>
              * </pre>
              */
             defaultCaption: '',
             /**
              * @typedef {Array} dictionaries
-             * @property {String} caption Текст в меню.
-             * @property {String} template Шаблон, который отобразится в диалоге выбора.
-             * @property {Object} componentsOptions Опции, которые прокинутся в компонент на диалоге выбора.
+             * @property {String} caption Название, которое будет использовано в меню выбора справочника. Опция неактуальна, когда установлен только один справочник.
+             * @property {String} template Шаблон справочника. В качестве значения передают имя компонента.
+             * @property {Object} componentsOptions Опции, которые будут переданы в секцию _options (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/oop/'>ООП-обертка в веб-фреймворке WS</a>) компонента справочника.
              * @translatable caption
              */
             /**
-             * @cfg {dictionaries[]} Набор диалогов выбора для поля связи
+             * @cfg {dictionaries[]} Устанавливает набор справочников для кнопки выбора.
              * @remark
-             * Если передать всего один элемент, то дилог выбора откроется при клике на иконку меню.
+             * Когда установлено несколько справочник, при клике по кнопке открывается меню выбора справочника.
+             * Когда установлен один справочник, то он будет открыт сразу при клике по кнопке.
+             * @example
+             * <pre>
+             *    <options name="dictionaries" type="array">
+             *       <options>
+             *          <option name="caption">Сотрудники</option>
+             *          <option name="template">js!SBIS3.MyArea.DictEmployees</option>
+             *       </options>
+             *    <options>
+             * </pre>
              */
             dictionaries: []
          },
