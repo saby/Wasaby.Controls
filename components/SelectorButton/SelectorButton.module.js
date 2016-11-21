@@ -44,10 +44,16 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     }
 
    /**
-    * Контрол, отображающий выбранные записи в виде текстовых значений через запятую.
+    * Класса контрола "Кнопка выбора", который отображает выбранные записи в виде текстовых значений через запятую.
+    * Контрол применяется в качестве альтернативы полю связи {@link SBIS3.CONTROLS.FieldLink}.
+    *
+    * Подробнее о поле связи и кнопке выбора вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/'>Поле связи</a>.
+    *
     * @class SBIS3.CONTROLS.SelectorButton
     * @extends SBIS3.CONTROLS.ButtonBase
+    *
     * @author Крайнов Дмитрий Олегович
+    *
     * @mixes SBIS3.CONTROLS.IconMixin
     * @mixes SBIS3.CONTROLS.Clickable
     * @mixes SBIS3.CONTROLS.MultiSelectable
@@ -57,7 +63,13 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * @mixes SBIS3.CONTROLS.SyncSelectionMixin
     * @mixes SBIS3.CONTROLS.ChooserMixin
     * @mixes SBIS3.CONTROLS.DSMixin
+    *
     * @cssModifier controls-SelectorButton__asLink Отображает текст как ссылку.
+    *
+    * @demo SBIS3.DOCS.SelectorButtonLink Пример 1. Кнопка выбора в виде иконки, поле ввода отсутствует. Вызов справочника производится кликом по кнопке с иконкой. Все выбранные значения будут отображаться справа от кнопки.
+    * В режиме множественного выбора сброс выбранных значений производится массово кликом по серому крестику.
+    * @demo SBIS3.DOCS.SelectorButtonSingle Пример 2. Кнопка выбора в виде кнопки-ссылки, поле ввода отсутствует. Вызов справочника производится кликом по ссылке. Все выбранные значения будут отображаться в качестве текста кнопки.
+    * В режиме множественного выбора удаление выбранных значений производится массово кликом по серому крестику. Для корректного отображения кнопки-ссылки используется CSS-модификатор "controls-SelectorButton__asLink".
     *
     * @category Buttons
     * @control
