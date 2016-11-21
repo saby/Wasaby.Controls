@@ -166,7 +166,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
                     }
                 }
             }
-            this._setValue(filter);
+            this._setValue(value);
         },
 
         _selectedItemsChangeHandler: function(event, idArray, changed) {
