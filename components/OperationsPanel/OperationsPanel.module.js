@@ -41,7 +41,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * Также допустимо создание новых действий, для которых настраивается иконка и поведение при клике.
     * @class SBIS3.CONTROLS.OperationsPanel
     * @extends $ws.proto.CompoundControl
-    * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel
+    *
+    * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel Пример 1.
+    * @demo SBIS3.CONTROLS.Demo.SumAction Пример 2.
+    *
     * @author Крайнов Дмитрий Олегович
     * @ignoreOptions contextRestriction independentContext
     *
