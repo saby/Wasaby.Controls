@@ -310,8 +310,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              /* Проиницализируем переменные */
              this._setVariables();
-             this._inputField.attr('placeholder', '');
-
              /* Флаг, как с css модификатор удалится в 3.7.5, т.к. сделаем ширину везде динамической,
                 а базовую линию меток будем выставлять через line-height */
              this._isDynamicInputWidth = this.getContainer().hasClass('controls-FieldLink__dynamicInputWidth');
@@ -400,7 +398,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
            },
 
           _useNativePlaceHolder: function() {
-             return false;
+             /* Если в placeholder положили компонент-ссылку, открывающую справочник,
+                то будем использовать не нативный placeholder */
+             return this.getProperty('placeholder').indexOf('SBIS3.CONTROLS.FieldLink.Link') === -1;
           },
 
           _setPlaceholder: function() {
