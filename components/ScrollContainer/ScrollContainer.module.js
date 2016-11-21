@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        * </component>
        * @author Крайнов Дмитрий Олегович
        */
-         
+            
       var ScrollContainer = CompoundControl.extend({
 
          _dotTplFn: dotTplFn,
@@ -69,6 +69,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          init: function() {
             ScrollContainer.superclass.init.call(this);
             this._content = $('.controls-ScrollContainer__content', this.getContainer());
+            //Под ios и android оставляем нативный скролл
             if (!cDetection.isMobileIOS && !cDetection.isMobileAndroid){
                this._container.one('touchstart mousemove', this._initScrollbar.bind(this));
                this._hideScrollbar();
@@ -82,7 +83,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _onScroll: function(){
-            this._scrollbar.setPosition(this._getScrollTop());
+            if (this._scrollbar){
+               this._scrollbar.setPosition(this._getScrollTop());
+            }
          },
 
          _hideScrollbar: function(){

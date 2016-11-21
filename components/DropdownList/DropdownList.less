@@ -1,6 +1,6 @@
 .controls-DropdownList {
    display: inline-block;
-   height: @DropdownList-height;
+   min-height: @DropdownList-height;
    box-sizing: @DropdownList-box-sizing;
    line-height: @DropdownList-height;
    .controls-DropdownList__selectedItem {
@@ -97,7 +97,7 @@
   }
 
   .controls-DropdownList__item, .controls-DropdownList__selectedItem *{
-    font-size: 15px;
+    font-size: @DropdownList-picker-menu-font-size;
     cursor: @DropdownList-cursor;
   }
 
@@ -107,6 +107,9 @@
       }
    }
    &.controls-DropdownList__type-fastDataFilter {
+     &.controls-FloatArea {
+       margin: @DropdownList-picker-fastdatafilter-offset;
+     }
      .controls-DropdownList__body {
         max-width: 400px;
         border-radius: @DropdownList-picker-list-right-border-radius;
@@ -140,7 +143,7 @@
      .controls-DropdownList__body {
        margin-top: @DropdownList-picker-margin-top;
          .controls-DropdownList__item{
-            padding: 6px 16px;
+            padding: 7px 16px 6px 16px;
             position: relative;
            .controls-DropdownList__itemTextWrapper{
               position: relative;
@@ -148,7 +151,7 @@
               &.controls-DropdownList__itemTextWrapper-height{
                  /*Этот класс для того, чтобы не сломать прикладные шаблоны
                    Для работы затемнения, нужно указать высоту контейнера*/
-                 height: 20px;
+                 height: @DropdownList-picker-menu-item-height;
               }
               .controls-DropdownList__item-text{
                  overflow: hidden;
@@ -161,9 +164,9 @@
                  width: 24px;
                  margin-left: -24px;
                  display: inline-block;
-                 height: 20px;
+                 height: @DropdownList-picker-menu-item-height;
                  position: relative;
-                 top: -20px;
+                 top: -@DropdownList-picker-menu-item-height;
                  background: linear-gradient(to left, @DropdownList-picker-menu-item-color, @DropdownList-picker-menu-item-color-blur);
               }
            }
@@ -176,7 +179,7 @@
      }
 
      .controls-DropdownList__multiselect.controls-DropdownList__item{
-       padding: 6px 16px 6px 0;
+       padding-left: 0;
        .controls-DropdownList__itemTextWrapper{
          max-width: calc(~"100% - 16px");/* 16px чекбокс */
        }
@@ -200,7 +203,7 @@
    }
    .controls-DropdownList__header {
       display: none;
-      background: @DropdownList-picker-bg;
+      background: @DropdownList-header-bg;
       border: @DropdownList-picker-border;
       border-radius: @DropdownList-picker-head-border-radius;
       border-bottom: 0;
@@ -233,11 +236,11 @@
     .controls-DropdownList__pickerHead {
       font-weight: bold;
       color: #313E78;
-      padding: 4px 8px;
+      padding: @DropdownList-picker-head-padding;
       cursor: default;
       width: 100%;
       .controls-DropdownList__pickerHead-text {
-        font-size: 15px;
+        font-size: @DropdownList-picker-menu-font-size;
       }
     }
     &.controls-DropdownList__type-title .controls-DropdownList__pickerHead {
@@ -249,7 +252,7 @@
         padding-top: 0;
       }
       .controls-DropdownList__header{
-        padding-top: 4px;
+        padding-top: @DropdownList-picker-head-duplicate-type-top-padding;
       }
     }
   }
@@ -276,9 +279,10 @@
    }
    &.controls-FloatArea {
       background: transparent;
+      margin: @DropdownList-picker-offset;
    }
    .controls-DropdownList__item {
-      padding: 6px 8px;
+      padding: @DropdownList-picker-menu-item-padding;
       background: @DropdownList-picker-menu-item-color;
       margin: @DropdownList-picker-menu-item-margin;
       font-size: @DropdownList-picker-menu-font-size;
@@ -292,7 +296,7 @@
         }
       }
       &.controls-DropdownList__child{
-        padding: 3px 8px;
+        padding: 3px 8px 2px 8px;
         .controls-DropdownList__itemTextWrapper{
           padding-left: 16px;
         }

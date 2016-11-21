@@ -152,12 +152,21 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see getItemsActions
           */
           /**
-          * @event onItemClick Происходит при любом клике по записи.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {String} id Первичный ключ записи.
-          * @param {WS.Data/Entity/Model} data Экземпляр класса записи, по которой произвели клик.
-          * @param {jQuery} target DOM-элемент, на который кликнули.
-          */
+           * @event onItemClick Происходит при любом клике по записи.
+           * @remark
+           * При работе с иерархическими списками при клике по папке (узлу) по умолчанию происходит проваливание в узел или его развертывание.
+           * Чтобы отменить поведение, установленное по умолчанию, в обработчике события установите результат false.
+           * <pre>
+           *    myListView.subscribe('onItemClick', function(eventObject) {
+           *        eventObject.setResult(false);
+           *        ... // пользовательская логика клика по записи.
+           *    });
+           * </pre>
+           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+           * @param {String} id Первичный ключ записи.
+           * @param {WS.Data/Entity/Model} data Экземпляр класса записи, по которой произвели клик.
+           * @param {jQuery} target DOM-элемент, на который кликнули.
+           */
           /**
           * @event onItemActivate Происходит при смене записи (активации) под курсором мыши (например, клик с целью редактирования или выбора).
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -602,11 +611,12 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @remark
                 * Варианты значений:
                 * <ul>
-                *    <li>"" (пустая строка) - Редактирование по месту отключено;</li>
-                *    <li>click - Режим редактирования по клику;</li>
-                *    <li>autoadd - Режим автоматического добавления новых элементов коллекции; этот режим позволяет при завершении редактирования последнего элемента автоматически создавать новый.</li>
-                *    <li>toolbar - Отображение панели инструментов при входе в режим редактирования записи.</li>
-                *    <li>single - Режим редактирования единичной записи. После завершения редактирования текущей записи не происходит автоматического перехода к редактированию следующей записи.</li>
+                *    <li>"" (пустая строка) - редактирование по месту отключено;</li>
+                *    <li>click - режим редактирования по клику на запись;</li>
+                *    <li>hover - режим редактирования по наведению курсора на запись;</li>
+                *    <li>autoadd - режим автоматического добавления новых элементов коллекции; этот режим позволяет при завершении редактирования последнего элемента автоматически создавать новый.</li>
+                *    <li>toolbar - отображение панели инструментов при входе в режим редактирования записи.</li>
+                *    <li>single - режим редактирования единичной записи. После завершения редактирования текущей записи не происходит автоматического перехода к редактированию следующей записи.</li>
                 * </ul>
                 * Режимы редактирования можно группировать и получать совмещенное поведение.
                 * Например, задать редактирование по клику и отобразить панель инструментов при входе в режим редактирования записи можно такой конфигурацией:
@@ -2266,7 +2276,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var loadAllowed  = this.isInfiniteScroll() && this._options.infiniteScroll !== 'demand',
                more = this.getItems().getMetaData().more,
                isContainerVisible = dcHelpers.isElementVisible(this.getContainer()),
-               hasScroll = this._scrollWatcher.hasScroll(),
+               // отступ с учетом высоты loading-indicator
+               hasScroll = this._scrollWatcher.hasScroll(this._loadingIndicator.height()),
                hasNextPage = this._hasNextPage(more, this._scrollOffset.bottom);
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
@@ -2383,7 +2394,7 @@ define('js!SBIS3.CONTROLS.ListView',
                $('.controls-ListView__counter', this._container.get(0)).removeClass('ws-hidden');
 
                var ost = more - (this._scrollOffset.bottom + this._options.pageSize);
-               if (ost < 0) {
+               if (ost <= 0) {
                   this._loadMoreButton.setVisible(false);
                   return;
                }
@@ -2785,10 +2796,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {Number} [offset] - если передать, то номер страницы рассчитается от него
           */
          getPage: function (offset) {
-            var offset = offset || this._offset,
-                more = this.getItems().getMetaData().more;
-            //Если offset отрицательный, значит запросили последнюю страницу.
-            return Math.ceil((offset < 0 ? more + offset : offset) / this._options.pageSize);
+            if (this.getItems()) {
+               var offset = offset || this._offset,
+                  more = this.getItems().getMetaData().more;
+               //Если offset отрицательный, значит запросили последнюю страницу.
+               return Math.ceil((offset < 0 ? more + offset : offset) / this._options.pageSize);
+            }
          },
          _updateOffset: function () {
             var more = this.getItems().getMetaData().more,
@@ -3334,13 +3347,15 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          //endregion moveMethods
          /**
-          * Устанавливает позицию строки итогов
-          * @param {String} position Позиция
+          * Устанавливает позицию строки итогов.
+          * @param {String} position Позиция.
           * <ul>
-          *    <li>none - Строка итогов не будет отображаться</li>
-          *    <li>top - Строка итогов будет расположена вверху</li>
-          *    <li>bottom - Строка итогов будет расположена внизу</li>
+          *    <li>none - строка итогов не будет отображаться;</li>
+          *    <li>top - строка итогов будет расположена вверху;</li>
+          *    <li>bottom - строка итогов будет расположена внизу.</li>
           * </ul>
+          * @remark
+          * После установки требуется произвести перерисовку связанного списка.
           * @example
           * <pre>
           *     DataGridView.setResultsPosition('none');

@@ -120,3 +120,9 @@
       }
    }
 }
+
+.ws-is-desktop-safari { /* Костыль для десктоп-сафари, иначе курсор ввода текста на Mac-устройствах не отображается в полях ввода */
+   .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
+      outline: 1px solid transparent;
+   }
+}
