@@ -422,8 +422,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          //TODO нужно ли здесь звать redraw? Сейчас без этого не работает.
          this.redraw();
          //Подписка на клик по элементу комбобокса
-         //TODO mouseup из за того что контрол херит событие клик
-         this._picker.getContainer().mouseup(function (e) {
+         //Подписываемся на onClick контрола, т.к. на мобильных платформах может не стрельнуть обработчик события mouseup/mousedown. Связано это с тем,
+         //что кто-то может прервать событие touchstart, вследствие чего описанные события не стрельнут.
+         //Подписка на платформенное событие более правильное решение, т.к. наше событие будет всегда.
+         this._picker.subscribe('onClick', function (eventObject, e) {
             var row = $(e.target).closest('.js-controls-ComboBox__itemRow');
             if (row.length) {
 
