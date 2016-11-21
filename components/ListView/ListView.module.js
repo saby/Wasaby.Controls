@@ -432,7 +432,11 @@ define('js!SBIS3.CONTROLS.ListView',
                 *    <li>id - идентификатор записи.</li>
                 *    <li>item - запись (экземпляр класса {@link WS.Data/Entity/Model}).</li>
                 * </ul>
-                * @property {Boolean} allowChangeEnable Признак, по которому устанавливается возможность использования операций в случае, если взаимодействие с контролом запрещено (см. опцию {@link $ws.proto.Control#enabled}).
+                * @property {Boolean} allowChangeEnable Признак отображения действий, которые доступны при наведении курсора на запись, в зависимости от режима взаимодействия со списком (см. {@link $ws.proto.Control#enabled}).
+                * <ul>
+                *     <li>true. Когда для списка установлено <i>enabled=false</i>, действия отображаться не будут.</li>
+                *     <li>false. Действия доступны всегда.</li>
+                * </ul>
                 * @editor icon ImageEditor
                 * @translatable caption tooltip
                 */
