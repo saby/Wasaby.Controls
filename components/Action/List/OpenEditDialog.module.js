@@ -31,9 +31,11 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       _opendEditComponent: function(meta, template, mode) {
          this._linkedModelKey = meta.id;
-         return OpenEditDialog.superclass._opendEditComponent.call(this, meta, template, mode);
+         return OpenEditDialog.superclass._openComponent.call(this, meta, template, mode);
       },
-
+      _openComponent: function (meta, template, mode){
+         return this._opendEditComponent();
+      },
       _showDialog: function(config, meta, template, mode) {
          //добавляем обработчики формконтронтроллера в конфиг
          config.componentOptions.handlers = cMerge(
@@ -260,15 +262,30 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       _buildComponentConfig: function() {
          return {};
       },
+
+      /************************Точно нужно*****************************/
+      _getDialogConfig: function(meta) {
+         if (meta.dialogOptions) {
+            meta.componentOptions = meta.dialogOptions;
+         }
+         var defaultConfig = OpenEditDialog.superclass._getDialogConfig.call(this, meta);
+         colHelpers.forEach(defaultConfig, function(defaultValue, key){
+            if (meta.hasOwnProperty(key)){
+               IoC.resolve('ILogger').log('OpenEditDialog', 'Опция ' + key + ' для диалога редактирования должна задаваться через meta.componentOptions');
+               defaultConfig[key] = meta[key];
+            }
+         });
+         return defaultConfig;
+      },
       /**
-       * поддерживаем сеттер для опции dialogComponent
+       * Поддерживаем сеттер для опции dialogComponent
        * @param val
        * @protected
        */
       setDialogComponent: function(val) {
-         Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.7.4.100', 1);
          this._options.template = val;
       }
+      /*********************************************************************/
    });
 
    OpenEditDialog.ACTION_MERGE = '_mergeRecords';
