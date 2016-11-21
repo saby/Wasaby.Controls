@@ -94,30 +94,9 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
 
       _openComponent: function(meta, template, mode) {
-         var config = this._getDialogConfig(meta),
-            self = this,
-            executeDeferred = new Deferred(),
-            compOptions = this._buildComponentConfig(meta);
 
-         mode = mode || this._options.mode;
+         this._setConfig();
 
-         cMerge(config, {
-            opener: this,
-            template: dialogComponent,
-            componentOptions: compOptions,
-            handlers: {
-               onAfterClose: function(e, meta){
-                  executeDeferred.callback(meta, this._record);
-                  self._dialog = undefined;
-               },
-               onBeforeShow: function(){
-                  self._notify('onBeforeShow');
-               },
-               onAfterShow: function(){
-                  self._notify('onAfterShow');
-               }
-            }
-         });
 
          this._showDialog(config, meta, mode);
 
@@ -153,12 +132,12 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          return {};
       },
 
-      _createDialog: function(config, meta, mode) {
+      _createComponent: function(config, meta, mode) {
          var Component = (mode == 'floatArea') ? FloatArea : Dialog;
          this._dialog = new Component(config);
       },
 
-      _getDialogConfig: function(meta) {
+      _getComponentConfig: function(meta) {
          var defaultConfig = {
                isStack: true,
                autoHide: true,
@@ -185,6 +164,34 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             }
          });
          return config;
+      },
+
+      _setComponentConfig: function(meta, dialogComponent, mode) {
+         var config = this._getComponentConfig(meta),
+            self = this,
+            executeDeferred = new Deferred(),
+            compOptions = this._buildComponentConfig(meta);
+
+         mode = mode || this._options.mode;
+
+         cMerge(config, {
+            opener: this,
+            template: dialogComponent,
+            componentOptions: compOptions,
+            handlers: {
+               onAfterClose: function(e, meta){
+                  executeDeferred.callback(meta, this._record);
+                  self._dialog = undefined;
+               },
+               onBeforeShow: function(){
+                  self._notify('onBeforeShow');
+               },
+               onAfterShow: function(){
+                  self._notify('onAfterShow');
+               }
+            }
+         });
+
       },
       /**
        * Установить режим открытия диалога редактирования компонента.
