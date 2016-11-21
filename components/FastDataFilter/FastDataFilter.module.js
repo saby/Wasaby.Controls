@@ -5,15 +5,15 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
    [
    "Core/constants",
    "js!SBIS3.CORE.CompoundControl",
-   "js!SBIS3.CONTROLS.DSMixin",
+   "js!SBIS3.CONTROLS.ItemsControlMixin",
    "js!SBIS3.CONTROLS.FilterMixin",
    "js!SBIS3.CONTROLS.DropdownList",
    "html!SBIS3.CONTROLS.FastDataFilter",
-   "Core/helpers/collection-helpers",
-   "Core/helpers/markup-helpers"
+   "html!SBIS3.CONTROLS.FastDataFilter/ItemTpl",
+   "Core/helpers/collection-helpers"
 ],
 
-   function( constants,CompoundControl, DSMixin, FilterMixin, DropdownList, dotTplFn, colHelpers, mkpHelpers) {
+   function( constants,CompoundControl, ItemsControlMixin, FilterMixin, DropdownList, dotTplFn, ItemTpl, colHelpers) {
 
       'use strict';
       /**
@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
        * @class SBIS3.CONTROLS.FastDataFilter
        * @extends $ws.proto.CompoundControl
        * @author Крайнов Дмитрий Олегович
-       * @mixes SBIS3.CONTROLS.DSMixin
+       * @mixes SBIS3.CONTROLS.ItemsControlMixin
        * @mixes SBIS3.CONTROLS.FilterMixin
        * @demo SBIS3.CONTROLS.Demo.MyFastDataFilter Работа с статическими данными
        * @demo SBIS3.CONTROLS.Demo.MyFastDataFilterDataSource Работа с DataSource данными
@@ -31,10 +31,16 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
        * @public
        * @category Filtering
        */
-      var FastDataFilter = CompoundControl.extend([FilterMixin, DSMixin],/** @lends SBIS3.CONTROLS.FastDataFilter.prototype */{
+      var FastDataFilter = CompoundControl.extend([FilterMixin, ItemsControlMixin],/** @lends SBIS3.CONTROLS.FastDataFilter.prototype */{
          $protected: {
             _dotTplFn: dotTplFn,
             _options: {
+               _buildTplArgs: function(cfg){
+                  var tplOptions = cfg._buildTplArgsSt.apply(this, arguments);
+                  tplOptions.mode = cfg.mode;
+                  return tplOptions;
+               },
+               itemTpl: ItemTpl,
                mode: 'hover',
                displayField: '',
                /**
@@ -99,53 +105,6 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             FastDataFilter.superclass.init.apply(this, arguments);
             this._container.removeClass('ws-area');
          },
-         _getItemTemplate: function(item) {
-            var self = this,
-                cfg = {
-                   items: item.get('values'),
-                   keyField: item.get('keyField'),
-                   mode: this._options.mode,
-                   multiselect : !!item.get('multiselect'),
-                   displayField: item.get('displayField'),
-                   hierField: item.get('hierField'),
-                   className: item.get('className'),
-                   pickerClassName: (item.get('pickerClassName') + ' controls-DropdownList__picker') || 'controls-DropdownList__picker',
-                   dataSource: item.get('dataSource'),
-                   filter: item.get('filter'),
-                   allowDblClick: !!item.get('allowDblClick'),
-                   name: item.get('name'),
-                   type: 'fastDataFilter',
-                   pickerConfig: {
-                      handlers: {
-                         onShow: function () {
-                            /* По стандарту: в быстрых фильтрах может одновременно отображаться лишь одна выпадашка,
-                               особенно актуально это для выпадашек с множественным выбором, т.к. они не скрываются
-                               при уведении мыши, если там отметить запись чекбоксом */
-                            var hasVisibleDDList = colHelpers.find(self.getItemsInstances(), function (instance) {
-                               return instance !== this.getParent() && instance.isPickerVisible()
-                            }.bind(this));
-
-                            if(hasVisibleDDList) {
-                               this.hide();
-                            }
-                         }
-                      }
-                   }
-                };
-            if(item.has('headTemplate')){
-               cfg.headTemplate = item.get('headTemplate');
-            }
-            if(item.has('itemTpl')){
-               cfg.itemTpl = item.get('itemTpl');
-            }
-            else if(item.has('itemTemplate')){
-               cfg.itemTemplate = item.get('itemTemplate');
-            }
-            if(item.has('includedTemplates')){
-               cfg.includedTemplates = item.get('includedTemplates');
-            }
-            return '<component data-component="SBIS3.CONTROLS.DropdownList" config="' + mkpHelpers.encodeCfgAttr(cfg) + '"></component>';
-         },
          _drawItemsCallback: function(){
             var instances = this.getItemsInstances();
             for (var i in instances) {
@@ -167,7 +126,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
 
             this.subscribeTo(item, 'onSelectedItemsChange', function(event, idArray){
                var idx = self._getFilterSctructureItemIndex(this.getContainer().data('id')),
-                   text = [], ds,
+                   text = [],
                //Если выбрали дефолтное значение, то нужно взять из resetValue
                //TODO может быть всегда отдавать массивом?
                    filterValue =  idArray.length === 1 && (idArray[0] === this.getDefaultId()) && self._filterStructure[idx] ? self._filterStructure[idx].resetValue :
@@ -285,7 +244,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             var instances = this.getItemsInstances();
                for (var i in instances) {
                   if (instances.hasOwnProperty(i)){
-                     var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(i)],
+                     var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(instances[i].getContainer().attr('data-id'))],
                            value = (fsObject.hasOwnProperty('value') && fsObject.value !== undefined) ?  instances[i]._options.multiselect ?  fsObject.value : [fsObject.value]: [instances[i].getDefaultId()];
                      if (!this._isSimilarArrays(instances[i].getSelectedKeys(), value)) {
                         if(instances[i].getItems()){

@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * @class SBIS3.CONTROLS.TreeDataGridView
     * @extends SBIS3.CONTROLS.DataGridView
     * @mixes SBIS3.CONTROLS.TreeMixin
-    * @author Крайнов Дмитрий Олегович
+    * @mixes SBIS3.CONTROLS.TreeViewMixin
     *
     * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView Пример 1. Простое иерархическое представление данных в режиме множественного выбора записей.
     * @demo SBIS3.CONTROLS.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.

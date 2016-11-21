@@ -7,10 +7,24 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
 ],
 
    /**
-    * Интерфейс для работы с информационными окнами.
+    * Класс интерфейса для работы с нотификационными уведомлениями (см. {@link SBIS3.CONTROLS.NotificationPopup}) и окнами (см. {@link SBIS3.CONTROLS.SubmitPopup}).
+    * С помощью класса возможно инициировать отображение уведомления и управление их расположением друг относительно друга в случае, если одновременно отображается больше одного уведомления.
     * Содержит функции для показа информационных окон и нотификационных уведомелений в области уведомлений.
+    * Всплывающие уведомления отображаются в нижнем правом углу друг над другом и пропадают сами спустя 5 секунд.
+    * <br/>
+    * Для вызова уведомлений и окон используйте методы showConfirmDialog, showMessageDialog, showNotification и showCustomNotification.
+    * <br/>
+    * <b>Пример.</b> В компоненте подключен класс "SBIS3.CONTROLS.Utils.InformationPopupManager" и импортирован в переменную "InformationPopupManager".
+    * Производится вызов диалога с кнопками "Да", "Нет" и "Отмена".
+    * <pre>
+    *    InformationPopupManager.showConfirmDialog({
+    *       message: 'Сохранить изменения?',
+    *       details: 'Чтобы продолжить редактирование нажмите, «Отмена».',
+    *       opener: self
+    *    });
+    * </pre>
     * @class SBIS3.CONTROLS.Utils.InformationPopupManager
-    * @author Степин П.В.
+    * @author Степин Павел Владимирович
     * @public
     */
    function( cMerge,SubmitPopup, NotificationPopup, NotificationManager){
@@ -42,7 +56,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
 
       return /** @lends SBIS3.CONTROLS.Utils.InformationPopupManager.prototype */{
          /**
-          * Открывает диалог с кнопками "Да", "Нет" и "Отмена" (опционально).
+          * Открывает диалог с кнопками "Да", "Нет" и "Отмена" (опционально от опции {@link SBIS3.CONTROLS.SubmitPopup#status}).
           * @param {Object} Объект конфигурацией открываемого диалога - {@link SBIS3.CONTROLS.SubmitPopup}.
           * @param {Function} positiveHandler Обработчик нажатия на кнопку "Да".
           * @param {Function} negativeHandler Обработчик нажатия на кнопку "Нет".
@@ -60,6 +74,8 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           * );
           * </pre>
           * @see showMessageDialog
+          * @see showNotification
+          * @see showCustomNotification
           */
          showConfirmDialog: function(config, positiveHandler, negativeHandler, cancelHandler){
             return showSubmitDialog(cMerge(config, {
@@ -83,13 +99,15 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           * );
           * </pre>
           * @see showConfirmDialog
+          * @see showNotification
+          * @see showCustomNotification
           */
          showMessageDialog: function(config, handler){
             return showSubmitDialog(config, null, null, handler);
          },
 
          /**
-          * Показывает нотификационное сообщение.
+          * Открывает нотификационное сообщение.
           * @param {Object} Объект конфигурацией открываемого окна - {@link SBIS3.CONTROLS.NotificationPopup}.
           * @param {Boolean} notHide true - не скрывать окно по истичению времени жизни.
           * @returns {SBIS3.CONTROLS.NotificationPopup} Экземпляр класса окна нотификационного сообщения.
@@ -106,6 +124,8 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           * );
           * </pre>
           * @see showCustomNotification
+          * @see showConfirmDialog
+          * @see showMessageDialog
           */
          showNotification: function(config, notHide){
             var popup = new NotificationPopup(cMerge({
@@ -118,10 +138,12 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
          },
 
          /**
-          * Показывает произвольное нотификационное сообщение.
+          * Открывает произвольное нотификационное сообщение.
           * @param {SBIS3.CONTROLS.PopupMixin|*} inst Экземпляр класса окна. Это может быть любое окно, созданное на основе указанного миксина.
           * @param {Boolean} notHide true - не скрывать окно по истичению времени жизни.
           * @see showNotification
+          * @see showConfirmDialog
+          * @see showMessageDialog
           */
          showCustomNotification: function(inst, notHide){
             NotificationManager.showNotification(inst, notHide);
