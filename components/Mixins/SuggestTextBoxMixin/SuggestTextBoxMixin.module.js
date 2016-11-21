@@ -115,8 +115,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             parentConfig.tabindex = 0;
             return parentConfig;
          },
-         setListFilter: function(parentFunc, filter) {
-            parentFunc.call(this, filter, !this._changedByKeyboard);
+         setListFilter: function(parentFunc, filter, silent) {
+            parentFunc.call(this, filter, silent || !this._changedByKeyboard);
          }
       }
    };
