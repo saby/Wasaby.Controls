@@ -90,10 +90,13 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _hideScrollbar: function(){
-            var style = {
-                  marginRight: -this._getBrowserScrollbarWidth()
-               }
-            this._content.css(style);
+            if (!cDetection.safari && !cDetection.chrome){
+               var style = {
+                     marginRight: -this._getBrowserScrollbarWidth()
+                  }
+               this._content.css(style);
+            }
+            this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
          },
 
          _getBrowserScrollbarWidth: function() {
