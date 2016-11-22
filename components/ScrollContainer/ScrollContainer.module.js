@@ -89,11 +89,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _hideScrollbar: function(){
-            var currentPadding = this._content.css('padding-right').replace(/[^0-9.]+/g, ''),
-               style = {
-                  marginRight: -this._getBrowserScrollbarWidth()
-               }
-            this._content.css(style);
+            if (!cDetection.safari && !cDetection.chrome){
+               var currentPadding = this._content.css('padding-right').replace(/[^0-9.]+/g, ''),
+                  style = {
+                     marginRight: -this._getBrowserScrollbarWidth()
+                  }
+               this._content.css(style);
+            }
+            this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
          },
 
          _getBrowserScrollbarWidth: function() {

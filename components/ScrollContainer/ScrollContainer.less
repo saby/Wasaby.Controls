@@ -23,6 +23,13 @@
    position: relative;
    overflow-y: scroll;
    height: 100%;
+   &::-webkit-scrollbar {
+      width: 0!important;
+   }
+}
+
+.controls-ScrollContainer__content-overflowHidden {
+   overflow: hidden;
 }
 
 .ws-is-mobile-safari, .ws-is-mobile-chrome-ios, .ws-is-mobile-chrome-ios {
