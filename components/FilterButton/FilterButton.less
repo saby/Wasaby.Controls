@@ -58,8 +58,11 @@
          text-align: center;
 
          &:hover {
-            background-color: @controls-filterButton-toggleButton-bgColor;
-            border: @controls-filterButton-toggleButton-border;
+            /* Т.к. усиливать селектор уже некуда, а кнопка особая,
+               используется только в кнопке фильтров, то пишу !important.
+               Из-за постоянной смены селекторов базовой кнопки, это правило ломалосью */
+            background-color: @controls-filterButton-toggleButton-bgColor !important;
+            border: @controls-filterButton-toggleButton-border !important;
             .controls-filterButton__toggleButton-icon {
                color: @controls-filterButton-history-title-color;
             }
