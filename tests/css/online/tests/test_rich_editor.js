@@ -493,6 +493,18 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
                 });	
 				actions.wait(2000);
 			})
+			
+			.capture('hovered_toolbar', function (actions) {
+				actions.mouseMove('.controls-RichEditorToolbar__toggleButton');	
+			})
+			
+			.capture('hovered_button', function (actions) {
+				actions.mouseMove('[sbisname="bold"]');	
+			})
+			
+			.capture('hovered_style_button', function (actions) {
+				actions.mouseMove('[sbisname="style"]');
+			})
     });
 	
 	gemini.suite('toggle_toolbar', function (test) {
