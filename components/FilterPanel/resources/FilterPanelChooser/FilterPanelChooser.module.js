@@ -131,14 +131,14 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
 
         _elemClickHandler: function(e, id) {
             this._getListView().toggleItemsSelection([id]);
-            this._setFilter(this._getFilter());
+            this._updateFilter();
         },
 
         _onFavoritesCheckedChange: function() {
-            this._setFilter(this._getFilter());
+            this._updateFilter();
         },
 
-        _getFilter: function() {
+        _updateFilter: function() {
             var
                 favorites = this._options.favorites,
                 filter = cFunctions.clone(this._getListView().getSelectedKeys());
@@ -149,7 +149,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
                     }
                 }
             }
-            return filter;
+            this._setFilter(filter);
         },
 
         _selectedItemsChangeHandler: function(event, idArray, changed) {
@@ -210,6 +210,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
                     selectedKeys.push(items[i][this._options.keyField]);
                 }
                 this._getListView().setSelectedKeys(selectedKeys);
+                this._updateFilter();
                 this._updateAllButton();
                 this._isSelected = true;
             }
