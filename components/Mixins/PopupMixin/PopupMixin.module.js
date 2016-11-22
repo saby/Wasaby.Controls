@@ -321,8 +321,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                   'left': offset.left + 'px'
                });
             } else {
-               var bodyOffset = this._bodyPositioning();
-               this._container.offset(bodyOffset);
+               if (!this._fixed){
+                  var bodyOffset = this._bodyPositioning();
+                  this._container.offset(bodyOffset);
+               }
             }
          }
       },
