@@ -795,4 +795,26 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.waitForElementToShow('.engine-DecoratedLink', 5000);
 			})	
     });
+	
+	gemini.suite('rich_text_area', function (test) {
+
+        test.setUrl('/IntRichFieldEditor44.html').setCaptureElements('html')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="RichEditorRoundToolbar]', 40000);
+				actions.waitForElementToShow('[sbisname="RichTextArea]', 5000);
+				this.toggle = '[sbisname="toggle"]';
+				this.input = '.controls-RichEditor__editorFrame';
+				this.link = '[sbisname="link"]';
+				this.link_input = 'input.input-string-field';
+				actions.wait(500);				
+            })
+			
+			.capture('plain', function (actions) {
+				actions.click(this.toggle);
+				actions.waitForElementToShow(this.link, 5000);
+				actions.click(this.link);
+				actions.waitForElementToShow(this.link_input, 5000);
+			})	
+    });
 });
