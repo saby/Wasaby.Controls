@@ -369,6 +369,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              if(this._options.useSelectorAction) {
                 this.subscribeTo((this._selectorAction = this.getChildControlByName('FieldLinkSelectorAction')), 'onExecuted', function(event, meta, result) {
+                   this.setActive(true);
                    if(result) {
                       this.setSelectedItems(result);
                    }
@@ -676,6 +677,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _chooseCallback: function(result) {
              var isModel;
 
+             /* После выбора из панели, возвращаем фокус в поле связи */
+             this.setActive(true);
              if(result && result.length) {
                 isModel = cInstance.instanceOfModule(result[0], 'WS.Data/Entity/Model');
                 this.setText('');
