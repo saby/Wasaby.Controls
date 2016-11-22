@@ -65,6 +65,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * @mixes SBIS3.CONTROLS.DSMixin
     *
     * @cssModifier controls-SelectorButton__asLink Отображает текст как ссылку.
+    * @cssModifier controls-SelectorButton__withoutCross Скрывает крестик справа от текста.
     *
     * @demo SBIS3.DOCS.SelectorButtonLink Пример 1. Кнопка выбора в виде иконки, поле ввода отсутствует. Вызов справочника производится кликом по кнопке с иконкой. Все выбранные значения будут отображаться справа от кнопки.
     * В режиме множественного выбора сброс выбранных значений производится массово кликом по серому крестику.
