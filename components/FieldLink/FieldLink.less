@@ -14,7 +14,7 @@
 
    .controls-FieldLink__item {
       /* Учитываем бордер пикера */
-      width: calc(50% ~'-' 2px);
+      width: ~'calc(50% - 2px)';
       display: inline-flex;
       align-items: center;
       margin: 0;
@@ -117,7 +117,13 @@
          max-width: 100%;
       }
       .controls-FieldLink__item {
-         max-width: ~'calc(100% - 24px)';
+         max-width: ~'calc(100% - '@controls-FieldLink-linkItem-cross-width~')';
+      }
+
+      &.ws-disabled {
+         .controls-FieldLink__item {
+            max-width: 100%;
+         }
       }
    }
 
@@ -137,7 +143,7 @@
 
    .controls-TextBox__beforeFieldWrapper {
       order: 0;
-      max-width: ~'calc(100% - 20px)';
+      max-width: ~'calc(100% - '@controls-FieldLink-showAllLinks-width~')';
       overflow: hidden;
 
       .controls-FieldLink__showAllLinks {
