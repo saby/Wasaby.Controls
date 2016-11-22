@@ -3,6 +3,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "Core/Deferred",
    "js!SBIS3.CONTROLS.TextBox",
    "html!SBIS3.CONTROLS.ComboBox",
+   "html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxPicker",
    "js!SBIS3.CONTROLS.PickerMixin",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
    "js!WS.Data/Collection/RecordSet",
@@ -10,11 +11,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "js!SBIS3.CONTROLS.Selectable",
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.SearchMixin",
+   "js!SBIS3.CONTROLS.ScrollContainer",
+   "js!SBIS3.CORE.MarkupTransformer",
    "html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown",
    "html!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate",
    "html!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
    "Core/core-instance"
-], function ( constants, Deferred,TextBox, dotTplFn, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
+], function ( constants, Deferred,TextBox, dotTplFn, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, MarkupTransformer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора.
@@ -85,6 +88,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
    var ComboBox = TextBox.extend([PickerMixin, ItemsControlMixin, Selectable, DataBindMixin, SearchMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       _dotTplFn: dotTplFn,
+      _dotTplFnPicker: dotTplFnPicker,
       /**
        * @typedef {Object} ItemsComboBox
        * @property {String} title Текст пункта меню.
@@ -464,13 +468,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             },
             closeByExternalClick: true,
             targetPart: true,
-            activableByClick: false
+            activableByClick: false,
+            template : MarkupTransformer(this._dotTplFnPicker)({})
          };
       },
 
       _getItemsContainer: function () {
          if (this._picker){
-         	return this._picker.getContainer();
+         	return $('.controls-ComboBox__list', this._picker.getContainer()[0]);
          } else {
          	return null;
          }

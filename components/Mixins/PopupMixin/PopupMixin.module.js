@@ -23,7 +23,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
       $(window).blur(function(e) {
          if(document.activeElement.tagName == "IFRAME"){
-            eventsChannel.notify('onDocumentClick', e);
+            if(! $(document.activeElement).hasClass('ws-popup-mixin-ignore-iframe')){
+               eventsChannel.notify('onDocumentClick', e);
+            }
          }
       });
 
@@ -37,15 +39,35 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
    }
 
    /**
-    * Миксин, определяющий поведение контролов, которые отображаются с абсолютным позиционированием поверх всех остальных
-    * компонентов (диалоговые окна, плавающие панели, подсказки).
+    * Миксин, определяющий поведение контролов, которые отображаются с абсолютным позиционированием поверх всех остальных компонентов (диалоговые окна, плавающие панели, подсказки).
     * При подмешивании этого миксина в контрол он вырезается из своего местоположения и вставляется в Body.
     * @mixin SBIS3.CONTROLS.PopupMixin
     * @author Крайнов Дмитрий Олегович
     * @public
     */
    var PopupMixin = /** @lends SBIS3.CONTROLS.PopupMixin.prototype */ {
-      $protected: {
+       /**
+        * @event onShow Происходит при открытии окна.
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        */
+       /**
+        * @event onClose Происходит при закрытии окна.
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        */
+       /**
+        * @event onAlignmentChange Происходит при изменении вертикального {@link verticalAlign} или горизонтального {@link horizontalAlign} выравнивания.
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Object} newAlignment Объект с конфигурацией выравнивания.
+        * @param {Object} [newAlignment.verticalAlign] Вертикальное выравнивание.
+        * @param {Object} [newAlignment.horizontalAlign] Горизонтальное выравнивание.
+        * @param {Object} [newAlignment.corner] Точка построения окна.
+        */
+       /**
+        * @event onChangeFixed Происходит при изменении способа позиционирования окна браузера или других объектов на веб-странице.
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Boolean} fixed В значении true - CSS-свойство position=fixed, иначе position=absolute.
+        */
+       $protected: {
          _targetSizes: {},
          _containerSizes: {},
          _windowSizes: {},

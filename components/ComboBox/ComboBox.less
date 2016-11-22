@@ -137,10 +137,17 @@
 }
 
 .controls-ComboBox__picker {
-   margin: @combo-box-picker-margin;
-   border: @combo-box-picker-border;
+   padding: @combo-box-picker-padding;
+   .controls-ComboBox__body{
+     margin: @combo-box-picker-margin;
+     border: @combo-box-picker-border;
+     height: calc(~"100% - 10px"); /* отступ от края экрана*/
+     .border-radius(@combo-box-picker-border-radius);
+   }
+   .controls-ComboBox__scrollContainer{
+     height: 100%;
+   }
 
-   .border-radius(@combo-box-picker-border-radius);
    .controls-ComboBox__itemRow {
       &.controls-ComboBox__emptyRow, &.controls-ComboBox__emptyRow:hover{
         color: #ccc;

@@ -276,7 +276,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       return tplOptions;
    };
    /**
-    * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
+    * Миксин позволяет контролу отображать данные, которые имеют иерархическую структуру, и работать с ними.
     * На DOM-элементы, отображающие развернутые узлы вешается css-класс "controls-TreeView__item-expanded". Для свернутых узлов используется css-класс "controls-TreeView__item-collapsed".
     * @mixin SBIS3.CONTROLS.TreeMixin
     * @public
@@ -287,7 +287,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       /**
        * @name SBIS3.CONTROLS.TreeMixin#reload
        * @function
-       * Перезагружает набор записей представления данных с последующим обновлением отображения.
+       * @description Перезагружает набор записей представления данных с последующим обновлением отображения.
        * @param {Object} filter Параметры фильтрации.
        * @param {String|Array.<Object.<String,Boolean>>} sorting Параметры сортировки.
        * @param {Number} offset Смещение первого элемента выборки.
@@ -354,12 +354,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       /**
        * @event onNodeExpand Происходит после разворачивания узла.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {String|Number} key Идентификатор разворачиваемого узла.
+       * @param {String|Number} key Идентификатор узла.
+       * @param {jQuery} object Контейнер узла.
+       * @see onNodeCollapse
        */
       /**
        * @event onNodeCollapse Происходит после сворачивания узла.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {String|Number} key Идентификатор разворачиваемого узла.
+       * @param {String|Number} key Идентификатор узла.
+       * @param {jQuery} object Контейнер узла.
+       * @see onNodeExpand
        */
       $protected: {
          _folderOffsets : {},
@@ -519,6 +523,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * @see SBIS3.CONTROLS.ItemsControlMixin#setItemsSortMethod
              */
             itemsSortMethod: _defaultItemsSortMethod,
+             /**
+              * @cfg {Boolean}
+              */
             hierarchyViewMode: false
          },
          _foldersFooters: {},

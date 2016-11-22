@@ -1,6 +1,6 @@
 .controls-DropdownList {
    display: inline-block;
-   height: @DropdownList-height;
+   min-height: @DropdownList-height;
    box-sizing: @DropdownList-box-sizing;
    line-height: @DropdownList-height;
    .controls-DropdownList__selectedItem {
@@ -92,9 +92,13 @@
 }
 
 .controls-DropdownList__picker {
-  cursor: @DropdownList-cursor;
+  .controls-DropdownList__scrollContainer{
+    height: 100%;
+  }
+
   .controls-DropdownList__item, .controls-DropdownList__selectedItem *{
     font-size: @DropdownList-picker-menu-font-size;
+    cursor: @DropdownList-cursor;
   }
 
   &.controls-DropdownList__equalsWidth.controls-FloatArea {
@@ -136,42 +140,46 @@
          padding-right: 4px;
        }
      }
-     .controls-DropdownList__item{
-       padding: 6px 16px;
-       position: relative;
-       .controls-DropdownList__itemTextWrapper{
-         position: relative;
-         overflow: hidden;
-         &.controls-DropdownList__itemTextWrapper-height{
-            /*Этот класс для того, чтобы не сломать прикладные шаблоны
-              Для работы затемнения, нужно указать высоту контейнера*/
-            height: @DropdownList-picker-menu-item-height;
-         }
-         .controls-DropdownList__item-text{
-            overflow: hidden;
-            white-space: nowrap;
-            float: left;
-            display: inline-block;
-         }
-          .controls-DropdownList__item-text-shadow {
-             float: right;
-             width: 24px;
-             margin-left: -24px;
-             display: inline-block;
-             height: @DropdownList-picker-menu-item-height;
-             position: relative;
-             top: -@DropdownList-picker-menu-item-height;
-             background: linear-gradient(to left, @DropdownList-picker-menu-item-color, @DropdownList-picker-menu-item-color-blur);
-          }
-       }
-       &:hover {
-         .controls-DropdownList__item-text-shadow {
-           background: linear-gradient(to left, @DropdownList-picker-menu-item-hover, @DropdownList-picker-menu-item-hover-blur);
-         }
-       }
+     .controls-DropdownList__body {
+       margin-top: @DropdownList-picker-margin-top;
+         .controls-DropdownList__item{
+            padding: 7px 16px 6px 16px;
+            position: relative;
+           .controls-DropdownList__itemTextWrapper{
+              position: relative;
+              overflow: hidden;
+              &.controls-DropdownList__itemTextWrapper-height{
+                 /*Этот класс для того, чтобы не сломать прикладные шаблоны
+                   Для работы затемнения, нужно указать высоту контейнера*/
+                 height: @DropdownList-picker-menu-item-height;
+              }
+              .controls-DropdownList__item-text{
+                 overflow: hidden;
+                 white-space: nowrap;
+                 float: left;
+                 display: inline-block;
+              }
+              .controls-DropdownList__item-text-shadow {
+                 float: right;
+                 width: 24px;
+                 margin-left: -24px;
+                 display: inline-block;
+                 height: @DropdownList-picker-menu-item-height;
+                 position: relative;
+                 top: -@DropdownList-picker-menu-item-height;
+                 background: linear-gradient(to left, @DropdownList-picker-menu-item-color, @DropdownList-picker-menu-item-color-blur);
+              }
+           }
+           &:hover {
+              .controls-DropdownList__item-text-shadow {
+                 background: linear-gradient(to left, @DropdownList-picker-menu-item-hover, @DropdownList-picker-menu-item-hover-blur);
+              }
+           }
+        }
      }
+
      .controls-DropdownList__multiselect.controls-DropdownList__item{
-       padding: 6px 16px 6px 0;
+       padding-left: 0;
        .controls-DropdownList__itemTextWrapper{
          max-width: calc(~"100% - 16px");/* 16px чекбокс */
        }
@@ -191,7 +199,6 @@
       }
       .controls-DropdownList__body{
          margin-top: @DropdownList-height;
-         border-radius: @DropdownList-picker-list-left-border-radius;
       }
    }
    .controls-DropdownList__header {
@@ -224,6 +231,7 @@
     }
     .controls-DropdownList__body {
       border-radius: @DropdownList-picker-list-border-radius;
+      margin-top: @DropdownList-picker-margin-top;
     }
     .controls-DropdownList__pickerHead {
       font-weight: bold;
@@ -262,11 +270,12 @@
    }
    .controls-DropdownList__body {
       z-index: 1;
+      height: calc(~"100% - 50px"); /* Отступ шапки 40px + 10px от края экрана*/
       border: @DropdownList-picker-border;
       border-radius: @DropdownList-picker-list-border-radius;
       background: @DropdownList-picker-bg;
-      margin-top: @DropdownList-picker-margin-top;
       padding: @DropdownList-picker-padding;
+      max-height: @DropdownList-picker-max-height;
    }
    &.controls-FloatArea {
       background: transparent;
@@ -287,7 +296,7 @@
         }
       }
       &.controls-DropdownList__child{
-        padding: 3px 8px;
+        padding: 3px 8px 2px 8px;
         .controls-DropdownList__itemTextWrapper{
           padding-left: 16px;
         }

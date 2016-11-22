@@ -5,12 +5,13 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
    ],
 
    /**
-    * Всплывающее нотификационное уведомление с иконкой, заголовком и дополнительным содержимым.
+    * Класс контрола "Всплывающее нотификационное уведомление", для которого можно установить иконку (см. {@link icon}), заголовок (см. {@link caption}) и шаблоны (см. {@link headerTemplate}, {@link bodyTemplate} и {@link footerTemplate}).
+    * Для вызова контрола рекомендуется использовать {@link SBIS3.CONTROLS.Utils.InformationPopupManager}.
     * @class SBIS3.CONTROLS.NotificationPopup
     * @extends SBIS3.CONTROLS.InformationPopup
     * @control
     * @public
-    * @author Степин П.В.
+    * @author Степин Павел Владимирович
     */
    function(InformationPopup, template, headerTpl){
       'use strict';
@@ -25,39 +26,52 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
       var NotificationPopup = InformationPopup.extend( /** @lends SBIS3.CONTROLS.NotificationPopup.prototype */ {
          $protected: {
             _options: {
-
                /**
-                * @cfg {Function} Шаблон шапки. По умолчанию используется шаблон с иконкой и заголовком.
+                * @cfg {Function} Устанавливает шаблон шапки нотификационного уведомления.
+                * @remark
+                * По умолчанию используется шаблон с иконкой и заголовком.
+                * Внутри шаблона объект it возвращает опции класса.
+                * @see bodyTemplate
+                * @see footerTemplate
+                * @see icon
                 */
                headerTemplate: headerTpl,
-
                /**
-                * @cfg {Function} Шаблон для содержимого
+                * @cfg {Function} Устанавливает шаблон для содержимого нотификационного уведомления.
+                * @remark
+                * Внутри шаблона объект it возвращает опции класса.
+                * @see headerTemplate
+                * @see footerTemplate
                 */
                bodyTemplate: null,
-
                /**
-                * @cfg {Function} Шаблон для нижней части
+                * @cfg {Function} Устанавливает шаблон футера нотификационного уведомления.
+                * @remark
+                * Внутри шаблона объект it возвращает опции класса.
+                * @see headerTemplate
+                * @see bodyTemplate
                 */
                footerTemplate: null,
-
                /**
-                * @cfg {String} Иконка. Отображается в шапке.
-                * По умолчанию иконка зависит от опции status.
+                * @cfg {String} Устанавливает иконку в заголовке нотификационного уведомления.
+                * @remark
+                * По умолчанию отображается в шапке нотификационного сообщения и зависит от значения опции {@link SBIS3.CONTROLS.InformationPopup#status}.
+                * Список иконок доступен <a href='https://wi.sbis.ru/docs/icons/'>здесь</a>.
+                * @see setIcon
                 */
                icon: null,
-
                /**
-                * @cfg {String} Заголовок. Отображается в шапке.
+                * @cfg {String} Устанавливает текст заголовка нотификационного уведомления.
+                * @remark
+                * По умолчанию отображается в шапке нотификационного сообщения.
                 * @translatable
+                * @see setCaption
                 */
                caption: null,
-
                /*
                 * @noShow
                 */
                template: template,
-
                /*
                 * @noShow
                 */
@@ -79,20 +93,20 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
                this.setStatus(this._options.status);
             }
          },
-
          /**
-          * Установить заголовок
-          * @param {String} caption Новый заголовок
+          * Установливает заголовок нотификационного уведомления.
+          * @param {String} caption Текст заголовка.
+          * @see caption
           */
          setCaption: function(caption){
             if(typeof caption === 'string'){
                this.getContainer().find('.controls-NotificationPopup__header_caption').text(caption);
             }
          },
-
          /**
-          * Установить иконку
-          * @param {String} icon Новая иконка
+          * Установливает иконку в заголовке нотификационного уведомления.
+          * @param {String} icon Иконка. Список иконок доступен <a href='https://wi.sbis.ru/docs/icons/'>здесь</a>.
+          * @see icon
           */
          setIcon: function(icon){
             if(typeof icon === 'string'){
@@ -100,11 +114,6 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
                this._customIcon = true;
             }
          },
-
-         /**
-          * Установить новое состояние
-          * @param {InformationPopupStatus} status
-          */
          setStatus: function(status){
             if(!this._customIcon){
                this._setIcon(ICONS[status] || '');

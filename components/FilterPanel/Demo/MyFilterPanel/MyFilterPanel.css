@@ -24,4 +24,6 @@
 .controls-MyFilterPanelToggleButton {
    margin-top: 12px;
    float: left;
+   width: 100px;
+   height: 100px;
 }

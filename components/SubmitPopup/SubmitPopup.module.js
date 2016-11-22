@@ -7,14 +7,13 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
 ],
 
    /**
-    * Информационное окно.
-    * В зависимости от состояния, может быть диалогом подтверждения, с кнопками "Да", "Нет" и (опционально) "Отмена",
-    * или диалогом с кнопкой "Ок".
+    * Класс контрола "Окно подтверждения". В зависимости от состояния (см. {@link status}), может быть диалогом подтверждения, с кнопками "Да", "Нет" и "Отмена" (опционально), или диалогом с кнопкой "Ок".
+    * Для вызова контрола рекомендуется использовать {@link SBIS3.CONTROLS.Utils.InformationPopupManager}.
     * @class SBIS3.CONTROLS.SubmitPopup
     * @extends SBIS3.CONTROLS.InformationPopup
     * @control
     * @public
-    * @author Степин П.В.
+    * @author Степин Павел Владимирович
     */
    function( constants,InformationPopup, template){
       'use strict';
@@ -22,73 +21,87 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
       var SubmitPopup = InformationPopup.extend(/** @lends SBIS3.CONTROLS.SubmitPopup.prototype */ {
          /**
           * @typedef {String} SubmitPopupStatus
-          * @variant confirm  Диалог подтверждения. Имеет кнопки "Да", "Нет" и (опционально) "Отмена". Цвет диалога - синий.
+          * @variant confirm  Диалог подтверждения. Имеет кнопки "Да", "Нет" и "Отмена" (опционально). Цвет диалога - синий.
           * @variant default  "По умолчанию". Имеет кнопку "ОК". Цвет диалога - синий.
           * @variant success  "Успешно". Имеет кнопку "ОК". Цвет диалога - зеленый.
           * @variant error    "Ошибка". Имеет кнопку "ОК". Цвет диалога - красный.
           */
-
          /**
           * @typedef {Boolean|undefined} ChosenStatus
-          * @variant true Нажата кнопка "Да"
-          * @variant false Нажата кнопка "Нет"
-          * @variant undefined Нажата кнопка "ОК" или "Отмена"
+          * @variant true Нажата кнопка "Да".
+          * @variant false Нажата кнопка "Нет".
+          * @variant undefined Нажата кнопка "ОК" или "Отмена".
           */
          /**
-          * @event onChoose Событие нажатия на кнопку в окне.
+          * @event onChoose Происходит при нажатии на кнопку диалога.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {ChosenStatus} Вариант диалога, выбранный нажатием соответствующей кнопки
+          * @param {ChosenStatus} Вариант диалога, выбранный нажатием соответствующей кнопки.
           * @variant
           */
-
          /**
           * @typedef {Object} ButtonConfig
-          * @property {Boolean} isLink Показать кнопку ссылку вместо обычной кнопки
+          * @property {Boolean} isLink Показать кнопку-ссылку вместо обычной кнопки.
           * @property {String} caption Текст кнопки.
           */
          $protected: {
             _options: {
-
                /**
-                * @cfg {SubmitPopupStatus} Состояние диалога. От состояния заивисит цвет линии в шапке и набор кнопок.
+                * @name SBIS3.CONTROLS.SubmitPopup#opener
+                * @cfg {undefined|$ws.proto.Control} Устанавливает контрол, который будет считаться инициатором открытия диалога.
+                */
+               /**
+                * @cfg {SubmitPopupStatus} Устанавливает состояние диалога. От состояния зависит цвет линии в шапке и набор кнопок.
                 */
                status: 'default',
                /**
-                * @cfg {String} Отображаемое сообщение.
+                * @cfg {String} Устанавливает отображаемое в диалоге сообщение.
+                * @see details
                 */
                message: '',
-
                /**
-                * @cfg {String} Детали сообщения, отображаются под основным сообщением.
+                * @cfg {String} Устанавливает детали сообщения, которые отображаются под основным сообщением (см. {@link message}).
+                * @see message
                 */
                details: '',
-               
                /**
-                * @cfg {ButtonConfig} Настройки кнопки подтверждения. Применяется для диалогов со статусом confirm.
+                * @cfg {ButtonConfig} Устанавливает конфигурацию кнопки "Да". Применяется для диалогов со статусом confirm.
+                * @see status
+                * @see negativeButton
+                * @see cancelButton
+                * @see submitButton
                 */
                positiveButton: {
                   caption: rk('Да'),
                   isLink: false
                },
-
                /**
-                * @cfg {ButtonConfig} Настройки кнопки отрицания. Применяется для диалогов со статусом confirm.
+                * @cfg {ButtonConfig} Устанавливает конфигурацию кнопки "Нет". Применяется для диалогов со статусом confirm.
+                * @see status
+                * @see positiveButton
+                * @see cancelButton
+                * @see submitButton
                 */
                negativeButton: {
                   caption: rk('Нет'),
                   isLink: false
                },
-
                /**
-                * @cfg {ButtonConfig} Настройки кнопки отмены. Применяется для диалогов со статусом confirm.
+                * @cfg {ButtonConfig} Устанавливает конфигурацию кнопки "Отмена". Применяется для диалогов со статусом confirm.
+                * @see status
+                * @see positiveButton
+                * @see negativeButton
+                * @see submitButton
                 */
                cancelButton: {
                   caption: rk('Отмена'),
                   isLink: false
                },
-
                /**
-                * @cfg {ButtonConfig} Настройки кнопки подтверждения. Применяется для диалогов со статусом default, success  и error.
+                * @cfg {ButtonConfig} Устанавливает конфигурацию кнопки "ОК". Применяется для диалогов со статусом default, success  и error.
+                * @see status
+                * @see positiveButton
+                * @see negativeButton
+                * @see cancelButton
                 */
                submitButton: {
                   caption: rk('ОК'),
@@ -96,17 +109,20 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                },
 
                /**
-                * @cfg {Boolean} Использовать ли кнопку Отмена. Опция актуальна только для окна подтверждения.
+                * @cfg {Boolean} Устанавливает использование кнопки "Отмена". Опция актуальна только для диалогов со статусом confirm.
+                * @see status
                 */
                hasCancelButton: false,
 
                /**
-                * @cfg {Function} Шаблон для сообщения
+                * @cfg {Function} Устанавливает шаблон отображения сообщения (см. {@link message}).
+                * @see detailsTemplate
                 */
                messageTemplate: null,
 
                /**
-                * @cfg {Function} Шаблон для деталей, отображается под основным сообщением
+                * @cfg {Function} Устанавливает шаблон отображения деталей сообщения(см. {@link details}).
+                * @see messageTemplate
                 */
                detailsTemplate: null,
 
@@ -116,15 +132,19 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                template: template,
 
                /*
-                * cfg {Number} Максимальный размер сообщения, превышая который, окно увеличит свой размер.
+                * cfg {Number} Устанавливает максимальный размер сообщения, превышая который, окно увеличит свой размер.
+                * @see detailsMaxLength
                 */
                messageMaxLength: 100,
 
                /*
-                * cfg {Number} Максимальный размер описания, превышая который, окно увеличит свой размер.
+                * cfg {Number} Устанавливает максимальный размер описания, превышая который, окно увеличит свой размер.
+                * @see messageMaxLength
                 */
                detailsMaxLength: 160,
-
+               /**
+                * cfg {Boolean} Устанавливает тип диалога: модальный или немодальный.
+                */
                isModal: true
             },
 
