@@ -251,16 +251,16 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
       },
       _resetFilter: function() {
          this._filterRecordSet.each(function(item) {
+            item.set(ITEM_FILTER_TEXT_VALUE, ''); // Вначале нужно поменять текстовое описание и лишь потом фильтр, т.к. при onFilterChange должно быть уже правильное текстовое значение
             item.set(ITEM_FILTER_VALUE, cFunctions.clone(item.get(ITEM_FILTER_RESET_VALUE)));
-            item.set(ITEM_FILTER_TEXT_VALUE, '');
          });
          this._notify('onFilterReset', this.getFilter());
       },
       _resetFilterField: function(fieldName) {
          var
             item = this._filterRecordSet.at(this._filterRecordSet.getIndexByValue(ITEM_FILTER_ID, fieldName));
+         item.set(ITEM_FILTER_TEXT_VALUE, ''); // Вначале нужно поменять текстовое описание и лишь потом фильтр, т.к. при onFilterChange должно быть уже правильное текстовое значение
          item.set(ITEM_FILTER_VALUE, cFunctions.clone(item.get(ITEM_FILTER_RESET_VALUE)));
-         item.set(ITEM_FILTER_TEXT_VALUE, '');
       },
       _getContentContainer: function() {
          return $('.controls-FilterPanel__contentContainer', this.getContainer());
