@@ -261,3 +261,53 @@
       display: none;
    }
 }
+.controls-GroupBy__separator {
+   height: @list-view-separator-height / 2;
+   margin-bottom: @list-view-separator-height / 2;
+   border-bottom: @list-view-separator-line;
+}
+.controls-GroupBy__separator__center {
+   text-align: center;
+}
+.controls-GroupBy__separator__right {
+   text-align: right;
+}
+.controls-GroupBy__separatorText {
+   height: @list-view-separator-height;
+   line-height: @list-view-separator-height;
+   display: inline-block;
+   padding: @list-view-separator-content-padding;
+   background: #fff;
+   color: @list-view-separator-content-color;
+   font-size: @list-view-separator-content-size;
+   &.controls-GroupBy__separatorCollapse{
+      cursor: pointer;
+      &:before {
+         width: @list-view-separator-expander-size;
+         height: @list-view-separator-expander-size;
+         content: '\e000';
+         color: @list-view-separator-content-color;
+         font-size: @list-view-separator-expander-size;
+         display: inline-block;
+         float: left;
+         margin-right: 6px;
+      }
+      &.controls-GroupBy__separatorCollapse__collapsed {
+         &:before {
+            content: '\e013';
+         }
+      }
+   }
+}
+/*с включенной черезполосицей нужно отключать верхний бордер у строк, следующих за группой*/
+.ws-is-desktop-platform {
+   .controls-GroupBy__separatorText {
+      &.controls-GroupBy__separatorCollapse{
+         &:hover{
+            &, &:before {
+               color: @list-view-separator-content-hover-color;
+            }
+         }
+      }
+   }
+}
