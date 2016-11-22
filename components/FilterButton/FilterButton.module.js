@@ -17,7 +17,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
    "js!SBIS3.CORE.MarkupTransformer",
    "js!SBIS3.CONTROLS.Link",
    "js!SBIS3.CONTROLS.Button",
-   "js!SBIS3.CONTROLS.IconButton",
    "js!SBIS3.CONTROLS.FilterButton.FilterLine",
    "js!SBIS3.CONTROLS.FilterHistory",
    "js!SBIS3.CONTROLS.AdditionalFilterParams",
@@ -145,7 +144,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
              declareCmd('show-filter', showPicker);
              declareCmd('change-field-internal', this._changeFieldInternal.bind(this));
 
-             this.getContainer().on('click', '.controls__filterButton__filterLine-items', showPicker);
+             this.getContainer().removeClass('ws-area')
+                                .on('click', '.controls__filterButton__filterLine-items, .controls__filterButton-button', showPicker);
           },
 
           showPicker: function() {
