@@ -49,8 +49,21 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
       return digits;
    },
 
-   getFullText = function() {
-
+   getFullText = function(srcText, model) {
+      var item, fullText = '';
+      if (srcText.charAt(0) == '+') {
+         srcText = srcText.substring(1);
+      }
+      for (var i = 0; i < model.length; i++) {
+         item = model[i];
+         if (item.isGroup) {
+            fullText += srcText.substr(0, item.innerMask.length);
+            srcText = srcText.substring(item.innerMask.length);
+         } else {
+            fullText += item.innerMask;
+         }
+      }
+      return fullText;
    };
 
    var PhoneTextBox = FormattedTextBoxBase.extend( /** @lends SBIS3.CONTROLS.PhoneCall.prototype */ {
@@ -62,20 +75,20 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
          }
       },
 
-      $constructor: function() {
-         // Первоначальная установка даты, если передана опция
-         if ( this._options.srcText ) {
-            this._setDate( this._options.date );
-         }
-
-         if (this._options.text  &&  !this._options.date) {
-            this.setText(this._options.text);
-         }
-      },
-
       _modifyOptions : function(cfg) {
+
+
          if (cfg.srcText) {
-            cfg.text = getFullText(cfg.srcText);
+            var formatModel = cfg._createModel(cfg._controlCharactersSet, cfg.mask);
+            cfg.text = getFullText(cfg.srcText, formatModel.model);
+            if (cfg.srcText.charAt(0) != '+') {
+               cfg.srcText = '+' + cfg.srcText;
+            }
+         }
+         else {
+            if (cfg.text) {
+               cfg.srcText = getSrcText(cfg.text);
+            }
          }
          var newCfg = PhoneTextBox.superclass._modifyOptions.apply(this, arguments);
 
@@ -84,13 +97,16 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
 
       _setEnabled: function(state) {
          PhoneTextBox.superclass._setEnabled.apply(this, arguments);
-         $('.controls-FormattedTextBox__fieldWrapper', this._container.get(0)).toggleClass('ws-hidden', !state);
+         $('.js-controls-FormattedTextBox__field', this._container.get(0)).toggleClass('ws-hidden', !state);
          $('.controls-PhoneTextBox__link', this._container.get(0)).toggleClass('ws-hidden', state);
       },
 
       _updateText: function() {
          PhoneTextBox.superclass._updateText.apply(this, arguments);
-         $('.controls-PhoneTextBox__link', this._container.get(0)).text(this.getText());
+         this._options.srcText = getSrcText(this.getText());
+         $('.controls-PhoneTextBox__link', this._container.get(0))
+            .text(this.getText())
+            .attr('href', 'tel:' + this._options.srcText);
       }
    });
 
