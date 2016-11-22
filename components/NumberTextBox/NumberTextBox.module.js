@@ -49,8 +49,37 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
     * </component>
     */
 
-   var NumberTextBox;
-   NumberTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS.NumberTextBox.prototype */ {
+   function formatText(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength){
+      var decimals = onlyInteger ? 0 : decimals,
+          isDotLast = value.length ? value.indexOf('.') === value.length - 1 : false;
+
+      if (value == '-') {
+         return value;
+      }
+      value = cDefaultRenders.numeric(
+         value,
+         integers,
+         delimiters,
+         decimals,
+         onlyPositive,
+         maxLength,
+         true
+      );
+      if(isDotLast){
+         value = value ? value + '.' : '.';
+      }
+      if(!checkMaxLength(value, maxLength)){
+         return text;
+      }
+      return value || '';
+   }
+
+   function checkMaxLength(value, maxLength){
+      var length = value ? value.replace(/\s/g,'').length : 0;
+      return !(maxLength && length > maxLength);
+   }
+
+   var NumberTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS.NumberTextBox.prototype */ {
       $protected: {
          _inputField: null,
          _caretPosition: [0, 0],
@@ -152,6 +181,23 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          }
       },
 
+      _modifyOptions: function(options){
+         options = NumberTextBox.superclass._modifyOptions.apply(this, arguments);
+         if (options.numericValue){
+            options.text = formatText(
+               options.numericValue, 
+               options.text, 
+               options.onlyInteger, 
+               options.decimals, 
+               options.integers, 
+               options.delimiters, 
+               options.onlyPositive, 
+               options.maxLength
+            );
+         }
+         return options;
+      },
+
       $constructor: function () {
          var self = this;
          this.getContainer().addClass('controls-NumberTextBox');
@@ -192,12 +238,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             this._inputField.val(this._options.text);
          }
          NumberTextBox.superclass._inputFocusInHandler.apply(this, arguments);
-      },
-
-      _checkMaxLength: function(value){
-         var
-             length = value ? value.replace(/\s/g,'').length : 0;
-         return !(this._options.maxLength && length > this._options.maxLength);
       },
 
       _setText: function(text){
@@ -297,28 +337,16 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       },
 
       _formatText: function(value){
-         var decimals = this._options.onlyInteger ? 0 : this._options.decimals,
-             isDotLast = value.length ? value.indexOf('.') === value.length - 1 : false;
-
-         if (value == '-') {
-            return value;
-         }
-         value = cDefaultRenders.numeric(
-            value,
-            this._options.integers,
-            this._options.delimiters,
-            decimals,
-            this._options.onlyPositive,
-            this._options.maxLength,
-            true
+         return formatText(
+            value, 
+            this._options.text, 
+            this._options.onlyInteger, 
+            this._options.decimals, 
+            this._options.integers, 
+            this._options.delimiters, 
+            this._options.onlyPositive, 
+            this._options.maxLength
          );
-         if(isDotLast){
-            value = value ? value + '.' : '.';
-         }
-         if(!this._checkMaxLength(value)){
-            return this._options.text;
-         }
-         return value || '';
       },
 
       _arrowUpClick: function(){
@@ -389,7 +417,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             dotPosition = currentVal.indexOf('.'),
             symbol = String.fromCharCode(keyCode),
             spaceCount = currentVal.split(' ').length - 1,
-            checkMaxLength = this._checkMaxLength(currentVal),
+            checkMaxLength = checkMaxLength(currentVal, this._options.maxLength),
             newCaretPosition = b;
          if (currentVal[0] == 0 && b == e && b == 1){ // заменяем первый ноль если курсор после него
             newCaretPosition--;
