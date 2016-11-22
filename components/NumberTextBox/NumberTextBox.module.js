@@ -182,7 +182,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       },
 
       _modifyOptions: function(options){
-         options = NumberTextBox.superclass._modifyOptions.call(this);
+         options = NumberTextBox.superclass._modifyOptions.apply(this, arguments);
          if (options.numericValue){
             options.text = formatText(
                options.numericValue, 
