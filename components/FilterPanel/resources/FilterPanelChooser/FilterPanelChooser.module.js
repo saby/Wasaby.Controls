@@ -27,10 +27,18 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
            return true;
         },
         createDataSource = function(items, keyField) {
-            return new Memory({
-                data: items,
-                idProperty: keyField
-            });
+            if (items instanceof Array) {
+                return new Memory({
+                    data: items,
+                    idProperty: keyField
+                });
+            } else if (cInstance.instanceOfModule(items, 'WS.Data/Collection/RecordSet')) {
+                return new Memory({
+                    data: items.getRawData(),
+                    adapter: items.getAdapter(),
+                    idProperty: keyField
+                });
+            }
         };
     'use strict';
 
@@ -46,16 +54,31 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
             _options: {
                 _itemTpl: itemTpl,
                 items: undefined,
-                filter: [],
+                value: [],
                 favorites: [],
-                favoritesCount: 0,
+                favoritesCount: undefined,
                 captionFullList: 'Все',
                 //list, dictionary, favorites
                 viewMode: 'list',
                 keyField: 'id',
                 countField: 'count',
                 displayField: 'title',
-                dictionaryTemplate: undefined
+                /**
+                 * @typedef {String} selectionTypeDef Режим выбора.
+                 * @variant node выбираются только узлы
+                 * @variant leaf выбираются только листья
+                 * @variant all выбираются все записи
+                 * @typedef {Object} dictionaryOptions
+                 * @property {String} template Компонент, на основе которого организован справочник.
+                 * @property {selectionTypeDef} selectionType
+                 * @property {Object} componentOptions
+                 * Группа опций, которые передаются в секцию _options компонента из опции template. На его основе строится справочник.
+                 * Значения переданных опций можно использовать в дочерних компонентах справочника через инструкции шаблонизатора.
+                 **/
+                /**
+                 * @cfg {dictionaryOptions} Устанавливает настройки справочника.
+                 **/
+                dictionaryOptions: {}
             },
             //Происходил выбор из справочника
             _isSelected: false
@@ -79,7 +102,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
             sorting[this._options.countField] = 'DESC';
             listView.setSorting(sorting);
             if (this._options.viewMode === 'favorites') {
-                this._getFavoritesCheckBox().subscribe('onCheckedChange', this._onFavoritesCheckedChange.bind(this));
+                this._getFavoritesCheckBox().subscribe('onValueChange', this._onFavoritesCheckedChange.bind(this));
             }
             this._updateFavoritesCheckBox();
 
@@ -90,23 +113,32 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
         _modifyOptions: function() {
             var opts = FilterPanelChooser.superclass._modifyOptions.apply(this, arguments);
             opts.dataSource = createDataSource(opts.items, opts.keyField);
+            opts.favoritesIsChecked = contains(opts.value, opts.favorites);
             opts._itemsCount = opts.items.length;
             return opts;
         },
 
-        getFilter: function() {
-            return this._options.filter;
+        getValue: function() {
+            return this._options.value;
         },
 
-        setFilter: function(keys) {
-            this._setFilter(keys);
+        setValue: function(keys) {
+            this._setValue(keys);
             this._getListView().setSelectedKeys(keys);
             this._updateFavoritesCheckBox();
         },
 
-        _setFilter: function(filter) {
-            this._options.filter = filter;
-            this._notifyOnPropertyChanged('filter');
+        _setValue: function(value) {
+            var
+               self = this,
+               viewItems = this._getListView().getItems(),
+               textValue = '';
+            $ws.helpers.forEach(value, function(id, idx) {
+                textValue += viewItems.getRecordById(id).get(self._options.displayField) + (idx < value.length - 1 ? ', ' : '');
+            });
+            this.setTextValue(textValue);
+            this._options.value = value;
+            this._notifyOnPropertyChanged('value');
         },
 
         _clickFavoritesHandler: function(e) {
@@ -116,25 +148,25 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
 
         _elemClickHandler: function(e, id) {
             this._getListView().toggleItemsSelection([id]);
-            this._setFilter(this._getFilter());
+            this._updateValue();
         },
 
         _onFavoritesCheckedChange: function() {
-            this._setFilter(this._getFilter());
+            this._updateValue();
         },
 
-        _getFilter: function() {
+        _updateValue: function() {
             var
                 favorites = this._options.favorites,
-                filter = cFunctions.clone(this._getListView().getSelectedKeys());
-            if (this._options.viewMode === 'favorites' && this._getFavoritesCheckBox().isChecked()) {
+                value = cFunctions.clone(this._getListView().getSelectedKeys());
+            if (this._options.viewMode === 'favorites' && this._getFavoritesCheckBox().getValue()) {
                 for (var i = 0; i < favorites.length; i++) {
-                    if (!ArraySimpleUtil.hasInArray(filter, favorites[i])) {
-                        filter.push(favorites[i]);
+                    if (!ArraySimpleUtil.hasInArray(value, favorites[i])) {
+                        value.push(favorites[i]);
                     }
                 }
             }
-            return filter;
+            this._setValue(value);
         },
 
         _selectedItemsChangeHandler: function(event, idArray, changed) {
@@ -161,7 +193,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
         },
 
         _showDictionary: function(meta) {
-            meta = meta || {};
+            meta = cFunctions.merge(cFunctions.clone(this._options.dictionaryOptions), meta || {});
             meta.selectedItems = this._getListView().getSelectedItems();
             this._getSelector().execute(meta);
         },
@@ -176,7 +208,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
 
         _updateFavoritesCheckBox: function() {
             if (this._options.viewMode === 'favorites') {
-                this._getFavoritesCheckBox().setChecked(contains(this._options.filter, this._options.favorites));
+                this._getFavoritesCheckBox().setValue(contains(this._options.value, this._options.favorites));
             }
         },
 
@@ -195,8 +227,20 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
                     selectedKeys.push(items[i][this._options.keyField]);
                 }
                 this._getListView().setSelectedKeys(selectedKeys);
+                this._updateValue();
                 this._updateAllButton();
                 this._isSelected = true;
+            }
+        },
+
+        getTextValue: function() {
+            return this._options.textValue;
+        },
+
+        setTextValue: function(textValue) {
+            if (textValue !== this._options.textValue) {
+                this._options.textValue = textValue;
+                this._notifyOnPropertyChanged('textValue');
             }
         },
 
@@ -206,7 +250,6 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
         _getSelector: fHelpers.memoize(function() {
             return new SelectorAction({
                 mode: 'floatArea',
-                template: this._options.dictionaryTemplate,
                 handlers: {
                     onExecuted: this._onExecutedHandler.bind(this)
                 }

@@ -88,25 +88,17 @@ define('js!SBIS3.CONTROLS.EditInPlace',
              */
             _getRecordsDifference: function() {
                var
-                   raw1, raw2,
+                   prevValue,
                    result = [];
-               if (cInstance.instanceOfModule(this._editingModel, 'WS.Data/Entity/Model')) {
-                  this._editingModel.each(function(field, value) {
-                     if (value != this._previousModelState.get(field)) {
-                        result.push(field);
-                     }
-                  }, this);
-               } else {
-                  raw1 = this._editingModel.getRawData();
-                  raw2 = this._previousModelState.getRawData();
-                  for (var field in raw1) {
-                     if (raw1.hasOwnProperty(field)) {
-                        if (raw1[field] != raw2[field]) {
-                           result.push(field);
-                        }
-                     }
+               this._editingModel.each(function(field, value) {
+                  prevValue = this._previousModelState.get(field);
+                  //Сложные типы полей(например Enum), нельзя сравнивать поссылочно, иначе будет неверный результат
+                  //Такие типы должны обладать методом isEqual, с помощью которого и будем производить сравнение
+                  if (value && typeof value.isEqual === 'function' && !value.isEqual(prevValue) || value != prevValue) {
+                     result.push(field);
                   }
-               }
+               }, this);
+
                return result;
             },
             _getElementToFocus: function() {
@@ -218,10 +210,26 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }
             },
             updatePosition: function() {
-               var editorTop = this.getTarget().position().top - this.getContainer().position().top;
-               $.each(this._editors, function(id, editor) {
-                  $(editor).css('top', editorTop);
-               });
+               var
+                   editorTop,
+                   target = this.getTarget();
+
+               //TODO: Тут необходима проверка на target. При добалении по месту, мы создаём фейковую строку, которая является таргетом.
+               //При завршение добавления, мы фейковую строку из DOM удаляем. Для корректной работы редактирования необходимо
+               //выполнить по порядку 3 действия: отписаться от изменения высоты, удалить фейковую строку, скрыть редактирование.
+               //Такой порядок обязателен т.к. в ховер режиме если сначала скрыть редактирование, то курсор попадёт на фейковую
+               //строку и начнётся редактирование для фейковой строки, у которой нет рекорда, что приведёт к ошибкам.
+               //Отписка и скрытие происходит внутри метода endEdit у редактирования. А фейковой строкой занимается контроллер,
+               //т.к. он её создаёт, а само редактирование разницы между редактированием и добавлением не знает.
+               //Получается для корректной работы нужно метод endEdit разбивать на 2 и между вызовами удалять фейковую строку.
+               //Но т.к. в скором времени планируется отказаться от hover режима, добавим проверку на наличие таргета,
+               //которую можно будет удалить после отказа от hover режима.
+               if (target && target.length) {
+                  editorTop = target.position().top - this.getContainer().position().top;
+                  $.each(this._editors, function (id, editor) {
+                     $(editor).css('top', editorTop);
+                  });
+               }
             },
             getEditingRecord: function() {
                return this._editingModel;

@@ -196,8 +196,8 @@
       }
       .controls-EditAtPlace {
          .controls-DateRange{
-           height: 24px;
-           position: relative;
+            height: 24px;
+            position: relative;
          }
 
          .controls-EditAtPlace__textField{
@@ -344,16 +344,25 @@
 }
 
 .ws-is-firefox {
-  .controls-TabButton .controls-TabButton__inner{
-    line-height: 29px;
+  .controls-TabButton {
+     .controls-TabButton__inner{
+        line-height: 29px;
+     }
+     &.controls-TabButton__main-item .controls-TabButton__inner{
+        line-height: 26px;
+     }
+     .controls-EditAtPlace{
+        .controls-EditAtPlace__fieldWrapper .controls-TextBox__field{
+           padding: 0;
+        }
+        .controls-EditAtPlace__editor .controls-TextBox__fieldWrapper{
+           padding-top: 2px;
+        }
+     }
   }
-  .controls-TabButton.controls-TabButton__main-item .controls-TabButton__inner{
-    line-height: 26px;
-  }
-  .controls-TabButtons__simple-view-mini .controls-TabButton .controls-TabButton__inner {
-    line-height: 23px;
-  }
-  .controls-EditAtPlace .js-controls-EditAtPlace__fieldWrapper .controls-TextBox__field{
-    padding-bottom: 0;
+  .controls-TabButtons__simple-view-mini {
+     .controls-TabButton .controls-TabButton__inner {
+        line-height: 23px;
+     }
   }
 }

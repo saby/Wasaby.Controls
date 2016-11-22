@@ -384,17 +384,17 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             if (newText != this._options.text) {
                ComboBox.superclass.setText.call(this, newText);
                this._drawNotEditablePlaceholder(newText);
-               $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(newText);
-               /*управлять этим классом надо только когда имеем дело с рекордами
-               * потому что только в этом случае может прийти рекорд с пустым ключом null, в случае ENUM это не нужно
-               * вообще этот участок кода нехороший, помечу его TODO
-               * планирую избавиться от него по задаче https://inside.tensor.ru/opendoc.html?guid=fb9b0a49-6829-4f06-aa27-7d276a1c9e84&description*/
-               if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
-                  this._container.toggleClass('controls-ComboBox_emptyValue', (key === null));
-               }
-               else {
-                  this._container.removeClass('controls-ComboBox_emptyValue');
-               }
+               $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(newText);                              
+            }
+            /*управлять этим классом надо только когда имеем дело с рекордами
+             * потому что только в этом случае может прийти рекорд с пустым ключом null, в случае ENUM это не нужно
+             * вообще этот участок кода нехороший, помечу его TODO
+             * планирую избавиться от него по задаче https://inside.tensor.ru/opendoc.html?guid=fb9b0a49-6829-4f06-aa27-7d276a1c9e84&description*/
+            if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
+               this._container.toggleClass('controls-ComboBox_emptyValue', (key === null));
+            }
+            else {
+               this._container.removeClass('controls-ComboBox_emptyValue');
             }
          }
          else {
@@ -426,8 +426,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          //TODO нужно ли здесь звать redraw? Сейчас без этого не работает.
          this.redraw();
          //Подписка на клик по элементу комбобокса
-         //TODO mouseup из за того что контрол херит событие клик
-         this._picker.getContainer().mouseup(function (e) {
+         //Подписываемся на onClick контрола, т.к. на мобильных платформах может не стрельнуть обработчик события mouseup/mousedown. Связано это с тем,
+         //что кто-то может прервать событие touchstart, вследствие чего описанные события не стрельнут.
+         //Подписка на платформенное событие более правильное решение, т.к. наше событие будет всегда.
+         this._picker.subscribe('onClick', function (eventObject, e) {
             var row = $(e.target).closest('.js-controls-ComboBox__itemRow');
             if (row.length) {
 
@@ -549,10 +551,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   noItems = false;
                   selKey = item.getId();
                   self._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
+                  self._options.selectedIndex = self._getItemIndexByKey(self._options.selectedKey);
                   //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
                   if (oldKey !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
-                     self._notifySelectedItem(self._options.selectedKey);
-                     self._drawSelectedItem(self._options.selectedKey);
+                     self._notifySelectedItem(self._options.selectedKey, self._options.selectedIndex);
+                     self._drawSelectedItem(self._options.selectedKey, self._options.selectedIndex);
                   }
                });
 

@@ -17,26 +17,32 @@ define(
    'use strict';
 
    /**
-    * Контрол, отображающий корешки закладок
-    * Для корректной работы необходимо задание свойсв {@link keyField} и {@link displayField}
-    * Также для отдельных вкладок можно использовать модификаторы:
+    * Класс контрола "Вкладки". Чтобы контрол правильно работал, требуется установить опции {@link keyField} и {@link displayField}.
+    * Стандарт вкладок описан <a href='http://axure.tensor.ru/standarts/v7/%D0%B2%D0%BA%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_05_.html'>здесь</a>.
+    * @remark
+    * Чтобы скрыть одну вкладку, используйте следующий код:
+    * <pre>
+    *     // myId - идентификатор влкадки
+    *     this.getChildControlByName('TabButtons').getItemsInstances()[myId].hide()
+    * </pre>
     * @class SBIS3.CONTROLS.TabButtons
     * @extends SBIS3.CONTROLS.RadioGroupBase
     * @author Крайнов Дмитрий Олегович
+    *
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyTabButtons
     *
     * @cssModifier controls-TabButtons__simple-view Модификатор для вкладок второго уровня
-    * @cssModifier controls-TabButtons__simple-view-select Модификатор для вкладок второго уровня с рыжим цветом выделенной вкладки. использовать совместно с controls-TabButtons__simple-view
-    * @cssModifier controls-TabButtons__simple-view-mini Модификатор для неакцентных вкладок второго уровня
+    * @cssModifier controls-TabButtons__simple-view-select Устанавливает для вкладок второго уровня выделение рыжим цветом. Использовать совместно с модификатором "controls-TabButtons__simple-view".
+    * @cssModifier controls-TabButtons__simple-view-mini Модификатор для неакцентных вкладок 2-го уровня.
 
     * @css controls-TabButton__counter для вкладок, в которых используется счетчик. сам счетчик обернуть в класс controls-tabButton__counter-value
     * @css controls-TabButton__counter-success для вкладок, в которых используется счетчик зеленого цвета. использовать совместно с controls-TabButton__counter
     * @css controls-TabButton__counter-error для вкладок, в которых используется счетчик красного цвета. использовать совместно с controls-TabButton__counter
-    * @css controls-TabButton__mainText параметры текста, как у главной вкладки
-    * @css controls-TabButton__additionalText1 оформление дополнительного текста 1
-    * @css controls-TabButton__additionalText2 оформление дополнительного текста 2
-    * @css controls-TabButton__main-item оформления главной вкладки
+    * @css controls-TabButton__mainText Используется для оформления текста владки, как у главной вкладки.
+    * @css controls-TabButton__additionalText1 Используется для оформления текста обычной вкладки 2-го уровня, 1-ый стиль.
+    * @css controls-TabButton__additionalText2 Используется для текста обычной вкладки 2-го уровня, 2-ой стиль.
+    * @css controls-TabButton__main-item Используется для главной вкладки.
     */
    var
       buildTplArgs = function(cfg) {
@@ -65,7 +71,7 @@ define(
             _canServerRender: true,
             _defaultItemTemplate: ItemTemplate,
             /**
-             * @cfg {Content} содержимое между вкладками
+             * @cfg {Content} Устанавливает содержимое между вкладками.
              * @example
              * <pre>
              *     <option name="tabSpaceTemplate">

@@ -10,17 +10,17 @@ module.exports = function(grunt) {
          newPath,
          jsModules = {},
          gruntFilePath = path.resolve(),
-         resourcesBaseDir = path.join(gruntFilePath, 'components'),
+         componentsDir = path.join(gruntFilePath, 'components'),
+         wsdataDir = path.join(gruntFilePath, 'ws-data/WS.Data'),
          dirWalker = function(dir) {
-            newPath = '';
-            var files = fs.readdirSync(dir);
-            for (var i = 0; i < files.length; i++){
+            var pattern = /\.module\.js$/,
+               files = fs.readdirSync(dir);
+            for (var i = 0; i < files.length; i++) {
                newPath = path.join(dir, files[i]);
-               if (fs.statSync(newPath).isDirectory()){
+               if (fs.statSync(newPath).isDirectory()) {
                   dirWalker(newPath);
-               }
-               else {
-                  if (/\.module\.js$/.test(files[i])){
+               } else {
+                  if (pattern.test(files[i])) {
                      require(newPath);
                   }
                }
@@ -29,9 +29,10 @@ module.exports = function(grunt) {
 
       var restoreDefine = global.define;
       global.define = function(name){
-         jsModules[name.replace(/js!/,'')] = '/' + path.relative(resourcesBaseDir, newPath).replace(/\\/g,'/');
+         jsModules[name.replace(/js!/,'')] = '/' + path.relative(componentsDir, newPath).replace(/\\/g,'/');
       };
-      dirWalker(resourcesBaseDir);
+      dirWalker(componentsDir);
+      dirWalker(wsdataDir);
       global.define = restoreDefine;
 
       var jsModulesJsonString = JSON.stringify({jsModules: jsModules}, null, 3);

@@ -23,7 +23,7 @@
    color: @date-range-choose-color;
    font-family: @date-range-choose-font-family;
    font-size: @date-range-choose-font-size;
-   width: @date-range-choose-year-state-width;
+   min-width: @date-range-choose-year-state-width;
 
    .controls-DateRangeChoose__currentValue {
       font-size:  @date-range-choose-current-value-font-size;
@@ -32,6 +32,7 @@
       height: @date-range-choose-current-value-height;
       line-height: @date-range-choose-current-value-line-height;
       border-bottom: @date-range-choose-current-value-border-bottom;
+      padding: 0 @date-range-choose-current-value-padding-left-right;
       margin-bottom: @date-range-choose-current-value-margin-bottom;
       background-color: @date-range-choose-current-value-bg-color;
       cursor: pointer;
@@ -41,16 +42,17 @@
    }
 
    .controls-DateRangeChoose__yearWrapper {
+      position: relative;
       margin-bottom: @date-range-choose-year-margin-bottom;
       .controls-DateRangeChoose__year {
          cursor: pointer;
-         display: inline-block;
+         display: block;
          font-size: @date-range-choose-year-font-size;
          font-weight: @date-range-choose-year-font-weight;
          text-align: center;
          height: @date-range-choose-year-height;
          line-height: @date-range-choose-year-height + 1;
-         margin: 0 15px;
+         margin: 0 auto;
          width: @date-range-choose-width - @date-range-choose-border-width*2 - @date-range-choose-year-prev-next-btns-width*2 - 15*2;
          vertical-align: middle;
          &:hover {
@@ -64,6 +66,8 @@
          display: inline-block;
          font-size: @date-range-choose-year-prev-next-btns-font-size;
          font-weight: @date-range-choose-year-prev-next-btns-font-weight;
+         position: absolute;
+         top: 0;
          text-align: center;
          vertical-align: middle;
          height: @date-range-choose-year-height;
@@ -72,6 +76,12 @@
          &:hover {
             color: @date-range-choose-hover-color;
          }
+      }
+      .controls-DateRangeChoose__year-prev {
+         left: 0;
+      }
+      .controls-DateRangeChoose__year-next {
+         right: 0;
       }
    }
 
@@ -171,7 +181,7 @@
    &.controls-DateRangeChoose__showHalfYears,
    &.controls-DateRangeChoose__showQuarters,
    &.controls-DateRangeChoose__showMonths {
-      width: @date-range-choose-width;
+      min-width: @date-range-choose-width;
    }
 
    &.controls-DateRangeChoose__showHalfYears {

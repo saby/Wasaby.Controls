@@ -60,7 +60,7 @@
 @link-hover-text-decoration:              underline;
 
 @link-active-text-color:                  @link-hover-text-color;
-@link-active-text-decoration:             none;
+@link-active-text-decoration:             @link-hover-text-decoration;
 
 @link-icon-vertical-alignment:            middle;
 @link-icon-margin:                        -3px 0 0;
@@ -799,15 +799,15 @@
 
 @text-box-border-width:                   1px;
 @text-box-border-style:                   solid;
-@text-box-border-color:                   transparent transparent #eaeaea transparent;
-@text-box-bottom-border-color:            #eaeaea;
+@text-box-border-color:                   #eaeaea #eaeaea #ccc #eaeaea;
+@text-box-bottom-border-color:            #ccc;
 @text-box-bg:                             @white-color;
 @text-box-editor-bg:                      @white-color;
 @text-box-editor-text-color:              inherit;
 
 @text-box-focus-border-width:             @text-box-border-width;
 @text-box-focus-border-style:             @text-box-border-style;
-@text-box-focus-border-color:             #eaeaea #eaeaea @gray-light-color;
+@text-box-focus-border-color:             #ccc;
 @text-box-focus-bg:                       @text-box-bg;
 
 @text-box-error-border-width:             @text-box-border-width;
@@ -822,7 +822,7 @@
 
 @text-box-disabled-border-width:          @text-box-border-width;
 @text-box-disabled-border-style:          @text-box-border-style;
-@text-box-disabled-border-color:          transparent;
+@text-box-disabled-border-color:          transparent transparent #e4e4e4 transparent;
 @text-box-disabled-bg:                    transparent;
 @text-box-disabled-border-bottom:         1px solid #E4E4E4;
 
@@ -969,9 +969,11 @@
 @combo-box-arrow-spritesheet:                   'img/ComboBox.png';
 
 @combo-box-cursor:                              pointer;
+@combo-box-right-padding:                       4px;
 @combo-box-disabled-cursor:                     default;
 @combo-box-disabled-border-width:               0 0 1px 0;
-@combo-box-disabled-border-color:               #E4E4E4;
+@combo-box-disabled-border-bottom-color:        #E4E4E4;
+@combo-box-disabled-border-color:               transparent;
 @combo-box-disabled-color:                      inherit;
 
 @combo-box-field-font:                          inherit;
@@ -1012,10 +1014,9 @@
 @combo-box-picker-border-radius:                0;
 @combo-box-picker-margin:                       -1px;
 @combo-box-picker-padding:                      0 1px;
-@combo-box-picker-item-padding:                 4px;
 @combo-box-picker-item-font:                    inherit;
 @combo-box-picker-item-font-size:               15px;
-@combo-box-picker-item-padding:                 6px 4px;
+@combo-box-picker-item-padding:                 7px 4px 6px 4px;
 
 @combo-box-picker-item-text-color:              @combo-box-field-text-color;
 @combo-box-picker-item-bg:                      @white-color;
@@ -1053,12 +1054,12 @@
 
 @text-area-border-width:                        1px;
 @text-area-border-style:                        solid;
-@text-area-border-color:                        #eaeaea;
+@text-area-border-color:                        #eaeaea #eaeaea #cccccc #eaeaea;
 @text-area-bg:                                  @text-box-bg;
 
 @text-area-focus-border-width:                  @text-area-border-width;
 @text-area-focus-border-style:                  @text-area-border-style;
-@text-area-focus-border-color:                  #eaeaea #eaeaea @gray-light-color #eaeaea;
+@text-area-focus-border-color:                  #ccc;
 @text-area-focus-bg:                            @text-area-bg;
 
 @text-area-error-border-width:                  @text-area-border-width;
@@ -1362,6 +1363,7 @@
 @date-range-choose-current-value-bg-hover-color:   @date-range-choose-bg-hover-color;
 @date-range-choose-current-value-border-bottom: 1px solid @date-range-choose-border-color;
 @date-range-choose-current-value-margin-bottom: 4px;
+@date-range-choose-current-value-padding-left-right: 10px;
 
 @date-range-choose-year-font-size:              15px;
 @date-range-choose-year-font-weight:            bold;
@@ -1517,7 +1519,7 @@
 @edit-at-place-text-area-editor-font:           @edit-at-place-text-box-editor-font;
 
 @edit-at-place-editor-overlay-margin:           -5px 0 0 -5px;
-@edit-at-place-editor-overlay-padding:          4px;
+@edit-at-place-editor-overlay-padding:          4px 0 4px 4px;
 @edit-at-place-editor-overlay-border:           1px solid #e4e4e4;
 @edit-at-place-editor-overlay-border-radius:    4px;
 @edit-at-place-editor-overlay-bg:               #f3f3f3 !important;
@@ -1525,12 +1527,11 @@
 @edit-at-place-control-margin:                  0 0 0 8px;
 @edit-at-place-group-control-margin:            4px;
 
-@edit-at-place-cancel-button-width:             16px;
-@edit-at-place-cancel-button-height:            16px;
+@edit-at-place-cancel-button-width:             @closeButtonWidth;
+@edit-at-place-cancel-button-height:            @closeButtonHeight;
 @edit-at-place-cancel-button-margin:            0 0 0 4px;
-@edit-at-place-cancel-button-spritesheet:       'img/cancelIcon-sprite.png';
-@edit-at-place-cancel-button-bg:                url(@edit-at-place-cancel-button-spritesheet) 0 -32px no-repeat;
-@edit-at-place-cancel-button-hover-bg:          url(@edit-at-place-cancel-button-spritesheet) 0 -16px no-repeat;
+@edit-at-place-cancel-button-bg:                @closeButtonImage;
+@edit-at-place-cancel-button-hover-bg:          @closeButtonImageHover;
 
 
 
@@ -1555,7 +1556,7 @@
 @list-view-actions-active-bg:                   @data-grid-row-hover-bg !important;
 @list-view-actions-bg:                          @data-grid-row-hover-bg;
 
-@list-view-items-toolbar-bottom:                     0;
+@list-view-items-toolbar-bottom:                     3px;
 @list-view-items-toolbar-right:                      0;
 @list-view-items-toolbar-zindex:                     10;
 @list-view-items-toolbar-line-height:                24px;
@@ -1568,6 +1569,7 @@
 @list-view-items-toolbar-ipad-minHeight:             30px;
 @touch-mode-items-toolbar-icon-margin-top:           -24px;
 @list-view-items-toolbar-right-tile:                 1px;
+@list-view-items-toolbar-bottom-tile:                2px;
 
 @bottomStyle-items-toolbar-margin-top:               2px;
 
@@ -1609,6 +1611,9 @@
 @listView-empty-data-color:                     @black-color;
 @listView-empty-data-font-size:                 15px;
 @listView-empty-data-padding-top:               46px;
+@listView-servicefooter-padding:                0 8px;
+@listView-servicefooter-height:                 32px;
+@listView-servicefooter-fontsize:               12px;
 
 // ItemsToolbar small
 @list-view-small-items-toolbar-line-height:         16px;
@@ -1627,12 +1632,24 @@
 
 @bottomStyle-small-items-toolbar-margin-top:        4px;
 
+/*group*/
+@list-view-separator-height:                       24px;
+@list-view-separator-line:                         1px solid #eaeaea;
+@list-view-separator-content-padding:              0 12px;
+@list-view-separator-content-color:                @gray-color;
+@list-view-separator-content-size:                 12px;
+@list-view-separator-expander-size:                16px;
+@list-view-separator-content-hover-color:          @blue-dark-color;
+
 // --------- //
 //  ToolBar  //
 // --------- //
 
 @controls-toolbar-display:                      inline-block;
-@controls-toolbar-item-margin-right:            8px;
+@controls-toolbar-default-margin:               8px;
+@controls-toolbar-item-margin-right:            @controls-toolbar-default-margin;
+@controls-toolbar-menu-margin-left:             @controls-toolbar-default-margin;
+@controls-toolbar-container-margin-right:       -@controls-toolbar-default-margin;
 @controls-toolbar-item-vertical-align:          middle;
 
 // --------- //
@@ -1722,7 +1739,7 @@
 @data-grid-header-cell-cursor:                  default;
 @data-grid-header-cell-text-alignment:          left;
 @data-grid-header-cell-height:                  14px;
-@data-grid-header-cell-padding:                 4px 8px;
+@data-grid-header-cell-padding:                 4px 6px;
 @data-grid-header-cell-padding-side:            12px;
 @data-grid-header-cell-font-size:               12px;
 
@@ -1742,7 +1759,7 @@
 @data-grid-cell-text-alignment:                 @data-grid-header-cell-text-alignment;
 @data-grid-cell-height:                         30px;
 @data-grid-cell-line-height:                    20px;
-@data-grid-cell-padding:                        3px 8px;
+@data-grid-cell-padding:                        3px 6px;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
 @data-grid-cell-check-box-vertical-align: 		top !important;
@@ -1885,7 +1902,7 @@
 // ----------------------- //
 //      EditInPlace        //
 // ----------------------- //
-@controls-editInPlace-editor-padding:               3px;
+@controls-editInPlace-editor-padding:               3px 1px;
 @controls-editInPlace-editor-bg:                    #f3f3f3 !important;
 
 
@@ -1897,6 +1914,7 @@
 @listView-check-box-top:                            5px;
 @listView-check-box-width:                          16px;
 @listView-check-box-height:                         16px;
+@listView-check-box-border:                         none;
 @multiView-tile-item-border:                        1px solid #E7F0F9 ;
 @multiView-tile-item-min-width:                     200px;
 @multiView-tile-item-min-height:                    128px;
@@ -1926,15 +1944,20 @@
 
 
 @DropdownList-captionWrapper-margin:          0 19px 0 19px;
-@DropdownList-min-height:                     24px;
+@DropdownList-height:                     24px;
 @DropdownList-shadow-hover:                   0 0 0 1px @DropdownList-border-color;
 
 @DropdownList-picker-bg:                              @white-color;
 @DropdownList-header-bg:                              @DropdownList-picker-bg;
+@DropdownList-picker-offset:                          0;
+@DropdownList-picker-fastdatafilter-offset:           0;
 @DropdownList-picker-margin-top:                      -2px;
 @DropdownList-picker-head-margin:                     0;
+@DropdownList-picker-head-padding:                    4px 8px;
+@DropdownList-picker-head-duplicate-type-top-padding: 4px;
 @DropdownList-picker-hor-revert-head-margin:          @DropdownList-picker-head-margin;
 @DropdownList-picker-padding:                         4px 0;
+@DropdownList-picker-max-height:                      400px;
 @DropdownList-picker-head-margin:                     0;
 @DropdownList-picker-border:                          2px solid @DropdownList-border-color;
 @DropdownList-picker-head-border-radius:              4px 4px 0 0;
@@ -1944,13 +1967,14 @@
 @DropdownList-picker-list-border-radius:              4px;
 @DropdownList-picker-menu-font-size:                  15px;
 @DropdownList-picker-menu-white-space:                nowrap;
-@DropdownList-picker-menu-item-padding:               4px 16px 4px 16px;
+@DropdownList-picker-menu-item-padding:               7px 8px 6px 8px;
 @DropdownList-picker-menu-item-margin:                0;
+@DropdownList-picker-menu-item-height:                19px;
 @DropdownList-picker-menu-item-multiselect-padding:   0;
 @DropdownList-picker-menu-item-color:                 @white-color;
-@DropdownList-picker-menu-item-color-blur:            rgba(255, 255, 255, 0.8);
+@DropdownList-picker-menu-item-color-blur:            rgba(255, 255, 255, 0);
 @DropdownList-picker-menu-item-hover:                 #F0F5FB;
-@DropdownList-picker-menu-item-hover-blur:            rgba(240, 245, 251, 0.8);
+@DropdownList-picker-menu-item-hover-blur:            rgba(240, 245, 251, 0);
 @DropdownList-linkStyleColor:                         #0055bb;
 @DropdownList-linkStyleHoverColor:                    #313E78;
 @DropdownList-footer-buttonsBlock-position:           relative;
@@ -2017,7 +2041,7 @@
 @controls-filterButton-history-maxHeight-overflow:hidden;
 @controls-filterButton-history-actions-right:     auto !important;
 @controls-filterButton-history-actions-left:      -4px !important;
-@controls-filterButton-history-actions-bottom:    0;
+@controls-filterButton-history-actions-bottom:    3px;
 
 @controls-filterButton-history-item-min-height:   24px;
 
@@ -2195,8 +2219,8 @@
 @controls-SubmitPopup-footer-bg:                   #F5F5F5;
 @controls-SubmitPopup-footer-border-top:           1px solid #EAEAEA;
 @controls-SubmitPopup-footer-padding:              16px;
-@controls-SubmitPopup-button-width:                86px;
-@controls-SubmitPopup-button-mini-width:           80px;
+@controls-SubmitPopup-button-min-width:            86px;
+@controls-SubmitPopup-button-mini-min-width:       80px;
 @controls-SubmitPopup-button-height:               24px;
 @controls-SubmitPopup-border-top:                  none;
 @controls-SubmitPopup-border-left:                 @controls-InformationPopup-border;
@@ -2232,3 +2256,83 @@
 @controls-Paging-btn-margin:                       0;
 @controls-Paging-btn-padding:                      8px 10px;
 @controls-Paging-btn-sprite:                       url('img/PagingArrows.png');
+
+//Scrollbar
+@controls-Scrollbar-width:                         4px;
+@controls-Scrollbar-thumb-border-radius:           2px;
+@controls-Scrollbar-dark-hover-thumb-color:        rgba(255, 255, 255, 0.20);
+@controls-Scrollbar-dark-active-thumb-color:       rgba(255, 255, 255, 0.50);
+
+@controls-Scrollbar-light-hover-thumb-color:       rgba(0, 0, 0, 0.10);
+@controls-Scrollbar-light-active-thumb-color:      rgba(0, 0, 0, 0.15);
+
+//----------//
+//  Header  //
+//----------//
+
+@header-padding-left:                              8px;
+@header-padding-right:                             12px;
+@header-height:                                    32px;
+
+@header-font:                                      700 18px escape('/') @header-height @font-basic-name;
+@header-color:                                     #D94700;
+
+@bigHeader-font:                                   700 20px escape('/') @header-height @font-basic-name;
+@bigHeader-color:                                  @header-color;
+
+@subheader-font:                                   700 15px escape('/') @header-height @font-basic-name;
+@subheader-color:                                  @blue-dark-color;
+
+@bigSubheader-font:                                700 18px escape('/') @header-height @font-basic-name;
+@bigSubheader-color:                               @subheader-color;
+
+//--------------//
+//  LinkHeader  //
+//--------------//
+
+@link-header-padding-left:                         @header-padding-left;
+@link-header-padding-right:                        @header-padding-right;
+@link-header-height:                               @header-height;
+
+@link-header-font:                                 700 18px escape('/') @header-height @font-basic-name;
+@link-header-color:                                #D94700;
+@link-header-text-decoration:                      none;
+
+@link-header-after-content:                        '\E002';
+@link-header-after-font:                           18px @font-basic-name;
+@link-header-after-color:                          @blue-dark-color;
+@link-header-after-margin-left:                    4px;
+
+@link-header-hover-color:                          @primary-color;
+@link-header-hover-after-color:                    @link-header-hover-color;
+
+@link-header-separator-color:                      #F4F4F4;
+@link-header-separator-margin:                     0 0 0 8px;
+
+//----------------//
+//  ToggleHeader  //
+//----------------//
+
+@toggle-header-padding-right:                      8px;
+@toggle-header-height:                             24px;
+
+@toggle-header-font:                               700 15px escape('/') @toggle-header-height @font-basic-name;
+@toggle-header-color:                              @blue-dark-color;
+@toggle-header-border:                             none;
+@toggle-header-background:                         none;
+
+@toggle-header-before-content:                     '\E013';
+@toggle-header-before-font:                        18px 'TensorFont';
+@toggle-header-before-color:                       #D94700;
+@toggle-header-before-width:                       24px;
+
+@toggle-header-count-font:                         15px escape('/') @toggle-header-height @font-basic-name;
+@toggle-header-count-color:                        #D94700;
+@toggle-header-count-margin-right:                 4px;
+
+
+@toggle-header-hover-color:                        @primary-color;
+@toggle-header-hover-before-color:                 @toggle-header-hover-color;
+@toggle-header-hover-count-color:                  @toggle-header-hover-color;
+
+@toggle-header-checked-before-content:             '\E000';

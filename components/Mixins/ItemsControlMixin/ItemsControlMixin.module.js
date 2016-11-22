@@ -266,8 +266,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _dataSet: null,
          _dotItemTpl: null,
          _propertyValueGetter: getPropertyValue,
+         _groupCollapsing: {},
          _options: {
-
             _canServerRender: false,
             _serverRender: false,
             _defaultItemTemplate: '',
@@ -693,6 +693,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else {
                this._options._items = itemsOpt;
             }
+            if (this._options._itemsProjection) {
+               this._unsetItemsEventHandlers();
+               this._options._itemsProjection.destroy();
+            }
             this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
             this._options._itemsProjection = this._options._applyGroupingToProjection(this._options._itemsProjection, this._options);
             this._setItemsEventHandlers();
@@ -736,6 +740,37 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             curField = item.get(field),
             prevField = prevItem.get(field);
          return curField != prevField;
+      },
+
+      _getGroupContainers: function(groupId) {
+         var containers = $([]);
+         if (this._getItemsProjection()) {
+            var items = this._getItemsProjection().getGroupItems(groupId);
+            for (var i = 0; i < items.length; i++) {
+               containers.push(this._getDomElementByItem(items[i]).get(0))
+            }
+         }
+
+         return containers;
+      },
+
+      _toggleGroup: function(groupId, flag) {
+         this._groupCollapsing[groupId] = flag;
+         var containers = this._getGroupContainers(groupId);
+         containers.toggleClass('ws-hidden', flag);
+         $('.controls-GroupBy[data-group="' + groupId + '"] .controls-GroupBy__separatorCollapse', this._container).toggleClass('controls-GroupBy__separatorCollapse__collapsed', flag);
+         this._drawItemsCallbackDebounce();
+      },
+
+      expandGroup: function(groupId) {
+         this._toggleGroup(groupId, false);
+      },
+      collapseGroup: function(groupId) {
+         this._toggleGroup(groupId, true);
+      },
+      toggleGroup: function(groupId) {
+         var state = this._groupCollapsing[groupId];
+         this[state ? 'expandGroup' : 'collapseGroup'].call(this, groupId);
       },
 
       _prepareItemsData : function() {
@@ -878,13 +913,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             /*TODO Особое поведение при группировке*/
                if (!Object.isEmpty(this._options.groupBy)) {
-                  /*TODO косяк Лехи - не присылает группу при удалении*/
-                  /*if (this._options.easyGroup) {
+
+                  if (this._options.easyGroup) {
                      if (this._getItemsProjection().getGroupItems(groupId).length < 1) {
                         $('[data-group="' + groupId + '"]', this._container.get(0)).remove();
                      }
                   }
-                  else {*/
+                  else {
                      var prev = targetElement.prev();
                      if (prev.length && prev.hasClass('controls-GroupBy')) {
                         var next = targetElement.next();
@@ -892,7 +927,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                            prev.remove();
                         }
                      }
-                  /*}*/
+                  }
                }
 
                removedElements.push(targetElement.get(0));
@@ -2078,9 +2113,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          this._reviveItems();
       },
-      _onCollectionRemove: function(items, notCollapsed) {
+      _onCollectionRemove: function(items, notCollapsed, groupId) {
          if (items.length) {
-            this._removeItems(items)
+            this._removeItems(items, groupId)
          }
       },
       _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {

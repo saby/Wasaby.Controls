@@ -93,6 +93,10 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
 
                dateDecoratorMask: 'DD.MM.YY',
 
+               _escape: function(txt) {
+                  return strHelpers.escapeHtml(txt)
+               },
+
                formattedText: function() {
                   return formatText.call(this, this.text);
             }

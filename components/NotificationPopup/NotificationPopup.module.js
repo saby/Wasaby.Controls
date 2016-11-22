@@ -5,12 +5,13 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
    ],
 
    /**
-    * Всплывающее нотификационное уведомление с иконкой, заголовком и дополнительным содержимым.
+    * Класс контрола "Всплывающее нотификационное уведомление", для которого можно установить иконку (см. {@link icon}), заголовок (см. {@link caption}) и шаблоны (см. {@link headerTemplate}, {@link bodyTemplate} и {@link footerTemplate}).
+    * Для вызова контрола рекомендуется использовать {@link SBIS3.CONTROLS.Utils.InformationPopupManager}.
     * @class SBIS3.CONTROLS.NotificationPopup
     * @extends SBIS3.CONTROLS.InformationPopup
     * @control
     * @public
-    * @author Степин П.В.
+    * @author Степин Павел Владимирович
     */
    function(InformationPopup, template, headerTpl){
       'use strict';

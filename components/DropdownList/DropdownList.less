@@ -1,8 +1,8 @@
 .controls-DropdownList {
    display: inline-block;
-   min-height: @DropdownList-min-height;
+   min-height: @DropdownList-height;
    box-sizing: @DropdownList-box-sizing;
-   line-height: @DropdownList-min-height;
+   line-height: @DropdownList-height;
    .controls-DropdownList__selectedItem {
       display: block; /* ie8/9 */
       display: flex;
@@ -97,7 +97,7 @@
   }
 
   .controls-DropdownList__item, .controls-DropdownList__selectedItem *{
-    font-size: 15px;
+    font-size: @DropdownList-picker-menu-font-size;
     cursor: @DropdownList-cursor;
   }
 
@@ -107,9 +107,12 @@
       }
    }
    &.controls-DropdownList__type-fastDataFilter {
+     &.controls-FloatArea {
+       margin: @DropdownList-picker-fastdatafilter-offset;
+     }
      .controls-DropdownList__body {
-       max-width: 400px;
-       border-radius: @DropdownList-picker-list-right-border-radius;
+        max-width: 400px;
+        border-radius: @DropdownList-picker-list-right-border-radius;
      }
      .controls-DropdownList__selectedItem{
        .controls-DropdownList__textWrapper{
@@ -140,29 +143,35 @@
      .controls-DropdownList__body {
        margin-top: @DropdownList-picker-margin-top;
          .controls-DropdownList__item{
-            padding: 6px 16px;
+            padding: 7px 16px 6px 16px;
+            position: relative;
            .controls-DropdownList__itemTextWrapper{
               position: relative;
-              //Блок с "размытием" располагается в том месте, где должен быть padding для текста. если текст заезжает на этот паддинг,
-              //то будет скрыт в размытии, кодом, описанном ниже. Так как ограничение ширины установлено через max-width,
-              //мы не знаем, какой именно текст уместился в контейнер, а какой нет.
-              &:after {
-                 content: '';
-                 position: absolute;
-                 top: 0;
-                 bottom: 0;
-                 right: -4px;
-                 width: 4px;
-                 background: linear-gradient(to left, @DropdownList-picker-menu-item-color, @DropdownList-picker-menu-item-color-blur);
+              overflow: hidden;
+              &.controls-DropdownList__itemTextWrapper-height{
+                 /*Этот класс для того, чтобы не сломать прикладные шаблоны
+                   Для работы затемнения, нужно указать высоту контейнера*/
+                 height: @DropdownList-picker-menu-item-height;
               }
               .controls-DropdownList__item-text{
                  overflow: hidden;
                  white-space: nowrap;
-                 width: calc(~"100% + 4px"); //Если текст не влезает, то уйдет в "размытие" на 4px
+                 float: left;
+                 display: inline-block;
+              }
+              .controls-DropdownList__item-text-shadow {
+                 float: right;
+                 width: 24px;
+                 margin-left: -24px;
+                 display: inline-block;
+                 height: @DropdownList-picker-menu-item-height;
+                 position: relative;
+                 top: -@DropdownList-picker-menu-item-height;
+                 background: linear-gradient(to left, @DropdownList-picker-menu-item-color, @DropdownList-picker-menu-item-color-blur);
               }
            }
            &:hover {
-              .controls-DropdownList__itemTextWrapper:after {
+              .controls-DropdownList__item-text-shadow {
                  background: linear-gradient(to left, @DropdownList-picker-menu-item-hover, @DropdownList-picker-menu-item-hover-blur);
               }
            }
@@ -170,7 +179,7 @@
      }
 
      .controls-DropdownList__multiselect.controls-DropdownList__item{
-       padding: 6px 16px 6px 0;
+       padding-left: 0;
        .controls-DropdownList__itemTextWrapper{
          max-width: calc(~"100% - 16px");/* 16px чекбокс */
        }
@@ -178,9 +187,9 @@
    }
    &.controls-popup-revert-horizontal{
       &.controls-DropdownList__type-fastDataFilter {
-        .controls-DropdownList__body {
-          border-radius: @DropdownList-picker-list-left-border-radius;
-       }
+         .controls-DropdownList__body {
+            border-radius: @DropdownList-picker-list-left-border-radius;
+         }
       }
       .controls-DropdownList__header{
          float: right;
@@ -189,12 +198,12 @@
         }
       }
       .controls-DropdownList__body{
-         margin-top: @DropdownList-min-height;
+         margin-top: @DropdownList-height;
       }
    }
    .controls-DropdownList__header {
       display: none;
-      background: @DropdownList-picker-bg;
+      background: @DropdownList-header-bg;
       border: @DropdownList-picker-border;
       border-radius: @DropdownList-picker-head-border-radius;
       border-bottom: 0;
@@ -227,11 +236,11 @@
     .controls-DropdownList__pickerHead {
       font-weight: bold;
       color: #313E78;
-      padding: 4px 8px;
+      padding: @DropdownList-picker-head-padding;
       cursor: default;
       width: 100%;
       .controls-DropdownList__pickerHead-text {
-        font-size: 15px;
+        font-size: @DropdownList-picker-menu-font-size;
       }
     }
     &.controls-DropdownList__type-title .controls-DropdownList__pickerHead {
@@ -243,7 +252,7 @@
         padding-top: 0;
       }
       .controls-DropdownList__header{
-        padding-top: 4px;
+        padding-top: @DropdownList-picker-head-duplicate-type-top-padding;
       }
     }
   }
@@ -266,12 +275,14 @@
       border-radius: @DropdownList-picker-list-border-radius;
       background: @DropdownList-picker-bg;
       padding: @DropdownList-picker-padding;
+      max-height: @DropdownList-picker-max-height;
    }
    &.controls-FloatArea {
       background: transparent;
+      margin: @DropdownList-picker-offset;
    }
    .controls-DropdownList__item {
-      padding: 6px 8px;
+      padding: @DropdownList-picker-menu-item-padding;
       background: @DropdownList-picker-menu-item-color;
       margin: @DropdownList-picker-menu-item-margin;
       font-size: @DropdownList-picker-menu-font-size;
@@ -282,11 +293,10 @@
         .controls-DropdownList__item-text{
           overflow: hidden;
           white-space: nowrap;
-          width: 100%;
         }
       }
       &.controls-DropdownList__child{
-        padding: 3px 8px;
+        padding: 3px 8px 2px 8px;
         .controls-DropdownList__itemTextWrapper{
           padding-left: 16px;
         }
@@ -372,8 +382,10 @@
 /* Все ie без поддержки flexBox'a */
 .ws-is-ie8, .ws-is-ie9, .ws-is-ie10 {
   .controls-DropdownList .controls-DropdownList__selectedItem{
+     vertical-align: top;
     .controls-DropdownList__textWrapper{
       display: inline-block;
+      vertical-align: top;
     }
     .controls-DropdownList__beforeCaptionWrapper{
        vertical-align: top;
@@ -395,6 +407,26 @@
 
 .ws-is-ie, .ws-is-firefox {
   .controls-DropdownList .controls-DropdownList__selectedItem{
-    display: inline-flex;
+     display: inline-block;
+     display: inline-flex;
   }
+}
+
+/* Все ie без поддержки flexBox'a
+   TODO: Выпилить 1 января 2017 года
+*/
+.ws-is-ie8, .ws-is-ie9 {
+   .controls-DropdownList__picker.controls-DropdownList__type-fastDataFilter {
+      .controls-DropdownList__header {
+         height: 24px;
+      }
+      .controls-DropdownList__body {
+         margin-top: -6px;
+      }
+      &.controls-popup-revert-horizontal {
+         .controls-DropdownList__body {
+            margin-top: @DropdownList-height;
+         }
+      }
+   }
 }

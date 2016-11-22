@@ -212,6 +212,13 @@
   display: -ms-inline-flexbox;
   display: -webkit-inline-flex;
 }
+
+.flexbox() {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
 //Решаем проблему лишних отступов между inline-block элементами лежащими друг за другом.
 //ВАЖНО: Если не задано значение @child-font-size то у всех дочерних элементов блока, с данным стилем, должен быть указан собственный font-size.
 .inline-block-bug-fix(@child-font-size: 0) {
@@ -222,4 +229,18 @@
       font-size: @child-font-size;
     }
   }
+}
+
+.ws-header-mixin(@padding-left, @padding-right, @font, @color) {
+  display: inline-block;
+  padding-left: @padding-left;
+  padding-right: @padding-right;
+  font: @font;
+  color: @color;
+}
+
+.ws-header-content-mixin(@content, @font, @color) {
+  content: @content;
+  font: @font;
+  color: @color;
 }

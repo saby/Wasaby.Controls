@@ -105,7 +105,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
        */
       move: function(movedItems, target, position) {
          var
-            result,
+            result = false,
             isNodeTo = true,
             isChangeOrder = position !== 'on';
 
@@ -119,7 +119,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
 
          if (this._checkRecordsForMove(movedItems, target, isChangeOrder)) {
             if (isNodeTo && !isChangeOrder) {
-               result = this.getMoveStrategy().hierarhyMove(movedItems, target);
+               result = this.getMoveStrategy().hierarсhyMove(movedItems, target);
             } else if(isChangeOrder)  {
                result = this.getMoveStrategy().move(movedItems, target, position == 'after');
             }
@@ -197,8 +197,8 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             path = recordSet.getMetaData().path,
             toMap = [];
          if (recordSet.getMetaData().path) {
-            toMap = $.map(path.getChildItems(), function (elem) {
-               return '' + elem;
+            path.each(function (elem) {
+               toMap.push('' + elem.getId());
             });
          }
          var record = recordSet.getRecordById(parentKey);

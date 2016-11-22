@@ -143,15 +143,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       var
          records = [],
          projectionFilter,
-         prevGroupId = undefined;
+         prevGroupId = undefined,
+         analyzeChanges;
+
+      projectionFilter = resetFilterAndStopEventRaising(projection, false);
       if (cfg.expand || cfg.hierarchyViewMode) {
-         projection.setEventRaising(false);
+         analyzeChanges = true;
          expandAllItems(projection, cfg);
-         projection.setEventRaising(true);
-
-
-      }
-      else {
+      } else {
          /**
           * todo Переписать, когда будет выполнена указанная ниже задача
           * Задача в разработку от 28.04.2016 №1172779597
@@ -159,10 +158,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
           * https://inside.tensor.ru/opendoc.html?guid=6f1758f0-f45d-496b-a8fe-fde7390c92c7
           * @private
           */
-         projectionFilter = resetFilterAndStopEventRaising.call(this, projection, false);
-         applyExpandToItemsProjection.call(this, projection, cfg);
-         restoreFilterAndRunEventRaising.call(this, projection, projectionFilter, false);
+         analyzeChanges = false;
+         applyExpandToItemsProjection(projection, cfg);
       }
+      restoreFilterAndRunEventRaising(projection, projectionFilter, analyzeChanges);
 
       if (cfg.hierarchyViewMode) {
          records = searchProcessing(projection, cfg);
@@ -277,7 +276,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       return tplOptions;
    };
    /**
-    * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
+    * Миксин позволяет контролу отображать данные, которые имеют иерархическую структуру, и работать с ними.
     * На DOM-элементы, отображающие развернутые узлы вешается css-класс "controls-TreeView__item-expanded". Для свернутых узлов используется css-класс "controls-TreeView__item-collapsed".
     * @mixin SBIS3.CONTROLS.TreeMixin
     * @public
@@ -288,7 +287,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       /**
        * @name SBIS3.CONTROLS.TreeMixin#reload
        * @function
-       * Перезагружает набор записей представления данных с последующим обновлением отображения.
+       * @description Перезагружает набор записей представления данных с последующим обновлением отображения.
        * @param {Object} filter Параметры фильтрации.
        * @param {String|Array.<Object.<String,Boolean>>} sorting Параметры сортировки.
        * @param {Number} offset Смещение первого элемента выборки.
@@ -355,12 +354,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       /**
        * @event onNodeExpand Происходит после разворачивания узла.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {String|Number} key Идентификатор разворачиваемого узла.
+       * @param {String|Number} key Идентификатор узла.
+       * @param {jQuery} object Контейнер узла.
+       * @see onNodeCollapse
        */
       /**
        * @event onNodeCollapse Происходит после сворачивания узла.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {String|Number} key Идентификатор разворачиваемого узла.
+       * @param {String|Number} key Идентификатор узла.
+       * @param {jQuery} object Контейнер узла.
+       * @see onNodeExpand
        */
       $protected: {
          _folderOffsets : {},
@@ -520,6 +523,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * @see SBIS3.CONTROLS.ItemsControlMixin#setItemsSortMethod
              */
             itemsSortMethod: _defaultItemsSortMethod,
+             /**
+              * @cfg {Boolean}
+              */
             hierarchyViewMode: false
          },
          _foldersFooters: {},
@@ -650,7 +656,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        */
       _breadCrumbsItemClick : function(id) {
          //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onBreadCrumbClick'), а вотом выполняется setCurrentRoot
-         if (this.isEnabled() && this._notify('onSearchPathClick', id) !== false ) {
+         if (this._notify('onSearchPathClick', id) !== false ) {
 
 
             var filter = cMerge(this.getFilter(), {
