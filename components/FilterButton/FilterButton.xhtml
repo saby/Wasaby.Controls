@@ -1,5 +1,8 @@
 <div class="controls__filterButton controls__filterButton-{{= it.filterAlign}}">
-    <div class="controls__filterButton-button icon-24 icon-size icon-FilterNew icon-primary action-hover"></div>
+    <component data-component="SBIS3.CONTROLS.IconButton" class="controls__filterButton-button">
+        <opt name="icon">icon-24 icon-size icon-FilterNew icon-primary action-hover</opt>
+        <opt name="command">show-filter</opt>
+    </component>
     {{? it.filterLineComponent }}
         <component data-component="{{= it.filterLineComponent}}" name="filterLine">
         </component>
