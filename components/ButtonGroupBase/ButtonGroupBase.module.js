@@ -28,7 +28,8 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', [
          /**
           * Элементы были заданы в верстке
           */
-         _hasItems: null
+         _hasItems: null,
+         _activatedHandler: null
       },
 
       $constructor: function() {
@@ -48,17 +49,24 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', [
 
       _drawItemsCallback : function(){
          var
-             controls = this.getItemsInstances(),
-             self = this;
+            controls = this.getItemsInstances(),
+            self = this;
+         if (!this._activatedHandler) {
+            this._activatedHandler = (function(busEvent, event){
+               var hash = this.getContainer().data('hash');
+               self._itemActivatedHandler(hash, event);
+            });
+         }
          for (var i in controls) {
             if (controls.hasOwnProperty(i)) {
-               controls[i].subscribe('onActivated', function (busEvent, event) {
-                  var hash = this.getContainer().data('hash');
-                  self._itemActivatedHandler(hash, event);
-               });
+               /*надо переподписываться, потому что в callBack мы можем попасть после любого события, в т.ч после добавления новых кнопок, или перерисовки одной кнопки*/
+               controls[i].unsubscribe('onActivated', this._activatedHandler);
+               controls[i].subscribe('onActivated', this._activatedHandler);
             }
          }
       },
+
+
 
       _itemActivatedHandler : function(id, event) {
          /*метод должен быть перегружен*/
