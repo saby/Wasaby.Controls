@@ -2195,14 +2195,16 @@
 @controls-InformationPopup-success-status-border-color:       #72BE44;
 @controls-InformationPopup-error-status-border-color:         #EF463A;
 @controls-InformationPopup-warning-status-border-color:       #FEC63F;
-@controls-InformationPopup-border:                            1px solid #E4E4E4;
 @controls-InformationPopup-border-top:                        3px solid;
-@controls-InformationPopup-border-left:                       @controls-InformationPopup-border !important;
-@controls-InformationPopup-border-right:                      @controls-InformationPopup-border !important;
-@controls-InformationPopup-border-bottom:                     @controls-InformationPopup-border !important;
+@controls-InformationPopup-border-bottom:                     none;
 @controls-InformationPopup-closeButton-top:                   8px;
 
 //NotificationPopup
+@controls-NotificationPopup-border:                                          1px solid #E4E4E4;
+@controls-NotificationPopup-border-top:                                      none;
+@controls-NotificationPopup-border-left:                                     @controls-NotificationPopup-border;
+@controls-NotificationPopup-border-right:                                    @controls-NotificationPopup-border;
+@controls-NotificationPopup-border-bottom:                                   @controls-NotificationPopup-border;
 @controls-NotificationPopup-header-height:                                   40px;
 @controls-NotificationPopup-header-padding:                                  0 12px 0 12px;
 @controls-NotificationPopup-header-padding-with-close-button:                0 48px 0 12px;
@@ -2224,10 +2226,11 @@
 @controls-SubmitPopup-button-min-width:            86px;
 @controls-SubmitPopup-button-mini-min-width:       80px;
 @controls-SubmitPopup-button-height:               24px;
+@controls-SubmitPopup-border:                      2px solid #E4E4E4;
 @controls-SubmitPopup-border-top:                  none;
-@controls-SubmitPopup-border-left:                 @controls-InformationPopup-border;
-@controls-SubmitPopup-border-right:                @controls-InformationPopup-border;
-@controls-SubmitPopup-border-bottom:               @controls-InformationPopup-border;
+@controls-SubmitPopup-border-left:                 @controls-SubmitPopup-border;
+@controls-SubmitPopup-border-right:                @controls-SubmitPopup-border;
+@controls-SubmitPopup-border-bottom:               @controls-SubmitPopup-border;
 
 //ListView AjaxIndicator
 @controls-AjaxLoader-background:                   none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
